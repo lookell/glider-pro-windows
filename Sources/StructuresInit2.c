@@ -57,36 +57,36 @@ void InitClutter (void)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
-	
+
 	QSetRect(&clutterSrcRect, 0, 0, 128, 69);
 	theErr = CreateOffScreenGWorld(&clutterSrcMap, &clutterSrcRect, kPreferredDepth);
 	SetGWorld(clutterSrcMap, nil);
 	LoadGraphic(kClutterPictID);
-	
-	theErr = CreateOffScreenGWorld(&clutterMaskMap, &clutterSrcRect, 1);	
+
+	theErr = CreateOffScreenGWorld(&clutterMaskMap, &clutterSrcRect, 1);
 	SetGWorld(clutterMaskMap, nil);
 	LoadGraphic(kClutterPictID + 1000);
-	
+
 	QSetRect(&flowerSrc[0], 0, 0, 10, 28);
 	QOffsetRect(&flowerSrc[0], 0, 23);
-	
+
 	QSetRect(&flowerSrc[1], 0, 0, 24, 35);
 	QOffsetRect(&flowerSrc[1], 10, 16);
-	
+
 	QSetRect(&flowerSrc[2], 0, 0, 34, 35);
 	QOffsetRect(&flowerSrc[2], 34, 16);
-	
+
 	QSetRect(&flowerSrc[3], 0, 0, 27, 23);
 	QOffsetRect(&flowerSrc[3], 68, 14);
-	
+
 	QSetRect(&flowerSrc[4], 0, 0, 27, 14);
 	QOffsetRect(&flowerSrc[4], 68, 37);
-	
+
 	QSetRect(&flowerSrc[5], 0, 0, 32, 51);
 	QOffsetRect(&flowerSrc[5], 95, 0);
-	
+
 	SetGWorld(wasCPort, wasWorld);
 }
 
@@ -100,14 +100,14 @@ void InitSupport (void)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
-	
+
 	QSetRect(&suppSrcRect, 0, 0, kRoomWide, kFloorSupportTall);		// 44
 	theErr = CreateOffScreenGWorld(&suppSrcMap, &suppSrcRect, kPreferredDepth);
 	SetGWorld(suppSrcMap, nil);
 	LoadGraphic(kSupportPictID);
-	
+
 	SetGWorld(wasCPort, wasWorld);
 }
 
@@ -121,18 +121,18 @@ void InitAngel (void)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
-	
+
 	QSetRect(&angelSrcRect, 0, 0, 96, 44);
 	theErr = CreateOffScreenGWorld(&angelSrcMap, &angelSrcRect, kPreferredDepth);
 	SetGWorld(angelSrcMap, nil);
 	LoadGraphic(kAngelPictID);
-	
-	theErr = CreateOffScreenGWorld(&angelMaskMap, &angelSrcRect, 1);	
+
+	theErr = CreateOffScreenGWorld(&angelMaskMap, &angelSrcRect, 1);
 	SetGWorld(angelMaskMap, nil);
 	LoadGraphic(kAngelPictID + 1);
-	
+
 	SetGWorld(wasCPort, wasWorld);
 }
 
@@ -147,20 +147,20 @@ void CreateOffscreens (void)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
-	
+
 	justRoomsRect = houseRect;
 	ZeroRectCorner(&justRoomsRect);
-	
+
 	workSrcRect = houseRect;			// Set up work map
 	ZeroRectCorner(&workSrcRect);
 	theErr = CreateOffScreenGWorld(&workSrcMap, &workSrcRect, kPreferredDepth);
-	
+
 	backSrcRect = houseRect;			// Set up background map
 	ZeroRectCorner(&backSrcRect);
 	theErr = CreateOffScreenGWorld(&backSrcMap, &backSrcRect, kPreferredDepth);
-	
+
 	InitScoreboardMap();	SpinCursor(1);
 	InitGliderMap();		SpinCursor(1);
 	InitBlowers();			SpinCursor(1);
@@ -174,7 +174,7 @@ void CreateOffscreens (void)
 	InitClutter();			SpinCursor(1);
 	InitSupport();			SpinCursor(1);
 	InitAngel();			SpinCursor(1);
-	
+
 	QSetRect(&tileSrcRect, 0, 0, 128, 80);
 	tileSrcMap = nil;
 //	????
@@ -188,95 +188,95 @@ void CreatePointers (void)
 {
 	Handle		tempHandle;
 	short		i;
-	
+
 	thisRoom = nil;
 	thisRoom = (roomPtr)NewPtr(sizeof(roomType));
 	if (thisRoom == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	hotSpots = nil;
 	hotSpots = (hotPtr)NewPtr(sizeof(hotObject) * kMaxHotSpots);
 	if (hotSpots == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	sparkles = nil;
 	sparkles = (sparklePtr)NewPtr(sizeof(sparkleType) * kMaxSparkles);
 	if (sparkles == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	flyingPoints = nil;
 	flyingPoints = (flyingPtPtr)NewPtr(sizeof(flyingPtType) * kMaxFlyingPts);
 	if (flyingPoints == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	flames = nil;
 	flames = (flamePtr)NewPtr(sizeof(flameType) * kMaxCandles);
 	if (flames == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	tikiFlames = nil;
 	tikiFlames = (flamePtr)NewPtr(sizeof(flameType) * kMaxTikis);
 	if (tikiFlames == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	bbqCoals = nil;
 	bbqCoals = (flamePtr)NewPtr(sizeof(flameType) * kMaxCoals);
 	if (bbqCoals == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	pendulums = nil;
 	pendulums = (pendulumPtr)NewPtr(sizeof(pendulumType) * kMaxPendulums);
 	if (pendulums == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	savedMaps = nil;
 	savedMaps = (savedPtr)NewPtr(sizeof(savedType) * kMaxSavedMaps);
 	if (savedMaps == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	for (i = 0; i < kMaxSavedMaps; i++)
 		savedMaps[i].map = nil;
-	
+
 	bands = nil;
 	bands = (bandPtr)NewPtr(sizeof(bandType) * kMaxRubberBands);
 	if (bands == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	grease = nil;
 	grease = (greasePtr)NewPtr(sizeof(greaseType) * kMaxGrease);
 	if (grease == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	theStars = nil;
 	theStars = (starPtr)NewPtr(sizeof(starType) * kMaxStars);
 	if (theStars == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	shreds = nil;
 	shreds = (shredPtr)NewPtr(sizeof(shredType) * kMaxShredded);
 	if (shreds == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	dinahs = nil;
 	dinahs = (dynaPtr)NewPtr(sizeof(dynaType) * kMaxDynamicObs);
 	if (dinahs == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	masterObjects = nil;
 	masterObjects = (objDataPtr)NewPtr(sizeof(objDataType) * kMaxMasterObjects);
 	if (masterObjects == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	srcRects = nil;
 	srcRects = (Rect *)NewPtr(sizeof(Rect) * kNumSrcRects);
 	if (srcRects == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	theHousesSpecs = nil;
 	theHousesSpecs = (FSSpecPtr)NewPtr(sizeof(FSSpec) * maxFiles);
 	if (theHousesSpecs == nil)
 		RedAlert(kErrNoMemory);
-	
+
 #ifdef CREATEDEMODATA
 	demoData = nil;
 	demoData = (demoPtr)NewPtr(sizeof(demoType) * 2000);
@@ -334,7 +334,7 @@ void InitSrcRects (void)
 	QSetRect(&srcRects[kSewerBlower], 0, 0, 32, 12);
 	QOffsetRect(&srcRects[kSewerBlower], 0, 390);
 	QSetRect(&srcRects[kLiftArea], 0, 0, 64, 32);
-	
+
 	QSetRect(&srcRects[kTable], 0, 0, 64, kTableThick);		// Furniture
 	QSetRect(&srcRects[kShelf], 0, 0, 64, kShelfThick);
 	QSetRect(&srcRects[kCabinet], 0, 0, 64, 64);
@@ -353,7 +353,7 @@ void InitSrcRects (void)
 	QSetRect(&srcRects[kManhole], 0, 0, 123, 22);
 	QSetRect(&srcRects[kBooks], 0, 0, 64, 51);
 	QSetRect(&srcRects[kInvisBounce], 0, 0, 64, 64);
-	
+
 	QSetRect(&srcRects[kRedClock], 0, 0, 28, 17);			// Prizes
 	QSetRect(&srcRects[kBlueClock], 0, 0, 28, 25);
 	QOffsetRect(&srcRects[kBlueClock], 0, 17);
@@ -381,7 +381,7 @@ void InitSrcRects (void)
 	QSetRect(&srcRects[kHelium], 0, 0, 56, 16);
 	QOffsetRect(&srcRects[kHelium], 32, 270);
 	QSetRect(&srcRects[kSlider], 0, 0, 64, 16);
-	
+
 	QSetRect(&srcRects[kUpStairs], 0, 0, 160, 267);			// Transport
 	QSetRect(&srcRects[kDownStairs], 0, 0, 160, 267);
 	QSetRect(&srcRects[kMailboxLf], 0, 0, 94, 80);
@@ -400,7 +400,7 @@ void InitSrcRects (void)
 	QSetRect(&srcRects[kWindowExLf], 0, 0, 16, 170);
 	QSetRect(&srcRects[kInvisTrans], 0, 0, 64, 32);
 	QSetRect(&srcRects[kDeluxeTrans], 0, 0, 64, 64);
-	
+
 	QSetRect(&srcRects[kLightSwitch], 0, 0, 15, 24);		// Switch
 	QSetRect(&srcRects[kMachineSwitch], 0, 0, 16, 24);
 	QOffsetRect(&srcRects[kMachineSwitch], 0, 48);
@@ -414,7 +414,7 @@ void InitSrcRects (void)
 	QSetRect(&srcRects[kTrigger], 0, 0, 12, 12);
 	QSetRect(&srcRects[kLgTrigger], 0, 0, 48, 48);
 	QSetRect(&srcRects[kSoundTrigger], 0, 0, 32, 32);
-	
+
 	QSetRect(&srcRects[kCeilingLight], 0, 0, 64, 20);		// Lights
 	QOffsetRect(&srcRects[kCeilingLight], 0, 0);
 	QSetRect(&srcRects[kLightBulb], 0, 0, 16, 28);
@@ -426,7 +426,7 @@ void InitSrcRects (void)
 	QSetRect(&srcRects[kFlourescent], 0, 0, 64, 12);
 	QSetRect(&srcRects[kTrackLight], 0, 0, 64, 24);
 	QSetRect(&srcRects[kInvisLight], 0, 0, 16, 16);
-	
+
 	QSetRect(&srcRects[kShredder], 0, 0, 73, 22);			// Appliances
 	QSetRect(&srcRects[kToaster], 0, 0, 48, 27);
 	QOffsetRect(&srcRects[kToaster], 0, 22);
@@ -446,7 +446,7 @@ void InitSrcRects (void)
 	QSetRect(&srcRects[kCDs], 0, 0, 16, 30);
 	QOffsetRect(&srcRects[kCDs], 48, 22);
 	QSetRect(&srcRects[kCustomPict], 0, 0, 72, 34);
-	
+
 	QSetRect(&srcRects[kBalloon], 0, 0, 24, 30);			// Enemies
 	QSetRect(&srcRects[kCopterLf], 0, 0, 32, 30);
 	QSetRect(&srcRects[kCopterRt], 0, 0, 32, 30);
@@ -456,7 +456,7 @@ void InitSrcRects (void)
 	QSetRect(&srcRects[kDrip], 0, 0, 16, 12);
 	QSetRect(&srcRects[kFish], 0, 0, 36, 33);
 	QSetRect(&srcRects[kCobweb], 0, 0, 54, 45);
-	
+
 	QSetRect(&srcRects[kOzma], 0, 0, 102, 92);				// Clutter
 	QSetRect(&srcRects[kMirror], 0, 0, 64, 64);
 	QSetRect(&srcRects[kMousehole], 0, 0, 10, 11);

@@ -50,7 +50,7 @@ void LoopMovie (void)
 	Handle		theLoop;
 	UserData	theUserData;
 	short		theCount;
-	
+
 	theLoop = NewHandle(sizeof(long));
 	(** (long **) theLoop) = 0;
 	theUserData = GetMovieUserData(theMovie);
@@ -74,24 +74,24 @@ void OpenHouseMovie (void)
 	OSErr		theErr;
 	short		movieRefNum;
 	Boolean		dataRefWasChanged;
-	
+
 	if (thisMac.hasQT)
 	{
 		theSpec = theHousesSpecs[thisHouseIndex];
 		PasStringConcat(theSpec.name, "\p.mov");
-		
+
 		theErr = FSpGetFInfo(&theSpec, &finderInfo);
 		if (theErr != noErr)
 			return;
-		
+
 		theErr = OpenMovieFile(&theSpec, &movieRefNum, fsCurPerm);
 		if (theErr != noErr)
 		{
 			YellowAlert(kYellowQTMovieNotLoaded, theErr);
 			return;
 		}
-		
-		theErr = NewMovieFromFile(&theMovie, movieRefNum, nil, theSpec.name, 
+
+		theErr = NewMovieFromFile(&theMovie, movieRefNum, nil, theSpec.name,
 				newMovieActive, &dataRefWasChanged);
 		if (theErr != noErr)
 		{
@@ -100,7 +100,7 @@ void OpenHouseMovie (void)
 			return;
 		}
 		theErr = CloseMovieFile(movieRefNum);
-		
+
 		spaceSaver = NewHandle(307200L);
 		if (spaceSaver == nil)
 		{
@@ -108,9 +108,9 @@ void OpenHouseMovie (void)
 			CloseHouseMovie();
 			return;
 		}
-		
+
 		GoToBeginningOfMovie(theMovie);
-		theErr = LoadMovieIntoRam(theMovie, 
+		theErr = LoadMovieIntoRam(theMovie,
 				GetMovieTime(theMovie, 0L), GetMovieDuration(theMovie), 0);
 		if (theErr != noErr)
 		{
@@ -120,7 +120,7 @@ void OpenHouseMovie (void)
 			return;
 		}
 		DisposeHandle(spaceSaver);
-				
+
 		theErr = PrerollMovie(theMovie, 0, 0x000F0000);
 		if (theErr != noErr)
 		{
@@ -128,14 +128,14 @@ void OpenHouseMovie (void)
 			CloseHouseMovie();
 			return;
 		}
-		
+
 		theTime = GetMovieTimeBase(theMovie);
 		SetTimeBaseFlags(theTime, loopTimeBase);
 		SetMovieMasterTimeBase(theMovie, theTime, nil);
 		LoopMovie();
-		
+
 		GetMovieBox(theMovie, &movieRect);
-		
+
 		hasMovie = true;
 	}
 #endif
@@ -147,10 +147,10 @@ void CloseHouseMovie (void)
 {
 #ifdef COMPILEQT
 	OSErr		theErr;
-	
+
 	if ((thisMac.hasQT) && (hasMovie))
 	{
-		theErr = LoadMovieIntoRam(theMovie, 
+		theErr = LoadMovieIntoRam(theMovie,
 				GetMovieTime(theMovie, 0L), GetMovieDuration(theMovie), flushFromRam);
 		DisposeMovie(theMovie);
 	}
@@ -165,7 +165,7 @@ Boolean OpenHouse (void)
 {
 	OSErr		theErr;
 	Boolean		targetIsFolder, wasAliased;
-	
+
 	if (houseOpen)
 	{
 		if (!CloseHouse())
@@ -173,31 +173,31 @@ Boolean OpenHouse (void)
 	}
 	if ((housesFound < 1) || (thisHouseIndex == -1))
 		return(false);
-	
-	theErr = ResolveAliasFile(&theHousesSpecs[thisHouseIndex], true, 
+
+	theErr = ResolveAliasFile(&theHousesSpecs[thisHouseIndex], true,
 			&targetIsFolder, &wasAliased);
 	if (!CheckFileError(theErr, thisHouseName))
 		return (false);
-	
+
 	#ifdef COMPILEDEMO
 	if (!EqualString(theHousesSpecs[thisHouseIndex].name, "\pDemo House", false, true))
 		return (false);
 	#endif
-	
+
 	houseIsReadOnly = IsFileReadOnly(&theHousesSpecs[thisHouseIndex]);
-	
+
 	theErr = FSpOpenDF(&theHousesSpecs[thisHouseIndex], fsCurPerm, &houseRefNum);
 	if (!CheckFileError(theErr, thisHouseName))
 		return (false);
-	
+
 	houseOpen = true;
 	OpenHouseResFork();
-	
+
 	hasMovie = false;
 	tvInRoom = false;
 	tvWithMovieNumber = -1;
 	OpenHouseMovie();
-	
+
 	return (true);
 }
 
@@ -209,16 +209,16 @@ Boolean OpenSpecificHouse (FSSpec *specs)
 {
 	short		i;
 	Boolean		itOpened;
-	
+
 	if ((housesFound < 1) || (thisHouseIndex == -1))
 		return (false);
-	
+
 	itOpened = true;
-	
+
 	for (i = 0; i < housesFound; i++)
 	{
-		if ((theHousesSpecs[i].vRefNum == specs->vRefNum) && 
-				(theHousesSpecs[i].parID == specs->parID) && 
+		if ((theHousesSpecs[i].vRefNum == specs->vRefNum) &&
+				(theHousesSpecs[i].parID == specs->parID) &&
 				(EqualString(theHousesSpecs[i].name, specs->name, false, true)))
 		{
 			thisHouseIndex = i;
@@ -230,7 +230,7 @@ Boolean OpenSpecificHouse (FSSpec *specs)
 			break;
 		}
 	}
-	
+
 	return (itOpened);
 }
 #endif
@@ -247,15 +247,15 @@ Boolean SaveHouseAs (void)
 	OSErr				theErr;
 	Boolean				noProblems;
 	Str255				tempStr;
-	
+
 	noProblems = true;
-	
+
 	GetLocalizedString(15, tempStr);
 	StandardPutFile(tempStr, thisHouseName, &theReply);
 	if (theReply.sfGood)
 	{
 		oldHouse = theHousesSpecs[thisHouseIndex];
-			
+
 		CloseHouseResFork();						// close this house file
 		theErr = FSClose(houseRefNum);
 		if (theErr != noErr)
@@ -267,7 +267,7 @@ Boolean SaveHouseAs (void)
 		theErr = FSpCreate(&theReply.sfFile, 'ozm5', 'gliH', theReply.sfScript);
 		if (!CheckFileError(theErr, theReply.sfFile.name))
 			return (false);
-		HCreateResFile(theReply.sfFile.vRefNum, theReply.sfFile.parID, 
+		HCreateResFile(theReply.sfFile.vRefNum, theReply.sfFile.parID,
 				theReply.sfFile.name);
 		if (ResError() != noErr)
 			YellowAlert(kYellowFailedResCreate, ResError());
@@ -276,13 +276,13 @@ Boolean SaveHouseAs (void)
 		theErr = FSpOpenDF(&theReply.sfFile, fsRdWrPerm, &houseRefNum);
 		if (!CheckFileError(theErr, thisHouseName))
 			return (false);
-		
+
 		houseOpen = true;
-		
+
 		noProblems = WriteHouse(false);				// write out house data
 		if (!noProblems)
 			return(false);
-		
+
 		BuildHouseList();
 		if (OpenSpecificHouse(&theReply.sfFile))	// open new house again
 		{
@@ -300,8 +300,8 @@ Boolean SaveHouseAs (void)
 			}
 		}
 	}
-	
-	
+
+
 	return (noProblems);
 	*/
 	return false;
@@ -317,13 +317,13 @@ Boolean ReadHouse (void)
 	long		byteCount;
 	OSErr		theErr;
 	short		whichRoom;
-	
+
 	if (!houseOpen)
 	{
 		YellowAlert(kYellowUnaccounted, 2);
 		return (false);
 	}
-	
+
 	if (gameDirty || fileDirty)
 	{
 		if (houseIsReadOnly)
@@ -337,22 +337,22 @@ Boolean ReadHouse (void)
 		else if (!WriteHouse(false))
 			return(false);
 	}
-	
+
 	theErr = GetEOF(houseRefNum, &byteCount);
 	if (theErr != noErr)
 	{
 		CheckFileError(theErr, thisHouseName);
 		return(false);
 	}
-	
+
 	#ifdef COMPILEDEMO
 	if (byteCount != 16526L)
 		return (false);
 	#endif
-	
+
 	if (thisHouse != nil)
 		DisposeHandle((Handle)thisHouse);
-	
+
 	thisHouse = (houseHand)NewHandle(byteCount);
 	if (thisHouse == nil)
 	{
@@ -360,14 +360,14 @@ Boolean ReadHouse (void)
 		return(false);
 	}
 	MoveHHi((Handle)thisHouse);
-	
+
 	theErr = SetFPos(houseRefNum, fsFromStart, 0L);
 	if (theErr != noErr)
 	{
 		CheckFileError(theErr, thisHouseName);
 		return(false);
 	}
-	
+
 	HLock((Handle)thisHouse);
 	theErr = FSRead(houseRefNum, &byteCount, *thisHouse);
 	if (theErr != noErr)
@@ -376,7 +376,7 @@ Boolean ReadHouse (void)
 		HUnlock((Handle)thisHouse);
 		return(false);
 	}
-	
+
 	numberRooms = (*thisHouse)->nRooms;
 	#ifdef COMPILEDEMO
 	if (numberRooms != 45)
@@ -390,7 +390,7 @@ Boolean ReadHouse (void)
 		HUnlock((Handle)thisHouse);
 		return(false);
 	}
-	
+
 	wasHouseVersion = (*thisHouse)->version;
 	if (wasHouseVersion >= kNewHouseVersion)
 	{
@@ -398,7 +398,7 @@ Boolean ReadHouse (void)
 		HUnlock((Handle)thisHouse);
 		return(false);
 	}
-	
+
 	houseUnlocked = (((*thisHouse)->timeStamp & 0x00000001) == 0);
 	#ifdef COMPILEDEMO
 	if (houseUnlocked)
@@ -406,25 +406,25 @@ Boolean ReadHouse (void)
 	#endif
 	changeLockStateOfHouse = false;
 	saveHouseLocked = false;
-	
+
 	whichRoom = (*thisHouse)->firstRoom;
 	#ifdef COMPILEDEMO
 	if (whichRoom != 0)
 		return (false);
 	#endif
-	
+
 	wardBitSet = (((*thisHouse)->flags & 0x00000001) == 0x00000001);
 	phoneBitSet = (((*thisHouse)->flags & 0x00000002) == 0x00000002);
 	bannerStarCountOn = (((*thisHouse)->flags & 0x00000004) == 0x00000000);
-	
+
 	HUnlock((Handle)thisHouse);
-	
+
 	noRoomAtAll = (RealRoomNumberCount() == 0);
 	thisRoomNumber = -1;
 	previousRoom = -1;
 	if (!noRoomAtAll)
 		CopyRoomToThisRoom(whichRoom);
-	
+
 	if (houseIsReadOnly)
 	{
 		houseUnlocked = false;
@@ -432,13 +432,13 @@ Boolean ReadHouse (void)
 		{
 		}
 	}
-	
+
 	objActive = kNoObjectSelected;
 	ReflectCurrentRoom(true);
 	gameDirty = false;
 	fileDirty = false;
 	UpdateMenus(false);
-	
+
 	return (true);
 }
 
@@ -450,36 +450,36 @@ Boolean WriteHouse (Boolean checkIt)
 	UInt32			timeStamp;
 	long			byteCount;
 	OSErr			theErr;
-	
+
 	if (!houseOpen)
 	{
 		YellowAlert(kYellowUnaccounted, 4);
 		return (false);
 	}
-	
+
 	theErr = SetFPos(houseRefNum, fsFromStart, 0L);
 	if (theErr != noErr)
 	{
 		CheckFileError(theErr, thisHouseName);
 		return(false);
 	}
-	
+
 	CopyThisRoomToRoom();
-	
+
 	if (checkIt)
 		CheckHouseForProblems();
-	
+
 	HLock((Handle)thisHouse);
 	byteCount = GetHandleSize((Handle)thisHouse);
-	
+
 	if (fileDirty)
 	{
 		GetDateTime(&timeStamp);
 		timeStamp &= 0x7FFFFFFF;
-		
+
 		if (changeLockStateOfHouse)
 			houseUnlocked = !saveHouseLocked;
-		
+
 		if (houseUnlocked)								// house unlocked
 			timeStamp &= 0x7FFFFFFE;
 		else
@@ -487,7 +487,7 @@ Boolean WriteHouse (Boolean checkIt)
 		(*thisHouse)->timeStamp = (long)timeStamp;
 		(*thisHouse)->version = wasHouseVersion;
 	}
-	
+
 	theErr = FSWrite(houseRefNum, &byteCount, *thisHouse);
 	if (theErr != noErr)
 	{
@@ -495,7 +495,7 @@ Boolean WriteHouse (Boolean checkIt)
 		HUnlock((Handle)thisHouse);
 		return(false);
 	}
-	
+
 	theErr = SetEOF(houseRefNum, byteCount);
 	if (theErr != noErr)
 	{
@@ -503,15 +503,15 @@ Boolean WriteHouse (Boolean checkIt)
 		HUnlock((Handle)thisHouse);
 		return(false);
 	}
-	
+
 	HUnlock((Handle)thisHouse);
-	
+
 	if (changeLockStateOfHouse)
 	{
 		changeLockStateOfHouse = false;
 		ReflectCurrentRoom(true);
 	}
-	
+
 	gameDirty = false;
 	fileDirty = false;
 	UpdateMenus(false);
@@ -524,10 +524,10 @@ Boolean WriteHouse (Boolean checkIt)
 Boolean CloseHouse (void)
 {
 	OSErr		theErr;
-	
+
 	if (!houseOpen)
 		return (true);
-	
+
 	if (gameDirty)
 	{
 		if (houseIsReadOnly)
@@ -545,19 +545,19 @@ Boolean CloseHouse (void)
 			return(false);
 #endif
 	}
-	
+
 	CloseHouseResFork();
 	CloseHouseMovie();
-	
+
 	theErr = FSClose(houseRefNum);
 	if (theErr != noErr)
 	{
 		CheckFileError(theErr, thisHouseName);
 		return(false);
 	}
-	
+
 	houseOpen = false;
-	
+
 	return (true);
 }
 
@@ -597,10 +597,10 @@ Boolean QuerySaveChanges (void)
 {
 	short		hitWhat;
 	Boolean		whoCares;
-	
+
 	if (!fileDirty)
 		return(true);
-	
+
 	InitCursor();
 //	CenterAlert(kSaveChangesAlert);
 	ParamText(thisHouseName, "\p", "\p", "\p");
@@ -642,15 +642,15 @@ void YellowAlert (short whichAlert, short identifier)
 	#define		kYellowAlert	1006
 	Str255		errStr, errNumStr;
 	short		whoCares;
-	
+
 	InitCursor();
-	
+
 	GetIndString(errStr, kYellowAlert, whichAlert);
 	NumToString((long)identifier, errNumStr);
-	
+
 //	CenterAlert(kYellowAlert);
 	ParamText(errStr, errNumStr, "\p", "\p");
-	
+
 	whoCares = Alert(kYellowAlert, nil);
 }
 
@@ -659,7 +659,7 @@ void YellowAlert (short whichAlert, short identifier)
 Boolean IsFileReadOnly (FSSpec *theSpec)
 {
 #pragma unused (theSpec)
-	
+
 	return false;
 	/*
 	Str255			tempStr;
@@ -667,17 +667,17 @@ Boolean IsFileReadOnly (FSSpec *theSpec)
 	HParamBlockRec	hBlock;
 	VolumeParam		*volPtr;
 	OSErr			theErr;
-	
+
 	volPtr = (VolumeParam *)&theBlock;
 	volPtr->ioCompletion = nil;
 	volPtr->ioVolIndex = 0;
 	volPtr->ioNamePtr = tempStr;
 	volPtr->ioVRefNum = theSpec->vRefNum;
-	
+
 	theErr = PBGetVInfo(&theBlock, false);
 	if (CheckFileError(theErr, "\pRead/Write"))
 	{
-		if (((volPtr->ioVAtrb & 0x0080) == 0x0080) || 
+		if (((volPtr->ioVAtrb & 0x0080) == 0x0080) ||
 				((volPtr->ioVAtrb & 0x8000) == 0x8000))
 			return (true);		// soft/hard locked bits
 		else
@@ -688,7 +688,7 @@ Boolean IsFileReadOnly (FSSpec *theSpec)
 			hBlock.fileParam.ioFDirIndex = 0;
 			hBlock.fileParam.ioNamePtr = theSpec->name;
 			hBlock.fileParam.ioDirID = theSpec->parID;
-			
+
 			theErr = PBHGetFInfo(&hBlock, false);
 			if (CheckFileError(theErr, "\pRead/Write"))
 			{

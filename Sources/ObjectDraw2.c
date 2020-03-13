@@ -118,10 +118,10 @@ void DrawMailboxLeft (Rect *theRect, short down)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
-	
+
 	if (thisMac.isDepth == 4)
 	{
 		darkGrayC = 13;
@@ -134,57 +134,57 @@ void DrawMailboxLeft (Rect *theRect, short down)
 		lightWoodC = k8PissYellowColor;
 		darkWoodC = k8BrownColor;
 	}
-	
+
 	if (theRect->bottom < down + kMailboxBase)
 	{
-		ColorLine(theRect->left + 49, theRect->bottom, 
+		ColorLine(theRect->left + 49, theRect->bottom,
 				theRect->left + 49, down + kMailboxBase, darkGrayC);
-		ColorLine(theRect->left + 50, theRect->bottom, 
+		ColorLine(theRect->left + 50, theRect->bottom,
 				theRect->left + 50, down + kMailboxBase + 1, lightWoodC);
-		ColorLine(theRect->left + 51, theRect->bottom, 
+		ColorLine(theRect->left + 51, theRect->bottom,
 				theRect->left + 51, down + kMailboxBase + 2, lightWoodC);
-		ColorLine(theRect->left + 52, theRect->bottom, 
+		ColorLine(theRect->left + 52, theRect->bottom,
 				theRect->left + 52, down + kMailboxBase + 3, lightWoodC);
-		ColorLine(theRect->left + 53, theRect->bottom, 
+		ColorLine(theRect->left + 53, theRect->bottom,
 				theRect->left + 53, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 54, theRect->bottom, 
+		ColorLine(theRect->left + 54, theRect->bottom,
 				theRect->left + 54, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 55, theRect->bottom, 
+		ColorLine(theRect->left + 55, theRect->bottom,
 				theRect->left + 55, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 56, theRect->bottom, 
+		ColorLine(theRect->left + 56, theRect->bottom,
 				theRect->left + 56, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 57, theRect->bottom, 
+		ColorLine(theRect->left + 57, theRect->bottom,
 				theRect->left + 57, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 58, theRect->bottom, 
+		ColorLine(theRect->left + 58, theRect->bottom,
 				theRect->left + 58, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 59, theRect->bottom, 
+		ColorLine(theRect->left + 59, theRect->bottom,
 				theRect->left + 59, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 60, theRect->bottom, 
+		ColorLine(theRect->left + 60, theRect->bottom,
 				theRect->left + 60, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 61, theRect->bottom, 
+		ColorLine(theRect->left + 61, theRect->bottom,
 				theRect->left + 61, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 62, theRect->bottom, 
+		ColorLine(theRect->left + 62, theRect->bottom,
 				theRect->left + 62, down + kMailboxBase + 3, darkGrayC);
 	}
-	
+
 	SetGWorld(wasCPort, wasWorld);
-	
+
 	bounds = srcRects[kMailboxLf];
 	theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
 	SetGWorld(tempMap, nil);
 	LoadGraphic(kMailboxLeftPictID);
-	
-	theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);	
+
+	theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
 	SetGWorld(tempMask, nil);
 	LoadGraphic(kMailboxLeftMaskID);
-	
-	CopyMask((BitMap *)*GetGWorldPixMap(tempMap), 
-			(BitMap *)*GetGWorldPixMap(tempMask), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+	CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
+			(BitMap *)*GetGWorldPixMap(tempMask),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[kMailboxLf], &srcRects[kMailboxLf], theRect);
-	
+
 	SetGWorld(wasCPort, wasWorld);
-	
+
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
 //	SetPort((GrafPtr)backSrcMap);
@@ -201,10 +201,10 @@ void DrawMailboxRight (Rect *theRect, short down)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
-	
+
 	if (thisMac.isDepth == 4)
 	{
 		darkGrayC = 13;
@@ -217,57 +217,57 @@ void DrawMailboxRight (Rect *theRect, short down)
 		lightWoodC = k8PissYellowColor;
 		darkWoodC = k8BrownColor;
 	}
-	
+
 	if (theRect->bottom < down + kMailboxBase)
 	{
-		ColorLine(theRect->left + 34, theRect->bottom, 
+		ColorLine(theRect->left + 34, theRect->bottom,
 				theRect->left + 34, down + kMailboxBase, darkGrayC);
-		ColorLine(theRect->left + 35, theRect->bottom, 
+		ColorLine(theRect->left + 35, theRect->bottom,
 				theRect->left + 35, down + kMailboxBase + 1, lightWoodC);
-		ColorLine(theRect->left + 36, theRect->bottom, 
+		ColorLine(theRect->left + 36, theRect->bottom,
 				theRect->left + 36, down + kMailboxBase + 2, lightWoodC);
-		ColorLine(theRect->left + 37, theRect->bottom, 
+		ColorLine(theRect->left + 37, theRect->bottom,
 				theRect->left + 37, down + kMailboxBase + 3, lightWoodC);
-		ColorLine(theRect->left + 38, theRect->bottom, 
+		ColorLine(theRect->left + 38, theRect->bottom,
 				theRect->left + 38, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 39, theRect->bottom, 
+		ColorLine(theRect->left + 39, theRect->bottom,
 				theRect->left + 39, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 40, theRect->bottom, 
+		ColorLine(theRect->left + 40, theRect->bottom,
 				theRect->left + 40, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 41, theRect->bottom, 
+		ColorLine(theRect->left + 41, theRect->bottom,
 				theRect->left + 41, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 42, theRect->bottom, 
+		ColorLine(theRect->left + 42, theRect->bottom,
 				theRect->left + 42, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 43, theRect->bottom, 
+		ColorLine(theRect->left + 43, theRect->bottom,
 				theRect->left + 43, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 44, theRect->bottom, 
+		ColorLine(theRect->left + 44, theRect->bottom,
 				theRect->left + 44, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 45, theRect->bottom, 
+		ColorLine(theRect->left + 45, theRect->bottom,
 				theRect->left + 45, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 46, theRect->bottom, 
+		ColorLine(theRect->left + 46, theRect->bottom,
 				theRect->left + 46, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 47, theRect->bottom, 
+		ColorLine(theRect->left + 47, theRect->bottom,
 				theRect->left + 47, down + kMailboxBase + 3, darkGrayC);
 	}
-	
+
 	SetGWorld(wasCPort, wasWorld);
-	
+
 	bounds = srcRects[kMailboxRt];
 	theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
 	SetGWorld(tempMap, nil);
 	LoadGraphic(kMailboxRightPictID);
-	
-	theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);	
+
+	theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
 	SetGWorld(tempMask, nil);
 	LoadGraphic(kMailboxRightMaskID);
-	
-	CopyMask((BitMap *)*GetGWorldPixMap(tempMap), 
-			(BitMap *)*GetGWorldPixMap(tempMask), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+	CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
+			(BitMap *)*GetGWorldPixMap(tempMask),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[kMailboxRt], &srcRects[kMailboxRt], theRect);
-	
+
 	SetGWorld(wasCPort, wasWorld);
-	
+
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
 //	SetPort((GrafPtr)backSrcMap);
@@ -277,9 +277,9 @@ void DrawMailboxRight (Rect *theRect, short down)
 
 void DrawSimpleTransport (short what, Rect *theRect)
 {
-	CopyMask((BitMap *)*GetGWorldPixMap(transSrcMap), 
-			(BitMap *)*GetGWorldPixMap(transMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyMask((BitMap *)*GetGWorldPixMap(transSrcMap),
+			(BitMap *)*GetGWorldPixMap(transMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
 }
 
@@ -289,7 +289,7 @@ void DrawInvisTransport (Rect *theRect)
 {
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
 	ColorFrameRect(theRect, 32);
@@ -302,14 +302,14 @@ void DrawLightSwitch (Rect *theRect, Boolean state)
 {
 	if (state)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&lightSwitchSrc[0], theRect, srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&lightSwitchSrc[1], theRect, srcCopy, nil);
 	}
 }
@@ -319,12 +319,12 @@ void DrawLightSwitch (Rect *theRect, Boolean state)
 void DrawMachineSwitch (Rect *theRect, Boolean state)
 {
 	if (state)
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&machineSwitchSrc[0], theRect, srcCopy, nil);
 	else
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&machineSwitchSrc[1], theRect, srcCopy, nil);
 }
 
@@ -333,12 +333,12 @@ void DrawMachineSwitch (Rect *theRect, Boolean state)
 void DrawThermostat (Rect *theRect, Boolean state)
 {
 	if (state)
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&thermostatSrc[0], theRect, srcCopy, nil);
 	else
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&thermostatSrc[1], theRect, srcCopy, nil);
 }
 
@@ -347,12 +347,12 @@ void DrawThermostat (Rect *theRect, Boolean state)
 void DrawPowerSwitch (Rect *theRect, Boolean state)
 {
 	if (state)
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&powerSrc[0], theRect, srcCopy, nil);
 	else
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&powerSrc[1], theRect, srcCopy, nil);
 }
 
@@ -361,12 +361,12 @@ void DrawPowerSwitch (Rect *theRect, Boolean state)
 void DrawKnifeSwitch (Rect *theRect, Boolean state)
 {
 	if (state)
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&knifeSwitchSrc[0], theRect, srcCopy, nil);
 	else
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&knifeSwitchSrc[1], theRect, srcCopy, nil);
 }
 
@@ -376,7 +376,7 @@ void DrawInvisibleSwitch (Rect *theRect)
 {
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
 	ColorFrameRect(theRect, kIntenseGreenColor);
@@ -389,7 +389,7 @@ void DrawTrigger (Rect *theRect)
 {
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
 	ColorFrameRect(theRect, kIntenseBlueColor);
@@ -402,7 +402,7 @@ void DrawSoundTrigger (Rect *theRect)
 {
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
 	ColorFrameRect(theRect, kIntenseYellowColor);
@@ -413,9 +413,9 @@ void DrawSoundTrigger (Rect *theRect)
 
 void DrawSimpleLight (short what, Rect *theRect)
 {
-	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap), 
-			(BitMap *)*GetGWorldPixMap(lightMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap),
+			(BitMap *)*GetGWorldPixMap(lightMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
 }
 
@@ -427,7 +427,7 @@ void DrawFlourescent (Rect *theRect)
 	long		grayC, gray2C, gray3C, gray4C, violetC;
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
-		
+
 	if (thisMac.isDepth == 4)
 	{
 		grayC = 7L;
@@ -444,54 +444,54 @@ void DrawFlourescent (Rect *theRect)
 		gray4C = k8LtstGrayColor;
 		violetC = kPaleVioletColor;
 	}
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
-	
-	ColorLine(theRect->left + 16, theRect->top, 
+
+	ColorLine(theRect->left + 16, theRect->top,
 			theRect->right - 17, theRect->top, grayC);
-	ColorLine(theRect->left + 16, theRect->top + 1, 
+	ColorLine(theRect->left + 16, theRect->top + 1,
 			theRect->right - 17, theRect->top + 1, gray2C);
-	ColorLine(theRect->left + 16, theRect->top + 2, 
+	ColorLine(theRect->left + 16, theRect->top + 2,
 			theRect->right - 17, theRect->top + 2, gray2C);
-	ColorLine(theRect->left + 16, theRect->top + 3, 
+	ColorLine(theRect->left + 16, theRect->top + 3,
 			theRect->right - 17, theRect->top + 3, gray3C);
-	ColorLine(theRect->left + 16, theRect->top + 4, 
+	ColorLine(theRect->left + 16, theRect->top + 4,
 			theRect->right - 17, theRect->top + 4, gray4C);
-	ColorLine(theRect->left + 16, theRect->top + 5, 
+	ColorLine(theRect->left + 16, theRect->top + 5,
 			theRect->right - 17, theRect->top + 5, violetC);
-	ColorLine(theRect->left + 16, theRect->top + 6, 
+	ColorLine(theRect->left + 16, theRect->top + 6,
 			theRect->right - 17, theRect->top + 6, k8WhiteColor);
-	ColorLine(theRect->left + 16, theRect->top + 7, 
+	ColorLine(theRect->left + 16, theRect->top + 7,
 			theRect->right - 17, theRect->top + 7, k8WhiteColor);
-	ColorLine(theRect->left + 16, theRect->top + 8, 
+	ColorLine(theRect->left + 16, theRect->top + 8,
 			theRect->right - 17, theRect->top + 8, k8WhiteColor);
-	ColorLine(theRect->left + 16, theRect->top + 9, 
+	ColorLine(theRect->left + 16, theRect->top + 9,
 			theRect->right - 17, theRect->top + 9, k8WhiteColor);
-	ColorLine(theRect->left + 16, theRect->top + 10, 
+	ColorLine(theRect->left + 16, theRect->top + 10,
 			theRect->right - 17, theRect->top + 10, k8WhiteColor);
-	ColorLine(theRect->left + 16, theRect->top + 11, 
+	ColorLine(theRect->left + 16, theRect->top + 11,
 			theRect->right - 17, theRect->top + 11, violetC);
-	
+
 	SetGWorld(wasCPort, wasWorld);
-	
+
 	partRect = flourescentSrc1;
 	ZeroRectCorner(&partRect);
 	QOffsetRect(&partRect, theRect->left, theRect->top);
-	
-	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap), 
-			(BitMap *)*GetGWorldPixMap(lightMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap),
+			(BitMap *)*GetGWorldPixMap(lightMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&flourescentSrc1, &flourescentSrc1, &partRect);
-	
+
 	partRect = flourescentSrc2;
 	ZeroRectCorner(&partRect);
 	QOffsetRect(&partRect, -partRect.right, 0);
 	QOffsetRect(&partRect, theRect->right, theRect->top);
-	
-	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap), 
-			(BitMap *)*GetGWorldPixMap(lightMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap),
+			(BitMap *)*GetGWorldPixMap(lightMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&flourescentSrc2, &flourescentSrc2, &partRect);
 }
 
@@ -505,7 +505,7 @@ void DrawTrackLight (Rect *theRect)
 	short		which, howMany, i, spread;
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
-	
+
 	if (thisMac.isDepth == 4)
 	{
 		grayC = 7L;
@@ -520,45 +520,45 @@ void DrawTrackLight (Rect *theRect)
 		gray3C = k8LtstGray4Color;
 		gray4C = k8DkGrayColor;
 	}
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
-	
-	ColorLine(theRect->left, theRect->top - 3, 
+
+	ColorLine(theRect->left, theRect->top - 3,
 			theRect->right - 1, theRect->top - 3, gray2C);
-	ColorLine(theRect->left, theRect->top - 2, 
+	ColorLine(theRect->left, theRect->top - 2,
 			theRect->right - 1, theRect->top - 2, grayC);
-	ColorLine(theRect->left, theRect->top - 1, 
+	ColorLine(theRect->left, theRect->top - 1,
 			theRect->right - 1, theRect->top - 1, grayC);
-	ColorLine(theRect->left, theRect->top, 
+	ColorLine(theRect->left, theRect->top,
 			theRect->right - 1, theRect->top, gray3C);
-	ColorLine(theRect->left, theRect->top + 1, 
+	ColorLine(theRect->left, theRect->top + 1,
 			theRect->right - 1, theRect->top + 1, gray4C);
-	ColorLine(theRect->left, theRect->top + 2, 
+	ColorLine(theRect->left, theRect->top + 2,
 			theRect->right - 1, theRect->top + 2, gray3C);
-	
+
 	SetGWorld(wasCPort, wasWorld);
-	
+
 	partRect = trackLightSrc[0];			// left most track light
 	ZeroRectCorner(&partRect);
 	QOffsetRect(&partRect, theRect->left, theRect->top);
 	which = 0;
-	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap), 
-			(BitMap *)*GetGWorldPixMap(lightMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap),
+			(BitMap *)*GetGWorldPixMap(lightMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&trackLightSrc[which], &trackLightSrc[which], &partRect);
-	
+
 	partRect = trackLightSrc[0];			// right most track light
 	ZeroRectCorner(&partRect);
 	QOffsetRect(&partRect, -partRect.right, 0);
 	QOffsetRect(&partRect, theRect->right, theRect->top);
 	which = 2;
-	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap), 
-			(BitMap *)*GetGWorldPixMap(lightMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap),
+			(BitMap *)*GetGWorldPixMap(lightMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&trackLightSrc[which], &trackLightSrc[which], &partRect);
-	
-	howMany = ((RectWide(theRect) - RectWide(&trackLightSrc[0])) / 
+
+	howMany = ((RectWide(theRect) - RectWide(&trackLightSrc[0])) /
 			kTrackLightSpacing) - 1;
 	if (howMany > 0)
 	{
@@ -573,9 +573,9 @@ void DrawTrackLight (Rect *theRect)
 			which++;
 			if (which >= kNumTrackLights)
 				which = 0;
-			CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap), 
-					(BitMap *)*GetGWorldPixMap(lightMaskMap), 
-					(BitMap *)*GetGWorldPixMap(backSrcMap), 
+			CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap),
+					(BitMap *)*GetGWorldPixMap(lightMaskMap),
+					(BitMap *)*GetGWorldPixMap(backSrcMap),
 					&trackLightSrc[which], &trackLightSrc[which], &partRect);
 		}
 	}
@@ -587,7 +587,7 @@ void DrawInvisLight (Rect *theRect)
 {
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
 	ColorFrameOval(theRect, 17);
@@ -598,9 +598,9 @@ void DrawInvisLight (Rect *theRect)
 
 void DrawSimpleAppliance (short what, Rect *theRect)
 {
-	CopyMask((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-			(BitMap *)*GetGWorldPixMap(applianceMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyMask((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+			(BitMap *)*GetGWorldPixMap(applianceMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
 }
 
@@ -609,28 +609,28 @@ void DrawSimpleAppliance (short what, Rect *theRect)
 void DrawMacPlus (Rect *theRect, Boolean isOn, Boolean isLit)
 {
 	Rect		screen;
-	
+
 	if (isLit)
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(applianceMaskMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyMask((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(applianceMaskMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&srcRects[kMacPlus], &srcRects[kMacPlus], theRect);
 	}
-	
+
 	screen = plusScreen1;
 	ZeroRectCorner(&screen);
 	QOffsetRect(&screen, theRect->left + 10, theRect->top + 7);
 	if (isOn)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&plusScreen2, &screen, srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&plusScreen1, &screen, srcCopy, nil);
 	}
 }
@@ -645,45 +645,45 @@ void DrawTV (Rect *theRect, Boolean isOn, Boolean isLit)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-		
+
 	if (isLit)
 	{
 		GetGWorld(&wasCPort, &wasWorld);
-		
+
 		bounds = srcRects[kTV];
 		theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
 		SetGWorld(tempMap, nil);
 		LoadGraphic(kTVPictID);
-		
-		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);	
+
+		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
 		SetGWorld(tempMask, nil);
 		LoadGraphic(kTVMaskID);
-		
-		CopyMask((BitMap *)*GetGWorldPixMap(tempMap), 
-				(BitMap *)*GetGWorldPixMap(tempMask), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+		CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
+				(BitMap *)*GetGWorldPixMap(tempMask),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&srcRects[kTV], &srcRects[kTV], theRect);
-		
+
 		SetGWorld(wasCPort, wasWorld);
-		
+
 		DisposeGWorld(tempMap);
 		DisposeGWorld(tempMask);
 //		SetPort((GrafPtr)backSrcMap);
 	}
-	
+
 	bounds = tvScreen1;
 	ZeroRectCorner(&bounds);
 	QOffsetRect(&bounds, theRect->left + 17, theRect->top + 10);
 	if (isOn)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&tvScreen2, &bounds, srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&tvScreen1, &bounds, srcCopy, nil);
 	}
 }
@@ -693,28 +693,28 @@ void DrawTV (Rect *theRect, Boolean isOn, Boolean isLit)
 void DrawCoffee (Rect *theRect, Boolean isOn, Boolean isLit)
 {
 	Rect		light;
-	
+
 	if (isLit)
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(applianceMaskMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyMask((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(applianceMaskMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&srcRects[kCoffee], &srcRects[kCoffee], theRect);
 	}
-	
+
 	light = coffeeLight1;
 	ZeroRectCorner(&light);
 	QOffsetRect(&light, theRect->left + 32, theRect->top + 57);
 	if (isOn)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&coffeeLight2, &light, srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&coffeeLight1, &light, srcCopy, nil);
 	}
 }
@@ -723,9 +723,9 @@ void DrawCoffee (Rect *theRect, Boolean isOn, Boolean isLit)
 
 void DrawOutlet (Rect *theRect)
 {
-	CopyMask((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-			(BitMap *)*GetGWorldPixMap(applianceMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyMask((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+			(BitMap *)*GetGWorldPixMap(applianceMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[kOutlet], &srcRects[kOutlet], theRect);
 }
 
@@ -739,46 +739,46 @@ void DrawVCR (Rect *theRect, Boolean isOn, Boolean isLit)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
+
 	if (isLit)
 	{
 		GetGWorld(&wasCPort, &wasWorld);
-		
+
 		bounds = srcRects[kVCR];
 		theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
 		SetGWorld(tempMap, nil);
 		LoadGraphic(kVCRPictID);
-		
-		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);	
+
+		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
 		SetGWorld(tempMask, nil);
 		LoadGraphic(kVCRMaskID);
-		
-		CopyMask((BitMap *)*GetGWorldPixMap(tempMap), 
-				(BitMap *)*GetGWorldPixMap(tempMask), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+		CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
+				(BitMap *)*GetGWorldPixMap(tempMask),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&srcRects[kVCR], &srcRects[kVCR], theRect);
-		
+
 		SetGWorld(wasCPort, wasWorld);
-		
+
 		DisposeGWorld(tempMap);
 		DisposeGWorld(tempMask);
-		
+
 //		SetPort((GrafPtr)backSrcMap);
 	}
-	
+
 	bounds = vcrTime1;
 	ZeroRectCorner(&bounds);
 	QOffsetRect(&bounds, theRect->left + 64, theRect->top + 6);
 	if (isOn)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&vcrTime2, &bounds, srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&vcrTime1, &bounds, srcCopy, nil);
 	}
 }
@@ -793,47 +793,47 @@ void DrawStereo (Rect *theRect, Boolean isOn, Boolean isLit)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
-	
+
+
 	if (isLit)
 	{
 		GetGWorld(&wasCPort, &wasWorld);
-		
+
 		bounds = srcRects[kStereo];
 		theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
 		SetGWorld(tempMap, nil);
 		LoadGraphic(kStereoPictID);
-		
-		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);	
+
+		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
 		SetGWorld(tempMask, nil);
 		LoadGraphic(kStereoMaskID);
-		
-		CopyMask((BitMap *)*GetGWorldPixMap(tempMap), 
-				(BitMap *)*GetGWorldPixMap(tempMask), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+		CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
+				(BitMap *)*GetGWorldPixMap(tempMask),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&srcRects[kStereo], &srcRects[kStereo], theRect);
-		
+
 		SetGWorld(wasCPort, wasWorld);
-		
+
 		DisposeGWorld(tempMap);
 		DisposeGWorld(tempMask);
-		
+
 //		SetPort((GrafPtr)backSrcMap);
 	}
-	
+
 	bounds = stereoLight1;
 	ZeroRectCorner(&bounds);
 	QOffsetRect(&bounds, theRect->left + 56, theRect->top + 20);
 	if (isOn)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&stereoLight2, &bounds, srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&stereoLight1, &bounds, srcCopy, nil);
 	}
 }
@@ -848,63 +848,63 @@ void DrawMicrowave (Rect *theRect, Boolean isOn, Boolean isLit)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
-	
+
+
 	if (isLit)
 	{
 		GetGWorld(&wasCPort, &wasWorld);
-		
+
 		bounds = srcRects[kMicrowave];
 		theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
 		SetGWorld(tempMap, nil);
 		LoadGraphic(kMicrowavePictID);
-		
-		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);	
+
+		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
 		SetGWorld(tempMask, nil);
 		LoadGraphic(kMicrowaveMaskID);
-		
-		CopyMask((BitMap *)*GetGWorldPixMap(tempMap), 
-				(BitMap *)*GetGWorldPixMap(tempMask), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+		CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
+				(BitMap *)*GetGWorldPixMap(tempMask),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&srcRects[kMicrowave], &srcRects[kMicrowave], theRect);
-		
+
 		SetGWorld(wasCPort, wasWorld);
-		
+
 		DisposeGWorld(tempMap);
 		DisposeGWorld(tempMask);
-		
+
 //		SetPort((GrafPtr)backSrcMap);
 	}
-	
+
 	bounds = microOn;
 	ZeroRectCorner(&bounds);
 	QOffsetRect(&bounds, theRect->left + 14, theRect->top + 13);
 	if (isOn)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&microOn, &bounds, srcCopy, nil);
 		QOffsetRect(&bounds, 16, 0);
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&microOn, &bounds, srcCopy, nil);
 		QOffsetRect(&bounds, 16, 0);
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&microOn, &bounds, srcCopy, nil);
 	}
 	else if (isLit)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&microOff, &bounds, srcCopy, nil);
 		QOffsetRect(&bounds, 16, 0);
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&microOff, &bounds, srcCopy, nil);
 		QOffsetRect(&bounds, 16, 0);
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&microOff, &bounds, srcCopy, nil);
 	}
 }
@@ -913,9 +913,9 @@ void DrawMicrowave (Rect *theRect, Boolean isOn, Boolean isLit)
 
 void DrawBalloon (Rect *theRect)
 {
-	CopyMask((BitMap *)*GetGWorldPixMap(balloonSrcMap), 
-			(BitMap *)*GetGWorldPixMap(balloonMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyMask((BitMap *)*GetGWorldPixMap(balloonSrcMap),
+			(BitMap *)*GetGWorldPixMap(balloonMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&balloonSrc[1], &balloonSrc[1], theRect);
 }
 
@@ -923,9 +923,9 @@ void DrawBalloon (Rect *theRect)
 
 void DrawCopter (Rect *theRect)
 {
-	CopyMask((BitMap *)*GetGWorldPixMap(copterSrcMap), 
-			(BitMap *)*GetGWorldPixMap(copterMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyMask((BitMap *)*GetGWorldPixMap(copterSrcMap),
+			(BitMap *)*GetGWorldPixMap(copterMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&copterSrc[1], &copterSrc[1], theRect);
 }
 
@@ -935,16 +935,16 @@ void DrawDart (Rect *theRect, short which)
 {
 	if (which == kDartLf)
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(dartSrcMap), 
-				(BitMap *)*GetGWorldPixMap(dartMaskMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyMask((BitMap *)*GetGWorldPixMap(dartSrcMap),
+				(BitMap *)*GetGWorldPixMap(dartMaskMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&dartSrc[0], &dartSrc[0], theRect);
 	}
 	else
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(dartSrcMap), 
-				(BitMap *)*GetGWorldPixMap(dartMaskMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyMask((BitMap *)*GetGWorldPixMap(dartSrcMap),
+				(BitMap *)*GetGWorldPixMap(dartMaskMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&dartSrc[2], &dartSrc[2], theRect);
 	}
 }
@@ -953,9 +953,9 @@ void DrawDart (Rect *theRect, short which)
 
 void DrawBall (short what, Rect *theRect)
 {
-	CopyMask((BitMap *)*GetGWorldPixMap(ballSrcMap), 
-			(BitMap *)*GetGWorldPixMap(ballMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyMask((BitMap *)*GetGWorldPixMap(ballSrcMap),
+			(BitMap *)*GetGWorldPixMap(ballMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
 }
 
@@ -963,9 +963,9 @@ void DrawBall (short what, Rect *theRect)
 
 void DrawFish (short what, Rect *theRect)
 {
-	CopyMask((BitMap *)*GetGWorldPixMap(enemySrcMap), 
-			(BitMap *)*GetGWorldPixMap(enemyMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyMask((BitMap *)*GetGWorldPixMap(enemySrcMap),
+			(BitMap *)*GetGWorldPixMap(enemyMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
 }
 
@@ -973,9 +973,9 @@ void DrawFish (short what, Rect *theRect)
 
 void DrawDrip (Rect *theRect)
 {
-	CopyMask((BitMap *)*GetGWorldPixMap(dripSrcMap), 
-			(BitMap *)*GetGWorldPixMap(dripMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyMask((BitMap *)*GetGWorldPixMap(dripSrcMap),
+			(BitMap *)*GetGWorldPixMap(dripMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&dripSrc[3], &dripSrc[3], theRect);
 }
 
@@ -987,7 +987,7 @@ void DrawMirror (Rect *mirror)
 	long		grayC;
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
-	
+
 	if (thisMac.isDepth == 4)
 	{
 		grayC = 13;
@@ -996,10 +996,10 @@ void DrawMirror (Rect *mirror)
 	{
 		grayC = k8DkGray2Color;
 	}
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
-	
+
 	tempRect = *mirror;
 	ColorRect(&tempRect, k8WhiteColor);
 	ColorFrameRect(&tempRect, grayC);
@@ -1009,7 +1009,7 @@ void DrawMirror (Rect *mirror)
 	ColorFrameRect(&tempRect, k8EarthBlueColor);
 	InsetRect(&tempRect, 1, 1);
 	ColorFrameRect(&tempRect, grayC);
-	
+
 	SetGWorld(wasCPort, wasWorld);
 }
 
@@ -1017,9 +1017,9 @@ void DrawMirror (Rect *mirror)
 
 void DrawSimpleClutter (short what, Rect *theRect)
 {
-	CopyMask((BitMap *)*GetGWorldPixMap(clutterSrcMap), 
-			(BitMap *)*GetGWorldPixMap(clutterMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyMask((BitMap *)*GetGWorldPixMap(clutterSrcMap),
+			(BitMap *)*GetGWorldPixMap(clutterMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
 }
 
@@ -1027,9 +1027,9 @@ void DrawSimpleClutter (short what, Rect *theRect)
 
 void DrawFlower (Rect *theRect, short which)
 {
-	CopyMask((BitMap *)*GetGWorldPixMap(clutterSrcMap), 
-			(BitMap *)*GetGWorldPixMap(clutterMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyMask((BitMap *)*GetGWorldPixMap(clutterSrcMap),
+			(BitMap *)*GetGWorldPixMap(clutterMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&flowerSrc[which], &flowerSrc[which], theRect);
 }
 
@@ -1043,7 +1043,7 @@ void DrawWallWindow (Rect *window)
 	short		halfWay;
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
-		
+
 	if (thisMac.isDepth == 4)
 	{
 		brownC = 11;
@@ -1056,15 +1056,15 @@ void DrawWallWindow (Rect *window)
 		tanC = k8TanColor;
 		dkstRedC = k8DkRed2Color;
 	}
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
-	
+
 	tempRect = *window;
 	InsetRect(&tempRect, 3, 0);
 	ColorRect(&tempRect, brownC);
 	HiliteRect(&tempRect, tanC, dkstRedC);
-	
+
 	tempRect = *window;			// top sill
 	tempRect.bottom = tempRect.top + kWindowSillThick;
 	tempRect.left++;
@@ -1077,7 +1077,7 @@ void DrawWallWindow (Rect *window)
 	tempRect.bottom -= 2;
 	ColorRect(&tempRect, brownC);
 	HiliteRect(&tempRect, tanC, dkstRedC);
-	
+
 	tempRect = *window;			// bottom sill
 	tempRect.top = tempRect.bottom - kWindowSillThick;
 	QOffsetRect(&tempRect, 0, -4);
@@ -1091,16 +1091,16 @@ void DrawWallWindow (Rect *window)
 	tempRect.bottom -= 2;
 	ColorRect(&tempRect, brownC);
 	HiliteRect(&tempRect, tanC, dkstRedC);
-	
+
 	tempRect = *window;			// inside frame
 	tempRect.left += 8;
 	tempRect.right -= 8;
 	tempRect.top += 11;
 	tempRect.bottom -= 15;
 	HiliteRect(&tempRect, dkstRedC, tanC);
-	
+
 	halfWay = (tempRect.top + tempRect.bottom) / 2;
-	
+
 	tempRect2 = tempRect;		// top pane
 	tempRect2.bottom = halfWay + 2;
 	InsetRect(&tempRect2, 5, 5);
@@ -1110,7 +1110,7 @@ void DrawWallWindow (Rect *window)
 		ColorRect(&tempRect2, 5);
 	else
 		ColorRect(&tempRect2, k8SkyColor);
-	
+
 	tempRect2 = tempRect;		// bottom pane
 	tempRect2.top = halfWay - 3;
 	InsetRect(&tempRect2, 5, 5);
@@ -1120,10 +1120,10 @@ void DrawWallWindow (Rect *window)
 		ColorRect(&tempRect2, 5);
 	else
 		ColorRect(&tempRect2, k8SkyColor);
-	
-	ColorLine(tempRect2.left - 5, tempRect2.top - 7, 
+
+	ColorLine(tempRect2.left - 5, tempRect2.top - 7,
 			tempRect2.right + 5, tempRect2.top - 7, tanC);
-	
+
 	SetGWorld(wasCPort, wasWorld);
 }
 
@@ -1137,14 +1137,14 @@ void DrawCalendar (Rect *theRect)
 	Str255		monthStr;
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
-	
+
 	thePicture = GetPicture(kCalendarPictID);
 	if (thePicture == nil)
 		RedAlert(kErrFailedGraphicLoad);
-	
+
 	HLock((Handle)thePicture);
 	bounds = (*thePicture)->picFrame;
 	HUnlock((Handle)thePicture);
@@ -1152,7 +1152,7 @@ void DrawCalendar (Rect *theRect)
 	QOffsetRect(&bounds, theRect->left, theRect->top);
 	DrawPicture(thePicture, &bounds);
 	ReleaseResource((Handle)thePicture);
-	
+
 	SetPort((GrafPtr)backSrcMap);
 	TextFace(bold);
 	TextFont(applFont);
@@ -1161,7 +1161,7 @@ void DrawCalendar (Rect *theRect)
 	GetIndString(monthStr, kMonthStringID, timeRec.month);
 	MoveTo(theRect->left + ((64 - StringWidth(monthStr)) / 2), theRect->top + 55);
 	ColorText(monthStr, kDarkFleshColor);
-	
+
 	SetGWorld(wasCPort, wasWorld);
 }
 
@@ -1173,14 +1173,14 @@ void DrawBulletin (Rect *theRect)
 	PicHandle	thePicture;
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
-	
+
 	thePicture = GetPicture(kBulletinPictID);
 	if (thePicture == nil)
 		RedAlert(kErrFailedGraphicLoad);
-	
+
 	HLock((Handle)thePicture);
 	bounds = (*thePicture)->picFrame;
 	HUnlock((Handle)thePicture);
@@ -1188,7 +1188,7 @@ void DrawBulletin (Rect *theRect)
 	QOffsetRect(&bounds, theRect->left, theRect->top);
 	DrawPicture(thePicture, &bounds);
 	ReleaseResource((Handle)thePicture);
-	
+
 	SetGWorld(wasCPort, wasWorld);
 }
 
@@ -1201,50 +1201,50 @@ void DrawPictObject (short what, Rect *theRect)
 	short		pictID;
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
-		
+
 	switch (what)
 	{
 		case kFilingCabinet:
 		pictID = kFilingCabinetPictID;
 		break;
-		
+
 		case kDownStairs:
 		pictID = kDownStairsPictID;
 		break;
-		
+
 		case kDoorExRt:
 		pictID = kDoorExRightPictID;
 		break;
-		
+
 		case kDoorExLf:
 		pictID = kDoorExLeftPictID;
 		break;
-		
+
 		case kWindowExRt:
 		pictID = kWindowExRightPictID;
 		break;
-		
+
 		case kWindowExLf:
 		pictID = kWindowExLeftPictID;
 		break;
-		
+
 		case kOzma:
 		pictID = kOzmaPictID;
 		break;
 	}
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
-	
+
 	thePicture = GetPicture(pictID);
 	if (thePicture == nil)
 		RedAlert(kErrFailedGraphicLoad);
-	
+
 	bounds = srcRects[what];
 	QOffsetRect(&bounds, theRect->left, theRect->top);
 	DrawPicture(thePicture, &bounds);
 	ReleaseResource((Handle)thePicture);
-	
+
 	SetGWorld(wasCPort, wasWorld);
 }
 
@@ -1259,9 +1259,9 @@ void DrawPictWithMaskObject (short what, Rect *theRect)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
-	
+
 	switch (what)
 	{
 		case kCobweb:
@@ -1274,26 +1274,26 @@ void DrawPictWithMaskObject (short what, Rect *theRect)
 		maskID = kCloudMaskID;
 		break;
 	}
-	
+
 	bounds = srcRects[what];
 	theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
 	SetGWorld(tempMap, nil);
 	LoadGraphic(pictID);
-	
-	theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);	
+
+	theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
 	SetGWorld(tempMask, nil);
 	LoadGraphic(maskID);
-	
-	CopyMask((BitMap *)*GetGWorldPixMap(tempMap), 
-			(BitMap *)*GetGWorldPixMap(tempMask), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+	CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
+			(BitMap *)*GetGWorldPixMap(tempMask),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
-	
+
 	SetGWorld(wasCPort, wasWorld);
-	
+
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
-	
+
 //	SetPort((GrafPtr)backSrcMap);
 }
 
@@ -1307,103 +1307,103 @@ void DrawPictSansWhiteObject (short what, Rect *theRect)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
-	
+
 	switch (what)
 	{
 		case kBBQ:
 		pictID = kBBQPictID;
 		break;
-		
+
 		case kTrunk:
 		pictID = kTrunkPictID;
 		break;
-		
+
 		case kManhole:
 		pictID = kManholePictID;
 		break;
-		
+
 		case kBooks:
 		pictID = kBooksPictID;
 		break;
-		
+
 		case kUpStairs:
 		pictID = kUpStairsPictID;
 		break;
-		
+
 		case kDoorInLf:
 		pictID = kDoorInLeftPictID;
 		break;
-		
+
 		case kDoorInRt:
 		pictID = kDoorInRightPictID;
 		break;
-		
+
 		case kWindowInLf:
 		pictID = kWindowInLeftPictID;
 		break;
-		
+
 		case kWindowInRt:
 		pictID = kWindowInRightPictID;
 		break;
-		
+
 		case kHipLamp:
 		pictID = kHipLampPictID;
 		break;
-		
+
 		case kDecoLamp:
 		pictID = kDecoLampPictID;
 		break;
-		
+
 		case kGuitar:
 		pictID = kGuitarPictID;
 		break;
-		
+
 		case kCinderBlock:
 		pictID = kCinderPictID;
 		break;
-		
+
 		case kFlowerBox:
 		pictID = kFlowerBoxPictID;
 		break;
-		
+
 		case kFireplace:
 		pictID = kFireplacePictID;
 		break;
-		
+
 		case kBear:
 		pictID = kBearPictID;
 		break;
-		
+
 		case kVase1:
 		pictID = kVase1PictID;
 		break;
-		
+
 		case kVase2:
 		pictID = kVase2PictID;
 		break;
-		
+
 		case kRug:
 		pictID = kRugPictID;
 		break;
-		
+
 		case kChimes:
 		pictID = kChimesPictID;
 		break;
 	}
-	
+
 	bounds = srcRects[what];
 	theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
 	SetGWorld(tempMap, nil);
 	LoadGraphic(pictID);
-	
-	CopyBits((BitMap *)*GetGWorldPixMap(tempMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+	CopyBits((BitMap *)*GetGWorldPixMap(tempMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], theRect, transparent, nil);
-	
+
 	SetGWorld(wasCPort, wasWorld);
-	
+
 	DisposeGWorld(tempMap);
 //	SetPort((GrafPtr)backSrcMap);
 }
@@ -1416,21 +1416,21 @@ void DrawCustPictSansWhite (short pictID, Rect *theRect)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
-	
+
 	bounds = *theRect;
 	ZeroRectCorner(&bounds);
 	theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
 	SetGWorld(tempMap, nil);
 	LoadGraphic(pictID);
-	
-	CopyBits((BitMap *)*GetGWorldPixMap(tempMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+	CopyBits((BitMap *)*GetGWorldPixMap(tempMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&bounds, theRect, transparent, nil);
-	
+
 	SetGWorld(wasCPort, wasWorld);
-	
+
 	DisposeGWorld(tempMap);
 //	SetPort((GrafPtr)backSrcMap);
 }

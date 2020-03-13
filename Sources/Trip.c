@@ -235,7 +235,7 @@ void TriggerDart (short who)
 void UpdateOutletsLighting (short room, short nLights)
 {
 	short		i;
-	
+
 	for (i = 0; i < numDynamics; i++)
 	{
 		if ((dinahs[i].type == kOutlet) && (dinahs[i].room == room))

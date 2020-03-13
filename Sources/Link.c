@@ -59,7 +59,7 @@ void UpdateLinkControl (void)
 #ifndef COMPILEDEMO
 	if (linkWindow == nil)
 		return;
-	
+
 	switch (linkType)
 	{
 		case kSwitchLinkOnly:
@@ -117,13 +117,13 @@ void UpdateLinkControl (void)
 				case kFish:
 				HiliteControl(linkControl, kControlActive);
 				break;
-				
+
 				default:
 				HiliteControl(linkControl, kControlInactive);
 				break;
 			}
 		break;
-		
+
 		case kTriggerLinkOnly:
 		if (objActive == kNoObjectSelected)
 			HiliteControl(linkControl, kControlInactive);
@@ -145,7 +145,7 @@ void UpdateLinkControl (void)
 				case kFish:
 				HiliteControl(linkControl, kControlActive);
 				break;
-				
+
 				case kLightSwitch:
 				case kMachineSwitch:
 				case kThermostat:
@@ -155,13 +155,13 @@ void UpdateLinkControl (void)
 				if (linkRoom == thisRoomNumber)
 					HiliteControl(linkControl, kControlActive);
 				break;
-				
+
 				default:
 				HiliteControl(linkControl, kControlInactive);
 				break;
 			}
 		break;
-		
+
 		case kTransportLinkOnly:
 		if (objActive == kNoObjectSelected)
 			HiliteControl(linkControl, kControlInactive);
@@ -183,7 +183,7 @@ void UpdateLinkControl (void)
 				case kCloud:
 				HiliteControl(linkControl, kControlActive);
 				break;
-				
+
 				default:
 				HiliteControl(linkControl, kControlInactive);
 				break;
@@ -200,7 +200,7 @@ void UpdateLinkWindow (void)
 #ifndef COMPILEDEMO
 	if (linkWindow == nil)
 		return;
-	
+
 	SetPortWindowPort(linkWindow);
 	DrawControls(linkWindow);
 	UpdateLinkControl();
@@ -214,17 +214,17 @@ void OpenLinkWindow (void)
 #ifndef COMPILEDEMO
 	Rect		src, dest;
 	Point		globalMouse;
-	
+
 	if (linkWindow == nil)
 	{
 		QSetRect(&linkWindowRect, 0, 0, 129, 30);
 		if (thisMac.hasColor)
-			linkWindow = NewCWindow(nil, &linkWindowRect, 
+			linkWindow = NewCWindow(nil, &linkWindowRect,
 					"\pLink", false, kWindoidWDEF, kPutInFront, true, 0L);
 		else
-			linkWindow = NewWindow(nil, &linkWindowRect, 
+			linkWindow = NewWindow(nil, &linkWindowRect,
 					"\pLink", false, kWindoidWDEF, kPutInFront, true, 0L);
-		
+
 		MoveWindow(linkWindow, isLinkH, isLinkV, true);
 		globalMouse = MyGetGlobalMouse();
 		QSetRect(&src, 0, 0, 1, 1);
@@ -234,18 +234,18 @@ void OpenLinkWindow (void)
 		ShowHide(linkWindow, true);
 //		FlagWindowFloating(linkWindow);	TEMP - use flaoting windows
 		HiliteAllWindows();
-		
+
 		linkControl = GetNewControl(kLinkControlID, linkWindow);
 		if (linkControl == nil)
 			RedAlert(kErrFailedResourceLoad);
-		
+
 		unlinkControl = GetNewControl(kUnlinkControlID, linkWindow);
 		if (unlinkControl == nil)
 			RedAlert(kErrFailedResourceLoad);
-		
+
 		linkRoom = -1;
 		linkObject = 255;
-		
+
 		isLinkOpen = true;
 	}
 #endif
@@ -258,7 +258,7 @@ void CloseLinkWindow (void)
 #ifndef COMPILEDEMO
 	if (linkWindow != nil)
 		DisposeWindow(linkWindow);
-	
+
 	linkWindow = nil;
 	isLinkOpen = false;
 #endif
@@ -271,7 +271,7 @@ void DoLink (void)
 {
 	short		floor, suite;
 	char		wasState;
-	
+
 	if (GetRoomFloorSuite(thisRoomNumber, &floor, &suite))
 	{
 		floor += kNumUndergroundFloors;
@@ -279,16 +279,16 @@ void DoLink (void)
 		{
 			if (linkerIsSwitch)
 			{
-				thisRoom->objects[linkObject].data.e.where = 
+				thisRoom->objects[linkObject].data.e.where =
 						MergeFloorSuite(floor, suite);
-				thisRoom->objects[linkObject].data.e.who = 
+				thisRoom->objects[linkObject].data.e.who =
 						objActive;
 			}
 			else
 			{
-				thisRoom->objects[linkObject].data.d.where = 
+				thisRoom->objects[linkObject].data.d.where =
 						MergeFloorSuite(floor, suite);
-				thisRoom->objects[linkObject].data.d.who = 
+				thisRoom->objects[linkObject].data.d.who =
 						objActive;
 			}
 		}
@@ -298,16 +298,16 @@ void DoLink (void)
 			HLock((Handle)thisHouse);
 			if (linkerIsSwitch)
 			{
-				(*thisHouse)->rooms[linkRoom].objects[linkObject].data.e.where = 
+				(*thisHouse)->rooms[linkRoom].objects[linkObject].data.e.where =
 						MergeFloorSuite(floor, suite);
-				(*thisHouse)->rooms[linkRoom].objects[linkObject].data.e.who = 
+				(*thisHouse)->rooms[linkRoom].objects[linkObject].data.e.who =
 						objActive;
 			}
 			else	// linker is transport
 			{
-				(*thisHouse)->rooms[linkRoom].objects[linkObject].data.d.where = 
+				(*thisHouse)->rooms[linkRoom].objects[linkObject].data.d.where =
 						MergeFloorSuite(floor, suite);
-				(*thisHouse)->rooms[linkRoom].objects[linkObject].data.d.who = 
+				(*thisHouse)->rooms[linkRoom].objects[linkObject].data.d.who =
 						objActive;
 			}
 			HSetState((Handle)thisHouse, wasState);
@@ -325,7 +325,7 @@ void DoLink (void)
 void DoUnlink (void)
 {
 	char		wasState;
-	
+
 	if (thisRoomNumber == linkRoom)
 	{
 		if (linkerIsSwitch)
@@ -368,13 +368,13 @@ void HandleLinkClick (Point wherePt)
 #ifndef COMPILEDEMO
 	ControlHandle	theControl;
 	short			part;
-	
+
 	if (linkWindow == nil)
 		return;
-	
+
 	SetPortWindowPort(linkWindow);
 	GlobalToLocal(&wherePt);
-	
+
 	part = FindControl(wherePt, linkWindow, &theControl);
 	if ((theControl != nil) && (part != 0))
 	{
@@ -385,7 +385,7 @@ void HandleLinkClick (Point wherePt)
 				DoLink();
 			else if (theControl == unlinkControl)
 				DoUnlink();
-			
+
 			if (thisRoomNumber == linkRoom)
 				CopyThisRoomToRoom();
 			GenerateRetroLinks();

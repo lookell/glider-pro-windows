@@ -52,7 +52,7 @@ extern Boolean		doPrettyMap, doBitchDialogs;
 void ReadInPrefs (void)
 {
 	prefsInfo	thePrefs;
-	
+
 	if (LoadPrefs(&thePrefs, kPrefsVersion))
 	{
 #ifdef COMPILEDEMO
@@ -136,13 +136,13 @@ void ReadInPrefs (void)
 		theGlider.rightKey = kRightArrowKeyMap;
 		theGlider.battKey = kDownArrowKeyMap;
 		theGlider.bandKey = kUpArrowKeyMap;
-		
+
 		UnivGetSoundVolume(&isVolume, thisMac.hasSM3);
 		if (isVolume < 1)
 			isVolume = 1;
 		else if (isVolume > 3)
 			isVolume = 3;
-		
+
 		isDepthPref = kSwitchIfNeeded;
 		isSoundOn = true;
 		isMusicOn = true;
@@ -187,13 +187,13 @@ void ReadInPrefs (void)
 		doPrettyMap = false;
 		doBitchDialogs = true;
 	}
-	
+
 	if ((numNeighbors > 1) && (thisMac.screen.right <= 512))
 		numNeighbors = 1;
-	
+
 	UnivGetSoundVolume(&wasVolume, thisMac.hasSM3);
 	UnivSetSoundVolume(isVolume, thisMac.hasSM3);
-	
+
 	if (isVolume == 0)
 		isSoundOn = false;
 	else
@@ -207,10 +207,10 @@ void ReadInPrefs (void)
 
 void WriteOutPrefs (void)
 {
-	prefsInfo	thePrefs;	
-	
+	prefsInfo	thePrefs;
+
 	UnivGetSoundVolume(&isVolume, thisMac.hasSM3);
-	
+
 #ifdef COMPILEDEMO
 	PasStringCopy("\pDemo House", thePrefs.wasDefaultName);
 #else
@@ -271,10 +271,10 @@ void WriteOutPrefs (void)
 	thePrefs.wasDoBackground = doBackground;
 	thePrefs.wasPrettyMap = doPrettyMap;
 	thePrefs.wasBitchDialogs = doBitchDialogs;
-	
+
 	if (!SavePrefs(&thePrefs, kPrefsVersion))
 		SysBeep(1);
-	
+
 	UnivSetSoundVolume(wasVolume, thisMac.hasSM3);
 }
 
@@ -287,7 +287,7 @@ void main (void)
 	long		theErr;
 	OSErr		fileErr;
 	Boolean		whoCares, copyGood;
-	
+
 	ToolBoxInit();
 	CheckOurEnvirons();
 	if (!thisMac.hasColor)
@@ -300,7 +300,7 @@ void main (void)
 	SetUpAppleEvents();
 	LoadCursors();
 	ReadInPrefs();
-	
+
 #if defined COMPILEDEMO
 	copyGood = true;
 #elif defined COMPILENOCP
@@ -314,7 +314,7 @@ void main (void)
 	else if (didValidation)
 		WriteOutPrefs();				SpinCursor(3);
 #endif
-	
+
 //	if ((thisMac.numScreens > 1) && (isUseSecondScreen))
 //		ReflectSecondMonitorEnvirons(false, true, true);
 	HandleDepthSwitching();
@@ -326,28 +326,28 @@ void main (void)
 	InitSrcRects();
 	CreateOffscreens();					SpinCursor(2);
 	OpenMainWindow();
-	
+
 	if (thisMac.hasQT)
 	{
 		theErr = EnterMovies();
 		if (theErr != noErr)
 			thisMac.hasQT = false;
 	}
-	
+
 	InitSound();						SpinCursor(2);
 	InitMusic();						SpinCursor(2);
 	BuildHouseList();
 	if (OpenHouse())
 		whoCares = ReadHouse();
-	
+
 	PlayPrioritySound(kBirdSound, kBirdPriority);
 	DelayTicks(6);
 	InitializeMenus();					InitCursor();
-	
+
 #if BUILD_ARCADE_VERSION
 //	HideMenuBarOld();
 #endif
-	
+
 //	if ((isDoColorFade) && (thisMac.isDepth == 8))
 //	{
 //		wasSeed = ExtractCTSeed((CGrafPtr)mainWindow);
@@ -359,14 +359,14 @@ void main (void)
 //		numSMWarnings++;
 //		BitchAboutSM3();
 //	}
-	
+
 	while (!quitting)		// this is the main loop
 		HandleEvent();
-/*	
+/*
 #if BUILD_ARCADE_VERSION
 	ShowMenuBarOld();
 #endif
-*/	
+*/
 	KillMusic();
 	KillSound();
 	if (houseOpen)

@@ -31,7 +31,7 @@ extern	Boolean		evenFrame;
 void HandleDynamics (void)
 {
 	short		i;
-	
+
 	for (i = 0; i < numDynamics; i++)
 	{
 		switch (dinahs[i].type)
@@ -39,65 +39,65 @@ void HandleDynamics (void)
 			case kSparkle:
 			HandleSparkleObject(i);
 			break;
-			
+
 			case kToaster:
 			HandleToast(i);
 			break;
-			
+
 			case kMacPlus:
 			HandleMacPlus(i);
 			break;
-			
+
 			case kTV:
 			HandleTV(i);
 			break;
-			
+
 			case kCoffee:
 			HandleCoffee(i);
 			break;
-			
+
 			case kOutlet:
 			HandleOutlet(i);
 			break;
-			
+
 			case kVCR:
 			HandleVCR(i);
 			break;
-			
+
 			case kStereo:
 			HandleStereo(i);
 			break;
-			
+
 			case kMicrowave:
 			HandleMicrowave(i);
 			break;
-			
+
 			case kBalloon:
 			HandleBalloon(i);
 			break;
-			
+
 			case kCopterLf:
 			case kCopterRt:
 			HandleCopter(i);
 			break;
-			
+
 			case kDartLf:
 			case kDartRt:
 			HandleDart(i);
 			break;
-			
+
 			case kBall:
 			HandleBall(i);
 			break;
-			
+
 			case kDrip:
 			HandleDrip(i);
 			break;
-			
+
 			case kFish:
 			HandleFish(i);
 			break;
-			
+
 			default:
 			break;
 		}
@@ -112,7 +112,7 @@ void HandleDynamics (void)
 void RenderDynamics (void)
 {
 	short		i;
-	
+
 	for (i = 0; i < numDynamics; i++)
 	{
 		switch (dinahs[i].type)
@@ -120,33 +120,33 @@ void RenderDynamics (void)
 			case kToaster:
 			RenderToast(i);
 			break;
-			
+
 			case kBalloon:
 			RenderBalloon(i);
 			break;
-			
+
 			case kCopterLf:
 			case kCopterRt:
 			RenderCopter(i);
 			break;
-			
+
 			case kDartLf:
 			case kDartRt:
 			RenderDart(i);
 			break;
-			
+
 			case kBall:
 			RenderBall(i);
 			break;
-			
+
 			case kDrip:
 			RenderDrip(i);
 			break;
-			
+
 			case kFish:
 			RenderFish(i);
 			break;
-			
+
 			default:
 			break;
 		}
@@ -160,7 +160,7 @@ void RenderDynamics (void)
 void ZeroDinahs (void)
 {
 	short		i;
-	
+
 	for (i = 0; i < kMaxDynamicObs; i++)
 	{
 		dinahs[i].type = kObjectIsEmpty;
@@ -184,15 +184,15 @@ void ZeroDinahs (void)
 // When a room is being drawn, various dynamic objects are pointed here.
 // This function sets up the structures to handle them.
 
-short AddDynamicObject (short what, Rect *where, objectType *who, 
+short AddDynamicObject (short what, Rect *where, objectType *who,
 		short room, short index, Boolean isOn)
 {
 	short		position, velocity;
 	Boolean		lilFrame;
-	
+
 	if (numDynamics >= kMaxDynamicObs)
 		return (-1);
-	
+
 	dinahs[numDynamics].type = what;
 	switch (what)
 	{
@@ -213,11 +213,11 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].moving = false;
 		dinahs[numDynamics].active = isOn;
 		break;
-		
+
 		case kToaster:
 		dinahs[numDynamics].dest = breadSrc[0];
 		CenterRectInRect(&dinahs[numDynamics].dest, where);
-		VOffsetRect(&dinahs[numDynamics].dest, 
+		VOffsetRect(&dinahs[numDynamics].dest,
 				where->top - dinahs[numDynamics].dest.top);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = where->top + 2;	// hVel used as clip
@@ -240,12 +240,12 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].moving = false;
 		dinahs[numDynamics].active = isOn;
 		break;
-		
+
 		case kMacPlus:
 		dinahs[numDynamics].dest = plusScreen1;
 		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest, 
-				where->left + playOriginH + 10, 
+		QOffsetRect(&dinahs[numDynamics].dest,
+				where->left + playOriginH + 10,
 				where->top + playOriginV + 7);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = 0;
@@ -260,12 +260,12 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].moving = false;
 		dinahs[numDynamics].active = isOn;
 		break;
-		
+
 		case kTV:
 		dinahs[numDynamics].dest = tvScreen1;
 		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest, 
-				where->left + playOriginH + 17, 
+		QOffsetRect(&dinahs[numDynamics].dest,
+				where->left + playOriginH + 17,
 				where->top + playOriginV + 10);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = 0;
@@ -280,12 +280,12 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].moving = false;
 		dinahs[numDynamics].active = isOn;
 		break;
-		
+
 		case kCoffee:
 		dinahs[numDynamics].dest = coffeeLight1;
 		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest, 
-				where->left + playOriginH + 32, 
+		QOffsetRect(&dinahs[numDynamics].dest,
+				where->left + playOriginH + 32,
 				where->top + playOriginV + 57);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = 0;
@@ -303,12 +303,12 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].moving = false;
 		dinahs[numDynamics].active = isOn;
 		break;
-		
+
 		case kOutlet:
 		dinahs[numDynamics].dest = outletSrc[0];
 		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest, 
-				where->left + playOriginH, 
+		QOffsetRect(&dinahs[numDynamics].dest,
+				where->left + playOriginH,
 				where->top + playOriginV);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = numLights;
@@ -323,12 +323,12 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].moving = false;
 		dinahs[numDynamics].active = isOn;
 		break;
-		
+
 		case kVCR:
 		dinahs[numDynamics].dest = vcrTime1;
 		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest, 
-				where->left + playOriginH + 64, 
+		QOffsetRect(&dinahs[numDynamics].dest,
+				where->left + playOriginH + 64,
 				where->top + playOriginV + 6);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = 0;
@@ -346,12 +346,12 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].moving = false;
 		dinahs[numDynamics].active = isOn;
 		break;
-		
+
 		case kStereo:
 		dinahs[numDynamics].dest = stereoLight1;
 		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest, 
-				where->left + playOriginH + 56, 
+		QOffsetRect(&dinahs[numDynamics].dest,
+				where->left + playOriginH + 56,
 				where->top + playOriginV + 20);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = 0;
@@ -366,12 +366,12 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].moving = false;
 		dinahs[numDynamics].active = isOn;
 		break;
-		
+
 		case kMicrowave:
 		dinahs[numDynamics].dest = microOn;
 		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest, 
-				where->left + playOriginH + 14, 
+		QOffsetRect(&dinahs[numDynamics].dest,
+				where->left + playOriginH + 14,
 				where->top + playOriginV + 13);
 		dinahs[numDynamics].dest.right = dinahs[numDynamics].dest.left + 48;
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
@@ -387,13 +387,13 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].moving = false;
 		dinahs[numDynamics].active = isOn;
 		break;
-		
+
 		case kBalloon:
 		dinahs[numDynamics].dest = balloonSrc[0];
 		ZeroRectCorner(&dinahs[numDynamics].dest);
 		QOffsetRect(&dinahs[numDynamics].dest, where->left, 0);
 		dinahs[numDynamics].dest.bottom = kBalloonStart;
-		dinahs[numDynamics].dest.top = dinahs[numDynamics].dest.bottom - 
+		dinahs[numDynamics].dest.top = dinahs[numDynamics].dest.bottom -
 				RectTall(&balloonSrc[0]);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = 0;
@@ -408,14 +408,14 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].moving = false;
 		dinahs[numDynamics].active = isOn;			// initially idle
 		break;
-		
+
 		case kCopterLf:
 		case kCopterRt:
 		dinahs[numDynamics].dest = copterSrc[0];
 		ZeroRectCorner(&dinahs[numDynamics].dest);
 		QOffsetRect(&dinahs[numDynamics].dest, where->left, 0);
 		dinahs[numDynamics].dest.top = kCopterStart;
-		dinahs[numDynamics].dest.bottom = dinahs[numDynamics].dest.top + 
+		dinahs[numDynamics].dest.bottom = dinahs[numDynamics].dest.top +
 				RectTall(&copterSrc[0]);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		if (what == kCopterLf)
@@ -433,14 +433,14 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].moving = false;
 		dinahs[numDynamics].active = isOn;			// initially idle
 		break;
-		
+
 		case kDartLf:
 		case kDartRt:
 		dinahs[numDynamics].dest = dartSrc[0];
 		ZeroRectCorner(&dinahs[numDynamics].dest);
 		if (what == kDartLf)
 		{
-			QOffsetRect(&dinahs[numDynamics].dest, 
+			QOffsetRect(&dinahs[numDynamics].dest,
 					kRoomWide - RectWide(&dartSrc[0]), where->top);
 			dinahs[numDynamics].hVel = -kDartVelocity;
 			dinahs[numDynamics].frame = 0;
@@ -461,11 +461,11 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].moving = false;
 		dinahs[numDynamics].active = isOn;			// initially idle
 		break;
-		
+
 		case kBall:
 		dinahs[numDynamics].dest = ballSrc[0];
 		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest, 
+		QOffsetRect(&dinahs[numDynamics].dest,
 				where->left, where->top);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = 0;
@@ -492,11 +492,11 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].byte1 = 0;
 		dinahs[numDynamics].active = isOn;
 		break;
-		
+
 		case kDrip:
 		dinahs[numDynamics].dest = dripSrc[0];
 		CenterRectInRect(&dinahs[numDynamics].dest, where);
-		VOffsetRect(&dinahs[numDynamics].dest, 
+		VOffsetRect(&dinahs[numDynamics].dest,
 				where->top - dinahs[numDynamics].dest.top);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = dinahs[numDynamics].dest.top;	// remember
@@ -504,7 +504,7 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].count = ((short)who->data.h.delay * 6) / kTicksPerFrame;
 		dinahs[numDynamics].frame = 3;
 		dinahs[numDynamics].timer = dinahs[numDynamics].count;
-		dinahs[numDynamics].position = dinahs[numDynamics].dest.top + 
+		dinahs[numDynamics].position = dinahs[numDynamics].dest.top +
 				who->data.h.length;
 		dinahs[numDynamics].room = room;
 		dinahs[numDynamics].byte0 = (Byte)index;
@@ -512,10 +512,10 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].moving = false;
 		dinahs[numDynamics].active = isOn;
 		break;
-		
+
 		case kFish:
 		dinahs[numDynamics].dest = fishSrc[0];
-		QOffsetRect(&dinahs[numDynamics].dest, 
+		QOffsetRect(&dinahs[numDynamics].dest,
 				where->left + 10, where->top + 8);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = ((short)who->data.h.delay * 6) / kTicksPerFrame;
@@ -542,14 +542,14 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 		dinahs[numDynamics].moving = false;
 		dinahs[numDynamics].active = isOn;
 		break;
-		
+
 		default:
 		return (-1);
 		break;
 	}
-	
+
 	numDynamics++;
-	
+
 	return (numDynamics - 1);
 }
 

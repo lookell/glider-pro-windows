@@ -56,7 +56,7 @@ extern	Boolean		quickerTransitions, houseIsReadOnly;
 void DrawOnSplash (void)
 {
 	Str255		houseLoadedStr;
-	
+
 	PasStringCopy("\pHouse: ", houseLoadedStr);
 	PasStringConcat(houseLoadedStr, thisHouseName);
 	if ((thisMac.hasQT) && (hasMovie))
@@ -78,7 +78,7 @@ void DrawOnSplash (void)
 		else
 			ColorText(houseLoadedStr, 28L);
 	}
-	
+
 	#if defined(powerc) || defined(__powerc)
 	TextSize(12);
 	TextFace(0);
@@ -98,7 +98,7 @@ void DrawOnSplash (void)
 void RedrawSplashScreen (void)
 {
 	Rect		tempRect;
-	
+
 	SetPort((GrafPtr)workSrcMap);
 	PaintRect(&workSrcRect);
 	QSetRect(&tempRect, 0, 0, 640, 460);
@@ -121,16 +121,16 @@ void UpdateMainWindow (void)
 {
 	Rect		tempRect;
 	RgnHandle	dummyRgn;
-	
+
 	dummyRgn = NewRgn();
 	SetPortWindowPort(mainWindow);
-	
+
 	if (theMode == kEditMode)
 	{
 		PauseMarquee();
-		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap), 
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
-				&mainWindowRect, &mainWindowRect, srcCopy, 
+		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
+				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+				&mainWindowRect, &mainWindowRect, srcCopy,
 				GetPortVisibleRegion(GetWindowPort(mainWindow), dummyRgn));
 		ResumeMarquee();
 	}
@@ -141,15 +141,15 @@ void UpdateMainWindow (void)
 		QSetRect(&tempRect, 0, 0, 640, 460);
 		QOffsetRect(&tempRect, splashOriginH, splashOriginV);
 		LoadScaledGraphic(kSplash8BitPICT, &tempRect);
-		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap), 
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
-				&workSrcRect, &mainWindowRect, srcCopy, 
+		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
+				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+				&workSrcRect, &mainWindowRect, srcCopy,
 				GetPortVisibleRegion(GetWindowPort(mainWindow), dummyRgn));
 		SetPortWindowPort(mainWindow);
-		
+
 		DrawOnSplash();
 	}
-	
+
 	DisposeRgn(dummyRgn);
 	splashDrawn = true;
 }
@@ -160,10 +160,10 @@ void UpdateMainWindow (void)
 void UpdateMenuBarWindow (void)
 {
 	Rect		bounds;
-	
+
 	if (menuWindow == nil)
 		return;
-	
+
 	GetLocalWindowRect(menuWindow, &bounds);
 	PaintRect(&bounds);
 }
@@ -175,24 +175,24 @@ void OpenMainWindow (void)
 {
 //	long		wasSeed;
 	short		whichRoom;
-	
+
 	if (mainWindow != nil)
 	{
 		YellowAlert(kYellowUnaccounted, 6);
 		return;
 	}
-	
+
 	if (theMode == kEditMode)
 	{
 		if (menuWindow != nil)
 			DisposeWindow(menuWindow);
 		menuWindow = nil;
-		
+
 		QSetRect(&mainWindowRect, 0, 0, 512, 322);
 		mainWindow = GetNewCWindow(kEditWindowID, nil, kPutInFront);
-		SizeWindow(mainWindow, mainWindowRect.right, 
+		SizeWindow(mainWindow, mainWindowRect.right,
 				mainWindowRect.bottom, false);
-		
+
 		if (OptionKeyDown())
 		{
 			isEditH = 3;
@@ -204,7 +204,7 @@ void OpenMainWindow (void)
 		ClipRect(&mainWindowRect);
 		ForeColor(blackColor);
 		BackColor(whiteColor);
-		
+
 		whichRoom = GetFirstRoomNumber();
 		CopyRoomToThisRoom(whichRoom);
 		ReflectCurrentRoom(false);
@@ -215,7 +215,7 @@ void OpenMainWindow (void)
 		{
 			menuWindow = GetNewCWindow(kMenuWindowID, nil, kPutInFront);
 			SizeWindow(menuWindow, RectWide(&thisMac.screen), 20, false);
-			MoveWindow(menuWindow, thisMac.screen.left, 
+			MoveWindow(menuWindow, thisMac.screen.left,
 					thisMac.screen.top, true);
 			ShowWindow(menuWindow);
 		}
@@ -223,9 +223,9 @@ void OpenMainWindow (void)
 		ZeroRectCorner(&mainWindowRect);
 		mainWindowRect.bottom -= 20;		// thisMac.menuHigh
 		mainWindow = GetNewCWindow(kMainWindowID, nil, kPutInFront);
-		SizeWindow(mainWindow, mainWindowRect.right - mainWindowRect.left, 
+		SizeWindow(mainWindow, mainWindowRect.right - mainWindowRect.left,
 				mainWindowRect.bottom - mainWindowRect.top, false);
-		MoveWindow(mainWindow, thisMac.screen.left, 
+		MoveWindow(mainWindow, thisMac.screen.left,
 				thisMac.screen.top + 20, true);	// thisMac.menuHigh
 		ShowWindow(mainWindow);
 		SetPortWindowPort(mainWindow);
@@ -234,18 +234,18 @@ void OpenMainWindow (void)
 		ForeColor(blackColor);
 		BackColor(whiteColor);
 		PaintRect(&mainWindowRect);
-		
+
 		splashOriginH = ((thisMac.screen.right - thisMac.screen.left) - 640) / 2;
 		if (splashOriginH < 0)
 			splashOriginH = 0;
 		splashOriginV = ((thisMac.screen.bottom - thisMac.screen.top) - 480) / 2;
 		if (splashOriginV < 0)
 			splashOriginV = 0;
-		
+
 		SetPort((GrafPtr)workSrcMap);
 		PaintRect(&workSrcRect);
 		LoadGraphic(kSplash8BitPICT);
-		
+
 //		if ((fadeGraysOut) && (isDoColorFade))
 //		{
 //			wasSeed = ExtractCTSeed((CGrafPtr)mainWindow);
@@ -255,7 +255,7 @@ void OpenMainWindow (void)
 //			fadeGraysOut = false;
 //			ForceCTSeed((CGrafPtr)mainWindow, wasSeed);
 //		}
-		
+
 		SetPortWindowPort(mainWindow);
 	}
 }
@@ -280,7 +280,7 @@ void ZoomBetweenWindows (void)
 {
 	Rect		aRect;
 	short		h, v;
-	
+
 	if (theMode == kEditMode)
 	{
 		QSetRect(&aRect, 0, 0, 512, 342);
@@ -306,10 +306,10 @@ void ZoomBetweenWindows (void)
 void UpdateEditWindowTitle (void)
 {
 	Str255		newTitle, tempStr;
-	
+
 	if (mainWindow == nil)
 		return;
-	
+
 	PasStringCopy(thisHouseName, newTitle);
 	PasStringConcat(newTitle, "\p - ");
 	if (noRoomAtAll)
@@ -338,19 +338,19 @@ void UpdateEditWindowTitle (void)
 void HandleMainClick (Point wherePt, Boolean isDoubleClick)
 {
 	KeyMap		theseKeys;
-	
-	if ((theMode != kEditMode) || (mainWindow == nil) || 
+
+	if ((theMode != kEditMode) || (mainWindow == nil) ||
 			(!houseUnlocked))
 		return;
-	
+
 	SetPortWindowPort(mainWindow);
 	GlobalToLocal(&wherePt);
-	
+
 	if (toolSelected == kSelectTool)
 		DoSelectionClick(wherePt, isDoubleClick);
 	else
 		DoNewObjectClick(wherePt);
-	
+
 	GetKeys(theseKeys);
 	if (!BitTst(&theseKeys, kShiftKeyMap))
 	{
@@ -367,38 +367,38 @@ void ShowMenuBarOld (void)
 	Rect			theRect;
 	GrafPtr			wasPort, tempPort;
 	RgnHandle		worldRgn, menuBarRgn;
-	
+
 	if (LMGetMBarHeight() == 0)
 	{
 		GetPort(&wasPort);
 		tempPort = (GrafPtr)NewPtrClear(sizeof(GrafPort));
 		OpenPort(tempPort);
 		SetPort((GrafPtr)tempPort);
-		
+
 		LMSetMBarHeight(thisMac.menuHigh);
-		
+
 		theRect = (**GetGrayRgn()).rgnBBox;
 		UnionRect(&theRect, &qd.screenBits.bounds, &theRect);
 		worldRgn = NewRgn();
 		OpenRgn();
 		FrameRoundRect(&theRect, 16, 16);
 		CloseRgn(worldRgn);
-		
+
 		theRect = qd.screenBits.bounds;
 		theRect.bottom = theRect.top + thisMac.menuHigh;
 		menuBarRgn = NewRgn();
 		RectRgn(menuBarRgn, &theRect);
-		
-		SectRgn(worldRgn, menuBarRgn, menuBarRgn);	//	/------------------\	
-		DisposeRgn(worldRgn);						//	|__________________|	
-		
+
+		SectRgn(worldRgn, menuBarRgn, menuBarRgn);	//	/------------------\
+		DisposeRgn(worldRgn);						//	|__________________|
+
 		UnionRgn(tempPort->visRgn, menuBarRgn, tempPort->visRgn);
 		DiffRgn(tempPort->visRgn, menuBarRgn, tempPort->visRgn);
 		DisposeRgn(menuBarRgn);
-		
+
 		ClosePort(tempPort);
 		SetPort((GrafPtr)wasPort);
-		
+
 		DrawMenuBar();
 	}
 }
@@ -411,36 +411,36 @@ void HideMenuBarOld (void)
 	Rect			theRect;
 	RgnHandle		worldRgn, menuBarRgn;
 	GrafPtr			wasPort, tempPort;
-	
+
 	if (LMGetMBarHeight() != 0)
 	{
 		GetPort(&wasPort);
 		tempPort = (GrafPtr)NewPtrClear(sizeof(GrafPort));
 		OpenPort(tempPort);
 		SetPort((GrafPtr)tempPort);
-		
+
 		LMSetMBarHeight(0);
-		
+
 		theRect = (**GetGrayRgn()).rgnBBox;
 		UnionRect(&theRect, &qd.screenBits.bounds, &theRect);
 		worldRgn = NewRgn();
 		OpenRgn();
 		FrameRoundRect(&theRect, 16, 16);
 		CloseRgn(worldRgn);
-		
+
 		theRect = qd.screenBits.bounds;
 		theRect.bottom = theRect.top + thisMac.menuHigh;
 		menuBarRgn = NewRgn();
 		RectRgn(menuBarRgn, &theRect);
-		
-		SectRgn(worldRgn, menuBarRgn, menuBarRgn);	//	/------------------\	
-		DisposeRgn(worldRgn);						//	|__________________|	
-		
+
+		SectRgn(worldRgn, menuBarRgn, menuBarRgn);	//	/------------------\
+		DisposeRgn(worldRgn);						//	|__________________|
+
 		UnionRgn(tempPort->visRgn, menuBarRgn, tempPort->visRgn);
 		DisposeRgn(menuBarRgn);
-		
+
 		PaintRect(&theRect);
-		
+
 		ClosePort(tempPort);
 		SetPort((GrafPtr)wasPort);
 	}
@@ -457,40 +457,40 @@ void SetPaletteToGrays (void)
 	long		longGray;
 	short		i;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisGDevice);
 	HLock((Handle)thisGDevice);
 	thePMap = (*thisGDevice)->gdPMap;
 	HSetState((Handle)thisGDevice, wasState);
-	
+
 	theCTab = (*thePMap)->pmTable;
 	wasColors = nil;
 	wasColors = (ColorSpec*)NewPtr(sizeof(ColorSpec) * 256);
 	if (wasColors == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	newColors = nil;
 	newColors = (ColorSpec*)NewPtr(sizeof(ColorSpec) * 256);
 	if (newColors == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	for (i = 0; i < 256; i++)
 	{
 		wasColors[i] = (*theCTab)->ctTable[i];
 		newColors[i] = (*theCTab)->ctTable[i];
-		
+
 		if (i != 5)
 		{
-			longGray = ((long)newColors[i].rgb.red * 3L) / 10L + 
-				((long)newColors[i].rgb.green * 6L) / 10L + 
+			longGray = ((long)newColors[i].rgb.red * 3L) / 10L +
+				((long)newColors[i].rgb.green * 6L) / 10L +
 				((long)newColors[i].rgb.blue * 1L) / 10L;
-			
+
 			newColors[i].rgb.red = (unsigned short)longGray;
 			newColors[i].rgb.green = (unsigned short)longGray;
 			newColors[i].rgb.blue = (unsigned short)longGray;
 		}
 	}
-	
+
 	theDevice = GetGDevice();
 	SetGDevice(thisGDevice);
 	SetEntries(0, 255, newColors);
@@ -511,18 +511,18 @@ void HardDrawMainWindow (void)
 	short			i, w;
 	SInt8			mode;
 	char			wasState;
-	
+
 	wasState = HGetState((Handle)thisGDevice);
 	HLock((Handle)thisGDevice);
 	pixMapH = (**thisGDevice).gdPMap;
 	HSetState((Handle)thisGDevice, wasState);
-	
+
 	srcRowBytes = (long)((*(workSrcMap->portPixMap))->rowBytes & 0x7FFF);
 	destRowBytes = (**pixMapH).rowBytes & 0x7FFF;
 	src = (long)((*(workSrcMap->portPixMap))->baseAddr);
-	dest = (long)((**pixMapH).baseAddr) + splashOriginH + 
+	dest = (long)((**pixMapH).baseAddr) + splashOriginH +
 			((splashOriginV + thisMac.menuHigh) * destRowBytes);
-	
+
 	offsetPt.h = 0;
 	offsetPt.v = 0;
 	ShieldCursor(&mainWindowRect, offsetPt);
@@ -555,30 +555,30 @@ void WashColorIn (void)
 	GDHandle	theDevice;
 	long		longDelta;
 	short		i, c;
-	
+
 	theDevice = GetGDevice();
 	SetGDevice(thisGDevice);
-	
+
 	for (i = 0; i < kGray2ColorSteps; i++)
 	{
 		for (c = 0; c < 256; c++)
 		{
 			if (c != 5)
 			{
-				longDelta = (((long)wasColors[c].rgb.red - 
-						(long)newColors[c].rgb.red) / 
+				longDelta = (((long)wasColors[c].rgb.red -
+						(long)newColors[c].rgb.red) /
 						(long)(kGray2ColorSteps - i)) + (long)newColors[c].rgb.red;
 				newColors[c].rgb.red = (unsigned short)longDelta;
-				
-				longDelta = (((long)wasColors[c].rgb.green - 
-						(long)newColors[c].rgb.green) / 
-						(long)(kGray2ColorSteps - i)) + 
+
+				longDelta = (((long)wasColors[c].rgb.green -
+						(long)newColors[c].rgb.green) /
+						(long)(kGray2ColorSteps - i)) +
 						(long)newColors[c].rgb.green;
 				newColors[c].rgb.green = (unsigned short)longDelta;
-				
-				longDelta = (((long)wasColors[c].rgb.blue - 
-						(long)newColors[c].rgb.blue) / 
-						(long)(kGray2ColorSteps - i)) + 
+
+				longDelta = (((long)wasColors[c].rgb.blue -
+						(long)newColors[c].rgb.blue) /
+						(long)(kGray2ColorSteps - i)) +
 						(long)newColors[c].rgb.blue;
 				newColors[c].rgb.blue = (unsigned short)longDelta;
 			}
@@ -587,12 +587,12 @@ void WashColorIn (void)
 		if (Button())
 			break;
 	}
-	
+
 	SetEntries(0, 255, wasColors);
 	SetGDevice(theDevice);
-	
+
 	RestoreColorsSlam();
-	
+
 	if (wasColors != nil)
 		DisposePtr((Ptr)wasColors);
 	if (newColors != nil)

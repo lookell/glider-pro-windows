@@ -125,7 +125,7 @@ void UpdateMenusHouseOpen (void)
 	else
 	{
 		EnableMenuItem(houseMenu, iObject);
-		if ((objActive == kInitialGliderSelected) || 
+		if ((objActive == kInitialGliderSelected) ||
 				(objActive == kLeftGliderSelected) ||
 				(objActive == kRightGliderSelected))
 		{
@@ -165,10 +165,10 @@ void UpdateMenusHouseClosed (void)
 void UpdateClipboardMenus (void)
 {
 	Str255		title;
-	
+
 	if (!houseOpen)
 		return;
-	
+
 	if (houseUnlocked)
 	{
 		if (objActive > kNoObjectSelected)
@@ -191,7 +191,7 @@ void UpdateClipboardMenus (void)
 			SetMenuItemText(houseMenu, iClear, title);
 			DisableMenuItem(houseMenu, iDuplicate);
 		}
-		
+
 		EnableMenuItem(houseMenu, iCut);
 		EnableMenuItem(houseMenu, iCopy);
 //		if (hasScrap)
@@ -244,7 +244,7 @@ void UpdateMenus (Boolean newMode)
 {
 	if (!menusUp)
 		return;
-	
+
 	if (newMode)
 	{
 		if (theMode == kEditMode)
@@ -252,7 +252,7 @@ void UpdateMenus (Boolean newMode)
 		else
 			DeleteMenu(kHouseMenuID);
 	}
-	
+
 	if (theMode == kEditMode)
 	{
 		UpdateMenusEditMode();
@@ -267,7 +267,7 @@ void UpdateMenus (Boolean newMode)
 	}
 	else
 		UpdateMenusNonEditMode();
-	
+
 	DrawMenuBar();
 }
 
@@ -279,13 +279,13 @@ void DoAppleMenu (short theItem)
 //	Str255		daName;
 //	GrafPtr		wasPort;
 //	short		daNumber;
-	
+
 	switch (theItem)
 	{
 		case iAbout:
 		DoAbout();
 		break;
-		
+
 		default:
 //		GetMenuItemText(appleMenu, theItem, daName);
 //		GetPort(&wasPort);
@@ -307,13 +307,13 @@ void DoGameMenu (short theItem)
 		resumedSavedGame = false;
 		NewGame(kNewGameMode);
 		break;
-		
+
 		case iTwoPlayer:
 		twoPlayerGame = true;
 		resumedSavedGame = false;
 		NewGame(kNewGameMode);
 		break;
-		
+
 		case iOpenSavedGame:
 		resumedSavedGame = true;
 		HeyYourPissingAHighScore();
@@ -323,7 +323,7 @@ void DoGameMenu (short theItem)
 			NewGame(kResumeGameMode);
 		}
 		break;
-		
+
 		case iLoadHouse:
 #ifdef COMPILEDEMO
 		DoNotInDemo();
@@ -337,14 +337,14 @@ void DoGameMenu (short theItem)
 			if ((theMode == kSplashMode) || (theMode == kPlayMode))
 			{
 				Rect		updateRect;
-				
+
 				SetRect(&updateRect, splashOriginH + 474, splashOriginV + 304, splashOriginH + 474 + 166, splashOriginV + 304 + 12);
 				InvalWindowRect(mainWindow, &updateRect);
 			}
 		}
 #endif
 		break;
-		
+
 		case iQuit:
 #ifndef COMPILEDEMO
 		quitting = true;
@@ -354,7 +354,7 @@ void DoGameMenu (short theItem)
 		quitting = true;
 #endif
 		break;
-		
+
 		default:
 		break;
 	}
@@ -368,7 +368,7 @@ void DoOptionsMenu (short theItem)
 #ifndef COMPILEDEMO
 	OSErr		theErr;
 #endif
-	
+
 	switch (theItem)
 	{
 		case iEditor:
@@ -413,17 +413,17 @@ void DoOptionsMenu (short theItem)
 		UpdateMenus(true);
 #endif
 		break;
-		
+
 		case iHighScores:
 		DoHighScores();
 		incrementModeTime = TickCount() + kIdleSplashTicks;
 		break;
-		
+
 		case iPrefs:
 		DoSettingsMain();
 		incrementModeTime = TickCount() + kIdleSplashTicks;
 		break;
-		
+
 		case iHelp:
 		DoDemoGame();
 		break;
@@ -438,7 +438,7 @@ void DoHouseMenu (short theItem)
 #ifndef COMPILEDEMO
 	short		direction, dist;
 	Boolean		whoCares;
-	
+
 	switch (theItem)
 	{
 		case iNewHouse:
@@ -448,7 +448,7 @@ void DoHouseMenu (short theItem)
 			OpenCloseEditWindows();
 		}
 		break;
-		
+
 		case iSave:
 		DeselectObject();
 		if (fileDirty)
@@ -466,21 +466,21 @@ void DoHouseMenu (short theItem)
 			DrawThisRoomsObjects();
 		}
 		break;
-		
+
 //		case iSaveAs:
 //		whoCares = SaveHouseAs();
 //		break;
-		
+
 		case iHouse:
 		if (houseUnlocked)
 			DoHouseInfo();
 		break;
-		
+
 		case iRoom:
 		if (houseUnlocked)
 			DoRoomInfo();
 		break;
-		
+
 		case iObject:
 		if (houseUnlocked)
 		{
@@ -494,7 +494,7 @@ void DoHouseMenu (short theItem)
 				StartMarquee(&roomObjectRects[objActive]);
 		}
 		break;
-		
+
 		case iCut:
 		if (houseUnlocked)
 		{
@@ -511,7 +511,7 @@ void DoHouseMenu (short theItem)
 			UpdateClipboardMenus();
 		}
 		break;
-		
+
 		case iCopy:
 		if (houseUnlocked)
 		{
@@ -522,7 +522,7 @@ void DoHouseMenu (short theItem)
 			UpdateClipboardMenus();
 		}
 		break;
-		
+
 		case iPaste:
 		if (houseUnlocked)
 		{
@@ -534,7 +534,7 @@ void DoHouseMenu (short theItem)
 */
 		}
 		break;
-		
+
 		case iClear:
 		if (houseUnlocked)
 		{
@@ -545,37 +545,37 @@ void DoHouseMenu (short theItem)
 			UpdateClipboardMenus();
 		}
 		break;
-		
+
 		case iDuplicate:
 		if (houseUnlocked)
 			DuplicateObject();
 		break;
-		
+
 		case iBringForward:
 		if (houseUnlocked)
 			BringSendFrontBack(true);
 		break;
-		
+
 		case iSendBack:
 		if (houseUnlocked)
 			BringSendFrontBack(false);
 		break;
-		
+
 		case iGoToRoom:
 		if (houseUnlocked)
 			DoGoToDialog();
 		break;
-		
+
 		case iMapWindow:
 		if (houseUnlocked)
 			ToggleMapWindow();
 		break;
-		
+
 		case iObjectWindow:
 		if (houseUnlocked)
 			ToggleToolsWindow();
 		break;
-		
+
 		case iCoordinateWindow:
 		if (houseUnlocked)
 			ToggleCoordinateWindow();
@@ -591,32 +591,32 @@ void DoHouseMenu (short theItem)
 void DoMenuChoice (long menuChoice)
 {
 	short		theMenu, theItem;
-	
+
 	if (menuChoice == 0)
 		return;
-	
+
 	theMenu = HiWord(menuChoice);
 	theItem = LoWord(menuChoice);
-	
+
 	switch (theMenu)
 	{
 		case kAppleMenuID:
 		DoAppleMenu(theItem);
 		break;
-		
+
 		case kGameMenuID:
 		DoGameMenu(theItem);
 		break;
-		
+
 		case kOptionsMenuID:
 		DoOptionsMenu(theItem);
 		break;
-		
+
 		case kHouseMenuID:
 		DoHouseMenu(theItem);
 		break;
 	}
-	
+
 	HiliteMenu(0);
 }
 
@@ -627,7 +627,7 @@ void UpdateMapCheckmark (Boolean checkIt)
 {
 	if (!menusUp)
 		return;
-	
+
 	CheckMenuItem(houseMenu, iMapWindow, checkIt);
 }
 
@@ -638,7 +638,7 @@ void UpdateToolsCheckmark (Boolean checkIt)
 {
 	if (!menusUp)
 		return;
-	
+
 	CheckMenuItem(houseMenu, iObjectWindow, checkIt);
 }
 
@@ -649,7 +649,7 @@ void UpdateCoordinateCheckmark (Boolean checkIt)
 {
 	if (!menusUp)
 		return;
-	
+
 	CheckMenuItem(houseMenu, iCoordinateWindow, checkIt);
 }
 
@@ -678,12 +678,12 @@ pascal Boolean ResumeFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case updateEvt:
 		if ((WindowPtr)event->message == GetDialogWindow(dial))
 		{
@@ -695,7 +695,7 @@ pascal Boolean ResumeFilter (DialogPtr dial, EventRecord *event, short *item)
 		}
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -718,7 +718,7 @@ short QueryResumeGame (void)
 	char			wasState;
 	Boolean			leaving;
 	ModalFilterUPP	resumeFilterUPP;
-	
+
 	resumeFilterUPP = NewModalFilterUPP(ResumeFilter);
 
 	wasState = HGetState((Handle)thisHouse);	// get score & num. gliders
@@ -733,17 +733,17 @@ short QueryResumeGame (void)
 		ParamText(glidStr, "\p", scoreStr, "\p");
 	else
 		ParamText(glidStr, "\ps", scoreStr, "\p");
-	
+
 //	CenterDialog(kResumeGameDial);
 	theDial = GetNewDialog(kResumeGameDial, nil, kPutInFront);
 	if (theDial == nil)
 		RedAlert(kErrDialogDidntLoad);
 	SetPort((GrafPtr)theDial);
-	
+
 	ShowWindow(GetDialogWindow(theDial));
 	DrawDefaultButton(theDial);
 	leaving = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(resumeFilterUPP, &hitWhat);
@@ -754,7 +754,7 @@ short QueryResumeGame (void)
 	}
 	DisposeDialog(theDial);
 	DisposeModalFilterUPP(resumeFilterUPP);
-	
+
 	return (hitWhat);
 }
 
@@ -768,7 +768,7 @@ void DoNotInDemo (void)
 {
 	#define		kNotInDemoAlert		1037
 	short		whoCares;
-	
+
 //	CenterAlert(kNotInDemoAlert);
 	whoCares = Alert(kNotInDemoAlert, nil);
 }
@@ -780,7 +780,7 @@ void HeyYourPissingAHighScore (void)
 {
 	#define		kNoHighScoreAlert	1046
 	short		whoCares;
-	
+
 //	CenterAlert(kNoHighScoreAlert);
 	whoCares = Alert(kNoHighScoreAlert, nil);
 }

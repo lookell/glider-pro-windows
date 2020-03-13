@@ -72,7 +72,7 @@ short GetThisVolumeRefNum (void)
 {
 	OSErr		theErr;
 	short		vRef;
-	
+
 	theErr = GetVol(nil, &vRef);
 	return (vRef);
 }
@@ -83,7 +83,7 @@ short GetThisVolumeRefNum (void)
 long GetThisCurrentDirectoryID (void)
 {
 	long		dirID;
-	
+
 	dirID = LMGetCurDirStore();
 	return (dirID);
 }
@@ -106,7 +106,7 @@ Boolean DoWeHaveGestalt (void)
 	return (TrapExists(kGestaltTrap));
 }
 */
-//--------------------------------------------------------------  DoWeHaveWNE  
+//--------------------------------------------------------------  DoWeHaveWNE
 
 // Specifically tests for the availablity of the WaitNextEvent() trap.
 /*
@@ -115,25 +115,25 @@ Boolean DoWeHaveWNE (void)
 	return (TrapExists(kWNETrap));
 }
 */
-//--------------------------------------------------------------  DoWeHaveColor  
+//--------------------------------------------------------------  DoWeHaveColor
 // Determines if ROMs support Color QuickDraw (monitor not neccessarily color).
 /*
 Boolean DoWeHaveColor (void)
 {
 	SysEnvRec		thisWorld;
-	
+
 	SysEnvirons(2, &thisWorld);
 	return (thisWorld.hasColorQD);
 }
 */
-//--------------------------------------------------------------  DoWeHaveSystem602  
+//--------------------------------------------------------------  DoWeHaveSystem602
 // Determines if the System version is at least 6.0.2 or more recent.
 /*
 Boolean DoWeHaveSystem602 (void)
 {
 	SysEnvRec		thisWorld;
 	Boolean			haveIt;
-	
+
 	SysEnvirons(2, &thisWorld);
 	if (thisWorld.systemVersion >= 0x0602)
 		haveIt = true;
@@ -142,14 +142,14 @@ Boolean DoWeHaveSystem602 (void)
 	return (haveIt);
 }
 */
-//--------------------------------------------------------------  DoWeHaveSystem605  
+//--------------------------------------------------------------  DoWeHaveSystem605
 // Determines if the System version is at least 6.0.5 or more recent.
 /*
 Boolean DoWeHaveSystem605 (void)
 {
 	SysEnvRec		thisWorld;
 	Boolean			haveIt;
-	
+
 	SysEnvirons(2, &thisWorld);
 	if (thisWorld.systemVersion >= 0x0605)
 		haveIt = true;
@@ -158,7 +158,7 @@ Boolean DoWeHaveSystem605 (void)
 	return (haveIt);
 }
 /
-//--------------------------------------------------------------  DoWeHaveSystem7  
+//--------------------------------------------------------------  DoWeHaveSystem7
 
 // Determines if the System version is at least 7.0.0 or more recent.
 
@@ -166,7 +166,7 @@ Boolean DoWeHaveSystem7 (void)
 {
 	SysEnvRec		thisWorld;
 	Boolean			haveIt;
-	
+
 	SysEnvirons(2, &thisWorld);
 	if (thisWorld.systemVersion >= 0x0700)
 		haveIt = true;
@@ -182,12 +182,12 @@ Boolean DoWeHaveSoundManager3 (void)
 {
 //	NumVersion	version;
 	Boolean		hasIt;
-	
+
 	hasIt = true;
-	
+
 	version = SndSoundManagerVersion();
 	hasIt = (version.majorRev >= 3);
-	
+
 	return hasIt;
 }
 */
@@ -198,13 +198,13 @@ Boolean DoWeHaveQuickTime (void)
 	long		theResponse;
 	OSErr		theErr;
 	Boolean		haveIt;
-	
+
 	theErr = Gestalt(gestaltQuickTime, &theResponse);
 	if (theErr == noErr)
 		haveIt = true;
 	else
 		haveIt = false;
-	
+
 	return (haveIt);
 }
 
@@ -215,17 +215,17 @@ Boolean DoWeHaveDragManager (void)
 	long		theResponse;
 	OSErr		theErr;
 	Boolean		haveIt;
-	
+
 	theErr = Gestalt(gestaltDragMgrAttr, &theResponse);
 	if ((theErr == noErr) && ((theResponse & (1L << gestaltDragMgrPresent)) != 0))
 		haveIt = true;
 	else
 		haveIt = false;
-	
+
 	return (haveIt);
 }
 
-//--------------------------------------------------------------  WhatsOurDepth  
+//--------------------------------------------------------------  WhatsOurDepth
 
 // Determines the pixel bit depth for current device (monitor).
 
@@ -233,7 +233,7 @@ short WhatsOurDepth (void)
 {
 	short			thisDepth;
 	char			wasState;
-	
+
 	if (thisMac.hasColor)
 	{
 		if (thisGDevice != nil)
@@ -248,11 +248,11 @@ short WhatsOurDepth (void)
 	}
 	else
 		thisDepth = 1;
-	
+
 	return (thisDepth);
 }
 
-//--------------------------------------------------------------  CanWeDisplay8Bit  
+//--------------------------------------------------------------  CanWeDisplay8Bit
 
 // Determines if device (monitor) capable of supporting 8 bit (256 colors/grays).
 
@@ -260,44 +260,44 @@ Boolean CanWeDisplay8Bit (GDHandle theDevice)
 {
 	short		canDepth;
 	Boolean		canDo;
-	
+
 	canDo = false;
 	canDepth = HasDepth(theDevice, 8, 1, 0);
 	if (canDepth != 0)
 		canDo = true;
-	
+
 	return (canDo);
 }
 
-//--------------------------------------------------------------  CanWeDisplay4Bit  
+//--------------------------------------------------------------  CanWeDisplay4Bit
 // Determines if device (monitor) capable of supporting 4 bit (16 colors/grays).
 /*
 Boolean CanWeDisplay4Bit (GDHandle theDevice)
 {
 	short		canDepth;
 	Boolean		canDo;
-	
+
 	canDo = false;
 	canDepth = HasDepth(theDevice, 4, 1, 0);
 	if (canDepth != 0)
 		canDo = true;
-	
+
 	return (canDo);
 }
 */
-//--------------------------------------------------------------  CanWeDisplay1Bit  
+//--------------------------------------------------------------  CanWeDisplay1Bit
 // Determines if device (monitor) capable of supporting 1 bit (black & white).
 /*
 Boolean CanWeDisplay1Bit (GDHandle theDevice)
 {
 	short		canDepth;
 	Boolean		canDo;
-	
+
 	canDo = false;
 	canDepth = HasDepth(theDevice, 1, 1, 0);
 	if (canDepth != 0)
 		canDo = true;
-	
+
 	return (canDo);
 }
 */
@@ -309,21 +309,21 @@ short HowManyUsableScreens (Boolean use1Bit, Boolean use4Bit, Boolean use8Bit)
 {
 	GDHandle	tempGDevice;
 	short		count;
-	
+
 	count = 0;
 	tempGDevice = GetDeviceList();
 	while (tempGDevice != nil)
 	{
 		if (TestDeviceAttribute(tempGDevice, screenDevice))
 		{
-//			if ((use1Bit && CanWeDisplay1Bit(tempGDevice)) || 
-//					(use4Bit && CanWeDisplay4Bit(tempGDevice)) || 
+//			if ((use1Bit && CanWeDisplay1Bit(tempGDevice)) ||
+//					(use4Bit && CanWeDisplay4Bit(tempGDevice)) ||
 //					(use8Bit && CanWeDisplay8Bit(tempGDevice)))
 				count = count + 1;
 		}
 		tempGDevice = GetNextDevice(tempGDevice);
 	}
-	
+
 	return (count);
 }
 
@@ -334,7 +334,7 @@ short HowManyUsableScreens (Boolean use1Bit, Boolean use4Bit, Boolean use8Bit)
 void GetDeviceRect (Rect *theRect)
 {
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisGDevice);
 	HLock((Handle)thisGDevice);
 	*theRect = (*thisGDevice)->gdRect;
@@ -349,12 +349,12 @@ Boolean AreWeColorOrGrayscale (void)
 {
 	char		wasState;
 	Boolean		colorOrGray;
-	
+
 	wasState = HGetState((Handle)thisGDevice);
 	HLock((Handle)thisGDevice);
 	colorOrGray = (**thisGDevice).gdFlags & 0x0001;
 	HSetState((Handle)thisGDevice, wasState);
-	
+
 	if (thisMac.hasColor)
 	{
 		wasState = HGetState((Handle)thisGDevice);
@@ -376,12 +376,12 @@ void SwitchToDepth (short newDepth, Boolean doColor)
 	OSErr			theErr;
 	short			colorFlag;
 	char			tagByte;
-	
+
 	if (doColor)
 		colorFlag = 1;
 	else
 		colorFlag = 0;
-	
+
 	if (thisGDevice != nil)
 	{
 		tagByte = HGetState((Handle)thisGDevice);
@@ -397,31 +397,31 @@ void SwitchToDepth (short newDepth, Boolean doColor)
 		RedAlert(kErrUnnaccounted);
 }
 
-//--------------------------------------------------------------  SwitchDepthOrAbort  
+//--------------------------------------------------------------  SwitchDepthOrAbort
 
 // Brings up a dialog allowing user to select bit depth or exit to shell.
 
 void SwitchDepthOrAbort (void)
 {
 	short			usersDecision;
-	
+
 	if (thisMac.canSwitch)
 	{
 		InitCursor();
-		
+
 //		CenterAlert(kSwitchDepthAlert);
-		
+
 		usersDecision = Alert(kSwitchDepthAlert, nil);
 		switch (usersDecision)
 		{
 			case 1:
 			SwitchToDepth(8, true);
 			break;
-			
+
 			case 2:
 			SwitchToDepth(4, false);
 			break;
-			
+
 			case 3:
 			ExitToShell();
 			break;
@@ -431,7 +431,7 @@ void SwitchDepthOrAbort (void)
 		RedAlert(kErrUnnaccounted);
 }
 
-//--------------------------------------------------------------  CheckOurEnvirons  
+//--------------------------------------------------------------  CheckOurEnvirons
 // Calls all the above functions in order to fill out a sort of "spec sheet"…
 // for the current Mac.
 
@@ -439,7 +439,7 @@ void CheckOurEnvirons (void)
 {
 	RgnHandle	grayRegion;
 	char		wasState;
-	
+
 	thisMac.thisResFile = CurResFile();
 	thisMac.vRefNum = 0;		// TEMP
 	thisMac.dirID = 0;			// TEMP
@@ -451,7 +451,7 @@ void CheckOurEnvirons (void)
 	thisMac.hasSM3 = true;	// TEMP
 	thisMac.hasQT = DoWeHaveQuickTime();
 	thisMac.hasDrag = DoWeHaveDragManager();
-	
+
 	FindOurDevice();
 	wasState = HGetState((Handle)thisGDevice);
 	HLock((Handle)thisGDevice);
@@ -461,10 +461,10 @@ void CheckOurEnvirons (void)
 	HSetState((Handle)thisGDevice, wasState);
 	thisMac.numScreens = HowManyUsableScreens(false, true, true);
 	GetDeviceRect(&thisMac.screen);
-	
+
 	thisMac.wasDepth = WhatsOurDepth();
 	thisMac.wasColorOrGray = AreWeColorOrGrayscale();
-	
+
 	grayRegion = GetGrayRgn();
 	(void) GetRegionBounds(grayRegion, &(thisMac.gray));
 }
@@ -475,13 +475,13 @@ void CheckOurEnvirons (void)
 void ReflectSecondMonitorEnvirons (Boolean use1Bit, Boolean use4Bit, Boolean use8Bit)
 {
 	GDHandle	tempGDevice;
-	
+
 	tempGDevice = GetDeviceList();
 	while (tempGDevice != nil)
 	{
 		if (TestDeviceAttribute(tempGDevice, screenDevice))
-			if ((use1Bit && CanWeDisplay1Bit(tempGDevice)) || 
-					(use4Bit && CanWeDisplay4Bit(tempGDevice)) || 
+			if ((use1Bit && CanWeDisplay1Bit(tempGDevice)) ||
+					(use4Bit && CanWeDisplay4Bit(tempGDevice)) ||
 					(use8Bit && CanWeDisplay8Bit(tempGDevice)))
 				if (!TestDeviceAttribute(tempGDevice, mainScreen))
 				{
@@ -509,11 +509,11 @@ void HandleDepthSwitching (void)
 		switch (isDepthPref)
 		{
 			case kSwitchIfNeeded:
-			if ((thisMac.wasDepth != 8) && 
+			if ((thisMac.wasDepth != 8) &&
 					((thisMac.wasDepth != 4) || (thisMac.wasColorOrGray)))
 				SwitchDepthOrAbort();
 			break;
-			
+
 			case kSwitchTo256Colors:
 			if (thisMac.wasDepth != 8)
 			{
@@ -523,7 +523,7 @@ void HandleDepthSwitching (void)
 					SwitchDepthOrAbort();
 			}
 			break;
-			
+
 			case kSwitchTo16Grays:
 			if ((thisMac.wasDepth != 4) || (thisMac.wasColorOrGray))
 			{
@@ -533,12 +533,12 @@ void HandleDepthSwitching (void)
 					SwitchDepthOrAbort();
 			}
 			break;
-			
+
 			default:
 			break;
 		}
 	}
-	
+
 	thisMac.isDepth = WhatsOurDepth();
 }
 
@@ -548,7 +548,7 @@ void HandleDepthSwitching (void)
 
 void RestoreColorDepth (void)
 {
-	if ((thisMac.hasColor) && ((thisMac.wasDepth != thisMac.isDepth) || 
+	if ((thisMac.hasColor) && ((thisMac.wasDepth != thisMac.isDepth) ||
 			(thisMac.wasColorOrGray != AreWeColorOrGrayscale())))
 		SwitchToDepth(thisMac.wasDepth, true);
 }
@@ -567,10 +567,10 @@ void CheckMemorySize (void)
 	long		soundBytes, musicBytes;
 	short		hitWhat;
 	Str255		sizeStr;
-	
+
 	dontLoadMusic = false;
 	dontLoadSounds = false;
-	
+
 	bytesNeeded = kBaseBytesNeeded;							// base memory
 	soundBytes = SoundBytesNeeded();						// sound memory
 	if (soundBytes <= 0L)
@@ -583,15 +583,15 @@ void CheckMemorySize (void)
 	else
 		bytesNeeded += musicBytes;
 	bytesNeeded += 4L * (long)thisMac.screen.bottom;		// main screen
-	bytesNeeded += (((long)houseRect.right - (long)houseRect.left) * 
-			((long)houseRect.bottom + 1 - (long)houseRect.top) * 
+	bytesNeeded += (((long)houseRect.right - (long)houseRect.left) *
+			((long)houseRect.bottom + 1 - (long)houseRect.top) *
 			(long)thisMac.isDepth) / 8L;					// work map
 	bytesNeeded += 4L * (long)houseRect.bottom;
-	bytesNeeded += (((long)houseRect.right - (long)houseRect.left) * 
-			((long)houseRect.bottom + 1 - (long)houseRect.top) * 
+	bytesNeeded += (((long)houseRect.right - (long)houseRect.left) *
+			((long)houseRect.bottom + 1 - (long)houseRect.top) *
 			(long)thisMac.isDepth) / 8L;					// back map
 	bytesNeeded += 4L * houseRect.bottom;
-	bytesNeeded += (((long)houseRect.right - (long)houseRect.left) * 21 * 
+	bytesNeeded += (((long)houseRect.right - (long)houseRect.left) * 21 *
 			(long)thisMac.isDepth) / 8L;					// scoreboard map
 	bytesNeeded += (6396L * (long)thisMac.isDepth) / 8L;	// more scoreboard
 	bytesNeeded += (32112L * (long)thisMac.isDepth) / 8L;	// glider map
@@ -655,9 +655,9 @@ void CheckMemorySize (void)
 	bytesNeeded += sizeof(dynaType) * kMaxDynamicObs;
 	bytesNeeded += sizeof(objDataType) * kMaxMasterObjects;
 	bytesNeeded += kDemoLength;		SpinCursor(1);
-	
+
 	bytesAvail = FreeMem();			SpinCursor(1);
-	
+
 	if (bytesAvail < bytesNeeded)
 	{
 		InitCursor();
@@ -674,7 +674,7 @@ void CheckMemorySize (void)
 			dontLoadSounds = true;
 			return;
 		}
-		
+
 #ifdef COMPILEDEMO
 //		CenterAlert(kLowMemoryAlert);
 		NumToString((bytesNeeded + kPaddingBytes) / 1024L, sizeStr);
@@ -701,10 +701,10 @@ void SetAppMemorySize (long newSize)
 	Handle		tempResource;
 	short		oldResFile;
 	short		i;
-	
+
 	oldResFile = CurResFile();
 	UseResFile(thisMac.thisResFile);
-	
+
 	for (i = 0; i < 2; i++)
 	{
 		tempResource = Get1Resource('SIZE', i);
@@ -715,7 +715,7 @@ void SetAppMemorySize (long newSize)
 				DisposeHandle(tempResource);
 		}
 	}
-	
+
 	tempResource = Get1Resource('SIZE', -1);
 	if (tempResource != nil)
 	{
@@ -726,7 +726,7 @@ void SetAppMemorySize (long newSize)
 		WriteResource(tempResource);
 		ReleaseResource(tempResource);
 	}
-	
+
 	UpdateResFile(thisMac.thisResFile);
 	FlushVol(nil, 0);
 	UseResFile(oldResFile);

@@ -90,9 +90,9 @@ Boolean IsThisValid (short where, short who)
 {
 	char		wasState;
 	Boolean		itsGood;
-	
+
 	itsGood = true;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	switch ((*thisHouse)->rooms[where].objects[who].what)
@@ -100,7 +100,7 @@ Boolean IsThisValid (short where, short who)
 		case kObjectIsEmpty:
 		itsGood = false;
 		break;
-		
+
 		case kRedClock:
 		case kBlueClock:
 		case kYellowClock:
@@ -117,7 +117,7 @@ Boolean IsThisValid (short where, short who)
 		break;
 	}
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	return (itsGood);
 }
 
@@ -127,7 +127,7 @@ short GetRoomLinked (objectType *who)
 {
 	short		compoundRoomNumber, whereLinked;
 	short		floor, suite;
-	
+
 	switch (who->what)
 	{
 		case kMailboxLf:
@@ -145,7 +145,7 @@ short GetRoomLinked (objectType *who)
 		else
 			whereLinked = -1;			// not linked
 		break;
-		
+
 		case kLightSwitch:
 		case kMachineSwitch:
 		case kThermostat:
@@ -163,12 +163,12 @@ short GetRoomLinked (objectType *who)
 		else
 			whereLinked = -1;			// not linked
 		break;
-		
+
 		default:
 		whereLinked = -1;
 		break;
 	}
-	
+
 	return (whereLinked);
 }
 
@@ -177,7 +177,7 @@ short GetRoomLinked (objectType *who)
 short GetObjectLinked (objectType *who)
 {
 	short		whoLinked;
-	
+
 	switch (who->what)
 	{
 		case kMailboxLf:
@@ -191,7 +191,7 @@ short GetObjectLinked (objectType *who)
 		else
 			whoLinked = -1;				// object not linked
 		break;
-		
+
 		case kLightSwitch:
 		case kMachineSwitch:
 		case kThermostat:
@@ -205,12 +205,12 @@ short GetObjectLinked (objectType *who)
 		else
 			whoLinked = -1;				// object not linked
 		break;
-		
+
 		default:
 		whoLinked = -1;
 		break;
 	}
-	
+
 	return (whoLinked);
 }
 
@@ -219,15 +219,15 @@ short GetObjectLinked (objectType *who)
 Boolean ObjectIsLinkTransport (objectType *who)
 {
 	Boolean		itIs;
-	
+
 	itIs = false;
-	if ((who->what == kMailboxLf) || (who->what == kMailboxRt) || 
-			(who->what == kFloorTrans) || (who->what == kCeilingTrans) || 
+	if ((who->what == kMailboxLf) || (who->what == kMailboxRt) ||
+			(who->what == kFloorTrans) || (who->what == kCeilingTrans) ||
 			(who->what == kInvisTrans) || (who->what == kDeluxeTrans))
 	{
 		itIs = true;
 	}
-	
+
 	return (itIs);
 }
 
@@ -236,16 +236,16 @@ Boolean ObjectIsLinkTransport (objectType *who)
 Boolean ObjectIsLinkSwitch (objectType *who)
 {
 	Boolean		itIs;
-	
+
 	itIs = false;
-	if ((who->what == kLightSwitch) || (who->what == kMachineSwitch) || 
-			(who->what == kThermostat) || (who->what == kPowerSwitch) || 
-			(who->what == kKnifeSwitch) || (who->what == kInvisSwitch) || 
+	if ((who->what == kLightSwitch) || (who->what == kMachineSwitch) ||
+			(who->what == kThermostat) || (who->what == kPowerSwitch) ||
+			(who->what == kKnifeSwitch) || (who->what == kInvisSwitch) ||
 			(who->what == kTrigger) || (who->what == kLgTrigger))
 	{
 		itIs = true;
 	}
-	
+
 	return (itIs);
 }
 
@@ -256,11 +256,11 @@ void ListOneRoomsObjects (short where)
 	objectType	thisObject;
 	short		roomNum, n;
 	char		wasState;
-	
+
 	roomNum = localNumbers[where];
 	if (roomNum == kRoomIsEmpty)
 		return;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	for (n = 0; n < kMaxRoomObs; n++)
@@ -268,26 +268,26 @@ void ListOneRoomsObjects (short where)
 		if (numMasterObjects < kMaxMasterObjects)
 		{
 			thisObject = (*thisHouse)->rooms[roomNum].objects[n];
-			
+
 			masterObjects[numMasterObjects].roomNum = roomNum;
 			masterObjects[numMasterObjects].objectNum = n;
-			masterObjects[numMasterObjects].roomLink = 
+			masterObjects[numMasterObjects].roomLink =
 					GetRoomLinked(&thisObject);
-			masterObjects[numMasterObjects].objectLink = 
+			masterObjects[numMasterObjects].objectLink =
 					GetObjectLinked(&thisObject);
 			masterObjects[numMasterObjects].localLink = -1;
-			
-			masterObjects[numMasterObjects].theObject = 
+
+			masterObjects[numMasterObjects].theObject =
 					(*thisHouse)->rooms[roomNum].objects[n];
-			
+
 			if ((where == kCentralRoom) && (IsThisValid(roomNum, n)))
 				masterObjects[numMasterObjects].hotNum = CreateActiveRects(n);
 			else
 				masterObjects[numMasterObjects].hotNum = -1;
 			masterObjects[numMasterObjects].dynaNum = -1;
-			
+
 			numMasterObjects++;
-			
+
 			if (where == kCentralRoom)
 				numLocalMasterObjects++;
 		}
@@ -301,22 +301,22 @@ void ListAllLocalObjects (void)
 {
 	short		i, n;
 	char		wasState;
-	
+
 	numMasterObjects = 0;
 	numLocalMasterObjects = 0;
 	nHotSpots = 0;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	ListOneRoomsObjects(kCentralRoom);
-	
+
 	if (numNeighbors > 1)
 	{
 		ListOneRoomsObjects(kEastRoom);
 		ListOneRoomsObjects(kWestRoom);
 	}
-	
+
 	if (numNeighbors > 3)
 	{
 		ListOneRoomsObjects(kNorthRoom);
@@ -326,9 +326,9 @@ void ListAllLocalObjects (void)
 		ListOneRoomsObjects(kSouthWestRoom);
 		ListOneRoomsObjects(kNorthWestRoom);
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	for (i = 0; i < numMasterObjects; i++)				// correlate links with…
 	{													// index into this list
 		if ((masterObjects[i].roomLink != -1) && 		// if object has a link
@@ -336,7 +336,7 @@ void ListAllLocalObjects (void)
 		{
 			for (n = 0; n < numMasterObjects; n++)		// search for the object…
 			{											// linked to in this list
-				if ((masterObjects[i].roomLink == masterObjects[n].roomNum) && 
+				if ((masterObjects[i].roomLink == masterObjects[n].roomNum) &&
 						(masterObjects[i].objectLink == masterObjects[n].objectNum))
 				{
 					masterObjects[i].localLink = n;		// log the index
@@ -351,7 +351,7 @@ void ListAllLocalObjects (void)
 void AddTempManholeRect (Rect *manHole)
 {
 	Rect		tempRect;
-	
+
 	if (numTempManholes < kMaxTempManholes)
 	{
 		tempRect = *manHole;
@@ -367,7 +367,7 @@ Boolean SetObjectState (short room, short object, short action, short local)
 {
 	char		wasState;
 	Boolean		changed;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	switch ((*thisHouse)->rooms[room].objects[object].what)
@@ -390,13 +390,13 @@ Boolean SetObjectState (short room, short object, short action, short local)
 			(*thisHouse)->rooms[room].objects[object].data.a.state = newState;
 			changed = true;
 			break;
-			
+
 			case kForceOn:
 			changed = ((*thisHouse)->rooms[room].objects[object].data.a.state == false);
 			newState = true;
 			(*thisHouse)->rooms[room].objects[object].data.a.state = newState;
 			break;
-			
+
 			case kForceOff:
 			changed = ((*thisHouse)->rooms[room].objects[object].data.a.state == true);
 			newState = false;
@@ -416,7 +416,7 @@ Boolean SetObjectState (short room, short object, short action, short local)
 				hotSpots[masterObjects[local].hotNum].isOn = newState;
 		}
 		break;
-		
+
 		case kTaper:
 		case kCandle:
 		case kStubby:
@@ -424,7 +424,7 @@ Boolean SetObjectState (short room, short object, short action, short local)
 		case kBBQ:
 		changed = false;	// Cannot switch on/off these
 		break;
-		
+
 		case kTable:
 		case kShelf:
 		case kCabinet:
@@ -442,7 +442,7 @@ Boolean SetObjectState (short room, short object, short action, short local)
 		case kInvisBounce:
 		changed = false;	// Cannot switch on/off these
 		break;
-		
+
 		case kRedClock:
 		case kBlueClock:
 		case kYellowClock:
@@ -471,10 +471,10 @@ Boolean SetObjectState (short room, short object, short action, short local)
 			}
 		}
 		break;
-		
+
 		case kSlider:
 		break;
-		
+
 		case kUpStairs:
 		case kDownStairs:
 		case kMailboxLf:
@@ -492,7 +492,7 @@ Boolean SetObjectState (short room, short object, short action, short local)
 		case kInvisTrans:
 		changed = false;
 		break;
-		
+
 		case kDeluxeTrans:
 		switch (action)
 		{
@@ -503,14 +503,14 @@ Boolean SetObjectState (short room, short object, short action, short local)
 			(*thisHouse)->rooms[room].objects[object].data.d.wide += newState;
 			changed = true;
 			break;
-			
+
 			case kForceOn:
 			changed = (((*thisHouse)->rooms[room].objects[object].data.d.wide & 0x0F) == 0x00);
 			newState = true;
 			(*thisHouse)->rooms[room].objects[object].data.d.wide &= 0xF0;
 			(*thisHouse)->rooms[room].objects[object].data.d.wide += newState;
 			break;
-			
+
 			case kForceOff:
 			changed = (((*thisHouse)->rooms[room].objects[object].data.d.wide & 0x0F) != 0x00);
 			newState = false;
@@ -520,16 +520,16 @@ Boolean SetObjectState (short room, short object, short action, short local)
 		}
 		if ((changed) && (local != -1))
 		{
-			masterObjects[local].theObject.data.d.wide = 
+			masterObjects[local].theObject.data.d.wide =
 					(*thisHouse)->rooms[room].objects[object].data.d.wide;
 			if (room == thisRoomNumber)
-				thisRoom->objects[object].data.d.wide = 
+				thisRoom->objects[object].data.d.wide =
 						(*thisHouse)->rooms[room].objects[object].data.d.wide;
 			if (masterObjects[local].hotNum != -1)
 				hotSpots[masterObjects[local].hotNum].isOn = newState;
 		}
 		break;
-		
+
 		case kLightSwitch:
 		case kMachineSwitch:
 		case kThermostat:
@@ -540,7 +540,7 @@ Boolean SetObjectState (short room, short object, short action, short local)
 		case kSoundTrigger:
 		changed = false;
 		break;
-		
+
 		case kCeilingLight:
 		case kLightBulb:
 		case kTableLamp:
@@ -556,13 +556,13 @@ Boolean SetObjectState (short room, short object, short action, short local)
 			(*thisHouse)->rooms[room].objects[object].data.f.state = newState;
 			changed = true;
 			break;
-			
+
 			case kForceOn:
 			changed = ((*thisHouse)->rooms[room].objects[object].data.f.state == false);
 			newState = true;
 			(*thisHouse)->rooms[room].objects[object].data.f.state = newState;
 			break;
-			
+
 			case kForceOff:
 			changed = ((*thisHouse)->rooms[room].objects[object].data.f.state == true);
 			newState = false;
@@ -576,17 +576,17 @@ Boolean SetObjectState (short room, short object, short action, short local)
 				thisRoom->objects[object].data.f.state = newState;
 		}
 		break;
-		
+
 		case kGuitar:		// really no point to change this state
 		changed = false;
 		break;
-		
+
 		case kStereo:
 		newState = !isPlayMusicGame;
 		isPlayMusicGame = newState;
 		changed = true;
 		break;
-		
+
 		case kShredder:
 		case kToaster:
 		case kMacPlus:
@@ -602,13 +602,13 @@ Boolean SetObjectState (short room, short object, short action, short local)
 			(*thisHouse)->rooms[room].objects[object].data.g.state = newState;
 			changed = true;
 			break;
-			
+
 			case kForceOn:
 			changed = ((*thisHouse)->rooms[room].objects[object].data.g.state == false);
 			newState = true;
 			(*thisHouse)->rooms[room].objects[object].data.g.state = newState;
 			break;
-			
+
 			case kForceOff:
 			changed = ((*thisHouse)->rooms[room].objects[object].data.g.state == true);
 			newState = false;
@@ -626,14 +626,14 @@ Boolean SetObjectState (short room, short object, short action, short local)
 			}
 		}
 		break;
-		
+
 		case kCinderBlock:
 		case kFlowerBox:
 		case kCDs:
 		case kCustomPict:
 		changed = false;
 		break;
-				
+
 		case kBalloon:
 		case kCopterLf:
 		case kCopterRt:
@@ -649,13 +649,13 @@ Boolean SetObjectState (short room, short object, short action, short local)
 			(*thisHouse)->rooms[room].objects[object].data.h.state = newState;
 			changed = true;
 			break;
-			
+
 			case kForceOn:
 			changed = ((*thisHouse)->rooms[room].objects[object].data.h.state == false);
 			newState = true;
 			(*thisHouse)->rooms[room].objects[object].data.h.state = newState;
 			break;
-			
+
 			case kForceOff:
 			changed = ((*thisHouse)->rooms[room].objects[object].data.h.state == true);
 			newState = false;
@@ -669,11 +669,11 @@ Boolean SetObjectState (short room, short object, short action, short local)
 				thisRoom->objects[object].data.h.state = newState;
 		}
 		break;
-		
+
 		case kCobweb:
 		changed = false;
 		break;
-		
+
 		case kOzma:
 		case kMirror:
 		case kMousehole:
@@ -691,10 +691,10 @@ Boolean SetObjectState (short room, short object, short action, short local)
 		case kChimes:
 		changed = false;
 		break;
-		
+
 	}
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	return (changed);
 }
 
@@ -704,9 +704,9 @@ Boolean GetObjectState (short room, short object)
 {
 	char		wasState;
 	Boolean		theState;
-	
+
 	theState = true;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	switch ((*thisHouse)->rooms[room].objects[object].what)
@@ -724,14 +724,14 @@ Boolean GetObjectState (short room, short object)
 		case kLiftArea:
 		theState = (*thisHouse)->rooms[room].objects[object].data.a.state;
 		break;
-		
+
 		case kTaper:
 		case kCandle:
 		case kStubby:
 		case kTiki:
 		case kBBQ:
 		break;
-		
+
 		case kTable:
 		case kShelf:
 		case kCabinet:
@@ -748,7 +748,7 @@ Boolean GetObjectState (short room, short object)
 		case kBooks:
 		case kInvisBounce:
 		break;
-		
+
 		case kRedClock:
 		case kBlueClock:
 		case kYellowClock:
@@ -765,10 +765,10 @@ Boolean GetObjectState (short room, short object)
 		case kHelium:
 		theState = (*thisHouse)->rooms[room].objects[object].data.c.state;
 		break;
-		
+
 		case kSlider:
 		break;
-		
+
 		case kUpStairs:
 		case kDownStairs:
 		case kMailboxLf:
@@ -785,11 +785,11 @@ Boolean GetObjectState (short room, short object)
 		case kWindowExLf:
 		case kInvisTrans:
 		break;
-		
+
 		case kDeluxeTrans:
 		theState = (*thisHouse)->rooms[room].objects[object].data.d.wide & 0x0F;
 		break;
-		
+
 		case kLightSwitch:
 		case kMachineSwitch:
 		case kThermostat:
@@ -799,7 +799,7 @@ Boolean GetObjectState (short room, short object)
 		case kLgTrigger:
 		case kSoundTrigger:
 		break;
-		
+
 		case kCeilingLight:
 		case kLightBulb:
 		case kTableLamp:
@@ -810,11 +810,11 @@ Boolean GetObjectState (short room, short object)
 		case kInvisLight:
 		theState = (*thisHouse)->rooms[room].objects[object].data.f.state;
 		break;
-		
+
 		case kStereo:
 		theState = isPlayMusicGame;
 		break;
-		
+
 		case kShredder:
 		case kToaster:
 		case kMacPlus:
@@ -826,13 +826,13 @@ Boolean GetObjectState (short room, short object)
 		case kMicrowave:
 		theState = (*thisHouse)->rooms[room].objects[object].data.g.state;
 		break;
-		
+
 		case kCinderBlock:
 		case kFlowerBox:
 		case kCDs:
 		case kCustomPict:
 		break;
-		
+
 		case kBalloon:
 		case kCopterLf:
 		case kCopterRt:
@@ -843,10 +843,10 @@ Boolean GetObjectState (short room, short object)
 		case kFish:
 		theState = (*thisHouse)->rooms[room].objects[object].data.h.state;
 		break;
-		
+
 		case kCobweb:
 		break;
-		
+
 		case kOzma:
 		case kMirror:
 		case kMousehole:
@@ -864,9 +864,9 @@ Boolean GetObjectState (short room, short object)
 		case kChimes:
 		break;
 	}
-		
+
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	return (theState);
 }
 
@@ -882,7 +882,7 @@ void BringSendFrontBack (Boolean bringFront)
 	short		sorting[kMaxRoomObs];
 	short		sorted[kMaxRoomObs];
 	char		wasState;
-	
+
 	if (bringFront)							// No need to bring to front…
 	{										// or send to back if the object…
 		if (objActive == (kMaxRoomObs - 1))	// in question is already front-
@@ -893,7 +893,7 @@ void BringSendFrontBack (Boolean bringFront)
 		if (objActive == 0)
 			return;
 	}
-	
+
 	CopyThisRoomToRoom();					// Any changes to room written…
 											// back to the house handle.
 	numLinks = CountHouseLinks();			// Determine space needed for all links.
@@ -908,21 +908,21 @@ void BringSendFrontBack (Boolean bringFront)
 		}
 		GenerateLinksList();				// Fill in links list with src/dest…
 	}										// data on objects and room numbers.
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);				// Lock down house.
 	thisHousePtr = *thisHouse;				// Get a pointer to house structure.
-	
+
 	for (i = 0; i < kMaxRoomObs; i++)		// Set up an ordered array.
 		sorting[i] = i;
-	
+
 	savedObject = (*thisHouse)->rooms[thisRoomNumber].objects[objActive];
-	
+
 	if (bringFront)
 	{
 		for (i = objActive; i < kMaxRoomObs - 1; i++)
 		{									// Pull all objects down to fill hole.
-			(*thisHouse)->rooms[thisRoomNumber].objects[i] = 
+			(*thisHouse)->rooms[thisRoomNumber].objects[i] =
 					(*thisHouse)->rooms[thisRoomNumber].objects[i + 1];
 			sorting[i] = sorting[i + 1];
 			SpinCursor(2);
@@ -935,7 +935,7 @@ void BringSendFrontBack (Boolean bringFront)
 	{
 		for (i = objActive; i > 0; i--)
 		{									// Move all objects up to fill hole.
-			(*thisHouse)->rooms[thisRoomNumber].objects[i] = 
+			(*thisHouse)->rooms[thisRoomNumber].objects[i] =
 					(*thisHouse)->rooms[thisRoomNumber].objects[i - 1];
 			sorting[i] = sorting[i - 1];
 			SpinCursor(2);
@@ -944,10 +944,10 @@ void BringSendFrontBack (Boolean bringFront)
 		(*thisHouse)->rooms[thisRoomNumber].objects[0] = savedObject;
 		sorting[0] = objActive;
 	}
-	
+
 	for (i = 0; i < kMaxRoomObs; i++)		// Set up retro-ordered array.
 		sorted[sorting[i]] = i;
-	
+
 	for (i = 0; i < numLinks; i++)			// Walk links list in order to assign…
 	{										// corrected links to objects moved.
 		if (linksList[i].destRoom == thisRoomNumber)
@@ -957,7 +957,7 @@ void BringSendFrontBack (Boolean bringFront)
 				srcObj = sorted[linksList[i].srcObj];
 			else
 				srcObj = linksList[i].srcObj;
-			
+
 			switch ((*thisHouse)->rooms[srcRoom].objects[srcObj].what)
 			{
 				case kLightSwitch:
@@ -968,24 +968,24 @@ void BringSendFrontBack (Boolean bringFront)
 				case kInvisSwitch:
 				case kTrigger:
 				case kLgTrigger:
-				(*thisHouse)->rooms[srcRoom].objects[srcObj].data.d.who = 
+				(*thisHouse)->rooms[srcRoom].objects[srcObj].data.d.who =
 						sorted[linksList[i].destObj];
 				break;
-				
+
 				default:
-				(*thisHouse)->rooms[srcRoom].objects[srcObj].data.e.who = 
+				(*thisHouse)->rooms[srcRoom].objects[srcObj].data.e.who =
 						sorted[linksList[i].destObj];
 				break;
 			}
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 	if (linksList != nil)
 		DisposePtr((Ptr)linksList);
-	
+
 	ForceThisRoom(thisRoomNumber);
-	
+
 	fileDirty = true;
 	UpdateMenus(false);
 	InvalWindowRect(mainWindow, &mainWindowRect);
@@ -994,7 +994,7 @@ void BringSendFrontBack (Boolean bringFront)
 	ReadyBackground(thisRoom->background, thisRoom->tiles);
 	DrawThisRoomsObjects();
 	GenerateRetroLinks();
-	
+
 	InitCursor();
 }
 #endif

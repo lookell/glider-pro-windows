@@ -132,10 +132,10 @@ void UpdateSettingsBrains (DialogPtr theDialog)
 {
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
-	
+
 	SetDialogNumToStr(theDialog, kMaxFilesItem, (long)willMaxFiles);
 	SelectDialogItemText(theDialog, kMaxFilesItem, 0, 1024);
-	
+
 	FrameDialogItemC(theDialog, 3, kRedOrangeColor8);
 }
 
@@ -154,59 +154,59 @@ pascal Boolean BrainsFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			case kCapAKeyASCII:
 			case kAKeyASCII:
 			*item = kDoDemoCheck;
 			return(true);
 			break;
-			
+
 			case kCapBKeyASCII:
 			case kBKeyASCII:
 			*item = kDoBackgroundCheck;
 			return(true);
 			break;
-			
+
 			case kCapDKeyASCII:
 			case kDKeyASCII:
 			*item = kBrainsDefault;
 			FlashDialogButton(dial, kBrainsDefault);
 			return(true);
 			break;
-			
+
 			case kCapEKeyASCII:
 			case kEKeyASCII:
 			*item = kDoErrorCheck;
 			return(true);
 			break;
-			
+
 			case kCapQKeyASCII:
 			case kQKeyASCII:
 			*item = kQuickTransitCheck;
 			return(true);
 			break;
-			
+
 			case kCapZKeyASCII:
 			case kZKeyASCII:
 			*item = kDoZoomsCheck;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case mouseDown:
 		return(false);
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -215,7 +215,7 @@ pascal Boolean BrainsFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -231,13 +231,13 @@ void DoBrainsPrefs (void)
 	short			itemHit, wasMaxFiles;
 	Boolean			leaving;
 	ModalFilterUPP	brainsFilterUPP;
-	
+
 	brainsFilterUPP = NewModalFilterUPP(BrainsFilter);
-	
+
 	BringUpDialog(&prefDlg, kBrainsPrefsDialID);
 	leaving = false;
 	wasMaxFiles = willMaxFiles;
-	
+
 	wasTransit = quickerTransitions;
 	wasZooms = doZooms;
 	wasDemos = doAutoDemo;
@@ -245,7 +245,7 @@ void DoBrainsPrefs (void)
 	wasErrorCheck = isHouseChecks;
 	wasPrettyMap = doPrettyMap;
 	wasBitchDialogs = doBitchDialogs;
-	
+
 	SetDialogItemValue(prefDlg, kQuickTransitCheck, (short)wasTransit);
 	SetDialogItemValue(prefDlg, kDoZoomsCheck, (short)wasZooms);
 	SetDialogItemValue(prefDlg, kDoDemoCheck, (short)wasDemos);
@@ -253,7 +253,7 @@ void DoBrainsPrefs (void)
 	SetDialogItemValue(prefDlg, kDoErrorCheck, (short)wasErrorCheck);
 	SetDialogItemValue(prefDlg, kDoPrettyMapCheck, (short)wasPrettyMap);
 	SetDialogItemValue(prefDlg, kDoBitchDlgsCheck, (short)wasBitchDialogs);
-	
+
 	while (!leaving)
 	{
 		ModalDialog(brainsFilterUPP, &itemHit);
@@ -277,53 +277,53 @@ void DoBrainsPrefs (void)
 			doBitchDialogs = wasBitchDialogs;
 			leaving = true;
 			break;
-			
+
 			case kCancelButton:
 			willMaxFiles = wasMaxFiles;
 			leaving = true;
 			break;
-			
+
 			case kQuickTransitCheck:
 			wasTransit = !wasTransit;
 			SetDialogItemValue(prefDlg, kQuickTransitCheck, (short)wasTransit);
 			break;
-			
+
 			case kDoZoomsCheck:
 			wasZooms = !wasZooms;
 			SetDialogItemValue(prefDlg, kDoZoomsCheck, (short)wasZooms);
 			break;
-			
+
 			case kDoDemoCheck:
 			wasDemos = !wasDemos;
 			SetDialogItemValue(prefDlg, kDoDemoCheck, (short)wasDemos);
 			break;
-			
+
 			case kDoBackgroundCheck:
 			wasBackground = !wasBackground;
 			SetDialogItemValue(prefDlg, kDoBackgroundCheck, (short)wasBackground);
 			break;
-			
+
 			case kBrainsDefault:
 			SetBrainsToDefaults(prefDlg);
 			break;
-			
+
 			case kDoErrorCheck:
 			wasErrorCheck = !wasErrorCheck;
 			SetDialogItemValue(prefDlg, kDoErrorCheck, (short)wasErrorCheck);
 			break;
-			
+
 			case kDoPrettyMapCheck:
 			wasPrettyMap = !wasPrettyMap;
 			SetDialogItemValue(prefDlg, kDoPrettyMapCheck, (short)wasPrettyMap);
 			break;
-			
+
 			case kDoBitchDlgsCheck:
 			wasBitchDialogs = !wasBitchDialogs;
 			SetDialogItemValue(prefDlg, kDoBitchDlgsCheck, (short)wasBitchDialogs);
 			break;
 		}
 	}
-	
+
 	DisposeDialog(prefDlg);
 	DisposeModalFilterUPP(brainsFilterUPP);
 }
@@ -341,7 +341,7 @@ void SetControlsToDefaults (DialogPtr theDialog)
 	tempBattMap = kDownArrowKeyMap;
 	tempBandMap = kUpArrowKeyMap;
 	wasEscPauseKey = false;
-	SelectFromRadioGroup(theDialog, kTABPausesRadio, 
+	SelectFromRadioGroup(theDialog, kTABPausesRadio,
 				kESCPausesRadio, kTABPausesRadio);
 }
 
@@ -360,9 +360,9 @@ void UpdateControlKeyName (DialogPtr theDialog)
 void UpdateSettingsControl (DialogPtr theDialog)
 {
 	short		i;
-	
+
 	DrawDialog(theDialog);
-	
+
 	PenSize(2, 2);
 	ForeColor(whiteColor);
 	for (i = 0; i < 4; i++)
@@ -380,7 +380,7 @@ void UpdateSettingsControl (DialogPtr theDialog)
 pascal Boolean ControlFilter (DialogPtr dial, EventRecord *event, short *item)
 {
 	long		wasKeyMap;
-	
+
 	switch (event->what)
 	{
 		case keyDown:
@@ -388,15 +388,15 @@ pascal Boolean ControlFilter (DialogPtr dial, EventRecord *event, short *item)
 		{
 			case 0:
 			wasKeyMap = (long)GetKeyMapFromMessage(event->message);
-			if ((wasKeyMap == tempLeftMap) || (wasKeyMap == tempBattMap) || 
-					(wasKeyMap == tempBandMap) || (wasKeyMap == kTabKeyMap) || 
+			if ((wasKeyMap == tempLeftMap) || (wasKeyMap == tempBattMap) ||
+					(wasKeyMap == tempBandMap) || (wasKeyMap == kTabKeyMap) ||
 					(wasKeyMap == kEscKeyMap) || (wasKeyMap == kDeleteKeyMap))
 			{
 				if (wasKeyMap == kEscKeyMap)
 				{
 					FlashDialogButton(dial, kCancelButton);
 					*item = kCancelButton;
-					return(true);			
+					return(true);
 				}
 				else
 					SysBeep(1);
@@ -407,18 +407,18 @@ pascal Boolean ControlFilter (DialogPtr dial, EventRecord *event, short *item)
 				tempRightMap = wasKeyMap;
 			}
 			break;
-			
+
 			case 1:
 			wasKeyMap = (long)GetKeyMapFromMessage(event->message);
-			if ((wasKeyMap == tempRightMap) || (wasKeyMap == tempBattMap) || 
-					(wasKeyMap == tempBandMap) || (wasKeyMap == kTabKeyMap) || 
+			if ((wasKeyMap == tempRightMap) || (wasKeyMap == tempBattMap) ||
+					(wasKeyMap == tempBandMap) || (wasKeyMap == kTabKeyMap) ||
 					(wasKeyMap == kEscKeyMap) || (wasKeyMap == kDeleteKeyMap))
 			{
 				if (wasKeyMap == kEscKeyMap)
 				{
 					FlashDialogButton(dial, kCancelButton);
 					*item = kCancelButton;
-					return(true);			
+					return(true);
 				}
 				else
 					SysBeep(1);
@@ -429,18 +429,18 @@ pascal Boolean ControlFilter (DialogPtr dial, EventRecord *event, short *item)
 				tempLeftMap = wasKeyMap;
 			}
 			break;
-			
+
 			case 2:
 			wasKeyMap = (long)GetKeyMapFromMessage(event->message);
-			if ((wasKeyMap == tempRightMap) || (wasKeyMap == tempLeftMap) || 
-					(wasKeyMap == tempBandMap) || (wasKeyMap == kTabKeyMap) || 
+			if ((wasKeyMap == tempRightMap) || (wasKeyMap == tempLeftMap) ||
+					(wasKeyMap == tempBandMap) || (wasKeyMap == kTabKeyMap) ||
 					(wasKeyMap == kEscKeyMap) || (wasKeyMap == kDeleteKeyMap))
 			{
 				if (wasKeyMap == kEscKeyMap)
 				{
 					FlashDialogButton(dial, kCancelButton);
 					*item = kCancelButton;
-					return(true);			
+					return(true);
 				}
 				else
 					SysBeep(1);
@@ -451,18 +451,18 @@ pascal Boolean ControlFilter (DialogPtr dial, EventRecord *event, short *item)
 				tempBattMap = wasKeyMap;
 			}
 			break;
-			
+
 			case 3:
 			wasKeyMap = (long)GetKeyMapFromMessage(event->message);
-			if ((wasKeyMap == tempRightMap) || (wasKeyMap == tempLeftMap) || 
-					(wasKeyMap == tempBattMap) || (wasKeyMap == kTabKeyMap) || 
+			if ((wasKeyMap == tempRightMap) || (wasKeyMap == tempLeftMap) ||
+					(wasKeyMap == tempBattMap) || (wasKeyMap == kTabKeyMap) ||
 					(wasKeyMap == kEscKeyMap) || (wasKeyMap == kDeleteKeyMap))
 			{
 				if (wasKeyMap == kEscKeyMap)
 				{
 					FlashDialogButton(dial, kCancelButton);
 					*item = kCancelButton;
-					return(true);			
+					return(true);
 				}
 				else
 					SysBeep(1);
@@ -477,11 +477,11 @@ pascal Boolean ControlFilter (DialogPtr dial, EventRecord *event, short *item)
 		UpdateControlKeyName(dial);
 		return(false);
 		break;
-		
+
 		case mouseDown:
 		return(false);
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -490,7 +490,7 @@ pascal Boolean ControlFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -505,9 +505,9 @@ void DoControlPrefs (void)
 	short			i, itemHit;
 	Boolean			leaving;
 	ModalFilterUPP	controlFilterUPP;
-	
+
 	controlFilterUPP = NewModalFilterUPP(ControlFilter);
-	
+
 //	CenterDialog(kControlPrefsDialID);
 	prefDlg = GetNewDialog(kControlPrefsDialID, nil, kPutInFront);
 	if (prefDlg == nil)
@@ -519,7 +519,7 @@ void DoControlPrefs (void)
 		InsetRect(&controlRects[i], -3, -3);
 	}
 	whichCtrl = 1;
-	
+
 	PasStringCopy(leftName, tempLeftStr);
 	PasStringCopy(rightName, tempRightStr);
 	PasStringCopy(batteryName, tempBattStr);
@@ -529,17 +529,17 @@ void DoControlPrefs (void)
 	tempBattMap = theGlider.battKey;
 	tempBandMap = theGlider.bandKey;
 	wasEscPauseKey = isEscPauseKey;
-	
+
 	leaving = false;
-	
+
 	ShowWindow(GetDialogWindow(prefDlg));
 	if (isEscPauseKey)
-		SelectFromRadioGroup(prefDlg, kESCPausesRadio, 
+		SelectFromRadioGroup(prefDlg, kESCPausesRadio,
 				kESCPausesRadio, kTABPausesRadio);
 	else
-		SelectFromRadioGroup(prefDlg, kTABPausesRadio, 
+		SelectFromRadioGroup(prefDlg, kTABPausesRadio,
 				kESCPausesRadio, kTABPausesRadio);
-	
+
 	while (!leaving)
 	{
 		ModalDialog(controlFilterUPP, &itemHit);
@@ -557,11 +557,11 @@ void DoControlPrefs (void)
 			isEscPauseKey = wasEscPauseKey;
 			leaving = true;
 			break;
-			
+
 			case kCancelButton:
 			leaving = true;
 			break;
-			
+
 			case kRightControl:
 			case kLeftControl:
 			case kBattControl:
@@ -576,20 +576,20 @@ void DoControlPrefs (void)
 			PenNormal();
 			UpdateControlKeyName(prefDlg);
 			break;
-			
+
 			case kESCPausesRadio:
 			case kTABPausesRadio:
 			SelectFromRadioGroup(prefDlg, itemHit, kESCPausesRadio, kTABPausesRadio);
 			wasEscPauseKey = !wasEscPauseKey;
 			break;
-			
+
 			case kControlDefaults:
 			SetControlsToDefaults(prefDlg);
 			UpdateControlKeyName(prefDlg);
 			break;
 		}
 	}
-	
+
 	DisposeDialog(prefDlg);
 	DisposeModalFilterUPP(controlFilterUPP);
 }
@@ -597,7 +597,7 @@ void DoControlPrefs (void)
 //--------------------------------------------------------------  SoundDefaults
 
 void SoundDefaults (DialogPtr theDialog)
-{	
+{
 	wasIdle = true;
 	wasPlay = true;
 	SetDialogItemValue(theDialog, kIdleMusicItem, (short)wasIdle);
@@ -612,17 +612,17 @@ void SoundDefaults (DialogPtr theDialog)
 void UpdateSettingsSound (DialogPtr theDialog)
 {
 	short		howLoudNow;
-	
+
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
-	
+
 	UnivGetSoundVolume(&howLoudNow, thisMac.hasSM3);
-	
+
 	if (howLoudNow >= 7)
 		SetDialogNumToStr(theDialog, kVolNumberItem, 11L);
 	else
 		SetDialogNumToStr(theDialog, kVolNumberItem, (long)howLoudNow);
-	
+
 	FrameDialogItemC(theDialog, 11, kRedOrangeColor8);
 }
 
@@ -631,9 +631,9 @@ void UpdateSettingsSound (DialogPtr theDialog)
 void HandleSoundMusicChange (short newVolume, Boolean sayIt)
 {
 	OSErr		theErr;
-	
+
 	isSoundOn = (newVolume != 0);
-	
+
 	if (wasIdle)
 	{
 		if (newVolume == 0)
@@ -651,7 +651,7 @@ void HandleSoundMusicChange (short newVolume, Boolean sayIt)
 			}
 		}
 	}
-	
+
 	if ((newVolume != 0) && (sayIt))
 		PlayPrioritySound(kChord2Sound, kChord2Priority);
 }
@@ -661,7 +661,7 @@ void HandleSoundMusicChange (short newVolume, Boolean sayIt)
 pascal Boolean SoundFilter (DialogPtr dial, EventRecord *event, short *item)
 {
 	short		newVolume;
-	
+
 	switch (event->what)
 	{
 		case keyDown:
@@ -673,23 +673,23 @@ pascal Boolean SoundFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			case kUpArrowKeyASCII:
 			*item = kLouderItem;
 			return(true);
 			break;
-			
+
 			case kDownArrowKeyASCII:
 			*item = kSofterItem;
 			return(true);
 			break;
-			
+
 			case k0KeyASCII:
 			case k1KeyASCII:
 			case k2KeyASCII:
@@ -703,41 +703,41 @@ pascal Boolean SoundFilter (DialogPtr dial, EventRecord *event, short *item)
 				SetDialogNumToStr(dial, kVolNumberItem, 11L);
 			else
 				SetDialogNumToStr(dial, kVolNumberItem, (long)newVolume);
-			
+
 			UnivSetSoundVolume(newVolume, thisMac.hasSM3);
-			
+
 			HandleSoundMusicChange(newVolume, true);
 			return(false);
 			break;
-			
+
 			case kCapDKeyASCII:
 			case kDKeyASCII:
 			*item = kSoundDefault;
 			FlashDialogButton(dial, kSoundDefault);
 			return(true);
 			break;
-			
+
 			case kCapGKeyASCII:
 			case kGKeyASCII:
 			*item = kPlayMusicItem;
 			return(true);
 			break;
-			
+
 			case kCapIKeyASCII:
 			case kIKeyASCII:
 			*item = kIdleMusicItem;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case mouseDown:
 		return(false);
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -746,7 +746,7 @@ pascal Boolean SoundFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -764,19 +764,19 @@ void DoSoundPrefs (void)
 	short			itemHit;
 	Boolean			leaving;
 	ModalFilterUPP	soundFilterUPP;
-	
+
 	soundFilterUPP = NewModalFilterUPP(SoundFilter);
-	
+
 	BringUpDialog(&prefDlg, kSoundPrefsDialID);
-	
+
 	UnivGetSoundVolume(&wasLoudness, thisMac.hasSM3);
-	
+
 	wasIdle = isPlayMusicIdle;
 	wasPlay = isPlayMusicGame;
 	SetDialogItemValue(prefDlg, kIdleMusicItem, (short)wasIdle);
 	SetDialogItemValue(prefDlg, kPlayMusicItem, (short)wasPlay);
 	leaving = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(soundFilterUPP, &itemHit);
@@ -789,7 +789,7 @@ void DoSoundPrefs (void)
 			UnivGetSoundVolume(&tempVolume, thisMac.hasSM3);
 			isSoundOn = (tempVolume != 0);
 			break;
-			
+
 			case kCancelButton:
 			UnivSetSoundVolume(wasLoudness, thisMac.hasSM3);
 			HandleSoundMusicChange(wasLoudness, false);
@@ -812,9 +812,9 @@ void DoSoundPrefs (void)
 			}
 			leaving = true;
 			break;
-			
+
 			case kSofterItem:
-			UnivGetSoundVolume(&tempVolume, thisMac.hasSM3);	
+			UnivGetSoundVolume(&tempVolume, thisMac.hasSM3);
 			if (tempVolume > 0)
 			{
 				GetDialogItemRect(prefDlg, kSofterItem, &tempRect);
@@ -827,9 +827,9 @@ void DoSoundPrefs (void)
 				DelayTicks(8);
 			}
 			break;
-			
+
 			case kLouderItem:
-			UnivGetSoundVolume(&tempVolume, thisMac.hasSM3);	
+			UnivGetSoundVolume(&tempVolume, thisMac.hasSM3);
 			if (tempVolume < 7)
 			{
 				GetDialogItemRect(prefDlg, kLouderItem, &tempRect);
@@ -845,7 +845,7 @@ void DoSoundPrefs (void)
 				DelayTicks(8);
 			}
 			break;
-			
+
 			case kIdleMusicItem:
 			wasIdle = !wasIdle;
 			SetDialogItemValue(prefDlg, kIdleMusicItem, (short)wasIdle);
@@ -865,18 +865,18 @@ void DoSoundPrefs (void)
 			else
 				StopTheMusic();
 			break;
-			
+
 			case kPlayMusicItem:
 			wasPlay = !wasPlay;
 			SetDialogItemValue(prefDlg, kPlayMusicItem, (short)wasPlay);
 			break;
-			
+
 			case kSoundDefault:
 			SoundDefaults(prefDlg);
 			break;
 		}
 	}
-	
+
 	DisposeDialog(prefDlg);
 	DisposeModalFilterUPP(soundFilterUPP);
 }
@@ -896,22 +896,22 @@ void DisplayDefaults (void)
 void FrameDisplayIcon (DialogPtr theDialog)
 {
 	Rect		theRect;
-	
+
 	switch (numNeighbors)
 	{
 		case 1:
 		GetDialogItemRect(theDialog, kDisplay1Item, &theRect);
 		break;
-		
+
 		case 3:
 		GetDialogItemRect(theDialog, kDisplay3Item, &theRect);
 		break;
-		
+
 		default:
 		GetDialogItemRect(theDialog, kDisplay9Item, &theRect);
 		break;
 	}
-	
+
 	theRect.left -= 3;
 	theRect.top += 0;
 	theRect.right += 3;
@@ -927,13 +927,13 @@ void DisplayUpdate (DialogPtr theDialog)
 {
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
-	
+
 	SetDialogItemValue(theDialog, kDoColorFadeItem, (short)wasFade);
-	SelectFromRadioGroup(theDialog, kCurrentDepth + wasDepthPref, 
+	SelectFromRadioGroup(theDialog, kCurrentDepth + wasDepthPref,
 			kCurrentDepth, k16Depth);
 //	SetDialogItemValue(theDialog, kUseQDItem, (short)wasQD);
 	SetDialogItemValue(theDialog, kUseScreen2Item, (short)wasScreen2);
-	
+
 	ForeColor(redColor);
 	FrameDisplayIcon(theDialog);
 	ForeColor(blackColor);
@@ -945,7 +945,7 @@ void DisplayUpdate (DialogPtr theDialog)
 //--------------------------------------------------------------  DisplayFilter
 
 pascal Boolean DisplayFilter (DialogPtr dial, EventRecord *event, short *item)
-{	
+{
 	switch (event->what)
 	{
 		case keyDown:
@@ -957,135 +957,135 @@ pascal Boolean DisplayFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			case kLeftArrowKeyASCII:
 			switch (numNeighbors)
 			{
 				case 1:
 				*item = kDisplay9Item;
 				break;
-				
+
 				case 3:
 				*item = kDisplay1Item;
 				break;
-				
+
 				case 9:
 				*item = kDisplay3Item;
 				break;
 			}
 			return(true);
 			break;
-			
+
 			case kRightArrowKeyASCII:
 			switch (numNeighbors)
 			{
 				case 1:
 				*item = kDisplay3Item;
 				break;
-				
+
 				case 3:
 				*item = kDisplay9Item;
 				break;
-				
+
 				case 9:
 				*item = kDisplay1Item;
 				break;
 			}
 			return(true);
 			break;
-			
+
 			case kUpArrowKeyASCII:
 			switch (wasDepthPref)
 			{
 				case kSwitchIfNeeded:
 				*item = k16Depth;
 				break;
-				
+
 				case kSwitchTo256Colors:
 				*item = kCurrentDepth;
 				break;
-				
+
 				case kSwitchTo16Grays:
 				*item = k256Depth;
 				break;
 			}
 			return(true);
 			break;
-			
+
 			case kDownArrowKeyASCII:
 			switch (wasDepthPref)
 			{
 				case kSwitchIfNeeded:
 				*item = k256Depth;
 				break;
-				
+
 				case kSwitchTo256Colors:
 				*item = k16Depth;
 				break;
-				
+
 				case kSwitchTo16Grays:
 				*item = kCurrentDepth;
 				break;
 			}
 			return(true);
 			break;
-			
+
 			case k1KeyASCII:
 			*item = kDisplay1Item;
 			return(true);
 			break;
-			
+
 			case k3KeyASCII:
 			*item = kDisplay3Item;
 			return(true);
 			break;
-			
+
 			case k9KeyASCII:
 			*item = kDisplay9Item;
 			return(true);
 			break;
-			
+
 			case kCapBKeyASCII:
 			case kBKeyASCII:
 			*item = kDoColorFadeItem;
 			return(true);
 			break;
-			
+
 			case kCapDKeyASCII:
 			case kDKeyASCII:
 			*item = kDispDefault;
 			FlashDialogButton(dial, kDispDefault);
 			return(true);
 			break;
-			
+
 			case kCapRKeyASCII:
 			case kRKeyASCII:
 			*item = kUseScreen2Item;
 			FlashDialogButton(dial, kUseQDItem);
 			return(true);
 			break;
-			
+
 			case kCapUKeyASCII:
 			case kUKeyASCII:
 			*item = kUseQDItem;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case mouseDown:
 		return(false);
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -1094,7 +1094,7 @@ pascal Boolean DisplayFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -1109,9 +1109,9 @@ void DoDisplayPrefs (void)
 	short			itemHit, wasNeighbors;
 	Boolean			leaving;
 	ModalFilterUPP	displayFilterUPP;
-	
+
 	displayFilterUPP = NewModalFilterUPP(DisplayFilter);
-	
+
 	BringUpDialog(&prefDlg, kDisplayPrefsDialID);
 	if (!thisMac.can8Bit)
 	{
@@ -1127,7 +1127,7 @@ void DoDisplayPrefs (void)
 	wasDepthPref = isDepthPref;
 	wasScreen2 = isUseSecondScreen;
 	leaving = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(displayFilterUPP, &itemHit);
@@ -1141,12 +1141,12 @@ void DoDisplayPrefs (void)
 			isUseSecondScreen = wasScreen2;
 			leaving = true;
 			break;
-			
+
 			case kCancelButton:
 			numNeighbors = wasNeighbors;
 			leaving = true;
 			break;
-			
+
 			case kDisplay1Item:
 			ForeColor(whiteColor);
 			FrameDisplayIcon(prefDlg);
@@ -1155,7 +1155,7 @@ void DoDisplayPrefs (void)
 			FrameDisplayIcon(prefDlg);
 			ForeColor(blackColor);
 			break;
-			
+
 			case kDisplay3Item:
 			if (thisMac.screen.right > 512)
 			{
@@ -1167,7 +1167,7 @@ void DoDisplayPrefs (void)
 				ForeColor(blackColor);
 			}
 			break;
-			
+
 			case kDisplay9Item:
 			if (thisMac.screen.right > 512)
 			{
@@ -1179,19 +1179,19 @@ void DoDisplayPrefs (void)
 				ForeColor(blackColor);
 			}
 			break;
-			
+
 			case kDoColorFadeItem:
 			wasFade = !wasFade;
 			SetDialogItemValue(prefDlg, kDoColorFadeItem, (short)wasFade);
 			break;
-			
+
 			case kCurrentDepth:
 			case k256Depth:
 			case k16Depth:
 			wasDepthPref = itemHit - kCurrentDepth;
 			SelectFromRadioGroup(prefDlg, itemHit, kCurrentDepth, k16Depth);
 			break;
-			
+
 			case kDispDefault:
 			ForeColor(whiteColor);
 			FrameDisplayIcon(prefDlg);
@@ -1199,19 +1199,19 @@ void DoDisplayPrefs (void)
 			DisplayDefaults();
 			DisplayUpdate(prefDlg);
 			break;
-			
+
 			case kUseQDItem:
 //			wasQD = !wasQD;
 //			SetDialogItemValue(prefDlg, kUseQDItem, (short)wasQD);
 			break;
-			
+
 			case kUseScreen2Item:
 			wasScreen2 = !wasScreen2;
 			SetDialogItemValue(prefDlg, kUseScreen2Item, (short)wasScreen2);
 			break;
 		}
 	}
-	
+
 	DisposeDialog(prefDlg);
 	DisposeModalFilterUPP(displayFilterUPP);
 }
@@ -1267,7 +1267,7 @@ void FlashSettingsButton (short who)
 	#define		kNormalSettingsIcon		1010
 	#define		kInvertedSettingsIcon	1014
 	short		theID;
-	
+
 	theID = kInvertedSettingsIcon + who;
 	DrawCIcon (theID, prefButton[who].left + 4, prefButton[who].top + 4);
 	DelayTicks(8);
@@ -1280,11 +1280,11 @@ void FlashSettingsButton (short who)
 void UpdateSettingsMain (DialogPtr theDialog)
 {
 	Str255		theStr;
-	
+
 	DrawDialog(theDialog);
-	
+
 	DrawDefaultButton(theDialog);
-	
+
 	GetIndString(theStr, 129, 1);
 	DrawDialogUserText(theDialog, 7, theStr, false);
 	GetIndString(theStr, 129, 2);
@@ -1293,7 +1293,7 @@ void UpdateSettingsMain (DialogPtr theDialog)
 	DrawDialogUserText(theDialog, 9, theStr, false);
 	GetIndString(theStr, 129, 4);
 	DrawDialogUserText(theDialog, 10, theStr, false);
-	
+
 	ColorFrameRect(&prefButton[0], kRedOrangeColor8);
 	ColorFrameRect(&prefButton[1], kRedOrangeColor8);
 	ColorFrameRect(&prefButton[2], kRedOrangeColor8);
@@ -1307,7 +1307,7 @@ pascal Boolean PrefsFilter (DialogPtr dial, EventRecord *event, short *item)
 	Point		testPt;
 	short		i;
 	Boolean		foundHit;
-	
+
 	switch (event->what)
 	{
 		case keyDown:
@@ -1319,36 +1319,36 @@ pascal Boolean PrefsFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kCapBKeyASCII:
 			case kBKeyASCII:
 			*item = kBrainsButton;
 			return(true);
 			break;
-			
+
 			case kCapCKeyASCII:
 			case kCKeyASCII:
 			*item = kControlsButton;
 			return(true);
 			break;
-			
+
 			case kCapDKeyASCII:
 			case kDKeyASCII:
 			*item = kDisplayButton;
 			return(true);
 			break;
-			
+
 			case kCapSKeyASCII:
 			case kSKeyASCII:
 			*item = kSoundButton;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case mouseDown:
 		testPt = event->where;
 		GlobalToLocal(&testPt);
@@ -1363,7 +1363,7 @@ pascal Boolean PrefsFilter (DialogPtr dial, EventRecord *event, short *item)
 		}
 		return(foundHit);
 		break;
-		
+
 		case updateEvt:
 		if ((WindowPtr)event->message == (WindowPtr)mainWindow)
 		{
@@ -1383,7 +1383,7 @@ pascal Boolean PrefsFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -1399,11 +1399,11 @@ void DoSettingsMain (void)
 	short			itemHit;
 	Boolean			leaving;
 	ModalFilterUPP	prefsFilterUPP;
-	
+
 	prefsFilterUPP = NewModalFilterUPP(PrefsFilter);
-	
+
 	BringUpDialog(&prefDlg, kMainPrefsDialID);
-	
+
 	GetDialogItemRect(prefDlg, kDisplayButton, &prefButton[0]);
 	InsetRect(&prefButton[0], -4, -4);
 	GetDialogItemRect(prefDlg, 4, &prefButton[1]);
@@ -1412,10 +1412,10 @@ void DoSettingsMain (void)
 	InsetRect(&prefButton[2], -4, -4);
 	GetDialogItemRect(prefDlg, 6, &prefButton[3]);
 	InsetRect(&prefButton[3], -4, -4);
-	
+
 	leaving = false;
 	nextRestartChange = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(prefsFilterUPP, &itemHit);
@@ -1424,26 +1424,26 @@ void DoSettingsMain (void)
 			case kOkayButton:
 			leaving = true;
 			break;
-			
+
 			case kDisplayButton:
 			FlashSettingsButton(0);
 			DoDisplayPrefs();
 			SetPort((GrafPtr)prefDlg);
 			break;
-			
+
 			case kSoundButton:
 			FlashSettingsButton(1);
 			DoSoundPrefs();
 			SetPort((GrafPtr)prefDlg);
 			FlushEvents(everyEvent, 0);
 			break;
-			
+
 			case kControlsButton:
 			FlashSettingsButton(2);
 			DoControlPrefs();
 			SetPort((GrafPtr)prefDlg);
 			break;
-			
+
 			case kBrainsButton:
 			if ((OptionKeyDown()) && (!houseUnlocked))
 			{
@@ -1455,16 +1455,16 @@ void DoSettingsMain (void)
 			DoBrainsPrefs();
 			SetPort((GrafPtr)prefDlg);
 			break;
-			
+
 			case kAllDefaultsButton:
 			SetAllDefaults();
 			break;
 		}
 	}
-	
+
 	DisposeDialog(prefDlg);
 	DisposeModalFilterUPP(prefsFilterUPP);
-	
+
 	if (nextRestartChange)
 		BitchAboutChanges();
 }
@@ -1475,7 +1475,7 @@ void BitchAboutChanges (void)
 {
 	#define		kChangesEffectAlert	1040
 	short		hitWhat;
-	
+
 //	CenterAlert(kChangesEffectAlert);
 	hitWhat = Alert(kChangesEffectAlert, nil);
 }

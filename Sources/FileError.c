@@ -29,10 +29,10 @@ Boolean CheckFileError (short resultCode, StringPtr fileName)
 {
 	short			dummyInt, stringIndex;
 	Str255			errMessage, errNumString;
-	
+
 	if (resultCode == noErr)		// No problems?  Then cruise
 		return(true);
-	
+
 	switch (resultCode)
 	{
 		case dirFulErr:
@@ -88,14 +88,14 @@ Boolean CheckFileError (short resultCode, StringPtr fileName)
 			break;
 	}
 	InitCursor();
-	
+
 	GetIndString(errMessage, rFileErrorStrings, stringIndex);
 	NumToString((long)resultCode, errNumString);
 	ParamText(errMessage, errNumString, fileName, "\p");
-	
+
 //	CenterAlert(rFileErrorAlert);
 	dummyInt = Alert(rFileErrorAlert, 0L);
-	
+
 	return(false);
 }
 

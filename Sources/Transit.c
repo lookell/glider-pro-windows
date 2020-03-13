@@ -32,31 +32,31 @@ short WhatAreWeLinkedTo (short where, Byte who)
 {
 	short		what, whatType;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	what = (*thisHouse)->rooms[where].objects[who].what;
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	switch (what)
 	{
 		case kMailboxLf:
 		whatType = kLinkedToLeftMailbox;
 		break;
-		
+
 		case kMailboxRt:
 		whatType = kLinkedToRightMailbox;
 		break;
-		
+
 		case kCeilingTrans:
 		whatType = kLinkedToCeilingDuct;
 		break;
-		
+
 		default:
 		whatType = kLinkedToOther;
 		break;
 	}
-	
+
 	return (whatType);
 }
 
@@ -65,12 +65,12 @@ short WhatAreWeLinkedTo (short where, Byte who)
 void ReadyGliderFromTransit (gliderPtr thisGlider, short toWhat)
 {
 	Rect		tempRect;
-	
+
 	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
 		return;
-	
+
 	FlagGliderNormal(thisGlider);
-	
+
 	switch (toWhat)
 	{
 		case kLinkedToOther:
@@ -87,7 +87,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, short toWhat)
 		thisGlider->wholeShadow = thisGlider->destShadow;
 		thisGlider->enteredRect = thisGlider->dest;
 		break;
-		
+
 		case kLinkedToLeftMailbox:
 		StartGliderMailingOut(thisGlider);
 		thisGlider->clip = transRect;		// fix clip
@@ -103,7 +103,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, short toWhat)
 		thisGlider->whole = thisGlider->dest;
 		thisGlider->wholeShadow = thisGlider->destShadow;
 		break;
-		
+
 		case kLinkedToRightMailbox:
 		StartGliderMailingOut(thisGlider);
 		thisGlider->clip = transRect;		// fix clip
@@ -119,7 +119,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, short toWhat)
 		thisGlider->whole = thisGlider->dest;
 		thisGlider->wholeShadow = thisGlider->destShadow;
 		break;
-		
+
 		case kLinkedToCeilingDuct:
 		StartGliderDuctingIn(thisGlider);
 		tempRect = thisGlider->dest;		// set glider's position
@@ -134,14 +134,14 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, short toWhat)
 		thisGlider->whole = thisGlider->dest;
 		thisGlider->wholeShadow = thisGlider->destShadow;
 		break;
-		
+
 		case kLinkedToFloorDuct:
 		break;
-		
+
 		default:
 		break;
 	}
-	
+
 	if ((twoPlayerGame) && (thisGlider->which != firstPlayer))
 		TagGliderIdle(thisGlider);
 }
@@ -151,7 +151,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, short toWhat)
 void MoveRoomToRoom (gliderPtr thisGlider, short where)
 {
 	Rect		enterRect;
-	
+
 	HandleRoomVisitation();
 	switch (where)
 	{
@@ -172,7 +172,7 @@ void MoveRoomToRoom (gliderPtr thisGlider, short where)
 			OffsetGlider(&theGlider, kToLeft);
 			OffsetGlider(&theGlider2, kToLeft);
 			QSetRect(&enterRect, 0, 0, 48, 20);
-			QOffsetRect(&enterRect, 0, 
+			QOffsetRect(&enterRect, 0,
 					kGliderStartsDown + (short)thisRoom->leftStart - 2);
 			theGlider.enteredRect = enterRect;
 			theGlider2.enteredRect = enterRect;
@@ -181,12 +181,12 @@ void MoveRoomToRoom (gliderPtr thisGlider, short where)
 		{
 			OffsetGlider(thisGlider, kToLeft);
 			QSetRect(&enterRect, 0, 0, 48, 20);
-			QOffsetRect(&enterRect, 0, 
+			QOffsetRect(&enterRect, 0,
 					kGliderStartsDown + (short)thisRoom->leftStart - 2);
 			thisGlider->enteredRect = enterRect;
 		}
 		break;
-		
+
 		case kToLeft:
 		SetMusicalMode(kProdGameScoreMode);
 		if (twoPlayerGame)
@@ -204,7 +204,7 @@ void MoveRoomToRoom (gliderPtr thisGlider, short where)
 			OffsetGlider(&theGlider, kToRight);
 			OffsetGlider(&theGlider2, kToRight);
 			QSetRect(&enterRect, 0, 0, 48, 20);
-			QOffsetRect(&enterRect, kRoomWide - 48, 
+			QOffsetRect(&enterRect, kRoomWide - 48,
 					kGliderStartsDown + (short)thisRoom->rightStart - 2);
 			theGlider.enteredRect = enterRect;
 			theGlider2.enteredRect = enterRect;
@@ -213,12 +213,12 @@ void MoveRoomToRoom (gliderPtr thisGlider, short where)
 		{
 			OffsetGlider(thisGlider, kToRight);
 			QSetRect(&enterRect, 0, 0, 48, 20);
-			QOffsetRect(&enterRect, kRoomWide - 48, 
+			QOffsetRect(&enterRect, kRoomWide - 48,
 					kGliderStartsDown + (short)thisRoom->rightStart - 2);
 			thisGlider->enteredRect = enterRect;
 		}
 		break;
-		
+
 		case kAbove:
 		SetMusicalMode(kKickGameScoreMode);
 		ForceThisRoom(localNumbers[kNorthRoom]);
@@ -250,7 +250,7 @@ void MoveRoomToRoom (gliderPtr thisGlider, short where)
 				ReadyGliderForTripUpStairs(thisGlider);
 		}
 		break;
-		
+
 		case kBelow:
 		SetMusicalMode(kKickGameScoreMode);
 		ForceThisRoom(localNumbers[kSouthRoom]);
@@ -282,11 +282,11 @@ void MoveRoomToRoom (gliderPtr thisGlider, short where)
 				ReadyGliderForTripDownStairs(thisGlider);
 		}
 		break;
-		
+
 		default:
 		break;
 	}
-	
+
 	if ((twoPlayerGame) && (!onePlayerLeft))
 	{
 		if (firstPlayer == kPlayer1)
@@ -294,11 +294,11 @@ void MoveRoomToRoom (gliderPtr thisGlider, short where)
 		else
 			TagGliderIdle(&theGlider);
 	}
-	
+
 	ReadyLevel();
 	RefreshScoreboard(kNormalTitleMode);
 	WipeScreenOn(where, &justRoomsRect);
-	
+
 #ifdef COMPILEQT
 	RenderFrame();
 	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) && (tvOn))
@@ -314,10 +314,10 @@ void MoveRoomToRoom (gliderPtr thisGlider, short where)
 void TransportRoomToRoom (gliderPtr thisGlider)
 {
 	Boolean		sameRoom;
-	
+
 	SetMusicalMode(kKickGameScoreMode);
 	HandleRoomVisitation();
-	
+
 	sameRoom = (transRoom == thisRoomNumber);
 	if (!sameRoom)
 		ForceThisRoom(transRoom);
@@ -330,13 +330,13 @@ void TransportRoomToRoom (gliderPtr thisGlider)
 	}
 	else
 		ReadyGliderFromTransit(thisGlider, linkedToWhat);
-	
+
 	if (!sameRoom)
 		ReadyLevel();
 	RefreshScoreboard(kNormalTitleMode);
 	if (!sameRoom)
 		WipeScreenOn(kAbove, &justRoomsRect);
-	
+
 #ifdef COMPILEQT
 	RenderFrame();
 	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) && (tvOn))
@@ -352,14 +352,14 @@ void TransportRoomToRoom (gliderPtr thisGlider)
 void MoveDuctToDuct (gliderPtr thisGlider)
 {
 	Boolean		sameRoom;
-	
+
 	SetMusicalMode(kKickGameScoreMode);
 	HandleRoomVisitation();
-	
+
 	sameRoom = (transRoom == thisRoomNumber);
 	if (!sameRoom)
 		ForceThisRoom(transRoom);
-	
+
 	if (twoPlayerGame)
 	{
 		UndoGliderLimbo(&theGlider);			// turn off limbo if needed
@@ -369,13 +369,13 @@ void MoveDuctToDuct (gliderPtr thisGlider)
 	}
 	else
 		ReadyGliderFromTransit(thisGlider, linkedToWhat);
-	
+
 	if (!sameRoom)
 		ReadyLevel();
 	RefreshScoreboard(kNormalTitleMode);
 	if (!sameRoom)
 		WipeScreenOn(kAbove, &justRoomsRect);
-	
+
 #ifdef COMPILEQT
 	RenderFrame();
 	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) && (tvOn))
@@ -391,14 +391,14 @@ void MoveDuctToDuct (gliderPtr thisGlider)
 void MoveMailToMail (gliderPtr thisGlider)
 {
 	Boolean		sameRoom;
-	
+
 	SetMusicalMode(kKickGameScoreMode);
 	HandleRoomVisitation();
-	
+
 	sameRoom = (transRoom == thisRoomNumber);
 	if (!sameRoom)
 		ForceThisRoom(transRoom);
-	
+
 	if (twoPlayerGame)
 	{
 		UndoGliderLimbo(&theGlider);			// turn off limbo if needed
@@ -408,13 +408,13 @@ void MoveMailToMail (gliderPtr thisGlider)
 	}
 	else
 		ReadyGliderFromTransit(thisGlider, linkedToWhat);
-	
+
 	if (!sameRoom)
 		ReadyLevel();
 	RefreshScoreboard(kNormalTitleMode);
 	if (!sameRoom)
 		WipeScreenOn(kAbove, &justRoomsRect);
-	
+
 #ifdef COMPILEQT
 	RenderFrame();
 	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) && (tvOn))
@@ -431,7 +431,7 @@ void HandleRoomVisitation (void)
 {
 	houseType	*thisHousePtr;
 	char		wasState;
-	
+
 	if (!thisRoom->visited)
 	{
 		wasState = HGetState((Handle)thisHouse);
@@ -474,11 +474,11 @@ void FollowTheLeader (void)
 {
 	short		wasEscaped;
 	Boolean		oneOrTwo;
-	
+
 	playerSuicide = false;
 	wasEscaped = otherPlayerEscaped;
 	otherPlayerEscaped = kNoOneEscaped;
-	
+
 	if (theGlider.mode == kGliderInLimbo)
 	{
 		oneOrTwo = true;
@@ -495,7 +495,7 @@ void FollowTheLeader (void)
 		theGlider.whole = theGlider.dest;
 		theGlider.wholeShadow = theGlider.destShadow;
 	}
-	
+
 	switch (wasEscaped)
 	{
 		case kPlayerEscapedUp:
@@ -506,7 +506,7 @@ void FollowTheLeader (void)
 		else
 			MoveRoomToRoom(&theGlider, kAbove);
 		break;
-		
+
 		case kPlayerEscapedDown:
 		case kPlayerEscapingDownStairs:
 		case kPlayerEscapedDownStairs:
@@ -515,42 +515,42 @@ void FollowTheLeader (void)
 		else
 			MoveRoomToRoom(&theGlider, kBelow);
 		break;
-		
+
 		case kPlayerEscapedLeft:
 		if (oneOrTwo)
 			MoveRoomToRoom(&theGlider2, kToLeft);
 		else
 			MoveRoomToRoom(&theGlider, kToLeft);
 		break;
-		
+
 		case kPlayerEscapedRight:
 		if (oneOrTwo)
 			MoveRoomToRoom(&theGlider2, kToRight);
 		else
 			MoveRoomToRoom(&theGlider, kToRight);
 		break;
-		
+
 		case kPlayerTransportedOut:
 		if (oneOrTwo)
 			TransportRoomToRoom(&theGlider2);
 		else
 			TransportRoomToRoom(&theGlider);
 		break;
-		
+
 		case kPlayerMailedOut:
 		if (oneOrTwo)
 			MoveMailToMail(&theGlider2);
 		else
 			MoveMailToMail(&theGlider);
 		break;
-		
+
 		case kPlayerDuckedOut:
 		if (oneOrTwo)
 			MoveDuctToDuct(&theGlider2);
 		else
 			MoveDuctToDuct(&theGlider);
 		break;
-		
+
 		default:
 		break;
 	}

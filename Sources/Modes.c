@@ -23,19 +23,19 @@ extern	Boolean		onePlayerLeft, playerDead;
 //--------------------------------------------------------------  StartGliderFadingIn
 
 void StartGliderFadingIn (gliderPtr thisGlider)
-{	
+{
 	if (foilTotal <= 0)
 		showFoil = false;
-	
+
 	thisGlider->mode = kGliderFadingIn;
 	thisGlider->whole = thisGlider->dest;
 	thisGlider->frame = 0;
 	thisGlider->dontDraw = false;
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = 
+		thisGlider->src =
 				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
-		thisGlider->mask = 
+		thisGlider->mask =
 				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
 	}
 	else
@@ -51,16 +51,16 @@ void StartGliderTransportingIn (gliderPtr thisGlider)
 {
 	if (foilTotal <= 0)
 		showFoil = false;
-	
+
 	thisGlider->mode = kGliderTransportingIn;
 	thisGlider->whole = thisGlider->dest;
 	thisGlider->frame = 0;
 	thisGlider->dontDraw = false;
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = 
+		thisGlider->src =
 				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
-		thisGlider->mask = 
+		thisGlider->mask =
 				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
 	}
 	else
@@ -75,15 +75,15 @@ void StartGliderTransportingIn (gliderPtr thisGlider)
 void StartGliderFadingOut (gliderPtr thisGlider)
 {
 	Rect		tempBounds;
-	
+
 	if (thisGlider->mode == kGliderFadingOut)
 		return;
-	
+
 	if (thisGlider->mode == kGliderGoingFoil)
 		DeckGliderInFoil(thisGlider);
 	else if (thisGlider->mode == kGliderLosingFoil)
 		RemoveFoilFromGlider(thisGlider);
-	
+
 	if (RectTall(&thisGlider->dest) > kGliderHigh)
 	{
 		tempBounds = thisGlider->dest;
@@ -103,9 +103,9 @@ void StartGliderFadingOut (gliderPtr thisGlider)
 	thisGlider->frame = kLastFadeSequence - 1;
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = 
+		thisGlider->src =
 				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
-		thisGlider->mask = 
+		thisGlider->mask =
 				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
 	}
 	else
@@ -123,12 +123,12 @@ void StartGliderGoingUpStairs (gliderPtr thisGlider)
 		DeckGliderInFoil(thisGlider);
 	else if (thisGlider->mode == kGliderLosingFoil)
 		RemoveFoilFromGlider(thisGlider);
-	
+
 	if (thisGlider->mode == kGliderBurning)
 		thisGlider->frame = kWasBurning;
 	else
 		thisGlider->frame = 0;
-	
+
 	thisGlider->mode = kGliderGoingUp;
 }
 
@@ -140,12 +140,12 @@ void StartGliderGoingDownStairs (gliderPtr thisGlider)
 		DeckGliderInFoil(thisGlider);
 	else if (thisGlider->mode == kGliderLosingFoil)
 		RemoveFoilFromGlider(thisGlider);
-	
+
 	if (thisGlider->mode == kGliderBurning)
 		thisGlider->frame = kWasBurning;
 	else
 		thisGlider->frame = 0;
-	
+
 	thisGlider->mode = kGliderGoingDown;
 	rightClip = GetUpStairsRightEdge();
 }
@@ -157,19 +157,19 @@ void StartGliderMailingIn (gliderPtr thisGlider, Rect *bounds, hotPtr who)
 	short		topSought, whoLinked;
 	Byte		objLinked;
 	char		wasState;
-	
+
 	PlayPrioritySound(kTransOutSound, kTransOutPriority);
-	
+
 	whoLinked = who->who;
 	transRoom = masterObjects[whoLinked].roomLink;
 	objLinked = masterObjects[whoLinked].objectLink;
 	linkedToWhat = WhatAreWeLinkedTo(transRoom, objLinked);
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	GetObjectRect(&(*thisHouse)->rooms[transRoom].objects[objLinked], &transRect);
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	thisGlider->frame = 0;
 	thisGlider->clip = *bounds;
 	topSought = bounds->bottom - RectTall(&thisGlider->dest);
@@ -184,7 +184,7 @@ void StartGliderMailingOut (gliderPtr thisGlider)
 		DeckGliderInFoil(thisGlider);
 	else if (thisGlider->mode == kGliderLosingFoil)
 		RemoveFoilFromGlider(thisGlider);
-	
+
 	if (linkedToWhat == kLinkedToLeftMailbox)
 	{
 		thisGlider->facing = kFaceLeft;
@@ -199,7 +199,7 @@ void StartGliderMailingOut (gliderPtr thisGlider)
 		thisGlider->src = gliderSrc[0];
 		thisGlider->mask = gliderSrc[0];
 	}
-	
+
 	thisGlider->hVel = 0;
 	thisGlider->vVel = 0;
 	thisGlider->hDesiredVel = 0;
@@ -215,29 +215,29 @@ void StartGliderDuctingDown (gliderPtr thisGlider, Rect *bounds, hotPtr who)
 	short		leftSought, whoLinked;
 	Byte		objLinked;
 	char		wasState;
-	
+
 	PlayPrioritySound(kTransOutSound, kTransOutPriority);
-	
+
 	if (thisGlider->mode == kGliderGoingFoil)
 		DeckGliderInFoil(thisGlider);
 	else if (thisGlider->mode == kGliderLosingFoil)
 		RemoveFoilFromGlider(thisGlider);
-	
+
 	whoLinked = who->who;
 	transRoom = masterObjects[whoLinked].roomLink;
 	objLinked = masterObjects[whoLinked].objectLink;
 	linkedToWhat = WhatAreWeLinkedTo(transRoom, objLinked);
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	GetObjectRect(&(*thisHouse)->rooms[transRoom].objects[objLinked], &transRect);
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	thisGlider->frame = 0;
 	thisGlider->clip = *bounds;
 	leftSought = bounds->left + ((RectWide(bounds) - kGliderWide) / 2);
 	thisGlider->clip.left = leftSought;
-	
+
 	thisGlider->mode = kGliderDuctingDown;
 }
 
@@ -248,29 +248,29 @@ void StartGliderDuctingUp (gliderPtr thisGlider, Rect *bounds, hotPtr who)
 	short		leftSought, whoLinked;
 	Byte		objLinked;
 	char		wasState;
-	
+
 	PlayPrioritySound(kTransOutSound, kTransOutPriority);
-	
+
 	if (thisGlider->mode == kGliderGoingFoil)
 		DeckGliderInFoil(thisGlider);
 	else if (thisGlider->mode == kGliderLosingFoil)
 		RemoveFoilFromGlider(thisGlider);
-	
+
 	whoLinked = who->who;
 	transRoom = masterObjects[whoLinked].roomLink;
 	objLinked = masterObjects[whoLinked].objectLink;
 	linkedToWhat = WhatAreWeLinkedTo(transRoom, objLinked);
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	GetObjectRect(&(*thisHouse)->rooms[transRoom].objects[objLinked], &transRect);
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	thisGlider->frame = 0;
 	thisGlider->clip = *bounds;
 	leftSought = bounds->left + ((RectWide(bounds) - kGliderWide) / 2);
 	thisGlider->clip.left = leftSought;
-	
+
 	thisGlider->mode = kGliderDuctingUp;
 }
 
@@ -290,24 +290,24 @@ void StartGliderTransporting (gliderPtr thisGlider, hotPtr who)
 	short		whoLinked;
 	Byte		objLinked;
 	char		wasState;
-	
+
 	PlayPrioritySound(kTransOutSound, kTransOutPriority);
-	
+
 	if (thisGlider->mode == kGliderGoingFoil)
 		DeckGliderInFoil(thisGlider);
 	else if (thisGlider->mode == kGliderLosingFoil)
 		RemoveFoilFromGlider(thisGlider);
-	
+
 	whoLinked = who->who;
 	transRoom = masterObjects[whoLinked].roomLink;
 	objLinked = masterObjects[whoLinked].objectLink;
 	linkedToWhat = WhatAreWeLinkedTo(transRoom, objLinked);
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	GetObjectRect(&(*thisHouse)->rooms[transRoom].objects[objLinked], &transRect);
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	thisGlider->dest.right = thisGlider->dest.left + kGliderWide;
 	thisGlider->dest.bottom = thisGlider->dest.top + kGliderHigh;
 	thisGlider->destShadow.right = thisGlider->destShadow.left + kGliderWide;
@@ -317,9 +317,9 @@ void StartGliderTransporting (gliderPtr thisGlider, hotPtr who)
 	thisGlider->frame = kLastFadeSequence - 1;
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = 
+		thisGlider->src =
 				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
-		thisGlider->mask = 
+		thisGlider->mask =
 				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
 	}
 	else
@@ -406,9 +406,9 @@ void FlagGliderShredding (gliderPtr thisGlider, Rect *bounds)
 void FlagGliderBurning (gliderPtr thisGlider)
 {
 	#define		kFramesToBurn	60
-	
+
 	PlayPrioritySound(kCaughtFireSound, kCaughtFirePriority);
-	
+
 	thisGlider->dest.right = thisGlider->dest.left + kGliderWide;
 	thisGlider->dest.top = thisGlider->dest.bottom - kGliderBurningHigh;
 	thisGlider->destShadow.right = thisGlider->destShadow.left + kGliderWide;
@@ -473,7 +473,7 @@ void UndoGliderLimbo (gliderPtr thisGlider)
 {
 	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
 		return;
-	
+
 	if (thisGlider->mode == kGliderInLimbo)
 		thisGlider->mode = thisGlider->wasMode;
 	thisGlider->dontDraw = false;
@@ -485,7 +485,7 @@ void ToggleGliderFacing (gliderPtr thisGlider)
 {
 	if (thisGlider->mode != kGliderNormal)
 		return;
-	
+
 	if (thisGlider->facing == kFaceLeft)
 		FlagGliderFaceRight(thisGlider);
 	else
@@ -498,7 +498,7 @@ void InsureGliderFacingRight (gliderPtr thisGlider)
 {
 	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
 		return;
-	
+
 	if ((thisGlider->facing == kFaceLeft) && (thisGlider->mode != kGliderBurning))
 		FlagGliderFaceRight(thisGlider);
 }
@@ -509,7 +509,7 @@ void InsureGliderFacingLeft (gliderPtr thisGlider)
 {
 	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
 		return;
-	
+
 	if ((thisGlider->facing == kFaceRight) && (thisGlider->mode != kGliderBurning))
 		FlagGliderFaceLeft(thisGlider);
 }
@@ -519,10 +519,10 @@ void InsureGliderFacingLeft (gliderPtr thisGlider)
 void ReadyGliderForTripUpStairs (gliderPtr thisGlider)
 {
 	#define kVGliderAppearsComingUp		100
-	
+
 	if ((twoPlayerGame) && (thisGlider->which == playerDead) && (onePlayerLeft))
 		return;
-	
+
 	thisGlider->facing = kFaceLeft;
 	thisGlider->mode = kGliderComingUp;
 	thisGlider->src = gliderSrc[2];
@@ -532,7 +532,7 @@ void ReadyGliderForTripUpStairs (gliderPtr thisGlider)
 	thisGlider->hDesiredVel = 0;
 	thisGlider->vDesiredVel = 0;
 	thisGlider->tipped = false;
-	
+
 	rightClip = GetUpStairsRightEdge();
 	thisGlider->dest = thisGlider->src;
 	ZeroRectCorner(&thisGlider->dest);
@@ -541,7 +541,7 @@ void ReadyGliderForTripUpStairs (gliderPtr thisGlider)
 	thisGlider->destShadow.left = thisGlider->dest.left;
 	thisGlider->destShadow.right = thisGlider->dest.right;
 	thisGlider->wholeShadow = thisGlider->destShadow;
-	
+
 	FinishGliderUpStairs(thisGlider);
 }
 
@@ -550,10 +550,10 @@ void ReadyGliderForTripUpStairs (gliderPtr thisGlider)
 void ReadyGliderForTripDownStairs (gliderPtr thisGlider)
 {
 	#define kVGliderAppearsComingDown		100
-	
+
 	if ((twoPlayerGame) && (thisGlider->which == playerDead) && (onePlayerLeft))
 		return;
-	
+
 	thisGlider->facing = kFaceRight;
 	thisGlider->mode = kGliderComingDown;
 	thisGlider->src = gliderSrc[0];
@@ -563,7 +563,7 @@ void ReadyGliderForTripDownStairs (gliderPtr thisGlider)
 	thisGlider->hDesiredVel = 0;
 	thisGlider->vDesiredVel = 0;
 	thisGlider->tipped = false;
-	
+
 	leftClip = GetDownStairsLeftEdge();
 	thisGlider->dest = thisGlider->src;
 	ZeroRectCorner(&thisGlider->dest);
@@ -572,7 +572,7 @@ void ReadyGliderForTripDownStairs (gliderPtr thisGlider)
 	thisGlider->destShadow.left = thisGlider->dest.left;
 	thisGlider->destShadow.right = thisGlider->dest.right;
 	thisGlider->wholeShadow = thisGlider->destShadow;
-	
+
 	FinishGliderDownStairs(thisGlider);
 }
 
@@ -582,9 +582,9 @@ void StartGliderFoilGoing (gliderPtr thisGlider)
 {
 	if ((thisGlider->mode == kGliderGoingFoil) || (thisGlider->mode == kGliderInLimbo))
 		return;
-	
+
 	QuickFoilRefresh(false);
-	
+
 	thisGlider->mode = kGliderGoingFoil;
 	thisGlider->whole = thisGlider->dest;
 	thisGlider->frame = 0;
@@ -604,13 +604,13 @@ void StartGliderFoilGoing (gliderPtr thisGlider)
 
 void StartGliderFoilLosing (gliderPtr thisGlider)
 {
-	if ((thisGlider->mode == kGliderLosingFoil) || 
+	if ((thisGlider->mode == kGliderLosingFoil) ||
 			(thisGlider->mode == kGliderInLimbo))
 		return;
-	
+
 	QuickFoilRefresh(false);
 	PlayPrioritySound(kFizzleSound, kFizzlePriority);
-	
+
 	thisGlider->mode = kGliderLosingFoil;
 	thisGlider->whole = thisGlider->dest;
 	thisGlider->frame = 0;
@@ -632,7 +632,7 @@ void TagGliderIdle (gliderPtr thisGlider)
 {
 	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
 		return;
-	
+
 	thisGlider->wasMode = thisGlider->mode;
 	thisGlider->mode = kGliderIdle;
 	thisGlider->hVel = 30;			// used for 30 frame delay

@@ -42,17 +42,17 @@ void SaveGame2 (void)
 	gamePtr				savedGame;
 	short				r, i, numRooms, gameRefNum;
 	char				wasState;
-	
+
 	FlushEvents(everyEvent, 0);
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
-	
+
 	numRooms = thisHousePtr->nRooms;
-	
+
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	byteCount = sizeof(game2Type) + sizeof(savedRoom) * numRooms;
 	savedGame = (gamePtr)NewPtr(byteCount);
 	if (savedGame == nil)
@@ -60,32 +60,32 @@ void SaveGame2 (void)
 		YellowAlert(kYellowFailedSaveGame, MemError());
 		return;
 	}
-	
+
 	GetFirstWordOfString(thisHouseName, gameNameStr);
 	if (gameNameStr[0] > 23)
 		gameNameStr[0] = 23;
 	PasStringConcat(gameNameStr, "\p Game");
-	
+
 	StandardPutFile("\pSave Game As:", gameNameStr, &theReply);
 	if (!theReply.sfGood)
 		return;
-	
+
 	if (theReply.sfReplacing)
 	{
-		theErr = FSMakeFSSpec(theReply.sfFile.vRefNum, theReply.sfFile.parID, 
+		theErr = FSMakeFSSpec(theReply.sfFile.vRefNum, theReply.sfFile.parID,
 				theReply.sfFile.name, &tempSpec);
 		if (!CheckFileError(theErr, "\pSaved Game"))
 			return;
-		
+
 		theErr = FSpDelete(&tempSpec);
 		if (!CheckFileError(theErr, "\pSaved Game"))
 			return;
 	}
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
-	
+
 	savedGame->house = theHousesSpecs[thisHouseIndex];
 	savedGame->version = kSavedGameVersion;
 	savedGame->wasStarsLeft = numStarsRemaining;
@@ -104,21 +104,21 @@ void SaveGame2 (void)
 	savedGame->nRooms = numRooms;
 	savedGame->facing = theGlider.facing;
 	savedGame->showFoil = showFoil;
-	
+
 	for (r = 0; r < numRooms; r++)
 	{
 		destRoom = &(savedGame->savedData[r]);
 		srcRoom = &(thisHousePtr->rooms[r]);
-		
+
 		destRoom->unusedShort = 0;
 		destRoom->unusedByte = 0;
 		destRoom->visited = srcRoom->visited;
 		for (i = 0; i < kMaxRoomObs; i++)
 			destRoom->objects[i] = srcRoom->objects[i];
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	theErr = FSpCreate(&theReply.sfFile, 'ozm5', 'gliG', theReply.sfScript);
 	if (CheckFileError(theErr, "\pSaved Game"))
 	{
@@ -153,12 +153,12 @@ void SavedGameMismatchError (StringPtr gameName)
 {
 	#define		kSavedGameErrorAlert	1044
 	short		whoCares;
-	
+
 	InitCursor();
-	
+
 //	CenterAlert(kSavedGameErrorAlert);
 	ParamText(gameName, thisHouseName, "\p", "\p");
-	
+
 	whoCares = Alert(kSavedGameErrorAlert, nil);
 }
 
@@ -178,24 +178,24 @@ return false;		// TEMP fix this iwth NavServices
 	OSErr				theErr;
 	short				r, i, gameRefNum;
 	char				wasState;
-	
+
 	theList[0] = 'gliG';
-	
+
 	StandardGetFile(nil, 1, theList, &theReply);
 	if (!theReply.sfGood)
 		return(false);
-	
+
 	theErr = FSpOpenDF(&theReply.sfFile, fsCurPerm, &gameRefNum);
 	if (!CheckFileError(theErr, "\pSaved Game"))
 		return(false);
-	
+
 	theErr = GetEOF(gameRefNum, &byteCount);
 	if (!CheckFileError(theErr, "\pSaved Game"))
 	{
 		theErr = FSClose(gameRefNum);
 		return(false);
 	}
-	
+
 	savedGame = (gamePtr)NewPtr(byteCount);
 	if (savedGame == nil)
 	{
@@ -203,7 +203,7 @@ return false;		// TEMP fix this iwth NavServices
 		theErr = FSClose(gameRefNum);
 		return(false);
 	}
-	
+
 	theErr = SetFPos(gameRefNum, fsFromStart, 0L);
 	if (!CheckFileError(theErr, "\pSaved Game"))
 	{
@@ -211,7 +211,7 @@ return false;		// TEMP fix this iwth NavServices
 		theErr = FSClose(gameRefNum);
 		return(false);
 	}
-	
+
 	theErr = FSRead(gameRefNum, &byteCount, savedGame);
 	if (!CheckFileError(theErr, "\pSaved Game"))
 	{
@@ -219,11 +219,11 @@ return false;		// TEMP fix this iwth NavServices
 		theErr = FSClose(gameRefNum);
 		return(false);
 	}
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
-	
+
 	if (!EqualString(savedGame->house.name, thisHouseName, true, true))
 	{
 		SavedGameMismatchError(savedGame->house.name);
@@ -273,7 +273,7 @@ return false;		// TEMP fix this iwth NavServices
 		smallGame.unusedShort = 0;
 		smallGame.facing = savedGame->facing;
 		smallGame.showFoil = savedGame->showFoil;
-		
+
 		for (r = 0; r < savedGame->nRooms; r++)
 		{
 			srcRoom = &(savedGame->savedData[r]);
@@ -284,13 +284,13 @@ return false;		// TEMP fix this iwth NavServices
 		}
 	}
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	DisposePtr((Ptr)savedGame);
-	
+
 	theErr = FSClose(gameRefNum);
 	if (!CheckFileError(theErr, "\pSaved Game"))
 		return (false);
-	
+
 	return (true);
 	*/
 }
@@ -305,14 +305,14 @@ void SaveGame (Boolean doSave)
 	houseType		*thisHousePtr;
 	UInt32			stamp;
 	char			wasState;
-	
+
 	if (twoPlayerGame)
 		return;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
-	
+
 	if (doSave)
 	{
 		thisHousePtr->savedGame.version = kSavedGameVersion;
@@ -333,16 +333,16 @@ void SaveGame (Boolean doSave)
 		thisHousePtr->savedGame.unusedShort = 0;
 		thisHousePtr->savedGame.facing = theGlider.facing;
 		thisHousePtr->savedGame.showFoil = showFoil;
-		
+
 		thisHousePtr->hasGame = true;
 	}
 	else
 	{
 		thisHousePtr->hasGame = false;
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	if (doSave)
 	{
 		if (!WriteHouse(theMode == kEditMode))

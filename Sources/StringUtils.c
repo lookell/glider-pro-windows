@@ -18,7 +18,7 @@
 void PasStringCopy (StringPtr p1, StringPtr p2)
 {
 	register short		stringLength;
-	
+
 	stringLength = *p2++ = *p1++;
 	while (--stringLength >= 0)
 		*p2++ = *p1++;
@@ -36,11 +36,11 @@ short WhichStringFirst (StringPtr p1, StringPtr p2)
 	short		smallestLength, seek, greater;
 	char		char1, char2;
 	Boolean		foundIt;
-	
+
 	smallestLength = p1[0];
 	if (p2[0] < smallestLength)
 		smallestLength = p2[0];
-	
+
 	greater = 0;					// neither are greater, they are equal
 	seek = 1;						// start at character #1
 	foundIt = false;
@@ -52,7 +52,7 @@ short WhichStringFirst (StringPtr p1, StringPtr p2)
 		char2 = p2[seek];			// make upper case (if applicable)
 		if ((char2 > 0x60) && (char2 < 0x7B))
 			char2 -= 0x20;
-		
+
 		if (char1 > char2)			// first string is greater
 		{
 			greater = 1;
@@ -77,7 +77,7 @@ short WhichStringFirst (StringPtr p1, StringPtr p2)
 		}
 	}
 	while (!foundIt);
-	
+
 	return (greater);
 }
 
@@ -89,15 +89,15 @@ short WhichStringFirst (StringPtr p1, StringPtr p2)
 void PasStringCopyNum (StringPtr p1, StringPtr p2, short charsToCopy)
 {
 	short		i;
-	
+
 	if (charsToCopy > *p1)		// if trying to copy more chars than there are
 		charsToCopy = *p1;		// reduce the number of chars to copy to this size
-	
+
 	*p2 = charsToCopy;
-	
+
 	*p2++;
 	*p1++;
-	
+
 	for (i = 0; i < charsToCopy; i++)
 		*p2++ = *p1++;
 }
@@ -109,23 +109,23 @@ void PasStringCopyNum (StringPtr p1, StringPtr p2, short charsToCopy)
 void PasStringConcat (StringPtr p1, StringPtr p2)
 {
 	short		wasLength, addedLength, i;
-	
+
 	wasLength = *p1;
 	if (wasLength > 255)
 		wasLength = 255;
-	
+
 	addedLength = *p2;
 	if ((wasLength + addedLength) > 255)
 		addedLength = 255 - wasLength;
-	
+
 	*p1 = wasLength + addedLength;
-	
+
 	*p1++;
 	*p2++;
-	
+
 	for (i = 0; i < wasLength; i++)
 		*p1++;
-	
+
 	for (i = 0; i < addedLength; i++)
 		*p1++ = *p2++;
 }
@@ -141,10 +141,10 @@ void GetLineOfText (StringPtr srcStr, short index, StringPtr textLine)
 {
 	short		i, srcLength, count, start, stop;
 	Boolean		foundIt;
-	
+
 	PasStringCopy("\p", textLine);
 	srcLength = srcStr[0];
-	
+
 	if (index == 0)						// walk through to "index"
 		start = 1;
 	else
@@ -168,11 +168,11 @@ void GetLineOfText (StringPtr srcStr, short index, StringPtr textLine)
 		}
 		while ((i < srcLength) && (!foundIt));
 	}
-	
+
 	if (start != 0)
 	{
 		i = start;
-		
+
 		foundIt = false;
 		do
 		{
@@ -184,7 +184,7 @@ void GetLineOfText (StringPtr srcStr, short index, StringPtr textLine)
 			i++;
 		}
 		while ((i < srcLength) && (!foundIt));
-		
+
 		if (!foundIt)
 		{
 			if (start > srcLength)
@@ -195,9 +195,9 @@ void GetLineOfText (StringPtr srcStr, short index, StringPtr textLine)
 			else
 				stop = i;
 		}
-		
+
 		count = 0;
-		
+
 		for (i = start; i <= stop; i++)
 		{
 			count++;
@@ -217,10 +217,10 @@ void WrapText (StringPtr theText, short maxChars)
 {
 	short		lastChar, count, chars, spaceIs;
 	Boolean		foundEdge, foundSpace;
-	
+
 	lastChar = theText[0];
 	count = 0;
-	
+
 	do
 	{
 		chars = 0;
@@ -239,7 +239,7 @@ void WrapText (StringPtr theText, short maxChars)
 			}
 		}
 		while ((count < lastChar) && (chars < maxChars) && (!foundEdge));
-		
+
 		if ((!foundEdge) && (count < lastChar) && (foundSpace))
 		{
 			theText[spaceIs] = kReturnKeyASCII;
@@ -256,16 +256,16 @@ void WrapText (StringPtr theText, short maxChars)
 void GetFirstWordOfString (StringPtr stringIn, StringPtr stringOut)
 {
 	short		isLong, spaceAt, i;
-	
+
 	isLong = stringIn[0];
 	spaceAt = isLong;
-	
+
 	for (i = 1; i < isLong; i++)
 	{
 		if ((stringIn[i] == ' ') && (spaceAt == isLong))
 			spaceAt = i - 1;
 	}
-	
+
 	if (spaceAt <= 0)
 		PasStringCopy("\p", stringOut);
 	else
@@ -283,7 +283,7 @@ void CollapseStringToWidth (StringPtr theStr, short wide)
 {
 	short		dotsWide;
 	Boolean 	tooWide;
-	
+
 	dotsWide = StringWidth("\p…");
 	tooWide = StringWidth(theStr) > wide;
 	while (tooWide)
@@ -304,7 +304,7 @@ void GetChooserName (StringPtr thisName)
 	#define		kChooserStringID	-16096
 	Handle		theNameHandle;
 	Byte		oldState;
-	
+
 	theNameHandle = (Handle)GetString(kChooserStringID);
 	if (theNameHandle != nil) {
 		oldState = HGetState(theNameHandle);
@@ -321,7 +321,7 @@ void GetChooserName (StringPtr thisName)
 StringPtr GetLocalizedString (short index, StringPtr theString)
 {
 	#define		kLocalizedStringsID		150
-	
+
 	GetIndString(theString, kLocalizedStringsID, index);
 	return (theString);
 }

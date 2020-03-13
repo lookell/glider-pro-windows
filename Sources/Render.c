@@ -104,14 +104,14 @@ void AddRectToWorkRectsWhole (Rect *theRect)
 {
 	if (numWork2Main < (kMaxGarbageRects - 1))
 	{
-		if ((theRect->right <= workSrcRect.left) || 
-				(theRect->bottom <= workSrcRect.top) || 
-				(theRect->left >= workSrcRect.right) || 
+		if ((theRect->right <= workSrcRect.left) ||
+				(theRect->bottom <= workSrcRect.top) ||
+				(theRect->left >= workSrcRect.right) ||
 				(theRect->top >= workSrcRect.bottom))
 			return;
-		
+
 		work2MainRects[numWork2Main] = *theRect;
-		
+
 		if (work2MainRects[numWork2Main].left < workSrcRect.left)
 			work2MainRects[numWork2Main].left = workSrcRect.left;
 		else if (work2MainRects[numWork2Main].right > workSrcRect.right)
@@ -120,13 +120,13 @@ void AddRectToWorkRectsWhole (Rect *theRect)
 			work2MainRects[numWork2Main].top = workSrcRect.top;
 		else if (work2MainRects[numWork2Main].bottom > workSrcRect.bottom)
 			work2MainRects[numWork2Main].bottom = workSrcRect.bottom;
-		
-		if ((work2MainRects[numWork2Main].right == 
-				work2MainRects[numWork2Main].left) || 
-				(work2MainRects[numWork2Main].top == 
+
+		if ((work2MainRects[numWork2Main].right ==
+				work2MainRects[numWork2Main].left) ||
+				(work2MainRects[numWork2Main].top ==
 				work2MainRects[numWork2Main].bottom))
 			return;
-		
+
 		numWork2Main++;
 	}
 }
@@ -138,50 +138,50 @@ void DrawReflection (gliderPtr thisGlider, Boolean oneOrTwo)
 	RgnHandle	wasClip;
 	Rect		src, dest;
 	short		which;
-	
+
 	if (thisGlider->dontDraw)
 		return;
-	
+
 	if (thisGlider->facing == kFaceRight)
 		which = 0;
 	else
 		which = 1;
-	
+
 	dest = thisGlider->dest;
 	QOffsetRect(&dest, playOriginH - 20, playOriginV - 16);
-	
+
 	wasClip = NewRgn();
 	if (wasClip == nil)
 		return;
-	
+
 	SetPort((GrafPtr)workSrcMap);
 	GetClip(wasClip);
 	SetClip(mirrorRgn);
-	
+
 	if (oneOrTwo)
 	{
 		if (showFoil)
-			CopyMask((BitMap *)*GetGWorldPixMap(glid2SrcMap), 
-					(BitMap *)*GetGWorldPixMap(glidMaskMap), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
+			CopyMask((BitMap *)*GetGWorldPixMap(glid2SrcMap),
+					(BitMap *)*GetGWorldPixMap(glidMaskMap),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
 					&thisGlider->src, &thisGlider->mask, &dest);
 		else
-			CopyMask((BitMap *)*GetGWorldPixMap(glidSrcMap), 
-					(BitMap *)*GetGWorldPixMap(glidMaskMap), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
+			CopyMask((BitMap *)*GetGWorldPixMap(glidSrcMap),
+					(BitMap *)*GetGWorldPixMap(glidMaskMap),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
 					&thisGlider->src, &thisGlider->mask, &dest);
 	}
 	else
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(glid2SrcMap), 
-				(BitMap *)*GetGWorldPixMap(glidMaskMap), 
-				(BitMap *)*GetGWorldPixMap(workSrcMap), 
+		CopyMask((BitMap *)*GetGWorldPixMap(glid2SrcMap),
+				(BitMap *)*GetGWorldPixMap(glidMaskMap),
+				(BitMap *)*GetGWorldPixMap(workSrcMap),
 				&thisGlider->src, &thisGlider->mask, &dest);
 	}
-	
+
 	SetClip(wasClip);
 	DisposeRgn(wasClip);
-	
+
 	src =thisGlider->whole;
 	QOffsetRect(&src, playOriginH - 20, playOriginV - 16);
 	AddRectToWorkRects(&src);
@@ -193,10 +193,10 @@ void DrawReflection (gliderPtr thisGlider, Boolean oneOrTwo)
 void RenderFlames (void)
 {
 	short		i;
-	
+
 	if ((numFlames == 0) && (numTikiFlames == 0) && (numCoals == 0))
 		return;
-	
+
 	for (i = 0; i < numFlames; i++)
 	{
 		flames[i].mode++;
@@ -208,14 +208,14 @@ void RenderFlames (void)
 			flames[i].src.top = 0;
 			flames[i].src.bottom = 15;
 		}
-		
-		CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[flames[i].who].map), 
-				(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+		CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[flames[i].who].map),
+				(BitMap *)*GetGWorldPixMap(workSrcMap),
 				&flames[i].src, &flames[i].dest, srcCopy, nil);
-		
+
 		AddRectToWorkRects(&flames[i].dest);
 	}
-	
+
 	for (i = 0; i < numTikiFlames; i++)
 	{
 		tikiFlames[i].mode++;
@@ -227,14 +227,14 @@ void RenderFlames (void)
 			tikiFlames[i].src.top = 0;
 			tikiFlames[i].src.bottom = 10;
 		}
-		
-		CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[tikiFlames[i].who].map), 
-				(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+		CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[tikiFlames[i].who].map),
+				(BitMap *)*GetGWorldPixMap(workSrcMap),
 				&tikiFlames[i].src, &tikiFlames[i].dest, srcCopy, nil);
-		
+
 		AddRectToWorkRects(&tikiFlames[i].dest);
 	}
-	
+
 	for (i = 0; i < numCoals; i++)
 	{
 		bbqCoals[i].mode++;
@@ -246,11 +246,11 @@ void RenderFlames (void)
 			bbqCoals[i].src.top = 0;
 			bbqCoals[i].src.bottom = 9;
 		}
-		
-		CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[bbqCoals[i].who].map), 
-				(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+		CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[bbqCoals[i].who].map),
+				(BitMap *)*GetGWorldPixMap(workSrcMap),
 				&bbqCoals[i].src, &bbqCoals[i].dest, srcCopy, nil);
-		
+
 		AddRectToWorkRects(&bbqCoals[i].dest);
 	}
 }
@@ -261,18 +261,18 @@ void RenderPendulums (void)
 {
 	short		i;
 	Boolean		playedTikTok;
-	
+
 	playedTikTok = false;
-	
+
 	if (numPendulums == 0)
 		return;
-	
+
 	clockFrame++;
 	if ((clockFrame == 10) || (clockFrame == 15))
 	{
 		if (clockFrame >= 15)
 			clockFrame = 0;
-		
+
 		for (i = 0; i < numPendulums; i++)
 		{
 			if (pendulums[i].active)
@@ -282,7 +282,7 @@ void RenderPendulums (void)
 					pendulums[i].mode++;
 					pendulums[i].src.top += 28;
 					pendulums[i].src.bottom += 28;
-					
+
 					if (pendulums[i].mode >= 2)
 					{
 						pendulums[i].toOrFro = !pendulums[i].toOrFro;
@@ -298,10 +298,10 @@ void RenderPendulums (void)
 					pendulums[i].mode--;
 					pendulums[i].src.top -= 28;
 					pendulums[i].src.bottom -= 28;
-					
+
 					if (pendulums[i].mode <= 0)
 					{
-						pendulums[i].toOrFro = !pendulums[i].toOrFro;	
+						pendulums[i].toOrFro = !pendulums[i].toOrFro;
 						if (!playedTikTok)
 						{
 							PlayPrioritySound(kTokSound, kTokPriority);
@@ -309,26 +309,26 @@ void RenderPendulums (void)
 						}
 					}
 				}
-				
-				CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[pendulums[i].who].map), 
-						(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+				CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[pendulums[i].who].map),
+						(BitMap *)*GetGWorldPixMap(workSrcMap),
 						&pendulums[i].src, &pendulums[i].dest, srcCopy, nil);
-								
+
 				AddRectToWorkRects(&pendulums[i].dest);
 			}
 		}
 	}
-}	
+}
 
 //--------------------------------------------------------------  RenderFlyingPoints
 
 void RenderFlyingPoints (void)
 {
 	short		i;
-	
+
 	if (numFlyingPts == 0)
 		return;
-	
+
 	for (i = 0; i < kMaxFlyingPts; i++)
 	{
 		if (flyingPoints[i].mode != -1)
@@ -338,7 +338,7 @@ void RenderFlyingPoints (void)
 				flyingPoints[i].mode = flyingPoints[i].start;
 				flyingPoints[i].loops++;
 			}
-			
+
 			if (flyingPoints[i].loops >= kMaxFlyingPointsLoop)
 			{
 				AddRectToWorkRects(&flyingPoints[i].dest);
@@ -349,27 +349,27 @@ void RenderFlyingPoints (void)
 			{
 				flyingPoints[i].dest.left += flyingPoints[i].hVel;
 				flyingPoints[i].dest.right += flyingPoints[i].hVel;
-				
+
 				if (flyingPoints[i].hVel > 0)
 					flyingPoints[i].whole.right = flyingPoints[i].dest.right;
 				else
 					flyingPoints[i].whole.left = flyingPoints[i].dest.left;
-				
+
 				flyingPoints[i].dest.top += flyingPoints[i].vVel;
 				flyingPoints[i].dest.bottom += flyingPoints[i].vVel;
-				
+
 				if (flyingPoints[i].vVel > 0)
 					flyingPoints[i].whole.bottom = flyingPoints[i].dest.bottom;
 				else
 					flyingPoints[i].whole.top = flyingPoints[i].dest.top;
-				
-				CopyMask((BitMap *)*GetGWorldPixMap(pointsSrcMap), 
-						(BitMap *)*GetGWorldPixMap(pointsMaskMap), 
-						(BitMap *)*GetGWorldPixMap(workSrcMap), 
-						&pointsSrc[flyingPoints[i].mode], 
-						&pointsSrc[flyingPoints[i].mode], 
+
+				CopyMask((BitMap *)*GetGWorldPixMap(pointsSrcMap),
+						(BitMap *)*GetGWorldPixMap(pointsMaskMap),
+						(BitMap *)*GetGWorldPixMap(workSrcMap),
+						&pointsSrc[flyingPoints[i].mode],
+						&pointsSrc[flyingPoints[i].mode],
 						&flyingPoints[i].dest);
-				
+
 				AddRectToWorkRects(&flyingPoints[i].whole);
 				AddRectToBackRects(&flyingPoints[i].dest);
 				flyingPoints[i].whole = flyingPoints[i].dest;
@@ -384,10 +384,10 @@ void RenderFlyingPoints (void)
 void RenderSparkles (void)
 {
 	short		i;
-	
+
 	if (numSparkles == 0)
 		return;
-	
+
 	for (i = 0; i < kMaxSparkles; i++)
 	{
 		if (sparkles[i].mode != -1)
@@ -400,13 +400,13 @@ void RenderSparkles (void)
 			}
 			else
 			{
-				CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap), 
-						(BitMap *)*GetGWorldPixMap(bonusMaskMap), 
-						(BitMap *)*GetGWorldPixMap(workSrcMap), 
-						&sparkleSrc[sparkles[i].mode], 
-						&sparkleSrc[sparkles[i].mode], 
+				CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
+						(BitMap *)*GetGWorldPixMap(bonusMaskMap),
+						(BitMap *)*GetGWorldPixMap(workSrcMap),
+						&sparkleSrc[sparkles[i].mode],
+						&sparkleSrc[sparkles[i].mode],
 						&sparkles[i].bounds);
-				
+
 				AddRectToWorkRects(&sparkles[i].bounds);
 				AddRectToBackRects(&sparkles[i].bounds);
 				sparkles[i].mode++;
@@ -420,10 +420,10 @@ void RenderSparkles (void)
 void RenderStars (void)
 {
 	short		i;
-	
+
 	if (numStars == 0)
 		return;
-	
+
 	for (i = 0; i < numStars; i++)
 	{
 		if (theStars[i].mode != -1)
@@ -437,11 +437,11 @@ void RenderStars (void)
 				theStars[i].src.top = 0;
 				theStars[i].src.bottom = 31;
 			}
-			
-			CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[theStars[i].who].map), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+			CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[theStars[i].who].map),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
 					&theStars[i].src, &theStars[i].dest, srcCopy, nil);
-			
+
 			AddRectToWorkRects(&theStars[i].dest);
 		}
 	}
@@ -453,76 +453,76 @@ void RenderGlider (gliderPtr thisGlider, Boolean oneOrTwo)
 {
 	Rect		src, dest;
 	short		which;
-	
+
 	if (thisGlider->dontDraw)
 		return;
-	
+
 	if (thisGlider->facing == kFaceRight)
 		which = 0;
 	else
 		which = 1;
-	
+
 	if (shadowVisible)
 	{
 		dest = thisGlider->destShadow;
 		QOffsetRect(&dest, playOriginH, playOriginV);
-		
-		if ((thisGlider->mode == kGliderComingUp) || 
+
+		if ((thisGlider->mode == kGliderComingUp) ||
 				(thisGlider->mode == kGliderGoingDown))
 		{
 			src = shadowSrc[which];
 			src.right = src.left + (dest.right - dest.left);
-			
-			CopyMask((BitMap *)*GetGWorldPixMap(shadowSrcMap), 
-					(BitMap *)*GetGWorldPixMap(shadowMaskMap), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+			CopyMask((BitMap *)*GetGWorldPixMap(shadowSrcMap),
+					(BitMap *)*GetGWorldPixMap(shadowMaskMap),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
 					&src, &src, &dest);
 		}
 		else if (thisGlider->mode == kGliderComingDown)
 		{
 			src = shadowSrc[which];
 			src.left = src.right - (dest.right - dest.left);
-			
-			CopyMask((BitMap *)*GetGWorldPixMap(shadowSrcMap), 
-					(BitMap *)*GetGWorldPixMap(shadowMaskMap), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+			CopyMask((BitMap *)*GetGWorldPixMap(shadowSrcMap),
+					(BitMap *)*GetGWorldPixMap(shadowMaskMap),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
 					&src, &src, &dest);
 		}
 		else
-			CopyMask((BitMap *)*GetGWorldPixMap(shadowSrcMap), 
-					(BitMap *)*GetGWorldPixMap(shadowMaskMap), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
+			CopyMask((BitMap *)*GetGWorldPixMap(shadowSrcMap),
+					(BitMap *)*GetGWorldPixMap(shadowMaskMap),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
 					&shadowSrc[which], &shadowSrc[which], &dest);
 		src =thisGlider->wholeShadow;
 		QOffsetRect(&src, playOriginH, playOriginV);
 		AddRectToWorkRects(&src);
 		AddRectToBackRects(&dest);
 	}
-	
+
 	dest = thisGlider->dest;
 	QOffsetRect(&dest, playOriginH, playOriginV);
-	
+
 	if (oneOrTwo)
 	{
 		if ((!twoPlayerGame) && (showFoil))
-			CopyMask((BitMap *)*GetGWorldPixMap(glid2SrcMap), 
-					(BitMap *)*GetGWorldPixMap(glidMaskMap), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
+			CopyMask((BitMap *)*GetGWorldPixMap(glid2SrcMap),
+					(BitMap *)*GetGWorldPixMap(glidMaskMap),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
 					&thisGlider->src, &thisGlider->mask, &dest);
 		else
-			CopyMask((BitMap *)*GetGWorldPixMap(glidSrcMap), 
-					(BitMap *)*GetGWorldPixMap(glidMaskMap), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
+			CopyMask((BitMap *)*GetGWorldPixMap(glidSrcMap),
+					(BitMap *)*GetGWorldPixMap(glidMaskMap),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
 					&thisGlider->src, &thisGlider->mask, &dest);
 	}
 	else
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(glid2SrcMap), 
-				(BitMap *)*GetGWorldPixMap(glidMaskMap), 
-				(BitMap *)*GetGWorldPixMap(workSrcMap), 
+		CopyMask((BitMap *)*GetGWorldPixMap(glid2SrcMap),
+				(BitMap *)*GetGWorldPixMap(glidMaskMap),
+				(BitMap *)*GetGWorldPixMap(workSrcMap),
 				&thisGlider->src, &thisGlider->mask, &dest);
 	}
-	
+
 	src =thisGlider->whole;
 	QOffsetRect(&src, playOriginH, playOriginV);
 	AddRectToWorkRects(&src);
@@ -535,20 +535,20 @@ void RenderBands (void)
 {
 	Rect		dest;
 	short		i;
-	
+
 	if (numBands == 0)
 		return;
-	
+
 	for (i = 0; i < numBands; i++)
 	{
 		dest = bands[i].dest;
 		QOffsetRect(&dest, playOriginH, playOriginV);
-		CopyMask((BitMap *)*GetGWorldPixMap(bandsSrcMap), 
-				(BitMap *)*GetGWorldPixMap(bandsMaskMap), 
-				(BitMap *)*GetGWorldPixMap(workSrcMap), 
-				&bandRects[bands[i].mode], 
+		CopyMask((BitMap *)*GetGWorldPixMap(bandsSrcMap),
+				(BitMap *)*GetGWorldPixMap(bandsMaskMap),
+				(BitMap *)*GetGWorldPixMap(workSrcMap),
+				&bandRects[bands[i].mode],
 				&bandRects[bands[i].mode], &dest);
-		
+
 		AddRectToWorkRects(&dest);
 		AddRectToBackRects(&dest);
 	}
@@ -560,7 +560,7 @@ void RenderShreds (void)
 {
 	Rect		src, dest;
 	short		i, high;
-	
+
 	if (numShredded > 0)
 	{
 		for (i = 0; i < numShredded; i++)
@@ -575,9 +575,9 @@ void RenderShreds (void)
 				src.top = src.bottom - high;
 				dest = shreds[i].bounds;
 				QOffsetRect(&dest, playOriginH, playOriginV);
-				CopyMask((BitMap *)*GetGWorldPixMap(shredSrcMap), 
-						(BitMap *)*GetGWorldPixMap(shredMaskMap), 
-						(BitMap *)*GetGWorldPixMap(workSrcMap), 
+				CopyMask((BitMap *)*GetGWorldPixMap(shredSrcMap),
+						(BitMap *)*GetGWorldPixMap(shredMaskMap),
+						(BitMap *)*GetGWorldPixMap(workSrcMap),
 						&src, &src, &dest);
 				AddRectToBackRects(&dest);
 				dest.top--;
@@ -593,9 +593,9 @@ void RenderShreds (void)
 				shreds[i].frame++;
 				if (shreds[i].frame < 20)
 				{
-					CopyMask((BitMap *)*GetGWorldPixMap(shredSrcMap), 
-						(BitMap *)*GetGWorldPixMap(shredMaskMap), 
-							(BitMap *)*GetGWorldPixMap(workSrcMap), 
+					CopyMask((BitMap *)*GetGWorldPixMap(shredSrcMap),
+						(BitMap *)*GetGWorldPixMap(shredMaskMap),
+							(BitMap *)*GetGWorldPixMap(workSrcMap),
 							&shredSrcRect, &shredSrcRect, &dest);
 				}
 				else
@@ -616,20 +616,20 @@ void RenderShreds (void)
 void CopyRectsQD (void)
 {
 	short		i;
-	
+
 	for (i = 0; i < numWork2Main; i++)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap), 
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
-				&work2MainRects[i], &work2MainRects[i], 
+		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
+				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+				&work2MainRects[i], &work2MainRects[i],
 				srcCopy, nil);
 	}
-	
+
 	for (i = 0; i < numBack2Work; i++)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap), 
-				(BitMap *)*GetGWorldPixMap(workSrcMap), 
-				&back2WorkRects[i], &back2WorkRects[i], 
+		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
+				(BitMap *)*GetGWorldPixMap(workSrcMap),
+				&back2WorkRects[i], &back2WorkRects[i],
 				srcCopy, nil);
 	}
 }
@@ -658,14 +658,14 @@ void RenderFrame (void)
 		RenderGlider(&theGlider2, false);
 	RenderShreds();
 	RenderBands();
-	
+
 	while (TickCount() < nextFrame)
 	{
 	}
 	nextFrame = TickCount() + kTicksPerFrame;
-	
+
 	CopyRectsQD();
-	
+
 	numWork2Main = 0;
 	numBack2Work = 0;
 }
@@ -675,18 +675,18 @@ void RenderFrame (void)
 void InitGarbageRects (void)
 {
 	short		i;
-	
+
 	numWork2Main = 0;
 	numBack2Work = 0;
-	
+
 	numSparkles = 0;
 	for (i = 0; i < kMaxSparkles; i++)
 		sparkles[i].mode = -1;
-	
+
 	numFlyingPts = 0;
 	for (i = 0; i < kMaxFlyingPts; i++)
 		flyingPoints[i].mode = -1;
-	
+
 	nextFrame = TickCount() + kTicksPerFrame;
 }
 
@@ -694,8 +694,8 @@ void InitGarbageRects (void)
 
 void CopyRectBackToWork (Rect *theRect)
 {
-	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap), 
-			(BitMap *)*GetGWorldPixMap(workSrcMap), 
+	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
+			(BitMap *)*GetGWorldPixMap(workSrcMap),
 			theRect, theRect, srcCopy, nil);
 }
 
@@ -703,8 +703,8 @@ void CopyRectBackToWork (Rect *theRect)
 
 void CopyRectWorkToBack (Rect *theRect)
 {
-	CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			theRect, theRect, srcCopy, nil);
 }
 
@@ -712,8 +712,8 @@ void CopyRectWorkToBack (Rect *theRect)
 
 void CopyRectWorkToMain (Rect *theRect)
 {
-	CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap), 
-			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
+	CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
+			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 			theRect, theRect, srcCopy, nil);
 }
 
@@ -721,8 +721,8 @@ void CopyRectWorkToMain (Rect *theRect)
 
 void CopyRectMainToWork (Rect *theRect)
 {
-	CopyBits(GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
-			(BitMap *)*GetGWorldPixMap(workSrcMap), 
+	CopyBits(GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+			(BitMap *)*GetGWorldPixMap(workSrcMap),
 			theRect, theRect, srcCopy, nil);
 }
 
@@ -730,8 +730,8 @@ void CopyRectMainToWork (Rect *theRect)
 
 void CopyRectMainToBack (Rect *theRect)
 {
-	CopyBits(GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+	CopyBits(GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			theRect, theRect, srcCopy, nil);
 }
 
@@ -740,7 +740,7 @@ void CopyRectMainToBack (Rect *theRect)
 void AddToMirrorRegion (Rect *theRect)
 {
 	RgnHandle	tempRgn;
-	
+
 	if (mirrorRgn == nil)
 	{
 		mirrorRgn = NewRgn();

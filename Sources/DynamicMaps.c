@@ -46,7 +46,7 @@ extern	short		numGrease, numDynamics;
 void NilSavedMaps (void)
 {
 	short		i;
-	
+
 	for (i = 0; i < kMaxSavedMaps; i++)
 	{
 		if (savedMaps[i].map != nil)
@@ -71,24 +71,24 @@ short BackUpToSavedMap (Rect *theRect, short where, short who)
 {
 	Rect		mapRect;
 	OSErr		theErr;
-	
+
 	if (numSavedMaps >= kMaxSavedMaps)
 		return(-1);
-	
+
 	mapRect = *theRect;
 	ZeroRectCorner(&mapRect);
 	savedMaps[numSavedMaps].dest = *theRect;
 //	CreateOffScreenPixMap(&mapRect, &savedMaps[numSavedMaps].map);
 	theErr = CreateOffScreenGWorld(&savedMaps[numSavedMaps].map, &mapRect, kPreferredDepth);
-	
-	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap), 
-			GetPortBitMapForCopyBits(savedMaps[numSavedMaps].map), 
+
+	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
+			GetPortBitMapForCopyBits(savedMaps[numSavedMaps].map),
 			theRect, &mapRect, srcCopy, nil);
-	
+
 	savedMaps[numSavedMaps].where = where;
 	savedMaps[numSavedMaps].who = who;
 	numSavedMaps++;
-	
+
 	return (numSavedMaps - 1);	// return array index
 }
 
@@ -101,9 +101,9 @@ short ReBackUpSavedMap (Rect *theRect, short where, short who)
 {
 	Rect		mapRect;
 	short		i, foundIndex;
-	
+
 	foundIndex = -1;
-	
+
 	for (i = 0; i < numSavedMaps; i++)
 	{
 		if ((savedMaps[i].where == where) && (savedMaps[i].who == who))
@@ -111,15 +111,15 @@ short ReBackUpSavedMap (Rect *theRect, short where, short who)
 			foundIndex = i;
 			mapRect = *theRect;
 			ZeroRectCorner(&mapRect);
-			
-			CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap), 
-					GetPortBitMapForCopyBits(savedMaps[foundIndex].map), 
+
+			CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
+					GetPortBitMapForCopyBits(savedMaps[foundIndex].map),
 					theRect, &mapRect, srcCopy, nil);
-			
+
 			return (foundIndex);
 		}
 	}
-	
+
 	return (foundIndex);
 }
 
@@ -132,24 +132,24 @@ void RestoreFromSavedMap (short where, short who, Boolean doSparkle)
 {
 	Rect		mapRect, bounds;
 	short		i;
-	
+
 	for (i = 0; i < numSavedMaps; i++)
 	{
-		if ((savedMaps[i].where == where) && (savedMaps[i].who == who) && 
+		if ((savedMaps[i].where == where) && (savedMaps[i].who == who) &&
 				(savedMaps[i].map != nil))
 		{
 			mapRect = savedMaps[i].dest;
 			ZeroRectCorner(&mapRect);
-			
-			CopyBits(GetPortBitMapForCopyBits(savedMaps[i].map), 
-					(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+			CopyBits(GetPortBitMapForCopyBits(savedMaps[i].map),
+					(BitMap *)*GetGWorldPixMap(backSrcMap),
 					&mapRect, &savedMaps[i].dest, srcCopy, nil);
-			CopyBits(GetPortBitMapForCopyBits(savedMaps[i].map), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
+			CopyBits(GetPortBitMapForCopyBits(savedMaps[i].map),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
 					&mapRect, &savedMaps[i].dest, srcCopy, nil);
-			
+
 			AddRectToWorkRects(&savedMaps[i].dest);
-			
+
 			if (doSparkle)
 			{
 				bounds = savedMaps[i].dest;
@@ -170,17 +170,17 @@ void AddSparkle (Rect *theRect)
 {
 	Rect		centeredRect;
 	short		i;
-	
+
 	if (numSparkles < kMaxSparkles)
 	{
 		theRect->left += playOriginH;
 		theRect->right += playOriginH;
 		theRect->top += playOriginV;
 		theRect->bottom += playOriginV;
-		
+
 		centeredRect = sparkleSrc[0];
 		CenterRectInRect(&centeredRect, theRect);
-		
+
 		for (i = 0; i < kMaxSparkles; i++)
 			if (sparkles[i].mode == -1)
 			{
@@ -200,17 +200,17 @@ void AddFlyingPoint (Rect *theRect, short points, short hVel, short vVel)
 {
 	Rect		centeredRect;
 	short		i;
-	
+
 	if (numFlyingPts < kMaxFlyingPts)
 	{
 		theRect->left += playOriginH;
 		theRect->right += playOriginH;
 		theRect->top += playOriginV;
 		theRect->bottom += playOriginV;
-		
+
 		centeredRect = pointsSrc[0];
 		CenterRectInRect(&centeredRect, theRect);
-		
+
 		for (i = 0; i < kMaxFlyingPts; i++)
 			if (flyingPoints[i].mode == -1)
 			{
@@ -225,22 +225,22 @@ void AddFlyingPoint (Rect *theRect, short points, short hVel, short vVel)
 					flyingPoints[i].start = 12;
 					flyingPoints[i].stop = 14;
 					break;
-					
+
 					case 250:
 					flyingPoints[i].start = 9;
 					flyingPoints[i].stop = 11;
 					break;
-					
+
 					case 300:
 					flyingPoints[i].start = 6;
 					flyingPoints[i].stop = 8;
 					break;
-					
+
 					case 500:
 					flyingPoints[i].start = 3;
 					flyingPoints[i].stop = 5;
 					break;
-					
+
 					default:
 					flyingPoints[i].start = 0;
 					flyingPoints[i].stop = 2;
@@ -264,22 +264,22 @@ void BackUpFlames (Rect *src, short index)
 {
 	Rect		dest;
 	short		i;
-	
+
 	QSetRect(&dest, 0, 0, 16, 15);
 	for (i = 0; i < kNumCandleFlames; i++)
 	{
 				// Copy background to map.
-		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap), 
-				GetPortBitMapForCopyBits(savedMaps[index].map), 
+		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
+				GetPortBitMapForCopyBits(savedMaps[index].map),
 				src, &dest, srcCopy, nil);
-		
+
 				// Copy flame to map.
-		CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap), 
-				(BitMap *)*GetGWorldPixMap(blowerMaskMap), 
-				GetPortBitMapForCopyBits(savedMaps[index].map), 
+		CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap),
+				(BitMap *)*GetGWorldPixMap(blowerMaskMap),
+				GetPortBitMapForCopyBits(savedMaps[index].map),
 				&flame[i], &flame[i], &dest);
-		
-		
+
+
 		QOffsetRect(&dest, 0, 15);
 	}
 }
@@ -292,7 +292,7 @@ void BackUpFlames (Rect *src, short index)
 void ReBackUpFlames (short where, short who)
 {
 	short		i, f;
-	
+
 	for (i = 0; i < numSavedMaps; i++)
 	{
 		if ((savedMaps[i].where == where) && (savedMaps[i].who == who))
@@ -317,10 +317,10 @@ void AddCandleFlame (short where, short who, short h, short v)
 {
 	Rect		src, bounds;
 	short		savedNum;
-	
+
 	if ((numFlames >= kMaxCandles) || (h < 16) || (v < 15))
 		return;
-	
+
 	QSetRect(&src, 0, 0, 16, 15);
 	QOffsetRect(&src, h - 8, v - 15);
 	if ((thisMac.isDepth == 4) && ((src.left % 2) == 1))
@@ -350,21 +350,21 @@ void BackUpTikiFlames (Rect *src, short index)
 {
 	Rect		dest;
 	short		i;
-	
+
 	QSetRect(&dest, 0, 0, 8, 10);
 	for (i = 0; i < kNumTikiFlames; i++)
 	{
 				// copy background to map
-		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap), 
-				GetPortBitMapForCopyBits(savedMaps[index].map), 
+		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
+				GetPortBitMapForCopyBits(savedMaps[index].map),
 				src, &dest, srcCopy, nil);
-		
+
 				// copy flame to map
-		CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap), 
-				(BitMap *)*GetGWorldPixMap(blowerMaskMap), 
-				GetPortBitMapForCopyBits(savedMaps[index].map), 
+		CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap),
+				(BitMap *)*GetGWorldPixMap(blowerMaskMap),
+				GetPortBitMapForCopyBits(savedMaps[index].map),
 				&tikiFlame[i], &tikiFlame[i], &dest);
-		
+
 		QOffsetRect(&dest, 0, 10);
 	}
 }
@@ -376,7 +376,7 @@ void BackUpTikiFlames (Rect *src, short index)
 void ReBackUpTikiFlames (short where, short who)
 {
 	short		i, f;
-	
+
 	for (i = 0; i < numSavedMaps; i++)
 	{
 		if ((savedMaps[i].where == where) && (savedMaps[i].who == who))
@@ -401,10 +401,10 @@ void AddTikiFlame (short where, short who, short h, short v)
 {
 	Rect		src, bounds;
 	short		savedNum;
-	
+
 	if ((numTikiFlames >= kMaxTikis) || (h < 8) || (v < 10))
 		return;
-	
+
 	QSetRect(&src, 0, 0, 8, 10);
 	if ((thisMac.isDepth == 4) && ((h % 2) == 1))
 	{
@@ -421,7 +421,7 @@ void AddTikiFlame (short where, short who, short h, short v)
 		tikiFlames[numTikiFlames].dest = src;
 		tikiFlames[numTikiFlames].mode = RandomInt(kNumTikiFlames);
 		QSetRect(&tikiFlames[numTikiFlames].src, 0, 0, 8, 10);
-		QOffsetRect(&tikiFlames[numTikiFlames].src, 0, 
+		QOffsetRect(&tikiFlames[numTikiFlames].src, 0,
 				tikiFlames[numTikiFlames].mode * 10);
 		tikiFlames[numTikiFlames].who = savedNum;
 		numTikiFlames++;
@@ -436,21 +436,21 @@ void BackUpBBQCoals (Rect *src, short index)
 {
 	Rect		dest;
 	short		i;
-	
+
 	QSetRect(&dest, 0, 0, 32, 9);
 	for (i = 0; i < kNumBBQCoals; i++)
 	{
 				// copy background to map
-		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap), 
-				GetPortBitMapForCopyBits(savedMaps[index].map), 
+		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
+				GetPortBitMapForCopyBits(savedMaps[index].map),
 				src, &dest, srcCopy, nil);
-		
+
 				// copy flame to map
-		CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap), 
-				(BitMap *)*GetGWorldPixMap(blowerMaskMap), 
-				GetPortBitMapForCopyBits(savedMaps[index].map), 
+		CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap),
+				(BitMap *)*GetGWorldPixMap(blowerMaskMap),
+				GetPortBitMapForCopyBits(savedMaps[index].map),
 				&coals[i], &coals[i], &dest);
-		
+
 		QOffsetRect(&dest, 0, 9);
 	}
 }
@@ -462,7 +462,7 @@ void BackUpBBQCoals (Rect *src, short index)
 void ReBackUpBBQCoals (short where, short who)
 {
 	short		i, f;
-	
+
 	for (i = 0; i < numSavedMaps; i++)
 	{
 		if ((savedMaps[i].where == where) && (savedMaps[i].who == who))
@@ -487,10 +487,10 @@ void AddBBQCoals (short where, short who, short h, short v)
 {
 	Rect		src, bounds;
 	short		savedNum;
-	
+
 	if ((numCoals >= kMaxCoals) || (h < 32) || (v < 9))
 		return;
-	
+
 	QSetRect(&src, 0, 0, 32, 9);
 	if ((thisMac.isDepth == 4) && ((h % 2) == 1))
 	{
@@ -509,7 +509,7 @@ void AddBBQCoals (short where, short who, short h, short v)
 		QSetRect(&bbqCoals[numCoals].src, 0, 0, 32, 9);
 		QOffsetRect(&bbqCoals[numCoals].src, 0, bbqCoals[numCoals].mode * 9);
 		bbqCoals[numCoals].who = savedNum;
-		
+
 		numCoals++;
 	}
 }
@@ -522,19 +522,19 @@ void BackUpPendulum (Rect *src, short index)
 {
 	Rect		dest;
 	short		i;
-	
+
 	QSetRect(&dest, 0, 0, 32, 28);
 	for (i = 0; i < kNumPendulums; i++)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap), 
-				GetPortBitMapForCopyBits(savedMaps[index].map), 
+		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
+				GetPortBitMapForCopyBits(savedMaps[index].map),
 				src, &dest, srcCopy, nil);
-		
-		CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap), 
-				(BitMap *)*GetGWorldPixMap(bonusMaskMap), 
-				GetPortBitMapForCopyBits(savedMaps[index].map), 
+
+		CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
+				(BitMap *)*GetGWorldPixMap(bonusMaskMap),
+				GetPortBitMapForCopyBits(savedMaps[index].map),
 				&pendulumSrc[i], &pendulumSrc[i], &dest);
-		
+
 		QOffsetRect(&dest, 0, 28);
 	}
 }
@@ -546,7 +546,7 @@ void BackUpPendulum (Rect *src, short index)
 void ReBackUpPendulum (short where, short who)
 {
 	short		i, f;
-	
+
 	for (i = 0; i < numSavedMaps; i++)
 	{
 		if ((savedMaps[i].where == where) && (savedMaps[i].who == who))
@@ -571,10 +571,10 @@ void AddPendulum (short where, short who, short h, short v)
 {
 	Rect		src, bounds;
 	short		savedNum;
-	
+
 	if ((numPendulums >= kMaxPendulums) || (h < 32) || (v < 28))
 		return;
-	
+
 	clockFrame = 10;
 	QSetRect(&bounds, 0, 0, 32, 28 * kNumPendulums);
 	savedNum = BackUpToSavedMap(&bounds, where, who);
@@ -613,20 +613,20 @@ void BackUpStar (Rect *src, short index)
 {
 	Rect		dest;
 	short		i;
-	
+
 	QSetRect(&dest, 0, 0, 32, 31);
 	for (i = 0; i < 6; i++)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap), 
-				GetPortBitMapForCopyBits(savedMaps[index].map), 
+		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
+				GetPortBitMapForCopyBits(savedMaps[index].map),
 				src, &dest, srcCopy, nil);
-		
+
 				// copy flame to map
-		CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap), 
-				(BitMap *)*GetGWorldPixMap(bonusMaskMap), 
-				GetPortBitMapForCopyBits(savedMaps[index].map), 
+		CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
+				(BitMap *)*GetGWorldPixMap(bonusMaskMap),
+				GetPortBitMapForCopyBits(savedMaps[index].map),
 				&starSrc[i], &starSrc[i], &dest);
-		
+
 		QOffsetRect(&dest, 0, 31);
 	}
 }
@@ -638,7 +638,7 @@ void BackUpStar (Rect *src, short index)
 void ReBackUpStar (short where, short who)
 {
 	short		i, f;
-	
+
 	for (i = 0; i < numSavedMaps; i++)
 	{
 		if ((savedMaps[i].where == where) && (savedMaps[i].who == who))
@@ -663,10 +663,10 @@ void AddStar (short where, short who, short h, short v)
 {
 	Rect		src, bounds;
 	short		savedNum;
-	
+
 	if (numStars >= kMaxStars)
 		return;
-	
+
 	QSetRect(&src, 0, 0, 32, 31);
 	if ((thisMac.isDepth == 4) && ((h % 2) == 1))
 	{
@@ -675,7 +675,7 @@ void AddStar (short where, short who, short h, short v)
 			h += 2;
 	}
 	QOffsetRect(&src, h, v);
-	
+
 	QSetRect(&bounds, 0, 0, 32, 31 * 6);
 	savedNum = BackUpToSavedMap(&bounds, where, who);
 	if (savedNum != -1)
@@ -688,7 +688,7 @@ void AddStar (short where, short who, short h, short v)
 		theStars[numStars].who = savedNum;
 		theStars[numStars].link = who;
 		theStars[numStars].where = where;
-		
+
 		numStars++;
 	}
 }
@@ -700,7 +700,7 @@ void AddStar (short where, short who, short h, short v)
 void StopPendulum (short where, short who)
 {
 	short		i;
-	
+
 	for (i = 0; i < numPendulums; i++)
 	{
 		if ((pendulums[i].link == who) && (pendulums[i].where == where))
@@ -715,7 +715,7 @@ void StopPendulum (short where, short who)
 void StopStar (short where, short who)
 {
 	short		i;
-	
+
 	for (i = 0; i < numStars; i++)
 	{
 		if ((theStars[i].link == who) && (theStars[i].where == where))
@@ -731,13 +731,13 @@ void AddAShreddedGlider (Rect *bounds)
 {
 	if (numShredded > kMaxShredded)
 		return;
-	
+
 	shreds[numShredded].bounds.left = bounds->left + 4;
 	shreds[numShredded].bounds.right = shreds[numShredded].bounds.left + 40;
 	shreds[numShredded].bounds.top = bounds->top + 14;
 	shreds[numShredded].bounds.bottom = shreds[numShredded].bounds.top;
 	shreds[numShredded].frame = 0;
-	
+
 	numShredded++;
 }
 
@@ -748,7 +748,7 @@ void AddAShreddedGlider (Rect *bounds)
 void RemoveShreds (void)
 {
 	short		largest, who, i;
-	
+
 	largest = 0;
 	who = -1;
 	for (i = 0; i < numShredded; i++)
@@ -759,7 +759,7 @@ void RemoveShreds (void)
 			who = i;
 		}
 	}
-	
+
 	if (who != -1)
 	{
 		if (who == (numShredded - 1))

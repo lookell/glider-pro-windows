@@ -20,7 +20,7 @@
 void ColorText (StringPtr theStr, long color)
 {
 	RGBColor	theRGBColor, wasColor;
-	
+
 	GetForeColor(&wasColor);
 	Index2Color(color, &theRGBColor);
 	RGBForeColor(&theRGBColor);
@@ -36,7 +36,7 @@ void ColorText (StringPtr theStr, long color)
 void ColorRect (Rect *theRect, long color)
 {
 	RGBColor	theRGBColor, wasColor;
-	
+
 	GetForeColor(&wasColor);
 	Index2Color(color, &theRGBColor);
 	RGBForeColor(&theRGBColor);
@@ -52,7 +52,7 @@ void ColorRect (Rect *theRect, long color)
 void ColorOval (Rect *theRect, long color)
 {
 	RGBColor	theRGBColor, wasColor;
-	
+
 	GetForeColor(&wasColor);
 	Index2Color(color, &theRGBColor);
 	RGBForeColor(&theRGBColor);
@@ -68,7 +68,7 @@ void ColorOval (Rect *theRect, long color)
 void ColorRegion (RgnHandle theRgn, long color)
 {
 	RGBColor	theRGBColor, wasColor;
-	
+
 	GetForeColor(&wasColor);
 	Index2Color(color, &theRGBColor);
 	RGBForeColor(&theRGBColor);
@@ -84,7 +84,7 @@ void ColorRegion (RgnHandle theRgn, long color)
 void ColorLine (short h0, short v0, short h1, short v1, long color)
 {
 	RGBColor	theRGBColor, wasColor;
-	
+
 	GetForeColor(&wasColor);
 	Index2Color(color, &theRGBColor);
 	RGBForeColor(&theRGBColor);
@@ -102,13 +102,13 @@ void ColorLine (short h0, short v0, short h1, short v1, long color)
 
 void HiliteRect (Rect *theRect, short color1, short color2)
 {
-	ColorLine(theRect->left, theRect->top, theRect->right - 2, 
+	ColorLine(theRect->left, theRect->top, theRect->right - 2,
 			theRect->top, color1);
-	ColorLine(theRect->left, theRect->top, theRect->left, 
+	ColorLine(theRect->left, theRect->top, theRect->left,
 			theRect->bottom - 2, color1);
-	ColorLine(theRect->right - 1, theRect->top, theRect->right - 1, 
+	ColorLine(theRect->right - 1, theRect->top, theRect->right - 1,
 			theRect->bottom - 2, color2);
-	ColorLine(theRect->left + 1, theRect->bottom - 1, theRect->right - 1, 
+	ColorLine(theRect->left + 1, theRect->bottom - 1, theRect->right - 1,
 			theRect->bottom - 1, color2);
 }
 
@@ -120,7 +120,7 @@ void HiliteRect (Rect *theRect, short color1, short color2)
 void ColorFrameRect (Rect *theRect, long color)
 {
 	RGBColor	theRGBColor, wasColor;
-	
+
 	GetForeColor(&wasColor);
 	Index2Color(color, &theRGBColor);
 	RGBForeColor(&theRGBColor);
@@ -137,7 +137,7 @@ void ColorFrameRect (Rect *theRect, long color)
 void ColorFrameWHRect (short left, short top, short wide, short high, long color)
 {
 	Rect		theRect;
-	
+
 	theRect.left = left;
 	theRect.top = top;
 	theRect.right = left + wide;
@@ -153,7 +153,7 @@ void ColorFrameWHRect (short left, short top, short wide, short high, long color
 void ColorFrameOval (Rect *theRect, long color)
 {
 	RGBColor	theRGBColor, wasColor;
-	
+
 	GetForeColor(&wasColor);
 	Index2Color(color, &theRGBColor);
 	RGBForeColor(&theRGBColor);
@@ -169,11 +169,11 @@ void ColorFrameOval (Rect *theRect, long color)
 void LtGrayForeColor (void)
 {
 	RGBColor	color;
-	
+
 	color.red = (unsigned short) 0xBFFF;
 	color.green = (unsigned short) 0xBFFF;
 	color.blue = (unsigned short) 0xBFFF;
-	
+
 	RGBForeColor(&color);
 }
 
@@ -185,11 +185,11 @@ void LtGrayForeColor (void)
 void GrayForeColor (void)
 {
 	RGBColor	color;
-	
+
 	color.red = (unsigned short) 0x7FFF;
 	color.green = (unsigned short) 0x7FFF;
 	color.blue = (unsigned short) 0x7FFF;
-	
+
 	RGBForeColor(&color);
 }
 
@@ -201,11 +201,11 @@ void GrayForeColor (void)
 void DkGrayForeColor (void)
 {
 	RGBColor	color;
-	
+
 	color.red = (unsigned short) 0x3FFF;
 	color.green = (unsigned short) 0x3FFF;
 	color.blue = (unsigned short) 0x3FFF;
-	
+
 	RGBForeColor(&color);
 }
 

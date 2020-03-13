@@ -45,30 +45,30 @@ extern	Boolean			twoPlayerGame, paused, hasMirror, splashDrawn;
 // The menus are loaded from disk and the menu bar set up and drawn.
 
 void InitializeMenus (void)
-{	
+{
 	appleMenu = GetMenu(kAppleMenuID);
 	if (appleMenu == nil)
 		RedAlert(kErrFailedResourceLoad);
 	AppendResMenu(appleMenu, 'DRVR');
 	InsertMenu(appleMenu, 0);
-	
+
 	gameMenu = GetMenu(kGameMenuID);
 	if (gameMenu == nil)
 		RedAlert(kErrFailedResourceLoad);
 	InsertMenu(gameMenu, 0);
-	
+
 	optionsMenu = GetMenu(kOptionsMenuID);
 	if (optionsMenu == nil)
 		RedAlert(kErrFailedResourceLoad);
 	InsertMenu(optionsMenu, 0);
-	
+
 	menusUp = true;
 	DrawMenuBar();
-	
+
 	houseMenu = GetMenu(kHouseMenuID);
 	if (houseMenu == nil)
 		RedAlert(kErrFailedResourceLoad);
-	
+
 	UpdateMenus(false);
 }
 
@@ -84,25 +84,25 @@ void GetExtraCursors (void)
 		RedAlert(kErrFailedResourceLoad);
 	HLock((Handle)handCursorH);
 	handCursor = **handCursorH;
-	
+
 	beamCursorH = GetCursor(iBeamCursor);
 	if (beamCursorH == nil)
 		RedAlert(kErrFailedResourceLoad);
 	HLock((Handle)beamCursorH);
 	beamCursor = **beamCursorH;
-	
+
 	vertCursorH = GetCursor(kVertCursorID);
 	if (vertCursorH == nil)
 		RedAlert(kErrFailedResourceLoad);
 	HLock((Handle)vertCursorH);
 	vertCursor = **vertCursorH;
-	
+
 	horiCursorH = GetCursor(kHoriCursorID);
 	if (horiCursorH == nil)
 		RedAlert(kErrFailedResourceLoad);
 	HLock((Handle)horiCursorH);
 	horiCursor = **horiCursorH;
-	
+
 	diagCursorH = GetCursor(kDiagCursorID);
 	if (diagCursorH == nil)
 		RedAlert(kErrFailedResourceLoad);
@@ -118,11 +118,11 @@ void GetExtraCursors (void)
 void VariableInit (void)
 {
 	short		i;
-	
+
 	shieldPt.h = 0;
 	shieldPt.v = 0;
 	shieldRect = thisMac.screen;
-	
+
 	menusUp = false;
 	quitting = false;
 	houseOpen = false;
@@ -139,18 +139,18 @@ void VariableInit (void)
 	demoGoing = false;
 //	scrapIsARoom = true;
 	splashDrawn = false;
-	
+
 #ifndef COMPILEDEMO
 //	SeeIfValidScrapAvailable(false);
 #endif
-	
+
 	theGlider.which = kPlayer1;
 	theGlider2.leftKey = kControlKeyMap;
 	theGlider2.rightKey = kCommandKeyMap;
 	theGlider2.battKey = kOptionKeyMap;
 	theGlider2.bandKey = kShiftKeyMap;
 	theGlider2.which = kPlayer2;
-	
+
 	theMode = kSplashMode;
 	thisRoomNumber = 0;
 	previousRoom = -1;
@@ -163,7 +163,7 @@ void VariableInit (void)
 	incrementModeTime = TickCount() + kIdleSplashTicks;
 	willMaxFiles = maxFiles;
 	numExtraHouses = 0;
-	
+
 	fadeInSequence[0] = 4;	// 4
 	fadeInSequence[1] = 5;
 	fadeInSequence[2] = 6;
@@ -180,9 +180,9 @@ void VariableInit (void)
 	fadeInSequence[13] = 8;
 	fadeInSequence[14] = 9;
 	fadeInSequence[15] = 10;
-	
+
 	doubleTime = GetDblTime();
-	
+
 	mirrorRgn = nil;
 	mainWindow = nil;
 	mapWindow = nil;
@@ -192,17 +192,17 @@ void VariableInit (void)
 	toolSrcMap = nil;
 	nailSrcMap = nil;
 	menuWindow = nil;
-	
+
 	houseRect = thisMac.screen;
 	houseRect.bottom -= kScoreboardTall;
 	if (houseRect.right > kMaxViewWidth)
 		houseRect.right = kMaxViewWidth;
 	if (houseRect.bottom > kMaxViewHeight)
 		houseRect.bottom = kMaxViewHeight;
-	
+
 	playOriginH = (RectWide(&thisMac.screen) - kRoomWide) / 2;
 	playOriginV = (RectTall(&thisMac.screen) - kTileHigh) / 2;
-	
+
 	for (i = 0; i < 9; i++)
 	{
 		QSetRect(&localRoomsDest[i], 0, 0, kRoomWide, kTileHigh);

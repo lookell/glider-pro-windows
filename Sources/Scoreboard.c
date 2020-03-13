@@ -53,15 +53,15 @@ extern	Boolean		evenFrame, onePlayerLeft;
 void RefreshScoreboard (short mode)
 {
 	doRollScore = true;
-	
+
 	RefreshRoomTitle(mode);
 	RefreshNumGliders();
 	RefreshPoints();
-	
-	CopyBits((BitMap *)*GetGWorldPixMap(boardSrcMap), 
-			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
+
+	CopyBits((BitMap *)*GetGWorldPixMap(boardSrcMap),
+			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 			&boardSrcRect, &boardDestRect, srcCopy, 0L);
-	
+
 	QuickBatteryRefresh(false);
 	QuickBandsRefresh(false);
 	QuickFoilRefresh(false);
@@ -76,7 +76,7 @@ void RefreshScoreboard (short mode)
  	#define		kHeliumLow		-38		// 25%
  	#define		kBandsLow		2		// 25%
  	long		whosTurn;
- 	
+
  	if (theScore > displayedScore)
 	{
 		if (doRollScore)
@@ -87,11 +87,11 @@ void RefreshScoreboard (short mode)
 		}
 		else
 			displayedScore = theScore;
-		
+
 		PlayPrioritySound(kScoreTikSound, kScoreTikPriority);
 		QuickScoreRefresh();
 	}
-	
+
 	whosTurn = gameFrame & 0x00000007;
 	switch (whosTurn)
 	{
@@ -99,46 +99,46 @@ void RefreshScoreboard (short mode)
 		if ((foilTotal > 0) && (foilTotal < kFoilLow))
 			QuickFoilRefresh(false);
 		break;
-		
+
 		case 1:		// hide battery
 		if ((batteryTotal > 0) && (batteryTotal < kBatteryLow))
 			QuickBatteryRefresh(true);
 		else if ((batteryTotal < 0) && (batteryTotal > kHeliumLow))
 			QuickBatteryRefresh(true);
 		break;
-		
+
 		case 2:		// show rubber bands
 		if ((bandsTotal > 0) && (bandsTotal < kBandsLow))
 			QuickBandsRefresh(false);
 		break;
-		
+
 		case 4:		// show battery
 		if ((batteryTotal > 0) && (batteryTotal < kBatteryLow))
 			QuickBatteryRefresh(false);
 		else if ((batteryTotal < 0) && (batteryTotal > kHeliumLow))
 			QuickBatteryRefresh(false);
 		break;
-		
+
 		case 5:		// hide foil
 		if ((foilTotal > 0) && (foilTotal < kFoilLow))
 			QuickFoilRefresh(true);
 		break;
-		
+
 		case 7:		// hide rubber bands
 		if ((bandsTotal > 0) && (bandsTotal < kBandsLow))
 			QuickBandsRefresh(true);
 		break;
 	}
  }
- 
+
 //--------------------------------------------------------------  RefreshRoomTitle
 
 void RefreshRoomTitle (short mode)
 {
 	RGBColor	theRGBColor, wasColor;
-	
+
 	SetPort((GrafPtr)boardTSrcMap);
-	
+
 	GetForeColor(&wasColor);
 	if (thisMac.isDepth == 4)
 		Index2Color(kGrayBackgroundColor4, &theRGBColor);
@@ -147,7 +147,7 @@ void RefreshRoomTitle (short mode)
 	RGBForeColor(&theRGBColor);
 	PaintRect(&boardTSrcRect);
 	RGBForeColor(&wasColor);
-	
+
 	MoveTo(1, 10);
 	ForeColor(blackColor);
 	switch (mode)
@@ -155,11 +155,11 @@ void RefreshRoomTitle (short mode)
 		case kEscapedTitleMode:
 		DrawString("\pHit Delete key if unable to Follow");
 		break;
-		
+
 		case kSavingTitleMode:
 		DrawString("\pSaving Game…");
 		break;
-		
+
 		default:
 		DrawString(thisRoom->name);
 		break;
@@ -171,19 +171,19 @@ void RefreshRoomTitle (short mode)
 		case kEscapedTitleMode:
 		DrawString("\pHit Delete key if unable to Follow");
 		break;
-		
+
 		case kSavingTitleMode:
 		DrawString("\pSaving Game…");
 		break;
-		
+
 		default:
 		DrawString(thisRoom->name);
 		break;
 	}
 	ForeColor(blackColor);
-	
-	CopyBits((BitMap *)*GetGWorldPixMap(boardTSrcMap), 
-			(BitMap *)*GetGWorldPixMap(boardSrcMap), 
+
+	CopyBits((BitMap *)*GetGWorldPixMap(boardTSrcMap),
+			(BitMap *)*GetGWorldPixMap(boardSrcMap),
 			&boardTSrcRect, &boardTDestRect, srcCopy, nil);
 }
 
@@ -194,35 +194,35 @@ void RefreshNumGliders (void)
 	RGBColor	theRGBColor, wasColor;
 	Str255		nGlidersStr;
 	long		displayMortals;
-	
+
 	SetPort((GrafPtr)boardGSrcMap);
-	
+
 	GetForeColor(&wasColor);
 	if (thisMac.isDepth == 4)
 		Index2Color(kGrayBackgroundColor4, &theRGBColor);
 	else
-		Index2Color(kGrayBackgroundColor, &theRGBColor);		
+		Index2Color(kGrayBackgroundColor, &theRGBColor);
 	RGBForeColor(&theRGBColor);
 	PaintRect(&boardGSrcRect);
 	RGBForeColor(&wasColor);
-	
+
 	displayMortals = mortals;
 	if (displayMortals < 0)
 		displayMortals = 0;
 	NumToString(displayMortals, nGlidersStr);
-	
+
 	MoveTo(1, 10);
 	ForeColor(blackColor);
 	DrawString(nGlidersStr);
-	
+
 	MoveTo(0, 9);
 	ForeColor(whiteColor);
 	DrawString(nGlidersStr);
-	
+
 	ForeColor(blackColor);
-	
-	CopyBits((BitMap *)*GetGWorldPixMap(boardGSrcMap), 
-			(BitMap *)*GetGWorldPixMap(boardSrcMap), 
+
+	CopyBits((BitMap *)*GetGWorldPixMap(boardGSrcMap),
+			(BitMap *)*GetGWorldPixMap(boardSrcMap),
 			&boardGSrcRect, &boardGDestRect, srcCopy, nil);
 }
 
@@ -232,34 +232,34 @@ void RefreshPoints (void)
 {
 	RGBColor	theRGBColor, wasColor;
 	Str255		scoreStr;
-	
+
 	SetPort((GrafPtr)boardPSrcMap);
-	
+
 	GetForeColor(&wasColor);
 	if (thisMac.isDepth == 4)
 		Index2Color(kGrayBackgroundColor4, &theRGBColor);
 	else
-		Index2Color(kGrayBackgroundColor, &theRGBColor);	
+		Index2Color(kGrayBackgroundColor, &theRGBColor);
 	RGBForeColor(&theRGBColor);
 	PaintRect(&boardPSrcRect);
 	RGBForeColor(&wasColor);
-	
+
 	NumToString(theScore, scoreStr);
-	
+
 	MoveTo(1, 10);
 	ForeColor(blackColor);
 	DrawString(scoreStr);
-	
+
 	MoveTo(0, 9);
 	ForeColor(whiteColor);
 	DrawString(scoreStr);
-	
+
 	ForeColor(blackColor);
-	
-	CopyBits((BitMap *)*GetGWorldPixMap(boardPSrcMap), 
-			(BitMap *)*GetGWorldPixMap(boardSrcMap), 
+
+	CopyBits((BitMap *)*GetGWorldPixMap(boardPSrcMap),
+			(BitMap *)*GetGWorldPixMap(boardSrcMap),
 			&boardPSrcRect, &boardPDestRect, srcCopy, nil);
-	
+
 	displayedScore = theScore;
 }
 
@@ -269,32 +269,32 @@ void QuickGlidersRefresh (void)
 {
 	RGBColor	theRGBColor, wasColor;
 	Str255		nGlidersStr;
-	
+
 	SetPort((GrafPtr)boardGSrcMap);
-	
+
 	GetForeColor(&wasColor);
 	if (thisMac.isDepth == 4)
 		Index2Color(kGrayBackgroundColor4, &theRGBColor);
 	else
-		Index2Color(kGrayBackgroundColor, &theRGBColor);	
+		Index2Color(kGrayBackgroundColor, &theRGBColor);
 	RGBForeColor(&theRGBColor);
 	PaintRect(&boardGSrcRect);
 	RGBForeColor(&wasColor);
-	
+
 	NumToString((long)mortals, nGlidersStr);
-	
+
 	MoveTo(1, 10);
 	ForeColor(blackColor);
 	DrawString(nGlidersStr);
-	
+
 	MoveTo(0, 9);
 	ForeColor(whiteColor);
 	DrawString(nGlidersStr);
-	
+
 	ForeColor(blackColor);
-	
-	CopyBits((BitMap *)*GetGWorldPixMap(boardGSrcMap), 
-			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
+
+	CopyBits((BitMap *)*GetGWorldPixMap(boardGSrcMap),
+			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 			&boardGSrcRect, &boardGQDestRect, srcCopy, nil);
 }
 
@@ -304,9 +304,9 @@ void QuickScoreRefresh (void)
 {
 	RGBColor	theRGBColor, wasColor;
 	Str255		scoreStr;
-	
+
 	SetPort((GrafPtr)boardPSrcMap);
-	
+
 	GetForeColor(&wasColor);
 	if (thisMac.isDepth == 4)
 		Index2Color(kGrayBackgroundColor4, &theRGBColor);
@@ -315,21 +315,21 @@ void QuickScoreRefresh (void)
 	RGBForeColor(&theRGBColor);
 	PaintRect(&boardPSrcRect);
 	RGBForeColor(&wasColor);
-	
+
 	NumToString(displayedScore, scoreStr);
-	
+
 	MoveTo(1, 10);
 	ForeColor(blackColor);
 	DrawString(scoreStr);
-	
+
 	MoveTo(0, 9);
 	ForeColor(whiteColor);
 	DrawString(scoreStr);
-	
+
 	ForeColor(blackColor);
-	
-	CopyBits((BitMap *)*GetGWorldPixMap(boardPSrcMap), 
-			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
+
+	CopyBits((BitMap *)*GetGWorldPixMap(boardPSrcMap),
+			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 			&boardPSrcRect, &boardPQDestRect, srcCopy, nil);
 }
 
@@ -339,26 +339,26 @@ void QuickBatteryRefresh (Boolean flash)
 {
 	if ((batteryTotal > 0) && (!flash))
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap), 
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
-				&badgesBadgesRects[kBatteryBadge], 
-				&badgesDestRects[kBatteryBadge], 
+		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
+				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+				&badgesBadgesRects[kBatteryBadge],
+				&badgesDestRects[kBatteryBadge],
 				srcCopy, nil);
 	}
 	else if ((batteryTotal < 0) && (!flash))
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap), 
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
-				&badgesBadgesRects[kHeliumBadge], 
-				&badgesDestRects[kHeliumBadge], 
+		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
+				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+				&badgesBadgesRects[kHeliumBadge],
+				&badgesDestRects[kHeliumBadge],
 				srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap), 
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
-				&badgesBlankRects[kBatteryBadge], 
-				&badgesDestRects[kBatteryBadge], 
+		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
+				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+				&badgesBlankRects[kBatteryBadge],
+				&badgesDestRects[kBatteryBadge],
 				srcCopy, nil);
 	}
 }
@@ -369,18 +369,18 @@ void QuickBandsRefresh (Boolean flash)
 {
 	if ((bandsTotal > 0) && (!flash))
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap), 
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
-				&badgesBadgesRects[kBandsBadge], 
-				&badgesDestRects[kBandsBadge], 
+		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
+				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+				&badgesBadgesRects[kBandsBadge],
+				&badgesDestRects[kBandsBadge],
 				srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap), 
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
-				&badgesBlankRects[kBandsBadge], 
-				&badgesDestRects[kBandsBadge], 
+		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
+				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+				&badgesBlankRects[kBandsBadge],
+				&badgesDestRects[kBandsBadge],
 				srcCopy, nil);
 	}
 }
@@ -391,18 +391,18 @@ void QuickFoilRefresh (Boolean flash)
 {
 	if ((foilTotal > 0) && (!flash))
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap), 
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
-				&badgesBadgesRects[kFoilBadge], 
-				&badgesDestRects[kFoilBadge], 
+		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
+				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+				&badgesBadgesRects[kFoilBadge],
+				&badgesDestRects[kFoilBadge],
 				srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap), 
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
-				&badgesBlankRects[kFoilBadge], 
-				&badgesDestRects[kFoilBadge], 
+		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
+				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+				&badgesBlankRects[kFoilBadge],
+				&badgesDestRects[kFoilBadge],
 				srcCopy, nil);
 	}
 }
@@ -412,12 +412,12 @@ void QuickFoilRefresh (Boolean flash)
 void AdjustScoreboardHeight (void)
 {
 	short		offset, newMode;
-	
+
 	if (numNeighbors == 9)
 		newMode = kScoreboardHigh;
 	else
 		newMode = kScoreboardLow;
-	
+
 	if (wasScoreboardMode != newMode)
 	{
 		switch (newMode)
@@ -427,7 +427,7 @@ void AdjustScoreboardHeight (void)
 			offset = -offset;
 			justRoomsRect = workSrcRect;
 			break;
-			
+
 			case kScoreboardLow:		// 1 or 3 neighbors
 			offset = localRoomsDest[kCentralRoom].top;
 			justRoomsRect = workSrcRect;
@@ -435,7 +435,7 @@ void AdjustScoreboardHeight (void)
 			justRoomsRect.bottom = localRoomsDest[kCentralRoom].bottom;
 			break;
 		}
-		
+
 		QOffsetRect(&boardDestRect, 0, offset);
 		QOffsetRect(&boardGQDestRect, 0, offset);
 		QOffsetRect(&boardPQDestRect, 0, offset);
@@ -443,7 +443,7 @@ void AdjustScoreboardHeight (void)
 		QOffsetRect(&badgesDestRects[kBandsBadge], 0, offset);
 		QOffsetRect(&badgesDestRects[kFoilBadge], 0, offset);
 		QOffsetRect(&badgesDestRects[kHeliumBadge], 0, offset);
-		
+
 		wasScoreboardMode = newMode;
 	}
 }

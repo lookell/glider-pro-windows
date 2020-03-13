@@ -51,7 +51,7 @@ void LogDemoKey (char keyIs)
 //--------------------------------------------------------------  DoCommandKey
 
 void DoCommandKey (void)
-{	
+{
 	if (BitTst(&theKeys, kQKeyMap))
 	{
 		playing = false;
@@ -77,7 +77,7 @@ void DoCommandKey (void)
 void DoPause (void)
 {
 	Rect		bounds;
-	
+
 	SetPort((GrafPtr)mainWindow);
 	QSetRect(&bounds, 0, 0, 214, 54);
 	CenterRectInRect(&bounds, &houseRect);
@@ -85,34 +85,34 @@ void DoPause (void)
 		LoadScaledGraphic(kEscPausePictID, &bounds);
 	else
 		LoadScaledGraphic(kTabPausePictID, &bounds);
-	
+
 	do
 	{
 		GetKeys(theKeys);
 	}
-	while ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) || 
+	while ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) ||
 			(!isEscPauseKey && BitTst(&theKeys, kTabKeyMap)));
-	
+
 	paused = true;
 	while (paused)
 	{
 		GetKeys(theKeys);
-		if ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) || 
+		if ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) ||
 				(!isEscPauseKey && BitTst(&theKeys, kTabKeyMap)))
 			paused = false;
 		else if (BitTst(&theKeys, kCommandKeyMap))
 			DoCommandKey();
 	}
-	
-	CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap), 
-			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
+
+	CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
+			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 			&bounds, &bounds, srcCopy, nil);
-	
+
 	do
 	{
 		GetKeys(theKeys);
 	}
-	while ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) || 
+	while ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) ||
 			(!isEscPauseKey && BitTst(&theKeys, kTabKeyMap)));
 }
 
@@ -134,9 +134,9 @@ void DoBatteryEngaged (gliderPtr thisGlider)
 		else
 			thisGlider->hVel += kHyperThrust;
 	}
-	
+
 	batteryTotal--;
-	
+
 	if (batteryTotal == 0)
 	{
 		QuickBatteryRefresh(false);
@@ -161,7 +161,7 @@ void DoHeliumEngaged (gliderPtr thisGlider)
 {
 	thisGlider->vDesiredVel = -kHeliumLift;
 	batteryTotal++;
-	
+
 	if (batteryTotal == 0)
 	{
 		QuickBatteryRefresh(false);
@@ -188,26 +188,26 @@ void DoHeliumEngaged (gliderPtr thisGlider)
  	if (thisGlider->which == kPlayer1)
 	{
 		GetKeys(theKeys);
-		
+
 #if BUILD_ARCADE_VERSION
-		
-		if ((BitTst(&theKeys, thisGlider->leftKey)) || 
-				(BitTst(&theKeys, thisGlider->rightKey)) || 
-				(BitTst(&theKeys, thisGlider->battKey)) || 
+
+		if ((BitTst(&theKeys, thisGlider->leftKey)) ||
+				(BitTst(&theKeys, thisGlider->rightKey)) ||
+				(BitTst(&theKeys, thisGlider->battKey)) ||
 				(BitTst(&theKeys, thisGlider->bandKey)))
 		{
 			playing = false;
 			paused = false;
 		}
-		
+
 #else
-		
+
 		if (BitTst(&theKeys, kCommandKeyMap))
 			DoCommandKey();
-		
+
 #endif
 	}
-	
+
 	if (thisGlider->mode == kGliderBurning)
 	{
 		if (thisGlider->facing == kFaceLeft)
@@ -220,7 +220,7 @@ void DoHeliumEngaged (gliderPtr thisGlider)
 		thisGlider->heldLeft = false;
 		thisGlider->heldRight = false;
 		thisGlider->tipped = false;
-		
+
 	 	if (gameFrame == (long)demoData[demoIndex].frame)
 	 	{
 	 		switch (demoData[demoIndex].key)
@@ -231,14 +231,14 @@ void DoHeliumEngaged (gliderPtr thisGlider)
 				thisGlider->heldRight = true;
 				thisGlider->fireHeld = false;
 	 			break;
-	 			
+
 	 			case 1:		// right key
 	 			thisGlider->hDesiredVel -= kNormalThrust;
 				thisGlider->tipped = (thisGlider->facing == kFaceRight);
 				thisGlider->heldLeft = true;
 				thisGlider->fireHeld = false;
 	 			break;
-	 			
+
 	 			case 2:		// battery key
 		 		if (batteryTotal > 0)
 					DoBatteryEngaged(thisGlider);
@@ -246,36 +246,36 @@ void DoHeliumEngaged (gliderPtr thisGlider)
 					DoHeliumEngaged(thisGlider);
 	 			thisGlider->fireHeld = false;
 	 			break;
-	 			
+
 	 			case 3:		// rubber band key
 	 			if (!thisGlider->fireHeld)
 				{
-					if (AddBand(thisGlider, thisGlider->dest.left + 24, 
+					if (AddBand(thisGlider, thisGlider->dest.left + 24,
 							thisGlider->dest.top + 10, thisGlider->facing))
 					{
 						bandsTotal--;
 						if (bandsTotal <= 0)
 							QuickBandsRefresh(false);
-						
+
 						thisGlider->fireHeld = true;
 					}
 				}
 	 			break;
 	 		}
-	 		
+
 	 		demoIndex++;
 	 	}
 	 	else
 	 		thisGlider->fireHeld = false;
-	 	
-		if ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) || 
+
+		if ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) ||
 				(!isEscPauseKey && BitTst(&theKeys, kTabKeyMap)))
 		{
 			DoPause();
 		}
  	}
  }
- 
+
 //--------------------------------------------------------------  GetInput
 
 void GetInput (gliderPtr thisGlider)
@@ -286,7 +286,7 @@ void GetInput (gliderPtr thisGlider)
 		if (BitTst(&theKeys, kCommandKeyMap))
 			DoCommandKey();
 	}
-	
+
 	if (thisGlider->mode == kGliderBurning)
 	{
 		if (thisGlider->facing == kFaceLeft)
@@ -326,8 +326,8 @@ void GetInput (gliderPtr thisGlider)
 		}
 		else
 			thisGlider->tipped = false;
-		
-		if ((BitTst(&theKeys, thisGlider->battKey)) && (batteryTotal != 0) && 
+
+		if ((BitTst(&theKeys, thisGlider->battKey)) && (batteryTotal != 0) &&
 				(thisGlider->mode == kGliderNormal))
 		{
 		#ifdef CREATEDEMODATA
@@ -340,8 +340,8 @@ void GetInput (gliderPtr thisGlider)
 		}
 		else
 			batteryWasEngaged = false;
-		
-		if ((BitTst(&theKeys, thisGlider->bandKey)) && (bandsTotal > 0) && 
+
+		if ((BitTst(&theKeys, thisGlider->bandKey)) && (bandsTotal > 0) &&
 				(thisGlider->mode == kGliderNormal))
 		{
 		#ifdef CREATEDEMODATA
@@ -349,28 +349,28 @@ void GetInput (gliderPtr thisGlider)
 		#endif
 			if (!thisGlider->fireHeld)
 			{
-				if (AddBand(thisGlider, thisGlider->dest.left + 24, 
+				if (AddBand(thisGlider, thisGlider->dest.left + 24,
 						thisGlider->dest.top + 10, thisGlider->facing))
 				{
 					bandsTotal--;
 					if (bandsTotal <= 0)
 						QuickBandsRefresh(false);
-					
+
 					thisGlider->fireHeld = true;
 				}
 			}
 		}
 		else
 			thisGlider->fireHeld = false;
-		
-		if ((otherPlayerEscaped != kNoOneEscaped) && 
-				(BitTst(&theKeys, kDeleteKeyMap)) && 
+
+		if ((otherPlayerEscaped != kNoOneEscaped) &&
+				(BitTst(&theKeys, kDeleteKeyMap)) &&
 				(thisGlider->which) && (!onePlayerLeft))
 		{
 			ForceKillGlider();
 		}
-		
-		if ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) || 
+
+		if ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) ||
 				(!isEscPauseKey && BitTst(&theKeys, kTabKeyMap)))
 		{
 			DoPause();
@@ -385,7 +385,7 @@ Boolean QuerySaveGame (void)
 	#define		kSaveGameAlert		1041
 	#define		kYesSaveGameButton	1
 	short		hitWhat;
-	
+
 	InitCursor();
 	FlushEvents(everyEvent, 0);
 //	CenterAlert(kSaveGameAlert);

@@ -46,9 +46,9 @@ void DrawBanner (Point *topLeft)
 	GWorldPtr	tempMap;
 	GWorldPtr	tempMask;
 	OSErr		theErr;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
-	
+
 	QSetRect(&wholePage, 0, 0, 330, 220);
 	mapBounds = thisMac.screen;
 	ZeroRectCorner(&mapBounds);
@@ -56,10 +56,10 @@ void DrawBanner (Point *topLeft)
 	topLeft->h = wholePage.left;
 	topLeft->v = wholePage.top;
 	partPage = wholePage;
-	partPage.bottom = partPage.top + 190;	
+	partPage.bottom = partPage.top + 190;
 	SetGWorld(workSrcMap, nil);
 	LoadScaledGraphic(kBannerPageTopPICT, &partPage);
-	
+
 	partPage = wholePage;
 	partPage.top = partPage.bottom - 30;
 	mapBounds = partPage;
@@ -67,17 +67,17 @@ void DrawBanner (Point *topLeft)
 	theErr = CreateOffScreenGWorld(&tempMap, &mapBounds, kPreferredDepth);
 	SetGWorld(tempMap, nil);
 	LoadGraphic(kBannerPageBottomPICT);
-	
-	theErr = CreateOffScreenGWorld(&tempMask, &mapBounds, 1);	
+
+	theErr = CreateOffScreenGWorld(&tempMask, &mapBounds, 1);
 	SetGWorld(tempMask, nil);
 	LoadGraphic(kBannerPageBottomMask);
-	
-	CopyMask((BitMap *)*GetGWorldPixMap(tempMap), 
-			(BitMap *)*GetGWorldPixMap(tempMask), 
-			(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+	CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
+			(BitMap *)*GetGWorldPixMap(tempMask),
+			(BitMap *)*GetGWorldPixMap(workSrcMap),
 			&mapBounds, &mapBounds, &partPage);
 	SetPort((GrafPtr)workSrcMap);
-	
+
 	SetGWorld(wasCPort, wasWorld);
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
@@ -90,9 +90,9 @@ short CountStarsInHouse (void)
 {
 	short		i, h, numRooms, numStars;
 	char		wasState;
-	
+
 	numStars = 0;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	numRooms = (*thisHouse)->nRooms;
@@ -106,7 +106,7 @@ short CountStarsInHouse (void)
 			}
 	}
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	return (numStars);
 }
 
@@ -119,12 +119,12 @@ void DrawBannerMessage (Point topLeft)
 	Str255		bannerStr, subStr;
 	short		count;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	PasStringCopy((*thisHouse)->banner, bannerStr);
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	TextFont(applFont);
 	TextFace(bold);
 	TextSize(12);
@@ -138,23 +138,23 @@ void DrawBannerMessage (Point topLeft)
 		count++;
 	}
 	while (subStr[0] > 0);
-	
+
 	if (bannerStarCountOn)
 	{
 		if (numStarsRemaining != 1)
 			GetLocalizedString(1, bannerStr);
 		else
 			GetLocalizedString(2, bannerStr);
-		
+
 		NumToString((long)numStarsRemaining, subStr);
 		PasStringConcat(bannerStr, subStr);
-		
+
 		if (numStarsRemaining != 1)
 			GetLocalizedString(3, subStr);
 		else
 			GetLocalizedString(4, subStr);
 		PasStringConcat(bannerStr, subStr);
-		
+
 		ForeColor(redColor);
 		MoveTo(topLeft.h + 16, topLeft.v + 164);
 		DrawString(bannerStr);
@@ -172,7 +172,7 @@ void BringUpBanner (void)
 {
 	Rect		wholePage;
 	Point		topLeft;
-	
+
 	DrawBanner(&topLeft);
 	DrawBannerMessage(topLeft);
 //	if (quickerTransitions)
@@ -181,16 +181,16 @@ void BringUpBanner (void)
 //		DissBits(&justRoomsRect);
 	QSetRect(&wholePage, 0, 0, 330, 220);
 	QOffsetRect(&wholePage, topLeft.h, topLeft.v);
-	
-	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap), 
-			(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
+			(BitMap *)*GetGWorldPixMap(workSrcMap),
 			&wholePage, &wholePage, srcCopy, nil);
-	
+
 	if (demoGoing)
 		WaitForInputEvent(4);
 	else
 		WaitForInputEvent(15);
-	
+
 //	if (quickerTransitions)
 //		DissBitsChunky(&justRoomsRect);
 //	else
@@ -206,19 +206,19 @@ void DisplayStarsRemaining (void)
 {
 	Rect		src, bounds;
 	Str255		theStr;
-	
+
 	SetPortWindowPort(mainWindow);
 	QSetRect(&bounds, 0, 0, 256, 64);
 	CenterRectInRect(&bounds, &thisMac.screen);
 	QOffsetRect(&bounds, -thisMac.screen.left, -thisMac.screen.top);
 	src = bounds;
 	InsetRect(&src, 64, 32);
-	
+
 	TextFont(applFont);
 	TextFace(bold);
 	TextSize(12);
 	NumToString((long)numStarsRemaining, theStr);
-	
+
 	QOffsetRect(&bounds, 0, -20);
 	if (numStarsRemaining < 2)
 		LoadScaledGraphic(kStarRemainingPICT, &bounds);
@@ -228,7 +228,7 @@ void DisplayStarsRemaining (void)
 		MoveTo(bounds.left + 102 - (StringWidth(theStr) / 2), bounds.top + 23);
 		ColorText(theStr, 4L);
 	}
-	
+
 	DelayTicks(60);
 	if (WaitForInputEvent(30))
 		RestoreEntireGameScreen();

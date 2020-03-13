@@ -28,10 +28,10 @@ void GetWindowLeftTop (WindowPtr theWindow, short *left, short *top)
 {
 	Point		thePoint;
 	Rect		bounds;
-	
+
 	*left = 0;
 	*top = 0;
-	
+
 	if (theWindow != nil)
 	{
 		SetPortWindowPort(theWindow);
@@ -107,15 +107,15 @@ Boolean	IsWindowFloating (WindowPtr theWindow)
 void OpenMessageWindow (StringPtr title)
 {
 	Rect		mssgWindowRect;
-	
+
 	SetRect(&mssgWindowRect, 0, 0, 256, kMessageWindowTall);
 	if (thisMac.hasColor)
-		mssgWindow = NewCWindow(nil, &mssgWindowRect, 
+		mssgWindow = NewCWindow(nil, &mssgWindowRect,
 				title, false, noGrowDocProc, kPutInFront, false, 0L);
 	else
-		mssgWindow = NewWindow(nil, &mssgWindowRect, 
+		mssgWindow = NewWindow(nil, &mssgWindowRect,
 				title, false, noGrowDocProc, kPutInFront, false, 0L);
-	
+
 	if (mssgWindow != nil)
 	{
 		ShowWindow(mssgWindow);
@@ -135,7 +135,7 @@ void OpenMessageWindow (StringPtr title)
 void SetMessageWindowMessage (StringPtr message)
 {
 	Rect		mssgWindowRect;
-	
+
 	if (mssgWindow != nil)
 	{
 		SetPort((GrafPtr)mssgWindow);

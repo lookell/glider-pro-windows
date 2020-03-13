@@ -34,18 +34,18 @@ extern	Boolean		evenFrame, twoPlayerGame, onePlayerLeft, playerDead;
 void CheckDynamicCollision (short who, gliderPtr thisGlider, Boolean doOffset)
 {
 	Rect		dinahRect;
-	
+
 	dinahRect = dinahs[who].dest;
 	if (doOffset)
 		QOffsetRect(&dinahRect, -playOriginH, -playOriginV);
-	
+
 	if (SectGlider(thisGlider, &dinahRect, true))
 	{
-		if ((thisGlider->mode == kGliderNormal) || 
-				(thisGlider->mode == kGliderFaceLeft) || 
-				(thisGlider->mode == kGliderFaceRight) || 
-				(thisGlider->mode == kGliderBurning) || 
-				(thisGlider->mode == kGliderGoingFoil) || 
+		if ((thisGlider->mode == kGliderNormal) ||
+				(thisGlider->mode == kGliderFaceLeft) ||
+				(thisGlider->mode == kGliderFaceRight) ||
+				(thisGlider->mode == kGliderBurning) ||
+				(thisGlider->mode == kGliderGoingFoil) ||
 				(thisGlider->mode == kGliderLosingFoil))
 		{
 			if ((foilTotal > 0) || (thisGlider->mode == kGliderLosingFoil))
@@ -82,9 +82,9 @@ Boolean DidBandHitDynamic (short who)
 	Rect		dinahRect;
 	short		i;
 	Boolean		collided;
-	
+
 	dinahRect = dinahs[who].dest;
-	
+
 	for (i = 0; i < numBands; i++)
 	{
 		if (bands[i].dest.bottom < dinahRect.top)
@@ -97,11 +97,11 @@ Boolean DidBandHitDynamic (short who)
 			collided = false;
 		else
 			collided = true;
-		
+
 		if (collided)
 			break;
 	}
-	
+
 	return (collided);
 }
 
@@ -113,7 +113,7 @@ void RenderToast (short who)
 {
 	Rect		src, dest;
 	short		vClip;
-	
+
 	if (dinahs[who].moving)
 	{
 		dest = dinahs[who].dest;
@@ -125,12 +125,12 @@ void RenderToast (short who)
 			src.bottom -= vClip;
 			dest.bottom -= vClip;
 		}
-		
-		CopyMask((BitMap *)*GetGWorldPixMap(toastSrcMap), 
-				(BitMap *)*GetGWorldPixMap(toastMaskMap), 
-				(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+		CopyMask((BitMap *)*GetGWorldPixMap(toastSrcMap),
+				(BitMap *)*GetGWorldPixMap(toastMaskMap),
+				(BitMap *)*GetGWorldPixMap(workSrcMap),
 				&src, &src, &dest);
-		
+
 		AddRectToBackRects(&dest);
 		dest = dinahs[who].whole;
 		QOffsetRect(&dest, playOriginH, playOriginV);
@@ -143,18 +143,18 @@ void RenderToast (short who)
 void RenderBalloon (short who)
 {
 	Rect		src, dest;
-	
+
 	if (dinahs[who].moving)
 	{
 		dest = dinahs[who].dest;
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		src = balloonSrc[dinahs[who].frame];
-		
-		CopyMask((BitMap *)*GetGWorldPixMap(balloonSrcMap), 
-				(BitMap *)*GetGWorldPixMap(balloonMaskMap), 
-				(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+		CopyMask((BitMap *)*GetGWorldPixMap(balloonSrcMap),
+				(BitMap *)*GetGWorldPixMap(balloonMaskMap),
+				(BitMap *)*GetGWorldPixMap(workSrcMap),
 				&src, &src, &dest);
-		
+
 		AddRectToBackRects(&dest);
 		dest = dinahs[who].whole;
 		QOffsetRect(&dest, playOriginH, playOriginV);
@@ -167,18 +167,18 @@ void RenderBalloon (short who)
 void RenderCopter (short who)
 {
 	Rect		src, dest;
-	
+
 	if (dinahs[who].moving)
 	{
 		dest = dinahs[who].dest;
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		src = copterSrc[dinahs[who].frame];
-		
-		CopyMask((BitMap *)*GetGWorldPixMap(copterSrcMap), 
-				(BitMap *)*GetGWorldPixMap(copterMaskMap), 
-				(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+		CopyMask((BitMap *)*GetGWorldPixMap(copterSrcMap),
+				(BitMap *)*GetGWorldPixMap(copterMaskMap),
+				(BitMap *)*GetGWorldPixMap(workSrcMap),
 				&src, &src, &dest);
-		
+
 		AddRectToBackRects(&dest);
 		dest = dinahs[who].whole;
 		QOffsetRect(&dest, playOriginH, playOriginV);
@@ -191,18 +191,18 @@ void RenderCopter (short who)
 void RenderDart (short who)
 {
 	Rect		src, dest;
-	
+
 	if (dinahs[who].moving)
 	{
 		dest = dinahs[who].dest;
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		src = dartSrc[dinahs[who].frame];
-		
-		CopyMask((BitMap *)*GetGWorldPixMap(dartSrcMap), 
-				(BitMap *)*GetGWorldPixMap(dartMaskMap), 
-				(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+		CopyMask((BitMap *)*GetGWorldPixMap(dartSrcMap),
+				(BitMap *)*GetGWorldPixMap(dartMaskMap),
+				(BitMap *)*GetGWorldPixMap(workSrcMap),
 				&src, &src, &dest);
-		
+
 		AddRectToBackRects(&dest);
 		dest = dinahs[who].whole;
 		QOffsetRect(&dest, playOriginH, playOriginV);
@@ -215,16 +215,16 @@ void RenderDart (short who)
 void RenderBall (short who)
 {
 	Rect		src, dest;
-	
+
 	dest = dinahs[who].dest;
 	QOffsetRect(&dest, playOriginH, playOriginV);
 	src = ballSrc[dinahs[who].frame];
-	
-	CopyMask((BitMap *)*GetGWorldPixMap(ballSrcMap), 
-			(BitMap *)*GetGWorldPixMap(ballMaskMap), 
-			(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+	CopyMask((BitMap *)*GetGWorldPixMap(ballSrcMap),
+			(BitMap *)*GetGWorldPixMap(ballMaskMap),
+			(BitMap *)*GetGWorldPixMap(workSrcMap),
 			&src, &src, &dest);
-	
+
 	AddRectToBackRects(&dest);
 	dest = dinahs[who].whole;
 	QOffsetRect(&dest, playOriginH, playOriginV);
@@ -236,16 +236,16 @@ void RenderBall (short who)
 void RenderDrip (short who)
 {
 	Rect		src, dest;
-	
+
 	dest = dinahs[who].dest;
 	QOffsetRect(&dest, playOriginH, playOriginV);
 	src = dripSrc[dinahs[who].frame];
-	
-	CopyMask((BitMap *)*GetGWorldPixMap(dripSrcMap), 
-			(BitMap *)*GetGWorldPixMap(dripMaskMap), 
-			(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+	CopyMask((BitMap *)*GetGWorldPixMap(dripSrcMap),
+			(BitMap *)*GetGWorldPixMap(dripMaskMap),
+			(BitMap *)*GetGWorldPixMap(workSrcMap),
 			&src, &src, &dest);
-	
+
 	AddRectToBackRects(&dest);
 	dest = dinahs[who].whole;
 	QOffsetRect(&dest, playOriginH, playOriginV);
@@ -257,16 +257,16 @@ void RenderDrip (short who)
 void RenderFish (short who)
 {
 	Rect		src, dest;
-	
+
 	dest = dinahs[who].dest;
 	QOffsetRect(&dest, playOriginH, playOriginV);
 	src = fishSrc[dinahs[who].frame];
-	
+
 	if (dinahs[who].moving)
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(fishSrcMap), 
-				(BitMap *)*GetGWorldPixMap(fishMaskMap), 
-				(BitMap *)*GetGWorldPixMap(workSrcMap), 
+		CopyMask((BitMap *)*GetGWorldPixMap(fishSrcMap),
+				(BitMap *)*GetGWorldPixMap(fishMaskMap),
+				(BitMap *)*GetGWorldPixMap(workSrcMap),
 				&src, &src, &dest);
 		AddRectToBackRects(&dest);
 		dest = dinahs[who].whole;
@@ -275,8 +275,8 @@ void RenderFish (short who)
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(fishSrcMap), 
-				(BitMap *)*GetGWorldPixMap(workSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(fishSrcMap),
+				(BitMap *)*GetGWorldPixMap(workSrcMap),
 				&src, &dest, srcCopy, nil);
 		AddRectToBackRects(&dest);
 		dest = dinahs[who].whole;
@@ -293,7 +293,7 @@ void RenderFish (short who)
 void HandleSparkleObject (short who)
 {
 	Rect		tempRect;
-	
+
 	if (dinahs[who].active)								// is it on?
 	{
 		if (dinahs[who].frame <= 0)						// is it idle?
@@ -321,7 +321,7 @@ void HandleSparkleObject (short who)
 void HandleToast (short who)
 {
 	Rect		dest;
-	
+
 	if (dinahs[who].moving)
 	{
 		if (evenFrame)
@@ -397,9 +397,9 @@ void HandleMacPlus (short who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacBeepSound, kMacBeepPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&plusScreen2, &dinahs[who].dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&plusScreen2, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
@@ -413,9 +413,9 @@ void HandleMacPlus (short who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&plusScreen1, &dinahs[who].dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&plusScreen1, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
@@ -434,7 +434,7 @@ void HandleTV (short who)
 		{
 			if (dinahs[who].timer == 0)
 			{
-				if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) && 
+				if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) &&
 						(who == tvWithMovieNumber))
 				{
 				}
@@ -446,15 +446,15 @@ void HandleTV (short who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kTVOnSound, kTVOnPriority);
-				if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) && 
+				if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) &&
 						(who == tvWithMovieNumber))
 				{
 				}
 				else
 				{
-					CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-							(BitMap *)*GetGWorldPixMap(backSrcMap), 
-							&tvScreen2, &dinahs[who].dest, 
+					CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+							(BitMap *)*GetGWorldPixMap(backSrcMap),
+							&tvScreen2, &dinahs[who].dest,
 							srcCopy, nil);
 					AddRectToBackRects(&dinahs[who].dest);
 				}
@@ -467,9 +467,9 @@ void HandleTV (short who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kTVOffSound, kTVOffPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&tvScreen1, &dinahs[who].dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&tvScreen1, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
@@ -494,9 +494,9 @@ void HandleCoffee (short who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&coffeeLight2, &dinahs[who].dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&coffeeLight2, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
@@ -513,9 +513,9 @@ void HandleCoffee (short who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&coffeeLight1, &dinahs[who].dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&coffeeLight1, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
@@ -530,7 +530,7 @@ void HandleOutlet (short who)
 	if (dinahs[who].position != 0)
 	{
 		dinahs[who].timer--;
-		
+
 		if (twoPlayerGame)
 		{
 			if (onePlayerLeft)
@@ -548,7 +548,7 @@ void HandleOutlet (short who)
 		}
 		else
 			CheckDynamicCollision(who, &theGlider, true);
-		
+
 		if (dinahs[who].timer <= 0)
 		{
 			dinahs[who].frame = 0;
@@ -563,13 +563,13 @@ void HandleOutlet (short who)
 			if (dinahs[who].frame >= kNumOutletPicts)
 				dinahs[who].frame = 1;
 		}
-		
+
 		if ((dinahs[who].position != 0) || (dinahs[who].hVel > 0))
 		{
-			CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
-					&outletSrc[dinahs[who].frame], 
-					&dinahs[who].dest, 
+			CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
+					&outletSrc[dinahs[who].frame],
+					&dinahs[who].dest,
 					srcCopy, nil);
 		}
 		else
@@ -583,7 +583,7 @@ void HandleOutlet (short who)
 	{
 		if (dinahs[who].active)
 			dinahs[who].timer--;
-		
+
 		if (dinahs[who].timer <= 0)
 		{
 			if (dinahs[who].active)
@@ -617,9 +617,9 @@ void HandleVCR (short who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kVCRSound, kVCRPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&vcrTime2, &dinahs[who].dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&vcrTime2, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
@@ -633,17 +633,17 @@ void HandleVCR (short who)
 			{
 				if (dinahs[who].frame == 0)
 				{
-					CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-							(BitMap *)*GetGWorldPixMap(backSrcMap), 
-							&vcrTime2, &dinahs[who].dest, 
+					CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+							(BitMap *)*GetGWorldPixMap(backSrcMap),
+							&vcrTime2, &dinahs[who].dest,
 							srcCopy, nil);
 					AddRectToBackRects(&dinahs[who].dest);
 				}
 				else
 				{
-					CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-							(BitMap *)*GetGWorldPixMap(backSrcMap), 
-							&vcrTime1, &dinahs[who].dest, 
+					CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+							(BitMap *)*GetGWorldPixMap(backSrcMap),
+							&vcrTime1, &dinahs[who].dest,
 							srcCopy, nil);
 					AddRectToBackRects(&dinahs[who].dest);
 				}
@@ -656,9 +656,9 @@ void HandleVCR (short who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&vcrTime1, &dinahs[who].dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&vcrTime1, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
@@ -683,9 +683,9 @@ void HandleStereo (short who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&stereoLight2, &dinahs[who].dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&stereoLight2, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
@@ -700,9 +700,9 @@ void HandleStereo (short who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&stereoLight1, &dinahs[who].dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&stereoLight1, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
@@ -715,7 +715,7 @@ void HandleStereo (short who)
 void HandleMicrowave (short who)
 {
 	Rect		dest;
-	
+
 	if (dinahs[who].timer > 0)
 	{
 		dinahs[who].timer--;
@@ -728,19 +728,19 @@ void HandleMicrowave (short who)
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
 				dest = dinahs[who].dest;
 				dest.right = dest.left + 16;
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&microOn, &dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&microOn, &dest,
 						srcCopy, nil);
 				QOffsetRect(&dest, 16, 0);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&microOn, &dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&microOn, &dest,
 						srcCopy, nil);
 				QOffsetRect(&dest, 16, 0);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&microOn, &dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&microOn, &dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
@@ -754,19 +754,19 @@ void HandleMicrowave (short who)
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
 				dest = dinahs[who].dest;
 				dest.right = dest.left + 16;
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&microOff, &dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&microOff, &dest,
 						srcCopy, nil);
 				QOffsetRect(&dest, 16, 0);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&microOff, &dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&microOff, &dest,
 						srcCopy, nil);
 				QOffsetRect(&dest, 16, 0);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap), 
-						(BitMap *)*GetGWorldPixMap(backSrcMap), 
-						&microOff, &dest, 
+				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
+						(BitMap *)*GetGWorldPixMap(backSrcMap),
+						&microOff, &dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}

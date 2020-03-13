@@ -29,7 +29,7 @@ extern	Boolean		switchedOut;
 Point MyGetGlobalMouse (void)
 {
 	Point	localWhere;
-	
+
 	GetMouse(&localWhere);
 	LocalToGlobal(&localWhere);
 	return (localWhere);
@@ -50,18 +50,18 @@ void ToolBoxInit (void)
 	InitMenus();
 	TEInit();
 	InitDialogs(nil);
-	
+
 	MaxApplZone();
-	
+
 	MoreMasters();
 	MoreMasters();
 	MoreMasters();
 	MoreMasters();
-	
+
 	GetDateTime((UInt32 *)&qd.randSeed);
-	
+
 #endif
-	
+
 	InitCursor();
 	switchedOut = false;
 }
@@ -72,12 +72,12 @@ void ToolBoxInit (void)
 short RandomInt (short range)
 {
 	register long	rawResult;
-	
+
 	rawResult = Random();
 	if (rawResult < 0L)
 		rawResult *= -1L;
 	rawResult = (rawResult * (long)range) / 32768L;
-	
+
 	return ((short)rawResult);
 }
 
@@ -89,22 +89,22 @@ long RandomLong (long range)
 {
 	register long	highWord, lowWord;
 	register long	rawResultHi, rawResultLo;
-	
+
 	highWord = (range & 0xFFFF0000) >> 16;
 	lowWord = range & 0x0000FFFF;
-	
+
 	rawResultHi = Random();
 	if (rawResultHi < 0L)
 		rawResultHi *= -1L;
 	rawResultHi = (rawResultHi * highWord) / 32768L;
-	
+
 	rawResultLo = Random();
 	if (rawResultLo < 0L)
 		rawResultLo *= -1L;
 	rawResultLo = (rawResultLo * lowWord) / 32768L;
-	
+
 	rawResultHi = (rawResultHi << 16) + rawResultLo;
-	
+
 	return (rawResultHi);
 }
 
@@ -139,9 +139,9 @@ void RedAlert (short errorNumber)
 	#define			rErrMssgID		171		// string ID for death error message
 	short			dummyInt;
 	Str255			errTitle, errMessage, errNumberString;
-	
+
 	InitCursor();
-	
+
 	if (errorNumber > 1)		// <= 0 is unaccounted for
 	{
 		GetIndString(errTitle, rErrTitleID, errorNumber);
@@ -155,7 +155,7 @@ void RedAlert (short errorNumber)
 	NumToString((long)errorNumber, errNumberString);
 	ParamText(errTitle, errMessage, errNumberString, "\p");
 //	CenterAlert(rDeathAlertID);
-	
+
 	dummyInt = Alert(rDeathAlertID, nil);
 	ExitToShell();
 }
@@ -178,14 +178,14 @@ void FindOurDevice (void)
 void CreateOffScreenBitMap (Rect *theRect, GrafPtr *offScreen)
 {
 	GrafPtr		theBWPort;
-	BitMap		theBitMap;	
+	BitMap		theBitMap;
 	long		theRowBytes;
-	
+
 	theBWPort = (GrafPtr)(NewPtr(sizeof(GrafPort)));
 	OpenPort(theBWPort);
 	theRowBytes = (long)((theRect->right - theRect->left + 15L) / 16L) * 2L;
 	theBitMap.rowBytes = (short)theRowBytes;
-	theBitMap.baseAddr = NewPtr((long)theBitMap.rowBytes * 
+	theBitMap.baseAddr = NewPtr((long)theBitMap.rowBytes *
 		(theRect->bottom - theRect->top));
 	if (theBitMap.baseAddr == nil)
 		RedAlert(kErrNoMemory);
@@ -212,7 +212,7 @@ void CreateOffScreenPixMap (Rect *theRect, CGrafPtr *offScreen)
 	OSErr		theErr;
 	short		thisDepth;
 	char		wasState;
-	
+
 	oldDevice = GetGDevice();
 	SetGDevice(thisGDevice);
 	newCGrafPtr = nil;
@@ -221,7 +221,7 @@ void CreateOffScreenPixMap (Rect *theRect, CGrafPtr *offScreen)
 	{
 		OpenCPort(newCGrafPtr);
 		thisDepth = (**(*newCGrafPtr).portPixMap).pixelSize;
-		offRowBytes = ((((long)thisDepth * 
+		offRowBytes = ((((long)thisDepth *
 				(long)(theRect->right - theRect->left)) + 15L) >> 4L) << 1L;
 		sizeOfOff = (long)(theRect->bottom - theRect->top + 1) * offRowBytes;
 	//	sizeOfOff = (long)(theRect->bottom - theRect->top) * offRowBytes;
@@ -247,7 +247,7 @@ void CreateOffScreenPixMap (Rect *theRect, CGrafPtr *offScreen)
 		}
 		else
 		{
-			CloseCPort(newCGrafPtr);		
+			CloseCPort(newCGrafPtr);
 			DisposePtr((Ptr)newCGrafPtr);
 			newCGrafPtr = nil;
 			RedAlert(kErrNoMemory);
@@ -255,7 +255,7 @@ void CreateOffScreenPixMap (Rect *theRect, CGrafPtr *offScreen)
 	}
 	else
 		RedAlert(kErrNoMemory);
-	
+
 	*offScreen = newCGrafPtr;
 	SetGDevice(oldDevice);
 }
@@ -266,14 +266,14 @@ void CreateOffScreenPixMap (Rect *theRect, CGrafPtr *offScreen)
 OSErr CreateOffScreenGWorld (GWorldPtr *theGWorld, Rect *bounds, short depth)
 {
 	OSErr		theErr;
-	
+
 	theErr = NewGWorld(theGWorld, depth, bounds, nil, nil, useTempMem);
-	
+
 	if (theErr)
 		theErr = NewGWorld(theGWorld, depth, bounds, nil, nil, 0);
-	
+
 	LockPixels(GetGWorldPixMap(*theGWorld));
-	
+
 	return theErr;
 }
 
@@ -284,7 +284,7 @@ OSErr CreateOffScreenGWorld (GWorldPtr *theGWorld, Rect *bounds, short depth)
 void KillOffScreenPixMap (CGrafPtr offScreen)
 {
 	Ptr		theseBits;
-	
+
 	if (offScreen != nil)
 	{
 		theseBits = (**(*offScreen).portPixMap).baseAddr;
@@ -318,17 +318,17 @@ void LoadGraphic (short resID)
 {
 	Rect		bounds;
 	PicHandle	thePicture;
-	
+
 	thePicture = GetPicture(resID);
 	if (thePicture == nil)
 		RedAlert(kErrFailedGraphicLoad);
-	
+
 	HLock((Handle)thePicture);
 	bounds = (*thePicture)->picFrame;
 	HUnlock((Handle)thePicture);
 	OffsetRect(&bounds, -bounds.left, -bounds.top);
 	DrawPicture(thePicture, &bounds);
-	
+
 	ReleaseResource((Handle)thePicture);
 }
 
@@ -340,7 +340,7 @@ void LoadGraphic (short resID)
 void LoadScaledGraphic (short resID, Rect *theRect)
 {
 	PicHandle	thePicture;
-	
+
 	thePicture = GetPicture(resID);
 	if (thePicture == nil)
 		RedAlert(kErrFailedGraphicLoad);
@@ -355,20 +355,20 @@ void PlotSICN (Rect *theRect, SICNHand theSICN, long theIndex)
 {
 	char		state;
 	BitMap		srcBits;
-	
-	if ((theSICN != nil) && 
+
+	if ((theSICN != nil) &&
 			((GetHandleSize((Handle)theSICN) / sizeof(SICN)) > theIndex))
 	{
 		state = HGetState((Handle)theSICN);
 		HLock((Handle)theSICN);
-		
+
 		srcBits.baseAddr = (Ptr)(*theSICN)[theIndex];
 		srcBits.rowBytes = 2;
 		SetRect(&srcBits.bounds, 0, 0, 16, 16);
-		
-		CopyBits(&srcBits,&(*qd.thePort).portBits, 
+
+		CopyBits(&srcBits,&(*qd.thePort).portBits,
 				&srcBits.bounds, theRect, srcCopy, nil);
-		
+
 		HSetState((Handle) theSICN, state);
 	}
 }
@@ -380,7 +380,7 @@ void LargeIconPlot (Rect *theRect, short theID)
 {
 	OSErr		theErr;
 	Handle		theSuite;
-	
+
 	theErr = GetIconSuite(&theSuite, theID, svAllLargeData);
 	if (theErr == noErr)
 		theErr = PlotIconSuite(theRect, atNone, ttNone, theSuite);
@@ -394,7 +394,7 @@ void DrawCIcon (short theID, short h, short v)
 {
 	CIconHandle	theIcon;
 	Rect		theRect;
-	
+
 	theIcon = GetCIcon(theID);
 	if (theIcon != nil)
 	{
@@ -415,19 +415,19 @@ long LongSquareRoot (long theNumber)
 {
 	long		currentAnswer;
 	long		nextTrial;
-	
+
 	if (theNumber <= 1L)
 		return (theNumber);
-	
+
 	nextTrial = theNumber / 2;
-	
+
 	do
 	{
 		currentAnswer = nextTrial;
 		nextTrial = (nextTrial + theNumber / nextTrial) / 2;
 	}
 	while (nextTrial < currentAnswer);
-	
+
 	return(currentAnswer);
 }
 
@@ -442,23 +442,23 @@ Boolean WaitForInputEvent (short seconds)
 	KeyMap		theKeys;
 	long		timeToBail;
 	Boolean		waiting, didResume;
-	
+
 	timeToBail = TickCount() + 60L * (long)seconds;
 	FlushEvents(everyEvent, 0);
 	waiting = true;
 	didResume = false;
-	
+
 	while (waiting)
 	{
 		GetKeys(theKeys);
-		if ((BitTst(&theKeys, kCommandKeyMap)) || (BitTst(&theKeys, kOptionKeyMap)) || 
+		if ((BitTst(&theKeys, kCommandKeyMap)) || (BitTst(&theKeys, kOptionKeyMap)) ||
 				(BitTst(&theKeys, kShiftKeyMap)) || (BitTst(&theKeys, kControlKeyMap)))
 			waiting = false;
 		if (GetNextEvent(everyEvent, &theEvent))
 		{
 			if ((theEvent.what == mouseDown) || (theEvent.what == keyDown))
 				waiting = false;
-			else if ((theEvent.what == osEvt) && (theEvent.message & 0x01000000)) 
+			else if ((theEvent.what == osEvt) && (theEvent.message & 0x01000000))
 			{
 				if (theEvent.message & 0x00000001)		// resuming
 				{
@@ -486,9 +486,9 @@ void WaitCommandQReleased (void)
 {
 	KeyMap		theKeys;
 	Boolean		waiting;
-	
+
 	waiting = true;
-	
+
 	while (waiting)
 	{
 		GetKeys(theKeys);
@@ -504,15 +504,15 @@ void WaitCommandQReleased (void)
 char KeyMapOffsetFromRawKey (char rawKeyCode)
 {
 	char		hiByte, loByte, theOffset;
-	
+
 	hiByte = rawKeyCode & 0xF0;
 	loByte = rawKeyCode & 0x0F;
-	
+
 	if (loByte <= 0x07)
 		theOffset = hiByte + (0x07 - loByte);
 	else
 		theOffset = hiByte + (0x17 - loByte);
-	
+
 	return (theOffset);
 }
 
@@ -523,7 +523,7 @@ char GetKeyMapFromMessage (long message)
 {
 	long		theVirtual;
 	char		offset;
-	
+
 	theVirtual = (message & keyCodeMask) >> 8;
 	offset = KeyMapOffsetFromRawKey((char)theVirtual);
 	return (offset);
@@ -536,13 +536,13 @@ char GetKeyMapFromMessage (long message)
 void GetKeyName (long message, StringPtr theName)
 {
 	long		theASCII, theVirtual;
-	
+
 	theASCII = message & charCodeMask;
 	theVirtual = (message & keyCodeMask) >> 8;
-	
+
 	if ((theASCII >= kExclamationASCII) && (theASCII <= kZKeyASCII))
 	{
-		
+
 		if ((theVirtual >= 0x0041) && (theVirtual <= 0x005C))
 		{
 			PasStringCopy("\p( )", theName);
@@ -561,39 +561,39 @@ void GetKeyName (long message, StringPtr theName)
 			case kHomeKeyASCII:
 			PasStringCopy("\phome", theName);
 			break;
-			
+
 			case kEnterKeyASCII:
 			PasStringCopy("\penter", theName);
 			break;
-			
+
 			case kEndKeyASCII:
 			PasStringCopy("\pend", theName);
 			break;
-			
+
 			case kHelpKeyASCII:
 			PasStringCopy("\phelp", theName);
 			break;
-			
+
 			case kDeleteKeyASCII:
 			PasStringCopy("\pdelete", theName);
 			break;
-			
+
 			case kTabKeyASCII:
 			PasStringCopy("\ptab", theName);
 			break;
-			
+
 			case kPageUpKeyASCII:
 			PasStringCopy("\ppg up", theName);
 			break;
-			
+
 			case kPageDownKeyASCII:
 			PasStringCopy("\ppg dn", theName);
 			break;
-			
+
 			case kReturnKeyASCII:
 			PasStringCopy("\preturn", theName);
 			break;
-			
+
 			case kFunctionKeyASCII:
 			switch (theVirtual)
 			{
@@ -647,42 +647,42 @@ void GetKeyName (long message, StringPtr theName)
 				break;
 			}
 			break;
-			
+
 			case kClearKeyASCII:
 			PasStringCopy("\pclear", theName);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			if (theVirtual == 0x0047)
 				PasStringCopy("\pclear", theName);
 			else
 				PasStringCopy("\pesc", theName);
 			break;
-			
+
 			case kLeftArrowKeyASCII:
 			PasStringCopy("\plf arrow", theName);
 			break;
-			
+
 			case kRightArrowKeyASCII:
 			PasStringCopy("\prt arrow", theName);
 			break;
-			
+
 			case kUpArrowKeyASCII:
 			PasStringCopy("\pup arrow", theName);
 			break;
-			
+
 			case kDownArrowKeyASCII:
 			PasStringCopy("\pdn arrow", theName);
 			break;
-			
+
 			case kSpaceBarASCII:
 			PasStringCopy("\pspace", theName);
 			break;
-			
+
 			case kForwardDeleteASCII:
 			PasStringCopy("\pfrwd del", theName);
 			break;
-			
+
 			default:
 			PasStringCopy("\p????", theName);
 			break;
@@ -696,7 +696,7 @@ void GetKeyName (long message, StringPtr theName)
 Boolean OptionKeyDown (void)
 {
 	KeyMap		theKeys;
-	
+
 	GetKeys(theKeys);
 	if (BitTst(&theKeys, kOptionKeyMap))
 		return (true);
@@ -710,7 +710,7 @@ Boolean OptionKeyDown (void)
 long ExtractCTSeed (CGrafPtr porter)
 {
 	long		theSeed;
-	
+
 	theSeed = (**((**(porter->portPixMap)).pmTable)).ctSeed;
 	return(theSeed);
 }
@@ -731,7 +731,7 @@ void ForceCTSeed (CGrafPtr porter, long newSeed)
 void DelayTicks (long howLong)
 {
 	UInt32		whoCares;
-	
+
 	Delay(howLong, &whoCares);
 }
 
@@ -744,7 +744,7 @@ void UnivGetSoundVolume (short *volume, Boolean hasSM3)
 #pragma unused (hasSM3)
 	long		longVol;
 	OSErr		theErr;
-	
+
 //	if (hasSM3)
 //	{
 		theErr = GetDefaultOutputVolume(&longVol);
@@ -752,7 +752,7 @@ void UnivGetSoundVolume (short *volume, Boolean hasSM3)
 //	}
 //	else
 //		GetSoundVol(volume);
-	
+
 	if (*volume > 7)
 		*volume = 7;
 	else if (*volume < 0)
@@ -768,12 +768,12 @@ void  UnivSetSoundVolume (short volume, Boolean hasSM3)
 #pragma unused (hasSM3)
 	long		longVol;
 	OSErr		theErr;
-	
+
 	if (volume > 7)
 		volume = 7;
 	else if (volume < 0)
 		volume = 0;
-	
+
 //	if (hasSM3)
 //	{
 		longVol = (long)volume * 0x0025;

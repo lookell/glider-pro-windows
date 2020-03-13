@@ -41,25 +41,25 @@ void GetPutDialogCorner (Point *theCorner)
 	DialogTHndl	dlogHandle;
 	Rect		theScreen, dlogBounds;
 	Byte		wasState;
-	
+
 	theCorner->h = 64;
 	theCorner->v = 64;
 	theScreen = qd.screenBits.bounds;
 	theScreen.top += LMGetMBarHeight();
 	OffsetRect(&theScreen, -theScreen.left, -theScreen.top);
-	
+
 	dlogHandle = (DialogTHndl)GetResource('DLOG', sfPutDialogID);
 	if (dlogHandle != nil)
 	{
 		wasState = HGetState((Handle)dlogHandle);
 		HLock((Handle)dlogHandle);
-		
+
 		dlogBounds = (**dlogHandle).boundsRect;
 		OffsetRect(&dlogBounds, -dlogBounds.left, -dlogBounds.top);
-		
+
 		theCorner->h = (theScreen.right - dlogBounds.right) / 2;
 		theCorner->v = (theScreen.bottom - dlogBounds.bottom) / 3;
-		
+
 		HSetState((Handle)dlogHandle, wasState);
 	}
 	theCorner->v += LMGetMBarHeight();
@@ -75,25 +75,25 @@ void GetGetDialogCorner (Point *theCorner)
 	DialogTHndl	dlogHandle;
 	Rect		theScreen, dlogBounds;
 	Byte		wasState;
-	
+
 	theCorner->h = 64;
 	theCorner->v = 64;
 	theScreen = qd.screenBits.bounds;
 	theScreen.top += LMGetMBarHeight();
 	OffsetRect(&theScreen, -theScreen.left, -theScreen.top);
-	
+
 	dlogHandle = (DialogTHndl)GetResource('DLOG', sfGetDialogID);
 	if (dlogHandle != nil)
 	{
 		wasState = HGetState((Handle)dlogHandle);
 		HLock((Handle)dlogHandle);
-		
+
 		dlogBounds = (**dlogHandle).boundsRect;
 		OffsetRect(&dlogBounds, -dlogBounds.left, -dlogBounds.top);
-		
+
 		theCorner->h = (theScreen.right - dlogBounds.right) / 2;
 		theCorner->v = (theScreen.bottom - dlogBounds.bottom) / 3;
-		
+
 		HSetState((Handle)dlogHandle, wasState);
 	}
 	theCorner->v += LMGetMBarHeight();
@@ -108,24 +108,24 @@ void CenterDialog (SInt16 dialogID)
 	Rect		theScreen, dlogBounds;
 	SInt16		hPos, vPos;
 	Byte		wasState;
-	
+
 	theScreen = qd.screenBits.bounds;
 	theScreen.top += LMGetMBarHeight();
-	
+
 	dlogHandle = (DialogTHndl)GetResource('DLOG', dialogID);
 	if (dlogHandle != nil)
 	{
 		wasState = HGetState((Handle)dlogHandle);
 		HLock((Handle)dlogHandle);
-		
+
 		dlogBounds = (**dlogHandle).boundsRect;
 		OffsetRect(&dlogBounds, -dlogBounds.left, -dlogBounds.top);
-		
+
 		hPos = ((theScreen.right - theScreen.left) - dlogBounds.right) / 2;
 		vPos = ((theScreen.bottom - theScreen.top) - dlogBounds.bottom) / 3;
-		
+
 		OffsetRect(&dlogBounds, hPos, vPos + LMGetMBarHeight());
-		
+
 		(**dlogHandle).boundsRect = dlogBounds;
 		HSetState((Handle)dlogHandle, wasState);
 	}
@@ -138,13 +138,13 @@ void GetDialogRect (Rect *bounds, short dialogID)
 {
 	DialogTHndl	dlogHandle;
 	Byte		wasState;
-	
+
 	dlogHandle = (DialogTHndl)GetResource('DLOG', dialogID);
 	if (dlogHandle != nil)
 	{
 		wasState = HGetState((Handle)dlogHandle);
 		HLock((Handle)dlogHandle);
-		
+
 		*bounds = (**dlogHandle).boundsRect;
 		HSetState((Handle)dlogHandle, wasState);
 	}
@@ -160,27 +160,27 @@ void TrueCenterDialog (short dialogID)
 	Rect		theScreen, dlogBounds;
 	short		hPos, vPos;
 	Byte		wasState;
-	
+
 	theScreen = qd.screenBits.bounds;
 	theScreen.top += LMGetMBarHeight();
-	
+
 	dlogHandle = (DialogTHndl)GetResource('DLOG', dialogID);
 	if (dlogHandle != nil)
 	{
 		wasState = HGetState((Handle)dlogHandle);
 		HLock((Handle)dlogHandle);
-		
+
 		dlogBounds = (**dlogHandle).boundsRect;
-		OffsetRect(&dlogBounds, theScreen.left - dlogBounds.left, 
+		OffsetRect(&dlogBounds, theScreen.left - dlogBounds.left,
 				theScreen.top - dlogBounds.top);
-		
-		hPos = ((theScreen.right - theScreen.left) - 
+
+		hPos = ((theScreen.right - theScreen.left) -
 				(dlogBounds.right - dlogBounds.left)) / 2;
-		vPos = ((theScreen.bottom - theScreen.top) - 
+		vPos = ((theScreen.bottom - theScreen.top) -
 				(dlogBounds.bottom - dlogBounds.top)) / 2;
-		
+
 		OffsetRect(&dlogBounds, hPos, vPos + LMGetMBarHeight());
-		
+
 		(**dlogHandle).boundsRect = dlogBounds;
 		HSetState((Handle)dlogHandle, wasState);
 	}
@@ -195,24 +195,24 @@ void CenterAlert (short alertID)
 	Rect		theScreen, alertRect;
 	short		horiOff, vertOff;
 	Byte		wasState;
-	
+
 	theScreen = qd.screenBits.bounds;
 	theScreen.top += LMGetMBarHeight();
-	
+
 	alertHandle = (AlertTHndl)GetResource('ALRT', alertID);
 	if (alertHandle != nil)
 	{
 		wasState = HGetState((Handle)alertHandle);
 		HLock((Handle)alertHandle);
-		
+
 		alertRect = (**alertHandle).boundsRect;
 		OffsetRect(&alertRect, -alertRect.left, -alertRect.top);
-		
-		horiOff = ((theScreen.right - theScreen.left) - alertRect.right) / 2;	
+
+		horiOff = ((theScreen.right - theScreen.left) - alertRect.right) / 2;
 		vertOff = ((theScreen.bottom - theScreen.top) - alertRect.bottom) / 3;
-		
+
 		OffsetRect(&alertRect, horiOff, vertOff + LMGetMBarHeight());
-		
+
 		(**alertHandle).boundsRect = alertRect;
 		HSetState((Handle)alertHandle, wasState);
 	}
@@ -233,12 +233,12 @@ void ZoomOutDialogRect (short dialogID)
 	UInt32		dummyLong;
 	Byte		wasState;
 	short		wideStep, highStep, i;
-	
+
 	GetPort(&wasPort);
-	
+
 	tempPort = (GrafPtr)NewPtrClear(sizeof(GrafPort));
 	OpenPort(tempPort);
-	
+
 	dlogHandle = (DialogTHndl)GetResource('DLOG', dialogID);
 	if (dlogHandle != nil)
 	{
@@ -247,19 +247,19 @@ void ZoomOutDialogRect (short dialogID)
 		dlogBounds = (**dlogHandle).boundsRect;
 		HSetState((Handle)dlogHandle, wasState);
 	}
-	
+
 	wideStep = ((dlogBounds.right - dlogBounds.left) / 2) / kSteps;
 	highStep = ((dlogBounds.bottom - dlogBounds.top) / 2) / kSteps;
-	
-	SetRect(&zoomRect, dlogBounds.left + (wideStep * kSteps), 
-			dlogBounds.top + (highStep * kSteps), 
-			dlogBounds.right - (wideStep * kSteps), 
+
+	SetRect(&zoomRect, dlogBounds.left + (wideStep * kSteps),
+			dlogBounds.top + (highStep * kSteps),
+			dlogBounds.right - (wideStep * kSteps),
 			dlogBounds.bottom - (highStep * kSteps));
 	GlobalToLocalRect(&zoomRect);
-	
+
 	PenPat(GetQDGlobalsGray(&dummyPattern));
 	PenMode(patXor);
-	
+
 	for (i = 0; i < kSteps; i++)
 	{
 		FrameRect(&zoomRect);
@@ -267,9 +267,9 @@ void ZoomOutDialogRect (short dialogID)
 		FrameRect(&zoomRect);
 		InsetRect(&zoomRect, -wideStep, -highStep);
 	}
-	
+
 	ClosePort(tempPort);
-	
+
 	SetPort((GrafPtr)wasPort);
 }
 */
@@ -287,12 +287,12 @@ void ZoomOutAlertRect (short alertID)
 	UInt32		dummyLong;
 	Byte		wasState;
 	short		wideStep, highStep, i;
-	
+
 	GetPort(&wasPort);
-	
+
 	tempPort = (GrafPtr)NewPtrClear(sizeof(GrafPort));
 	OpenPort(tempPort);
-	
+
 	alertHandle = (AlertTHndl)GetResource('ALRT', alertID);
 	if (alertHandle != nil)
 	{
@@ -301,19 +301,19 @@ void ZoomOutAlertRect (short alertID)
 		alertBounds = (**alertHandle).boundsRect;
 		HSetState((Handle)alertHandle, wasState);
 	}
-	
+
 	wideStep = ((alertBounds.right - alertBounds.left) / 2) / kSteps;
 	highStep = ((alertBounds.bottom - alertBounds.top) / 2) / kSteps;
-	
-	SetRect(&zoomRect, alertBounds.left + (wideStep * kSteps), 
-			alertBounds.top + (highStep * kSteps), 
-			alertBounds.right - (wideStep * kSteps), 
+
+	SetRect(&zoomRect, alertBounds.left + (wideStep * kSteps),
+			alertBounds.top + (highStep * kSteps),
+			alertBounds.right - (wideStep * kSteps),
 			alertBounds.bottom - (highStep * kSteps));
 	GlobalToLocalRect(&zoomRect);
-	
+
 	PenPat(GetQDGlobalsGray(&dummyPattern));
 	PenMode(patXor);
-	
+
 	for (i = 0; i < kSteps; i++)
 	{
 		FrameRect(&zoomRect);
@@ -321,9 +321,9 @@ void ZoomOutAlertRect (short alertID)
 		FrameRect(&zoomRect);
 		InsetRect(&zoomRect, -wideStep, -highStep);
 	}
-	
+
 	ClosePort(tempPort);
-	
+
 	SetPort((GrafPtr)wasPort);
 }
 */
@@ -338,7 +338,7 @@ void FlashDialogButton (DialogPtr theDialog, short itemNumber)
 	Handle		itemHandle;
 	UInt32		dummyLong;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, itemNumber, &itemType, &itemHandle, &itemRect);
 	HiliteControl((ControlHandle)itemHandle, kControlButtonPart);
 	Delay(8, &dummyLong);
@@ -354,7 +354,7 @@ void DrawDefaultButton (DialogPtr theDialog)
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, 1, &itemType, &itemHandle, &itemRect);
 	InsetRect(&itemRect, -4, -4);
 	PenSize(3, 3);
@@ -370,7 +370,7 @@ void GetDialogString (DialogPtr theDialog, short item, StringPtr theString)
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	GetDialogItemText(itemHandle, theString);
 }
@@ -383,7 +383,7 @@ void SetDialogString (DialogPtr theDialog, short item, StringPtr theString)
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	SetDialogItemText(itemHandle, theString);
 }
@@ -397,7 +397,7 @@ short GetDialogStringLen (DialogPtr theDialog, short item)
 	Str255		theString;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	GetDialogItemText(itemHandle, theString);
 	return (theString[0]);
@@ -412,7 +412,7 @@ void GetDialogItemValue (DialogPtr theDialog, short item, short *theState)
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	*theState = GetControlValue((ControlHandle)itemHandle);
 }
@@ -426,7 +426,7 @@ void SetDialogItemValue (DialogPtr theDialog, short item, short theState)
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	SetControlValue((ControlHandle)itemHandle, theState);
 }
@@ -439,7 +439,7 @@ void ToggleDialogItemValue (DialogPtr theDialog, short item)
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType, theState;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	theState = GetControlValue((ControlHandle)itemHandle);
 	if (theState == 0)
@@ -459,7 +459,7 @@ void SetDialogNumToStr (DialogPtr theDialog, short item, long theNumber)
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	NumToString(theNumber, theString);
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	SetDialogItemText(itemHandle, theString);
@@ -475,7 +475,7 @@ void GetDialogNumFromStr (DialogPtr theDialog, short item, long *theNumber)
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	GetDialogItemText(itemHandle, theString);
 	StringToNum(theString, theNumber);
@@ -488,7 +488,7 @@ void GetDialogItemRect (DialogPtr theDialog, short item, Rect *theRect)
 {
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, theRect);
 }
 
@@ -501,7 +501,7 @@ void SetDialogItemRect (DialogPtr theDialog, short item, Rect *theRect)
 	Rect		oldRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &oldRect);
 	OffsetRect(&oldRect, theRect->left - oldRect.left, theRect->top - oldRect.top);
 	SetDialogItem(theDialog, item, itemType, itemHandle, &oldRect);
@@ -515,7 +515,7 @@ void OffsetDialogItemRect (DialogPtr theDialog, short item, short h, short v)
 	Rect		oldRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &oldRect);
 	OffsetRect(&oldRect, h, v);
 	SetDialogItem(theDialog, item, itemType, itemHandle, &oldRect);
@@ -531,13 +531,13 @@ void SelectFromRadioGroup (DialogPtr dial, short which, short first, short last)
 	Rect		iRect;
 	Handle		iHandle;
 	short		iType, i;
-	
+
 	for (i = first; i <= last; i++)
 	{
 		GetDialogItem(dial, i, &iType, &iHandle, &iRect);
 		SetControlValue((ControlHandle)iHandle, (short)false);
 	}
-	
+
 	GetDialogItem(dial, which, &iType, &iHandle, &iRect);
 	SetControlValue((ControlHandle)iHandle, (short)true);
 }
@@ -551,7 +551,7 @@ void AddMenuToPopUp (DialogPtr theDialog, short whichItem, MenuHandle theMenu)
 	Rect		iRect;
 	Handle		iHandle;
 	short		iType;
-	
+
 	GetDialogItem(theDialog, whichItem, &iType, &iHandle, &iRect);
 	(**(ControlHandle)iHandle).contrlRfCon = (long)theMenu;
 }
@@ -564,7 +564,7 @@ void GetPopUpMenuValue (DialogPtr theDialog, short whichItem, short *value)
 	Rect		iRect;
 	Handle		iHandle;
 	short		iType;
-	
+
 	GetDialogItem(theDialog, whichItem, &iType, &iHandle, &iRect);
 	*value = GetControlValue((ControlHandle)iHandle);
 }
@@ -577,7 +577,7 @@ void SetPopUpMenuValue (DialogPtr theDialog, short whichItem, short value)
 	Rect		iRect;
 	Handle		iHandle;
 	short		iType;
-	
+
 	GetDialogItem(theDialog, whichItem, &iType, &iHandle, &iRect);
 	SetControlValue((ControlHandle)iHandle, value);
 }
@@ -590,7 +590,7 @@ void MyEnableControl (DialogPtr theDialog, short whichItem)
 	Rect		iRect;
 	Handle		iHandle;
 	short		iType;
-	
+
 	GetDialogItem(theDialog, whichItem, &iType, &iHandle, &iRect);
 	HiliteControl((ControlHandle)iHandle, kActive);
 }
@@ -603,7 +603,7 @@ void MyDisableControl (DialogPtr theDialog, short whichItem)
 	Rect		iRect;
 	Handle		iHandle;
 	short		iType;
-	
+
 	GetDialogItem(theDialog, whichItem, &iType, &iHandle, &iRect);
 	HiliteControl((ControlHandle)iHandle, kInactive);
 }
@@ -619,10 +619,10 @@ void DrawDialogUserText (DialogPtr dial, short item, StringPtr text, Boolean inv
 	Handle		iHandle;
 	Str255		newString, stringCopy;
 	short		iType, textLong, i, inset;
-	
+
 	TextFont(applFont);
 	TextSize(9);
-	
+
 	PasStringCopy(text, stringCopy);
 	GetDialogItem(dial, item, &iType, &iHandle, &iRect);
 	if ((StringWidth(stringCopy) + 2) > (iRect.right - iRect.left))
@@ -630,15 +630,15 @@ void DrawDialogUserText (DialogPtr dial, short item, StringPtr text, Boolean inv
 	textLong = stringCopy[0];
 	for (i = 0; i < textLong; i++)
 		newString[i] = stringCopy[i + 1];
-	
+
 	OffsetRect(&iRect, 0, 1);
 	EraseRect(&iRect);
 	OffsetRect(&iRect, 0, -1);
-	
+
 	inset = ((iRect.right - iRect.left) - (StringWidth(stringCopy) + 2)) / 2;
 	iRect.left += inset;
 	iRect.right -= inset;
-	
+
 	TETextBox(newString, textLong, &iRect, teCenter);
 	if (invert)
 	{
@@ -658,10 +658,10 @@ void DrawDialogUserText2 (DialogPtr dial, short item, StringPtr text)
 	Handle		iHandle;
 	Str255		stringCopy;
 	short		iType;
-	
+
 	TextFont(applFont);
 	TextSize(9);
-	
+
 	PasStringCopy(text, stringCopy);
 	GetDialogItem(dial, item, &iType, &iHandle, &iRect);
 	if ((StringWidth(stringCopy) + 2) > (iRect.right - iRect.left))
@@ -680,7 +680,7 @@ void LoadDialogPICT (DialogPtr theDialog, short item, short theID)
 	Handle		iHandle;
 	PicHandle	thePict;
 	short		iType;
-	
+
 	GetDialogItem(theDialog, item, &iType, &iHandle, &iRect);
 	thePict = GetPicture(theID);
 	if (thePict)
@@ -695,7 +695,7 @@ void FrameDialogItem (DialogPtr theDialog, short item)
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	FrameRect(&itemRect);
 }
@@ -709,7 +709,7 @@ void FrameDialogItemC (DialogPtr theDialog, short item, long color)
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	GetForeColor(&wasColor);
 	Index2Color(color, &theRGBColor);
@@ -726,7 +726,7 @@ void FrameOvalDialogItem (DialogPtr theDialog, short item)
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	FrameOval(&itemRect);
 }
@@ -740,14 +740,14 @@ void BorderDialogItem (DialogPtr theDialog, short item, short sides)
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	// 1 = left
 	// 2 = top
 	// 4 = bottom
 	// 8 = right ... so 6 = top & bottom, 15 = all 4 sides
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
-	
+
 	if (sides >= 8)				// 8 = right
 	{
 		MoveTo(itemRect.right, itemRect.top);
@@ -781,7 +781,7 @@ void ShadowDialogItem (DialogPtr theDialog, short item, short thickness)
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	PenSize(thickness, thickness);
 	MoveTo(itemRect.left + thickness, itemRect.bottom);
@@ -799,7 +799,7 @@ void EraseDialogItem (DialogPtr theDialog, short item)
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
-	
+
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	EraseRect(&itemRect);
 }

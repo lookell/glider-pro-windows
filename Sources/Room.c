@@ -40,7 +40,7 @@ extern	short		tempTiles[];
 void SetInitialTiles (short background, Boolean doRoom)
 {
 	short		i;
-	
+
 	if (background >= kUserBackground)
 	{
 		for (i = 0; i < kNumTiles; i++)
@@ -82,7 +82,7 @@ void SetInitialTiles (short background, Boolean doRoom)
 				tempTiles[kNumTiles - 1] = kNumTiles - 1;
 			}
 			break;
-			
+
 			case kSkywalk:
 			for (i = 0; i < kNumTiles; i++)
 			{
@@ -92,7 +92,7 @@ void SetInitialTiles (short background, Boolean doRoom)
 					tempTiles[i] = i;
 			}
 			break;
-			
+
 			case kField:
 			case kGarden:
 			case kDirt:
@@ -104,7 +104,7 @@ void SetInitialTiles (short background, Boolean doRoom)
 					tempTiles[i] = 0;
 			}
 			break;
-			
+
 			case kMeadow:
 			for (i = 0; i < kNumTiles; i++)
 			{
@@ -114,7 +114,7 @@ void SetInitialTiles (short background, Boolean doRoom)
 					tempTiles[i] = 1;
 			}
 			break;
-			
+
 			case kRoof:
 			for (i = 0; i < kNumTiles; i++)
 			{
@@ -124,7 +124,7 @@ void SetInitialTiles (short background, Boolean doRoom)
 					tempTiles[i] = 3;
 			}
 			break;
-			
+
 			case kSky:
 			for (i = 0; i < kNumTiles; i++)
 			{
@@ -134,7 +134,7 @@ void SetInitialTiles (short background, Boolean doRoom)
 					tempTiles[i] = 2;
 			}
 			break;
-			
+
 			case kStratosphere:
 			case kStars:
 			for (i = 0; i < kNumTiles; i++)
@@ -145,7 +145,7 @@ void SetInitialTiles (short background, Boolean doRoom)
 					tempTiles[i] = i;
 			}
 			break;
-			
+
 			default:
 			break;
 		}
@@ -163,9 +163,9 @@ Boolean CreateNewRoom (short h, short v)
 	OSErr		theErr;
 	short		i, availableRoom;
 	char		wasState;
-	
+
 	CopyThisRoomToRoom();					// save off current room
-	
+
 	PasStringCopy("\pUntitled Room", thisRoom->name);
 	thisRoom->leftStart = 32;				// fill out fields of new room
 	thisRoom->rightStart = 32;
@@ -180,7 +180,7 @@ Boolean CreateNewRoom (short h, short v)
 	thisRoom->numObjects = 0;
 	for (i = 0; i < kMaxRoomObs; i++)		// zero out all objects
 		thisRoom->objects[i].what = kObjectIsEmpty;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	MoveHHi((Handle)thisHouse);
 	HLock((Handle)thisHouse);
@@ -192,7 +192,7 @@ Boolean CreateNewRoom (short h, short v)
 				availableRoom = i;
 				break;
 			}
-	
+
 	if (availableRoom == -1)				// found no available rooms
 	{
 		HUnlock((Handle)thisHouse);
@@ -217,24 +217,24 @@ Boolean CreateNewRoom (short h, short v)
 		previousRoom = thisRoomNumber;
 		thisRoomNumber = availableRoom;
 	}
-	
+
 	if (noRoomAtAll)
 		(*thisHouse)->firstRoom = thisRoomNumber;
-	
+
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	CopyThisRoomToRoom();
 	UpdateEditWindowTitle();
 	noRoomAtAll = false;
 	fileDirty = true;
 	UpdateMenus(false);
-	
+
 	GetKeys(theKeys);
 	if (BitTst(&theKeys, kShiftKeyMap))
 		newRoomNow = false;
 	else
 		newRoomNow = autoRoomEdit;			// Flag to bring up RoomInfo
-	
+
 	return (true);
 }
 #endif
@@ -246,9 +246,9 @@ void ReadyBackground (short theID, short *theTiles)
 	Rect		src, dest;
 	PicHandle	thePicture;
 	short		i;
-	
+
 	SetPort((GrafPtr)workSrcMap);
-	
+
 	if ((noRoomAtAll) || (!houseUnlocked))
 	{
 		LtGrayForeColor();
@@ -259,13 +259,13 @@ void ReadyBackground (short theID, short *theTiles)
 			DrawString("\pNo rooms");
 		else
 			DrawString("\pNothing to show");
-		
-		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&workSrcRect, &workSrcRect, srcCopy, nil);
 		return;
 	}
-	
+
 	thePicture = GetPicture(theID);
 	if (thePicture == nil)
 	{
@@ -276,30 +276,30 @@ void ReadyBackground (short theID, short *theTiles)
 			return;
 		}
 	}
-	
+
 	HLock((Handle)thePicture);
 	dest = (*thePicture)->picFrame;
 	HUnlock((Handle)thePicture);
 	QOffsetRect(&dest, -dest.left, -dest.top);
 	DrawPicture(thePicture, &dest);
 	ReleaseResource((Handle)thePicture);
-	
+
 	QSetRect(&src, 0, 0, kTileWide, kTileHigh);
 	QSetRect(&dest, 0, 0, kTileWide, kTileHigh);
 	for (i = 0; i < kNumTiles; i++)
 	{
 		src.left = theTiles[i] * kTileWide;
 		src.right = src.left + kTileWide;
-		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&src, &dest, srcCopy, nil);
 		QOffsetRect(&dest, kTileWide, 0);
 	}
-	
+
 	QSetRect(&src, 0, 0, kRoomWide, kTileHigh);
 	QSetRect(&dest, 0, 0, kRoomWide, kTileHigh);
-	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap), 
-			(BitMap *)*GetGWorldPixMap(workSrcMap), 
+	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
+			(BitMap *)*GetGWorldPixMap(workSrcMap),
 			&src, &dest, srcCopy, nil);
 }
 
@@ -310,7 +310,7 @@ void ReflectCurrentRoom (Boolean forceMapRedraw)
 #ifndef COMPILEDEMO
 	if (theMode != kEditMode)
 		return;
-	
+
 	if ((noRoomAtAll) || (!houseUnlocked))
 	{
 		CenterMapOnRoom(64, 1);
@@ -344,7 +344,7 @@ void CopyRoomToThisRoom (short roomNumber)
 {
 	if (roomNumber == -1)
 		return;
-	
+
 	CopyThisRoomToRoom();			// copy back to house
 	ForceThisRoom(roomNumber);		// load new room from house
 }
@@ -354,10 +354,10 @@ void CopyRoomToThisRoom (short roomNumber)
 void CopyThisRoomToRoom (void)
 {
 	char		tagByte;
-	
+
 	if ((noRoomAtAll) || (thisRoomNumber == -1))
 		return;
-	
+
 	tagByte = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);		// copy back to house
 	(*thisHouse)->rooms[thisRoomNumber] = *thisRoom;
@@ -369,10 +369,10 @@ void CopyThisRoomToRoom (void)
 void ForceThisRoom (short roomNumber)
 {
 	char		tagByte;
-	
+
 	if (roomNumber == -1)
 		return;
-	
+
 	tagByte = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	if (roomNumber < (*thisHouse)->nRooms)
@@ -380,7 +380,7 @@ void ForceThisRoom (short roomNumber)
 	else
 		YellowAlert(kYellowIllegalRoomNum, 0);
 	HSetState((Handle)thisHouse, tagByte);
-	
+
 	previousRoom = thisRoomNumber;
 	thisRoomNumber = roomNumber;
 }
@@ -394,19 +394,19 @@ Boolean RoomExists (short suite, short floor, short *roomNum)
 	short		i;
 	char		wasState;
 	Boolean		foundIt;
-	
+
 	foundIt = false;
-	
+
 	if (suite < 0)
 		return (foundIt);
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
-	
+
 	for (i = 0; i < numberRooms; i++)
 	{
-		if ((thisHousePtr->rooms[i].floor == floor) && 
+		if ((thisHousePtr->rooms[i].floor == floor) &&
 				(thisHousePtr->rooms[i].suite == suite))
 		{
 			foundIt = true;
@@ -414,9 +414,9 @@ Boolean RoomExists (short suite, short floor, short *roomNum)
 			break;
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	return (foundIt);
 }
 
@@ -426,11 +426,11 @@ Boolean RoomNumExists (short roomNum)
 {
 	short		floor, suite, whoCares;
 	Boolean		exists;
-	
+
 	exists = false;
 	if (GetRoomFloorSuite(roomNum, &floor, &suite))
 		exists = RoomExists(suite, floor, &whoCares);
-	
+
 	return (exists);
 }
 
@@ -442,18 +442,18 @@ void DeleteRoom (Boolean doWarn)
 	short		wasFloor, wasSuite;
 	char		wasState;
 	Boolean		firstDeleted;
-	
+
 	if ((theMode != kEditMode) || (noRoomAtAll))
 		return;
-	
+
 	if (doWarn)
 	{
 		if (!QueryDeleteRoom())
 			return;
 	}
-	
+
 	DeselectObject();
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	wasFloor = (*thisHouse)->rooms[thisRoomNumber].floor;
@@ -462,13 +462,13 @@ void DeleteRoom (Boolean doWarn)
 	thisRoom->suite = kRoomIsEmpty;
 	(*thisHouse)->rooms[thisRoomNumber].suite = kRoomIsEmpty;
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	noRoomAtAll = (RealRoomNumberCount() == 0);					// see if now no rooms
 	if (noRoomAtAll)
 		thisRoomNumber = kRoomIsEmpty;
 	else
 		SetToNearestNeighborRoom(wasFloor, wasSuite);
-	
+
 	if (firstDeleted)
 	{
 		wasState = HGetState((Handle)thisHouse);
@@ -476,7 +476,7 @@ void DeleteRoom (Boolean doWarn)
 		(*thisHouse)->firstRoom = thisRoomNumber;
 		HSetState((Handle)thisHouse, wasState);
 	}
-	
+
 	newRoomNow = false;
 	fileDirty = true;
 	UpdateMenus(false);
@@ -490,7 +490,7 @@ void DeleteRoom (Boolean doWarn)
 Boolean QueryDeleteRoom (void)
 {
 	short		hitWhat;
-	
+
 //	CenterAlert(kDeleteRoomAlert);
 	hitWhat = Alert(kDeleteRoomAlert, nil);
 	if (hitWhat == kYesDoDeleteRoom)
@@ -506,32 +506,32 @@ short DoesNeighborRoomExist (short whichNeighbor)
 {
 #ifndef COMPILEDEMO
 	short		newH, newV, newRoomNumber;
-	
+
 	if (theMode != kEditMode)
 		return(-1);
-	
+
 	newH = thisRoom->suite;
 	newV = thisRoom->floor;
-	
+
 	switch (whichNeighbor)
 	{
 		case kRoomAbove:
 		newV++;
 		break;
-		
+
 		case kRoomBelow:
 		newV--;
 		break;
-		
+
 		case kRoomToRight:
 		newH++;
 		break;
-		
+
 		case kRoomToLeft:
 		newH--;
 		break;
 	}
-	
+
 	if (RoomExists(newH, newV, &newRoomNumber))
 		return (newRoomNumber);
 	else
@@ -545,9 +545,9 @@ void SelectNeighborRoom (short whichNeighbor)
 {
 #ifndef COMPILEDEMO
 	short		newRoomNumber;
-	
+
 	newRoomNumber = DoesNeighborRoomExist(whichNeighbor);
-	
+
 	if (newRoomNumber != -1)
 	{
 		DeselectObject();
@@ -565,64 +565,64 @@ short GetNeighborRoomNumber (short which)
 	short		roomH, roomV;
 	short		roomNum;
 	char		wasState;
-	
+
 	switch (which)
 	{
 		case kCentralRoom:
 		hDelta = 0;
 		vDelta = 0;
 		break;
-		
+
 		case kNorthRoom:
 		hDelta = 0;
 		vDelta = 1;
 		break;
-		
+
 		case kNorthEastRoom:
 		hDelta = 1;
 		vDelta = 1;
 		break;
-		
+
 		case kEastRoom:
 		hDelta = 1;
 		vDelta = 0;
 		break;
-		
+
 		case kSouthEastRoom:
 		hDelta = 1;
 		vDelta = -1;
 		break;
-		
+
 		case kSouthRoom:
 		hDelta = 0;
 		vDelta = -1;
 		break;
-		
+
 		case kSouthWestRoom:
 		hDelta = -1;
 		vDelta = -1;
 		break;
-		
+
 		case kWestRoom:
 		hDelta = -1;
 		vDelta = 0;
 		break;
-		
+
 		case kNorthWestRoom:
 		hDelta = -1;
 		vDelta = 1;
 		break;
 	}
-	
+
 	roomNum = kRoomIsEmpty;
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	roomH = (*thisHouse)->rooms[thisRoomNumber].suite + hDelta;
 	roomV = (*thisHouse)->rooms[thisRoomNumber].floor + vDelta;
-	
+
 	for (i = 0; i < numberRooms; i++)
 	{
-		if (((*thisHouse)->rooms[i].suite == roomH) && 
+		if (((*thisHouse)->rooms[i].suite == roomH) &&
 				((*thisHouse)->rooms[i].floor == roomV))
 		{
 			roomNum = i;
@@ -630,7 +630,7 @@ short GetNeighborRoomNumber (short which)
 		}
 	}
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	return (roomNum);
 }
 
@@ -645,22 +645,22 @@ void SetToNearestNeighborRoom (short wasFloor, short wasSuite)
 	short		testRoomNum, testH, testV;
 	char		wasState;
 	Boolean		finished;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	finished = false;
 	distance = 1;	// we begin our walk a distance of one from source room
 	h = -1;			// we begin with the neighbor to the left…
 	v = 0;			// and on the same floor
 	hStep = 0;		// we don't 'walk' left or right…
 	vStep = -1;		// instead, we 'walk' up
-	
+
 	do
 	{
 		testH = wasSuite + h;
 		testV = wasFloor + v;
-		
+
 		if (RoomExists(testH, testV, &testRoomNum))		// if a legitimate room
 		{
 			CopyRoomToThisRoom(testRoomNum);
@@ -682,7 +682,7 @@ void SetToNearestNeighborRoom (short wasFloor, short wasSuite)
 				{
 					h -= hStep;						// first, back up a step
 					v -= vStep;
-					
+
 					if (hStep == 0)					// we were travelling up or down
 					{
 						if (vStep == -1)			// we were travelling up…
@@ -702,7 +702,7 @@ void SetToNearestNeighborRoom (short wasFloor, short wasSuite)
 			}
 		}
 	} while (!finished);
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 
@@ -712,7 +712,7 @@ Boolean GetRoomFloorSuite (short room, short *floor, short *suite)
 {
 	char		wasState;
 	Boolean		isRoom;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	if ((*thisHouse)->rooms[room].suite == kRoomIsEmpty)
@@ -728,7 +728,7 @@ Boolean GetRoomFloorSuite (short room, short *floor, short *suite)
 		isRoom = true;
 	}
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	return (isRoom);
 }
 
@@ -739,14 +739,14 @@ short GetRoomNumber (short floor, short suite)
 	// pass in a floor and suite; returns the room index into the house file
 	short		roomNum, i;
 	char		wasState;
-	
+
 	roomNum = kRoomIsEmpty;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	for (i = 0; i < numberRooms; i++)
 	{
-		if (((*thisHouse)->rooms[i].suite == suite) && 
+		if (((*thisHouse)->rooms[i].suite == suite) &&
 				((*thisHouse)->rooms[i].floor == floor))
 		{
 			roomNum = i;
@@ -754,7 +754,7 @@ short GetRoomNumber (short floor, short suite)
 		}
 	}
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	return (roomNum);
 }
 
@@ -764,10 +764,10 @@ Boolean	IsRoomAStructure (short roomNum)
 {
 	char		wasState;
 	Boolean		isStructure;
-	
+
 	if (roomNum == kRoomIsEmpty)
 		return (false);
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	if ((*thisHouse)->rooms[roomNum].background >= kUserBackground)
@@ -800,14 +800,14 @@ Boolean	IsRoomAStructure (short roomNum)
 			case kRoof:
 			isStructure = true;
 			break;
-			
+
 			default:
 			isStructure = false;
 			break;
 		}
 	}
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	return (isStructure);
 }
 
@@ -817,11 +817,11 @@ void DetermineRoomOpenings (void)
 {
 	short		whichBack, leftTile, rightTile;
 	short		boundsCode;
-	
+
 	whichBack = thisRoom->background;
 	leftTile = thisRoom->tiles[0];
 	rightTile = thisRoom->tiles[kNumTiles - 1];
-	
+
 	if (whichBack >= kUserBackground)
 	{
 		if (thisRoom->bounds != 0)
@@ -830,12 +830,12 @@ void DetermineRoomOpenings (void)
 			boundsCode = GetOriginalBounding(whichBack);
 		leftOpen = ((boundsCode & 0x0001) == 0x0001);
 		rightOpen = ((boundsCode & 0x0004) == 0x0004);
-		
+
 		if (leftOpen)
 			leftThresh = kNoLeftWallLimit;
 		else
 			leftThresh = kLeftWallLimit;
-		
+
 		if (rightOpen)
 			rightThresh = kNoRightWallLimit;
 		else
@@ -866,7 +866,7 @@ void DetermineRoomOpenings (void)
 			leftOpen = (leftTile != 0);
 			rightOpen = (rightTile != (kNumTiles - 1));
 			break;
-			
+
 			case kDirt:
 			if (leftTile == 1)
 				leftThresh = kLeftWallLimit;
@@ -879,7 +879,7 @@ void DetermineRoomOpenings (void)
 			leftOpen = (leftTile != 0);
 			rightOpen = (rightTile != (kNumTiles - 1));
 			break;
-			
+
 			case kMeadow:
 			if (leftTile == 6)
 				leftThresh = kLeftWallLimit;
@@ -892,7 +892,7 @@ void DetermineRoomOpenings (void)
 			leftOpen = (leftTile != 6);
 			rightOpen = (rightTile != 7);
 			break;
-			
+
 			case kGarden:
 			case kSkywalk:
 			case kField:
@@ -903,29 +903,29 @@ void DetermineRoomOpenings (void)
 			leftOpen = true;
 			rightOpen = true;
 			break;
-			
+
 			default:
 			if (leftTile == 0)
 				leftThresh = kLeftWallLimit;
 			else
 				leftThresh = kNoLeftWallLimit;
-			
+
 			if (rightTile == (kNumTiles - 1))
 				rightThresh = kRightWallLimit;
 			else
 				rightThresh = kNoRightWallLimit;
-			
+
 			leftOpen = (leftTile != 0);
 			rightOpen = (rightTile != (kNumTiles - 1));
 			break;
 		}
 	}
-	
+
 	if (DoesRoomHaveFloor())
 		bottomOpen = false;
 	else
 		bottomOpen = true;
-	
+
 	if (DoesRoomHaveCeiling())
 		topOpen = false;
 	else
@@ -938,7 +938,7 @@ short GetOriginalBounding (short theID)
 {
 	boundsHand	boundsRes;
 	short		boundCode;
-	
+
 	boundsRes = (boundsHand)GetResource('bnds', theID);
 	if (boundsRes == nil)
 	{
@@ -961,7 +961,7 @@ short GetOriginalBounding (short theID)
 		HUnlock((Handle)boundsRes);
 		ReleaseResource((Handle)boundsRes);
 	}
-	
+
 	return (boundCode);
 }
 
@@ -972,7 +972,7 @@ short GetNumberOfLights (short where)
 	houseType	*thisHousePtr;
 	short		i, count;
 	char		wasState;
-	
+
 	if (theMode == kEditMode)
 	{
 		switch (thisRoom->background)
@@ -987,16 +987,16 @@ short GetNumberOfLights (short where)
 			case kStars:
 			count = 1;
 			break;
-			
+
 			case kDirt:
 			count = 0;
-			if ((thisRoom->tiles[0] == 0) && (thisRoom->tiles[1] == 0) && 
-					(thisRoom->tiles[2] == 0) && (thisRoom->tiles[3] == 0) && 
+			if ((thisRoom->tiles[0] == 0) && (thisRoom->tiles[1] == 0) &&
+					(thisRoom->tiles[2] == 0) && (thisRoom->tiles[3] == 0) &&
 					(thisRoom->tiles[4] == 0) && (thisRoom->tiles[5] == 0) &&
 					(thisRoom->tiles[6] == 0) && (thisRoom->tiles[7] == 0))
 				count = 1;
 			break;
-			
+
 			default:
 			count = 0;
 			break;
@@ -1014,7 +1014,7 @@ short GetNumberOfLights (short where)
 					case kWallWindow:
 					count++;
 					break;
-					
+
 					case kCeilingLight:
 					case kLightBulb:
 					case kTableLamp:
@@ -1047,20 +1047,20 @@ short GetNumberOfLights (short where)
 			case kStars:
 			count = 1;
 			break;
-			
+
 			case kDirt:
 			count = 0;
-			if ((thisHousePtr->rooms[where].tiles[0] == 0) && 
-					(thisHousePtr->rooms[where].tiles[1] == 0) && 
-					(thisHousePtr->rooms[where].tiles[2] == 0) && 
-					(thisHousePtr->rooms[where].tiles[3] == 0) && 
-					(thisHousePtr->rooms[where].tiles[4] == 0) && 
+			if ((thisHousePtr->rooms[where].tiles[0] == 0) &&
+					(thisHousePtr->rooms[where].tiles[1] == 0) &&
+					(thisHousePtr->rooms[where].tiles[2] == 0) &&
+					(thisHousePtr->rooms[where].tiles[3] == 0) &&
+					(thisHousePtr->rooms[where].tiles[4] == 0) &&
 					(thisHousePtr->rooms[where].tiles[5] == 0) &&
-					(thisHousePtr->rooms[where].tiles[6] == 0) && 
+					(thisHousePtr->rooms[where].tiles[6] == 0) &&
 					(thisHousePtr->rooms[where].tiles[7] == 0))
 				count = 1;
 			break;
-			
+
 			default:
 			count = 0;
 			break;
@@ -1078,7 +1078,7 @@ short GetNumberOfLights (short where)
 					case kWallWindow:
 					count++;
 					break;
-					
+
 					case kCeilingLight:
 					case kLightBulb:
 					case kTableLamp:
@@ -1104,7 +1104,7 @@ Boolean IsShadowVisible (void)
 {
 	short		boundsCode;
 	Boolean		hasFloor;
-	
+
 	if (thisRoom->background >= kUserBackground)
 	{
 		if (thisRoom->bounds != 0)			// is this a version 2.0 house?
@@ -1123,13 +1123,13 @@ Boolean IsShadowVisible (void)
 			case kStars:
 			hasFloor = false;
 			break;
-			
+
 			default:
 			hasFloor = true;
 			break;
 		}
 	}
-	
+
 	return (hasFloor);
 }
 
@@ -1139,7 +1139,7 @@ Boolean DoesRoomHaveFloor (void)
 {
 	short		boundsCode;
 	Boolean		hasFloor;
-	
+
 	if (thisRoom->background >= kUserBackground)
 	{
 		if (thisRoom->bounds != 0)			// is this a version 2.0 house?
@@ -1157,13 +1157,13 @@ Boolean DoesRoomHaveFloor (void)
 			case kStars:
 			hasFloor = false;
 			break;
-			
+
 			default:
 			hasFloor = true;
 			break;
 		}
 	}
-	
+
 	return (hasFloor);
 }
 
@@ -1173,7 +1173,7 @@ Boolean DoesRoomHaveCeiling (void)
 {
 	short		boundsCode;
 	Boolean		hasCeiling;
-	
+
 	if (thisRoom->background >= kUserBackground)
 	{
 		if (thisRoom->bounds != 0)			// is this a version 2.0 house?
@@ -1195,7 +1195,7 @@ Boolean DoesRoomHaveCeiling (void)
 			case kStars:
 			hasCeiling = false;
 			break;
-			
+
 			default:
 			hasCeiling = true;
 			break;

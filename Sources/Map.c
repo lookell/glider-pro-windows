@@ -53,12 +53,12 @@ extern	Boolean		doBitchDialogs;
 Boolean ThisRoomVisibleOnMap (void)
 {
 	short		h, v;
-	
+
 	h = thisRoom->suite;
 	v = kMapGroundValue - thisRoom->floor;
-	
-	if ((h < mapLeftRoom) || (v < mapTopRoom) || 
-			(h >= (mapLeftRoom + mapRoomsWide)) || 
+
+	if ((h < mapLeftRoom) || (v < mapTopRoom) ||
+			(h >= (mapLeftRoom + mapRoomsWide)) ||
 			(v >= (mapTopRoom + mapRoomsHigh)))
 		return (false);
 	else
@@ -73,20 +73,20 @@ void CenterMapOnRoom (short h, short v)
 {
 	if (mapWindow == nil)
 		return;
-	
+
 	mapLeftRoom = h - (mapRoomsWide / 2);
 	mapTopRoom = (kMapGroundValue - v) - (mapRoomsHigh / 2);
-	
+
 	if (mapLeftRoom < 0)
 		mapLeftRoom = 0;
 	else if (mapLeftRoom > (kMaxNumRoomsH - mapRoomsWide))
 		mapLeftRoom = kMaxNumRoomsH - mapRoomsWide;
-	
+
 	if (mapTopRoom < 0)
 		mapTopRoom = 0;
 	else if (mapTopRoom > (kMaxNumRoomsV - mapRoomsHigh))
 		mapTopRoom = kMaxNumRoomsV - mapRoomsHigh;
-	
+
 	if (mapWindow != nil)
 	{
 		SetControlValue(mapHScroll, mapLeftRoom);
@@ -102,7 +102,7 @@ void FlagMapRoomsForUpdate (void)
 {
 	if (mapWindow == nil)
 		return;
-	
+
 //	SetPortWindowPort(mapWindow);
 	InvalWindowRect(mapWindow, &wasActiveRoomRect);
 	InvalWindowRect(mapWindow, &activeRoomRect);
@@ -119,22 +119,22 @@ void FindNewActiveRoomRect (void)
 	short		floor, suite, whoCares;
 	char		wasState;
 	Boolean		activeRoomVisible;
-	
+
 	if (mapWindow == nil)
 		return;
-	
+
 	activeRoomVisible = false;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	for (i = 0; i < mapRoomsHigh; i++)
 	{
 		for (h = 0; h < mapRoomsWide; h++)
 		{
 			QSetRect(&aRoom, 0, 0, kMapRoomWidth, kMapRoomHeight);
 			QOffsetRect(&aRoom, kMapRoomWidth * h, kMapRoomHeight * i);
-			
+
 			suite = h + mapLeftRoom;
 			floor = kMapGroundValue - (i + mapTopRoom);
 			if ((RoomExists(suite, floor, &whoCares)) && (houseUnlocked))
@@ -148,9 +148,9 @@ void FindNewActiveRoomRect (void)
 			}
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	if (activeRoomVisible)
 	{
 		activeRoomRect.right++;
@@ -165,7 +165,7 @@ void FindNewActiveRoomRect (void)
 void LoadGraphicPlus (short resID, Rect *theRect)
 {
 	PicHandle	thePicture;
-	
+
 	thePicture = GetPicture(resID);
 	if (thePicture == nil)
 	{
@@ -190,18 +190,18 @@ void RedrawMapContents (void)
 	short		floor, suite, whoCares, type;
 	char		wasState;
 	Boolean		activeRoomVisible;
-	
+
 	if (mapWindow == nil)
 		return;
-	
+
 	activeRoomVisible = false;
 	groundLevel = kMapGroundValue - mapTopRoom;
-	
+
 	newClip.left = mapWindowRect.left;
 	newClip.top = mapWindowRect.top;
 	newClip.right = mapWindowRect.right + 2 - kMapScrollBarWidth;
 	newClip.bottom = mapWindowRect.bottom + 2 - kMapScrollBarWidth;
-	
+
 	SetPort((GrafPtr)mapWindow);
 	wasClip = NewRgn();
 	if (wasClip != nil)
@@ -209,17 +209,17 @@ void RedrawMapContents (void)
 		GetClip(wasClip);
 		ClipRect(&newClip);
 	}
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	for (i = 0; i < mapRoomsHigh; i++)
 	{
 		for (h = 0; h < mapRoomsWide; h++)
 		{
 			QSetRect(&aRoom, 0, 0, kMapRoomWidth, kMapRoomHeight);
 			QOffsetRect(&aRoom, kMapRoomWidth * h, kMapRoomHeight * i);
-			
+
 			suite = h + mapLeftRoom;
 			floor = kMapGroundValue - (i + mapTopRoom);
 			if ((RoomExists(suite, floor, &whoCares)) && (houseUnlocked))
@@ -240,11 +240,11 @@ void RedrawMapContents (void)
 				{
 					QSetRect(&src, 0, 0, kMapRoomWidth, kMapRoomHeight);
 					QOffsetRect(&src, 0, type * kMapRoomHeight);
-					CopyBits((BitMap *)*GetGWorldPixMap(nailSrcMap), 
-							GetPortBitMapForCopyBits(GetWindowPort(mapWindow)), 
+					CopyBits((BitMap *)*GetGWorldPixMap(nailSrcMap),
+							GetPortBitMapForCopyBits(GetWindowPort(mapWindow)),
 							&src, &aRoom, srcCopy, nil);
 				}
-				
+
 				if (whoCares == thisRoomNumber)
 				{
 					activeRoomRect = aRoom;
@@ -254,7 +254,7 @@ void RedrawMapContents (void)
 			else
 			{
 				Pattern		dummyPat;
-				
+
 				PenPat(GetQDGlobalsGray(&dummyPat));
 				if (i >= groundLevel)
 					ForeColor(greenColor);
@@ -264,24 +264,24 @@ void RedrawMapContents (void)
 			}
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	ForeColor(blackColor);
 	PenNormal();
-	
+
 	for (i = 1; i < mapRoomsWide; i++)
 	{
 		MoveTo(i * kMapRoomWidth, 0);
 		Line(0, mapRoomsHigh * kMapRoomHeight);
 	}
-	
+
 	for (i = 1; i < mapRoomsHigh; i++)
 	{
 		MoveTo(0, i * kMapRoomHeight);
 		Line(mapRoomsWide * kMapRoomWidth, 0);
 	}
-	
+
 	if (activeRoomVisible)
 	{
 		ForeColor(redColor);
@@ -293,7 +293,7 @@ void RedrawMapContents (void)
 		ForeColor(blackColor);
 		InsetRect(&activeRoomRect, -1, -1);
 	}
-	
+
 	if (wasClip != nil)
 	{
 		SetClip(wasClip);
@@ -309,10 +309,10 @@ void UpdateMapWindow (void)
 	#ifndef COMPILEDEMO
 	if (mapWindow == nil)
 		return;
-	
+
 	SetControlValue(mapHScroll, mapLeftRoom);
 	SetControlValue(mapVScroll, mapTopRoom);
-	
+
 	SetPortWindowPort(mapWindow);
 	DrawControls(mapWindow);
 	DrawGrowIcon(mapWindow);
@@ -327,7 +327,7 @@ void ResizeMapWindow (short newH, short newV)
 #ifndef COMPILEDEMO
 	if ((newH == 0) && (newV == 0))
 		return;
-	
+
 	SetPortWindowPort(mapWindow);
 	mapRoomsWide = newH / kMapRoomWidth;
 	if (mapRoomsWide < 3)
@@ -335,24 +335,24 @@ void ResizeMapWindow (short newH, short newV)
 	mapRoomsHigh = newV / kMapRoomHeight;
 	if (mapRoomsHigh < 3)
 		mapRoomsHigh = 3;
-	QSetRect(&mapWindowRect, 0, 0, 
-			mapRoomsWide * kMapRoomWidth + kMapScrollBarWidth - 2, 
+	QSetRect(&mapWindowRect, 0, 0,
+			mapRoomsWide * kMapRoomWidth + kMapScrollBarWidth - 2,
 			mapRoomsHigh * kMapRoomHeight + kMapScrollBarWidth - 2);
 	EraseRect(&mapWindowRect);
 	SizeWindow(mapWindow, mapWindowRect.right, mapWindowRect.bottom, true);
-	
+
 	SetControlMaximum(mapHScroll, kMaxNumRoomsH - mapRoomsWide);
 	MoveControl(mapHScroll, 0, mapWindowRect.bottom - kMapScrollBarWidth + 2);
-	SizeControl(mapHScroll, mapWindowRect.right - kMapScrollBarWidth + 3, 
+	SizeControl(mapHScroll, mapWindowRect.right - kMapScrollBarWidth + 3,
 			kMapScrollBarWidth);
 	mapLeftRoom = GetControlValue(mapHScroll);
-	
+
 	SetControlMaximum(mapVScroll, kMaxNumRoomsV - mapRoomsHigh);
 	MoveControl(mapVScroll, mapWindowRect.right - kMapScrollBarWidth + 2, 0);
-	SizeControl(mapVScroll, kMapScrollBarWidth, 
+	SizeControl(mapVScroll, kMapScrollBarWidth,
 			mapWindowRect.bottom - kMapScrollBarWidth + 3);
 	mapTopRoom = GetControlValue(mapVScroll);
-	
+
 	InvalWindowRect(mapWindow, &mapWindowRect);
 #endif
 }
@@ -364,19 +364,19 @@ void OpenMapWindow (void)
 #ifndef COMPILEDEMO
 	Rect		src, dest;
 	Point		globalMouse;
-	
+
 	if (mapWindow == nil)
 	{
 		CreateNailOffscreen();
-		QSetRect(&mapWindowRect, 0, 0, 
-				mapRoomsWide * kMapRoomWidth + kMapScrollBarWidth - 2, 
+		QSetRect(&mapWindowRect, 0, 0,
+				mapRoomsWide * kMapRoomWidth + kMapScrollBarWidth - 2,
 				mapRoomsHigh * kMapRoomHeight + kMapScrollBarWidth - 2);
-		mapWindow = NewCWindow(nil, &mapWindowRect, 
+		mapWindow = NewCWindow(nil, &mapWindowRect,
 					"\pMap", false, kWindoidGrowWDEF, kPutInFront, true, 0L);
-		
+
 		if (mapWindow == nil)
 			RedAlert(kErrNoMemory);
-		
+
 //		if (OptionKeyDown())
 //		{
 //			isMapH = 3;
@@ -393,32 +393,32 @@ void OpenMapWindow (void)
 		ShowHide(mapWindow, true);
 //		FlagWindowFloating(mapWindow);	TEMP - use flaoting windows
 		HiliteAllWindows();
-		
+
 		SetPort((GrafPtr)mapWindow);
 		SetOrigin(1, 1);
-		QSetRect(&mapHScrollRect, -1, mapRoomsHigh * kMapRoomHeight, 
-				mapRoomsWide * kMapRoomWidth + 1, 
+		QSetRect(&mapHScrollRect, -1, mapRoomsHigh * kMapRoomHeight,
+				mapRoomsWide * kMapRoomWidth + 1,
 				mapRoomsHigh * kMapRoomHeight + kMapScrollBarWidth);
-		QSetRect(&mapVScrollRect, mapRoomsWide * kMapRoomWidth, -1, 
-				mapRoomsWide * kMapRoomWidth + kMapScrollBarWidth, 
+		QSetRect(&mapVScrollRect, mapRoomsWide * kMapRoomWidth, -1,
+				mapRoomsWide * kMapRoomWidth + kMapScrollBarWidth,
 				mapRoomsHigh * kMapRoomHeight + 1);
-		mapHScroll = NewControl(mapWindow, &mapHScrollRect, "\p", true, mapLeftRoom, 
+		mapHScroll = NewControl(mapWindow, &mapHScrollRect, "\p", true, mapLeftRoom,
 				0, kMaxNumRoomsH - mapRoomsWide, scrollBarProc, kHScrollRef);
 		if (mapHScroll == nil)
 			RedAlert(kErrNoMemory);
-		
-		mapVScroll = NewControl(mapWindow, &mapVScrollRect, "\p", true, mapTopRoom, 
+
+		mapVScroll = NewControl(mapWindow, &mapVScrollRect, "\p", true, mapTopRoom,
 				0, kMaxNumRoomsV - mapRoomsHigh, scrollBarProc, kVScrollRef);
 		if (mapVScroll == nil)
 			RedAlert(kErrNoMemory);
-		
+
 		QSetRect(&mapCenterRect, -16, -16, 0, 0);
-		QOffsetRect(&mapCenterRect, mapWindowRect.right + 2, 
+		QOffsetRect(&mapCenterRect, mapWindowRect.right + 2,
 				mapWindowRect.bottom + 2);
-		
+
 		CenterMapOnRoom(thisRoom->suite, thisRoom->floor);
 	}
-	
+
 	UpdateMapCheckmark(true);
 #endif
 }
@@ -457,7 +457,7 @@ void ToggleMapWindow (void)
 pascal void LiveHScrollAction (ControlHandle theControl, short thePart)
 {
 	short		wasValue, newValue;
-	
+
 	switch (thePart)
 	{
 		case kControlUpButtonPart:
@@ -469,7 +469,7 @@ pascal void LiveHScrollAction (ControlHandle theControl, short thePart)
 			RedrawMapContents();
 		}
 		break;
-		
+
 		case kControlDownButtonPart:
 		wasValue = GetControlValue(theControl);
 		SetControlValue(theControl, wasValue + 1);
@@ -479,7 +479,7 @@ pascal void LiveHScrollAction (ControlHandle theControl, short thePart)
 			RedrawMapContents();
 		}
 		break;
-		
+
 		case kControlPageUpPart:
 		wasValue = GetControlValue(theControl);
 		newValue = wasValue - (mapRoomsWide / 2);
@@ -490,7 +490,7 @@ pascal void LiveHScrollAction (ControlHandle theControl, short thePart)
 			RedrawMapContents();
 		}
 		break;
-		
+
 		case kControlPageDownPart:
 		wasValue = GetControlValue(theControl);
 		newValue = wasValue + (mapRoomsWide / 2);
@@ -501,7 +501,7 @@ pascal void LiveHScrollAction (ControlHandle theControl, short thePart)
 			RedrawMapContents();
 		}
 		break;
-		
+
 		case kControlIndicatorPart:
 		break;
 	}
@@ -514,7 +514,7 @@ pascal void LiveHScrollAction (ControlHandle theControl, short thePart)
 pascal void LiveVScrollAction (ControlHandle theControl, short thePart)
 {
 	short		wasValue, newValue;
-	
+
 	switch (thePart)
 	{
 		case kControlUpButtonPart:
@@ -526,7 +526,7 @@ pascal void LiveVScrollAction (ControlHandle theControl, short thePart)
 			RedrawMapContents();
 		}
 		break;
-		
+
 		case kControlDownButtonPart:
 		wasValue = GetControlValue(theControl);
 		SetControlValue(theControl, wasValue + 1);
@@ -536,7 +536,7 @@ pascal void LiveVScrollAction (ControlHandle theControl, short thePart)
 			RedrawMapContents();
 		}
 		break;
-		
+
 		case kControlPageUpPart:
 		wasValue = GetControlValue(theControl);
 		newValue = wasValue - (mapRoomsHigh / 2);
@@ -547,7 +547,7 @@ pascal void LiveVScrollAction (ControlHandle theControl, short thePart)
 			RedrawMapContents();
 		}
 		break;
-		
+
 		case kControlPageDownPart:
 		wasValue = GetControlValue(theControl);
 		newValue = wasValue + (mapRoomsHigh / 2);
@@ -558,7 +558,7 @@ pascal void LiveVScrollAction (ControlHandle theControl, short thePart)
 			RedrawMapContents();
 		}
 		break;
-		
+
 		case kControlIndicatorPart:
 		break;
 	}
@@ -577,39 +577,39 @@ void HandleMapClick (EventRecord *theEvent)
 	short				whichPart, localH, localV;
 	short				roomH, roomV, itsNumber;
 	ControlActionUPP	scrollHActionUPP, scrollVActionUPP;
-	
+
 	wherePt = theEvent->where;
-	
+
 	scrollHActionUPP = NewControlActionUPP(LiveHScrollAction);
 	scrollVActionUPP = NewControlActionUPP(LiveVScrollAction);
-	
+
 	if (mapWindow == nil)
 		return;
-	
+
 	SetPortWindowPort(mapWindow);
 	globalWhere = wherePt;
 	GlobalToLocal(&wherePt);
 	wherePt.h -= 1;
 	wherePt.v -= 1;
-	
+
 	whichPart = FindControl(wherePt, mapWindow, &whichControl);
 	if (whichPart == 0)				// User clicked in map content area.
 	{
 		localH = wherePt.h / kMapRoomWidth;
 		localV = wherePt.v / kMapRoomHeight;
-		
+
 		if ((localH >= mapRoomsWide) || (localV >= mapRoomsHigh))
 			return;
-		
+
 		roomH = localH + mapLeftRoom;
 		roomV = kMapGroundValue - (localV + mapTopRoom);
-		
+
 		if (RoomExists(roomH, roomV, &itsNumber))
 		{
 			CopyRoomToThisRoom(itsNumber);
 			DeselectObject();
 			ReflectCurrentRoom(false);
-			
+
 			if (thisMac.hasDrag)
 			{
 				SetPortWindowPort(mainWindow);
@@ -668,10 +668,10 @@ void HandleMapClick (EventRecord *theEvent)
 				case kControlPageDownPart:
 				if (TrackControl(whichControl, wherePt, scrollHActionUPP))
 				{
-					
+
 				}
 				break;
-				
+
 				case kControlIndicatorPart:
 				if (TrackControl(whichControl, wherePt, nil))
 				{
@@ -691,10 +691,10 @@ void HandleMapClick (EventRecord *theEvent)
 				case kControlPageDownPart:
 				if (TrackControl(whichControl, wherePt, scrollVActionUPP))
 				{
-					
+
 				}
 				break;
-				
+
 				case kControlIndicatorPart:
 				if (TrackControl(whichControl, wherePt, nil))
 				{
@@ -705,7 +705,7 @@ void HandleMapClick (EventRecord *theEvent)
 			}
 		}
 	}
-	
+
 	DisposeControlActionUPP(scrollHActionUPP);
 	DisposeControlActionUPP(scrollVActionUPP);
 #endif
@@ -717,7 +717,7 @@ void HandleMapClick (EventRecord *theEvent)
 Boolean QueryNewRoom (void)
 {
 	short		hitWhat;
-	
+
 //	CenterAlert(kNewRoomAlert);
 	hitWhat = Alert(kNewRoomAlert, nil);
 	if (hitWhat == kYesDoNewRoom)
@@ -735,16 +735,16 @@ void CreateNailOffscreen (void)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
+
 	if (nailSrcMap == nil)
 	{
 		GetGWorld(&wasCPort, &wasWorld);
-		
+
 		QSetRect(&nailSrcRect, 0, 0, kMapRoomWidth, kMapRoomHeight * (kNumBackgrounds + 1));
 		theErr = CreateOffScreenGWorld(&nailSrcMap, &nailSrcRect, kPreferredDepth);
 		SetGWorld(nailSrcMap, nil);
 		LoadGraphic(kThumbnailPictID);
-		
+
 		SetGWorld(wasCPort, wasWorld);
 	}
 }
@@ -770,19 +770,19 @@ void MoveRoom (Point wherePt)
 {
 	short		localH, localV;
 	short		roomH, roomV, itsNumber;
-	
+
 	localH = wherePt.h / kMapRoomWidth;
 	localV = wherePt.v / kMapRoomHeight;
-	
+
 	if ((localH >= mapRoomsWide) || (localV >= mapRoomsHigh))
 		return;
-	
+
 	roomH = localH + mapLeftRoom;
 	roomV = kMapGroundValue - (localV + mapTopRoom);
-	
+
 	if (RoomExists(roomH, roomV, &itsNumber))
 	{
-		
+
 	}
 	else
 	{

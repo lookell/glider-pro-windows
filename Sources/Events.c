@@ -47,10 +47,10 @@ short BitchAboutColorDepth (void)
 {
 	#define		kColorSwitchedAlert		1042
 	short		sheSaid;
-	
+
 //	CenterAlert(kColorSwitchedAlert);
 	sheSaid = Alert(kColorSwitchedAlert, nil);
-	
+
 	return (sheSaid);
 }
 
@@ -63,20 +63,20 @@ void HandleMouseEvent (EventRecord *theEvent)
 	long		menuChoice, newSize;
 	short		thePart, hDelta, vDelta;
 	Boolean		isDoubleClick;
-	
+
 	thePart = FindWindow(theEvent->where, &whichWindow);
-	
+
 	switch (thePart)
 	{
 		case inSysWindow:
 //		SystemClick(theEvent, whichWindow);
 		break;
-		
+
 		case inMenuBar:
 		menuChoice = MenuSelect(theEvent->where);
 		DoMenuChoice(menuChoice);
 		break;
-		
+
 		case inDrag:
 		DragWindow(whichWindow, theEvent->where, &thisMac.screen);
 		if (whichWindow == mainWindow)
@@ -94,7 +94,7 @@ void HandleMouseEvent (EventRecord *theEvent)
 			GetWindowLeftTop(whichWindow, &isCoordH, &isCoordV);
 		HiliteAllWindows();
 		break;
-		
+
 		case inGoAway:
 		if (TrackGoAway(whichWindow,theEvent->where))
 		{
@@ -108,7 +108,7 @@ void HandleMouseEvent (EventRecord *theEvent)
 				ToggleCoordinateWindow();
 		}
 		break;
-		
+
 		case inGrow:
 		if (whichWindow == mapWindow)
 		{
@@ -116,13 +116,13 @@ void HandleMouseEvent (EventRecord *theEvent)
 			ResizeMapWindow(LoWord(newSize), HiWord(newSize));
 		}
 		break;
-		
+
 		case inZoomIn:
 		case inZoomOut:
 		if (TrackBox(whichWindow, theEvent->where, thePart))
 			ZoomWindow(whichWindow, thePart, true);
 		break;
-		
+
 		case inContent:
 		if (whichWindow == mainWindow)
 		{
@@ -132,7 +132,7 @@ void HandleMouseEvent (EventRecord *theEvent)
 			vDelta = theEvent->where.v - lastWhere.v;
 			if (vDelta < 0)
 				vDelta = -vDelta;
-			if (((theEvent->when - lastUp) < doubleTime) && (hDelta < 5) && 
+			if (((theEvent->when - lastUp) < doubleTime) && (hDelta < 5) &&
 					(vDelta < 5))
 				isDoubleClick = true;
 			else
@@ -150,7 +150,7 @@ void HandleMouseEvent (EventRecord *theEvent)
 		else if (whichWindow == linkWindow)
 			HandleLinkClick(theEvent->where);
 		break;
-		
+
 		default:
 		break;
 	}
@@ -163,51 +163,51 @@ void HandleKeyEvent (EventRecord *theEvent)
 {
 	char		theChar;
 	Boolean		shiftDown, commandDown, optionDown;
-	
+
 	theChar = theEvent->message & charCodeMask;
 	shiftDown = ((theEvent->modifiers & shiftKey) != 0);
 	commandDown = ((theEvent->modifiers & cmdKey) != 0);
 	optionDown = ((theEvent->modifiers & optionKey) != 0);
-	
+
 	if ((commandDown) && (!optionDown))
 		DoMenuChoice(MenuKey(theChar));
-	else 
+	else
 	{
 		switch (theChar)
 		{
 			case kHelpKeyASCII:
 			break;
-			
+
 			case kPageUpKeyASCII:
 			if (houseUnlocked)
 				PrevToolMode();
 			break;
-			
+
 			case kPageDownKeyASCII:
 			if (houseUnlocked)
 				NextToolMode();
 			break;
-			
+
 #if BUILD_ARCADE_VERSION
-			
+
 			case kLeftArrowKeyASCII:
 			DoOptionsMenu(iHighScores);
 			break;
-			
+
 			case kRightArrowKeyASCII:
 			DoOptionsMenu(iHelp);
 			break;
-			
+
 			case kUpArrowKeyASCII:
 			DoGameMenu(iNewGame);
 			break;
-			
+
 			case kDownArrowKeyASCII:
 			DoGameMenu(iNewGame);
 			break;
-			
+
 #else
-			
+
 			case kLeftArrowKeyASCII:
 			if (houseUnlocked)
 			{
@@ -217,7 +217,7 @@ void HandleKeyEvent (EventRecord *theEvent)
 					MoveObject(kBumpLeft, shiftDown);
 			}
 			break;
-			
+
 			case kRightArrowKeyASCII:
 			if (houseUnlocked)
 			{
@@ -227,7 +227,7 @@ void HandleKeyEvent (EventRecord *theEvent)
 					MoveObject(kBumpRight, shiftDown);
 			}
 			break;
-			
+
 			case kUpArrowKeyASCII:
 			if (houseUnlocked)
 			{
@@ -237,7 +237,7 @@ void HandleKeyEvent (EventRecord *theEvent)
 					MoveObject(kBumpUp, shiftDown);
 			}
 			break;
-			
+
 			case kDownArrowKeyASCII:
 			if (houseUnlocked)
 			{
@@ -247,9 +247,9 @@ void HandleKeyEvent (EventRecord *theEvent)
 					MoveObject(kBumpDown, shiftDown);
 			}
 			break;
-			
+
 #endif
-			
+
 			case kDeleteKeyASCII:
 			if (houseUnlocked)
 			{
@@ -259,7 +259,7 @@ void HandleKeyEvent (EventRecord *theEvent)
 					DeleteObject();
 			}
 			break;
-			
+
 			case kTabKeyASCII:
 			if ((theMode == kEditMode) && (houseUnlocked))
 			{
@@ -269,66 +269,66 @@ void HandleKeyEvent (EventRecord *theEvent)
 					SelectNextObject();
 			}
 			break;
-			
+
 			case kEscapeKeyASCII:
 			if ((theMode == kEditMode) && (houseUnlocked))
 				DeselectObject();
 			break;
-			
+
 			case kAKeyASCII:
 			case kCapAKeyASCII:
 			if ((theMode == kEditMode) && (houseUnlocked))
 				SetSpecificToolMode(kApplianceMode);
 			break;
-			
+
 			case kBKeyASCII:
 			case kCapBKeyASCII:
 			if ((theMode == kEditMode) && (houseUnlocked))
 				SetSpecificToolMode(kBlowerMode);
 			break;
-			
+
 			case kCKeyASCII:
 			case kCapCKeyASCII:
 			if ((theMode == kEditMode) && (houseUnlocked))
 				SetSpecificToolMode(kClutterMode);
 			break;
-			
+
 			case kEKeyASCII:
 			case kCapEKeyASCII:
 			if ((theMode == kEditMode) && (houseUnlocked))
 				SetSpecificToolMode(kEnemyMode);
 			break;
-			
+
 			case kFKeyASCII:
 			case kCapFKeyASCII:
 			if ((theMode == kEditMode) && (houseUnlocked))
 				SetSpecificToolMode(kFurnitureMode);
 			break;
-			
+
 			case kLKeyASCII:
 			case kCapLKeyASCII:
 			if ((theMode == kEditMode) && (houseUnlocked))
 				SetSpecificToolMode(kLightMode);
 			break;
-			
+
 			case kPKeyASCII:
 			case kCapPKeyASCII:
 			if ((theMode == kEditMode) && (houseUnlocked))
 				SetSpecificToolMode(kBonusMode);
 			break;
-			
+
 			case kSKeyASCII:
 			case kCapSKeyASCII:
 			if ((theMode == kEditMode) && (houseUnlocked))
 				SetSpecificToolMode(kSwitchMode);
 			break;
-			
+
 			case kTKeyASCII:
 			case kCapTKeyASCII:
 			if ((theMode == kEditMode) && (houseUnlocked))
 				SetSpecificToolMode(kTransportMode);
 			break;
-			
+
 			default:
 			break;
 		}
@@ -339,7 +339,7 @@ void HandleKeyEvent (EventRecord *theEvent)
 // Handle an update event.
 
 void HandleUpdateEvent (EventRecord *theEvent)
-{	
+{
 	if ((WindowPtr)theEvent->message == mainWindow)
 	{
 		SetPort((GrafPtr)mainWindow);
@@ -391,7 +391,7 @@ void HandleOSEvent (EventRecord *theEvent)
 {
 	OSErr		theErr;
 	short		buttonHit;
-	
+
 	if (theEvent->message & 0x01000000)		// suspend or resume event
 	{
 		if (theEvent->message & 0x00000001)	// resume event
@@ -425,7 +425,7 @@ void HandleOSEvent (EventRecord *theEvent)
 				}
 			}
 			incrementModeTime = TickCount() + kIdleSplashTicks;
-			
+
 #ifndef COMPILEDEMO
 //			if (theMode == kEditMode)
 //				SeeIfValidScrapAvailable(true);
@@ -447,7 +447,7 @@ void HandleOSEvent (EventRecord *theEvent)
 void HandleHighLevelEvent (EventRecord *theEvent)
 {
 	OSErr		theErr;
-	
+
 	theErr = AEProcessAppleEvent(theEvent);
 	if ((theErr != noErr) && (theErr != errAEEventNotHandled))
 		YellowAlert(kYellowAppleEventErr, theErr);
@@ -462,7 +462,7 @@ void HandleIdleTask (void)
 	{
 		SetPort((GrafPtr)mainWindow);
 		DoMarquee();
-		
+
 		if ((autoRoomEdit) && (newRoomNow))
 		{
 			if (theMode == kEditMode)
@@ -482,20 +482,20 @@ void HandleEvent (void)
 	EventRecord	theEvent;
 	long		sleep = 2;
 	Boolean		itHappened;
-	
+
 	GetKeys(eventKeys);
-	if ((BitTst(&eventKeys, kCommandKeyMap)) && 
+	if ((BitTst(&eventKeys, kCommandKeyMap)) &&
 			(BitTst(&eventKeys, kOptionKeyMap)))
 	{
 		HiliteAllObjects();
 	}
-	else if ((BitTst(&eventKeys, kOptionKeyMap)) && (theMode == kEditMode) && 
+	else if ((BitTst(&eventKeys, kOptionKeyMap)) && (theMode == kEditMode) &&
 			(houseUnlocked))
 	{
 		EraseSelectedTool();
 		SelectTool(kSelectTool);
 	}
-	
+
 	if (thisMac.hasWNE)
 		itHappened = WaitNextEvent(everyEvent, &theEvent, sleep, nil);
 	else
@@ -503,7 +503,7 @@ void HandleEvent (void)
 //		SystemTask();
 		itHappened = GetNextEvent(everyEvent, &theEvent);
 	}
-	
+
 	if (itHappened)
 	{
 		switch (theEvent.what)
@@ -511,20 +511,20 @@ void HandleEvent (void)
 			case mouseDown:
 			HandleMouseEvent(&theEvent);
 			break;
-			
+
 			case keyDown:
 			case autoKey:
 			HandleKeyEvent(&theEvent);
 			break;
-			
+
 			case updateEvt:
 			HandleUpdateEvent(&theEvent);
 			break;
-			
+
 			case osEvt:
 			HandleOSEvent(&theEvent);
 			break;
-			
+
 			case kHighLevelEvent:
 			HandleHighLevelEvent(&theEvent);
 			break;
@@ -532,7 +532,7 @@ void HandleEvent (void)
 	}
 	else
 		HandleIdleTask();
-	
+
 	if ((theMode == kSplashMode) && doAutoDemo && !switchedOut)
 	{
 		if (TickCount() >= incrementModeTime)

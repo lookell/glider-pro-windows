@@ -30,7 +30,7 @@ extern	Boolean		evenFrame, twoPlayerGame, onePlayerLeft, playerDead;
 void HandleBalloon (short who)
 {
 	Rect		dest;
-	
+
 	if (dinahs[who].moving)
 	{
 		if (dinahs[who].vVel < 0)
@@ -58,7 +58,7 @@ void HandleBalloon (short who)
 			}
 			else
 				CheckDynamicCollision(who, &theGlider, false);
-			
+
 			if ((numBands > 0) && (DidBandHitDynamic(who)))
 			{
 				dinahs[who].frame = 6;
@@ -80,13 +80,13 @@ void HandleBalloon (short who)
 				if (dinahs[who].frame >= 8)
 					dinahs[who].frame = 6;
 			}
-			
+
 			VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
 			dinahs[who].whole = dinahs[who].dest;
 			dinahs[who].whole.top -= dinahs[who].vVel;
 		}
-		
-		if ((dinahs[who].dest.top <= kBalloonStop) || 
+
+		if ((dinahs[who].dest.top <= kBalloonStop) ||
 				(dinahs[who].dest.bottom >= kBalloonStart))
 		{
 			dest = dinahs[who].whole;
@@ -99,7 +99,7 @@ void HandleBalloon (short who)
 			dinahs[who].vVel = -2;
 			dinahs[who].timer = dinahs[who].count;
 			dinahs[who].dest.bottom = kBalloonStart;
-			dinahs[who].dest.top = dinahs[who].dest.bottom - 
+			dinahs[who].dest.top = dinahs[who].dest.bottom -
 					RectTall(&balloonSrc[0]);
 			dinahs[who].whole = dinahs[who].dest;
 		}
@@ -134,7 +134,7 @@ void HandleBalloon (short who)
 void HandleCopter (short who)
 {
 	Rect		dest;
-	
+
 	if (dinahs[who].moving)					// is 'copter about?
 	{
 		if (dinahs[who].hVel != 0)			// 'copter was not shot
@@ -187,8 +187,8 @@ void HandleCopter (short who)
 			dinahs[who].whole = dinahs[who].dest;
 			dinahs[who].whole.top -= dinahs[who].vVel;
 		}
-		
-		if ((dinahs[who].dest.top <= kCopterStart) || 
+
+		if ((dinahs[who].dest.top <= kCopterStart) ||
 				(dinahs[who].dest.bottom >= kCopterStop))
 		{
 			dest = dinahs[who].whole;
@@ -205,7 +205,7 @@ void HandleCopter (short who)
 				dinahs[who].hVel = 1;
 			dinahs[who].timer = dinahs[who].count;
 			dinahs[who].dest.top = kCopterStart;
-			dinahs[who].dest.bottom = dinahs[who].dest.top + 
+			dinahs[who].dest.bottom = dinahs[who].dest.top +
 					RectTall(&copterSrc[0]);
 			dinahs[who].dest.left = dinahs[who].position;
 			dinahs[who].dest.right = dinahs[who].dest.left + 32;
@@ -242,7 +242,7 @@ void HandleCopter (short who)
 void HandleDart (short who)
 {
 	Rect		dest;
-	
+
 	if (dinahs[who].moving)					// Dart has appeared
 	{
 		if (dinahs[who].hVel != 0)			// meaning it isn't falling
@@ -292,9 +292,9 @@ void HandleDart (short who)
 			dinahs[who].whole = dinahs[who].dest;
 			dinahs[who].whole.top -= dinahs[who].vVel;
 		}
-		
-		if ((dinahs[who].dest.left <= 0) || 
-				(dinahs[who].dest.right >= kRoomWide) || 
+
+		if ((dinahs[who].dest.left <= 0) ||
+				(dinahs[who].dest.right >= kRoomWide) ||
 				(dinahs[who].dest.bottom >= kDartStop))
 		{
 			dest = dinahs[who].whole;
@@ -310,7 +310,7 @@ void HandleDart (short who)
 				dinahs[who].frame = 0;
 				dinahs[who].hVel = -kDartVelocity;
 				dinahs[who].dest.right = kRoomWide;
-				dinahs[who].dest.left = dinahs[who].dest.right - 
+				dinahs[who].dest.left = dinahs[who].dest.right -
 						RectWide(&dartSrc[0]);
 			}
 			else
@@ -318,12 +318,12 @@ void HandleDart (short who)
 				dinahs[who].frame = 2;
 				dinahs[who].hVel = kDartVelocity;
 				dinahs[who].dest.left = 0;
-				dinahs[who].dest.right = dinahs[who].dest.left + 
+				dinahs[who].dest.right = dinahs[who].dest.left +
 						RectWide(&dartSrc[0]);
 			}
 			dinahs[who].timer = dinahs[who].count;
 			dinahs[who].dest.top = dinahs[who].position;
-			dinahs[who].dest.bottom = dinahs[who].dest.top + 
+			dinahs[who].dest.bottom = dinahs[who].dest.top +
 					RectTall(&dartSrc[0]);
 			dinahs[who].whole = dinahs[who].dest;
 		}
@@ -374,7 +374,7 @@ void HandleBall (short who)
 	}
 	else
 		CheckDynamicCollision(who, &theGlider, false);
-	
+
 	if (dinahs[who].moving)										// is ball bouncing?
 	{
 		VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
@@ -427,7 +427,7 @@ void HandleBall (short who)
 void HandleDrip (short who)
 {
 	Rect		dest;
-	
+
 	if (dinahs[who].moving)
 	{
 		if (evenFrame)
@@ -449,7 +449,7 @@ void HandleDrip (short who)
 		}
 		else
 			CheckDynamicCollision(who, &theGlider, false);
-		
+
 		VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
 		if (dinahs[who].dest.bottom >= dinahs[who].position)
 		{
@@ -477,7 +477,7 @@ void HandleDrip (short who)
 		if (dinahs[who].active)
 		{
 			dinahs[who].timer--;
-			
+
 			if (dinahs[who].timer == 6)
 				dinahs[who].frame = 0;
 			else if (dinahs[who].timer == 4)
@@ -501,7 +501,7 @@ void HandleDrip (short who)
 void HandleFish (short who)
 {
 	Rect		dest;
-	
+
 	if (dinahs[who].moving)										// fish leaping
 	{
 		if ((dinahs[who].vVel >= 0) && (dinahs[who].frame < 7))
@@ -523,7 +523,7 @@ void HandleFish (short who)
 		}
 		else
 			CheckDynamicCollision(who, &theGlider, false);
-		
+
 		VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
 		if (dinahs[who].dest.bottom >= dinahs[who].position)	// splash down
 		{

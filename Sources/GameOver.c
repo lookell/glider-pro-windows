@@ -58,7 +58,7 @@ extern	Boolean		playing, shadowVisible, demoGoing;
 // completed the house.
 
 void DoGameOver (void)
-{	
+{
 	playing = false;
 	SetUpFinalScreen();
 	SetPort((GrafPtr)mainWindow);
@@ -79,7 +79,7 @@ void SetUpFinalScreen (void)
 	Str255		tempStr, subStr;
 	short		count, offset, i, textDown;
 	char		wasState;
-	
+
 	SetPort((GrafPtr)workSrcMap);
 	ColorRect(&workSrcRect, 244);
 	QSetRect(&tempRect, 0, 0, 640, 460);
@@ -88,17 +88,17 @@ void SetUpFinalScreen (void)
 	textDown = tempRect.top;
 	if (textDown < 0)
 		textDown = 0;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	PasStringCopy((*thisHouse)->trailer, tempStr);
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	count = 0;
 	do
 	{
 		GetLineOfText(tempStr, count, subStr);
-		offset = ((thisMac.screen.right - thisMac.screen.left) - 
+		offset = ((thisMac.screen.right - thisMac.screen.left) -
 				TextWidth(subStr, 1, subStr[0])) / 2;
 		TextFont(applFont);
 		TextFace(bold);
@@ -113,15 +113,15 @@ void SetUpFinalScreen (void)
 		count++;
 	}
 	while (subStr[0] > 0);
-	
+
 	CopyRectWorkToBack(&workSrcRect);
-	
+
 	for (i = 0; i < 5; i++)		// initialize the falling stars
 	{
 		pages[i].dest = starSrc[0];
-		QOffsetRect(&pages[i].dest, 
-				workSrcRect.right + RandomInt(workSrcRect.right / 5) + 
-				(workSrcRect.right/ 4) * i, 
+		QOffsetRect(&pages[i].dest,
+				workSrcRect.right + RandomInt(workSrcRect.right / 5) +
+				(workSrcRect.right/ 4) * i,
 				RandomInt(workSrcRect.bottom) - workSrcRect.bottom / 2);
 		pages[i].was = pages[i].dest;
 		pages[i].frame = RandomInt(6);
@@ -142,7 +142,7 @@ void DoGameOverStarAnimation (void)
 	long		nextLoop;
 	short		which, i, count, pass;
 	Boolean		noInteruption;
-	
+
 	angelDest = angelSrcRect;
 	QOffsetRect(&angelDest, -96, 0);
 	noInteruption = true;
@@ -150,7 +150,7 @@ void DoGameOverStarAnimation (void)
 	count = 0;
 	pass = 0;
 	FlushEvents(everyEvent, 0);
-	
+
 	while (noInteruption)
 	{
 		if ((angelDest.left % 32) == 0)		// add a star
@@ -163,35 +163,35 @@ void DoGameOverStarAnimation (void)
 			if (count < (which + 1))
 				count = which + 1;
 		}
-		
+
 		for (i = 0; i < count; i++)
 		{
 			pages[i].frame++;
 			if (pages[i].frame >= 6)
 				pages[i].frame = 0;
-			
-			CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap), 
-					(BitMap *)*GetGWorldPixMap(bonusMaskMap), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
-					&starSrc[pages[i].frame], 
-					&starSrc[pages[i].frame], 
+
+			CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
+					(BitMap *)*GetGWorldPixMap(bonusMaskMap),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
+					&starSrc[pages[i].frame],
+					&starSrc[pages[i].frame],
 					&pages[i].dest);
-			
+
 			pages[i].was = pages[i].dest;
 			pages[i].was.top -= kStarFalls;
-			
+
 			AddRectToWorkRectsWhole(&pages[i].was);
 			AddRectToBackRects(&pages[i].dest);
-			
+
 			if (pages[i].dest.top < workSrcRect.bottom)
 				QOffsetRect(&pages[i].dest, 0, kStarFalls);
 		}
-		
+
 		if (angelDest.left <= (workSrcRect.right + 2))
 		{
-			CopyMask((BitMap *)*GetGWorldPixMap(angelSrcMap), 
-					(BitMap *)*GetGWorldPixMap(angelMaskMap), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
+			CopyMask((BitMap *)*GetGWorldPixMap(angelSrcMap),
+					(BitMap *)*GetGWorldPixMap(angelMaskMap),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
 					&angelSrcRect, &angelSrcRect, &angelDest);
 			angelDest.left -= 2;
 			AddRectToWorkRectsWhole(&angelDest);
@@ -200,16 +200,16 @@ void DoGameOverStarAnimation (void)
 			QOffsetRect(&angelDest, 2, 0);
 			pass = 0;
 		}
-		
+
 		CopyRectsQD();
-		
+
 		numWork2Main = 0;
 		numBack2Work = 0;
-		
+
 		do
 		{
 			GetKeys(theKeys);
-			if ((BitTst(&theKeys, kCommandKeyMap)) || (BitTst(&theKeys, kOptionKeyMap)) || 
+			if ((BitTst(&theKeys, kCommandKeyMap)) || (BitTst(&theKeys, kOptionKeyMap)) ||
 					(BitTst(&theKeys, kShiftKeyMap)) || (BitTst(&theKeys, kControlKeyMap)))
 				noInteruption = false;
 			if (GetNextEvent(everyEvent, &theEvent))
@@ -218,7 +218,7 @@ void DoGameOverStarAnimation (void)
 		}
 		while (TickCount() < nextLoop);
 		nextLoop = TickCount() + 2;
-		
+
 		if (pass < 80)
 			pass++;
 		else
@@ -255,29 +255,29 @@ void InitDiedGameOver (void)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
-	
+
 	QSetRect(&pageSrcRect, 0, 0, 25, 32 * 8);
 	theErr = CreateOffScreenGWorld(&gameOverSrcMap, &pageSrcRect, kPreferredDepth);
 	SetGWorld(gameOverSrcMap, nil);
 	LoadGraphic(kLettersPictID);
-	
+
 	QSetRect(&pageSrcRect, 0, 0, 32, 32 * kPageFrames);
 	theErr = CreateOffScreenGWorld(&pageSrcMap, &pageSrcRect, kPreferredDepth);
 	SetGWorld(pageSrcMap, nil);
 	LoadGraphic(kPagesPictID);
-	
-	theErr = CreateOffScreenGWorld(&pageMaskMap, &pageSrcRect, 1);	
+
+	theErr = CreateOffScreenGWorld(&pageMaskMap, &pageSrcRect, 1);
 	SetGWorld(pageMaskMap, nil);
 	LoadGraphic(kPagesMaskID);
-	
+
 	for (i = 0; i < kPageFrames; i++)	// initialize src page rects
 	{
 		QSetRect(&pageSrc[i], 0, 0, 32, 32);
 		QOffsetRect(&pageSrc[i], 0, 32 * i);
 	}
-	
+
 	for (i = 0; i < 8; i++)				// initialize dest page rects
 	{
 		QSetRect(&pages[i].dest, 0, 0, 32, 32);
@@ -287,7 +287,7 @@ void InitDiedGameOver (void)
 			QOffsetRect(&pages[i].dest, -kPageSpacing * (4 - i), 0);
 		else
 			QOffsetRect(&pages[i].dest, kPageSpacing * (i - 3), 0);
-		QOffsetRect(&pages[i].dest, (thisMac.screen.right - thisMac.screen.left) / -2, 
+		QOffsetRect(&pages[i].dest, (thisMac.screen.right - thisMac.screen.left) / -2,
 				(thisMac.screen.right - thisMac.screen.left) / -2);
 		if (pages[i].dest.left % 2 == 1)
 			QOffsetRect(&pages[i].dest, 1, 0);
@@ -296,13 +296,13 @@ void InitDiedGameOver (void)
 		pages[i].counter = RandomInt(32);
 		pages[i].stuck = false;
 	}
-	
+
 	for (i = 0; i < 8; i++)
 	{
 		QSetRect(&lettersSrc[i], 0, 0, 25, 32);
 		QOffsetRect(&lettersSrc[i], 0, 32 * i);
 	}
-	
+
 	roomRgn = NewRgn();
 	RectRgn(roomRgn, &justRoomsRect);
 	pagesStuck = 0;
@@ -316,7 +316,7 @@ void InitDiedGameOver (void)
 void HandlePages (void)
 {
 	short		i;
-	
+
 	for (i = 0; i < 8; i++)
 	{
 		if ((pages[i].dest.bottom + RandomInt(8)) > stopPages)
@@ -359,25 +359,25 @@ void HandlePages (void)
 					case 5:
 					QOffsetRect(&pages[i].dest, 6, 6);
 					break;
-					
+
 					case 6:
 					QOffsetRect(&pages[i].dest, 8, 8);
 					break;
-					
+
 					case 7:
 					QOffsetRect(&pages[i].dest, 8, 8);
 					pages[i].counter = RandomInt(4) + 4;
 					break;
-					
+
 					case 8:
 					case 9:
 					QOffsetRect(&pages[i].dest, 8, 8);
 					break;
-					
+
 					case 10:
 					QOffsetRect(&pages[i].dest, 6, 6);
 					break;
-					
+
 					case kPageFrames:
 					QOffsetRect(&pages[i].dest, 8, 0);
 					pages[i].frame = 0;
@@ -395,41 +395,41 @@ void HandlePages (void)
 
 //--------------------------------------------------------------  DrawPages
 
-// This function does the drawing for the pieces of paper that blow… 
+// This function does the drawing for the pieces of paper that blow…
 // across the screen.
 
 void DrawPages (void)
 {
 	short		i;
-	
+
 	for (i = 0; i < 8; i++)
 	{
 		if (pages[i].stuck)
 		{
-			CopyBits((BitMap *)*GetGWorldPixMap(gameOverSrcMap), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
-					&lettersSrc[i], &pages[i].dest, 
+			CopyBits((BitMap *)*GetGWorldPixMap(gameOverSrcMap),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
+					&lettersSrc[i], &pages[i].dest,
 					srcCopy, roomRgn);
 		}
 		else
 		{
-			CopyMask((BitMap *)*GetGWorldPixMap(pageSrcMap), 
-					(BitMap *)*GetGWorldPixMap(pageMaskMap), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
-					&pageSrc[pages[i].frame], 
-					&pageSrc[pages[i].frame], 
+			CopyMask((BitMap *)*GetGWorldPixMap(pageSrcMap),
+					(BitMap *)*GetGWorldPixMap(pageMaskMap),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
+					&pageSrc[pages[i].frame],
+					&pageSrc[pages[i].frame],
 					&pages[i].dest);
 		}
-		
+
 		QUnionSimilarRect(&pages[i].dest, &pages[i].was, &pages[i].was);
 		AddRectToWorkRects(&pages[i].was);
 		AddRectToBackRects(&pages[i].dest);
-		
+
 		CopyRectsQD();
-		
+
 		numWork2Main = 0;
 		numBack2Work = 0;
-		
+
 		pages[i].was = pages[i].dest;
 	}
 }
@@ -446,13 +446,13 @@ void DoDiedGameOver (void)
 	KeyMap		theKeys;
 	long		nextLoop;
 	Boolean		userAborted;
-	
+
 	userAborted = false;
 	InitDiedGameOver();
 	CopyRectMainToWork(&workSrcRect);
 	CopyRectMainToBack(&workSrcRect);
 	FlushEvents(everyEvent, 0);
-	
+
 	nextLoop = TickCount() + 2;
 	while (pagesStuck < 8)
 	{
@@ -461,7 +461,7 @@ void DoDiedGameOver (void)
 		do
 		{
 			GetKeys(theKeys);
-			if ((BitTst(&theKeys, kCommandKeyMap)) || (BitTst(&theKeys, kOptionKeyMap)) || 
+			if ((BitTst(&theKeys, kCommandKeyMap)) || (BitTst(&theKeys, kOptionKeyMap)) ||
 					(BitTst(&theKeys, kShiftKeyMap)) || (BitTst(&theKeys, kControlKeyMap)))
 			{
 				pagesStuck = 8;
@@ -477,20 +477,20 @@ void DoDiedGameOver (void)
 		while (TickCount() < nextLoop);
 		nextLoop = TickCount() + 2;
 	}
-	
+
 	if (roomRgn != nil)
 		DisposeRgn(roomRgn);
-	
+
 	DisposeGWorld(pageSrcMap);
 	pageSrcMap = nil;
-	
+
 	DisposeGWorld(pageMaskMap);
 	pageMaskMap = nil;
-	
+
 	DisposeGWorld(gameOverSrcMap);
 	gameOverSrcMap = nil;
 	playing = false;
-	
+
 	if (demoGoing)
 	{
 		if (!userAborted)

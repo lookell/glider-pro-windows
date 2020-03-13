@@ -31,17 +31,17 @@ void PutRoomScrap (void)
 	Rect		largeBounds, smallBounds;
 	PicHandle	smallPict;
 	long		theErr;
-	
+
 	theErr = ZeroScrap();
 	if (theErr == noErr)
 	{
 		SetRect(&largeBounds, 0, 0, kRoomWide, kTileHigh);
 		SetRect(&smallBounds, 0, 0, kRoomWide / 4, kTileHigh / 4);
 		smallPict = OpenPicture(&smallBounds);
-		CopyBits(&(((GrafPtr)mainWindow)->portBits), &(((GrafPtr)mainWindow)->portBits), 
+		CopyBits(&(((GrafPtr)mainWindow)->portBits), &(((GrafPtr)mainWindow)->portBits),
 				&largeBounds, &smallBounds, srcCopy, nil);
 		ClosePicture();
-		
+
 		HLock((Handle)smallPict);
 		theErr = PutScrap(GetHandleSize((Handle)smallPict), 'PICT', (Ptr)(*smallPict));
 		theErr = PutScrap(sizeof(roomType), 'Room', (Ptr)thisRoom);
@@ -56,7 +56,7 @@ void PutRoomScrap (void)
 		}
 		else
 			YellowAlert(kYellowScrapError, theErr);
-		
+
 		KillPicture(smallPict);
 	}
 	else
@@ -73,7 +73,7 @@ void PutObjectScrap (void)
 	Str255		kindStr;
 	objectPtr	scrapObjPtr;
 	long		theErr;
-	
+
 	theErr = ZeroScrap();
 	if (theErr == noErr)
 	{
@@ -108,21 +108,21 @@ void GetRoomScrap (void)
 	long		theErr, scrapOffset;
 	short		wasFloor, wasSuite, srcRoomNumber, destRoomNumber, i;
 	short		linkRoomNumber;
-	
+
 	tempRoom = NewHandle(0L);
 	if (tempRoom == nil)
 	{
 		YellowAlert(kYellowNoMemory, 0);
 		return;
 	}
-	
+
 	theErr = GetScrap(tempRoom, 'Room', &scrapOffset);
 	if (theErr < 0)
 		YellowAlert(kYellowScrapError, theErr);
 	else
 	{
 		DeselectObject();
-		
+
 		wasFloor = thisRoom->floor;
 		wasSuite = thisRoom->suite;
 		destRoomNumber = GetRoomNumber(thisRoom->floor, thisRoom->suite);
@@ -133,10 +133,10 @@ void GetRoomScrap (void)
 		srcRoomNumber = GetRoomNumber(thisRoom->floor, thisRoom->suite);
 		thisRoom->floor = wasFloor;
 		thisRoom->suite = wasSuite;
-		
+
 		for (i = 0; i < kMaxRoomObs; i++)		// fix links
 		{										// first see if a linkable object
-			if ((ObjectIsLinkTransport(&thisRoom->objects[i])) || 
+			if ((ObjectIsLinkTransport(&thisRoom->objects[i])) ||
 					(ObjectIsLinkSwitch(&thisRoom->objects[i])))
 			{
 				linkRoomNumber = GetRoomLinked (&thisRoom->objects[i]);
@@ -144,18 +144,18 @@ void GetRoomScrap (void)
 				{								// if linked to an object in same room…
 					if (ObjectIsLinkSwitch(&thisRoom->objects[i]))
 					{							// point to new room location
-						thisRoom->objects[i].data.d.where = 
+						thisRoom->objects[i].data.d.where =
 								(wasSuite * 100) + wasFloor + kNumUndergroundFloors;
 					}
 					else
 					{							// point to new room location
-						thisRoom->objects[i].data.e.where = 
+						thisRoom->objects[i].data.e.where =
 								(wasSuite * 100) + wasFloor + kNumUndergroundFloors;
 					}
 				}
 			}
 		}
-		
+
 		CopyThisRoomToRoom();
 		ReflectCurrentRoom(false);
 		fileDirty = true;
@@ -175,21 +175,21 @@ void GetObjectScrap (void)
 	Point		noPoint;
 	long		theErr, scrapOffset;
 	short		direction, dist;
-	
+
 	tempObjectHand = NewHandle(0L);
 	if (tempObjectHand == nil)
 	{
 		YellowAlert(kYellowNoMemory, 0);
 		return;
 	}
-	
+
 	theErr = GetScrap(tempObjectHand, 'Obj.', &scrapOffset);
 	if (theErr < 0)
 		YellowAlert(kYellowScrapError, theErr);
 	else
 	{
 		DeselectObject();
-		
+
 		HLock(tempObjectHand);
 		noPoint.h = 100;
 		noPoint.v = 100;
@@ -223,9 +223,9 @@ void SeeIfValidScrapAvailable (Boolean updateMenus)
 {
 	Handle		tempRoom, tempObject;
 	long		theErr, scrapOffset;
-	
+
 	hasScrap = false;
-	
+
 	tempRoom = NewHandle(0L);
 	if (tempRoom != nil)
 	{
@@ -237,7 +237,7 @@ void SeeIfValidScrapAvailable (Boolean updateMenus)
 		}
 		DisposeHandle(tempRoom);
 	}
-	
+
 	tempObject = NewHandle(0L);
 	if (tempObject != nil)
 	{
@@ -249,7 +249,7 @@ void SeeIfValidScrapAvailable (Boolean updateMenus)
 		}
 		DisposeHandle(tempObject);
 	}
-	
+
 	if (updateMenus)
 		UpdateClipboardMenus();
 }
@@ -265,37 +265,37 @@ Boolean DropLocationIsTrash (AEDesc *dropLocation)
 	long		trashDirID;
 	OSErr		theErr;
 	short		trashVRefNum;
-	
+
 	if ((dropLocation->descriptorType != typeNull) &&
 			(AECoerceDesc(dropLocation, typeFSS, &dropSpec) == noErr))
 	{
 		HLock(dropSpec.dataHandle);
 		theSpec = (FSSpec *) *dropSpec.dataHandle;
-		
+
 		thePB.dirInfo.ioCompletion = 0L;
 		thePB.dirInfo.ioNamePtr = (StringPtr) &theSpec->name;
 		thePB.dirInfo.ioVRefNum = theSpec->vRefNum;
 		thePB.dirInfo.ioFDirIndex = 0;
 		thePB.dirInfo.ioDrDirID = theSpec->parID;
-		
+
 		theErr = PBGetCatInfo(&thePB, false);
-		
+
 		HUnlock(dropSpec.dataHandle);
 		AEDisposeDesc(&dropSpec);
-		
+
 		if (theErr != noErr)
 			return(false);
-		
+
 		if (!(thePB.dirInfo.ioFlAttrib & (1 << 4)))
 			return(false);
-		
-		FindFolder(theSpec->vRefNum, kTrashFolderType, kCreateFolder, 
+
+		FindFolder(theSpec->vRefNum, kTrashFolderType, kCreateFolder,
 				&trashVRefNum, &trashDirID);
-		
+
 		if (thePB.dirInfo.ioDrDirID == trashDirID)
 			return(true);
 	}
-	
+
 	return(false);
 }
 
@@ -303,31 +303,31 @@ Boolean DropLocationIsTrash (AEDesc *dropLocation)
 //--------------------------------------------------------------  DragTrackingFunc
 
 #if 0
-pascal OSErr DragTrackingFunc (DragTrackingMessage theMessage, WindowPtr theWindow, 
+pascal OSErr DragTrackingFunc (DragTrackingMessage theMessage, WindowPtr theWindow,
 		void *theRefCon, DragReference theDrag)
 {
 	DragAttributes	attributes;
 	OSErr			theErr;
-	
+
 	theErr = noErr;
-	
+
 	GetDragAttributes(theDrag, &attributes);
-	
+
 	switch (theMessage)
 	{
 		case dragTrackingEnterWindow:
 		xxx;
 		break;
-		
+
 		case dragTrackingInWindow:
 		xxx;
 		break;
-		
+
 		case dragTrackingLeaveWindow:
 		xxx;
 		break;
 	}
-	
+
 	return (theErr);
 }
 #endif
@@ -347,27 +347,27 @@ Boolean DragRoom (EventRecord *theEvent, Rect *roomSrc, short roomNumber)
 	OSErr			theErr;
 	short			mouseDnMods, mouseUpMods, copyRoom;
 	char			wasState;
-	
+
 	if (thisMac.hasDrag)
 	{
 		if (!WaitMouseMoved(theEvent->where))
 			return(false);
-		
+
 		SetPort((GrafPtr)mainWindow);
 		BeginUpdate((GrafPtr)mainWindow);
 		UpdateMainWindow();
 		EndUpdate((GrafPtr)mainWindow);
-		
+
 		theErr = NewDrag(&theDrag);
 		if (theErr != noErr)
 			return (false);
-		
+
 		wasState = HGetState((Handle)thisHouse);
 		HLock((Handle)thisHouse);
 		theRoom = &((*thisHouse)->rooms[roomNumber]);
-		
-		theErr = AddDragItemFlavor(theDrag, (ItemReference)roomNumber, 
-				(FlavorType)'Room', (Ptr)theRoom, 
+
+		theErr = AddDragItemFlavor(theDrag, (ItemReference)roomNumber,
+				(FlavorType)'Room', (Ptr)theRoom,
 				sizeof(roomType), (FlavorFlags)0);
 		if (theErr != noErr)
 		{
@@ -375,52 +375,52 @@ Boolean DragRoom (EventRecord *theEvent, Rect *roomSrc, short roomNumber)
 			DisposeDrag(theDrag);
 			return (false);
 		}
-		
+
 		SetRect(&largeBounds, 0, 0, kRoomWide, kTileHigh);
 		SetRect(&smallBounds, 0, 0, kRoomWide / 4, kTileHigh / 4);
 		smallPict = OpenPicture(&smallBounds);
-		CopyBits(&(((GrafPtr)mainWindow)->portBits), &(((GrafPtr)mainWindow)->portBits), 
+		CopyBits(&(((GrafPtr)mainWindow)->portBits), &(((GrafPtr)mainWindow)->portBits),
 				&largeBounds, &smallBounds, srcCopy, nil);
 		ClosePicture();
 		HLock((Handle)smallPict);
-		theErr = AddDragItemFlavor(theDrag, (ItemReference)roomNumber, 
-				(FlavorType)'PICT', (Ptr)(*smallPict), 
+		theErr = AddDragItemFlavor(theDrag, (ItemReference)roomNumber,
+				(FlavorType)'PICT', (Ptr)(*smallPict),
 				GetHandleSize((Handle)smallPict), (FlavorFlags)0);
 		HUnlock((Handle)smallPict);
 		KillPicture(smallPict);
-		
+
 		HSetState((Handle)thisHouse, wasState);
 		if (theErr != noErr)
 		{
 			DisposeDrag(theDrag);
 			return (false);
 		}
-		
+
 		theErr = SetDragItemBounds(theDrag, (ItemReference)roomNumber, roomSrc);
 		if (theErr != noErr)
 		{
 			DisposeDrag(theDrag);
 			return (false);
 		}
-		
+
 		boundsRgn = NewRgn();
 		RectRgn(boundsRgn, roomSrc);
-		
+
 		tempRgn = NewRgn();
 		CopyRgn(boundsRgn, tempRgn);
 		InsetRgn(tempRgn, 1, 1);
 		DiffRgn(boundsRgn, tempRgn, boundsRgn);
 		DisposeRgn(tempRgn);
-		
+
 		theErr = TrackDrag(theDrag, theEvent, boundsRgn);
-		
+
 		if ((theErr != noErr) && (theErr != userCanceledErr))
 		{
 			DisposeRgn(boundsRgn);
 			DisposeDrag(theDrag);
 			return(true);
 		}
-		
+
 		theErr = GetDragAttributes(theDrag, &attributes);
 		if (theErr != noErr)
 		{
@@ -428,7 +428,7 @@ Boolean DragRoom (EventRecord *theEvent, Rect *roomSrc, short roomNumber)
 			DisposeDrag(theDrag);
 			return(true);
 		}
-		
+
 		theErr = GetDropLocation(theDrag, &dropLocation);
 		if (theErr != noErr)
 		{
@@ -436,7 +436,7 @@ Boolean DragRoom (EventRecord *theEvent, Rect *roomSrc, short roomNumber)
 			DisposeDrag(theDrag);
 			return(true);
 		}
-		
+
 		theErr = GetDragModifiers(theDrag, 0L, &mouseDnMods, &mouseUpMods);
 		if (theErr != noErr)
 		{
@@ -444,9 +444,9 @@ Boolean DragRoom (EventRecord *theEvent, Rect *roomSrc, short roomNumber)
 			DisposeDrag(theDrag);
 			return(true);
 		}
-		
+
 		copyRoom = (mouseDnMods | mouseUpMods) & optionKey;
-		
+
 		if (!(attributes & kDragInsideSenderApplication))
 		{
 			if ((!copyRoom) && (DropLocationIsTrash(&dropLocation)))
@@ -462,11 +462,11 @@ Boolean DragRoom (EventRecord *theEvent, Rect *roomSrc, short roomNumber)
 	//		GlobalToLocal(&dragPoint);
 	//		MoveRoom(dragPoint);
 		}
-		
+
 		DisposeRgn(boundsRgn);
 		DisposeDrag(theDrag);
 	}
-	
+
 	return (true);
 }
 
@@ -478,20 +478,20 @@ OSErr InitDragInfo (DragInfoHandle dragInfo)
 	OSErr					theErr;
 	DragTrackingHandlerUPP	trackingProc;
 	DragReceiveHandlerUPP	receiveProc;
-	
+
 	if (!HasDragManager())
 		return (noErr);
-	
+
 	trackingProc = NewDragTrackingHandlerProc(DragTrackingFunc);
 	(**dragInfo).dragTrackingProc = trackingProc;
 	theErr = InstallTrackingHandler(trackingProc, mapWindow, dragInfo);
 	if (theErr != noErr)
 		return (theErr);
-	
+
 	receiveProc = NewDragReceiveHandlerProc(DragReceiveFunc);
 	(**dragInfo).dragReceiveProc = receiveProc;
 	theErr = InstallReceiveHandler(receiveProc, (**dragInfo).window, dragInfo);
-	
+
 	return err;
 }
 #endif
@@ -502,10 +502,10 @@ OSErr InitDragInfo (DragInfoHandle dragInfo)
 void KillDragInfo (DragInfoHandle dragInfo)
 {
 	OSErr		theErr;
-	
+
 	if (!HasDragManager())
 		return (noErr);
-	
+
 	theErr = RemoveTrackingHandler((**dragInfo).dragTrackingProc,
 			(**dragInfo).window);
 	theErr = RemoveReceiveHandler((**dragInfo).dragReceiveProc,

@@ -45,7 +45,7 @@ Boolean GetMonoCursors (acurHandle ballCursH)
 {
 	short			i, j;
 	CursHandle		cursHdl;
-	
+
 	if (ballCursH)							// Were we passed a legit acur handle?
 	{
 		j = (*ballCursH)->n;				// Get number of 'frames' in the acur
@@ -77,7 +77,7 @@ Boolean GetColorCursors (acurHandle ballCursH)
 	short			i, j;
 	CCrsrHandle		cursHdl;
 	Boolean			result = true;
-	
+
 	if (ballCursH)
 	{
 		j = (*ballCursH)->n;				// Get the number of cursors
@@ -87,7 +87,7 @@ Boolean GetColorCursors (acurHandle ballCursH)
 			cursHdl = GetCCursor((*ballCursH)->frame[i].resID);	// Get the cursor
 			if (cursHdl == nil)		// Make sure a real cursor was returned
 			{								// If not, trash all cursors loaded
-				for (j = 0; j < i; j++)				
+				for (j = 0; j < i; j++)
 					DisposeCCursor((CCrsrHandle)(*ballCursH)->frame[j].cursorHdl);
 				result = false;				// Tell calling proc we failed
 				break;						// And break out of the loop
@@ -110,9 +110,9 @@ Boolean GetColorCursors (acurHandle ballCursH)
 void InitAnimatedCursor (acurHandle ballCursH)
 {
 	Boolean			useColor;
-	
+
 	useColor = thisMac.hasColor;
-	if (ballCursH == nil) 
+	if (ballCursH == nil)
 		ballCursH = (void *)GetResource('acur', 128);
 	if (ballCursH && ballCursH != animCursorH)
 	{
@@ -149,7 +149,7 @@ void LoadCursors (void)
 void DisposCursors (void)
 {
 	register short		i, j;
-	
+
 	if (animCursorH != nil)
 	{
 		j = (*animCursorH)->n;
@@ -237,7 +237,7 @@ void SpinCursor (short incrementIndex)
 {
 	UInt32		dummyLong;
 	short		i;
-	
+
 	for (i = 0; i < incrementIndex; i++)
 	{
 		IncrementCursor();
@@ -253,7 +253,7 @@ void BackSpinCursor (short decrementIndex)
 {
 	UInt32		dummyLong;
 	short		i;
-	
+
 	for (i = 0; i < decrementIndex; i++)
 	{
 		DecrementCursor();

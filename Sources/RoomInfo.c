@@ -65,22 +65,22 @@ void UpdateRoomInfoDialog (DialogPtr theDialog)
 {
 	Rect		src, dest;
 	short		i;
-	
+
 	DrawDialog(theDialog);
 	if (tempBack >= kUserBackground)
 		SetPopUpMenuValue(theDialog, kRoomPopupItem, kOriginalArtworkItem);
 	else
-		SetPopUpMenuValue(theDialog, kRoomPopupItem, 
+		SetPopUpMenuValue(theDialog, kRoomPopupItem,
 				(tempBack - kBaseBackgroundID) + 1);
-	
-	
-	
-	CopyBits(GetPortBitMapForCopyBits(tileSrcMap), 
-			GetPortBitMapForCopyBits(GetDialogPort(theDialog)), 
+
+
+
+	CopyBits(GetPortBitMapForCopyBits(tileSrcMap),
+			GetPortBitMapForCopyBits(GetDialogPort(theDialog)),
 			&tileSrcRect, &tileSrc, srcCopy, nil);
 	/*
-	CopyBits(&((GrafPtr)tileSrcMap)->portBits, 
-			&(((GrafPtr)theDialog)->portBits), 
+	CopyBits(&((GrafPtr)tileSrcMap)->portBits,
+			&(((GrafPtr)theDialog)->portBits),
 			&tileSrcRect, &tileSrc, srcCopy, nil);
 	*/
 	dest = tileDest;
@@ -89,23 +89,23 @@ void UpdateRoomInfoDialog (DialogPtr theDialog)
 	{
 		QSetRect(&src, 0, 0, kMiniTileWide, 80);
 		QOffsetRect(&src, tempTiles[i] * kMiniTileWide, 0);
-		
-		CopyBits(GetPortBitMapForCopyBits(tileSrcMap), 
-				GetPortBitMapForCopyBits(GetDialogPort(theDialog)), 
+
+		CopyBits(GetPortBitMapForCopyBits(tileSrcMap),
+				GetPortBitMapForCopyBits(GetDialogPort(theDialog)),
 				&src, &dest, srcCopy, nil);
 		/*
-		CopyBits(&((GrafPtr)tileSrcMap)->portBits, 
-				&(((GrafPtr)theDialog)->portBits), 
+		CopyBits(&((GrafPtr)tileSrcMap)->portBits,
+				&(((GrafPtr)theDialog)->portBits),
 				&src, &dest, srcCopy, nil);
 		*/
 		QOffsetRect(&dest, kMiniTileWide, 0);
 	}
-	
+
 	if (GetNumberOfLights(thisRoomNumber) == 0)
 		SetDialogString(theDialog, kLitUnlitText, "\p(Room Is Dark)");
 	else
 		SetDialogString(theDialog, kLitUnlitText, "\p(Room Is Lit)");
-	
+
 	FrameDialogItemC(theDialog, kRoomLocationBox, kRedOrangeColor8);
 	FrameDialogItem(theDialog, kRoomTilesBox);
 	FrameDialogItemC(theDialog, kRoomDividerLine, kRedOrangeColor8);
@@ -122,12 +122,12 @@ void DragMiniTile (Point mouseIs, short *newTileOver)
 	Point		mouseWas;
 	short		wasTileOver;
 	Pattern		dummyPattern;
-	
+
 	tileOver = (mouseIs.h - tileSrc.left) / kMiniTileWide;
 	wasTileOver = -1;
 	QSetRect(&dragRect, 0, 0, kMiniTileWide, 80);
-	QOffsetRect(&dragRect, 
-			tileSrc.left + (tileOver * kMiniTileWide), 
+	QOffsetRect(&dragRect,
+			tileSrc.left + (tileOver * kMiniTileWide),
 			tileSrc.top);
 	PenMode(patXor);
 	PenPat(GetQDGlobalsGray(&dummyPattern));
@@ -141,7 +141,7 @@ void DragMiniTile (Point mouseIs, short *newTileOver)
 			FrameRect(&dragRect);
 			QOffsetRect(&dragRect, mouseIs.h - mouseWas.h, 0);
 			FrameRect(&dragRect);
-			
+
 			if (PtInRect(mouseIs, &tileDest))		// is cursor in the drop rect
 			{
 				*newTileOver = (mouseIs.h - tileDest.left) / kMiniTileWide;
@@ -150,20 +150,20 @@ void DragMiniTile (Point mouseIs, short *newTileOver)
 					PenNormal();
 					PenSize(1, 2);
 					ForeColor(blueColor);
-					MoveTo(tileDest.left + (*newTileOver * kMiniTileWide), 
+					MoveTo(tileDest.left + (*newTileOver * kMiniTileWide),
 							tileDest.top - 3);
 					Line(kMiniTileWide, 0);
-					MoveTo(tileDest.left + (*newTileOver * kMiniTileWide), 
+					MoveTo(tileDest.left + (*newTileOver * kMiniTileWide),
 							tileDest.bottom + 1);
 					Line(kMiniTileWide, 0);
-					
+
 					if (wasTileOver != -1)
 					{
 						ForeColor(whiteColor);
-						MoveTo(tileDest.left + (wasTileOver * kMiniTileWide), 
+						MoveTo(tileDest.left + (wasTileOver * kMiniTileWide),
 								tileDest.top - 3);
 						Line(kMiniTileWide, 0);
-						MoveTo(tileDest.left + (wasTileOver * kMiniTileWide), 
+						MoveTo(tileDest.left + (wasTileOver * kMiniTileWide),
 								tileDest.bottom + 1);
 						Line(kMiniTileWide, 0);
 					}
@@ -182,10 +182,10 @@ void DragMiniTile (Point mouseIs, short *newTileOver)
 					PenNormal();
 					PenSize(1, 2);
 					ForeColor(whiteColor);
-					MoveTo(tileDest.left + (wasTileOver * kMiniTileWide), 
+					MoveTo(tileDest.left + (wasTileOver * kMiniTileWide),
 							tileDest.top - 3);
 					Line(kMiniTileWide, 0);
-					MoveTo(tileDest.left + (wasTileOver * kMiniTileWide), 
+					MoveTo(tileDest.left + (wasTileOver * kMiniTileWide),
 							tileDest.bottom + 1);
 					Line(kMiniTileWide, 0);
 					ForeColor(blackColor);
@@ -195,7 +195,7 @@ void DragMiniTile (Point mouseIs, short *newTileOver)
 					wasTileOver = -1;
 				}
 			}
-			
+
 			mouseWas = mouseIs;
 		}
 	}
@@ -225,7 +225,7 @@ void DragMiniTile (Point mouseIs, short *newTileOver)
 void HiliteTileOver (Point mouseIs)
 {
 	short		newTileOver;
-	
+
 	if (PtInRect(mouseIs, &tileSrc))
 	{
 		if (cursorIs != kHandCursor)
@@ -233,7 +233,7 @@ void HiliteTileOver (Point mouseIs)
 			SetCursor(&handCursor);
 			cursorIs = kHandCursor;
 		}
-		
+
 		newTileOver = (mouseIs.h - tileSrc.left) / kMiniTileWide;
 		if (newTileOver != tileOver)
 		{
@@ -243,7 +243,7 @@ void HiliteTileOver (Point mouseIs)
 			Line(kMiniTileWide, 0);
 			MoveTo(tileSrc.left + (newTileOver * kMiniTileWide), tileSrc.bottom + 1);
 			Line(kMiniTileWide, 0);
-			
+
 			if (tileOver != -1)
 			{
 				ForeColor(whiteColor);
@@ -254,7 +254,7 @@ void HiliteTileOver (Point mouseIs)
 			}
 			ForeColor(blackColor);
 			PenNormal();
-			
+
 			tileOver = newTileOver;
 		}
 	}
@@ -272,7 +272,7 @@ void HiliteTileOver (Point mouseIs)
 			PenNormal();
 			tileOver = -1;
 		}
-		
+
 		if (PtInRect(mouseIs, &editTETextBox))
 		{
 			if (cursorIs != kBeamCursor)
@@ -300,7 +300,7 @@ pascal Boolean RoomFilter (DialogPtr dial, EventRecord *event, short *item)
 {
 	Point		mouseIs;
 	short		newTileOver;
-	
+
 	switch (event->what)
 	{
 		case keyDown:
@@ -312,26 +312,26 @@ pascal Boolean RoomFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			case kTabKeyASCII:
 			SelectDialogItemText(dial, kRoomNameItem, 0, 1024);
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case mouseDown:
 		mouseIs = event->where;
-		GlobalToLocal(&mouseIs);		
+		GlobalToLocal(&mouseIs);
 		if (PtInRect(mouseIs, &tileSrc))
 		{
 			if (StillDown())
@@ -348,11 +348,11 @@ pascal Boolean RoomFilter (DialogPtr dial, EventRecord *event, short *item)
 		else
 			return(false);
 		break;
-		
+
 		case mouseUp:
 		return(false);
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -361,7 +361,7 @@ pascal Boolean RoomFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		GetMouse(&mouseIs);
 		HiliteTileOver(mouseIs);
@@ -387,10 +387,10 @@ void DoRoomInfo (void)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	roomFilterUPP = NewModalFilterUPP(RoomFilter);
-	
+
 	tileOver = -1;
 	cursorIs = kArrowCursor;
 	tempBack = thisRoom->background;
@@ -398,12 +398,12 @@ void DoRoomInfo (void)
 //	SetMenuItemTextStyle(backgroundsMenu, kOriginalArtworkItem, italic);
 	if (HouseHasOriginalPicts())
 		EnableMenuItem(backgroundsMenu, kOriginalArtworkItem);
-	
+
 	NumToString(thisRoom->floor, floorStr);
 	NumToString(thisRoom->suite, suiteStr);
 	NumToString(thisRoom->numObjects, objectsStr);
 	ParamText(floorStr, suiteStr, objectsStr, "\p");
-	
+
 	theErr = CreateOffScreenGWorld(&tileSrcMap, &tileSrcRect, kPreferredDepth);
 	SetGWorld(tileSrcMap, nil);
 //	CreateOffScreenPixMap(&tileSrcRect, &tileSrcMap);
@@ -413,61 +413,61 @@ void DoRoomInfo (void)
 		BitchAboutPICTNotFound();
 		tempBack = kSimpleRoom;
 	}
-	if ((tempBack == 2002) || (tempBack == 2011) || 
+	if ((tempBack == 2002) || (tempBack == 2011) ||
 			(tempBack == 2016) || (tempBack == 2017))
 		LoadScaledGraphic(tempBack - 800, &tileSrcRect);
 	else
 		LoadScaledGraphic(tempBack, &tileSrcRect);
-	
+
 	SetGWorld(wasCPort, wasWorld);
-	
+
 	for (i = 0; i < kNumTiles; i++)
 		tempTiles[i] = thisRoom->tiles[i];
-	
+
 //	CenterDialog(kRoomInfoDialogID);
 	roomInfoDialog = GetNewDialog(kRoomInfoDialogID, nil, kPutInFront);
 	if (roomInfoDialog == nil)
 		RedAlert(kErrDialogDidntLoad);
 	SetPort((GrafPtr)roomInfoDialog);
-	
+
 	// Fix this later.  TEMP
 //	AddMenuToPopUp(roomInfoDialog, kRoomPopupItem, backgroundsMenu);
 	if (tempBack >= kUserBackground)
 		SetPopUpMenuValue(roomInfoDialog, kRoomPopupItem, kOriginalArtworkItem);
 	else
-		SetPopUpMenuValue(roomInfoDialog, kRoomPopupItem, 
+		SetPopUpMenuValue(roomInfoDialog, kRoomPopupItem,
 				(tempBack - kBaseBackgroundID) + 1);
 	SetDialogString(roomInfoDialog, kRoomNameItem, thisRoom->name);
 	GetDialogItemRect(roomInfoDialog, kRoomTilesBox, &tileSrc);
 	GetDialogItemRect(roomInfoDialog, kRoomTilesBox2, &tileDest);
 	GetDialogItemRect(roomInfoDialog, kRoomNameItem, &editTETextBox);
 	SelectDialogItemText(roomInfoDialog, kRoomNameItem, 0, 1024);
-	
+
 	ShowWindow(GetDialogWindow(roomInfoDialog));
 	DrawDefaultButton(roomInfoDialog);
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	wasFirstRoom = ((*thisHouse)->firstRoom == thisRoomNumber);
 	HSetState((Handle)thisHouse, wasState);
 	SetDialogItemValue(roomInfoDialog, kRoomFirstCheck, (short)wasFirstRoom);
-	
+
 	if (tempBack >= kUserBackground)
 		MyEnableControl(roomInfoDialog, kBoundsButton);
 	else
 		MyDisableControl(roomInfoDialog, kBoundsButton);
-	
+
 	leaving = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(roomFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			for (i = 0; i < kNumTiles; i++)
 				thisRoom->tiles[i] = tempTiles[i];
-			
+
 			GetDialogString(roomInfoDialog, kRoomNameItem, tempStr);
 			PasStringCopyNum(tempStr, thisRoom->name, 27);
 			if (wasFirstRoom)
@@ -522,7 +522,7 @@ void DoRoomInfo (void)
 				if (newBack != tempBack)				// if background has changed
 					SetInitialTiles(newBack, false);
 			}
-			
+
 			if (newBack >= kUserBackground)
 			{
 				MyEnableControl(roomInfoDialog, kBoundsButton);
@@ -531,12 +531,12 @@ void DoRoomInfo (void)
 			}
 			else
 				MyDisableControl(roomInfoDialog, kBoundsButton);
-			
+
 			if (newBack != tempBack)
 			{
 				tempBack = newBack;
 				SetPort((GrafPtr)tileSrcMap);
-				if ((tempBack == 2002) || (tempBack == 2011) || 
+				if ((tempBack == 2002) || (tempBack == 2011) ||
 						(tempBack == 2016) || (tempBack == 2017))
 					LoadScaledGraphic(tempBack - 800, &tileSrcRect);
 				else
@@ -558,11 +558,11 @@ void DoRoomInfo (void)
 			}
 		}
 	}
-	
+
 	InitCursor();
 	DisposeDialog(roomInfoDialog);
 	DisposeModalFilterUPP(roomFilterUPP);
-	
+
 //	KillOffScreenPixMap(tileSrcMap);
 	DisposeGWorld(tileSrcMap);
 	tileSrcMap = nil;
@@ -575,10 +575,10 @@ void DoRoomInfo (void)
 void UpdateOriginalArt (DialogPtr theDialog)
 {
 	Pattern		dummyPattern;
-	
+
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
-	
+
 	PenSize(2, 1);
 	if (!originalLeftOpen)
 		BorderDialogItem(theDialog, 7, 8);
@@ -588,7 +588,7 @@ void UpdateOriginalArt (DialogPtr theDialog)
 		BorderDialogItem(theDialog, 7, 8);
 		PenPat(GetQDGlobalsBlack(&dummyPattern));
 	}
-	
+
 	PenSize(1, 2);
 	if (!originalTopOpen)
 		BorderDialogItem(theDialog, 8, 4);
@@ -598,7 +598,7 @@ void UpdateOriginalArt (DialogPtr theDialog)
 		BorderDialogItem(theDialog, 8, 4);
 		PenPat(GetQDGlobalsBlack(&dummyPattern));
 	}
-	
+
 	PenSize(2, 1);
 	if (!originalRightOpen)
 		BorderDialogItem(theDialog, 9, 1);
@@ -608,7 +608,7 @@ void UpdateOriginalArt (DialogPtr theDialog)
 		BorderDialogItem(theDialog, 9, 1);
 		PenPat(GetQDGlobalsBlack(&dummyPattern));
 	}
-	
+
 	PenSize(1, 2);
 	if (!originalBottomOpen)
 		BorderDialogItem(theDialog, 10, 2);
@@ -618,7 +618,7 @@ void UpdateOriginalArt (DialogPtr theDialog)
 		BorderDialogItem(theDialog, 10, 2);
 		PenPat(GetQDGlobalsBlack(&dummyPattern));
 	}
-	
+
 	PenSize(1, 1);
 }
 #endif
@@ -629,7 +629,7 @@ void UpdateOriginalArt (DialogPtr theDialog)
 pascal Boolean OriginalArtFilter (DialogPtr dial, EventRecord *event, short *item)
 {
 	Point		mouseIs;
-	
+
 	switch (event->what)
 	{
 		case keyDown:
@@ -641,26 +641,26 @@ pascal Boolean OriginalArtFilter (DialogPtr dial, EventRecord *event, short *ite
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			case kTabKeyASCII:
 			SelectDialogItemText(dial, kPICTIDItem, 0, 1024);
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case mouseDown:
 		mouseIs = event->where;
-		GlobalToLocal(&mouseIs);		
+		GlobalToLocal(&mouseIs);
 		if (PtInRect(mouseIs, &leftBound))
 		{
 			*item = 7;
@@ -684,11 +684,11 @@ pascal Boolean OriginalArtFilter (DialogPtr dial, EventRecord *event, short *ite
 		else
 			return(false);
 		break;
-		
+
 		case mouseUp:
 		return(false);
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -697,7 +697,7 @@ pascal Boolean OriginalArtFilter (DialogPtr dial, EventRecord *event, short *ite
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -715,12 +715,12 @@ short ChooseOriginalArt (short was)
 	short			item, newPictID, tempShort, wasPictID;
 	Boolean			leaving;
 	ModalFilterUPP	originalArtFilterUPP;
-	
+
 	originalArtFilterUPP = NewModalFilterUPP(OriginalArtFilter);
-	
+
 	if (was < kUserBackground)
 		was = kUserBackground;
-	
+
 	InitCursor();
 	BringUpDialog(&theDialog, kOriginalArtDialogID);
 	if (was >= kOriginalArtworkItem)
@@ -735,27 +735,27 @@ short ChooseOriginalArt (short was)
 	}
 	SetDialogNumToStr(theDialog, kPICTIDItem, (long)newPictID);
 	SelectDialogItemText(theDialog, kPICTIDItem, 0, 16);
-	
+
 	GetDialogItemRect(theDialog, 7, &leftBound);
 	GetDialogItemRect(theDialog, 8, &topBound);
 	GetDialogItemRect(theDialog, 9, &rightBound);
 	GetDialogItemRect(theDialog, 10, &bottomBound);
-	
+
 	tempShort = thisRoom->bounds >> 1;			// version 2.0 house
 	originalLeftOpen = ((tempShort & 1) == 1);
 	originalTopOpen = ((tempShort & 2) == 2);
 	originalRightOpen = ((tempShort & 4) == 4);
 	originalBottomOpen = ((tempShort & 8) == 8);
 	originalFloor = ((tempShort & 16) == 16);
-	
+
 	SetDialogItemValue(theDialog, kFloorSupportCheck, (short)originalFloor);
-	
+
 	leaving = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(originalArtFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			GetDialogNumFromStr(theDialog, kPICTIDItem, &longID);
@@ -817,10 +817,10 @@ short ChooseOriginalArt (short was)
 			ToggleDialogItemValue(theDialog, kFloorSupportCheck);
 		}
 	}
-	
+
 	DisposeDialog(theDialog);
 	DisposeModalFilterUPP(originalArtFilterUPP);
-	
+
 	return (newPictID);
 }
 #endif
@@ -836,9 +836,9 @@ Boolean PictIDExists (short theID)
 //	short		numPicts, i;
 //	short		resID;
 	Boolean		foundIt;
-	
+
 	foundIt = true;
-	
+
 	thePicture = GetPicture(theID);
 	if (thePicture == nil)
 	{
@@ -852,7 +852,7 @@ Boolean PictIDExists (short theID)
 	}
 	else
 		ReleaseResource((Handle)thePicture);
-	
+
 //	foundIt = false;
 //	numPicts = Count1Resources('PICT');
 //	for (i = 1; i <= numPicts; i++)
@@ -869,7 +869,7 @@ Boolean PictIDExists (short theID)
 //			}
 //		}
 //	}
-	
+
 	return (foundIt);
 }
 
@@ -881,7 +881,7 @@ short GetFirstPICT (void)
 	Str255		resName;
 	ResType		resType;
 	short		resID;
-	
+
 	resHandle = Get1IndResource('PICT', 1);
 	if (resHandle != nil)
 	{
@@ -899,7 +899,7 @@ short GetFirstPICT (void)
 void BitchAboutPICTNotFound (void)
 {
 	short		hitWhat;
-	
+
 //	CenterAlert(kNoPICTFoundAlert);
 	hitWhat = Alert(kNoPICTFoundAlert, nil);
 }

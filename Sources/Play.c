@@ -77,7 +77,7 @@ void NewGame (short mode)
 	Size		freeBytes, growBytes;
 	OSErr		theErr;
 	Boolean		wasPlayMusicPref;
-	
+
 	AdjustScoreboardHeight();
 	gameOver = false;
 	theMode = kPlayMode;
@@ -108,7 +108,7 @@ void NewGame (short mode)
 		SetHouseToFirstRoom();
 	DetermineRoomOpenings();
 	NilSavedMaps();
-	
+
 	gameFrame = 0L;
 	numBands = 0;
 	demoIndex = 0;
@@ -116,7 +116,7 @@ void NewGame (short mode)
 	otherPlayerEscaped = kNoOneEscaped;
 	onePlayerLeft = false;
 	playerSuicide = false;
-	
+
 	if (twoPlayerGame)					// initialize glider(s)
 	{
 		InitGlider(&theGlider, kNewGameMode);
@@ -134,32 +134,32 @@ void NewGame (short mode)
 		SetPort((GrafPtr)glid2SrcMap);
 		LoadGraphic(kGliderFoilPictID);
 	}
-	
+
 #if !BUILD_ARCADE_VERSION
 //	HideMenuBarOld();		// TEMP
 #endif
-	
+
 	SetPort((GrafPtr)mainWindow);		// paint strip on screen black
 	tempRect = thisMac.screen;
 	tempRect.top = tempRect.bottom - 20;	// thisMac.menuHigh
 	PaintRect(&tempRect);
-	
+
 #ifdef COMPILEQT
 	if ((thisMac.hasQT) && (hasMovie))
 	{
 		SetMovieGWorld(theMovie, (CGrafPtr)mainWindow, nil);
 	}
 #endif
-	
+
 	SetPort((GrafPtr)workSrcMap);
 	PaintRect(&workSrcRect);
 //	if (quickerTransitions)
 //		DissBitsChunky(&workSrcRect);
 //	else
 //		DissBits(&workSrcRect);
-	
+
 //	DebugStr("\pIf screen isn't black, exit to shell.");	// TEMP TEMP TEMP
-	
+
 	DrawLocale();
 	RefreshScoreboard(kNormalTitleMode);
 //	if (quickerTransitions)
@@ -180,7 +180,7 @@ void NewGame (short mode)
 	{
 		DumpScreenOn(&justRoomsRect);
 	}
-	
+
 	InitGarbageRects();
 	StartGliderFadingIn(&theGlider);
 	if (twoPlayerGame)
@@ -191,13 +191,13 @@ void NewGame (short mode)
 	}
 	InitTelephone();
 	wasPlayMusicPref = isPlayMusicGame;
-	
+
 	freeBytes = MaxMem(&growBytes);
-	
+
 #ifdef CREATEDEMODATA
 	SysBeep(1);
 #endif
-	
+
 #ifdef COMPILEQT
 	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom))
 	{
@@ -209,17 +209,17 @@ void NewGame (short mode)
 		}
 	}
 #endif
-	
+
 	playing = true;		// everything before this line is game set-up
 	PlayGame();			// everything following is after a game has ended
-	
+
 #ifdef CREATEDEMODATA
 	DumpToResEditFile((Ptr)demoData, sizeof(demoType) * (long)demoIndex);
 #endif
-	
+
 	isPlayMusicGame = wasPlayMusicPref;
 	ZeroMirrorRegion();
-	
+
 #ifdef COMPILEQT
 	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom))
 	{
@@ -228,7 +228,7 @@ void NewGame (short mode)
 		SetMovieActive(theMovie, false);
 	}
 #endif
-	
+
 	twoPlayerGame = false;
 	theMode = kSplashMode;
 	InitCursor();
@@ -254,22 +254,22 @@ void NewGame (short mode)
 	SetPortWindowPort(mainWindow);
 	BlackenScoreboard();
 	UpdateMenus(false);
-	
+
 	if (!gameOver)
 	{
 		CGrafPtr	wasCPort;
 		GDHandle	wasWorld;
-		
+
 		GetGWorld(&wasCPort, &wasWorld);
-		
+
 		InvalWindowRect(mainWindow, &mainWindowRect);
-		
+
 		SetGWorld(workSrcMap, nil);
 		PaintRect(&workSrcRect);
 		QSetRect(&tempRect, 0, 0, 640, 460);
 		QOffsetRect(&tempRect, splashOriginH, splashOriginV);
 		LoadScaledGraphic(kSplash8BitPICT, &tempRect);
-		
+
 		SetGWorld(wasCPort, wasWorld);
 	}
 	WaitCommandQReleased();
@@ -283,7 +283,7 @@ void DoDemoGame (void)
 {
 	short		wasHouseIndex;
 	Boolean		whoCares;
-	
+
 	wasHouseIndex = thisHouseIndex;
 	whoCares = CloseHouse();
 	thisHouseIndex = demoHouseIndex;
@@ -305,14 +305,14 @@ void DoDemoGame (void)
 //--------------------------------------------------------------  InitGlider
 
 void InitGlider (gliderPtr thisGlider, short mode)
-{	
+{
 	WhereDoesGliderBegin(&thisGlider->dest, mode);
-	
+
 	if (mode == kResumeGameMode)
 		numStarsRemaining = smallGame.wasStarsLeft;
 	else if (mode == kNewGameMode)
 		numStarsRemaining = CountStarsInHouse();
-	
+
 	if (mode == kResumeGameMode)
 	{
 		theScore = smallGame.score;
@@ -323,13 +323,13 @@ void InitGlider (gliderPtr thisGlider, short mode)
 		thisGlider->mode = smallGame.gliderState;
 		thisGlider->facing = smallGame.facing;
 		showFoil = smallGame.showFoil;
-		
+
 		switch (thisGlider->mode)
 		{
 			case kGliderBurning:
 			FlagGliderBurning(thisGlider);
 			break;
-			
+
 			default:
 			FlagGliderNormal(thisGlider);
 			break;
@@ -350,16 +350,16 @@ void InitGlider (gliderPtr thisGlider, short mode)
 		thisGlider->mask = gliderSrc[0];
 		showFoil = false;
 	}
-	
+
 	QSetRect(&thisGlider->destShadow, 0, 0, kGliderWide, kShadowHigh);
 	QOffsetRect(&thisGlider->destShadow, thisGlider->dest.left, kShadowTop);
 	thisGlider->wholeShadow = thisGlider->destShadow;
-	
+
 	thisGlider->hVel = 0;
 	thisGlider->vVel = 0;
 	thisGlider->hDesiredVel = 0;
 	thisGlider->vDesiredVel = 0;
-	
+
 	thisGlider->tipped = false;
 	thisGlider->sliding = false;
 	thisGlider->dontDraw = false;
@@ -370,7 +370,7 @@ void InitGlider (gliderPtr thisGlider, short mode)
 void SetHouseToFirstRoom (void)
 {
 	short		firstRoom;
-	
+
 	firstRoom = GetFirstRoomNumber();
 	ForceThisRoom(firstRoom);
 }
@@ -389,17 +389,17 @@ void HandlePlayEvent (void)
 	EventRecord	theEvent;
 	GrafPtr		wasPort;
 	long		sleep = 2;
-	
+
 	if (WaitNextEvent(everyEvent, &theEvent, sleep, nil))
 	{
-		if ((theEvent.what == updateEvt) && 
+		if ((theEvent.what == updateEvt) &&
 				((WindowPtr)theEvent.message == mainWindow))
 		{
 			GetPort(&wasPort);
 			SetPortWindowPort(mainWindow);
 			BeginUpdate(mainWindow);
-			CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap), 
-					GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
+			CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
+					GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 					&justRoomsRect, &justRoomsRect, srcCopy, nil);
 			RefreshScoreboard(kNormalTitleMode);
 			EndUpdate(mainWindow);
@@ -433,7 +433,7 @@ void PlayGame (void)
 	{
 		gameFrame++;
 		evenFrame = !evenFrame;
-		
+
 		if (doBackground)
 		{
 			do
@@ -441,9 +441,9 @@ void PlayGame (void)
 				HandlePlayEvent();
 			} while (switchedOut);
 		}
-		
+
 		HandleTelephone();
-		
+
 		if (twoPlayerGame)
 		{
 			HandleDynamics();
@@ -495,7 +495,7 @@ void PlayGame (void)
 				HandleDynamicScoreboard();
 			}
 		}
-		
+
 		if (gameOver)
 		{
 			countDown--;
@@ -503,27 +503,27 @@ void PlayGame (void)
 			{
 				CGrafPtr	wasCPort;
 				GDHandle	wasWorld;
-				
+
 				GetGWorld(&wasCPort, &wasWorld);
-				
+
 				HideGlider(&theGlider);
 				RefreshScoreboard(kNormalTitleMode);
-				
+
 #if BUILD_ARCADE_VERSION
 			// Need to paint over the scoreboard black.
-				
+
 				SetGWorld(boardSrcMap, nil);
 				PaintRect(&boardSrcRect);
-				
-				CopyBits((BitMap *)*GetGWorldPixMap(boardSrcMap), 
-						GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
+
+				CopyBits((BitMap *)*GetGWorldPixMap(boardSrcMap),
+						GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 						&boardSrcRect, &boardDestRect, srcCopy, 0L);
-				
+
 				{
 					Rect		bounds;
 					PicHandle	thePicture;
 					SInt16		hOffset;
-					
+
 					if (boardSrcRect.right >= 640)
 						hOffset = (RectWide(&boardSrcRect) - kMaxViewWidth) / 2;
 					else
@@ -542,39 +542,39 @@ void PlayGame (void)
 #else
 //				ShowMenuBarOld();	// TEMP
 #endif
-				
+
 				if (mortals < 0)
 					DoDiedGameOver();
 				else
 					DoGameOver();
-				
+
 				SetGWorld(wasCPort, wasWorld);
 			}
 		}
 	}
-	
+
 #if BUILD_ARCADE_VERSION
 	{
 		CGrafPtr	wasCPort;
 		GDHandle	wasWorld;
-		
+
 		GetGWorld(&wasCPort, &wasWorld);
-		
+
 		SetGWorld(boardSrcMap, nil);
 		PaintRect(&boardSrcRect);
-		
-		CopyBits((BitMap *)*GetGWorldPixMap(boardSrcMap), 
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)), 
+
+		CopyBits((BitMap *)*GetGWorldPixMap(boardSrcMap),
+				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 				&boardSrcRect, &boardDestRect, srcCopy, 0L);
-		
+
 		SetGWorld(wasCPort, wasWorld);
 	}
-	
+
 	{
 		Rect		bounds;
 		PicHandle	thePicture;
 		SInt16		hOffset;
-		
+
 		if (boardSrcRect.right >= 640)
 			hOffset = (RectWide(&boardSrcRect) - kMaxViewWidth) / 2;
 		else
@@ -590,11 +590,11 @@ void PlayGame (void)
 		DrawPicture(thePicture, &bounds);
 		ReleaseResource((Handle)thePicture);
 	}
-	
+
 #else
-	
+
 //	ShowMenuBarOld();	// TEMP
-	
+
 #endif
 }
 
@@ -607,13 +607,13 @@ void SetObjectsToDefaults (void)
 	short		r, i;
 	char		wasState;
 	Boolean		initState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
-	
+
 	numRooms = thisHousePtr->nRooms;
-	
+
 	for (r = 0; r < numRooms; r++)
 	{
 		thisHousePtr->rooms[r].visited = false;
@@ -632,10 +632,10 @@ void SetObjectsToDefaults (void)
 				case kGrecoVent:
 				case kSewerBlower:
 				case kLiftArea:
-				thisHousePtr->rooms[r].objects[i].data.a.state = 
+				thisHousePtr->rooms[r].objects[i].data.a.state =
 					thisHousePtr->rooms[r].objects[i].data.a.initial;
 				break;
-				
+
 				case kRedClock:
 				case kBlueClock:
 				case kYellowClock:
@@ -650,16 +650,16 @@ void SetObjectsToDefaults (void)
 				case kStar:
 				case kSparkle:
 				case kHelium:
-				thisHousePtr->rooms[r].objects[i].data.c.state = 
+				thisHousePtr->rooms[r].objects[i].data.c.state =
 					thisHousePtr->rooms[r].objects[i].data.c.initial;
 				break;
-				
+
 				case kDeluxeTrans:
 				initState = (thisHousePtr->rooms[r].objects[i].data.d.wide & 0xF0) >> 4;
 				thisHousePtr->rooms[r].objects[i].data.d.wide &= 0xF0;
 				thisHousePtr->rooms[r].objects[i].data.d.wide += initState;
 				break;
-				
+
 				case kCeilingLight:
 				case kLightBulb:
 				case kTableLamp:
@@ -668,14 +668,14 @@ void SetObjectsToDefaults (void)
 				case kFlourescent:
 				case kTrackLight:
 				case kInvisLight:
-				thisHousePtr->rooms[r].objects[i].data.f.state = 
+				thisHousePtr->rooms[r].objects[i].data.f.state =
 					thisHousePtr->rooms[r].objects[i].data.f.initial;
 				break;
-				
+
 				case kStereo:
 				thisHousePtr->rooms[r].objects[i].data.g.state = isPlayMusicGame;
 				break;
-				
+
 				case kShredder:
 				case kToaster:
 				case kMacPlus:
@@ -685,10 +685,10 @@ void SetObjectsToDefaults (void)
 				case kOutlet:
 				case kVCR:
 				case kMicrowave:
-				thisHousePtr->rooms[r].objects[i].data.g.state = 
+				thisHousePtr->rooms[r].objects[i].data.g.state =
 					thisHousePtr->rooms[r].objects[i].data.g.initial;
 				break;
-				
+
 				case kBalloon:
 				case kCopterLf:
 				case kCopterRt:
@@ -697,10 +697,10 @@ void SetObjectsToDefaults (void)
 				case kBall:
 				case kDrip:
 				case kFish:
-				thisHousePtr->rooms[r].objects[i].data.h.state = 
+				thisHousePtr->rooms[r].objects[i].data.h.state =
 					thisHousePtr->rooms[r].objects[i].data.h.initial;
 				break;
-				
+
 			}
 		}
 	}
@@ -712,17 +712,17 @@ void SetObjectsToDefaults (void)
 void HideGlider (gliderPtr thisGlider)
 {
 	Rect		tempRect;
-	
+
 	tempRect = thisGlider->whole;
 	QOffsetRect(&tempRect, playOriginH, playOriginV);
 	CopyRectWorkToMain(&tempRect);
-	
+
 	if (hasMirror)
 	{
 		QOffsetRect(&tempRect, -20, -16);
 		CopyRectWorkToMain(&tempRect);
 	}
-	
+
 	tempRect = thisGlider->wholeShadow;
 	QOffsetRect(&tempRect, playOriginH, playOriginV);
 	CopyRectWorkToMain(&tempRect);
@@ -735,7 +735,7 @@ void InitTelephone (void)
 	thePhone.nextRing = RandomInt(kRingSpread) + kRingBaseDelay;
 	thePhone.rings = RandomInt(3) + 3;
 	thePhone.delay = kRingDelay;
-	
+
 	theChimes.nextRing = RandomInt(kChimeDelay) + 1;
 }
 
@@ -744,7 +744,7 @@ void InitTelephone (void)
 void HandleTelephone (void)
 {
 	short		delayTime;
-	
+
 	if (!phoneBitSet)
 	{
 		if (thePhone.nextRing == 0)
@@ -767,7 +767,7 @@ void HandleTelephone (void)
 			thePhone.nextRing--;
 	}
 	// handle also the wind chimes (if they are present)
-	
+
 	if (numChimes > 0)
 	{
 		if (theChimes.nextRing == 0)
@@ -776,11 +776,11 @@ void HandleTelephone (void)
 				PlayPrioritySound(kChime1Sound, kChime1Priority);
 			else
 				PlayPrioritySound(kChime2Sound, kChime2Priority);
-			
+
 			delayTime = kChimeDelay / numChimes;
 			if (delayTime < 2)
 				delayTime = 2;
-			
+
 			theChimes.nextRing = RandomInt(delayTime) + 1;
 		}
 		else
@@ -800,17 +800,17 @@ void StrikeChime (void)
 void RestoreEntireGameScreen (void)
 {
 	Rect		tempRect;
-	
+
 	HideCursor();
-	
+
 #if !BUILD_ARCADE_VERSION
 //	HideMenuBarOld();		// TEMP
 #endif
-	
+
 	SetPort((GrafPtr)mainWindow);
 	tempRect = thisMac.screen;
 	PaintRect(&tempRect);
-	
+
 	DrawLocale();
 	RefreshScoreboard(kNormalTitleMode);
 //	if (quickerTransitions)

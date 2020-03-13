@@ -53,49 +53,49 @@ Boolean CreateNewHouse (void)
 	FSSpec				tempSpec;
 	FSSpec				theSpec;
 	OSErr				theErr;
-	
+
 	theErr = NavGetDefaultDialogOptions(&dialogOptions);
 	theErr = NavPutFile(nil, &theReply, &dialogOptions, nil, 'gliH', 'ozm5', nil);
 	if (theErr == userCanceledErr)
 		return false;
 	if (!theReply.validRecord)
 		return (false);
-	
-	theErr = AEGetNthPtr(&(theReply.selection), 1, typeFSS, &theKeyword, 
+
+	theErr = AEGetNthPtr(&(theReply.selection), 1, typeFSS, &theKeyword,
 			&actualType, &theSpec, sizeof(FSSpec), &actualSize);
-	
+
 	if (theReply.replacing)
 	{
-		theErr = FSMakeFSSpec(theSpec.vRefNum, theSpec.parID, 
+		theErr = FSMakeFSSpec(theSpec.vRefNum, theSpec.parID,
 				theSpec.name, &tempSpec);
 		if (!CheckFileError(theErr, theSpec.name))
 			return (false);
-		
+
 		theErr = FSpDelete(&tempSpec);
 		if (!CheckFileError(theErr, theSpec.name))
 			return (false);
 	}
-	
+
 	if (houseOpen)
 	{
 		if (!CloseHouse())
 			return (false);
 	}
-	
+
 	theErr = FSpCreate(&theSpec, 'ozm5', 'gliH', theReply.keyScript);
 	if (!CheckFileError(theErr, "\pNew House"))
 		return (false);
 	HCreateResFile(theSpec.vRefNum, theSpec.parID, theSpec.name);
 	if (ResError() != noErr)
 		YellowAlert(kYellowFailedResCreate, ResError());
-	
+
 	PasStringCopy(theSpec.name, thisHouseName);
 	AddExtraHouse(&theSpec);
 	BuildHouseList();
 	InitCursor();
 	if (!OpenHouse())
 		return (false);
-	
+
 	return (true);
 }
 #endif
@@ -109,21 +109,21 @@ Boolean InitializeEmptyHouse (void)
 {
 	houseType		*thisHousePtr;
 	Str255			tempStr;
-	
+
 	if (thisHouse != nil)
 		DisposeHandle((Handle)thisHouse);
-	
+
 	thisHouse = (houseHand)NewHandle(sizeof(houseType));
-	
+
 	if (thisHouse == nil)
 	{
 		YellowAlert(kYellowUnaccounted, 1);
 		return (false);
 	}
-	
+
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
-	
+
 	thisHousePtr->version = kHouseVersion;
 	thisHousePtr->firstRoom = -1;
 	thisHousePtr->timeStamp = 0L;
@@ -131,19 +131,19 @@ Boolean InitializeEmptyHouse (void)
 	thisHousePtr->initial.h = 32;
 	thisHousePtr->initial.v = 32;
 	ZeroHighScores();
-	
+
 	GetLocalizedString(11, tempStr);
 	PasStringCopy(tempStr, thisHousePtr->banner);
 	GetLocalizedString(12, tempStr);
 	PasStringCopy(tempStr, thisHousePtr->trailer);
 	thisHousePtr->hasGame = false;
 	thisHousePtr->nRooms = 0;
-	
+
 	wardBitSet = false;
 	phoneBitSet = false;
-	
+
 	HUnlock((Handle)thisHouse);
-	
+
 	numberRooms = 0;
 	mapLeftRoom = 60;
 	mapTopRoom = 50;
@@ -156,7 +156,7 @@ Boolean InitializeEmptyHouse (void)
 	fileDirty = true;
 	UpdateMenus(false);
 	ReflectCurrentRoom(true);
-	
+
 	return (true);
 }
 #endif
@@ -171,7 +171,7 @@ short RealRoomNumberCount (void)
 {
 	short		realRoomCount, i;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	realRoomCount = (*thisHouse)->nRooms;
@@ -184,7 +184,7 @@ short RealRoomNumberCount (void)
 		}
 	}
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	return (realRoomCount);
 }
 
@@ -197,7 +197,7 @@ short GetFirstRoomNumber (void)
 {
 	short		firstRoom;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	if ((*thisHouse)->nRooms <= 0)
@@ -212,7 +212,7 @@ short GetFirstRoomNumber (void)
 			firstRoom = 0;
 	}
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	return (firstRoom);
 }
 
@@ -225,15 +225,15 @@ void WhereDoesGliderBegin (Rect *theRect, short mode)
 {
 	Point		initialPt;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	if (mode == kResumeGameMode)
 		initialPt = smallGame.where;
 	else if (mode == kNewGameMode)
 		initialPt = (*thisHouse)->initial;
-	
+
 	HSetState((Handle)thisHouse, wasState);
 	QSetRect(theRect, 0, 0, kGliderWide, kGliderHigh);
 	QOffsetRect(theRect, initialPt.h, initialPt.v);
@@ -246,7 +246,7 @@ void WhereDoesGliderBegin (Rect *theRect, short mode)
 Boolean HouseHasOriginalPicts (void)
 {
 	short		nPicts;
-	
+
 	nPicts = Count1Resources('PICT');
 	return (nPicts > 0);
 }
@@ -261,14 +261,14 @@ short CountHouseLinks (void)
 	short		numRooms, numLinks;
 	short		r, i, what;
 	char		wasState;
-	
+
 	numLinks = 0;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
 	numRooms = thisHousePtr->nRooms;
-	
+
 	for (r = 0; r < numRooms; r++)
 	{
 		for (i = 0; i < kMaxRoomObs; i++)
@@ -287,7 +287,7 @@ short CountHouseLinks (void)
 				if (thisHousePtr->rooms[r].objects[i].data.e.where != -1)
 					numLinks++;
 				break;
-				
+
 				case kMailboxLf:
 				case kMailboxRt:
 				case kFloorTrans:
@@ -300,9 +300,9 @@ short CountHouseLinks (void)
 			}
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	return (numLinks);
 }
 
@@ -311,7 +311,7 @@ short CountHouseLinks (void)
 // Generates a list of all objects that have links and what rooms…
 // and objects they are linked to.  It is called in order to preserve…
 // the links if the objects or rooms in a house are to be shuffled…
-// around. 
+// around.
 
 #ifndef COMPILEDEMO
 void GenerateLinksList (void)
@@ -321,14 +321,14 @@ void GenerateLinksList (void)
 	short		numLinks, numRooms, r, i, what;
 	short		floor, suite, roomLinked, objectLinked;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
 	numRooms = thisHousePtr->nRooms;
-	
+
 	numLinks = 0;
-	
+
 	for (r = 0; r < numRooms; r++)
 	{
 		for (i = 0; i < kMaxRoomObs; i++)
@@ -357,7 +357,7 @@ void GenerateLinksList (void)
 					numLinks++;
 				}
 				break;
-				
+
 				case kMailboxLf:
 				case kMailboxRt:
 				case kFloorTrans:
@@ -380,7 +380,7 @@ void GenerateLinksList (void)
 			}
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 #endif
@@ -394,10 +394,10 @@ void SortRoomsObjects (short which)
 {
 	short		probe, probe2, room, obj;
 	Boolean		busy, looking;
-	
+
 	busy = true;
 	probe = 0;
-	
+
 	do
 	{
 		if ((*thisHouse)->rooms[which].objects[probe].what == kObjectIsEmpty)
@@ -408,7 +408,7 @@ void SortRoomsObjects (short which)
 			{
 				if ((*thisHouse)->rooms[which].objects[probe2].what != kObjectIsEmpty)
 				{
-					(*thisHouse)->rooms[which].objects[probe] = 
+					(*thisHouse)->rooms[which].objects[probe] =
 							(*thisHouse)->rooms[which].objects[probe2];
 					(*thisHouse)->rooms[which].objects[probe2].what = kObjectIsEmpty;
 					if (srcLocations[probe2] != -1)
@@ -450,27 +450,27 @@ void SortHouseObjects (void)
 	houseType	*thisHousePtr;
 	short		numLinks, numRooms, r, i, l;
 	char		wasState;
-	
+
 	SpinCursor(3);
-	
+
 	CopyThisRoomToRoom();
-	
+
 	numLinks = CountHouseLinks();
 	if (numLinks == 0)
 		return;
-	
+
 	linksList = nil;
 	linksList = (linksPtr)NewPtr(sizeof(linksType) * numLinks);
 	if (linksList == nil)
 		RedAlert(kErrNoMemory);
-	
+
 	GenerateLinksList();
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
 	numRooms = thisHousePtr->nRooms;
-	
+
 	for (r = 0; r < numRooms; r++)
 	{
 		for (i = 0; i < kMaxRoomObs; i++)	// initialize arrays
@@ -478,7 +478,7 @@ void SortHouseObjects (void)
 			srcLocations[i] = -1;
 			destLocations[i] = -1;
 		}
-		
+
 		for (i = 0; i < kMaxRoomObs; i++)	// walk object list
 		{
 			for (l = 0; l < numLinks; l++)	// walk link list
@@ -490,11 +490,11 @@ void SortHouseObjects (void)
 			}
 		}
 		SortRoomsObjects(r);
-		
+
 		if ((r & 0x0007) == 0x0007)
 			IncrementCursor();
 	}
-	
+
 	SpinCursor(3);
 	HSetState((Handle)thisHouse, wasState);
 	if (linksList != nil)
@@ -513,19 +513,19 @@ short CountRoomsVisited (void)
 	houseType	*thisHousePtr;
 	short		numRooms, r, count;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
 	numRooms = thisHousePtr->nRooms;
 	count = 0;
-	
+
 	for (r = 0; r < numRooms; r++)
 	{
 		if (thisHousePtr->rooms[r].visited)
 			count++;
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 	return (count);
 }
@@ -542,15 +542,15 @@ void GenerateRetroLinks (void)
 	short		i, r, numRooms, floor, suite;
 	short		what, roomLinked, objectLinked;
 	char		wasState;
-	
+
 	for (i = 0; i < kMaxRoomObs; i++)		// Initialize array.
 		retroLinkList[i].room = -1;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
 	numRooms = thisHousePtr->nRooms;
-	
+
 	for (r = 0; r < numRooms; r++)
 	{
 		for (i = 0; i < kMaxRoomObs; i++)
@@ -582,7 +582,7 @@ void GenerateRetroLinks (void)
 					}
 				}
 				break;
-				
+
 				case kMailboxLf:
 				case kMailboxRt:
 				case kFloorTrans:
@@ -608,7 +608,7 @@ void GenerateRetroLinks (void)
 			}
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 
@@ -638,12 +638,12 @@ pascal Boolean GoToFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -652,7 +652,7 @@ pascal Boolean GoToFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -675,26 +675,26 @@ pascal Boolean GoToFilter (DialogPtr dial, EventRecord *event, short *item)
 	short			item, roomToGoTo;
 	Boolean			leaving, canceled;
 	ModalFilterUPP	goToFilterUPP;
-	
+
 	goToFilterUPP = NewModalFilterUPP(GoToFilter);
 	BringUpDialog(&theDialog, kGoToDialogID);
-	
+
 	if (GetFirstRoomNumber() == thisRoomNumber)
 		MyDisableControl(theDialog, kGoToFirstButt);
 	if ((!RoomNumExists(previousRoom)) || (previousRoom == thisRoomNumber))
 		MyDisableControl(theDialog, kGoToPrevButt);
-	
+
 	SetDialogNumToStr(theDialog, kFloorEditText, (long)wasFloor);
 	SetDialogNumToStr(theDialog, kSuiteEditText, (long)wasSuite);
 	SelectDialogItemText(theDialog, kFloorEditText, 0, 1024);
-	
+
 	leaving = false;
 	canceled = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(goToFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			roomToGoTo = -1;
@@ -721,10 +721,10 @@ pascal Boolean GoToFilter (DialogPtr dial, EventRecord *event, short *item)
 			leaving = true;
 		}
 	}
-	
+
 	DisposeDialog(theDialog);
 	DisposeModalFilterUPP(goToFilterUPP);
-	
+
 	if (!canceled)
 	{
 		if (RoomNumExists(roomToGoTo))
@@ -749,17 +749,17 @@ void ConvertHouseVer1To2 (void)
 	short		wasRoom, floor, suite;
 	short		i, h, numRooms;
 	char		wasState;
-	
+
 	CopyThisRoomToRoom();
 	wasRoom = thisRoomNumber;
 	GetLocalizedString(13, message);
 	OpenMessageWindow(message);
-	
+
 	SpinCursor(3);
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	numRooms = (*thisHouse)->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
@@ -770,7 +770,7 @@ void ConvertHouseVer1To2 (void)
 			PasStringConcat(message, roomStr);
 			SetMessageWindowMessage(message);
 			SpinCursor(1);
-			
+
 			ForceThisRoom(i);
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
@@ -789,7 +789,7 @@ void ConvertHouseVer1To2 (void)
 						thisRoom->objects[h].data.d.where = MergeFloorSuite(floor, suite);
 					}
 					break;
-					
+
 					case kLightSwitch:
 					case kMachineSwitch:
 					case kThermostat:
@@ -810,10 +810,10 @@ void ConvertHouseVer1To2 (void)
 			CopyThisRoomToRoom();
 		}
 	}
-	
+
 	(*thisHouse)->version = kHouseVersion;
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	InitCursor();
 	CloseMessageWindow();
 	ForceThisRoom(wasRoom);
@@ -827,22 +827,22 @@ void ShiftWholeHouse (short howFar)
 	short		wasRoom;
 	short		i, h, numRooms;
 	char		wasState;
-	
+
 	OpenMessageWindow("\pShifting Whole House…");
 	SpinCursor(3);
-	
+
 	CopyThisRoomToRoom();
 	wasRoom = thisRoomNumber;
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	numRooms = (*thisHouse)->nRooms;
-	
+
 	for (i = 0; i < numRooms; i++)
 	{
 		if ((*thisHouse)->rooms[i].suite != kRoomIsEmpty)
 		{
 			SpinCursor(1);
-			
+
 			ForceThisRoom(i);
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
@@ -850,10 +850,10 @@ void ShiftWholeHouse (short howFar)
 			CopyThisRoomToRoom();
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 	ForceThisRoom(wasRoom);
-	
+
 	InitCursor();
 	CloseMessageWindow();
 }

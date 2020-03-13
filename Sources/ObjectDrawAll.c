@@ -29,22 +29,22 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 	short		floor, suite, room, obj;
 	char		wasState;
 	Boolean		isLit;
-	
+
 	if (localNumbers[neighbor] == kRoomIsEmpty)
 		return;
-	
+
 	testRect = houseRect;
 	ZeroRectCorner(&testRect);
 	isLit = (numLights > 0);
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	for (i = 0; i < kMaxRoomObs; i++)
 	{
 		dynamicNum = -1;
 		legit = -1;
-		
+
 		if (IsThisValid(localNumbers[neighbor], i))
 		{
 			thisObject = (*thisHouse)->rooms[localNumbers[neighbor]].objects[i];
@@ -52,7 +52,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 			{
 				case kObjectIsEmpty:
 				break;
-				
+
 				case kFloorVent:
 				case kCeilingVent:
 				case kFloorBlower:
@@ -67,7 +67,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawSimpleBlowers(thisObject.what, &itsRect);
 				break;
-				
+
 				case kTaper:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -80,7 +80,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 						if (redraw)
 							ReBackUpFlames(localNumbers[neighbor], i);
 						else
-							AddCandleFlame(localNumbers[neighbor], i, 
+							AddCandleFlame(localNumbers[neighbor], i,
 									itsRect.left + 10, itsRect.top + 7);
 					}
 					else
@@ -95,13 +95,13 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 							if (redraw)
 								ReBackUpFlames(localNumbers[neighbor], i);
 							else
-								AddCandleFlame(localNumbers[neighbor], i, 
+								AddCandleFlame(localNumbers[neighbor], i,
 										itsRect.left + 10, itsRect.top + 7);
 						}
 					}
 				}
 				break;
-				
+
 				case kCandle:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -114,7 +114,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 						if (redraw)
 							ReBackUpFlames(localNumbers[neighbor], i);
 						else
-							AddCandleFlame(localNumbers[neighbor], i, 
+							AddCandleFlame(localNumbers[neighbor], i,
 									itsRect.left + 14, itsRect.top + 7);
 					}
 					else
@@ -129,13 +129,13 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 							if (redraw)
 								ReBackUpFlames(localNumbers[neighbor], i);
 							else
-								AddCandleFlame(localNumbers[neighbor], i, 
+								AddCandleFlame(localNumbers[neighbor], i,
 										itsRect.left + 14, itsRect.top + 7);
 						}
 					}
 				}
 				break;
-				
+
 				case kStubby:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -148,7 +148,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 						if (redraw)
 							ReBackUpFlames(localNumbers[neighbor], i);
 						else
-							AddCandleFlame(localNumbers[neighbor], i, 
+							AddCandleFlame(localNumbers[neighbor], i,
 									itsRect.left + 9, itsRect.top + 7);
 					}
 					else
@@ -163,13 +163,13 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 							if (redraw)
 								ReBackUpFlames(localNumbers[neighbor], i);
 							else
-								AddCandleFlame(localNumbers[neighbor], i, 
+								AddCandleFlame(localNumbers[neighbor], i,
 										itsRect.left + 9, itsRect.top + 7);
 						}
 					}
 				}
 				break;
-				
+
 				case kTiki:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -178,10 +178,10 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				if (redraw)
 					ReBackUpTikiFlames(localNumbers[neighbor], i);
 				else
-					AddTikiFlame(localNumbers[neighbor], i, 
+					AddTikiFlame(localNumbers[neighbor], i,
 							itsRect.left + 10, itsRect.top - 9);
 				break;
-				
+
 				case kBBQ:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -192,36 +192,36 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 					if (redraw)
 						ReBackUpBBQCoals(localNumbers[neighbor], i);
 					else
-						AddBBQCoals(localNumbers[neighbor], i, 
+						AddBBQCoals(localNumbers[neighbor], i,
 								itsRect.left + 16, itsRect.top + 9);
 				}
 				break;
-				
+
 				case kInvisBlower:
 				case kLiftArea:
 				break;
-				
+
 				case kTable:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
 					DrawTable(&itsRect, playOriginV);
 				break;
-				
+
 				case kShelf:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
 					DrawShelf(&itsRect);
 				break;
-				
+
 				case kCabinet:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawCabinet(&itsRect);
 				break;
-				
+
 				case kFilingCabinet:
 				case kOzma:
 				GetObjectRect(&thisObject, &itsRect);
@@ -229,7 +229,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawPictObject(thisObject.what, &itsRect);
 				break;
-				
+
 				case kWasteBasket:
 				case kMilkCrate:
 				GetObjectRect(&thisObject, &itsRect);
@@ -237,38 +237,38 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawSimpleFurniture(thisObject.what, &itsRect);
 				break;
-				
+
 				case kCounter:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawCounter(&itsRect);
 				break;
-				
+
 				case kDresser:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
 					DrawDresser(&itsRect);
 				break;
-				
+
 				case kDeckTable:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
 					DrawDeckTable(&itsRect, playOriginV);
 				break;
-				
+
 				case kStool:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
 					DrawStool(&itsRect, playOriginV + VerticalRoomOffset(neighbor));
 				break;
-				
+
 				case kInvisObstacle:
 				break;
-				
+
 				case kManhole:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -279,10 +279,10 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 						DrawPictSansWhiteObject(thisObject.what, &itsRect);
 				}
 				break;
-				
+
 				case kInvisBounce:
 				break;
-				
+
 				case kRedClock:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -296,7 +296,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 						DrawRedClock(&itsRect);
 				}
 				break;
-				
+
 				case kBlueClock:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -310,7 +310,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 						DrawBlueClock(&itsRect);
 				}
 				break;
-				
+
 				case kYellowClock:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -324,7 +324,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 						DrawYellowClock(&itsRect);
 				}
 				break;
-				
+
 				case kCuckoo:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -340,12 +340,12 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 						if (redraw)
 							ReBackUpPendulum(localNumbers[neighbor], i);
 						else
-							AddPendulum(localNumbers[neighbor], i, 
+							AddPendulum(localNumbers[neighbor], i,
 									itsRect.left + 4, itsRect.top + 46);
 					}
 				}
 				break;
-				
+
 				case kPaper:
 				case kBattery:
 				case kBands:
@@ -362,7 +362,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 						DrawSimplePrizes(thisObject.what, &itsRect);
 				}
 				break;
-				
+
 				case kGreaseRt:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -373,8 +373,8 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 						if (redraw)
 							dynamicNum = ReBackUpGrease(localNumbers[neighbor], i);
 						else
-							dynamicNum = AddGrease(localNumbers[neighbor], i, 
-									itsRect.left, itsRect.top, 
+							dynamicNum = AddGrease(localNumbers[neighbor], i,
+									itsRect.left, itsRect.top,
 									thisObject.data.c.length, true);
 						if (dynamicNum != -1)
 							DrawGreaseRt(&itsRect, thisObject.data.c.length, true);
@@ -383,7 +383,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				else								// fallen
 					DrawGreaseRt(&itsRect, thisObject.data.c.length, false);
 				break;
-				
+
 				case kGreaseLf:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -394,8 +394,8 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 						if (redraw)
 							dynamicNum = ReBackUpGrease(localNumbers[neighbor], i);
 						else
-							dynamicNum = AddGrease(localNumbers[neighbor], i, 
-									itsRect.left, itsRect.top, 
+							dynamicNum = AddGrease(localNumbers[neighbor], i,
+									itsRect.left, itsRect.top,
 									thisObject.data.c.length, false);
 						if (dynamicNum != -1)
 							DrawGreaseLf(&itsRect, thisObject.data.c.length, true);
@@ -404,7 +404,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				else
 					DrawGreaseLf(&itsRect, thisObject.data.c.length, false);
 				break;
-				
+
 				case kFoil:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -418,11 +418,11 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 						DrawFoil(&itsRect);
 				}
 				break;
-				
+
 				case kInvisBonus:
 				case kSlider:
 				break;
-				
+
 				case kStar:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -437,13 +437,13 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 						if (redraw)
 							ReBackUpStar(localNumbers[neighbor], i);
 						else
-							AddStar(localNumbers[neighbor], i, itsRect.left, 
+							AddStar(localNumbers[neighbor], i, itsRect.left,
 									itsRect.top);
 						DrawSimplePrizes(thisObject.what, &itsRect);
 					}
 				}
 				break;
-				
+
 				case kSparkle:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -453,12 +453,12 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 					{
 						rectA = itsRect;
 						QOffsetRect(&rectA, -playOriginH, -playOriginV);
-						dynamicNum = AddDynamicObject(kSparkle, &rectA, &thisObject, 
+						dynamicNum = AddDynamicObject(kSparkle, &rectA, &thisObject,
 								localNumbers[neighbor], i, thisObject.data.c.state);
 					}
 				}
 				break;
-				
+
 				case kUpStairs:
 				case kDoorInLf:
 				case kDoorInRt:
@@ -469,7 +469,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				if (SectRect(&itsRect, &testRect, &whoCares))
 					DrawPictSansWhiteObject(thisObject.what, &itsRect);
 				break;
-				
+
 				case kDownStairs:
 				case kDoorExRt:
 				case kDoorExLf:
@@ -480,19 +480,19 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				if (SectRect(&itsRect, &testRect, &whoCares))
 					DrawPictObject(thisObject.what, &itsRect);
 				break;
-				
+
 				case kMailboxLf:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				DrawMailboxLeft(&itsRect, playOriginV + VerticalRoomOffset(neighbor));
 				break;
-				
+
 				case kMailboxRt:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				DrawMailboxRight(&itsRect, playOriginV + VerticalRoomOffset(neighbor));
 				break;
-				
+
 				case kFloorTrans:
 				case kCeilingTrans:
 				GetObjectRect(&thisObject, &itsRect);
@@ -500,11 +500,11 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				if (SectRect(&itsRect, &testRect, &whoCares))
 					DrawSimpleTransport(thisObject.what, &itsRect);
 				break;
-				
+
 				case kInvisTrans:
 				case kDeluxeTrans:
 				break;
-				
+
 				case kLightSwitch:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -517,7 +517,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				}
 				dynamicNum = masterObjects[i].hotNum;
 				break;
-				
+
 				case kMachineSwitch:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -530,7 +530,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				}
 				dynamicNum = masterObjects[i].hotNum;
 				break;
-				
+
 				case kThermostat:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -543,7 +543,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				}
 				dynamicNum = masterObjects[i].hotNum;
 				break;
-				
+
 				case kPowerSwitch:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -556,7 +556,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				}
 				dynamicNum = masterObjects[i].hotNum;
 				break;
-				
+
 				case kKnifeSwitch:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -569,16 +569,16 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				}
 				dynamicNum = masterObjects[i].hotNum;
 				break;
-				
+
 				case kInvisSwitch:
 				dynamicNum = masterObjects[i].hotNum;
 				break;
-				
+
 				case kTrigger:
 				case kLgTrigger:
 				case kSoundTrigger:
 				break;
-				
+
 				case kCeilingLight:
 				case kLightBulb:
 				case kTableLamp:
@@ -587,7 +587,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawSimpleLight(thisObject.what, &itsRect);
 				break;
-				
+
 				case kTrunk:
 				case kBooks:
 				case kHipLamp:
@@ -606,31 +606,31 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawPictSansWhiteObject(thisObject.what, &itsRect);
 				break;
-				
+
 				case kCustomPict:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawCustPictSansWhite(thisObject.data.g.height, &itsRect);
 				break;
-				
+
 				case kFlourescent:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawFlourescent(&itsRect);
 				break;
-				
+
 				case kTrackLight:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawTrackLight(&itsRect);
 				break;
-				
+
 				case kInvisLight:
 				break;
-				
+
 				case kShredder:
 				case kCDs:
 				GetObjectRect(&thisObject, &itsRect);
@@ -638,7 +638,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawSimpleAppliance(thisObject.what, &itsRect);
 				break;
-				
+
 				case kToaster:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -649,12 +649,12 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 					{
 						rectA = itsRect;
 						QOffsetRect(&rectA, -playOriginH, -playOriginV);
-						dynamicNum = AddDynamicObject(kToaster, &rectA, &thisObject, 
+						dynamicNum = AddDynamicObject(kToaster, &rectA, &thisObject,
 								localNumbers[neighbor], i, thisObject.data.g.state);
 					}
 				}
 				break;
-				
+
 				case kMacPlus:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -665,19 +665,19 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 					{
 						rectA = itsRect;
 						QOffsetRect(&rectA, -playOriginH, -playOriginV);
-						dynamicNum = AddDynamicObject(kMacPlus, &rectA, &thisObject, 
+						dynamicNum = AddDynamicObject(kMacPlus, &rectA, &thisObject,
 								localNumbers[neighbor], i, thisObject.data.g.state);
 					}
 				}
 				break;
-				
+
 				case kTV:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (SectRect(&itsRect, &testRect, &whoCares))
 				{
 #ifdef COMPILEQT
-					if ((thisMac.hasQT) && (hasMovie) && (neighbor == kCentralRoom) && 
+					if ((thisMac.hasQT) && (hasMovie) && (neighbor == kCentralRoom) &&
 							(!tvInRoom))
 					{
 						whoCares = tvScreen1;
@@ -698,10 +698,10 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 					{
 						rectA = itsRect;
 						QOffsetRect(&rectA, -playOriginH, -playOriginV);
-						dynamicNum = AddDynamicObject(kTV, &rectA, &thisObject, 
+						dynamicNum = AddDynamicObject(kTV, &rectA, &thisObject,
 								localNumbers[neighbor], i, thisObject.data.g.state);
 #ifdef COMPILEQT
-						if ((thisMac.hasQT) && (hasMovie) && (neighbor == kCentralRoom) && 
+						if ((thisMac.hasQT) && (hasMovie) && (neighbor == kCentralRoom) &&
 								(!tvInRoom))
 						{
 							tvWithMovieNumber = dynamicNum;
@@ -711,7 +711,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 					}
 				}
 				break;
-				
+
 				case kCoffee:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -722,12 +722,12 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 					{
 						rectA = itsRect;
 						QOffsetRect(&rectA, -playOriginH, -playOriginV);
-						dynamicNum = AddDynamicObject(kCoffee, &rectA, &thisObject, 
+						dynamicNum = AddDynamicObject(kCoffee, &rectA, &thisObject,
 								localNumbers[neighbor], i, thisObject.data.g.state);
 					}
 				}
 				break;
-				
+
 				case kOutlet:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -739,12 +739,12 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 					{
 						rectA = itsRect;
 						QOffsetRect(&rectA, -playOriginH, -playOriginV);
-						dynamicNum = AddDynamicObject(kOutlet, &rectA, &thisObject, 
+						dynamicNum = AddDynamicObject(kOutlet, &rectA, &thisObject,
 								localNumbers[neighbor], i, thisObject.data.g.state);
 					}
 				}
 				break;
-				
+
 				case kVCR:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -755,12 +755,12 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 					{
 						rectA = itsRect;
 						QOffsetRect(&rectA, -playOriginH, -playOriginV);
-						dynamicNum = AddDynamicObject(kVCR, &rectA, &thisObject, 
+						dynamicNum = AddDynamicObject(kVCR, &rectA, &thisObject,
 								localNumbers[neighbor], i, thisObject.data.g.state);
 					}
 				}
 				break;
-				
+
 				case kStereo:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -771,12 +771,12 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 					{
 						rectA = itsRect;
 						QOffsetRect(&rectA, -playOriginH, -playOriginV);
-						dynamicNum = AddDynamicObject(kStereo, &rectA, &thisObject, 
+						dynamicNum = AddDynamicObject(kStereo, &rectA, &thisObject,
 								localNumbers[neighbor], i, thisObject.data.g.state);
 					}
 				}
 				break;
-				
+
 				case kMicrowave:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -787,78 +787,78 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 					{
 						rectA = itsRect;
 						QOffsetRect(&rectA, -playOriginH, -playOriginV);
-						dynamicNum = AddDynamicObject(kMicrowave, &rectA, &thisObject, 
+						dynamicNum = AddDynamicObject(kMicrowave, &rectA, &thisObject,
 								localNumbers[neighbor], i, thisObject.data.g.state);
 					}
 				}
 				break;
-				
+
 				case kBalloon:
 				if ((neighbor == kCentralRoom) && (!redraw))
 				{
 					GetObjectRect(&thisObject, &itsRect);
 					OffsetRectRoomRelative(&itsRect, neighbor);
 					QOffsetRect(&itsRect, -playOriginH, -playOriginV);
-					dynamicNum = AddDynamicObject(kBalloon, &itsRect, &thisObject, 
+					dynamicNum = AddDynamicObject(kBalloon, &itsRect, &thisObject,
 							localNumbers[neighbor], i, thisObject.data.h.state);
 				}
 				break;
-				
+
 				case kCopterLf:
 				if ((neighbor == kCentralRoom) && (!redraw))
 				{
 					GetObjectRect(&thisObject, &itsRect);
 					OffsetRectRoomRelative(&itsRect, neighbor);
 					QOffsetRect(&itsRect, -playOriginH, -playOriginV);
-					dynamicNum = AddDynamicObject(kCopterLf, &itsRect, &thisObject, 
+					dynamicNum = AddDynamicObject(kCopterLf, &itsRect, &thisObject,
 							localNumbers[neighbor], i, thisObject.data.h.state);
 				}
 				break;
-				
+
 				case kCopterRt:
 				if ((neighbor == kCentralRoom) && (!redraw))
 				{
 					GetObjectRect(&thisObject, &itsRect);
 					OffsetRectRoomRelative(&itsRect, neighbor);
 					QOffsetRect(&itsRect, -playOriginH, -playOriginV);
-					dynamicNum = AddDynamicObject(kCopterRt, &itsRect, &thisObject, 
+					dynamicNum = AddDynamicObject(kCopterRt, &itsRect, &thisObject,
 							localNumbers[neighbor], i, thisObject.data.h.state);
 				}
 				break;
-				
+
 				case kDartLf:
 				if ((neighbor == kCentralRoom) && (!redraw))
 				{
 					GetObjectRect(&thisObject, &itsRect);
 					OffsetRectRoomRelative(&itsRect, neighbor);
 					QOffsetRect(&itsRect, -playOriginH, -playOriginV);
-					dynamicNum = AddDynamicObject(kDartLf, &itsRect, &thisObject, 
+					dynamicNum = AddDynamicObject(kDartLf, &itsRect, &thisObject,
 							localNumbers[neighbor], i, thisObject.data.h.state);
 				}
 				break;
-				
+
 				case kDartRt:
 				if ((neighbor == kCentralRoom) && (!redraw))
 				{
 					GetObjectRect(&thisObject, &itsRect);
 					OffsetRectRoomRelative(&itsRect, neighbor);
 					QOffsetRect(&itsRect, -playOriginH, -playOriginV);
-					dynamicNum = AddDynamicObject(kDartRt, &itsRect, &thisObject, 
+					dynamicNum = AddDynamicObject(kDartRt, &itsRect, &thisObject,
 							localNumbers[neighbor], i, thisObject.data.h.state);
 				}
 				break;
-				
+
 				case kBall:
 				if ((neighbor == kCentralRoom) && (!redraw))
 				{
 					GetObjectRect(&thisObject, &itsRect);
 					OffsetRectRoomRelative(&itsRect, neighbor);
 					QOffsetRect(&itsRect, -playOriginH, -playOriginV);
-					dynamicNum = AddDynamicObject(kBall, &itsRect, &thisObject, 
+					dynamicNum = AddDynamicObject(kBall, &itsRect, &thisObject,
 							localNumbers[neighbor], i, thisObject.data.h.state);
 				}
 				break;
-				
+
 				case kDrip:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -869,12 +869,12 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 					{
 						rectA = itsRect;
 						QOffsetRect(&rectA, -playOriginH, -playOriginV);
-						dynamicNum = AddDynamicObject(kDrip, &rectA, &thisObject, 
+						dynamicNum = AddDynamicObject(kDrip, &rectA, &thisObject,
 								localNumbers[neighbor], i, thisObject.data.h.state);
 					}
 				}
 				break;
-				
+
 				case kFish:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -885,12 +885,12 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 					{
 						rectA = itsRect;
 						QOffsetRect(&rectA, -playOriginH, -playOriginV);
-						dynamicNum = AddDynamicObject(kFish, &rectA, &thisObject, 
+						dynamicNum = AddDynamicObject(kFish, &rectA, &thisObject,
 								localNumbers[neighbor], i, thisObject.data.h.state);
 					}
 				}
 				break;
-				
+
 				case kCobweb:
 				case kCloud:
 				GetObjectRect(&thisObject, &itsRect);
@@ -898,7 +898,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawPictWithMaskObject(thisObject.what, &itsRect);
 				break;
-				
+
 				case kMirror:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
@@ -910,7 +910,7 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 					AddToMirrorRegion(&itsRect);
 				}
 				break;
-				
+
 				case kMousehole:
 				case kFaucet:
 				GetObjectRect(&thisObject, &itsRect);
@@ -918,49 +918,49 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawSimpleClutter(thisObject.what, &itsRect);
 				break;
-				
+
 				case kFlower:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawFlower(&itsRect, thisObject.data.i.pict);
 				break;
-				
+
 				case kWallWindow:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (SectRect(&itsRect, &testRect, &whoCares))
 					DrawWallWindow(&itsRect);
 				break;
-				
+
 				case kCalendar:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawCalendar(&itsRect);
 				break;
-				
+
 				case kBulletin:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawBulletin(&itsRect);
 				break;
-				
+
 			}
 		}
-		
+
 		if (!redraw)									// set up links
 		{
 			for (n = 0; n < numMasterObjects; n++)
 			{
-				if ((masterObjects[n].objectNum == i) && 
+				if ((masterObjects[n].objectNum == i) &&
 						(masterObjects[n].roomNum == localNumbers[neighbor]))
 					masterObjects[n].dynaNum = dynamicNum;
 			}
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 

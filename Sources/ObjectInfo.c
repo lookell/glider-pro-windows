@@ -121,12 +121,12 @@ void UpdateBlowerInfo (DialogPtr theDialog)
 {
 	#define		kArrowheadLength	4
 	Rect		bounds;
-	
+
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 	FrameDialogItemC(theDialog, 5, kRedOrangeColor8);
-	
-	if ((thisRoom->objects[objActive].what != kLeftFan) && 
+
+	if ((thisRoom->objects[objActive].what != kLeftFan) &&
 			(thisRoom->objects[objActive].what != kRightFan))
 	{
 		GetDialogItemRect(theDialog, 8, &bounds);
@@ -136,7 +136,7 @@ void UpdateBlowerInfo (DialogPtr theDialog)
 		bounds.right -= 2;
 		bounds.bottom -= 2;
 		PenSize(2, 2);
-		
+
 		switch (newDirection)
 		{
 			case 1:		// up
@@ -147,7 +147,7 @@ void UpdateBlowerInfo (DialogPtr theDialog)
 			MoveTo(bounds.left + HalfRectWide(&bounds), bounds.top);
 			Line(-kArrowheadLength, kArrowheadLength);
 			break;
-			
+
 			case 2:		// right
 			MoveTo(bounds.right, bounds.top + HalfRectTall(&bounds));
 			Line(-RectWide(&bounds), 0);
@@ -156,7 +156,7 @@ void UpdateBlowerInfo (DialogPtr theDialog)
 			MoveTo(bounds.right, bounds.top + HalfRectTall(&bounds));
 			Line(-kArrowheadLength, -kArrowheadLength);
 			break;
-			
+
 			case 4:		// down
 			MoveTo(bounds.left + HalfRectWide(&bounds), bounds.top);
 			Line(0, RectTall(&bounds));
@@ -165,7 +165,7 @@ void UpdateBlowerInfo (DialogPtr theDialog)
 			MoveTo(bounds.left + HalfRectWide(&bounds), bounds.bottom);
 			Line(-kArrowheadLength, -kArrowheadLength);
 			break;
-			
+
 			case 8:		// left
 			MoveTo(bounds.left, bounds.top + HalfRectTall(&bounds));
 			Line(RectWide(&bounds), 0);
@@ -174,14 +174,14 @@ void UpdateBlowerInfo (DialogPtr theDialog)
 			MoveTo(bounds.left, bounds.top + HalfRectTall(&bounds));
 			Line(kArrowheadLength, kArrowheadLength);
 			break;
-			
+
 			default:
 			break;
 		}
-		
+
 		PenNormal();
-		
-		if ((thisRoom->objects[objActive].what == kInvisBlower) || 
+
+		if ((thisRoom->objects[objActive].what == kInvisBlower) ||
 				(thisRoom->objects[objActive].what == kLiftArea))
 		{
 			switch (newDirection)
@@ -192,21 +192,21 @@ void UpdateBlowerInfo (DialogPtr theDialog)
 				FrameOvalDialogItem(theDialog, 13);
 				FrameOvalDialogItem(theDialog, 14);
 				break;
-				
+
 				case 2:		// right
 				FrameOvalDialogItem(theDialog, 11);
 				EraseDialogItem(theDialog, 12);
 				FrameOvalDialogItem(theDialog, 13);
 				FrameOvalDialogItem(theDialog, 14);
 				break;
-				
+
 				case 4:		// down
 				FrameOvalDialogItem(theDialog, 11);
 				FrameOvalDialogItem(theDialog, 12);
 				EraseDialogItem(theDialog, 13);
 				FrameOvalDialogItem(theDialog, 14);
 				break;
-				
+
 				case 8:		// left
 				FrameOvalDialogItem(theDialog, 11);
 				FrameOvalDialogItem(theDialog, 12);
@@ -242,7 +242,7 @@ void UpdateSwitchInfo (DialogPtr theDialog)
 {
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
-	SelectFromRadioGroup(theDialog, newType + kToggleRadio, 
+	SelectFromRadioGroup(theDialog, newType + kToggleRadio,
 			kToggleRadio, kForceOffRadio);
 	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
 	FrameDialogItemC(theDialog, 13, kRedOrangeColor8);
@@ -300,7 +300,7 @@ void UpdateInvisBonusInfo (DialogPtr theDialog)
 {
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
-	SelectFromRadioGroup(theDialog, newPoint + k100PtRadio, 
+	SelectFromRadioGroup(theDialog, newPoint + k100PtRadio,
 			k100PtRadio, k500PtRadio);
 	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
 }
@@ -348,31 +348,31 @@ pascal Boolean BlowerFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			case kTabKeyASCII:
 //			SelectDialogItemText(dial, kRoomNameItem, 0, 1024);
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case mouseDown:
 		return(false);
 		break;
-		
+
 		case mouseUp:
 		return(false);
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -381,7 +381,7 @@ pascal Boolean BlowerFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -403,12 +403,12 @@ pascal Boolean FurnitureFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -417,7 +417,7 @@ pascal Boolean FurnitureFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -439,12 +439,12 @@ pascal Boolean CustPictFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -453,7 +453,7 @@ pascal Boolean CustPictFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -475,18 +475,18 @@ pascal Boolean SwitchFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -495,7 +495,7 @@ pascal Boolean SwitchFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -517,23 +517,23 @@ pascal Boolean TriggerFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			case kTabKeyASCII:
 			SelectDialogItemText(dial, kDelay3Item, 0, 1024);
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -542,7 +542,7 @@ pascal Boolean TriggerFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -564,26 +564,26 @@ pascal Boolean LightFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case mouseDown:
 		return(false);
 		break;
-		
+
 		case mouseUp:
 		return(false);
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -592,7 +592,7 @@ pascal Boolean LightFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -614,31 +614,31 @@ pascal Boolean ApplianceFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			case kTabKeyASCII:
 			SelectDialogItemText(dial, kDelayItem, 0, 1024);
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case mouseDown:
 		return(false);
 		break;
-		
+
 		case mouseUp:
 		return(false);
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -647,7 +647,7 @@ pascal Boolean ApplianceFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -669,26 +669,26 @@ pascal Boolean MicrowaveFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case mouseDown:
 		return(false);
 		break;
-		
+
 		case mouseUp:
 		return(false);
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -697,7 +697,7 @@ pascal Boolean MicrowaveFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -719,18 +719,18 @@ pascal Boolean GreaseFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -739,7 +739,7 @@ pascal Boolean GreaseFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -761,12 +761,12 @@ pascal Boolean InvisBonusFilter (DialogPtr dial, EventRecord *event, short *item
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -775,7 +775,7 @@ pascal Boolean InvisBonusFilter (DialogPtr dial, EventRecord *event, short *item
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -797,18 +797,18 @@ pascal Boolean TransFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -817,7 +817,7 @@ pascal Boolean TransFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -839,31 +839,31 @@ pascal Boolean EnemyFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			case kTabKeyASCII:
 			SelectDialogItemText(dial, kDelay2Item, 0, 1024);
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case mouseDown:
 		return(false);
 		break;
-		
+
 		case mouseUp:
 		return(false);
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -872,7 +872,7 @@ pascal Boolean EnemyFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -894,26 +894,26 @@ pascal Boolean FlowerFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kEscapeKeyASCII:
 			FlashDialogButton(dial, kCancelButton);
 			*item = kCancelButton;
 			return(true);
 			break;
-			
+
 			default:
 			return(false);
 		}
 		break;
-		
+
 		case mouseDown:
 		return(false);
 		break;
-		
+
 		case mouseUp:
 		return(false);
 		break;
-		
+
 		case updateEvt:
 		SetPort((GrafPtr)dial);
 		BeginUpdate(GetDialogWindow(dial));
@@ -922,7 +922,7 @@ pascal Boolean FlowerFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -938,43 +938,43 @@ void DoBlowerObjectInfo (short what)
 	short			item, initial;
 	Boolean			leaving, doReturn, leftFacing;
 	ModalFilterUPP	blowerFilterUPP;
-	
+
 	blowerFilterUPP = NewModalFilterUPP(BlowerFilter);
-	
+
 	NumToString(objActive + 1, numberStr);
 	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
 	NumToString(thisRoom->objects[objActive].data.a.distance, distStr);
 	ParamText(numberStr, kindStr, distStr, "\p");
-	
+
 //	CenterDialog(kBlowerInfoDialogID);
 	infoDial = GetNewDialog(kBlowerInfoDialogID, nil, kPutInFront);
 	if (infoDial == nil)
 		RedAlert(kErrDialogDidntLoad);
 	SetPort((GrafPtr)infoDial);
-	
+
 	newDirection = thisRoom->objects[objActive].data.a.vector & 0x0F;
 	if (thisRoom->objects[objActive].data.a.initial)
 		SetDialogItemValue(infoDial, kInitialStateCheckbox, 1);
 	else
 		SetDialogItemValue(infoDial, kInitialStateCheckbox, 0);
-	
-	if ((what == kTaper) || (what == kCandle) || (what == kStubby) || 
+
+	if ((what == kTaper) || (what == kCandle) || (what == kStubby) ||
 			(what == kTiki) || (what == kBBQ))
 	{
 		HideDialogItem(infoDial, kInitialStateCheckbox);
 	}
-	
+
 	if ((what == kLeftFan) || (what == kRightFan))
 	{
 		if (what == kLeftFan)
 		{
-			SelectFromRadioGroup(infoDial, kLeftFacingRadio, 
+			SelectFromRadioGroup(infoDial, kLeftFacingRadio,
 					kLeftFacingRadio, kRightFacingRadio);
 			leftFacing = true;
 		}
 		else
 		{
-			SelectFromRadioGroup(infoDial, kRightFacingRadio, 
+			SelectFromRadioGroup(infoDial, kRightFacingRadio,
 					kLeftFacingRadio, kRightFacingRadio);
 			leftFacing = false;
 		}
@@ -985,19 +985,19 @@ void DoBlowerObjectInfo (short what)
 		HideDialogItem(infoDial, kLeftFacingRadio);
 		HideDialogItem(infoDial, kRightFacingRadio);
 	}
-	
+
 	if (retroLinkList[objActive].room == -1)
 		HideDialogItem(infoDial, 15);
-	
+
 	ShowWindow(GetDialogWindow(infoDial));
-	
+
 	leaving = false;
 	doReturn = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(blowerFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			GetDialogItemValue(infoDial, kInitialStateCheckbox, &initial);
@@ -1058,16 +1058,16 @@ void DoBlowerObjectInfo (short what)
 		else if (item == kLeftFacingRadio)
 		{
 			leftFacing = true;
-			SelectFromRadioGroup(infoDial, kLeftFacingRadio, kLeftFacingRadio, 
+			SelectFromRadioGroup(infoDial, kLeftFacingRadio, kLeftFacingRadio,
 					kRightFacingRadio);
 		}
 		else if (item == kRightFacingRadio)
 		{
 			leftFacing = false;
-			SelectFromRadioGroup(infoDial, kRightFacingRadio, kLeftFacingRadio, 
+			SelectFromRadioGroup(infoDial, kRightFacingRadio, kLeftFacingRadio,
 					kRightFacingRadio);
 		}
-		else if ((thisRoom->objects[objActive].what == kInvisBlower) || 
+		else if ((thisRoom->objects[objActive].what == kInvisBlower) ||
 				(thisRoom->objects[objActive].what == kLiftArea))
 		{
 			switch (item)
@@ -1075,15 +1075,15 @@ void DoBlowerObjectInfo (short what)
 				case 11:
 				newDirection = 0x01;
 				break;
-				
+
 				case 12:
 				newDirection = 0x02;
 				break;
-				
+
 				case 13:
 				newDirection = 0x04;
 				break;
-				
+
 				case 14:
 				newDirection = 0x08;
 				break;
@@ -1091,13 +1091,13 @@ void DoBlowerObjectInfo (short what)
 			UpdateBlowerInfo(infoDial);
 		}
 	}
-	
+
 	DisposeDialog(infoDial);
 	DisposeModalFilterUPP(blowerFilterUPP);
-	
+
 	if (doReturn)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object, 
+		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
 }
@@ -1111,9 +1111,9 @@ void DoFurnitureObjectInfo (void)
 	short			item;
 	Boolean			leaving, doReturn;
 	ModalFilterUPP	furnitureFilterUPP;
-	
+
 	furnitureFilterUPP = NewModalFilterUPP(FurnitureFilter);
-	
+
 	if (objActive == kInitialGliderSelected)
 	{
 		PasStringCopy("\p-", numberStr);
@@ -1135,19 +1135,19 @@ void DoFurnitureObjectInfo (void)
 		GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
 	}
 	ParamText(numberStr, kindStr, "\p", "\p");
-	
+
 	BringUpDialog(&infoDial, kFurnitureInfoDialogID);
-	
+
 	if ((objActive < 0) || (retroLinkList[objActive].room == -1))
 		HideDialogItem(infoDial, 6);
-	
+
 	leaving = false;
 	doReturn = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(furnitureFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 			leaving = true;
 		else if (item == 6)				// Linked From? button.
@@ -1156,13 +1156,13 @@ void DoFurnitureObjectInfo (void)
 			doReturn = true;
 		}
 	}
-	
+
 	DisposeDialog(infoDial);
 	DisposeModalFilterUPP(furnitureFilterUPP);
-	
+
 	if (doReturn)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object, 
+		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
 }
@@ -1177,16 +1177,16 @@ void DoCustPictObjectInfo (void)
 	short			item;
 	Boolean			leaving;
 	ModalFilterUPP	custPictFilterUPP;
-	
+
 	custPictFilterUPP = NewModalFilterUPP(CustPictFilter);
-	
+
 	NumToString(objActive + 1, numberStr);
 	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
 	if (thisRoom->objects[objActive].what == kCustomPict)
 		ParamText(numberStr, kindStr, "\pPICT", "\p10000");
 	else
 		ParamText(numberStr, kindStr, "\pSound", "\p3000");
-	
+
 	BringUpDialog(&infoDial, kCustPictInfoDialogID);
 	if (thisRoom->objects[objActive].what == kCustomPict)
 	{
@@ -1200,11 +1200,11 @@ void DoCustPictObjectInfo (void)
 	}
 	SelectDialogItemText(infoDial, kCustPictIDItem, 0, 1024);
 	leaving = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(custPictFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			GetDialogNumFromStr(infoDial, kCustPictIDItem, &wasPict);
@@ -1259,7 +1259,7 @@ void DoCustPictObjectInfo (void)
 			leaving = true;
 		}
 	}
-	
+
 	DisposeDialog(infoDial);
 	DisposeModalFilterUPP(custPictFilterUPP);
 }
@@ -1273,9 +1273,9 @@ void DoSwitchObjectInfo (void)
 	short			item, floor, suite;
 	Boolean			leaving, doLink, doGoTo, doReturn;
 	ModalFilterUPP	switchFilterUPP;
-	
+
 	switchFilterUPP = NewModalFilterUPP(SwitchFilter);
-	
+
 	NumToString(objActive + 1, numberStr);
 	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
 	if (thisRoom->objects[objActive].data.e.where == -1)
@@ -1288,31 +1288,31 @@ void DoSwitchObjectInfo (void)
 		NumToString((long)suite, tempStr);
 		PasStringConcat(roomStr, tempStr);
 	}
-	
+
 	if (thisRoom->objects[objActive].data.e.who == 255)
 		PasStringCopy("\pnone", objStr);
 	else
 		NumToString((long)thisRoom->objects[objActive].data.e.who + 1, objStr);
-	
+
 	ParamText(numberStr, kindStr, roomStr, objStr);
 	newType = thisRoom->objects[objActive].data.e.type;
-	
+
 	BringUpDialog(&infoDial, kSwitchInfoDialogID);
 	leaving = false;
 	doLink = false;
 	doGoTo = false;
 	doReturn = false;
-	
+
 	if (thisRoom->objects[objActive].data.e.who == 255)
 		MyDisableControl(infoDial, kGotoButton2);
-	
+
 	if (retroLinkList[objActive].room == -1)
 		HideDialogItem(infoDial, 15);
-	
+
 	while (!leaving)
 	{
 		ModalDialog(switchFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			thisRoom->objects[objActive].data.e.type = newType;
@@ -1362,10 +1362,10 @@ void DoSwitchObjectInfo (void)
 			doReturn = true;
 		}
 	}
-	
+
 	DisposeDialog(infoDial);
 	DisposeModalFilterUPP(switchFilterUPP);
-	
+
 	if (doLink)
 	{
 		linkType = kSwitchLinkOnly;
@@ -1381,7 +1381,7 @@ void DoSwitchObjectInfo (void)
 	}
 	else if (doReturn)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object, 
+		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
 }
@@ -1396,9 +1396,9 @@ void DoTriggerObjectInfo (void)
 	short			item, floor, suite;
 	Boolean			leaving, doLink, doGoTo, doReturn;
 	ModalFilterUPP	triggerFilterUPP;
-	
+
 	triggerFilterUPP = NewModalFilterUPP(TriggerFilter);
-	
+
 	NumToString(objActive + 1, numberStr);
 	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
 	if (thisRoom->objects[objActive].data.e.where == -1)
@@ -1411,42 +1411,42 @@ void DoTriggerObjectInfo (void)
 		NumToString((long)suite, tempStr);
 		PasStringConcat(roomStr, tempStr);
 	}
-	
+
 	if (thisRoom->objects[objActive].data.e.who == 255)
 		PasStringCopy("\pnone", objStr);
 	else
 		NumToString((long)thisRoom->objects[objActive].data.e.who + 1, objStr);
-	
+
 	ParamText(numberStr, kindStr, roomStr, objStr);
 	newType = thisRoom->objects[objActive].data.e.type;
-	
+
 	BringUpDialog(&infoDial, kTriggerInfoDialogID);
 	leaving = false;
 	doLink = false;
 	doGoTo = false;
 	doReturn = false;
-	
+
 	if (retroLinkList[objActive].room == -1)
 		HideDialogItem(infoDial, 15);
-	
+
 	if (thisRoom->objects[objActive].data.e.who == 255)
 		MyDisableControl(infoDial, kGotoButton2);
-	
-	SetDialogNumToStr(infoDial, kDelay3Item, 
+
+	SetDialogNumToStr(infoDial, kDelay3Item,
 			(long)thisRoom->objects[objActive].data.e.delay);
 	SelectDialogItemText(infoDial, kDelay3Item, 0, 1024);
-	
+
 	while (!leaving)
 	{
 		ModalDialog(triggerFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			GetDialogNumFromStr(infoDial, kDelay3Item, &delayIs);
 			if ((delayIs < 0L) || (delayIs > 32767L))
 			{
 				SysBeep(1);
-				SetDialogNumToStr(infoDial, kDelay3Item, 
+				SetDialogNumToStr(infoDial, kDelay3Item,
 						(long)thisRoom->objects[objActive].data.e.delay);
 				SelectDialogItemText(infoDial, kDelay3Item, 0, 1024);
 			}
@@ -1466,7 +1466,7 @@ void DoTriggerObjectInfo (void)
 			if ((delayIs < 0L) || (delayIs > 32767L))
 			{
 				SysBeep(1);
-				SetDialogNumToStr(infoDial, kDelay3Item, 
+				SetDialogNumToStr(infoDial, kDelay3Item,
 						(long)thisRoom->objects[objActive].data.e.delay);
 				SelectDialogItemText(infoDial, kDelay3Item, 0, 1024);
 			}
@@ -1485,7 +1485,7 @@ void DoTriggerObjectInfo (void)
 			if ((delayIs < 0L) || (delayIs > 32767L))
 			{
 				SysBeep(1);
-				SetDialogNumToStr(infoDial, kDelay3Item, 
+				SetDialogNumToStr(infoDial, kDelay3Item,
 						(long)thisRoom->objects[objActive].data.e.delay);
 				SelectDialogItemText(infoDial, kDelay3Item, 0, 1024);
 			}
@@ -1504,7 +1504,7 @@ void DoTriggerObjectInfo (void)
 			if ((delayIs < 0L) || (delayIs > 32767L))
 			{
 				SysBeep(1);
-				SetDialogNumToStr(infoDial, kDelay3Item, 
+				SetDialogNumToStr(infoDial, kDelay3Item,
 						(long)thisRoom->objects[objActive].data.e.delay);
 				SelectDialogItemText(infoDial, kDelay3Item, 0, 1024);
 			}
@@ -1518,10 +1518,10 @@ void DoTriggerObjectInfo (void)
 			}
 		}
 	}
-	
+
 	DisposeDialog(infoDial);
 	DisposeModalFilterUPP(triggerFilterUPP);
-	
+
 	if (doLink)
 	{
 		linkType = kTriggerLinkOnly;
@@ -1537,7 +1537,7 @@ void DoTriggerObjectInfo (void)
 	}
 	else if (doReturn)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object, 
+		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
 }
@@ -1551,36 +1551,36 @@ void DoLightObjectInfo (void)
 	short			item, initial;
 	Boolean			leaving, doReturn;
 	ModalFilterUPP	lightFilterUPP;
-	
+
 	lightFilterUPP = NewModalFilterUPP(LightFilter);
-	
+
 	NumToString(objActive + 1, numberStr);
 	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
 	ParamText(numberStr, kindStr, "\p", "\p");
-	
+
 //	CenterDialog(kLightInfoDialogID);
 	infoDial = GetNewDialog(kLightInfoDialogID, nil, kPutInFront);
 	if (infoDial == nil)
 		RedAlert(kErrDialogDidntLoad);
 	SetPort((GrafPtr)infoDial);
-	
+
 	if (thisRoom->objects[objActive].data.f.initial)
 		SetDialogItemValue(infoDial, kInitialStateCheckbox, 1);
 	else
 		SetDialogItemValue(infoDial, kInitialStateCheckbox, 0);
-	
+
 	if (retroLinkList[objActive].room == -1)
 		HideDialogItem(infoDial, 8);
-	
+
 	ShowWindow(GetDialogWindow(infoDial));
-	
+
 	leaving = false;
 	doReturn = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(lightFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			GetDialogItemValue(infoDial, kInitialStateCheckbox, &initial);
@@ -1588,7 +1588,7 @@ void DoLightObjectInfo (void)
 				thisRoom->objects[objActive].data.f.initial = true;
 			else
 				thisRoom->objects[objActive].data.f.initial = false;
-			
+
 			ReadyBackground(thisRoom->background, thisRoom->tiles);
 			DrawThisRoomsObjects();
 			InvalWindowRect(mainWindow, &mainWindowRect);
@@ -1607,7 +1607,7 @@ void DoLightObjectInfo (void)
 				thisRoom->objects[objActive].data.f.initial = true;
 			else
 				thisRoom->objects[objActive].data.f.initial = false;
-			
+
 			ReadyBackground(thisRoom->background, thisRoom->tiles);
 			DrawThisRoomsObjects();
 			InvalWindowRect(mainWindow, &mainWindowRect);
@@ -1617,13 +1617,13 @@ void DoLightObjectInfo (void)
 			doReturn = true;
 		}
 	}
-	
+
 	DisposeDialog(infoDial);
 	DisposeModalFilterUPP(lightFilterUPP);
-	
+
 	if (doReturn)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object, 
+		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
 }
@@ -1638,41 +1638,41 @@ void DoApplianceObjectInfo (short what)
 	short			item, initial;
 	Boolean			leaving, doReturn;
 	ModalFilterUPP	applianceFilterUPP;
-	
+
 	applianceFilterUPP = NewModalFilterUPP(ApplianceFilter);
-	
+
 	NumToString(objActive + 1, numberStr);
 	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
 	ParamText(numberStr, kindStr, "\p", "\p");
-	
+
 	BringUpDialog(&infoDial, kApplianceInfoDialogID);
-	
+
 	if (retroLinkList[objActive].room == -1)
 		HideDialogItem(infoDial, 10);
-	
+
 	if (thisRoom->objects[objActive].data.g.initial)
 		SetDialogItemValue(infoDial, kInitialStateCheckbox, 1);
 	else
 		SetDialogItemValue(infoDial, kInitialStateCheckbox, 0);
-	
-	if ((what == kShredder) || (what == kMacPlus) || (what == kTV) || 
+
+	if ((what == kShredder) || (what == kMacPlus) || (what == kTV) ||
 			(what == kCoffee) || (what == kVCR) || (what == kMicrowave))
 	{
 		HideDialogItem(infoDial, kDelayItem);
 		HideDialogItem(infoDial, kDelayLabelItem);
 	}
-	
+
 	delay = thisRoom->objects[objActive].data.g.delay;
 	SetDialogNumToStr(infoDial, kDelayItem, (long)delay);
 	SelectDialogItemText(infoDial, kDelayItem, 0, 1024);
-	
+
 	leaving = false;
 	doReturn = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(applianceFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			GetDialogNumFromStr(infoDial, kDelayItem, &delay);
@@ -1733,13 +1733,13 @@ void DoApplianceObjectInfo (short what)
 			}
 		}
 	}
-	
+
 	DisposeDialog(infoDial);
 	DisposeModalFilterUPP(applianceFilterUPP);
-	
+
 	if (doReturn)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object, 
+		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
 }
@@ -1753,23 +1753,23 @@ void DoMicrowaveObjectInfo (void)
 	short			item, initial, kills;
 	Boolean			leaving, doReturn;
 	ModalFilterUPP	microwaveFilterUPP;
-	
+
 	microwaveFilterUPP = NewModalFilterUPP(MicrowaveFilter);
-	
+
 	NumToString(objActive + 1, numberStr);
 	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
 	ParamText(numberStr, kindStr, "\p", "\p");
-	
+
 	BringUpDialog(&infoDial, kMicrowaveInfoDialogID);
-	
+
 	if (retroLinkList[objActive].room == -1)
 		HideDialogItem(infoDial, 11);
-	
+
 	if (thisRoom->objects[objActive].data.g.initial)
 		SetDialogItemValue(infoDial, kInitialStateCheckbox, 1);
 	else
 		SetDialogItemValue(infoDial, kInitialStateCheckbox, 0);
-	
+
 	kills = (short)thisRoom->objects[objActive].data.g.byte0;
 	if ((kills & 0x0001) == 0x0001)
 		SetDialogItemValue(infoDial, kKillBandsCheckbox, 1);
@@ -1783,14 +1783,14 @@ void DoMicrowaveObjectInfo (void)
 		SetDialogItemValue(infoDial, kKillFoilCheckbox, 1);
 	else
 		SetDialogItemValue(infoDial, kKillFoilCheckbox, 0);
-	
+
 	leaving = false;
 	doReturn = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(microwaveFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			GetDialogItemValue(infoDial, kInitialStateCheckbox, &initial);
@@ -1809,7 +1809,7 @@ void DoMicrowaveObjectInfo (void)
 			if (initial == 1)
 				kills += 4;
 			thisRoom->objects[objActive].data.g.byte0 = (Byte)kills;
-			
+
 			fileDirty = true;
 			UpdateMenus(false);
 			InvalWindowRect(mainWindow, &mainWindowRect);
@@ -1846,7 +1846,7 @@ void DoMicrowaveObjectInfo (void)
 			if (initial == 1)
 				kills += 4;
 			thisRoom->objects[objActive].data.g.byte0 = (Byte)kills;
-			
+
 			fileDirty = true;
 			UpdateMenus(false);
 			InvalWindowRect(mainWindow, &mainWindowRect);
@@ -1857,13 +1857,13 @@ void DoMicrowaveObjectInfo (void)
 			doReturn = true;
 		}
 	}
-	
+
 	DisposeDialog(infoDial);
 	DisposeModalFilterUPP(microwaveFilterUPP);
-	
+
 	if (doReturn)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object, 
+		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
 }
@@ -1877,27 +1877,27 @@ void DoGreaseObjectInfo (void)
 	short			item;
 	Boolean			leaving, wasSpilled, doReturn;
 	ModalFilterUPP	greaseFilterUPP;
-	
+
 	greaseFilterUPP = NewModalFilterUPP(GreaseFilter);
-	
+
 	NumToString(objActive + 1, numberStr);
 	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
 	ParamText(numberStr, kindStr, "\p", "\p");
-	
+
 	BringUpDialog(&infoDial, kGreaseInfoDialogID);
-	
+
 	if (retroLinkList[objActive].room == -1)
 		HideDialogItem(infoDial, 8);
-	
+
 	wasSpilled = !(thisRoom->objects[objActive].data.c.initial);
 	SetDialogItemValue(infoDial, kGreaseItem, (short)wasSpilled);
 	leaving = false;
 	doReturn = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(greaseFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			thisRoom->objects[objActive].data.c.initial = !wasSpilled;
@@ -1931,13 +1931,13 @@ void DoGreaseObjectInfo (void)
 			doReturn = true;
 		}
 	}
-	
+
 	DisposeDialog(infoDial);
 	DisposeModalFilterUPP(greaseFilterUPP);
-	
+
 	if (doReturn)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object, 
+		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
 }
@@ -1951,40 +1951,40 @@ void DoInvisBonusObjectInfo (void)
 	short			item;
 	Boolean			leaving, doReturn;
 	ModalFilterUPP	invisBonusFilterUPP;
-	
+
 	invisBonusFilterUPP = NewModalFilterUPP(InvisBonusFilter);
-	
+
 	NumToString(objActive + 1, numberStr);
 	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
 	ParamText(numberStr, kindStr, "\p", "\p");
-	
+
 	switch (thisRoom->objects[objActive].data.c.points)
 	{
 		case 300:
 		newPoint = 1;
 		break;
-		
+
 		case 500:
 		newPoint = 2;
 		break;
-		
+
 		default:
 		newPoint = 0;
 		break;
 	}
-	
+
 	BringUpDialog(&infoDial, kInvisBonusInfoDialogID);
-	
+
 	if (retroLinkList[objActive].room == -1)
 		HideDialogItem(infoDial, 9);
-	
+
 	leaving = false;
 	doReturn = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(invisBonusFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			switch (newPoint)
@@ -1992,11 +1992,11 @@ void DoInvisBonusObjectInfo (void)
 				case 0:
 				thisRoom->objects[objActive].data.c.points = 100;
 				break;
-				
+
 				case 1:
 				thisRoom->objects[objActive].data.c.points = 300;
 				break;
-				
+
 				case 2:
 				thisRoom->objects[objActive].data.c.points = 500;
 				break;
@@ -2029,11 +2029,11 @@ void DoInvisBonusObjectInfo (void)
 				case 0:
 				thisRoom->objects[objActive].data.c.points = 100;
 				break;
-				
+
 				case 1:
 				thisRoom->objects[objActive].data.c.points = 300;
 				break;
-				
+
 				case 2:
 				thisRoom->objects[objActive].data.c.points = 500;
 				break;
@@ -2044,13 +2044,13 @@ void DoInvisBonusObjectInfo (void)
 			doReturn = true;
 		}
 	}
-	
+
 	DisposeDialog(infoDial);
 	DisposeModalFilterUPP(invisBonusFilterUPP);
-	
+
 	if (doReturn)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object, 
+		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
 }
@@ -2064,9 +2064,9 @@ void DoTransObjectInfo (short what)
 	short			item, floor, suite;
 	Boolean			leaving, doLink, doGoTo, doReturn, wasState;
 	ModalFilterUPP	transFilterUPP;
-	
+
 	transFilterUPP = NewModalFilterUPP(TransFilter);
-	
+
 	NumToString(objActive + 1, numberStr);
 	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
 	if (thisRoom->objects[objActive].data.d.where == -1)
@@ -2079,16 +2079,16 @@ void DoTransObjectInfo (short what)
 		NumToString((long)suite, tempStr);
 		PasStringConcat(roomStr, tempStr);
 	}
-	
+
 	if (thisRoom->objects[objActive].data.d.who == 255)
 		PasStringCopy("\pnone", objStr);
 	else
 		NumToString((long)thisRoom->objects[objActive].data.d.who + 1, objStr);
-	
+
 	ParamText(numberStr, kindStr, roomStr, objStr);
-	
+
 	BringUpDialog(&infoDial, kTransInfoDialogID);
-	
+
 	if (retroLinkList[objActive].room == -1)
 		HideDialogItem(infoDial, 12);
 	if (what != kDeluxeTrans)
@@ -2098,19 +2098,19 @@ void DoTransObjectInfo (short what)
 		wasState = (thisRoom->objects[objActive].data.d.wide & 0xF0) >> 4;
 		SetDialogItemValue(infoDial, kInitialStateCheckbox3, (short)wasState);
 	}
-	
+
 	leaving = false;
 	doLink = false;
 	doGoTo = false;
 	doReturn = false;
-	
+
 	if (thisRoom->objects[objActive].data.d.who == 255)
 		MyDisableControl(infoDial, kGotoButton1);
-	
+
 	while (!leaving)
 	{
 		ModalDialog(transFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			if (what == kDeluxeTrans)
@@ -2154,10 +2154,10 @@ void DoTransObjectInfo (short what)
 			SetDialogItemValue(infoDial, kInitialStateCheckbox3, (short)wasState);
 		}
 	}
-	
+
 	DisposeDialog(infoDial);
 	DisposeModalFilterUPP(transFilterUPP);
-	
+
 	if (doLink)
 	{
 		linkType = kTransportLinkOnly;
@@ -2173,7 +2173,7 @@ void DoTransObjectInfo (short what)
 	}
 	else if (doReturn)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object, 
+		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
 }
@@ -2188,41 +2188,41 @@ void DoEnemyObjectInfo (short what)
 	short			item, initial;
 	Boolean			leaving, doReturn;
 	ModalFilterUPP	enemyFilterUPP;
-	
+
 	enemyFilterUPP = NewModalFilterUPP(EnemyFilter);
-	
+
 	NumToString(objActive + 1, numberStr);
 	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
 	ParamText(numberStr, kindStr, "\p", "\p");
-	
+
 	BringUpDialog(&infoDial, kEnemyInfoDialogID);
-	
+
 	if (retroLinkList[objActive].room == -1)
 		HideDialogItem(infoDial, 11);
-	
+
 	delay = thisRoom->objects[objActive].data.h.delay;
 	SetDialogNumToStr(infoDial, kDelay2Item, (long)delay);
 	SelectDialogItemText(infoDial, kDelay2Item, 0, 1024);
-	
+
 	if (thisRoom->objects[objActive].data.h.initial)
 		SetDialogItemValue(infoDial, kInitialStateCheckbox2, 1);
 	else
 		SetDialogItemValue(infoDial, kInitialStateCheckbox2, 0);
-	
+
 	if (what == kBall)
 	{
 		HideDialogItem(infoDial, kDelay2Item);
 		HideDialogItem(infoDial, 8);
 		HideDialogItem(infoDial, 9);
 	}
-	
+
 	leaving = false;
 	doReturn = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(enemyFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			GetDialogNumFromStr(infoDial, kDelay2Item, &delay);
@@ -2277,13 +2277,13 @@ void DoEnemyObjectInfo (short what)
 			}
 		}
 	}
-	
+
 	DisposeDialog(infoDial);
 	DisposeModalFilterUPP(enemyFilterUPP);
-	
+
 	if (doReturn)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object, 
+		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
 }
@@ -2297,39 +2297,39 @@ void DoFlowerObjectInfo (void)
 	short			item, flower;
 	Boolean			leaving, doReturn;
 	ModalFilterUPP	flowerFilterUPP;
-	
+
 	flowerFilterUPP = NewModalFilterUPP(FlowerFilter);
-	
+
 	NumToString(objActive + 1, numberStr);
 	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
 	ParamText(numberStr, kindStr, "\p", "\p");
-	
+
 	BringUpDialog(&infoDial, kFlowerInfoDialogID);
-	
+
 	if (retroLinkList[objActive].room == -1)
 		HideDialogItem(infoDial, 13);
-	
+
 	flower = thisRoom->objects[objActive].data.i.pict + kRadioFlower1;
 	SelectFromRadioGroup(infoDial, flower, kRadioFlower1, kRadioFlower6);
-	
+
 	leaving = false;
 	doReturn = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(flowerFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			flower -= kRadioFlower1;
 			if (flower != thisRoom->objects[objActive].data.i.pict)
 			{
 				InvalWindowRect(mainWindow, &thisRoom->objects[objActive].data.i.bounds);
-				thisRoom->objects[objActive].data.i.bounds.right = 
-						thisRoom->objects[objActive].data.i.bounds.left + 
+				thisRoom->objects[objActive].data.i.bounds.right =
+						thisRoom->objects[objActive].data.i.bounds.left +
 						RectWide(&flowerSrc[flower]);
-				thisRoom->objects[objActive].data.i.bounds.top = 
-						thisRoom->objects[objActive].data.i.bounds.bottom - 
+				thisRoom->objects[objActive].data.i.bounds.top =
+						thisRoom->objects[objActive].data.i.bounds.bottom -
 						RectTall(&flowerSrc[flower]);
 				thisRoom->objects[objActive].data.i.pict = flower;
 				InvalWindowRect(mainWindow, &thisRoom->objects[objActive].data.i.bounds);
@@ -2357,11 +2357,11 @@ void DoFlowerObjectInfo (void)
 			if (flower != thisRoom->objects[objActive].data.i.pict)
 			{
 				InvalWindowRect(mainWindow, &thisRoom->objects[objActive].data.i.bounds);
-				thisRoom->objects[objActive].data.i.bounds.right = 
-						thisRoom->objects[objActive].data.i.bounds.left + 
+				thisRoom->objects[objActive].data.i.bounds.right =
+						thisRoom->objects[objActive].data.i.bounds.left +
 						RectWide(&flowerSrc[flower]);
-				thisRoom->objects[objActive].data.i.bounds.top = 
-						thisRoom->objects[objActive].data.i.bounds.bottom - 
+				thisRoom->objects[objActive].data.i.bounds.top =
+						thisRoom->objects[objActive].data.i.bounds.bottom -
 						RectTall(&flowerSrc[flower]);
 				thisRoom->objects[objActive].data.i.pict = flower;
 				InvalWindowRect(mainWindow, &thisRoom->objects[objActive].data.i.bounds);
@@ -2376,13 +2376,13 @@ void DoFlowerObjectInfo (void)
 			doReturn = true;
 		}
 	}
-	
+
 	DisposeDialog(infoDial);
 	DisposeModalFilterUPP(flowerFilterUPP);
-	
+
 	if (doReturn)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object, 
+		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
 }
@@ -2391,14 +2391,14 @@ void DoFlowerObjectInfo (void)
 
 void DoObjectInfo (void)
 {
-	if ((objActive == kInitialGliderSelected) || 
-			(objActive == kLeftGliderSelected) || 
+	if ((objActive == kInitialGliderSelected) ||
+			(objActive == kLeftGliderSelected) ||
 			(objActive == kRightGliderSelected))
 	{
 		DoFurnitureObjectInfo();
 		return;
 	}
-	
+
 	switch (thisRoom->objects[objActive].what)
 	{
 		case kFloorVent:
@@ -2419,7 +2419,7 @@ void DoObjectInfo (void)
 		case kLiftArea:
 		DoBlowerObjectInfo(thisRoom->objects[objActive].what);
 		break;
-		
+
 		case kTable:
 		case kShelf:
 		case kCabinet:
@@ -2479,16 +2479,16 @@ void DoObjectInfo (void)
 		case kChimes:
 		DoFurnitureObjectInfo();
 		break;
-		
+
 		case kGreaseRt:
 		case kGreaseLf:
 		DoGreaseObjectInfo();
 		break;
-		
+
 		case kInvisBonus:
 		DoInvisBonusObjectInfo();
 		break;
-		
+
 		case kMailboxLf:
 		case kMailboxRt:
 		case kFloorTrans:
@@ -2497,7 +2497,7 @@ void DoObjectInfo (void)
 		case kDeluxeTrans:
 		DoTransObjectInfo(thisRoom->objects[objActive].what);
 		break;
-		
+
 		case kLightSwitch:
 		case kMachineSwitch:
 		case kThermostat:
@@ -2506,12 +2506,12 @@ void DoObjectInfo (void)
 		case kInvisSwitch:
 		DoSwitchObjectInfo();
 		break;
-		
+
 		case kTrigger:
 		case kLgTrigger:
 		DoTriggerObjectInfo();
 		break;
-		
+
 		case kCeilingLight:
 		case kLightBulb:
 		case kTableLamp:
@@ -2522,7 +2522,7 @@ void DoObjectInfo (void)
 		case kInvisLight:
 		DoLightObjectInfo();
 		break;
-		
+
 		case kShredder:
 		case kToaster:
 		case kMacPlus:
@@ -2532,11 +2532,11 @@ void DoObjectInfo (void)
 		case kVCR:
 		DoApplianceObjectInfo(thisRoom->objects[objActive].what);
 		break;
-		
+
 		case kMicrowave:
 		DoMicrowaveObjectInfo();
 		break;
-		
+
 		case kBalloon:
 		case kCopterLf:
 		case kCopterRt:
@@ -2547,16 +2547,16 @@ void DoObjectInfo (void)
 		case kFish:
 		DoEnemyObjectInfo(thisRoom->objects[objActive].what);
 		break;
-		
+
 		case kFlower:
 		DoFlowerObjectInfo();
 		break;
-		
+
 		case kSoundTrigger:
 		case kCustomPict:
 		DoCustPictObjectInfo();
 		break;
-		
+
 		default:
 		SysBeep(1);
 		break;

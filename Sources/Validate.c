@@ -49,7 +49,7 @@ short GetSystemVolume (void)
 	SysEnvRec		thisWorld;
 	OSErr			theErr;
 	short			theRefNum;
-	
+
 	theRefNum = 0;
 	theErr = SysEnvirons(1, &thisWorld);				// get system info
 	if (theErr == noErr)
@@ -57,7 +57,7 @@ short GetSystemVolume (void)
 	return(theRefNum);
 }
 
-//--------------------------------------------------------------  VolumeCreated 
+//--------------------------------------------------------------  VolumeCreated
 // Returns the creation date (date formatted) of the volume the System is on.
 
 long VolumeCreated (void)
@@ -67,28 +67,28 @@ long VolumeCreated (void)
 	Str255			dummyStr;
 	long			created;
 	OSErr			theErr;
-	
+
 	created = 0;
-	
+
 	theErr = SysEnvirons(1, &thisWorld);				// get system info
-	
+
 	if ((theErr == noErr) || (theErr == envNotPresent))
-	{	
+	{
 		theBlock.volumeParam.ioVolIndex = 0;  			// set up paramBlock
 		theBlock.volumeParam.ioNamePtr = dummyStr;
 		theBlock.volumeParam.ioVRefNum = thisWorld.sysVRefNum;
 		theBlock.volumeParam.ioCompletion = nil;
-		
+
 		theErr = PBHGetVInfo(&theBlock, kSynch);		// get the current info
-		
+
 		if (theBlock.volumeParam.ioResult == noErr)
 			created = theBlock.volumeParam.ioVCrDate;
 	}
-	
+
 	return (created);
 }
 
-//--------------------------------------------------------------  VolumeMatchesPrefs 
+//--------------------------------------------------------------  VolumeMatchesPrefs
 // Uses an "encryption mask" on the volume creation date and compares…
 // it with a value stored in the games prefs.  Returns whether or not…
 // we have a match.
@@ -98,27 +98,27 @@ Boolean VolumeMatchesPrefs (long prefsSay, long *thisEncrypt)
 	DateTimeRec		dateRecord;
 	UInt32			theseSeconds;
 	Boolean			legit;
-	
+
 	*thisEncrypt = VolumeCreated();
 	*thisEncrypt ^= kEncryptMask;
-	
+
 	if (*thisEncrypt == prefsSay)
 		legit = true;
 	else
 	{
 		GetDateTime(&theseSeconds);
 		SecondsToDate(theseSeconds, &dateRecord);
-		if ((dateRecord.month == 6) && (dateRecord.day == 22) && 
+		if ((dateRecord.month == 6) && (dateRecord.day == 22) &&
 				(dateRecord.year == 1966))
 			legit = true;
 		else
 			legit = false;
 	}
-	
+
 	return (legit);
 }
 
-//--------------------------------------------------------------  NoFloppyException 
+//--------------------------------------------------------------  NoFloppyException
 // Some machines may not have floppy drives on them at all.  This function…
 // determines if this is one of those "special cases".
 
@@ -127,7 +127,7 @@ Boolean NoFloppyException (void)
 	long		response;
 	OSErr		theErr;
 	Boolean		isFloppyless;
-	
+
 	isFloppyless = false;
 	theErr = Gestalt(gestaltMachineType, &response);
 	if (theErr == noErr)
@@ -135,7 +135,7 @@ Boolean NoFloppyException (void)
 		if ((response == gestaltPowerBook100) || (response == 27))	// Duo's too
 			isFloppyless = true;
 	}
-	
+
 	return (isFloppyless);
 }
 
@@ -146,17 +146,17 @@ OSErr GetIndVolumeDate (short volIndex, long *theDate)
 	HParamBlockRec	theBlock;
 	Str255			namePtr;
 	OSErr			theErr;
-	
+
 	theBlock.volumeParam.ioVolIndex = volIndex;				// set up param block
 	theBlock.volumeParam.ioNamePtr = namePtr;
 	theBlock.volumeParam.ioVRefNum = 0;
 	theBlock.volumeParam.ioCompletion = nil;
-	
+
 	theErr = PBHGetVInfo(&theBlock, kSynch);				// get the nitty
-	
+
 	if (theErr == noErr)
 		*theDate = theBlock.volumeParam.ioVCrDate;			// get volume created
-	
+
 	return (theErr);
 }
 
@@ -168,10 +168,10 @@ Boolean LoopThruMountedVolumes (void)
 	OSErr		theErr;
 	short		i;
 	Boolean		foundIt;
-	
+
 	foundIt = false;
 	i = 0;
-	
+
 	do
 	{
 		theErr = GetIndVolumeDate(i, &theDate);
@@ -180,7 +180,7 @@ Boolean LoopThruMountedVolumes (void)
 		i++;
 	}
 	while ((theErr != nsvErr) && (!foundIt));
-	
+
 	return (foundIt);
 }
 
@@ -196,9 +196,9 @@ Boolean SpecificVolumeCreated (void)
 	short			vRefNum;
 	long			spaceHas, theDate, tempLong;
 	Boolean			dummyBool;
-	
+
 	theDate = 0;
-	
+
 	theErr = GetVInfo(1, namePtr, &vRefNum, &spaceHas);		// try drive 1
 	if (theErr == nsvErr)
 		theErr = GetVInfo(2, namePtr, &vRefNum, &spaceHas);	// no volume? try 2
@@ -208,9 +208,9 @@ Boolean SpecificVolumeCreated (void)
 		theBlock.volumeParam.ioNamePtr = namePtr;
 		theBlock.volumeParam.ioVRefNum = vRefNum;
 		theBlock.volumeParam.ioCompletion = nil;
-		
+
 		theErr = PBHGetVInfo(&theBlock, kSynch);			// get the nitty
-		
+
 		if (theBlock.volumeParam.ioResult == noErr)
 			theDate = theBlock.volumeParam.ioVCrDate;		// get volume created
 	}
@@ -225,15 +225,15 @@ Boolean SpecificVolumeCreated (void)
 		theBlock.volumeParam.ioNamePtr = namePtr;
 		theBlock.volumeParam.ioVRefNum = vRefNum;
 		theBlock.volumeParam.ioCompletion = nil;
-		
+
 		theErr = PBHGetVInfo(&theBlock, kSynch);			// get the nitty
-		
+
 		if (theBlock.volumeParam.ioResult == noErr)
 			theDate = theBlock.volumeParam.ioVCrDate;		// get volume created
 	}
-	
+
 	tempLong = theDate;
-	
+
 	return (theDate == kLegalVolumeCreation);
 }
 
@@ -250,7 +250,7 @@ pascal Boolean MasterFilter (DialogPtr theDialog, EventRecord *theEvent, short *
 	OSErr			theErr;
 	short			volRefNum;
 	Boolean			handledIt, dummyBool;
-	
+
 	theErr = GetVInfo(1, (StringPtr)&wasName, &volRefNum, &freeBytes);
  	if (theErr == nsvErr)
  		theErr = GetVInfo(2, (StringPtr)&wasName, &volRefNum, &freeBytes);
@@ -277,9 +277,9 @@ pascal Boolean MasterFilter (DialogPtr theDialog, EventRecord *theEvent, short *
 		dummyBool = CheckFileError(theErr, "\pValidation");
 		RedAlert(kErrFailedValidation);
 	}
-	
+
 	handledIt = false;
-	
+
 	if (GetNextEvent(diskMask, &diskEvent))
 	{
 //		legitMasterDisk = SpecificVolumeCreated();
@@ -315,7 +315,7 @@ pascal Boolean MasterFilter (DialogPtr theDialog, EventRecord *theEvent, short *
 		}
 		handledIt = true;
 	}
-	
+
 	return (handledIt);
 }
 
@@ -329,9 +329,9 @@ Boolean GetMasterDisk (void)
 	short			itemHit;
 	Boolean			done;
 	ModalFilterUPP	masterFilterUPP;
-	
+
 	masterFilterUPP = NewModalFilterUPP(MasterFilter);
-	
+
 	InitCursor();
 	CenterDialog(kMasterDialogID);
 	masterDialog = GetNewDialog(kMasterDialogID, nil, kPutInFront);
@@ -339,11 +339,11 @@ Boolean GetMasterDisk (void)
 		RedAlert(kErrDialogDidntLoad);
 	SetPort((GrafPtr)masterDialog);
 	ShowWindow(GetDialogWindow(masterDialog));
-	
-	legitMasterDisk = false;	
+
+	legitMasterDisk = false;
 	done = false;
 	bailOut = false;
-	
+
 	while ((!done) && (!legitMasterDisk))
 	{
 		ModalDialog(masterFilterUPP, &itemHit);
@@ -354,10 +354,10 @@ Boolean GetMasterDisk (void)
 			done = true;
 		}
 	}
-	
+
 	DisposeDialog(masterDialog);
 	DisposeModalFilterUPP(masterFilterUPP);
-	
+
 	if (legitMasterDisk)
 		didValidation = true;
 	return (legitMasterDisk);
@@ -370,12 +370,12 @@ Boolean GetMasterDisk (void)
 Boolean ValidInstallation (Boolean returnToFinder)
 {
 #pragma unused (returnToFinder)
-	
+
 	return true;
 	/*
 	long		actualEncrypted;
 	Boolean		isValid;
-	
+
 	theSystemVol = GetSystemVolume();
 	isValid = VolumeMatchesPrefs(encryptedNumber, &actualEncrypted);
 	if (!isValid)
@@ -389,7 +389,7 @@ Boolean ValidInstallation (Boolean returnToFinder)
 		ExitToShell();
 	if (isValid && !bailOut)
 		encryptedNumber = actualEncrypted;
-	
+
 	return (isValid);
 	*/
 }

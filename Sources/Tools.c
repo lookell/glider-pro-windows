@@ -74,16 +74,16 @@ void CreateToolsOffscreen (void)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
-	
+
 	if (toolSrcMap == nil)
 	{
 		GetGWorld(&wasCPort, &wasWorld);
-		
+
 		QSetRect(&toolSrcRect, 0, 0, 360, 216);
 		theErr = CreateOffScreenGWorld(&toolSrcMap, &toolSrcRect, kPreferredDepth);
 		SetGWorld(toolSrcMap, nil);
 		LoadGraphic(kToolsPictID);
-		
+
 		SetGWorld(wasCPort, wasWorld);
 	}
 }
@@ -110,7 +110,7 @@ void FrameSelectedTool (void)
 {
 	Rect		theRect;
 	short		toolIcon;
-	
+
 	toolIcon = toolSelected;
 	if ((toolMode == kBlowerMode) && (toolIcon >= 7))
 	{
@@ -123,7 +123,7 @@ void FrameSelectedTool (void)
 		else
 			toolIcon = ((toolIcon - 7) / 2) + 7;
 	}
-	
+
 	theRect = toolRects[toolIcon];
 	PenSize(2, 2);
 	ForeColor(redColor);
@@ -139,13 +139,13 @@ void FrameSelectedTool (void)
 void DrawToolName (void)
 {
 	Str255		theString;
-	
+
 	if (toolSelected == 0)
 		PasStringCopy("\pSelection Tool", theString);
 	else
-		GetIndString(theString, kObjectNameStrings, 
+		GetIndString(theString, kObjectNameStrings,
 				toolSelected + ((toolMode - 1) * 0x0010));
-	
+
 	EraseRect(&toolTextRect);
 	MoveTo(toolTextRect.left + 3, toolTextRect.bottom - 6);
 	TextFont(applFont);
@@ -162,19 +162,19 @@ void DrawToolTiles (void)
 {
 	Rect		srcRect, destRect;
 	short		i;
-	
+
 	DrawCIcon(2000, toolRects[0].left, toolRects[0].top);	// Selection Tool
-	
+
 	for (i = 0; i < 15; i++)								// Other tools
 	{
 		QSetRect(&srcRect, 0, 0, 24, 24);
 		QSetRect(&destRect, 0, 0, 24, 24);
-		
+
 		QOffsetRect(&srcRect, i * 24, (toolMode - 1) * 24);
 		QOffsetRect(&destRect, toolRects[i + 1].left + 2, toolRects[i + 1].top + 2);
-		
-		CopyBits((BitMap *)*GetGWorldPixMap(toolSrcMap), 
-				GetPortBitMapForCopyBits(GetWindowPort(toolsWindow)), 
+
+		CopyBits((BitMap *)*GetGWorldPixMap(toolSrcMap),
+				GetPortBitMapForCopyBits(GetWindowPort(toolsWindow)),
 				&srcRect, &destRect, srcCopy, nil);
 	}
 }
@@ -187,12 +187,12 @@ void EraseSelectedTool (void)
 #ifndef COMPILEDEMO
 	Rect		theRect;
 	short		toolIcon;
-	
+
 	if (toolsWindow == nil)
 		return;
-	
+
 	SetPort((GrafPtr)toolsWindow);
-	
+
 	toolIcon = toolSelected;
 	if ((toolMode == kBlowerMode) && (toolIcon >= 7))
 	{
@@ -205,7 +205,7 @@ void EraseSelectedTool (void)
 		else
 			toolIcon = ((toolIcon - 7) / 2) + 7;
 	}
-	
+
 	theRect = toolRects[toolIcon];
 	PenSize(2, 2);
 	ForeColor(whiteColor);
@@ -220,12 +220,12 @@ void SelectTool (short which)
 #ifndef COMPILEDEMO
 	Rect		theRect;
 	short		toolIcon;
-	
+
 	if (toolsWindow == nil)
 		return;
-	
+
 	SetPort((GrafPtr)toolsWindow);
-	
+
 	toolIcon = which;
 	if ((toolMode == kBlowerMode) && (toolIcon >= 7))
 	{
@@ -238,13 +238,13 @@ void SelectTool (short which)
 		else
 			toolIcon = ((toolIcon - 7) / 2) + 7;
 	}
-	
+
 	theRect = toolRects[toolIcon];
 	ForeColor(redColor);
 	FrameRect(&theRect);
 	PenNormal();
 	ForeColor(blackColor);
-	
+
 	toolSelected = which;
 	DrawToolName();
 #endif
@@ -257,15 +257,15 @@ void UpdateToolsWindow (void)
 #ifndef COMPILEDEMO
 	if (toolsWindow == nil)
 		return;
-	
+
 	SetPortWindowPort(toolsWindow);
 	DrawControls(toolsWindow);
-	
+
 	DkGrayForeColor();
 	MoveTo(4, 25);
 	Line(108, 0);
 	ForeColor(blackColor);
-	
+
 	DrawToolTiles();
 	FrameSelectedTool();
 	DrawToolName();
@@ -280,7 +280,7 @@ void OpenToolsWindow (void)
 	Rect		src, dest;
 	Point		globalMouse;
 	short		h, v;
-	
+
 	if (toolsWindow == nil)
 	{
 		QSetRect(&toolsWindowRect, 0, 0, 116, 152);		// 143
@@ -288,15 +288,15 @@ void OpenToolsWindow (void)
 		InsetRect(&toolTextRect, -1, -1);
 		QOffsetRect(&toolTextRect, 0, 157 - 15);
 		if (thisMac.hasColor)
-			toolsWindow = NewCWindow(nil, &toolsWindowRect, 
+			toolsWindow = NewCWindow(nil, &toolsWindowRect,
 					"\pTools", false, kWindoidWDEF, kPutInFront, true, 0L);
 		else
-			toolsWindow = NewWindow(nil, &toolsWindowRect, 
+			toolsWindow = NewWindow(nil, &toolsWindowRect,
 					"\pTools", false, kWindoidWDEF, kPutInFront, true, 0L);
-		
+
 		if (toolsWindow == nil)
 			RedAlert(kErrNoMemory);
-		
+
 //		if (OptionKeyDown())
 //		{
 //			isToolsH = qd.screenBits.bounds.right - 120;
@@ -311,26 +311,26 @@ void OpenToolsWindow (void)
 		ShowHide(toolsWindow, true);
 //		FlagWindowFloating(toolsWindow);	TEMP - use flaoting windows
 		HiliteAllWindows();
-		
+
 		classPopUp = GetNewControl(kPopUpControl, toolsWindow);
 		if (classPopUp == nil)
 			RedAlert(kErrFailedResourceLoad);
-		
+
 		SetControlValue(classPopUp, toolMode);
-		
+
 		for (v = 0; v < kToolsHigh; v++)
 			for (h = 0; h < kToolsWide; h++)
 			{
 				QSetRect(&toolRects[(v * kToolsWide) + h], 2, 29, 30, 57);
 				QOffsetRect(&toolRects[(v * kToolsWide) + h], h * 28, v * 28);
 			}
-		
+
 		CreateToolsOffscreen();
-		
+
 		SwitchToolModes(toolMode);
 		toolSelected = kSelectTool;
 	}
-	
+
 	UpdateToolsCheckmark(true);
 #endif
 }
@@ -371,7 +371,7 @@ void SwitchToolModes (short newMode)
 {
 	if (toolsWindow == nil)
 		return;
-	
+
 	SelectTool(kSelectTool);
 	switch (newMode)
 	{
@@ -380,56 +380,56 @@ void SwitchToolModes (short newMode)
 		lastTool = kLastBlower;
 		objectBase = kBlowerBase;
 		break;
-		
+
 		case kFurnitureMode:
 		firstTool = kFirstFurniture;
 		lastTool = kLastFurniture;
 		objectBase = kFurnitureBase;
 		break;
-		
+
 		case kBonusMode:
 		firstTool = kFirstBonus;
 		lastTool = kLastBonus;
 		objectBase = kBonusBase;
 		break;
-		
+
 		case kTransportMode:
 		firstTool = kFirstTransport;
 		lastTool = kLastTransport;
 		objectBase = kTransportBase;
 		break;
-		
+
 		case kSwitchMode:
 		firstTool = kFirstSwitch;
 		lastTool = kLastSwitch;
 		objectBase = kSwitchBase;
 		break;
-		
+
 		case kLightMode:
 		firstTool = kFirstLight;
 		lastTool = kLastLight;
 		objectBase = kLightBase;
 		break;
-		
+
 		case kApplianceMode:
 		firstTool = kFirstAppliance;
 		lastTool = kLastAppliance;
 		objectBase = kApplianceBase;
 		break;
-		
+
 		case kEnemyMode:
 		firstTool = kFirstEnemy;
 		lastTool = kLastEnemy;
 		objectBase = kEnemyBase;
 		break;
-		
+
 		case kClutterMode:
 		firstTool = kFirstClutter;
 		lastTool = kLastClutter;
 		objectBase = kClutterBase;
 		break;
 	}
-	
+
 	toolMode = newMode;
 	InvalWindowRect(toolsWindow, &toolsWindowRect);
 }
@@ -442,13 +442,13 @@ void HandleToolsClick (Point wherePt)
 #ifndef COMPILEDEMO
 	ControlHandle	theControl;
 	short			i, part, newMode, toolIcon;
-	
+
 	if (toolsWindow == nil)
 		return;
-	
+
 	SetPortWindowPort(toolsWindow);
 	GlobalToLocal(&wherePt);
-	
+
 	part = FindControl(wherePt, toolsWindow, &theControl);
 	if ((theControl != nil) && (part != 0))
 	{
@@ -495,7 +495,7 @@ void NextToolMode (void)
 #ifndef COMPILEDEMO
 	if (toolsWindow == nil)
 		return;
-	
+
 	if ((theMode == kEditMode) && (toolMode < kClutterMode))
 	{
 		EraseSelectedTool();
@@ -514,7 +514,7 @@ void PrevToolMode (void)
 #ifndef COMPILEDEMO
 	if (toolsWindow == nil)
 		return;
-	
+
 	if ((theMode == kEditMode) && (toolMode > kBlowerMode))
 	{
 		EraseSelectedTool();
@@ -533,7 +533,7 @@ void SetSpecificToolMode (short modeToSet)
 #ifndef COMPILEDEMO
 	if ((toolsWindow == nil) || (theMode != kEditMode))
 		return;
-	
+
 	EraseSelectedTool();
 	toolMode = modeToSet;
 	SetControlValue(classPopUp, toolMode);

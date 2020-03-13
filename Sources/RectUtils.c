@@ -19,7 +19,7 @@
 void FrameWHRect (short left, short top, short wide, short high)
 {
 	Rect		theRect;
-	
+
 	theRect.left = left;
 	theRect.top = top;
 	theRect.right = left + wide;
@@ -34,14 +34,14 @@ void FrameWHRect (short left, short top, short wide, short high)
 void NormalizeRect (Rect *theRect)
 {
 	short		tempSide;
-	
+
 	if (theRect->left > theRect->right)
 	{
 		tempSide = theRect->left;
 		theRect->left = theRect->right;
 		theRect->right = tempSide;
 	}
-	
+
 	if (theRect->top > theRect->bottom)
 	{
 		tempSide = theRect->top;
@@ -113,7 +113,7 @@ short RectTall (Rect *theRect)
 void GlobalToLocalRect (Rect *theRect)
 {
 	Point			upperLeftPt;
-	
+
 	upperLeftPt.h = 0;
 	upperLeftPt.v = 0;
 	GlobalToLocal(&upperLeftPt);
@@ -128,7 +128,7 @@ void GlobalToLocalRect (Rect *theRect)
 void LocalToGlobalRect (Rect *theRect)
 {
 	Point			upperLeftPt;
-	
+
 	upperLeftPt.h = 0;
 	upperLeftPt.v = 0;
 	LocalToGlobal(&upperLeftPt);
@@ -142,13 +142,13 @@ void LocalToGlobalRect (Rect *theRect)
 void CenterRectInRect (Rect *rectA, Rect *rectB)
 {
 	short	widthA, tallA;
-	
+
 	widthA = RectWide(rectA);
 	tallA = RectTall(rectA);
-	
+
 	rectA->left = rectB->left + (RectWide(rectB) - widthA) / 2;
 	rectA->right = rectA->left + widthA;
-	
+
 	rectA->top = rectB->top + (RectTall(rectB) - tallA) / 2;
 	rectA->bottom = rectA->top + tallA;
 }
@@ -181,7 +181,7 @@ void VOffsetRect (Rect *theRect, short v)
 Boolean IsRectLeftOfRect (Rect *rect1, Rect *rect2)
 {
 	short		offset;
-	
+
 	offset = (rect1->right - rect1->left) - (rect2->right - rect2->left) / 2;
 	if ((rect1->left) < (rect2->left + offset))
 		return (true);
@@ -224,23 +224,23 @@ Boolean ForceRectInRect (Rect *small, Rect *large)
 {
 	SInt16		hOff, vOff;
 	Boolean		changed;
-	
+
 	changed = false;
-	
+
 	NormalizeRect(small);
-	
+
 	if ((small->bottom - small->top) > (large->bottom - large->top))
 	{
 		small->bottom = small->top + (large->bottom - large->top);
 		changed = true;
 	}
-	
+
 	if ((small->right - small->left) > (large->right - large->left))
 	{
 		small->right = small->left + (large->right - large->left);
 		changed = true;
 	}
-	
+
 	hOff = large->left - small->left;
 	if (hOff > 0)
 	{
@@ -265,7 +265,7 @@ Boolean ForceRectInRect (Rect *small, Rect *large)
 		OffsetRect(small, 0, vOff);
 		changed = true;
 	}
-	
+
 	return changed;
 }
 
@@ -280,17 +280,17 @@ void QUnionSimilarRect (Rect *rectA, Rect *rectB, Rect *rectC)
 		rectC->left = rectA->left;
 	else
 		rectC->left = rectB->left;
-	
+
 	if (rectA->top < rectB->top)
 		rectC->top = rectA->top;
 	else
 		rectC->top = rectB->top;
-	
+
 	if (rectA->right > rectB->right)
 		rectC->right = rectA->right;
 	else
 		rectC->right = rectB->right;
-	
+
 	if (rectA->bottom > rectB->bottom)
 		rectC->bottom = rectA->bottom;
 	else
@@ -305,13 +305,13 @@ void FrameRectSansCorners (Rect *theRect)
 {
 	MoveTo(theRect->left + 1, theRect->top);
 	LineTo(theRect->right - 2, theRect->top);
-	
+
 	MoveTo(theRect->right - 1, theRect->top + 1);
 	LineTo(theRect->right - 1, theRect->bottom - 2);
-	
+
 	MoveTo(theRect->left + 1, theRect->bottom - 1);
 	LineTo(theRect->right - 2, theRect->bottom - 1);
-	
+
 	MoveTo(theRect->left, theRect->top + 1);
 	LineTo(theRect->left, theRect->bottom - 2);
 }

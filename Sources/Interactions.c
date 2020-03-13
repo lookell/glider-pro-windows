@@ -56,15 +56,15 @@ Boolean GliderHitTop (gliderPtr thisGlider, Rect *theRect)
 	Rect		glideBounds;
 	short		offset;
 	Boolean		hitTop;
-	
+
 	glideBounds.left = thisGlider->dest.left + 5;
 	glideBounds.top = thisGlider->dest.top + 5;
 	glideBounds.right = thisGlider->dest.right - 5;
 	glideBounds.bottom = thisGlider->dest.bottom - 5;
-	
+
 	glideBounds.left -= thisGlider->wasHVel;
 	glideBounds.right -= thisGlider->wasHVel;
-	
+
 	if (theRect->bottom < glideBounds.top)
 		hitTop = false;
 	else if (theRect->top > glideBounds.bottom)
@@ -75,24 +75,24 @@ Boolean GliderHitTop (gliderPtr thisGlider, Rect *theRect)
 		hitTop = false;
 	else
 		hitTop = true;
-	
+
 	if (!hitTop)
 	{
 		PlayPrioritySound(kFoilHitSound, kFoilHitPriority);
 		foilTotal--;
 		if (foilTotal <= 0)
 			StartGliderFoilLosing(thisGlider);
-		
+
 		glideBounds.left += thisGlider->wasHVel;
 		glideBounds.right += thisGlider->wasHVel;
 		if (thisGlider->hVel > 0)
 			offset = 2 + glideBounds.right - theRect->left;
 		else
 			offset = 2 + glideBounds.left - theRect->right;
-		
+
 		thisGlider->hVel = -thisGlider->hVel - offset;
 	}
-	
+
 	return (hitTop);
 }
 
@@ -102,11 +102,11 @@ Boolean SectGlider (gliderPtr thisGlider, Rect *theRect, Boolean scrutinize)
 {
 	Rect		glideBounds;
 	Boolean		itHit;
-	
+
 	glideBounds = thisGlider->dest;
 	if (thisGlider->mode == kGliderBurning)
 		glideBounds.top += 6;
-	
+
 	if (scrutinize)
 	{
 		glideBounds.left += 5;
@@ -114,7 +114,7 @@ Boolean SectGlider (gliderPtr thisGlider, Rect *theRect, Boolean scrutinize)
 		glideBounds.right -= 5;
 		glideBounds.bottom -= 5;
 	}
-	
+
 	if (theRect->bottom < glideBounds.top)
 		itHit = false;
 	else if (theRect->top > glideBounds.bottom)
@@ -125,7 +125,7 @@ Boolean SectGlider (gliderPtr thisGlider, Rect *theRect, Boolean scrutinize)
 		itHit = false;
 	else
 		itHit = true;
-	
+
 	return (itHit);
 }
 
@@ -134,9 +134,9 @@ Boolean SectGlider (gliderPtr thisGlider, Rect *theRect, Boolean scrutinize)
 Boolean GliderInRect (gliderPtr thisGlider, Rect *theRect)
 {
 	Rect		glideBounds;
-	
+
 	glideBounds = thisGlider->dest;
-	
+
 	if (glideBounds.top < theRect->top)
 		return (false);
 	else if (glideBounds.bottom > theRect->bottom)
@@ -154,7 +154,7 @@ Boolean GliderInRect (gliderPtr thisGlider, Rect *theRect)
 void BounceGlider (gliderPtr thisGlider, Rect *theRect)
 {
 	Rect		glideBounds;
-	
+
 	glideBounds = thisGlider->dest;
 	if ((theRect->right - glideBounds.left) < (glideBounds.right - theRect->left))
 		thisGlider->hVel = theRect->right - glideBounds.left;
@@ -171,7 +171,7 @@ void BounceGlider (gliderPtr thisGlider, Rect *theRect)
 void CheckEscapeUpTwo (gliderPtr thisGlider)
 {
 	short		offset, leftTile, rightTile;
-	
+
 	if (topOpen)
 	{
 		if (thisGlider->dest.top < kNoCeilingLimit)
@@ -199,13 +199,13 @@ void CheckEscapeUpTwo (gliderPtr thisGlider)
 	{
 		leftTile = thisGlider->dest.left >> 6;		// ÷ 64
 		rightTile = thisGlider->dest.right >> 6;	// ÷ 64
-		
-		if ((leftTile >= 0) && (leftTile < 8) && 
+
+		if ((leftTile >= 0) && (leftTile < 8) &&
 				(rightTile >= 0) && (rightTile < 8))
 		{
-			if (((thisTiles[leftTile] == 5) || 
-					(thisTiles[leftTile] == 6)) && 
-					((thisTiles[rightTile] == 5) || 
+			if (((thisTiles[leftTile] == 5) ||
+					(thisTiles[leftTile] == 6)) &&
+					((thisTiles[rightTile] == 5) ||
 					(thisTiles[rightTile] == 6)))
 			{
 				if (thisGlider->dest.top < kNoCeilingLimit)
@@ -244,7 +244,7 @@ void CheckEscapeUpTwo (gliderPtr thisGlider)
 void CheckEscapeUp (gliderPtr thisGlider)
 {
 	short		leftTile, rightTile;
-	
+
 	if (topOpen)
 	{
 		if (thisGlider->dest.top < kNoCeilingLimit)
@@ -256,13 +256,13 @@ void CheckEscapeUp (gliderPtr thisGlider)
 	{
 		leftTile = thisGlider->dest.left >> 6;		// ÷ 64
 		rightTile = thisGlider->dest.right >> 6;	// ÷ 64
-		
-		if ((leftTile >= 0) && (leftTile < 8) && 
+
+		if ((leftTile >= 0) && (leftTile < 8) &&
 				(rightTile >= 0) && (rightTile < 8))
 		{
-			if (((thisTiles[leftTile] == 5) || 
-					(thisTiles[leftTile] == 6)) && 
-					((thisTiles[rightTile] == 5) || 
+			if (((thisTiles[leftTile] == 5) ||
+					(thisTiles[leftTile] == 6)) &&
+					((thisTiles[rightTile] == 5) ||
 					(thisTiles[rightTile] == 6)))
 			{
 				if (thisGlider->dest.top < kNoCeilingLimit)
@@ -283,7 +283,7 @@ void CheckEscapeUp (gliderPtr thisGlider)
 void CheckEscapeDownTwo (gliderPtr thisGlider)
 {
 	short		offset, leftTile, rightTile;
-	
+
 	if (bottomOpen)
 	{
 		if (thisGlider->dest.bottom > kNoFloorLimit)
@@ -311,13 +311,13 @@ void CheckEscapeDownTwo (gliderPtr thisGlider)
 	{
 		leftTile = thisGlider->dest.left >> 6;		// ÷ 64
 		rightTile = thisGlider->dest.right >> 6;	// ÷ 64
-		
-		if ((leftTile >= 0) && (leftTile < 8) && 
+
+		if ((leftTile >= 0) && (leftTile < 8) &&
 				(rightTile >= 0) && (rightTile < 8))
 		{
-			if (((thisTiles[leftTile] == 2) || 
-					(thisTiles[leftTile] == 3)) && 
-					((thisTiles[rightTile] == 2) || 
+			if (((thisTiles[leftTile] == 2) ||
+					(thisTiles[leftTile] == 3)) &&
+					((thisTiles[rightTile] == 2) ||
 					(thisTiles[rightTile] == 3)))
 			{
 				if (thisGlider->dest.bottom > kNoFloorLimit)
@@ -378,7 +378,7 @@ void CheckEscapeDownTwo (gliderPtr thisGlider)
 void CheckEscapeDown (gliderPtr thisGlider)
 {
 	short		leftTile, rightTile;
-	
+
 	if (bottomOpen)
 	{
 		if (thisGlider->dest.bottom > kNoFloorLimit)
@@ -390,10 +390,10 @@ void CheckEscapeDown (gliderPtr thisGlider)
 	{
 		leftTile = thisGlider->dest.left >> 6;		// ÷ 64
 		rightTile = thisGlider->dest.right >> 6;	// ÷ 64
-		
+
 		if ((leftTile >= 0) && (leftTile < 8) && (rightTile >= 0) && (rightTile < 8))
 		{
-			if (((thisTiles[leftTile] == 2) || (thisTiles[leftTile] == 3)) && 
+			if (((thisTiles[leftTile] == 2) || (thisTiles[leftTile] == 3)) &&
 					((thisTiles[rightTile] == 2) || (thisTiles[rightTile] == 3)))
 			{
 				if (thisGlider->dest.bottom > kNoFloorLimit)
@@ -450,14 +450,14 @@ void CheckEscapeDown (gliderPtr thisGlider)
 void CheckRoofCollision (gliderPtr thisGlider)
 {
 	short		offset, tileOver;
-	
+
 	offset = (thisGlider->dest.left + kHalfGliderWide) >> 6;	// ÷ 64
 	if ((offset >= 0) && (offset <= 7) && (!thisGlider->sliding))
 	{
 		tileOver = thisTiles[offset];
 		if (tileOver == 1)
 		{
-			if (((thisGlider->dest.left + kHalfGliderWide) - (offset << 6)) > 
+			if (((thisGlider->dest.left + kHalfGliderWide) - (offset << 6)) >
 					(250 - thisGlider->dest.bottom))
 			{
 				thisGlider->vVel = kFloorLimit - thisGlider->dest.bottom;
@@ -467,7 +467,7 @@ void CheckRoofCollision (gliderPtr thisGlider)
 		}
 		else if (tileOver == 2)
 		{
-			if (((thisGlider->dest.left + kHalfGliderWide) - (offset << 6)) > 
+			if (((thisGlider->dest.left + kHalfGliderWide) - (offset << 6)) >
 					(186 - thisGlider->dest.bottom))
 			{
 				thisGlider->vVel = kFloorLimit - thisGlider->dest.bottom;
@@ -477,7 +477,7 @@ void CheckRoofCollision (gliderPtr thisGlider)
 		}
 		else if (tileOver == 5)
 		{
-			if ((64 - ((thisGlider->dest.left + kHalfGliderWide) - (offset << 6))) > 
+			if ((64 - ((thisGlider->dest.left + kHalfGliderWide) - (offset << 6))) >
 					(186 - thisGlider->dest.bottom))
 			{
 				thisGlider->vVel = kFloorLimit - thisGlider->dest.bottom;
@@ -487,7 +487,7 @@ void CheckRoofCollision (gliderPtr thisGlider)
 		}
 		else if (tileOver == 6)
 		{
-			if ((64 - ((thisGlider->dest.left + kHalfGliderWide) - (offset << 6))) > 
+			if ((64 - ((thisGlider->dest.left + kHalfGliderWide) - (offset << 6))) >
 					(250 - thisGlider->dest.bottom))
 			{
 				thisGlider->vVel = kFloorLimit - thisGlider->dest.bottom;
@@ -509,7 +509,7 @@ void CheckRoofCollision (gliderPtr thisGlider)
 void CheckEscapeLeftTwo (gliderPtr thisGlider)
 {
 	short		offset;
-	
+
 	if (leftThresh == kLeftWallLimit)
 	{
 		if (thisGlider->ignoreLeft)
@@ -572,7 +572,7 @@ void CheckEscapeLeftTwo (gliderPtr thisGlider)
 void CheckEscapeLeft (gliderPtr thisGlider)
 {
 	short		offset;
-	
+
 	if (leftThresh == kLeftWallLimit)
 	{
 		if (thisGlider->ignoreLeft)
@@ -599,7 +599,7 @@ void CheckEscapeLeft (gliderPtr thisGlider)
 void CheckEscapeRightTwo (gliderPtr thisGlider)
 {
 	short		offset;
-	
+
 	if (rightThresh == kRightWallLimit)
 	{
 		if (thisGlider->ignoreRight)
@@ -662,7 +662,7 @@ void CheckEscapeRightTwo (gliderPtr thisGlider)
 void CheckEscapeRight (gliderPtr thisGlider)
 {
 	short		offset;
-	
+
 	if (rightThresh == kRightWallLimit)
 	{
 		if (thisGlider->ignoreRight)
@@ -688,9 +688,9 @@ void CheckEscapeRight (gliderPtr thisGlider)
 
 void CheckGliderInRoom (gliderPtr thisGlider)
 {
-	if ((thisGlider->mode == kGliderNormal) || 
-			(thisGlider->mode == kGliderFaceLeft) || 
-			(thisGlider->mode == kGliderFaceRight) || 
+	if ((thisGlider->mode == kGliderNormal) ||
+			(thisGlider->mode == kGliderFaceLeft) ||
+			(thisGlider->mode == kGliderFaceRight) ||
 			(thisGlider->mode == kGliderBurning))
 	{
 		if (thisGlider->dest.top < kCeilingLimit)
@@ -721,7 +721,7 @@ void CheckGliderInRoom (gliderPtr thisGlider)
 		}
 		else if ((thisBackground == kRoof) && (thisGlider->dest.bottom > kRoofLimit))
 			CheckRoofCollision(thisGlider);
-		
+
 		if (thisGlider->dest.left < leftThresh)
 		{
 			if (thisGlider->mode == kGliderBurning)
@@ -757,18 +757,18 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 {
 	Rect		bounds;
 	short		whoLinked, points;
-	
+
 	whoLinked = who->who;
 	bounds =  who->bounds;
-	
+
 	switch (masterObjects[whoLinked].theObject.what)
 	{
 		case kRedClock:
-		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum, 
+		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum,
 				0, whoLinked))
 		{
 			PlayPrioritySound(kBeepsSound, kBeepsPriority);
-			RestoreFromSavedMap(thisRoomNumber, 
+			RestoreFromSavedMap(thisRoomNumber,
 					masterObjects[whoLinked].objectNum, false);
 			AddFlyingPoint(&bounds, 100, thisGlider->hVel / 2, thisGlider->vVel / 2);
 			thisGlider->hVel /= 4;
@@ -778,13 +778,13 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 		}
 		who->isOn = false;
 		break;
-		
+
 		case kBlueClock:
-		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum, 
+		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum,
 				0, whoLinked))
 		{
 			PlayPrioritySound(kBuzzerSound, kBuzzerPriority);
-			RestoreFromSavedMap(thisRoomNumber, 
+			RestoreFromSavedMap(thisRoomNumber,
 					masterObjects[whoLinked].objectNum, false);
 			AddFlyingPoint(&bounds, 300, thisGlider->hVel / 2, thisGlider->vVel / 2);
 			thisGlider->hVel /= 4;
@@ -794,13 +794,13 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 		}
 		who->isOn = false;
 		break;
-		
+
 		case kYellowClock:
-		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum, 
+		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum,
 				0, whoLinked))
 		{
 			PlayPrioritySound(kDingSound, kDingPriority);
-			RestoreFromSavedMap(thisRoomNumber, 
+			RestoreFromSavedMap(thisRoomNumber,
 					masterObjects[whoLinked].objectNum, false);
 			AddFlyingPoint(&bounds, 500, thisGlider->hVel / 2, thisGlider->vVel / 2);
 			thisGlider->hVel /= 4;
@@ -810,13 +810,13 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 		}
 		who->isOn = false;
 		break;
-		
+
 		case kCuckoo:
-		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum, 
+		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum,
 				0, whoLinked))
 		{
 			PlayPrioritySound(kCuckooSound, kCuckooPriority);
-			RestoreFromSavedMap(thisRoomNumber, 
+			RestoreFromSavedMap(thisRoomNumber,
 					masterObjects[whoLinked].objectNum, false);
 			StopPendulum(thisRoomNumber, masterObjects[whoLinked].objectNum);
 			AddFlyingPoint(&bounds, 1000, thisGlider->hVel / 2, thisGlider->vVel / 2);
@@ -827,13 +827,13 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 		}
 		who->isOn = false;
 		break;
-		
+
 		case kPaper:
-		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum, 
+		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum,
 				0, whoLinked))
 		{
 			PlayPrioritySound(kEnergizeSound, kEnergizePriority);
-			RestoreFromSavedMap(thisRoomNumber, 
+			RestoreFromSavedMap(thisRoomNumber,
 					masterObjects[whoLinked].objectNum, false);
 			AddSparkle(&bounds);
 			thisGlider->hVel /= 2;
@@ -846,13 +846,13 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 		}
 		who->isOn = false;
 		break;
-		
+
 		case kBattery:
-		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum, 
+		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum,
 				0, whoLinked))
 		{
 			PlayPrioritySound(kEnergizeSound, kEnergizePriority);
-			RestoreFromSavedMap(thisRoomNumber, 
+			RestoreFromSavedMap(thisRoomNumber,
 					masterObjects[whoLinked].objectNum, false);
 			AddSparkle(&bounds);
 			thisGlider->hVel /= 2;
@@ -868,13 +868,13 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 		}
 		who->isOn = false;
 		break;
-		
+
 		case kBands:
-		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum, 
+		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum,
 				0, whoLinked))
 		{
 			PlayPrioritySound(kEnergizeSound, kEnergizePriority);
-			RestoreFromSavedMap(thisRoomNumber, 
+			RestoreFromSavedMap(thisRoomNumber,
 					masterObjects[whoLinked].objectNum, false);
 			AddSparkle(&bounds);
 			thisGlider->hVel /= 2;
@@ -887,22 +887,22 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 		}
 		who->isOn = false;
 		break;
-		
+
 		case kGreaseRt:
 		case kGreaseLf:
-		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum, 
+		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum,
 				0, whoLinked))
-			SpillGrease(masterObjects[whoLinked].dynaNum, 
+			SpillGrease(masterObjects[whoLinked].dynaNum,
 					masterObjects[whoLinked].hotNum);
 		who->isOn = false;
 		break;
-		
+
 		case kFoil:
-		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum, 
+		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum,
 				0, whoLinked))
 		{
 			PlayPrioritySound(kEnergizeSound, kEnergizePriority);
-			RestoreFromSavedMap(thisRoomNumber, 
+			RestoreFromSavedMap(thisRoomNumber,
 					masterObjects[whoLinked].objectNum, false);
 			AddSparkle(&bounds);
 			thisGlider->hVel /= 2;
@@ -915,10 +915,10 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 		}
 		who->isOn = false;
 		break;
-		
+
 		case kInvisBonus:
 		points = masterObjects[whoLinked].theObject.data.c.points;
-		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum, 
+		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum,
 				0, whoLinked))
 		{
 			PlayPrioritySound(kBonusSound, kBonusPriority);
@@ -929,13 +929,13 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 		}
 		who->isOn = false;
 		break;
-		
+
 		case kStar:
-		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum, 
+		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum,
 				0, whoLinked))
 		{
 			PlayPrioritySound(kEnergizeSound, kEnergizePriority);
-			RestoreFromSavedMap(thisRoomNumber, 
+			RestoreFromSavedMap(thisRoomNumber,
 					masterObjects[whoLinked].objectNum, false);
 			AddSparkle(&bounds);
 			StopStar(thisRoomNumber, masterObjects[whoLinked].objectNum);
@@ -949,16 +949,16 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 		}
 		who->isOn = false;
 		break;
-		
+
 		case kSparkle:
 		break;
-		
+
 		case kHelium:
-		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum, 
+		if (SetObjectState(thisRoomNumber, masterObjects[whoLinked].objectNum,
 				0, whoLinked))
 		{
 			PlayPrioritySound(kEnergizeSound, kEnergizePriority);
-			RestoreFromSavedMap(thisRoomNumber, 
+			RestoreFromSavedMap(thisRoomNumber,
 					masterObjects[whoLinked].objectNum, false);
 			AddSparkle(&bounds);
 			thisGlider->hVel /= 2;
@@ -974,7 +974,7 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 		}
 		who->isOn = false;
 		break;
-		
+
 		case kSlider:
 		break;
 	}
@@ -986,16 +986,16 @@ void HandleSwitches (hotPtr who)
 {
 	Rect		newRect, bounds;
 	short		whoLinked, roomLinked, objectLinked, linkIndex;
-	
+
 	if (who->stillOver)
 		return;
-	
+
 	whoLinked = who->who;					// what is switch's obj. #
 	roomLinked = masterObjects[whoLinked].roomLink;
 	objectLinked = masterObjects[whoLinked].objectLink;
 	linkIndex = masterObjects[whoLinked].localLink;
 											// change state of linked obj.
-	if (SetObjectState(roomLinked, objectLinked, 
+	if (SetObjectState(roomLinked, objectLinked,
 			masterObjects[whoLinked].theObject.data.e.type, linkIndex))
 	{
 		newRect = who->bounds;
@@ -1006,33 +1006,33 @@ void HandleSwitches (hotPtr who)
 			PlayPrioritySound(kSwitchSound, kSwitchPriority);
 			DrawLightSwitch(&newRect, newState);
 			break;
-			
+
 			case kMachineSwitch:
 			PlayPrioritySound(kSwitchSound, kSwitchPriority);
 			DrawMachineSwitch(&newRect, newState);
 			break;
-			
+
 			case kThermostat:
 			PlayPrioritySound(kSwitchSound, kSwitchPriority);
 			DrawThermostat(&newRect, newState);
 			break;
-			
+
 			case kPowerSwitch:
 			PlayPrioritySound(kSwitchSound, kSwitchPriority);
 			DrawPowerSwitch(&newRect, newState);
 			break;
-			
+
 			case kKnifeSwitch:
 			PlayPrioritySound(kSwitchSound, kSwitchPriority);
 			DrawKnifeSwitch(&newRect, newState);
 			break;
-			
+
 			case kInvisSwitch:
 			break;
 		}
 		CopyRectBackToWork(&newRect);
 		AddRectToWorkRects(&newRect);
-		
+
 		if (linkIndex != -1)
 		{
 			switch (masterObjects[linkIndex].theObject.what)
@@ -1049,29 +1049,29 @@ void HandleSwitches (hotPtr who)
 				RestoreFromSavedMap(roomLinked, objectLinked, true);
 				AddSparkle(&bounds);
 				break;
-				
+
 				case kCuckoo:
 				RestoreFromSavedMap(roomLinked, objectLinked, true);
 				StopPendulum(roomLinked, objectLinked);
 				break;
-				
+
 				case kGreaseRt:
 				case kGreaseLf:
-				SpillGrease(masterObjects[linkIndex].dynaNum, 
+				SpillGrease(masterObjects[linkIndex].dynaNum,
 						masterObjects[linkIndex].hotNum);
 				break;
-				
+
 				case kInvisBonus:
 				case kSlider:
 				break;
-				
+
 				case kDeluxeTrans:
 				break;
-				
+
 				case kSoundTrigger:
 				PlayPrioritySound(kTriggerSound, kTriggerPriority);
 				break;
-				
+
 				case kCeilingLight:
 				case kLightBulb:
 				case kTableLamp:
@@ -1082,75 +1082,75 @@ void HandleSwitches (hotPtr who)
 				case kInvisLight:
 				RedrawRoomLighting();
 				break;
-				
+
 				case kShredder:
 				break;
-				
+
 				case kToaster:
 				ToggleToaster(masterObjects[linkIndex].dynaNum);
 				break;
-				
+
 				case kMacPlus:
 				ToggleMacPlus(masterObjects[linkIndex].dynaNum);
 				break;
-				
+
 				case kGuitar:
 				PlayPrioritySound(kChordSound, kChordPriority);
 				break;
-				
+
 				case kTV:
 				ToggleTV(masterObjects[linkIndex].dynaNum);
 				break;
-				
+
 				case kCoffee:
 				ToggleCoffee(masterObjects[linkIndex].dynaNum);
 				break;
-				
+
 				case kOutlet:
 				ToggleOutlet(masterObjects[linkIndex].dynaNum);
 				break;
-				
+
 				case kVCR:
 				ToggleVCR(masterObjects[linkIndex].dynaNum);
 				break;
-				
+
 				case kStereo:
 				ToggleStereos(masterObjects[linkIndex].dynaNum);
 				break;
-				
+
 				case kMicrowave:
 				ToggleMicrowave(masterObjects[linkIndex].dynaNum);
 				break;
-				
+
 				case kBalloon:
 				ToggleBalloon(masterObjects[linkIndex].dynaNum);
 				break;
-				
+
 				case kCopterLf:
 				case kCopterRt:
 				ToggleCopter(masterObjects[linkIndex].dynaNum);
 				break;
-				
+
 				case kDartLf:
 				case kDartRt:
 				ToggleDart(masterObjects[linkIndex].dynaNum);
 				break;
-				
+
 				case kBall:
 				ToggleBall(masterObjects[linkIndex].dynaNum);
 				break;
-				
+
 				case kDrip:
 				ToggleDrip(masterObjects[linkIndex].dynaNum);
 				break;
-				
+
 				case kFish:
 				ToggleFish(masterObjects[linkIndex].dynaNum);
 				break;
 			}
 		}
 	}
-	
+
 	who->stillOver = true;
 }
 
@@ -1160,10 +1160,10 @@ void HandleMicrowaveAction (hotPtr who, gliderPtr thisGlider)
 {
 	short		whoLinked, kills;
 	Boolean		killed;
-	
+
 	if (who->stillOver)
 		return;
-	
+
 	killed = false;
 	whoLinked = who->who;					// what is microwave's obj. #
 	if (masterObjects[whoLinked].theObject.data.g.state)
@@ -1188,7 +1188,7 @@ void HandleMicrowaveAction (hotPtr who, gliderPtr thisGlider)
 			StartGliderFoilLosing(thisGlider);
 		}
 	}
-	
+
 	if (killed)
 		PlayPrioritySound(kMicrowavedSound, kMicrowavedPriority);
 }
@@ -1202,19 +1202,19 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 		case kLiftIt:
 		thisGlider->vDesiredVel = kFloorVentLift;
 		break;
-		
+
 		case kDropIt:
 		thisGlider->vDesiredVel = kCeilingVentDrop;
 		break;
-		
+
 		case kPushItLeft:
 		thisGlider->hDesiredVel += -kFanStrength;
 		break;
-		
+
 		case kPushItRight:
 		thisGlider->hDesiredVel += kFanStrength;
 		break;
-		
+
 		case kDissolveIt:
 		if (thisGlider->mode != kGliderFadingOut)
 		{
@@ -1242,11 +1242,11 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 			}
 		}
 		break;
-		
+
 		case kRewardIt:
 		HandleRewards(thisGlider, who);
 		break;
-		
+
 		case kMoveItUp:
 		if (!thisGlider->heldRight && GliderInRect(thisGlider, &who->bounds))
 		{
@@ -1260,7 +1260,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 			{
 				if (otherPlayerEscaped == kNoOneEscaped)
 				{
-					if ((thisGlider->mode != kGliderGoingUp) && 
+					if ((thisGlider->mode != kGliderGoingUp) &&
 							(thisGlider->mode != kGliderInLimbo))
 					{
 						otherPlayerEscaped = kPlayerEscapingUpStairs;
@@ -1270,7 +1270,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 				}
 				else if (otherPlayerEscaped == kPlayerEscapedUpStairs)
 				{
-					if ((thisGlider->mode != kGliderGoingUp) && 
+					if ((thisGlider->mode != kGliderGoingUp) &&
 							(thisGlider->mode != kGliderInLimbo))
 					{
 						StartGliderGoingUpStairs(thisGlider);
@@ -1281,7 +1281,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 				StartGliderGoingUpStairs(thisGlider);
 		}
 		break;
-		
+
 		case kMoveItDown:
 		if (!thisGlider->heldLeft && GliderInRect(thisGlider, &who->bounds))
 		{
@@ -1295,7 +1295,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 			{
 				if (otherPlayerEscaped == kNoOneEscaped)
 				{
-					if ((thisGlider->mode != kGliderGoingDown) && 
+					if ((thisGlider->mode != kGliderGoingDown) &&
 							(thisGlider->mode != kGliderInLimbo))
 					{
 						otherPlayerEscaped = kPlayerEscapingDownStairs;
@@ -1305,7 +1305,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 				}
 				else if (otherPlayerEscaped == kPlayerEscapedDownStairs)
 				{
-					if ((thisGlider->mode != kGliderGoingDown) && 
+					if ((thisGlider->mode != kGliderGoingDown) &&
 							(thisGlider->mode != kGliderInLimbo))
 					{
 						StartGliderGoingDownStairs(thisGlider);
@@ -1316,13 +1316,13 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 				StartGliderGoingDownStairs(thisGlider);
 		}
 		break;
-		
+
 		case kSwitchIt:
 		HandleSwitches(who);
 		break;
-		
+
 		case kShredIt:
-		if ((thisGlider->mode != kGliderShredding) && 
+		if ((thisGlider->mode != kGliderShredding) &&
 				(GliderInRect(thisGlider, &who->bounds)))
 		{
 			if ((foilTotal > 0) || (thisGlider->mode == kGliderLosingFoil))
@@ -1339,7 +1339,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 				FlagGliderShredding(thisGlider, &who->bounds);
 		}
 		break;
-		
+
 		case kStrumIt:
 		if (!who->stillOver)
 		{
@@ -1347,14 +1347,14 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 			who->stillOver = true;
 		}
 		break;
-		
+
 		case kTriggerIt:
 		case kLgTrigger:
 		ArmTrigger(who);
 		break;
-		
+
 		case kBurnIt:
-		if ((thisGlider->mode != kGliderBurning) && 
+		if ((thisGlider->mode != kGliderBurning) &&
 				(thisGlider->mode != kGliderFadingOut))
 		{
 			if ((foilTotal > 0) || (thisGlider->mode == kGliderLosingFoil))
@@ -1372,12 +1372,12 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 				FlagGliderBurning(thisGlider);
 		}
 		break;
-		
+
 		case kSlideIt:
 		thisGlider->sliding = true;
 		thisGlider->vVel = who->bounds.top - thisGlider->dest.bottom;
 		break;
-		
+
 		case kTransportIt:
 		if (thisGlider->mode == kGliderBurning)
 		{
@@ -1385,8 +1385,8 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 			StartGliderFadingOut(thisGlider);
 			PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 		}
-		else if ((GliderInRect(thisGlider, &who->bounds)) && 
-				(thisGlider->mode != kGliderTransporting) && 
+		else if ((GliderInRect(thisGlider, &who->bounds)) &&
+				(thisGlider->mode != kGliderTransporting) &&
 				(thisGlider->mode != kGliderFadingOut))
 		{
 			if ((twoPlayerGame) && (!onePlayerLeft))
@@ -1401,7 +1401,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 				}
 				else if (otherPlayerEscaped == kPlayerTransportedOut)
 				{
-					if ((thisGlider->mode != kGliderInLimbo) && 
+					if ((thisGlider->mode != kGliderInLimbo) &&
 							(activeRectEscaped == index))
 					{
 						StartGliderTransporting(thisGlider, who);
@@ -1412,15 +1412,15 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 				StartGliderTransporting(thisGlider, who);
 		}
 		break;
-		
+
 		case kIgnoreLeftWall:
 		thisGlider->ignoreLeft = true;
 		break;
-		
+
 		case kIgnoreRightWall:
 		thisGlider->ignoreRight = true;
 		break;
-		
+
 		case kMailItLeft:									// mailbox open to right
 		if (thisGlider->mode == kGliderBurning)
 		{
@@ -1428,11 +1428,11 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 			StartGliderFadingOut(thisGlider);
 			PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 		}
-		else if ((GliderInRect(thisGlider, &who->bounds)) && 
-				(thisGlider->mode != kGliderMailOutRight) && 
-				(thisGlider->mode != kGliderMailInLeft) && 
-				(thisGlider->mode != kGliderFadingOut) && 
-				(((thisGlider->facing == kFaceRight) && (!thisGlider->tipped)) || 
+		else if ((GliderInRect(thisGlider, &who->bounds)) &&
+				(thisGlider->mode != kGliderMailOutRight) &&
+				(thisGlider->mode != kGliderMailInLeft) &&
+				(thisGlider->mode != kGliderFadingOut) &&
+				(((thisGlider->facing == kFaceRight) && (!thisGlider->tipped)) ||
 				((thisGlider->facing == kFaceLeft) && (thisGlider->tipped))))
 		{
 			if ((twoPlayerGame) && (!onePlayerLeft))		// two gliders to handle
@@ -1448,7 +1448,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 				}
 				else if (otherPlayerEscaped == kPlayerMailedOut)
 				{											// other glider left here
-					if ((thisGlider->mode != kGliderInLimbo) && 
+					if ((thisGlider->mode != kGliderInLimbo) &&
 							(activeRectEscaped == index))
 					{										// []_ <--G
 						StartGliderMailingIn(thisGlider, &who->bounds, who);
@@ -1463,7 +1463,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 			}
 		}
 		break;
-		
+
 		case kMailItRight:									// mailbox open to left
 		if (thisGlider->mode == kGliderBurning)
 		{
@@ -1471,11 +1471,11 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 			StartGliderFadingOut(thisGlider);
 			PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 		}
-		else if ((GliderInRect(thisGlider, &who->bounds)) && 
-				(thisGlider->mode != kGliderMailOutLeft) && 
-				(thisGlider->mode != kGliderMailInRight) && 
-				(thisGlider->mode != kGliderFadingOut) && 
-				(((thisGlider->facing == kFaceRight) && (thisGlider->tipped)) || 
+		else if ((GliderInRect(thisGlider, &who->bounds)) &&
+				(thisGlider->mode != kGliderMailOutLeft) &&
+				(thisGlider->mode != kGliderMailInRight) &&
+				(thisGlider->mode != kGliderFadingOut) &&
+				(((thisGlider->facing == kFaceRight) && (thisGlider->tipped)) ||
 				((thisGlider->facing == kFaceLeft) && (!thisGlider->tipped))))
 		{
 			if ((twoPlayerGame) && (!onePlayerLeft))
@@ -1491,7 +1491,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 				}
 				else if (otherPlayerEscaped == kPlayerMailedOut)
 				{
-					if ((thisGlider->mode != kGliderInLimbo) && 
+					if ((thisGlider->mode != kGliderInLimbo) &&
 							(activeRectEscaped == index))
 					{
 						StartGliderMailingIn(thisGlider, &who->bounds, who);
@@ -1506,7 +1506,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 			}
 		}
 		break;
-		
+
 		case kDuctItDown:
 		if (thisGlider->mode == kGliderBurning)
 		{
@@ -1514,8 +1514,8 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 			StartGliderFadingOut(thisGlider);
 			PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 		}
-		else if ((GliderInRect(thisGlider, &who->bounds)) && 
-				(thisGlider->mode != kGliderDuctingDown) && 
+		else if ((GliderInRect(thisGlider, &who->bounds)) &&
+				(thisGlider->mode != kGliderDuctingDown) &&
 				(thisGlider->mode != kGliderFadingOut))
 		{
 			if ((twoPlayerGame) && (!onePlayerLeft))
@@ -1530,7 +1530,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 				}
 				else if (otherPlayerEscaped == kPlayerDuckedOut)
 				{
-					if ((thisGlider->mode != kGliderInLimbo) && 
+					if ((thisGlider->mode != kGliderInLimbo) &&
 							(activeRectEscaped == index))
 						StartGliderDuctingDown(thisGlider, &who->bounds, who);
 				}
@@ -1539,7 +1539,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 				StartGliderDuctingDown(thisGlider, &who->bounds, who);
 		}
 		break;
-		
+
 		case kDuctItUp:
 		if (thisGlider->mode == kGliderBurning)
 		{
@@ -1547,10 +1547,10 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 			StartGliderFadingOut(thisGlider);
 			PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 		}
-		else if ((GliderInRect(thisGlider, &who->bounds)) && 
-				(thisGlider->mode != kGliderDuctingUp) && 
-				(thisGlider->mode != kGliderDuctingIn) && 
-				(thisGlider->mode != kGliderFadingOut) && 
+		else if ((GliderInRect(thisGlider, &who->bounds)) &&
+				(thisGlider->mode != kGliderDuctingUp) &&
+				(thisGlider->mode != kGliderDuctingIn) &&
+				(thisGlider->mode != kGliderFadingOut) &&
 				(!who->stillOver))
 		{
 			if ((twoPlayerGame) && (!onePlayerLeft))
@@ -1565,7 +1565,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 				}
 				else if (otherPlayerEscaped == kPlayerDuckedOut)
 				{
-					if ((thisGlider->mode != kGliderInLimbo) && 
+					if ((thisGlider->mode != kGliderInLimbo) &&
 							(activeRectEscaped == index))
 						StartGliderDuctingUp(thisGlider, &who->bounds, who);
 				}
@@ -1577,20 +1577,20 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 			}
 		}
 		break;
-		
+
 		case kMicrowaveIt:
 		if (GliderInRect(thisGlider, &who->bounds))
 			HandleMicrowaveAction(who, thisGlider);
 		break;
-		
+
 		case kIgnoreGround:
 		thisGlider->ignoreGround = true;
 		break;
-		
+
 		case kBounceIt:
 		BounceGlider(thisGlider, &who->bounds);
 		break;
-		
+
 		case kChimeIt:
 		if (!who->stillOver)
 		{
@@ -1598,12 +1598,12 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 			who->stillOver = true;
 		}
 		break;
-		
+
 		case kWebIt:
-		if ((GliderInRect(thisGlider, &who->bounds)) && 
+		if ((GliderInRect(thisGlider, &who->bounds)) &&
 				(thisGlider->mode != kGliderBurning))
 			WebGlider(thisGlider, &who->bounds);
-		else if ((thisGlider->mode == kGliderBurning) && 
+		else if ((thisGlider->mode == kGliderBurning) &&
 				(GliderInRect(thisGlider, &who->bounds)))
 		{
 			thisGlider->wasMode = 0;
@@ -1611,7 +1611,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 			PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 		}
 		break;
-		
+
 		case kSoundIt:
 		if (!who->stillOver)
 		{
@@ -1628,7 +1628,7 @@ void CheckForHotSpots (void)
 {
 	short		i;
 	Boolean		hitObject;
-	
+
 	for (i = 0; i < nHotSpots; i++)
 	{
 		if (hotSpots[i].isOn)
@@ -1636,7 +1636,7 @@ void CheckForHotSpots (void)
 			if (twoPlayerGame)
 			{
 				hitObject = false;
-				if (SectGlider(&theGlider, &hotSpots[i].bounds, 
+				if (SectGlider(&theGlider, &hotSpots[i].bounds,
 						hotSpots[i].doScrutinize))
 				{
 					if (onePlayerLeft)
@@ -1653,8 +1653,8 @@ void CheckForHotSpots (void)
 						hitObject = true;
 					}
 				}
-				
-				if (SectGlider(&theGlider2, &hotSpots[i].bounds, 
+
+				if (SectGlider(&theGlider2, &hotSpots[i].bounds,
 						hotSpots[i].doScrutinize))
 				{
 					if (onePlayerLeft)
@@ -1676,7 +1676,7 @@ void CheckForHotSpots (void)
 			}
 			else
 			{
-				if (SectGlider(&theGlider, &hotSpots[i].bounds, 
+				if (SectGlider(&theGlider, &hotSpots[i].bounds,
 						hotSpots[i].doScrutinize))
 					HandleHotSpotCollision(&theGlider, &hotSpots[i], i);
 				else
@@ -1715,12 +1715,12 @@ void HandleInteraction (void)
 void FlagStillOvers (gliderPtr thisGlider)
 {
 	short		i;
-	
+
 	for (i = 0; i < nHotSpots; i++)
 	{
 		if (hotSpots[i].isOn)
 		{
-			if (SectGlider(thisGlider, &hotSpots[i].bounds, 
+			if (SectGlider(thisGlider, &hotSpots[i].bounds,
 					hotSpots[i].doScrutinize))
 				hotSpots[i].stillOver = true;
 			else
@@ -1737,7 +1737,7 @@ void WebGlider (gliderPtr thisGlider, Rect *webBounds)
 {
 	#define		kKillWebbedGlider	150
 	short		hDist, vDist;
-	
+
 	if ((thisGlider->mode == kGliderBurning) && (GliderInRect(thisGlider, webBounds)))
 	{
 		thisGlider->wasMode = 0;
@@ -1745,12 +1745,12 @@ void WebGlider (gliderPtr thisGlider, Rect *webBounds)
 		PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 		return;
 	}
-	
-	hDist = ((webBounds->right - thisGlider->dest.right) + 
+
+	hDist = ((webBounds->right - thisGlider->dest.right) +
 			(webBounds->left - thisGlider->dest.left)) >> 3;
-	vDist = ((webBounds->bottom - thisGlider->dest.bottom) + 
+	vDist = ((webBounds->bottom - thisGlider->dest.bottom) +
 			(webBounds->top - thisGlider->dest.top)) >> 3;
-	
+
 	if (thisGlider->hDesiredVel != 0)
 	{
 		if (evenFrame)
@@ -1765,7 +1765,7 @@ void WebGlider (gliderPtr thisGlider, Rect *webBounds)
 		thisGlider->hDesiredVel = 0;
 		thisGlider->vDesiredVel = 0;
 	}
-	
+
 	thisGlider->wasMode++;
 	if (thisGlider->wasMode >= kKillWebbedGlider)
 	{

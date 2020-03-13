@@ -63,14 +63,14 @@ void UpdateCoordWindow (void)
 #ifndef COMPILEDEMO
 	Str255		tempStr, numStr;
 	GrafPtr		wasPort;
-	
+
 	if (coordWindow == nil)
 		return;
-	
+
 	GetPort(&wasPort);
 	SetPort((GrafPtr)coordWindow);
 	EraseRect(&coordWindowRect);
-	
+
 	PasStringCopy("\ph: ", tempStr);
 	if (coordH != -1)
 	{
@@ -81,7 +81,7 @@ void UpdateCoordWindow (void)
 		PasStringConcat(tempStr, "\p-");
 	MoveTo(5, 12);
 	DrawString(tempStr);
-	
+
 	PasStringCopy("\pv: ", tempStr);
 	if (coordV != -1)
 	{
@@ -92,7 +92,7 @@ void UpdateCoordWindow (void)
 		PasStringConcat(tempStr, "\p-");
 	MoveTo(4, 22);
 	DrawString(tempStr);
-	
+
 	ForeColor(blueColor);
 	PasStringCopy("\pd: ", tempStr);
 	if (coordD != -1)
@@ -105,7 +105,7 @@ void UpdateCoordWindow (void)
 	MoveTo(5, 32);
 	DrawString(tempStr);
 	ForeColor(blackColor);
-	
+
 	SetPort((GrafPtr)wasPort);
 #endif
 }
@@ -119,20 +119,20 @@ void OpenCoordWindow (void)
 	Rect		src, dest;
 	Point		globalMouse;
 	short		direction, dist;
-	
+
 	if (coordWindow == nil)
 	{
 		QSetRect(&coordWindowRect, 0, 0, 50, 38);
 		if (thisMac.hasColor)
-			coordWindow = NewCWindow(nil, &coordWindowRect, 
+			coordWindow = NewCWindow(nil, &coordWindowRect,
 					"\pTools", false, kWindoidWDEF, kPutInFront, true, 0L);
 		else
-			coordWindow = NewWindow(nil, &coordWindowRect, 
+			coordWindow = NewWindow(nil, &coordWindowRect,
 					"\pTools", false, kWindoidWDEF, kPutInFront, true, 0L);
-		
+
 		if (coordWindow == nil)
 			RedAlert(kErrNoMemory);
-		
+
 //		if (OptionKeyDown())
 //		{
 //			isCoordH = qd.screenBits.bounds.right - 55;
@@ -147,13 +147,13 @@ void OpenCoordWindow (void)
 		ShowHide(coordWindow, true);
 //		FlagWindowFloating(coordWindow);	TEMP - use flaoting windows
 		HiliteAllWindows();
-		
+
 		coordH = -1;
 		coordV = -1;
 		coordD = -1;
 		TextFace(applFont);
 		TextSize(9);
-		
+
 		if (objActive != kNoObjectSelected)
 		{
 			if (ObjectHasHandle(&direction, &dist))
@@ -161,7 +161,7 @@ void OpenCoordWindow (void)
 			SetCoordinateHVD(theMarquee.bounds.left, theMarquee.bounds.top, coordD);
 		}
 	}
-	
+
 	UpdateCoordinateCheckmark(true);
 #endif
 }

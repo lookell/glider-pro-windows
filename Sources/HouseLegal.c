@@ -46,12 +46,12 @@ Boolean KeepObjectLegal (void)
 	short		direction, dist;
 	char		wasState;
 	Boolean		unchanged;
-	
+
 	unchanged = true;
 #ifndef COMPILEDEMO
-	
+
 	theObject = &thisRoom->objects[objActive];
-	
+
 	if (objActive == kInitialGliderSelected)
 	{
 		wasState = HGetState((Handle)thisHouse);
@@ -67,9 +67,9 @@ Boolean KeepObjectLegal (void)
 		HSetState((Handle)thisHouse, wasState);
 		return (true);
 	}
-	
+
 	QSetRect(&roomRect, 0, 0, kRoomWide, kTileHigh);
-	
+
 	switch (theObject->what)
 	{
 		case kFloorVent:
@@ -105,8 +105,8 @@ Boolean KeepObjectLegal (void)
 			theObject->data.a.topLeft.h--;
 			unchanged = false;
 		}
-		if (((theObject->what == kTaper) || (theObject->what == kCandle) || 
-				(theObject->what == kTiki) || (theObject->what == kBBQ)) && 
+		if (((theObject->what == kTaper) || (theObject->what == kCandle) ||
+				(theObject->what == kTiki) || (theObject->what == kBBQ)) &&
 				(theObject->data.a.topLeft.h % 2 != 0))
 		{
 			theObject->data.a.topLeft.h--;
@@ -117,19 +117,19 @@ Boolean KeepObjectLegal (void)
 			theObject->data.a.topLeft.v = kFloorVentTop;
 			theObject->data.a.distance += 2;
 		}
-		if ((theObject->what == kFloorBlower) && 
+		if ((theObject->what == kFloorBlower) &&
 				(theObject->data.a.topLeft.v != kFloorBlowerTop))
 		{
 			theObject->data.a.topLeft.v = kFloorBlowerTop;
 			theObject->data.a.distance += 2;
 		}
-		if ((theObject->what == kSewerGrate) && 
+		if ((theObject->what == kSewerGrate) &&
 				(theObject->data.a.topLeft.v != kSewerGrateTop))
 		{
 			theObject->data.a.topLeft.v = kSewerGrateTop;
 			theObject->data.a.distance += 2;
 		}
-		if ((theObject->what == kFloorTrans) && 
+		if ((theObject->what == kFloorTrans) &&
 				(theObject->data.a.topLeft.v != kFloorTransTop))
 		{
 			theObject->data.a.topLeft.v = kFloorTransTop;
@@ -141,7 +141,7 @@ Boolean KeepObjectLegal (void)
 			{
 				case kAbove:
 				dist = bounds.top - dist;
-				if ((theObject->what == kFloorVent) || 
+				if ((theObject->what == kFloorVent) ||
 						(theObject->what == kFloorBlower) ||
 						(theObject->what == kTaper) ||
 						(theObject->what == kCandle) ||
@@ -162,7 +162,7 @@ Boolean KeepObjectLegal (void)
 					}
 				}
 				break;
-				
+
 				case kToRight:
 				dist = bounds.right + dist;
 				if (dist > kRoomWide)
@@ -171,7 +171,7 @@ Boolean KeepObjectLegal (void)
 					unchanged = false;
 				}
 				break;
-				
+
 				case kBelow:
 				dist = bounds.bottom + dist;
 				if (dist > kTileHigh)
@@ -180,7 +180,7 @@ Boolean KeepObjectLegal (void)
 					unchanged = false;
 				}
 				break;
-				
+
 				case kToLeft:
 				dist = bounds.left - dist;
 				if (dist < 0)
@@ -192,7 +192,7 @@ Boolean KeepObjectLegal (void)
 			}
 		}
 		break;
-		
+
 		case kTable:
 		case kShelf:
 		case kCabinet:
@@ -214,18 +214,18 @@ Boolean KeepObjectLegal (void)
 			theObject->data.b.bounds = bounds;
 			unchanged = false;
 		}
-		if ((theObject->what == kManhole) && 
+		if ((theObject->what == kManhole) &&
 				(((bounds.left - 3) % 64) != 0))
 		{
-			theObject->data.b.bounds.left = 
+			theObject->data.b.bounds.left =
 					(((bounds.left + 29) / 64) * 64) + 3;
-			theObject->data.b.bounds.right = 
-					theObject->data.b.bounds.left + 
+			theObject->data.b.bounds.right =
+					theObject->data.b.bounds.left +
 					RectWide(&srcRects[kManhole]);
 			unchanged = false;
 		}
 		break;
-		
+
 		case kRedClock:
 		case kBlueClock:
 		case kYellowClock:
@@ -248,19 +248,19 @@ Boolean KeepObjectLegal (void)
 			theObject->data.c.topLeft.v = bounds.top;
 			unchanged = false;
 		}
-		if ((theObject->what == kGreaseRt) && 
+		if ((theObject->what == kGreaseRt) &&
 				(bounds.right + theObject->data.c.length > kRoomWide))
 		{
 			theObject->data.c.length = kRoomWide - bounds.right;
 			unchanged = false;
 		}
-		else if ((theObject->what == kGreaseLf) && 
+		else if ((theObject->what == kGreaseLf) &&
 				(bounds.left - theObject->data.c.length < 0))
 		{
 			theObject->data.c.length = bounds.left;
 			unchanged = false;
 		}
-		else if ((theObject->what == kSlider) && 
+		else if ((theObject->what == kSlider) &&
 				(bounds.left + theObject->data.c.length > kRoomWide))
 		{
 			theObject->data.c.length = kRoomWide - bounds.left;
@@ -271,14 +271,14 @@ Boolean KeepObjectLegal (void)
 			theObject->data.c.topLeft.h--;
 			unchanged = false;
 		}
-		if ((theObject->what != kStar) && 
+		if ((theObject->what != kStar) &&
 				(theObject->data.c.length % 2 != 0))
 		{
 			theObject->data.c.length--;
 			unchanged = false;
 		}
 		break;
-		
+
 		case kUpStairs:
 		case kDownStairs:
 		case kMailboxLf:
@@ -303,14 +303,14 @@ Boolean KeepObjectLegal (void)
 			unchanged = false;
 			if (theObject->what == kDeluxeTrans)
 			{
-				theObject->data.d.tall = ((RectWide(&bounds) / 4) << 8) + 
+				theObject->data.d.tall = ((RectWide(&bounds) / 4) << 8) +
 						(RectTall(&bounds) / 4);
 			}
 		}
-		if ((theObject->what == kDoorInLf) || 
+		if ((theObject->what == kDoorInLf) ||
 				(theObject->what == kDoorInRt))
 		{
-			if (theObject->data.d.topLeft.h + 
+			if (theObject->data.d.topLeft.h +
 					HalfRectWide(&srcRects[kDoorInLf]) > (kRoomWide / 2))
 			{
 				theObject->data.d.topLeft.h = kDoorInRtLeft;
@@ -322,10 +322,10 @@ Boolean KeepObjectLegal (void)
 				theObject->what = kDoorInLf;
 			}
 		}
-		if ((theObject->what == kDoorExRt) || 
+		if ((theObject->what == kDoorExRt) ||
 				(theObject->what == kDoorExLf))
 		{
-			if (theObject->data.d.topLeft.h + 
+			if (theObject->data.d.topLeft.h +
 					HalfRectWide(&srcRects[kDoorExRt]) > (kRoomWide / 2))
 			{
 				theObject->data.d.topLeft.h = kDoorExRtLeft;
@@ -337,10 +337,10 @@ Boolean KeepObjectLegal (void)
 				theObject->what = kDoorExLf;
 			}
 		}
-		if ((theObject->what == kWindowInLf) || 
+		if ((theObject->what == kWindowInLf) ||
 				(theObject->what == kWindowInRt))
 		{
-			if (theObject->data.d.topLeft.h + 
+			if (theObject->data.d.topLeft.h +
 					HalfRectWide(&srcRects[kWindowInLf]) > (kRoomWide / 2))
 			{
 				theObject->data.d.topLeft.h = kWindowInRtLeft;
@@ -352,10 +352,10 @@ Boolean KeepObjectLegal (void)
 				theObject->what = kWindowInLf;
 			}
 		}
-		if ((theObject->what == kWindowExRt) || 
+		if ((theObject->what == kWindowExRt) ||
 				(theObject->what == kWindowExLf))
 		{
-			if (theObject->data.d.topLeft.h + 
+			if (theObject->data.d.topLeft.h +
 					HalfRectWide(&srcRects[kWindowExRt]) > (kRoomWide / 2))
 			{
 				theObject->data.d.topLeft.h = kWindowExRtLeft;
@@ -367,23 +367,23 @@ Boolean KeepObjectLegal (void)
 				theObject->what = kWindowExLf;
 			}
 		}
-		
-		if ((theObject->what == kInvisTrans) && 
-				((theObject->data.d.topLeft.v + 
+
+		if ((theObject->what == kInvisTrans) &&
+				((theObject->data.d.topLeft.v +
 				theObject->data.d.tall) > kTileHigh))
 		{
-			theObject->data.d.tall = kTileHigh - 
+			theObject->data.d.tall = kTileHigh -
 				theObject->data.d.topLeft.v;
 			unchanged = false;
 		}
-		if ((theObject->what == kInvisTrans) && 
+		if ((theObject->what == kInvisTrans) &&
 				(theObject->data.d.wide < 0))
 		{
 			theObject->data.d.wide = 0;
 			unchanged = false;
 		}
 		break;
-		
+
 		case kLightSwitch:
 		case kMachineSwitch:
 		case kThermostat:
@@ -406,7 +406,7 @@ Boolean KeepObjectLegal (void)
 			unchanged = false;
 		}
 		break;
-		
+
 		case kCeilingLight:
 		case kLightBulb:
 		case kTableLamp:
@@ -422,10 +422,10 @@ Boolean KeepObjectLegal (void)
 			{
 				if (theObject->data.f.topLeft.h < bounds.left)
 					theObject->data.f.topLeft.h = bounds.left;
-				
+
 				if (theObject->data.f.topLeft.v < bounds.top)
 					theObject->data.f.topLeft.v = bounds.top;
-				
+
 				if ((theObject->data.f.topLeft.h + theObject->data.f.length) > bounds.right)
 					theObject->data.f.length = bounds.right - theObject->data.f.topLeft.h;
 			}
@@ -436,8 +436,8 @@ Boolean KeepObjectLegal (void)
 			}
 			unchanged = false;
 		}
-		if (((theObject->what == kFlourescent) || 
-				(theObject->what == kTrackLight)) && 
+		if (((theObject->what == kFlourescent) ||
+				(theObject->what == kTrackLight)) &&
 				((bounds.right > kRoomWide) || (bounds.left < 0)))
 		{
 			if (theObject->data.f.topLeft.h < 0)
@@ -463,7 +463,7 @@ Boolean KeepObjectLegal (void)
 			theObject->data.f.length = kRoomWide - bounds.left;
 		}
 		break;
-		
+
 		case kShredder:
 		case kToaster:
 		case kMacPlus:
@@ -485,32 +485,32 @@ Boolean KeepObjectLegal (void)
 			theObject->data.g.topLeft.v = bounds.top;
 			unchanged = false;
 		}
-		if ((theObject->what == kToaster) && 
+		if ((theObject->what == kToaster) &&
 				(bounds.top - theObject->data.g.height < 0))
 		{
 			theObject->data.g.height = bounds.top;
 			unchanged = false;
 		}
-		if ((theObject->what == kTV) && 
+		if ((theObject->what == kTV) &&
 				(theObject->data.g.topLeft.h % 2 == 0))
 		{
 			theObject->data.g.topLeft.h--;
 			unchanged = false;
 		}
-		if (((theObject->what == kToaster) || 
-				(theObject->what == kMacPlus) || 
-				(theObject->what == kCoffee) || 
-				(theObject->what == kOutlet) || 
-				(theObject->what == kVCR) || 
-				(theObject->what == kStereo) || 
-				(theObject->what == kMicrowave)) && 
+		if (((theObject->what == kToaster) ||
+				(theObject->what == kMacPlus) ||
+				(theObject->what == kCoffee) ||
+				(theObject->what == kOutlet) ||
+				(theObject->what == kVCR) ||
+				(theObject->what == kStereo) ||
+				(theObject->what == kMicrowave)) &&
 				(theObject->data.g.topLeft.h % 2 != 0))
 		{
 			theObject->data.g.topLeft.h--;
 			unchanged = false;
 		}
 		break;
-		
+
 		case kBalloon:
 		case kCopterLf:
 		case kCopterRt:
@@ -527,32 +527,32 @@ Boolean KeepObjectLegal (void)
 			theObject->data.h.topLeft.v = bounds.top;
 			unchanged = false;
 		}
-		if (((theObject->what == kBall) || 
+		if (((theObject->what == kBall) ||
 				(theObject->what == kFish)) &&
 				(bounds.top - theObject->data.h.length < 0))
 		{
 			theObject->data.h.length = bounds.top;
 			unchanged = false;
 		}
-		if ((theObject->what == kDrip) && 
+		if ((theObject->what == kDrip) &&
 				(bounds.bottom + theObject->data.h.length > kTileHigh))
 		{
 			theObject->data.h.length = kTileHigh - bounds.bottom;
 			unchanged = false;
 		}
-		if (((theObject->what == kBalloon) || 
-				(theObject->what == kCopterLf) || 
-				(theObject->what == kCopterRt) || 
-				(theObject->what == kBall) || 
-				(theObject->what == kDrip) || 
-				(theObject->what == kFish)) && 
+		if (((theObject->what == kBalloon) ||
+				(theObject->what == kCopterLf) ||
+				(theObject->what == kCopterRt) ||
+				(theObject->what == kBall) ||
+				(theObject->what == kDrip) ||
+				(theObject->what == kFish)) &&
 				(theObject->data.h.topLeft.h % 2 != 0))
 		{
 			theObject->data.h.topLeft.h--;
 			unchanged = false;
 		}
 		break;
-		
+
 		case kOzma:
 		case kMirror:
 		case kMousehole:
@@ -588,11 +588,11 @@ Boolean KeepObjectLegal (void)
 			}
 		}
 		break;
-		
+
 	}
-	
+
 #endif
-	
+
 	return (unchanged);
 }
 
@@ -604,13 +604,13 @@ Boolean KeepObjectLegal (void)
 void WrapBannerAndTrailer (void)
 {
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	WrapText((*thisHouse)->banner, 40);
 	WrapText((*thisHouse)->trailer, 64);
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 
@@ -622,12 +622,12 @@ void ValidateNumberOfRooms (void)
 {
 	long		countedRooms, reportsRooms;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	reportsRooms = (long)(*thisHouse)->nRooms;
-	countedRooms = (GetHandleSize((Handle)thisHouse) - 
+	countedRooms = (GetHandleSize((Handle)thisHouse) -
 			sizeof(houseType)) / sizeof(roomType);
 	if (reportsRooms != countedRooms)
 	{
@@ -635,7 +635,7 @@ void ValidateNumberOfRooms (void)
 		numberRooms = (*thisHouse)->nRooms;
 		houseErrors++;
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 
@@ -649,20 +649,20 @@ void CheckDuplicateFloorSuite (void)
 	short		i, numRooms, bitPlace;
 	char		*pidgeonHoles;
 	char		wasState;
-	
+
 	pidgeonHoles = (char *)NewPtrClear(sizeof(char) * kRoomsTimesSuites);
 	if (pidgeonHoles == nil)
 		return;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	numRooms = (*thisHouse)->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
 		if ((*thisHouse)->rooms[i].suite != kRoomIsEmpty)
 		{
-			bitPlace = (((*thisHouse)->rooms[i].floor + 7) * 128) + 
+			bitPlace = (((*thisHouse)->rooms[i].floor + 7) * 128) +
 					(*thisHouse)->rooms[i].suite;
 			if ((bitPlace < 0) || (bitPlace >= 8192))
 				DebugStr("\pBlew array");
@@ -675,9 +675,9 @@ void CheckDuplicateFloorSuite (void)
 				pidgeonHoles[bitPlace]++;
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	DisposePtr((Ptr)pidgeonHoles);
 }
 
@@ -690,10 +690,10 @@ void CompressHouse (void)
 	short		wasFirstRoom, roomNumber, probe;
 	char		wasState;
 	Boolean		compressing, probing;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	wasFirstRoom = (*thisHouse)->firstRoom;
 	compressing = true;
 	roomNumber = (*thisHouse)->nRooms - 1;	// start with last room
@@ -729,7 +729,7 @@ void CompressHouse (void)
 			compressing = false;
 	}
 	while (compressing);
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 
@@ -743,10 +743,10 @@ void LopOffExtraRooms (void)
 	short		r, count;
 	char		wasState;
 	Str255		message;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	count = 0;
 	r = (*thisHouse)->nRooms;		// begin at last room
 	do
@@ -758,7 +758,7 @@ void LopOffExtraRooms (void)
 			r = 0;
 	}
 	while (r > 0);
-	
+
 	if (count > 0)					// if there were trailing empties…
 	{
 		r = (*thisHouse)->nRooms - count;
@@ -787,10 +787,10 @@ void ValidateRoomNumbers (void)
 	short		i, numRooms;
 	char		wasState;
 	Str255		message;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	numRooms = (*thisHouse)->nRooms;
 	if (numRooms < 0)
 	{
@@ -801,7 +801,7 @@ void ValidateRoomNumbers (void)
 	{
 		if ((*thisHouse)->rooms[i].suite != kRoomIsEmpty)
 		{
-			if (((*thisHouse)->rooms[i].floor > 56) || 
+			if (((*thisHouse)->rooms[i].floor > 56) ||
 					((*thisHouse)->rooms[i].floor < -7))
 			{
 				(*thisHouse)->rooms[i].suite = kRoomIsEmpty;
@@ -811,7 +811,7 @@ void ValidateRoomNumbers (void)
 				houseErrors++;
 				ForeColor(blackColor);
 			}
-			if (((*thisHouse)->rooms[i].suite >= 128) || 
+			if (((*thisHouse)->rooms[i].suite >= 128) ||
 					((*thisHouse)->rooms[i].suite < 0))
 			{
 				(*thisHouse)->rooms[i].suite = kRoomIsEmpty;
@@ -823,7 +823,7 @@ void ValidateRoomNumbers (void)
 			}
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 
@@ -835,18 +835,18 @@ void CountUntitledRooms (void)
 {
 	short		i, numRooms;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	numRooms = (*thisHouse)->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (((*thisHouse)->rooms[i].suite != kRoomIsEmpty) && 
+		if (((*thisHouse)->rooms[i].suite != kRoomIsEmpty) &&
 				(EqualString((*thisHouse)->rooms[i].name, "\pUntitled Room", false, true)))
 			houseErrors++;
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 
@@ -858,23 +858,23 @@ void CheckRoomNameLength (void)
 {
 	short		i, numRooms;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	numRooms = (*thisHouse)->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
 		(*thisHouse)->rooms[i].unusedByte = 0;
-		
-		if (((*thisHouse)->rooms[i].suite != kRoomIsEmpty) && 
+
+		if (((*thisHouse)->rooms[i].suite != kRoomIsEmpty) &&
 				((*thisHouse)->rooms[i].name[0] > 27))
 		{
 			(*thisHouse)->rooms[i].name[0] = 27;
 			houseErrors++;
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 
@@ -886,10 +886,10 @@ void MakeSureNumObjectsJives (void)
 {
 	short		i, h, numRooms, count;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	numRooms = (*thisHouse)->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
@@ -908,7 +908,7 @@ void MakeSureNumObjectsJives (void)
 			}
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 
@@ -921,10 +921,10 @@ void KeepAllObjectsLegal (void)
 	short		i, h, numRooms;
 	char		wasState;
 	Str255		message;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	numRooms = (*thisHouse)->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
@@ -950,7 +950,7 @@ void KeepAllObjectsLegal (void)
 			CopyThisRoomToRoom();
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 
@@ -964,10 +964,10 @@ void CheckForStaircasePairs (void)
 	char		wasState;
 	Boolean		hasStairs;
 	Str255		message;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
-	
+
 	numRooms = (*thisHouse)->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
@@ -992,7 +992,7 @@ void CheckForStaircasePairs (void)
 						hasStairs = false;
 						for (g = 0; g < kMaxRoomObs; g++)
 						{
-							if ((*thisHouse)->rooms[neighbor].objects[g].what == 
+							if ((*thisHouse)->rooms[neighbor].objects[g].what ==
 									kDownStairs)
 								hasStairs = true;
 						}
@@ -1023,7 +1023,7 @@ void CheckForStaircasePairs (void)
 						hasStairs = false;
 						for (g = 0; g < kMaxRoomObs; g++)
 						{
-							if ((*thisHouse)->rooms[neighbor].objects[g].what == 
+							if ((*thisHouse)->rooms[neighbor].objects[g].what ==
 									kUpStairs)
 								hasStairs = true;
 						}
@@ -1040,7 +1040,7 @@ void CheckForStaircasePairs (void)
 			}
 		}
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 #endif
@@ -1054,19 +1054,19 @@ void CheckHouseForProblems (void)
 #ifndef COMPILEDEMO
 	Str255		message, message2;
 	short		wasActive;
-	
+
 	houseErrors = 0;
 	CopyThisRoomToRoom();
 	wasRoom = thisRoomNumber;
 	wasActive = objActive;
 	GetLocalizedString(24, message);
 	OpenMessageWindow(message);
-	
+
 	SpinCursor(3);
 	GetLocalizedString(25, message);
 	SetMessageWindowMessage(message);
 	WrapBannerAndTrailer();
-	
+
 	if (isHouseChecks)
 	{
 		SpinCursor(3);
@@ -1081,7 +1081,7 @@ void CheckHouseForProblems (void)
 			houseErrors = 0;
 		}
 	}
-	
+
 	if (isHouseChecks)
 	{
 		SpinCursor(3);
@@ -1098,12 +1098,12 @@ void CheckHouseForProblems (void)
 			DelayTicks(45);
 		}
 	}
-	
+
 	SpinCursor(3);
 	CompressHouse();
 	SpinCursor(3);
 	LopOffExtraRooms();
-	
+
 	if (isHouseChecks)
 	{
 		SpinCursor(3);
@@ -1119,7 +1119,7 @@ void CheckHouseForProblems (void)
 			DelayTicks(60);
 		}
 	}
-	
+
 	if (isHouseChecks)
 	{
 		SpinCursor(3);
@@ -1136,7 +1136,7 @@ void CheckHouseForProblems (void)
 			DelayTicks(45);
 		}
 	}
-	
+
 	if (isHouseChecks)
 	{
 		SpinCursor(3);
@@ -1153,7 +1153,7 @@ void CheckHouseForProblems (void)
 			DelayTicks(45);
 		}
 	}
-	
+
 	if (isHouseChecks)
 	{
 		SpinCursor(3);
@@ -1170,7 +1170,7 @@ void CheckHouseForProblems (void)
 			DelayTicks(60);
 		}
 	}
-	
+
 	if (isHouseChecks)
 	{
 		SpinCursor(3);
@@ -1189,14 +1189,14 @@ void CheckHouseForProblems (void)
 			DelayTicks(60);
 		}
 	}
-	
+
 	if (isHouseChecks)
 	{
 		SpinCursor(3);
 		houseErrors = 0;
 		CheckForStaircasePairs();
 	}
-	
+
 	if (isHouseChecks)
 	{
 		SpinCursor(3);
@@ -1209,7 +1209,7 @@ void CheckHouseForProblems (void)
 			DelayTicks(60);
 		}
 	}
-	
+
 	InitCursor();
 	CloseMessageWindow();
 	ForceThisRoom(wasRoom);

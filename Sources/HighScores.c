@@ -58,7 +58,7 @@ extern	Boolean		quickerTransitions, resumedSavedGame;
 void DoHighScores (void)
 {
 	Rect		tempRect;
-	
+
 	SpinCursor(3);
 	SetPort((GrafPtr)workSrcMap);
 	PaintRect(&workSrcRect);
@@ -80,7 +80,7 @@ void DoHighScores (void)
 	InitCursor();
 	DelayTicks(60);
 	WaitForInputEvent(30);
-	
+
 	RedrawSplashScreen();
 }
 
@@ -102,38 +102,38 @@ void DrawHighScores (void)
 	Str255		tempStr;
 	short		scoreLeft, bannerWidth, i, dropIt;
 	char		wasState;
-	
+
 	scoreLeft = ((thisMac.screen.right - thisMac.screen.left) - kScoreWide) / 2;
 	dropIt = 129 + splashOriginV;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
-	
+
 	QSetRect(&tempRect, 0, 0, 332, 30);
 	theErr = CreateOffScreenGWorld(&tempMap, &tempRect, kPreferredDepth);
 	SetGWorld(tempMap, nil);
 	LoadGraphic(kHighScoresPictID);
-	
-	theErr = CreateOffScreenGWorld(&tempMask, &tempRect, 1);	
+
+	theErr = CreateOffScreenGWorld(&tempMask, &tempRect, 1);
 	SetGWorld(tempMask, nil);
 	LoadGraphic(kHighScoresMaskID);
-	
+
 	tempRect2 = tempRect;
 	QOffsetRect(&tempRect2, scoreLeft + (kScoreWide - 332) / 2, dropIt - 60);
-	
-	CopyMask((BitMap *)*GetGWorldPixMap(tempMap), 
-			(BitMap *)*GetGWorldPixMap(tempMask), 
-			(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+	CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
+			(BitMap *)*GetGWorldPixMap(tempMask),
+			(BitMap *)*GetGWorldPixMap(workSrcMap),
 			&tempRect, &tempRect, &tempRect2);
-	
+
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
-	
+
 	SetGWorld(wasCPort, wasWorld);
-	
+
 	TextFont(applFont);
 	TextFace(bold);
 	TextSize(14);
-	
+
 	PasStringCopy("\p• ", tempStr);
 	PasStringConcat(tempStr, thisHouseName);
 	PasStringConcat(tempStr, "\p •");
@@ -144,11 +144,11 @@ void DrawHighScores (void)
 	ForeColor(cyanColor);
 	DrawString(tempStr);
 	ForeColor(blackColor);
-	
+
 	TextFont(applFont);
 	TextFace(bold);
 	TextSize(12);
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
@@ -161,16 +161,16 @@ void DrawHighScores (void)
 	ForeColor(yellowColor);
 	MoveTo(scoreLeft + (kScoreWide - bannerWidth) / 2, dropIt - kKimsLifted - 1);
 	DrawString(tempStr);
-	
+
 	QSetRect(&tempRect, 0, 0, bannerWidth + 8, kScoreSpacing);
-	QOffsetRect(&tempRect, scoreLeft - 3 + (kScoreWide - bannerWidth) / 2, 
+	QOffsetRect(&tempRect, scoreLeft - 3 + (kScoreWide - bannerWidth) / 2,
 			dropIt + 5 - kScoreSpacing - kKimsLifted);
 	ForeColor(blackColor);
 	FrameRect(&tempRect);
 	QOffsetRect(&tempRect, -1, -1);
 	ForeColor(yellowColor);
 	FrameRect(&tempRect);
-	
+
 	for (i = 0; i < kMaxScores; i++)
 	{
 		if (thisHousePtr->highScores.scores[i] > 0L)
@@ -262,7 +262,7 @@ void DrawHighScores (void)
 			DrawString(tempStr);
 		}
 	}
-	
+
 	ForeColor(blueColor);
 	TextFont(applFont);
 	TextFace(bold);
@@ -270,7 +270,7 @@ void DrawHighScores (void)
 	MoveTo(scoreLeft + 80, dropIt - 1 + (10 * kScoreSpacing));
 	GetLocalizedString(8, tempStr);
 	DrawString(tempStr);
-	
+
 	ForeColor(blackColor);
 	HSetState((Handle)thisHouse, wasState);
 }
@@ -285,11 +285,11 @@ void SortHighScores (void)
 	long		greatest;
 	short		i, h, which;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
-	
+
 	for (h = 0; h < kMaxScores; h++)
 	{
 		greatest = -1L;
@@ -313,7 +313,7 @@ void SortHighScores (void)
 	}
 	PasStringCopy(thisHousePtr->highScores.banner, tempScores.banner);
 	thisHousePtr->highScores = tempScores;
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 
@@ -325,11 +325,11 @@ void ZeroHighScores (void)
 	houseType	*thisHousePtr;
 	short		i;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
-	
+
 	PasStringCopy(thisHouseName, thisHousePtr->highScores.banner);
 	for (i = 0; i < kMaxScores; i++)
 	{
@@ -338,7 +338,7 @@ void ZeroHighScores (void)
 		thisHousePtr->highScores.timeStamps[i] = 0L;
 		thisHousePtr->highScores.levels[i] = 0;
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 
@@ -350,11 +350,11 @@ void ZeroAllButHighestScore (void)
 	houseType	*thisHousePtr;
 	short		i;
 	char		wasState;
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
-	
+
 	for (i = 1; i < kMaxScores; i++)
 	{
 		PasStringCopy("\p--------------", thisHousePtr->highScores.names[i]);
@@ -362,7 +362,7 @@ void ZeroAllButHighestScore (void)
 		thisHousePtr->highScores.timeStamps[i] = 0L;
 		thisHousePtr->highScores.levels[i] = 0;
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
 }
 
@@ -376,17 +376,17 @@ Boolean TestHighScore (void)
 	houseType	*thisHousePtr;
 	short		placing, i;
 	char		wasState;
-	
+
 	if (resumedSavedGame)
 		return (false);
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	thisHousePtr = *thisHouse;
-	
+
 	lastHighScore = -1;
 	placing = -1;
-	
+
 	for (i = 0; i < kMaxScores; i++)
 	{
 		if (theScore > thisHousePtr->highScores.scores[i])
@@ -396,7 +396,7 @@ Boolean TestHighScore (void)
 			break;
 		}
 	}
-	
+
 	if (placing != -1)
 	{
 		FlushEvents(everyEvent, 0);
@@ -413,9 +413,9 @@ Boolean TestHighScore (void)
 		SortHighScores();
 		gameDirty = true;
 	}
-	
+
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	if (placing != -1)
 	{
 		DoHighScores();
@@ -431,10 +431,10 @@ Boolean TestHighScore (void)
 void UpdateNameDialog (DialogPtr theDialog)
 {
 	short		nChars;
-	
+
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
-	
+
 	nChars = GetDialogStringLen(theDialog, kHighNameItem);
 	SetDialogNumToStr(theDialog, kNameNCharsItem, (long)nChars);
 }
@@ -445,14 +445,14 @@ void UpdateNameDialog (DialogPtr theDialog)
 pascal Boolean NameFilter (DialogPtr dial, EventRecord *event, short *item)
 {
 	short		nChars;
-	
+
 	if (keyStroke)
 	{
 		nChars = GetDialogStringLen(dial, kHighNameItem);
 		SetDialogNumToStr(dial, kNameNCharsItem, (long)nChars);
 		keyStroke = false;
 	}
-	
+
 	switch (event->what)
 	{
 		case keyDown:
@@ -466,18 +466,18 @@ pascal Boolean NameFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kTabKeyASCII:
 			SelectDialogItemText(dial, kHighNameItem, 0, 1024);
 			return(false);
 			break;
-			
+
 			default:
 			PlayPrioritySound(kTypingSound, kTypingPriority);
 			return(false);
 		}
 		break;
-		
+
 		case updateEvt:
 		BeginUpdate(GetDialogWindow(dial));
 		UpdateNameDialog(dial);
@@ -485,7 +485,7 @@ pascal Boolean NameFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -502,9 +502,9 @@ void GetHighScoreName (short place)
 	short			item;
 	Boolean			leaving;
 	ModalFilterUPP	nameFilterUPP;
-	
+
 	nameFilterUPP = NewModalFilterUPP(NameFilter);
-	
+
 	InitCursor();
 	NumToString(theScore, scoreStr);
 	NumToString((long)place, placeStr);
@@ -515,11 +515,11 @@ void GetHighScoreName (short place)
 	SetDialogString(theDial, kHighNameItem, highName);
 	SelectDialogItemText(theDial, kHighNameItem, 0, 1024);
 	leaving = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(nameFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			GetDialogString(theDial, kHighNameItem, tempStr);
@@ -527,7 +527,7 @@ void GetHighScoreName (short place)
 			leaving = true;
 		}
 	}
-	
+
 	DisposeDialog(theDial);
 	DisposeModalFilterUPP(nameFilterUPP);
 }
@@ -538,10 +538,10 @@ void GetHighScoreName (short place)
 void UpdateBannerDialog (DialogPtr theDialog)
 {
 	short		nChars;
-	
+
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
-	
+
 	nChars = GetDialogStringLen(theDialog, kHighBannerItem);
 	SetDialogNumToStr(theDialog, kBannerScoreNCharsItem, (long)nChars);
 }
@@ -552,17 +552,17 @@ void UpdateBannerDialog (DialogPtr theDialog)
 pascal Boolean BannerFilter (DialogPtr dial, EventRecord *event, short *item)
 {
 	short		nChars;
-	
+
 	if (keyStroke)
 	{
 		nChars = GetDialogStringLen(dial, kHighBannerItem);
 		SetDialogNumToStr(dial, kBannerScoreNCharsItem, (long)nChars);
 		keyStroke = false;
 	}
-	
+
 	switch (event->what)
 	{
-		
+
 		case keyDown:
 		keyStroke = true;
 		switch ((event->message) & charCodeMask)
@@ -574,18 +574,18 @@ pascal Boolean BannerFilter (DialogPtr dial, EventRecord *event, short *item)
 			*item = kOkayButton;
 			return(true);
 			break;
-			
+
 			case kTabKeyASCII:
 			SelectDialogItemText(dial, kHighBannerItem, 0, 1024);
 			return(false);
 			break;
-			
+
 			default:
 			PlayPrioritySound(kTypingSound, kTypingPriority);
 			return(false);
 		}
 		break;
-		
+
 		case updateEvt:
 		BeginUpdate(GetDialogWindow(dial));
 		UpdateBannerDialog(dial);
@@ -593,7 +593,7 @@ pascal Boolean BannerFilter (DialogPtr dial, EventRecord *event, short *item)
 		event->what = nullEvent;
 		return(false);
 		break;
-		
+
 		default:
 		return(false);
 		break;
@@ -612,19 +612,19 @@ void GetHighScoreBanner (void)
 	short			item;
 	Boolean			leaving;
 	ModalFilterUPP	bannerFilterUPP;
-	
+
 	bannerFilterUPP = NewModalFilterUPP(BannerFilter);
-	
+
 	PlayPrioritySound(kEnergizeSound, kEnergizePriority);
 	BringUpDialog(&theDial, kHighBannerDialogID);
 	SetDialogString(theDial, kHighBannerItem, highBanner);
 	SelectDialogItemText(theDial, kHighBannerItem, 0, 1024);
 	leaving = false;
-	
+
 	while (!leaving)
 	{
 		ModalDialog(bannerFilterUPP, &item);
-		
+
 		if (item == kOkayButton)
 		{
 			GetDialogString(theDial, kHighBannerItem, tempStr);
@@ -632,7 +632,7 @@ void GetHighScoreBanner (void)
 			leaving = true;
 		}
 	}
-	
+
 	DisposeDialog(theDial);
 	DisposeModalFilterUPP(bannerFilterUPP);
 }
@@ -645,18 +645,18 @@ Boolean CreateScoresFolder (long *scoresDirID)
 	long		prefsDirID;
 	OSErr		theErr;
 	short		volRefNum;
-	
-	theErr = FindFolder(kOnSystemDisk, kPreferencesFolderType, kCreateFolder, 
+
+	theErr = FindFolder(kOnSystemDisk, kPreferencesFolderType, kCreateFolder,
 			&volRefNum, &prefsDirID);
 	if (!CheckFileError(theErr, "\pPrefs Folder"))
 		return (false);
-	
+
 	theErr = FSMakeFSSpec(volRefNum, prefsDirID, "\pG-PRO Scores ƒ", &scoresSpec);
-	
+
 	theErr = FSpDirCreate(&scoresSpec, smSystemScript, scoresDirID);
 	if (!CheckFileError(theErr, "\pHigh Scores Folder"))
 		return (false);
-	
+
 	return (true);
 }
 
@@ -670,20 +670,20 @@ Boolean FindHighScoresFolder (short *volRefNum, long *scoresDirID)
 	OSErr		theErr;
 	short		count;
 	Boolean		foundIt;
-	
-	theErr = FindFolder(kOnSystemDisk, kPreferencesFolderType, kCreateFolder, 
+
+	theErr = FindFolder(kOnSystemDisk, kPreferencesFolderType, kCreateFolder,
 			volRefNum, &prefsDirID);
 	if (!CheckFileError(theErr, "\pPrefs Folder"))
 		return (false);
-	
+
 	PasStringCopy("\pG-PRO Scores ƒ", nameString);
 	count = 1;
 	foundIt = false;
-	
+
 	theBlock.dirInfo.ioCompletion = nil;
 	theBlock.dirInfo.ioVRefNum = *volRefNum;
 	theBlock.dirInfo.ioNamePtr = nameString;
-	
+
 	while ((theErr == noErr) && (!foundIt))
 	{
 		theBlock.dirInfo.ioFDirIndex = count;
@@ -693,7 +693,7 @@ Boolean FindHighScoresFolder (short *volRefNum, long *scoresDirID)
 		{
 			if ((theBlock.dirInfo.ioFlAttrib & 0x10) == 0x10)
 			{
-				if (EqualString(theBlock.dirInfo.ioNamePtr, "\pG-PRO Scores ƒ", 
+				if (EqualString(theBlock.dirInfo.ioNamePtr, "\pG-PRO Scores ƒ",
 						true, true))
 				{
 					foundIt = true;
@@ -703,7 +703,7 @@ Boolean FindHighScoresFolder (short *volRefNum, long *scoresDirID)
 			count++;
 		}
 	}
-	
+
 	if (theErr == fnfErr)
 	{
 		if (CreateScoresFolder(scoresDirID))
@@ -720,7 +720,7 @@ Boolean FindHighScoresFolder (short *volRefNum, long *scoresDirID)
 Boolean OpenHighScoresFile (FSSpec *scoreSpec, short *scoresRefNum)
 {
 	OSErr		theErr;
-	
+
 	theErr = FSpOpenDF(scoreSpec, fsCurPerm, scoresRefNum);
 	if (theErr == fnfErr)
 	{
@@ -733,7 +733,7 @@ Boolean OpenHighScoresFile (FSSpec *scoreSpec, short *scoresRefNum)
 	}
 	else if (!CheckFileError(theErr, "\pHigh Score"))
 		return (false);
-	
+
 	return (true);
 }
 
@@ -747,32 +747,32 @@ Boolean WriteScoresToDisk (void)
 	OSErr		theErr;
 	short		volRefNum, scoresRefNum;
 	char		wasState;
-	
+
 	if (!FindHighScoresFolder(&volRefNum, &dirID))
 	{
 		SysBeep(1);
 		return (false);
 	}
-	
+
 	theErr = FSMakeFSSpec(volRefNum, dirID, thisHouseName, &scoreSpec);
 	if (!OpenHighScoresFile(&scoreSpec, &scoresRefNum))
 	{
 		SysBeep(1);
 		return (false);
 	}
-	
+
 	theErr = SetFPos(scoresRefNum, fsFromStart, 0L);
 	if (!CheckFileError(theErr, "\pHigh Scores File"))
 	{
 		theErr = FSClose(scoresRefNum);
 		return(false);
 	}
-	
+
 	byteCount = sizeof(scoresType);
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	theScores = &((*thisHouse)->highScores);
-	
+
 	theErr = FSWrite(scoresRefNum, &byteCount, (Ptr)theScores);
 	if (!CheckFileError(theErr, "\pHigh Scores File"))
 	{
@@ -781,18 +781,18 @@ Boolean WriteScoresToDisk (void)
 		return(false);
 	}
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	theErr = SetEOF(scoresRefNum, byteCount);
 	if (!CheckFileError(theErr, "\pHigh Scores File"))
 	{
 		theErr = FSClose(scoresRefNum);
 		return(false);
 	}
-	
+
 	theErr = FSClose(scoresRefNum);
 	if (!CheckFileError(theErr, "\pHigh Scores File"))
 		return(false);
-	
+
 	return (true);
 }
 
@@ -806,38 +806,38 @@ Boolean ReadScoresFromDisk (void)
 	OSErr		theErr;
 	short		volRefNum, scoresRefNum;
 	char		wasState;
-	
+
 	if (!FindHighScoresFolder(&volRefNum, &dirID))
 	{
 		SysBeep(1);
 		return (false);
 	}
-	
+
 	theErr = FSMakeFSSpec(volRefNum, dirID, thisHouseName, &scoreSpec);
 	if (!OpenHighScoresFile(&scoreSpec, &scoresRefNum))
 	{
 		SysBeep(1);
 		return (false);
 	}
-	
+
 	theErr = GetEOF(scoresRefNum, &byteCount);
 	if (!CheckFileError(theErr, "\pHigh Scores File"))
 	{
 		theErr = FSClose(scoresRefNum);
 		return (false);
 	}
-	
+
 	theErr = SetFPos(scoresRefNum, fsFromStart, 0L);
 	if (!CheckFileError(theErr, "\pHigh Scores File"))
 	{
 		theErr = FSClose(scoresRefNum);
 		return (false);
 	}
-	
+
 	wasState = HGetState((Handle)thisHouse);
 	HLock((Handle)thisHouse);
 	theScores = &((*thisHouse)->highScores);
-	
+
 	theErr = FSRead(scoresRefNum, &byteCount, theScores);
 	if (!CheckFileError(theErr, "\pHigh Scores File"))
 	{
@@ -846,11 +846,11 @@ Boolean ReadScoresFromDisk (void)
 		return (false);
 	}
 	HSetState((Handle)thisHouse, wasState);
-	
+
 	theErr = FSClose(scoresRefNum);
 	if (!CheckFileError(theErr, "\pHigh Scores File"))
 		return(false);
-	
+
 	return (true);
 }
 

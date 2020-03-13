@@ -44,10 +44,10 @@ void HandleGrease (void)
 {
 	Rect		src;
 	short		i;
-	
+
 	if (numGrease == 0)
 		return;
-	
+
 	for (i = 0; i < numGrease; i++)
 	{
 		if (grease[i].mode == kGreaseFalling)
@@ -67,18 +67,18 @@ void HandleGrease (void)
 				QOffsetRect(&src, grease[i].start, grease[i].dest.bottom);
 				hotSpots[grease[i].hotNum].bounds = src;
 			}
-			
+
 			QSetRect(&src, 0, 0, 32, 27);
 			QOffsetRect(&src, 0, grease[i].frame * 27);
-			CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[grease[i].mapNum].map), 
-					(BitMap *)*GetGWorldPixMap(workSrcMap), 
-					&src, &grease[i].dest, 
+			CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[grease[i].mapNum].map),
+					(BitMap *)*GetGWorldPixMap(workSrcMap),
+					&src, &grease[i].dest,
 					srcCopy, nil);
-			CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[grease[i].mapNum].map), 
-					(BitMap *)*GetGWorldPixMap(backSrcMap), 
-					&src, &grease[i].dest, 
+			CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[grease[i].mapNum].map),
+					(BitMap *)*GetGWorldPixMap(backSrcMap),
+					&src, &grease[i].dest,
 					srcCopy, nil);
-			
+
 			AddRectToWorkRects(&grease[i].dest);
 			if (grease[i].isRight)
 				QOffsetRect(&grease[i].dest, 2, 0);
@@ -101,23 +101,23 @@ void HandleGrease (void)
 				grease[i].start -= 2;
 				hotSpots[grease[i].hotNum].bounds.left -= 2;
 			}
-			
+
 			{
 				CGrafPtr	wasCPort;
 				GDHandle	wasWorld;
-				
+
 				GetGWorld(&wasCPort, &wasWorld);
-				
+
 				SetGWorld(backSrcMap, nil);
 				PaintRect(&src);
-				
+
 				SetGWorld(workSrcMap, nil);
 				PaintRect(&src);
 				AddRectToWorkRects(&src);
-				
+
 				SetGWorld(wasCPort, wasWorld);
 			}
-			
+
 			if (grease[i].isRight)
 			{
 				if (grease[i].start >= grease[i].stop)
@@ -142,27 +142,27 @@ void BackupGrease (Rect *src, short index, Boolean isRight)
 {
 	Rect		dest;
 	short		i;
-	
+
 	QSetRect(&dest, 0, 0, 32, 27);
 	for (i = 0; i < 4; i++)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap), 
-				(BitMap *)*GetGWorldPixMap(savedMaps[index].map), 
+		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
+				(BitMap *)*GetGWorldPixMap(savedMaps[index].map),
 				src, &dest, srcCopy, nil);
-		
+
 		if (isRight)
 		{
-			CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap), 
-					(BitMap *)*GetGWorldPixMap(bonusMaskMap), 
-					(BitMap *)*GetGWorldPixMap(savedMaps[index].map), 
+			CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
+					(BitMap *)*GetGWorldPixMap(bonusMaskMap),
+					(BitMap *)*GetGWorldPixMap(savedMaps[index].map),
 					&greaseSrcRt[i], &greaseSrcRt[i], &dest);
 			QOffsetRect(src, 2, 0);
 		}
 		else
 		{
-			CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap), 
-					(BitMap *)*GetGWorldPixMap(bonusMaskMap), 
-					(BitMap *)*GetGWorldPixMap(savedMaps[index].map), 
+			CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
+					(BitMap *)*GetGWorldPixMap(bonusMaskMap),
+					(BitMap *)*GetGWorldPixMap(savedMaps[index].map),
 					&greaseSrcLf[i], &greaseSrcLf[i], &dest);
 			QOffsetRect(src, -2, 0);
 		}
@@ -181,7 +181,7 @@ short ReBackUpGrease (short where, short who)
 {
 	Rect		src;
 	short		i;
-	
+
 	for (i = 0; i < numGrease; i++)
 	{
 		if ((grease[i].where == where) && (grease[i].who == who))
@@ -194,7 +194,7 @@ short ReBackUpGrease (short where, short who)
 			return (i);
 		}
 	}
-	
+
 	return (-1);
 }
 
@@ -203,18 +203,18 @@ short ReBackUpGrease (short where, short who)
 // Called when a new room is being set up during a game.  This adds…
 // another jar of grease to the queue of jars to be handled.
 
-short AddGrease (short where, short who, short h, short v, 
+short AddGrease (short where, short who, short h, short v,
 		short distance, Boolean isRight)
 {
 	Rect		src, bounds;
 	short		savedNum;
-	
+
 	if (numGrease >= kMaxGrease)
 		return (-1);
-	
+
 	QSetRect(&src, 0, 0, 32, 27);
 	QOffsetRect(&src, h, v);
-	
+
 	QSetRect(&bounds, 0, 0, 32, 27 * 4);
 	savedNum = BackUpToSavedMap(&bounds, where, who);
 	if (savedNum != -1)
@@ -243,7 +243,7 @@ short AddGrease (short where, short who, short h, short v,
 			grease[numGrease].stop = src.left - distance;
 		}
 		numGrease++;
-		
+
 		return (numGrease - 1);
 	}
 	else
@@ -273,28 +273,28 @@ void RedrawAllGrease (void)
 	GDHandle	wasWorld;
 	Rect		src;
 	short		i;
-	
+
 	if (numGrease == 0)
 		return;
-	
+
 	for (i = 0; i < numGrease; i++)
 	{
 		src = hotSpots[grease[i].hotNum].bounds;
-		if ((grease[i].where == thisRoomNumber) && 
-				((src.bottom - src.top) == 2) && 
+		if ((grease[i].where == thisRoomNumber) &&
+				((src.bottom - src.top) == 2) &&
 				(grease[i].mode != kGreaseIdle))
 		{
 			QOffsetRect(&src, playOriginH, playOriginV);
-			
+
 			GetGWorld(&wasCPort, &wasWorld);
-			
+
 			SetGWorld(backSrcMap, nil);
 			PaintRect(&src);
-			
+
 			SetGWorld(workSrcMap, nil);
 			PaintRect(&src);
 			AddRectToWorkRects(&src);
-			
+
 			SetGWorld(wasCPort, wasWorld);
 		}
 	}

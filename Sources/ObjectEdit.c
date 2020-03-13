@@ -46,16 +46,16 @@ extern	Boolean		noRoomAtAll;
 short FindObjectSelected (Point where)
 {
 	short		found, i;
-	
+
 	found = kNoObjectSelected;
-	
+
 	if (PtInRect(where, &initialGliderRect))
 		return (kInitialGliderSelected);
 	else if (PtInRect(where, &leftStartGliderDest))
 		return (kLeftGliderSelected);
 	else if (PtInRect(where, &rightStartGliderDest))
 		return (kRightGliderSelected);
-	
+
 	for (i = kMaxRoomObs - 1; i >= 0; i--)
 	{
 		if (PtInRect(where, &roomObjectRects[i]))
@@ -74,9 +74,9 @@ void DoSelectionClick (Point where, Boolean isDoubleClick)
 {
 #ifndef COMPILEDEMO
 	short		direction, dist;
-	
+
 	StopMarquee();
-	
+
 	if ((PtInMarqueeHandle(where)) && (objActive != kNoObjectSelected))
 	{
 		if (StillDown())
@@ -144,7 +144,7 @@ void DragHandle (Point where)
 {
 	short		hDelta, vDelta;
 	Boolean		whoCares;
-	
+
 	switch (thisRoom->objects[objActive].what)
 	{
 		case kFloorVent:
@@ -164,7 +164,7 @@ void DragHandle (Point where)
 		thisRoom->objects[objActive].data.a.distance = vDelta;
 		whoCares = KeepObjectLegal();
 		break;
-		
+
 		case kLiftArea:
 		hDelta = thisRoom->objects[objActive].data.a.distance;
 		vDelta = thisRoom->objects[objActive].data.a.tall * 2;
@@ -177,7 +177,7 @@ void DragHandle (Point where)
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
 		break;
-		
+
 		case kLeftFan:
 		case kRightFan:
 		hDelta = thisRoom->objects[objActive].data.a.distance;
@@ -185,9 +185,9 @@ void DragHandle (Point where)
 		thisRoom->objects[objActive].data.a.distance = hDelta;
 		whoCares = KeepObjectLegal();
 		break;
-		
+
 		case kInvisBlower:
-		if (((thisRoom->objects[objActive].data.a.vector & 0x0F) == 1) || 
+		if (((thisRoom->objects[objActive].data.a.vector & 0x0F) == 1) ||
 				((thisRoom->objects[objActive].data.a.vector & 0x0F) == 4))
 		{
 			vDelta = thisRoom->objects[objActive].data.a.distance;
@@ -202,13 +202,13 @@ void DragHandle (Point where)
 		}
 		whoCares = KeepObjectLegal();
 		break;
-		
+
 		case kTable:
 		case kShelf:
 		case kDeckTable:
 		hDelta = RectWide(&thisRoom->objects[objActive].data.b.bounds);
 		DragMarqueeHandle(where, &hDelta);
-		thisRoom->objects[objActive].data.b.bounds.right = 
+		thisRoom->objects[objActive].data.b.bounds.right =
 			thisRoom->objects[objActive].data.b.bounds.left + hDelta;
 		whoCares = KeepObjectLegal();
 		InvalWindowRect(mainWindow, &mainWindowRect);
@@ -216,16 +216,16 @@ void DragHandle (Point where)
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
 		break;
-		
+
 		case kCabinet:
 		case kInvisObstacle:
 		case kInvisBounce:
 		hDelta = RectWide(&thisRoom->objects[objActive].data.b.bounds);
 		vDelta = RectTall(&thisRoom->objects[objActive].data.b.bounds);
 		DragMarqueeCorner(where, &hDelta, &vDelta, false);
-		thisRoom->objects[objActive].data.b.bounds.right = 
+		thisRoom->objects[objActive].data.b.bounds.right =
 			thisRoom->objects[objActive].data.b.bounds.left + hDelta;
-		thisRoom->objects[objActive].data.b.bounds.bottom = 
+		thisRoom->objects[objActive].data.b.bounds.bottom =
 			thisRoom->objects[objActive].data.b.bounds.top + vDelta;
 		whoCares = KeepObjectLegal();
 		InvalWindowRect(mainWindow, &mainWindowRect);
@@ -233,15 +233,15 @@ void DragHandle (Point where)
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
 		break;
-		
+
 		case kCounter:
 		case kDresser:
 		hDelta = RectWide(&thisRoom->objects[objActive].data.b.bounds);
 		vDelta = RectTall(&thisRoom->objects[objActive].data.b.bounds);
 		DragMarqueeCorner(where, &hDelta, &vDelta, true);
-		thisRoom->objects[objActive].data.b.bounds.right = 
+		thisRoom->objects[objActive].data.b.bounds.right =
 			thisRoom->objects[objActive].data.b.bounds.left + hDelta;
-		thisRoom->objects[objActive].data.b.bounds.top = 
+		thisRoom->objects[objActive].data.b.bounds.top =
 			thisRoom->objects[objActive].data.b.bounds.bottom - vDelta;
 		whoCares = KeepObjectLegal();
 		InvalWindowRect(mainWindow, &mainWindowRect);
@@ -249,7 +249,7 @@ void DragHandle (Point where)
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
 		break;
-		
+
 		case kGreaseRt:
 		case kGreaseLf:
 		case kSlider:
@@ -262,7 +262,7 @@ void DragHandle (Point where)
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
 		break;
-		
+
 		case kInvisTrans:
 		hDelta = thisRoom->objects[objActive].data.d.wide;
 		vDelta = thisRoom->objects[objActive].data.d.tall;
@@ -277,7 +277,7 @@ void DragHandle (Point where)
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
 		break;
-		
+
 		case kDeluxeTrans:
 		hDelta = ((thisRoom->objects[objActive].data.d.tall & 0xFF00) >> 8) * 4;
 		vDelta = (thisRoom->objects[objActive].data.d.tall & 0x00FF) * 4;
@@ -293,7 +293,7 @@ void DragHandle (Point where)
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
 		break;
-		
+
 		case kFlourescent:
 		case kTrackLight:
 		hDelta = thisRoom->objects[objActive].data.f.length;
@@ -305,14 +305,14 @@ void DragHandle (Point where)
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
 		break;
-		
+
 		case kToaster:
 		vDelta = thisRoom->objects[objActive].data.g.height;
 		DragMarqueeHandle(where, &vDelta);
 		thisRoom->objects[objActive].data.g.height = vDelta;
 		whoCares = KeepObjectLegal();
 		break;
-		
+
 		case kBall:
 		case kDrip:
 		case kFish:
@@ -321,15 +321,15 @@ void DragHandle (Point where)
 		thisRoom->objects[objActive].data.h.length = vDelta;
 		whoCares = KeepObjectLegal();
 		break;
-		
+
 		case kMirror:
 		case kWallWindow:
 		hDelta = RectWide(&thisRoom->objects[objActive].data.i.bounds);
 		vDelta = RectTall(&thisRoom->objects[objActive].data.i.bounds);
 		DragMarqueeCorner(where, &hDelta, &vDelta, false);
-		thisRoom->objects[objActive].data.i.bounds.right = 
+		thisRoom->objects[objActive].data.i.bounds.right =
 			thisRoom->objects[objActive].data.i.bounds.left + hDelta;
-		thisRoom->objects[objActive].data.i.bounds.bottom = 
+		thisRoom->objects[objActive].data.i.bounds.bottom =
 			thisRoom->objects[objActive].data.i.bounds.top + vDelta;
 		whoCares = KeepObjectLegal();
 		InvalWindowRect(mainWindow, &mainWindowRect);
@@ -337,9 +337,9 @@ void DragHandle (Point where)
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
 		break;
-		
+
 	}
-	
+
 	fileDirty = true;
 	UpdateMenus(false);
 }
@@ -354,7 +354,7 @@ void DragObject (Point where)
 	short		deltaH, deltaV, increment;
 	char		wasState;
 	Boolean		invalAll;
-	
+
 	if (objActive == kInitialGliderSelected)
 	{
 		wasRect = initialGliderRect;
@@ -411,13 +411,13 @@ void DragObject (Point where)
 			DragMarqueeRect(where, &newRect, true, false);
 			invalAll = false;
 			break;
-			
+
 			case kDartLf:
 			case kDartRt:
 			DragMarqueeRect(where, &newRect, false, true);
 			invalAll = false;
 			break;
-			
+
 			case kTiki:
 			case kTable:
 			case kShelf:
@@ -438,14 +438,14 @@ void DragObject (Point where)
 			DragMarqueeRect(where, &newRect, false, false);
 			invalAll = true;
 			break;
-			
+
 			case kCounter:
 			case kDresser:
 			case kTrackLight:
 			DragMarqueeRect(where, &newRect, true, false);
 			invalAll = true;
 			break;
-			
+
 			case kRedClock:
 			case kBlueClock:
 			case kYellowClock:
@@ -517,7 +517,7 @@ void DragObject (Point where)
 			break;
 		}
 	}
-	
+
 	deltaH = newRect.left - wasRect.left;
 	deltaV = newRect.top - wasRect.top;
 	if ((deltaH != 0) || (deltaV != 0))
@@ -525,7 +525,7 @@ void DragObject (Point where)
 		fileDirty = true;
 		UpdateMenus(false);
 	}
-	
+
 	if (objActive == kInitialGliderSelected)
 	{
 		wasState = HGetState((Handle)thisHouse);
@@ -543,7 +543,7 @@ void DragObject (Point where)
 			increment = 0;
 		thisRoom->leftStart = (Byte)increment;
 		QSetRect(&leftStartGliderDest, 0, 0, 48, 16);
-		QOffsetRect(&leftStartGliderDest, 0, 
+		QOffsetRect(&leftStartGliderDest, 0,
 				kGliderStartsDown + (short)thisRoom->leftStart);
 	}
 	else if (objActive == kRightGliderSelected)
@@ -555,7 +555,7 @@ void DragObject (Point where)
 			increment = 0;
 		thisRoom->rightStart = (Byte)increment;
 		QSetRect(&rightStartGliderDest, 0, 0, 48, 16);
-		QOffsetRect(&rightStartGliderDest, 0, 
+		QOffsetRect(&rightStartGliderDest, 0,
 				kGliderStartsDown + (short)thisRoom->rightStart);
 	}
 	else
@@ -571,7 +571,7 @@ void DragObject (Point where)
 			case kSewerBlower:
 			thisRoom->objects[objActive].data.a.topLeft.h += deltaH;
 			break;
-			
+
 			case kLeftFan:
 			case kRightFan:
 			case kTaper:
@@ -584,7 +584,7 @@ void DragObject (Point where)
 			thisRoom->objects[objActive].data.a.topLeft.h += deltaH;
 			thisRoom->objects[objActive].data.a.topLeft.v += deltaV;
 			break;
-			
+
 			case kTable:
 			case kShelf:
 			case kCabinet:
@@ -602,14 +602,14 @@ void DragObject (Point where)
 			thisRoom->objects[objActive].data.b.bounds.top += deltaV;
 			thisRoom->objects[objActive].data.b.bounds.bottom += deltaV;
 			break;
-			
+
 			case kCounter:
 			case kDresser:
 			case kManhole:
 			thisRoom->objects[objActive].data.b.bounds.left += deltaH;
 			thisRoom->objects[objActive].data.b.bounds.right += deltaH;
 			break;
-			
+
 			case kRedClock:
 			case kBlueClock:
 			case kYellowClock:
@@ -628,7 +628,7 @@ void DragObject (Point where)
 			thisRoom->objects[objActive].data.c.topLeft.h += deltaH;
 			thisRoom->objects[objActive].data.c.topLeft.v += deltaV;
 			break;
-			
+
 			case kUpStairs:
 			case kDownStairs:
 			case kFloorTrans:
@@ -643,7 +643,7 @@ void DragObject (Point where)
 			case kWindowExLf:
 			thisRoom->objects[objActive].data.d.topLeft.h += deltaH;
 			break;
-			
+
 			case kMailboxLf:
 			case kMailboxRt:
 			case kInvisTrans:
@@ -651,7 +651,7 @@ void DragObject (Point where)
 			thisRoom->objects[objActive].data.d.topLeft.h += deltaH;
 			thisRoom->objects[objActive].data.d.topLeft.v += deltaV;
 			break;
-			
+
 			case kLightSwitch:
 			case kMachineSwitch:
 			case kThermostat:
@@ -664,7 +664,7 @@ void DragObject (Point where)
 			thisRoom->objects[objActive].data.e.topLeft.h += deltaH;
 			thisRoom->objects[objActive].data.e.topLeft.v += deltaV;
 			break;
-			
+
 			case kCeilingLight:
 			case kHipLamp:
 			case kDecoLamp:
@@ -672,14 +672,14 @@ void DragObject (Point where)
 			case kTrackLight:
 			thisRoom->objects[objActive].data.f.topLeft.h += deltaH;
 			break;
-			
+
 			case kLightBulb:
 			case kTableLamp:
 			case kInvisLight:
 			thisRoom->objects[objActive].data.f.topLeft.h += deltaH;
 			thisRoom->objects[objActive].data.f.topLeft.v += deltaV;
 			break;
-			
+
 			case kShredder:
 			case kToaster:
 			case kMacPlus:
@@ -697,18 +697,18 @@ void DragObject (Point where)
 			thisRoom->objects[objActive].data.g.topLeft.h += deltaH;
 			thisRoom->objects[objActive].data.g.topLeft.v += deltaV;
 			break;
-			
+
 			case kBalloon:
 			case kCopterLf:
 			case kCopterRt:
 			thisRoom->objects[objActive].data.h.topLeft.h += deltaH;
 			break;
-			
+
 			case kDartLf:
 			case kDartRt:
 			thisRoom->objects[objActive].data.h.topLeft.v += deltaV;
 			break;
-			
+
 			case kBall:
 			case kDrip:
 			case kFish:
@@ -716,7 +716,7 @@ void DragObject (Point where)
 			thisRoom->objects[objActive].data.h.topLeft.h += deltaH;
 			thisRoom->objects[objActive].data.h.topLeft.v += deltaV;
 			break;
-			
+
 			case kOzma:
 			case kMirror:
 			case kFlower:
@@ -735,7 +735,7 @@ void DragObject (Point where)
 			thisRoom->objects[objActive].data.i.bounds.top += deltaV;
 			thisRoom->objects[objActive].data.i.bounds.bottom += deltaV;
 			break;
-			
+
 			case kMousehole:
 			case kFireplace:
 			thisRoom->objects[objActive].data.i.bounds.left += deltaH;
@@ -743,7 +743,7 @@ void DragObject (Point where)
 			break;
 		}
 	}
-	
+
 	if (KeepObjectLegal())
 	{
 	}
@@ -762,7 +762,7 @@ void DragObject (Point where)
 		else
 			InvalWindowRect(mainWindow, &roomObjectRects[objActive]);
 	}
-	
+
 	ReadyBackground(thisRoom->background, thisRoom->tiles);
 	DrawThisRoomsObjects();
 }
@@ -774,15 +774,15 @@ void DoNewObjectClick (Point where)
 {
 #ifndef COMPILEDEMO
 	short		whatObject;
-	
+
 	StopMarquee();
 	objActive = kNoObjectSelected;
-	
+
 	whatObject = toolSelected + ((toolMode - 1) * 0x0010);
 	if (AddNewObject(where, whatObject, true))
 		IgnoreThisClick();
 	UpdateMenus(false);
-	
+
 	AddObjectPairing();
 #endif
 }
@@ -795,7 +795,7 @@ void AddObjectPairing (void)
 	short		roomNum, emptySlot;
 	char		wasState;
 	Str255		message;
-	
+
 	if (thisRoom->objects[objActive].what == kDoorInRt)
 	{
 		roomNum = DoesNeighborRoomExist(kRoomToRight);
@@ -807,7 +807,7 @@ void AddObjectPairing (void)
 				wasState = HGetState((Handle)thisHouse);
 				HLock((Handle)thisHouse);
 				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
-				
+
 				testRoomPtr->objects[emptySlot].what = kDoorExLf;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kDoorExLfLeft;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.v = kDoorExTop;
@@ -815,10 +815,10 @@ void AddObjectPairing (void)
 				testRoomPtr->objects[emptySlot].data.d.where = -1;
 				testRoomPtr->objects[emptySlot].data.d.who = 255;
 				testRoomPtr->objects[emptySlot].data.d.wide = 0;
-				
+
 				testRoomPtr->numObjects++;
 				HSetState((Handle)thisHouse, wasState);
-				
+
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
 				ForeColor(blueColor);
@@ -841,7 +841,7 @@ void AddObjectPairing (void)
 				wasState = HGetState((Handle)thisHouse);
 				HLock((Handle)thisHouse);
 				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
-				
+
 				testRoomPtr->objects[emptySlot].what = kDoorExRt;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kDoorExRtLeft;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.v = kDoorExTop;
@@ -849,11 +849,11 @@ void AddObjectPairing (void)
 				testRoomPtr->objects[emptySlot].data.d.where = -1;
 				testRoomPtr->objects[emptySlot].data.d.who = 255;
 				testRoomPtr->objects[emptySlot].data.d.wide = 0;
-				
+
 				testRoomPtr->numObjects++;
-				
+
 				HSetState((Handle)thisHouse, wasState);
-				
+
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
 				ForeColor(blueColor);
@@ -876,7 +876,7 @@ void AddObjectPairing (void)
 				wasState = HGetState((Handle)thisHouse);
 				HLock((Handle)thisHouse);
 				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
-				
+
 				testRoomPtr->objects[emptySlot].what = kDoorInLf;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kDoorInLfLeft;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.v = kDoorInTop;
@@ -884,11 +884,11 @@ void AddObjectPairing (void)
 				testRoomPtr->objects[emptySlot].data.d.where = -1;
 				testRoomPtr->objects[emptySlot].data.d.who = 255;
 				testRoomPtr->objects[emptySlot].data.d.wide = 0;
-				
+
 				testRoomPtr->numObjects++;
-				
+
 				HSetState((Handle)thisHouse, wasState);
-				
+
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
 				ForeColor(blueColor);
@@ -911,7 +911,7 @@ void AddObjectPairing (void)
 				wasState = HGetState((Handle)thisHouse);
 				HLock((Handle)thisHouse);
 				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
-				
+
 				testRoomPtr->objects[emptySlot].what = kDoorInRt;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kDoorInRtLeft;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.v = kDoorInTop;
@@ -919,11 +919,11 @@ void AddObjectPairing (void)
 				testRoomPtr->objects[emptySlot].data.d.where = -1;
 				testRoomPtr->objects[emptySlot].data.d.who = 255;
 				testRoomPtr->objects[emptySlot].data.d.wide = 0;
-				
+
 				testRoomPtr->numObjects++;
-				
+
 				HSetState((Handle)thisHouse, wasState);
-				
+
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
 				ForeColor(blueColor);
@@ -946,7 +946,7 @@ void AddObjectPairing (void)
 				wasState = HGetState((Handle)thisHouse);
 				HLock((Handle)thisHouse);
 				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
-				
+
 				testRoomPtr->objects[emptySlot].what = kWindowExRt;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kWindowExRtLeft;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.v = kWindowExTop;
@@ -954,11 +954,11 @@ void AddObjectPairing (void)
 				testRoomPtr->objects[emptySlot].data.d.where = -1;
 				testRoomPtr->objects[emptySlot].data.d.who = 255;
 				testRoomPtr->objects[emptySlot].data.d.wide = 0;
-				
+
 				testRoomPtr->numObjects++;
-				
+
 				HSetState((Handle)thisHouse, wasState);
-				
+
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
 				ForeColor(blueColor);
@@ -981,7 +981,7 @@ void AddObjectPairing (void)
 				wasState = HGetState((Handle)thisHouse);
 				HLock((Handle)thisHouse);
 				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
-				
+
 				testRoomPtr->objects[emptySlot].what = kWindowExLf;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kWindowExLfLeft;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.v = kWindowExTop;
@@ -989,11 +989,11 @@ void AddObjectPairing (void)
 				testRoomPtr->objects[emptySlot].data.d.where = -1;
 				testRoomPtr->objects[emptySlot].data.d.who = 255;
 				testRoomPtr->objects[emptySlot].data.d.wide = 0;
-				
+
 				testRoomPtr->numObjects++;
-				
+
 				HSetState((Handle)thisHouse, wasState);
-				
+
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
 				ForeColor(blueColor);
@@ -1016,7 +1016,7 @@ void AddObjectPairing (void)
 				wasState = HGetState((Handle)thisHouse);
 				HLock((Handle)thisHouse);
 				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
-				
+
 				testRoomPtr->objects[emptySlot].what = kWindowInLf;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kWindowInLfLeft;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.v = kWindowInTop;
@@ -1024,11 +1024,11 @@ void AddObjectPairing (void)
 				testRoomPtr->objects[emptySlot].data.d.where = -1;
 				testRoomPtr->objects[emptySlot].data.d.who = 255;
 				testRoomPtr->objects[emptySlot].data.d.wide = 0;
-				
+
 				testRoomPtr->numObjects++;
-				
+
 				HSetState((Handle)thisHouse, wasState);
-				
+
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
 				ForeColor(blueColor);
@@ -1051,7 +1051,7 @@ void AddObjectPairing (void)
 				wasState = HGetState((Handle)thisHouse);
 				HLock((Handle)thisHouse);
 				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
-				
+
 				testRoomPtr->objects[emptySlot].what = kWindowInRt;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kWindowInRtLeft;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.v = kWindowInTop;
@@ -1059,11 +1059,11 @@ void AddObjectPairing (void)
 				testRoomPtr->objects[emptySlot].data.d.where = -1;
 				testRoomPtr->objects[emptySlot].data.d.who = 255;
 				testRoomPtr->objects[emptySlot].data.d.wide = 0;
-				
+
 				testRoomPtr->numObjects++;
-				
+
 				HSetState((Handle)thisHouse, wasState);
-				
+
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
 				ForeColor(blueColor);
@@ -1086,20 +1086,20 @@ void AddObjectPairing (void)
 				wasState = HGetState((Handle)thisHouse);
 				HLock((Handle)thisHouse);
 				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
-				
+
 				testRoomPtr->objects[emptySlot].what = kDownStairs;
-				testRoomPtr->objects[emptySlot].data.d.topLeft.h = 
+				testRoomPtr->objects[emptySlot].data.d.topLeft.h =
 						thisRoom->objects[objActive].data.d.topLeft.h;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.v = kStairsTop;
 				testRoomPtr->objects[emptySlot].data.d.tall = 0;
 				testRoomPtr->objects[emptySlot].data.d.where = -1;
 				testRoomPtr->objects[emptySlot].data.d.who = 255;
 				testRoomPtr->objects[emptySlot].data.d.wide = 0;
-				
+
 				testRoomPtr->numObjects++;
-				
+
 				HSetState((Handle)thisHouse, wasState);
-				
+
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
 				ForeColor(blueColor);
@@ -1122,20 +1122,20 @@ void AddObjectPairing (void)
 				wasState = HGetState((Handle)thisHouse);
 				HLock((Handle)thisHouse);
 				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
-				
+
 				testRoomPtr->objects[emptySlot].what = kUpStairs;
-				testRoomPtr->objects[emptySlot].data.d.topLeft.h = 
+				testRoomPtr->objects[emptySlot].data.d.topLeft.h =
 						thisRoom->objects[objActive].data.d.topLeft.h;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.v = kStairsTop;
 				testRoomPtr->objects[emptySlot].data.d.tall = 0;
 				testRoomPtr->objects[emptySlot].data.d.where = -1;
 				testRoomPtr->objects[emptySlot].data.d.who = 255;
 				testRoomPtr->objects[emptySlot].data.d.wide = 0;
-				
+
 				testRoomPtr->numObjects++;
-				
+
 				HSetState((Handle)thisHouse, wasState);
-				
+
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
 				ForeColor(blueColor);
@@ -1155,25 +1155,25 @@ void DeleteObject (void)
 {
 #ifndef COMPILEDEMO
 	short		i;
-	
+
 	if ((theMode != kEditMode) || (objActive == kNoObjectSelected))
 		return;
-	
-	if ((objActive == kInitialGliderSelected) || 
-			(objActive == kLeftGliderSelected) || 
+
+	if ((objActive == kInitialGliderSelected) ||
+			(objActive == kLeftGliderSelected) ||
 			(objActive == kRightGliderSelected))
 	{
 		SysBeep(1);
 		return;
 	}
-	
+
 	for (i = 0; i < kMaxRoomObs; i++)
 	{
-		if ((retroLinkList[i].room == thisRoomNumber) && 
+		if ((retroLinkList[i].room == thisRoomNumber) &&
 				(retroLinkList[i].object == objActive))
 			retroLinkList[i].room = -1;
 	}
-	
+
 	thisRoom->objects[objActive].what = kObjectIsEmpty;
 	thisRoom->numObjects--;
 	fileDirty = true;
@@ -1194,16 +1194,16 @@ void DuplicateObject (void)
 	Point		placePt;
 	short		direction, dist;
 	Boolean		handled;
-	
+
 	tempObject = thisRoom->objects[objActive];
-	
-	placePt.h = roomObjectRects[objActive].left + 
+
+	placePt.h = roomObjectRects[objActive].left +
 			HalfRectWide(&roomObjectRects[objActive]) + 64;
-	placePt.v = roomObjectRects[objActive].top + 
+	placePt.v = roomObjectRects[objActive].top +
 			HalfRectTall(&roomObjectRects[objActive]);
-	
+
 	StopMarquee();
-	
+
 	if (AddNewObject(placePt, tempObject.what, false))
 	{
 		switch (tempObject.what)
@@ -1219,7 +1219,7 @@ void DuplicateObject (void)
 			thisRoom->objects[objActive].data.a.vector = tempObject.data.a.vector;
 			thisRoom->objects[objActive].data.a.tall = tempObject.data.a.tall;
 			break;
-			
+
 			case kLiftArea:
 			thisRoom->objects[objActive].data.a.topLeft.h = tempObject.data.a.topLeft.h + 64;
 			thisRoom->objects[objActive].data.a.topLeft.v = tempObject.data.a.topLeft.v;
@@ -1229,13 +1229,13 @@ void DuplicateObject (void)
 			thisRoom->objects[objActive].data.a.vector = tempObject.data.a.vector;
 			thisRoom->objects[objActive].data.a.tall = tempObject.data.a.tall;
 			break;
-			
+
 			case kFilingCabinet:	case kWasteBasket:		case kMilkCrate:
 			case kStool:			case kTrunk:			case kManhole:
 			case kBooks:
 			thisRoom->objects[objActive].data.b.pict = tempObject.data.b.pict;
 			break;
-			
+
 			case kTable:			case kShelf:			case kCabinet:
 			case kCounter:			case kDresser:			case kDeckTable:
 			case kInvisObstacle:	case kInvisBounce:
@@ -1243,7 +1243,7 @@ void DuplicateObject (void)
 			QOffsetRect(&thisRoom->objects[objActive].data.b.bounds, 64, 0);
 			thisRoom->objects[objActive].data.b.pict = tempObject.data.b.pict;
 			break;
-			
+
 			case kRedClock:			case kBlueClock:		case kYellowClock:
 			case kCuckoo:			case kPaper:			case kBattery:
 			case kBands:			case kGreaseRt:			case kGreaseLf:
@@ -1254,7 +1254,7 @@ void DuplicateObject (void)
 			thisRoom->objects[objActive].data.c.state = tempObject.data.c.state;
 			thisRoom->objects[objActive].data.c.initial = tempObject.data.c.initial;
 			break;
-			
+
 			case kSlider:
 			thisRoom->objects[objActive].data.c.topLeft.h = tempObject.data.c.topLeft.h + 64;
 			thisRoom->objects[objActive].data.c.length = tempObject.data.c.length;
@@ -1262,7 +1262,7 @@ void DuplicateObject (void)
 			thisRoom->objects[objActive].data.c.state = tempObject.data.c.state;
 			thisRoom->objects[objActive].data.c.initial = tempObject.data.c.initial;
 			break;
-			
+
 			case kUpStairs:			case kDownStairs:		case kMailboxLf:
 			case kMailboxRt:		case kFloorTrans:		case kCeilingTrans:
 			case kDoorInLf:			case kDoorInRt:			case kDoorExRt:
@@ -1273,7 +1273,7 @@ void DuplicateObject (void)
 			thisRoom->objects[objActive].data.d.who = tempObject.data.d.who;
 			thisRoom->objects[objActive].data.d.wide = tempObject.data.d.wide;
 			break;
-			
+
 			case kInvisTrans:		case kDeluxeTrans:
 			thisRoom->objects[objActive].data.d.topLeft.h = tempObject.data.d.topLeft.h + 64;
 			thisRoom->objects[objActive].data.d.topLeft.v = tempObject.data.d.topLeft.v;
@@ -1282,7 +1282,7 @@ void DuplicateObject (void)
 			thisRoom->objects[objActive].data.d.who = tempObject.data.d.who;
 			thisRoom->objects[objActive].data.d.wide = tempObject.data.d.wide;
 			break;
-			
+
 			case kLightSwitch:		case kMachineSwitch:	case kThermostat:
 			case kPowerSwitch:		case kKnifeSwitch:		case kInvisSwitch:
 			case kTrigger:			case kLgTrigger:		case kSoundTrigger:
@@ -1291,7 +1291,7 @@ void DuplicateObject (void)
 			thisRoom->objects[objActive].data.e.who = tempObject.data.e.who;
 			thisRoom->objects[objActive].data.e.type = tempObject.data.e.type;
 			break;
-			
+
 			case kCeilingLight:		case kLightBulb:		case kTableLamp:
 			case kHipLamp:			case kDecoLamp:			case kFlourescent:
 			case kTrackLight:		case kInvisLight:
@@ -1301,7 +1301,7 @@ void DuplicateObject (void)
 			thisRoom->objects[objActive].data.f.initial = tempObject.data.f.initial;
 			thisRoom->objects[objActive].data.f.state = tempObject.data.f.state;
 			break;
-			
+
 			case kShredder:			case kToaster:			case kMacPlus:
 			case kGuitar:			case kTV:				case kCoffee:
 			case kOutlet:			case kVCR:				case kStereo:
@@ -1313,9 +1313,9 @@ void DuplicateObject (void)
 			thisRoom->objects[objActive].data.g.initial = tempObject.data.g.initial;
 			thisRoom->objects[objActive].data.g.state = tempObject.data.g.state;
 			break;
-			
+
 			case kCustomPict:
-			thisRoom->objects[objActive].data.g.topLeft.h = 
+			thisRoom->objects[objActive].data.g.topLeft.h =
 					tempObject.data.g.topLeft.h + 64;
 			thisRoom->objects[objActive].data.g.topLeft.v = tempObject.data.g.topLeft.v;
 			thisRoom->objects[objActive].data.g.height = tempObject.data.g.height;
@@ -1324,7 +1324,7 @@ void DuplicateObject (void)
 			thisRoom->objects[objActive].data.g.initial = tempObject.data.g.initial;
 			thisRoom->objects[objActive].data.g.state = tempObject.data.g.state;
 			break;
-			
+
 			case kBalloon:			case kCopterLf:			case kCopterRt:
 			case kDartLf:			case kDartRt:			case kBall:
 			case kDrip:				case kFish:				case kCobweb:
@@ -1334,31 +1334,31 @@ void DuplicateObject (void)
 			thisRoom->objects[objActive].data.h.initial = tempObject.data.h.initial;
 			thisRoom->objects[objActive].data.h.state = tempObject.data.h.state;
 			break;
-			
+
 			case kOzma:				case kMousehole:		case kFireplace:
 			case kBear:				case kCalendar:			case kVase1:
 			case kVase2:			case kBulletin:			case kCloud:
 			case kFaucet:			case kRug:				case kChimes:
 			thisRoom->objects[objActive].data.i.pict = tempObject.data.i.pict;
 			break;
-			
+
 			case kMirror:			case kFlower:			case kWallWindow:
 			thisRoom->objects[objActive].data.i.bounds = tempObject.data.i.bounds;
 			QOffsetRect(&thisRoom->objects[objActive].data.i.bounds, 64, 0);
 			thisRoom->objects[objActive].data.i.pict = tempObject.data.i.pict;
 			break;
 		}
-		
+
 		if (KeepObjectLegal())
 		{
 		}
 		handled = ObjectHasHandle(&direction, &dist);
-		
+
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		GetThisRoomsObjRects();
 		DrawThisRoomsObjects();
 		InvalWindowRect(mainWindow, &mainWindowRect);
-		
+
 		if (handled)
 		{
 			StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
@@ -1378,12 +1378,12 @@ void MoveObject (short whichWay, Boolean shiftDown)
 	short		deltaH, deltaV, increment;
 	short		dist, direction;
 	char		wasState;
-	
+
 	if (theMode != kEditMode)
 		return;
-	
+
 	StopMarquee();
-	
+
 	if (shiftDown)
 		increment = 10;
 	else
@@ -1444,11 +1444,11 @@ void MoveObject (short whichWay, Boolean shiftDown)
 					case kMirror:
 					increment = 2;
 					break;
-					
+
 					case kManhole:
 					increment = 64;
 					break;
-					
+
 					default:
 					increment = 1;
 					break;
@@ -1458,30 +1458,30 @@ void MoveObject (short whichWay, Boolean shiftDown)
 				increment = 1;
 		}
 	}
-	
+
 	switch (whichWay)
 	{
 		case kBumpUp:
 		deltaH = 0;
 		deltaV = -increment;
 		break;
-		
+
 		case kBumpDown:
 		deltaH = 0;
 		deltaV = increment;
 		break;
-		
+
 		case kBumpRight:
 		deltaH = increment;
 		deltaV = 0;
 		break;
-		
+
 		case kBumpLeft:
 		deltaH = -increment;
 		deltaV = 0;
 		break;
 	}
-	
+
 	if (objActive == kInitialGliderSelected)
 	{
 		wasRect = initialGliderRect;
@@ -1501,7 +1501,7 @@ void MoveObject (short whichWay, Boolean shiftDown)
 			increment = 0;
 		thisRoom->leftStart = (Byte)increment;
 		QSetRect(&leftStartGliderDest, 0, 0, 48, 16);
-		QOffsetRect(&leftStartGliderDest, 0, 
+		QOffsetRect(&leftStartGliderDest, 0,
 				kGliderStartsDown + (short)thisRoom->leftStart);
 	}
 	else if (objActive == kRightGliderSelected)
@@ -1514,7 +1514,7 @@ void MoveObject (short whichWay, Boolean shiftDown)
 			increment = 0;
 		thisRoom->rightStart = (Byte)increment;
 		QSetRect(&rightStartGliderDest, 0, 0, 48, 16);
-		QOffsetRect(&rightStartGliderDest, kRoomWide - 48, 
+		QOffsetRect(&rightStartGliderDest, kRoomWide - 48,
 				kGliderStartsDown + (short)thisRoom->rightStart);
 	}
 	else
@@ -1531,7 +1531,7 @@ void MoveObject (short whichWay, Boolean shiftDown)
 			case kSewerBlower:
 			thisRoom->objects[objActive].data.a.topLeft.h += deltaH;
 			break;
-			
+
 			case kLeftFan:
 			case kRightFan:
 			case kTaper:
@@ -1544,7 +1544,7 @@ void MoveObject (short whichWay, Boolean shiftDown)
 			thisRoom->objects[objActive].data.a.topLeft.h += deltaH;
 			thisRoom->objects[objActive].data.a.topLeft.v += deltaV;
 			break;
-			
+
 			case kTable:
 			case kShelf:
 			case kCabinet:
@@ -1562,14 +1562,14 @@ void MoveObject (short whichWay, Boolean shiftDown)
 			thisRoom->objects[objActive].data.b.bounds.top += deltaV;
 			thisRoom->objects[objActive].data.b.bounds.bottom += deltaV;
 			break;
-			
+
 			case kCounter:
 			case kDresser:
 			case kManhole:
 			thisRoom->objects[objActive].data.b.bounds.left += deltaH;
 			thisRoom->objects[objActive].data.b.bounds.right += deltaH;
 			break;
-			
+
 			case kRedClock:
 			case kBlueClock:
 			case kYellowClock:
@@ -1588,14 +1588,14 @@ void MoveObject (short whichWay, Boolean shiftDown)
 			thisRoom->objects[objActive].data.c.topLeft.h += deltaH;
 			thisRoom->objects[objActive].data.c.topLeft.v += deltaV;
 			break;
-			
+
 			case kUpStairs:
 			case kDownStairs:
 			case kFloorTrans:
 			case kCeilingTrans:
 			thisRoom->objects[objActive].data.d.topLeft.h += deltaH;
 			break;
-			
+
 			case kMailboxLf:
 			case kMailboxRt:
 			case kInvisTrans:
@@ -1603,7 +1603,7 @@ void MoveObject (short whichWay, Boolean shiftDown)
 			thisRoom->objects[objActive].data.d.topLeft.h += deltaH;
 			thisRoom->objects[objActive].data.d.topLeft.v += deltaV;
 			break;
-			
+
 			case kLightSwitch:
 			case kMachineSwitch:
 			case kThermostat:
@@ -1616,7 +1616,7 @@ void MoveObject (short whichWay, Boolean shiftDown)
 			thisRoom->objects[objActive].data.e.topLeft.h += deltaH;
 			thisRoom->objects[objActive].data.e.topLeft.v += deltaV;
 			break;
-			
+
 			case kCeilingLight:
 			case kHipLamp:
 			case kDecoLamp:
@@ -1624,14 +1624,14 @@ void MoveObject (short whichWay, Boolean shiftDown)
 			case kTrackLight:
 			thisRoom->objects[objActive].data.f.topLeft.h += deltaH;
 			break;
-			
+
 			case kLightBulb:
 			case kTableLamp:
 			case kInvisLight:
 			thisRoom->objects[objActive].data.f.topLeft.h += deltaH;
 			thisRoom->objects[objActive].data.f.topLeft.v += deltaV;
 			break;
-			
+
 			case kShredder:
 			case kToaster:
 			case kMacPlus:
@@ -1649,18 +1649,18 @@ void MoveObject (short whichWay, Boolean shiftDown)
 			thisRoom->objects[objActive].data.g.topLeft.h += deltaH;
 			thisRoom->objects[objActive].data.g.topLeft.v += deltaV;
 			break;
-			
+
 			case kBalloon:
 			case kCopterLf:
 			case kCopterRt:
 			thisRoom->objects[objActive].data.h.topLeft.h += deltaH;
 			break;
-			
+
 			case kDartLf:
 			case kDartRt:
 			thisRoom->objects[objActive].data.h.topLeft.v += deltaV;
 			break;
-			
+
 			case kBall:
 			case kDrip:
 			case kFish:
@@ -1668,7 +1668,7 @@ void MoveObject (short whichWay, Boolean shiftDown)
 			thisRoom->objects[objActive].data.h.topLeft.h += deltaH;
 			thisRoom->objects[objActive].data.h.topLeft.v += deltaV;
 			break;
-			
+
 			case kOzma:
 			case kMirror:
 			case kFlower:
@@ -1687,23 +1687,23 @@ void MoveObject (short whichWay, Boolean shiftDown)
 			thisRoom->objects[objActive].data.i.bounds.top += deltaV;
 			thisRoom->objects[objActive].data.i.bounds.bottom += deltaV;
 			break;
-			
+
 			case kMousehole:
 			case kFireplace:
 			thisRoom->objects[objActive].data.i.bounds.left += deltaH;
 			thisRoom->objects[objActive].data.i.bounds.right += deltaH;
 			break;
-			
+
 		}
 	}
-	
+
 	if (KeepObjectLegal())
 	{
 	}
 	fileDirty = true;
 	UpdateMenus(false);
 	GetThisRoomsObjRects();
-	
+
 	if (objActive == kInitialGliderSelected)
 	{
 		InvalWindowRect(mainWindow, &wasRect);
@@ -1741,17 +1741,17 @@ void MoveObject (short whichWay, Boolean shiftDown)
 			case kWallWindow:
 			InvalWindowRect(mainWindow, &mainWindowRect);
 			break;
-			
+
 			default:
 			InvalWindowRect(mainWindow, &wasRect);
 			InvalWindowRect(mainWindow, &roomObjectRects[objActive]);
 			break;
 		}
 	}
-	
+
 	ReadyBackground(thisRoom->background, thisRoom->tiles);
 	DrawThisRoomsObjects();
-	
+
 	if (ObjectHasHandle(&direction, &dist))
 	{
 		StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
@@ -1778,7 +1778,7 @@ void DeselectObject (void)
 #ifndef COMPILEDEMO
 	if ((theMode != kEditMode) || (objActive == kNoObjectSelected))
 		return;
-	
+
 	objActive = kNoObjectSelected;
 	StopMarquee();
 	UpdateMenus(false);
@@ -1790,10 +1790,10 @@ void DeselectObject (void)
 #ifndef COMPILEDEMO
 Boolean ObjectHasHandle (short *direction, short *dist)
 {
-	if ((objActive == kInitialGliderSelected) || 
+	if ((objActive == kInitialGliderSelected) ||
 			(objActive == kNoObjectSelected))
 		return (false);
-	
+
 	switch (thisRoom->objects[objActive].what)
 	{
 		case kFloorVent:
@@ -1810,41 +1810,41 @@ Boolean ObjectHasHandle (short *direction, short *dist)
 		*dist = thisRoom->objects[objActive].data.a.distance;
 		return (true);
 		break;
-		
+
 		case kCeilingVent:
 		case kCeilingBlower:
 		*direction = kBelow;
 		*dist = thisRoom->objects[objActive].data.a.distance;
 		return (true);
 		break;
-		
+
 		case kLeftFan:
 		*direction = kToLeft;
 		*dist = thisRoom->objects[objActive].data.a.distance;
 		return (true);
 		break;
-		
+
 		case kRightFan:
 		*direction = kToRight;
 		*dist = thisRoom->objects[objActive].data.a.distance;
 		return (true);
 		break;
-		
+
 		case kInvisBlower:
 		switch (thisRoom->objects[objActive].data.a.vector & 0x0F)
 		{
 			case 1: 	// up
 			*direction = kAbove;
 			break;
-			
+
 			case 2: 	// right
 			*direction = kToRight;
 			break;
-			
+
 			case 4: 	// down
 			*direction = kBelow;
 			break;
-			
+
 			case 8: 	// left
 			*direction = kToLeft;
 			break;
@@ -1852,7 +1852,7 @@ Boolean ObjectHasHandle (short *direction, short *dist)
 		*dist = thisRoom->objects[objActive].data.a.distance;
 		return (true);
 		break;
-		
+
 		case kTable:
 		case kShelf:
 		case kDeckTable:
@@ -1860,7 +1860,7 @@ Boolean ObjectHasHandle (short *direction, short *dist)
 		*dist = 0;
 		return (true);
 		break;
-		
+
 		case kLiftArea:
 		case kCabinet:
 		case kInvisObstacle:
@@ -1871,65 +1871,65 @@ Boolean ObjectHasHandle (short *direction, short *dist)
 		*dist = 0;
 		return (true);
 		break;
-		
+
 		case kCounter:
 		case kDresser:
 		*direction = kTopCorner;
 		*dist = 0;
 		return (true);
 		break;
-		
+
 		case kGreaseRt:
 		*direction = kToRight;
 		*dist = thisRoom->objects[objActive].data.c.length;
 		return (true);
 		break;
-		
+
 		case kGreaseLf:
 		*direction = kToLeft;
 		*dist = thisRoom->objects[objActive].data.c.length;
 		return (true);
 		break;
-		
+
 		case kSlider:
 		*direction = kToRight;
 		*dist = 0;
 		return (true);
 		break;
-		
+
 		case kInvisTrans:
 		case kDeluxeTrans:
 		*direction = kBottomCorner;
 		*dist = 0;
 		return (true);
 		break;
-		
+
 		case kFlourescent:
 		case kTrackLight:
 		*direction = kToRight;
 		*dist = 0;
 		return (true);
 		break;
-		
+
 		case kToaster:
 		*direction = kAbove;
 		*dist = thisRoom->objects[objActive].data.g.height;
 		return (true);
 		break;
-		
+
 		case kBall:
 		case kFish:
 		*direction = kAbove;
 		*dist = thisRoom->objects[objActive].data.h.length;
 		return (true);
 		break;
-		
+
 		case kDrip:
 		*direction = kBelow;
 		*dist = thisRoom->objects[objActive].data.h.length;
 		return (true);
 		break;
-		
+
 		default:
 		return (false);
 		break;
@@ -1941,10 +1941,10 @@ Boolean ObjectHasHandle (short *direction, short *dist)
 
 Boolean ObjectIsUpBlower (objectType *who)
 {
-	if ((who->what == kFloorVent) || (who->what == kFloorBlower) || 
-			(who->what == kSewerGrate) || (who->what == kTaper) || 
-			(who->what == kCandle) || (who->what == kStubby) || 
-			(who->what == kTiki) || (who->what == kBBQ) || 
+	if ((who->what == kFloorVent) || (who->what == kFloorBlower) ||
+			(who->what == kSewerGrate) || (who->what == kTaper) ||
+			(who->what == kCandle) || (who->what == kStubby) ||
+			(who->what == kTiki) || (who->what == kBBQ) ||
 			(who->what == kGrecoVent) || (who->what == kSewerBlower))
 		return (true);
 	else if ((who->what == kInvisBlower) || (who->what == kLiftArea))
@@ -1964,13 +1964,13 @@ void HandleBlowerGlider (void)
 {
 #ifndef COMPILEDEMO
 	short		direction, dist;
-	
+
 	if (ObjectIsUpBlower(&thisRoom->objects[objActive]))
 	{
 		if (ObjectHasHandle(&direction, &dist))
 		{
-			SetMarqueeGliderRect(((roomObjectRects[objActive].right + 
-					roomObjectRects[objActive].left) / 2), 
+			SetMarqueeGliderRect(((roomObjectRects[objActive].right +
+					roomObjectRects[objActive].left) / 2),
 					roomObjectRects[objActive].top - dist);
 		}
 	}
@@ -1984,12 +1984,12 @@ void SelectNextObject (void)
 #ifndef COMPILEDEMO
 	short		direction, dist;
 	Boolean		noneFound;
-	
+
 	if ((theMode != kEditMode) || (thisRoom->numObjects <= 0))
 		return;
-	
+
 	noneFound = true;
-	
+
 	while (noneFound)
 	{
 		objActive++;
@@ -1998,7 +1998,7 @@ void SelectNextObject (void)
 		if (thisRoom->objects[objActive].what != kObjectIsEmpty)
 			noneFound = false;
 	}
-	
+
 	UpdateMenus(false);
 	if (ObjectHasHandle(&direction, &dist))
 	{
@@ -2017,12 +2017,12 @@ void SelectPrevObject (void)
 #ifndef COMPILEDEMO
 	short		direction, dist;
 	Boolean		noneFound;
-	
+
 	if ((theMode != kEditMode) || (thisRoom->numObjects <= 0))
 		return;
-	
+
 	noneFound = true;
-	
+
 	while (noneFound)
 	{
 		objActive--;
@@ -2031,7 +2031,7 @@ void SelectPrevObject (void)
 		if (thisRoom->objects[objActive].what != kObjectIsEmpty)
 			noneFound = false;
 	}
-	
+
 	UpdateMenus(false);
 	if (ObjectHasHandle(&direction, &dist))
 	{
@@ -2050,22 +2050,22 @@ void GetThisRoomsObjRects (void)
 {
 	PicHandle	thePict;
 	short		i, wide, tall;
-	
+
 	isFirstRoom = (GetFirstRoomNumber() == thisRoomNumber);
-	
+
 	if ((isFirstRoom) && (!noRoomAtAll) && (houseUnlocked))
 		WhereDoesGliderBegin(&initialGliderRect, kNewGameMode);
 	else
 		QSetRect(&initialGliderRect, 0, 0, 0, 0);
-	
+
 	QSetRect(&leftStartGliderDest, 0, 0, 48, 16);
-	QOffsetRect(&leftStartGliderDest, 0, 
+	QOffsetRect(&leftStartGliderDest, 0,
 			kGliderStartsDown + (short)thisRoom->leftStart);
-	
+
 	QSetRect(&rightStartGliderDest, 0, 0, 48, 16);
-	QOffsetRect(&rightStartGliderDest, kRoomWide - 48, 
+	QOffsetRect(&rightStartGliderDest, kRoomWide - 48,
 			kGliderStartsDown + (short)thisRoom->rightStart);
-	
+
 	if ((noRoomAtAll) || (!houseUnlocked))
 	{
 		return;
@@ -2079,7 +2079,7 @@ void GetThisRoomsObjRects (void)
 				case kObjectIsEmpty:
 				QSetRect(&roomObjectRects[i], -2, -2, -1, -1);
 				break;
-				
+
 				case kFloorVent:
 				case kCeilingVent:
 				case kFloorBlower:
@@ -2097,20 +2097,20 @@ void GetThisRoomsObjRects (void)
 				case kSewerBlower:
 				roomObjectRects[i] = srcRects[thisRoom->objects[i].what];
 				ZeroRectCorner(&roomObjectRects[i]);
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.a.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.a.topLeft.h,
 						thisRoom->objects[i].data.a.topLeft.v);
 				break;
-				
+
 				case kLiftArea:
-				QSetRect(&roomObjectRects[i], 0, 0, 
-						thisRoom->objects[i].data.a.distance, 
+				QSetRect(&roomObjectRects[i], 0, 0,
+						thisRoom->objects[i].data.a.distance,
 						thisRoom->objects[i].data.a.tall * 2);
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.a.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.a.topLeft.h,
 						thisRoom->objects[i].data.a.topLeft.v);
 				break;
-				
+
 				case kTable:
 				case kShelf:
 				case kCabinet:
@@ -2128,7 +2128,7 @@ void GetThisRoomsObjRects (void)
 				case kInvisBounce:
 				roomObjectRects[i] = thisRoom->objects[i].data.b.bounds;
 				break;
-				
+
 				case kRedClock:
 				case kBlueClock:
 				case kYellowClock:
@@ -2143,41 +2143,41 @@ void GetThisRoomsObjRects (void)
 				case kHelium:
 				roomObjectRects[i] = srcRects[thisRoom->objects[i].what];
 				ZeroRectCorner(&roomObjectRects[i]);
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.c.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.c.topLeft.h,
 						thisRoom->objects[i].data.c.topLeft.v);
 				break;
-				
+
 				case kGreaseRt:
 				roomObjectRects[i] = srcRects[thisRoom->objects[i].what];
 				ZeroRectCorner(&roomObjectRects[i]);
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.c.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.c.topLeft.h,
 						thisRoom->objects[i].data.c.topLeft.v);
 				if (!thisRoom->objects[i].data.c.initial)
 					QOffsetRect(&roomObjectRects[i], 8, 0);
 				break;
-				
+
 				case kGreaseLf:
 				roomObjectRects[i] = srcRects[thisRoom->objects[i].what];
 				ZeroRectCorner(&roomObjectRects[i]);
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.c.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.c.topLeft.h,
 						thisRoom->objects[i].data.c.topLeft.v);
 				if (!thisRoom->objects[i].data.c.initial)
 					QOffsetRect(&roomObjectRects[i], -8, 0);
 				break;
-				
+
 				case kSlider:
 				roomObjectRects[i] = srcRects[thisRoom->objects[i].what];
 				ZeroRectCorner(&roomObjectRects[i]);
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.c.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.c.topLeft.h,
 						thisRoom->objects[i].data.c.topLeft.v);
-				roomObjectRects[i].right = roomObjectRects[i].left + 
+				roomObjectRects[i].right = roomObjectRects[i].left +
 						thisRoom->objects[i].data.c.length;
 				break;
-				
+
 				case kUpStairs:
 				case kDownStairs:
 				case kMailboxLf:
@@ -2194,31 +2194,31 @@ void GetThisRoomsObjRects (void)
 				case kWindowExLf:
 				roomObjectRects[i] = srcRects[thisRoom->objects[i].what];
 				ZeroRectCorner(&roomObjectRects[i]);
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.d.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.d.topLeft.h,
 						thisRoom->objects[i].data.d.topLeft.v);
 				break;
-				
+
 				case kInvisTrans:
 				roomObjectRects[i] = srcRects[thisRoom->objects[i].what];
 				ZeroRectCorner(&roomObjectRects[i]);
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.d.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.d.topLeft.h,
 						thisRoom->objects[i].data.d.topLeft.v);
-				roomObjectRects[i].bottom = roomObjectRects[i].top + 
+				roomObjectRects[i].bottom = roomObjectRects[i].top +
 						thisRoom->objects[i].data.d.tall;
 				roomObjectRects[i].right += (short)thisRoom->objects[i].data.d.wide;
 				break;
-				
+
 				case kDeluxeTrans:		// Uses a kludge to get width & height (x4)
 				wide = (thisRoom->objects[i].data.d.tall & 0xFF00) >> 8;
 				tall = thisRoom->objects[i].data.d.tall & 0x00FF;
 				QSetRect(&roomObjectRects[i], 0, 0, wide * 4, tall * 4);
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.d.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.d.topLeft.h,
 						thisRoom->objects[i].data.d.topLeft.v);
 				break;
-				
+
 				case kLightSwitch:
 				case kMachineSwitch:
 				case kThermostat:
@@ -2230,11 +2230,11 @@ void GetThisRoomsObjRects (void)
 				case kSoundTrigger:
 				roomObjectRects[i] = srcRects[thisRoom->objects[i].what];
 				ZeroRectCorner(&roomObjectRects[i]);
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.e.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.e.topLeft.h,
 						thisRoom->objects[i].data.e.topLeft.v);
 				break;
-				
+
 				case kCeilingLight:
 				case kLightBulb:
 				case kTableLamp:
@@ -2243,21 +2243,21 @@ void GetThisRoomsObjRects (void)
 				case kInvisLight:
 				roomObjectRects[i] = srcRects[thisRoom->objects[i].what];
 				ZeroRectCorner(&roomObjectRects[i]);
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.f.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.f.topLeft.h,
 						thisRoom->objects[i].data.f.topLeft.v);
 				break;
-				
+
 				case kFlourescent:
 				case kTrackLight:
 				roomObjectRects[i] = srcRects[thisRoom->objects[i].what];
 				ZeroRectCorner(&roomObjectRects[i]);
 				roomObjectRects[i].right = thisRoom->objects[i].data.f.length;
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.f.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.f.topLeft.h,
 						thisRoom->objects[i].data.f.topLeft.v);
 				break;
-				
+
 				case kShredder:
 				case kToaster:
 				case kMacPlus:
@@ -2273,11 +2273,11 @@ void GetThisRoomsObjRects (void)
 				case kCDs:
 				roomObjectRects[i] = srcRects[thisRoom->objects[i].what];
 				ZeroRectCorner(&roomObjectRects[i]);
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.g.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.g.topLeft.h,
 						thisRoom->objects[i].data.g.topLeft.v);
 				break;
-				
+
 				case kCustomPict:
 				thePict = GetPicture(thisRoom->objects[i].data.g.height);
 				if (thePict == nil)
@@ -2292,11 +2292,11 @@ void GetThisRoomsObjRects (void)
 					HUnlock((Handle)thePict);
 				}
 				ZeroRectCorner(&roomObjectRects[i]);
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.g.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.g.topLeft.h,
 						thisRoom->objects[i].data.g.topLeft.v);
 				break;
-				
+
 				case kBalloon:
 				case kCopterLf:
 				case kCopterRt:
@@ -2308,11 +2308,11 @@ void GetThisRoomsObjRects (void)
 				case kCobweb:
 				roomObjectRects[i] = srcRects[thisRoom->objects[i].what];
 				ZeroRectCorner(&roomObjectRects[i]);
-				QOffsetRect(&roomObjectRects[i], 
-						thisRoom->objects[i].data.h.topLeft.h, 
+				QOffsetRect(&roomObjectRects[i],
+						thisRoom->objects[i].data.h.topLeft.h,
 						thisRoom->objects[i].data.h.topLeft.v);
 				break;
-				
+
 				case kOzma:
 				case kMirror:
 				case kMousehole:
@@ -2330,11 +2330,11 @@ void GetThisRoomsObjRects (void)
 				case kChimes:
 				roomObjectRects[i] = thisRoom->objects[i].data.i.bounds;
 				break;
-				
+
 				default:
 				QSetRect(&roomObjectRects[i], -2, -2, -1, -1);
 				break;
-				
+
 			}
 		}
 	}
@@ -2351,10 +2351,10 @@ void DrawThisRoomsObjects (void)
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	Pattern		dummyPattern;
-	
+
 	GetGWorld(&wasCPort, &wasWorld);
 	SetGWorld(backSrcMap, nil);
-	
+
 	if ((noRoomAtAll) || (!houseUnlocked))
 		return;
 	else
@@ -2366,14 +2366,14 @@ void DrawThisRoomsObjects (void)
 			PaintRect(&backSrcRect);
 			PenNormal();
 		}
-		
+
 		for (i = 0; i < kMaxRoomObs; i++)
 		{
 			switch (thisRoom->objects[i].what)
 			{
 				case kObjectIsEmpty:
 				break;
-				
+
 				case kFloorVent:
 				case kCeilingVent:
 				case kFloorBlower:
@@ -2388,31 +2388,31 @@ void DrawThisRoomsObjects (void)
 				case kSewerBlower:
 				DrawSimpleBlowers(thisRoom->objects[i].what, &roomObjectRects[i]);
 				break;
-				
+
 				case kTiki:
 				DrawTiki(&roomObjectRects[i], 0);
 				break;
-				
+
 				case kInvisBlower:
 				DrawInvisibleBlower(&roomObjectRects[i]);
 				break;
-				
+
 				case kLiftArea:
 				DrawLiftArea(&roomObjectRects[i]);
 				break;
-				
+
 				case kTable:
 				DrawTable(&roomObjectRects[i], 0);
 				break;
-				
+
 				case kShelf:
 				DrawShelf(&roomObjectRects[i]);
 				break;
-				
+
 				case kCabinet:
 				DrawCabinet(&roomObjectRects[i]);
 				break;
-				
+
 				case kFilingCabinet:
 				case kDownStairs:
 				case kDoorExRt:
@@ -2422,52 +2422,52 @@ void DrawThisRoomsObjects (void)
 				case kOzma:
 				DrawPictObject(thisRoom->objects[i].what, &roomObjectRects[i]);
 				break;
-				
+
 				case kWasteBasket:
 				case kMilkCrate:
 				DrawSimpleFurniture(thisRoom->objects[i].what, &roomObjectRects[i]);
 				break;
-				
+
 				case kCounter:
 				DrawCounter(&roomObjectRects[i]);
 				break;
-				
+
 				case kDresser:
 				DrawDresser(&roomObjectRects[i]);
 				break;
-				
+
 				case kDeckTable:
 				DrawDeckTable(&roomObjectRects[i], 0);
 				break;
-				
+
 				case kStool:
 				DrawStool(&roomObjectRects[i], 0);
 				break;
-				
+
 				case kInvisObstacle:
 				DrawInvisObstacle(&roomObjectRects[i]);
 				break;
-				
+
 				case kInvisBounce:
 				DrawInvisBounce(&roomObjectRects[i]);
 				break;
-				
+
 				case kRedClock:
 				DrawRedClock(&roomObjectRects[i]);
 				break;
-				
+
 				case kBlueClock:
 				DrawBlueClock(&roomObjectRects[i]);
 				break;
-				
+
 				case kYellowClock:
 				DrawYellowClock(&roomObjectRects[i]);
 				break;
-				
+
 				case kCuckoo:
 				DrawCuckoo(&roomObjectRects[i]);
 				break;
-				
+
 				case kPaper:
 				case kBattery:
 				case kBands:
@@ -2476,35 +2476,35 @@ void DrawThisRoomsObjects (void)
 				case kHelium:
 				DrawSimplePrizes(thisRoom->objects[i].what, &roomObjectRects[i]);
 				break;
-				
+
 				case kGreaseRt:
 				tempRect = roomObjectRects[i];
 				if (!thisRoom->objects[i].data.c.initial)
 					QOffsetRect(&tempRect, -8, 0);
-				DrawGreaseRt(&tempRect, thisRoom->objects[i].data.c.length, 
+				DrawGreaseRt(&tempRect, thisRoom->objects[i].data.c.length,
 						thisRoom->objects[i].data.c.initial);
 				break;
-				
+
 				case kGreaseLf:
 				tempRect = roomObjectRects[i];
 				if (!thisRoom->objects[i].data.c.initial)
 					QOffsetRect(&tempRect, 8, 0);
-				DrawGreaseLf(&tempRect, thisRoom->objects[i].data.c.length, 
+				DrawGreaseLf(&tempRect, thisRoom->objects[i].data.c.length,
 						thisRoom->objects[i].data.c.initial);
 				break;
-				
+
 				case kFoil:
 				DrawFoil(&roomObjectRects[i]);
 				break;
-				
+
 				case kInvisBonus:
 				DrawInvisBonus(&roomObjectRects[i]);
 				break;
-				
+
 				case kSlider:
 				DrawSlider(&roomObjectRects[i]);
 				break;
-				
+
 				case kBBQ:
 				case kTrunk:
 				case kManhole:
@@ -2527,204 +2527,204 @@ void DrawThisRoomsObjects (void)
 				case kChimes:
 				DrawPictSansWhiteObject(thisRoom->objects[i].what, &roomObjectRects[i]);
 				break;
-				
+
 				case kCustomPict:
-				DrawCustPictSansWhite(thisRoom->objects[i].data.g.height, 
+				DrawCustPictSansWhite(thisRoom->objects[i].data.g.height,
 						&roomObjectRects[i]);
 				break;
-				
+
 				case kMailboxLf:
 				DrawMailboxLeft(&roomObjectRects[i], 0);
 				break;
-				
+
 				case kMailboxRt:
 				DrawMailboxRight(&roomObjectRects[i], 0);
 				break;
-				
+
 				case kFloorTrans:
 				case kCeilingTrans:
 				DrawSimpleTransport(thisRoom->objects[i].what, &roomObjectRects[i]);
 				break;
-				
+
 				case kInvisTrans:
 				case kDeluxeTrans:
 				DrawInvisTransport(&roomObjectRects[i]);
 				break;
-				
+
 				case kLightSwitch:
 				DrawLightSwitch(&roomObjectRects[i], true);
 				break;
-				
+
 				case kMachineSwitch:
 				DrawMachineSwitch(&roomObjectRects[i], true);
 				break;
-				
+
 				case kThermostat:
 				DrawThermostat(&roomObjectRects[i], true);
 				break;
-				
+
 				case kPowerSwitch:
 				DrawPowerSwitch(&roomObjectRects[i], true);
 				break;
-				
+
 				case kKnifeSwitch:
 				DrawKnifeSwitch(&roomObjectRects[i], true);
 				break;
-				
+
 				case kInvisSwitch:
 				DrawInvisibleSwitch(&roomObjectRects[i]);
 				break;
-				
+
 				case kTrigger:
 				case kLgTrigger:
 				DrawTrigger(&roomObjectRects[i]);
 				break;
-				
+
 				case kSoundTrigger:
 				DrawSoundTrigger(&roomObjectRects[i]);
 				break;
-				
+
 				case kCeilingLight:
 				case kLightBulb:
 				case kTableLamp:
 				DrawSimpleLight(thisRoom->objects[i].what, &roomObjectRects[i]);
 				break;
-				
+
 				case kFlourescent:
 				DrawFlourescent(&roomObjectRects[i]);
 				break;
-				
+
 				case kTrackLight:
 				DrawTrackLight(&roomObjectRects[i]);
 				break;
-				
+
 				case kInvisLight:
 				DrawInvisLight(&roomObjectRects[i]);
 				break;
-				
+
 				case kShredder:
 				case kToaster:
 				case kCDs:
 				DrawSimpleAppliance(thisRoom->objects[i].what, &roomObjectRects[i]);
 				break;
-				
+
 				case kMacPlus:
-				DrawMacPlus(&roomObjectRects[i], 
+				DrawMacPlus(&roomObjectRects[i],
 						thisRoom->objects[i].data.g.initial, true);
 				break;
-				
+
 				case kTV:
-				DrawTV(&roomObjectRects[i], 
+				DrawTV(&roomObjectRects[i],
 						thisRoom->objects[i].data.g.initial, true);
 				break;
-				
+
 				case kCoffee:
-				DrawCoffee(&roomObjectRects[i], 
+				DrawCoffee(&roomObjectRects[i],
 						thisRoom->objects[i].data.g.initial, true);
 				break;
-				
+
 				case kOutlet:
 				DrawOutlet(&roomObjectRects[i]);
 				break;
-				
+
 				case kVCR:
-				DrawVCR(&roomObjectRects[i], 
+				DrawVCR(&roomObjectRects[i],
 						thisRoom->objects[i].data.g.initial, true);
 				break;
-				
+
 				case kStereo:
 				DrawStereo(&roomObjectRects[i], isPlayMusicGame, true);
 				break;
-				
+
 				case kMicrowave:
-				DrawMicrowave(&roomObjectRects[i], 
+				DrawMicrowave(&roomObjectRects[i],
 						thisRoom->objects[i].data.g.initial, true);
 				break;
-				
+
 				case kBalloon:
 				DrawBalloon(&roomObjectRects[i]);
 				break;
-				
+
 				case kCopterLf:
 				case kCopterRt:
 				DrawCopter(&roomObjectRects[i]);
 				break;
-				
+
 				case kDartLf:
 				case kDartRt:
 				DrawDart(&roomObjectRects[i], thisRoom->objects[i].what);
 				break;
-				
+
 				case kBall:
 				DrawBall(thisRoom->objects[i].what, &roomObjectRects[i]);
 				break;
-				
+
 				case kDrip:
 				DrawDrip(&roomObjectRects[i]);
 				break;
-				
+
 				case kFish:
 				DrawFish(thisRoom->objects[i].what, &roomObjectRects[i]);
 				break;
-				
+
 				case kCobweb:
 				case kCloud:
 				DrawPictWithMaskObject(thisRoom->objects[i].what, &roomObjectRects[i]);
 				break;
-				
+
 				case kMirror:
 				DrawMirror(&roomObjectRects[i]);
 				break;
-				
+
 				case kMousehole:
 				case kFaucet:
 				DrawSimpleClutter(thisRoom->objects[i].what, &roomObjectRects[i]);
 				break;
-				
+
 				case kFlower:
 				DrawFlower(&roomObjectRects[i], thisRoom->objects[i].data.i.pict);
 				break;
-				
+
 				case kWallWindow:
 				DrawWallWindow(&roomObjectRects[i]);
 				break;
-				
+
 				case kCalendar:
 				DrawCalendar(&roomObjectRects[i]);
 				break;
-				
+
 				case kBulletin:
 				DrawBulletin(&roomObjectRects[i]);
 				break;
-				
+
 				default:
 				break;
 			}
 		}
 	}
-	
+
 	SetGWorld(wasCPort, wasWorld);
-	
+
 	if (isFirstRoom)
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(glidSrcMap), 
-				(BitMap *)*GetGWorldPixMap(glidMaskMap), 
-				(BitMap *)*GetGWorldPixMap(backSrcMap), 
+		CopyMask((BitMap *)*GetGWorldPixMap(glidSrcMap),
+				(BitMap *)*GetGWorldPixMap(glidMaskMap),
+				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&gliderSrc[0], &gliderSrc[0], &initialGliderRect);
 	}
-	
-	CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap), 
-			(BitMap *)*GetGWorldPixMap(blowerMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+	CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap),
+			(BitMap *)*GetGWorldPixMap(blowerMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&leftStartGliderSrc, &leftStartGliderSrc, &leftStartGliderDest);
-	
-	CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap), 
-			(BitMap *)*GetGWorldPixMap(blowerMaskMap), 
-			(BitMap *)*GetGWorldPixMap(backSrcMap), 
+
+	CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap),
+			(BitMap *)*GetGWorldPixMap(blowerMaskMap),
+			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&rightStartGliderSrc, &rightStartGliderSrc, &rightStartGliderDest);
-	
-	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap), 
-			(BitMap *)*GetGWorldPixMap(workSrcMap), 
+
+	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
+			(BitMap *)*GetGWorldPixMap(workSrcMap),
 			&backSrcRect, &backSrcRect, srcCopy, nil);
 }
 #endif
@@ -2737,28 +2737,28 @@ void HiliteAllObjects (void)
 	KeyMap		theseKeys;
 	short		i;
 	Pattern		dummyPattern;
-	
+
 	if (theMode != kEditMode)
 		return;
-	
+
 	PauseMarquee();
 	SetPort((GrafPtr)mainWindow);
 	PenPat(GetQDGlobalsGray(&dummyPattern));
 	PenMode(patXor);
-	
+
 	for (i = 0; i < kMaxRoomObs; i++)
 		FrameRect(&roomObjectRects[i]);
-	
+
 	do
 	{
 		GetKeys(theseKeys);
 	}
-	while ((BitTst(&theseKeys, kCommandKeyMap)) && 
+	while ((BitTst(&theseKeys, kCommandKeyMap)) &&
 			(BitTst(&theseKeys, kOptionKeyMap)));
-	
+
 	for (i = 0; i < kMaxRoomObs; i++)
 		FrameRect(&roomObjectRects[i]);
-	
+
 	PenNormal();
 	ResumeMarquee();
 #endif
@@ -2770,7 +2770,7 @@ void GoToObjectInRoom (short object, short floor, short suite)
 {
 	#ifndef COMPILEDEMO
 	short		itsNumber, direction, dist;
-	
+
 	if (RoomExists(suite, floor, &itsNumber))
 	{
 		if (itsNumber != thisRoomNumber)
@@ -2781,7 +2781,7 @@ void GoToObjectInRoom (short object, short floor, short suite)
 		}
 		else
 			DeselectObject();
-		
+
 		if (thisRoom->objects[object].what != kObjectIsEmpty)
 		{
 			objActive = object;
@@ -2803,7 +2803,7 @@ void GoToObjectInRoom (short object, short floor, short suite)
 void GoToObjectInRoomNum (short object, short roomNum)
 {
 	short		floor, suite;
-	
+
 	if (GetRoomFloorSuite(roomNum, &floor, &suite))
 		GoToObjectInRoom(object, floor, suite);
 }

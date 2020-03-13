@@ -573,7 +573,7 @@
 #define kGliderFadingOut			2			//  •• •• ••
 #define kGliderGoingUp				3			//  ••    ••
 #define kGliderComingUp				4			//  ••    ••
-#define kGliderGoingDown			5			// 
+#define kGliderGoingDown			5			//
 #define kGliderComingDown			6			//   ••••••
 #define kGliderFaceLeft				7			//  ••    ••
 #define kGliderFaceRight			8			//  ••    ••

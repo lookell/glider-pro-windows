@@ -38,7 +38,7 @@ pascal OSErr DoOpenAppAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref
 {
 #pragma unused (reply, ref)
 	OSErr		theErr;
-	
+
 	theErr = MyGotRequiredParams(theAE);
 	return (theErr);
 }
@@ -58,29 +58,29 @@ pascal OSErr DoOpenDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref
 	DescType		returnedType;
 	OSErr			theErr, whoCares;
 	short			i;
-	
+
 	theErr = AEGetParamDesc(theAE, keyDirectObject, typeAEList, &docList);
 	if (theErr != noErr)
 	{
 		YellowAlert(kYellowAppleEventErr, theErr);
 		return (theErr);
 	}
-	
+
 	theErr = MyGotRequiredParams(theAE);
 	if (theErr != noErr)
 	{
 		whoCares = AEDisposeDesc(&docList);
 		return (theErr);
 	}
-	
+
 	theErr = AECountItems(&docList, &itemsInList);
 	if (theErr != noErr)
 	{
 		whoCares = AEDisposeDesc(&docList);
 		return (theErr);
 	}
-	
-#ifndef COMPILEDEMO	
+
+#ifndef COMPILEDEMO
 	for (i = 1; i <= itemsInList; i++)
 	{
 		theErr = AEGetNthPtr(&docList, i, typeFSS, &keywd, &returnedType,
@@ -112,7 +112,7 @@ pascal OSErr DoOpenDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref
 				if ((theMode == kSplashMode) || (theMode == kPlayMode))
 				{
 					Rect		updateRect;
-					
+
 					SetRect(&updateRect, splashOriginH + 474, splashOriginV + 304, splashOriginH + 474 + 166, splashOriginV + 304 + 12);
 					InvalWindowRect(mainWindow, &updateRect);
 				}
@@ -122,7 +122,7 @@ pascal OSErr DoOpenDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref
 	}
 #endif
 	whoCares = AEDisposeDesc(&docList);
-	
+
 	return theErr;
 }
 
@@ -134,10 +134,10 @@ pascal OSErr DoPrintDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 re
 #pragma unused (theAE, reply, ref)
 
 	short		hitWhat;
-	
+
 //	CenterAlert(kNoPrintingAlert);
 	hitWhat = Alert(kNoPrintingAlert, nil);
-	
+
 	return errAEEventNotHandled;
 }
 
@@ -148,11 +148,11 @@ pascal OSErr DoQuitAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 {
 #pragma unused (reply, ref)
 	OSErr			isHuman;
-	
+
 	isHuman = MyGotRequiredParams(theAE);
 	if (isHuman == noErr)
 		quitting = true;
-	
+
 	return isHuman;
 }
 
@@ -163,7 +163,7 @@ pascal OSErr MyGotRequiredParams (const AppleEvent *theAE)
 {
 	DescType		returnedType;
 	Size			actualSize;
-	
+
 	return (AEGetAttributePtr(theAE, keyMissedKeywordAttr, typeWildCard,
 			&returnedType, 0L, 0, &actualSize) == errAEDescNotFound) ? noErr :
 			errAEParamMissed;
@@ -175,32 +175,32 @@ pascal OSErr MyGotRequiredParams (const AppleEvent *theAE)
 void SetUpAppleEvents (void)
 {
 	OSErr		theErr;
-	
+
 	openAppAEUPP = NewAEEventHandlerProc(DoOpenAppAE);
 	openDocAEUPP = NewAEEventHandlerProc(DoOpenDocAE);
 	printDocAEUPP = NewAEEventHandlerProc(DoPrintDocAE);
 	quitAEUPP = NewAEEventHandlerProc(DoQuitAE);
-	
-	theErr = AEInstallEventHandler(kCoreEventClass,		// install oapp 
+
+	theErr = AEInstallEventHandler(kCoreEventClass,		// install oapp
 			kAEOpenApplication, openAppAEUPP, 0, false);
 	if (theErr != noErr)
 		YellowAlert(kYellowAppleEventErr, theErr);
-	
-	theErr = AEInstallEventHandler(kCoreEventClass, 	// install odoc 
+
+	theErr = AEInstallEventHandler(kCoreEventClass, 	// install odoc
 			kAEOpenDocuments, openDocAEUPP, 0, false);
 	if (theErr != noErr)
 		YellowAlert(kYellowAppleEventErr, theErr);
-	
-	theErr = AEInstallEventHandler(kCoreEventClass, 	// install pdoc 
+
+	theErr = AEInstallEventHandler(kCoreEventClass, 	// install pdoc
 			kAEPrintDocuments, printDocAEUPP, 0, false);
 	if (theErr != noErr)
 		YellowAlert(kYellowAppleEventErr, theErr);
-	
-	theErr = AEInstallEventHandler(kCoreEventClass, 	// install quit 
+
+	theErr = AEInstallEventHandler(kCoreEventClass, 	// install quit
 			kAEQuitApplication, quitAEUPP, 0, false);
 	if (theErr != noErr)
 		YellowAlert(kYellowAppleEventErr, theErr);
-	
+
 	theErr = AESetInteractionAllowed(kAEInteractWithAll);
 	if (theErr != noErr)
 		YellowAlert(kYellowAppleEventErr, theErr);

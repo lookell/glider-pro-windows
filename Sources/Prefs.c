@@ -40,14 +40,14 @@ Boolean CanUseFindFolder (void)
 {
 	OSErr		theErr;
 	long		theFeature;
-	
+
 	if (!thisMac.hasGestalt)
 		return(false);
-	
+
 	theErr = Gestalt(gestaltFindFolderAttr, &theFeature);
 	if (theErr != noErr)
 		return(false);
-	
+
 	if (!BitTst(&theFeature, 31 - gestaltFindFolderPresent))
 		return(false);
 	else
@@ -59,12 +59,12 @@ Boolean CanUseFindFolder (void)
 Boolean GetPrefsFPath (long *prefDirID, short *systemVolRef)
 {
 	OSErr		theErr;
-	
-	theErr = FindFolder(kOnSystemDisk, kPreferencesFolderType, kCreateFolder, 
+
+	theErr = FindFolder(kOnSystemDisk, kPreferencesFolderType, kCreateFolder,
 		systemVolRef, prefDirID);
 	if (theErr != noErr)
 		return(false);
-	
+
 	return(true);
 }
 
@@ -75,14 +75,14 @@ Boolean CreatePrefsFolder (short *systemVolRef)
 	HFileParam	fileParamBlock;
 	Str255		folderName;
 	OSErr		theErr;
-	
+
 	GetIndString(folderName, kPrefsStringsID, kPrefsFNameIndex);
-	
+
 	fileParamBlock.ioVRefNum = *systemVolRef;
 	fileParamBlock.ioDirID = 0;
 	fileParamBlock.ioNamePtr = folderName;
 	fileParamBlock.ioCompletion = nil;
-	
+
 	theErr = PBDirCreate((HParmBlkPtr)&fileParamBlock, false);
 	if (theErr != noErr)
 	{
@@ -101,7 +101,7 @@ Boolean WritePrefs (long *prefDirID, short *systemVolRef, prefsInfo *thePrefs)
 	long		byteCount;
 	FSSpec		theSpecs;
 	Str255		fileName = kPrefFileName;
-	
+
 	theErr = FSMakeFSSpec(*systemVolRef, *prefDirID, fileName, &theSpecs);
 	if (theErr != noErr)
 	{
@@ -123,23 +123,23 @@ Boolean WritePrefs (long *prefDirID, short *systemVolRef, prefsInfo *thePrefs)
 		CheckFileError(theErr, "\pPreferences");
 		return(false);
 	}
-	
+
 	byteCount = sizeof(*thePrefs);
-	
+
 	theErr = FSWrite(fileRefNum, &byteCount, thePrefs);
 	if (theErr != noErr)
 	{
 		CheckFileError(theErr, "\pPreferences");
 		return(false);
 	}
-	
+
 	theErr = FSClose(fileRefNum);
 	if (theErr != noErr)
 	{
 		CheckFileError(theErr, "\pPreferences");
 		return(false);
 	}
-	
+
 	return(true);
 }
 
@@ -149,15 +149,15 @@ Boolean SavePrefs (prefsInfo *thePrefs, short versionNow)
 {
 	long		prefDirID;
 	short		systemVolRef;
-	
+
 	thePrefs->prefVersion = versionNow;
-	
+
 	if (!GetPrefsFPath(&prefDirID, &systemVolRef))
 		return(false);
-	
+
 	if (!WritePrefs(&prefDirID, &systemVolRef, thePrefs))
 		return(false);
-	
+
 	return(true);
 }
 
@@ -170,7 +170,7 @@ OSErr ReadPrefs (long *prefDirID, short *systemVolRef, prefsInfo *thePrefs)
 	long		byteCount;
 	FSSpec		theSpecs;
 	Str255		fileName = kPrefFileName;
-	
+
 	theErr = FSMakeFSSpec(*systemVolRef, *prefDirID, fileName, &theSpecs);
 	if (theErr != noErr)
 	{
@@ -182,16 +182,16 @@ OSErr ReadPrefs (long *prefDirID, short *systemVolRef, prefsInfo *thePrefs)
 			return(theErr);
 		}
 	}
-	
+
 	theErr = FSpOpenDF(&theSpecs, fsRdWrPerm, &fileRefNum);
 	if (theErr != noErr)
 	{
 		CheckFileError(theErr, "\pPreferences");
 		return(theErr);
 	}
-	
+
 	byteCount = sizeof(*thePrefs);
-	
+
 	theErr = FSRead(fileRefNum, &byteCount, thePrefs);
 	if (theErr != noErr)
 	{
@@ -204,14 +204,14 @@ OSErr ReadPrefs (long *prefDirID, short *systemVolRef, prefsInfo *thePrefs)
 		}
 		return(theErr);
 	}
-	
+
 	theErr = FSClose(fileRefNum);
 	if (theErr != noErr)
 	{
 		CheckFileError(theErr, "\pPreferences");
 		return(theErr);
 	}
-	
+
 	return(theErr);
 }
 
@@ -222,16 +222,16 @@ Boolean DeletePrefs (long *dirID, short *volRef)
 	FSSpec		theSpecs;
 	Str255		fileName = kPrefFileName;
 	OSErr		theErr;
-	
+
 	theErr = FSMakeFSSpec(*volRef, *dirID, fileName, &theSpecs);
 	if (theErr != noErr)
 		return(false);
 	else
 		theErr = FSpDelete(&theSpecs);
-	
+
 	if (theErr != noErr)
 		return(false);
-	
+
 	return(true);
 }
 
@@ -243,11 +243,11 @@ Boolean LoadPrefs (prefsInfo *thePrefs, short versionNeed)
 	OSErr		theErr;
 	short		systemVolRef;
 	Boolean		noProblems;
-	
+
 	noProblems = GetPrefsFPath(&prefDirID, &systemVolRef);
 	if (!noProblems)
 		return(false);
-	
+
 	theErr = ReadPrefs(&prefDirID, &systemVolRef, thePrefs);
 	if (theErr == eofErr)
 	{
@@ -257,14 +257,14 @@ Boolean LoadPrefs (prefsInfo *thePrefs, short versionNeed)
 	}
 	else if (theErr != noErr)
 		return (false);
-	
+
 	if (thePrefs->prefVersion != versionNeed)
 	{
 		BringUpDeletePrefsAlert();
 		noProblems = DeletePrefs(&prefDirID, &systemVolRef);
 		return(false);
 	}
-	
+
 	return (true);
 }
 
@@ -273,7 +273,7 @@ Boolean LoadPrefs (prefsInfo *thePrefs, short versionNeed)
 void BringUpDeletePrefsAlert (void)
 {
 	short		whoCares;
-	
+
 	InitCursor();
 //	CenterAlert(kNewPrefsAlertID);
 	whoCares = Alert(kNewPrefsAlertID, nil);
