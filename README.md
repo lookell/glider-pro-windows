@@ -1,3 +1,11 @@
+This repository contains the source code of Glider PRO, ported to run on the Windows operating system.
+
+The original source code repository, where this code originates from, is located at <https://github.com/softdorothy/glider_pro>.
+
+The original `README.md` file is reproduced below.
+
+---
+
 # glider_pro
 Sources for the Macintosh game, Glider PRO, written by John Calhoun and published by Casady &amp; Green Inc.
 
