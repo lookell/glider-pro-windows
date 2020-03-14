@@ -417,7 +417,7 @@ void KillMusic (void)
 
 //--------------------------------------------------------------  MusicBytesNeeded
 
-long MusicBytesNeeded (void)
+SInt32 MusicBytesNeeded (void)
 {
 	return 1;
 #if 0

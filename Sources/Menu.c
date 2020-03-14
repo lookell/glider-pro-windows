@@ -619,7 +619,7 @@ void DoHouseMenu (short theItem)
 // Users has selected a menu item - determin which menu was selected…
 // and call the appropriate function above.
 
-void DoMenuChoice (long menuChoice)
+void DoMenuChoice (SInt32 menuChoice)
 {
 	return;
 #if 0

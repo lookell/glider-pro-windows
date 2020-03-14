@@ -537,7 +537,7 @@ void KillSound (void)
 
 //--------------------------------------------------------------  SoundBytesNeeded
 
-long SoundBytesNeeded (void)
+SInt32 SoundBytesNeeded (void)
 {
 	return 1;
 #if 0
