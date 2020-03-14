@@ -9,4 +9,4 @@
 #include "Macintosh.h"
 
 
-OSErr CreateOffScreenGWorld (GWorldPtr *theGWorld, Rect *bounds, short depth);
+OSErr CreateOffScreenGWorld (GWorldPtr *theGWorld, Rect *bounds, SInt16 depth);
