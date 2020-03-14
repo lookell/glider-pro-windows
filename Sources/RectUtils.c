@@ -98,12 +98,9 @@ SInt16 HalfRectTall (Rect *theRect)
 //--------------------------------------------------------------  RectWide
 // Given a rectangle, this simple function returns the rect's width.
 
-short RectWide (Rect *theRect)
+SInt16 RectWide (Rect *theRect)
 {
-	return 0;
-#if 0
 	return (theRect->right - theRect->left);
-#endif
 }
 
 //--------------------------------------------------------------  RectTall
