@@ -18,12 +18,12 @@
 
 typedef struct
 {
-	short			n;
-	short			index;
+	SInt16			n;
+	SInt16			index;
 	union
 	{
 		Handle		cursorHdl;
-		short		resID;
+		SInt16		resID;
 	} frame[1];
 } acurRec, *acurPtr, **acurHandle;
 
@@ -255,7 +255,7 @@ void DecrementCursor (void)
 
 // Advances the beach ball cursor the number of frames specified.
 
-void SpinCursor (short incrementIndex)
+void SpinCursor (SInt16 incrementIndex)
 {
 	return;
 #if 0
@@ -274,7 +274,7 @@ void SpinCursor (short incrementIndex)
 
 // Reverses the beach ball cursor the number of frames specified.
 
-void BackSpinCursor (short decrementIndex)
+void BackSpinCursor (SInt16 decrementIndex)
 {
 	return;
 #if 0
