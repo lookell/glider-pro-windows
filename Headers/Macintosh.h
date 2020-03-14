@@ -47,6 +47,10 @@ typedef struct Rect {
 	SInt16 right;
 } Rect;
 
+typedef struct Pattern {
+	UInt8 pat[8];
+} Pattern;
+
 // unknown types
 
 typedef const void *AEEventHandlerUPP;
@@ -67,7 +71,6 @@ typedef const void *Handle;
 typedef const void *KeyMap;
 typedef const void *MenuHandle;
 typedef const void *Movie;
-typedef const void *Pattern;
 typedef const void *PixMapHandle;
 typedef const void *Ptr;
 typedef const void *RgnHandle;
