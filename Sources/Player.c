@@ -47,7 +47,7 @@ GWorldPtr	shadowMaskMap;
 Rect		shadowSrc[kNumShadowSrcRects];
 Rect		gliderSrc[kNumGliderSrcRects];
 Rect		transRect;
-long		theScore;
+SInt32		theScore;
 short		fadeInSequence[kLastFadeSequence];
 short		rightClip, leftClip, transRoom;
 Boolean		shadowVisible, onePlayerLeft, playerDead;

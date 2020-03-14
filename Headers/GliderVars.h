@@ -52,9 +52,9 @@ extern	Rect		mainWindowRect, houseRect;
 extern	houseHand	thisHouse;
 extern	roomPtr		thisRoom;
 extern	WindowPtr	mainWindow, coordWindow;
-extern	long		theScore;
-extern	short		playOriginH, playOriginV;
-extern	short		thisRoomNumber, theMode, batteryTotal, bandsTotal;
-extern	short		foilTotal, mortals, numMasterObjects, previousRoom;
+extern	SInt32		theScore;
+extern	SInt16		playOriginH, playOriginV;
+extern	SInt16		thisRoomNumber, theMode, batteryTotal, bandsTotal;
+extern	SInt16		foilTotal, mortals, numMasterObjects, previousRoom;
 extern	Boolean		fileDirty, gameDirty, showFoil, doZooms, isPlayMusicGame;
 
