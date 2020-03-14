@@ -90,12 +90,9 @@ SInt16 HalfRectWide (Rect *theRect)
 //--------------------------------------------------------------  HalfRectTall
 // Given a rectangle, this function returns the rect's height divided by 2.
 
-short HalfRectTall (Rect *theRect)
+SInt16 HalfRectTall (Rect *theRect)
 {
-	return 0;
-#if 0
 	return ((theRect->bottom - theRect->top) / 2);
-#endif
 }
 
 //--------------------------------------------------------------  RectWide

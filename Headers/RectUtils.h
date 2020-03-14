@@ -17,7 +17,7 @@ void NormalizeRect (Rect *);
 void ZeroRectCorner (Rect *);
 void CenterRectOnPoint (Rect *, Point);
 SInt16 HalfRectWide (Rect *);
-short HalfRectTall (Rect *);
+SInt16 HalfRectTall (Rect *);
 short RectWide (Rect *);
 short RectTall (Rect *);
 void GlobalToLocalRect (Rect *);
