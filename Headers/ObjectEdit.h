@@ -13,4 +13,4 @@
 
 
 extern Rect			roomObjectRects[];
-extern short		objActive;
+extern SInt16		objActive;
