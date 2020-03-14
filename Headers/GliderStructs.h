@@ -12,7 +12,7 @@
 typedef struct
 {
 	Point		topLeft;				// 4
-	short		distance;				// 2
+	SInt16		distance;				// 2
 	Boolean		initial;				// 1
 	Boolean		state;					// 1		              F. lf. dn. rt. up
 	Byte		vector;					// 1		| x | x | x | x | 8 | 4 | 2 | 1 |
@@ -22,14 +22,14 @@ typedef struct
 typedef struct
 {
 	Rect		bounds;					// 8
-	short		pict;					// 2
+	SInt16		pict;					// 2
 } furnitureType;						// total = 10
 
 typedef struct
 {
 	Point		topLeft;				// 4
-	short		length;					// 2 grease spill
-	short		points;					// 2 invis bonus
+	SInt16		length;					// 2 grease spill
+	SInt16		points;					// 2 invis bonus
 	Boolean		state;					// 1
 	Boolean		initial;				// 1
 } bonusType;							// total = 10
@@ -37,8 +37,8 @@ typedef struct
 typedef struct
 {
 	Point		topLeft;				// 4
-	short		tall;					// 2 invis transport
-	short		where;					// 2
+	SInt16		tall;					// 2 invis transport
+	SInt16		where;					// 2
 	Byte		who;					// 1
 	Byte		wide;					// 1
 } transportType;						// total = 10
@@ -46,8 +46,8 @@ typedef struct
 typedef struct
 {
 	Point		topLeft;				// 4
-	short		delay;					// 2
-	short		where;					// 2
+	SInt16		delay;					// 2
+	SInt16		where;					// 2
 	Byte		who;					// 1
 	Byte		type;					// 1
 } switchType;							// total = 10
@@ -55,7 +55,7 @@ typedef struct
 typedef struct
 {
 	Point		topLeft;				// 4
-	short		length;					// 2
+	SInt16		length;					// 2
 	Byte		byte0;					// 1
 	Byte		byte1;					// 1
 	Boolean		initial;				// 1
@@ -65,7 +65,7 @@ typedef struct
 typedef struct
 {
 	Point		topLeft;				// 4
-	short		height;					// 2 toaster, pict ID
+	SInt16		height;					// 2 toaster, pict ID
 	Byte		byte0;					// 1
 	Byte		delay;					// 1
 	Boolean		initial;				// 1
@@ -75,7 +75,7 @@ typedef struct
 typedef struct
 {
 	Point		topLeft;					// 4
-	short		length;						// 2
+	SInt16		length;						// 2
 	Byte		delay;						// 1
 	Byte		byte0;						// 1
 	Boolean		initial;					// 1
@@ -85,12 +85,12 @@ typedef struct
 typedef struct
 {
 	Rect		bounds;						// 8
-	short		pict;						// 2
+	SInt16		pict;						// 2
 } clutterType;								// total = 10
 
 typedef struct
 {
-	short		what;						// 2
+	SInt16		what;						// 2
 	union
 	{
 		blowerType		a;
@@ -109,34 +109,34 @@ typedef struct
 {
 	Str31			banner;					// 32		= 32
 	Str15			names[kMaxScores];		// 16 * 10	= 160
-	long			scores[kMaxScores];		// 4 * 10	= 40
-	unsigned long	timeStamps[kMaxScores];	// 4 * 10	= 40
-	short			levels[kMaxScores];		// 2 * 10	= 20
+	SInt32			scores[kMaxScores];		// 4 * 10	= 40
+	UInt32			timeStamps[kMaxScores];	// 4 * 10	= 40
+	SInt16			levels[kMaxScores];		// 2 * 10	= 20
 } scoresType;								// total 	= 292
 
 typedef struct
 {
-	short		version;					// 2
-	short		wasStarsLeft;				// 2
-	long		timeStamp;					// 4
+	SInt16		version;					// 2
+	SInt16		wasStarsLeft;				// 2
+	SInt32		timeStamp;					// 4
 	Point		where;						// 4
-	long		score;						// 4
-	long		unusedLong;					// 4
-	long		unusedLong2;				// 4
-	short		energy;						// 2
-	short		bands;						// 2
-	short		roomNumber;					// 2
-	short		gliderState;				// 2
-	short		numGliders;					// 2
-	short		foil;						// 2
-	short		unusedShort;				// 2
+	SInt32		score;						// 4
+	SInt32		unusedLong;					// 4
+	SInt32		unusedLong2;				// 4
+	SInt16		energy;						// 2
+	SInt16		bands;						// 2
+	SInt16		roomNumber;					// 2
+	SInt16		gliderState;				// 2
+	SInt16		numGliders;					// 2
+	SInt16		foil;						// 2
+	SInt16		unusedShort;				// 2
 	Boolean		facing;						// 1
 	Boolean		showFoil;					// 1
 } gameType;									// total = 40
 
 typedef struct
 {
-	short		unusedShort;				// 2
+	SInt16		unusedShort;				// 2
 	Byte		unusedByte;					// 1
 	Boolean		visited;					// 1
 	objectType	objects[kMaxRoomObs];		// 24 * 12
@@ -145,20 +145,20 @@ typedef struct
 typedef struct
 {
 	FSSpec		house;						// 70
-	short		version;					// 2
-	short		wasStarsLeft;				// 2
-	long		timeStamp;					// 4
+	SInt16		version;					// 2
+	SInt16		wasStarsLeft;				// 2
+	SInt32		timeStamp;					// 4
 	Point		where;						// 4
-	long		score;						// 4
-	long		unusedLong;					// 4
-	long		unusedLong2;				// 4
-	short		energy;						// 2
-	short		bands;						// 2
-	short		roomNumber;					// 2
-	short		gliderState;				// 2
-	short		numGliders;					// 2
-	short		foil;						// 2
-	short		nRooms;						// 2
+	SInt32		score;						// 4
+	SInt32		unusedLong;					// 4
+	SInt32		unusedLong2;				// 4
+	SInt16		energy;						// 2
+	SInt16		bands;						// 2
+	SInt16		roomNumber;					// 2
+	SInt16		gliderState;				// 2
+	SInt16		numGliders;					// 2
+	SInt16		foil;						// 2
+	SInt16		nRooms;						// 2
 	Boolean		facing;						// 1
 	Boolean		showFoil;					// 1
 	savedRoom	savedData[];				// 4
@@ -167,25 +167,25 @@ typedef struct
 typedef struct
 {
 	Str27		name;						// 28
-	short		bounds;						// 2
+	SInt16		bounds;						// 2
 	Byte		leftStart;					// 1
 	Byte		rightStart;					// 1
 	Byte		unusedByte;					// 1
 	Boolean		visited;					// 1
-	short		background;					// 2
-	short		tiles[kNumTiles];			// 2 * 8
-	short		floor, suite;				// 2 + 2
-	short		openings;					// 2
-	short		numObjects;					// 2
+	SInt16		background;					// 2
+	SInt16		tiles[kNumTiles];			// 2 * 8
+	SInt16		floor, suite;				// 2 + 2
+	SInt16		openings;					// 2
+	SInt16		numObjects;					// 2
 	objectType	objects[kMaxRoomObs];		// 24 * 12
 } roomType, *roomPtr;						// total = 348
 
 typedef struct
 {
-	short		version;					// 2
-	short		unusedShort;				// 2
-	long		timeStamp;					// 4
-	long		flags;						// 4 (bit 0 = wardBit)
+	SInt16		version;					// 2
+	SInt16		unusedShort;				// 2
+	SInt32		timeStamp;					// 4
+	SInt32		flags;						// 4 (bit 0 = wardBit)
 	Point		initial;					// 4
 	Str255		banner;						// 256
 	Str255		trailer;					// 256
@@ -193,8 +193,8 @@ typedef struct
 	gameType	savedGame;					// 40
 	Boolean		hasGame;					// 1
 	Boolean		unusedBoolean;				// 1
-	short		firstRoom;					// 2
-	short		nRooms;						// 2
+	SInt16		firstRoom;					// 2
+	SInt16		nRooms;						// 2
 	roomType	rooms[];					// 348 * nRooms
 } houseType, *housePtr, **houseHand;		// total = 866 +
 
@@ -203,12 +203,12 @@ typedef struct
 	Rect		src, mask, dest, whole;
 	Rect		destShadow, wholeShadow;
 	Rect		clip, enteredRect;
-	long		leftKey, rightKey;
-	long		battKey, bandKey;
-	short		hVel, vVel;
-	short		wasHVel, wasVVel;
-	short		vDesiredVel, hDesiredVel;
-	short		mode, frame, wasMode;
+	SInt32		leftKey, rightKey;
+	SInt32		battKey, bandKey;
+	SInt16		hVel, vVel;
+	SInt16		wasHVel, wasVVel;
+	SInt16		vDesiredVel, hDesiredVel;
+	SInt16		mode, frame, wasMode;
 	Boolean		facing, tipped;
 	Boolean		sliding, ignoreLeft, ignoreRight;
 	Boolean		fireHeld, which;
@@ -219,8 +219,8 @@ typedef struct
 typedef struct
 {
 	Rect		bounds;
-	short		action;
-	short		who;
+	SInt16		action;
+	SInt16		who;
 	Boolean		isOn, stillOver;
 	Boolean		doScrutinize;
 } hotObject, *hotPtr;
@@ -229,38 +229,38 @@ typedef struct
 {
 	Rect		dest;
 	GWorldPtr	map;
-	short		where;
-	short		who;
+	SInt16		where;
+	SInt16		who;
 } savedType, *savedPtr;
 
 typedef struct
 {
 	Rect		bounds;
-	short		mode;
+	SInt16		mode;
 } sparkleType, *sparklePtr;
 
 typedef struct
 {
 	Rect		dest, whole;
-	short		start;
-	short		stop;
-	short		mode;
-	short		loops;
-	short		hVel, vVel;
+	SInt16		start;
+	SInt16		stop;
+	SInt16		mode;
+	SInt16		loops;
+	SInt16		hVel, vVel;
 } flyingPtType, *flyingPtPtr;
 
 typedef struct
 {
 	Rect		dest, src;
-	short		mode;
-	short		who;
+	SInt16		mode;
+	SInt16		who;
 } flameType, *flamePtr;
 
 typedef struct
 {
 	Rect		dest, src;
-	short		mode, where;
-	short		who, link;
+	SInt16		mode, where;
+	SInt16		who, link;
 	Boolean		toOrFro, active;
 } pendulumType, *pendulumPtr;
 
@@ -275,74 +275,74 @@ typedef struct
 typedef struct
 {
 	Rect		dest;
-	short		mode, count;
-	short		hVel, vVel;
+	SInt16		mode, count;
+	SInt16		hVel, vVel;
 } bandType, *bandPtr;
 
 typedef struct
 {
-	short		srcRoom, srcObj;
-	short		destRoom, destObj;
+	SInt16		srcRoom, srcObj;
+	SInt16		destRoom, destObj;
 } linksType, *linksPtr;
 
 typedef struct
 {
 	Rect		dest;
-	short		mapNum, mode;
-	short		who, where;
-	short		start, stop;
-	short		frame, hotNum;
+	SInt16		mapNum, mode;
+	SInt16		who, where;
+	SInt16		start, stop;
+	SInt16		frame, hotNum;
 	Boolean		isRight;
 } greaseType, *greasePtr;
 
 typedef struct
 {
 	Rect		dest, src;
-	short		mode, who;
-	short		link, where;
+	SInt16		mode, who;
+	SInt16		link, where;
 } starType, *starPtr;
 
 typedef struct
 {
 	Rect		bounds;
-	short		frame;
+	SInt16		frame;
 } shredType, *shredPtr;
 
 typedef struct
 {
 	Rect		dest;
 	Rect		whole;
-	short		hVel, vVel;
-	short		type, count;
-	short		frame, timer;
-	short		position, room;
+	SInt16		hVel, vVel;
+	SInt16		type, count;
+	SInt16		frame, timer;
+	SInt16		position, room;
 	Byte		byte0, byte1;
 	Boolean		moving, active;
 } dynaType, *dynaPtr;
 
 typedef struct
 {
-	short		roomNum;	// room # object in (real number)
-	short		objectNum;	// obj. # in house (real number)
-	short		roomLink;	// room # object linked to (if any)
-	short		objectLink;	// obj. # object linked to (if any)
-	short		localLink;	// index in master list if exists
-	short		hotNum;		// index into active rects (if any)
-	short		dynaNum;	// index into dinahs (if any)
+	SInt16		roomNum;	// room # object in (real number)
+	SInt16		objectNum;	// obj. # in house (real number)
+	SInt16		roomLink;	// room # object linked to (if any)
+	SInt16		objectLink;	// obj. # object linked to (if any)
+	SInt16		localLink;	// index in master list if exists
+	SInt16		hotNum;		// index into active rects (if any)
+	SInt16		dynaNum;	// index into dinahs (if any)
 	objectType	theObject;	// actual object data
 } objDataType, *objDataPtr;
 
 typedef struct
 {
-	long		frame;
-	char		key;
-	char		padding;
+	SInt32		frame;
+	Byte		key;
+	Byte		padding;
 } demoType, *demoPtr;
 
 typedef struct
 {
-	short		room;
-	short		object;
+	SInt16		room;
+	SInt16		object;
 } retroLink, *retroLinkPtr;
 
 
