@@ -16,7 +16,7 @@
 // Given the top left corner and a width and height, this function…
 // simply creates the necessary rectangle and frames it.
 
-void FrameWHRect (short left, short top, short wide, short high)
+void FrameWHRect (SInt16 left, SInt16 top, SInt16 wide, SInt16 high)
 {
 	return;
 #if 0
@@ -172,7 +172,7 @@ void CenterRectInRect (Rect *rectA, Rect *rectB)
 
 // Just a simple function to offset a rectangle horizontally only.
 
-void HOffsetRect (Rect *theRect, short h)
+void HOffsetRect (Rect *theRect, SInt16 h)
 {
 	return;
 #if 0
@@ -185,7 +185,7 @@ void HOffsetRect (Rect *theRect, short h)
 
 // Just a simple function to offset a rectangle vertically only.
 
-void VOffsetRect (Rect *theRect, short v)
+void VOffsetRect (Rect *theRect, SInt16 v)
 {
 	return;
 #if 0
@@ -218,7 +218,7 @@ Boolean IsRectLeftOfRect (Rect *rect1, Rect *rect2)
 // This duplicates a Mac ToolBox call, but since it's local, it's faster.
 // It offsets a rectangle both vertically and horizontally.
 
-void QOffsetRect (Rect *theRect, short h, short v)
+void QOffsetRect (Rect *theRect, SInt16 h, SInt16 v)
 {
 	return;
 #if 0
@@ -234,7 +234,7 @@ void QOffsetRect (Rect *theRect, short h, short v)
 // This also duplicates a ToolBox call.  It's needed often though, so…
 // any gains in speed are nice.  It sets up a rect structure.
 
-void QSetRect (Rect *theRect, short l, short t, short r, short b)
+void QSetRect (Rect *theRect, SInt16 l, SInt16 t, SInt16 r, SInt16 b)
 {
 	return;
 #if 0
