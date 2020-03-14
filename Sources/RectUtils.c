@@ -82,12 +82,9 @@ void CenterRectOnPoint (Rect *theRect, Point where)
 //--------------------------------------------------------------  HalfRectWide
 // Given a rectangle, this function returns the rect's width divided by 2.
 
-short HalfRectWide (Rect *theRect)
+SInt16 HalfRectWide (Rect *theRect)
 {
-	return 0;
-#if 0
 	return ((theRect->right - theRect->left) / 2);
-#endif
 }
 
 //--------------------------------------------------------------  HalfRectTall

@@ -16,7 +16,7 @@ void FrameWHRect (short, short, short, short);
 void NormalizeRect (Rect *);
 void ZeroRectCorner (Rect *);
 void CenterRectOnPoint (Rect *, Point);
-short HalfRectWide (Rect *);
+SInt16 HalfRectWide (Rect *);
 short HalfRectTall (Rect *);
 short RectWide (Rect *);
 short RectTall (Rect *);
