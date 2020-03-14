@@ -106,12 +106,9 @@ SInt16 RectWide (Rect *theRect)
 //--------------------------------------------------------------  RectTall
 // Given a rectangle, this simple function returns the rect's height.
 
-short RectTall (Rect *theRect)
+SInt16 RectTall (Rect *theRect)
 {
-	return 0;
-#if 0
 	return (theRect->bottom - theRect->top);
-#endif
 }
 
 //--------------------------------------------------------------  GlobalToLocalRect

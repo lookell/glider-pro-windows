@@ -19,7 +19,7 @@ void CenterRectOnPoint (Rect *, Point);
 SInt16 HalfRectWide (Rect *);
 SInt16 HalfRectTall (Rect *);
 SInt16 RectWide (Rect *);
-short RectTall (Rect *);
+SInt16 RectTall (Rect *);
 void GlobalToLocalRect (Rect *);
 void LocalToGlobalRect (Rect *);
 void CenterRectInRect (Rect *, Rect *);
