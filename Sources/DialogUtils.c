@@ -22,7 +22,7 @@
 // Given a dialog pointer and a resource ID, this function brings it up…
 // centered, visible, and with the default button outlined.
 
-void BringUpDialog (DialogPtr *theDialog, short dialogID)
+void BringUpDialog (DialogPtr *theDialog, SInt16 dialogID)
 {
 	return;
 #if 0
@@ -138,7 +138,7 @@ void CenterDialog (SInt16 dialogID)
 //--------------------------------------------------------------  GetDialogRect
 // Determines the bounding rectangle for a given dialog.
 
-void GetDialogRect (Rect *bounds, short dialogID)
+void GetDialogRect (Rect *bounds, SInt16 dialogID)
 {
 	return;
 #if 0
@@ -161,7 +161,7 @@ void GetDialogRect (Rect *bounds, short dialogID)
 // Places a dialog DEAD CENTER (as opposed to 1/3 of the way down as…
 // is common for Mac dialog centering).
 /*
-void TrueCenterDialog (short dialogID)
+void TrueCenterDialog (SInt16 dialogID)
 {
 	DialogTHndl	dlogHandle;
 	Rect		theScreen, dlogBounds;
@@ -196,7 +196,7 @@ void TrueCenterDialog (short dialogID)
 //--------------------------------------------------------------  CenterAlert
 // Given an alert ID, this function properly centers it on the main monitor.
 /*
-void CenterAlert (short alertID)
+void CenterAlert (SInt16 alertID)
 {
 	AlertTHndl	alertHandle;
 	Rect		theScreen, alertRect;
@@ -230,7 +230,7 @@ void CenterAlert (short alertID)
 // Given a dialog, this function does the "zoom" animation to make the…
 // the dialog appear to expand from nothingness or zoom in at you.
 /*
-void ZoomOutDialogRect (short dialogID)
+void ZoomOutDialogRect (SInt16 dialogID)
 {
 	#define		kSteps		16
 	#define		kZoomDelay	1
@@ -284,7 +284,7 @@ void ZoomOutDialogRect (short dialogID)
 
 // Like the above funciton but zooms out alerts instead of dialogs.
 /*
-void ZoomOutAlertRect (short alertID)
+void ZoomOutAlertRect (SInt16 alertID)
 {
 	#define		kSteps		16
 	#define		kZoomDelay	1
@@ -339,7 +339,7 @@ void ZoomOutAlertRect (short alertID)
 // Flashes the default dialog button (item = 1) so as to make it appear…
 // as though the user clicked on it.
 
-void FlashDialogButton (DialogPtr theDialog, short itemNumber)
+void FlashDialogButton (DialogPtr theDialog, SInt16 itemNumber)
 {
 	return;
 #if 0
@@ -378,7 +378,7 @@ void DrawDefaultButton (DialogPtr theDialog)
 //--------------------------------------------------------------  GetDialogString
 // Returns a string from a specific dialog item.
 
-void GetDialogString (DialogPtr theDialog, short item, StringPtr theString)
+void GetDialogString (DialogPtr theDialog, SInt16 item, StringPtr theString)
 {
 	return;
 #if 0
@@ -394,7 +394,7 @@ void GetDialogString (DialogPtr theDialog, short item, StringPtr theString)
 //--------------------------------------------------------------  SetDialogString
 // Sets a specific string to a specific dialog item.
 
-void SetDialogString (DialogPtr theDialog, short item, StringPtr theString)
+void SetDialogString (DialogPtr theDialog, SInt16 item, StringPtr theString)
 {
 	return;
 #if 0
@@ -410,7 +410,7 @@ void SetDialogString (DialogPtr theDialog, short item, StringPtr theString)
 //--------------------------------------------------------------  GetDialogStringLen
 // Returns the length of a dialog item string (text).
 
-short GetDialogStringLen (DialogPtr theDialog, short item)
+SInt16 GetDialogStringLen (DialogPtr theDialog, SInt16 item)
 {
 	return (0);
 #if 0
@@ -429,7 +429,7 @@ short GetDialogStringLen (DialogPtr theDialog, short item)
 // Returns the value or "state" of a dialog item.  For checkboxes and…
 // radio buttons, this may be a 1 or 0.
 
-void GetDialogItemValue (DialogPtr theDialog, short item, short *theState)
+void GetDialogItemValue (DialogPtr theDialog, SInt16 item, SInt16 *theState)
 {
 	return;
 #if 0
@@ -446,7 +446,7 @@ void GetDialogItemValue (DialogPtr theDialog, short item, short *theState)
 // Sets a specific dialogf items value or state (can set or clear…
 // checkboxes, radio buttons, etc.).
 
-void SetDialogItemValue (DialogPtr theDialog, short item, short theState)
+void SetDialogItemValue (DialogPtr theDialog, SInt16 item, SInt16 theState)
 {
 	return;
 #if 0
@@ -462,7 +462,7 @@ void SetDialogItemValue (DialogPtr theDialog, short item, short theState)
 //--------------------------------------------------------------  ToggleDialogItemValue
 // If item is a checkbox or radio button, its state is toggled.
 
-void ToggleDialogItemValue (DialogPtr theDialog, short item)
+void ToggleDialogItemValue (DialogPtr theDialog, SInt16 item)
 {
 	return;
 #if 0
@@ -484,7 +484,7 @@ void ToggleDialogItemValue (DialogPtr theDialog, short item)
 // Function accepts an integer, converts it to a string and sets a…
 // dialog items text to this string.
 
-void SetDialogNumToStr (DialogPtr theDialog, short item, long theNumber)
+void SetDialogNumToStr (DialogPtr theDialog, SInt16 item, SInt32 theNumber)
 {
 	return;
 #if 0
@@ -503,7 +503,7 @@ void SetDialogNumToStr (DialogPtr theDialog, short item, long theNumber)
 // Function extracts the text from a dialog item and converts it to an…
 // integer for returning.
 
-void GetDialogNumFromStr (DialogPtr theDialog, short item, long *theNumber)
+void GetDialogNumFromStr (DialogPtr theDialog, SInt16 item, SInt32 *theNumber)
 {
 	return;
 #if 0
@@ -521,7 +521,7 @@ void GetDialogNumFromStr (DialogPtr theDialog, short item, long *theNumber)
 //--------------------------------------------------------------  GetDialogItemRect
 // Returns the bounding rectangle of the specified dialog item.
 
-void GetDialogItemRect (DialogPtr theDialog, short item, Rect *theRect)
+void GetDialogItemRect (DialogPtr theDialog, SInt16 item, Rect *theRect)
 {
 	return;
 #if 0
@@ -536,7 +536,7 @@ void GetDialogItemRect (DialogPtr theDialog, short item, Rect *theRect)
 // Sets the bounding rectangle of the specified dialog item.  Used to…
 // resize or move a control.
 
-void SetDialogItemRect (DialogPtr theDialog, short item, Rect *theRect)
+void SetDialogItemRect (DialogPtr theDialog, SInt16 item, Rect *theRect)
 {
 	return;
 #if 0
@@ -553,7 +553,7 @@ void SetDialogItemRect (DialogPtr theDialog, short item, Rect *theRect)
 //--------------------------------------------------------------  OffsetDialogItemRect
 // Moves a dialog item by h and v.
 
-void OffsetDialogItemRect (DialogPtr theDialog, short item, short h, short v)
+void OffsetDialogItemRect (DialogPtr theDialog, SInt16 item, SInt16 h, SInt16 v)
 {
 	return;
 #if 0
@@ -572,7 +572,7 @@ void OffsetDialogItemRect (DialogPtr theDialog, short item, short h, short v)
 // clears the whole range of them but sets the one specified (as though…
 // the radio buttons are linked and only one can be set at a time).
 
-void SelectFromRadioGroup (DialogPtr dial, short which, short first, short last)
+void SelectFromRadioGroup (DialogPtr dial, SInt16 which, SInt16 first, SInt16 last)
 {
 	return;
 #if 0
@@ -595,7 +595,7 @@ void SelectFromRadioGroup (DialogPtr dial, short which, short first, short last)
 // Assigns a menu handle to a pop-up dialog item - thus, giving that…
 // pop-up item something to pop up.
 /*
-void AddMenuToPopUp (DialogPtr theDialog, short whichItem, MenuHandle theMenu)
+void AddMenuToPopUp (DialogPtr theDialog, SInt16 whichItem, MenuHandle theMenu)
 {
 	Rect		iRect;
 	Handle		iHandle;
@@ -608,7 +608,7 @@ void AddMenuToPopUp (DialogPtr theDialog, short whichItem, MenuHandle theMenu)
 //--------------------------------------------------------------  GetPopUpMenuValu
 // Returns which item is currently selected in a pop-up menu.
 
-void GetPopUpMenuValue (DialogPtr theDialog, short whichItem, short *value)
+void GetPopUpMenuValue (DialogPtr theDialog, SInt16 whichItem, SInt16 *value)
 {
 	return;
 #if 0
@@ -624,7 +624,7 @@ void GetPopUpMenuValue (DialogPtr theDialog, short whichItem, short *value)
 //--------------------------------------------------------------  SetPopUpMenuValue
 // Forces a specific item to be set (as though selected) in a pop-up menu.
 
-void SetPopUpMenuValue (DialogPtr theDialog, short whichItem, short value)
+void SetPopUpMenuValue (DialogPtr theDialog, SInt16 whichItem, SInt16 value)
 {
 	return;
 #if 0
@@ -640,7 +640,7 @@ void SetPopUpMenuValue (DialogPtr theDialog, short whichItem, short value)
 //--------------------------------------------------------------  MyEnableControl
 // "Un-grays" or enables a dialog item (usually a button).
 
-void MyEnableControl (DialogPtr theDialog, short whichItem)
+void MyEnableControl (DialogPtr theDialog, SInt16 whichItem)
 {
 	return;
 #if 0
@@ -656,7 +656,7 @@ void MyEnableControl (DialogPtr theDialog, short whichItem)
 //--------------------------------------------------------------  MyDisableControl
 // "Grays out" or disables a dialog item (usually a button).
 
-void MyDisableControl (DialogPtr theDialog, short whichItem)
+void MyDisableControl (DialogPtr theDialog, SInt16 whichItem)
 {
 	return;
 #if 0
@@ -674,7 +674,7 @@ void MyDisableControl (DialogPtr theDialog, short whichItem)
 // within the bounding rect of the item.  Dialog item assumed to be…
 // a "user item" (invisible item with only bounds).
 
-void DrawDialogUserText (DialogPtr dial, short item, StringPtr text, Boolean invert)
+void DrawDialogUserText (DialogPtr dial, SInt16 item, StringPtr text, Boolean invert)
 {
 	return;
 #if 0
@@ -716,7 +716,7 @@ void DrawDialogUserText (DialogPtr dial, short item, StringPtr text, Boolean inv
 // it truncates the string (and appends "…") to the end in order that…
 // the string fits within the dialog item's bounds.
 
-void DrawDialogUserText2 (DialogPtr dial, short item, StringPtr text)
+void DrawDialogUserText2 (DialogPtr dial, SInt16 item, StringPtr text)
 {
 	return;
 #if 0
@@ -741,7 +741,7 @@ void DrawDialogUserText2 (DialogPtr dial, short item, StringPtr text)
 // Draws a 'PICT' specified by ID within the bounds of the specified…
 // dialog item.
 
-void LoadDialogPICT (DialogPtr theDialog, short item, short theID)
+void LoadDialogPICT (DialogPtr theDialog, SInt16 item, SInt16 theID)
 {
 	return;
 #if 0
@@ -760,7 +760,7 @@ void LoadDialogPICT (DialogPtr theDialog, short item, short theID)
 //--------------------------------------------------------------  FrameDialogItem
 // Given a dialog item, this function draws a box around it.
 
-void FrameDialogItem (DialogPtr theDialog, short item)
+void FrameDialogItem (DialogPtr theDialog, SInt16 item)
 {
 	return;
 #if 0
@@ -776,7 +776,7 @@ void FrameDialogItem (DialogPtr theDialog, short item)
 //--------------------------------------------------------------  FrameDialogItemC
 // Given a dialog item, this function draws a color (specified) box around it.
 
-void FrameDialogItemC (DialogPtr theDialog, short item, long color)
+void FrameDialogItemC (DialogPtr theDialog, SInt16 item, SInt32 color)
 {
 	return;
 #if 0
@@ -797,7 +797,7 @@ void FrameDialogItemC (DialogPtr theDialog, short item, long color)
 //--------------------------------------------------------------  FrameOvalDialogItem
 // Given a dialog item, this function draws an oval around it.
 
-void FrameOvalDialogItem (DialogPtr theDialog, short item)
+void FrameOvalDialogItem (DialogPtr theDialog, SInt16 item)
 {
 	return;
 #if 0
@@ -814,7 +814,7 @@ void FrameOvalDialogItem (DialogPtr theDialog, short item)
 // Given a dialog item, this function draws any combination of 4 sides…
 // of a box around it.  Which sides get drawn is encoded in "sides".
 
-void BorderDialogItem (DialogPtr theDialog, short item, short sides)
+void BorderDialogItem (DialogPtr theDialog, SInt16 item, SInt16 sides)
 {
 	return;
 #if 0
@@ -858,7 +858,7 @@ void BorderDialogItem (DialogPtr theDialog, short item, short sides)
 //--------------------------------------------------------------  ShadowDialogItem
 // Draws a drop shadow to the right and below a specified dialog item.
 
-void ShadowDialogItem (DialogPtr theDialog, short item, short thickness)
+void ShadowDialogItem (DialogPtr theDialog, SInt16 item, SInt16 thickness)
 {
 	return;
 #if 0
@@ -879,7 +879,7 @@ void ShadowDialogItem (DialogPtr theDialog, short item, short thickness)
 //--------------------------------------------------------------  EraseDialogItem
 // Erases (but doesn't physically remove) a dialog item.
 
-void EraseDialogItem (DialogPtr theDialog, short item)
+void EraseDialogItem (DialogPtr theDialog, SInt16 item)
 {
 	return;
 #if 0
