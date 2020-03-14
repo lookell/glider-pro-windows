@@ -18,7 +18,7 @@
 static void HiLiteOkayButton (void);
 static void UnHiLiteOkayButton (void);
 static void UpdateMainPict (DialogPtr);
-static pascal Boolean AboutFilter (DialogPtr, EventRecord *theEvent, short *hit);
+static pascal Boolean AboutFilter (DialogPtr, EventRecord *theEvent, SInt16 *hit);
 
 
 static RgnHandle		okayButtRgn;
@@ -178,7 +178,7 @@ static void UpdateMainPict (DialogPtr theDial)
 //--------------------------------------------------------------  AboutFilter
 // Dialog filter for the About dialog.
 
-static pascal Boolean AboutFilter (DialogPtr theDial, EventRecord *theEvent, short *hit)
+static pascal Boolean AboutFilter (DialogPtr theDial, EventRecord *theEvent, SInt16 *hit)
 {
 	return (false);
 #if 0
