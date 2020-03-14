@@ -12,11 +12,11 @@
 typedef struct
 {
 	Rect		screen, gray;
-	long		dirID;
-	short		wasDepth, isDepth;
-	short		thisResFile;
-	short		numScreens;
-	short		vRefNum;
+	SInt32		dirID;
+	SInt16		wasDepth, isDepth;
+	SInt16		thisResFile;
+	SInt16		numScreens;
+	SInt16		vRefNum;
 	Boolean		can1Bit;
 	Boolean		can4Bit;
 	Boolean		can8Bit;
