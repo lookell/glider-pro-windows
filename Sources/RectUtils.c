@@ -59,13 +59,10 @@ void NormalizeRect (Rect *theRect)
 
 void ZeroRectCorner (Rect *theRect)		// Offset rect to (0, 0)
 {
-	return;
-#if 0
 	theRect->right -= theRect->left;
 	theRect->bottom -= theRect->top;
 	theRect->left = 0;
 	theRect->top = 0;
-#endif
 }
 
 //--------------------------------------------------------------  CenterRectOnPoint
