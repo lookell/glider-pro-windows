@@ -90,7 +90,7 @@ void DrawBanner (Point *topLeft)
 //--------------------------------------------------------------  CountStarsInHouse
 // Goes through the current house and counts the total number of stars within.
 
-short CountStarsInHouse (void)
+SInt16 CountStarsInHouse (void)
 {
 	return 0;
 #if 0

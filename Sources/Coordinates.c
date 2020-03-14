@@ -27,7 +27,7 @@ Boolean			isCoordOpen;
 // Given a horizontal, vertical and distance value, this function…
 // displays these values in the Coordinates window.
 
-void SetCoordinateHVD (short h, short v, short d)
+void SetCoordinateHVD (SInt16 h, SInt16 v, SInt16 d)
 {
 	return;
 #if 0
@@ -50,7 +50,7 @@ void SetCoordinateHVD (short h, short v, short d)
 // has changed the height (delta).  This function then displays it in…
 // the Coordinate window.
 
-void DeltaCoordinateD (short d)
+void DeltaCoordinateD (SInt16 d)
 {
 	return;
 #if 0

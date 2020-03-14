@@ -103,7 +103,7 @@ void CheckLegitRect(Rect *srcRect, Rect *inRect)
 
 /*==============================================================  DisplayLong  */
 
-void DisplayLong (long theValue)
+void DisplayLong (SInt32 theValue)
 
 {
 	return;
@@ -138,7 +138,7 @@ void DisplayLong (long theValue)
 
 /*==============================================================  DisplayShort  */
 
-void DisplayShort(short theValue)
+void DisplayShort(SInt16 theValue)
 
 {
 	return;
@@ -173,7 +173,7 @@ void DisplayShort(short theValue)
 
 /*==============================================================  FlashLong  */
 
-void FlashLong(long theValue)
+void FlashLong(SInt32 theValue)
 {
 	return;
 #if 0
@@ -200,7 +200,7 @@ void FlashLong(long theValue)
 
 /*==============================================================  FlashShort  */
 
-void FlashShort (short theValue)
+void FlashShort (SInt16 theValue)
 {
 	return;
 #if 0
@@ -227,7 +227,7 @@ void FlashShort (short theValue)
 
 /*==============================================================  DoBarGraph  */
 
-void DoBarGraph (short theValue, short downScreen, short maxDown, short scaleIt)
+void DoBarGraph (SInt16 theValue, SInt16 downScreen, SInt16 maxDown, SInt16 scaleIt)
 
 {
 	return;
@@ -286,7 +286,7 @@ void DoBarGraph (short theValue, short downScreen, short maxDown, short scaleIt)
 
 /*==============================================================  BetaOkay  */
 
-short BetaOkay (void)
+SInt16 BetaOkay (void)
 
 {
 	return 0;
@@ -309,7 +309,7 @@ short BetaOkay (void)
 
 //--------------------------------------------------------------  DebugNum
 
-void DebugNum (long theNum)
+void DebugNum (SInt32 theNum)
 {
 	return;
 #if 0
@@ -353,7 +353,7 @@ void FillScreenRed (void)
 
 //--------------------------------------------------------------  DumpToResEditFile
 
-void DumpToResEditFile (Ptr data, long dataSize)
+void DumpToResEditFile (Ptr data, SInt32 dataSize)
 {
 	return;
 #if 0

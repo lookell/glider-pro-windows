@@ -17,8 +17,8 @@
 #define kManholeThruFloor		3957
 
 
-void LoadGraphicSpecial (short);
-void DrawRoomBackground (short, short, short);
+void LoadGraphicSpecial (SInt16);
+void DrawRoomBackground (SInt16, SInt16, SInt16);
 void DrawFloorSupport (void);
 void ReadyBackMap (void);
 void RestoreWorkMap (void);
@@ -135,7 +135,7 @@ void DrawLocale (void)
 
 //--------------------------------------------------------------  LoadGraphicSpecial
 
-void LoadGraphicSpecial (short resID)
+void LoadGraphicSpecial (SInt16 resID)
 {
 	return;
 #if 0
@@ -166,7 +166,7 @@ void LoadGraphicSpecial (short resID)
 
 //--------------------------------------------------------------  DrawRoomBackground
 
-void DrawRoomBackground (short who, short where, short elevation)
+void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 {
 	return;
 #if 0

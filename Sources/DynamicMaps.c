@@ -14,11 +14,11 @@
 #include "Utilities.h"
 
 
-void BackUpFlames (Rect *, short);
-void BackUpTikiFlames (Rect *, short);
-void BackUpBBQCoals (Rect *, short);
-void BackUpPendulum (Rect *, short);
-void BackUpStar (Rect *, short);
+void BackUpFlames (Rect *, SInt16);
+void BackUpTikiFlames (Rect *, SInt16);
+void BackUpBBQCoals (Rect *, SInt16);
+void BackUpPendulum (Rect *, SInt16);
+void BackUpStar (Rect *, SInt16);
 
 
 sparklePtr	sparkles;
@@ -70,7 +70,7 @@ void NilSavedMaps (void)
 // room that it obscured so that, should the player get the object,…
 // it can be made to "disappear".
 
-short BackUpToSavedMap (Rect *theRect, short where, short who)
+SInt16 BackUpToSavedMap (Rect *theRect, SInt16 where, SInt16 who)
 {
 	return (-1);
 #if 0
@@ -103,7 +103,7 @@ short BackUpToSavedMap (Rect *theRect, short where, short who)
 // a slot in the pixmap array for the object.  It re-copies the background…
 // and is needed when the lights in the room go on or off.
 
-short ReBackUpSavedMap (Rect *theRect, short where, short who)
+SInt16 ReBackUpSavedMap (Rect *theRect, SInt16 where, SInt16 who)
 {
 	return (-1);
 #if 0
@@ -137,7 +137,7 @@ short ReBackUpSavedMap (Rect *theRect, short where, short who)
 // This copies the saved background swatch to the screen - effectively…
 // covering up or "erasing" the object.
 
-void RestoreFromSavedMap (short where, short who, Boolean doSparkle)
+void RestoreFromSavedMap (SInt16 where, SInt16 who, Boolean doSparkle)
 {
 	return;
 #if 0
@@ -211,7 +211,7 @@ void AddSparkle (Rect *theRect)
 
 // This adds a "flying point" object to the array of flying points.
 
-void AddFlyingPoint (Rect *theRect, short points, short hVel, short vVel)
+void AddFlyingPoint (Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVel)
 {
 	return;
 #if 0
@@ -278,7 +278,7 @@ void AddFlyingPoint (Rect *theRect, short points, short hVel, short vVel)
 // CopyBits() calls will properly draw the flame on screen with the…
 // proper background.
 
-void BackUpFlames (Rect *src, short index)
+void BackUpFlames (Rect *src, SInt16 index)
 {
 	return;
 #if 0
@@ -310,7 +310,7 @@ void BackUpFlames (Rect *src, short index)
 // Like the above function but this is called when the lighting changes…
 // in a room (lights go on or off).
 
-void ReBackUpFlames (short where, short who)
+void ReBackUpFlames (SInt16 where, SInt16 who)
 {
 	return;
 #if 0
@@ -337,7 +337,7 @@ void ReBackUpFlames (short where, short who)
 
 // This adds a candle flame to tha array of flames.
 
-void AddCandleFlame (short where, short who, short h, short v)
+void AddCandleFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
 	return;
 #if 0
@@ -373,7 +373,7 @@ void AddCandleFlame (short where, short who, short h, short v)
 //--------------------------------------------------------------  BackUpTikiFlames
 // This is like the function BackUpFlames() but customized for Tiki torches.
 
-void BackUpTikiFlames (Rect *src, short index)
+void BackUpTikiFlames (Rect *src, SInt16 index)
 {
 	return;
 #if 0
@@ -403,7 +403,7 @@ void BackUpTikiFlames (Rect *src, short index)
 
 // This is like the function ReBackUpFlames() but customized for Tiki torches.
 
-void ReBackUpTikiFlames (short where, short who)
+void ReBackUpTikiFlames (SInt16 where, SInt16 who)
 {
 	return;
 #if 0
@@ -430,7 +430,7 @@ void ReBackUpTikiFlames (short where, short who)
 
 // This adds a tiki flame to the array of tiki flames.
 
-void AddTikiFlame (short where, short who, short h, short v)
+void AddTikiFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
 	return;
 #if 0
@@ -468,7 +468,7 @@ void AddTikiFlame (short where, short who, short h, short v)
 
 // Another one - but for BBQ coals.
 
-void BackUpBBQCoals (Rect *src, short index)
+void BackUpBBQCoals (Rect *src, SInt16 index)
 {
 	return;
 #if 0
@@ -498,7 +498,7 @@ void BackUpBBQCoals (Rect *src, short index)
 
 // Sense a pattern here?
 
-void ReBackUpBBQCoals (short where, short who)
+void ReBackUpBBQCoals (SInt16 where, SInt16 who)
 {
 	return;
 #if 0
@@ -525,7 +525,7 @@ void ReBackUpBBQCoals (short where, short who)
 
 // Adds BBQ coals to the array of BBQ coals.
 
-void AddBBQCoals (short where, short who, short h, short v)
+void AddBBQCoals (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
 	return;
 #if 0
@@ -563,7 +563,7 @@ void AddBBQCoals (short where, short who, short h, short v)
 // Just like many of the previous functions, but for the pendulum on the…
 // cuckoo clock.
 
-void BackUpPendulum (Rect *src, short index)
+void BackUpPendulum (Rect *src, SInt16 index)
 {
 	return;
 #if 0
@@ -591,7 +591,7 @@ void BackUpPendulum (Rect *src, short index)
 
 // Backs up the pendulums in the event of lights going on or off.
 
-void ReBackUpPendulum (short where, short who)
+void ReBackUpPendulum (SInt16 where, SInt16 who)
 {
 	return;
 #if 0
@@ -618,7 +618,7 @@ void ReBackUpPendulum (short where, short who)
 
 // Adds a pendulum to the array of pendulums.
 
-void AddPendulum (short where, short who, short h, short v)
+void AddPendulum (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
 	return;
 #if 0
@@ -663,7 +663,7 @@ void AddPendulum (short where, short who, short h, short v)
 
 // Makes a copy of background beneath a star.
 
-void BackUpStar (Rect *src, short index)
+void BackUpStar (Rect *src, SInt16 index)
 {
 	return;
 #if 0
@@ -692,7 +692,7 @@ void BackUpStar (Rect *src, short index)
 
 // Re-backs up the stars - in the event of lighting switch.
 
-void ReBackUpStar (short where, short who)
+void ReBackUpStar (SInt16 where, SInt16 who)
 {
 	return;
 #if 0
@@ -719,7 +719,7 @@ void ReBackUpStar (short where, short who)
 
 // Adds a star to the star array.
 
-void AddStar (short where, short who, short h, short v)
+void AddStar (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
 	return;
 #if 0
@@ -760,7 +760,7 @@ void AddStar (short where, short who, short h, short v)
 
 // Will set a flag to kill a pendulum.
 
-void StopPendulum (short where, short who)
+void StopPendulum (SInt16 where, SInt16 who)
 {
 	return;
 #if 0
@@ -778,7 +778,7 @@ void StopPendulum (short where, short who)
 
 // Will set a flag to kill a star.
 
-void StopStar (short where, short who)
+void StopStar (SInt16 where, SInt16 who)
 {
 	return;
 #if 0

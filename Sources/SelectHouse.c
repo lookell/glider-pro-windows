@@ -39,7 +39,7 @@
 void UpdateLoadDialog (DialogPtr);
 void PageUpHouses (DialogPtr);
 void PageDownHouses (DialogPtr);
-pascal Boolean LoadFilter (DialogPtr, EventRecord *, short *);
+pascal Boolean LoadFilter (DialogPtr, EventRecord *, SInt16 *);
 void SortHouseList (void);
 void DoDirSearch (void);
 
@@ -205,7 +205,7 @@ void PageDownHouses (DialogPtr theDial)
 //--------------------------------------------------------------  LoadFilter
 #ifndef COMPILEDEMO
 
-pascal Boolean LoadFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean LoadFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0

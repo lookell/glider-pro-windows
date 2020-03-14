@@ -22,7 +22,7 @@
 #define kScoreRollAmount		13
 
 
-void RefreshRoomTitle (short);
+void RefreshRoomTitle (SInt16);
 void RefreshNumGliders (void);
 void RefreshPoints (void);
 
@@ -51,7 +51,7 @@ extern	Boolean		evenFrame, onePlayerLeft;
 //==============================================================  Functions
 //--------------------------------------------------------------  RefreshScoreboard
 
-void RefreshScoreboard (short mode)
+void RefreshScoreboard (SInt16 mode)
 {
 	return;
 #if 0
@@ -140,7 +140,7 @@ void RefreshScoreboard (short mode)
 
 //--------------------------------------------------------------  RefreshRoomTitle
 
-void RefreshRoomTitle (short mode)
+void RefreshRoomTitle (SInt16 mode)
 {
 	return;
 #if 0

@@ -15,7 +15,7 @@
 #include "ObjectEdit.h"
 
 
-short BitchAboutColorDepth (void);
+SInt16 BitchAboutColorDepth (void);
 void HandleMouseEvent (EventRecord *);
 void HandleKeyEvent (EventRecord *);
 void HandleUpdateEvent (EventRecord *);
@@ -44,7 +44,7 @@ extern	Boolean		autoRoomEdit, newRoomNow, isPlayMusicIdle;
 // Display a dialog that alerts the user that they have switched the bit…
 // depth of the monitor under our noses.  They must return it to previous.
 
-short BitchAboutColorDepth (void)
+SInt16 BitchAboutColorDepth (void)
 {
 	return (1);
 #if 0

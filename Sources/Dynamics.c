@@ -31,7 +31,7 @@ extern	Boolean		evenFrame, twoPlayerGame, onePlayerLeft, playerDead;
 // Checks for a collision betwen the glider and one of the dynamic objects.
 // For example, did the glider hit a flying piece of toast?
 
-void CheckDynamicCollision (short who, gliderPtr thisGlider, Boolean doOffset)
+void CheckDynamicCollision (SInt16 who, gliderPtr thisGlider, Boolean doOffset)
 {
 	return;
 #if 0
@@ -80,7 +80,7 @@ void CheckDynamicCollision (short who, gliderPtr thisGlider, Boolean doOffset)
 
 // Checks to see if a rubber band struck a dynamic.
 
-Boolean DidBandHitDynamic (short who)
+Boolean DidBandHitDynamic (SInt16 who)
 {
 	return (false);
 #if 0
@@ -115,7 +115,7 @@ Boolean DidBandHitDynamic (short who)
 
 // The following handful of functions handle drawing specific "dynamic" objecsts.
 
-void RenderToast (short who)
+void RenderToast (SInt16 who)
 {
 	return;
 #if 0
@@ -149,7 +149,7 @@ void RenderToast (short who)
 
 //--------------------------------------------------------------  RenderBalloon
 
-void RenderBalloon (short who)
+void RenderBalloon (SInt16 who)
 {
 	return;
 #if 0
@@ -176,7 +176,7 @@ void RenderBalloon (short who)
 
 //--------------------------------------------------------------  RenderCopter
 
-void RenderCopter (short who)
+void RenderCopter (SInt16 who)
 {
 	return;
 #if 0
@@ -203,7 +203,7 @@ void RenderCopter (short who)
 
 //--------------------------------------------------------------  RenderDart
 
-void RenderDart (short who)
+void RenderDart (SInt16 who)
 {
 	return;
 #if 0
@@ -230,7 +230,7 @@ void RenderDart (short who)
 
 //--------------------------------------------------------------  RenderBall
 
-void RenderBall (short who)
+void RenderBall (SInt16 who)
 {
 	return;
 #if 0
@@ -254,7 +254,7 @@ void RenderBall (short who)
 
 //--------------------------------------------------------------  RenderDrip
 
-void RenderDrip (short who)
+void RenderDrip (SInt16 who)
 {
 	return;
 #if 0
@@ -278,7 +278,7 @@ void RenderDrip (short who)
 
 //--------------------------------------------------------------  RenderFish
 
-void RenderFish (short who)
+void RenderFish (SInt16 who)
 {
 	return;
 #if 0
@@ -317,7 +317,7 @@ void RenderFish (short who)
 // The following handful of functions are called each game frame and handle…
 // the movement and state of the various types of dynamic objects.
 
-void HandleSparkleObject (short who)
+void HandleSparkleObject (SInt16 who)
 {
 	return;
 #if 0
@@ -348,7 +348,7 @@ void HandleSparkleObject (short who)
 
 //--------------------------------------------------------------  HandleToast
 
-void HandleToast (short who)
+void HandleToast (SInt16 who)
 {
 	return;
 #if 0
@@ -418,7 +418,7 @@ void HandleToast (short who)
 
 //--------------------------------------------------------------  HandleMacPlus
 
-void HandleMacPlus (short who)
+void HandleMacPlus (SInt16 who)
 {
 	return;
 #if 0
@@ -461,7 +461,7 @@ void HandleMacPlus (short who)
 
 //--------------------------------------------------------------  HandleTV
 
-void HandleTV (short who)
+void HandleTV (SInt16 who)
 {
 	return;
 #if 0
@@ -518,7 +518,7 @@ void HandleTV (short who)
 
 //--------------------------------------------------------------  HandleCoffee
 
-void HandleCoffee (short who)
+void HandleCoffee (SInt16 who)
 {
 	return;
 #if 0
@@ -567,7 +567,7 @@ void HandleCoffee (short who)
 
 //--------------------------------------------------------------  HandleOutlet
 
-void HandleOutlet (short who)
+void HandleOutlet (SInt16 who)
 {
 	return;
 #if 0
@@ -645,7 +645,7 @@ void HandleOutlet (short who)
 
 //--------------------------------------------------------------  HandleVCR
 
-void HandleVCR (short who)
+void HandleVCR (SInt16 who)
 {
 	return;
 #if 0
@@ -716,7 +716,7 @@ void HandleVCR (short who)
 
 //--------------------------------------------------------------  HandleStereo
 
-void HandleStereo (short who)
+void HandleStereo (SInt16 who)
 {
 	return;
 #if 0
@@ -763,7 +763,7 @@ void HandleStereo (short who)
 
 //--------------------------------------------------------------  HandleMicrowave
 
-void HandleMicrowave (short who)
+void HandleMicrowave (SInt16 who)
 {
 	return;
 #if 0

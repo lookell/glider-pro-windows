@@ -110,7 +110,7 @@
 //==============================================================  Functions
 //--------------------------------------------------------------  DrawMailboxLeft
 
-void DrawMailboxLeft (Rect *theRect, short down)
+void DrawMailboxLeft (Rect *theRect, SInt16 down)
 {
 	return;
 #if 0
@@ -196,7 +196,7 @@ void DrawMailboxLeft (Rect *theRect, short down)
 
 //--------------------------------------------------------------  DrawMailboxRight
 
-void DrawMailboxRight (Rect *theRect, short down)
+void DrawMailboxRight (Rect *theRect, SInt16 down)
 {
 	return;
 #if 0
@@ -282,7 +282,7 @@ void DrawMailboxRight (Rect *theRect, short down)
 
 //--------------------------------------------------------------  DrawSimpleTransport
 
-void DrawSimpleTransport (short what, Rect *theRect)
+void DrawSimpleTransport (SInt16 what, Rect *theRect)
 {
 	return;
 #if 0
@@ -448,7 +448,7 @@ void DrawSoundTrigger (Rect *theRect)
 
 //--------------------------------------------------------------  DrawSimpleLight
 
-void DrawSimpleLight (short what, Rect *theRect)
+void DrawSimpleLight (SInt16 what, Rect *theRect)
 {
 	return;
 #if 0
@@ -645,7 +645,7 @@ void DrawInvisLight (Rect *theRect)
 
 //--------------------------------------------------------------  DrawSimpleAppliance
 
-void DrawSimpleAppliance (short what, Rect *theRect)
+void DrawSimpleAppliance (SInt16 what, Rect *theRect)
 {
 	return;
 #if 0
@@ -1010,7 +1010,7 @@ void DrawCopter (Rect *theRect)
 
 //--------------------------------------------------------------  DrawDart
 
-void DrawDart (Rect *theRect, short which)
+void DrawDart (Rect *theRect, SInt16 which)
 {
 	return;
 #if 0
@@ -1033,7 +1033,7 @@ void DrawDart (Rect *theRect, short which)
 
 //--------------------------------------------------------------  DrawBall
 
-void DrawBall (short what, Rect *theRect)
+void DrawBall (SInt16 what, Rect *theRect)
 {
 	return;
 #if 0
@@ -1046,7 +1046,7 @@ void DrawBall (short what, Rect *theRect)
 
 //--------------------------------------------------------------  DrawFish
 
-void DrawFish (short what, Rect *theRect)
+void DrawFish (SInt16 what, Rect *theRect)
 {
 	return;
 #if 0
@@ -1109,7 +1109,7 @@ void DrawMirror (Rect *mirror)
 
 //--------------------------------------------------------------  DrawSimpleClutter
 
-void DrawSimpleClutter (short what, Rect *theRect)
+void DrawSimpleClutter (SInt16 what, Rect *theRect)
 {
 	return;
 #if 0
@@ -1122,7 +1122,7 @@ void DrawSimpleClutter (short what, Rect *theRect)
 
 //--------------------------------------------------------------  DrawFlower
 
-void DrawFlower (Rect *theRect, short which)
+void DrawFlower (Rect *theRect, SInt16 which)
 {
 	return;
 #if 0
@@ -1303,7 +1303,7 @@ void DrawBulletin (Rect *theRect)
 
 //--------------------------------------------------------------  DrawPictObject
 
-void DrawPictObject (short what, Rect *theRect)
+void DrawPictObject (SInt16 what, Rect *theRect)
 {
 	return;
 #if 0
@@ -1362,7 +1362,7 @@ void DrawPictObject (short what, Rect *theRect)
 
 //--------------------------------------------------------------  DrawPictWithMaskObject
 
-void DrawPictWithMaskObject (short what, Rect *theRect)
+void DrawPictWithMaskObject (SInt16 what, Rect *theRect)
 {
 	return;
 #if 0
@@ -1414,7 +1414,7 @@ void DrawPictWithMaskObject (short what, Rect *theRect)
 
 //--------------------------------------------------------------  DrawPictSansWhiteObject
 
-void DrawPictSansWhiteObject (short what, Rect *theRect)
+void DrawPictSansWhiteObject (SInt16 what, Rect *theRect)
 {
 	return;
 #if 0
@@ -1527,7 +1527,7 @@ void DrawPictSansWhiteObject (short what, Rect *theRect)
 }
 //--------------------------------------------------------------  DrawCustPictSansWhite
 
-void DrawCustPictSansWhite (short pictID, Rect *theRect)
+void DrawCustPictSansWhite (SInt16 pictID, Rect *theRect)
 {
 	return;
 #if 0

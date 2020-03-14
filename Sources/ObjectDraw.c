@@ -48,15 +48,15 @@
 #define k8BlackColor			255
 
 
-void DrawClockDigit (short, Rect *);
-void DrawClockHands (Point, short, short);
-void DrawLargeClockHands (Point, short, short);
+void DrawClockDigit (SInt16, Rect *);
+void DrawClockHands (Point, SInt16, SInt16);
+void DrawLargeClockHands (Point, SInt16, SInt16);
 
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DrawSimpleBlowers
 
-void DrawSimpleBlowers (short what, Rect *theRect)
+void DrawSimpleBlowers (SInt16 what, Rect *theRect)
 {
 	return;
 #if 0
@@ -69,7 +69,7 @@ void DrawSimpleBlowers (short what, Rect *theRect)
 
 //--------------------------------------------------------------  DrawTiki
 
-void DrawTiki (Rect *theRect, short down)
+void DrawTiki (Rect *theRect, SInt16 down)
 {
 	return;
 #if 0
@@ -156,7 +156,7 @@ void DrawLiftArea (Rect *theRect)
 
 //--------------------------------------------------------------  DrawTable
 
-void DrawTable (Rect *tableTop, short down)
+void DrawTable (Rect *tableTop, SInt16 down)
 {
 	return;
 #if 0
@@ -506,7 +506,7 @@ void DrawCabinet (Rect *cabinet)
 
 //--------------------------------------------------------------  DrawSimpleFurniture
 
-void DrawSimpleFurniture (short what, Rect *theRect)
+void DrawSimpleFurniture (SInt16 what, Rect *theRect)
 {
 	return;
 #if 0
@@ -800,7 +800,7 @@ void DrawDresser (Rect *dresser)
 
 //--------------------------------------------------------------  DrawDeckTable
 
-void DrawDeckTable (Rect *tableTop, short down)
+void DrawDeckTable (Rect *tableTop, SInt16 down)
 {
 	return;
 #if 0
@@ -916,7 +916,7 @@ void DrawDeckTable (Rect *tableTop, short down)
 
 //--------------------------------------------------------------  DrawStool
 
-void DrawStool (Rect *theRect, short down)
+void DrawStool (Rect *theRect, SInt16 down)
 {
 	return;
 #if 0
@@ -1032,7 +1032,7 @@ void DrawRedClock (Rect *theRect)
 
 //--------------------------------------------------------------  DrawClockDigit
 
-void DrawClockDigit (short number, Rect *dest)
+void DrawClockDigit (SInt16 number, Rect *dest)
 {
 	return;
 #if 0
@@ -1116,7 +1116,7 @@ void DrawCuckoo (Rect *theRect)
 
 //--------------------------------------------------------------  DrawClockHands
 
-void DrawClockHands (Point where, short bigHand, short littleHand)
+void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 {
 	return;
 #if 0
@@ -1235,7 +1235,7 @@ void DrawClockHands (Point where, short bigHand, short littleHand)
 
 //--------------------------------------------------------------  DrawClockHands
 
-void DrawLargeClockHands (Point where, short bigHand, short littleHand)
+void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 {
 	return;
 #if 0
@@ -1357,7 +1357,7 @@ void DrawLargeClockHands (Point where, short bigHand, short littleHand)
 
 //--------------------------------------------------------------  DrawSimplePrizes
 
-void DrawSimplePrizes (short what, Rect *theRect)
+void DrawSimplePrizes (SInt16 what, Rect *theRect)
 {
 	return;
 #if 0
@@ -1370,7 +1370,7 @@ void DrawSimplePrizes (short what, Rect *theRect)
 
 //--------------------------------------------------------------  DrawGreaseRt
 
-void DrawGreaseRt (Rect *theRect, short distance, Boolean state)
+void DrawGreaseRt (Rect *theRect, SInt16 distance, Boolean state)
 {
 	return;
 #if 0
@@ -1406,7 +1406,7 @@ void DrawGreaseRt (Rect *theRect, short distance, Boolean state)
 
 //--------------------------------------------------------------  DrawGreaseLf
 
-void DrawGreaseLf (Rect *theRect, short distance, Boolean state)
+void DrawGreaseLf (Rect *theRect, SInt16 distance, Boolean state)
 {
 	return;
 #if 0

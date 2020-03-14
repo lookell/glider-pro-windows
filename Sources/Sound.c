@@ -38,7 +38,7 @@ Boolean				channelOpen, isSoundOn, failedSound;
 //==============================================================  Functions
 //--------------------------------------------------------------  PlayPrioritySound
 
-void PlayPrioritySound (short which, short priority)
+void PlayPrioritySound (SInt16 which, SInt16 priority)
 {
 	return;
 #if 0
@@ -137,7 +137,7 @@ void FlushAnyTriggerPlaying (void)
 
 //--------------------------------------------------------------  PlaySound0
 
-void PlaySound0 (short soundID, short priority)
+void PlaySound0 (SInt16 soundID, SInt16 priority)
 {
 	return;
 #if 0
@@ -168,7 +168,7 @@ void PlaySound0 (short soundID, short priority)
 
 //--------------------------------------------------------------  PlaySound1
 
-void PlaySound1 (short soundID, short priority)
+void PlaySound1 (SInt16 soundID, SInt16 priority)
 {
 	return;
 #if 0
@@ -199,7 +199,7 @@ void PlaySound1 (short soundID, short priority)
 
 //--------------------------------------------------------------  PlaySound2
 
-void PlaySound2 (short soundID, short priority)
+void PlaySound2 (SInt16 soundID, SInt16 priority)
 {
 	return;
 #if 0
@@ -287,7 +287,7 @@ pascal void CallBack2 (SndChannelPtr theChannel, SndCommand *theCommand)
 
 //--------------------------------------------------------------  LoadTriggerSound
 
-OSErr LoadTriggerSound (short soundID)
+OSErr LoadTriggerSound (SInt16 soundID)
 {
 	return (-1);
 #if 0

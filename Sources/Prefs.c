@@ -26,11 +26,11 @@
 
 
 Boolean CanUseFindFolder (void);
-Boolean GetPrefsFPath (long *, short *);
-Boolean CreatePrefsFolder (short *);
-Boolean WritePrefs (long *, short *, prefsInfo *);
-OSErr ReadPrefs (long *, short *, prefsInfo *);
-Boolean DeletePrefs (long *, short *);
+Boolean GetPrefsFPath (SInt32 *, SInt16 *);
+Boolean CreatePrefsFolder (SInt16 *);
+Boolean WritePrefs (SInt32 *, SInt16 *, prefsInfo *);
+OSErr ReadPrefs (SInt32 *, SInt16 *, prefsInfo *);
+Boolean DeletePrefs (SInt32 *, SInt16 *);
 void BringUpDeletePrefsAlert (void);
 
 
@@ -60,7 +60,7 @@ Boolean CanUseFindFolder (void)
 
 //--------------------------------------------------------------  GetPrefsFPath
 
-Boolean GetPrefsFPath (long *prefDirID, short *systemVolRef)
+Boolean GetPrefsFPath (SInt32 *prefDirID, SInt16 *systemVolRef)
 {
 	return false;
 #if 0
@@ -77,7 +77,7 @@ Boolean GetPrefsFPath (long *prefDirID, short *systemVolRef)
 
 //--------------------------------------------------------------  CreatePrefsFolder
 
-Boolean CreatePrefsFolder (short *systemVolRef)
+Boolean CreatePrefsFolder (SInt16 *systemVolRef)
 {
 	return false;
 #if 0
@@ -104,7 +104,7 @@ Boolean CreatePrefsFolder (short *systemVolRef)
 
 //--------------------------------------------------------------  WritePrefs
 
-Boolean WritePrefs (long *prefDirID, short *systemVolRef, prefsInfo *thePrefs)
+Boolean WritePrefs (SInt32 *prefDirID, SInt16 *systemVolRef, prefsInfo *thePrefs)
 {
 	return false;
 #if 0
@@ -158,7 +158,7 @@ Boolean WritePrefs (long *prefDirID, short *systemVolRef, prefsInfo *thePrefs)
 
 //--------------------------------------------------------------  SavePrefs
 
-Boolean SavePrefs (prefsInfo *thePrefs, short versionNow)
+Boolean SavePrefs (prefsInfo *thePrefs, SInt16 versionNow)
 {
 	return false;
 #if 0
@@ -179,7 +179,7 @@ Boolean SavePrefs (prefsInfo *thePrefs, short versionNow)
 
 //--------------------------------------------------------------  ReadPrefs
 
-OSErr ReadPrefs (long *prefDirID, short *systemVolRef, prefsInfo *thePrefs)
+OSErr ReadPrefs (SInt32 *prefDirID, SInt16 *systemVolRef, prefsInfo *thePrefs)
 {
 	return (-1);
 #if 0
@@ -236,7 +236,7 @@ OSErr ReadPrefs (long *prefDirID, short *systemVolRef, prefsInfo *thePrefs)
 
 //--------------------------------------------------------------  DeletePrefs
 
-Boolean DeletePrefs (long *dirID, short *volRef)
+Boolean DeletePrefs (SInt32 *dirID, SInt16 *volRef)
 {
 	return false;
 #if 0
@@ -259,7 +259,7 @@ Boolean DeletePrefs (long *dirID, short *volRef)
 
 //--------------------------------------------------------------  LoadPrefs
 
-Boolean LoadPrefs (prefsInfo *thePrefs, short versionNeed)
+Boolean LoadPrefs (prefsInfo *thePrefs, SInt16 versionNeed)
 {
 	return false;
 #if 0

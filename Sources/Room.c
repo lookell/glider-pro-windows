@@ -19,7 +19,7 @@
 
 
 Boolean QueryDeleteRoom (void);
-void SetToNearestNeighborRoom (short, short);
+void SetToNearestNeighborRoom (SInt16, SInt16);
 
 
 roomPtr		thisRoom;
@@ -38,7 +38,7 @@ extern	short		tempTiles[];
 //--------------------------------------------------------------  SetInitialTiles
 
 #ifndef COMPILEDEMO
-void SetInitialTiles (short background, Boolean doRoom)
+void SetInitialTiles (SInt16 background, Boolean doRoom)
 {
 	return;
 #if 0
@@ -160,7 +160,7 @@ void SetInitialTiles (short background, Boolean doRoom)
 //--------------------------------------------------------------  CreateNewRoom
 
 #ifndef COMPILEDEMO
-Boolean CreateNewRoom (short h, short v)
+Boolean CreateNewRoom (SInt16 h, SInt16 v)
 {
 	return false;
 #if 0
@@ -248,7 +248,7 @@ Boolean CreateNewRoom (short h, short v)
 
 //--------------------------------------------------------------  ReadyBackground
 
-void ReadyBackground (short theID, short *theTiles)
+void ReadyBackground (SInt16 theID, SInt16 *theTiles)
 {
 	return;
 #if 0
@@ -353,7 +353,7 @@ void ReflectCurrentRoom (Boolean forceMapRedraw)
 
 //--------------------------------------------------------------  CopyRoomToThisRoom
 
-void CopyRoomToThisRoom (short roomNumber)
+void CopyRoomToThisRoom (SInt16 roomNumber)
 {
 	return;
 #if 0
@@ -385,7 +385,7 @@ void CopyThisRoomToRoom (void)
 
 //--------------------------------------------------------------  ForceThisRoom
 
-void ForceThisRoom (short roomNumber)
+void ForceThisRoom (SInt16 roomNumber)
 {
 	return;
 #if 0
@@ -409,7 +409,7 @@ void ForceThisRoom (short roomNumber)
 
 //--------------------------------------------------------------  RoomExists
 
-Boolean RoomExists (short suite, short floor, short *roomNum)
+Boolean RoomExists (SInt16 suite, SInt16 floor, SInt16 *roomNum)
 {
 	return false;
 #if 0
@@ -447,7 +447,7 @@ Boolean RoomExists (short suite, short floor, short *roomNum)
 
 //--------------------------------------------------------------  RoomNumExists
 
-Boolean RoomNumExists (short roomNum)
+Boolean RoomNumExists (SInt16 roomNum)
 {
 	return false;
 #if 0
@@ -536,7 +536,7 @@ Boolean QueryDeleteRoom (void)
 
 //--------------------------------------------------------------  DoesNeighborRoomExist
 
-short DoesNeighborRoomExist (short whichNeighbor)
+SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor)
 {
 	return (-1);
 #if 0
@@ -578,7 +578,7 @@ short DoesNeighborRoomExist (short whichNeighbor)
 
 //--------------------------------------------------------------  SelectNeighborRoom
 
-void SelectNeighborRoom (short whichNeighbor)
+void SelectNeighborRoom (SInt16 whichNeighbor)
 {
 	return;
 #if 0
@@ -599,7 +599,7 @@ void SelectNeighborRoom (short whichNeighbor)
 
 //--------------------------------------------------------------  GetNeighborRoomNumber
 
-short GetNeighborRoomNumber (short which)
+SInt16 GetNeighborRoomNumber (SInt16 which)
 {
 	return kRoomIsEmpty;
 #if 0
@@ -679,7 +679,7 @@ short GetNeighborRoomNumber (short which)
 
 //--------------------------------------------------------------  SetToNearestNeighborRoom
 
-void SetToNearestNeighborRoom (short wasFloor, short wasSuite)
+void SetToNearestNeighborRoom (SInt16 wasFloor, SInt16 wasSuite)
 {
 	return;
 #if 0
@@ -754,7 +754,7 @@ void SetToNearestNeighborRoom (short wasFloor, short wasSuite)
 
 //--------------------------------------------------------------  GetRoomFloorSuite
 
-Boolean GetRoomFloorSuite (short room, short *floor, short *suite)
+Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite)
 {
 	return false;
 #if 0
@@ -783,7 +783,7 @@ Boolean GetRoomFloorSuite (short room, short *floor, short *suite)
 
 //--------------------------------------------------------------  GetRoomNumber
 
-short GetRoomNumber (short floor, short suite)
+SInt16 GetRoomNumber (SInt16 floor, SInt16 suite)
 {
 	return kRoomIsEmpty;
 #if 0
@@ -812,7 +812,7 @@ short GetRoomNumber (short floor, short suite)
 
 //--------------------------------------------------------------  IsRoomAStructure
 
-Boolean	IsRoomAStructure (short roomNum)
+Boolean	IsRoomAStructure (SInt16 roomNum)
 {
 	return false;
 #if 0
@@ -992,7 +992,7 @@ void DetermineRoomOpenings (void)
 
 //--------------------------------------------------------------  GetOriginalBounding
 
-short GetOriginalBounding (short theID)
+SInt16 GetOriginalBounding (SInt16 theID)
 {
 	return 0;
 #if 0
@@ -1028,7 +1028,7 @@ short GetOriginalBounding (short theID)
 
 //--------------------------------------------------------------  GetNumberOfLights
 
-short GetNumberOfLights (short where)
+SInt16 GetNumberOfLights (SInt16 where)
 {
 	return 1;
 #if 0

@@ -25,9 +25,9 @@
 #define kZeroScoresAlert		1032
 
 
-long CountTotalHousePoints (void);
+SInt32 CountTotalHousePoints (void);
 void UpdateHouseInfoDialog (DialogPtr);
-pascal Boolean HouseFilter (DialogPtr, EventRecord *, short *);
+pascal Boolean HouseFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean WarnLockingHouse (void);
 void HowToZeroScores (void);
 
@@ -49,7 +49,7 @@ extern	Boolean		phoneBitSet;
 
 // The following functions all handle the "House Info" dialog in the editor.
 
-long CountTotalHousePoints (void)
+SInt32 CountTotalHousePoints (void)
 {
 	return 0;
 #if 0
@@ -129,7 +129,7 @@ void UpdateHouseInfoDialog (DialogPtr theDialog)
 
 //--------------------------------------------------------------  HouseFilter
 
-pascal Boolean HouseFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean HouseFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0

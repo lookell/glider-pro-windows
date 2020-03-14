@@ -14,8 +14,8 @@
 #define kKillBandMode			-1
 
 
-void CheckBandCollision (short);
-void KillBand (short);
+void CheckBandCollision (SInt16);
+void KillBand (SInt16);
 
 
 bandPtr		bands;
@@ -34,7 +34,7 @@ extern	Boolean		twoPlayerGame, onePlayerLeft, playerDead;
 //==============================================================  Functions
 //--------------------------------------------------------------  CheckBandCollision
 
-void CheckBandCollision (short who)
+void CheckBandCollision (SInt16 who)
 {
 	return;
 #if 0
@@ -259,7 +259,7 @@ void HandleBands (void)
 
 //--------------------------------------------------------------  AddBand
 
-Boolean AddBand (gliderPtr thisGlider, short h, short v, Boolean direction)
+Boolean AddBand (gliderPtr thisGlider, SInt16 h, SInt16 v, Boolean direction)
 {
 	return false;
 #if 0
@@ -300,7 +300,7 @@ Boolean AddBand (gliderPtr thisGlider, short h, short v, Boolean direction)
 
 //--------------------------------------------------------------  KillBand
 
-void KillBand (short which)
+void KillBand (SInt16 which)
 {
 	return;
 #if 0

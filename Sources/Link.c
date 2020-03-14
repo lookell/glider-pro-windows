@@ -31,7 +31,7 @@ Boolean			isLinkOpen, linkerIsSwitch;
 //==============================================================  Functions
 //--------------------------------------------------------------  MergeFloorSuite
 
-short MergeFloorSuite (short floor, short suite)
+SInt16 MergeFloorSuite (SInt16 floor, SInt16 suite)
 {
 	return 0;
 #if 0
@@ -41,7 +41,7 @@ short MergeFloorSuite (short floor, short suite)
 
 //--------------------------------------------------------------  ExtractFloorSuite
 
-void ExtractFloorSuite (short combo, short *floor, short *suite)
+void ExtractFloorSuite (SInt16 combo, SInt16 *floor, SInt16 *suite)
 {
 	return;
 #if 0

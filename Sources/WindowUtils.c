@@ -24,7 +24,7 @@ WindowPtr	mssgWindow;
 // Returns the top left coordinate of the specified window.  Corrdinates…
 // are (of course) global (local coordinates would always be (0, 0)).
 
-void GetWindowLeftTop (WindowPtr theWindow, short *left, short *top)
+void GetWindowLeftTop (WindowPtr theWindow, SInt16 *left, SInt16 *top)
 {
 	return;
 	#if 0

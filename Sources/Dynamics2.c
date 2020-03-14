@@ -27,7 +27,7 @@ extern	Boolean		evenFrame, twoPlayerGame, onePlayerLeft, playerDead;
 //==============================================================  Functions
 //--------------------------------------------------------------  HandleBalloon
 
-void HandleBalloon (short who)
+void HandleBalloon (SInt16 who)
 {
 	return;
 #if 0
@@ -134,7 +134,7 @@ void HandleBalloon (short who)
 
 //--------------------------------------------------------------  HandleCopter
 
-void HandleCopter (short who)
+void HandleCopter (SInt16 who)
 {
 	return;
 #if 0
@@ -245,7 +245,7 @@ void HandleCopter (short who)
 
 //--------------------------------------------------------------  HandleDart
 
-void HandleDart (short who)
+void HandleDart (SInt16 who)
 {
 	return;
 #if 0
@@ -364,7 +364,7 @@ void HandleDart (short who)
 
 //--------------------------------------------------------------  HandleBall
 
-void HandleBall (short who)
+void HandleBall (SInt16 who)
 {
 	return;
 #if 0
@@ -436,7 +436,7 @@ void HandleBall (short who)
 
 //--------------------------------------------------------------  HandleDrip
 
-void HandleDrip (short who)
+void HandleDrip (SInt16 who)
 {
 	return;
 #if 0
@@ -513,7 +513,7 @@ void HandleDrip (short who)
 
 //--------------------------------------------------------------  HandleFish
 
-void HandleFish (short who)
+void HandleFish (SInt16 who)
 {
 	return;
 #if 0

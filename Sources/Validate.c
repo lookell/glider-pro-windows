@@ -24,14 +24,14 @@
 #define	kMasterTitleTop			16
 
 
-short GetSystemVolume (void);
-long VolumeCreated (void);
-Boolean VolumeMatchesPrefs (long, long *);
+SInt16 GetSystemVolume (void);
+SInt32 VolumeCreated (void);
+Boolean VolumeMatchesPrefs (SInt32, SInt32 *);
 Boolean NoFloppyException (void);
-OSErr GetIndVolumeDate (short, long *);
+OSErr GetIndVolumeDate (SInt16, SInt32 *);
 Boolean LoopThruMountedVolumes (void);
 Boolean SpecificVolumeCreated (void);
-pascal Boolean MasterFilter (DialogPtr, EventRecord *, short *);
+pascal Boolean MasterFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean GetMasterDisk (void);
 
 
@@ -45,7 +45,7 @@ Boolean		legitMasterDisk, bailOut, didValidation;
 // Finds a hard volume reference number for the volume the System folder…
 // resides on.
 
-short GetSystemVolume (void)
+SInt16 GetSystemVolume (void)
 {
 	SysEnvRec		thisWorld;
 	OSErr			theErr;
@@ -61,7 +61,7 @@ short GetSystemVolume (void)
 //--------------------------------------------------------------  VolumeCreated
 // Returns the creation date (date formatted) of the volume the System is on.
 
-long VolumeCreated (void)
+SInt32 VolumeCreated (void)
 {
 	SysEnvRec		thisWorld;
 	HParamBlockRec	theBlock;
@@ -94,7 +94,7 @@ long VolumeCreated (void)
 // it with a value stored in the games prefs.  Returns whether or not…
 // we have a match.
 
-Boolean VolumeMatchesPrefs (long prefsSay, long *thisEncrypt)
+Boolean VolumeMatchesPrefs (SInt32 prefsSay, SInt32 *thisEncrypt)
 {
 	DateTimeRec		dateRecord;
 	UInt32			theseSeconds;
@@ -142,7 +142,7 @@ Boolean NoFloppyException (void)
 
 //--------------------------------------------------------------  GetIndVolumeDate
 
-OSErr GetIndVolumeDate (short volIndex, long *theDate)
+OSErr GetIndVolumeDate (SInt16 volIndex, SInt32 *theDate)
 {
 	HParamBlockRec	theBlock;
 	Str255			namePtr;
@@ -242,7 +242,7 @@ Boolean SpecificVolumeCreated (void)
 // Dialog filter for the function that follows this one.  It handles…
 // disk inserts and ejects disks that don't match in the previous function.
 
-pascal Boolean MasterFilter (DialogPtr theDialog, EventRecord *theEvent, short *itemHit)
+pascal Boolean MasterFilter (DialogPtr theDialog, EventRecord *theEvent, SInt16 *itemHit)
 {
 #pragma unused (theDialog, theEvent, itemHit)
 	EventRecord		diskEvent;

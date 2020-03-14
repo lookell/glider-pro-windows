@@ -12,8 +12,8 @@
 #define kMaxTempManholes			8
 
 
-short GetObjectLinked (objectType *);
-void ListOneRoomsObjects (short);
+SInt16 GetObjectLinked (objectType *);
+void ListOneRoomsObjects (SInt16);
 
 
 Rect		blowerSrcRect;									// Blowers
@@ -86,7 +86,7 @@ extern	short		numNeighbors;
 //==============================================================  Functions
 //--------------------------------------------------------------  IsThisValid
 
-Boolean IsThisValid (short where, short who)
+Boolean IsThisValid (SInt16 where, SInt16 who)
 {
 	return true;
 #if 0
@@ -126,7 +126,7 @@ Boolean IsThisValid (short where, short who)
 
 //--------------------------------------------------------------  GetRoomLinked
 
-short GetRoomLinked (objectType *who)
+SInt16 GetRoomLinked (objectType *who)
 {
 	return (-1);
 #if 0
@@ -180,7 +180,7 @@ short GetRoomLinked (objectType *who)
 
 //--------------------------------------------------------------  GetObjectLinked
 
-short GetObjectLinked (objectType *who)
+SInt16 GetObjectLinked (objectType *who)
 {
 	return (-1);
 #if 0
@@ -266,7 +266,7 @@ Boolean ObjectIsLinkSwitch (objectType *who)
 
 //--------------------------------------------------------------  ListOneRoomsObjects
 
-void ListOneRoomsObjects (short where)
+void ListOneRoomsObjects (SInt16 where)
 {
 	return;
 #if 0
@@ -387,7 +387,7 @@ void AddTempManholeRect (Rect *manHole)
 
 //--------------------------------------------------------------  SetObjectState
 
-Boolean SetObjectState (short room, short object, short action, short local)
+Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 {
 	return false;
 #if 0
@@ -727,7 +727,7 @@ Boolean SetObjectState (short room, short object, short action, short local)
 
 //--------------------------------------------------------------  GetObjectState
 
-Boolean GetObjectState (short room, short object)
+Boolean GetObjectState (SInt16 room, SInt16 object)
 {
 	return false;
 #if 0

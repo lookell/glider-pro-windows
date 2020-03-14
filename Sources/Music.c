@@ -153,7 +153,7 @@ void ToggleMusicWhilePlaying (void)
 
 //--------------------------------------------------------------  SetMusicalPiece
 
-void SetMusicalMode (short newMode)
+void SetMusicalMode (SInt16 newMode)
 {
 	return;
 #if 0

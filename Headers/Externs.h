@@ -224,7 +224,7 @@
 
 //--------------------------------------------------------------  Structs
 /*
-typedef	short		SICN[16];
+typedef	SInt16		SICN[16];
 typedef	SICN		*SICNList;
 typedef	SICNList	*SICNHand;
 */
@@ -238,24 +238,24 @@ typedef struct
 	Str15		wasBattName, wasBandName;
 	Str15		wasHighName;
 	Str31		wasHighBanner;
-//	long		encrypted, fakeLong;
-	long		wasLeftMap, wasRightMap;
-	long		wasBattMap, wasBandMap;
-	short		wasVolume;
-	short		prefVersion;
-	short		wasMaxFiles;
-	short		wasEditH, wasEditV;
-	short		wasMapH, wasMapV;
-	short		wasMapWide, wasMapHigh;
-	short		wasToolsH, wasToolsV;
-	short		wasLinkH, wasLinkV;
-	short		wasCoordH, wasCoordV;
-	short		isMapLeft, isMapTop;
-	short		wasNumNeighbors;
-	short		wasDepthPref;
-	short		wasToolGroup;
-	short		smWarnings;
-	short		wasFloor, wasSuite;
+//	SInt32		encrypted, fakeLong;
+	SInt32		wasLeftMap, wasRightMap;
+	SInt32		wasBattMap, wasBandMap;
+	SInt16		wasVolume;
+	SInt16		prefVersion;
+	SInt16		wasMaxFiles;
+	SInt16		wasEditH, wasEditV;
+	SInt16		wasMapH, wasMapV;
+	SInt16		wasMapWide, wasMapHigh;
+	SInt16		wasToolsH, wasToolsV;
+	SInt16		wasLinkH, wasLinkV;
+	SInt16		wasCoordH, wasCoordV;
+	SInt16		isMapLeft, isMapTop;
+	SInt16		wasNumNeighbors;
+	SInt16		wasDepthPref;
+	SInt16		wasToolGroup;
+	SInt16		smWarnings;
+	SInt16		wasFloor, wasSuite;
 	Boolean		wasZooms, wasMusicOn;
 	Boolean		wasAutoEdit, wasDoColorFade;
 	Boolean		wasMapOpen, wasToolsOpen;
@@ -277,18 +277,18 @@ void LoadCursors (void);								// --- AnimCursor.c
 void DisposCursors (void);
 void IncrementCursor (void);
 void DecrementCursor (void);
-void SpinCursor (short);
-void BackSpinCursor (short);
+void SpinCursor (SInt16);
+void BackSpinCursor (SInt16);
 
-void ColorText (StringPtr, long);						// --- ColorUtils.c
-void ColorRect (Rect *, long);
-void ColorOval (Rect *, long);
-void ColorRegion (RgnHandle, long);
-void ColorLine (short, short, short, short, long);
-void HiliteRect (Rect *, short, short);
-void ColorFrameRect (Rect *, long);
-void ColorFrameWHRect (short, short, short, short, long);
-void ColorFrameOval (Rect *, long);
+void ColorText (StringPtr, SInt32);						// --- ColorUtils.c
+void ColorRect (Rect *, SInt32);
+void ColorOval (Rect *, SInt32);
+void ColorRegion (RgnHandle, SInt32);
+void ColorLine (SInt16, SInt16, SInt16, SInt16, SInt32);
+void HiliteRect (Rect *, SInt16, SInt16);
+void ColorFrameRect (Rect *, SInt32);
+void ColorFrameWHRect (SInt16, SInt16, SInt16, SInt16, SInt32);
+void ColorFrameOval (Rect *, SInt32);
 void LtGrayForeColor (void);
 void GrayForeColor (void);
 void DkGrayForeColor (void);
@@ -298,82 +298,82 @@ void MonitorWait (void);								// --- DebugUtils.c
 void DisplayRect (Rect *);
 void FlashRect (Rect *);
 void CheckLegitRect(Rect *, Rect *);
-void DisplayLong (long);
-void DisplayShort (short);
-void FlashLong (long);
-void FlashShort (short);
-void DoBarGraph (short, short, short, short);
-short BetaOkay (void);
-void DebugNum (long);
+void DisplayLong (SInt32);
+void DisplayShort (SInt16);
+void FlashLong (SInt32);
+void FlashShort (SInt16);
+void DoBarGraph (SInt16, SInt16, SInt16, SInt16);
+SInt16 BetaOkay (void);
+void DebugNum (SInt32);
 void DisplayCTSeed (CGrafPtr);
 void FillScreenRed (void);
-void DumpToResEditFile (Ptr, long);
+void DumpToResEditFile (Ptr, SInt32);
 
 void HandleEvent (void);								// --- Event.c
 void HiliteAllWindows (void);
 void IgnoreThisClick (void);
 
-short WhatsOurDepth (void);								// --- Environs.c
-void SwitchToDepth (short, Boolean);
+SInt16 WhatsOurDepth (void);							// --- Environs.c
+void SwitchToDepth (SInt16, Boolean);
 void CheckOurEnvirons (void);
 //void ReflectSecondMonitorEnvirons (Boolean, Boolean, Boolean);
 void HandleDepthSwitching (void);
 void RestoreColorDepth (void);
 void CheckMemorySize (void);
-void SetAppMemorySize (long);
+void SetAppMemorySize (SInt32);
 
-Boolean CheckFileError (short, StringPtr);				// --- File Error.c
+Boolean CheckFileError (SInt16, StringPtr);				// --- File Error.c
 
-Boolean SavePrefs (prefsInfo *, short);					// --- Prefs.c
-Boolean LoadPrefs (prefsInfo *, short);
+Boolean SavePrefs (prefsInfo *, SInt16);				// --- Prefs.c
+Boolean LoadPrefs (prefsInfo *, SInt16);
 
 void PasStringCopy (StringPtr, StringPtr);				// --- StringUtils.c
-short WhichStringFirst (StringPtr, StringPtr);
-void PasStringCopyNum (StringPtr, StringPtr, short);
+SInt16 WhichStringFirst (StringPtr, StringPtr);
+void PasStringCopyNum (StringPtr, StringPtr, SInt16);
 void PasStringConcat (StringPtr, StringPtr);
-void GetLineOfText (StringPtr, short, StringPtr);
-void WrapText (StringPtr, short);
+void GetLineOfText (StringPtr, SInt16, StringPtr);
+void WrapText (StringPtr, SInt16);
 void GetFirstWordOfString (StringPtr, StringPtr);
-void CollapseStringToWidth (StringPtr, short);
+void CollapseStringToWidth (StringPtr, SInt16);
 void GetChooserName (StringPtr);
-StringPtr GetLocalizedString (short, StringPtr);
+StringPtr GetLocalizedString (SInt16, StringPtr);
 
 Point MyGetGlobalMouse (void);							// --- Utilities.c
 void ToolBoxInit (void);
 void FindOurDevice (void);
-short RandomInt (short);
-long RandomLong (long);
+SInt16 RandomInt (SInt16);
+SInt32 RandomLong (SInt32);
 void InitRandomLongQUS (void);
 UInt32 RandomLongQUS (void);
-//void CenterAlert (short);
-void RedAlert (short);
+//void CenterAlert (SInt16);
+void RedAlert (SInt16);
 //void CreateOffScreenBitMap (Rect *, GrafPtr *);
 //void CreateOffScreenPixMap (Rect *, CGrafPtr *);
 //void KillOffScreenPixMap (CGrafPtr);
 //void KillOffScreenBitMap (GrafPtr);
-void LoadGraphic (short);
-void LoadScaledGraphic (short, Rect *);
-//void PlotSICN (Rect *, SICNHand, long);
-void LargeIconPlot (Rect *, short);
-void DrawCIcon (short, short, short);
+void LoadGraphic (SInt16);
+void LoadScaledGraphic (SInt16, Rect *);
+//void PlotSICN (Rect *, SICNHand, SInt32);
+void LargeIconPlot (Rect *, SInt16);
+void DrawCIcon (SInt16, SInt16, SInt16);
 char KeyMapOffsetFromRawKey (char);
-long LongSquareRoot (long);
+SInt32 LongSquareRoot (SInt32);
 //void HideMenuBarOld (void);
 //void ShowMenuBarOld (void);
-Boolean WaitForInputEvent (short);
+Boolean WaitForInputEvent (SInt16);
 void WaitCommandQReleased (void);
-char GetKeyMapFromMessage (long);
-void GetKeyName (long, StringPtr);
+char GetKeyMapFromMessage (SInt32);
+void GetKeyName (SInt32, StringPtr);
 Boolean OptionKeyDown (void);
-long ExtractCTSeed (CGrafPtr);
-//void ForceCTSeed (CGrafPtr, long);
-void DelayTicks (long);
-void UnivGetSoundVolume (short *, Boolean);
-void  UnivSetSoundVolume (short, Boolean);
+SInt32 ExtractCTSeed (CGrafPtr);
+//void ForceCTSeed (CGrafPtr, SInt32);
+void DelayTicks (SInt32);
+void UnivGetSoundVolume (SInt16 *, Boolean);
+void  UnivSetSoundVolume (SInt16, Boolean);
 
 Boolean ValidInstallation (Boolean);					// --- Validate.c
 
-void GetWindowLeftTop (WindowPtr, short *, short *);	// --- WindowUtils.c
+void GetWindowLeftTop (WindowPtr, SInt16 *, SInt16 *);	// --- WindowUtils.c
 void GetWindowRect (WindowPtr, Rect *);
 void GetLocalWindowRect (WindowPtr, Rect *);
 //void FlagWindowFloating (WindowPtr);
@@ -384,8 +384,8 @@ void CloseMessageWindow (void);
 void CloseThisWindow (WindowPtr *);
 
 #ifdef powerc
-//	extern pascal void SetSoundVol(short level);		// for old Sound Manager
-//	extern pascal void GetSoundVol(short *level)
+//	extern pascal void SetSoundVol(SInt16 level);		// for old Sound Manager
+//	extern pascal void GetSoundVol(SInt16 *level)
 //	THREEWORDINLINE(0x4218, 0x10B8, 0x0260);
 #endif
 

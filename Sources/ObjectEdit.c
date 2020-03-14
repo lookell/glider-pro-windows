@@ -19,7 +19,7 @@
 #include "Room.h"
 
 
-short FindObjectSelected (Point);
+SInt16 FindObjectSelected (Point);
 void DragHandle (Point);
 void DragObject (Point);
 void AddObjectPairing (void);
@@ -44,7 +44,7 @@ extern	Boolean		noRoomAtAll;
 //--------------------------------------------------------------  FindObjectSelected
 
 #ifndef COMPILEDEMO
-short FindObjectSelected (Point where)
+SInt16 FindObjectSelected (Point where)
 {
 	return kNoObjectSelected;
 #if 0
@@ -1396,7 +1396,7 @@ void DuplicateObject (void)
 
 //--------------------------------------------------------------  MoveObject
 
-void MoveObject (short whichWay, Boolean shiftDown)
+void MoveObject (SInt16 whichWay, Boolean shiftDown)
 {
 	return;
 #if 0
@@ -1819,7 +1819,7 @@ void DeselectObject (void)
 //--------------------------------------------------------------  ObjectHasHandle
 
 #ifndef COMPILEDEMO
-Boolean ObjectHasHandle (short *direction, short *dist)
+Boolean ObjectHasHandle (SInt16 *direction, SInt16 *dist)
 {
 	return false;
 #if 0
@@ -2821,7 +2821,7 @@ void HiliteAllObjects (void)
 
 //--------------------------------------------------------------  GoToObjectInRoom
 
-void GoToObjectInRoom (short object, short floor, short suite)
+void GoToObjectInRoom (SInt16 object, SInt16 floor, SInt16 suite)
 {
 	return;
 #if 0
@@ -2858,7 +2858,7 @@ void GoToObjectInRoom (short object, short floor, short suite)
 
 //--------------------------------------------------------------  GoToObjectInRoomNum
 
-void GoToObjectInRoomNum (short object, short roomNum)
+void GoToObjectInRoomNum (SInt16 object, SInt16 roomNum)
 {
 	return;
 #if 0

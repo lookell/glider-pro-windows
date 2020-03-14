@@ -19,7 +19,7 @@ extern	Boolean		tvOn;
 //==============================================================  Functions
 //--------------------------------------------------------------  ToggleToaster
 
-void ToggleToaster (short index)
+void ToggleToaster (SInt16 index)
 {
 	return;
 #if 0
@@ -29,7 +29,7 @@ void ToggleToaster (short index)
 
 //--------------------------------------------------------------  ToggleMacPlus
 
-void ToggleMacPlus (short index)
+void ToggleMacPlus (SInt16 index)
 {
 	return;
 #if 0
@@ -43,7 +43,7 @@ void ToggleMacPlus (short index)
 
 //--------------------------------------------------------------  ToggleTV
 
-void ToggleTV (short index)
+void ToggleTV (SInt16 index)
 {
 	return;
 #if 0
@@ -68,7 +68,7 @@ void ToggleTV (short index)
 
 //--------------------------------------------------------------  ToggleCoffee
 
-void ToggleCoffee (short index)
+void ToggleCoffee (SInt16 index)
 {
 	return;
 #if 0
@@ -79,7 +79,7 @@ void ToggleCoffee (short index)
 
 //--------------------------------------------------------------  ToggleOutlet
 
-void ToggleOutlet (short index)
+void ToggleOutlet (SInt16 index)
 {
 	return;
 #if 0
@@ -89,7 +89,7 @@ void ToggleOutlet (short index)
 
 //--------------------------------------------------------------  ToggleVCR
 
-void ToggleVCR (short index)
+void ToggleVCR (SInt16 index)
 {
 	return;
 #if 0
@@ -100,7 +100,7 @@ void ToggleVCR (short index)
 
 //--------------------------------------------------------------  ToggleStereo
 
-void ToggleStereos (short index)
+void ToggleStereos (SInt16 index)
 {
 	return;
 #if 0
@@ -114,7 +114,7 @@ void ToggleStereos (short index)
 
 //--------------------------------------------------------------  ToggleMicrowave
 
-void ToggleMicrowave (short index)
+void ToggleMicrowave (SInt16 index)
 {
 	return;
 #if 0
@@ -125,7 +125,7 @@ void ToggleMicrowave (short index)
 
 //--------------------------------------------------------------  ToggleBalloon
 
-void ToggleBalloon (short index)
+void ToggleBalloon (SInt16 index)
 {
 	return;
 #if 0
@@ -135,7 +135,7 @@ void ToggleBalloon (short index)
 
 //--------------------------------------------------------------  ToggleCopter
 
-void ToggleCopter (short index)
+void ToggleCopter (SInt16 index)
 {
 	return;
 #if 0
@@ -145,7 +145,7 @@ void ToggleCopter (short index)
 
 //--------------------------------------------------------------  ToggleDart
 
-void ToggleDart (short index)
+void ToggleDart (SInt16 index)
 {
 	return;
 #if 0
@@ -155,7 +155,7 @@ void ToggleDart (short index)
 
 //--------------------------------------------------------------  ToggleBall
 
-void ToggleBall (short index)
+void ToggleBall (SInt16 index)
 {
 	return;
 #if 0
@@ -165,7 +165,7 @@ void ToggleBall (short index)
 
 //--------------------------------------------------------------  ToggleDrip
 
-void ToggleDrip (short index)
+void ToggleDrip (SInt16 index)
 {
 	return;
 #if 0
@@ -175,7 +175,7 @@ void ToggleDrip (short index)
 
 //--------------------------------------------------------------  ToggleFish
 
-void ToggleFish (short index)
+void ToggleFish (SInt16 index)
 {
 	return;
 #if 0
@@ -185,7 +185,7 @@ void ToggleFish (short index)
 
 //--------------------------------------------------------------  TriggerSwitch
 
-void TriggerSwitch (short who)
+void TriggerSwitch (SInt16 who)
 {
 	return;
 #if 0
@@ -195,7 +195,7 @@ void TriggerSwitch (short who)
 
 //--------------------------------------------------------------  TriggerToast
 
-void TriggerToast (short who)
+void TriggerToast (SInt16 who)
 {
 	return;
 #if 0
@@ -216,7 +216,7 @@ void TriggerToast (short who)
 
 //--------------------------------------------------------------  TriggerOutlet
 
-void TriggerOutlet (short who)
+void TriggerOutlet (SInt16 who)
 {
 	return;
 #if 0
@@ -236,7 +236,7 @@ void TriggerOutlet (short who)
 
 //--------------------------------------------------------------  TriggerDrip
 
-void TriggerDrip (short who)
+void TriggerDrip (SInt16 who)
 {
 	return;
 #if 0
@@ -247,7 +247,7 @@ void TriggerDrip (short who)
 
 //--------------------------------------------------------------  TriggerFish
 
-void TriggerFish (short who)
+void TriggerFish (SInt16 who)
 {
 	return;
 #if 0
@@ -263,7 +263,7 @@ void TriggerFish (short who)
 
 //--------------------------------------------------------------  TriggerBalloon
 
-void TriggerBalloon (short who)
+void TriggerBalloon (SInt16 who)
 {
 	return;
 #if 0
@@ -275,7 +275,7 @@ void TriggerBalloon (short who)
 
 //--------------------------------------------------------------  TriggerCopter
 
-void TriggerCopter (short who)
+void TriggerCopter (SInt16 who)
 {
 	return;
 #if 0
@@ -287,7 +287,7 @@ void TriggerCopter (short who)
 
 //--------------------------------------------------------------  TriggerDart
 
-void TriggerDart (short who)
+void TriggerDart (SInt16 who)
 {
 	return;
 #if 0
@@ -298,7 +298,7 @@ void TriggerDart (short who)
 
 //--------------------------------------------------------------  UpdateOutletsLighting
 
-void UpdateOutletsLighting (short room, short nLights)
+void UpdateOutletsLighting (SInt16 room, SInt16 nLights)
 {
 	return;
 #if 0

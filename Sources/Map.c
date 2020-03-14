@@ -26,10 +26,10 @@
 #define kThumbnailPictID		1010
 
 
-void LoadGraphicPlus (short, Rect *);
+void LoadGraphicPlus (SInt16, Rect *);
 void RedrawMapContents (void);
-pascal void LiveHScrollAction (ControlHandle, short);
-pascal void LiveVScrollAction (ControlHandle, short);
+pascal void LiveHScrollAction (ControlHandle, SInt16);
+pascal void LiveVScrollAction (ControlHandle, SInt16);
 Boolean QueryNewRoom (void);
 void CreateNailOffscreen (void);
 void KillNailOffscreen (void);
@@ -73,7 +73,7 @@ Boolean ThisRoomVisibleOnMap (void)
 //--------------------------------------------------------------  CenterMapOnRoom
 
 #ifndef COMPILEDEMO
-void CenterMapOnRoom (short h, short v)
+void CenterMapOnRoom (SInt16 h, SInt16 v)
 {
 	return;
 #if 0
@@ -175,7 +175,7 @@ void FindNewActiveRoomRect (void)
 
 //--------------------------------------------------------------  LoadGraphicPlus
 
-void LoadGraphicPlus (short resID, Rect *theRect)
+void LoadGraphicPlus (SInt16 resID, Rect *theRect)
 {
 	return;
 #if 0
@@ -344,7 +344,7 @@ void UpdateMapWindow (void)
 
 //--------------------------------------------------------------  ResizeMapWindow
 
-void ResizeMapWindow (short newH, short newV)
+void ResizeMapWindow (SInt16 newH, SInt16 newV)
 {
 	return;
 #if 0
@@ -488,7 +488,7 @@ void ToggleMapWindow (void)
 //--------------------------------------------------------------  LiveHScrollAction
 #ifndef COMPILEDEMO
 
-pascal void LiveHScrollAction (ControlHandle theControl, short thePart)
+pascal void LiveHScrollAction (ControlHandle theControl, SInt16 thePart)
 {
 	return;
 #if 0
@@ -548,7 +548,7 @@ pascal void LiveHScrollAction (ControlHandle theControl, short thePart)
 //--------------------------------------------------------------  LiveVScrollAction
 #ifndef COMPILEDEMO
 
-pascal void LiveVScrollAction (ControlHandle theControl, short thePart)
+pascal void LiveVScrollAction (ControlHandle theControl, SInt16 thePart)
 {
 	return;
 #if 0

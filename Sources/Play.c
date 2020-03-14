@@ -26,13 +26,13 @@
 
 typedef struct
 {
-	short		nextRing;
-	short		rings;
-	short		delay;
+	SInt16		nextRing;
+	SInt16		rings;
+	SInt16		delay;
 } phoneType, *phonePtr;
 
 
-void InitGlider (gliderPtr, short);
+void InitGlider (gliderPtr, SInt16);
 void SetHouseToFirstRoom (void);
 void SetHouseToSavedRoom (void);
 void HandlePlayEvent (void);
@@ -41,8 +41,8 @@ void HandleRoomVisitation (void);
 void SetObjectsToDefaults (void);
 void InitTelephone (void);
 void HandleTelephone (void);
-Boolean DoesStarCodeExist (short);
-short GetNumStarsRemaining (short, short);
+Boolean DoesStarCodeExist (SInt16);
+SInt16 GetNumStarsRemaining (SInt16, SInt16);
 
 
 phoneType	thePhone, theChimes;
@@ -72,7 +72,7 @@ extern	Boolean		switchedOut;
 //==============================================================  Functions
 //--------------------------------------------------------------  NewGame
 
-void NewGame (short mode)
+void NewGame (SInt16 mode)
 {
 	return;
 #if 0
@@ -311,7 +311,7 @@ void DoDemoGame (void)
 
 //--------------------------------------------------------------  InitGlider
 
-void InitGlider (gliderPtr thisGlider, short mode)
+void InitGlider (gliderPtr thisGlider, SInt16 mode)
 {
 	return;
 #if 0

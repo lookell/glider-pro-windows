@@ -14,15 +14,15 @@
 
 typedef struct
 {
-	short		object, room;
-	short		index, timer;
-	short		what;
+	SInt16		object, room;
+	SInt16		index, timer;
+	SInt16		what;
 	Boolean		armed;
 } trigType, *trigPtr;
 
 
-short FindEmptyTriggerSlot (void);
-void FireTrigger (short);
+SInt16 FindEmptyTriggerSlot (void);
+void FireTrigger (SInt16);
 
 
 trigType	triggers[kMaxTriggers];
@@ -59,7 +59,7 @@ void ArmTrigger (hotPtr who)
 
 //--------------------------------------------------------------  FindEmptyTriggerSlot
 
-short FindEmptyTriggerSlot (void)
+SInt16 FindEmptyTriggerSlot (void)
 {
 	return (-1);
 #if 0
@@ -106,7 +106,7 @@ void HandleTriggers (void)
 
 //--------------------------------------------------------------  FireTrigger
 
-void FireTrigger (short index)
+void FireTrigger (SInt16 index)
 {
 	return;
 #if 0

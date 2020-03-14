@@ -25,8 +25,8 @@ void UpdateMenusNonEditMode (void);
 void UpdateMenusHouseOpen (void);
 void UpdateMenusHouseClosed (void);
 void UpdateResumeDialog (DialogPtr);
-pascal Boolean ResumeFilter (DialogPtr, EventRecord *, short *);
-short QueryResumeGame (void);
+pascal Boolean ResumeFilter (DialogPtr, EventRecord *, SInt16 *);
+SInt16 QueryResumeGame (void);
 void HeyYourPissingAHighScore (void);
 
 
@@ -293,7 +293,7 @@ void UpdateMenus (Boolean newMode)
 //--------------------------------------------------------------  DoAppleMenu
 // Handle the Apple menu (About box and desk accessories).
 
-void DoAppleMenu (short theItem)
+void DoAppleMenu (SInt16 theItem)
 {
 	return;
 #if 0
@@ -320,7 +320,7 @@ void DoAppleMenu (short theItem)
 //--------------------------------------------------------------  DoGameMenu
 // Handle the user selecting an item from the Game menu.
 
-void DoGameMenu (short theItem)
+void DoGameMenu (SInt16 theItem)
 {
 	return;
 #if 0
@@ -388,7 +388,7 @@ void DoGameMenu (short theItem)
 //--------------------------------------------------------------  DoOptionsMenu
 // Handle the user selecting an item from the Options menu.
 
-void DoOptionsMenu (short theItem)
+void DoOptionsMenu (SInt16 theItem)
 {
 	return;
 #if 0
@@ -461,7 +461,7 @@ void DoOptionsMenu (short theItem)
 //--------------------------------------------------------------  DoHouseMenu
 // Handle the user selecting an item from the House menu (only in Edit mode).
 
-void DoHouseMenu (short theItem)
+void DoHouseMenu (SInt16 theItem)
 {
 	return;
 #if 0
@@ -711,7 +711,7 @@ void UpdateResumeDialog (DialogPtr theDialog)
 //--------------------------------------------------------------  ResumeFilter
 // Dialog filter for the Resume dialog (below).
 
-pascal Boolean ResumeFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean ResumeFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -756,7 +756,7 @@ pascal Boolean ResumeFilter (DialogPtr dial, EventRecord *event, short *item)
 // begin a new one.  It displays a little info on the state of their…
 // saved game (number of glider left, points, etc.).
 
-short QueryResumeGame (void)
+SInt16 QueryResumeGame (void)
 {
 	return kSheWantsNewGame;
 #if 0

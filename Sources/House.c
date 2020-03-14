@@ -20,7 +20,7 @@
 
 
 void UpdateGoToDialog (DialogPtr);
-pascal Boolean GoToFilter (DialogPtr, EventRecord *, short *);
+pascal Boolean GoToFilter (DialogPtr, EventRecord *, SInt16 *);
 
 
 houseHand	thisHouse;
@@ -174,7 +174,7 @@ Boolean InitializeEmptyHouse (void)
 // be place-holders - they were deleted earlier and are flagged as…
 // deleted but still occupy space in the file).
 
-short RealRoomNumberCount (void)
+SInt16 RealRoomNumberCount (void)
 {
 	return 0;
 #if 0
@@ -203,7 +203,7 @@ short RealRoomNumberCount (void)
 // Returns the room number (indicee into house file) of the room where…
 // the player is to begin.
 
-short GetFirstRoomNumber (void)
+SInt16 GetFirstRoomNumber (void)
 {
 	return -1;
 #if 0
@@ -234,7 +234,7 @@ short GetFirstRoomNumber (void)
 // Returns a rectangle indicating where in the first room the player's…
 // glider is to appear.
 
-void WhereDoesGliderBegin (Rect *theRect, short mode)
+void WhereDoesGliderBegin (Rect *theRect, SInt16 mode)
 {
 	return;
 #if 0
@@ -274,7 +274,7 @@ Boolean HouseHasOriginalPicts (void)
 
 // Counts up the number of linked objects in a house.
 
-short CountHouseLinks (void)
+SInt16 CountHouseLinks (void)
 {
 	return 0;
 #if 0
@@ -415,7 +415,7 @@ void GenerateLinksList (void)
 // I'm a little fuzzy on what this does.
 
 #ifndef COMPILEDEMO
-void SortRoomsObjects (short which)
+void SortRoomsObjects (SInt16 which)
 {
 	return;
 #if 0
@@ -539,7 +539,7 @@ void SortHouseObjects (void)
 // Goes through and counts the number of rooms a player has been to in…
 // the current game.
 
-short CountRoomsVisited (void)
+SInt16 CountRoomsVisited (void)
 {
 	return 0;
 #if 0
@@ -665,7 +665,7 @@ void UpdateGoToDialog (DialogPtr theDialog)
 //--------------------------------------------------------------  GoToFilter
 // Dialog filter for the "Go To Room..." dialog.
 
-pascal Boolean GoToFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean GoToFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return (false);
 #if 0
@@ -870,7 +870,7 @@ void ConvertHouseVer1To2 (void)
 
 //--------------------------------------------------------------  ShiftWholeHouse
 
-void ShiftWholeHouse (short howFar)
+void ShiftWholeHouse (SInt16 howFar)
 {
 	return;
 #if 0

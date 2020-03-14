@@ -1521,7 +1521,7 @@ void HandleGlider (gliderPtr thisGlider)
 
 //--------------------------------------------------------------  OffsetGlider
 
-void OffsetGlider (gliderPtr thisGlider, short where)
+void OffsetGlider (gliderPtr thisGlider, SInt16 where)
 {
 	return;
 #if 0

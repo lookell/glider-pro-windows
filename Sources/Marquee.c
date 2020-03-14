@@ -79,7 +79,7 @@ void StartMarquee (Rect *theRect)
 
 //--------------------------------------------------------------  StartMarqueeHandled
 
-void StartMarqueeHandled (Rect *theRect, short direction, short dist)
+void StartMarqueeHandled (Rect *theRect, SInt16 direction, SInt16 dist)
 {
 	return;
 #if 0
@@ -280,7 +280,7 @@ void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 
 //--------------------------------------------------------------  DragMarqueeHandle
 
-void DragMarqueeHandle (Point start, short *dragged)
+void DragMarqueeHandle (Point start, SInt16 *dragged)
 {
 	return;
 #if 0
@@ -369,7 +369,7 @@ void DragMarqueeHandle (Point start, short *dragged)
 
 //--------------------------------------------------------------  DragMarqueeCorner
 
-void DragMarqueeCorner (Point start, short *hDragged, short *vDragged, Boolean isTop)
+void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean isTop)
 {
 	return;
 #if 0
@@ -434,7 +434,7 @@ void DragMarqueeCorner (Point start, short *hDragged, short *vDragged, Boolean i
 
 //--------------------------------------------------------------  MarqueeHasHandles
 
-Boolean MarqueeHasHandles (short *direction, short *dist)
+Boolean MarqueeHasHandles (SInt16 *direction, SInt16 *dist)
 {
 	return false;
 #if 0
@@ -479,7 +479,7 @@ void DrawGliderMarquee (void)
 
 //--------------------------------------------------------------  SetMarqueeGliderCenter
 
-void SetMarqueeGliderRect (short h, short v)
+void SetMarqueeGliderRect (SInt16 h, SInt16 v)
 {
 	return;
 #if 0

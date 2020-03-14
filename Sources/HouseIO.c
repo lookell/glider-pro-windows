@@ -674,7 +674,7 @@ Boolean QuerySaveChanges (void)
 // to the user when a non-lethal error has occurred.  Ideally, of…
 // course, this never is called.
 
-void YellowAlert (short whichAlert, short identifier)
+void YellowAlert (SInt16 whichAlert, SInt16 identifier)
 {
 	return;
 #if 0

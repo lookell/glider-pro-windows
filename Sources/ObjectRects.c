@@ -19,7 +19,7 @@
 #define kShredderActiveHigh		40
 
 
-short AddActiveRect (Rect *, short, short, Boolean, Boolean);
+SInt16 AddActiveRect (Rect *, SInt16, SInt16, Boolean, Boolean);
 
 
 extern	hotPtr		hotSpots;
@@ -277,7 +277,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 
 //--------------------------------------------------------------  AddActiveRect
 
-short AddActiveRect (Rect *bounds, short action, short who, Boolean isOn,
+SInt16 AddActiveRect (Rect *bounds, SInt16 action, SInt16 who, Boolean isOn,
 		Boolean doScrutinize)
 {
 	return (-1);
@@ -299,7 +299,7 @@ short AddActiveRect (Rect *bounds, short action, short who, Boolean isOn,
 
 //--------------------------------------------------------------  CreateActiveRects
 
-short CreateActiveRects (short who)
+SInt16 CreateActiveRects (SInt16 who)
 {
 	return (-1);
 #if 0
@@ -1073,7 +1073,7 @@ short CreateActiveRects (short who)
 
 //--------------------------------------------------------------  VerticalRoomOffset
 
-short VerticalRoomOffset (short neighbor)
+SInt16 VerticalRoomOffset (SInt16 neighbor)
 {
 	return 0;
 #if 0
@@ -1102,7 +1102,7 @@ short VerticalRoomOffset (short neighbor)
 
 //--------------------------------------------------------------  OffsetRectRoomRelative
 
-void OffsetRectRoomRelative (Rect *theRect, short neighbor)
+void OffsetRectRoomRelative (Rect *theRect, SInt16 neighbor)
 {
 	return;
 #if 0
@@ -1147,7 +1147,7 @@ void OffsetRectRoomRelative (Rect *theRect, short neighbor)
 
 //--------------------------------------------------------------  GetUpStairsRightEdge
 
-short GetUpStairsRightEdge (void)
+SInt16 GetUpStairsRightEdge (void)
 {
 	return kRoomWide;
 #if 0
@@ -1178,7 +1178,7 @@ short GetUpStairsRightEdge (void)
 
 //--------------------------------------------------------------  GetDownStairsLeftEdge
 
-short GetDownStairsLeftEdge (void)
+SInt16 GetDownStairsLeftEdge (void)
 {
 	return 0;
 #if 0

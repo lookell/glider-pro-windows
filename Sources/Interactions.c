@@ -34,7 +34,7 @@ void CheckEscapeRight (gliderPtr);
 void CheckGliderInRoom (gliderPtr);
 void HandleRewards (gliderPtr, hotPtr);
 void HandleMicrowaveAction (hotPtr, gliderPtr);
-void HandleHotSpotCollision (gliderPtr, hotPtr, short);
+void HandleHotSpotCollision (gliderPtr, hotPtr, SInt16);
 void CheckForHotSpots (void);
 void WebGlider (gliderPtr, Rect *);
 
@@ -1246,7 +1246,7 @@ void HandleMicrowaveAction (hotPtr who, gliderPtr thisGlider)
 
 //--------------------------------------------------------------  HandleHotSpotCollision
 
-void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
+void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, SInt16 index)
 {
 	return;
 #if 0

@@ -26,7 +26,7 @@
 typedef struct
 {
 	Rect		dest, was;
-	short		frame, counter;
+	SInt16		frame, counter;
 	Boolean		stuck;
 } pageType, *pagePtr;
 

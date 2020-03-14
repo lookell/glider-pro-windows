@@ -52,7 +52,7 @@ void KillToolsOffscreen (void);
 void FrameSelectedTool (void);
 void DrawToolName (void);
 void DrawToolTiles (void);
-void SwitchToolModes (short);
+void SwitchToolModes (SInt16);
 
 
 Rect			toolsWindowRect, toolSrcRect, toolTextRect;
@@ -234,7 +234,7 @@ void EraseSelectedTool (void)
 
 //--------------------------------------------------------------  SelectTool
 
-void SelectTool (short which)
+void SelectTool (SInt16 which)
 {
 	return;
 #if 0
@@ -401,7 +401,7 @@ void ToggleToolsWindow (void)
 //--------------------------------------------------------------  SwitchToolModes
 
 #ifndef COMPILEDEMO
-void SwitchToolModes (short newMode)
+void SwitchToolModes (SInt16 newMode)
 {
 	return;
 #if 0
@@ -574,7 +574,7 @@ void PrevToolMode (void)
 
 //--------------------------------------------------------------  SetSpecificToolMode
 
-void SetSpecificToolMode (short modeToSet)
+void SetSpecificToolMode (SInt16 modeToSet)
 {
 	return;
 #if 0

@@ -74,7 +74,7 @@ void PourScreenOn (Rect *theRect)
 
 //--------------------------------------------------------------  WipeScreenOn
 
-void WipeScreenOn (short direction, Rect *theRect)
+void WipeScreenOn (SInt16 direction, Rect *theRect)
 {
 	return;
 #if 0

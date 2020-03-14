@@ -24,19 +24,19 @@
 #define kSewerBlowerTop			292
 
 
-short FindEmptyObjectSlot (void);
-short HowManyCandleObjects (void);
-short HowManyTikiObjects (void);
-short HowManyBBQObjects (void);
-short HowManyCuckooObjects (void);
-short HowManyBandsObjects (void);
-short HowManyGreaseObjects (void);
-short HowManyStarsObjects (void);
-short HowManySoundObjects (void);
-short HowManyUpStairsObjects (void);
-short HowManyDownStairsObjects (void);
-short HowManyShredderObjects (void);
-short HowManyDynamicObjects (void);
+SInt16 FindEmptyObjectSlot (void);
+SInt16 HowManyCandleObjects (void);
+SInt16 HowManyTikiObjects (void);
+SInt16 HowManyBBQObjects (void);
+SInt16 HowManyCuckooObjects (void);
+SInt16 HowManyBandsObjects (void);
+SInt16 HowManyGreaseObjects (void);
+SInt16 HowManyStarsObjects (void);
+SInt16 HowManySoundObjects (void);
+SInt16 HowManyUpStairsObjects (void);
+SInt16 HowManyDownStairsObjects (void);
+SInt16 HowManyShredderObjects (void);
+SInt16 HowManyDynamicObjects (void);
 void ShoutNoMoreSpecialObjects (void);
 
 
@@ -46,7 +46,7 @@ short		wasFlower;
 //==============================================================  Functions
 //--------------------------------------------------------------  AddNewObject
 
-Boolean AddNewObject (Point where, short what, Boolean showItNow)
+Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
 {
 	return false;
 #if 0
@@ -807,7 +807,7 @@ Boolean AddNewObject (Point where, short what, Boolean showItNow)
 //--------------------------------------------------------------  FindEmptyObjectSlot
 
 #ifndef COMPILEDEMO
-short FindEmptyObjectSlot (void)
+SInt16 FindEmptyObjectSlot (void)
 {
 	return (-1);
 #if 0
@@ -827,7 +827,7 @@ short FindEmptyObjectSlot (void)
 
 //--------------------------------------------------------------  FindObjectSlotInRoom
 
-short FindObjectSlotInRoom (short roomNumber)
+SInt16 FindObjectSlotInRoom (SInt16 roomNumber)
 {
 	return (-1);
 #if 0
@@ -857,7 +857,7 @@ short FindObjectSlotInRoom (short roomNumber)
 
 //--------------------------------------------------------------  DoesRoomNumHaveObject
 
-Boolean DoesRoomNumHaveObject (short room, short what)
+Boolean DoesRoomNumHaveObject (SInt16 room, SInt16 what)
 {
 	return false;
 #if 0
@@ -901,7 +901,7 @@ void ShoutNoMoreObjects (void)
 
 //--------------------------------------------------------------  HowManyCandleObjects
 
-short HowManyCandleObjects (void)
+SInt16 HowManyCandleObjects (void)
 {
 	return 0;
 #if 0
@@ -920,7 +920,7 @@ short HowManyCandleObjects (void)
 
 //--------------------------------------------------------------  HowManyTikiObjects
 
-short HowManyTikiObjects (void)
+SInt16 HowManyTikiObjects (void)
 {
 	return 0;
 #if 0
@@ -937,7 +937,7 @@ short HowManyTikiObjects (void)
 
 //--------------------------------------------------------------  HowManyBBQObjects
 
-short HowManyBBQObjects (void)
+SInt16 HowManyBBQObjects (void)
 {
 	return 0;
 #if 0
@@ -954,7 +954,7 @@ short HowManyBBQObjects (void)
 
 //--------------------------------------------------------------  HowManyCuckooObjects
 
-short HowManyCuckooObjects (void)
+SInt16 HowManyCuckooObjects (void)
 {
 	return 0;
 #if 0
@@ -971,7 +971,7 @@ short HowManyCuckooObjects (void)
 
 //--------------------------------------------------------------  HowManyBandsObjects
 
-short HowManyBandsObjects (void)
+SInt16 HowManyBandsObjects (void)
 {
 	return 0;
 #if 0
@@ -988,7 +988,7 @@ short HowManyBandsObjects (void)
 
 //--------------------------------------------------------------  HowManyGreaseObjects
 
-short HowManyGreaseObjects (void)
+SInt16 HowManyGreaseObjects (void)
 {
 	return 0;
 #if 0
@@ -1006,7 +1006,7 @@ short HowManyGreaseObjects (void)
 
 //--------------------------------------------------------------  HowManyStarsObjects
 
-short HowManyStarsObjects (void)
+SInt16 HowManyStarsObjects (void)
 {
 	return 0;
 #if 0
@@ -1023,7 +1023,7 @@ short HowManyStarsObjects (void)
 
 //--------------------------------------------------------------  HowManySoundObjects
 
-short HowManySoundObjects (void)
+SInt16 HowManySoundObjects (void)
 {
 	return 0;
 #if 0
@@ -1040,7 +1040,7 @@ short HowManySoundObjects (void)
 
 //--------------------------------------------------------------  HowManyUpStairsObjects
 
-short HowManyUpStairsObjects (void)
+SInt16 HowManyUpStairsObjects (void)
 {
 	return 0;
 #if 0
@@ -1057,7 +1057,7 @@ short HowManyUpStairsObjects (void)
 
 //--------------------------------------------------------------  HowManyDownStairsObjects
 
-short HowManyDownStairsObjects (void)
+SInt16 HowManyDownStairsObjects (void)
 {
 	return 0;
 #if 0
@@ -1074,7 +1074,7 @@ short HowManyDownStairsObjects (void)
 
 //--------------------------------------------------------------  HowManyShredderObjects
 
-short HowManyShredderObjects (void)
+SInt16 HowManyShredderObjects (void)
 {
 	return 0;
 #if 0
@@ -1091,7 +1091,7 @@ short HowManyShredderObjects (void)
 
 //--------------------------------------------------------------  HowManyDynamicObjects
 
-short HowManyDynamicObjects (void)
+SInt16 HowManyDynamicObjects (void)
 {
 	return 0;
 #if 0

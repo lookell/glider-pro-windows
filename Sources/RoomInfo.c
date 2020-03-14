@@ -35,14 +35,14 @@
 
 
 void UpdateRoomInfoDialog (DialogPtr);
-void DragMiniTile (Point, short *);
+void DragMiniTile (Point, SInt16 *);
 void HiliteTileOver (Point);
-pascal Boolean RoomFilter (DialogPtr, EventRecord *, short *);
-short ChooseOriginalArt (short);
+pascal Boolean RoomFilter (DialogPtr, EventRecord *, SInt16 *);
+SInt16 ChooseOriginalArt (SInt16);
 void UpdateOriginalArt (DialogPtr);
-pascal Boolean OriginalArtFilter (DialogPtr, EventRecord *, short *);
-Boolean PictIDExists (short);
-short GetFirstPICT (void);
+pascal Boolean OriginalArtFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean PictIDExists (SInt16);
+SInt16 GetFirstPICT (void);
 void BitchAboutPICTNotFound (void);
 
 
@@ -120,7 +120,7 @@ void UpdateRoomInfoDialog (DialogPtr theDialog)
 //--------------------------------------------------------------  DragMiniTile
 
 #ifndef COMPILEDEMO
-void DragMiniTile (Point mouseIs, short *newTileOver)
+void DragMiniTile (Point mouseIs, SInt16 *newTileOver)
 {
 	return;
 #if 0
@@ -306,7 +306,7 @@ void HiliteTileOver (Point mouseIs)
 //--------------------------------------------------------------  RoomFilter
 #ifndef COMPILEDEMO
 
-pascal Boolean RoomFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean RoomFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -645,7 +645,7 @@ void UpdateOriginalArt (DialogPtr theDialog)
 //--------------------------------------------------------------  OriginalArtFilter
 #ifndef COMPILEDEMO
 
-pascal Boolean OriginalArtFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean OriginalArtFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -730,7 +730,7 @@ pascal Boolean OriginalArtFilter (DialogPtr dial, EventRecord *event, short *ite
 //--------------------------------------------------------------  ChooseOriginalArt
 
 #ifndef COMPILEDEMO
-short ChooseOriginalArt (short was)
+SInt16 ChooseOriginalArt (SInt16 was)
 {
 	return kUserBackground;
 #if 0
@@ -852,7 +852,7 @@ short ChooseOriginalArt (short was)
 
 //--------------------------------------------------------------  PictIDExists
 
-Boolean PictIDExists (short theID)
+Boolean PictIDExists (SInt16 theID)
 {
 	return false;
 #if 0
@@ -903,7 +903,7 @@ Boolean PictIDExists (short theID)
 
 //--------------------------------------------------------------  GetFirstPICT
 
-short GetFirstPICT (void)
+SInt16 GetFirstPICT (void)
 {
 	return (-1);
 #if 0

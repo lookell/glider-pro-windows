@@ -20,7 +20,7 @@ extern	Boolean		tvOn;
 //==============================================================  Functions
 //--------------------------------------------------------------  DrawARoomsObjects
 
-void DrawARoomsObjects (short neighbor, Boolean redraw)
+void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 {
 	return;
 #if 0

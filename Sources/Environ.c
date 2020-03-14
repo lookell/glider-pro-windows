@@ -31,15 +31,15 @@
 
 typedef struct
 {
-	short	flags;
-	long	mem1;
-	long	mem2;
+	SInt16	flags;
+	SInt32	mem1;
+	SInt32	mem2;
 } sizeType;
 
 
-//short GetThisVolumeRefNum (void);
-//long GetThisCurrentDirectoryID (void);
-//Boolean TrapExists (short);
+//SInt16 GetThisVolumeRefNum (void);
+//SInt32 GetThisCurrentDirectoryID (void);
+//Boolean TrapExists (SInt16);
 //Boolean DoWeHaveGestalt (void);
 //Boolean DoWeHaveWNE (void);
 //Boolean DoWeHaveColor (void);
@@ -52,7 +52,7 @@ Boolean DoWeHaveDragManager (void);
 Boolean CanWeDisplay8Bit (GDHandle);
 //Boolean CanWeDisplay4Bit (GDHandle);
 //Boolean CanWeDisplay1Bit (GDHandle);
-short HowManyUsableScreens (Boolean, Boolean, Boolean);
+SInt16 HowManyUsableScreens (Boolean, Boolean, Boolean);
 void GetDeviceRect (Rect *);
 Boolean AreWeColorOrGrayscale (void);
 void SwitchDepthOrAbort (void);
@@ -69,7 +69,7 @@ extern	Boolean		dontLoadMusic, dontLoadSounds;
 //--------------------------------------------------------------  GetThisVolumeRefNum
 // Get a hard reference number for the current drive volume this app is on.
 /*
-short GetThisVolumeRefNum (void)
+SInt16 GetThisVolumeRefNum (void)
 {
 	OSErr		theErr;
 	short		vRef;
@@ -81,7 +81,7 @@ short GetThisVolumeRefNum (void)
 //--------------------------------------------------------------  GetThisCurrentDirectoryID
 // Get a hard ID number for the current directory volume this app is in.
 /*
-long GetThisCurrentDirectoryID (void)
+SInt32 GetThisCurrentDirectoryID (void)
 {
 	long		dirID;
 
@@ -92,7 +92,7 @@ long GetThisCurrentDirectoryID (void)
 //--------------------------------------------------------------  TrapExists
 // Returns whether or not a ToolBox trap exists for the users ROMs/System.
 /*
-Boolean TrapExists (short trapNumber)
+Boolean TrapExists (SInt16 trapNumber)
 {
 	return ((NGetTrapAddress(trapNumber, ToolTrap) !=
 		NGetTrapAddress(kUnimpTrap, ToolTrap)));
@@ -236,7 +236,7 @@ Boolean DoWeHaveDragManager (void)
 
 // Determines the pixel bit depth for current device (monitor).
 
-short WhatsOurDepth (void)
+SInt16 WhatsOurDepth (void)
 {
 	return (8);
 #if 0
@@ -318,7 +318,7 @@ Boolean CanWeDisplay1Bit (GDHandle theDevice)
 
 // Counts the number of monitors that meet the depth criteria passed in.
 
-short HowManyUsableScreens (Boolean use1Bit, Boolean use4Bit, Boolean use8Bit)
+SInt16 HowManyUsableScreens (Boolean use1Bit, Boolean use4Bit, Boolean use8Bit)
 {
 	return (1);
 #if 0
@@ -393,7 +393,7 @@ Boolean AreWeColorOrGrayscale (void)
 
 // Switches the current device (monitor) to a specific bit depth.
 
-void SwitchToDepth (short newDepth, Boolean doColor)
+void SwitchToDepth (SInt16 newDepth, Boolean doColor)
 {
 	return;
 #if 0
@@ -736,7 +736,7 @@ void CheckMemorySize (void)
 // Physically changes the 'SIZE' resource of the app so that when launched again,…
 // the Finder will give us enough memory to fully run the game (God, we hope!).
 
-void SetAppMemorySize (long newSize)
+void SetAppMemorySize (SInt32 newSize)
 {
 	return;
 #if 0

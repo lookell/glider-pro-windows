@@ -20,7 +20,7 @@
 #define kGreaseSpiltIdle	3
 
 
-void BackupGrease (Rect *, short, Boolean);
+void BackupGrease (Rect *, SInt16, Boolean);
 
 
 greasePtr	grease;
@@ -141,7 +141,7 @@ void HandleGrease (void)
 // just entered a new room.  The "grease jar falling over" animation…
 // is set up here.
 
-void BackupGrease (Rect *src, short index, Boolean isRight)
+void BackupGrease (Rect *src, SInt16 index, Boolean isRight)
 {
 	return;
 #if 0
@@ -183,7 +183,7 @@ void BackupGrease (Rect *src, short index, Boolean isRight)
 // off or on the lights).  It assumes certain data strucutures are…
 // already declared from an earlier call to the above funciton.
 
-short ReBackUpGrease (short where, short who)
+SInt16 ReBackUpGrease (SInt16 where, SInt16 who)
 {
 	return (-1);
 #if 0
@@ -212,8 +212,8 @@ short ReBackUpGrease (short where, short who)
 // Called when a new room is being set up during a game.  This adds…
 // another jar of grease to the queue of jars to be handled.
 
-short AddGrease (short where, short who, short h, short v,
-		short distance, Boolean isRight)
+SInt16 AddGrease (SInt16 where, SInt16 who, SInt16 h, SInt16 v,
+		SInt16 distance, Boolean isRight)
 {
 	return (-1);
 #if 0
@@ -266,7 +266,7 @@ short AddGrease (short where, short who, short h, short v,
 
 // A player has knocked a jar of grease over - this function flags that.
 
-void SpillGrease (short who, short index)
+void SpillGrease (SInt16 who, SInt16 index)
 {
 	return;
 #if 0

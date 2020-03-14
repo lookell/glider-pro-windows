@@ -28,7 +28,7 @@ extern	Boolean		playerDead, playerSuicide, tvOn;
 //==============================================================  Functions
 //--------------------------------------------------------------  WhatAreWeLinkedTo
 
-short WhatAreWeLinkedTo (short where, Byte who)
+SInt16 WhatAreWeLinkedTo (SInt16 where, Byte who)
 {
 	return kLinkedToOther;
 #if 0
@@ -65,7 +65,7 @@ short WhatAreWeLinkedTo (short where, Byte who)
 
 //--------------------------------------------------------------  ReadyGliderFromTransit
 
-void ReadyGliderFromTransit (gliderPtr thisGlider, short toWhat)
+void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 {
 	return;
 #if 0
@@ -154,7 +154,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, short toWhat)
 
 //--------------------------------------------------------------  MoveRoomToRoom
 
-void MoveRoomToRoom (gliderPtr thisGlider, short where)
+void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 {
 	return;
 #if 0

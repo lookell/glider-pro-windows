@@ -79,7 +79,7 @@ void ToolBoxInit (void)
 //--------------------------------------------------------------  RandomInt
 // Returns a random integer (short) within "range".
 
-short RandomInt (short range)
+SInt16 RandomInt (SInt16 range)
 {
 	return 0;
 #if 0
@@ -98,7 +98,7 @@ short RandomInt (short range)
 
 // Returns a random long interger within "range".
 
-long RandomLong (long range)
+SInt32 RandomLong (SInt32 range)
 {
 	return 0;
 #if 0
@@ -154,7 +154,7 @@ UInt32 RandomLongQUS (void)
 // Called when we must quit app.  Brings up a dialog informing user…
 // of the problem and the exits to shell.
 
-void RedAlert (short errorNumber)
+void RedAlert (SInt16 errorNumber)
 {
 	return;
 #if 0
@@ -291,7 +291,7 @@ void CreateOffScreenPixMap (Rect *theRect, CGrafPtr *offScreen)
 //--------------------------------------------------------------------  CreateOffScreenGWorld
 // Creates an offscreen GWorld using the depth passed in.
 
-OSErr CreateOffScreenGWorld (GWorldPtr *theGWorld, Rect *bounds, short depth)
+OSErr CreateOffScreenGWorld (GWorldPtr *theGWorld, Rect *bounds, SInt16 depth)
 {
 	return (-1);
 #if 0
@@ -345,7 +345,7 @@ void KillOffScreenBitMap (GrafPtr offScreen)
 // the current port (no scaling, clipping, etc, are done).  Always…
 // draws in the upper left corner of current port.
 
-void LoadGraphic (short resID)
+void LoadGraphic (SInt16 resID)
 {
 	return;
 #if 0
@@ -371,7 +371,7 @@ void LoadGraphic (short resID)
 // specified.  If this rect isn't the same size of the 'PICT', scaling…
 // will occur.
 
-void LoadScaledGraphic (short resID, Rect *theRect)
+void LoadScaledGraphic (SInt16 resID, Rect *theRect)
 {
 	return;
 #if 0
@@ -388,7 +388,7 @@ void LoadScaledGraphic (short resID, Rect *theRect)
 //--------------------------------------------------------------  PlotSICN
 // Draws a small icon (16 x 16 pixels).
 /*
-void PlotSICN (Rect *theRect, SICNHand theSICN, long theIndex)
+void PlotSICN (Rect *theRect, SICNHand theSICN, SInt32 theIndex)
 {
 	char		state;
 	BitMap		srcBits;
@@ -413,7 +413,7 @@ void PlotSICN (Rect *theRect, SICNHand theSICN, long theIndex)
 //--------------------------------------------------------------  LargeIconPlot
 // Draws a standard b&w icon (32 x 32) - resource is an 'ICON'.
 
-void LargeIconPlot (Rect *theRect, short theID)
+void LargeIconPlot (Rect *theRect, SInt16 theID)
 {
 	return;
 #if 0
@@ -430,7 +430,7 @@ void LargeIconPlot (Rect *theRect, short theID)
 
 // Draws a standard color icon (32 x 32) - resource is a 'CICN'.
 
-void DrawCIcon (short theID, short h, short v)
+void DrawCIcon (SInt16 theID, SInt16 h, SInt16 v)
 {
 	return;
 #if 0
@@ -454,7 +454,7 @@ void DrawCIcon (short theID, short h, short v)
 // accurate long integer results.  It uses no transcendental functions or…
 // floating point.
 
-long LongSquareRoot (long theNumber)
+SInt32 LongSquareRoot (SInt32 theNumber)
 {
 	return 0;
 #if 0
@@ -482,7 +482,7 @@ long LongSquareRoot (long theNumber)
 // Wait for either a key to be hit or the mouse button to be clicked.
 // Also has a "timeout" parameter ("seconds").
 
-Boolean WaitForInputEvent (short seconds)
+Boolean WaitForInputEvent (SInt16 seconds)
 {
 	return false;
 #if 0
@@ -574,7 +574,7 @@ char KeyMapOffsetFromRawKey (char rawKeyCode)
 //--------------------------------------------------------------  GetKeyMapFromMessage
 // Gets the key map offset from a keyDown event's message field.
 
-char GetKeyMapFromMessage (long message)
+char GetKeyMapFromMessage (SInt32 message)
 {
 	return 0;
 #if 0
@@ -591,7 +591,7 @@ char GetKeyMapFromMessage (long message)
 // Given a keyDown event (it's message field), this function returns…
 // a string with that key's name (so we get "Shift" and "Esc", etc.).
 
-void GetKeyName (long message, StringPtr theName)
+void GetKeyName (SInt32 message, StringPtr theName)
 {
 	return;
 #if 0
@@ -771,7 +771,7 @@ Boolean OptionKeyDown (void)
 //--------------------------------------------------------------  ExtractCTSeed
 // Very esoteric - gets the "color table seed" from a specified graf port.
 /*
-long ExtractCTSeed (CGrafPtr porter)
+SInt32 ExtractCTSeed (CGrafPtr porter)
 {
 	long		theSeed;
 
@@ -783,7 +783,7 @@ long ExtractCTSeed (CGrafPtr porter)
 // Forces  the "color table seed" from a specified graf port to a…
 // specified value.
 /*
-void ForceCTSeed (CGrafPtr porter, long newSeed)
+void ForceCTSeed (CGrafPtr porter, SInt32 newSeed)
 {
 	(**((**(porter->portPixMap)).pmTable)).ctSeed = newSeed;
 }
@@ -792,7 +792,7 @@ void ForceCTSeed (CGrafPtr porter, long newSeed)
 // Lil' function that just sits and waits a specified number of…
 // Ticks (1/60 of a second).
 
-void DelayTicks (long howLong)
+void DelayTicks (SInt32 howLong)
 {
 	return;
 #if 0
@@ -806,7 +806,7 @@ void DelayTicks (long howLong)
 // Returns the speaker volume (as set by the user) in the range of…
 // zero to seven (handles Sound Manager 3 case as well).
 
-void UnivGetSoundVolume (short *volume, Boolean hasSM3)
+void UnivGetSoundVolume (SInt16 *volume, Boolean hasSM3)
 {
 	return;
 #if 0
@@ -833,7 +833,7 @@ void UnivGetSoundVolume (short *volume, Boolean hasSM3)
 // Sets the speaker volume to a specified value (in the range of…
 // zero to seven (handles Sound Manager 3 case as well).
 
-void  UnivSetSoundVolume (short volume, Boolean hasSM3)
+void  UnivSetSoundVolume (SInt16 volume, Boolean hasSM3)
 {
 	return;
 #if 0

@@ -35,7 +35,7 @@ void PasStringCopy (StringPtr p1, StringPtr p2)
 // indicate the 2nd was greater and a 0 to indicate that the strings…
 // are equal.
 
-short WhichStringFirst (StringPtr p1, StringPtr p2)
+SInt16 WhichStringFirst (StringPtr p1, StringPtr p2)
 {
 	return 0;
 #if 0
@@ -93,7 +93,7 @@ short WhichStringFirst (StringPtr p1, StringPtr p2)
 // This function copies a specified number of characters from one…
 // Pascal string to another.
 
-void PasStringCopyNum (StringPtr p1, StringPtr p2, short charsToCopy)
+void PasStringCopyNum (StringPtr p1, StringPtr p2, SInt16 charsToCopy)
 {
 	return;
 #if 0
@@ -150,7 +150,7 @@ void PasStringConcat (StringPtr p1, StringPtr p2)
 // by carriage returns.  The index variable indicates which line…
 // is sought.
 
-void GetLineOfText (StringPtr srcStr, short index, StringPtr textLine)
+void GetLineOfText (StringPtr srcStr, SInt16 index, StringPtr textLine)
 {
 	return;
 #if 0
@@ -229,7 +229,7 @@ void GetLineOfText (StringPtr srcStr, short index, StringPtr textLine)
 // one line, this function goes through and inserts carriage returns…
 // in order to ensure that no line of text exceeds maxChars.
 
-void WrapText (StringPtr theText, short maxChars)
+void WrapText (StringPtr theText, SInt16 maxChars)
 {
 	return;
 #if 0
@@ -301,7 +301,7 @@ void GetFirstWordOfString (StringPtr stringIn, StringPtr stringOut)
 // font.  If the text would exceed our width limit, characters…
 // are dropped off the end of the string and "…" appended.
 
-void CollapseStringToWidth (StringPtr theStr, short wide)
+void CollapseStringToWidth (StringPtr theStr, SInt16 wide)
 {
 	return;
 #if 0
@@ -346,7 +346,7 @@ void GetChooserName (StringPtr thisName)
 
 //--------------------------------------------------------------  GetLocalizedString
 
-StringPtr GetLocalizedString (short index, StringPtr theString)
+StringPtr GetLocalizedString (SInt16 index, StringPtr theString)
 {
 	return (theString);
 #if 0

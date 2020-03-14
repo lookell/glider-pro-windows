@@ -76,31 +76,31 @@ void UpdateInvisBonusInfo (DialogPtr);
 void UpdateTransInfo (DialogPtr);
 void UpdateEnemyInfo (DialogPtr);
 void UpdateFlowerInfo (DialogPtr);
-pascal Boolean BlowerFilter (DialogPtr, EventRecord *, short *);
-pascal Boolean FurnitureFilter (DialogPtr, EventRecord *, short *);
-pascal Boolean CustPictFilter (DialogPtr, EventRecord *, short *);
-pascal Boolean SwitchFilter (DialogPtr, EventRecord *, short *);
-pascal Boolean TriggerFilter (DialogPtr, EventRecord *, short *);
-pascal Boolean LightFilter (DialogPtr, EventRecord *, short *);
-pascal Boolean ApplianceFilter (DialogPtr, EventRecord *, short *);
-pascal Boolean MicrowaveFilter (DialogPtr, EventRecord *, short *);
-pascal Boolean GreaseFilter (DialogPtr, EventRecord *, short *);
-pascal Boolean InvisBonusFilter (DialogPtr, EventRecord *, short *);
-pascal Boolean TransFilter (DialogPtr, EventRecord *, short *);
-pascal Boolean EnemyFilter (DialogPtr, EventRecord *, short *);
-pascal Boolean FlowerFilter (DialogPtr, EventRecord *, short *);
-void DoBlowerObjectInfo (short);
+pascal Boolean BlowerFilter (DialogPtr, EventRecord *, SInt16 *);
+pascal Boolean FurnitureFilter (DialogPtr, EventRecord *, SInt16 *);
+pascal Boolean CustPictFilter (DialogPtr, EventRecord *, SInt16 *);
+pascal Boolean SwitchFilter (DialogPtr, EventRecord *, SInt16 *);
+pascal Boolean TriggerFilter (DialogPtr, EventRecord *, SInt16 *);
+pascal Boolean LightFilter (DialogPtr, EventRecord *, SInt16 *);
+pascal Boolean ApplianceFilter (DialogPtr, EventRecord *, SInt16 *);
+pascal Boolean MicrowaveFilter (DialogPtr, EventRecord *, SInt16 *);
+pascal Boolean GreaseFilter (DialogPtr, EventRecord *, SInt16 *);
+pascal Boolean InvisBonusFilter (DialogPtr, EventRecord *, SInt16 *);
+pascal Boolean TransFilter (DialogPtr, EventRecord *, SInt16 *);
+pascal Boolean EnemyFilter (DialogPtr, EventRecord *, SInt16 *);
+pascal Boolean FlowerFilter (DialogPtr, EventRecord *, SInt16 *);
+void DoBlowerObjectInfo (SInt16);
 void DoFurnitureObjectInfo (void);
 void DoCustPictObjectInfo (void);
 void DoSwitchObjectInfo (void);
 void DoTriggerObjectInfo (void);
 void DoLightObjectInfo (void);
-void DoApplianceObjectInfo (short);
+void DoApplianceObjectInfo (SInt16);
 void DoMicrowaveObjectInfo (void);
 void DoGreaseObjectInfo (void);
 void DoInvisBonusObjectInfo (void);
-void DoTransObjectInfo (short);
-void DoEnemyObjectInfo (short);
+void DoTransObjectInfo (SInt16);
+void DoEnemyObjectInfo (SInt16);
 void DoFlowerObjectInfo (void);
 
 
@@ -375,7 +375,7 @@ void UpdateFlowerInfo (DialogPtr theDialog)
 
 //--------------------------------------------------------------  BlowerFilter
 
-pascal Boolean BlowerFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean BlowerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -433,7 +433,7 @@ pascal Boolean BlowerFilter (DialogPtr dial, EventRecord *event, short *item)
 
 //--------------------------------------------------------------  FurnitureFilter
 
-pascal Boolean FurnitureFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean FurnitureFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -472,7 +472,7 @@ pascal Boolean FurnitureFilter (DialogPtr dial, EventRecord *event, short *item)
 
 //--------------------------------------------------------------  CustPictFilter
 
-pascal Boolean CustPictFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean CustPictFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -511,7 +511,7 @@ pascal Boolean CustPictFilter (DialogPtr dial, EventRecord *event, short *item)
 
 //--------------------------------------------------------------  SwitchFilter
 
-pascal Boolean SwitchFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean SwitchFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -556,7 +556,7 @@ pascal Boolean SwitchFilter (DialogPtr dial, EventRecord *event, short *item)
 
 //--------------------------------------------------------------  TriggerFilter
 
-pascal Boolean TriggerFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean TriggerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -606,7 +606,7 @@ pascal Boolean TriggerFilter (DialogPtr dial, EventRecord *event, short *item)
 
 //--------------------------------------------------------------  LightFilter
 
-pascal Boolean LightFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean LightFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -659,7 +659,7 @@ pascal Boolean LightFilter (DialogPtr dial, EventRecord *event, short *item)
 
 //--------------------------------------------------------------  ApplianceFilter
 
-pascal Boolean ApplianceFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean ApplianceFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -717,7 +717,7 @@ pascal Boolean ApplianceFilter (DialogPtr dial, EventRecord *event, short *item)
 
 //--------------------------------------------------------------  MicrowaveFilter
 
-pascal Boolean MicrowaveFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean MicrowaveFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -770,7 +770,7 @@ pascal Boolean MicrowaveFilter (DialogPtr dial, EventRecord *event, short *item)
 
 //--------------------------------------------------------------  GreaseFilter
 
-pascal Boolean GreaseFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean GreaseFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -815,7 +815,7 @@ pascal Boolean GreaseFilter (DialogPtr dial, EventRecord *event, short *item)
 
 //--------------------------------------------------------------  InvisBonusFilter
 
-pascal Boolean InvisBonusFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean InvisBonusFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -854,7 +854,7 @@ pascal Boolean InvisBonusFilter (DialogPtr dial, EventRecord *event, short *item
 
 //--------------------------------------------------------------  TransFilter
 
-pascal Boolean TransFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean TransFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -899,7 +899,7 @@ pascal Boolean TransFilter (DialogPtr dial, EventRecord *event, short *item)
 
 //--------------------------------------------------------------  EnemyFilter
 
-pascal Boolean EnemyFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean EnemyFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -957,7 +957,7 @@ pascal Boolean EnemyFilter (DialogPtr dial, EventRecord *event, short *item)
 
 //--------------------------------------------------------------  EnemyFilter
 
-pascal Boolean FlowerFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean FlowerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -1010,7 +1010,7 @@ pascal Boolean FlowerFilter (DialogPtr dial, EventRecord *event, short *item)
 
 //--------------------------------------------------------------  DoBlowerObjectInfo
 
-void DoBlowerObjectInfo (short what)
+void DoBlowerObjectInfo (SInt16 what)
 {
 	return;
 #if 0
@@ -1727,7 +1727,7 @@ void DoLightObjectInfo (void)
 
 //--------------------------------------------------------------  DoApplianceObjectInfo
 
-void DoApplianceObjectInfo (short what)
+void DoApplianceObjectInfo (SInt16 what)
 {
 	return;
 #if 0
@@ -2166,7 +2166,7 @@ void DoInvisBonusObjectInfo (void)
 
 //--------------------------------------------------------------  DoTransObjectInfo
 
-void DoTransObjectInfo (short what)
+void DoTransObjectInfo (SInt16 what)
 {
 	return;
 #if 0
@@ -2292,7 +2292,7 @@ void DoTransObjectInfo (short what)
 
 //--------------------------------------------------------------  DoEnemyObjectInfo
 
-void DoEnemyObjectInfo (short what)
+void DoEnemyObjectInfo (SInt16 what)
 {
 	return;
 #if 0

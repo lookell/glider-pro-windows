@@ -33,14 +33,14 @@
 
 void DrawHighScores (void);
 void UpdateNameDialog (DialogPtr);
-pascal Boolean NameFilter (DialogPtr, EventRecord *, short *);
-void GetHighScoreName (short);
+pascal Boolean NameFilter (DialogPtr, EventRecord *, SInt16 *);
+void GetHighScoreName (SInt16);
 void UpdateBannerDialog (DialogPtr);
-pascal Boolean BannerFilter (DialogPtr, EventRecord *, short *);
+pascal Boolean BannerFilter (DialogPtr, EventRecord *, SInt16 *);
 void GetHighScoreBanner (void);
-Boolean CreateScoresFolder (long *);
-Boolean FindHighScoresFolder (short *, long *);
-Boolean OpenHighScoresFile (FSSpec *, short *);
+Boolean CreateScoresFolder (SInt32 *);
+Boolean FindHighScoresFolder (SInt16 *, SInt32 *);
+Boolean OpenHighScoresFile (FSSpec *, SInt16 *);
 
 
 Str31		highBanner;
@@ -464,7 +464,7 @@ void UpdateNameDialog (DialogPtr theDialog)
 //--------------------------------------------------------------  NameFilter
 // Dialog filter for the "Enter High Score Name" dialog.
 
-pascal Boolean NameFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean NameFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return (false);
 #if 0
@@ -520,7 +520,7 @@ pascal Boolean NameFilter (DialogPtr dial, EventRecord *event, short *item)
 //--------------------------------------------------------------  GetHighScoreName
 // Brings up a dialog to get player's name (due to a high score).
 
-void GetHighScoreName (short place)
+void GetHighScoreName (SInt16 place)
 {
 	return;
 #if 0
@@ -580,7 +580,7 @@ void UpdateBannerDialog (DialogPtr theDialog)
 //--------------------------------------------------------------  BannerFilter
 // Dialog filter for the "Enter Message" dialog.
 
-pascal Boolean BannerFilter (DialogPtr dial, EventRecord *event, short *item)
+pascal Boolean BannerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return (false);
 #if 0
@@ -676,7 +676,7 @@ void GetHighScoreBanner (void)
 
 //--------------------------------------------------------------  CreateScoresFolder
 
-Boolean CreateScoresFolder (long *scoresDirID)
+Boolean CreateScoresFolder (SInt32 *scoresDirID)
 {
 	return (false);
 #if 0
@@ -702,7 +702,7 @@ Boolean CreateScoresFolder (long *scoresDirID)
 
 //--------------------------------------------------------------  FindHighScoresFolder
 
-Boolean FindHighScoresFolder (short *volRefNum, long *scoresDirID)
+Boolean FindHighScoresFolder (SInt16 *volRefNum, SInt32 *scoresDirID)
 {
 	return false;
 #if 0
@@ -760,7 +760,7 @@ Boolean FindHighScoresFolder (short *volRefNum, long *scoresDirID)
 
 //--------------------------------------------------------------  OpenHighScoresFile
 
-Boolean OpenHighScoresFile (FSSpec *scoreSpec, short *scoresRefNum)
+Boolean OpenHighScoresFile (FSSpec *scoreSpec, SInt16 *scoresRefNum)
 {
 	return false;
 #if 0

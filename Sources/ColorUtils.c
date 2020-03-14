@@ -18,7 +18,7 @@
 // this function draws text in that color.  It assumes the current port,…
 // the current font, the current pen location, etc.
 
-void ColorText (StringPtr theStr, long color)
+void ColorText (StringPtr theStr, SInt32 color)
 {
 	return;
 #if 0
@@ -37,7 +37,7 @@ void ColorText (StringPtr theStr, long color)
 // Given a rectangle and color index, this function draws a solid…
 // rectangle in that color.  Current port, pen mode, etc. assumed.
 
-void ColorRect (Rect *theRect, long color)
+void ColorRect (Rect *theRect, SInt32 color)
 {
 	return;
 #if 0
@@ -56,7 +56,7 @@ void ColorRect (Rect *theRect, long color)
 // Given a rectangle and color index, this function draws a solid…
 // oval in that color.  Current port, pen mode, etc. assumed.
 
-void ColorOval (Rect *theRect, long color)
+void ColorOval (Rect *theRect, SInt32 color)
 {
 	return;
 #if 0
@@ -75,7 +75,7 @@ void ColorOval (Rect *theRect, long color)
 // Given a region and color index, this function draws a solid…
 // region in that color.  Current port, pen mode, etc. assumed.
 
-void ColorRegion (RgnHandle theRgn, long color)
+void ColorRegion (RgnHandle theRgn, SInt32 color)
 {
 	return;
 #if 0
@@ -94,7 +94,7 @@ void ColorRegion (RgnHandle theRgn, long color)
 // Given a the end points for a line and color index, this function…
 // draws a line in that color.  Current port, pen mode, etc. assumed.
 
-void ColorLine (short h0, short v0, short h1, short v1, long color)
+void ColorLine (SInt16 h0, SInt16 v0, SInt16 h1, SInt16 v1, SInt32 color)
 {
 	return;
 #if 0
@@ -116,7 +116,7 @@ void ColorLine (short h0, short v0, short h1, short v1, long color)
 // sides with color 2.  A rect can be made to appear "hi-lit" or "3D"…
 // in this way.
 
-void HiliteRect (Rect *theRect, short color1, short color2)
+void HiliteRect (Rect *theRect, SInt16 color1, SInt16 color2)
 {
 	return;
 #if 0
@@ -136,7 +136,7 @@ void HiliteRect (Rect *theRect, short color1, short color2)
 // Given a rectangle and color index, this function frames a…
 // rectangle in that color.  Current port, pen mode, etc. assumed.
 
-void ColorFrameRect (Rect *theRect, long color)
+void ColorFrameRect (Rect *theRect, SInt32 color)
 {
 	return;
 #if 0
@@ -156,7 +156,7 @@ void ColorFrameRect (Rect *theRect, long color)
 // and a color index, this function frames a rectangle in that color.
 // Current port, pen mode, etc. assumed.
 
-void ColorFrameWHRect (short left, short top, short wide, short high, long color)
+void ColorFrameWHRect (SInt16 left, SInt16 top, SInt16 wide, SInt16 high, SInt32 color)
 {
 	return;
 #if 0
@@ -175,7 +175,7 @@ void ColorFrameWHRect (short left, short top, short wide, short high, long color
 // Given a rectangle and color index, this function frames an…
 // oval in that color.  Current port, pen mode, etc. assumed.
 
-void ColorFrameOval (Rect *theRect, long color)
+void ColorFrameOval (Rect *theRect, SInt32 color)
 {
 	return;
 #if 0
