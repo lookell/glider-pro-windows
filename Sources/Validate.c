@@ -7,7 +7,8 @@
 
 
 #include "Externs.h"
-#include <Gestalt.h>
+//#include <Gestalt.h>
+#include "Macintosh.h"
 
 
 #ifndef COMPILEDEMO
@@ -369,6 +370,8 @@ Boolean GetMasterDisk (void)
 
 Boolean ValidInstallation (Boolean returnToFinder)
 {
+	return true;
+#if 0
 #pragma unused (returnToFinder)
 
 	return true;
@@ -392,6 +395,7 @@ Boolean ValidInstallation (Boolean returnToFinder)
 
 	return (isValid);
 	*/
+#endif
 }
 
 #endif

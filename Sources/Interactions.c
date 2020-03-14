@@ -53,6 +53,8 @@ extern	Boolean		twoPlayerGame, newState, onePlayerLeft, playerDead;
 
 Boolean GliderHitTop (gliderPtr thisGlider, Rect *theRect)
 {
+	return false;
+#if 0
 	Rect		glideBounds;
 	short		offset;
 	Boolean		hitTop;
@@ -94,12 +96,15 @@ Boolean GliderHitTop (gliderPtr thisGlider, Rect *theRect)
 	}
 
 	return (hitTop);
+#endif
 }
 
 //--------------------------------------------------------------  SectGlider
 
 Boolean SectGlider (gliderPtr thisGlider, Rect *theRect, Boolean scrutinize)
 {
+	return false;
+#if 0
 	Rect		glideBounds;
 	Boolean		itHit;
 
@@ -127,12 +132,15 @@ Boolean SectGlider (gliderPtr thisGlider, Rect *theRect, Boolean scrutinize)
 		itHit = true;
 
 	return (itHit);
+#endif
 }
 
 //--------------------------------------------------------------  GliderInRect
 
 Boolean GliderInRect (gliderPtr thisGlider, Rect *theRect)
 {
+	return false;
+#if 0
 	Rect		glideBounds;
 
 	glideBounds = thisGlider->dest;
@@ -147,12 +155,15 @@ Boolean GliderInRect (gliderPtr thisGlider, Rect *theRect)
 		return (false);
 	else
 		return (true);
+#endif
 }
 
 //--------------------------------------------------------------  BounceGlider
 
 void BounceGlider (gliderPtr thisGlider, Rect *theRect)
 {
+	return;
+#if 0
 	Rect		glideBounds;
 
 	glideBounds = thisGlider->dest;
@@ -164,12 +175,15 @@ void BounceGlider (gliderPtr thisGlider, Rect *theRect)
 		PlayPrioritySound(kFoilHitSound, kFoilHitPriority);
 	else
 		PlayPrioritySound(kHitWallSound, kHitWallPriority);
+#endif
 }
 
 //--------------------------------------------------------------  CheckEscapeUpTwo
 
 void CheckEscapeUpTwo (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	short		offset, leftTile, rightTile;
 
 	if (topOpen)
@@ -237,12 +251,15 @@ void CheckEscapeUpTwo (gliderPtr thisGlider)
 	}
 	else
 		thisGlider->vVel = kCeilingLimit - thisGlider->dest.top;
+#endif
 }
 
 //--------------------------------------------------------------  CheckEscapeUp
 
 void CheckEscapeUp (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	short		leftTile, rightTile;
 
 	if (topOpen)
@@ -276,12 +293,15 @@ void CheckEscapeUp (gliderPtr thisGlider)
 	}
 	else
 		thisGlider->vVel = kCeilingLimit - thisGlider->dest.top;
+#endif
 }
 
 //--------------------------------------------------------------  CheckEscapeDownTwo
 
 void CheckEscapeDownTwo (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	short		offset, leftTile, rightTile;
 
 	if (bottomOpen)
@@ -371,12 +391,15 @@ void CheckEscapeDownTwo (gliderPtr thisGlider)
 			PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  CheckEscapeDown
 
 void CheckEscapeDown (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	short		leftTile, rightTile;
 
 	if (bottomOpen)
@@ -443,12 +466,15 @@ void CheckEscapeDown (gliderPtr thisGlider)
 			PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  CheckRoofCollision
 
 void CheckRoofCollision (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	short		offset, tileOver;
 
 	offset = (thisGlider->dest.left + kHalfGliderWide) >> 6;	// ÷ 64
@@ -502,12 +528,15 @@ void CheckRoofCollision (gliderPtr thisGlider)
 			PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  CheckEscapeLeftTwo
 
 void CheckEscapeLeftTwo (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	short		offset;
 
 	if (leftThresh == kLeftWallLimit)
@@ -565,12 +594,15 @@ void CheckEscapeLeftTwo (gliderPtr thisGlider)
 			thisGlider->hVel = -thisGlider->hVel + offset;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  CheckEscapeLeft
 
 void CheckEscapeLeft (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	short		offset;
 
 	if (leftThresh == kLeftWallLimit)
@@ -592,12 +624,15 @@ void CheckEscapeLeft (gliderPtr thisGlider)
 	}
 	else
 		MoveRoomToRoom(thisGlider, kToLeft);
+#endif
 }
 
 //--------------------------------------------------------------  CheckEscapeRightTwo
 
 void CheckEscapeRightTwo (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	short		offset;
 
 	if (rightThresh == kRightWallLimit)
@@ -655,12 +690,15 @@ void CheckEscapeRightTwo (gliderPtr thisGlider)
 			thisGlider->hVel = -thisGlider->hVel + offset;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  CheckEscapeRight
 
 void CheckEscapeRight (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	short		offset;
 
 	if (rightThresh == kRightWallLimit)
@@ -682,12 +720,15 @@ void CheckEscapeRight (gliderPtr thisGlider)
 	}
 	else
 		MoveRoomToRoom(thisGlider, kToRight);
+#endif
 }
 
 //--------------------------------------------------------------  CheckGliderInRoom
 
 void CheckGliderInRoom (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	if ((thisGlider->mode == kGliderNormal) ||
 			(thisGlider->mode == kGliderFaceLeft) ||
 			(thisGlider->mode == kGliderFaceRight) ||
@@ -749,12 +790,15 @@ void CheckGliderInRoom (gliderPtr thisGlider)
 				CheckEscapeRight(thisGlider);
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleRewards
 
 void HandleRewards (gliderPtr thisGlider, hotPtr who)
 {
+	return;
+#if 0
 	Rect		bounds;
 	short		whoLinked, points;
 
@@ -978,12 +1022,15 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 		case kSlider:
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleSwitches
 
 void HandleSwitches (hotPtr who)
 {
+	return;
+#if 0
 	Rect		newRect, bounds;
 	short		whoLinked, roomLinked, objectLinked, linkIndex;
 
@@ -1152,12 +1199,15 @@ void HandleSwitches (hotPtr who)
 	}
 
 	who->stillOver = true;
+#endif
 }
 
 //--------------------------------------------------------------  HandleMicrowaveAction
 
 void HandleMicrowaveAction (hotPtr who, gliderPtr thisGlider)
 {
+	return;
+#if 0
 	short		whoLinked, kills;
 	Boolean		killed;
 
@@ -1191,12 +1241,15 @@ void HandleMicrowaveAction (hotPtr who, gliderPtr thisGlider)
 
 	if (killed)
 		PlayPrioritySound(kMicrowavedSound, kMicrowavedPriority);
+#endif
 }
 
 //--------------------------------------------------------------  HandleHotSpotCollision
 
 void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 {
+	return;
+#if 0
 	switch (who->action)
 	{
 		case kLiftIt:
@@ -1620,12 +1673,15 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, short index)
 		}
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  CheckForHotSpots
 
 void CheckForHotSpots (void)
 {
+	return;
+#if 0
 	short		i;
 	Boolean		hitObject;
 
@@ -1684,12 +1740,15 @@ void CheckForHotSpots (void)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleInteraction
 
 void HandleInteraction (void)
 {
+	return;
+#if 0
 	CheckForHotSpots();
 	if (twoPlayerGame)
 	{
@@ -1708,12 +1767,15 @@ void HandleInteraction (void)
 	}
 	else
 		CheckGliderInRoom(&theGlider);
+#endif
 }
 
 //--------------------------------------------------------------  FlagStillOvers
 
 void FlagStillOvers (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < nHotSpots; i++)
@@ -1729,12 +1791,15 @@ void FlagStillOvers (gliderPtr thisGlider)
 		else
 			hotSpots[i].stillOver = false;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  WebGlider
 
 void WebGlider (gliderPtr thisGlider, Rect *webBounds)
 {
+	return;
+#if 0
 	#define		kKillWebbedGlider	150
 	short		hDist, vDist;
 
@@ -1773,5 +1838,6 @@ void WebGlider (gliderPtr thisGlider, Rect *webBounds)
 		StartGliderFadingOut(thisGlider);
 		PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 	}
+#endif
 }
 

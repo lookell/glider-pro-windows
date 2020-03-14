@@ -6,8 +6,9 @@
 //============================================================================
 
 
-#include <Sound.h>
-#include <TextUtils.h>
+//#include <Sound.h>
+//#include <TextUtils.h>
+#include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "Environ.h"
@@ -105,6 +106,8 @@ extern	Boolean		changeLockStateOfHouse, saveHouseLocked, doPrettyMap;
 
 void SetBrainsToDefaults (DialogPtr theDialog)
 {
+	return;
+#if 0
 	SetDialogNumToStr(theDialog, kMaxFilesItem, 24L);
 #ifdef powerc
 	wasTransit = false;
@@ -124,12 +127,15 @@ void SetBrainsToDefaults (DialogPtr theDialog)
 	SetDialogItemValue(theDialog, kDoErrorCheck, (short)wasErrorCheck);
 	SetDialogItemValue(theDialog, kDoPrettyMapCheck, (short)wasPrettyMap);
 	SetDialogItemValue(theDialog, kDoBitchDlgsCheck, (short)wasBitchDialogs);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateSettingsBrains
 
 void UpdateSettingsBrains (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 
@@ -137,12 +143,15 @@ void UpdateSettingsBrains (DialogPtr theDialog)
 	SelectDialogItemText(theDialog, kMaxFilesItem, 0, 1024);
 
 	FrameDialogItemC(theDialog, 3, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  BrainsFilter
 
 pascal Boolean BrainsFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -220,12 +229,15 @@ pascal Boolean BrainsFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoBrainsPrefs
 
 void DoBrainsPrefs (void)
 {
+	return;
+#if 0
 	DialogPtr		prefDlg;
 	long			tempLong;
 	short			itemHit, wasMaxFiles;
@@ -326,12 +338,15 @@ void DoBrainsPrefs (void)
 
 	DisposeDialog(prefDlg);
 	DisposeModalFilterUPP(brainsFilterUPP);
+#endif
 }
 
 //--------------------------------------------------------------  SetControlsToDefaults
 
 void SetControlsToDefaults (DialogPtr theDialog)
 {
+	return;
+#if 0
 	PasStringCopy("\plf arrow", tempLeftStr);
 	PasStringCopy("\prt arrow", tempRightStr);
 	PasStringCopy("\pdn arrow", tempBattStr);
@@ -343,22 +358,28 @@ void SetControlsToDefaults (DialogPtr theDialog)
 	wasEscPauseKey = false;
 	SelectFromRadioGroup(theDialog, kTABPausesRadio,
 				kESCPausesRadio, kTABPausesRadio);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateControlKeyName
 
 void UpdateControlKeyName (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialogUserText(theDialog, kRightControl + 4, tempRightStr, whichCtrl == 0);
 	DrawDialogUserText(theDialog, kLeftControl + 4, tempLeftStr, whichCtrl == 1);
 	DrawDialogUserText(theDialog, kBattControl + 4, tempBattStr, whichCtrl == 2);
 	DrawDialogUserText(theDialog, kBandControl + 4, tempBandStr, whichCtrl == 3);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateSettingsControl
 
 void UpdateSettingsControl (DialogPtr theDialog)
 {
+	return;
+#if 0
 	short		i;
 
 	DrawDialog(theDialog);
@@ -373,12 +394,15 @@ void UpdateSettingsControl (DialogPtr theDialog)
 	PenNormal();
 	UpdateControlKeyName(theDialog);
 	FrameDialogItemC(theDialog, 3, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  ControlFilter
 
 pascal Boolean ControlFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	long		wasKeyMap;
 
 	switch (event->what)
@@ -495,12 +519,15 @@ pascal Boolean ControlFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoControlPrefs
 
 void DoControlPrefs (void)
 {
+	return;
+#if 0
 	DialogPtr		prefDlg;
 	short			i, itemHit;
 	Boolean			leaving;
@@ -592,12 +619,15 @@ void DoControlPrefs (void)
 
 	DisposeDialog(prefDlg);
 	DisposeModalFilterUPP(controlFilterUPP);
+#endif
 }
 
 //--------------------------------------------------------------  SoundDefaults
 
 void SoundDefaults (DialogPtr theDialog)
 {
+	return;
+#if 0
 	wasIdle = true;
 	wasPlay = true;
 	SetDialogItemValue(theDialog, kIdleMusicItem, (short)wasIdle);
@@ -605,12 +635,15 @@ void SoundDefaults (DialogPtr theDialog)
 	UnivSetSoundVolume(3, thisMac.hasSM3);
 	SetDialogNumToStr(theDialog, kVolNumberItem, 3L);
 	HandleSoundMusicChange(3, true);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateSettingsSound
 
 void UpdateSettingsSound (DialogPtr theDialog)
 {
+	return;
+#if 0
 	short		howLoudNow;
 
 	DrawDialog(theDialog);
@@ -624,12 +657,15 @@ void UpdateSettingsSound (DialogPtr theDialog)
 		SetDialogNumToStr(theDialog, kVolNumberItem, (long)howLoudNow);
 
 	FrameDialogItemC(theDialog, 11, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  HandleSoundMusicChange
 
 void HandleSoundMusicChange (short newVolume, Boolean sayIt)
 {
+	return;
+#if 0
 	OSErr		theErr;
 
 	isSoundOn = (newVolume != 0);
@@ -654,12 +690,15 @@ void HandleSoundMusicChange (short newVolume, Boolean sayIt)
 
 	if ((newVolume != 0) && (sayIt))
 		PlayPrioritySound(kChord2Sound, kChord2Priority);
+#endif
 }
 
 //--------------------------------------------------------------  SoundFilter
 
 pascal Boolean SoundFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	short		newVolume;
 
 	switch (event->what)
@@ -751,12 +790,15 @@ pascal Boolean SoundFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoSettingsMain
 
 void DoSoundPrefs (void)
 {
+	return;
+#if 0
 	Rect			tempRect;
 	DialogPtr		prefDlg;
 	short			wasLoudness, tempVolume;
@@ -879,22 +921,28 @@ void DoSoundPrefs (void)
 
 	DisposeDialog(prefDlg);
 	DisposeModalFilterUPP(soundFilterUPP);
+#endif
 }
 
 //--------------------------------------------------------------  DisplayDefaults
 
 void DisplayDefaults (void)
 {
+	return;
+#if 0
 	numNeighbors = 9;
 	wasDepthPref = kSwitchIfNeeded;
 	wasFade = true;
 	wasScreen2 = false;
+#endif
 }
 
 //--------------------------------------------------------------  FrameDisplayIcon
 
 void FrameDisplayIcon (DialogPtr theDialog)
 {
+	return;
+#if 0
 	Rect		theRect;
 
 	switch (numNeighbors)
@@ -919,12 +967,15 @@ void FrameDisplayIcon (DialogPtr theDialog)
 	FrameRect(&theRect);
 	InsetRect(&theRect, 1, 1);
 	FrameRect(&theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DisplayUpdate
 
 void DisplayUpdate (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 
@@ -940,12 +991,15 @@ void DisplayUpdate (DialogPtr theDialog)
 	FrameDialogItemC(theDialog, 8, kRedOrangeColor8);
 	FrameDialogItemC(theDialog, 13, kRedOrangeColor8);
 	FrameDialogItemC(theDialog, 14, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  DisplayFilter
 
 pascal Boolean DisplayFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -1099,12 +1153,15 @@ pascal Boolean DisplayFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoDisplayPrefs
 
 void DoDisplayPrefs (void)
 {
+	return;
+#if 0
 	DialogPtr		prefDlg;
 	short			itemHit, wasNeighbors;
 	Boolean			leaving;
@@ -1214,12 +1271,15 @@ void DoDisplayPrefs (void)
 
 	DisposeDialog(prefDlg);
 	DisposeModalFilterUPP(displayFilterUPP);
+#endif
 }
 
 //--------------------------------------------------------------  SetAllDefaults
 
 void SetAllDefaults (void)
 {
+	return;
+#if 0
 	OSErr		theErr;
 								// Default brain settings
 	willMaxFiles = 48;
@@ -1258,12 +1318,15 @@ void SetAllDefaults (void)
 	quickerTransitions = false;
 	isDepthPref = kSwitchIfNeeded;
 	isDoColorFade = true;
+#endif
 }
 
 //--------------------------------------------------------------  FlashSettingsButton
 
 void FlashSettingsButton (short who)
 {
+	return;
+#if 0
 	#define		kNormalSettingsIcon		1010
 	#define		kInvertedSettingsIcon	1014
 	short		theID;
@@ -1273,12 +1336,15 @@ void FlashSettingsButton (short who)
 	DelayTicks(8);
 	theID = kNormalSettingsIcon + who;
 	DrawCIcon (theID, prefButton[who].left + 4, prefButton[who].top + 4);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateSettingsMain
 
 void UpdateSettingsMain (DialogPtr theDialog)
 {
+	return;
+#if 0
 	Str255		theStr;
 
 	DrawDialog(theDialog);
@@ -1298,12 +1364,15 @@ void UpdateSettingsMain (DialogPtr theDialog)
 	ColorFrameRect(&prefButton[1], kRedOrangeColor8);
 	ColorFrameRect(&prefButton[2], kRedOrangeColor8);
 	ColorFrameRect(&prefButton[3], kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  PrefsFilter
 
 pascal Boolean PrefsFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	Point		testPt;
 	short		i;
 	Boolean		foundHit;
@@ -1388,12 +1457,15 @@ pascal Boolean PrefsFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoSettingsMain
 
 void DoSettingsMain (void)
 {
+	return;
+#if 0
 	#define			kAllDefaultsButton		11
 	DialogPtr		prefDlg;
 	short			itemHit;
@@ -1467,16 +1539,20 @@ void DoSettingsMain (void)
 
 	if (nextRestartChange)
 		BitchAboutChanges();
+#endif
 }
 
 //--------------------------------------------------------------  BitchAboutChanges
 
 void BitchAboutChanges (void)
 {
+	return;
+#if 0
 	#define		kChangesEffectAlert	1040
 	short		hitWhat;
 
 //	CenterAlert(kChangesEffectAlert);
 	hitWhat = Alert(kChangesEffectAlert, nil);
+#endif
 }
 

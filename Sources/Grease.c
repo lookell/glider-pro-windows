@@ -42,6 +42,8 @@ extern	Rect		greaseSrcRt[], greaseSrcLf[], shieldRect;
 
 void HandleGrease (void)
 {
+	return;
+#if 0
 	Rect		src;
 	short		i;
 
@@ -130,6 +132,7 @@ void HandleGrease (void)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  BackupGrease
@@ -140,6 +143,8 @@ void HandleGrease (void)
 
 void BackupGrease (Rect *src, short index, Boolean isRight)
 {
+	return;
+#if 0
 	Rect		dest;
 	short		i;
 
@@ -168,6 +173,7 @@ void BackupGrease (Rect *src, short index, Boolean isRight)
 		}
 		QOffsetRect(&dest, 0, 27);
 	}
+#endif
 
 }
 
@@ -179,6 +185,8 @@ void BackupGrease (Rect *src, short index, Boolean isRight)
 
 short ReBackUpGrease (short where, short who)
 {
+	return (-1);
+#if 0
 	Rect		src;
 	short		i;
 
@@ -196,6 +204,7 @@ short ReBackUpGrease (short where, short who)
 	}
 
 	return (-1);
+#endif
 }
 
 //--------------------------------------------------------------  AddGrease
@@ -206,6 +215,8 @@ short ReBackUpGrease (short where, short who)
 short AddGrease (short where, short who, short h, short v,
 		short distance, Boolean isRight)
 {
+	return (-1);
+#if 0
 	Rect		src, bounds;
 	short		savedNum;
 
@@ -248,6 +259,7 @@ short AddGrease (short where, short who, short h, short v,
 	}
 	else
 		return (-1);
+#endif
 }
 
 //--------------------------------------------------------------  SpillGrease
@@ -256,12 +268,15 @@ short AddGrease (short where, short who, short h, short v,
 
 void SpillGrease (short who, short index)
 {
+	return;
+#if 0
 	if (grease[who].mode == kGreaseIdle)
 	{
 		grease[who].mode = kGreaseFalling;
 		grease[who].hotNum = index;
 		PlayPrioritySound(kGreaseSpillSound, kGreaseSpillPriority);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  RedrawAllGrease
@@ -269,6 +284,8 @@ void SpillGrease (short who, short index)
 
 void RedrawAllGrease (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	Rect		src;
@@ -298,5 +315,6 @@ void RedrawAllGrease (void)
 			SetGWorld(wasCPort, wasWorld);
 		}
 	}
+#endif
 }
 

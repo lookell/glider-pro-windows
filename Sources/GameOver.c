@@ -5,7 +5,8 @@
 //============================================================================
 
 
-#include <ToolUtils.h>
+//#include <ToolUtils.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "MainWindow.h"
@@ -59,6 +60,8 @@ extern	Boolean		playing, shadowVisible, demoGoing;
 
 void DoGameOver (void)
 {
+	return;
+#if 0
 	playing = false;
 	SetUpFinalScreen();
 	SetPort((GrafPtr)mainWindow);
@@ -66,6 +69,7 @@ void DoGameOver (void)
 	DoGameOverStarAnimation();
 	if (!TestHighScore())
 		RedrawSplashScreen();
+#endif
 }
 
 //--------------------------------------------------------------  SetUpFinalScreen
@@ -75,6 +79,8 @@ void DoGameOver (void)
 
 void SetUpFinalScreen (void)
 {
+	return;
+#if 0
 	Rect		tempRect;
 	Str255		tempStr, subStr;
 	short		count, offset, i, textDown;
@@ -126,6 +132,7 @@ void SetUpFinalScreen (void)
 		pages[i].was = pages[i].dest;
 		pages[i].frame = RandomInt(6);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoGameOverStarAnimation
@@ -135,6 +142,8 @@ void SetUpFinalScreen (void)
 
 void DoGameOverStarAnimation (void)
 {
+	return;
+#if 0
 	#define		kStarFalls	8
 	EventRecord	theEvent;
 	KeyMap		theKeys;
@@ -227,6 +236,7 @@ void DoGameOverStarAnimation (void)
 			noInteruption = false;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  FlagGameOver
@@ -236,9 +246,12 @@ void DoGameOverStarAnimation (void)
 
 void FlagGameOver (void)
 {
+	return;
+#if 0
 	gameOver = true;
 	countDown = kNumCountDownFrames;
 	SetMusicalMode(kPlayWholeScoreMode);
+#endif
 }
 
 //--------------------------------------------------------------  InitDiedGameOver
@@ -248,6 +261,8 @@ void FlagGameOver (void)
 
 void InitDiedGameOver (void)
 {
+	return;
+#if 0
 	#define		kPageSpacing		40
 	#define		kPageRightOffset	128
 	#define		kPageBackUp			128
@@ -307,6 +322,7 @@ void InitDiedGameOver (void)
 	RectRgn(roomRgn, &justRoomsRect);
 	pagesStuck = 0;
 	stopPages = ((thisMac.screen.bottom - thisMac.screen.top) / 2) - 16;
+#endif
 }
 
 //--------------------------------------------------------------  HandlePages
@@ -315,6 +331,8 @@ void InitDiedGameOver (void)
 
 void HandlePages (void)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < 8; i++)
@@ -391,6 +409,7 @@ void HandlePages (void)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawPages
@@ -400,6 +419,8 @@ void HandlePages (void)
 
 void DrawPages (void)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < 8; i++)
@@ -432,6 +453,7 @@ void DrawPages (void)
 
 		pages[i].was = pages[i].dest;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoDiedGameOver
@@ -442,6 +464,8 @@ void DrawPages (void)
 
 void DoDiedGameOver (void)
 {
+	return;
+#if 0
 	EventRecord	theEvent;
 	KeyMap		theKeys;
 	long		nextLoop;
@@ -503,5 +527,6 @@ void DoDiedGameOver (void)
 		TestHighScore();
 	}
 	RedrawSplashScreen();
+#endif
 }
 

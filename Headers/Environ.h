@@ -5,7 +5,8 @@
 //============================================================================
 
 
-#include <Quickdraw.h>
+//#include <Quickdraw.h>
+#include "Macintosh.h"
 
 
 typedef struct

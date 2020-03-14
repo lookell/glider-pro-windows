@@ -26,6 +26,8 @@ WindowPtr	mssgWindow;
 
 void GetWindowLeftTop (WindowPtr theWindow, short *left, short *top)
 {
+	return;
+	#if 0
 	Point		thePoint;
 	Rect		bounds;
 
@@ -42,6 +44,7 @@ void GetWindowLeftTop (WindowPtr theWindow, short *left, short *top)
 		*left = thePoint.h;
 		*top = thePoint.v;
 	}
+	#endif
 }
 
 //--------------------------------------------------------------  GetWindowRect
@@ -50,12 +53,15 @@ void GetWindowLeftTop (WindowPtr theWindow, short *left, short *top)
 
 void GetWindowRect (WindowPtr theWindow, Rect *bounds)
 {
+	return;
+	#if 0
 	if (theWindow != nil)
 	{
 		SetPortWindowPort(theWindow);
 		GetWindowBounds(theWindow, kWindowContentRgn, bounds);
 		LocalToGlobalRect(bounds);
 	}
+	#endif
 }
 
 //--------------------------------------------------------------  GetLocalWindowRect
@@ -64,11 +70,14 @@ void GetWindowRect (WindowPtr theWindow, Rect *bounds)
 
 void GetLocalWindowRect (WindowPtr theWindow, Rect *bounds)
 {
+	return;
+	#if 0
 	if (theWindow != nil)
 	{
 		SetPortWindowPort(theWindow);
 		GetWindowBounds(theWindow, kWindowContentRgn, bounds);
 	}
+	#endif
 }
 
 //--------------------------------------------------------------  FlagWindowFloating
@@ -106,6 +115,8 @@ Boolean	IsWindowFloating (WindowPtr theWindow)
 
 void OpenMessageWindow (StringPtr title)
 {
+	return;
+	#if 0
 	Rect		mssgWindowRect;
 
 	SetRect(&mssgWindowRect, 0, 0, 256, kMessageWindowTall);
@@ -125,6 +136,7 @@ void OpenMessageWindow (StringPtr title)
 		BackColor(whiteColor);
 		TextFont(systemFont);
 	}
+	#endif
 }
 
 //--------------------------------------------------------------  SetMessageWindowMessage
@@ -134,6 +146,8 @@ void OpenMessageWindow (StringPtr title)
 
 void SetMessageWindowMessage (StringPtr message)
 {
+	return;
+	#if 0
 	Rect		mssgWindowRect;
 
 	if (mssgWindow != nil)
@@ -145,6 +159,7 @@ void SetMessageWindowMessage (StringPtr message)
 		MoveTo(mssgWindowRect.left, mssgWindowRect.bottom - 6);
 		DrawString(message);
 	}
+	#endif
 }
 
 //--------------------------------------------------------------  CloseMessageWindow
@@ -153,9 +168,12 @@ void SetMessageWindowMessage (StringPtr message)
 
 void CloseMessageWindow (void)
 {
+	return;
+	#if 0
 	if (mssgWindow != nil)
 		DisposeWindow(mssgWindow);
 	mssgWindow = nil;
+	#endif
 }
 
 //--------------------------------------------------------------  CloseThisWindow
@@ -165,8 +183,11 @@ void CloseMessageWindow (void)
 
 void CloseThisWindow (WindowPtr *theWindow)
 {
+	return;
+	#if 0
 	if (*theWindow != nil)
 		DisposeWindow(*theWindow);
 	*theWindow = nil;
+	#endif
 }
 

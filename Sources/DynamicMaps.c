@@ -45,6 +45,8 @@ extern	short		numGrease, numDynamics;
 
 void NilSavedMaps (void)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < kMaxSavedMaps; i++)
@@ -59,6 +61,7 @@ void NilSavedMaps (void)
 		savedMaps[i].who = -1;
 	}
 	numSavedMaps = 0;
+#endif
 }
 
 //--------------------------------------------------------------  BackUpToSavedMap
@@ -69,6 +72,8 @@ void NilSavedMaps (void)
 
 short BackUpToSavedMap (Rect *theRect, short where, short who)
 {
+	return (-1);
+#if 0
 	Rect		mapRect;
 	OSErr		theErr;
 
@@ -90,6 +95,7 @@ short BackUpToSavedMap (Rect *theRect, short where, short who)
 	numSavedMaps++;
 
 	return (numSavedMaps - 1);	// return array index
+#endif
 }
 
 //--------------------------------------------------------------  ReBackUpSavedMap
@@ -99,6 +105,8 @@ short BackUpToSavedMap (Rect *theRect, short where, short who)
 
 short ReBackUpSavedMap (Rect *theRect, short where, short who)
 {
+	return (-1);
+#if 0
 	Rect		mapRect;
 	short		i, foundIndex;
 
@@ -121,6 +129,7 @@ short ReBackUpSavedMap (Rect *theRect, short where, short who)
 	}
 
 	return (foundIndex);
+#endif
 }
 
 //--------------------------------------------------------------  RestoreFromSavedMap
@@ -130,6 +139,8 @@ short ReBackUpSavedMap (Rect *theRect, short where, short who)
 
 void RestoreFromSavedMap (short where, short who, Boolean doSparkle)
 {
+	return;
+#if 0
 	Rect		mapRect, bounds;
 	short		i;
 
@@ -160,6 +171,7 @@ void RestoreFromSavedMap (short where, short who, Boolean doSparkle)
 			break;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  AddSparkle
@@ -168,6 +180,8 @@ void RestoreFromSavedMap (short where, short who, Boolean doSparkle)
 
 void AddSparkle (Rect *theRect)
 {
+	return;
+#if 0
 	Rect		centeredRect;
 	short		i;
 
@@ -190,6 +204,7 @@ void AddSparkle (Rect *theRect)
 				break;
 			}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  AddFlyingPoint
@@ -198,6 +213,8 @@ void AddSparkle (Rect *theRect)
 
 void AddFlyingPoint (Rect *theRect, short points, short hVel, short vVel)
 {
+	return;
+#if 0
 	Rect		centeredRect;
 	short		i;
 
@@ -251,6 +268,7 @@ void AddFlyingPoint (Rect *theRect, short points, short hVel, short vVel)
 				break;
 			}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  BackUpFlames
@@ -262,6 +280,8 @@ void AddFlyingPoint (Rect *theRect, short points, short hVel, short vVel)
 
 void BackUpFlames (Rect *src, short index)
 {
+	return;
+#if 0
 	Rect		dest;
 	short		i;
 
@@ -282,6 +302,7 @@ void BackUpFlames (Rect *src, short index)
 
 		QOffsetRect(&dest, 0, 15);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ReBackUpFlames
@@ -291,6 +312,8 @@ void BackUpFlames (Rect *src, short index)
 
 void ReBackUpFlames (short where, short who)
 {
+	return;
+#if 0
 	short		i, f;
 
 	for (i = 0; i < numSavedMaps; i++)
@@ -307,6 +330,7 @@ void ReBackUpFlames (short where, short who)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  AddCandleFlame
@@ -315,6 +339,8 @@ void ReBackUpFlames (short where, short who)
 
 void AddCandleFlame (short where, short who, short h, short v)
 {
+	return;
+#if 0
 	Rect		src, bounds;
 	short		savedNum;
 
@@ -341,6 +367,7 @@ void AddCandleFlame (short where, short who, short h, short v)
 		flames[numFlames].who = savedNum;
 		numFlames++;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  BackUpTikiFlames
@@ -348,6 +375,8 @@ void AddCandleFlame (short where, short who, short h, short v)
 
 void BackUpTikiFlames (Rect *src, short index)
 {
+	return;
+#if 0
 	Rect		dest;
 	short		i;
 
@@ -367,6 +396,7 @@ void BackUpTikiFlames (Rect *src, short index)
 
 		QOffsetRect(&dest, 0, 10);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ReBackUpTikiFlames
@@ -375,6 +405,8 @@ void BackUpTikiFlames (Rect *src, short index)
 
 void ReBackUpTikiFlames (short where, short who)
 {
+	return;
+#if 0
 	short		i, f;
 
 	for (i = 0; i < numSavedMaps; i++)
@@ -391,6 +423,7 @@ void ReBackUpTikiFlames (short where, short who)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  AddTikiFlame
@@ -399,6 +432,8 @@ void ReBackUpTikiFlames (short where, short who)
 
 void AddTikiFlame (short where, short who, short h, short v)
 {
+	return;
+#if 0
 	Rect		src, bounds;
 	short		savedNum;
 
@@ -426,6 +461,7 @@ void AddTikiFlame (short where, short who, short h, short v)
 		tikiFlames[numTikiFlames].who = savedNum;
 		numTikiFlames++;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  BackUpBBQCoals
@@ -434,6 +470,8 @@ void AddTikiFlame (short where, short who, short h, short v)
 
 void BackUpBBQCoals (Rect *src, short index)
 {
+	return;
+#if 0
 	Rect		dest;
 	short		i;
 
@@ -453,6 +491,7 @@ void BackUpBBQCoals (Rect *src, short index)
 
 		QOffsetRect(&dest, 0, 9);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ReBackUpBBQCoals
@@ -461,6 +500,8 @@ void BackUpBBQCoals (Rect *src, short index)
 
 void ReBackUpBBQCoals (short where, short who)
 {
+	return;
+#if 0
 	short		i, f;
 
 	for (i = 0; i < numSavedMaps; i++)
@@ -477,6 +518,7 @@ void ReBackUpBBQCoals (short where, short who)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  AddBBQCoals
@@ -485,6 +527,8 @@ void ReBackUpBBQCoals (short where, short who)
 
 void AddBBQCoals (short where, short who, short h, short v)
 {
+	return;
+#if 0
 	Rect		src, bounds;
 	short		savedNum;
 
@@ -512,6 +556,7 @@ void AddBBQCoals (short where, short who, short h, short v)
 
 		numCoals++;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  BackUpPendulum
@@ -520,6 +565,8 @@ void AddBBQCoals (short where, short who, short h, short v)
 
 void BackUpPendulum (Rect *src, short index)
 {
+	return;
+#if 0
 	Rect		dest;
 	short		i;
 
@@ -537,6 +584,7 @@ void BackUpPendulum (Rect *src, short index)
 
 		QOffsetRect(&dest, 0, 28);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ReBackUpPendulum
@@ -545,6 +593,8 @@ void BackUpPendulum (Rect *src, short index)
 
 void ReBackUpPendulum (short where, short who)
 {
+	return;
+#if 0
 	short		i, f;
 
 	for (i = 0; i < numSavedMaps; i++)
@@ -561,6 +611,7 @@ void ReBackUpPendulum (short where, short who)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  AddPendulum
@@ -569,6 +620,8 @@ void ReBackUpPendulum (short where, short who)
 
 void AddPendulum (short where, short who, short h, short v)
 {
+	return;
+#if 0
 	Rect		src, bounds;
 	short		savedNum;
 
@@ -603,6 +656,7 @@ void AddPendulum (short where, short who, short h, short v)
 		pendulums[numPendulums].link = who;
 		numPendulums++;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  BackUpStar
@@ -611,6 +665,8 @@ void AddPendulum (short where, short who, short h, short v)
 
 void BackUpStar (Rect *src, short index)
 {
+	return;
+#if 0
 	Rect		dest;
 	short		i;
 
@@ -629,6 +685,7 @@ void BackUpStar (Rect *src, short index)
 
 		QOffsetRect(&dest, 0, 31);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ReBackUpStar
@@ -637,6 +694,8 @@ void BackUpStar (Rect *src, short index)
 
 void ReBackUpStar (short where, short who)
 {
+	return;
+#if 0
 	short		i, f;
 
 	for (i = 0; i < numSavedMaps; i++)
@@ -653,6 +712,7 @@ void ReBackUpStar (short where, short who)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  AddStar
@@ -661,6 +721,8 @@ void ReBackUpStar (short where, short who)
 
 void AddStar (short where, short who, short h, short v)
 {
+	return;
+#if 0
 	Rect		src, bounds;
 	short		savedNum;
 
@@ -691,6 +753,7 @@ void AddStar (short where, short who, short h, short v)
 
 		numStars++;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  StopPendulum
@@ -699,6 +762,8 @@ void AddStar (short where, short who, short h, short v)
 
 void StopPendulum (short where, short who)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < numPendulums; i++)
@@ -706,6 +771,7 @@ void StopPendulum (short where, short who)
 		if ((pendulums[i].link == who) && (pendulums[i].where == where))
 			pendulums[i].active = false;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  StopStar
@@ -714,6 +780,8 @@ void StopPendulum (short where, short who)
 
 void StopStar (short where, short who)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < numStars; i++)
@@ -721,6 +789,7 @@ void StopStar (short where, short who)
 		if ((theStars[i].link == who) && (theStars[i].where == where))
 			theStars[i].mode = -1;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  AddAShreddedGlider
@@ -729,6 +798,8 @@ void StopStar (short where, short who)
 
 void AddAShreddedGlider (Rect *bounds)
 {
+	return;
+#if 0
 	if (numShredded > kMaxShredded)
 		return;
 
@@ -739,6 +810,7 @@ void AddAShreddedGlider (Rect *bounds)
 	shreds[numShredded].frame = 0;
 
 	numShredded++;
+#endif
 }
 
 //--------------------------------------------------------------  RemoveShreds
@@ -747,6 +819,8 @@ void AddAShreddedGlider (Rect *bounds)
 
 void RemoveShreds (void)
 {
+	return;
+#if 0
 	short		largest, who, i;
 
 	largest = 0;
@@ -775,6 +849,7 @@ void RemoveShreds (void)
 			shreds[numShredded].frame = 0;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ZeroFlamesAndTheLike
@@ -786,6 +861,8 @@ void RemoveShreds (void)
 
 void ZeroFlamesAndTheLike (void)
 {
+	return;
+#if 0
 	numFlames = 0;
 	numTikiFlames = 0;
 	numCoals = 0;
@@ -794,5 +871,6 @@ void ZeroFlamesAndTheLike (void)
 	numStars = 0;
 	numShredded = 0;
 	numChimes = 0;
+#endif
 }
 

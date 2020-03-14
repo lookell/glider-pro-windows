@@ -33,6 +33,8 @@ trigType	triggers[kMaxTriggers];
 
 void ArmTrigger (hotPtr who)
 {
+	return;
+#if 0
 	short		where, whoLinked;
 
 	if (who->stillOver)
@@ -52,12 +54,15 @@ void ArmTrigger (hotPtr who)
 	}
 
 	who->stillOver = true;
+#endif
 }
 
 //--------------------------------------------------------------  FindEmptyTriggerSlot
 
 short FindEmptyTriggerSlot (void)
 {
+	return (-1);
+#if 0
 	short		where, i;
 
 	where = -1;
@@ -72,12 +77,15 @@ short FindEmptyTriggerSlot (void)
 	}
 
 	return (where);
+#endif
 }
 
 //--------------------------------------------------------------  HandleTriggers
 
 void HandleTriggers (void)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < kMaxTriggers; i++)
@@ -93,12 +101,15 @@ void HandleTriggers (void)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  FireTrigger
 
 void FireTrigger (short index)
 {
+	return;
+#if 0
 	short		triggerIs, triggeredIs;
 	char		wasState;
 
@@ -191,15 +202,19 @@ void FireTrigger (short index)
 		}
 		HSetState((Handle)thisHouse, wasState);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ZeroTriggers
 
 void ZeroTriggers (void)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < kMaxTriggers; i++)
 		triggers[i].armed = false;
+#endif
 }
 

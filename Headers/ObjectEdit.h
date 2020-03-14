@@ -8,7 +8,8 @@
 #pragma once
 
 
-#include <Quickdraw.h>
+//#include <Quickdraw.h>
+#include "Macintosh.h"
 
 
 extern Rect			roomObjectRects[];

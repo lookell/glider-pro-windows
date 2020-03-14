@@ -6,8 +6,9 @@
 //============================================================================
 
 
-#include <Resources.h>
-#include <Sound.h>
+//#include <Resources.h>
+//#include <Sound.h>
+#include "Macintosh.h"
 #include "Externs.h"
 
 
@@ -39,6 +40,8 @@ Boolean				channelOpen, isSoundOn, failedSound;
 
 void PlayPrioritySound (short which, short priority)
 {
+	return;
+#if 0
 	short		lowestPriority, whosLowest;
 
 	if (failedSound || dontLoadSounds)
@@ -82,12 +85,15 @@ void PlayPrioritySound (short which, short priority)
 			break;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  FlushAnyTriggerPlaying
 
 void FlushAnyTriggerPlaying (void)
 {
+	return;
+#if 0
 	SndCommand	theCommand;
 	OSErr		theErr;
 
@@ -126,12 +132,15 @@ void FlushAnyTriggerPlaying (void)
 		theCommand.param2 = 0;
 		theErr = SndDoImmediate(channel2, &theCommand);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  PlaySound0
 
 void PlaySound0 (short soundID, short priority)
 {
+	return;
+#if 0
 	SndCommand	theCommand;
 	OSErr		theErr;
 
@@ -154,12 +163,15 @@ void PlaySound0 (short soundID, short priority)
 		theCommand.param2 = SetCurrentA5();
 		theErr = SndDoCommand(channel0, &theCommand, true);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  PlaySound1
 
 void PlaySound1 (short soundID, short priority)
 {
+	return;
+#if 0
 	SndCommand	theCommand;
 	OSErr		theErr;
 
@@ -182,12 +194,15 @@ void PlaySound1 (short soundID, short priority)
 		theCommand.param2 = SetCurrentA5();
 		theErr = SndDoCommand(channel1, &theCommand, true);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  PlaySound2
 
 void PlaySound2 (short soundID, short priority)
 {
+	return;
+#if 0
 	SndCommand	theCommand;
 	OSErr		theErr;
 
@@ -210,12 +225,15 @@ void PlaySound2 (short soundID, short priority)
 		priority2 = priority;
 		soundPlaying2 = soundID;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  CallBack0
 
 pascal void CallBack0 (SndChannelPtr theChannel, SndCommand *theCommand)
 {
+	return;
+#if 0
 #pragma unused (theChannel)
 	long		thisA5, gameA5;
 
@@ -226,12 +244,15 @@ pascal void CallBack0 (SndChannelPtr theChannel, SndCommand *theCommand)
 	soundPlaying0 = kNoSoundPlaying;
 
 	thisA5 = SetA5(thisA5);
+#endif
 }
 
 //--------------------------------------------------------------  CallBack1
 
 pascal void CallBack1 (SndChannelPtr theChannel, SndCommand *theCommand)
 {
+	return;
+#if 0
 #pragma unused (theChannel)
 	long		thisA5, gameA5;
 
@@ -242,12 +263,15 @@ pascal void CallBack1 (SndChannelPtr theChannel, SndCommand *theCommand)
 	soundPlaying1 = kNoSoundPlaying;
 
 	thisA5 = SetA5(thisA5);
+#endif
 }
 
 //--------------------------------------------------------------  CallBack2
 
 pascal void CallBack2 (SndChannelPtr theChannel, SndCommand *theCommand)
 {
+	return;
+#if 0
 #pragma unused (theChannel)
 	long		thisA5, gameA5;
 
@@ -258,12 +282,15 @@ pascal void CallBack2 (SndChannelPtr theChannel, SndCommand *theCommand)
 	soundPlaying2 = kNoSoundPlaying;
 
 	thisA5 = SetA5(thisA5);
+#endif
 }
 
 //--------------------------------------------------------------  LoadTriggerSound
 
 OSErr LoadTriggerSound (short soundID)
 {
+	return (-1);
+#if 0
 	Handle		theSound;
 	long		soundDataSize;
 	OSErr		theErr;
@@ -300,21 +327,27 @@ OSErr LoadTriggerSound (short soundID)
 	}
 
 	return (theErr);
+#endif
 }
 
 //--------------------------------------------------------------  DumpTriggerSound
 
 void DumpTriggerSound (void)
 {
+	return;
+#if 0
 	if (theSoundData[kMaxSounds - 1] != nil)
 		DisposePtr(theSoundData[kMaxSounds - 1]);
 	theSoundData[kMaxSounds - 1] = nil;
+#endif
 }
 
 //--------------------------------------------------------------  LoadBufferSounds
 
 OSErr LoadBufferSounds (void)
 {
+	return (-1);
+#if 0
 	Handle		theSound;
 	long		soundDataSize;
 	OSErr		theErr;
@@ -344,12 +377,15 @@ OSErr LoadBufferSounds (void)
 	theSoundData[kMaxSounds - 1] = nil;
 
 	return (theErr);
+#endif
 }
 
 //--------------------------------------------------------------  DumpBufferSounds
 
 void DumpBufferSounds (void)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < kMaxSounds; i++)
@@ -358,12 +394,15 @@ void DumpBufferSounds (void)
 			DisposePtr(theSoundData[i]);
 		theSoundData[i] = nil;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  OpenSoundChannels
 
 OSErr OpenSoundChannels (void)
 {
+	return (-1);
+#if 0
 	OSErr		theErr;
 
 	callBack0UPP = NewSndCallBackProc(CallBack0);
@@ -398,12 +437,15 @@ OSErr OpenSoundChannels (void)
 		channelOpen = true;
 
 	return (theErr);
+#endif
 }
 
 //--------------------------------------------------------------  CloseSoundChannels
 
 OSErr CloseSoundChannels (void)
 {
+	return (-1);
+#if 0
 	OSErr		theErr;
 
 	theErr = noErr;
@@ -431,12 +473,15 @@ OSErr CloseSoundChannels (void)
 	DisposeSndCallBackUPP(callBack2UPP);
 
 	return (theErr);
+#endif
 }
 
 //--------------------------------------------------------------  InitSound
 
 void InitSound (void)
 {
+	return;
+#if 0
 	OSErr		theErr;
 
 	if (dontLoadSounds)
@@ -471,12 +516,15 @@ void InitSound (void)
 			failedSound = true;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  KillSound
 
 void KillSound (void)
 {
+	return;
+#if 0
 	OSErr		theErr;
 
 	if (dontLoadSounds)
@@ -484,12 +532,15 @@ void KillSound (void)
 
 	DumpBufferSounds();
 	theErr = CloseSoundChannels();
+#endif
 }
 
 //--------------------------------------------------------------  SoundBytesNeeded
 
 long SoundBytesNeeded (void)
 {
+	return 1;
+#if 0
 	Handle		theSound;
 	long		totalBytes;
 	short		i;
@@ -509,27 +560,34 @@ long SoundBytesNeeded (void)
 	}
 	SetResLoad(true);
 	return totalBytes;
+#endif
 }
 
 //--------------------------------------------------------------  TellHerNoSounds
 
 void TellHerNoSounds (void)
 {
+	return;
+#if 0
 	#define		kNoMemForSoundsAlert	1039
 	short		hitWhat;
 
 //	CenterAlert(kNoMemForSoundsAlert);
 	hitWhat = Alert(kNoMemForSoundsAlert, nil);
+#endif
 }
 
 //--------------------------------------------------------------  BitchAboutSM3
 
 void BitchAboutSM3 (void)
 {
+	return;
+#if 0
 	#define		kNoSoundManager3Alert	1030
 	short		hitWhat;
 
 //	CenterAlert(kNoSoundManager3Alert);
 	hitWhat = Alert(kNoSoundManager3Alert, nil);
+#endif
 }
 

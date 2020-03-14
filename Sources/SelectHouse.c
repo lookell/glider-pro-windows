@@ -6,10 +6,11 @@
 //============================================================================
 
 
-#include <Aliases.h>
-#include <Resources.h>
-#include <Sound.h>
-#include <StringCompare.h>
+//#include <Aliases.h>
+//#include <Resources.h>
+//#include <Sound.h>
+//#include <StringCompare.h>
+#include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "Environ.h"
@@ -61,6 +62,8 @@ extern	UInt32			doubleTime;
 #ifndef COMPILEDEMO
 void UpdateLoadDialog (DialogPtr theDialog)
 {
+	return;
+#if 0
 	Rect		tempRect, dialogRect, dummyRect;
 	short		houseStart, houseStop, i, wasResFile, isResFile, count;
 //	char		wasState;
@@ -129,6 +132,7 @@ void UpdateLoadDialog (DialogPtr theDialog)
 
 	InitCursor();
 	UseResFile(wasResFile);
+#endif
 }
 #endif
 
@@ -137,6 +141,8 @@ void UpdateLoadDialog (DialogPtr theDialog)
 #ifndef COMPILEDEMO
 void PageUpHouses (DialogPtr theDial)
 {
+	return;
+#if 0
 	Rect		tempRect;
 
 	if (housePage < kDispFiles)
@@ -159,6 +165,7 @@ void PageUpHouses (DialogPtr theDial)
 	QSetRect(&tempRect, 8, 39, 421, 223);
 	EraseRect(&tempRect);
 	InvalWindowRect(GetDialogWindow(theDial), &tempRect);
+#endif
 }
 #endif
 
@@ -167,6 +174,8 @@ void PageUpHouses (DialogPtr theDial)
 #ifndef COMPILEDEMO
 void PageDownHouses (DialogPtr theDial)
 {
+	return;
+#if 0
 	Rect		tempRect;
 
 	if (housePage >= (housesFound - kDispFiles))
@@ -189,6 +198,7 @@ void PageDownHouses (DialogPtr theDial)
 	QSetRect(&tempRect, 8, 39, 421, 223);
 	EraseRect(&tempRect);
 	InvalWindowRect(GetDialogWindow(theDial), &tempRect);
+#endif
 }
 #endif
 
@@ -197,6 +207,8 @@ void PageDownHouses (DialogPtr theDial)
 
 pascal Boolean LoadFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	short		screenCount, i, wasIndex;
 	char		theChar;
 
@@ -346,6 +358,7 @@ pascal Boolean LoadFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 #endif
 
@@ -354,6 +367,8 @@ pascal Boolean LoadFilter (DialogPtr dial, EventRecord *event, short *item)
 #ifndef COMPILEDEMO
 void DoLoadHouse (void)
 {
+	return;
+#if 0
 	Rect			tempRect;
 	DialogPtr		theDial;
 	short			i, item, wasIndex, screenCount;
@@ -508,6 +523,7 @@ void DoLoadHouse (void)
 
 	DisposeDialog(theDial);
 	DisposeModalFilterUPP(loadFilterUPP);
+#endif
 }
 #endif
 
@@ -515,6 +531,8 @@ void DoLoadHouse (void)
 
 void SortHouseList (void)
 {
+	return;
+#if 0
 	FSSpec		tempSpec;
 	short		i, h, whosFirst;
 
@@ -550,12 +568,15 @@ void SortHouseList (void)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoDirSearch
 
 void DoDirSearch (void)
 {
+	return;
+#if 0
 	#define		kMaxDirectories		32
 	CInfoPBRec	theBlock;
 	Str255		nameString;
@@ -643,12 +664,15 @@ void DoDirSearch (void)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  BuildHouseList
 
 void BuildHouseList (void)
 {
+	return;
+#if 0
 	short		i;
 
 	if (thisMac.hasSystem7)
@@ -661,16 +685,20 @@ void BuildHouseList (void)
 		}
 		DoDirSearch();							// now, search folders for the rest
 	}
+#endif
 }
 
 //--------------------------------------------------------------  AddExtraHouse
 
 void AddExtraHouse (FSSpec *newHouse)
 {
+	return;
+#if 0
 	if (numExtraHouses >= kMaxExtraHouses)
 		return;
 
 	extraHouseSpecs[numExtraHouses] = *newHouse;
 	numExtraHouses++;
+#endif
 }
 

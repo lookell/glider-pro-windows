@@ -5,7 +5,8 @@
 //============================================================================
 
 
-#include <QDOffscreen.h>
+//#include <QDOffscreen.h>
+#include "Macintosh.h"
 
 
 extern GWorldPtr		workSrcMap;

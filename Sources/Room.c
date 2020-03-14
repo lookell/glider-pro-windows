@@ -5,8 +5,9 @@
 //============================================================================
 
 
-#include <Resources.h>
-#include <ToolUtils.h>
+//#include <Resources.h>
+//#include <ToolUtils.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "House.h"
 #include "MainWindow.h"
@@ -39,6 +40,8 @@ extern	short		tempTiles[];
 #ifndef COMPILEDEMO
 void SetInitialTiles (short background, Boolean doRoom)
 {
+	return;
+#if 0
 	short		i;
 
 	if (background >= kUserBackground)
@@ -150,6 +153,7 @@ void SetInitialTiles (short background, Boolean doRoom)
 			break;
 		}
 	}
+#endif
 }
 #endif
 
@@ -158,6 +162,8 @@ void SetInitialTiles (short background, Boolean doRoom)
 #ifndef COMPILEDEMO
 Boolean CreateNewRoom (short h, short v)
 {
+	return false;
+#if 0
 	KeyMap		theKeys;
 	long		howMuch;
 	OSErr		theErr;
@@ -236,6 +242,7 @@ Boolean CreateNewRoom (short h, short v)
 		newRoomNow = autoRoomEdit;			// Flag to bring up RoomInfo
 
 	return (true);
+#endif
 }
 #endif
 
@@ -243,6 +250,8 @@ Boolean CreateNewRoom (short h, short v)
 
 void ReadyBackground (short theID, short *theTiles)
 {
+	return;
+#if 0
 	Rect		src, dest;
 	PicHandle	thePicture;
 	short		i;
@@ -301,12 +310,15 @@ void ReadyBackground (short theID, short *theTiles)
 	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
 			(BitMap *)*GetGWorldPixMap(workSrcMap),
 			&src, &dest, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  ReflectCurrentRoom
 
 void ReflectCurrentRoom (Boolean forceMapRedraw)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	if (theMode != kEditMode)
 		return;
@@ -336,23 +348,29 @@ void ReflectCurrentRoom (Boolean forceMapRedraw)
 	DrawThisRoomsObjects();
 	InvalWindowRect(mainWindow, &mainWindowRect);
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  CopyRoomToThisRoom
 
 void CopyRoomToThisRoom (short roomNumber)
 {
+	return;
+#if 0
 	if (roomNumber == -1)
 		return;
 
 	CopyThisRoomToRoom();			// copy back to house
 	ForceThisRoom(roomNumber);		// load new room from house
+#endif
 }
 
 //--------------------------------------------------------------  CopyThisRoomToRoom
 
 void CopyThisRoomToRoom (void)
 {
+	return;
+#if 0
 	char		tagByte;
 
 	if ((noRoomAtAll) || (thisRoomNumber == -1))
@@ -362,12 +380,15 @@ void CopyThisRoomToRoom (void)
 	HLock((Handle)thisHouse);		// copy back to house
 	(*thisHouse)->rooms[thisRoomNumber] = *thisRoom;
 	HSetState((Handle)thisHouse, tagByte);
+#endif
 }
 
 //--------------------------------------------------------------  ForceThisRoom
 
 void ForceThisRoom (short roomNumber)
 {
+	return;
+#if 0
 	char		tagByte;
 
 	if (roomNumber == -1)
@@ -383,12 +404,15 @@ void ForceThisRoom (short roomNumber)
 
 	previousRoom = thisRoomNumber;
 	thisRoomNumber = roomNumber;
+#endif
 }
 
 //--------------------------------------------------------------  RoomExists
 
 Boolean RoomExists (short suite, short floor, short *roomNum)
 {
+	return false;
+#if 0
 	// pass in a suite and floor; returns true is it is a legitimate room
 	houseType	*thisHousePtr;
 	short		i;
@@ -418,12 +442,15 @@ Boolean RoomExists (short suite, short floor, short *roomNum)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (foundIt);
+#endif
 }
 
 //--------------------------------------------------------------  RoomNumExists
 
 Boolean RoomNumExists (short roomNum)
 {
+	return false;
+#if 0
 	short		floor, suite, whoCares;
 	Boolean		exists;
 
@@ -432,12 +459,15 @@ Boolean RoomNumExists (short roomNum)
 		exists = RoomExists(suite, floor, &whoCares);
 
 	return (exists);
+#endif
 }
 
 //--------------------------------------------------------------  DeleteRoom
 
 void DeleteRoom (Boolean doWarn)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	short		wasFloor, wasSuite;
 	char		wasState;
@@ -482,6 +512,7 @@ void DeleteRoom (Boolean doWarn)
 	UpdateMenus(false);
 	ReflectCurrentRoom(false);
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  QueryDeleteRoom
@@ -489,6 +520,8 @@ void DeleteRoom (Boolean doWarn)
 #ifndef COMPILEDEMO
 Boolean QueryDeleteRoom (void)
 {
+	return true;
+#if 0
 	short		hitWhat;
 
 //	CenterAlert(kDeleteRoomAlert);
@@ -497,6 +530,7 @@ Boolean QueryDeleteRoom (void)
 		return (true);
 	else
 		return (false);
+#endif
 }
 #endif
 
@@ -504,6 +538,8 @@ Boolean QueryDeleteRoom (void)
 
 short DoesNeighborRoomExist (short whichNeighbor)
 {
+	return (-1);
+#if 0
 #ifndef COMPILEDEMO
 	short		newH, newV, newRoomNumber;
 
@@ -537,12 +573,15 @@ short DoesNeighborRoomExist (short whichNeighbor)
 	else
 		return (-1);
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  SelectNeighborRoom
 
 void SelectNeighborRoom (short whichNeighbor)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	short		newRoomNumber;
 
@@ -555,12 +594,15 @@ void SelectNeighborRoom (short whichNeighbor)
 		ReflectCurrentRoom(false);
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  GetNeighborRoomNumber
 
 short GetNeighborRoomNumber (short which)
 {
+	return kRoomIsEmpty;
+#if 0
 	short		hDelta, vDelta, i;
 	short		roomH, roomV;
 	short		roomNum;
@@ -632,12 +674,15 @@ short GetNeighborRoomNumber (short which)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (roomNum);
+#endif
 }
 
 //--------------------------------------------------------------  SetToNearestNeighborRoom
 
 void SetToNearestNeighborRoom (short wasFloor, short wasSuite)
 {
+	return;
+#if 0
 	// searches in a clockwise spiral pattern (from thisRoom) for a…
 	// legitimate neighboring room - then sets thisRoom to it
 	short		distance, h, v;
@@ -704,12 +749,15 @@ void SetToNearestNeighborRoom (short wasFloor, short wasSuite)
 	} while (!finished);
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  GetRoomFloorSuite
 
 Boolean GetRoomFloorSuite (short room, short *floor, short *suite)
 {
+	return false;
+#if 0
 	char		wasState;
 	Boolean		isRoom;
 
@@ -730,12 +778,15 @@ Boolean GetRoomFloorSuite (short room, short *floor, short *suite)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (isRoom);
+#endif
 }
 
 //--------------------------------------------------------------  GetRoomNumber
 
 short GetRoomNumber (short floor, short suite)
 {
+	return kRoomIsEmpty;
+#if 0
 	// pass in a floor and suite; returns the room index into the house file
 	short		roomNum, i;
 	char		wasState;
@@ -756,12 +807,15 @@ short GetRoomNumber (short floor, short suite)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (roomNum);
+#endif
 }
 
 //--------------------------------------------------------------  IsRoomAStructure
 
 Boolean	IsRoomAStructure (short roomNum)
 {
+	return false;
+#if 0
 	char		wasState;
 	Boolean		isStructure;
 
@@ -809,12 +863,15 @@ Boolean	IsRoomAStructure (short roomNum)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (isStructure);
+#endif
 }
 
 //--------------------------------------------------------------  DetermineRoomOpenings
 
 void DetermineRoomOpenings (void)
 {
+	return;
+#if 0
 	short		whichBack, leftTile, rightTile;
 	short		boundsCode;
 
@@ -930,12 +987,15 @@ void DetermineRoomOpenings (void)
 		topOpen = false;
 	else
 		topOpen = true;
+#endif
 }
 
 //--------------------------------------------------------------  GetOriginalBounding
 
 short GetOriginalBounding (short theID)
 {
+	return 0;
+#if 0
 	boundsHand	boundsRes;
 	short		boundCode;
 
@@ -963,12 +1023,15 @@ short GetOriginalBounding (short theID)
 	}
 
 	return (boundCode);
+#endif
 }
 
 //--------------------------------------------------------------  GetNumberOfLights
 
 short GetNumberOfLights (short where)
 {
+	return 1;
+#if 0
 	houseType	*thisHousePtr;
 	short		i, count;
 	char		wasState;
@@ -1096,12 +1159,15 @@ short GetNumberOfLights (short where)
 		HSetState((Handle)thisHouse, wasState);
 	}
 	return (count);
+#endif
 }
 
 //--------------------------------------------------------------  IsShadowVisible
 
 Boolean IsShadowVisible (void)
 {
+	return false;
+#if 0
 	short		boundsCode;
 	Boolean		hasFloor;
 
@@ -1131,12 +1197,15 @@ Boolean IsShadowVisible (void)
 	}
 
 	return (hasFloor);
+#endif
 }
 
 //--------------------------------------------------------------  DoesRoomHaveFloor
 
 Boolean DoesRoomHaveFloor (void)
 {
+	return false;
+#if 0
 	short		boundsCode;
 	Boolean		hasFloor;
 
@@ -1165,12 +1234,15 @@ Boolean DoesRoomHaveFloor (void)
 	}
 
 	return (hasFloor);
+#endif
 }
 
 //--------------------------------------------------------------  DoesRoomHaveCeiling
 
 Boolean DoesRoomHaveCeiling (void)
 {
+	return false;
+#if 0
 	short		boundsCode;
 	Boolean		hasCeiling;
 
@@ -1202,5 +1274,6 @@ Boolean DoesRoomHaveCeiling (void)
 		}
 	}
 	return (hasCeiling);
+#endif
 }
 

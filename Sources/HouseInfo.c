@@ -6,7 +6,8 @@
 //============================================================================
 
 
-#include <NumberFormatting.h>
+//#include <NumberFormatting.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "DialogUtils.h"
 
@@ -50,6 +51,8 @@ extern	Boolean		phoneBitSet;
 
 long CountTotalHousePoints (void)
 {
+	return 0;
+#if 0
 	long		pointTotal;
 	short		numRooms, h, i;
 	char		wasState;
@@ -102,12 +105,15 @@ long CountTotalHousePoints (void)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (pointTotal);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateHouseInfoDialog
 
 void UpdateHouseInfoDialog (DialogPtr theDialog)
 {
+	return;
+#if 0
 	short		nChars;
 
 	DrawDialog(theDialog);
@@ -118,12 +124,15 @@ void UpdateHouseInfoDialog (DialogPtr theDialog)
 	SetDialogNumToStr(theDialog, kHouseSizeItem, CountTotalHousePoints());
 	FrameDialogItemC(theDialog, 10, kRedOrangeColor8);
 	SetDialogItemValue(theDialog, kNoPhoneCheck, (short)tempPhoneBit);
+#endif
 }
 
 //--------------------------------------------------------------  HouseFilter
 
 pascal Boolean HouseFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	Point		mouseIs;
 	short		nChars;
 
@@ -199,12 +208,15 @@ pascal Boolean HouseFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoHouseInfo
 
 void DoHouseInfo (void)
 {
+	return;
+#if 0
 	DialogPtr		houseInfoDialog;
 	Str255			versStr, loVers, nRoomsStr;
 	long			h, v;
@@ -300,24 +312,30 @@ void DoHouseInfo (void)
 	InitCursor();
 	DisposeDialog(houseInfoDialog);
 	DisposeModalFilterUPP(houseFilterUPP);
+#endif
 }
 
 //--------------------------------------------------------------  WarnLockingHouse
 
 Boolean WarnLockingHouse (void)
 {
+	return true;
+#if 0
 	short		hitWhat;
 
 //	CenterAlert(kLockHouseAlert);
 	hitWhat = Alert(kLockHouseAlert, nil);
 
 	return (hitWhat == 1);
+#endif
 }
 
 //--------------------------------------------------------------  HowToZeroScores
 
 void HowToZeroScores (void)
 {
+	return;
+#if 0
 	short		hitWhat;
 
 //	CenterAlert(kZeroScoresAlert);
@@ -337,6 +355,7 @@ void HowToZeroScores (void)
 		UpdateMenus(false);
 		break;
 	}
+#endif
 }
 
 #endif

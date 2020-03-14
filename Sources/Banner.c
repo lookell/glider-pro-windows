@@ -5,7 +5,8 @@
 //============================================================================
 
 
-#include <NumberFormatting.h>
+//#include <NumberFormatting.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "MainWindow.h"
@@ -40,6 +41,8 @@ extern	Boolean		quickerTransitions, demoGoing, isUseSecondScreen;
 
 void DrawBanner (Point *topLeft)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	Rect		wholePage, partPage, mapBounds;
@@ -81,6 +84,7 @@ void DrawBanner (Point *topLeft)
 	SetGWorld(wasCPort, wasWorld);
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
+#endif
 }
 
 //--------------------------------------------------------------  CountStarsInHouse
@@ -88,6 +92,8 @@ void DrawBanner (Point *topLeft)
 
 short CountStarsInHouse (void)
 {
+	return 0;
+#if 0
 	short		i, h, numRooms, numStars;
 	char		wasState;
 
@@ -108,6 +114,7 @@ short CountStarsInHouse (void)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (numStars);
+#endif
 }
 
 //--------------------------------------------------------------  DrawBannerMessage
@@ -116,6 +123,8 @@ short CountStarsInHouse (void)
 
 void DrawBannerMessage (Point topLeft)
 {
+	return;
+#if 0
 	Str255		bannerStr, subStr;
 	short		count;
 	char		wasState;
@@ -163,6 +172,7 @@ void DrawBannerMessage (Point topLeft)
 		DrawString(subStr);
 	}
 	ForeColor(blackColor);
+#endif
 }
 
 //--------------------------------------------------------------  BringUpBanner
@@ -170,6 +180,8 @@ void DrawBannerMessage (Point topLeft)
 
 void BringUpBanner (void)
 {
+	return;
+#if 0
 	Rect		wholePage;
 	Point		topLeft;
 
@@ -195,6 +207,7 @@ void BringUpBanner (void)
 //		DissBitsChunky(&justRoomsRect);
 //	else
 //		DissBits(&justRoomsRect);
+#endif
 }
 
 //--------------------------------------------------------------  DisplayStarsRemaining
@@ -204,6 +217,8 @@ void BringUpBanner (void)
 
 void DisplayStarsRemaining (void)
 {
+	return;
+#if 0
 	Rect		src, bounds;
 	Str255		theStr;
 
@@ -233,5 +248,6 @@ void DisplayStarsRemaining (void)
 	if (WaitForInputEvent(30))
 		RestoreEntireGameScreen();
 	CopyRectWorkToMain(&bounds);
+#endif
 }
 

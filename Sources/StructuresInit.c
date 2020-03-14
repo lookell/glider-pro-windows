@@ -5,7 +5,8 @@
 //============================================================================
 
 
-#include <Resources.h>
+//#include <Resources.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Objects.h"
 #include "Play.h"
@@ -58,6 +59,8 @@ extern	short		wasScoreboardMode;
 
 void InitScoreboardMap (void)
 {
+	return;
+#if 0
 	Rect		bounds;
 	PicHandle	thePicture;
 	CGrafPtr	wasCPort;
@@ -160,6 +163,7 @@ void InitScoreboardMap (void)
 	QOffsetRect(&badgesDestRects[3], 467 + hOffset, 1 - kScoreboardTall);
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  InitGliderMap
@@ -168,6 +172,8 @@ void InitScoreboardMap (void)
 
 void InitGliderMap (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
@@ -235,6 +241,7 @@ void InitGliderMap (void)
 	}
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  InitBlowers
@@ -243,6 +250,8 @@ void InitGliderMap (void)
 
 void InitBlowers (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	short		i;
@@ -284,6 +293,7 @@ void InitBlowers (void)
 	QOffsetRect(&rightStartGliderSrc, 0, 374);
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  InitFurniture
@@ -292,6 +302,8 @@ void InitBlowers (void)
 
 void InitFurniture (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
@@ -332,6 +344,7 @@ void InitFurniture (void)
 	QOffsetRect(&deckSrc, 0, 162);
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  InitPrizes
@@ -340,6 +353,8 @@ void InitFurniture (void)
 
 void InitPrizes (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	short		i;
@@ -416,6 +431,7 @@ void InitPrizes (void)
 	}
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  InitTransports
@@ -424,6 +440,8 @@ void InitPrizes (void)
 
 void InitTransports (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
@@ -440,6 +458,7 @@ void InitTransports (void)
 	LoadGraphic(kTransportPictID + 1000);
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  InitSwitches
@@ -448,6 +467,8 @@ void InitTransports (void)
 
 void InitSwitches (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
@@ -485,6 +506,7 @@ void InitSwitches (void)
 	QOffsetRect(&knifeSwitchSrc[1], 16, 80);
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  InitLights
@@ -493,6 +515,8 @@ void InitSwitches (void)
 
 void InitLights (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	short		i;
@@ -522,6 +546,7 @@ void InitLights (void)
 	}
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  InitAppliances
@@ -530,6 +555,8 @@ void InitLights (void)
 
 void InitAppliances (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	short		i;
@@ -607,6 +634,7 @@ void InitAppliances (void)
 	QOffsetRect(&microOff, 64, 187);
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  InitEnemies
@@ -615,6 +643,8 @@ void InitAppliances (void)
 
 void InitEnemies (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	short		i;
@@ -722,5 +752,6 @@ void InitEnemies (void)
 	}
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 

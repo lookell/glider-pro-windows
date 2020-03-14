@@ -6,8 +6,9 @@
 //============================================================================
 
 
-#include <Resources.h>
-#include <Sound.h>
+//#include <Resources.h>
+//#include <Sound.h>
+#include "Macintosh.h"
 #include "Environ.h"
 #include "Externs.h"
 
@@ -43,6 +44,8 @@ extern	Boolean		isSoundOn;
 
 OSErr StartMusic (void)
 {
+	return (-1);
+#if 0
 	SndCommand	theCommand;
 	OSErr		theErr;
 	short		soundVolume;
@@ -91,12 +94,15 @@ OSErr StartMusic (void)
 	}
 
 	return (theErr);
+#endif
 }
 
 //--------------------------------------------------------------  StopTheMusic
 
 void StopTheMusic (void)
 {
+	return;
+#if 0
 	SndCommand	theCommand;
 	OSErr		theErr;
 
@@ -118,12 +124,15 @@ void StopTheMusic (void)
 
 		isMusicOn = false;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ToggleMusicWhilePlaying
 
 void ToggleMusicWhilePlaying (void)
 {
+	return;
+#if 0
 	OSErr		theErr;
 
 	if (dontLoadMusic)
@@ -139,12 +148,15 @@ void ToggleMusicWhilePlaying (void)
 		if (isMusicOn)
 			StopTheMusic();
 	}
+#endif
 }
 
 //--------------------------------------------------------------  SetMusicalPiece
 
 void SetMusicalMode (short newMode)
 {
+	return;
+#if 0
 	if (dontLoadMusic)
 		return;
 
@@ -163,12 +175,15 @@ void SetMusicalMode (short newMode)
 		musicCursor = 0;
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MusicCallBack
 
 pascal void MusicCallBack (SndChannelPtr theChannel, SndCommand *theCommand)
 {
+	return;
+#if 0
 #pragma unused (theChannel)
 	long		thisA5, gameA5;
 	OSErr		theErr;
@@ -213,12 +228,15 @@ pascal void MusicCallBack (SndChannelPtr theChannel, SndCommand *theCommand)
 	theErr = SndDoCommand(musicChannel, theCommand, false);
 
 	thisA5 = SetA5(thisA5);
+#endif
 }
 
 //--------------------------------------------------------------  LoadMusicSounds
 
 OSErr LoadMusicSounds (void)
 {
+	return (-1);
+#if 0
 	Handle		theSound;
 	long		soundDataSize;
 	OSErr		theErr;
@@ -248,12 +266,15 @@ OSErr LoadMusicSounds (void)
 		ReleaseResource(theSound);
 	}
 	return (theErr);
+#endif
 }
 
 //--------------------------------------------------------------  DumpMusicSounds
 
 OSErr DumpMusicSounds (void)
 {
+	return (-1);
+#if 0
 	OSErr		theErr;
 	short		i;
 
@@ -267,12 +288,15 @@ OSErr DumpMusicSounds (void)
 	}
 
 	return (theErr);
+#endif
 }
 
 //--------------------------------------------------------------  OpenMusicChannel
 
 OSErr OpenMusicChannel (void)
 {
+	return (-1);
+#if 0
 	OSErr		theErr;
 
 	musicCallBackUPP = NewSndCallBackProc(MusicCallBack);
@@ -288,12 +312,15 @@ OSErr OpenMusicChannel (void)
 			(SndCallBackUPP)musicCallBackUPP);
 
 	return (theErr);
+#endif
 }
 
 //--------------------------------------------------------------  CloseMusicChannel
 
 OSErr CloseMusicChannel (void)
 {
+	return (-1);
+#if 0
 	OSErr		theErr;
 
 	theErr = noErr;
@@ -305,12 +332,15 @@ OSErr CloseMusicChannel (void)
 	DisposeSndCallBackUPP(musicCallBackUPP);
 
 	return (theErr);
+#endif
 }
 
 //--------------------------------------------------------------  InitMusic
 
 void InitMusic (void)
 {
+	return;
+#if 0
 	OSErr		theErr;
 
 	if (dontLoadMusic)
@@ -366,12 +396,15 @@ void InitMusic (void)
 			failedMusic = true;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  KillMusic
 
 void KillMusic (void)
 {
+	return;
+#if 0
 	OSErr		theErr;
 
 	if (dontLoadMusic)
@@ -379,12 +412,15 @@ void KillMusic (void)
 
 	theErr = DumpMusicSounds();
 	theErr = CloseMusicChannel();
+#endif
 }
 
 //--------------------------------------------------------------  MusicBytesNeeded
 
 long MusicBytesNeeded (void)
 {
+	return 1;
+#if 0
 	Handle		theSound;
 	long		totalBytes;
 	short		i;
@@ -404,16 +440,20 @@ long MusicBytesNeeded (void)
 	}
 	SetResLoad(true);
 	return totalBytes;
+#endif
 }
 
 //--------------------------------------------------------------  TellHerNoMusic
 
 void TellHerNoMusic (void)
 {
+	return;
+#if 0
 	#define		kNoMemForMusicAlert	1038
 	short		hitWhat;
 
 //	CenterAlert(kNoMemForMusicAlert);
 	hitWhat = Alert(kNoMemForMusicAlert, nil);
+#endif
 }
 

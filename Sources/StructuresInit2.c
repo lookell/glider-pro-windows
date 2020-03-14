@@ -5,7 +5,8 @@
 //============================================================================
 
 
-#include <Resources.h>
+//#include <Resources.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "GameOver.h"
@@ -54,6 +55,8 @@ extern	short		maxFiles;
 
 void InitClutter (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
@@ -88,6 +91,7 @@ void InitClutter (void)
 	QOffsetRect(&flowerSrc[5], 95, 0);
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  InitSupport
@@ -97,6 +101,8 @@ void InitClutter (void)
 
 void InitSupport (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
@@ -109,6 +115,7 @@ void InitSupport (void)
 	LoadGraphic(kSupportPictID);
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  InitAngel
@@ -118,6 +125,8 @@ void InitSupport (void)
 
 void InitAngel (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
@@ -134,6 +143,7 @@ void InitAngel (void)
 	LoadGraphic(kAngelPictID + 1);
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  CreateOffscreens
@@ -144,6 +154,8 @@ void InitAngel (void)
 
 void CreateOffscreens (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
@@ -178,6 +190,7 @@ void CreateOffscreens (void)
 	QSetRect(&tileSrcRect, 0, 0, 128, 80);
 	tileSrcMap = nil;
 //	????
+#endif
 }
 
 //--------------------------------------------------------------  CreatePointers
@@ -186,6 +199,8 @@ void CreateOffscreens (void)
 
 void CreatePointers (void)
 {
+	return;
+#if 0
 	Handle		tempHandle;
 	short		i;
 
@@ -296,6 +311,7 @@ void CreatePointers (void)
 		ReleaseResource(tempHandle);
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  InitSrcRects
@@ -305,6 +321,8 @@ void CreatePointers (void)
 
 void InitSrcRects (void)
 {
+	return;
+#if 0
 	QSetRect(&srcRects[kFloorVent], 0, 0, 48, 11);		// Blowers
 	QOffsetRect(&srcRects[kFloorVent], 0, 0);
 	QSetRect(&srcRects[kCeilingVent], 0, 0, 48, 11);
@@ -472,5 +490,6 @@ void InitSrcRects (void)
 	QOffsetRect(&srcRects[kFaucet], 0, 51);
 	QSetRect(&srcRects[kRug], 0, 0, 144, 18);
 	QSetRect(&srcRects[kChimes], 0, 0, 28, 74);
+#endif
 }
 

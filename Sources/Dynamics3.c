@@ -30,6 +30,8 @@ extern	Boolean		evenFrame;
 
 void HandleDynamics (void)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < numDynamics; i++)
@@ -102,6 +104,7 @@ void HandleDynamics (void)
 			break;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleDynamics
@@ -111,6 +114,8 @@ void HandleDynamics (void)
 
 void RenderDynamics (void)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < numDynamics; i++)
@@ -151,6 +156,7 @@ void RenderDynamics (void)
 			break;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ZeroDinahs
@@ -159,6 +165,8 @@ void RenderDynamics (void)
 
 void ZeroDinahs (void)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < kMaxDynamicObs; i++)
@@ -177,6 +185,7 @@ void ZeroDinahs (void)
 		dinahs[i].active = false;
 	}
 	numDynamics = 0;
+#endif
 }
 
 //--------------------------------------------------------------  AddDynamicObject
@@ -187,6 +196,8 @@ void ZeroDinahs (void)
 short AddDynamicObject (short what, Rect *where, objectType *who,
 		short room, short index, Boolean isOn)
 {
+	return (-1);
+#if 0
 	short		position, velocity;
 	Boolean		lilFrame;
 
@@ -551,5 +562,6 @@ short AddDynamicObject (short what, Rect *where, objectType *who,
 	numDynamics++;
 
 	return (numDynamics - 1);
+#endif
 }
 

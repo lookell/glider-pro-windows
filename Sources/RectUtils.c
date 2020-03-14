@@ -18,6 +18,8 @@
 
 void FrameWHRect (short left, short top, short wide, short high)
 {
+	return;
+#if 0
 	Rect		theRect;
 
 	theRect.left = left;
@@ -25,6 +27,7 @@ void FrameWHRect (short left, short top, short wide, short high)
 	theRect.right = left + wide;
 	theRect.bottom = top + high;
 	FrameRect(&theRect);
+#endif
 }
 
 //--------------------------------------------------------------  NormalizeRect
@@ -33,6 +36,8 @@ void FrameWHRect (short left, short top, short wide, short high)
 
 void NormalizeRect (Rect *theRect)
 {
+	return;
+#if 0
 	short		tempSide;
 
 	if (theRect->left > theRect->right)
@@ -48,6 +53,7 @@ void NormalizeRect (Rect *theRect)
 		theRect->top = theRect->bottom;
 		theRect->bottom = tempSide;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ZeroRectCorner
@@ -56,10 +62,13 @@ void NormalizeRect (Rect *theRect)
 
 void ZeroRectCorner (Rect *theRect)		// Offset rect to (0, 0)
 {
+	return;
+#if 0
 	theRect->right -= theRect->left;
 	theRect->bottom -= theRect->top;
 	theRect->left = 0;
 	theRect->top = 0;
+#endif
 }
 
 //--------------------------------------------------------------  CenterRectOnPoint
@@ -68,9 +77,12 @@ void ZeroRectCorner (Rect *theRect)		// Offset rect to (0, 0)
 
 void CenterRectOnPoint (Rect *theRect, Point where)
 {
+	return;
+#if 0
 	ZeroRectCorner(theRect);
 	QOffsetRect(theRect, -HalfRectWide(theRect), -HalfRectTall(theRect));
 	QOffsetRect(theRect, where.h, where.v);
+#endif
 }
 
 //--------------------------------------------------------------  HalfRectWide
@@ -78,7 +90,10 @@ void CenterRectOnPoint (Rect *theRect, Point where)
 
 short HalfRectWide (Rect *theRect)
 {
+	return 0;
+#if 0
 	return ((theRect->right - theRect->left) / 2);
+#endif
 }
 
 //--------------------------------------------------------------  HalfRectTall
@@ -86,7 +101,10 @@ short HalfRectWide (Rect *theRect)
 
 short HalfRectTall (Rect *theRect)
 {
+	return 0;
+#if 0
 	return ((theRect->bottom - theRect->top) / 2);
+#endif
 }
 
 //--------------------------------------------------------------  RectWide
@@ -94,7 +112,10 @@ short HalfRectTall (Rect *theRect)
 
 short RectWide (Rect *theRect)
 {
+	return 0;
+#if 0
 	return (theRect->right - theRect->left);
+#endif
 }
 
 //--------------------------------------------------------------  RectTall
@@ -102,7 +123,10 @@ short RectWide (Rect *theRect)
 
 short RectTall (Rect *theRect)
 {
+	return 0;
+#if 0
 	return (theRect->bottom - theRect->top);
+#endif
 }
 
 //--------------------------------------------------------------  GlobalToLocalRect
@@ -112,12 +136,15 @@ short RectTall (Rect *theRect)
 
 void GlobalToLocalRect (Rect *theRect)
 {
+	return;
+#if 0
 	Point			upperLeftPt;
 
 	upperLeftPt.h = 0;
 	upperLeftPt.v = 0;
 	GlobalToLocal(&upperLeftPt);
 	QOffsetRect(theRect, upperLeftPt.h, upperLeftPt.v);
+#endif
 }
 
 //--------------------------------------------------------------  LocalToGlobalRect
@@ -127,12 +154,15 @@ void GlobalToLocalRect (Rect *theRect)
 
 void LocalToGlobalRect (Rect *theRect)
 {
+	return;
+#if 0
 	Point			upperLeftPt;
 
 	upperLeftPt.h = 0;
 	upperLeftPt.v = 0;
 	LocalToGlobal(&upperLeftPt);
 	QOffsetRect(theRect, upperLeftPt.h, upperLeftPt.v);
+#endif
 }
 
 //--------------------------------------------------------------  CenterRectInRect
@@ -141,6 +171,8 @@ void LocalToGlobalRect (Rect *theRect)
 
 void CenterRectInRect (Rect *rectA, Rect *rectB)
 {
+	return;
+#if 0
 	short	widthA, tallA;
 
 	widthA = RectWide(rectA);
@@ -151,6 +183,7 @@ void CenterRectInRect (Rect *rectA, Rect *rectB)
 
 	rectA->top = rectB->top + (RectTall(rectB) - tallA) / 2;
 	rectA->bottom = rectA->top + tallA;
+#endif
 }
 
 //--------------------------------------------------------------  HOffsetRect
@@ -159,8 +192,11 @@ void CenterRectInRect (Rect *rectA, Rect *rectB)
 
 void HOffsetRect (Rect *theRect, short h)
 {
+	return;
+#if 0
 	theRect->left += h;
 	theRect->right += h;
+#endif
 }
 
 //--------------------------------------------------------------  VOffsetRect
@@ -169,8 +205,11 @@ void HOffsetRect (Rect *theRect, short h)
 
 void VOffsetRect (Rect *theRect, short v)
 {
+	return;
+#if 0
 	theRect->top += v;
 	theRect->bottom += v;
+#endif
 }
 
 //--------------------------------------------------------------  IsRectLeftOfRect
@@ -180,6 +219,8 @@ void VOffsetRect (Rect *theRect, short v)
 
 Boolean IsRectLeftOfRect (Rect *rect1, Rect *rect2)
 {
+	return false;
+#if 0
 	short		offset;
 
 	offset = (rect1->right - rect1->left) - (rect2->right - rect2->left) / 2;
@@ -187,6 +228,7 @@ Boolean IsRectLeftOfRect (Rect *rect1, Rect *rect2)
 		return (true);
 	else
 		return (false);
+#endif
 }
 
 //--------------------------------------------------------------  QOffsetRect
@@ -196,10 +238,13 @@ Boolean IsRectLeftOfRect (Rect *rect1, Rect *rect2)
 
 void QOffsetRect (Rect *theRect, short h, short v)
 {
+	return;
+#if 0
 	theRect->right += h;
 	theRect->left += h;
 	theRect->bottom += v;
 	theRect->top += v;
+#endif
 }
 
 //--------------------------------------------------------------  QSetRect
@@ -209,10 +254,13 @@ void QOffsetRect (Rect *theRect, short h, short v)
 
 void QSetRect (Rect *theRect, short l, short t, short r, short b)
 {
+	return;
+#if 0
 	theRect->left = l;
 	theRect->top = t;
 	theRect->right = r;
 	theRect->bottom = b;
+#endif
 }
 
 //--------------------------------------------------------------  ForceRectInRect
@@ -222,6 +270,8 @@ void QSetRect (Rect *theRect, short l, short t, short r, short b)
 
 Boolean ForceRectInRect (Rect *small, Rect *large)
 {
+	return false;
+#if 0
 	SInt16		hOff, vOff;
 	Boolean		changed;
 
@@ -267,6 +317,7 @@ Boolean ForceRectInRect (Rect *small, Rect *large)
 	}
 
 	return changed;
+#endif
 }
 
 //--------------------------------------------------------------  QUnionSimilarRect
@@ -276,6 +327,8 @@ Boolean ForceRectInRect (Rect *small, Rect *large)
 
 void QUnionSimilarRect (Rect *rectA, Rect *rectB, Rect *rectC)
 {
+	return;
+#if 0
 	if (rectA->left < rectB->left)
 		rectC->left = rectA->left;
 	else
@@ -295,6 +348,7 @@ void QUnionSimilarRect (Rect *rectA, Rect *rectB, Rect *rectC)
 		rectC->bottom = rectA->bottom;
 	else
 		rectC->bottom = rectB->bottom;
+#endif
 }
 
 //--------------------------------------------------------------  FrameRectSansCorners
@@ -303,6 +357,8 @@ void QUnionSimilarRect (Rect *rectA, Rect *rectB, Rect *rectC)
 
 void FrameRectSansCorners (Rect *theRect)
 {
+	return;
+#if 0
 	MoveTo(theRect->left + 1, theRect->top);
 	LineTo(theRect->right - 2, theRect->top);
 
@@ -314,5 +370,6 @@ void FrameRectSansCorners (Rect *theRect)
 
 	MoveTo(theRect->left, theRect->top + 1);
 	LineTo(theRect->left, theRect->bottom - 2);
+#endif
 }
 

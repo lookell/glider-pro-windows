@@ -6,9 +6,10 @@
 //============================================================================
 
 
-#include <NumberFormatting.h>
-#include <Sound.h>
-#include <TextUtils.h>
+//#include <NumberFormatting.h>
+//#include <Sound.h>
+//#include <TextUtils.h>
+#include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "ObjectEdit.h"
@@ -119,6 +120,8 @@ extern	Boolean		linkerIsSwitch;
 
 void UpdateBlowerInfo (DialogPtr theDialog)
 {
+	return;
+#if 0
 	#define		kArrowheadLength	4
 	Rect		bounds;
 
@@ -216,127 +219,166 @@ void UpdateBlowerInfo (DialogPtr theDialog)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  UpdateFurnitureInfo
 
 void UpdateFurnitureInfo (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateCustPictInfo
 
 void UpdateCustPictInfo (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 	FrameDialogItemC(theDialog, 5, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateSwitchInfo
 
 void UpdateSwitchInfo (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 	SelectFromRadioGroup(theDialog, newType + kToggleRadio,
 			kToggleRadio, kForceOffRadio);
 	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
 	FrameDialogItemC(theDialog, 13, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateTriggerInfo
 
 void UpdateTriggerInfo (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
 	FrameDialogItemC(theDialog, 13, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateLightInfo
 
 void UpdateLightInfo (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 	FrameDialogItemC(theDialog, 5, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateApplianceInfo
 
 void UpdateApplianceInfo (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 	FrameDialogItemC(theDialog, 5, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateMicrowaveInfo
 
 void UpdateMicrowaveInfo (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 	FrameDialogItemC(theDialog, 5, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateGreaseInfo
 
 void UpdateGreaseInfo (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 	FrameDialogItemC(theDialog, 5, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateInvisBonusInfo
 
 void UpdateInvisBonusInfo (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 	SelectFromRadioGroup(theDialog, newPoint + k100PtRadio,
 			k100PtRadio, k500PtRadio);
 	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateTransInfo
 
 void UpdateTransInfo (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
 	FrameDialogItemC(theDialog, 10, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateEnemyInfo
 
 void UpdateEnemyInfo (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateFlowerInfo
 
 void UpdateFlowerInfo (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  BlowerFilter
 
 pascal Boolean BlowerFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -386,12 +428,15 @@ pascal Boolean BlowerFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  FurnitureFilter
 
 pascal Boolean FurnitureFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -422,12 +467,15 @@ pascal Boolean FurnitureFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  CustPictFilter
 
 pascal Boolean CustPictFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -458,12 +506,15 @@ pascal Boolean CustPictFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  SwitchFilter
 
 pascal Boolean SwitchFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -500,12 +551,15 @@ pascal Boolean SwitchFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  TriggerFilter
 
 pascal Boolean TriggerFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -547,12 +601,15 @@ pascal Boolean TriggerFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  LightFilter
 
 pascal Boolean LightFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -597,12 +654,15 @@ pascal Boolean LightFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ApplianceFilter
 
 pascal Boolean ApplianceFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -652,12 +712,15 @@ pascal Boolean ApplianceFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MicrowaveFilter
 
 pascal Boolean MicrowaveFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -702,12 +765,15 @@ pascal Boolean MicrowaveFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  GreaseFilter
 
 pascal Boolean GreaseFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -744,12 +810,15 @@ pascal Boolean GreaseFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  InvisBonusFilter
 
 pascal Boolean InvisBonusFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -780,12 +849,15 @@ pascal Boolean InvisBonusFilter (DialogPtr dial, EventRecord *event, short *item
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  TransFilter
 
 pascal Boolean TransFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -822,12 +894,15 @@ pascal Boolean TransFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  EnemyFilter
 
 pascal Boolean EnemyFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -877,12 +952,15 @@ pascal Boolean EnemyFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  EnemyFilter
 
 pascal Boolean FlowerFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -927,12 +1005,15 @@ pascal Boolean FlowerFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoBlowerObjectInfo
 
 void DoBlowerObjectInfo (short what)
 {
+	return;
+#if 0
 	DialogPtr		infoDial;
 	Str255			numberStr, kindStr, distStr;
 	short			item, initial;
@@ -1100,12 +1181,15 @@ void DoBlowerObjectInfo (short what)
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoFurnitureObjectInfo
 
 void DoFurnitureObjectInfo (void)
 {
+	return;
+#if 0
 	DialogPtr		infoDial;
 	Str255			numberStr, kindStr;
 	short			item;
@@ -1165,12 +1249,15 @@ void DoFurnitureObjectInfo (void)
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoCustPictObjectInfo
 
 void DoCustPictObjectInfo (void)
 {
+	return;
+#if 0
 	DialogPtr		infoDial;
 	Str255			numberStr, kindStr;
 	long			wasPict;
@@ -1262,12 +1349,15 @@ void DoCustPictObjectInfo (void)
 
 	DisposeDialog(infoDial);
 	DisposeModalFilterUPP(custPictFilterUPP);
+#endif
 }
 
 //--------------------------------------------------------------  DoSwitchObjectInfo
 
 void DoSwitchObjectInfo (void)
 {
+	return;
+#if 0
 	DialogPtr		infoDial;
 	Str255			numberStr, kindStr, roomStr, tempStr, objStr;
 	short			item, floor, suite;
@@ -1384,12 +1474,15 @@ void DoSwitchObjectInfo (void)
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoTriggerObjectInfo
 
 void DoTriggerObjectInfo (void)
 {
+	return;
+#if 0
 	DialogPtr		infoDial;
 	Str255			numberStr, kindStr, roomStr, tempStr, objStr;
 	long			delayIs;
@@ -1540,12 +1633,15 @@ void DoTriggerObjectInfo (void)
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoLightObjectInfo
 
 void DoLightObjectInfo (void)
 {
+	return;
+#if 0
 	DialogPtr		infoDial;
 	Str255			numberStr, kindStr;
 	short			item, initial;
@@ -1626,12 +1722,15 @@ void DoLightObjectInfo (void)
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoApplianceObjectInfo
 
 void DoApplianceObjectInfo (short what)
 {
+	return;
+#if 0
 	DialogPtr		infoDial;
 	Str255			numberStr, kindStr;
 	long			delay;
@@ -1742,12 +1841,15 @@ void DoApplianceObjectInfo (short what)
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoMicrowaveObjectInfo
 
 void DoMicrowaveObjectInfo (void)
 {
+	return;
+#if 0
 	DialogPtr		infoDial;
 	Str255			numberStr, kindStr;
 	short			item, initial, kills;
@@ -1866,12 +1968,15 @@ void DoMicrowaveObjectInfo (void)
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoGreaseObjectInfo
 
 void DoGreaseObjectInfo (void)
 {
+	return;
+#if 0
 	DialogPtr		infoDial;
 	Str255			numberStr, kindStr;
 	short			item;
@@ -1940,12 +2045,15 @@ void DoGreaseObjectInfo (void)
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoInvisBonusObjectInfo
 
 void DoInvisBonusObjectInfo (void)
 {
+	return;
+#if 0
 	DialogPtr		infoDial;
 	Str255			numberStr, kindStr;
 	short			item;
@@ -2053,12 +2161,15 @@ void DoInvisBonusObjectInfo (void)
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoTransObjectInfo
 
 void DoTransObjectInfo (short what)
 {
+	return;
+#if 0
 	DialogPtr		infoDial;
 	Str255			numberStr, kindStr, roomStr, tempStr, objStr;
 	short			item, floor, suite;
@@ -2176,12 +2287,15 @@ void DoTransObjectInfo (short what)
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoEnemyObjectInfo
 
 void DoEnemyObjectInfo (short what)
 {
+	return;
+#if 0
 	DialogPtr		infoDial;
 	Str255			numberStr, kindStr;
 	long			delay;
@@ -2286,12 +2400,15 @@ void DoEnemyObjectInfo (short what)
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoFlowerObjectInfo
 
 void DoFlowerObjectInfo (void)
 {
+	return;
+#if 0
 	DialogPtr		infoDial;
 	Str255			numberStr, kindStr;
 	short			item, flower;
@@ -2385,12 +2502,15 @@ void DoFlowerObjectInfo (void)
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoObjectInfo
 
 void DoObjectInfo (void)
 {
+	return;
+#if 0
 	if ((objActive == kInitialGliderSelected) ||
 			(objActive == kLeftGliderSelected) ||
 			(objActive == kRightGliderSelected))
@@ -2561,6 +2681,7 @@ void DoObjectInfo (void)
 		SysBeep(1);
 		break;
 	}
+#endif
 }
 
 #endif

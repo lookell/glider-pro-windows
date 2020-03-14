@@ -6,9 +6,10 @@
 //============================================================================
 
 
-#include <NumberFormatting.h>
-#include <Resources.h>
-#include <Sound.h>
+//#include <NumberFormatting.h>
+//#include <Resources.h>
+//#include <Sound.h>
+#include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "RectUtils.h"
@@ -63,6 +64,8 @@ extern	short		houseResFork, lastBackground;
 #ifndef COMPILEDEMO
 void UpdateRoomInfoDialog (DialogPtr theDialog)
 {
+	return;
+#if 0
 	Rect		src, dest;
 	short		i;
 
@@ -110,6 +113,7 @@ void UpdateRoomInfoDialog (DialogPtr theDialog)
 	FrameDialogItem(theDialog, kRoomTilesBox);
 	FrameDialogItemC(theDialog, kRoomDividerLine, kRedOrangeColor8);
 	FrameDialogItem(theDialog, kRoomTilesBox2);
+#endif
 }
 #endif
 
@@ -118,6 +122,8 @@ void UpdateRoomInfoDialog (DialogPtr theDialog)
 #ifndef COMPILEDEMO
 void DragMiniTile (Point mouseIs, short *newTileOver)
 {
+	return;
+#if 0
 	Rect		dragRect;
 	Point		mouseWas;
 	short		wasTileOver;
@@ -216,6 +222,7 @@ void DragMiniTile (Point mouseIs, short *newTileOver)
 	}
 	FrameRect(&dragRect);
 	PenNormal();
+#endif
 }
 #endif
 
@@ -224,6 +231,8 @@ void DragMiniTile (Point mouseIs, short *newTileOver)
 #ifndef COMPILEDEMO
 void HiliteTileOver (Point mouseIs)
 {
+	return;
+#if 0
 	short		newTileOver;
 
 	if (PtInRect(mouseIs, &tileSrc))
@@ -290,6 +299,7 @@ void HiliteTileOver (Point mouseIs)
 			}
 		}
 	}
+#endif
 }
 #endif
 
@@ -298,6 +308,8 @@ void HiliteTileOver (Point mouseIs)
 
 pascal Boolean RoomFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	Point		mouseIs;
 	short		newTileOver;
 
@@ -368,6 +380,7 @@ pascal Boolean RoomFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 #endif
 
@@ -375,6 +388,8 @@ pascal Boolean RoomFilter (DialogPtr dial, EventRecord *event, short *item)
 
 void DoRoomInfo (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	#define			kBackgroundsMenuID		140
 	DialogPtr		roomInfoDialog;
@@ -567,6 +582,7 @@ void DoRoomInfo (void)
 	DisposeGWorld(tileSrcMap);
 	tileSrcMap = nil;
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  UpdateOriginalArt
@@ -574,6 +590,8 @@ void DoRoomInfo (void)
 #ifndef COMPILEDEMO
 void UpdateOriginalArt (DialogPtr theDialog)
 {
+	return;
+#if 0
 	Pattern		dummyPattern;
 
 	DrawDialog(theDialog);
@@ -620,6 +638,7 @@ void UpdateOriginalArt (DialogPtr theDialog)
 	}
 
 	PenSize(1, 1);
+#endif
 }
 #endif
 
@@ -628,6 +647,8 @@ void UpdateOriginalArt (DialogPtr theDialog)
 
 pascal Boolean OriginalArtFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	Point		mouseIs;
 
 	switch (event->what)
@@ -702,6 +723,7 @@ pascal Boolean OriginalArtFilter (DialogPtr dial, EventRecord *event, short *ite
 		return(false);
 		break;
 	}
+#endif
 }
 #endif
 
@@ -710,6 +732,8 @@ pascal Boolean OriginalArtFilter (DialogPtr dial, EventRecord *event, short *ite
 #ifndef COMPILEDEMO
 short ChooseOriginalArt (short was)
 {
+	return kUserBackground;
+#if 0
 	DialogPtr		theDialog;
 	long			longID;
 	short			item, newPictID, tempShort, wasPictID;
@@ -822,6 +846,7 @@ short ChooseOriginalArt (short was)
 	DisposeModalFilterUPP(originalArtFilterUPP);
 
 	return (newPictID);
+#endif
 }
 #endif
 
@@ -829,6 +854,8 @@ short ChooseOriginalArt (short was)
 
 Boolean PictIDExists (short theID)
 {
+	return false;
+#if 0
 	PicHandle	thePicture;
 //	Handle		resHandle;
 //	Str255		resName;
@@ -871,12 +898,15 @@ Boolean PictIDExists (short theID)
 //	}
 
 	return (foundIt);
+#endif
 }
 
 //--------------------------------------------------------------  GetFirstPICT
 
 short GetFirstPICT (void)
 {
+	return (-1);
+#if 0
 	Handle		resHandle;
 	Str255		resName;
 	ResType		resType;
@@ -891,6 +921,7 @@ short GetFirstPICT (void)
 	}
 	else
 		return (-1);
+#endif
 }
 
 //--------------------------------------------------------------  BitchAboutPICTNotFound
@@ -898,10 +929,13 @@ short GetFirstPICT (void)
 #ifndef COMPILEDEMO
 void BitchAboutPICTNotFound (void)
 {
+	return;
+#if 0
 	short		hitWhat;
 
 //	CenterAlert(kNoPICTFoundAlert);
 	hitWhat = Alert(kNoPICTFoundAlert, nil);
+#endif
 }
 #endif
 

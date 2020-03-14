@@ -6,7 +6,8 @@
 //============================================================================
 
 
-#include <NumberFormatting.h>
+//#include <NumberFormatting.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "RectUtils.h"
@@ -52,6 +53,8 @@ extern	Boolean		evenFrame, onePlayerLeft;
 
 void RefreshScoreboard (short mode)
 {
+	return;
+#if 0
 	doRollScore = true;
 
 	RefreshRoomTitle(mode);
@@ -65,12 +68,15 @@ void RefreshScoreboard (short mode)
 	QuickBatteryRefresh(false);
 	QuickBandsRefresh(false);
 	QuickFoilRefresh(false);
+#endif
 }
 
 //--------------------------------------------------------------  HandleDynamicScoreboard
 
  void HandleDynamicScoreboard (void)
  {
+	return;
+#if 0
  	#define		kFoilLow		2		// 25%
  	#define		kBatteryLow		17		// 25%
  	#define		kHeliumLow		-38		// 25%
@@ -129,12 +135,15 @@ void RefreshScoreboard (short mode)
 			QuickBandsRefresh(true);
 		break;
 	}
+#endif
  }
 
 //--------------------------------------------------------------  RefreshRoomTitle
 
 void RefreshRoomTitle (short mode)
 {
+	return;
+#if 0
 	RGBColor	theRGBColor, wasColor;
 
 	SetPort((GrafPtr)boardTSrcMap);
@@ -185,12 +194,15 @@ void RefreshRoomTitle (short mode)
 	CopyBits((BitMap *)*GetGWorldPixMap(boardTSrcMap),
 			(BitMap *)*GetGWorldPixMap(boardSrcMap),
 			&boardTSrcRect, &boardTDestRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  RefreshNumGliders
 
 void RefreshNumGliders (void)
 {
+	return;
+#if 0
 	RGBColor	theRGBColor, wasColor;
 	Str255		nGlidersStr;
 	long		displayMortals;
@@ -224,12 +236,15 @@ void RefreshNumGliders (void)
 	CopyBits((BitMap *)*GetGWorldPixMap(boardGSrcMap),
 			(BitMap *)*GetGWorldPixMap(boardSrcMap),
 			&boardGSrcRect, &boardGDestRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  RefreshPoints
 
 void RefreshPoints (void)
 {
+	return;
+#if 0
 	RGBColor	theRGBColor, wasColor;
 	Str255		scoreStr;
 
@@ -261,12 +276,15 @@ void RefreshPoints (void)
 			&boardPSrcRect, &boardPDestRect, srcCopy, nil);
 
 	displayedScore = theScore;
+#endif
 }
 
 //--------------------------------------------------------------  QuickGlidersRefresh
 
 void QuickGlidersRefresh (void)
 {
+	return;
+#if 0
 	RGBColor	theRGBColor, wasColor;
 	Str255		nGlidersStr;
 
@@ -296,12 +314,15 @@ void QuickGlidersRefresh (void)
 	CopyBits((BitMap *)*GetGWorldPixMap(boardGSrcMap),
 			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 			&boardGSrcRect, &boardGQDestRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  QuickScoreRefresh
 
 void QuickScoreRefresh (void)
 {
+	return;
+#if 0
 	RGBColor	theRGBColor, wasColor;
 	Str255		scoreStr;
 
@@ -331,12 +352,15 @@ void QuickScoreRefresh (void)
 	CopyBits((BitMap *)*GetGWorldPixMap(boardPSrcMap),
 			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 			&boardPSrcRect, &boardPQDestRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  QuickBatteryRefresh
 
 void QuickBatteryRefresh (Boolean flash)
 {
+	return;
+#if 0
 	if ((batteryTotal > 0) && (!flash))
 	{
 		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
@@ -361,12 +385,15 @@ void QuickBatteryRefresh (Boolean flash)
 				&badgesDestRects[kBatteryBadge],
 				srcCopy, nil);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  QuickBandsRefresh
 
 void QuickBandsRefresh (Boolean flash)
 {
+	return;
+#if 0
 	if ((bandsTotal > 0) && (!flash))
 	{
 		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
@@ -383,12 +410,15 @@ void QuickBandsRefresh (Boolean flash)
 				&badgesDestRects[kBandsBadge],
 				srcCopy, nil);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  QuickFoilRefresh
 
 void QuickFoilRefresh (Boolean flash)
 {
+	return;
+#if 0
 	if ((foilTotal > 0) && (!flash))
 	{
 		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
@@ -405,12 +435,15 @@ void QuickFoilRefresh (Boolean flash)
 				&badgesDestRects[kFoilBadge],
 				srcCopy, nil);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  AdjustScoreboardHeight
 
 void AdjustScoreboardHeight (void)
 {
+	return;
+#if 0
 	short		offset, newMode;
 
 	if (numNeighbors == 9)
@@ -446,12 +479,16 @@ void AdjustScoreboardHeight (void)
 
 		wasScoreboardMode = newMode;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  BlackenScoreboard
 
 void BlackenScoreboard (void)
 {
+	return;
+#if 0
 	UpdateMenuBarWindow();
+#endif
 }
 

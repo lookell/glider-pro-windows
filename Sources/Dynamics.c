@@ -33,6 +33,8 @@ extern	Boolean		evenFrame, twoPlayerGame, onePlayerLeft, playerDead;
 
 void CheckDynamicCollision (short who, gliderPtr thisGlider, Boolean doOffset)
 {
+	return;
+#if 0
 	Rect		dinahRect;
 
 	dinahRect = dinahs[who].dest;
@@ -71,6 +73,7 @@ void CheckDynamicCollision (short who, gliderPtr thisGlider, Boolean doOffset)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DidBandHitDynamic
@@ -79,6 +82,8 @@ void CheckDynamicCollision (short who, gliderPtr thisGlider, Boolean doOffset)
 
 Boolean DidBandHitDynamic (short who)
 {
+	return (false);
+#if 0
 	Rect		dinahRect;
 	short		i;
 	Boolean		collided;
@@ -103,6 +108,7 @@ Boolean DidBandHitDynamic (short who)
 	}
 
 	return (collided);
+#endif
 }
 
 //--------------------------------------------------------------  RenderToast
@@ -111,6 +117,8 @@ Boolean DidBandHitDynamic (short who)
 
 void RenderToast (short who)
 {
+	return;
+#if 0
 	Rect		src, dest;
 	short		vClip;
 
@@ -136,12 +144,15 @@ void RenderToast (short who)
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  RenderBalloon
 
 void RenderBalloon (short who)
 {
+	return;
+#if 0
 	Rect		src, dest;
 
 	if (dinahs[who].moving)
@@ -160,12 +171,15 @@ void RenderBalloon (short who)
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  RenderCopter
 
 void RenderCopter (short who)
 {
+	return;
+#if 0
 	Rect		src, dest;
 
 	if (dinahs[who].moving)
@@ -184,12 +198,15 @@ void RenderCopter (short who)
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  RenderDart
 
 void RenderDart (short who)
 {
+	return;
+#if 0
 	Rect		src, dest;
 
 	if (dinahs[who].moving)
@@ -208,12 +225,15 @@ void RenderDart (short who)
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  RenderBall
 
 void RenderBall (short who)
 {
+	return;
+#if 0
 	Rect		src, dest;
 
 	dest = dinahs[who].dest;
@@ -229,12 +249,15 @@ void RenderBall (short who)
 	dest = dinahs[who].whole;
 	QOffsetRect(&dest, playOriginH, playOriginV);
 	AddRectToWorkRects(&dest);
+#endif
 }
 
 //--------------------------------------------------------------  RenderDrip
 
 void RenderDrip (short who)
 {
+	return;
+#if 0
 	Rect		src, dest;
 
 	dest = dinahs[who].dest;
@@ -250,12 +273,15 @@ void RenderDrip (short who)
 	dest = dinahs[who].whole;
 	QOffsetRect(&dest, playOriginH, playOriginV);
 	AddRectToWorkRects(&dest);
+#endif
 }
 
 //--------------------------------------------------------------  RenderFish
 
 void RenderFish (short who)
 {
+	return;
+#if 0
 	Rect		src, dest;
 
 	dest = dinahs[who].dest;
@@ -283,6 +309,7 @@ void RenderFish (short who)
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleSparkleObject
@@ -292,6 +319,8 @@ void RenderFish (short who)
 
 void HandleSparkleObject (short who)
 {
+	return;
+#if 0
 	Rect		tempRect;
 
 	if (dinahs[who].active)								// is it on?
@@ -314,12 +343,15 @@ void HandleSparkleObject (short who)
 	else
 	{
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleToast
 
 void HandleToast (short who)
 {
+	return;
+#if 0
 	Rect		dest;
 
 	if (dinahs[who].moving)
@@ -381,12 +413,15 @@ void HandleToast (short who)
 				dinahs[who].frame = dinahs[who].timer;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleMacPlus
 
 void HandleMacPlus (short who)
 {
+	return;
+#if 0
 	if (dinahs[who].timer > 0)
 	{
 		dinahs[who].timer--;
@@ -421,12 +456,15 @@ void HandleMacPlus (short who)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleTV
 
 void HandleTV (short who)
 {
+	return;
+#if 0
 	if (dinahs[who].timer > 0)
 	{
 		dinahs[who].timer--;
@@ -475,12 +513,15 @@ void HandleTV (short who)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleCoffee
 
 void HandleCoffee (short who)
 {
+	return;
+#if 0
 	if (dinahs[who].timer > 0)
 	{
 		dinahs[who].timer--;
@@ -521,12 +562,15 @@ void HandleCoffee (short who)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleOutlet
 
 void HandleOutlet (short who)
 {
+	return;
+#if 0
 	if (dinahs[who].position != 0)
 	{
 		dinahs[who].timer--;
@@ -596,12 +640,15 @@ void HandleOutlet (short who)
 				dinahs[who].timer = dinahs[who].count;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleVCR
 
 void HandleVCR (short who)
 {
+	return;
+#if 0
 	if (dinahs[who].timer > 0)
 	{
 		dinahs[who].timer--;
@@ -664,12 +711,15 @@ void HandleVCR (short who)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleStereo
 
 void HandleStereo (short who)
 {
+	return;
+#if 0
 	if (dinahs[who].timer > 0)
 	{
 		dinahs[who].timer--;
@@ -708,12 +758,15 @@ void HandleStereo (short who)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleMicrowave
 
 void HandleMicrowave (short who)
 {
+	return;
+#if 0
 	Rect		dest;
 
 	if (dinahs[who].timer > 0)
@@ -772,5 +825,6 @@ void HandleMicrowave (short who)
 			}
 		}
 	}
+#endif
 }
 

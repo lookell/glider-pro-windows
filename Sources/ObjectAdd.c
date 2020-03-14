@@ -6,7 +6,8 @@
 //============================================================================
 
 
-#include <ToolUtils.h>
+//#include <ToolUtils.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "ObjectEdit.h"
 #include "RectUtils.h"
@@ -47,6 +48,8 @@ short		wasFlower;
 
 Boolean AddNewObject (Point where, short what, Boolean showItNow)
 {
+	return false;
+#if 0
 	KeyMap		theseKeys;
 	Rect		srcRect, newRect;
 	short		direction, dist;
@@ -798,6 +801,7 @@ Boolean AddNewObject (Point where, short what, Boolean showItNow)
 #endif
 
 	return (true);
+#endif
 }
 
 //--------------------------------------------------------------  FindEmptyObjectSlot
@@ -805,6 +809,8 @@ Boolean AddNewObject (Point where, short what, Boolean showItNow)
 #ifndef COMPILEDEMO
 short FindEmptyObjectSlot (void)
 {
+	return (-1);
+#if 0
 	short		i, emptySlot;
 
 	emptySlot = -1;
@@ -816,12 +822,15 @@ short FindEmptyObjectSlot (void)
 		}
 
 	return (emptySlot);
+#endif
 }
 
 //--------------------------------------------------------------  FindObjectSlotInRoom
 
 short FindObjectSlotInRoom (short roomNumber)
 {
+	return (-1);
+#if 0
 	roomType	*testRoomPtr;
 	short		i, emptySlot;
 	char		wasState;
@@ -843,12 +852,15 @@ short FindObjectSlotInRoom (short roomNumber)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (emptySlot);
+#endif
 }
 
 //--------------------------------------------------------------  DoesRoomNumHaveObject
 
 Boolean DoesRoomNumHaveObject (short room, short what)
 {
+	return false;
+#if 0
 	roomType	*testRoomPtr;
 	short		i;
 	char		wasState;
@@ -871,22 +883,28 @@ Boolean DoesRoomNumHaveObject (short room, short what)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (hasIt);
+#endif
 }
 
 //--------------------------------------------------------------  ShoutNoMoreObjects
 
 void ShoutNoMoreObjects (void)
 {
+	return;
+#if 0
 	short		hitWhat;
 
 //	CenterAlert(kNoMoreObjectsAlert);
 	hitWhat = Alert(kNoMoreObjectsAlert, nil);
+#endif
 }
 
 //--------------------------------------------------------------  HowManyCandleObjects
 
 short HowManyCandleObjects (void)
 {
+	return 0;
+#if 0
 	short		i, aCandle;
 
 	aCandle = 0;
@@ -897,12 +915,15 @@ short HowManyCandleObjects (void)
 			aCandle++;
 
 	return (aCandle);
+#endif
 }
 
 //--------------------------------------------------------------  HowManyTikiObjects
 
 short HowManyTikiObjects (void)
 {
+	return 0;
+#if 0
 	short		i, aTiki;
 
 	aTiki = 0;
@@ -911,12 +932,15 @@ short HowManyTikiObjects (void)
 			aTiki++;
 
 	return (aTiki);
+#endif
 }
 
 //--------------------------------------------------------------  HowManyBBQObjects
 
 short HowManyBBQObjects (void)
 {
+	return 0;
+#if 0
 	short		i, aBBQ;
 
 	aBBQ = 0;
@@ -925,12 +949,15 @@ short HowManyBBQObjects (void)
 			aBBQ++;
 
 	return (aBBQ);
+#endif
 }
 
 //--------------------------------------------------------------  HowManyCuckooObjects
 
 short HowManyCuckooObjects (void)
 {
+	return 0;
+#if 0
 	short		i, aCuckoo;
 
 	aCuckoo = 0;
@@ -939,12 +966,15 @@ short HowManyCuckooObjects (void)
 			aCuckoo++;
 
 	return (aCuckoo);
+#endif
 }
 
 //--------------------------------------------------------------  HowManyBandsObjects
 
 short HowManyBandsObjects (void)
 {
+	return 0;
+#if 0
 	short		i, aBands;
 
 	aBands = 0;
@@ -953,12 +983,15 @@ short HowManyBandsObjects (void)
 			aBands++;
 
 	return (aBands);
+#endif
 }
 
 //--------------------------------------------------------------  HowManyGreaseObjects
 
 short HowManyGreaseObjects (void)
 {
+	return 0;
+#if 0
 	short		i, aGrease;
 
 	aGrease = 0;
@@ -968,12 +1001,15 @@ short HowManyGreaseObjects (void)
 			aGrease++;
 
 	return (aGrease);
+#endif
 }
 
 //--------------------------------------------------------------  HowManyStarsObjects
 
 short HowManyStarsObjects (void)
 {
+	return 0;
+#if 0
 	short		i, aStar;
 
 	aStar = 0;
@@ -982,12 +1018,15 @@ short HowManyStarsObjects (void)
 			aStar++;
 
 	return (aStar);
+#endif
 }
 
 //--------------------------------------------------------------  HowManySoundObjects
 
 short HowManySoundObjects (void)
 {
+	return 0;
+#if 0
 	short		i, aSound;
 
 	aSound = 0;
@@ -996,12 +1035,15 @@ short HowManySoundObjects (void)
 			aSound++;
 
 	return (aSound);
+#endif
 }
 
 //--------------------------------------------------------------  HowManyUpStairsObjects
 
 short HowManyUpStairsObjects (void)
 {
+	return 0;
+#if 0
 	short		i, aStair;
 
 	aStair = 0;
@@ -1010,12 +1052,15 @@ short HowManyUpStairsObjects (void)
 			aStair++;
 
 	return (aStair);
+#endif
 }
 
 //--------------------------------------------------------------  HowManyDownStairsObjects
 
 short HowManyDownStairsObjects (void)
 {
+	return 0;
+#if 0
 	short		i, aStair;
 
 	aStair = 0;
@@ -1024,12 +1069,15 @@ short HowManyDownStairsObjects (void)
 			aStair++;
 
 	return (aStair);
+#endif
 }
 
 //--------------------------------------------------------------  HowManyShredderObjects
 
 short HowManyShredderObjects (void)
 {
+	return 0;
+#if 0
 	short		i, aShredder;
 
 	aShredder = 0;
@@ -1038,12 +1086,15 @@ short HowManyShredderObjects (void)
 			aShredder++;
 
 	return (aShredder);
+#endif
 }
 
 //--------------------------------------------------------------  HowManyDynamicObjects
 
 short HowManyDynamicObjects (void)
 {
+	return 0;
+#if 0
 	short		i, aDinah;
 
 	aDinah = 0;
@@ -1068,16 +1119,20 @@ short HowManyDynamicObjects (void)
 			aDinah++;
 
 	return (aDinah);
+#endif
 }
 
 //--------------------------------------------------------------  ShoutNoMoreSpecialObjects
 
 void ShoutNoMoreSpecialObjects (void)
 {
+	return;
+#if 0
 	short		hitWhat;
 
 //	CenterAlert(kNoMoreSpecialAlert);
 	hitWhat = Alert(kNoMoreSpecialAlert, nil);
+#endif
 }
 
 #endif

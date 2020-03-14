@@ -22,6 +22,8 @@ extern	Boolean		tvOn;
 
 void DrawARoomsObjects (short neighbor, Boolean redraw)
 {
+	return;
+#if 0
 	objectType	thisObject;
 	Rect		whoCares, itsRect, rectA, rectB, testRect;
 	RgnHandle	theRgn;
@@ -962,5 +964,6 @@ void DrawARoomsObjects (short neighbor, Boolean redraw)
 	}
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 

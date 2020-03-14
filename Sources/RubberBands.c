@@ -36,6 +36,8 @@ extern	Boolean		twoPlayerGame, onePlayerLeft, playerDead;
 
 void CheckBandCollision (short who)
 {
+	return;
+#if 0
 	short		i, action, whoLinked;
 	Boolean		collided, nothingCollided;
 
@@ -201,12 +203,15 @@ void CheckBandCollision (short who)
 	{
 		bands[who].mode = kKillBandMode;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleBands
 
 void HandleBands (void)
 {
+	return;
+#if 0
 	Rect		dest;
 	short		i, count;
 
@@ -249,12 +254,15 @@ void HandleBands (void)
 		count++;
 	}
 	while (count < numBands);
+#endif
 }
 
 //--------------------------------------------------------------  AddBand
 
 Boolean AddBand (gliderPtr thisGlider, short h, short v, Boolean direction)
 {
+	return false;
+#if 0
 	if (numBands >= kMaxRubberBands)
 		return (false);
 
@@ -287,12 +295,15 @@ Boolean AddBand (gliderPtr thisGlider, short h, short v, Boolean direction)
 
 	PlayPrioritySound(kFireBandSound, kFireBandPriority);
 	return (true);
+#endif
 }
 
 //--------------------------------------------------------------  KillBand
 
 void KillBand (short which)
 {
+	return;
+#if 0
 	short		lastBand;
 
 	lastBand = numBands - 1;
@@ -300,12 +311,15 @@ void KillBand (short which)
 		bands[which] = bands[lastBand];
 
 	numBands--;
+#endif
 }
 
 //--------------------------------------------------------------  KillAllBands
 
 void KillAllBands (void)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < kMaxRubberBands; i++)
@@ -314,5 +328,6 @@ void KillAllBands (void)
 	}
 
 	numBands = 0;
+#endif
 }
 

@@ -6,8 +6,9 @@
 //============================================================================
 
 
-#include <Resources.h>
-#include <TextUtils.h>
+//#include <Resources.h>
+//#include <TextUtils.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "Objects.h"
@@ -111,6 +112,8 @@
 
 void DrawMailboxLeft (Rect *theRect, short down)
 {
+	return;
+#if 0
 	Rect		bounds;
 	GWorldPtr	tempMap;
 	GWorldPtr	tempMask;
@@ -188,12 +191,15 @@ void DrawMailboxLeft (Rect *theRect, short down)
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
 //	SetPort((GrafPtr)backSrcMap);
+#endif
 }
 
 //--------------------------------------------------------------  DrawMailboxRight
 
 void DrawMailboxRight (Rect *theRect, short down)
 {
+	return;
+#if 0
 	Rect		bounds;
 	GWorldPtr	tempMap;
 	GWorldPtr	tempMask;
@@ -271,22 +277,28 @@ void DrawMailboxRight (Rect *theRect, short down)
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
 //	SetPort((GrafPtr)backSrcMap);
+#endif
 }
 
 //--------------------------------------------------------------  DrawSimpleTransport
 
 void DrawSimpleTransport (short what, Rect *theRect)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(transSrcMap),
 			(BitMap *)*GetGWorldPixMap(transMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawInvisTransport
 
 void DrawInvisTransport (Rect *theRect)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 
@@ -294,12 +306,15 @@ void DrawInvisTransport (Rect *theRect)
 	SetGWorld(backSrcMap, nil);
 	ColorFrameRect(theRect, 32);
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawLightSwitch
 
 void DrawLightSwitch (Rect *theRect, Boolean state)
 {
+	return;
+#if 0
 	if (state)
 	{
 		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
@@ -312,12 +327,15 @@ void DrawLightSwitch (Rect *theRect, Boolean state)
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&lightSwitchSrc[1], theRect, srcCopy, nil);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawMachineSwitch
 
 void DrawMachineSwitch (Rect *theRect, Boolean state)
 {
+	return;
+#if 0
 	if (state)
 		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
@@ -326,12 +344,15 @@ void DrawMachineSwitch (Rect *theRect, Boolean state)
 		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&machineSwitchSrc[1], theRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  DrawThermostat
 
 void DrawThermostat (Rect *theRect, Boolean state)
 {
+	return;
+#if 0
 	if (state)
 		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
@@ -340,12 +361,15 @@ void DrawThermostat (Rect *theRect, Boolean state)
 		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&thermostatSrc[1], theRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  DrawPowerSwitch
 
 void DrawPowerSwitch (Rect *theRect, Boolean state)
 {
+	return;
+#if	0
 	if (state)
 		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
@@ -354,12 +378,15 @@ void DrawPowerSwitch (Rect *theRect, Boolean state)
 		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&powerSrc[1], theRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  DrawKnifeSwitch
 
 void DrawKnifeSwitch (Rect *theRect, Boolean state)
 {
+	return;
+#if 0
 	if (state)
 		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
@@ -368,12 +395,15 @@ void DrawKnifeSwitch (Rect *theRect, Boolean state)
 		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&knifeSwitchSrc[1], theRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  DrawInvisibleSwitch
 
 void DrawInvisibleSwitch (Rect *theRect)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 
@@ -381,12 +411,15 @@ void DrawInvisibleSwitch (Rect *theRect)
 	SetGWorld(backSrcMap, nil);
 	ColorFrameRect(theRect, kIntenseGreenColor);
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawTrigger
 
 void DrawTrigger (Rect *theRect)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 
@@ -394,12 +427,15 @@ void DrawTrigger (Rect *theRect)
 	SetGWorld(backSrcMap, nil);
 	ColorFrameRect(theRect, kIntenseBlueColor);
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawSoundTrigger
 
 void DrawSoundTrigger (Rect *theRect)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 
@@ -407,22 +443,28 @@ void DrawSoundTrigger (Rect *theRect)
 	SetGWorld(backSrcMap, nil);
 	ColorFrameRect(theRect, kIntenseYellowColor);
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawSimpleLight
 
 void DrawSimpleLight (short what, Rect *theRect)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap),
 			(BitMap *)*GetGWorldPixMap(lightMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawFlourescent
 
 void DrawFlourescent (Rect *theRect)
 {
+	return;
+#if 0
 	Rect		partRect;
 	long		grayC, gray2C, gray3C, gray4C, violetC;
 	CGrafPtr	wasCPort;
@@ -493,12 +535,15 @@ void DrawFlourescent (Rect *theRect)
 			(BitMap *)*GetGWorldPixMap(lightMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&flourescentSrc2, &flourescentSrc2, &partRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawTrackLight
 
 void DrawTrackLight (Rect *theRect)
 {
+	return;
+#if 0
 	#define		kTrackLightSpacing	64
 	Rect		partRect;
 	long		grayC, gray2C, gray3C, gray4C;
@@ -579,12 +624,15 @@ void DrawTrackLight (Rect *theRect)
 					&trackLightSrc[which], &trackLightSrc[which], &partRect);
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawInvisLight
 
 void DrawInvisLight (Rect *theRect)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 
@@ -592,22 +640,28 @@ void DrawInvisLight (Rect *theRect)
 	SetGWorld(backSrcMap, nil);
 	ColorFrameOval(theRect, 17);
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawSimpleAppliance
 
 void DrawSimpleAppliance (short what, Rect *theRect)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(applianceSrcMap),
 			(BitMap *)*GetGWorldPixMap(applianceMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawMacPlus
 
 void DrawMacPlus (Rect *theRect, Boolean isOn, Boolean isLit)
 {
+	return;
+#if 0
 	Rect		screen;
 
 	if (isLit)
@@ -633,12 +687,15 @@ void DrawMacPlus (Rect *theRect, Boolean isOn, Boolean isLit)
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&plusScreen1, &screen, srcCopy, nil);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawTV
 
 void DrawTV (Rect *theRect, Boolean isOn, Boolean isLit)
 {
+	return;
+#if 0
 	Rect		bounds;
 	GWorldPtr	tempMap;
 	GWorldPtr	tempMask;
@@ -686,12 +743,15 @@ void DrawTV (Rect *theRect, Boolean isOn, Boolean isLit)
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&tvScreen1, &bounds, srcCopy, nil);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawCoffee
 
 void DrawCoffee (Rect *theRect, Boolean isOn, Boolean isLit)
 {
+	return;
+#if 0
 	Rect		light;
 
 	if (isLit)
@@ -717,22 +777,28 @@ void DrawCoffee (Rect *theRect, Boolean isOn, Boolean isLit)
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&coffeeLight1, &light, srcCopy, nil);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawOutlet
 
 void DrawOutlet (Rect *theRect)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(applianceSrcMap),
 			(BitMap *)*GetGWorldPixMap(applianceMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[kOutlet], &srcRects[kOutlet], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawVCR
 
 void DrawVCR (Rect *theRect, Boolean isOn, Boolean isLit)
 {
+	return;
+#if 0
 	Rect		bounds;
 	GWorldPtr	tempMap;
 	GWorldPtr	tempMask;
@@ -781,12 +847,15 @@ void DrawVCR (Rect *theRect, Boolean isOn, Boolean isLit)
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&vcrTime1, &bounds, srcCopy, nil);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawStereo
 
 void DrawStereo (Rect *theRect, Boolean isOn, Boolean isLit)
 {
+	return;
+#if 0
 	Rect		bounds;
 	GWorldPtr	tempMap;
 	GWorldPtr	tempMask;
@@ -836,12 +905,15 @@ void DrawStereo (Rect *theRect, Boolean isOn, Boolean isLit)
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&stereoLight1, &bounds, srcCopy, nil);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawMicrowave
 
 void DrawMicrowave (Rect *theRect, Boolean isOn, Boolean isLit)
 {
+	return;
+#if 0
 	Rect		bounds;
 	GWorldPtr	tempMap;
 	GWorldPtr	tempMask;
@@ -907,32 +979,41 @@ void DrawMicrowave (Rect *theRect, Boolean isOn, Boolean isLit)
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&microOff, &bounds, srcCopy, nil);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawBalloon
 
 void DrawBalloon (Rect *theRect)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(balloonSrcMap),
 			(BitMap *)*GetGWorldPixMap(balloonMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&balloonSrc[1], &balloonSrc[1], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawCopter
 
 void DrawCopter (Rect *theRect)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(copterSrcMap),
 			(BitMap *)*GetGWorldPixMap(copterMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&copterSrc[1], &copterSrc[1], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawDart
 
 void DrawDart (Rect *theRect, short which)
 {
+	return;
+#if 0
 	if (which == kDartLf)
 	{
 		CopyMask((BitMap *)*GetGWorldPixMap(dartSrcMap),
@@ -947,42 +1028,54 @@ void DrawDart (Rect *theRect, short which)
 				(BitMap *)*GetGWorldPixMap(backSrcMap),
 				&dartSrc[2], &dartSrc[2], theRect);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawBall
 
 void DrawBall (short what, Rect *theRect)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(ballSrcMap),
 			(BitMap *)*GetGWorldPixMap(ballMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawFish
 
 void DrawFish (short what, Rect *theRect)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(enemySrcMap),
 			(BitMap *)*GetGWorldPixMap(enemyMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawDrip
 
 void DrawDrip (Rect *theRect)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(dripSrcMap),
 			(BitMap *)*GetGWorldPixMap(dripMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&dripSrc[3], &dripSrc[3], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawMirror
 
 void DrawMirror (Rect *mirror)
 {
+	return;
+#if 0
 	Rect		tempRect;
 	long		grayC;
 	CGrafPtr	wasCPort;
@@ -1011,32 +1104,41 @@ void DrawMirror (Rect *mirror)
 	ColorFrameRect(&tempRect, grayC);
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawSimpleClutter
 
 void DrawSimpleClutter (short what, Rect *theRect)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(clutterSrcMap),
 			(BitMap *)*GetGWorldPixMap(clutterMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawFlower
 
 void DrawFlower (Rect *theRect, short which)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(clutterSrcMap),
 			(BitMap *)*GetGWorldPixMap(clutterMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&flowerSrc[which], &flowerSrc[which], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawWallWindow
 
 void DrawWallWindow (Rect *window)
 {
+	return;
+#if 0
 	#define		kWindowSillThick	7
 	Rect		tempRect, tempRect2;
 	long		brownC, tanC, dkstRedC;
@@ -1125,12 +1227,15 @@ void DrawWallWindow (Rect *window)
 			tempRect2.right + 5, tempRect2.top - 7, tanC);
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawCalendar
 
 void DrawCalendar (Rect *theRect)
 {
+	return;
+#if 0
 	DateTimeRec	timeRec;
 	Rect		bounds;
 	PicHandle	thePicture;
@@ -1163,12 +1268,15 @@ void DrawCalendar (Rect *theRect)
 	ColorText(monthStr, kDarkFleshColor);
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawBulletin
 
 void DrawBulletin (Rect *theRect)
 {
+	return;
+#if 0
 	Rect		bounds;
 	PicHandle	thePicture;
 	CGrafPtr	wasCPort;
@@ -1190,12 +1298,15 @@ void DrawBulletin (Rect *theRect)
 	ReleaseResource((Handle)thePicture);
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawPictObject
 
 void DrawPictObject (short what, Rect *theRect)
 {
+	return;
+#if 0
 	Rect		bounds;
 	PicHandle	thePicture;
 	short		pictID;
@@ -1246,12 +1357,15 @@ void DrawPictObject (short what, Rect *theRect)
 	ReleaseResource((Handle)thePicture);
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawPictWithMaskObject
 
 void DrawPictWithMaskObject (short what, Rect *theRect)
 {
+	return;
+#if 0
 	Rect		bounds;
 	GWorldPtr	tempMap;
 	GWorldPtr	tempMask;
@@ -1295,12 +1409,15 @@ void DrawPictWithMaskObject (short what, Rect *theRect)
 	DisposeGWorld(tempMask);
 
 //	SetPort((GrafPtr)backSrcMap);
+#endif
 }
 
 //--------------------------------------------------------------  DrawPictSansWhiteObject
 
 void DrawPictSansWhiteObject (short what, Rect *theRect)
 {
+	return;
+#if 0
 	Rect		bounds;
 	CGrafPtr	tempMap;
 	short		pictID;
@@ -1406,11 +1523,14 @@ void DrawPictSansWhiteObject (short what, Rect *theRect)
 
 	DisposeGWorld(tempMap);
 //	SetPort((GrafPtr)backSrcMap);
+#endif
 }
 //--------------------------------------------------------------  DrawCustPictSansWhite
 
 void DrawCustPictSansWhite (short pictID, Rect *theRect)
 {
+	return;
+#if 0
 	Rect		bounds;
 	GWorldPtr	tempMap;
 	CGrafPtr	wasCPort;
@@ -1433,5 +1553,6 @@ void DrawCustPictSansWhite (short pictID, Rect *theRect)
 
 	DisposeGWorld(tempMap);
 //	SetPort((GrafPtr)backSrcMap);
+#endif
 }
 

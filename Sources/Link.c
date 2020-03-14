@@ -33,13 +33,18 @@ Boolean			isLinkOpen, linkerIsSwitch;
 
 short MergeFloorSuite (short floor, short suite)
 {
+	return 0;
+#if 0
 	return ((suite * 100) + floor);
+#endif
 }
 
 //--------------------------------------------------------------  ExtractFloorSuite
 
 void ExtractFloorSuite (short combo, short *floor, short *suite)
 {
+	return;
+#if 0
 	if ((*thisHouse)->version < 0x0200)		// old floor/suite combo
 	{
 		*floor = (combo / 100) - kNumUndergroundFloors;
@@ -50,12 +55,15 @@ void ExtractFloorSuite (short combo, short *floor, short *suite)
 		*suite = combo / 100;
 		*floor = (combo % 100) - kNumUndergroundFloors;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  UpdateLinkControl
 
 void UpdateLinkControl (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	if (linkWindow == nil)
 		return;
@@ -191,12 +199,15 @@ void UpdateLinkControl (void)
 		break;
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  UpdateLinkWindow
 
 void UpdateLinkWindow (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	if (linkWindow == nil)
 		return;
@@ -205,12 +216,15 @@ void UpdateLinkWindow (void)
 	DrawControls(linkWindow);
 	UpdateLinkControl();
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  OpenLinkWindow
 
 void OpenLinkWindow (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	Rect		src, dest;
 	Point		globalMouse;
@@ -249,18 +263,22 @@ void OpenLinkWindow (void)
 		isLinkOpen = true;
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  CloseLinkWindow
 
 void CloseLinkWindow (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	if (linkWindow != nil)
 		DisposeWindow(linkWindow);
 
 	linkWindow = nil;
 	isLinkOpen = false;
+#endif
 #endif
 }
 
@@ -269,6 +287,8 @@ void CloseLinkWindow (void)
 #ifndef COMPILEDEMO
 void DoLink (void)
 {
+	return;
+#if 0
 	short		floor, suite;
 	char		wasState;
 
@@ -316,6 +336,7 @@ void DoLink (void)
 		UpdateMenus(false);
 		CloseLinkWindow();
 	}
+#endif
 }
 #endif
 
@@ -324,6 +345,8 @@ void DoLink (void)
 #ifndef COMPILEDEMO
 void DoUnlink (void)
 {
+	return;
+#if 0
 	char		wasState;
 
 	if (thisRoomNumber == linkRoom)
@@ -358,6 +381,7 @@ void DoUnlink (void)
 	fileDirty = true;
 	UpdateMenus(false);
 	CloseLinkWindow();
+#endif
 }
 #endif
 
@@ -365,6 +389,8 @@ void DoUnlink (void)
 
 void HandleLinkClick (Point wherePt)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	ControlHandle	theControl;
 	short			part;
@@ -391,6 +417,7 @@ void HandleLinkClick (Point wherePt)
 			GenerateRetroLinks();
 		}
 	}
+#endif
 #endif
 }
 

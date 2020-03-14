@@ -6,13 +6,14 @@
 //============================================================================
 
 
-#include <LowMem.h>
-#include <Gestalt.h>
-#include <NumberFormatting.h>
-#include <Sound.h>
+#include "Macintosh.h"
+//#include <LowMem.h>
+//#include <Gestalt.h>
+//#include <NumberFormatting.h>
+//#include <Sound.h>
 #include "Externs.h"
 #include "Environ.h"
-#include <Palettes.h>
+//#include <Palettes.h>
 
 
 #define	kSwitchDepthAlert		130
@@ -195,6 +196,8 @@ Boolean DoWeHaveSoundManager3 (void)
 
 Boolean DoWeHaveQuickTime (void)
 {
+	return (false);
+#if 0
 	long		theResponse;
 	OSErr		theErr;
 	Boolean		haveIt;
@@ -206,12 +209,15 @@ Boolean DoWeHaveQuickTime (void)
 		haveIt = false;
 
 	return (haveIt);
+#endif
 }
 
 //--------------------------------------------------------------  DoWeHaveDragManager
 
 Boolean DoWeHaveDragManager (void)
 {
+	return (false);
+#if 0
 	long		theResponse;
 	OSErr		theErr;
 	Boolean		haveIt;
@@ -223,6 +229,7 @@ Boolean DoWeHaveDragManager (void)
 		haveIt = false;
 
 	return (haveIt);
+#endif
 }
 
 //--------------------------------------------------------------  WhatsOurDepth
@@ -231,6 +238,8 @@ Boolean DoWeHaveDragManager (void)
 
 short WhatsOurDepth (void)
 {
+	return (8);
+#if 0
 	short			thisDepth;
 	char			wasState;
 
@@ -250,6 +259,7 @@ short WhatsOurDepth (void)
 		thisDepth = 1;
 
 	return (thisDepth);
+#endif
 }
 
 //--------------------------------------------------------------  CanWeDisplay8Bit
@@ -258,6 +268,8 @@ short WhatsOurDepth (void)
 
 Boolean CanWeDisplay8Bit (GDHandle theDevice)
 {
+	return (true);
+#if 0
 	short		canDepth;
 	Boolean		canDo;
 
@@ -267,6 +279,7 @@ Boolean CanWeDisplay8Bit (GDHandle theDevice)
 		canDo = true;
 
 	return (canDo);
+#endif
 }
 
 //--------------------------------------------------------------  CanWeDisplay4Bit
@@ -307,6 +320,8 @@ Boolean CanWeDisplay1Bit (GDHandle theDevice)
 
 short HowManyUsableScreens (Boolean use1Bit, Boolean use4Bit, Boolean use8Bit)
 {
+	return (1);
+#if 0
 	GDHandle	tempGDevice;
 	short		count;
 
@@ -325,6 +340,7 @@ short HowManyUsableScreens (Boolean use1Bit, Boolean use4Bit, Boolean use8Bit)
 	}
 
 	return (count);
+#endif
 }
 
 //--------------------------------------------------------------  GetDeviceRect
@@ -333,12 +349,15 @@ short HowManyUsableScreens (Boolean use1Bit, Boolean use4Bit, Boolean use8Bit)
 
 void GetDeviceRect (Rect *theRect)
 {
+	return;
+#if 0
 	char		wasState;
 
 	wasState = HGetState((Handle)thisGDevice);
 	HLock((Handle)thisGDevice);
 	*theRect = (*thisGDevice)->gdRect;
 	HSetState((Handle)thisGDevice, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  AreWeColorOrGrayscale
@@ -347,6 +366,8 @@ void GetDeviceRect (Rect *theRect)
 
 Boolean AreWeColorOrGrayscale (void)
 {
+	return true;
+#if 0
 	char		wasState;
 	Boolean		colorOrGray;
 
@@ -365,6 +386,7 @@ Boolean AreWeColorOrGrayscale (void)
 	}
 	else
 		return (false);
+#endif
 }
 
 //--------------------------------------------------------------  SwitchToDepth
@@ -373,6 +395,8 @@ Boolean AreWeColorOrGrayscale (void)
 
 void SwitchToDepth (short newDepth, Boolean doColor)
 {
+	return;
+#if 0
 	OSErr			theErr;
 	short			colorFlag;
 	char			tagByte;
@@ -395,6 +419,7 @@ void SwitchToDepth (short newDepth, Boolean doColor)
 	}
 	else
 		RedAlert(kErrUnnaccounted);
+#endif
 }
 
 //--------------------------------------------------------------  SwitchDepthOrAbort
@@ -403,6 +428,8 @@ void SwitchToDepth (short newDepth, Boolean doColor)
 
 void SwitchDepthOrAbort (void)
 {
+	return;
+#if 0
 	short			usersDecision;
 
 	if (thisMac.canSwitch)
@@ -429,6 +456,7 @@ void SwitchDepthOrAbort (void)
 	}
 	else
 		RedAlert(kErrUnnaccounted);
+#endif
 }
 
 //--------------------------------------------------------------  CheckOurEnvirons
@@ -437,6 +465,8 @@ void SwitchDepthOrAbort (void)
 
 void CheckOurEnvirons (void)
 {
+	return;
+#if 0
 	RgnHandle	grayRegion;
 	char		wasState;
 
@@ -467,6 +497,7 @@ void CheckOurEnvirons (void)
 
 	grayRegion = GetGrayRgn();
 	(void) GetRegionBounds(grayRegion, &(thisMac.gray));
+#endif
 }
 
 //--------------------------------------------------------------  ReflectMonitor2Environs
@@ -504,6 +535,8 @@ void ReflectSecondMonitorEnvirons (Boolean use1Bit, Boolean use4Bit, Boolean use
 
 void HandleDepthSwitching (void)
 {
+	return;
+#if 0
 	if (thisMac.hasColor)
 	{
 		switch (isDepthPref)
@@ -540,6 +573,7 @@ void HandleDepthSwitching (void)
 	}
 
 	thisMac.isDepth = WhatsOurDepth();
+#endif
 }
 
 //--------------------------------------------------------------  RestoreColorDepth
@@ -548,9 +582,12 @@ void HandleDepthSwitching (void)
 
 void RestoreColorDepth (void)
 {
+	return;
+#if 0
 	if ((thisMac.hasColor) && ((thisMac.wasDepth != thisMac.isDepth) ||
 			(thisMac.wasColorOrGray != AreWeColorOrGrayscale())))
 		SwitchToDepth(thisMac.wasDepth, true);
+#endif
 }
 
 //--------------------------------------------------------------  CheckMemorySize
@@ -561,6 +598,8 @@ void RestoreColorDepth (void)
 
 void CheckMemorySize (void)
 {
+	return;
+#if 0
 	#define		kBaseBytesNeeded	614400L					// 600K Base memory
 	#define		kPaddingBytes		204800L					// 200K Padding
 	long		bytesNeeded, bytesAvail;
@@ -689,6 +728,7 @@ void CheckMemorySize (void)
 #endif
 		ExitToShell();
 	}
+#endif
 }
 
 //--------------------------------------------------------------  SetAppMemorySize
@@ -698,6 +738,8 @@ void CheckMemorySize (void)
 
 void SetAppMemorySize (long newSize)
 {
+	return;
+#if 0
 	Handle		tempResource;
 	short		oldResFile;
 	short		i;
@@ -730,5 +772,6 @@ void SetAppMemorySize (long newSize)
 	UpdateResFile(thisMac.thisResFile);
 	FlushVol(nil, 0);
 	UseResFile(oldResFile);
+#endif
 }
 

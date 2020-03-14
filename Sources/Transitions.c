@@ -17,6 +17,8 @@
 
 void PourScreenOn (Rect *theRect)
 {
+	return;
+#if 0
 	#define		kMaxColumnsWide	96
 	#define		kChipHigh		20
 	#define		kChipWide		16
@@ -67,12 +69,15 @@ void PourScreenOn (Rect *theRect)
 				working = false;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  WipeScreenOn
 
 void WipeScreenOn (short direction, Rect *theRect)
 {
+	return;
+#if 0
 	#define		kWipeRectThick	4
 	Rect		wipeRect;
 	RgnHandle	dummyRgn;
@@ -132,14 +137,18 @@ void WipeScreenOn (short direction, Rect *theRect)
 	}
 
 	DisposeRgn(dummyRgn);
+#endif
 }
 
 //--------------------------------------------------------------  DumpScreenOn
 
 void DumpScreenOn (Rect *theRect)
 {
+	return;
+#if 0
 	CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
 			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 			theRect, theRect, srcCopy, nil);
+#endif
 }
 

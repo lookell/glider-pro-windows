@@ -5,9 +5,10 @@
 //============================================================================
 
 
-#include <NumberFormatting.h>
-#include <Resources.h>
-#include <Sound.h>
+//#include <NumberFormatting.h>
+//#include <Resources.h>
+//#include <Sound.h>
+#include "Macintosh.h"
 #include "About.h"
 #include "DialogUtils.h"
 #include "Environ.h"
@@ -31,6 +32,8 @@ static Boolean			okayButtIsHiLit, clickedDownInOkay;
 
 void DoAbout (void)
 {
+	return;
+#if 0
 	#define			kAboutDialogID			150		// res ID of About dialog
 	#define			kTextItemVers			2		// item number of version text
 	#define			kPictItemMain			4		// item number of main PICT
@@ -86,6 +89,7 @@ void DoAbout (void)
 	DisposeModalFilterUPP(aboutFilterUPP);
 
 	UseResFile(wasResFile);
+#endif
 }
 
 //==============================================================  Static Functions
@@ -94,6 +98,8 @@ void DoAbout (void)
 
 static void HiLiteOkayButton (void)
 {
+	return;
+#if 0
 	#define		kOkayButtPICTHiLit		151		// res ID of unhilit button PICT
 	PicHandle	thePict;
 
@@ -108,6 +114,7 @@ static void HiLiteOkayButton (void)
 			okayButtIsHiLit = true;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  UnHiLiteOkayButton
@@ -116,6 +123,8 @@ static void HiLiteOkayButton (void)
 
 static void UnHiLiteOkayButton (void)
 {
+	return;
+#if 0
 	#define		kOkayButtPICTNotHiLit	150		// res ID of hilit button PICT
 	PicHandle	thePict;
 
@@ -130,6 +139,7 @@ static void UnHiLiteOkayButton (void)
 			okayButtIsHiLit = false;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  UpdateMainPict
@@ -137,6 +147,8 @@ static void UnHiLiteOkayButton (void)
 
 static void UpdateMainPict (DialogPtr theDial)
 {
+	return;
+#if 0
 	Str255		theStr, theStr2;
 	long		totalSize, contigSize;
 
@@ -160,6 +172,7 @@ static void UpdateMainPict (DialogPtr theDial)
 	NumToString((long)thisMac.isDepth, theStr2);
 	PasStringConcat(theStr, theStr2);
 	DrawDialogUserText2(theDial, 8, theStr);
+#endif
 }
 
 //--------------------------------------------------------------  AboutFilter
@@ -167,6 +180,8 @@ static void UpdateMainPict (DialogPtr theDial)
 
 static pascal Boolean AboutFilter (DialogPtr theDial, EventRecord *theEvent, short *hit)
 {
+	return (false);
+#if 0
 	Point		mousePt;
 	UInt32		dummyLong;
 	Boolean		handledIt;
@@ -253,5 +268,6 @@ static pascal Boolean AboutFilter (DialogPtr theDial, EventRecord *theEvent, sho
 	}
 
 	return (handledIt);
+#endif
 }
 

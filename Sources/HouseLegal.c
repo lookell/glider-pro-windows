@@ -6,8 +6,9 @@
 //============================================================================
 
 
-#include <NumberFormatting.h>
-#include <StringCompare.h>
+//#include <NumberFormatting.h>
+//#include <StringCompare.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "ObjectEdit.h"
 #include "RectUtils.h"
@@ -41,6 +42,8 @@ extern	short		numberRooms;
 
 Boolean KeepObjectLegal (void)
 {
+	return true;
+#if 0
 	objectType	*theObject;
 	Rect		bounds, roomRect;
 	short		direction, dist;
@@ -594,6 +597,7 @@ Boolean KeepObjectLegal (void)
 #endif
 
 	return (unchanged);
+#endif
 }
 
 //--------------------------------------------------------------  WrapBannerAndTrailer
@@ -603,6 +607,8 @@ Boolean KeepObjectLegal (void)
 #ifndef COMPILEDEMO
 void WrapBannerAndTrailer (void)
 {
+	return;
+#if 0
 	char		wasState;
 
 	wasState = HGetState((Handle)thisHouse);
@@ -612,6 +618,7 @@ void WrapBannerAndTrailer (void)
 	WrapText((*thisHouse)->trailer, 64);
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  ValidateNumberOfRooms
@@ -620,6 +627,8 @@ void WrapBannerAndTrailer (void)
 
 void ValidateNumberOfRooms (void)
 {
+	return;
+#if 0
 	long		countedRooms, reportsRooms;
 	char		wasState;
 
@@ -637,6 +646,7 @@ void ValidateNumberOfRooms (void)
 	}
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  CheckDuplicateFloorSuite
@@ -645,6 +655,8 @@ void ValidateNumberOfRooms (void)
 
 void CheckDuplicateFloorSuite (void)
 {
+	return;
+#if 0
 	#define		kRoomsTimesSuites	8192
 	short		i, numRooms, bitPlace;
 	char		*pidgeonHoles;
@@ -679,6 +691,7 @@ void CheckDuplicateFloorSuite (void)
 	HSetState((Handle)thisHouse, wasState);
 
 	DisposePtr((Ptr)pidgeonHoles);
+#endif
 }
 
 //--------------------------------------------------------------  CompressHouse
@@ -687,6 +700,8 @@ void CheckDuplicateFloorSuite (void)
 
 void CompressHouse (void)
 {
+	return;
+#if 0
 	short		wasFirstRoom, roomNumber, probe;
 	char		wasState;
 	Boolean		compressing, probing;
@@ -731,6 +746,7 @@ void CompressHouse (void)
 	while (compressing);
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  LopOffExtraRooms
@@ -739,6 +755,8 @@ void CompressHouse (void)
 
 void LopOffExtraRooms (void)
 {
+	return;
+#if 0
 	long		newSize;
 	short		r, count;
 	char		wasState;
@@ -776,6 +794,7 @@ void LopOffExtraRooms (void)
 		numberRooms = (*thisHouse)->nRooms;
 	}
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  ValidateRoomNumbers
@@ -784,6 +803,8 @@ void LopOffExtraRooms (void)
 
 void ValidateRoomNumbers (void)
 {
+	return;
+#if 0
 	short		i, numRooms;
 	char		wasState;
 	Str255		message;
@@ -825,6 +846,7 @@ void ValidateRoomNumbers (void)
 	}
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  CountUntitledRooms
@@ -833,6 +855,8 @@ void ValidateRoomNumbers (void)
 
 void CountUntitledRooms (void)
 {
+	return;
+#if 0
 	short		i, numRooms;
 	char		wasState;
 
@@ -848,6 +872,7 @@ void CountUntitledRooms (void)
 	}
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  CheckRoomNameLength
@@ -856,6 +881,8 @@ void CountUntitledRooms (void)
 
 void CheckRoomNameLength (void)
 {
+	return;
+#if 0
 	short		i, numRooms;
 	char		wasState;
 
@@ -876,6 +903,7 @@ void CheckRoomNameLength (void)
 	}
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  MakeSureNumObjectsJives
@@ -884,6 +912,8 @@ void CheckRoomNameLength (void)
 
 void MakeSureNumObjectsJives (void)
 {
+	return;
+#if 0
 	short		i, h, numRooms, count;
 	char		wasState;
 
@@ -910,6 +940,7 @@ void MakeSureNumObjectsJives (void)
 	}
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  KeepAllObjectsLegal
@@ -918,6 +949,8 @@ void MakeSureNumObjectsJives (void)
 
 void KeepAllObjectsLegal (void)
 {
+	return;
+#if 0
 	short		i, h, numRooms;
 	char		wasState;
 	Str255		message;
@@ -952,6 +985,7 @@ void KeepAllObjectsLegal (void)
 	}
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  CheckForStaircasePairs
@@ -960,6 +994,8 @@ void KeepAllObjectsLegal (void)
 
 void CheckForStaircasePairs (void)
 {
+	return;
+#if 0
 	short		i, h, g, numRooms, neighbor;
 	char		wasState;
 	Boolean		hasStairs;
@@ -1042,6 +1078,7 @@ void CheckForStaircasePairs (void)
 	}
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 #endif
 
@@ -1051,6 +1088,8 @@ void CheckForStaircasePairs (void)
 
 void CheckHouseForProblems (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	Str255		message, message2;
 	short		wasActive;
@@ -1214,6 +1253,7 @@ void CheckHouseForProblems (void)
 	CloseMessageWindow();
 	ForceThisRoom(wasRoom);
 	objActive = wasActive;
+#endif
 #endif
 }
 

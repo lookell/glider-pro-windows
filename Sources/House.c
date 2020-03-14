@@ -5,10 +5,11 @@
 //============================================================================
 
 
-#include <Navigation.h>
-#include <NumberFormatting.h>
-#include <Resources.h>
-#include <Sound.h>
+//#include <Navigation.h>
+//#include <NumberFormatting.h>
+//#include <Resources.h>
+//#include <Sound.h>
+#include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "House.h"
@@ -45,6 +46,8 @@ extern	Boolean		twoPlayerGame, wardBitSet, phoneBitSet;
 #ifndef COMPILEDEMO
 Boolean CreateNewHouse (void)
 {
+	return false;
+#if 0
 	AEKeyword			theKeyword;
 	DescType			actualType;
 	Size				actualSize;
@@ -97,6 +100,7 @@ Boolean CreateNewHouse (void)
 		return (false);
 
 	return (true);
+#endif
 }
 #endif
 
@@ -107,6 +111,8 @@ Boolean CreateNewHouse (void)
 #ifndef COMPILEDEMO
 Boolean InitializeEmptyHouse (void)
 {
+	return false;
+#if 0
 	houseType		*thisHousePtr;
 	Str255			tempStr;
 
@@ -158,6 +164,7 @@ Boolean InitializeEmptyHouse (void)
 	ReflectCurrentRoom(true);
 
 	return (true);
+#endif
 }
 #endif
 
@@ -169,6 +176,8 @@ Boolean InitializeEmptyHouse (void)
 
 short RealRoomNumberCount (void)
 {
+	return 0;
+#if 0
 	short		realRoomCount, i;
 	char		wasState;
 
@@ -186,6 +195,7 @@ short RealRoomNumberCount (void)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (realRoomCount);
+#endif
 }
 
 //--------------------------------------------------------------  GetFirstRoomNumber
@@ -195,6 +205,8 @@ short RealRoomNumberCount (void)
 
 short GetFirstRoomNumber (void)
 {
+	return -1;
+#if 0
 	short		firstRoom;
 	char		wasState;
 
@@ -214,6 +226,7 @@ short GetFirstRoomNumber (void)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (firstRoom);
+#endif
 }
 
 //--------------------------------------------------------------  WhereDoesGliderBegin
@@ -223,6 +236,8 @@ short GetFirstRoomNumber (void)
 
 void WhereDoesGliderBegin (Rect *theRect, short mode)
 {
+	return;
+#if 0
 	Point		initialPt;
 	char		wasState;
 
@@ -237,6 +252,7 @@ void WhereDoesGliderBegin (Rect *theRect, short mode)
 	HSetState((Handle)thisHouse, wasState);
 	QSetRect(theRect, 0, 0, kGliderWide, kGliderHigh);
 	QOffsetRect(theRect, initialPt.h, initialPt.v);
+#endif
 }
 
 //--------------------------------------------------------------  HouseHasOriginalPicts
@@ -245,10 +261,13 @@ void WhereDoesGliderBegin (Rect *theRect, short mode)
 
 Boolean HouseHasOriginalPicts (void)
 {
+	return false;
+#if 0
 	short		nPicts;
 
 	nPicts = Count1Resources('PICT');
 	return (nPicts > 0);
+#endif
 }
 
 //--------------------------------------------------------------  CountHouseLinks
@@ -257,6 +276,8 @@ Boolean HouseHasOriginalPicts (void)
 
 short CountHouseLinks (void)
 {
+	return 0;
+#if 0
 	houseType	*thisHousePtr;
 	short		numRooms, numLinks;
 	short		r, i, what;
@@ -304,6 +325,7 @@ short CountHouseLinks (void)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (numLinks);
+#endif
 }
 
 //--------------------------------------------------------------  GenerateLinksList
@@ -316,6 +338,8 @@ short CountHouseLinks (void)
 #ifndef COMPILEDEMO
 void GenerateLinksList (void)
 {
+	return;
+#if 0
 	houseType	*thisHousePtr;
 	objectType	thisObject;
 	short		numLinks, numRooms, r, i, what;
@@ -382,6 +406,7 @@ void GenerateLinksList (void)
 	}
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 #endif
 
@@ -392,6 +417,8 @@ void GenerateLinksList (void)
 #ifndef COMPILEDEMO
 void SortRoomsObjects (short which)
 {
+	return;
+#if 0
 	short		probe, probe2, room, obj;
 	Boolean		busy, looking;
 
@@ -437,6 +464,7 @@ void SortRoomsObjects (short which)
 			busy = false;
 	}
 	while (busy);
+#endif
 }
 #endif
 
@@ -447,6 +475,8 @@ void SortRoomsObjects (short which)
 #ifndef COMPILEDEMO
 void SortHouseObjects (void)
 {
+	return;
+#if 0
 	houseType	*thisHousePtr;
 	short		numLinks, numRooms, r, i, l;
 	char		wasState;
@@ -500,6 +530,7 @@ void SortHouseObjects (void)
 	if (linksList != nil)
 		DisposePtr((Ptr)linksList);
 	ForceThisRoom(thisRoomNumber);
+#endif
 }
 #endif
 
@@ -510,6 +541,8 @@ void SortHouseObjects (void)
 
 short CountRoomsVisited (void)
 {
+	return 0;
+#if 0
 	houseType	*thisHousePtr;
 	short		numRooms, r, count;
 	char		wasState;
@@ -528,6 +561,7 @@ short CountRoomsVisited (void)
 
 	HSetState((Handle)thisHouse, wasState);
 	return (count);
+#endif
 }
 
 //--------------------------------------------------------------  GenerateRetroLinks
@@ -537,6 +571,8 @@ short CountRoomsVisited (void)
 
 void GenerateRetroLinks (void)
 {
+	return;
+#if 0
 	houseType	*thisHousePtr;
 	objectType	thisObject;
 	short		i, r, numRooms, floor, suite;
@@ -610,6 +646,7 @@ void GenerateRetroLinks (void)
 	}
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateGoToDialog
@@ -617,9 +654,12 @@ void GenerateRetroLinks (void)
 
 void UpdateGoToDialog (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
 	FrameDialogItemC(theDialog, 10, kRedOrangeColor8);
+#endif
 }
 
 //--------------------------------------------------------------  GoToFilter
@@ -627,6 +667,8 @@ void UpdateGoToDialog (DialogPtr theDialog)
 
 pascal Boolean GoToFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return (false);
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -657,6 +699,7 @@ pascal Boolean GoToFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoGoToDialog
@@ -665,6 +708,8 @@ pascal Boolean GoToFilter (DialogPtr dial, EventRecord *event, short *item)
 
  void DoGoToDialog (void)
  {
+	 return;
+#if 0
  	#define			kGoToFirstButt		2
  	#define			kGoToPrevButt		3
  	#define			kGoToFSButt			4
@@ -736,6 +781,7 @@ pascal Boolean GoToFilter (DialogPtr dial, EventRecord *event, short *item)
 		else
 			SysBeep(1);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ConvertHouseVer1To2
@@ -745,6 +791,8 @@ pascal Boolean GoToFilter (DialogPtr dial, EventRecord *event, short *item)
 
 void ConvertHouseVer1To2 (void)
 {
+	return;
+#if 0
 	Str255		roomStr, message;
 	short		wasRoom, floor, suite;
 	short		i, h, numRooms;
@@ -817,12 +865,15 @@ void ConvertHouseVer1To2 (void)
 	InitCursor();
 	CloseMessageWindow();
 	ForceThisRoom(wasRoom);
+#endif
 }
 
 //--------------------------------------------------------------  ShiftWholeHouse
 
 void ShiftWholeHouse (short howFar)
 {
+	return;
+#if 0
 #pragma unused (howFar)
 	short		wasRoom;
 	short		i, h, numRooms;
@@ -856,5 +907,6 @@ void ShiftWholeHouse (short howFar)
 
 	InitCursor();
 	CloseMessageWindow();
+#endif
 }
 

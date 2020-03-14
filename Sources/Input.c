@@ -5,7 +5,8 @@
 //============================================================================
 
 
-#include <ToolUtils.h>
+//#include <ToolUtils.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
@@ -43,15 +44,20 @@ extern	Boolean		quitting, playing, onePlayerLeft, twoPlayerGame, demoGoing;
 
 void LogDemoKey (char keyIs)
 {
+	return;
+#if 0
 	demoData[demoIndex].frame = gameFrame;
 	demoData[demoIndex].key = keyIs;
 	demoIndex++;
+#endif
 }
 
 //--------------------------------------------------------------  DoCommandKey
 
 void DoCommandKey (void)
 {
+	return;
+#if 0
 	if (BitTst(&theKeys, kQKeyMap))
 	{
 		playing = false;
@@ -70,12 +76,15 @@ void DoCommandKey (void)
 		CopyRectWorkToMain(&workSrcRect);
 		RefreshScoreboard(kNormalTitleMode);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoPause
 
 void DoPause (void)
 {
+	return;
+#if 0
 	Rect		bounds;
 
 	SetPort((GrafPtr)mainWindow);
@@ -114,12 +123,15 @@ void DoPause (void)
 	}
 	while ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) ||
 			(!isEscPauseKey && BitTst(&theKeys, kTabKeyMap)));
+#endif
 }
 
 //--------------------------------------------------------------  DoBatteryEngaged
 
 void DoBatteryEngaged (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	if (thisGlider->facing == kFaceLeft)
 	{
 		if (thisGlider->tipped)
@@ -153,12 +165,15 @@ void DoBatteryEngaged (gliderPtr thisGlider)
 			batteryFrame = 0;
 		batteryWasEngaged = true;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoHeliumEngaged
 
 void DoHeliumEngaged (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	thisGlider->vDesiredVel = -kHeliumLift;
 	batteryTotal++;
 
@@ -179,12 +194,15 @@ void DoHeliumEngaged (gliderPtr thisGlider)
 			batteryFrame = 0;
 		batteryWasEngaged = true;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  GetDemoInput
 
  void GetDemoInput (gliderPtr thisGlider)
  {
+ 	return;
+#if 0
  	if (thisGlider->which == kPlayer1)
 	{
 		GetKeys(theKeys);
@@ -274,12 +292,15 @@ void DoHeliumEngaged (gliderPtr thisGlider)
 			DoPause();
 		}
  	}
+#endif
  }
 
 //--------------------------------------------------------------  GetInput
 
 void GetInput (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	if (thisGlider->which == kPlayer1)
 	{
 		GetKeys(theKeys);
@@ -376,12 +397,15 @@ void GetInput (gliderPtr thisGlider)
 			DoPause();
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  QuerySaveGame
 
 Boolean QuerySaveGame (void)
 {
+	return false;
+#if 0
 	#define		kSaveGameAlert		1041
 	#define		kYesSaveGameButton	1
 	short		hitWhat;
@@ -394,5 +418,6 @@ Boolean QuerySaveGame (void)
 		return (true);
 	else
 		return (false);
+#endif
 }
 

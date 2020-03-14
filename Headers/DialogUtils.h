@@ -5,7 +5,8 @@
 //============================================================================
 
 
-#include <Dialogs.h>
+//#include <Dialogs.h>
+#include "Macintosh.h"
 
 
 void BringUpDialog (DialogPtr *theDialog, short dialogID);

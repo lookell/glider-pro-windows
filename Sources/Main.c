@@ -6,8 +6,9 @@
 //============================================================================
 
 
-#include <Resources.h>
-#include <Sound.h>
+//#include <Resources.h>
+//#include <Sound.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "House.h"
@@ -51,6 +52,8 @@ extern Boolean		doPrettyMap, doBitchDialogs;
 
 void ReadInPrefs (void)
 {
+	return;
+#if 0
 	prefsInfo	thePrefs;
 
 	if (LoadPrefs(&thePrefs, kPrefsVersion))
@@ -198,6 +201,7 @@ void ReadInPrefs (void)
 		isSoundOn = false;
 	else
 		isSoundOn = true;
+#endif
 }
 
 //--------------------------------------------------------------  WriteOutPrefs
@@ -207,6 +211,8 @@ void ReadInPrefs (void)
 
 void WriteOutPrefs (void)
 {
+	return;
+#if 0
 	prefsInfo	thePrefs;
 
 	UnivGetSoundVolume(&isVolume, thisMac.hasSM3);
@@ -276,6 +282,7 @@ void WriteOutPrefs (void)
 		SysBeep(1);
 
 	UnivSetSoundVolume(wasVolume, thisMac.hasSM3);
+#endif
 }
 
 //--------------------------------------------------------------  main
@@ -283,6 +290,8 @@ void WriteOutPrefs (void)
 
 void main (void)
 {
+	return;
+#if 0
 //	long		wasSeed;
 	long		theErr;
 	OSErr		fileErr;
@@ -382,5 +391,6 @@ void main (void)
 	RestoreColorDepth();
 	FlushEvents(everyEvent, 0);
 //	theErr = LoadScrap();
+#endif
 }
 

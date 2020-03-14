@@ -5,7 +5,8 @@
 //============================================================================
 
 
-#include <Movies.h>
+//#include <Movies.h>
+#include "Macintosh.h"
 
 
 extern	Rect		blowerSrcRect;

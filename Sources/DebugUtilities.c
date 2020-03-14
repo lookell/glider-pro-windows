@@ -7,7 +7,8 @@
 /*============================================================*/
 
 
-#include <NumberFormatting.h>
+//#include <NumberFormatting.h>
+#include "Macintosh.h"
 #include "Externs.h"
 
 
@@ -19,6 +20,8 @@ short			barGraphHori = 0;
 
 void MonitorWait (void)
 {
+	return;
+#if 0
 	GrafPtr			wasPort, tempPort;
 	Rect			tempRect;
 
@@ -33,12 +36,15 @@ void MonitorWait (void)
 	ClosePort(tempPort);
 
 	SetPort((GrafPtr)wasPort);
+#endif
 }
 
 //--------------------------------------------------------------  DisplayRect
 
 void DisplayRect (Rect *theRect)
 {
+	return;
+#if 0
 	GrafPtr			wasPort, tempPort;
 
 	GetPort(&wasPort);
@@ -50,6 +56,7 @@ void DisplayRect (Rect *theRect)
 
 	ClosePort(tempPort);
 	SetPort((GrafPtr)wasPort);
+#endif
 }
 
 
@@ -58,6 +65,8 @@ void DisplayRect (Rect *theRect)
 void FlashRect (Rect *theRect)
 
 {
+	return;
+#if 0
 	GrafPtr			wasPort, tempPort;
 
 	GetPort(&wasPort);
@@ -72,12 +81,15 @@ void FlashRect (Rect *theRect)
 
 	ClosePort(tempPort);
 	SetPort((GrafPtr)wasPort);
+#endif
 }
 
 //--------------------------------------------------------------  CheckLegitRect
 
 void CheckLegitRect(Rect *srcRect, Rect *inRect)
 {
+	return;
+#if 0
 	Rect			dummyRect;
 
 	if ((srcRect->left > srcRect->right) || (srcRect->top > srcRect->bottom))
@@ -85,6 +97,7 @@ void CheckLegitRect(Rect *srcRect, Rect *inRect)
 
 	if (!SectRect(srcRect, inRect, &dummyRect))
 		DebugStr("\pSource Rectangle not Secting Target Rectangle");
+#endif
 }
 
 
@@ -93,6 +106,8 @@ void CheckLegitRect(Rect *srcRect, Rect *inRect)
 void DisplayLong (long theValue)
 
 {
+	return;
+#if 0
 	GrafPtr			wasPort, tempPort;
 	Str255			tempStr;
 	Rect			tempRect;
@@ -117,6 +132,7 @@ void DisplayLong (long theValue)
 
 	ClosePort(tempPort);
 	SetPort((GrafPtr)wasPort);
+#endif
 }
 
 
@@ -125,6 +141,8 @@ void DisplayLong (long theValue)
 void DisplayShort(short theValue)
 
 {
+	return;
+#if 0
 	GrafPtr			wasPort, tempPort;
 	Str255			tempStr;
 	Rect			tempRect;
@@ -149,6 +167,7 @@ void DisplayShort(short theValue)
 
 	ClosePort(tempPort);
 	SetPort((GrafPtr)wasPort);
+#endif
 }
 
 
@@ -156,6 +175,8 @@ void DisplayShort(short theValue)
 
 void FlashLong(long theValue)
 {
+	return;
+#if 0
 	GrafPtr			wasPort, tempPort;
 	Str255			tempStr;
 	Rect			tempRect;
@@ -173,6 +194,7 @@ void FlashLong(long theValue)
 
 	ClosePort(tempPort);
 	SetPort((GrafPtr)wasPort);
+#endif
 }
 
 
@@ -180,6 +202,8 @@ void FlashLong(long theValue)
 
 void FlashShort (short theValue)
 {
+	return;
+#if 0
 	GrafPtr			wasPort, tempPort;
 	Str255			tempStr;
 	Rect			tempRect;
@@ -197,6 +221,7 @@ void FlashShort (short theValue)
 
 	ClosePort(tempPort);
 	SetPort((GrafPtr)wasPort);
+#endif
 }
 
 
@@ -205,6 +230,8 @@ void FlashShort (short theValue)
 void DoBarGraph (short theValue, short downScreen, short maxDown, short scaleIt)
 
 {
+	return;
+#if 0
 	GrafPtr			wasPort, tempPort;
 
 	GetPort(&wasPort);
@@ -253,6 +280,7 @@ void DoBarGraph (short theValue, short downScreen, short maxDown, short scaleIt)
 
 	ClosePort(tempPort);
 	SetPort((GrafPtr)wasPort);
+#endif
 }
 
 
@@ -261,6 +289,8 @@ void DoBarGraph (short theValue, short downScreen, short maxDown, short scaleIt)
 short BetaOkay (void)
 
 {
+	return 0;
+#if 0
 	DateTimeRec		dateRecord;
 	UInt32	theseSeconds;
 	Boolean			stillCool;
@@ -274,31 +304,40 @@ short BetaOkay (void)
 		stillCool = false;
 
 	return((short)stillCool);
+#endif
 }
 
 //--------------------------------------------------------------  DebugNum
 
 void DebugNum (long theNum)
 {
+	return;
+#if 0
 	Str255		theStr;
 	NumToString(theNum, theStr);
 	DebugStr(theStr);
+#endif
 }
 
 //--------------------------------------------------------------  DisplayCTSeed
 
 void DisplayCTSeed (CGrafPtr who)
 {
+	return;
+#if 0
 	long		theSeed;
 
 	theSeed = (**((**(who->portPixMap)).pmTable)).ctSeed;
 	DisplayLong(theSeed);
+#endif
 }
 
 //--------------------------------------------------------------  FillScreenRed
 
 void FillScreenRed (void)
 {
+	return;
+#if 0
 	GrafPtr			wasPort, tempPort;
 
 	GetPort(&wasPort);
@@ -309,12 +348,15 @@ void FillScreenRed (void)
 	PaintRect(&qd.screenBits.bounds);
 	ClosePort(tempPort);
 	SetPort((GrafPtr)wasPort);
+#endif
 }
 
 //--------------------------------------------------------------  DumpToResEditFile
 
 void DumpToResEditFile (Ptr data, long dataSize)
 {
+	return;
+#if 0
 	DateTimeRec		timeRec;
 	Str32			filesName, dateStr;
 	Handle			newResource;
@@ -351,5 +393,6 @@ void DumpToResEditFile (Ptr data, long dataSize)
 		DebugStr("\pPtrToHand");
 	AddResource(newResource, 'demo', 128, "\p");
 	ChangedResource(newResource);
+#endif
 }
 

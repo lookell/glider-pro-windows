@@ -6,7 +6,8 @@
 //============================================================================
 
 
-#include <TextUtils.h>
+//#include <TextUtils.h>
+#include "Macintosh.h"
 #include "Externs.h"
 
 
@@ -17,11 +18,14 @@
 
 void PasStringCopy (StringPtr p1, StringPtr p2)
 {
+	return;
+#if 0
 	register short		stringLength;
 
 	stringLength = *p2++ = *p1++;
 	while (--stringLength >= 0)
 		*p2++ = *p1++;
+#endif
 }
 
 //--------------------------------------------------------------  WhichStringFirst
@@ -33,6 +37,8 @@ void PasStringCopy (StringPtr p1, StringPtr p2)
 
 short WhichStringFirst (StringPtr p1, StringPtr p2)
 {
+	return 0;
+#if 0
 	short		smallestLength, seek, greater;
 	char		char1, char2;
 	Boolean		foundIt;
@@ -79,6 +85,7 @@ short WhichStringFirst (StringPtr p1, StringPtr p2)
 	while (!foundIt);
 
 	return (greater);
+#endif
 }
 
 //--------------------------------------------------------------  PasStringCopyNum
@@ -88,6 +95,8 @@ short WhichStringFirst (StringPtr p1, StringPtr p2)
 
 void PasStringCopyNum (StringPtr p1, StringPtr p2, short charsToCopy)
 {
+	return;
+#if 0
 	short		i;
 
 	if (charsToCopy > *p1)		// if trying to copy more chars than there are
@@ -100,6 +109,7 @@ void PasStringCopyNum (StringPtr p1, StringPtr p2, short charsToCopy)
 
 	for (i = 0; i < charsToCopy; i++)
 		*p2++ = *p1++;
+#endif
 }
 
 //--------------------------------------------------------------  PasStringConcat
@@ -108,6 +118,8 @@ void PasStringCopyNum (StringPtr p1, StringPtr p2, short charsToCopy)
 
 void PasStringConcat (StringPtr p1, StringPtr p2)
 {
+	return;
+#if 0
 	short		wasLength, addedLength, i;
 
 	wasLength = *p1;
@@ -128,6 +140,7 @@ void PasStringConcat (StringPtr p1, StringPtr p2)
 
 	for (i = 0; i < addedLength; i++)
 		*p1++ = *p2++;
+#endif
 }
 
 //--------------------------------------------------------------  GetLineOfText
@@ -139,6 +152,8 @@ void PasStringConcat (StringPtr p1, StringPtr p2)
 
 void GetLineOfText (StringPtr srcStr, short index, StringPtr textLine)
 {
+	return;
+#if 0
 	short		i, srcLength, count, start, stop;
 	Boolean		foundIt;
 
@@ -205,6 +220,7 @@ void GetLineOfText (StringPtr srcStr, short index, StringPtr textLine)
 		}
 		textLine[0] = count;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  WrapText
@@ -215,6 +231,8 @@ void GetLineOfText (StringPtr srcStr, short index, StringPtr textLine)
 
 void WrapText (StringPtr theText, short maxChars)
 {
+	return;
+#if 0
 	short		lastChar, count, chars, spaceIs;
 	Boolean		foundEdge, foundSpace;
 
@@ -247,6 +265,7 @@ void WrapText (StringPtr theText, short maxChars)
 		}
 	}
 	while (count < lastChar);
+#endif
 }
 
 //--------------------------------------------------------------  GetFirstWordOfString
@@ -255,6 +274,8 @@ void WrapText (StringPtr theText, short maxChars)
 
 void GetFirstWordOfString (StringPtr stringIn, StringPtr stringOut)
 {
+	return;
+#if 0
 	short		isLong, spaceAt, i;
 
 	isLong = stringIn[0];
@@ -270,6 +291,7 @@ void GetFirstWordOfString (StringPtr stringIn, StringPtr stringOut)
 		PasStringCopy("\p", stringOut);
 	else
 		PasStringCopyNum(stringIn, stringOut, spaceAt);
+#endif
 }
 
 //--------------------------------------------------------------  CollapseStringToWidth
@@ -281,6 +303,8 @@ void GetFirstWordOfString (StringPtr stringIn, StringPtr stringOut)
 
 void CollapseStringToWidth (StringPtr theStr, short wide)
 {
+	return;
+#if 0
 	short		dotsWide;
 	Boolean 	tooWide;
 
@@ -293,6 +317,7 @@ void CollapseStringToWidth (StringPtr theStr, short wide)
 		if (!tooWide)
 			PasStringConcat(theStr, "\p…");
 	}
+#endif
 }
 
 //--------------------------------------------------------------  GetChooserName
@@ -301,6 +326,8 @@ void CollapseStringToWidth (StringPtr theStr, short wide)
 
 void GetChooserName (StringPtr thisName)
 {
+	return;
+#if 0
 	#define		kChooserStringID	-16096
 	Handle		theNameHandle;
 	Byte		oldState;
@@ -314,16 +341,20 @@ void GetChooserName (StringPtr thisName)
 		}
 	else
 		thisName[0] = 0;
+#endif
 }
 
 //--------------------------------------------------------------  GetLocalizedString
 
 StringPtr GetLocalizedString (short index, StringPtr theString)
 {
+	return (theString);
+#if 0
 	#define		kLocalizedStringsID		150
 
 	GetIndString(theString, kLocalizedStringsID, index);
 	return (theString);
+#endif
 }
 
 

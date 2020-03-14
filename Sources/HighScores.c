@@ -6,11 +6,12 @@
 //============================================================================
 
 
-#include <Folders.h>
-#include <NumberFormatting.h>
-#include <Script.h>
-#include <Sound.h>
-#include <StringCompare.h>
+//#include <Folders.h>
+//#include <NumberFormatting.h>
+//#include <Script.h>
+//#include <Sound.h>
+//#include <StringCompare.h>
+#include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "Environ.h"
@@ -57,6 +58,8 @@ extern	Boolean		quickerTransitions, resumedSavedGame;
 
 void DoHighScores (void)
 {
+	return;
+#if 0
 	Rect		tempRect;
 
 	SpinCursor(3);
@@ -82,6 +85,7 @@ void DoHighScores (void)
 	WaitForInputEvent(30);
 
 	RedrawSplashScreen();
+#endif
 }
 
 //--------------------------------------------------------------  DrawHighScores
@@ -93,6 +97,8 @@ void DoHighScores (void)
 
 void DrawHighScores (void)
 {
+	return;
+#if 0
 	GWorldPtr	tempMap, tempMask;
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
@@ -273,6 +279,7 @@ void DrawHighScores (void)
 
 	ForeColor(blackColor);
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  SortHighScores
@@ -280,6 +287,8 @@ void DrawHighScores (void)
 
 void SortHighScores (void)
 {
+	return;
+#if 0
 	scoresType	tempScores;
 	houseType	*thisHousePtr;
 	long		greatest;
@@ -315,6 +324,7 @@ void SortHighScores (void)
 	thisHousePtr->highScores = tempScores;
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  ZeroHighScores
@@ -322,6 +332,8 @@ void SortHighScores (void)
 
 void ZeroHighScores (void)
 {
+	return;
+#if 0
 	houseType	*thisHousePtr;
 	short		i;
 	char		wasState;
@@ -340,6 +352,7 @@ void ZeroHighScores (void)
 	}
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  ZeroAllButHighestScore
@@ -347,6 +360,8 @@ void ZeroHighScores (void)
 
 void ZeroAllButHighestScore (void)
 {
+	return;
+#if 0
 	houseType	*thisHousePtr;
 	short		i;
 	char		wasState;
@@ -364,6 +379,7 @@ void ZeroAllButHighestScore (void)
 	}
 
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  TestHighScore
@@ -373,6 +389,8 @@ void ZeroAllButHighestScore (void)
 
 Boolean TestHighScore (void)
 {
+	return (false);
+#if 0
 	houseType	*thisHousePtr;
 	short		placing, i;
 	char		wasState;
@@ -423,6 +441,7 @@ Boolean TestHighScore (void)
 	}
 	else
 		return (false);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateNameDialog
@@ -430,6 +449,8 @@ Boolean TestHighScore (void)
 
 void UpdateNameDialog (DialogPtr theDialog)
 {
+	return;
+#if 0
 	short		nChars;
 
 	DrawDialog(theDialog);
@@ -437,6 +458,7 @@ void UpdateNameDialog (DialogPtr theDialog)
 
 	nChars = GetDialogStringLen(theDialog, kHighNameItem);
 	SetDialogNumToStr(theDialog, kNameNCharsItem, (long)nChars);
+#endif
 }
 
 //--------------------------------------------------------------  NameFilter
@@ -444,6 +466,8 @@ void UpdateNameDialog (DialogPtr theDialog)
 
 pascal Boolean NameFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return (false);
+#if 0
 	short		nChars;
 
 	if (keyStroke)
@@ -490,6 +514,7 @@ pascal Boolean NameFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  GetHighScoreName
@@ -497,6 +522,8 @@ pascal Boolean NameFilter (DialogPtr dial, EventRecord *event, short *item)
 
 void GetHighScoreName (short place)
 {
+	return;
+#if 0
 	DialogPtr		theDial;
 	Str255			scoreStr, placeStr, tempStr;
 	short			item;
@@ -530,6 +557,7 @@ void GetHighScoreName (short place)
 
 	DisposeDialog(theDial);
 	DisposeModalFilterUPP(nameFilterUPP);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateBannerDialog
@@ -537,6 +565,8 @@ void GetHighScoreName (short place)
 
 void UpdateBannerDialog (DialogPtr theDialog)
 {
+	return;
+#if 0
 	short		nChars;
 
 	DrawDialog(theDialog);
@@ -544,6 +574,7 @@ void UpdateBannerDialog (DialogPtr theDialog)
 
 	nChars = GetDialogStringLen(theDialog, kHighBannerItem);
 	SetDialogNumToStr(theDialog, kBannerScoreNCharsItem, (long)nChars);
+#endif
 }
 
 //--------------------------------------------------------------  BannerFilter
@@ -551,6 +582,8 @@ void UpdateBannerDialog (DialogPtr theDialog)
 
 pascal Boolean BannerFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return (false);
+#if 0
 	short		nChars;
 
 	if (keyStroke)
@@ -598,6 +631,7 @@ pascal Boolean BannerFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  GetHighScoreBanner
@@ -607,6 +641,8 @@ pascal Boolean BannerFilter (DialogPtr dial, EventRecord *event, short *item)
 
 void GetHighScoreBanner (void)
 {
+	return;
+#if 0
 	DialogPtr		theDial;
 	Str255			tempStr;
 	short			item;
@@ -635,12 +671,15 @@ void GetHighScoreBanner (void)
 
 	DisposeDialog(theDial);
 	DisposeModalFilterUPP(bannerFilterUPP);
+#endif
 }
 
 //--------------------------------------------------------------  CreateScoresFolder
 
 Boolean CreateScoresFolder (long *scoresDirID)
 {
+	return (false);
+#if 0
 	FSSpec		scoresSpec;
 	long		prefsDirID;
 	OSErr		theErr;
@@ -658,12 +697,15 @@ Boolean CreateScoresFolder (long *scoresDirID)
 		return (false);
 
 	return (true);
+#endif
 }
 
 //--------------------------------------------------------------  FindHighScoresFolder
 
 Boolean FindHighScoresFolder (short *volRefNum, long *scoresDirID)
 {
+	return false;
+#if 0
 	CInfoPBRec	theBlock;
 	Str255		nameString;
 	long		prefsDirID;
@@ -713,12 +755,15 @@ Boolean FindHighScoresFolder (short *volRefNum, long *scoresDirID)
 	}
 	else
 		return (true);
+#endif
 }
 
 //--------------------------------------------------------------  OpenHighScoresFile
 
 Boolean OpenHighScoresFile (FSSpec *scoreSpec, short *scoresRefNum)
 {
+	return false;
+#if 0
 	OSErr		theErr;
 
 	theErr = FSpOpenDF(scoreSpec, fsCurPerm, scoresRefNum);
@@ -735,12 +780,15 @@ Boolean OpenHighScoresFile (FSSpec *scoreSpec, short *scoresRefNum)
 		return (false);
 
 	return (true);
+#endif
 }
 
 //--------------------------------------------------------------  WriteScoresToDisk
 
 Boolean WriteScoresToDisk (void)
 {
+	return false;
+#if 0
 	scoresType	*theScores;
 	FSSpec		scoreSpec;
 	long		dirID, byteCount;
@@ -794,12 +842,15 @@ Boolean WriteScoresToDisk (void)
 		return(false);
 
 	return (true);
+#endif
 }
 
 //--------------------------------------------------------------  ReadScoresFromDisk
 
 Boolean ReadScoresFromDisk (void)
 {
+	return false;
+#if 0
 	scoresType	*theScores;
 	FSSpec		scoreSpec;
 	long		dirID, byteCount;
@@ -852,5 +903,6 @@ Boolean ReadScoresFromDisk (void)
 		return(false);
 
 	return (true);
+#endif
 }
 

@@ -5,8 +5,9 @@
 //============================================================================
 
 
-#include <Sound.h>
-#include <ToolUtils.h>
+//#include <Sound.h>
+//#include <ToolUtils.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "House.h"
 #include "MainWindow.h"
@@ -45,6 +46,8 @@ extern	Boolean		noRoomAtAll;
 #ifndef COMPILEDEMO
 short FindObjectSelected (Point where)
 {
+	return kNoObjectSelected;
+#if 0
 	short		found, i;
 
 	found = kNoObjectSelected;
@@ -65,6 +68,7 @@ short FindObjectSelected (Point where)
 		}
 	}
 	return (found);
+#endif
 }
 #endif
 
@@ -72,6 +76,8 @@ short FindObjectSelected (Point where)
 
 void DoSelectionClick (Point where, Boolean isDoubleClick)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	short		direction, dist;
 
@@ -135,6 +141,7 @@ void DoSelectionClick (Point where, Boolean isDoubleClick)
 	}
 	UpdateMenus(false);
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  DragHandle
@@ -142,6 +149,8 @@ void DoSelectionClick (Point where, Boolean isDoubleClick)
 #ifndef COMPILEDEMO
 void DragHandle (Point where)
 {
+	return;
+#if 0
 	short		hDelta, vDelta;
 	Boolean		whoCares;
 
@@ -342,6 +351,7 @@ void DragHandle (Point where)
 
 	fileDirty = true;
 	UpdateMenus(false);
+#endif
 }
 #endif
 
@@ -350,6 +360,8 @@ void DragHandle (Point where)
 #ifndef COMPILEDEMO
 void DragObject (Point where)
 {
+	return;
+#if 0
 	Rect		newRect, wasRect;
 	short		deltaH, deltaV, increment;
 	char		wasState;
@@ -765,6 +777,7 @@ void DragObject (Point where)
 
 	ReadyBackground(thisRoom->background, thisRoom->tiles);
 	DrawThisRoomsObjects();
+#endif
 }
 #endif
 
@@ -772,6 +785,8 @@ void DragObject (Point where)
 
 void DoNewObjectClick (Point where)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	short		whatObject;
 
@@ -785,12 +800,15 @@ void DoNewObjectClick (Point where)
 
 	AddObjectPairing();
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  AddObjectPairing
 
 void AddObjectPairing (void)
 {
+	return;
+#if 0
 	roomType	*testRoomPtr;
 	short		roomNum, emptySlot;
 	char		wasState;
@@ -1147,12 +1165,15 @@ void AddObjectPairing (void)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DeleteObject
 
 void DeleteObject (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	short		i;
 
@@ -1184,12 +1205,15 @@ void DeleteObject (void)
 	ReadyBackground(thisRoom->background, thisRoom->tiles);
 	DrawThisRoomsObjects();
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  DuplicateObject
 
 void DuplicateObject (void)
 {
+	return;
+#if 0
 	objectType	tempObject;
 	Point		placePt;
 	short		direction, dist;
@@ -1367,12 +1391,15 @@ void DuplicateObject (void)
 		else
 			StartMarquee(&roomObjectRects[objActive]);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MoveObject
 
 void MoveObject (short whichWay, Boolean shiftDown)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	Rect		wasRect;
 	short		deltaH, deltaV, increment;
@@ -1769,12 +1796,15 @@ void MoveObject (short whichWay, Boolean shiftDown)
 			StartMarquee(&roomObjectRects[objActive]);
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  DeselectObject
 
 void DeselectObject (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	if ((theMode != kEditMode) || (objActive == kNoObjectSelected))
 		return;
@@ -1783,6 +1813,7 @@ void DeselectObject (void)
 	StopMarquee();
 	UpdateMenus(false);
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  ObjectHasHandle
@@ -1790,6 +1821,8 @@ void DeselectObject (void)
 #ifndef COMPILEDEMO
 Boolean ObjectHasHandle (short *direction, short *dist)
 {
+	return false;
+#if 0
 	if ((objActive == kInitialGliderSelected) ||
 			(objActive == kNoObjectSelected))
 		return (false);
@@ -1934,6 +1967,7 @@ Boolean ObjectHasHandle (short *direction, short *dist)
 		return (false);
 		break;
 	}
+#endif
 }
 #endif
 
@@ -1941,6 +1975,8 @@ Boolean ObjectHasHandle (short *direction, short *dist)
 
 Boolean ObjectIsUpBlower (objectType *who)
 {
+	return false;
+#if 0
 	if ((who->what == kFloorVent) || (who->what == kFloorBlower) ||
 			(who->what == kSewerGrate) || (who->what == kTaper) ||
 			(who->what == kCandle) || (who->what == kStubby) ||
@@ -1956,12 +1992,15 @@ Boolean ObjectIsUpBlower (objectType *who)
 	}
 	else
 		return (false);
+#endif
 }
 
 //--------------------------------------------------------------  HandleBlowerGlider
 
 void HandleBlowerGlider (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	short		direction, dist;
 
@@ -1975,12 +2014,15 @@ void HandleBlowerGlider (void)
 		}
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  SelectNextObject
 
 void SelectNextObject (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	short		direction, dist;
 	Boolean		noneFound;
@@ -2008,12 +2050,15 @@ void SelectNextObject (void)
 	else
 		StartMarquee(&roomObjectRects[objActive]);
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  SelectPrevObject
 
 void SelectPrevObject (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	short		direction, dist;
 	Boolean		noneFound;
@@ -2041,6 +2086,7 @@ void SelectPrevObject (void)
 	else
 		StartMarquee(&roomObjectRects[objActive]);
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  GetThisRoomsObjRects
@@ -2048,6 +2094,8 @@ void SelectPrevObject (void)
 #ifndef COMPILEDEMO
 void GetThisRoomsObjRects (void)
 {
+	return;
+#if 0
 	PicHandle	thePict;
 	short		i, wide, tall;
 
@@ -2338,6 +2386,7 @@ void GetThisRoomsObjRects (void)
 			}
 		}
 	}
+#endif
 }
 #endif
 
@@ -2346,6 +2395,8 @@ void GetThisRoomsObjRects (void)
 #ifndef COMPILEDEMO
 void DrawThisRoomsObjects (void)
 {
+	return;
+#if 0
 	Rect		tempRect;
 	short		i;
 	CGrafPtr	wasCPort;
@@ -2726,6 +2777,7 @@ void DrawThisRoomsObjects (void)
 	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
 			(BitMap *)*GetGWorldPixMap(workSrcMap),
 			&backSrcRect, &backSrcRect, srcCopy, nil);
+#endif
 }
 #endif
 
@@ -2733,6 +2785,8 @@ void DrawThisRoomsObjects (void)
 
 void HiliteAllObjects (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	KeyMap		theseKeys;
 	short		i;
@@ -2762,12 +2816,15 @@ void HiliteAllObjects (void)
 	PenNormal();
 	ResumeMarquee();
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  GoToObjectInRoom
 
 void GoToObjectInRoom (short object, short floor, short suite)
 {
+	return;
+#if 0
 	#ifndef COMPILEDEMO
 	short		itsNumber, direction, dist;
 
@@ -2796,15 +2853,19 @@ void GoToObjectInRoom (short object, short floor, short suite)
 		}
 	}
 	#endif
+#endif
 }
 
 //--------------------------------------------------------------  GoToObjectInRoomNum
 
 void GoToObjectInRoomNum (short object, short roomNum)
 {
+	return;
+#if 0
 	short		floor, suite;
 
 	if (GetRoomFloorSuite(roomNum, &floor, &suite))
 		GoToObjectInRoom(object, floor, suite);
+#endif
 }
 

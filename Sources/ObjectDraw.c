@@ -58,16 +58,21 @@ void DrawLargeClockHands (Point, short, short);
 
 void DrawSimpleBlowers (short what, Rect *theRect)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap),
 			(BitMap *)*GetGWorldPixMap(blowerMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawTiki
 
 void DrawTiki (Rect *theRect, short down)
 {
+	return;
+#if 0
 #define kTikiPoleBase	300
 	long		darkGrayC, lightWoodC, darkWoodC;
 	CGrafPtr	wasCPort;
@@ -109,12 +114,15 @@ void DrawTiki (Rect *theRect, short down)
 			(BitMap *)*GetGWorldPixMap(blowerMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[kTiki], &srcRects[kTiki], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawInvisibleBlower
 
 void DrawInvisibleBlower (Rect *theRect)
 {
+	return;
+#if 0
 	Rect		tempRect;
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
@@ -127,12 +135,15 @@ void DrawInvisibleBlower (Rect *theRect)
 
 	ColorFrameRect(&tempRect, 192);
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawLiftArea
 
 void DrawLiftArea (Rect *theRect)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 
@@ -140,12 +151,15 @@ void DrawLiftArea (Rect *theRect)
 	SetGWorld(backSrcMap, nil);
 	ColorFrameRect(theRect, 192);
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawTable
 
 void DrawTable (Rect *tableTop, short down)
 {
+	return;
+#if 0
 	#define		kTableBaseTop		296
 	#define		kTableShadowTop		312
 	#define		kTableShadowOffset	12
@@ -256,12 +270,15 @@ void DrawTable (Rect *tableTop, short down)
 			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&tableSrc, &tableSrc, &tempRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawShelf
 
 void DrawShelf (Rect *shelfTop)
 {
+	return;
+#if 0
 	#define		kBracketInset		18
 	#define		kShelfDeep			4
 	#define		kBracketThick		5
@@ -351,12 +368,15 @@ void DrawShelf (Rect *shelfTop)
 			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&shelfSrc, &shelfSrc, &tempRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawCabinet
 
 void DrawCabinet (Rect *cabinet)
 {
+	return;
+#if 0
 	#define		kCabinetDeep		4
 	#define		kCabinetShadowOff	6
 	Rect		tempRect;
@@ -481,22 +501,28 @@ void DrawCabinet (Rect *cabinet)
 			&handleSrc, &handleSrc, &tempRect);
 
 	FrameRect(cabinet);
+#endif
 }
 
 //--------------------------------------------------------------  DrawSimpleFurniture
 
 void DrawSimpleFurniture (short what, Rect *theRect)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(furnitureSrcMap),
 			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawCounter
 
 void DrawCounter (Rect *counter)
 {
+	return;
+#if 0
 	#define		kCounterFooterHigh	12
 	#define		kCounterStripWide	6
 	#define		kCounterStripTall	29
@@ -636,12 +662,15 @@ void DrawCounter (Rect *counter)
 		InsetRect(&tempRect, -4, -4);
 		QOffsetRect(&tempRect, kCounterStripWide + width, 0);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawDresser
 
 void DrawDresser (Rect *dresser)
 {
+	return;
+#if 0
 	#define		kDresserTopThick	4
 	#define		kDresserCrease		9
 	#define		kDresserDrawerDrop	12
@@ -766,12 +795,15 @@ void DrawDresser (Rect *dresser)
 			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&rightFootSrc, &rightFootSrc, &dest);
+#endif
 }
 
 //--------------------------------------------------------------  DrawDeckTable
 
 void DrawDeckTable (Rect *tableTop, short down)
 {
+	return;
+#if 0
 	#define		kTableBaseTop		296
 	#define		kTableShadowTop		312
 	#define		kTableShadowOffset	12
@@ -879,12 +911,15 @@ void DrawDeckTable (Rect *tableTop, short down)
 			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&deckSrc, &deckSrc, &tempRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawStool
 
 void DrawStool (Rect *theRect, short down)
 {
+	return;
+#if 0
 	#define		kStoolBase	304
 	long		grayC, dkGrayC;
 	CGrafPtr	wasCPort;
@@ -926,12 +961,15 @@ void DrawStool (Rect *theRect, short down)
 			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[kStool], &srcRects[kStool], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawInvisObstacle
 
 void DrawInvisObstacle (Rect *theRect)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 
@@ -939,12 +977,15 @@ void DrawInvisObstacle (Rect *theRect)
 	SetGWorld(backSrcMap, nil);
 	ColorFrameRect(theRect, k8BrownColor);
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawInvisBounce
 
 void DrawInvisBounce (Rect *theRect)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 
@@ -952,12 +993,15 @@ void DrawInvisBounce (Rect *theRect)
 	SetGWorld(backSrcMap, nil);
 	ColorFrameRect(theRect, k8RedColor);
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawRedClock
 
 void DrawRedClock (Rect *theRect)
 {
+	return;
+#if 0
 	DateTimeRec	timeRec;
 	Rect		dest;
 	short		hour, minutes;
@@ -983,21 +1027,27 @@ void DrawRedClock (Rect *theRect)
 	DrawClockDigit(minutes / 10, &dest);
 	QOffsetRect(&dest, 4, 0);
 	DrawClockDigit(minutes % 10, &dest);
+#endif
 }
 
 //--------------------------------------------------------------  DrawClockDigit
 
 void DrawClockDigit (short number, Rect *dest)
 {
+	return;
+#if 0
 	CopyBits((BitMap *)*GetGWorldPixMap(bonusSrcMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&digits[number], dest, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  DrawBlueClock
 
 void DrawBlueClock (Rect *theRect)
 {
+	return;
+#if 0
 	DateTimeRec	timeRec;
 	Point		dest;
 	short		hour, minutes;
@@ -1013,12 +1063,15 @@ void DrawBlueClock (Rect *theRect)
 	hour = timeRec.hour % 12;
 	minutes = ((timeRec.minute + 2) / 5) % 12;
 	DrawClockHands(dest, minutes, hour);
+#endif
 }
 
 //--------------------------------------------------------------  DrawYellowClock
 
 void DrawYellowClock (Rect *theRect)
 {
+	return;
+#if 0
 	DateTimeRec	timeRec;
 	Point		dest;
 	short		hour, minutes;
@@ -1034,12 +1087,15 @@ void DrawYellowClock (Rect *theRect)
 	hour = timeRec.hour % 12;
 	minutes = ((timeRec.minute + 2) / 5) % 12;
 	DrawClockHands(dest, minutes, hour);
+#endif
 }
 
 //--------------------------------------------------------------  DrawCuckoo
 
 void DrawCuckoo (Rect *theRect)
 {
+	return;
+#if 0
 	DateTimeRec	timeRec;
 	Point		dest;
 	short		hour, minutes;
@@ -1055,12 +1111,15 @@ void DrawCuckoo (Rect *theRect)
 	hour = timeRec.hour % 12;
 	minutes = ((timeRec.minute + 2) / 5) % 12;
 	DrawLargeClockHands(dest, minutes, hour);
+#endif
 }
 
 //--------------------------------------------------------------  DrawClockHands
 
 void DrawClockHands (Point where, short bigHand, short littleHand)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 
@@ -1171,12 +1230,15 @@ void DrawClockHands (Point where, short bigHand, short littleHand)
 	}
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawClockHands
 
 void DrawLargeClockHands (Point where, short bigHand, short littleHand)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 
@@ -1290,22 +1352,28 @@ void DrawLargeClockHands (Point where, short bigHand, short littleHand)
 
 	ForeColor(blackColor);
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawSimplePrizes
 
 void DrawSimplePrizes (short what, Rect *theRect)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
 			(BitMap *)*GetGWorldPixMap(bonusMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[what], &srcRects[what], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawGreaseRt
 
 void DrawGreaseRt (Rect *theRect, short distance, Boolean state)
 {
+	return;
+#if 0
 	Rect		spill, dest;
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
@@ -1333,12 +1401,15 @@ void DrawGreaseRt (Rect *theRect, short distance, Boolean state)
 		PaintRect(&spill);
 		SetGWorld(wasCPort, wasWorld);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawGreaseLf
 
 void DrawGreaseLf (Rect *theRect, short distance, Boolean state)
 {
+	return;
+#if 0
 	Rect		spill, dest;
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
@@ -1366,22 +1437,28 @@ void DrawGreaseLf (Rect *theRect, short distance, Boolean state)
 		PaintRect(&spill);
 		SetGWorld(wasCPort, wasWorld);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawBands
 
 void DrawFoil (Rect *theRect)
 {
+	return;
+#if 0
 	CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
 			(BitMap *)*GetGWorldPixMap(bonusMaskMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&srcRects[kFoil], &srcRects[kFoil], theRect);
+#endif
 }
 
 //--------------------------------------------------------------  DrawInvisBonus
 
 void DrawInvisBonus (Rect *theRect)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 
@@ -1389,12 +1466,15 @@ void DrawInvisBonus (Rect *theRect)
 	SetGWorld(backSrcMap, nil);
 	ColorFrameOval(theRect, 227);
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  DrawSlider
 
 void DrawSlider (Rect *theRect)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 
@@ -1402,5 +1482,6 @@ void DrawSlider (Rect *theRect)
 	SetGWorld(backSrcMap, nil);
 	FrameRect(theRect);
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 

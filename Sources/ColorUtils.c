@@ -7,7 +7,8 @@
 
 
 #include "Externs.h"
-#include <Palettes.h>
+//#include <Palettes.h>
+#include "Macintosh.h"
 
 
 //==============================================================  Functions
@@ -19,6 +20,8 @@
 
 void ColorText (StringPtr theStr, long color)
 {
+	return;
+#if 0
 	RGBColor	theRGBColor, wasColor;
 
 	GetForeColor(&wasColor);
@@ -26,6 +29,7 @@ void ColorText (StringPtr theStr, long color)
 	RGBForeColor(&theRGBColor);
 	DrawString(theStr);
 	RGBForeColor(&wasColor);
+#endif
 }
 
 //--------------------------------------------------------------  ColorRect
@@ -35,6 +39,8 @@ void ColorText (StringPtr theStr, long color)
 
 void ColorRect (Rect *theRect, long color)
 {
+	return;
+#if 0
 	RGBColor	theRGBColor, wasColor;
 
 	GetForeColor(&wasColor);
@@ -42,6 +48,7 @@ void ColorRect (Rect *theRect, long color)
 	RGBForeColor(&theRGBColor);
 	PaintRect(theRect);
 	RGBForeColor(&wasColor);
+#endif
 }
 
 //--------------------------------------------------------------  ColorOval
@@ -51,6 +58,8 @@ void ColorRect (Rect *theRect, long color)
 
 void ColorOval (Rect *theRect, long color)
 {
+	return;
+#if 0
 	RGBColor	theRGBColor, wasColor;
 
 	GetForeColor(&wasColor);
@@ -58,6 +67,7 @@ void ColorOval (Rect *theRect, long color)
 	RGBForeColor(&theRGBColor);
 	PaintOval(theRect);
 	RGBForeColor(&wasColor);
+#endif
 }
 
 //--------------------------------------------------------------  ColorRegion
@@ -67,6 +77,8 @@ void ColorOval (Rect *theRect, long color)
 
 void ColorRegion (RgnHandle theRgn, long color)
 {
+	return;
+#if 0
 	RGBColor	theRGBColor, wasColor;
 
 	GetForeColor(&wasColor);
@@ -74,6 +86,7 @@ void ColorRegion (RgnHandle theRgn, long color)
 	RGBForeColor(&theRGBColor);
 	PaintRgn(theRgn);
 	RGBForeColor(&wasColor);
+#endif
 }
 
 //--------------------------------------------------------------  ColorLine
@@ -83,6 +96,8 @@ void ColorRegion (RgnHandle theRgn, long color)
 
 void ColorLine (short h0, short v0, short h1, short v1, long color)
 {
+	return;
+#if 0
 	RGBColor	theRGBColor, wasColor;
 
 	GetForeColor(&wasColor);
@@ -91,6 +106,7 @@ void ColorLine (short h0, short v0, short h1, short v1, long color)
 	MoveTo(h0, v0);
 	LineTo(h1, v1);
 	RGBForeColor(&wasColor);
+#endif
 }
 
 //--------------------------------------------------------------  HiliteRect
@@ -102,6 +118,8 @@ void ColorLine (short h0, short v0, short h1, short v1, long color)
 
 void HiliteRect (Rect *theRect, short color1, short color2)
 {
+	return;
+#if 0
 	ColorLine(theRect->left, theRect->top, theRect->right - 2,
 			theRect->top, color1);
 	ColorLine(theRect->left, theRect->top, theRect->left,
@@ -110,6 +128,7 @@ void HiliteRect (Rect *theRect, short color1, short color2)
 			theRect->bottom - 2, color2);
 	ColorLine(theRect->left + 1, theRect->bottom - 1, theRect->right - 1,
 			theRect->bottom - 1, color2);
+#endif
 }
 
 //--------------------------------------------------------------  ColorFrameRect
@@ -119,6 +138,8 @@ void HiliteRect (Rect *theRect, short color1, short color2)
 
 void ColorFrameRect (Rect *theRect, long color)
 {
+	return;
+#if 0
 	RGBColor	theRGBColor, wasColor;
 
 	GetForeColor(&wasColor);
@@ -126,6 +147,7 @@ void ColorFrameRect (Rect *theRect, long color)
 	RGBForeColor(&theRGBColor);
 	FrameRect(theRect);
 	RGBForeColor(&wasColor);
+#endif
 }
 
 //--------------------------------------------------------------  ColorFrameWHRect
@@ -136,6 +158,8 @@ void ColorFrameRect (Rect *theRect, long color)
 
 void ColorFrameWHRect (short left, short top, short wide, short high, long color)
 {
+	return;
+#if 0
 	Rect		theRect;
 
 	theRect.left = left;
@@ -143,6 +167,7 @@ void ColorFrameWHRect (short left, short top, short wide, short high, long color
 	theRect.right = left + wide;
 	theRect.bottom = top + high;
 	ColorFrameRect(&theRect, color);
+#endif
 }
 
 //--------------------------------------------------------------  ColorFrameOval
@@ -152,6 +177,8 @@ void ColorFrameWHRect (short left, short top, short wide, short high, long color
 
 void ColorFrameOval (Rect *theRect, long color)
 {
+	return;
+#if 0
 	RGBColor	theRGBColor, wasColor;
 
 	GetForeColor(&wasColor);
@@ -159,6 +186,7 @@ void ColorFrameOval (Rect *theRect, long color)
 	RGBForeColor(&theRGBColor);
 	FrameOval(theRect);
 	RGBForeColor(&wasColor);
+#endif
 }
 
 //--------------------------------------------------------------  LtGrayForeColor
@@ -168,6 +196,8 @@ void ColorFrameOval (Rect *theRect, long color)
 
 void LtGrayForeColor (void)
 {
+	return;
+#if 0
 	RGBColor	color;
 
 	color.red = (unsigned short) 0xBFFF;
@@ -175,6 +205,7 @@ void LtGrayForeColor (void)
 	color.blue = (unsigned short) 0xBFFF;
 
 	RGBForeColor(&color);
+#endif
 }
 
 //--------------------------------------------------------------  GrayForeColor
@@ -184,6 +215,8 @@ void LtGrayForeColor (void)
 
 void GrayForeColor (void)
 {
+	return;
+#if 0
 	RGBColor	color;
 
 	color.red = (unsigned short) 0x7FFF;
@@ -191,6 +224,7 @@ void GrayForeColor (void)
 	color.blue = (unsigned short) 0x7FFF;
 
 	RGBForeColor(&color);
+#endif
 }
 
 //--------------------------------------------------------------  DkGrayForeColor
@@ -200,6 +234,8 @@ void GrayForeColor (void)
 
 void DkGrayForeColor (void)
 {
+	return;
+#if 0
 	RGBColor	color;
 
 	color.red = (unsigned short) 0x3FFF;
@@ -207,6 +243,7 @@ void DkGrayForeColor (void)
 	color.blue = (unsigned short) 0x3FFF;
 
 	RGBForeColor(&color);
+#endif
 }
 
 //--------------------------------------------------------------  RestoreColorsSlam
@@ -217,8 +254,11 @@ void DkGrayForeColor (void)
 
 void RestoreColorsSlam (void)
 {
+	return;
+#if 0
 	RestoreDeviceClut(nil);
 	PaintBehind(nil, GetGrayRgn());
 	DrawMenuBar();
+#endif
 }
 

@@ -30,6 +30,8 @@ extern	Boolean		playerDead, playerSuicide, tvOn;
 
 short WhatAreWeLinkedTo (short where, Byte who)
 {
+	return kLinkedToOther;
+#if 0
 	short		what, whatType;
 	char		wasState;
 
@@ -58,12 +60,15 @@ short WhatAreWeLinkedTo (short where, Byte who)
 	}
 
 	return (whatType);
+#endif
 }
 
 //--------------------------------------------------------------  ReadyGliderFromTransit
 
 void ReadyGliderFromTransit (gliderPtr thisGlider, short toWhat)
 {
+	return;
+#if 0
 	Rect		tempRect;
 
 	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
@@ -144,12 +149,15 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, short toWhat)
 
 	if ((twoPlayerGame) && (thisGlider->which != firstPlayer))
 		TagGliderIdle(thisGlider);
+#endif
 }
 
 //--------------------------------------------------------------  MoveRoomToRoom
 
 void MoveRoomToRoom (gliderPtr thisGlider, short where)
 {
+	return;
+#if 0
 	Rect		enterRect;
 
 	HandleRoomVisitation();
@@ -307,12 +315,15 @@ void MoveRoomToRoom (gliderPtr thisGlider, short where)
 		StartMovie(theMovie);
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  TransportRoomToRoom
 
 void TransportRoomToRoom (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	Boolean		sameRoom;
 
 	SetMusicalMode(kKickGameScoreMode);
@@ -344,6 +355,7 @@ void TransportRoomToRoom (gliderPtr thisGlider)
 		GoToBeginningOfMovie(theMovie);
 		StartMovie(theMovie);
 	}
+#endif
 #endif
 }
 
@@ -351,6 +363,8 @@ void TransportRoomToRoom (gliderPtr thisGlider)
 
 void MoveDuctToDuct (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	Boolean		sameRoom;
 
 	SetMusicalMode(kKickGameScoreMode);
@@ -383,6 +397,7 @@ void MoveDuctToDuct (gliderPtr thisGlider)
 		GoToBeginningOfMovie(theMovie);
 		StartMovie(theMovie);
 	}
+#endif
 #endif
 }
 
@@ -390,6 +405,8 @@ void MoveDuctToDuct (gliderPtr thisGlider)
 
 void MoveMailToMail (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	Boolean		sameRoom;
 
 	SetMusicalMode(kKickGameScoreMode);
@@ -423,12 +440,15 @@ void MoveMailToMail (gliderPtr thisGlider)
 		StartMovie(theMovie);
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  HandleRoomVisitation
 
 void HandleRoomVisitation (void)
 {
+	return;
+#if 0
 	houseType	*thisHousePtr;
 	char		wasState;
 
@@ -442,12 +462,15 @@ void HandleRoomVisitation (void)
 		theScore += kRoomVisitScore;
 		thisRoom->visited = true;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ForceKillGlider
 
 void ForceKillGlider (void)
 {
+	return;
+#if 0
 	if (theGlider.mode == kGliderInLimbo)
 	{
 		if (theGlider2.mode != kGliderFadingOut)
@@ -466,12 +489,15 @@ void ForceKillGlider (void)
 			playerSuicide = true;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  FollowTheLeader
 
 void FollowTheLeader (void)
 {
+	return;
+#if 0
 	short		wasEscaped;
 	Boolean		oneOrTwo;
 
@@ -554,5 +580,6 @@ void FollowTheLeader (void)
 		default:
 		break;
 	}
+#endif
 }
 

@@ -6,11 +6,12 @@
 //============================================================================
 
 
-#include <Folders.h>
-#include <Gestalt.h>
-#include <Script.h>
-#include <TextUtils.h>
-#include <ToolUtils.h>
+//#include <Folders.h>
+//#include <Gestalt.h>
+//#include <Script.h>
+//#include <TextUtils.h>
+//#include <ToolUtils.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 
@@ -38,6 +39,8 @@ void BringUpDeletePrefsAlert (void);
 
 Boolean CanUseFindFolder (void)
 {
+	return false;
+#if 0
 	OSErr		theErr;
 	long		theFeature;
 
@@ -52,12 +55,15 @@ Boolean CanUseFindFolder (void)
 		return(false);
 	else
 		return(true);
+#endif
 }
 
 //--------------------------------------------------------------  GetPrefsFPath
 
 Boolean GetPrefsFPath (long *prefDirID, short *systemVolRef)
 {
+	return false;
+#if 0
 	OSErr		theErr;
 
 	theErr = FindFolder(kOnSystemDisk, kPreferencesFolderType, kCreateFolder,
@@ -66,12 +72,15 @@ Boolean GetPrefsFPath (long *prefDirID, short *systemVolRef)
 		return(false);
 
 	return(true);
+#endif
 }
 
 //--------------------------------------------------------------  CreatePrefsFolder
 
 Boolean CreatePrefsFolder (short *systemVolRef)
 {
+	return false;
+#if 0
 	HFileParam	fileParamBlock;
 	Str255		folderName;
 	OSErr		theErr;
@@ -90,12 +99,15 @@ Boolean CreatePrefsFolder (short *systemVolRef)
 		return(false);
 	}
 	return(true);
+#endif
 }
 
 //--------------------------------------------------------------  WritePrefs
 
 Boolean WritePrefs (long *prefDirID, short *systemVolRef, prefsInfo *thePrefs)
 {
+	return false;
+#if 0
 	OSErr		theErr;
 	short		fileRefNum;
 	long		byteCount;
@@ -141,12 +153,15 @@ Boolean WritePrefs (long *prefDirID, short *systemVolRef, prefsInfo *thePrefs)
 	}
 
 	return(true);
+#endif
 }
 
 //--------------------------------------------------------------  SavePrefs
 
 Boolean SavePrefs (prefsInfo *thePrefs, short versionNow)
 {
+	return false;
+#if 0
 	long		prefDirID;
 	short		systemVolRef;
 
@@ -159,12 +174,15 @@ Boolean SavePrefs (prefsInfo *thePrefs, short versionNow)
 		return(false);
 
 	return(true);
+#endif
 }
 
 //--------------------------------------------------------------  ReadPrefs
 
 OSErr ReadPrefs (long *prefDirID, short *systemVolRef, prefsInfo *thePrefs)
 {
+	return (-1);
+#if 0
 	OSErr		theErr;
 	short		fileRefNum;
 	long		byteCount;
@@ -213,12 +231,15 @@ OSErr ReadPrefs (long *prefDirID, short *systemVolRef, prefsInfo *thePrefs)
 	}
 
 	return(theErr);
+#endif
 }
 
 //--------------------------------------------------------------  DeletePrefs
 
 Boolean DeletePrefs (long *dirID, short *volRef)
 {
+	return false;
+#if 0
 	FSSpec		theSpecs;
 	Str255		fileName = kPrefFileName;
 	OSErr		theErr;
@@ -233,12 +254,15 @@ Boolean DeletePrefs (long *dirID, short *volRef)
 		return(false);
 
 	return(true);
+#endif
 }
 
 //--------------------------------------------------------------  LoadPrefs
 
 Boolean LoadPrefs (prefsInfo *thePrefs, short versionNeed)
 {
+	return false;
+#if 0
 	long		prefDirID;
 	OSErr		theErr;
 	short		systemVolRef;
@@ -266,16 +290,20 @@ Boolean LoadPrefs (prefsInfo *thePrefs, short versionNeed)
 	}
 
 	return (true);
+#endif
 }
 
 //--------------------------------------------------------------  BringUpDeletePrefsAlert
 
 void BringUpDeletePrefsAlert (void)
 {
+	return;
+#if 0
 	short		whoCares;
 
 	InitCursor();
 //	CenterAlert(kNewPrefsAlertID);
 	whoCares = Alert(kNewPrefsAlertID, nil);
+#endif
 }
 

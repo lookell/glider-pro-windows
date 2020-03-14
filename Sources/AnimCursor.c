@@ -6,7 +6,8 @@
 //============================================================================
 
 
-#include <Resources.h>
+//#include <Resources.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 
@@ -43,6 +44,8 @@ Boolean			useColorCursor = false;
 
 Boolean GetMonoCursors (acurHandle ballCursH)
 {
+	return false;
+#if 0
 	short			i, j;
 	CursHandle		cursHdl;
 
@@ -66,6 +69,7 @@ Boolean GetMonoCursors (acurHandle ballCursH)
 		}
 	}
 	return(true);
+#endif
 }
 
 //--------------------------------------------------------------  GetColorCursors
@@ -74,6 +78,8 @@ Boolean GetMonoCursors (acurHandle ballCursH)
 
 Boolean GetColorCursors (acurHandle ballCursH)
 {
+	return false;
+#if 0
 	short			i, j;
 	CCrsrHandle		cursHdl;
 	Boolean			result = true;
@@ -101,6 +107,7 @@ Boolean GetColorCursors (acurHandle ballCursH)
 		InitCursor();						// Show the cursor again (as arrow)
 	}
 	return(result);							// Return to calling proc w/ results
+#endif
 }
 
 //--------------------------------------------------------------  InitAnimatedCursor
@@ -109,6 +116,8 @@ Boolean GetColorCursors (acurHandle ballCursH)
 
 void InitAnimatedCursor (acurHandle ballCursH)
 {
+	return;
+#if 0
 	Boolean			useColor;
 
 	useColor = thisMac.hasColor;
@@ -130,6 +139,7 @@ void InitAnimatedCursor (acurHandle ballCursH)
 	}
 	else
 		RedAlert(kErrFailedResourceLoad);
+#endif
 }
 
 //--------------------------------------------------------------  LoadCursors
@@ -139,7 +149,10 @@ void InitAnimatedCursor (acurHandle ballCursH)
 
 void LoadCursors (void)
 {
+	return;
+#if 0
 	InitAnimatedCursor((acurHandle)GetResource('acur', rAcurID));
+#endif
 }
 
 //--------------------------------------------------------------  DisposCursors
@@ -148,6 +161,8 @@ void LoadCursors (void)
 
 void DisposCursors (void)
 {
+	return;
+#if 0
 	register short		i, j;
 
 	if (animCursorH != nil)
@@ -172,6 +187,7 @@ void DisposCursors (void)
 		ReleaseResource((Handle)animCursorH);
 		animCursorH = nil;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  IncrementCursor
@@ -180,6 +196,8 @@ void DisposCursors (void)
 
 void IncrementCursor (void)
 {
+	return;
+#if 0
 	if (animCursorH == 0)
 		InitAnimatedCursor(nil);
 	if (animCursorH)
@@ -199,6 +217,7 @@ void IncrementCursor (void)
 	}
 	else
 		SetCursor((CursPtr)*GetCursor(watchCursor));
+#endif
 }
 
 //--------------------------------------------------------------  DecrementCursor
@@ -207,6 +226,8 @@ void IncrementCursor (void)
 
 void DecrementCursor (void)
 {
+	return;
+#if 0
 	if (animCursorH == 0)
 		InitAnimatedCursor(nil);
 	if (animCursorH)
@@ -227,6 +248,7 @@ void DecrementCursor (void)
 	}
 	else
 		SetCursor((CursPtr)*GetCursor(watchCursor));
+#endif
 }
 
 //--------------------------------------------------------------  SpinCursor
@@ -235,6 +257,8 @@ void DecrementCursor (void)
 
 void SpinCursor (short incrementIndex)
 {
+	return;
+#if 0
 	UInt32		dummyLong;
 	short		i;
 
@@ -243,6 +267,7 @@ void SpinCursor (short incrementIndex)
 		IncrementCursor();
 		Delay(1, &dummyLong);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  BackSpinCursor
@@ -251,6 +276,8 @@ void SpinCursor (short incrementIndex)
 
 void BackSpinCursor (short decrementIndex)
 {
+	return;
+#if 0
 	UInt32		dummyLong;
 	short		i;
 
@@ -259,5 +286,6 @@ void BackSpinCursor (short decrementIndex)
 		DecrementCursor();
 		Delay(1, &dummyLong);
 	}
+#endif
 }
 

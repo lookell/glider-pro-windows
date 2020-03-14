@@ -5,7 +5,8 @@
 //============================================================================
 
 
-#include <Resources.h>
+//#include <Resources.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "MainWindow.h"
@@ -43,6 +44,8 @@ extern	Boolean		shadowVisible, takingTheStairs;
 
 void DrawLocale (void)
 {
+	return;
+#if 0
 	short		i, roomV;
 	char		wasState;
 	CGrafPtr	wasCPort;
@@ -127,12 +130,15 @@ void DrawLocale (void)
 	takingTheStairs = false;
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  LoadGraphicSpecial
 
 void LoadGraphicSpecial (short resID)
 {
+	return;
+#if 0
 	Rect		bounds;
 	PicHandle	thePicture;
 
@@ -155,12 +161,15 @@ void LoadGraphicSpecial (short resID)
 	DrawPicture(thePicture, &bounds);
 
 	ReleaseResource((Handle)thePicture);
+#endif
 }
 
 //--------------------------------------------------------------  DrawRoomBackground
 
 void DrawRoomBackground (short who, short where, short elevation)
 {
+	return;
+#if 0
 	Rect		src, dest;
 	short		i, pictID;
 	short		tiles[kNumTiles];
@@ -250,12 +259,15 @@ void DrawRoomBackground (short who, short where, short elevation)
 				&src, &dest, srcCopy, nil);
 		QOffsetRect(&dest, kTileWide, 0);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawFloorSupport
 
 void DrawFloorSupport (void)
 {
+	return;
+#if 0
 	Rect		src, dest, whoCares;
 	short		i;
 	CGrafPtr	wasCPort;
@@ -373,21 +385,27 @@ void DrawFloorSupport (void)
 	}
 
 	SetGWorld(wasCPort, wasWorld);
+#endif
 }
 
 //--------------------------------------------------------------  ReadyBackMap
 
 void ReadyBackMap (void)
 {
+	return;
+#if 0
 	CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			&workSrcRect, &workSrcRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  RestoreWorkMap
 
 void RestoreWorkMap (void)
 {
+	return;
+#if 0
 	Rect		dest;
 
 	dest = backSrcRect;
@@ -395,12 +413,15 @@ void RestoreWorkMap (void)
 	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
 			(BitMap *)*GetGWorldPixMap(workSrcMap),
 			&backSrcRect, &backSrcRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  ReadyLevel
 
 void ReadyLevel (void)
 {
+	return;
+#if 0
 	NilSavedMaps();
 
 #ifdef COMPILEQT
@@ -415,24 +436,30 @@ void ReadyLevel (void)
 	DetermineRoomOpenings();
 	DrawLocale();
 	InitGarbageRects();
+#endif
 }
 
 //--------------------------------------------------------------  DrawLighting
 
 void DrawLighting (void)
 {
+	return;
+#if 0
 	if (numLights == 0)
 		return;
 	else
 	{
 		// for future construction
 	}
+#endif
 }
 
 //--------------------------------------------------------------  RedrawRoomLighting
 
 void RedrawRoomLighting (void)
 {
+	return;
+#if 0
 	short		roomV;
 	char		wasState;
 	Boolean		wasLit, isLit;
@@ -458,5 +485,6 @@ void RedrawRoomLighting (void)
 		AddRectToWorkRects(&localRoomsDest[kCentralRoom]);
 		shadowVisible = IsShadowVisible();
 	}
+#endif
 }
 

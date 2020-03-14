@@ -46,6 +46,8 @@ extern	Boolean			twoPlayerGame, paused, hasMirror, splashDrawn;
 
 void InitializeMenus (void)
 {
+	return;
+#if 0
 	appleMenu = GetMenu(kAppleMenuID);
 	if (appleMenu == nil)
 		RedAlert(kErrFailedResourceLoad);
@@ -70,6 +72,7 @@ void InitializeMenus (void)
 		RedAlert(kErrFailedResourceLoad);
 
 	UpdateMenus(false);
+#endif
 }
 
 //--------------------------------------------------------------  GetExtraCursors
@@ -79,6 +82,8 @@ void InitializeMenus (void)
 
 void GetExtraCursors (void)
 {
+	return;
+#if 0
 	handCursorH = GetCursor(kHandCursorID);
 	if (handCursorH == nil)
 		RedAlert(kErrFailedResourceLoad);
@@ -108,6 +113,7 @@ void GetExtraCursors (void)
 		RedAlert(kErrFailedResourceLoad);
 	HLock((Handle)diagCursorH);
 	diagCursor = **diagCursorH;
+#endif
 }
 
 //--------------------------------------------------------------  VariableInit
@@ -117,6 +123,8 @@ void GetExtraCursors (void)
 
 void VariableInit (void)
 {
+	return;
+#if 0
 	short		i;
 
 	shieldPt.h = 0;
@@ -216,5 +224,6 @@ void VariableInit (void)
 	QOffsetRect(&localRoomsDest[kSouthWestRoom], -kRoomWide, kVertLocalOffset);
 	QOffsetRect(&localRoomsDest[kWestRoom], -kRoomWide, 0);
 	QOffsetRect(&localRoomsDest[kNorthWestRoom], -kRoomWide, -kVertLocalOffset);
+#endif
 }
 

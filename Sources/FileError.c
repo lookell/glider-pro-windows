@@ -6,8 +6,9 @@
 //============================================================================
 
 
-#include <NumberFormatting.h>
-#include <TextUtils.h>
+//#include <NumberFormatting.h>
+//#include <TextUtils.h>
+#include "Macintosh.h"
 #include "Externs.h"
 
 
@@ -27,6 +28,8 @@
 
 Boolean CheckFileError (short resultCode, StringPtr fileName)
 {
+	return true;
+#if 0
 	short			dummyInt, stringIndex;
 	Str255			errMessage, errNumString;
 
@@ -97,6 +100,7 @@ Boolean CheckFileError (short resultCode, StringPtr fileName)
 	dummyInt = Alert(rFileErrorAlert, 0L);
 
 	return(false);
+#endif
 }
 
 

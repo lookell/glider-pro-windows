@@ -7,7 +7,8 @@
 
 
 #include "Externs.h"
-#include <AppleEvents.h>
+//#include <AppleEvents.h>
+#include "Macintosh.h"
 #include "House.h"
 
 
@@ -36,11 +37,14 @@ extern	Boolean		quitting;
 
 pascal OSErr DoOpenAppAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 {
+	return (-1);
+#if 0
 #pragma unused (reply, ref)
 	OSErr		theErr;
 
 	theErr = MyGotRequiredParams(theAE);
 	return (theErr);
+#endif
 }
 
 //--------------------------------------------------------------  DoOpenDocAE
@@ -48,6 +52,8 @@ pascal OSErr DoOpenAppAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref
 
 pascal OSErr DoOpenDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 {
+	return (-1);
+#if 0
 #pragma unused (reply, ref)
 	FSSpec			oneFSS;
 	FInfo			finderInfo;
@@ -124,6 +130,7 @@ pascal OSErr DoOpenDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref
 	whoCares = AEDisposeDesc(&docList);
 
 	return theErr;
+#endif
 }
 
 //--------------------------------------------------------------  DoPrintDocAE
@@ -131,6 +138,8 @@ pascal OSErr DoOpenDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref
 
 pascal OSErr DoPrintDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 {
+	return (-1);
+#if 0
 #pragma unused (theAE, reply, ref)
 
 	short		hitWhat;
@@ -139,6 +148,7 @@ pascal OSErr DoPrintDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 re
 	hitWhat = Alert(kNoPrintingAlert, nil);
 
 	return errAEEventNotHandled;
+#endif
 }
 
 //--------------------------------------------------------------  DoQuitAE
@@ -146,6 +156,8 @@ pascal OSErr DoPrintDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 re
 
 pascal OSErr DoQuitAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 {
+	return (-1);
+#if 0
 #pragma unused (reply, ref)
 	OSErr			isHuman;
 
@@ -154,6 +166,7 @@ pascal OSErr DoQuitAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 		quitting = true;
 
 	return isHuman;
+#endif
 }
 
 //--------------------------------------------------------------  MyGotRequiredParams
@@ -161,12 +174,15 @@ pascal OSErr DoQuitAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 
 pascal OSErr MyGotRequiredParams (const AppleEvent *theAE)
 {
+	return (-1);
+#if 0
 	DescType		returnedType;
 	Size			actualSize;
 
 	return (AEGetAttributePtr(theAE, keyMissedKeywordAttr, typeWildCard,
 			&returnedType, 0L, 0, &actualSize) == errAEDescNotFound) ? noErr :
 			errAEParamMissed;
+#endif
 }
 
 //--------------------------------------------------------------  SetUpAppleEvents
@@ -174,6 +190,8 @@ pascal OSErr MyGotRequiredParams (const AppleEvent *theAE)
 
 void SetUpAppleEvents (void)
 {
+	return;
+#if 0
 	OSErr		theErr;
 
 	openAppAEUPP = NewAEEventHandlerProc(DoOpenAppAE);
@@ -204,5 +222,6 @@ void SetUpAppleEvents (void)
 	theErr = AESetInteractionAllowed(kAEInteractWithAll);
 	if (theErr != noErr)
 		YellowAlert(kYellowAppleEventErr, theErr);
+#endif
 }
 

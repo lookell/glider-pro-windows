@@ -9,7 +9,8 @@
 #pragma once
 
 
-#include <Menus.h>
+//#include <Menus.h>
+#include "Macintosh.h"
 
 
 #define kPreferredDepth				8
@@ -228,7 +229,7 @@ typedef	SICN		*SICNList;
 typedef	SICNList	*SICNHand;
 */
 
-#pragma options align=mac68k
+//#pragma options align=mac68k
 
 typedef struct
 {
@@ -266,7 +267,7 @@ typedef struct
 	Boolean		wasPrettyMap, wasBitchDialogs;
 } prefsInfo;
 
-#pragma options align=reset
+//#pragma options align=reset
 
 //--------------------------------------------------------------  Prototypes
 
@@ -343,7 +344,7 @@ void FindOurDevice (void);
 short RandomInt (short);
 long RandomLong (long);
 void InitRandomLongQUS (void);
-unsigned long RandomLongQUS (void);
+UInt32 RandomLongQUS (void);
 //void CenterAlert (short);
 void RedAlert (short);
 //void CreateOffScreenBitMap (Rect *, GrafPtr *);

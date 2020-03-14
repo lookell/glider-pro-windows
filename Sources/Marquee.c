@@ -34,6 +34,8 @@ extern	Rect		leftStartGliderSrc;
 
 void DoMarquee (void)
 {
+	return;
+#if 0
 	if ((!theMarquee.active) || (theMarquee.paused))
 		return;
 
@@ -47,12 +49,15 @@ void DoMarquee (void)
 	PenPat(&theMarquee.pats[theMarquee.index]);
 	DrawMarquee();
 	PenNormal();
+#endif
 }
 
 //--------------------------------------------------------------  StartMarquee
 
 void StartMarquee (Rect *theRect)
 {
+	return;
+#if 0
 	if (theMarquee.active)
 		StopMarquee();
 
@@ -69,12 +74,15 @@ void StartMarquee (Rect *theRect)
 	DrawMarquee();
 	PenNormal();
 	SetCoordinateHVD(theMarquee.bounds.left, theMarquee.bounds.top, -1);
+#endif
 }
 
 //--------------------------------------------------------------  StartMarqueeHandled
 
 void StartMarqueeHandled (Rect *theRect, short direction, short dist)
 {
+	return;
+#if 0
 	if (theMarquee.active)
 		StopMarquee();
 
@@ -132,12 +140,15 @@ void StartMarqueeHandled (Rect *theRect, short direction, short dist)
 	DrawMarquee();
 	PenNormal();
 	SetCoordinateHVD(theMarquee.bounds.left, theMarquee.bounds.top, dist);
+#endif
 }
 
 //--------------------------------------------------------------  StopMarquee
 
 void StopMarquee (void)
 {
+	return;
+#if 0
 	if (gliderMarqueeUp)
 	{
 		DrawGliderMarquee();
@@ -154,23 +165,29 @@ void StopMarquee (void)
 	PenNormal();
 	theMarquee.active = false;
 	SetCoordinateHVD(-1, -1, -1);
+#endif
 }
 
 //--------------------------------------------------------------  PauseMarquee
 
 void PauseMarquee (void)
 {
+	return;
+#if 0
 	if (!theMarquee.active)
 		return;
 
 	theMarquee.paused = true;
 	StopMarquee();
+#endif
 }
 
 //--------------------------------------------------------------  ResumeMarquee
 
 void ResumeMarquee (void)
 {
+	return;
+#if 0
 	if (!theMarquee.paused)
 		return;
 
@@ -181,12 +198,15 @@ void ResumeMarquee (void)
 	}
 	else
 		StartMarquee(&theMarquee.bounds);
+#endif
 }
 
 //--------------------------------------------------------------  DragOutMarqueeRect
 
 void DragOutMarqueeRect (Point start, Rect *theRect)
 {
+	return;
+#if 0
 	Point		wasPt, newPt;
 
 	SetPortWindowPort(mainWindow);
@@ -211,12 +231,15 @@ void DragOutMarqueeRect (Point start, Rect *theRect)
 	}
 	FrameRect(theRect);
 	PenNormal();
+#endif
 }
 
 //--------------------------------------------------------------  DragMarqueeRect
 
 void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 {
+	return;
+#if 0
 	Point		wasPt, newPt;
 	short		deltaH, deltaV;
 
@@ -252,12 +275,15 @@ void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 	*theRect = theMarquee.bounds;
 	PenNormal();
 	InitCursor();
+#endif
 }
 
 //--------------------------------------------------------------  DragMarqueeHandle
 
 void DragMarqueeHandle (Point start, short *dragged)
 {
+	return;
+#if 0
 	Point		wasPt, newPt;
 	short		deltaH, deltaV;
 
@@ -338,12 +364,15 @@ void DragMarqueeHandle (Point start, short *dragged)
 	PaintRect(&theMarquee.handle);
 	PenNormal();
 	InitCursor();
+#endif
 }
 
 //--------------------------------------------------------------  DragMarqueeCorner
 
 void DragMarqueeCorner (Point start, short *hDragged, short *vDragged, Boolean isTop)
 {
+	return;
+#if 0
 	Point		wasPt, newPt;
 	short		deltaH, deltaV;
 
@@ -400,12 +429,15 @@ void DragMarqueeCorner (Point start, short *hDragged, short *vDragged, Boolean i
 	PaintRect(&theMarquee.handle);
 	PenNormal();
 	InitCursor();
+#endif
 }
 
 //--------------------------------------------------------------  MarqueeHasHandles
 
 Boolean MarqueeHasHandles (short *direction, short *dist)
 {
+	return false;
+#if 0
 	if (theMarquee.handled)
 	{
 		*direction = theMarquee.direction;
@@ -418,42 +450,54 @@ Boolean MarqueeHasHandles (short *direction, short *dist)
 		*dist = 0;
 		return (false);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  PtInMarqueeHandle
 
 Boolean PtInMarqueeHandle (Point where)
 {
+	return false;
+#if 0
 	return (PtInRect(where, &theMarquee.handle));
+#endif
 }
 
 //--------------------------------------------------------------  DrawGliderMarquee
 
 void DrawGliderMarquee (void)
 {
+	return;
+#if 0
 	CopyBits((BitMap *)*GetGWorldPixMap(blowerMaskMap),
 			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 			&leftStartGliderSrc,
 			&marqueeGliderRect,
 			srcXor, nil);
+#endif
 }
 
 //--------------------------------------------------------------  SetMarqueeGliderCenter
 
 void SetMarqueeGliderRect (short h, short v)
 {
+	return;
+#if 0
 	marqueeGliderRect = leftStartGliderSrc;
 	ZeroRectCorner(&marqueeGliderRect);
 	QOffsetRect(&marqueeGliderRect, h - kHalfGliderWide, v - kGliderHigh);
 
 	DrawGliderMarquee();
 	gliderMarqueeUp = true;
+#endif
 }
 
 //--------------------------------------------------------------  DrawMarquee
 
 void DrawMarquee (void)
 {
+	return;
+#if 0
 	FrameRect(&theMarquee.bounds);
 	if (theMarquee.handled)
 	{
@@ -492,12 +536,15 @@ void DrawMarquee (void)
 
 	if (gliderMarqueeUp)
 		DrawGliderMarquee();
+#endif
 }
 
 //--------------------------------------------------------------  InitMarquee
 
 void InitMarquee (void)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < kNumMarqueePats; i++)
@@ -507,5 +554,6 @@ void InitMarquee (void)
 	theMarquee.paused = false;
 	theMarquee.handled = false;
 	gliderMarqueeUp = false;
+#endif
 }
 

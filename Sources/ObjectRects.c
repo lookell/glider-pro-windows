@@ -31,6 +31,8 @@ extern	short		nHotSpots, numChimes;
 
 void GetObjectRect (objectPtr who, Rect *itsRect)
 {
+	return;
+#if 0
 	PicHandle	thePict;
 	short		wide, tall;
 
@@ -270,6 +272,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		*itsRect = who->data.i.bounds;
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  AddActiveRect
@@ -277,6 +280,8 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 short AddActiveRect (Rect *bounds, short action, short who, Boolean isOn,
 		Boolean doScrutinize)
 {
+	return (-1);
+#if 0
 	if (nHotSpots >= kMaxHotSpots)
 		return (-1);
 
@@ -289,12 +294,15 @@ short AddActiveRect (Rect *bounds, short action, short who, Boolean isOn,
 	nHotSpots++;
 
 	return (nHotSpots - 1);
+#endif
 }
 
 //--------------------------------------------------------------  CreateActiveRects
 
 short CreateActiveRects (short who)
 {
+	return (-1);
+#if 0
 	objectType	theObject;
 	Rect		bounds;
 	short		hotSpotNumber, wide, tall;
@@ -1060,12 +1068,15 @@ short CreateActiveRects (short who)
 	}
 
 	return (hotSpotNumber);
+#endif
 }
 
 //--------------------------------------------------------------  VerticalRoomOffset
 
 short VerticalRoomOffset (short neighbor)
 {
+	return 0;
+#if 0
 	short		offset;
 
 	offset = 0;
@@ -1086,12 +1097,15 @@ short VerticalRoomOffset (short neighbor)
 	}
 
 	return (offset);
+#endif
 }
 
 //--------------------------------------------------------------  OffsetRectRoomRelative
 
 void OffsetRectRoomRelative (Rect *theRect, short neighbor)
 {
+	return;
+#if 0
 	QOffsetRect(theRect, playOriginH, playOriginV);
 
 	switch (neighbor)
@@ -1128,12 +1142,15 @@ void OffsetRectRoomRelative (Rect *theRect, short neighbor)
 		QOffsetRect(theRect, -kRoomWide, -kVertLocalOffset);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  GetUpStairsRightEdge
 
 short GetUpStairsRightEdge (void)
 {
+	return kRoomWide;
+#if 0
 	objectType	thisObject;
 	short		i, rightEdge;
 	char		wasState;
@@ -1156,12 +1173,15 @@ short GetUpStairsRightEdge (void)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (rightEdge);
+#endif
 }
 
 //--------------------------------------------------------------  GetDownStairsLeftEdge
 
 short GetDownStairsLeftEdge (void)
 {
+	return 0;
+#if 0
 	objectType	thisObject;
 	short		i, leftEdge;
 	char		wasState;
@@ -1184,5 +1204,6 @@ short GetDownStairsLeftEdge (void)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (leftEdge);
+#endif
 }
 

@@ -63,6 +63,8 @@ extern	Boolean		takingTheStairs, playerSuicide;
 
 void MoveGlider (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	if (thisGlider->hVel > thisGlider->hDesiredVel)
 	{
 		thisGlider->hVel -= kHImpulse;
@@ -144,12 +146,15 @@ void MoveGlider (gliderPtr thisGlider)
 		thisGlider->dest.bottom += thisGlider->vVel;
 		thisGlider->whole.bottom = thisGlider->dest.bottom;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MoveGliderNormal
 
 void MoveGliderNormal (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	if (thisGlider->facing == kFaceLeft)
 	{
 		if (thisGlider->sliding)
@@ -196,12 +201,15 @@ void MoveGliderNormal (gliderPtr thisGlider)
 	}
 
 	MoveGlider(thisGlider);
+#endif
 }
 
 //--------------------------------------------------------------  MoveGliderBurning
 
 void MoveGliderBurning (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	thisGlider->frame++;
 	if (thisGlider->frame > 3)
 		thisGlider->frame = 0;
@@ -224,12 +232,15 @@ void MoveGliderBurning (gliderPtr thisGlider)
 		PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 	}
 	MoveGlider(thisGlider);
+#endif
 }
 
 //--------------------------------------------------------------  FadeGliderIn
 
 void FadeGliderIn (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	if (thisGlider->frame == 0)
 		PlayPrioritySound(kFadeInSound, kFadeInPriority);
 
@@ -254,12 +265,15 @@ void FadeGliderIn (gliderPtr thisGlider)
 			thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  TransportGliderIn
 
 void TransportGliderIn (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	if (thisGlider->frame == 0)
 		PlayPrioritySound(kTransInSound, kTransInPriority);
 
@@ -284,12 +298,15 @@ void TransportGliderIn (gliderPtr thisGlider)
 			thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  FadeGliderOut
 
 void FadeGliderOut (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	thisGlider->frame--;
 	if (thisGlider->frame < 0)
 		OffAMortal(thisGlider);
@@ -308,12 +325,15 @@ void FadeGliderOut (gliderPtr thisGlider)
 			thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MoveGliderUpStairs
 
 void MoveGliderUpStairs (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	#define		kClimbStairsSpeed	-4
 	short		vNotClipped;
 
@@ -376,12 +396,15 @@ void MoveGliderUpStairs (gliderPtr thisGlider)
 			thisGlider->mask.top = thisGlider->mask.bottom - vNotClipped;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  FinishGliderUpStairs
 
 void FinishGliderUpStairs (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	#define		kVClimbStairsSpeed	-4
 	#define		kHClimbStairsSpeed	-4
 	short		hNotClipped;
@@ -424,12 +447,15 @@ void FinishGliderUpStairs (gliderPtr thisGlider)
 		thisGlider->vDesiredVel = kVClimbStairsSpeed;
 		thisGlider->enteredRect = thisGlider->dest;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MoveGliderDownStairs
 
 void MoveGliderDownStairs (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	#define		kVDropStairsSpeed	4
 	#define		kHDropStairsSpeed	4
 	short		hNotClipped;
@@ -505,12 +531,15 @@ void MoveGliderDownStairs (gliderPtr thisGlider)
 			thisGlider->destShadow.right = thisGlider->dest.right;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  FinishGliderDownStairs
 
 void FinishGliderDownStairs (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	#define		kVDropStairsSpeed	4
 	#define		kHDropStairsSpeed	4
 	short		hNotClipped;
@@ -553,12 +582,15 @@ void FinishGliderDownStairs (gliderPtr thisGlider)
 		thisGlider->vDesiredVel = kVDropStairsSpeed;
 		thisGlider->enteredRect = thisGlider->dest;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MoveGliderFaceLeft
 
 void MoveGliderFaceLeft (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	thisGlider->src = gliderSrc[thisGlider->frame];
 	thisGlider->mask = gliderSrc[thisGlider->frame];
 
@@ -570,12 +602,15 @@ void MoveGliderFaceLeft (gliderPtr thisGlider)
 		thisGlider->mode = kGliderNormal;
 		thisGlider->facing = kFaceLeft;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MoveGliderFaceRight
 
 void MoveGliderFaceRight (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	thisGlider->src = gliderSrc[thisGlider->frame];
 	thisGlider->mask = gliderSrc[thisGlider->frame];
 
@@ -587,12 +622,15 @@ void MoveGliderFaceRight (gliderPtr thisGlider)
 		thisGlider->mode = kGliderNormal;
 		thisGlider->facing = kFaceRight;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  TransportGliderOut
 
 void TransportGliderOut (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	Rect		tempRect;
 
 	thisGlider->frame--;
@@ -650,12 +688,15 @@ void TransportGliderOut (gliderPtr thisGlider)
 			thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MoveGliderDownDuct
 
 void MoveGliderDownDuct (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	#define		kVDropDuctSpeed		4
 	Rect		tempRect;
 	short		vNotClipped;
@@ -747,12 +788,15 @@ void MoveGliderDownDuct (gliderPtr thisGlider)
 			thisGlider->mask.bottom = thisGlider->mask.top + vNotClipped;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MoveGliderUpDuct
 
 void MoveGliderUpDuct (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	#define		kVRiseDuctSpeed		-4
 	Rect		tempRect;
 	short		vNotClipped;
@@ -844,12 +888,15 @@ void MoveGliderUpDuct (gliderPtr thisGlider)
 			thisGlider->mask.top = thisGlider->mask.bottom - vNotClipped;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  FinishGliderMailingLeft
 
 void FinishGliderMailingLeft (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	#define		kHPushMailSpeed		-4
 	short		hNotClipped;
 
@@ -882,12 +929,15 @@ void FinishGliderMailingLeft (gliderPtr thisGlider)
 			FlagGliderNormal(thisGlider);
 		thisGlider->enteredRect = thisGlider->dest;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  FinishGliderMailingRight
 
 void FinishGliderMailingRight (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	#define		kHPushMailRtSpeed	4
 	short		hNotClipped;
 
@@ -920,12 +970,15 @@ void FinishGliderMailingRight (gliderPtr thisGlider)
 			FlagGliderNormal(thisGlider);
 		thisGlider->enteredRect = thisGlider->dest;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  FinishGliderDuctingIn
 
 void FinishGliderDuctingIn (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	#define		kVDropStairsSpeed	4
 	short		vNotClipped;
 
@@ -953,12 +1006,15 @@ void FinishGliderDuctingIn (gliderPtr thisGlider)
 		thisGlider->enteredRect = thisGlider->dest;
 		FlagStillOvers(thisGlider);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MoveGliderInMailLeft
 
 void MoveGliderInMailLeft (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	#define		kHMailPullSpeed		4
 	#define		kVMailDropSpeed		2
 	Rect		tempRect;
@@ -1044,12 +1100,15 @@ void MoveGliderInMailLeft (gliderPtr thisGlider)
 			thisGlider->destShadow.right = thisGlider->dest.right;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MoveGliderInMailRight
 
 void MoveGliderInMailRight (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	#define		kHMailPullRtSpeed	-4
 	#define		kVMailDropSpeed		2
 	Rect		tempRect;
@@ -1135,12 +1194,15 @@ void MoveGliderInMailRight (gliderPtr thisGlider)
 			thisGlider->destShadow.left = thisGlider->dest.left;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DeckGliderInFoil
 
 void DeckGliderInFoil (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	showFoil = true;
 
 	if (twoPlayerGame)
@@ -1163,12 +1225,15 @@ void DeckGliderInFoil (gliderPtr thisGlider)
 		thisGlider->src = gliderSrc[thisGlider->frame + 2];
 		thisGlider->mask = gliderSrc[thisGlider->frame + 2];
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MoveGliderFoilGoing
 
 void MoveGliderFoilGoing (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	thisGlider->frame++;
 	if (thisGlider->frame > 8)
 	{
@@ -1195,12 +1260,15 @@ void MoveGliderFoilGoing (gliderPtr thisGlider)
 			DeckGliderInFoil(thisGlider);
 	}
 	MoveGlider(thisGlider);
+#endif
 }
 
 //--------------------------------------------------------------  xxxx
 
 void RemoveFoilFromGlider (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	showFoil = false;
 
 	if (twoPlayerGame)
@@ -1223,12 +1291,15 @@ void RemoveFoilFromGlider (gliderPtr thisGlider)
 		thisGlider->src = gliderSrc[thisGlider->frame + 2];
 		thisGlider->mask = gliderSrc[thisGlider->frame + 2];
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MoveGliderFoilLosing
 
 void MoveGliderFoilLosing (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	thisGlider->frame++;
 	if (thisGlider->frame > 8)
 		FlagGliderNormal(thisGlider);
@@ -1253,12 +1324,15 @@ void MoveGliderFoilLosing (gliderPtr thisGlider)
 			RemoveFoilFromGlider(thisGlider);
 	}
 	MoveGlider(thisGlider);
+#endif
 }
 
 //--------------------------------------------------------------  MoveGliderShredding
 
 void MoveGliderShredding (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	#define		kDropShredSlow		1
 	#define		kDropShredFast		4
 	short		vNotClipped;
@@ -1316,24 +1390,30 @@ void MoveGliderShredding (gliderPtr thisGlider)
 		if (thisGlider->frame >= 0)
 			OffAMortal(thisGlider);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleIdleGlider
 
 void HandleIdleGlider (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	thisGlider->hVel--;
 	if (thisGlider->hVel <= 0)
 	{
 		thisGlider->mode = thisGlider->wasMode;
 		thisGlider->dontDraw = false;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleGlider
 
 void HandleGlider (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	switch (thisGlider->mode)
 	{
 		case kGliderNormal:
@@ -1436,12 +1516,15 @@ void HandleGlider (gliderPtr thisGlider)
 	thisGlider->ignoreLeft = false;
 	thisGlider->ignoreRight = false;
 	thisGlider->ignoreGround = false;
+#endif
 }
 
 //--------------------------------------------------------------  OffsetGlider
 
 void OffsetGlider (gliderPtr thisGlider, short where)
 {
+	return;
+#if 0
 	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
 		return;
 
@@ -1477,12 +1560,15 @@ void OffsetGlider (gliderPtr thisGlider, short where)
 		thisGlider->whole = thisGlider->dest;
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  OffAMortal
 
 void OffAMortal (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	if (gameOver)
 		return;
 
@@ -1601,5 +1687,6 @@ void OffAMortal (gliderPtr thisGlider)
 
 		otherPlayerEscaped = kPlayerIsDeadForever;
 	}
+#endif
 }
 

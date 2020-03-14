@@ -5,12 +5,13 @@
 //============================================================================
 
 
-#include <Icons.h>
-#include <NumberFormatting.h>
-#include <Resources.h>
-#include <Sound.h>
-#include <TextUtils.h>
-#include <ToolUtils.h>
+//#include <Icons.h>
+//#include <NumberFormatting.h>
+//#include <Resources.h>
+//#include <Sound.h>
+//#include <TextUtils.h>
+//#include <ToolUtils.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Utilities.h"
 
@@ -28,11 +29,17 @@ extern	Boolean		switchedOut;
 
 Point MyGetGlobalMouse (void)
 {
+	Point tmp;
+	tmp.v = 0;
+	tmp.h = 0;
+	return tmp;
+#if 0
 	Point	localWhere;
 
 	GetMouse(&localWhere);
 	LocalToGlobal(&localWhere);
 	return (localWhere);
+#endif
 }
 
 //--------------------------------------------------------------  ToolBoxInit
@@ -42,6 +49,8 @@ Point MyGetGlobalMouse (void)
 
 void ToolBoxInit (void)
 {
+	return;
+#if 0
 #if !TARGET_CARBON
 	InitGraf(&qd.thePort);
 	InitFonts();
@@ -64,6 +73,7 @@ void ToolBoxInit (void)
 
 	InitCursor();
 	switchedOut = false;
+#endif
 }
 
 //--------------------------------------------------------------  RandomInt
@@ -71,6 +81,8 @@ void ToolBoxInit (void)
 
 short RandomInt (short range)
 {
+	return 0;
+#if 0
 	register long	rawResult;
 
 	rawResult = Random();
@@ -79,6 +91,7 @@ short RandomInt (short range)
 	rawResult = (rawResult * (long)range) / 32768L;
 
 	return ((short)rawResult);
+#endif
 }
 
 //--------------------------------------------------------------  RandomLong
@@ -87,6 +100,8 @@ short RandomInt (short range)
 
 long RandomLong (long range)
 {
+	return 0;
+#if 0
 	register long	highWord, lowWord;
 	register long	rawResultHi, rawResultLo;
 
@@ -106,6 +121,7 @@ long RandomLong (long range)
 	rawResultHi = (rawResultHi << 16) + rawResultLo;
 
 	return (rawResultHi);
+#endif
 }
 
 //--------------------------------------------------------------  InitRandomLongQUS
@@ -114,7 +130,10 @@ long RandomLong (long range)
 
 void InitRandomLongQUS (void)
 {
+	return;
+#if 0
 	GetDateTime(&theSeed);
+#endif
 }
 
 //--------------------------------------------------------------  RandomLongQUS
@@ -123,8 +142,11 @@ void InitRandomLongQUS (void)
 
 UInt32 RandomLongQUS (void)
 {
+	return 0;
+#if 0
 	theSeed = theSeed * 1103515245 + 12345;
 	return (theSeed);
+#endif
 }
 
 //--------------------------------------------------------------  RedAlert
@@ -134,6 +156,8 @@ UInt32 RandomLongQUS (void)
 
 void RedAlert (short errorNumber)
 {
+	return;
+#if 0
 	#define			rDeathAlertID	170		// alert res. ID for death error
 	#define			rErrTitleID		170		// string ID for death error title
 	#define			rErrMssgID		171		// string ID for death error message
@@ -158,6 +182,7 @@ void RedAlert (short errorNumber)
 
 	dummyInt = Alert(rDeathAlertID, nil);
 	ExitToShell();
+#endif
 }
 
 //--------------------------------------------------------------  FindOurDevice
@@ -166,9 +191,12 @@ void RedAlert (short errorNumber)
 
 void FindOurDevice (void)
 {
+	return;
+#if 0
 	thisGDevice = GetMainDevice();
 	if (thisGDevice == nil)
 		RedAlert(kErrFailedGetDevice);
+#endif
 }
 
 //--------------------------------------------------------------  CreateOffScreenBitMap
@@ -265,6 +293,8 @@ void CreateOffScreenPixMap (Rect *theRect, CGrafPtr *offScreen)
 
 OSErr CreateOffScreenGWorld (GWorldPtr *theGWorld, Rect *bounds, short depth)
 {
+	return (-1);
+#if 0
 	OSErr		theErr;
 
 	theErr = NewGWorld(theGWorld, depth, bounds, nil, nil, useTempMem);
@@ -275,6 +305,7 @@ OSErr CreateOffScreenGWorld (GWorldPtr *theGWorld, Rect *bounds, short depth)
 	LockPixels(GetGWorldPixMap(*theGWorld));
 
 	return theErr;
+#endif
 }
 
 
@@ -316,6 +347,8 @@ void KillOffScreenBitMap (GrafPtr offScreen)
 
 void LoadGraphic (short resID)
 {
+	return;
+#if 0
 	Rect		bounds;
 	PicHandle	thePicture;
 
@@ -330,6 +363,7 @@ void LoadGraphic (short resID)
 	DrawPicture(thePicture, &bounds);
 
 	ReleaseResource((Handle)thePicture);
+#endif
 }
 
 //--------------------------------------------------------------  LoadScaledGraphic
@@ -339,6 +373,8 @@ void LoadGraphic (short resID)
 
 void LoadScaledGraphic (short resID, Rect *theRect)
 {
+	return;
+#if 0
 	PicHandle	thePicture;
 
 	thePicture = GetPicture(resID);
@@ -346,6 +382,7 @@ void LoadScaledGraphic (short resID, Rect *theRect)
 		RedAlert(kErrFailedGraphicLoad);
 	DrawPicture(thePicture, theRect);
 	ReleaseResource((Handle)thePicture);
+#endif
 }
 
 //--------------------------------------------------------------  PlotSICN
@@ -378,12 +415,15 @@ void PlotSICN (Rect *theRect, SICNHand theSICN, long theIndex)
 
 void LargeIconPlot (Rect *theRect, short theID)
 {
+	return;
+#if 0
 	OSErr		theErr;
 	Handle		theSuite;
 
 	theErr = GetIconSuite(&theSuite, theID, svAllLargeData);
 	if (theErr == noErr)
 		theErr = PlotIconSuite(theRect, atNone, ttNone, theSuite);
+#endif
 }
 
 //--------------------------------------------------------------  DrawCIcon
@@ -392,6 +432,8 @@ void LargeIconPlot (Rect *theRect, short theID)
 
 void DrawCIcon (short theID, short h, short v)
 {
+	return;
+#if 0
 	CIconHandle	theIcon;
 	Rect		theRect;
 
@@ -403,6 +445,7 @@ void DrawCIcon (short theID, short h, short v)
 		PlotCIcon(&theRect, theIcon);
 		DisposeCIcon(theIcon);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  LongSquareRoot
@@ -413,6 +456,8 @@ void DrawCIcon (short theID, short h, short v)
 
 long LongSquareRoot (long theNumber)
 {
+	return 0;
+#if 0
 	long		currentAnswer;
 	long		nextTrial;
 
@@ -429,6 +474,7 @@ long LongSquareRoot (long theNumber)
 	while (nextTrial < currentAnswer);
 
 	return(currentAnswer);
+#endif
 }
 
 //--------------------------------------------------------------  WaitForInputEvent
@@ -438,6 +484,8 @@ long LongSquareRoot (long theNumber)
 
 Boolean WaitForInputEvent (short seconds)
 {
+	return false;
+#if 0
 	EventRecord	theEvent;
 	KeyMap		theKeys;
 	long		timeToBail;
@@ -476,6 +524,7 @@ Boolean WaitForInputEvent (short seconds)
 	}
 	FlushEvents(everyEvent, 0);
 	return (didResume);
+#endif
 }
 
 //--------------------------------------------------------------  WaitCommandQReleased
@@ -484,6 +533,8 @@ Boolean WaitForInputEvent (short seconds)
 
 void WaitCommandQReleased (void)
 {
+	return;
+#if 0
 	KeyMap		theKeys;
 	Boolean		waiting;
 
@@ -496,6 +547,7 @@ void WaitCommandQReleased (void)
 			waiting = false;
 	}
 	FlushEvents(everyEvent, 0);
+#endif
 }
 
 //--------------------------------------------------------------  KeyMapOffsetFromRawKey
@@ -503,6 +555,8 @@ void WaitCommandQReleased (void)
 
 char KeyMapOffsetFromRawKey (char rawKeyCode)
 {
+	return 0;
+#if 0
 	char		hiByte, loByte, theOffset;
 
 	hiByte = rawKeyCode & 0xF0;
@@ -514,6 +568,7 @@ char KeyMapOffsetFromRawKey (char rawKeyCode)
 		theOffset = hiByte + (0x17 - loByte);
 
 	return (theOffset);
+#endif
 }
 
 //--------------------------------------------------------------  GetKeyMapFromMessage
@@ -521,12 +576,15 @@ char KeyMapOffsetFromRawKey (char rawKeyCode)
 
 char GetKeyMapFromMessage (long message)
 {
+	return 0;
+#if 0
 	long		theVirtual;
 	char		offset;
 
 	theVirtual = (message & keyCodeMask) >> 8;
 	offset = KeyMapOffsetFromRawKey((char)theVirtual);
 	return (offset);
+#endif
 }
 
 //--------------------------------------------------------------  GetKeyName
@@ -535,6 +593,8 @@ char GetKeyMapFromMessage (long message)
 
 void GetKeyName (long message, StringPtr theName)
 {
+	return;
+#if 0
 	long		theASCII, theVirtual;
 
 	theASCII = message & charCodeMask;
@@ -688,6 +748,7 @@ void GetKeyName (long message, StringPtr theName)
 			break;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  OptionKeyDown
@@ -695,6 +756,8 @@ void GetKeyName (long message, StringPtr theName)
 
 Boolean OptionKeyDown (void)
 {
+	return false;
+#if 0
 	KeyMap		theKeys;
 
 	GetKeys(theKeys);
@@ -702,6 +765,7 @@ Boolean OptionKeyDown (void)
 		return (true);
 	else
 		return (false);
+#endif
 }
 
 //--------------------------------------------------------------  ExtractCTSeed
@@ -730,9 +794,12 @@ void ForceCTSeed (CGrafPtr porter, long newSeed)
 
 void DelayTicks (long howLong)
 {
+	return;
+#if 0
 	UInt32		whoCares;
 
 	Delay(howLong, &whoCares);
+#endif
 }
 
 //--------------------------------------------------------------  UnivGetSoundVolume
@@ -741,6 +808,8 @@ void DelayTicks (long howLong)
 
 void UnivGetSoundVolume (short *volume, Boolean hasSM3)
 {
+	return;
+#if 0
 #pragma unused (hasSM3)
 	long		longVol;
 	OSErr		theErr;
@@ -757,6 +826,7 @@ void UnivGetSoundVolume (short *volume, Boolean hasSM3)
 		*volume = 7;
 	else if (*volume < 0)
 		*volume = 0;
+#endif
 }
 
 //--------------------------------------------------------------  UnivSetSoundVolume
@@ -765,6 +835,8 @@ void UnivGetSoundVolume (short *volume, Boolean hasSM3)
 
 void  UnivSetSoundVolume (short volume, Boolean hasSM3)
 {
+	return;
+#if 0
 #pragma unused (hasSM3)
 	long		longVol;
 	OSErr		theErr;
@@ -784,5 +856,6 @@ void  UnivSetSoundVolume (short volume, Boolean hasSM3)
 //	}
 //	else
 //		SetSoundVol(volume);
+#endif
 }
 

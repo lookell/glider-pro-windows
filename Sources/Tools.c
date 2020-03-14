@@ -5,7 +5,8 @@
 //============================================================================
 
 
-#include <TextUtils.h>
+//#include <TextUtils.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "RectUtils.h"
@@ -71,6 +72,8 @@ Boolean			isToolsOpen;
 #ifndef COMPILEDEMO
 void CreateToolsOffscreen (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
@@ -86,6 +89,7 @@ void CreateToolsOffscreen (void)
 
 		SetGWorld(wasCPort, wasWorld);
 	}
+#endif
 }
 #endif
 
@@ -94,12 +98,15 @@ void CreateToolsOffscreen (void)
 #ifndef COMPILEDEMO
 void KillToolsOffscreen (void)
 {
+	return;
+#if 0
 	if (toolSrcMap != nil)
 	{
 		DisposeGWorld(toolSrcMap);
 //		KillOffScreenPixMap(toolSrcMap);
 		toolSrcMap = nil;
 	}
+#endif
 }
 #endif
 
@@ -108,6 +115,8 @@ void KillToolsOffscreen (void)
 #ifndef COMPILEDEMO
 void FrameSelectedTool (void)
 {
+	return;
+#if 0
 	Rect		theRect;
 	short		toolIcon;
 
@@ -130,6 +139,7 @@ void FrameSelectedTool (void)
 	FrameRect(&theRect);
 	PenNormal();
 	ForeColor(blackColor);
+#endif
 }
 #endif
 
@@ -138,6 +148,8 @@ void FrameSelectedTool (void)
 #ifndef COMPILEDEMO
 void DrawToolName (void)
 {
+	return;
+#if 0
 	Str255		theString;
 
 	if (toolSelected == 0)
@@ -152,6 +164,7 @@ void DrawToolName (void)
 	TextSize(9);
 	TextFace(bold);
 	ColorText(theString, 171L);
+#endif
 }
 #endif
 
@@ -160,6 +173,8 @@ void DrawToolName (void)
 #ifndef COMPILEDEMO
 void DrawToolTiles (void)
 {
+	return;
+#if 0
 	Rect		srcRect, destRect;
 	short		i;
 
@@ -177,6 +192,7 @@ void DrawToolTiles (void)
 				GetPortBitMapForCopyBits(GetWindowPort(toolsWindow)),
 				&srcRect, &destRect, srcCopy, nil);
 	}
+#endif
 }
 #endif
 
@@ -184,6 +200,8 @@ void DrawToolTiles (void)
 
 void EraseSelectedTool (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	Rect		theRect;
 	short		toolIcon;
@@ -211,12 +229,15 @@ void EraseSelectedTool (void)
 	ForeColor(whiteColor);
 	FrameRect(&theRect);
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  SelectTool
 
 void SelectTool (short which)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	Rect		theRect;
 	short		toolIcon;
@@ -248,12 +269,15 @@ void SelectTool (short which)
 	toolSelected = which;
 	DrawToolName();
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  UpdateToolsWindow
 
 void UpdateToolsWindow (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	if (toolsWindow == nil)
 		return;
@@ -270,12 +294,15 @@ void UpdateToolsWindow (void)
 	FrameSelectedTool();
 	DrawToolName();
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  OpenToolsWindow
 
 void OpenToolsWindow (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	Rect		src, dest;
 	Point		globalMouse;
@@ -333,16 +360,20 @@ void OpenToolsWindow (void)
 
 	UpdateToolsCheckmark(true);
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  CloseToolsWindow
 
 void CloseToolsWindow (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	CloseThisWindow(&toolsWindow);
 	KillToolsOffscreen();
 	UpdateToolsCheckmark(false);
+#endif
 #endif
 }
 
@@ -350,6 +381,8 @@ void CloseToolsWindow (void)
 
 void ToggleToolsWindow (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	if (toolsWindow == nil)
 	{
@@ -362,6 +395,7 @@ void ToggleToolsWindow (void)
 		isToolsOpen = true;
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  SwitchToolModes
@@ -369,6 +403,8 @@ void ToggleToolsWindow (void)
 #ifndef COMPILEDEMO
 void SwitchToolModes (short newMode)
 {
+	return;
+#if 0
 	if (toolsWindow == nil)
 		return;
 
@@ -432,6 +468,7 @@ void SwitchToolModes (short newMode)
 
 	toolMode = newMode;
 	InvalWindowRect(toolsWindow, &toolsWindowRect);
+#endif
 }
 #endif
 
@@ -439,6 +476,8 @@ void SwitchToolModes (short newMode)
 
 void HandleToolsClick (Point wherePt)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	ControlHandle	theControl;
 	short			i, part, newMode, toolIcon;
@@ -486,12 +525,15 @@ void HandleToolsClick (Point wherePt)
 			}
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  NextToolMode
 
 void NextToolMode (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	if (toolsWindow == nil)
 		return;
@@ -505,12 +547,15 @@ void NextToolMode (void)
 		toolSelected = kSelectTool;
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  PrevToolMode
 
 void PrevToolMode (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	if (toolsWindow == nil)
 		return;
@@ -524,12 +569,15 @@ void PrevToolMode (void)
 		toolSelected = kSelectTool;
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  SetSpecificToolMode
 
 void SetSpecificToolMode (short modeToSet)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	if ((toolsWindow == nil) || (theMode != kEditMode))
 		return;
@@ -539,6 +587,7 @@ void SetSpecificToolMode (short modeToSet)
 	SetControlValue(classPopUp, toolMode);
 	SwitchToolModes(toolMode);
 	toolSelected = kSelectTool;
+#endif
 #endif
 }
 

@@ -88,6 +88,8 @@ extern	short		numNeighbors;
 
 Boolean IsThisValid (short where, short who)
 {
+	return true;
+#if 0
 	char		wasState;
 	Boolean		itsGood;
 
@@ -119,12 +121,15 @@ Boolean IsThisValid (short where, short who)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (itsGood);
+#endif
 }
 
 //--------------------------------------------------------------  GetRoomLinked
 
 short GetRoomLinked (objectType *who)
 {
+	return (-1);
+#if 0
 	short		compoundRoomNumber, whereLinked;
 	short		floor, suite;
 
@@ -170,12 +175,15 @@ short GetRoomLinked (objectType *who)
 	}
 
 	return (whereLinked);
+#endif
 }
 
 //--------------------------------------------------------------  GetObjectLinked
 
 short GetObjectLinked (objectType *who)
 {
+	return (-1);
+#if 0
 	short		whoLinked;
 
 	switch (who->what)
@@ -212,12 +220,15 @@ short GetObjectLinked (objectType *who)
 	}
 
 	return (whoLinked);
+#endif
 }
 
 //--------------------------------------------------------------  ObjectIsLinkTransport
 
 Boolean ObjectIsLinkTransport (objectType *who)
 {
+	return false;
+#if 0
 	Boolean		itIs;
 
 	itIs = false;
@@ -229,12 +240,15 @@ Boolean ObjectIsLinkTransport (objectType *who)
 	}
 
 	return (itIs);
+#endif
 }
 
 //--------------------------------------------------------------  ObjectIsLinkSwitch
 
 Boolean ObjectIsLinkSwitch (objectType *who)
 {
+	return false;
+#if 0
 	Boolean		itIs;
 
 	itIs = false;
@@ -247,12 +261,15 @@ Boolean ObjectIsLinkSwitch (objectType *who)
 	}
 
 	return (itIs);
+#endif
 }
 
 //--------------------------------------------------------------  ListOneRoomsObjects
 
 void ListOneRoomsObjects (short where)
 {
+	return;
+#if 0
 	objectType	thisObject;
 	short		roomNum, n;
 	char		wasState;
@@ -293,12 +310,15 @@ void ListOneRoomsObjects (short where)
 		}
 	}
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  ListAllLocalObjects
 
 void ListAllLocalObjects (void)
 {
+	return;
+#if 0
 	short		i, n;
 	char		wasState;
 
@@ -344,12 +364,15 @@ void ListAllLocalObjects (void)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  AddTempManholeRect
 
 void AddTempManholeRect (Rect *manHole)
 {
+	return;
+#if 0
 	Rect		tempRect;
 
 	if (numTempManholes < kMaxTempManholes)
@@ -359,12 +382,15 @@ void AddTempManholeRect (Rect *manHole)
 		tempManholes[numTempManholes] = tempRect;
 		numTempManholes++;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  SetObjectState
 
 Boolean SetObjectState (short room, short object, short action, short local)
 {
+	return false;
+#if 0
 	char		wasState;
 	Boolean		changed;
 
@@ -696,12 +722,15 @@ Boolean SetObjectState (short room, short object, short action, short local)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (changed);
+#endif
 }
 
 //--------------------------------------------------------------  GetObjectState
 
 Boolean GetObjectState (short room, short object)
 {
+	return false;
+#if 0
 	char		wasState;
 	Boolean		theState;
 
@@ -868,6 +897,7 @@ Boolean GetObjectState (short room, short object)
 	HSetState((Handle)thisHouse, wasState);
 
 	return (theState);
+#endif
 }
 
 //--------------------------------------------------------------  SendObjectToBack
@@ -875,6 +905,8 @@ Boolean GetObjectState (short room, short object)
 #ifndef COMPILEDEMO
 void BringSendFrontBack (Boolean bringFront)
 {
+	return;
+#if 0
 	houseType	*thisHousePtr;
 	objectType	savedObject;
 	short		numLinks, i;
@@ -996,6 +1028,7 @@ void BringSendFrontBack (Boolean bringFront)
 	GenerateRetroLinks();
 
 	InitCursor();
+#endif
 }
 #endif
 

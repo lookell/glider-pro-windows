@@ -5,9 +5,10 @@
 //============================================================================
 
 
-#include <ControlDefinitions.h>
-#include <LowMem.h>
-#include <NumberFormatting.h>
+//#include <ControlDefinitions.h>
+//#include <LowMem.h>
+//#include <NumberFormatting.h>
+#include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 
@@ -23,6 +24,8 @@
 
 void BringUpDialog (DialogPtr *theDialog, short dialogID)
 {
+	return;
+#if 0
 //	CenterDialog(dialogID);
 	*theDialog = GetNewDialog(dialogID, nil, kPutInFront);
 	if (*theDialog == nil)
@@ -30,6 +33,7 @@ void BringUpDialog (DialogPtr *theDialog, short dialogID)
 	SetPort((GrafPtr)*theDialog);
 	ShowWindow(GetDialogWindow(*theDialog));
 	DrawDefaultButton(*theDialog);
+#endif
 }
 
 //--------------------------------------------------------------  GetPutDialogCorner
@@ -136,6 +140,8 @@ void CenterDialog (SInt16 dialogID)
 
 void GetDialogRect (Rect *bounds, short dialogID)
 {
+	return;
+#if 0
 	DialogTHndl	dlogHandle;
 	Byte		wasState;
 
@@ -148,6 +154,7 @@ void GetDialogRect (Rect *bounds, short dialogID)
 		*bounds = (**dlogHandle).boundsRect;
 		HSetState((Handle)dlogHandle, wasState);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  TrueCenterDialog
@@ -334,6 +341,8 @@ void ZoomOutAlertRect (short alertID)
 
 void FlashDialogButton (DialogPtr theDialog, short itemNumber)
 {
+	return;
+#if 0
 	Rect		itemRect;
 	Handle		itemHandle;
 	UInt32		dummyLong;
@@ -343,6 +352,7 @@ void FlashDialogButton (DialogPtr theDialog, short itemNumber)
 	HiliteControl((ControlHandle)itemHandle, kControlButtonPart);
 	Delay(8, &dummyLong);
 	HiliteControl((ControlHandle)itemHandle, 0);
+#endif
 }
 
 //--------------------------------------------------------------  DrawDefaultButton
@@ -351,6 +361,8 @@ void FlashDialogButton (DialogPtr theDialog, short itemNumber)
 
 void DrawDefaultButton (DialogPtr theDialog)
 {
+	return;
+#if 0
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
@@ -360,6 +372,7 @@ void DrawDefaultButton (DialogPtr theDialog)
 	PenSize(3, 3);
 	FrameRoundRect(&itemRect, 16, 16);
 	PenNormal();
+#endif
 }
 
 //--------------------------------------------------------------  GetDialogString
@@ -367,12 +380,15 @@ void DrawDefaultButton (DialogPtr theDialog)
 
 void GetDialogString (DialogPtr theDialog, short item, StringPtr theString)
 {
+	return;
+#if 0
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
 
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	GetDialogItemText(itemHandle, theString);
+#endif
 }
 
 //--------------------------------------------------------------  SetDialogString
@@ -380,12 +396,15 @@ void GetDialogString (DialogPtr theDialog, short item, StringPtr theString)
 
 void SetDialogString (DialogPtr theDialog, short item, StringPtr theString)
 {
+	return;
+#if 0
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
 
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	SetDialogItemText(itemHandle, theString);
+#endif
 }
 
 //--------------------------------------------------------------  GetDialogStringLen
@@ -393,6 +412,8 @@ void SetDialogString (DialogPtr theDialog, short item, StringPtr theString)
 
 short GetDialogStringLen (DialogPtr theDialog, short item)
 {
+	return (0);
+#if 0
 	Rect		itemRect;
 	Str255		theString;
 	Handle		itemHandle;
@@ -401,6 +422,7 @@ short GetDialogStringLen (DialogPtr theDialog, short item)
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	GetDialogItemText(itemHandle, theString);
 	return (theString[0]);
+#endif
 }
 
 //--------------------------------------------------------------  GetDialogItemValue
@@ -409,12 +431,15 @@ short GetDialogStringLen (DialogPtr theDialog, short item)
 
 void GetDialogItemValue (DialogPtr theDialog, short item, short *theState)
 {
+	return;
+#if 0
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
 
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	*theState = GetControlValue((ControlHandle)itemHandle);
+#endif
 }
 
 //--------------------------------------------------------------  SetDialogItemValue
@@ -423,12 +448,15 @@ void GetDialogItemValue (DialogPtr theDialog, short item, short *theState)
 
 void SetDialogItemValue (DialogPtr theDialog, short item, short theState)
 {
+	return;
+#if 0
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
 
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	SetControlValue((ControlHandle)itemHandle, theState);
+#endif
 }
 
 //--------------------------------------------------------------  ToggleDialogItemValue
@@ -436,6 +464,8 @@ void SetDialogItemValue (DialogPtr theDialog, short item, short theState)
 
 void ToggleDialogItemValue (DialogPtr theDialog, short item)
 {
+	return;
+#if 0
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType, theState;
@@ -447,6 +477,7 @@ void ToggleDialogItemValue (DialogPtr theDialog, short item)
 	else
 		theState = 0;
 	SetControlValue((ControlHandle)itemHandle, theState);
+#endif
 }
 
 //--------------------------------------------------------------  SetDialogNumToStr
@@ -455,6 +486,8 @@ void ToggleDialogItemValue (DialogPtr theDialog, short item)
 
 void SetDialogNumToStr (DialogPtr theDialog, short item, long theNumber)
 {
+	return;
+#if 0
 	Str255		theString;
 	Rect		itemRect;
 	Handle		itemHandle;
@@ -463,6 +496,7 @@ void SetDialogNumToStr (DialogPtr theDialog, short item, long theNumber)
 	NumToString(theNumber, theString);
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	SetDialogItemText(itemHandle, theString);
+#endif
 }
 
 //--------------------------------------------------------------  GetDialogNumFromStr
@@ -471,6 +505,8 @@ void SetDialogNumToStr (DialogPtr theDialog, short item, long theNumber)
 
 void GetDialogNumFromStr (DialogPtr theDialog, short item, long *theNumber)
 {
+	return;
+#if 0
 	Str255		theString;
 	Rect		itemRect;
 	Handle		itemHandle;
@@ -479,6 +515,7 @@ void GetDialogNumFromStr (DialogPtr theDialog, short item, long *theNumber)
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	GetDialogItemText(itemHandle, theString);
 	StringToNum(theString, theNumber);
+#endif
 }
 
 //--------------------------------------------------------------  GetDialogItemRect
@@ -486,10 +523,13 @@ void GetDialogNumFromStr (DialogPtr theDialog, short item, long *theNumber)
 
 void GetDialogItemRect (DialogPtr theDialog, short item, Rect *theRect)
 {
+	return;
+#if 0
 	Handle		itemHandle;
 	short		itemType;
 
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, theRect);
+#endif
 }
 
 //--------------------------------------------------------------  SetDialogItemRect
@@ -498,6 +538,8 @@ void GetDialogItemRect (DialogPtr theDialog, short item, Rect *theRect)
 
 void SetDialogItemRect (DialogPtr theDialog, short item, Rect *theRect)
 {
+	return;
+#if 0
 	Rect		oldRect;
 	Handle		itemHandle;
 	short		itemType;
@@ -505,6 +547,7 @@ void SetDialogItemRect (DialogPtr theDialog, short item, Rect *theRect)
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &oldRect);
 	OffsetRect(&oldRect, theRect->left - oldRect.left, theRect->top - oldRect.top);
 	SetDialogItem(theDialog, item, itemType, itemHandle, &oldRect);
+#endif
 }
 
 //--------------------------------------------------------------  OffsetDialogItemRect
@@ -512,6 +555,8 @@ void SetDialogItemRect (DialogPtr theDialog, short item, Rect *theRect)
 
 void OffsetDialogItemRect (DialogPtr theDialog, short item, short h, short v)
 {
+	return;
+#if 0
 	Rect		oldRect;
 	Handle		itemHandle;
 	short		itemType;
@@ -519,6 +564,7 @@ void OffsetDialogItemRect (DialogPtr theDialog, short item, short h, short v)
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &oldRect);
 	OffsetRect(&oldRect, h, v);
 	SetDialogItem(theDialog, item, itemType, itemHandle, &oldRect);
+#endif
 }
 
 //--------------------------------------------------------------  SelectFromRadioGroup
@@ -528,6 +574,8 @@ void OffsetDialogItemRect (DialogPtr theDialog, short item, short h, short v)
 
 void SelectFromRadioGroup (DialogPtr dial, short which, short first, short last)
 {
+	return;
+#if 0
 	Rect		iRect;
 	Handle		iHandle;
 	short		iType, i;
@@ -540,6 +588,7 @@ void SelectFromRadioGroup (DialogPtr dial, short which, short first, short last)
 
 	GetDialogItem(dial, which, &iType, &iHandle, &iRect);
 	SetControlValue((ControlHandle)iHandle, (short)true);
+#endif
 }
 
 //--------------------------------------------------------------  AddMenuToPopUp
@@ -561,12 +610,15 @@ void AddMenuToPopUp (DialogPtr theDialog, short whichItem, MenuHandle theMenu)
 
 void GetPopUpMenuValue (DialogPtr theDialog, short whichItem, short *value)
 {
+	return;
+#if 0
 	Rect		iRect;
 	Handle		iHandle;
 	short		iType;
 
 	GetDialogItem(theDialog, whichItem, &iType, &iHandle, &iRect);
 	*value = GetControlValue((ControlHandle)iHandle);
+#endif
 }
 
 //--------------------------------------------------------------  SetPopUpMenuValue
@@ -574,12 +626,15 @@ void GetPopUpMenuValue (DialogPtr theDialog, short whichItem, short *value)
 
 void SetPopUpMenuValue (DialogPtr theDialog, short whichItem, short value)
 {
+	return;
+#if 0
 	Rect		iRect;
 	Handle		iHandle;
 	short		iType;
 
 	GetDialogItem(theDialog, whichItem, &iType, &iHandle, &iRect);
 	SetControlValue((ControlHandle)iHandle, value);
+#endif
 }
 
 //--------------------------------------------------------------  MyEnableControl
@@ -587,12 +642,15 @@ void SetPopUpMenuValue (DialogPtr theDialog, short whichItem, short value)
 
 void MyEnableControl (DialogPtr theDialog, short whichItem)
 {
+	return;
+#if 0
 	Rect		iRect;
 	Handle		iHandle;
 	short		iType;
 
 	GetDialogItem(theDialog, whichItem, &iType, &iHandle, &iRect);
 	HiliteControl((ControlHandle)iHandle, kActive);
+#endif
 }
 
 //--------------------------------------------------------------  MyDisableControl
@@ -600,12 +658,15 @@ void MyEnableControl (DialogPtr theDialog, short whichItem)
 
 void MyDisableControl (DialogPtr theDialog, short whichItem)
 {
+	return;
+#if 0
 	Rect		iRect;
 	Handle		iHandle;
 	short		iType;
 
 	GetDialogItem(theDialog, whichItem, &iType, &iHandle, &iRect);
 	HiliteControl((ControlHandle)iHandle, kInactive);
+#endif
 }
 
 //--------------------------------------------------------------  DrawDialogUserText
@@ -615,6 +676,8 @@ void MyDisableControl (DialogPtr theDialog, short whichItem)
 
 void DrawDialogUserText (DialogPtr dial, short item, StringPtr text, Boolean invert)
 {
+	return;
+#if 0
 	Rect		iRect;
 	Handle		iHandle;
 	Str255		newString, stringCopy;
@@ -645,6 +708,7 @@ void DrawDialogUserText (DialogPtr dial, short item, StringPtr text, Boolean inv
 		OffsetRect(&iRect, 0, 1);
 		InvertRect(&iRect);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawDialogUserText
@@ -654,6 +718,8 @@ void DrawDialogUserText (DialogPtr dial, short item, StringPtr text, Boolean inv
 
 void DrawDialogUserText2 (DialogPtr dial, short item, StringPtr text)
 {
+	return;
+#if 0
 	Rect		iRect;
 	Handle		iHandle;
 	Str255		stringCopy;
@@ -668,6 +734,7 @@ void DrawDialogUserText2 (DialogPtr dial, short item, StringPtr text)
 		CollapseStringToWidth(stringCopy, iRect.right - iRect.left - 2);
 	MoveTo(iRect.left, iRect.bottom);
 	DrawString(stringCopy);
+#endif
 }
 
 //--------------------------------------------------------------  LoadDialogPICT
@@ -676,6 +743,8 @@ void DrawDialogUserText2 (DialogPtr dial, short item, StringPtr text)
 
 void LoadDialogPICT (DialogPtr theDialog, short item, short theID)
 {
+	return;
+#if 0
 	Rect		iRect;
 	Handle		iHandle;
 	PicHandle	thePict;
@@ -685,6 +754,7 @@ void LoadDialogPICT (DialogPtr theDialog, short item, short theID)
 	thePict = GetPicture(theID);
 	if (thePict)
 		DrawPicture(thePict, &iRect);
+#endif
 }
 
 //--------------------------------------------------------------  FrameDialogItem
@@ -692,12 +762,15 @@ void LoadDialogPICT (DialogPtr theDialog, short item, short theID)
 
 void FrameDialogItem (DialogPtr theDialog, short item)
 {
+	return;
+#if 0
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
 
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	FrameRect(&itemRect);
+#endif
 }
 
 //--------------------------------------------------------------  FrameDialogItemC
@@ -705,6 +778,8 @@ void FrameDialogItem (DialogPtr theDialog, short item)
 
 void FrameDialogItemC (DialogPtr theDialog, short item, long color)
 {
+	return;
+#if 0
 	RGBColor	theRGBColor, wasColor;
 	Rect		itemRect;
 	Handle		itemHandle;
@@ -716,6 +791,7 @@ void FrameDialogItemC (DialogPtr theDialog, short item, long color)
 	RGBForeColor(&theRGBColor);
 	FrameRect(&itemRect);
 	RGBForeColor(&wasColor);
+#endif
 }
 
 //--------------------------------------------------------------  FrameOvalDialogItem
@@ -723,12 +799,15 @@ void FrameDialogItemC (DialogPtr theDialog, short item, long color)
 
 void FrameOvalDialogItem (DialogPtr theDialog, short item)
 {
+	return;
+#if 0
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
 
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	FrameOval(&itemRect);
+#endif
 }
 
 //--------------------------------------------------------------  BorderDialogItem
@@ -737,6 +816,8 @@ void FrameOvalDialogItem (DialogPtr theDialog, short item)
 
 void BorderDialogItem (DialogPtr theDialog, short item, short sides)
 {
+	return;
+#if 0
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
@@ -771,6 +852,7 @@ void BorderDialogItem (DialogPtr theDialog, short item, short sides)
 		MoveTo(itemRect.left - 1, itemRect.top);
 		LineTo(itemRect.left - 1, itemRect.bottom);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ShadowDialogItem
@@ -778,6 +860,8 @@ void BorderDialogItem (DialogPtr theDialog, short item, short sides)
 
 void ShadowDialogItem (DialogPtr theDialog, short item, short thickness)
 {
+	return;
+#if 0
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
@@ -789,6 +873,7 @@ void ShadowDialogItem (DialogPtr theDialog, short item, short thickness)
 	MoveTo(itemRect.right, itemRect.top + thickness);
 	Line(0, itemRect.bottom - itemRect.top - thickness);
 	PenNormal();
+#endif
 }
 
 //--------------------------------------------------------------  EraseDialogItem
@@ -796,11 +881,14 @@ void ShadowDialogItem (DialogPtr theDialog, short item, short thickness)
 
 void EraseDialogItem (DialogPtr theDialog, short item)
 {
+	return;
+#if 0
 	Rect		itemRect;
 	Handle		itemHandle;
 	short		itemType;
 
 	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
 	EraseRect(&itemRect);
+#endif
 }
 

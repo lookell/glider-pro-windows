@@ -6,7 +6,8 @@
 //============================================================================
 
 
-#include <StringCompare.h>
+//#include <StringCompare.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "House.h"
 
@@ -29,6 +30,8 @@ extern	Boolean		twoPlayerGame;
 
 void SaveGame2 (void)
 {
+	return;
+#if 0
 		// Add NavServices later.
 /*
 	StandardFileReply	theReply;
@@ -145,12 +148,15 @@ void SaveGame2 (void)
 	}
 	DisposePtr((Ptr)savedGame);
 	*/
+#endif
 }
 
 //--------------------------------------------------------------  SavedGameMismatchError
 
 void SavedGameMismatchError (StringPtr gameName)
 {
+	return;
+#if 0
 	#define		kSavedGameErrorAlert	1044
 	short		whoCares;
 
@@ -160,12 +166,15 @@ void SavedGameMismatchError (StringPtr gameName)
 	ParamText(gameName, thisHouseName, "\p", "\p");
 
 	whoCares = Alert(kSavedGameErrorAlert, nil);
+#endif
 }
 
 //--------------------------------------------------------------  OpenSavedGame
 
 Boolean OpenSavedGame (void)
 {
+	return false;
+#if 0
 return false;		// TEMP fix this iwth NavServices
 /*
 	StandardFileReply	theReply;
@@ -293,6 +302,7 @@ return false;		// TEMP fix this iwth NavServices
 
 	return (true);
 	*/
+#endif
 }
 
 //--------------------------------------------------------------  SaveGame
@@ -302,6 +312,8 @@ return false;		// TEMP fix this iwth NavServices
 
 void SaveGame (Boolean doSave)
 {
+	return;
+#if 0
 	houseType		*thisHousePtr;
 	UInt32			stamp;
 	char			wasState;
@@ -348,5 +360,6 @@ void SaveGame (Boolean doSave)
 		if (!WriteHouse(theMode == kEditMode))
 			YellowAlert(kYellowFailedWrite, 0);
 	}
+#endif
 }
 

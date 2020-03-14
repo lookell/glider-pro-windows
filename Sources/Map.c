@@ -5,8 +5,9 @@
 //============================================================================
 
 
-#include <ControlDefinitions.h>
-#include <Resources.h>
+//#include <ControlDefinitions.h>
+//#include <Resources.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "House.h"
@@ -52,6 +53,8 @@ extern	Boolean		doBitchDialogs;
 #ifndef COMPILEDEMO
 Boolean ThisRoomVisibleOnMap (void)
 {
+	return false;
+#if 0
 	short		h, v;
 
 	h = thisRoom->suite;
@@ -63,6 +66,7 @@ Boolean ThisRoomVisibleOnMap (void)
 		return (false);
 	else
 		return (true);
+#endif
 }
 #endif
 
@@ -71,6 +75,8 @@ Boolean ThisRoomVisibleOnMap (void)
 #ifndef COMPILEDEMO
 void CenterMapOnRoom (short h, short v)
 {
+	return;
+#if 0
 	if (mapWindow == nil)
 		return;
 
@@ -92,6 +98,7 @@ void CenterMapOnRoom (short h, short v)
 		SetControlValue(mapHScroll, mapLeftRoom);
 		SetControlValue(mapVScroll, mapTopRoom);
 	}
+#endif
 }
 #endif
 
@@ -100,12 +107,15 @@ void CenterMapOnRoom (short h, short v)
 #ifndef COMPILEDEMO
 void FlagMapRoomsForUpdate (void)
 {
+	return;
+#if 0
 	if (mapWindow == nil)
 		return;
 
 //	SetPortWindowPort(mapWindow);
 	InvalWindowRect(mapWindow, &wasActiveRoomRect);
 	InvalWindowRect(mapWindow, &activeRoomRect);
+#endif
 }
 #endif
 
@@ -114,6 +124,8 @@ void FlagMapRoomsForUpdate (void)
 #ifndef COMPILEDEMO
 void FindNewActiveRoomRect (void)
 {
+	return;
+#if 0
 	Rect		aRoom;
 	short		h, i;
 	short		floor, suite, whoCares;
@@ -157,6 +169,7 @@ void FindNewActiveRoomRect (void)
 		activeRoomRect.bottom++;
 		InsetRect(&activeRoomRect, -1, -1);
 	}
+#endif
 }
 #endif
 
@@ -164,6 +177,8 @@ void FindNewActiveRoomRect (void)
 
 void LoadGraphicPlus (short resID, Rect *theRect)
 {
+	return;
+#if 0
 	PicHandle	thePicture;
 
 	thePicture = GetPicture(resID);
@@ -177,6 +192,7 @@ void LoadGraphicPlus (short resID, Rect *theRect)
 	}
 	DrawPicture(thePicture, theRect);
 	ReleaseResource((Handle)thePicture);
+#endif
 }
 
 //--------------------------------------------------------------  RedrawMapContents
@@ -184,6 +200,8 @@ void LoadGraphicPlus (short resID, Rect *theRect)
 #ifndef COMPILEDEMO
 void RedrawMapContents (void)
 {
+	return;
+#if 0
 	Rect		newClip, aRoom, src;
 	RgnHandle	wasClip;
 	short		h, i, groundLevel;
@@ -299,6 +317,7 @@ void RedrawMapContents (void)
 		SetClip(wasClip);
 		DisposeRgn(wasClip);
 	}
+#endif
 }
 #endif
 
@@ -306,6 +325,8 @@ void RedrawMapContents (void)
 
 void UpdateMapWindow (void)
 {
+	return;
+#if 0
 	#ifndef COMPILEDEMO
 	if (mapWindow == nil)
 		return;
@@ -318,12 +339,15 @@ void UpdateMapWindow (void)
 	DrawGrowIcon(mapWindow);
 	RedrawMapContents();
 	#endif
+#endif
 }
 
 //--------------------------------------------------------------  ResizeMapWindow
 
 void ResizeMapWindow (short newH, short newV)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	if ((newH == 0) && (newV == 0))
 		return;
@@ -355,12 +379,15 @@ void ResizeMapWindow (short newH, short newV)
 
 	InvalWindowRect(mapWindow, &mapWindowRect);
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  OpenMapWindow
 
 void OpenMapWindow (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	Rect		src, dest;
 	Point		globalMouse;
@@ -421,15 +448,19 @@ void OpenMapWindow (void)
 
 	UpdateMapCheckmark(true);
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  CloseMapWindow
 
 void CloseMapWindow (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	CloseThisWindow(&mapWindow);
 	UpdateMapCheckmark(false);
+#endif
 #endif
 }
 
@@ -437,6 +468,8 @@ void CloseMapWindow (void)
 
 void ToggleMapWindow (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	if (mapWindow == nil)
 	{
@@ -449,6 +482,7 @@ void ToggleMapWindow (void)
 		isMapOpen = false;
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  LiveHScrollAction
@@ -456,6 +490,8 @@ void ToggleMapWindow (void)
 
 pascal void LiveHScrollAction (ControlHandle theControl, short thePart)
 {
+	return;
+#if 0
 	short		wasValue, newValue;
 
 	switch (thePart)
@@ -505,6 +541,7 @@ pascal void LiveHScrollAction (ControlHandle theControl, short thePart)
 		case kControlIndicatorPart:
 		break;
 	}
+#endif
 }
 #endif
 
@@ -513,6 +550,8 @@ pascal void LiveHScrollAction (ControlHandle theControl, short thePart)
 
 pascal void LiveVScrollAction (ControlHandle theControl, short thePart)
 {
+	return;
+#if 0
 	short		wasValue, newValue;
 
 	switch (thePart)
@@ -562,6 +601,7 @@ pascal void LiveVScrollAction (ControlHandle theControl, short thePart)
 		case kControlIndicatorPart:
 		break;
 	}
+#endif
 }
 #endif
 
@@ -569,6 +609,8 @@ pascal void LiveVScrollAction (ControlHandle theControl, short thePart)
 
 void HandleMapClick (EventRecord *theEvent)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	Rect				aRoom;
 	ControlHandle		whichControl;
@@ -709,6 +751,7 @@ void HandleMapClick (EventRecord *theEvent)
 	DisposeControlActionUPP(scrollHActionUPP);
 	DisposeControlActionUPP(scrollVActionUPP);
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  QueryNewRoom
@@ -716,6 +759,8 @@ void HandleMapClick (EventRecord *theEvent)
 #ifndef COMPILEDEMO
 Boolean QueryNewRoom (void)
 {
+	return true;
+#if 0
 	short		hitWhat;
 
 //	CenterAlert(kNewRoomAlert);
@@ -724,6 +769,7 @@ Boolean QueryNewRoom (void)
 		return (true);
 	else
 		return (false);
+#endif
 }
 #endif
 
@@ -732,6 +778,8 @@ Boolean QueryNewRoom (void)
 #ifndef COMPILEDEMO
 void CreateNailOffscreen (void)
 {
+	return;
+#if 0
 	CGrafPtr	wasCPort;
 	GDHandle	wasWorld;
 	OSErr		theErr;
@@ -747,6 +795,7 @@ void CreateNailOffscreen (void)
 
 		SetGWorld(wasCPort, wasWorld);
 	}
+#endif
 }
 #endif
 
@@ -755,12 +804,15 @@ void CreateNailOffscreen (void)
 #ifndef COMPILEDEMO
 void KillNailOffscreen (void)
 {
+	return;
+#if 0
 	if (nailSrcMap != nil)
 	{
 //		KillOffScreenPixMap(nailSrcMap);
 		DisposeGWorld(nailSrcMap);
 		nailSrcMap = nil;
 	}
+#endif
 }
 #endif
 
@@ -768,6 +820,8 @@ void KillNailOffscreen (void)
 
 void MoveRoom (Point wherePt)
 {
+	return;
+#if 0
 	short		localH, localV;
 	short		roomH, roomV, itsNumber;
 
@@ -792,5 +846,6 @@ void MoveRoom (Point wherePt)
 		UpdateMenus(false);
 		RedrawMapContents();
 	}
+#endif
 }
 

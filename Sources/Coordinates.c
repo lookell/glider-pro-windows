@@ -5,7 +5,8 @@
 //============================================================================
 
 
-#include <NumberFormatting.h>
+//#include <NumberFormatting.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "Marquee.h"
@@ -28,6 +29,8 @@ Boolean			isCoordOpen;
 
 void SetCoordinateHVD (short h, short v, short d)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	if (h != -2)
 		coordH = h;
@@ -36,6 +39,7 @@ void SetCoordinateHVD (short h, short v, short d)
 	if (d != -2)
 		coordD = d;
 	UpdateCoordWindow();
+#endif
 #endif
 }
 
@@ -48,9 +52,12 @@ void SetCoordinateHVD (short h, short v, short d)
 
 void DeltaCoordinateD (short d)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	coordD = d;
 	UpdateCoordWindow();
+#endif
 #endif
 }
 
@@ -60,6 +67,8 @@ void DeltaCoordinateD (short d)
 
 void UpdateCoordWindow (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	Str255		tempStr, numStr;
 	GrafPtr		wasPort;
@@ -108,6 +117,7 @@ void UpdateCoordWindow (void)
 
 	SetPort((GrafPtr)wasPort);
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  OpenCoordWindow
@@ -115,6 +125,8 @@ void UpdateCoordWindow (void)
 
 void OpenCoordWindow (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	Rect		src, dest;
 	Point		globalMouse;
@@ -164,6 +176,7 @@ void OpenCoordWindow (void)
 
 	UpdateCoordinateCheckmark(true);
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  CloseCoordWindow
@@ -171,8 +184,11 @@ void OpenCoordWindow (void)
 
 void CloseCoordWindow (void)
 {
+	return;
+#if 0
 	CloseThisWindow(&coordWindow);
 	UpdateCoordinateCheckmark(false);
+#endif
 }
 
 //--------------------------------------------------------------  ToggleCoordinateWindow
@@ -180,6 +196,8 @@ void CloseCoordWindow (void)
 
 void ToggleCoordinateWindow (void)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	if (coordWindow == nil)
 	{
@@ -191,6 +209,7 @@ void ToggleCoordinateWindow (void)
 		CloseCoordWindow();
 		isCoordOpen = false;
 	}
+#endif
 #endif
 }
 

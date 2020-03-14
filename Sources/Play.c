@@ -6,7 +6,8 @@
 //============================================================================
 
 
-#include <Resources.h>
+//#include <Resources.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "House.h"
@@ -73,6 +74,8 @@ extern	Boolean		switchedOut;
 
 void NewGame (short mode)
 {
+	return;
+#if 0
 	Rect		tempRect;
 	Size		freeBytes, growBytes;
 	OSErr		theErr;
@@ -275,12 +278,15 @@ void NewGame (short mode)
 	WaitCommandQReleased();
 	demoGoing = false;
 	incrementModeTime = TickCount() + kIdleSplashTicks;
+#endif
 }
 
 //--------------------------------------------------------------  DoDemoGame
 
 void DoDemoGame (void)
 {
+	return;
+#if 0
 	short		wasHouseIndex;
 	Boolean		whoCares;
 
@@ -300,12 +306,15 @@ void DoDemoGame (void)
 	if (OpenHouse())
 		whoCares = ReadHouse();
 	incrementModeTime = TickCount() + kIdleSplashTicks;
+#endif
 }
 
 //--------------------------------------------------------------  InitGlider
 
 void InitGlider (gliderPtr thisGlider, short mode)
 {
+	return;
+#if 0
 	WhereDoesGliderBegin(&thisGlider->dest, mode);
 
 	if (mode == kResumeGameMode)
@@ -363,29 +372,38 @@ void InitGlider (gliderPtr thisGlider, short mode)
 	thisGlider->tipped = false;
 	thisGlider->sliding = false;
 	thisGlider->dontDraw = false;
+#endif
 }
 
 //--------------------------------------------------------------  SetHouseToFirstRoom
 
 void SetHouseToFirstRoom (void)
 {
+	return;
+#if 0
 	short		firstRoom;
 
 	firstRoom = GetFirstRoomNumber();
 	ForceThisRoom(firstRoom);
+#endif
 }
 
 //--------------------------------------------------------------  SetHouseToSavedRoom
 
 void SetHouseToSavedRoom (void)
 {
+	return;
+#if 0
 	ForceThisRoom(smallGame.roomNumber);
+#endif
 }
 
 //--------------------------------------------------------------  HandlePlayEvent
 
 void HandlePlayEvent (void)
 {
+	return;
+#if 0
 	EventRecord	theEvent;
 	GrafPtr		wasPort;
 	long		sleep = 2;
@@ -423,12 +441,15 @@ void HandlePlayEvent (void)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  PlayGame
 
 void PlayGame (void)
 {
+	return;
+#if 0
 	while ((playing) && (!quitting))
 	{
 		gameFrame++;
@@ -596,12 +617,15 @@ void PlayGame (void)
 //	ShowMenuBarOld();	// TEMP
 
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  SetObjectsToDefaults
 
 void SetObjectsToDefaults (void)
 {
+	return;
+#if 0
 	houseType	*thisHousePtr;
 	short		numRooms;
 	short		r, i;
@@ -705,12 +729,15 @@ void SetObjectsToDefaults (void)
 		}
 	}
 	HSetState((Handle)thisHouse, wasState);
+#endif
 }
 
 //--------------------------------------------------------------  HideGlider
 
 void HideGlider (gliderPtr thisGlider)
 {
+	return;
+#if 0
 	Rect		tempRect;
 
 	tempRect = thisGlider->whole;
@@ -726,23 +753,29 @@ void HideGlider (gliderPtr thisGlider)
 	tempRect = thisGlider->wholeShadow;
 	QOffsetRect(&tempRect, playOriginH, playOriginV);
 	CopyRectWorkToMain(&tempRect);
+#endif
 }
 
 //--------------------------------------------------------------  InitTelephone
 
 void InitTelephone (void)
 {
+	return;
+#if 0
 	thePhone.nextRing = RandomInt(kRingSpread) + kRingBaseDelay;
 	thePhone.rings = RandomInt(3) + 3;
 	thePhone.delay = kRingDelay;
 
 	theChimes.nextRing = RandomInt(kChimeDelay) + 1;
+#endif
 }
 
 //--------------------------------------------------------------  HandleTelephone
 
 void HandleTelephone (void)
 {
+	return;
+#if 0
 	short		delayTime;
 
 	if (!phoneBitSet)
@@ -786,19 +819,25 @@ void HandleTelephone (void)
 		else
 			theChimes.nextRing--;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  StrikeChime
 
 void StrikeChime (void)
 {
+	return;
+#if 0
 	theChimes.nextRing = 0;
+#endif
 }
 
 //--------------------------------------------------------------  RestoreEntireGameScreen
 
 void RestoreEntireGameScreen (void)
 {
+	return;
+#if 0
 	Rect		tempRect;
 
 	HideCursor();
@@ -817,5 +856,6 @@ void RestoreEntireGameScreen (void)
 //		DissBitsChunky(&justRoomsRect);
 //	else
 //		DissBits(&justRoomsRect);
+#endif
 }
 

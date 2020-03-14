@@ -7,8 +7,9 @@
 
 
 //#include <Balloons.h>
-#include <NumberFormatting.h>
-#include <ToolUtils.h>
+//#include <NumberFormatting.h>
+//#include <ToolUtils.h>
+#include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "House.h"
@@ -48,12 +49,15 @@ extern	Boolean		houseOpen;
 
 void UpdateMenusEditMode (void)
 {
+	return;
+#if 0
 	DisableMenuItem(gameMenu, iNewGame);
 	DisableMenuItem(gameMenu, iTwoPlayer);
 	DisableMenuItem(gameMenu, iOpenSavedGame);
 	DisableMenuItem(optionsMenu, iHighScores);
 	DisableMenuItem(optionsMenu, iHelp);
 	CheckMenuItem(optionsMenu, iEditor, true);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateMenusNonEditMode
@@ -61,6 +65,8 @@ void UpdateMenusEditMode (void)
 
 void UpdateMenusNonEditMode (void)
 {
+	return;
+#if 0
 	if ((noRoomAtAll) || (!houseOpen) || (numberRooms <= 0))
 	{
 		DisableMenuItem(gameMenu, iNewGame);
@@ -90,6 +96,7 @@ void UpdateMenusNonEditMode (void)
 	else
 		EnableMenuItem(optionsMenu, iHelp);
 	CheckMenuItem(optionsMenu, iEditor, false);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateMenusHouseOpen
@@ -97,6 +104,8 @@ void UpdateMenusNonEditMode (void)
 
 void UpdateMenusHouseOpen (void)
 {
+	return;
+#if 0
 	EnableMenuItem(gameMenu, iLoadHouse);
 	if ((fileDirty) && (houseUnlocked))
 		EnableMenuItem(houseMenu, iSave);
@@ -138,6 +147,7 @@ void UpdateMenusHouseOpen (void)
 			EnableMenuItem(houseMenu, iSendBack);
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  UpdateMenusHouseClosed
@@ -145,6 +155,8 @@ void UpdateMenusHouseOpen (void)
 
 void UpdateMenusHouseClosed (void)
 {
+	return;
+#if 0
 	DisableMenuItem(gameMenu, iLoadHouse);
 	DisableMenuItem(houseMenu, iSave);
 	// DisableMenuItem(houseMenu, iSaveAs);
@@ -156,6 +168,7 @@ void UpdateMenusHouseClosed (void)
 	DisableMenuItem(houseMenu, iPaste);
 	DisableMenuItem(houseMenu, iClear);
 	DisableMenuItem(houseMenu, iDuplicate);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateClipboardMenus
@@ -164,6 +177,8 @@ void UpdateMenusHouseClosed (void)
 
 void UpdateClipboardMenus (void)
 {
+	return;
+#if 0
 	Str255		title;
 
 	if (!houseOpen)
@@ -232,6 +247,7 @@ void UpdateClipboardMenus (void)
 		DisableMenuItem(houseMenu, iObjectWindow);
 		DisableMenuItem(houseMenu, iCoordinateWindow);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  UpdateMenus
@@ -242,6 +258,8 @@ void UpdateClipboardMenus (void)
 
 void UpdateMenus (Boolean newMode)
 {
+	return;
+#if 0
 	if (!menusUp)
 		return;
 
@@ -269,6 +287,7 @@ void UpdateMenus (Boolean newMode)
 		UpdateMenusNonEditMode();
 
 	DrawMenuBar();
+#endif
 }
 
 //--------------------------------------------------------------  DoAppleMenu
@@ -276,6 +295,8 @@ void UpdateMenus (Boolean newMode)
 
 void DoAppleMenu (short theItem)
 {
+	return;
+#if 0
 //	Str255		daName;
 //	GrafPtr		wasPort;
 //	short		daNumber;
@@ -293,6 +314,7 @@ void DoAppleMenu (short theItem)
 //		SetPort((GrafPtr)wasPort);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoGameMenu
@@ -300,6 +322,8 @@ void DoAppleMenu (short theItem)
 
 void DoGameMenu (short theItem)
 {
+	return;
+#if 0
 	switch (theItem)
 	{
 		case iNewGame:
@@ -358,6 +382,7 @@ void DoGameMenu (short theItem)
 		default:
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoOptionsMenu
@@ -365,6 +390,8 @@ void DoGameMenu (short theItem)
 
 void DoOptionsMenu (short theItem)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	OSErr		theErr;
 #endif
@@ -428,6 +455,7 @@ void DoOptionsMenu (short theItem)
 		DoDemoGame();
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DoHouseMenu
@@ -435,6 +463,8 @@ void DoOptionsMenu (short theItem)
 
 void DoHouseMenu (short theItem)
 {
+	return;
+#if 0
 #ifndef COMPILEDEMO
 	short		direction, dist;
 	Boolean		whoCares;
@@ -582,6 +612,7 @@ void DoHouseMenu (short theItem)
 		break;
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  DoMenuChoice
@@ -590,6 +621,8 @@ void DoHouseMenu (short theItem)
 
 void DoMenuChoice (long menuChoice)
 {
+	return;
+#if 0
 	short		theMenu, theItem;
 
 	if (menuChoice == 0)
@@ -618,6 +651,7 @@ void DoMenuChoice (long menuChoice)
 	}
 
 	HiliteMenu(0);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateMapCheckmark
@@ -625,10 +659,13 @@ void DoMenuChoice (long menuChoice)
 
 void UpdateMapCheckmark (Boolean checkIt)
 {
+	return;
+#if 0
 	if (!menusUp)
 		return;
 
 	CheckMenuItem(houseMenu, iMapWindow, checkIt);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateToolsCheckmark
@@ -636,10 +673,13 @@ void UpdateMapCheckmark (Boolean checkIt)
 
 void UpdateToolsCheckmark (Boolean checkIt)
 {
+	return;
+#if 0
 	if (!menusUp)
 		return;
 
 	CheckMenuItem(houseMenu, iObjectWindow, checkIt);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateCoordinateCheckmark
@@ -647,10 +687,13 @@ void UpdateToolsCheckmark (Boolean checkIt)
 
 void UpdateCoordinateCheckmark (Boolean checkIt)
 {
+	return;
+#if 0
 	if (!menusUp)
 		return;
 
 	CheckMenuItem(houseMenu, iCoordinateWindow, checkIt);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateResumeDialog
@@ -658,8 +701,11 @@ void UpdateCoordinateCheckmark (Boolean checkIt)
 
 void UpdateResumeDialog (DialogPtr theDialog)
 {
+	return;
+#if 0
 	DrawDialog(theDialog);
 	DrawDefaultButton(theDialog);
+#endif
 }
 
 //--------------------------------------------------------------  ResumeFilter
@@ -667,6 +713,8 @@ void UpdateResumeDialog (DialogPtr theDialog)
 
 pascal Boolean ResumeFilter (DialogPtr dial, EventRecord *event, short *item)
 {
+	return false;
+#if 0
 	switch (event->what)
 	{
 		case keyDown:
@@ -700,6 +748,7 @@ pascal Boolean ResumeFilter (DialogPtr dial, EventRecord *event, short *item)
 		return(false);
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  QueryResumeGame
@@ -709,6 +758,8 @@ pascal Boolean ResumeFilter (DialogPtr dial, EventRecord *event, short *item)
 
 short QueryResumeGame (void)
 {
+	return kSheWantsNewGame;
+#if 0
 	#define			kResumeGameDial		1025
 	DialogPtr		theDial;
 	houseType		*thisHousePtr;
@@ -756,6 +807,7 @@ short QueryResumeGame (void)
 	DisposeModalFilterUPP(resumeFilterUPP);
 
 	return (hitWhat);
+#endif
 }
 
 //--------------------------------------------------------------  DoNotInDemo
@@ -766,11 +818,14 @@ short QueryResumeGame (void)
 #ifdef COMPILEDEMO
 void DoNotInDemo (void)
 {
+	return;
+#if 0
 	#define		kNotInDemoAlert		1037
 	short		whoCares;
 
 //	CenterAlert(kNotInDemoAlert);
 	whoCares = Alert(kNotInDemoAlert, nil);
+#endif
 }
 #endif
 
@@ -778,11 +833,14 @@ void DoNotInDemo (void)
 
 void HeyYourPissingAHighScore (void)
 {
+	return;
+#if 0
 	#define		kNoHighScoreAlert	1046
 	short		whoCares;
 
 //	CenterAlert(kNoHighScoreAlert);
 	whoCares = Alert(kNoHighScoreAlert, nil);
+#endif
 }
 
 //--------------------------------------------------------------  OpenCloseEditWindows
@@ -791,6 +849,8 @@ void HeyYourPissingAHighScore (void)
 
 void OpenCloseEditWindows (void)
 {
+	return;
+#if 0
 	if (theMode == kEditMode)
 	{
 		if (houseUnlocked)
@@ -809,5 +869,6 @@ void OpenCloseEditWindows (void)
 			CloseCoordWindow();
 		}
 	}
+#endif
 }
 

@@ -5,8 +5,9 @@
 //============================================================================
 
 
-#include <NumberFormatting.h>
-#include <ToolUtils.h>
+//#include <NumberFormatting.h>
+//#include <ToolUtils.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "House.h"
@@ -55,6 +56,8 @@ extern	Boolean		quickerTransitions, houseIsReadOnly;
 
 void DrawOnSplash (void)
 {
+	return;
+#if 0
 	Str255		houseLoadedStr;
 
 	PasStringCopy("\pHouse: ", houseLoadedStr);
@@ -91,12 +94,15 @@ void DrawOnSplash (void)
 	DrawString("\pPowerPC Native!");
 	ForeColor(blackColor);
 	#endif
+#endif
 }
 
 //--------------------------------------------------------------  RedrawSplashScreen
 
 void RedrawSplashScreen (void)
 {
+	return;
+#if 0
 	Rect		tempRect;
 
 	SetPort((GrafPtr)workSrcMap);
@@ -111,6 +117,7 @@ void RedrawSplashScreen (void)
 //	else
 //		DissBits(&workSrcRect);
 	CopyRectMainToWork(&workSrcRect);
+#endif
 }
 
 //--------------------------------------------------------------  UpdateMainWindow
@@ -119,6 +126,8 @@ void RedrawSplashScreen (void)
 
 void UpdateMainWindow (void)
 {
+	return;
+#if 0
 	Rect		tempRect;
 	RgnHandle	dummyRgn;
 
@@ -152,6 +161,7 @@ void UpdateMainWindow (void)
 
 	DisposeRgn(dummyRgn);
 	splashDrawn = true;
+#endif
 }
 
 //--------------------------------------------------------------  UpdateMenuBarWindow
@@ -159,6 +169,8 @@ void UpdateMainWindow (void)
 
 void UpdateMenuBarWindow (void)
 {
+	return;
+#if 0
 	Rect		bounds;
 
 	if (menuWindow == nil)
@@ -166,6 +178,7 @@ void UpdateMenuBarWindow (void)
 
 	GetLocalWindowRect(menuWindow, &bounds);
 	PaintRect(&bounds);
+#endif
 }
 
 //--------------------------------------------------------------  OpenMainWindow
@@ -173,6 +186,8 @@ void UpdateMenuBarWindow (void)
 
 void OpenMainWindow (void)
 {
+	return;
+#if 0
 //	long		wasSeed;
 	short		whichRoom;
 
@@ -258,6 +273,7 @@ void OpenMainWindow (void)
 
 		SetPortWindowPort(mainWindow);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  CloseMainWindow
@@ -266,9 +282,12 @@ void OpenMainWindow (void)
 
 void CloseMainWindow (void)
 {
+	return;
+#if 0
 	if (mainWindow != nil)
 		DisposeWindow(mainWindow);
 	mainWindow = nil;
+#endif
 }
 
 //--------------------------------------------------------------  ZoomBetweenWindows
@@ -305,6 +324,8 @@ void ZoomBetweenWindows (void)
 #ifndef COMPILEDEMO
 void UpdateEditWindowTitle (void)
 {
+	return;
+#if 0
 	Str255		newTitle, tempStr;
 
 	if (mainWindow == nil)
@@ -328,6 +349,7 @@ void UpdateEditWindowTitle (void)
 	else
 		PasStringConcat(newTitle, "\pHouse Locked");
 	SetWTitle(mainWindow, newTitle);
+#endif
 }
 #endif
 
@@ -337,6 +359,8 @@ void UpdateEditWindowTitle (void)
 
 void HandleMainClick (Point wherePt, Boolean isDoubleClick)
 {
+	return;
+#if 0
 	KeyMap		theseKeys;
 
 	if ((theMode != kEditMode) || (mainWindow == nil) ||
@@ -357,6 +381,7 @@ void HandleMainClick (Point wherePt, Boolean isDoubleClick)
 		EraseSelectedTool();
 		SelectTool(kSelectTool);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  ShowMenuBarOld

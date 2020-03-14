@@ -6,8 +6,9 @@
 //============================================================================
 
 
-#include <AppleEvents.h>
-#include <ToolUtils.h>
+//#include <AppleEvents.h>
+//#include <ToolUtils.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "House.h"
@@ -45,6 +46,8 @@ extern	Boolean		autoRoomEdit, newRoomNow, isPlayMusicIdle;
 
 short BitchAboutColorDepth (void)
 {
+	return (1);
+#if 0
 	#define		kColorSwitchedAlert		1042
 	short		sheSaid;
 
@@ -52,6 +55,7 @@ short BitchAboutColorDepth (void)
 	sheSaid = Alert(kColorSwitchedAlert, nil);
 
 	return (sheSaid);
+#endif
 }
 
 //--------------------------------------------------------------  HandleMouseEvent
@@ -59,6 +63,8 @@ short BitchAboutColorDepth (void)
 
 void HandleMouseEvent (EventRecord *theEvent)
 {
+	return;
+#if 0
 	WindowPtr	whichWindow;
 	long		menuChoice, newSize;
 	short		thePart, hDelta, vDelta;
@@ -154,6 +160,7 @@ void HandleMouseEvent (EventRecord *theEvent)
 		default:
 		break;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleKeyEvent
@@ -161,6 +168,8 @@ void HandleMouseEvent (EventRecord *theEvent)
 
 void HandleKeyEvent (EventRecord *theEvent)
 {
+	return;
+#if 0
 	char		theChar;
 	Boolean		shiftDown, commandDown, optionDown;
 
@@ -333,6 +342,7 @@ void HandleKeyEvent (EventRecord *theEvent)
 			break;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleUpdateEvent
@@ -340,6 +350,8 @@ void HandleKeyEvent (EventRecord *theEvent)
 
 void HandleUpdateEvent (EventRecord *theEvent)
 {
+	return;
+#if 0
 	if ((WindowPtr)theEvent->message == mainWindow)
 	{
 		SetPort((GrafPtr)mainWindow);
@@ -382,6 +394,7 @@ void HandleUpdateEvent (EventRecord *theEvent)
 		UpdateMenuBarWindow();
 		EndUpdate(menuWindow);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleOSEvent
@@ -389,6 +402,8 @@ void HandleUpdateEvent (EventRecord *theEvent)
 
 void HandleOSEvent (EventRecord *theEvent)
 {
+	return;
+#if 0
 	OSErr		theErr;
 	short		buttonHit;
 
@@ -439,6 +454,7 @@ void HandleOSEvent (EventRecord *theEvent)
 				StopTheMusic();
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleHighLevelEvent
@@ -446,11 +462,14 @@ void HandleOSEvent (EventRecord *theEvent)
 
 void HandleHighLevelEvent (EventRecord *theEvent)
 {
+	return;
+#if 0
 	OSErr		theErr;
 
 	theErr = AEProcessAppleEvent(theEvent);
 	if ((theErr != noErr) && (theErr != errAEEventNotHandled))
 		YellowAlert(kYellowAppleEventErr, theErr);
+#endif
 }
 
 //--------------------------------------------------------------  HandleIdleTask
@@ -458,6 +477,8 @@ void HandleHighLevelEvent (EventRecord *theEvent)
 
 void HandleIdleTask (void)
 {
+	return;
+#if 0
 	if (theMode == kEditMode)
 	{
 		SetPort((GrafPtr)mainWindow);
@@ -470,6 +491,7 @@ void HandleIdleTask (void)
 			newRoomNow = false;
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HandleEvent
@@ -478,6 +500,8 @@ void HandleIdleTask (void)
 
 void HandleEvent (void)
 {
+	return;
+#if 0
 	KeyMap		eventKeys;
 	EventRecord	theEvent;
 	long		sleep = 2;
@@ -538,6 +562,7 @@ void HandleEvent (void)
 		if (TickCount() >= incrementModeTime)
 			DoDemoGame();
 	}
+#endif
 }
 
 //--------------------------------------------------------------  HiliteAllWindows
@@ -547,6 +572,8 @@ void HandleEvent (void)
 
 void HiliteAllWindows (void)
 {
+	return;
+#if 0
 	if (mainWindow != nil)
 		HiliteWindow(mainWindow, true);
 	if (mapWindow != nil)
@@ -557,6 +584,7 @@ void HiliteAllWindows (void)
 		HiliteWindow(coordWindow, true);
 	if (linkWindow != nil)
 		HiliteWindow(linkWindow, true);
+#endif
 }
 
 //--------------------------------------------------------------  IgnoreThisClick
@@ -566,8 +594,11 @@ void HiliteAllWindows (void)
 
 void IgnoreThisClick (void)
 {
+	return;
+#if 0
 	lastUp -= doubleTime;
 	lastWhere.h = -100;
 	lastWhere.v = -100;
+#endif
 }
 

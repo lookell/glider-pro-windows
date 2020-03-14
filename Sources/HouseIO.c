@@ -6,11 +6,12 @@
 //============================================================================
 
 
-#include <Aliases.h>
-#include <Movies.h>
-#include <Resources.h>
-#include <StringCompare.h>
-#include <TextUtils.h>
+//#include <Aliases.h>
+//#include <Movies.h>
+//#include <Resources.h>
+//#include <StringCompare.h>
+//#include <TextUtils.h>
+#include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "House.h"
@@ -47,6 +48,8 @@ extern	Boolean		phoneBitSet, bannerStarCountOn;
 
 void LoopMovie (void)
 {
+	return;
+#if 0
 	Handle		theLoop;
 	UserData	theUserData;
 	short		theCount;
@@ -60,12 +63,15 @@ void LoopMovie (void)
 		RemoveUserData(theUserData, 'LOOP', 1);
 	}
 	AddUserData(theUserData, theLoop, 'LOOP');
+#endif
 }
 
 //--------------------------------------------------------------  OpenHouseMovie
 
 void OpenHouseMovie (void)
 {
+	return;
+#if 0
 #ifdef COMPILEQT
 	TimeBase	theTime;
 	FSSpec		theSpec;
@@ -139,12 +145,15 @@ void OpenHouseMovie (void)
 		hasMovie = true;
 	}
 #endif
+#endif
 }
 
 //--------------------------------------------------------------  CloseHouseMovie
 
 void CloseHouseMovie (void)
 {
+	return;
+#if 0
 #ifdef COMPILEQT
 	OSErr		theErr;
 
@@ -156,6 +165,7 @@ void CloseHouseMovie (void)
 	}
 #endif
 	hasMovie = false;
+#endif
 }
 
 //--------------------------------------------------------------  OpenHouse
@@ -163,6 +173,8 @@ void CloseHouseMovie (void)
 
 Boolean OpenHouse (void)
 {
+	return false;
+#if 0
 	OSErr		theErr;
 	Boolean		targetIsFolder, wasAliased;
 
@@ -199,6 +211,7 @@ Boolean OpenHouse (void)
 	OpenHouseMovie();
 
 	return (true);
+#endif
 }
 
 //--------------------------------------------------------------  OpenSpecificHouse
@@ -207,6 +220,8 @@ Boolean OpenHouse (void)
 #ifndef COMPILEDEMO
 Boolean OpenSpecificHouse (FSSpec *specs)
 {
+	return false;
+#if 0
 	short		i;
 	Boolean		itOpened;
 
@@ -232,6 +247,7 @@ Boolean OpenSpecificHouse (FSSpec *specs)
 	}
 
 	return (itOpened);
+#endif
 }
 #endif
 
@@ -240,6 +256,8 @@ Boolean OpenSpecificHouse (FSSpec *specs)
 #ifndef COMPILEDEMO
 Boolean SaveHouseAs (void)
 {
+	return false;
+#if 0
 	// TEMP - fix this later -- use NavServices (see House.c)
 /*
 	StandardFileReply	theReply;
@@ -305,6 +323,7 @@ Boolean SaveHouseAs (void)
 	return (noProblems);
 	*/
 	return false;
+#endif
 }
 #endif
 
@@ -314,6 +333,8 @@ Boolean SaveHouseAs (void)
 
 Boolean ReadHouse (void)
 {
+	return false;
+#if 0
 	long		byteCount;
 	OSErr		theErr;
 	short		whichRoom;
@@ -440,6 +461,7 @@ Boolean ReadHouse (void)
 	UpdateMenus(false);
 
 	return (true);
+#endif
 }
 
 //--------------------------------------------------------------  WriteHouse
@@ -447,6 +469,8 @@ Boolean ReadHouse (void)
 
 Boolean WriteHouse (Boolean checkIt)
 {
+	return false;
+#if 0
 	UInt32			timeStamp;
 	long			byteCount;
 	OSErr			theErr;
@@ -516,6 +540,7 @@ Boolean WriteHouse (Boolean checkIt)
 	fileDirty = false;
 	UpdateMenus(false);
 	return (true);
+#endif
 }
 
 //--------------------------------------------------------------  CloseHouse
@@ -523,6 +548,8 @@ Boolean WriteHouse (Boolean checkIt)
 
 Boolean CloseHouse (void)
 {
+	return false;
+#if 0
 	OSErr		theErr;
 
 	if (!houseOpen)
@@ -559,6 +586,7 @@ Boolean CloseHouse (void)
 	houseOpen = false;
 
 	return (true);
+#endif
 }
 
 //--------------------------------------------------------------  OpenHouseResFork
@@ -566,6 +594,8 @@ Boolean CloseHouse (void)
 
 void OpenHouseResFork (void)
 {
+	return;
+#if 0
 	if (houseResFork == -1)
 	{
 		houseResFork = FSpOpenResFile(&theHousesSpecs[thisHouseIndex], fsCurPerm);
@@ -574,6 +604,7 @@ void OpenHouseResFork (void)
 		else
 			UseResFile(houseResFork);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  CloseHouseResFork
@@ -581,11 +612,14 @@ void OpenHouseResFork (void)
 
 void CloseHouseResFork (void)
 {
+	return;
+#if 0
 	if (houseResFork != -1)
 	{
 		CloseResFile(houseResFork);
 		houseResFork = -1;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  QuerySaveChanges
@@ -595,6 +629,8 @@ void CloseHouseResFork (void)
 #ifndef COMPILEDEMO
 Boolean QuerySaveChanges (void)
 {
+	return false;
+#if 0
 	short		hitWhat;
 	Boolean		whoCares;
 
@@ -629,6 +665,7 @@ Boolean QuerySaveChanges (void)
 	}
 	else
 		return (false);
+#endif
 }
 #endif
 
@@ -639,6 +676,8 @@ Boolean QuerySaveChanges (void)
 
 void YellowAlert (short whichAlert, short identifier)
 {
+	return;
+#if 0
 	#define		kYellowAlert	1006
 	Str255		errStr, errNumStr;
 	short		whoCares;
@@ -652,12 +691,15 @@ void YellowAlert (short whichAlert, short identifier)
 	ParamText(errStr, errNumStr, "\p", "\p");
 
 	whoCares = Alert(kYellowAlert, nil);
+#endif
 }
 
 //--------------------------------------------------------------  IsFileReadOnly
 
 Boolean IsFileReadOnly (FSSpec *theSpec)
 {
+	return false;
+#if 0
 #pragma unused (theSpec)
 
 	return false;
@@ -704,5 +746,6 @@ Boolean IsFileReadOnly (FSSpec *theSpec)
 	else
 		return (false);
 	*/
+#endif
 }
 

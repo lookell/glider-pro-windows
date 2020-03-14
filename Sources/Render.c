@@ -64,6 +64,8 @@ extern	Boolean		evenFrame, shadowVisible, twoPlayerGame, tvOn;
 
 void AddRectToWorkRects (Rect *theRect)
 {
+	return;
+#if 0
 	if (numWork2Main < (kMaxGarbageRects - 1))
 	{
 		work2MainRects[numWork2Main] = *theRect;
@@ -77,12 +79,15 @@ void AddRectToWorkRects (Rect *theRect)
 			work2MainRects[numWork2Main].bottom = justRoomsRect.bottom;
 		numWork2Main++;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  AddRectToBackRects
 
 void AddRectToBackRects (Rect *theRect)
 {
+	return;
+#if 0
 	if (numBack2Work < (kMaxGarbageRects - 1))
 	{
 		back2WorkRects[numBack2Work] = *theRect;
@@ -96,12 +101,15 @@ void AddRectToBackRects (Rect *theRect)
 			back2WorkRects[numBack2Work].bottom = workSrcRect.bottom;
 		numBack2Work++;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  AddRectToWorkRectsWhole
 
 void AddRectToWorkRectsWhole (Rect *theRect)
 {
+	return;
+#if 0
 	if (numWork2Main < (kMaxGarbageRects - 1))
 	{
 		if ((theRect->right <= workSrcRect.left) ||
@@ -129,12 +137,15 @@ void AddRectToWorkRectsWhole (Rect *theRect)
 
 		numWork2Main++;
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DrawReflection
 
 void DrawReflection (gliderPtr thisGlider, Boolean oneOrTwo)
 {
+	return;
+#if 0
 	RgnHandle	wasClip;
 	Rect		src, dest;
 	short		which;
@@ -186,12 +197,15 @@ void DrawReflection (gliderPtr thisGlider, Boolean oneOrTwo)
 	QOffsetRect(&src, playOriginH - 20, playOriginV - 16);
 	AddRectToWorkRects(&src);
 	AddRectToBackRects(&dest);
+#endif
 }
 
 //--------------------------------------------------------------  RenderFlames
 
 void RenderFlames (void)
 {
+	return;
+#if 0
 	short		i;
 
 	if ((numFlames == 0) && (numTikiFlames == 0) && (numCoals == 0))
@@ -253,12 +267,15 @@ void RenderFlames (void)
 
 		AddRectToWorkRects(&bbqCoals[i].dest);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  RenderPendulums
 
 void RenderPendulums (void)
 {
+	return;
+#if 0
 	short		i;
 	Boolean		playedTikTok;
 
@@ -318,12 +335,15 @@ void RenderPendulums (void)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  RenderFlyingPoints
 
 void RenderFlyingPoints (void)
 {
+	return;
+#if 0
 	short		i;
 
 	if (numFlyingPts == 0)
@@ -377,12 +397,15 @@ void RenderFlyingPoints (void)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  RenderSparkles
 
 void RenderSparkles (void)
 {
+	return;
+#if 0
 	short		i;
 
 	if (numSparkles == 0)
@@ -413,12 +436,15 @@ void RenderSparkles (void)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  RenderStars
 
 void RenderStars (void)
 {
+	return;
+#if 0
 	short		i;
 
 	if (numStars == 0)
@@ -445,12 +471,15 @@ void RenderStars (void)
 			AddRectToWorkRects(&theStars[i].dest);
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  RenderGlider
 
 void RenderGlider (gliderPtr thisGlider, Boolean oneOrTwo)
 {
+	return;
+#if 0
 	Rect		src, dest;
 	short		which;
 
@@ -527,12 +556,15 @@ void RenderGlider (gliderPtr thisGlider, Boolean oneOrTwo)
 	QOffsetRect(&src, playOriginH, playOriginV);
 	AddRectToWorkRects(&src);
 	AddRectToBackRects(&dest);
+#endif
 }
 
 //--------------------------------------------------------------  RenderBands
 
 void RenderBands (void)
 {
+	return;
+#if 0
 	Rect		dest;
 	short		i;
 
@@ -552,12 +584,15 @@ void RenderBands (void)
 		AddRectToWorkRects(&dest);
 		AddRectToBackRects(&dest);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  RenderShreds
 
 void RenderShreds (void)
 {
+	return;
+#if 0
 	Rect		src, dest;
 	short		i, high;
 
@@ -609,12 +644,15 @@ void RenderShreds (void)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  CopyRectsQD
 
 void CopyRectsQD (void)
 {
+	return;
+#if 0
 	short		i;
 
 	for (i = 0; i < numWork2Main; i++)
@@ -632,12 +670,15 @@ void CopyRectsQD (void)
 				&back2WorkRects[i], &back2WorkRects[i],
 				srcCopy, nil);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  RenderFrame
 
 void RenderFrame (void)
 {
+	return;
+#if 0
 	if (hasMirror)
 	{
 		DrawReflection(&theGlider, true);
@@ -668,12 +709,15 @@ void RenderFrame (void)
 
 	numWork2Main = 0;
 	numBack2Work = 0;
+#endif
 }
 
 //--------------------------------------------------------------  InitGarbageRects
 
 void InitGarbageRects (void)
 {
+	return;
+#if 0
 	short		i;
 
 	numWork2Main = 0;
@@ -688,57 +732,75 @@ void InitGarbageRects (void)
 		flyingPoints[i].mode = -1;
 
 	nextFrame = TickCount() + kTicksPerFrame;
+#endif
 }
 
 //--------------------------------------------------------------  CopyRectBackToWork
 
 void CopyRectBackToWork (Rect *theRect)
 {
+	return;
+#if 0
 	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
 			(BitMap *)*GetGWorldPixMap(workSrcMap),
 			theRect, theRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  CopyRectWorkToBack
 
 void CopyRectWorkToBack (Rect *theRect)
 {
+	return;
+#if 0
 	CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			theRect, theRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  CopyRectWorkToMain
 
 void CopyRectWorkToMain (Rect *theRect)
 {
+	return;
+#if 0
 	CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
 			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 			theRect, theRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  CopyRectMainToWork
 
 void CopyRectMainToWork (Rect *theRect)
 {
+	return;
+#if 0
 	CopyBits(GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 			(BitMap *)*GetGWorldPixMap(workSrcMap),
 			theRect, theRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  CopyRectMainToBack
 
 void CopyRectMainToBack (Rect *theRect)
 {
+	return;
+#if 0
 	CopyBits(GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
 			(BitMap *)*GetGWorldPixMap(backSrcMap),
 			theRect, theRect, srcCopy, nil);
+#endif
 }
 
 //--------------------------------------------------------------  AddToMirrorRegion
 
 void AddToMirrorRegion (Rect *theRect)
 {
+	return;
+#if 0
 	RgnHandle	tempRgn;
 
 	if (mirrorRgn == nil)
@@ -758,15 +820,19 @@ void AddToMirrorRegion (Rect *theRect)
 		}
 	}
 	hasMirror = true;
+#endif
 }
 
 //--------------------------------------------------------------  ZeroMirrorRegion
 
 void ZeroMirrorRegion (void)
 {
+	return;
+#if 0
 	if (mirrorRgn != nil)
 		DisposeRgn(mirrorRgn);
 	mirrorRgn = nil;
 	hasMirror = false;
+#endif
 }
 
