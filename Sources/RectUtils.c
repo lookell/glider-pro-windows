@@ -36,9 +36,7 @@ void FrameWHRect (short left, short top, short wide, short high)
 
 void NormalizeRect (Rect *theRect)
 {
-	return;
-#if 0
-	short		tempSide;
+	SInt16		tempSide;
 
 	if (theRect->left > theRect->right)
 	{
@@ -53,7 +51,6 @@ void NormalizeRect (Rect *theRect)
 		theRect->top = theRect->bottom;
 		theRect->bottom = tempSide;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  ZeroRectCorner
