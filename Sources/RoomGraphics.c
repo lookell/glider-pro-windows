@@ -29,13 +29,13 @@ Rect		suppSrcRect;
 GWorldPtr	suppSrcMap;
 Rect		localRoomsDest[9];
 Rect		houseRect;
-short		numNeighbors, numLights, thisTiles[kNumTiles];
-short		localNumbers[9], thisBackground;
+SInt16		numNeighbors, numLights, thisTiles[kNumTiles];
+SInt16		localNumbers[9], thisBackground;
 Boolean		isStructure[9], wardBitSet;
 
 extern	CGrafPtr	savedMaps[];
 extern	Rect		tempManholes[];
-extern	short		numTempManholes, tvWithMovieNumber;
+extern	SInt16		numTempManholes, tvWithMovieNumber;
 extern	Boolean		shadowVisible, takingTheStairs;
 
 

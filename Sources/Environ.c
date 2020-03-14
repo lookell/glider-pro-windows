@@ -61,7 +61,7 @@ void SwitchDepthOrAbort (void);
 macEnviron	thisMac;
 
 extern	GDHandle	thisGDevice;
-extern	short		isDepthPref;
+extern	SInt16		isDepthPref;
 extern	Boolean		dontLoadMusic, dontLoadSounds;
 
 

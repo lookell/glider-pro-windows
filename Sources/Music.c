@@ -29,10 +29,10 @@ OSErr CloseMusicChannel (void);
 SndCallBackUPP	musicCallBackUPP;
 SndChannelPtr	musicChannel;
 Ptr				theMusicData[kMaxMusic];
-short			musicSoundID, musicCursor;
-short			musicScore[kLastMusicPiece];
-short			gameScore[kLastGamePiece];
-short			musicMode;
+SInt16			musicSoundID, musicCursor;
+SInt16			musicScore[kLastMusicPiece];
+SInt16			gameScore[kLastGamePiece];
+SInt16			musicMode;
 Boolean			isMusicOn, isPlayMusicIdle, isPlayMusicGame;
 Boolean			failedMusic, dontLoadMusic;
 

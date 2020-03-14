@@ -48,12 +48,12 @@ Rect		shadowSrc[kNumShadowSrcRects];
 Rect		gliderSrc[kNumGliderSrcRects];
 Rect		transRect;
 SInt32		theScore;
-short		fadeInSequence[kLastFadeSequence];
-short		rightClip, leftClip, transRoom;
+SInt16		fadeInSequence[kLastFadeSequence];
+SInt16		rightClip, leftClip, transRoom;
 Boolean		shadowVisible, onePlayerLeft, playerDead;
 
 
-extern	short		numShredded, otherPlayerEscaped;
+extern	SInt16		numShredded, otherPlayerEscaped;
 extern	Boolean		playing, twoPlayerGame, gameOver, hasMirror;
 extern	Boolean		takingTheStairs, playerSuicide;
 

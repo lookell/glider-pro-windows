@@ -87,13 +87,13 @@ void BitchAboutChanges (void);
 Rect		prefButton[4], controlRects[4];
 Str15		leftName, rightName, batteryName, bandName;
 Str15		tempLeftStr, tempRightStr, tempBattStr, tempBandStr;
-long		tempLeftMap, tempRightMap, tempBattMap, tempBandMap;
-short		whichCtrl, wasDepthPref;
+SInt32		tempLeftMap, tempRightMap, tempBattMap, tempBandMap;
+SInt16		whichCtrl, wasDepthPref;
 Boolean		wasFade, wasIdle, wasPlay, wasTransit, wasZooms, wasBackground;
 Boolean		wasEscPauseKey, wasDemos, wasScreen2, nextRestartChange, wasErrorCheck;
 Boolean		wasPrettyMap, wasBitchDialogs;
 
-extern	short		numNeighbors, isDepthPref, maxFiles, willMaxFiles;
+extern	SInt16		numNeighbors, isDepthPref, maxFiles, willMaxFiles;
 extern	Boolean		isDoColorFade, isPlayMusicIdle, isUseSecondScreen;
 extern	Boolean		isHouseChecks, doBitchDialogs;
 extern	Boolean		isEscPauseKey, failedMusic, isSoundOn, doBackground;

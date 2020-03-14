@@ -21,7 +21,7 @@ void SavedGameMismatchError (StringPtr);
 gameType	smallGame;
 
 extern	FSSpecPtr	theHousesSpecs;
-extern	short		numStarsRemaining, thisHouseIndex;
+extern	SInt16		numStarsRemaining, thisHouseIndex;
 extern	Boolean		twoPlayerGame;
 
 

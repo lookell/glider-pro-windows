@@ -45,7 +45,7 @@ extern	starPtr		theStars;
 extern	shredPtr	shreds;
 extern	dynaPtr		dinahs;
 extern	demoPtr		demoData;
-extern	short		maxFiles;
+extern	SInt16		maxFiles;
 
 
 //==============================================================  Functions

@@ -49,13 +49,13 @@ void BitchAboutPICTNotFound (void);
 Rect		tileSrc, tileDest, tileSrcRect, editTETextBox;
 Rect		leftBound, topBound, rightBound, bottomBound;
 CGrafPtr	tileSrcMap;
-short		tempTiles[kNumTiles];
-short		tileOver, tempBack, cursorIs;
+SInt16		tempTiles[kNumTiles];
+SInt16		tileOver, tempBack, cursorIs;
 Boolean		originalLeftOpen, originalTopOpen, originalRightOpen, originalBottomOpen;
 Boolean		originalFloor;
 
 extern	Cursor		handCursor, beamCursor;
-extern	short		houseResFork, lastBackground;
+extern	SInt16		houseResFork, lastBackground;
 
 
 //==============================================================  Functions

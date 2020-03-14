@@ -16,10 +16,10 @@
 
 
 dynaPtr		dinahs;
-short		numDynamics;
+SInt16		numDynamics;
 
 extern	Rect		breadSrc[];
-extern	short		numLights;
+extern	SInt16		numLights;
 extern	Boolean		evenFrame;
 
 

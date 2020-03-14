@@ -30,13 +30,13 @@ Rect		roomObjectRects[kMaxRoomObs];
 Rect		initialGliderRect;
 Rect		leftStartGliderSrc, rightStartGliderSrc;
 Rect		leftStartGliderDest, rightStartGliderDest;
-short		objActive;
+SInt16		objActive;
 Boolean		isFirstRoom;
 
 
 extern	retroLink	retroLinkList[];
 extern	Rect		gliderSrc[kNumGliderSrcRects];
-extern	short		toolSelected, toolMode;
+extern	SInt16		toolSelected, toolMode;
 extern	Boolean		noRoomAtAll;
 
 

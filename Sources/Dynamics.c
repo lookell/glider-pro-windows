@@ -21,7 +21,7 @@ Rect		breadSrc[kNumBreadPicts];
 
 extern	dynaPtr		dinahs;
 extern	bandPtr		bands;
-extern	short		numBands, tvWithMovieNumber;
+extern	SInt16		numBands, tvWithMovieNumber;
 extern	Boolean		evenFrame, twoPlayerGame, onePlayerLeft, playerDead;
 
 

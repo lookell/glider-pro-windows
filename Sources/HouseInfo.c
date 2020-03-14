@@ -34,7 +34,7 @@ void HowToZeroScores (void);
 
 Str255		banner, trailer;
 Rect		houseEditText1, houseEditText2;
-short		houseCursorIs;
+SInt16		houseCursorIs;
 Boolean		keyHit, tempPhoneBit;
 
 extern	Cursor		beamCursor;

@@ -39,11 +39,11 @@ void CheckForHotSpots (void);
 void WebGlider (gliderPtr, Rect *);
 
 
-short		otherPlayerEscaped, activeRectEscaped;
+SInt16		otherPlayerEscaped, activeRectEscaped;
 
 extern	hotPtr		hotSpots;
-extern	short		nHotSpots, leftThresh, rightThresh, thisTiles[];
-extern	short		localNumbers[], thisBackground, numStarsRemaining;
+extern	SInt16		nHotSpots, leftThresh, rightThresh, thisTiles[];
+extern	SInt16		localNumbers[], thisBackground, numStarsRemaining;
 extern	Boolean		leftOpen, rightOpen, topOpen, bottomOpen, evenFrame;
 extern	Boolean		twoPlayerGame, newState, onePlayerLeft, playerDead;
 

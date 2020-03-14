@@ -26,7 +26,7 @@ void DrawBanner (Point *);
 void DrawBannerMessage (Point);
 
 
-short		numStarsRemaining;
+SInt16		numStarsRemaining;
 Boolean		bannerStarCountOn;
 
 extern	Rect		justRoomsRect;

@@ -35,8 +35,8 @@ pascal Boolean MasterFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean GetMasterDisk (void);
 
 
-long		encryptedNumber;
-short		theSystemVol;
+SInt32		encryptedNumber;
+SInt16		theSystemVol;
 Boolean		legitMasterDisk, bailOut, didValidation;
 
 /*

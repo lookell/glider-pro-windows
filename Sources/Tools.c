@@ -60,9 +60,9 @@ Rect			toolRects[kTotalTools];
 ControlHandle	classPopUp;
 GWorldPtr		toolSrcMap;
 WindowPtr		toolsWindow;
-short			isToolsH, isToolsV;
-short			toolSelected, toolMode;
-short			firstTool, lastTool, objectBase;
+SInt16			isToolsH, isToolsV;
+SInt16			toolSelected, toolMode;
+SInt16			firstTool, lastTool, objectBase;
 Boolean			isToolsOpen;
 
 

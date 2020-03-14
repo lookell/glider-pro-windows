@@ -23,11 +23,11 @@ Rect		bandsSrcRect;
 Rect		bandRects[3];
 GWorldPtr	bandsSrcMap;
 GWorldPtr	bandsMaskMap;
-short		numBands, bandHitLast;
+SInt16		numBands, bandHitLast;
 
 extern	hotPtr		hotSpots;
-extern	long		gameFrame;
-extern	short		nHotSpots, leftThresh, rightThresh;
+extern	SInt32		gameFrame;
+extern	SInt16		nHotSpots, leftThresh, rightThresh;
 extern	Boolean		twoPlayerGame, onePlayerLeft, playerDead;
 
 

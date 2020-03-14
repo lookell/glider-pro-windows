@@ -27,10 +27,10 @@ void KeepAllObjectsLegal (void);
 void CheckForStaircasePairs (void);
 
 
-short		houseErrors, wasRoom;
+SInt16		houseErrors, wasRoom;
 Boolean		isHouseChecks;
 
-extern	short		numberRooms;
+extern	SInt16		numberRooms;
 
 
 //==============================================================  Functions

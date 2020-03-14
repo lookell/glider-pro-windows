@@ -10,12 +10,12 @@
 #include "RectUtils.h"
 
 
-short		saidFollow;
+SInt16		saidFollow;
 
 extern	Rect		gliderSrc[];
 extern	Rect		transRect;
-extern	short		fadeInSequence[], linkedToWhat;
-extern	short		rightClip, leftClip, transRoom;
+extern	SInt16		fadeInSequence[], linkedToWhat;
+extern	SInt16		rightClip, leftClip, transRoom;
 extern	Boolean		hasMirror, shadowVisible, firstPlayer, twoPlayerGame;
 extern	Boolean		onePlayerLeft, playerDead;
 

@@ -31,14 +31,14 @@ Boolean IsFileReadOnly (FSSpec *);
 
 Movie		theMovie;
 Rect		movieRect;
-short		houseRefNum, houseResFork, wasHouseVersion;
+SInt16		houseRefNum, houseResFork, wasHouseVersion;
 Boolean		houseOpen, fileDirty, gameDirty;
 Boolean		changeLockStateOfHouse, saveHouseLocked, houseIsReadOnly;
 Boolean		hasMovie, tvInRoom;
 
 extern	FSSpecPtr	theHousesSpecs;
-extern	short		thisHouseIndex, tvWithMovieNumber;
-extern	short		numberRooms, housesFound;
+extern	SInt16		thisHouseIndex, tvWithMovieNumber;
+extern	SInt16		numberRooms, housesFound;
 extern	Boolean		noRoomAtAll, quitting, wardBitSet;
 extern	Boolean		phoneBitSet, bannerStarCountOn;
 

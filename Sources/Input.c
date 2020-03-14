@@ -31,11 +31,11 @@ Boolean QuerySaveGame (void);
 demoPtr		demoData;
 KeyMap		theKeys;
 DialogPtr	saveDial;
-short		demoIndex, batteryFrame;
+SInt16		demoIndex, batteryFrame;
 Boolean		isEscPauseKey, paused, batteryWasEngaged;
 
-extern	long		gameFrame;
-extern	short		otherPlayerEscaped;
+extern	SInt32		gameFrame;
+extern	SInt16		otherPlayerEscaped;
 extern	Boolean		quitting, playing, onePlayerLeft, twoPlayerGame, demoGoing;
 
 

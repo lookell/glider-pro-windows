@@ -26,15 +26,15 @@ pascal Boolean GoToFilter (DialogPtr, EventRecord *, SInt16 *);
 houseHand	thisHouse;
 linksPtr	linksList;
 Str32		thisHouseName;
-short		srcLocations[kMaxRoomObs];
-short		destLocations[kMaxRoomObs];
-short		wasFloor, wasSuite;
+SInt16		srcLocations[kMaxRoomObs];
+SInt16		destLocations[kMaxRoomObs];
+SInt16		wasFloor, wasSuite;
 retroLink	retroLinkList[kMaxRoomObs];
 Boolean		houseUnlocked;
 
 
 extern	gameType	smallGame;
-extern	short		numberRooms, mapLeftRoom, mapTopRoom, numStarsRemaining;
+extern	SInt16		numberRooms, mapLeftRoom, mapTopRoom, numStarsRemaining;
 extern	Boolean		houseOpen, noRoomAtAll;
 extern	Boolean		twoPlayerGame, wardBitSet, phoneBitSet;
 

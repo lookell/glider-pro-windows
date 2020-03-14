@@ -40,8 +40,8 @@ Rect			mapWindowRect;
 GWorldPtr		nailSrcMap;
 WindowPtr		mapWindow;
 ControlHandle	mapHScroll, mapVScroll;
-short			isMapH, isMapV, mapRoomsHigh, mapRoomsWide;
-short			mapLeftRoom, mapTopRoom;
+SInt16			isMapH, isMapV, mapRoomsHigh, mapRoomsWide;
+SInt16			mapLeftRoom, mapTopRoom;
 Boolean			isMapOpen, doPrettyMap;
 
 extern	Boolean		doBitchDialogs;

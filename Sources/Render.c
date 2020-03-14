@@ -37,8 +37,8 @@ Rect		back2WorkRects[kMaxGarbageRects];
 Rect		shieldRect;
 RgnHandle	mirrorRgn;
 Point		shieldPt;
-long		nextFrame;
-short		numWork2Main, numBack2Work;
+SInt32		nextFrame;
+SInt16		numWork2Main, numBack2Work;
 Boolean		hasMirror;
 
 extern	bandPtr		bands;
@@ -53,9 +53,9 @@ extern	Rect		pointsSrc[];
 extern	Rect		bandRects[];
 extern	savedType	savedMaps[];
 extern	Rect		shadowSrc[], justRoomsRect, movieRect;
-extern	short		numBands, numStars, numShredded;
-extern	short		numSparkles, numFlyingPts, numPendulums, clockFrame;
-extern	short		numFlames, numSavedMaps, numTikiFlames, numCoals;
+extern	SInt16		numBands, numStars, numShredded;
+extern	SInt16		numSparkles, numFlyingPts, numPendulums, clockFrame;
+extern	SInt16		numFlames, numSavedMaps, numTikiFlames, numCoals;
 extern	Boolean		evenFrame, shadowVisible, twoPlayerGame, tvOn;
 
 

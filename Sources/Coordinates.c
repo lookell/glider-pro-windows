@@ -16,8 +16,8 @@
 
 Rect			coordWindowRect;
 WindowPtr		coordWindow;
-short			isCoordH, isCoordV;
-short			coordH, coordV, coordD;
+SInt16			isCoordH, isCoordV;
+SInt16			coordH, coordV, coordD;
 Boolean			isCoordOpen;
 
 

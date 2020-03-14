@@ -24,7 +24,7 @@ void BackupGrease (Rect *, SInt16, Boolean);
 
 
 greasePtr	grease;
-short		numGrease;
+SInt16		numGrease;
 
 extern	hotPtr		hotSpots;
 extern	savedType	savedMaps[];

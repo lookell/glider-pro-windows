@@ -25,13 +25,13 @@ void SetToNearestNeighborRoom (SInt16, SInt16);
 roomPtr		thisRoom;
 Rect		backSrcRect;
 GWorldPtr	backSrcMap;
-short		numberRooms, thisRoomNumber, previousRoom;
-short		leftThresh, rightThresh, lastBackground;
+SInt16		numberRooms, thisRoomNumber, previousRoom;
+SInt16		leftThresh, rightThresh, lastBackground;
 Boolean		autoRoomEdit, newRoomNow, noRoomAtAll;
 Boolean		leftOpen, rightOpen, topOpen, bottomOpen;
 Boolean		doBitchDialogs;
 
-extern	short		tempTiles[];
+extern	SInt16		tempTiles[];
 
 
 //==============================================================  Functions

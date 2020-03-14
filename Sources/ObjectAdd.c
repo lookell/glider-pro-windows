@@ -40,7 +40,7 @@ SInt16 HowManyDynamicObjects (void);
 void ShoutNoMoreSpecialObjects (void);
 
 
-short		wasFlower;
+SInt16		wasFlower;
 
 
 //==============================================================  Functions

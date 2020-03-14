@@ -12,8 +12,8 @@
 
 
 extern	Rect		localRoomsDest[], movieRect;
-extern	short		localNumbers[];
-extern	short		numLights, tvWithMovieNumber;
+extern	SInt16		localNumbers[];
+extern	SInt16		numLights, tvWithMovieNumber;
 extern	Boolean		tvOn;
 
 

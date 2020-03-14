@@ -47,11 +47,11 @@ void DoDirSearch (void);
 Rect		loadHouseRects[12];
 FSSpecPtr	theHousesSpecs;
 FSSpec		extraHouseSpecs[kMaxExtraHouses];
-long		lastWhenClick;
+SInt32		lastWhenClick;
 Point		lastWhereClick;
-short		housesFound, thisHouseIndex, maxFiles, willMaxFiles;
-short		housePage, demoHouseIndex, numExtraHouses;
-char		fileFirstChar[12];
+SInt16		housesFound, thisHouseIndex, maxFiles, willMaxFiles;
+SInt16		housePage, demoHouseIndex, numExtraHouses;
+Byte		fileFirstChar[12];
 
 extern	UInt32			doubleTime;
 

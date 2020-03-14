@@ -73,14 +73,14 @@ Rect		tempManholes[kMaxTempManholes];
 savedType	savedMaps[kMaxSavedMaps];
 objDataPtr	masterObjects;
 hotPtr		hotSpots;
-short		nLocalObj, nHotSpots, numMasterObjects, numLocalMasterObjects;
-short		numTempManholes, tvWithMovieNumber;
+SInt16		nLocalObj, nHotSpots, numMasterObjects, numLocalMasterObjects;
+SInt16		numTempManholes, tvWithMovieNumber;
 Boolean		newState;
 
 extern	linksPtr	linksList;
-extern	short		srcLocations[], destLocations[];
-extern	short		localNumbers[];
-extern	short		numNeighbors;
+extern	SInt16		srcLocations[], destLocations[];
+extern	SInt16		localNumbers[];
+extern	SInt16		numNeighbors;
 
 
 //==============================================================  Functions

@@ -29,8 +29,8 @@ OSErr CloseSoundChannels (void);
 SndCallBackUPP		callBack0UPP, callBack1UPP, callBack2UPP;
 SndChannelPtr		channel0, channel1, channel2;
 Ptr					theSoundData[kMaxSounds];
-short				numSoundsLoaded, priority0, priority1, priority2;
-short				soundPlaying0, soundPlaying1, soundPlaying2;
+SInt16				numSoundsLoaded, priority0, priority1, priority2;
+SInt16				soundPlaying0, soundPlaying1, soundPlaying2;
 Boolean				soundLoaded[kMaxSounds], dontLoadSounds;
 Boolean				channelOpen, isSoundOn, failedSound;
 

@@ -38,13 +38,13 @@ Rect		boardPQDestRect, boardGQDestRect;
 Rect		badgesBlankRects[4], badgesBadgesRects[4];
 Rect		badgesDestRects[4];
 GWorldPtr	boardPSrcMap;
-long		displayedScore;
-short		wasScoreboardMode;
+SInt32		displayedScore;
+SInt16		wasScoreboardMode;
 Boolean		doRollScore;
 
 extern	Rect		localRoomsDest[], justRoomsRect;
-extern	long		gameFrame;
-extern	short		numNeighbors, otherPlayerEscaped;
+extern	SInt32		gameFrame;
+extern	SInt16		numNeighbors, otherPlayerEscaped;
 extern	Boolean		evenFrame, onePlayerLeft;
 
 

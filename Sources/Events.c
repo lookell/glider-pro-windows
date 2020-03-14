@@ -25,16 +25,16 @@ void HandleIdleTask (void);
 void IncrementMode (void);
 
 
-long			lastUp, incrementModeTime;
+SInt32			lastUp, incrementModeTime;
 UInt32			doubleTime;
 Point			lastWhere;
-short			idleMode;
+SInt16			idleMode;
 Boolean			doAutoDemo, switchedOut;
 
 extern	WindowPtr	mapWindow, toolsWindow, linkWindow;
 extern	WindowPtr	menuWindow;
-extern	short		isEditH, isEditV, isMapH, isMapV, isToolsH, isToolsV;
-extern	short		isLinkH, isLinkV, isCoordH, isCoordV;
+extern	SInt16		isEditH, isEditV, isMapH, isMapV, isToolsH, isToolsV;
+extern	SInt16		isLinkH, isLinkV, isCoordH, isCoordV;
 extern	Boolean		quitting, isMusicOn, failedMusic;
 extern	Boolean		autoRoomEdit, newRoomNow, isPlayMusicIdle;
 

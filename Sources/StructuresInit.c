@@ -49,7 +49,7 @@ extern	Rect		boardPQDestRect, boardGQDestRect, badgesBlankRects[];
 extern	Rect		badgesBadgesRects[], badgesDestRects[];
 extern	Rect		nailSrcRect, sparkleSrc[];
 extern	Rect		pointsSrc[], breadSrc[];
-extern	short		wasScoreboardMode;
+extern	SInt16		wasScoreboardMode;
 
 
 //==============================================================  Functions

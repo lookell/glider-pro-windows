@@ -45,10 +45,10 @@ Boolean OpenHighScoresFile (FSSpec *, SInt16 *);
 
 Str31		highBanner;
 Str15		highName;
-short		lastHighScore;
+SInt16		lastHighScore;
 Boolean		keyStroke;
 
-extern	short		splashOriginH, splashOriginV;
+extern	SInt16		splashOriginH, splashOriginV;
 extern	Boolean		quickerTransitions, resumedSavedGame;
 
 

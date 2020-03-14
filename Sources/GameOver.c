@@ -43,12 +43,12 @@ Rect		pageSrcRect, pageSrc[kPageFrames], lettersSrc[8], angelSrcRect;
 RgnHandle	roomRgn;
 GWorldPtr	pageSrcMap, gameOverSrcMap, angelSrcMap;
 GWorldPtr	pageMaskMap, angelMaskMap;
-short		countDown, stopPages, pagesStuck;
+SInt16		countDown, stopPages, pagesStuck;
 Boolean		gameOver;
 
 extern	Rect		justRoomsRect;
-extern	short		splashOriginH, splashOriginV, numWork2Main;
-extern	short		numBack2Work;
+extern	SInt16		splashOriginH, splashOriginV, numWork2Main;
+extern	SInt16		numBack2Work;
 extern	Boolean		playing, shadowVisible, demoGoing;
 
 

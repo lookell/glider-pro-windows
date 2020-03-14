@@ -23,7 +23,7 @@ void DoUnlink (void);
 Rect			linkWindowRect;
 ControlHandle	linkControl, unlinkControl;
 WindowPtr		linkWindow;
-short			isLinkH, isLinkV, linkRoom, linkType;
+SInt16			isLinkH, isLinkV, linkRoom, linkType;
 Byte			linkObject;
 Boolean			isLinkOpen, linkerIsSwitch;
 

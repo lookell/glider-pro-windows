@@ -37,14 +37,14 @@ Rect			workSrcRect;
 GWorldPtr		workSrcMap;
 Rect			mainWindowRect;
 WindowPtr		mainWindow, menuWindow;
-short			isEditH, isEditV;
-short			playOriginH, playOriginV;
-short			splashOriginH, splashOriginV;
-short			theMode;
+SInt16			isEditH, isEditV;
+SInt16			playOriginH, playOriginV;
+SInt16			splashOriginH, splashOriginV;
+SInt16			theMode;
 Boolean			fadeGraysOut, isDoColorFade, splashDrawn;
 
 extern	GDHandle	thisGDevice;
-extern	short		toolSelected;
+extern	SInt16		toolSelected;
 extern	Boolean		noRoomAtAll, isUseSecondScreen;
 extern	Boolean		quickerTransitions, houseIsReadOnly;
 

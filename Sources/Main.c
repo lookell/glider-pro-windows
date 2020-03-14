@@ -22,20 +22,20 @@ void WriteOutPrefs (void);
 int main (void);
 
 
-short		isVolume, wasVolume;
-short		isDepthPref, dataResFile, numSMWarnings;
+SInt16		isVolume, wasVolume;
+SInt16		isDepthPref, dataResFile, numSMWarnings;
 Boolean		quitting, doZooms, quickerTransitions, isUseSecondScreen;
 
 
 extern Str31		highBanner;
 extern Str15		leftName, rightName, batteryName, bandName;
 extern Str15		highName;
-//extern long		encryptedNumber;
-extern short		maxFiles, numNeighbors, houseRefNum, willMaxFiles;
-extern short		isEditH, isEditV, isMapH, isMapV;
-extern short		isToolsH, isToolsV, isCoordH, isCoordV;
-extern short		isLinkH, isLinkV, toolMode, mapLeftRoom, mapTopRoom;
-extern short		mapRoomsWide, mapRoomsHigh, wasFloor, wasSuite;
+//extern SInt32		encryptedNumber;
+extern SInt16		maxFiles, numNeighbors, houseRefNum, willMaxFiles;
+extern SInt16		isEditH, isEditV, isMapH, isMapV;
+extern SInt16		isToolsH, isToolsV, isCoordH, isCoordV;
+extern SInt16		isLinkH, isLinkV, toolMode, mapLeftRoom, mapTopRoom;
+extern SInt16		mapRoomsWide, mapRoomsHigh, wasFloor, wasSuite;
 extern Boolean		isMusicOn, isSoundOn, isPlayMusicIdle, isHouseChecks;
 extern Boolean		houseOpen, isDoColorFade, isEscPauseKey;
 extern Boolean		autoRoomEdit, doAutoDemo, doBackground;

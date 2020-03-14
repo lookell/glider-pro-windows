@@ -12,7 +12,7 @@
 #include "Externs.h"
 
 
-short			barGraphHori = 0;
+SInt16			barGraphHori = 0;
 
 
 //==============================================================  Functions

@@ -28,15 +28,15 @@ pendulumPtr	pendulums;
 starPtr		theStars;
 shredPtr	shreds;
 Rect		pointsSrc[15];
-short		numSparkles, numFlyingPts, numChimes;
-short		numFlames, numSavedMaps, numTikiFlames, numCoals;
-short		numPendulums, clockFrame, numStars, numShredded;
+SInt16		numSparkles, numFlyingPts, numChimes;
+SInt16		numFlames, numSavedMaps, numTikiFlames, numCoals;
+SInt16		numPendulums, clockFrame, numStars, numShredded;
 
 
 extern	savedType	savedMaps[];
 extern	Rect		flame[], tikiFlame[], coals[], pendulumSrc[];
 extern	Rect		starSrc[];
-extern	short		numGrease, numDynamics;
+extern	SInt16		numGrease, numDynamics;
 
 
 //==============================================================  Functions

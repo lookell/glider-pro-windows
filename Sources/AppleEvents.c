@@ -26,8 +26,8 @@ AEEventHandlerUPP	openAppAEUPP, openDocAEUPP, printDocAEUPP, quitAEUPP;
 
 
 extern	FSSpecPtr	theHousesSpecs;
-extern	long		incrementModeTime;
-extern	short		thisHouseIndex, splashOriginH, splashOriginV;
+extern	SInt32		incrementModeTime;
+extern	SInt16		thisHouseIndex, splashOriginH, splashOriginV;
 extern	Boolean		quitting;
 
 

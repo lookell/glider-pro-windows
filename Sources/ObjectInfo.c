@@ -104,11 +104,11 @@ void DoEnemyObjectInfo (SInt16);
 void DoFlowerObjectInfo (void);
 
 
-short		newDirection, newPoint;
+SInt16		newDirection, newPoint;
 Byte		newType;
 
 extern	retroLink	retroLinkList[];
-extern	short		linkRoom, linkType, wasFlower;
+extern	SInt16		linkRoom, linkType, wasFlower;
 extern	Byte		linkObject;
 extern	Boolean		linkerIsSwitch;
 

@@ -34,9 +34,9 @@ MenuHandle	appleMenu, gameMenu, optionsMenu, houseMenu;
 Boolean		menusUp, resumedSavedGame;
 
 
-extern	long		incrementModeTime;
-extern	short		demoHouseIndex, wasHouseVersion;
-extern	short		splashOriginH, splashOriginV, numberRooms;
+extern	SInt32		incrementModeTime;
+extern	SInt16		demoHouseIndex, wasHouseVersion;
+extern	SInt16		splashOriginH, splashOriginV, numberRooms;
 extern	Boolean		quitting, noRoomAtAll, twoPlayerGame;
 extern	Boolean		isMapOpen, isToolsOpen, isPlayMusicIdle;
 extern	Boolean		isCoordOpen, failedMusic, splashDrawn;

@@ -12,7 +12,7 @@
 
 extern	dynaPtr		dinahs;
 extern	hotPtr		hotSpots;
-extern	short		numDynamics, tvWithMovieNumber;
+extern	SInt16		numDynamics, tvWithMovieNumber;
 extern	Boolean		tvOn;
 
 

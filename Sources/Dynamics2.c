@@ -20,7 +20,7 @@
 
 
 extern	dynaPtr		dinahs;
-extern	short		numBands;
+extern	SInt16		numBands;
 extern	Boolean		evenFrame, twoPlayerGame, onePlayerLeft, playerDead;
 
 

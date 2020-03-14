@@ -23,7 +23,7 @@ SInt16 AddActiveRect (Rect *, SInt16, SInt16, Boolean, Boolean);
 
 
 extern	hotPtr		hotSpots;
-extern	short		nHotSpots, numChimes;
+extern	SInt16		nHotSpots, numChimes;
 
 
 //==============================================================  Functions

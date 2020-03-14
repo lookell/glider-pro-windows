@@ -14,13 +14,13 @@
 void HandleRoomVisitation (void);
 
 
-short		linkedToWhat;
+SInt16		linkedToWhat;
 Boolean		takingTheStairs, firstPlayer;
 
 
 extern	Rect		justRoomsRect, transRect;
-extern	short		transRoom, otherPlayerEscaped;
-extern	short		localNumbers[9];
+extern	SInt16		transRoom, otherPlayerEscaped;
+extern	SInt16		localNumbers[9];
 extern	Boolean		topOpen, twoPlayerGame, onePlayerLeft;
 extern	Boolean		playerDead, playerSuicide, tvOn;
 
