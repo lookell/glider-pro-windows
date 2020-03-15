@@ -813,8 +813,6 @@ void RemoveShreds (void)
 
 void ZeroFlamesAndTheLike (void)
 {
-	return;
-#if 0
 	numFlames = 0;
 	numTikiFlames = 0;
 	numCoals = 0;
@@ -823,6 +821,5 @@ void ZeroFlamesAndTheLike (void)
 	numStars = 0;
 	numShredded = 0;
 	numChimes = 0;
-#endif
 }
 
