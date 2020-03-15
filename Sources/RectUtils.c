@@ -171,11 +171,8 @@ void CenterRectInRect (Rect *rectA, Rect *rectB)
 
 void HOffsetRect (Rect *theRect, SInt16 h)
 {
-	return;
-#if 0
 	theRect->left += h;
 	theRect->right += h;
-#endif
 }
 
 //--------------------------------------------------------------  VOffsetRect
@@ -184,11 +181,8 @@ void HOffsetRect (Rect *theRect, SInt16 h)
 
 void VOffsetRect (Rect *theRect, SInt16 v)
 {
-	return;
-#if 0
 	theRect->top += v;
 	theRect->bottom += v;
-#endif
 }
 
 //--------------------------------------------------------------  IsRectLeftOfRect
