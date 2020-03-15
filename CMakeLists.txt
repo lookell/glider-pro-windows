@@ -13,6 +13,8 @@ add_executable(gliderpro)
 target_include_directories(gliderpro PRIVATE Headers)
 target_sources(
   gliderpro PRIVATE
+  # manifest
+  Resources/gliderpro.manifest
   # added headers
   Headers/Macintosh.h
   # added sources
