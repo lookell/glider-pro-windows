@@ -593,10 +593,8 @@ void ReBackUpPendulum (SInt16 where, SInt16 who)
 
 void AddPendulum (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
-	return;
-#if 0
 	Rect		src, bounds;
-	short		savedNum;
+	SInt16		savedNum;
 
 	if ((numPendulums >= kMaxPendulums) || (h < 32) || (v < 28))
 		return;
@@ -614,7 +612,7 @@ void AddPendulum (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 				h += 2;
 		}
 		QOffsetRect(&src, h, v);
-		BackUpPendulum (&src, savedNum);
+		BackUpPendulum(&src, savedNum);
 		pendulums[numPendulums].dest = src;
 		pendulums[numPendulums].mode = 1;
 		if (RandomInt(2) == 0)
@@ -629,7 +627,6 @@ void AddPendulum (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 		pendulums[numPendulums].link = who;
 		numPendulums++;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  BackUpStar
