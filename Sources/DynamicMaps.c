@@ -210,10 +210,8 @@ void AddSparkle (Rect *theRect)
 
 void AddFlyingPoint (Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVel)
 {
-	return;
-#if 0
 	Rect		centeredRect;
-	short		i;
+	SInt16		i;
 
 	if (numFlyingPts < kMaxFlyingPts)
 	{
@@ -265,7 +263,6 @@ void AddFlyingPoint (Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVel)
 				break;
 			}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  BackUpFlames
