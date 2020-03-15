@@ -71,12 +71,9 @@ void ZeroRectCorner (Rect *theRect)		// Offset rect to (0, 0)
 
 void CenterRectOnPoint (Rect *theRect, Point where)
 {
-	return;
-#if 0
 	ZeroRectCorner(theRect);
 	QOffsetRect(theRect, -HalfRectWide(theRect), -HalfRectTall(theRect));
 	QOffsetRect(theRect, where.h, where.v);
-#endif
 }
 
 //--------------------------------------------------------------  HalfRectWide
