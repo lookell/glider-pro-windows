@@ -212,10 +212,8 @@ SInt16 ReBackUpGrease (SInt16 where, SInt16 who)
 SInt16 AddGrease (SInt16 where, SInt16 who, SInt16 h, SInt16 v,
 		SInt16 distance, Boolean isRight)
 {
-	return (-1);
-#if 0
 	Rect		src, bounds;
-	short		savedNum;
+	SInt16		savedNum;
 
 	if (numGrease >= kMaxGrease)
 		return (-1);
@@ -256,7 +254,6 @@ SInt16 AddGrease (SInt16 where, SInt16 who, SInt16 h, SInt16 v,
 	}
 	else
 		return (-1);
-#endif
 }
 
 //--------------------------------------------------------------  SpillGrease
