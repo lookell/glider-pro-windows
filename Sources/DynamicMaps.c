@@ -393,7 +393,7 @@ void BackUpTikiFlames (Rect *src, SInt16 index)
 
 void ReBackUpTikiFlames (SInt16 where, SInt16 who)
 {
-	short		i, f;
+	SInt16		i, f;
 
 	for (i = 0; i < numSavedMaps; i++)
 	{
@@ -417,10 +417,8 @@ void ReBackUpTikiFlames (SInt16 where, SInt16 who)
 
 void AddTikiFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
-	return;
-#if 0
 	Rect		src, bounds;
-	short		savedNum;
+	SInt16		savedNum;
 
 	if ((numTikiFlames >= kMaxTikis) || (h < 8) || (v < 10))
 		return;
@@ -446,7 +444,6 @@ void AddTikiFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 		tikiFlames[numTikiFlames].who = savedNum;
 		numTikiFlames++;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  BackUpBBQCoals
