@@ -208,13 +208,10 @@ Boolean IsRectLeftOfRect (Rect *rect1, Rect *rect2)
 
 void QOffsetRect (Rect *theRect, SInt16 h, SInt16 v)
 {
-	return;
-#if 0
 	theRect->right += h;
 	theRect->left += h;
 	theRect->bottom += v;
 	theRect->top += v;
-#endif
 }
 
 //--------------------------------------------------------------  QSetRect
@@ -224,13 +221,10 @@ void QOffsetRect (Rect *theRect, SInt16 h, SInt16 v)
 
 void QSetRect (Rect *theRect, SInt16 l, SInt16 t, SInt16 r, SInt16 b)
 {
-	return;
-#if 0
 	theRect->left = l;
 	theRect->top = t;
 	theRect->right = r;
 	theRect->bottom = b;
-#endif
 }
 
 //--------------------------------------------------------------  ForceRectInRect
