@@ -185,10 +185,8 @@ void BackupGrease (Rect *src, SInt16 index, Boolean isRight)
 
 SInt16 ReBackUpGrease (SInt16 where, SInt16 who)
 {
-	return (-1);
-#if 0
 	Rect		src;
-	short		i;
+	SInt16		i;
 
 	for (i = 0; i < numGrease; i++)
 	{
@@ -204,7 +202,6 @@ SInt16 ReBackUpGrease (SInt16 where, SInt16 who)
 	}
 
 	return (-1);
-#endif
 }
 
 //--------------------------------------------------------------  AddGrease
