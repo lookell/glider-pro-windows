@@ -180,10 +180,8 @@ void RestoreFromSavedMap (SInt16 where, SInt16 who, Boolean doSparkle)
 
 void AddSparkle (Rect *theRect)
 {
-	return;
-#if 0
 	Rect		centeredRect;
-	short		i;
+	SInt16		i;
 
 	if (numSparkles < kMaxSparkles)
 	{
@@ -204,7 +202,6 @@ void AddSparkle (Rect *theRect)
 				break;
 			}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  AddFlyingPoint
