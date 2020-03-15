@@ -133,8 +133,6 @@ Boolean SectGlider (gliderPtr thisGlider, Rect *theRect, Boolean scrutinize)
 
 Boolean GliderInRect (gliderPtr thisGlider, Rect *theRect)
 {
-	return false;
-#if 0
 	Rect		glideBounds;
 
 	glideBounds = thisGlider->dest;
@@ -149,7 +147,6 @@ Boolean GliderInRect (gliderPtr thisGlider, Rect *theRect)
 		return (false);
 	else
 		return (true);
-#endif
 }
 
 //--------------------------------------------------------------  BounceGlider
