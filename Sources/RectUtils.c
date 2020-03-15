@@ -153,9 +153,7 @@ void LocalToGlobalRect (Rect *theRect)
 
 void CenterRectInRect (Rect *rectA, Rect *rectB)
 {
-	return;
-#if 0
-	short	widthA, tallA;
+	SInt16	widthA, tallA;
 
 	widthA = RectWide(rectA);
 	tallA = RectTall(rectA);
@@ -165,7 +163,6 @@ void CenterRectInRect (Rect *rectA, Rect *rectB)
 
 	rectA->top = rectB->top + (RectTall(rectB) - tallA) / 2;
 	rectA->bottom = rectA->top + tallA;
-#endif
 }
 
 //--------------------------------------------------------------  HOffsetRect
