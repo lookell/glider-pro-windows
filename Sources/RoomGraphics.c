@@ -33,7 +33,7 @@ SInt16		numNeighbors, numLights, thisTiles[kNumTiles];
 SInt16		localNumbers[9], thisBackground;
 Boolean		isStructure[9], wardBitSet;
 
-extern	CGrafPtr	savedMaps[];
+extern	savedType	savedMaps[];
 extern	Rect		tempManholes[];
 extern	SInt16		numTempManholes, tvWithMovieNumber;
 extern	Boolean		shadowVisible, takingTheStairs;

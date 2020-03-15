@@ -38,7 +38,7 @@ extern	sparklePtr	sparkles;
 extern	flyingPtPtr	flyingPoints;
 extern	flamePtr	flames, tikiFlames, bbqCoals;
 extern	pendulumPtr	pendulums;
-extern	savedPtr	savedMaps;
+extern	savedType	savedMaps[];
 extern	bandPtr		bands;
 extern	greasePtr	grease;
 extern	starPtr		theStars;
@@ -242,11 +242,6 @@ void CreatePointers (void)
 	pendulums = nil;
 	pendulums = (pendulumPtr)NewPtr(sizeof(pendulumType) * kMaxPendulums);
 	if (pendulums == nil)
-		RedAlert(kErrNoMemory);
-
-	savedMaps = nil;
-	savedMaps = (savedPtr)NewPtr(sizeof(savedType) * kMaxSavedMaps);
-	if (savedMaps == nil)
 		RedAlert(kErrNoMemory);
 
 	for (i = 0; i < kMaxSavedMaps; i++)
