@@ -192,16 +192,13 @@ void VOffsetRect (Rect *theRect, SInt16 v)
 
 Boolean IsRectLeftOfRect (Rect *rect1, Rect *rect2)
 {
-	return false;
-#if 0
-	short		offset;
+	SInt16		offset;
 
 	offset = (rect1->right - rect1->left) - (rect2->right - rect2->left) / 2;
 	if ((rect1->left) < (rect2->left + offset))
 		return (true);
 	else
 		return (false);
-#endif
 }
 
 //--------------------------------------------------------------  QOffsetRect
