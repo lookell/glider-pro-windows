@@ -29,8 +29,6 @@ extern	Boolean		evenFrame, twoPlayerGame, onePlayerLeft, playerDead;
 
 void HandleBalloon (SInt16 who)
 {
-	return;
-#if 0
 	Rect		dest;
 
 	if (dinahs[who].moving)
@@ -129,15 +127,12 @@ void HandleBalloon (SInt16 who)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleCopter
 
 void HandleCopter (SInt16 who)
 {
-	return;
-#if 0
 	Rect		dest;
 
 	if (dinahs[who].moving)					// is 'copter about?
@@ -240,15 +235,12 @@ void HandleCopter (SInt16 who)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleDart
 
 void HandleDart (SInt16 who)
 {
-	return;
-#if 0
 	Rect		dest;
 
 	if (dinahs[who].moving)					// Dart has appeared
@@ -359,15 +351,12 @@ void HandleDart (SInt16 who)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleBall
 
 void HandleBall (SInt16 who)
 {
-	return;
-#if 0
 	if (twoPlayerGame)
 	{
 		if (onePlayerLeft)
@@ -431,15 +420,12 @@ void HandleBall (SInt16 who)
 			evenFrame = true;
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleDrip
 
 void HandleDrip (SInt16 who)
 {
-	return;
-#if 0
 	Rect		dest;
 
 	if (dinahs[who].moving)
@@ -508,15 +494,12 @@ void HandleDrip (SInt16 who)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleFish
 
 void HandleFish (SInt16 who)
 {
-	return;
-#if 0
 	Rect		dest;
 
 	if (dinahs[who].moving)										// fish leaping
@@ -602,6 +585,5 @@ void HandleFish (SInt16 who)
 			}
 		}
 	}
-#endif
 }
 
