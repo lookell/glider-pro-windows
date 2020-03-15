@@ -569,9 +569,7 @@ void BackUpPendulum (Rect *src, SInt16 index)
 
 void ReBackUpPendulum (SInt16 where, SInt16 who)
 {
-	return;
-#if 0
-	short		i, f;
+	SInt16		i, f;
 
 	for (i = 0; i < numSavedMaps; i++)
 	{
@@ -587,7 +585,6 @@ void ReBackUpPendulum (SInt16 where, SInt16 who)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  AddPendulum
