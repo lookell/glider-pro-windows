@@ -688,10 +688,8 @@ void ReBackUpStar (SInt16 where, SInt16 who)
 
 void AddStar (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
-	return;
-#if 0
 	Rect		src, bounds;
-	short		savedNum;
+	SInt16		savedNum;
 
 	if (numStars >= kMaxStars)
 		return;
@@ -720,7 +718,6 @@ void AddStar (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 
 		numStars++;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  StopPendulum
