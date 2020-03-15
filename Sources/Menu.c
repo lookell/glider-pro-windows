@@ -849,8 +849,6 @@ void HeyYourPissingAHighScore (void)
 
 void OpenCloseEditWindows (void)
 {
-	return;
-#if 0
 	if (theMode == kEditMode)
 	{
 		if (houseUnlocked)
@@ -869,6 +867,5 @@ void OpenCloseEditWindows (void)
 			CloseCoordWindow();
 		}
 	}
-#endif
 }
 
