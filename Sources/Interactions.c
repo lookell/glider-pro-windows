@@ -100,8 +100,6 @@ Boolean GliderHitTop (gliderPtr thisGlider, Rect *theRect)
 
 Boolean SectGlider (gliderPtr thisGlider, Rect *theRect, Boolean scrutinize)
 {
-	return false;
-#if 0
 	Rect		glideBounds;
 	Boolean		itHit;
 
@@ -129,7 +127,6 @@ Boolean SectGlider (gliderPtr thisGlider, Rect *theRect, Boolean scrutinize)
 		itHit = true;
 
 	return (itHit);
-#endif
 }
 
 //--------------------------------------------------------------  GliderInRect
