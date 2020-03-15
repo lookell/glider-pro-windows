@@ -33,10 +33,7 @@ Boolean			isLinkOpen, linkerIsSwitch;
 
 SInt16 MergeFloorSuite (SInt16 floor, SInt16 suite)
 {
-	return 0;
-#if 0
 	return ((suite * 100) + floor);
-#endif
 }
 
 //--------------------------------------------------------------  ExtractFloorSuite
