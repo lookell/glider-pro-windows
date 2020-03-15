@@ -809,9 +809,7 @@ Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
 #ifndef COMPILEDEMO
 SInt16 FindEmptyObjectSlot (void)
 {
-	return (-1);
-#if 0
-	short		i, emptySlot;
+	SInt16		i, emptySlot;
 
 	emptySlot = -1;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -822,7 +820,6 @@ SInt16 FindEmptyObjectSlot (void)
 		}
 
 	return (emptySlot);
-#endif
 }
 
 //--------------------------------------------------------------  FindObjectSlotInRoom
@@ -903,9 +900,7 @@ void ShoutNoMoreObjects (void)
 
 SInt16 HowManyCandleObjects (void)
 {
-	return 0;
-#if 0
-	short		i, aCandle;
+	SInt16		i, aCandle;
 
 	aCandle = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -915,16 +910,13 @@ SInt16 HowManyCandleObjects (void)
 			aCandle++;
 
 	return (aCandle);
-#endif
 }
 
 //--------------------------------------------------------------  HowManyTikiObjects
 
 SInt16 HowManyTikiObjects (void)
 {
-	return 0;
-#if 0
-	short		i, aTiki;
+	SInt16		i, aTiki;
 
 	aTiki = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -932,16 +924,13 @@ SInt16 HowManyTikiObjects (void)
 			aTiki++;
 
 	return (aTiki);
-#endif
 }
 
 //--------------------------------------------------------------  HowManyBBQObjects
 
 SInt16 HowManyBBQObjects (void)
 {
-	return 0;
-#if 0
-	short		i, aBBQ;
+	SInt16		i, aBBQ;
 
 	aBBQ = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -949,16 +938,13 @@ SInt16 HowManyBBQObjects (void)
 			aBBQ++;
 
 	return (aBBQ);
-#endif
 }
 
 //--------------------------------------------------------------  HowManyCuckooObjects
 
 SInt16 HowManyCuckooObjects (void)
 {
-	return 0;
-#if 0
-	short		i, aCuckoo;
+	SInt16		i, aCuckoo;
 
 	aCuckoo = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -966,16 +952,13 @@ SInt16 HowManyCuckooObjects (void)
 			aCuckoo++;
 
 	return (aCuckoo);
-#endif
 }
 
 //--------------------------------------------------------------  HowManyBandsObjects
 
 SInt16 HowManyBandsObjects (void)
 {
-	return 0;
-#if 0
-	short		i, aBands;
+	SInt16		i, aBands;
 
 	aBands = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -983,16 +966,13 @@ SInt16 HowManyBandsObjects (void)
 			aBands++;
 
 	return (aBands);
-#endif
 }
 
 //--------------------------------------------------------------  HowManyGreaseObjects
 
 SInt16 HowManyGreaseObjects (void)
 {
-	return 0;
-#if 0
-	short		i, aGrease;
+	SInt16		i, aGrease;
 
 	aGrease = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1001,16 +981,13 @@ SInt16 HowManyGreaseObjects (void)
 			aGrease++;
 
 	return (aGrease);
-#endif
 }
 
 //--------------------------------------------------------------  HowManyStarsObjects
 
 SInt16 HowManyStarsObjects (void)
 {
-	return 0;
-#if 0
-	short		i, aStar;
+	SInt16		i, aStar;
 
 	aStar = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1018,16 +995,13 @@ SInt16 HowManyStarsObjects (void)
 			aStar++;
 
 	return (aStar);
-#endif
 }
 
 //--------------------------------------------------------------  HowManySoundObjects
 
 SInt16 HowManySoundObjects (void)
 {
-	return 0;
-#if 0
-	short		i, aSound;
+	SInt16		i, aSound;
 
 	aSound = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1035,16 +1009,13 @@ SInt16 HowManySoundObjects (void)
 			aSound++;
 
 	return (aSound);
-#endif
 }
 
 //--------------------------------------------------------------  HowManyUpStairsObjects
 
 SInt16 HowManyUpStairsObjects (void)
 {
-	return 0;
-#if 0
-	short		i, aStair;
+	SInt16		i, aStair;
 
 	aStair = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1052,16 +1023,13 @@ SInt16 HowManyUpStairsObjects (void)
 			aStair++;
 
 	return (aStair);
-#endif
 }
 
 //--------------------------------------------------------------  HowManyDownStairsObjects
 
 SInt16 HowManyDownStairsObjects (void)
 {
-	return 0;
-#if 0
-	short		i, aStair;
+	SInt16		i, aStair;
 
 	aStair = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1069,16 +1037,13 @@ SInt16 HowManyDownStairsObjects (void)
 			aStair++;
 
 	return (aStair);
-#endif
 }
 
 //--------------------------------------------------------------  HowManyShredderObjects
 
 SInt16 HowManyShredderObjects (void)
 {
-	return 0;
-#if 0
-	short		i, aShredder;
+	SInt16		i, aShredder;
 
 	aShredder = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1086,16 +1051,13 @@ SInt16 HowManyShredderObjects (void)
 			aShredder++;
 
 	return (aShredder);
-#endif
 }
 
 //--------------------------------------------------------------  HowManyDynamicObjects
 
 SInt16 HowManyDynamicObjects (void)
 {
-	return 0;
-#if 0
-	short		i, aDinah;
+	SInt16		i, aDinah;
 
 	aDinah = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1119,7 +1081,6 @@ SInt16 HowManyDynamicObjects (void)
 			aDinah++;
 
 	return (aDinah);
-#endif
 }
 
 //--------------------------------------------------------------  ShoutNoMoreSpecialObjects
