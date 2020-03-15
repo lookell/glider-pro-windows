@@ -29,8 +29,6 @@ Boolean			isCoordOpen;
 
 void SetCoordinateHVD (SInt16 h, SInt16 v, SInt16 d)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
 	if (h != -2)
 		coordH = h;
@@ -39,7 +37,6 @@ void SetCoordinateHVD (SInt16 h, SInt16 v, SInt16 d)
 	if (d != -2)
 		coordD = d;
 	UpdateCoordWindow();
-#endif
 #endif
 }
 
@@ -52,12 +49,9 @@ void SetCoordinateHVD (SInt16 h, SInt16 v, SInt16 d)
 
 void DeltaCoordinateD (SInt16 d)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
 	coordD = d;
 	UpdateCoordWindow();
-#endif
 #endif
 }
 
