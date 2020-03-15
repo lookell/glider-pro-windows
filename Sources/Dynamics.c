@@ -33,8 +33,6 @@ extern	Boolean		evenFrame, twoPlayerGame, onePlayerLeft, playerDead;
 
 void CheckDynamicCollision (SInt16 who, gliderPtr thisGlider, Boolean doOffset)
 {
-	return;
-#if 0
 	Rect		dinahRect;
 
 	dinahRect = dinahs[who].dest;
@@ -73,7 +71,6 @@ void CheckDynamicCollision (SInt16 who, gliderPtr thisGlider, Boolean doOffset)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DidBandHitDynamic
@@ -82,10 +79,8 @@ void CheckDynamicCollision (SInt16 who, gliderPtr thisGlider, Boolean doOffset)
 
 Boolean DidBandHitDynamic (SInt16 who)
 {
-	return (false);
-#if 0
 	Rect		dinahRect;
-	short		i;
+	SInt16		i;
 	Boolean		collided;
 
 	dinahRect = dinahs[who].dest;
@@ -108,7 +103,6 @@ Boolean DidBandHitDynamic (SInt16 who)
 	}
 
 	return (collided);
-#endif
 }
 
 //--------------------------------------------------------------  RenderToast
@@ -319,8 +313,6 @@ void RenderFish (SInt16 who)
 
 void HandleSparkleObject (SInt16 who)
 {
-	return;
-#if 0
 	Rect		tempRect;
 
 	if (dinahs[who].active)								// is it on?
@@ -343,15 +335,12 @@ void HandleSparkleObject (SInt16 who)
 	else
 	{
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleToast
 
 void HandleToast (SInt16 who)
 {
-	return;
-#if 0
 	Rect		dest;
 
 	if (dinahs[who].moving)
@@ -413,7 +402,6 @@ void HandleToast (SInt16 who)
 				dinahs[who].frame = dinahs[who].timer;
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleMacPlus
