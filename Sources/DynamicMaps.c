@@ -756,8 +756,6 @@ void StopStar (SInt16 where, SInt16 who)
 
 void AddAShreddedGlider (Rect *bounds)
 {
-	return;
-#if 0
 	if (numShredded > kMaxShredded)
 		return;
 
@@ -768,7 +766,6 @@ void AddAShreddedGlider (Rect *bounds)
 	shreds[numShredded].frame = 0;
 
 	numShredded++;
-#endif
 }
 
 //--------------------------------------------------------------  RemoveShreds
