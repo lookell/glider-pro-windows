@@ -506,10 +506,8 @@ void ReBackUpBBQCoals (SInt16 where, SInt16 who)
 
 void AddBBQCoals (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
-	return;
-#if 0
 	Rect		src, bounds;
-	short		savedNum;
+	SInt16		savedNum;
 
 	if ((numCoals >= kMaxCoals) || (h < 32) || (v < 9))
 		return;
@@ -535,7 +533,6 @@ void AddBBQCoals (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 
 		numCoals++;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  BackUpPendulum
