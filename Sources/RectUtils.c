@@ -291,8 +291,6 @@ Boolean ForceRectInRect (Rect *small, Rect *large)
 
 void QUnionSimilarRect (Rect *rectA, Rect *rectB, Rect *rectC)
 {
-	return;
-#if 0
 	if (rectA->left < rectB->left)
 		rectC->left = rectA->left;
 	else
@@ -312,7 +310,6 @@ void QUnionSimilarRect (Rect *rectA, Rect *rectB, Rect *rectC)
 		rectC->bottom = rectA->bottom;
 	else
 		rectC->bottom = rectB->bottom;
-#endif
 }
 
 //--------------------------------------------------------------  FrameRectSansCorners
