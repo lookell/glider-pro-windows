@@ -26,7 +26,9 @@ typedef int32_t SInt32;
 
 typedef UInt8 Byte;
 typedef UInt8 Boolean;
+
 typedef SInt16 OSErr;
+#define noErr 0
 
 typedef UInt8 *StringPtr;
 typedef UInt8 Str15[16];

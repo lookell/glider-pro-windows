@@ -131,8 +131,6 @@ void StopTheMusic (void)
 
 void ToggleMusicWhilePlaying (void)
 {
-	return;
-#if 0
 	OSErr		theErr;
 
 	if (dontLoadMusic)
@@ -148,15 +146,12 @@ void ToggleMusicWhilePlaying (void)
 		if (isMusicOn)
 			StopTheMusic();
 	}
-#endif
 }
 
 //--------------------------------------------------------------  SetMusicalPiece
 
 void SetMusicalMode (SInt16 newMode)
 {
-	return;
-#if 0
 	if (dontLoadMusic)
 		return;
 
@@ -175,7 +170,6 @@ void SetMusicalMode (SInt16 newMode)
 		musicCursor = 0;
 		break;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  MusicCallBack
@@ -339,8 +333,6 @@ OSErr CloseMusicChannel (void)
 
 void InitMusic (void)
 {
-	return;
-#if 0
 	OSErr		theErr;
 
 	if (dontLoadMusic)
@@ -396,15 +388,12 @@ void InitMusic (void)
 			failedMusic = true;
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  KillMusic
 
 void KillMusic (void)
 {
-	return;
-#if 0
 	OSErr		theErr;
 
 	if (dontLoadMusic)
@@ -412,7 +401,6 @@ void KillMusic (void)
 
 	theErr = DumpMusicSounds();
 	theErr = CloseMusicChannel();
-#endif
 }
 
 //--------------------------------------------------------------  MusicBytesNeeded
