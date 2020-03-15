@@ -330,10 +330,8 @@ void ReBackUpFlames (SInt16 where, SInt16 who)
 
 void AddCandleFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
-	return;
-#if 0
 	Rect		src, bounds;
-	short		savedNum;
+	SInt16		savedNum;
 
 	if ((numFlames >= kMaxCandles) || (h < 16) || (v < 15))
 		return;
@@ -358,7 +356,6 @@ void AddCandleFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 		flames[numFlames].who = savedNum;
 		numFlames++;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  BackUpTikiFlames
