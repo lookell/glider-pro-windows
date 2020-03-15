@@ -262,15 +262,12 @@ SInt16 AddGrease (SInt16 where, SInt16 who, SInt16 h, SInt16 v,
 
 void SpillGrease (SInt16 who, SInt16 index)
 {
-	return;
-#if 0
 	if (grease[who].mode == kGreaseIdle)
 	{
 		grease[who].mode = kGreaseFalling;
 		grease[who].hotNum = index;
 		PlayPrioritySound(kGreaseSpillSound, kGreaseSpillPriority);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  RedrawAllGrease
