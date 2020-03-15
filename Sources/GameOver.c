@@ -328,9 +328,7 @@ void InitDiedGameOver (void)
 
 void HandlePages (void)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	for (i = 0; i < 8; i++)
 	{
@@ -406,7 +404,6 @@ void HandlePages (void)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DrawPages
