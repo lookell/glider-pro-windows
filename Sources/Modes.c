@@ -24,8 +24,6 @@ extern	Boolean		onePlayerLeft, playerDead;
 
 void StartGliderFadingIn (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	if (foilTotal <= 0)
 		showFoil = false;
 
@@ -45,15 +43,12 @@ void StartGliderFadingIn (gliderPtr thisGlider)
 		thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame]];
 		thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
 	}
-#endif
 }
 
 //--------------------------------------------------------------  StartGliderTransportingIn
 
 void StartGliderTransportingIn (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	if (foilTotal <= 0)
 		showFoil = false;
 
@@ -73,15 +68,12 @@ void StartGliderTransportingIn (gliderPtr thisGlider)
 		thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame]];
 		thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
 	}
-#endif
 }
 
 //--------------------------------------------------------------  StartGliderFadingOut
 
 void StartGliderFadingOut (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	Rect		tempBounds;
 
 	if (thisGlider->mode == kGliderFadingOut)
@@ -121,15 +113,12 @@ void StartGliderFadingOut (gliderPtr thisGlider)
 		thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame]];
 		thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
 	}
-#endif
 }
 
 //--------------------------------------------------------------  StartGliderGoingUpStairs
 
 void StartGliderGoingUpStairs (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	if (thisGlider->mode == kGliderGoingFoil)
 		DeckGliderInFoil(thisGlider);
 	else if (thisGlider->mode == kGliderLosingFoil)
@@ -141,15 +130,12 @@ void StartGliderGoingUpStairs (gliderPtr thisGlider)
 		thisGlider->frame = 0;
 
 	thisGlider->mode = kGliderGoingUp;
-#endif
 }
 
 //--------------------------------------------------------------  StartGliderGoingDownStairs
 
 void StartGliderGoingDownStairs (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	if (thisGlider->mode == kGliderGoingFoil)
 		DeckGliderInFoil(thisGlider);
 	else if (thisGlider->mode == kGliderLosingFoil)
@@ -162,7 +148,6 @@ void StartGliderGoingDownStairs (gliderPtr thisGlider)
 
 	thisGlider->mode = kGliderGoingDown;
 	rightClip = GetUpStairsRightEdge();
-#endif
 }
 
 //--------------------------------------------------------------  StartGliderMailingIn
@@ -198,8 +183,6 @@ void StartGliderMailingIn (gliderPtr thisGlider, Rect *bounds, hotPtr who)
 
 void StartGliderMailingOut (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	if (thisGlider->mode == kGliderGoingFoil)
 		DeckGliderInFoil(thisGlider);
 	else if (thisGlider->mode == kGliderLosingFoil)
@@ -226,7 +209,6 @@ void StartGliderMailingOut (gliderPtr thisGlider)
 	thisGlider->vDesiredVel = 0;
 	thisGlider->tipped = false;
 	thisGlider->dontDraw = false;
-#endif
 }
 
 //--------------------------------------------------------------  StartGliderDuctingDown
@@ -305,12 +287,9 @@ void StartGliderDuctingUp (gliderPtr thisGlider, Rect *bounds, hotPtr who)
 
 void StartGliderDuctingIn (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	thisGlider->mode = kGliderDuctingIn;
 	thisGlider->whole = thisGlider->dest;
 	thisGlider->dontDraw = false;
-#endif
 }
 
 //--------------------------------------------------------------  StartGliderTransporting
@@ -366,8 +345,6 @@ void StartGliderTransporting (gliderPtr thisGlider, hotPtr who)
 
 void FlagGliderNormal (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	thisGlider->dest.right = thisGlider->dest.left + kGliderWide;
 	thisGlider->dest.bottom = thisGlider->dest.top + kGliderHigh;
 	thisGlider->destShadow.right = thisGlider->destShadow.left + kGliderWide;
@@ -394,15 +371,12 @@ void FlagGliderNormal (gliderPtr thisGlider)
 	thisGlider->dontDraw = false;
 	thisGlider->frame = 0;
 	shadowVisible = IsShadowVisible();
-#endif
 }
 
 //--------------------------------------------------------------  FlagGliderShredding
 
 void FlagGliderShredding (gliderPtr thisGlider, Rect *bounds)
 {
-	return;
-#if 0
 	PlayPrioritySound(kCaughtFireSound, kCaughtFirePriority);
 	thisGlider->dest.left = bounds->left + 36;
 	thisGlider->dest.right = thisGlider->dest.left + kGliderWide;
@@ -437,15 +411,12 @@ void FlagGliderShredding (gliderPtr thisGlider, Rect *bounds)
 	thisGlider->vDesiredVel = 0;
 	thisGlider->frame = bounds->bottom - 3;
 	thisGlider->tipped = false;
-#endif
 }
 
 //--------------------------------------------------------------  FlagGliderBurning
 
 void FlagGliderBurning (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	#define		kFramesToBurn	60
 
 	PlayPrioritySound(kCaughtFireSound, kCaughtFirePriority);
@@ -472,41 +443,32 @@ void FlagGliderBurning (gliderPtr thisGlider)
 	thisGlider->frame = 0;
 	thisGlider->wasMode = kFramesToBurn;		// used to count down burning
 	thisGlider->tipped = false;
-#endif
 }
 
 //--------------------------------------------------------------  FlagGliderFaceLeft
 
 void FlagGliderFaceLeft (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	thisGlider->mode = kGliderFaceLeft;
 	thisGlider->frame = kLastAboutFaceFrame;
 	thisGlider->src = gliderSrc[kLastAboutFaceFrame];
 	thisGlider->mask = gliderSrc[kLastAboutFaceFrame];
-#endif
 }
 
 //--------------------------------------------------------------  FlagGliderFaceRight
 
 void FlagGliderFaceRight (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	thisGlider->mode = kGliderFaceRight;
 	thisGlider->frame = kFirstAboutFaceFrame;
 	thisGlider->src = gliderSrc[kFirstAboutFaceFrame];
 	thisGlider->mask = gliderSrc[kFirstAboutFaceFrame];
-#endif
 }
 
 //--------------------------------------------------------------  FlagGliderInLimbo
 
 void FlagGliderInLimbo (gliderPtr thisGlider, Boolean sayIt)
 {
-	return;
-#if 0
 	thisGlider->wasMode = thisGlider->mode;
 	thisGlider->mode = kGliderInLimbo;
 	if ((sayIt) && (saidFollow < 3))
@@ -515,30 +477,24 @@ void FlagGliderInLimbo (gliderPtr thisGlider, Boolean sayIt)
 		saidFollow++;
 	}
 	firstPlayer = thisGlider->which;
-#endif
 }
 
 //--------------------------------------------------------------  UndoGliderLimbo
 
 void UndoGliderLimbo (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
 		return;
 
 	if (thisGlider->mode == kGliderInLimbo)
 		thisGlider->mode = thisGlider->wasMode;
 	thisGlider->dontDraw = false;
-#endif
 }
 
 //--------------------------------------------------------------  ToggleGliderFacing
 
 void ToggleGliderFacing (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	if (thisGlider->mode != kGliderNormal)
 		return;
 
@@ -546,43 +502,34 @@ void ToggleGliderFacing (gliderPtr thisGlider)
 		FlagGliderFaceRight(thisGlider);
 	else
 		FlagGliderFaceLeft(thisGlider);
-#endif
 }
 
 //--------------------------------------------------------------  InsureGliderFacingRight
 
 void InsureGliderFacingRight (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
 		return;
 
 	if ((thisGlider->facing == kFaceLeft) && (thisGlider->mode != kGliderBurning))
 		FlagGliderFaceRight(thisGlider);
-#endif
 }
 
 //--------------------------------------------------------------  InsureGliderFacingLeft
 
 void InsureGliderFacingLeft (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
 		return;
 
 	if ((thisGlider->facing == kFaceRight) && (thisGlider->mode != kGliderBurning))
 		FlagGliderFaceLeft(thisGlider);
-#endif
 }
 
 //--------------------------------------------------------------  ReadyGliderForTripUpStairs
 
 void ReadyGliderForTripUpStairs (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	#define kVGliderAppearsComingUp		100
 
 	if ((twoPlayerGame) && (thisGlider->which == playerDead) && (onePlayerLeft))
@@ -608,15 +555,12 @@ void ReadyGliderForTripUpStairs (gliderPtr thisGlider)
 	thisGlider->wholeShadow = thisGlider->destShadow;
 
 	FinishGliderUpStairs(thisGlider);
-#endif
 }
 
 //--------------------------------------------------------------  ReadyGliderForTripDownStairs
 
 void ReadyGliderForTripDownStairs (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	#define kVGliderAppearsComingDown		100
 
 	if ((twoPlayerGame) && (thisGlider->which == playerDead) && (onePlayerLeft))
@@ -642,15 +586,12 @@ void ReadyGliderForTripDownStairs (gliderPtr thisGlider)
 	thisGlider->wholeShadow = thisGlider->destShadow;
 
 	FinishGliderDownStairs(thisGlider);
-#endif
 }
 
 //--------------------------------------------------------------  StartGliderFoilGoing
 
 void StartGliderFoilGoing (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	if ((thisGlider->mode == kGliderGoingFoil) || (thisGlider->mode == kGliderInLimbo))
 		return;
 
@@ -669,15 +610,12 @@ void StartGliderFoilGoing (gliderPtr thisGlider)
 		thisGlider->src = gliderSrc[10 - thisGlider->frame];
 		thisGlider->mask = gliderSrc[10 - thisGlider->frame];
 	}
-#endif
 }
 
 //--------------------------------------------------------------  StartGliderFoilLosing
 
 void StartGliderFoilLosing (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	if ((thisGlider->mode == kGliderLosingFoil) ||
 			(thisGlider->mode == kGliderInLimbo))
 		return;
@@ -698,21 +636,17 @@ void StartGliderFoilLosing (gliderPtr thisGlider)
 		thisGlider->src = gliderSrc[10 - thisGlider->frame];
 		thisGlider->mask = gliderSrc[10 - thisGlider->frame];
 	}
-#endif
 }
 
 //--------------------------------------------------------------  TagGliderIdle
 
 void TagGliderIdle (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
 		return;
 
 	thisGlider->wasMode = thisGlider->mode;
 	thisGlider->mode = kGliderIdle;
 	thisGlider->hVel = 30;			// used for 30 frame delay
-#endif
 }
 
