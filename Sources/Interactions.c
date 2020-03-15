@@ -153,8 +153,6 @@ Boolean GliderInRect (gliderPtr thisGlider, Rect *theRect)
 
 void BounceGlider (gliderPtr thisGlider, Rect *theRect)
 {
-	return;
-#if 0
 	Rect		glideBounds;
 
 	glideBounds = thisGlider->dest;
@@ -166,7 +164,6 @@ void BounceGlider (gliderPtr thisGlider, Rect *theRect)
 		PlayPrioritySound(kFoilHitSound, kFoilHitPriority);
 	else
 		PlayPrioritySound(kHitWallSound, kHitWallPriority);
-#endif
 }
 
 //--------------------------------------------------------------  CheckEscapeUpTwo
