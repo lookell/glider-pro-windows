@@ -20,7 +20,7 @@
 #define	kSavingGameDial		1042
 
 
-void LogDemoKey (char);
+void LogDemoKey (Byte);
 void DoCommandKey (void);
 void DoPause (void);
 void DoBatteryEngaged (gliderPtr);
@@ -42,14 +42,11 @@ extern	Boolean		quitting, playing, onePlayerLeft, twoPlayerGame, demoGoing;
 //==============================================================  Functions
 //--------------------------------------------------------------  LogDemoKey
 
-void LogDemoKey (char keyIs)
+void LogDemoKey (Byte keyIs)
 {
-	return;
-#if 0
 	demoData[demoIndex].frame = gameFrame;
 	demoData[demoIndex].key = keyIs;
 	demoIndex++;
-#endif
 }
 
 //--------------------------------------------------------------  DoCommandKey
@@ -130,8 +127,6 @@ void DoPause (void)
 
 void DoBatteryEngaged (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	if (thisGlider->facing == kFaceLeft)
 	{
 		if (thisGlider->tipped)
@@ -165,15 +160,12 @@ void DoBatteryEngaged (gliderPtr thisGlider)
 			batteryFrame = 0;
 		batteryWasEngaged = true;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoHeliumEngaged
 
 void DoHeliumEngaged (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	thisGlider->vDesiredVel = -kHeliumLift;
 	batteryTotal++;
 
@@ -194,7 +186,6 @@ void DoHeliumEngaged (gliderPtr thisGlider)
 			batteryFrame = 0;
 		batteryWasEngaged = true;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  GetDemoInput
