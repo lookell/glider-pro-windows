@@ -172,22 +172,17 @@ void StopMarquee (void)
 
 void PauseMarquee (void)
 {
-	return;
-#if 0
 	if (!theMarquee.active)
 		return;
 
 	theMarquee.paused = true;
 	StopMarquee();
-#endif
 }
 
 //--------------------------------------------------------------  ResumeMarquee
 
 void ResumeMarquee (void)
 {
-	return;
-#if 0
 	if (!theMarquee.paused)
 		return;
 
@@ -198,7 +193,6 @@ void ResumeMarquee (void)
 	}
 	else
 		StartMarquee(&theMarquee.bounds);
-#endif
 }
 
 //--------------------------------------------------------------  DragOutMarqueeRect
@@ -436,8 +430,6 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 
 Boolean MarqueeHasHandles (SInt16 *direction, SInt16 *dist)
 {
-	return false;
-#if 0
 	if (theMarquee.handled)
 	{
 		*direction = theMarquee.direction;
@@ -450,7 +442,6 @@ Boolean MarqueeHasHandles (SInt16 *direction, SInt16 *dist)
 		*dist = 0;
 		return (false);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  PtInMarqueeHandle
@@ -481,15 +472,12 @@ void DrawGliderMarquee (void)
 
 void SetMarqueeGliderRect (SInt16 h, SInt16 v)
 {
-	return;
-#if 0
 	marqueeGliderRect = leftStartGliderSrc;
 	ZeroRectCorner(&marqueeGliderRect);
 	QOffsetRect(&marqueeGliderRect, h - kHalfGliderWide, v - kGliderHigh);
 
 	DrawGliderMarquee();
 	gliderMarqueeUp = true;
-#endif
 }
 
 //--------------------------------------------------------------  DrawMarquee
