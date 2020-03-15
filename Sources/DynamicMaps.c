@@ -393,8 +393,6 @@ void BackUpTikiFlames (Rect *src, SInt16 index)
 
 void ReBackUpTikiFlames (SInt16 where, SInt16 who)
 {
-	return;
-#if 0
 	short		i, f;
 
 	for (i = 0; i < numSavedMaps; i++)
@@ -411,7 +409,6 @@ void ReBackUpTikiFlames (SInt16 where, SInt16 who)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  AddTikiFlame
