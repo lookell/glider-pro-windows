@@ -30,9 +30,7 @@ extern	Boolean		evenFrame;
 
 void HandleDynamics (void)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	for (i = 0; i < numDynamics; i++)
 	{
@@ -104,7 +102,6 @@ void HandleDynamics (void)
 			break;
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleDynamics
@@ -114,9 +111,7 @@ void HandleDynamics (void)
 
 void RenderDynamics (void)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	for (i = 0; i < numDynamics; i++)
 	{
@@ -156,7 +151,6 @@ void RenderDynamics (void)
 			break;
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  ZeroDinahs
@@ -165,9 +159,7 @@ void RenderDynamics (void)
 
 void ZeroDinahs (void)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	for (i = 0; i < kMaxDynamicObs; i++)
 	{
@@ -185,7 +177,6 @@ void ZeroDinahs (void)
 		dinahs[i].active = false;
 	}
 	numDynamics = 0;
-#endif
 }
 
 //--------------------------------------------------------------  AddDynamicObject
@@ -196,9 +187,7 @@ void ZeroDinahs (void)
 SInt16 AddDynamicObject (SInt16 what, Rect *where, objectType *who,
 		SInt16 room, SInt16 index, Boolean isOn)
 {
-	return (-1);
-#if 0
-	short		position, velocity;
+	SInt16		position, velocity;
 	Boolean		lilFrame;
 
 	if (numDynamics >= kMaxDynamicObs)
@@ -242,7 +231,7 @@ SInt16 AddDynamicObject (SInt16 what, Rect *where, objectType *who,
 		while (position > 0);
 		dinahs[numDynamics].vVel = -velocity;
 		dinahs[numDynamics].count = velocity;		// count = initial velocity
-		dinahs[numDynamics].frame = (short)who->data.g.delay * 3;
+		dinahs[numDynamics].frame = (SInt16)who->data.g.delay * 3;
 		dinahs[numDynamics].timer = dinahs[numDynamics].frame;
 		dinahs[numDynamics].position = 0;			// launch/idle state
 		dinahs[numDynamics].room = room;
@@ -324,7 +313,7 @@ SInt16 AddDynamicObject (SInt16 what, Rect *where, objectType *who,
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = numLights;
 		dinahs[numDynamics].vVel = 0;
-		dinahs[numDynamics].count = ((short)who->data.g.delay * 6) / kTicksPerFrame;
+		dinahs[numDynamics].count = ((SInt16)who->data.g.delay * 6) / kTicksPerFrame;
 		dinahs[numDynamics].frame = 0;
 		dinahs[numDynamics].timer = dinahs[numDynamics].count;
 		dinahs[numDynamics].position = 0;			// launch/idle state
@@ -409,7 +398,7 @@ SInt16 AddDynamicObject (SInt16 what, Rect *where, objectType *who,
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = 0;
 		dinahs[numDynamics].vVel = -2;
-		dinahs[numDynamics].count = ((short)who->data.h.delay * 6) / kTicksPerFrame;
+		dinahs[numDynamics].count = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
 		dinahs[numDynamics].frame = 0;
 		dinahs[numDynamics].timer = dinahs[numDynamics].count;
 		dinahs[numDynamics].position = 0;
@@ -434,7 +423,7 @@ SInt16 AddDynamicObject (SInt16 what, Rect *where, objectType *who,
 		else
 			dinahs[numDynamics].hVel = 1;
 		dinahs[numDynamics].vVel = 2;
-		dinahs[numDynamics].count = ((short)who->data.h.delay * 6) / kTicksPerFrame;
+		dinahs[numDynamics].count = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
 		dinahs[numDynamics].frame = 0;
 		dinahs[numDynamics].timer = dinahs[numDynamics].count;
 		dinahs[numDynamics].position = dinahs[numDynamics].dest.left;
@@ -464,7 +453,7 @@ SInt16 AddDynamicObject (SInt16 what, Rect *where, objectType *who,
 		}
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].vVel = 2;
-		dinahs[numDynamics].count = ((short)who->data.h.delay * 6) / kTicksPerFrame;
+		dinahs[numDynamics].count = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
 		dinahs[numDynamics].timer = dinahs[numDynamics].count;
 		dinahs[numDynamics].position = dinahs[numDynamics].dest.top;
 		dinahs[numDynamics].byte0 = (Byte)index;
@@ -512,7 +501,7 @@ SInt16 AddDynamicObject (SInt16 what, Rect *where, objectType *who,
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = dinahs[numDynamics].dest.top;	// remember
 		dinahs[numDynamics].vVel = 0;
-		dinahs[numDynamics].count = ((short)who->data.h.delay * 6) / kTicksPerFrame;
+		dinahs[numDynamics].count = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
 		dinahs[numDynamics].frame = 3;
 		dinahs[numDynamics].timer = dinahs[numDynamics].count;
 		dinahs[numDynamics].position = dinahs[numDynamics].dest.top +
@@ -529,7 +518,7 @@ SInt16 AddDynamicObject (SInt16 what, Rect *where, objectType *who,
 		QOffsetRect(&dinahs[numDynamics].dest,
 				where->left + 10, where->top + 8);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = ((short)who->data.h.delay * 6) / kTicksPerFrame;
+		dinahs[numDynamics].hVel = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
 		position = who->data.g.height;			// reverse engineer init. vel.
 		velocity = 0;
 		evenFrame = true;
@@ -562,6 +551,5 @@ SInt16 AddDynamicObject (SInt16 what, Rect *where, objectType *who,
 	numDynamics++;
 
 	return (numDynamics - 1);
-#endif
 }
 
