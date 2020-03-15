@@ -306,9 +306,7 @@ void BackUpFlames (Rect *src, SInt16 index)
 
 void ReBackUpFlames (SInt16 where, SInt16 who)
 {
-	return;
-#if 0
-	short		i, f;
+	SInt16		i, f;
 
 	for (i = 0; i < numSavedMaps; i++)
 	{
@@ -324,7 +322,6 @@ void ReBackUpFlames (SInt16 where, SInt16 who)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  AddCandleFlame
