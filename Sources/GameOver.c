@@ -246,12 +246,9 @@ void DoGameOverStarAnimation (void)
 
 void FlagGameOver (void)
 {
-	return;
-#if 0
 	gameOver = true;
 	countDown = kNumCountDownFrames;
 	SetMusicalMode(kPlayWholeScoreMode);
-#endif
 }
 
 //--------------------------------------------------------------  InitDiedGameOver
