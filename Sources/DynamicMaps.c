@@ -726,16 +726,13 @@ void AddStar (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 
 void StopPendulum (SInt16 where, SInt16 who)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	for (i = 0; i < numPendulums; i++)
 	{
 		if ((pendulums[i].link == who) && (pendulums[i].where == where))
 			pendulums[i].active = false;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  StopStar
@@ -744,16 +741,13 @@ void StopPendulum (SInt16 where, SInt16 who)
 
 void StopStar (SInt16 where, SInt16 who)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	for (i = 0; i < numStars; i++)
 	{
 		if ((theStars[i].link == who) && (theStars[i].where == where))
 			theStars[i].mode = -1;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  AddAShreddedGlider
