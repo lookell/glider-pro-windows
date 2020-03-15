@@ -53,9 +53,7 @@ extern	Boolean		doBitchDialogs;
 #ifndef COMPILEDEMO
 Boolean ThisRoomVisibleOnMap (void)
 {
-	return false;
-#if 0
-	short		h, v;
+	SInt16		h, v;
 
 	h = thisRoom->suite;
 	v = kMapGroundValue - thisRoom->floor;
@@ -66,7 +64,6 @@ Boolean ThisRoomVisibleOnMap (void)
 		return (false);
 	else
 		return (true);
-#endif
 }
 #endif
 
