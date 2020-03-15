@@ -53,10 +53,8 @@ extern	Boolean		twoPlayerGame, newState, onePlayerLeft, playerDead;
 
 Boolean GliderHitTop (gliderPtr thisGlider, Rect *theRect)
 {
-	return false;
-#if 0
 	Rect		glideBounds;
-	short		offset;
+	SInt16		offset;
 	Boolean		hitTop;
 
 	glideBounds.left = thisGlider->dest.left + 5;
@@ -96,7 +94,6 @@ Boolean GliderHitTop (gliderPtr thisGlider, Rect *theRect)
 	}
 
 	return (hitTop);
-#endif
 }
 
 //--------------------------------------------------------------  SectGlider
