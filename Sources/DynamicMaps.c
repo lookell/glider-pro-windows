@@ -774,9 +774,7 @@ void AddAShreddedGlider (Rect *bounds)
 
 void RemoveShreds (void)
 {
-	return;
-#if 0
-	short		largest, who, i;
+	SInt16		largest, who, i;
 
 	largest = 0;
 	who = -1;
@@ -804,7 +802,6 @@ void RemoveShreds (void)
 			shreds[numShredded].frame = 0;
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  ZeroFlamesAndTheLike
