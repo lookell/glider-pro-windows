@@ -1,5 +1,5 @@
-#ifndef MACTYPES_H_
-#define MACTYPES_H_
+#ifndef MACINTOSH_H_
+#define MACINTOSH_H_
 
 #include <stddef.h>
 #include <stdint.h>
@@ -33,7 +33,11 @@ typedef UInt8 Str15[16];
 typedef UInt8 Str27[28];
 typedef UInt8 Str31[32];
 typedef UInt8 Str32[33];
+typedef UInt8 Str63[64];
 typedef UInt8 Str255[256];
+
+typedef void *Ptr;
+typedef Ptr *Handle;
 
 typedef struct Point {
 	SInt16 v;
@@ -51,32 +55,44 @@ typedef struct Pattern {
 	UInt8 pat[8];
 } Pattern;
 
+typedef struct RGBColor {
+	UInt16 red;
+	UInt16 green;
+	UInt16 blue;
+} RGBColor;
+
+typedef struct ColorSpec {
+	SInt16 value;
+	RGBColor rgb;
+} ColorSpec;
+
+typedef struct FSSpec {
+	SInt16 vRefNum;
+	SInt32 parID;
+	Str63 name;
+} FSSpec, *FSSpecPtr;
+
 // unknown types
 
-typedef const void *AEEventHandlerUPP;
-typedef const void *AppleEvent;
-typedef const void *CGrafPtr;
-typedef const void *ColorSpec;
-typedef const void *ControlHandle;
-typedef const void *CTabHandle;
-typedef const void *CursHandle;
-typedef const void *Cursor;
-typedef const void *DialogPtr;
-typedef const void *EventRecord;
-typedef const void *FSSpec;
-typedef const void *FSSpecPtr;
-typedef const void *GDHandle;
-typedef const void *GWorldPtr;
-typedef const void *Handle;
-typedef const void *KeyMap;
-typedef const void *MenuHandle;
-typedef const void *Movie;
-typedef const void *PixMapHandle;
-typedef const void *Ptr;
-typedef const void *RgnHandle;
-typedef const void *SndCommand;
-typedef const void *SndChannelPtr;
-typedef const void *SndCallBackUPP;
-typedef const void *WindowPtr;
+typedef struct AEEventHandlerUPP__ *AEEventHandlerUPP;
+typedef struct AppleEvent__ *AppleEvent;
+typedef struct CGrafPtr__ *CGrafPtr;
+typedef struct ControlHandle__ *ControlHandle;
+typedef struct CTabHandle__ *CTabHandle;
+typedef struct CursHandle__ *CursHandle;
+typedef struct Cursor__ *Cursor;
+typedef struct DialogPtr__ *DialogPtr;
+typedef struct EventRecord__ *EventRecord;
+typedef struct GDHandle__ *GDHandle;
+typedef CGrafPtr GWorldPtr;
+typedef struct KeyMap__ *KeyMap;
+typedef struct MenuHandle__ *MenuHandle;
+typedef struct Movie__ *Movie;
+typedef struct PixMapHandle__ *PixMapHandle;
+typedef struct RgnHandle__ *RgnHandle;
+typedef struct SndCommand__ *SndCommand;
+typedef struct SndChannelPtr__ *SndChannelPtr;
+typedef struct SndCallBackUPP__ *SndCallBackUPP;
+typedef struct WindowPtr__ *WindowPtr;
 
 #endif
