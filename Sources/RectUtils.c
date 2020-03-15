@@ -231,8 +231,6 @@ void QSetRect (Rect *theRect, SInt16 l, SInt16 t, SInt16 r, SInt16 b)
 
 Boolean ForceRectInRect (Rect *small, Rect *large)
 {
-	return false;
-#if 0
 	SInt16		hOff, vOff;
 	Boolean		changed;
 
@@ -255,30 +253,29 @@ Boolean ForceRectInRect (Rect *small, Rect *large)
 	hOff = large->left - small->left;
 	if (hOff > 0)
 	{
-		OffsetRect(small, hOff, 0);
+		QOffsetRect(small, hOff, 0);
 		changed = true;
 	}
 	hOff = large->right - small->right;
 	if (hOff < 0)
 	{
-		OffsetRect(small, hOff, 0);
+		QOffsetRect(small, hOff, 0);
 		changed = true;
 	}
 	vOff = large->top - small->top;
 	if (vOff > 0)
 	{
-		OffsetRect(small, 0, vOff);
+		QOffsetRect(small, 0, vOff);
 		changed = true;
 	}
 	vOff = large->bottom - small->bottom;
 	if (vOff < 0)
 	{
-		OffsetRect(small, 0, vOff);
+		QOffsetRect(small, 0, vOff);
 		changed = true;
 	}
 
 	return changed;
-#endif
 }
 
 //--------------------------------------------------------------  QUnionSimilarRect
