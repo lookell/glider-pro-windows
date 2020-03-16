@@ -280,8 +280,6 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 SInt16 AddActiveRect (Rect *bounds, SInt16 action, SInt16 who, Boolean isOn,
 		Boolean doScrutinize)
 {
-	return (-1);
-#if 0
 	if (nHotSpots >= kMaxHotSpots)
 		return (-1);
 
@@ -294,18 +292,15 @@ SInt16 AddActiveRect (Rect *bounds, SInt16 action, SInt16 who, Boolean isOn,
 	nHotSpots++;
 
 	return (nHotSpots - 1);
-#endif
 }
 
 //--------------------------------------------------------------  CreateActiveRects
 
 SInt16 CreateActiveRects (SInt16 who)
 {
-	return (-1);
-#if 0
 	objectType	theObject;
 	Rect		bounds;
-	short		hotSpotNumber, wide, tall;
+	SInt16		hotSpotNumber, wide, tall;
 	Boolean		isOn;
 
 	hotSpotNumber = -1;
@@ -661,7 +656,7 @@ SInt16 CreateActiveRects (SInt16 who)
 
 		case kStool:
 		bounds = theObject.data.b.bounds;
-		InsetRect(&bounds, 1, 1);
+		Mac_InsetRect(&bounds, 1, 1);
 		bounds.bottom = bounds.top + kStoolThick;
 		hotSpotNumber = AddActiveRect(&bounds, kDissolveIt, who, true, true);
 		break;
@@ -884,7 +879,7 @@ SInt16 CreateActiveRects (SInt16 who)
 					theObject.data.d.topLeft.h,
 					theObject.data.d.topLeft.v);
 			bounds.bottom = bounds.top + theObject.data.d.tall;
-			bounds.right += (short)theObject.data.d.wide;
+			bounds.right += (SInt16)theObject.data.d.wide;
 			hotSpotNumber = AddActiveRect(&bounds, kTransportIt, who, true, false);
 		}
 		break;
@@ -1036,7 +1031,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		QOffsetRect(&bounds,
 				theObject.data.h.topLeft.h,
 				theObject.data.h.topLeft.v);
-		InsetRect(&bounds, -24, -10);
+		Mac_InsetRect(&bounds, -24, -10);
 		hotSpotNumber = AddActiveRect(&bounds, kWebIt, who, true, true);
 		break;
 
@@ -1068,16 +1063,13 @@ SInt16 CreateActiveRects (SInt16 who)
 	}
 
 	return (hotSpotNumber);
-#endif
 }
 
 //--------------------------------------------------------------  VerticalRoomOffset
 
 SInt16 VerticalRoomOffset (SInt16 neighbor)
 {
-	return 0;
-#if 0
-	short		offset;
+	SInt16		offset;
 
 	offset = 0;
 
@@ -1097,15 +1089,12 @@ SInt16 VerticalRoomOffset (SInt16 neighbor)
 	}
 
 	return (offset);
-#endif
 }
 
 //--------------------------------------------------------------  OffsetRectRoomRelative
 
 void OffsetRectRoomRelative (Rect *theRect, SInt16 neighbor)
 {
-	return;
-#if 0
 	QOffsetRect(theRect, playOriginH, playOriginV);
 
 	switch (neighbor)
@@ -1142,7 +1131,6 @@ void OffsetRectRoomRelative (Rect *theRect, SInt16 neighbor)
 		QOffsetRect(theRect, -kRoomWide, -kVertLocalOffset);
 		break;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  GetUpStairsRightEdge

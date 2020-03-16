@@ -21,6 +21,7 @@ target_sources(
   # added headers
   Headers/Macintosh.h
   # added sources
+  Sources/Macintosh.c
   # original headers
   Headers/About.h
   Headers/DialogUtils.h
