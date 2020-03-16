@@ -313,8 +313,6 @@ void DoDemoGame (void)
 
 void InitGlider (gliderPtr thisGlider, SInt16 mode)
 {
-	return;
-#if 0
 	WhereDoesGliderBegin(&thisGlider->dest, mode);
 
 	if (mode == kResumeGameMode)
@@ -372,30 +370,23 @@ void InitGlider (gliderPtr thisGlider, SInt16 mode)
 	thisGlider->tipped = false;
 	thisGlider->sliding = false;
 	thisGlider->dontDraw = false;
-#endif
 }
 
 //--------------------------------------------------------------  SetHouseToFirstRoom
 
 void SetHouseToFirstRoom (void)
 {
-	return;
-#if 0
-	short		firstRoom;
+	SInt16		firstRoom;
 
 	firstRoom = GetFirstRoomNumber();
 	ForceThisRoom(firstRoom);
-#endif
 }
 
 //--------------------------------------------------------------  SetHouseToSavedRoom
 
 void SetHouseToSavedRoom (void)
 {
-	return;
-#if 0
 	ForceThisRoom(smallGame.roomNumber);
-#endif
 }
 
 //--------------------------------------------------------------  HandlePlayEvent
@@ -736,8 +727,6 @@ void SetObjectsToDefaults (void)
 
 void HideGlider (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	Rect		tempRect;
 
 	tempRect = thisGlider->whole;
@@ -753,30 +742,24 @@ void HideGlider (gliderPtr thisGlider)
 	tempRect = thisGlider->wholeShadow;
 	QOffsetRect(&tempRect, playOriginH, playOriginV);
 	CopyRectWorkToMain(&tempRect);
-#endif
 }
 
 //--------------------------------------------------------------  InitTelephone
 
 void InitTelephone (void)
 {
-	return;
-#if 0
 	thePhone.nextRing = RandomInt(kRingSpread) + kRingBaseDelay;
 	thePhone.rings = RandomInt(3) + 3;
 	thePhone.delay = kRingDelay;
 
 	theChimes.nextRing = RandomInt(kChimeDelay) + 1;
-#endif
 }
 
 //--------------------------------------------------------------  HandleTelephone
 
 void HandleTelephone (void)
 {
-	return;
-#if 0
-	short		delayTime;
+	SInt16		delayTime;
 
 	if (!phoneBitSet)
 	{
@@ -819,17 +802,13 @@ void HandleTelephone (void)
 		else
 			theChimes.nextRing--;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  StrikeChime
 
 void StrikeChime (void)
 {
-	return;
-#if 0
 	theChimes.nextRing = 0;
-#endif
 }
 
 //--------------------------------------------------------------  RestoreEntireGameScreen
