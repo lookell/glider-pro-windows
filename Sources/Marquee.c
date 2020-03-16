@@ -448,10 +448,7 @@ Boolean MarqueeHasHandles (SInt16 *direction, SInt16 *dist)
 
 Boolean PtInMarqueeHandle (Point where)
 {
-	return false;
-#if 0
-	return (PtInRect(where, &theMarquee.handle));
-#endif
+	return (Mac_PtInRect(where, &theMarquee.handle));
 }
 
 //--------------------------------------------------------------  DrawGliderMarquee
