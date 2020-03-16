@@ -20,6 +20,7 @@ target_sources(
   Resources/gliderpro.manifest
   # added headers
   Headers/Macintosh.h
+  Headers/WinAPI.h
   # added sources
   Sources/Macintosh.c
   # original headers
