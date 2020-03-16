@@ -142,11 +142,8 @@ void InitRandomLongQUS (void)
 
 UInt32 RandomLongQUS (void)
 {
-	return 0;
-#if 0
 	theSeed = theSeed * 1103515245 + 12345;
 	return (theSeed);
-#endif
 }
 
 //--------------------------------------------------------------  RedAlert
@@ -456,10 +453,8 @@ void DrawCIcon (SInt16 theID, SInt16 h, SInt16 v)
 
 SInt32 LongSquareRoot (SInt32 theNumber)
 {
-	return 0;
-#if 0
-	long		currentAnswer;
-	long		nextTrial;
+	SInt32		currentAnswer;
+	SInt32		nextTrial;
 
 	if (theNumber <= 1L)
 		return (theNumber);
@@ -474,7 +469,6 @@ SInt32 LongSquareRoot (SInt32 theNumber)
 	while (nextTrial < currentAnswer);
 
 	return(currentAnswer);
-#endif
 }
 
 //--------------------------------------------------------------  WaitForInputEvent
