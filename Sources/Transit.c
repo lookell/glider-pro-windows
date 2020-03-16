@@ -67,8 +67,6 @@ SInt16 WhatAreWeLinkedTo (SInt16 where, Byte who)
 
 void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 {
-	return;
-#if 0
 	Rect		tempRect;
 
 	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
@@ -149,7 +147,6 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 
 	if ((twoPlayerGame) && (thisGlider->which != firstPlayer))
 		TagGliderIdle(thisGlider);
-#endif
 }
 
 //--------------------------------------------------------------  MoveRoomToRoom
@@ -469,8 +466,6 @@ void HandleRoomVisitation (void)
 
 void ForceKillGlider (void)
 {
-	return;
-#if 0
 	if (theGlider.mode == kGliderInLimbo)
 	{
 		if (theGlider2.mode != kGliderFadingOut)
@@ -489,16 +484,13 @@ void ForceKillGlider (void)
 			playerSuicide = true;
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  FollowTheLeader
 
 void FollowTheLeader (void)
 {
-	return;
-#if 0
-	short		wasEscaped;
+	SInt16		wasEscaped;
 	Boolean		oneOrTwo;
 
 	playerSuicide = false;
@@ -580,6 +572,5 @@ void FollowTheLeader (void)
 		default:
 		break;
 	}
-#endif
 }
 
