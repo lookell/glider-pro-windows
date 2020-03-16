@@ -316,8 +316,6 @@ void CreatePointers (void)
 
 void InitSrcRects (void)
 {
-	return;
-#if 0
 	QSetRect(&srcRects[kFloorVent], 0, 0, 48, 11);		// Blowers
 	QOffsetRect(&srcRects[kFloorVent], 0, 0);
 	QSetRect(&srcRects[kCeilingVent], 0, 0, 48, 11);
@@ -485,6 +483,5 @@ void InitSrcRects (void)
 	QOffsetRect(&srcRects[kFaucet], 0, 51);
 	QSetRect(&srcRects[kRug], 0, 0, 144, 18);
 	QSetRect(&srcRects[kChimes], 0, 0, 28, 74);
-#endif
 }
 
