@@ -64,8 +64,6 @@ extern	Boolean		evenFrame, shadowVisible, twoPlayerGame, tvOn;
 
 void AddRectToWorkRects (Rect *theRect)
 {
-	return;
-#if 0
 	if (numWork2Main < (kMaxGarbageRects - 1))
 	{
 		work2MainRects[numWork2Main] = *theRect;
@@ -79,15 +77,12 @@ void AddRectToWorkRects (Rect *theRect)
 			work2MainRects[numWork2Main].bottom = justRoomsRect.bottom;
 		numWork2Main++;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  AddRectToBackRects
 
 void AddRectToBackRects (Rect *theRect)
 {
-	return;
-#if 0
 	if (numBack2Work < (kMaxGarbageRects - 1))
 	{
 		back2WorkRects[numBack2Work] = *theRect;
@@ -101,15 +96,12 @@ void AddRectToBackRects (Rect *theRect)
 			back2WorkRects[numBack2Work].bottom = workSrcRect.bottom;
 		numBack2Work++;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  AddRectToWorkRectsWhole
 
 void AddRectToWorkRectsWhole (Rect *theRect)
 {
-	return;
-#if 0
 	if (numWork2Main < (kMaxGarbageRects - 1))
 	{
 		if ((theRect->right <= workSrcRect.left) ||
@@ -137,7 +129,6 @@ void AddRectToWorkRectsWhole (Rect *theRect)
 
 		numWork2Main++;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DrawReflection
