@@ -1,4 +1,45 @@
 #include "Macintosh.h"
+#include "WinAPI.h"
+
+
+//--------------------------------------------------------------  GetDateTime
+// Retrieve the number of seconds since midnight, January 1, 1904.
+// The time difference is in terms of the local time zone.
+
+void Mac_GetDateTime(UInt32 *secs)
+{
+	SYSTEMTIME localMacEpoch, utcMacEpoch;
+	FILETIME epochTime, currentTime;
+	ULARGE_INTEGER epochSecs, currentSecs;
+
+	if (secs == NULL)
+		return;
+	*secs = 0;
+
+	localMacEpoch.wYear = 1904;
+	localMacEpoch.wMonth = 1;
+	localMacEpoch.wDayOfWeek = 5; // Friday
+	localMacEpoch.wDay = 1;
+	localMacEpoch.wHour = 0;
+	localMacEpoch.wMinute = 0;
+	localMacEpoch.wSecond = 0;
+	localMacEpoch.wMilliseconds = 0;
+	if (!TzSpecificLocalTimeToSystemTime(NULL, &localMacEpoch, &utcMacEpoch))
+		return;
+
+	if (!SystemTimeToFileTime(&utcMacEpoch, &epochTime))
+		return;
+	epochSecs.LowPart = epochTime.dwLowDateTime;
+	epochSecs.HighPart = epochTime.dwHighDateTime;
+	epochSecs.QuadPart /= (10 * 1000 * 1000);
+
+	GetSystemTimeAsFileTime(&currentTime);
+	currentSecs.LowPart = currentTime.dwLowDateTime;
+	currentSecs.HighPart = currentTime.dwHighDateTime;
+	currentSecs.QuadPart /= (10 * 1000 * 1000);
+
+	*secs = (UInt32)(currentSecs.QuadPart - epochSecs.QuadPart);
+}
 
 //--------------------------------------------------------------  InsetRect
 // Shrink or expand the given rectangle. The rectangle's sides

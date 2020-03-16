@@ -74,6 +74,7 @@ typedef struct FSSpec {
 	Str63 name;
 } FSSpec, *FSSpecPtr;
 
+void Mac_GetDateTime(UInt32 *secs);
 void Mac_InsetRect(Rect *r, SInt16 dh, SInt16 dv);
 
 // unknown types
