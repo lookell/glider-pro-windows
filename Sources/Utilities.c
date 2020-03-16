@@ -130,10 +130,7 @@ SInt32 RandomLong (SInt32 range)
 
 void InitRandomLongQUS (void)
 {
-	return;
-#if 0
-	GetDateTime(&theSeed);
-#endif
+	Mac_GetDateTime(&theSeed);
 }
 
 //--------------------------------------------------------------  RandomLongQUS
