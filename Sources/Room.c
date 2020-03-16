@@ -40,9 +40,7 @@ extern	SInt16		tempTiles[];
 #ifndef COMPILEDEMO
 void SetInitialTiles (SInt16 background, Boolean doRoom)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	if (background >= kUserBackground)
 	{
@@ -153,7 +151,6 @@ void SetInitialTiles (SInt16 background, Boolean doRoom)
 			break;
 		}
 	}
-#endif
 }
 #endif
 
@@ -355,14 +352,11 @@ void ReflectCurrentRoom (Boolean forceMapRedraw)
 
 void CopyRoomToThisRoom (SInt16 roomNumber)
 {
-	return;
-#if 0
 	if (roomNumber == -1)
 		return;
 
 	CopyThisRoomToRoom();			// copy back to house
 	ForceThisRoom(roomNumber);		// load new room from house
-#endif
 }
 
 //--------------------------------------------------------------  CopyThisRoomToRoom
@@ -449,9 +443,7 @@ Boolean RoomExists (SInt16 suite, SInt16 floor, SInt16 *roomNum)
 
 Boolean RoomNumExists (SInt16 roomNum)
 {
-	return false;
-#if 0
-	short		floor, suite, whoCares;
+	SInt16		floor, suite, whoCares;
 	Boolean		exists;
 
 	exists = false;
@@ -459,7 +451,6 @@ Boolean RoomNumExists (SInt16 roomNum)
 		exists = RoomExists(suite, floor, &whoCares);
 
 	return (exists);
-#endif
 }
 
 //--------------------------------------------------------------  DeleteRoom
@@ -538,10 +529,10 @@ Boolean QueryDeleteRoom (void)
 
 SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor)
 {
-	return (-1);
-#if 0
-#ifndef COMPILEDEMO
-	short		newH, newV, newRoomNumber;
+#ifdef COMPILEDEMO
+	return(-1);
+#else
+	SInt16		newH, newV, newRoomNumber;
 
 	if (theMode != kEditMode)
 		return(-1);
@@ -573,17 +564,14 @@ SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor)
 	else
 		return (-1);
 #endif
-#endif
 }
 
 //--------------------------------------------------------------  SelectNeighborRoom
 
 void SelectNeighborRoom (SInt16 whichNeighbor)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	short		newRoomNumber;
+	SInt16		newRoomNumber;
 
 	newRoomNumber = DoesNeighborRoomExist(whichNeighbor);
 
@@ -593,7 +581,6 @@ void SelectNeighborRoom (SInt16 whichNeighbor)
 		CopyRoomToThisRoom(newRoomNumber);
 		ReflectCurrentRoom(false);
 	}
-#endif
 #endif
 }
 
@@ -870,10 +857,8 @@ Boolean	IsRoomAStructure (SInt16 roomNum)
 
 void DetermineRoomOpenings (void)
 {
-	return;
-#if 0
-	short		whichBack, leftTile, rightTile;
-	short		boundsCode;
+	SInt16		whichBack, leftTile, rightTile;
+	SInt16		boundsCode;
 
 	whichBack = thisRoom->background;
 	leftTile = thisRoom->tiles[0];
@@ -987,7 +972,6 @@ void DetermineRoomOpenings (void)
 		topOpen = false;
 	else
 		topOpen = true;
-#endif
 }
 
 //--------------------------------------------------------------  GetOriginalBounding
@@ -1166,9 +1150,7 @@ SInt16 GetNumberOfLights (SInt16 where)
 
 Boolean IsShadowVisible (void)
 {
-	return false;
-#if 0
-	short		boundsCode;
+	SInt16		boundsCode;
 	Boolean		hasFloor;
 
 	if (thisRoom->background >= kUserBackground)
@@ -1197,16 +1179,13 @@ Boolean IsShadowVisible (void)
 	}
 
 	return (hasFloor);
-#endif
 }
 
 //--------------------------------------------------------------  DoesRoomHaveFloor
 
 Boolean DoesRoomHaveFloor (void)
 {
-	return false;
-#if 0
-	short		boundsCode;
+	SInt16		boundsCode;
 	Boolean		hasFloor;
 
 	if (thisRoom->background >= kUserBackground)
@@ -1234,16 +1213,13 @@ Boolean DoesRoomHaveFloor (void)
 	}
 
 	return (hasFloor);
-#endif
 }
 
 //--------------------------------------------------------------  DoesRoomHaveCeiling
 
 Boolean DoesRoomHaveCeiling (void)
 {
-	return false;
-#if 0
-	short		boundsCode;
+	SInt16		boundsCode;
 	Boolean		hasCeiling;
 
 	if (thisRoom->background >= kUserBackground)
@@ -1274,6 +1250,5 @@ Boolean DoesRoomHaveCeiling (void)
 		}
 	}
 	return (hasCeiling);
-#endif
 }
 
