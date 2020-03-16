@@ -33,9 +33,7 @@ trigType	triggers[kMaxTriggers];
 
 void ArmTrigger (hotPtr who)
 {
-	return;
-#if 0
-	short		where, whoLinked;
+	SInt16		where, whoLinked;
 
 	if (who->stillOver)
 		return;
@@ -54,16 +52,13 @@ void ArmTrigger (hotPtr who)
 	}
 
 	who->stillOver = true;
-#endif
 }
 
 //--------------------------------------------------------------  FindEmptyTriggerSlot
 
 SInt16 FindEmptyTriggerSlot (void)
 {
-	return (-1);
-#if 0
-	short		where, i;
+	SInt16		where, i;
 
 	where = -1;
 
@@ -77,16 +72,13 @@ SInt16 FindEmptyTriggerSlot (void)
 	}
 
 	return (where);
-#endif
 }
 
 //--------------------------------------------------------------  HandleTriggers
 
 void HandleTriggers (void)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	for (i = 0; i < kMaxTriggers; i++)
 	{
@@ -101,7 +93,6 @@ void HandleTriggers (void)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  FireTrigger
@@ -209,12 +200,9 @@ void FireTrigger (SInt16 index)
 
 void ZeroTriggers (void)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	for (i = 0; i < kMaxTriggers; i++)
 		triggers[i].armed = false;
-#endif
 }
 
