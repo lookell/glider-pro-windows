@@ -128,10 +128,8 @@ Boolean IsThisValid (SInt16 where, SInt16 who)
 
 SInt16 GetRoomLinked (objectType *who)
 {
-	return (-1);
-#if 0
-	short		compoundRoomNumber, whereLinked;
-	short		floor, suite;
+	SInt16		compoundRoomNumber, whereLinked;
+	SInt16		floor, suite;
 
 	switch (who->what)
 	{
@@ -175,16 +173,13 @@ SInt16 GetRoomLinked (objectType *who)
 	}
 
 	return (whereLinked);
-#endif
 }
 
 //--------------------------------------------------------------  GetObjectLinked
 
 SInt16 GetObjectLinked (objectType *who)
 {
-	return (-1);
-#if 0
-	short		whoLinked;
+	SInt16		whoLinked;
 
 	switch (who->what)
 	{
@@ -195,7 +190,7 @@ SInt16 GetObjectLinked (objectType *who)
 		case kInvisTrans:
 		case kDeluxeTrans:
 		if (who->data.d.who != 255)		// is it linked?
-			whoLinked = (short)who->data.d.who;
+			whoLinked = (SInt16)who->data.d.who;
 		else
 			whoLinked = -1;				// object not linked
 		break;
@@ -209,7 +204,7 @@ SInt16 GetObjectLinked (objectType *who)
 		case kTrigger:
 		case kLgTrigger:
 		if (who->data.e.who != 255)		// is it linked?
-			whoLinked = (short)who->data.e.who;
+			whoLinked = (SInt16)who->data.e.who;
 		else
 			whoLinked = -1;				// object not linked
 		break;
@@ -220,15 +215,12 @@ SInt16 GetObjectLinked (objectType *who)
 	}
 
 	return (whoLinked);
-#endif
 }
 
 //--------------------------------------------------------------  ObjectIsLinkTransport
 
 Boolean ObjectIsLinkTransport (objectType *who)
 {
-	return false;
-#if 0
 	Boolean		itIs;
 
 	itIs = false;
@@ -240,15 +232,12 @@ Boolean ObjectIsLinkTransport (objectType *who)
 	}
 
 	return (itIs);
-#endif
 }
 
 //--------------------------------------------------------------  ObjectIsLinkSwitch
 
 Boolean ObjectIsLinkSwitch (objectType *who)
 {
-	return false;
-#if 0
 	Boolean		itIs;
 
 	itIs = false;
@@ -261,7 +250,6 @@ Boolean ObjectIsLinkSwitch (objectType *who)
 	}
 
 	return (itIs);
-#endif
 }
 
 //--------------------------------------------------------------  ListOneRoomsObjects
@@ -371,8 +359,6 @@ void ListAllLocalObjects (void)
 
 void AddTempManholeRect (Rect *manHole)
 {
-	return;
-#if 0
 	Rect		tempRect;
 
 	if (numTempManholes < kMaxTempManholes)
@@ -382,7 +368,6 @@ void AddTempManholeRect (Rect *manHole)
 		tempManholes[numTempManholes] = tempRect;
 		numTempManholes++;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  SetObjectState
