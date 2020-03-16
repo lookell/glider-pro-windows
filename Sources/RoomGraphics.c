@@ -443,15 +443,12 @@ void ReadyLevel (void)
 
 void DrawLighting (void)
 {
-	return;
-#if 0
 	if (numLights == 0)
 		return;
 	else
 	{
 		// for future construction
 	}
-#endif
 }
 
 //--------------------------------------------------------------  RedrawRoomLighting
