@@ -9,11 +9,14 @@ if(NOT WIN32)
   message(FATAL_ERROR "This program must be compiled for Windows")
 endif()
 
+# remove the annoying copyright banner when the resource compiler runs
+set(CMAKE_RC_FLAGS "${CMAKE_RC_FLAGS} /nologo")
+
 add_executable(gliderpro)
 target_include_directories(gliderpro PRIVATE Headers)
 target_sources(
   gliderpro PRIVATE
-  # manifest
+  # resources
   Resources/gliderpro.manifest
   # added headers
   Headers/Macintosh.h
