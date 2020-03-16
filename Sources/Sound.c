@@ -40,9 +40,7 @@ Boolean				channelOpen, isSoundOn, failedSound;
 
 void PlayPrioritySound (SInt16 which, SInt16 priority)
 {
-	return;
-#if 0
-	short		lowestPriority, whosLowest;
+	SInt16		lowestPriority, whosLowest;
 
 	if (failedSound || dontLoadSounds)
 		return;
@@ -85,7 +83,6 @@ void PlayPrioritySound (SInt16 which, SInt16 priority)
 			break;
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  FlushAnyTriggerPlaying
@@ -480,6 +477,7 @@ OSErr CloseSoundChannels (void)
 
 void InitSound (void)
 {
+	failedSound = true;
 	return;
 #if 0
 	OSErr		theErr;
