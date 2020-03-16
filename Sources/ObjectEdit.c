@@ -785,10 +785,8 @@ void DragObject (Point where)
 
 void DoNewObjectClick (Point where)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	short		whatObject;
+	SInt16		whatObject;
 
 	StopMarquee();
 	objActive = kNoObjectSelected;
@@ -799,7 +797,6 @@ void DoNewObjectClick (Point where)
 	UpdateMenus(false);
 
 	AddObjectPairing();
-#endif
 #endif
 }
 
@@ -1803,8 +1800,6 @@ void MoveObject (SInt16 whichWay, Boolean shiftDown)
 
 void DeselectObject (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
 	if ((theMode != kEditMode) || (objActive == kNoObjectSelected))
 		return;
@@ -1813,7 +1808,6 @@ void DeselectObject (void)
 	StopMarquee();
 	UpdateMenus(false);
 #endif
-#endif
 }
 
 //--------------------------------------------------------------  ObjectHasHandle
@@ -1821,8 +1815,6 @@ void DeselectObject (void)
 #ifndef COMPILEDEMO
 Boolean ObjectHasHandle (SInt16 *direction, SInt16 *dist)
 {
-	return false;
-#if 0
 	if ((objActive == kInitialGliderSelected) ||
 			(objActive == kNoObjectSelected))
 		return (false);
@@ -1967,7 +1959,6 @@ Boolean ObjectHasHandle (SInt16 *direction, SInt16 *dist)
 		return (false);
 		break;
 	}
-#endif
 }
 #endif
 
@@ -1975,8 +1966,6 @@ Boolean ObjectHasHandle (SInt16 *direction, SInt16 *dist)
 
 Boolean ObjectIsUpBlower (objectType *who)
 {
-	return false;
-#if 0
 	if ((who->what == kFloorVent) || (who->what == kFloorBlower) ||
 			(who->what == kSewerGrate) || (who->what == kTaper) ||
 			(who->what == kCandle) || (who->what == kStubby) ||
@@ -1992,17 +1981,14 @@ Boolean ObjectIsUpBlower (objectType *who)
 	}
 	else
 		return (false);
-#endif
 }
 
 //--------------------------------------------------------------  HandleBlowerGlider
 
 void HandleBlowerGlider (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	short		direction, dist;
+	SInt16		direction, dist;
 
 	if (ObjectIsUpBlower(&thisRoom->objects[objActive]))
 	{
@@ -2014,17 +2000,14 @@ void HandleBlowerGlider (void)
 		}
 	}
 #endif
-#endif
 }
 
 //--------------------------------------------------------------  SelectNextObject
 
 void SelectNextObject (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	short		direction, dist;
+	SInt16		direction, dist;
 	Boolean		noneFound;
 
 	if ((theMode != kEditMode) || (thisRoom->numObjects <= 0))
@@ -2050,17 +2033,14 @@ void SelectNextObject (void)
 	else
 		StartMarquee(&roomObjectRects[objActive]);
 #endif
-#endif
 }
 
 //--------------------------------------------------------------  SelectPrevObject
 
 void SelectPrevObject (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	short		direction, dist;
+	SInt16		direction, dist;
 	Boolean		noneFound;
 
 	if ((theMode != kEditMode) || (thisRoom->numObjects <= 0))
@@ -2085,7 +2065,6 @@ void SelectPrevObject (void)
 	}
 	else
 		StartMarquee(&roomObjectRects[objActive]);
-#endif
 #endif
 }
 
@@ -2823,10 +2802,8 @@ void HiliteAllObjects (void)
 
 void GoToObjectInRoom (SInt16 object, SInt16 floor, SInt16 suite)
 {
-	return;
-#if 0
 	#ifndef COMPILEDEMO
-	short		itsNumber, direction, dist;
+	SInt16		itsNumber, direction, dist;
 
 	if (RoomExists(suite, floor, &itsNumber))
 	{
@@ -2853,19 +2830,15 @@ void GoToObjectInRoom (SInt16 object, SInt16 floor, SInt16 suite)
 		}
 	}
 	#endif
-#endif
 }
 
 //--------------------------------------------------------------  GoToObjectInRoomNum
 
 void GoToObjectInRoomNum (SInt16 object, SInt16 roomNum)
 {
-	return;
-#if 0
-	short		floor, suite;
+	SInt16		floor, suite;
 
 	if (GetRoomFloorSuite(roomNum, &floor, &suite))
 		GoToObjectInRoom(object, floor, suite);
-#endif
 }
 
