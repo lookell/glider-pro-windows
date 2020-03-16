@@ -46,29 +46,26 @@ extern	Boolean		noRoomAtAll;
 #ifndef COMPILEDEMO
 SInt16 FindObjectSelected (Point where)
 {
-	return kNoObjectSelected;
-#if 0
-	short		found, i;
+	SInt16		found, i;
 
 	found = kNoObjectSelected;
 
-	if (PtInRect(where, &initialGliderRect))
+	if (Mac_PtInRect(where, &initialGliderRect))
 		return (kInitialGliderSelected);
-	else if (PtInRect(where, &leftStartGliderDest))
+	else if (Mac_PtInRect(where, &leftStartGliderDest))
 		return (kLeftGliderSelected);
-	else if (PtInRect(where, &rightStartGliderDest))
+	else if (Mac_PtInRect(where, &rightStartGliderDest))
 		return (kRightGliderSelected);
 
 	for (i = kMaxRoomObs - 1; i >= 0; i--)
 	{
-		if (PtInRect(where, &roomObjectRects[i]))
+		if (Mac_PtInRect(where, &roomObjectRects[i]))
 		{
 			found = i;
 			break;
 		}
 	}
 	return (found);
-#endif
 }
 #endif
 
