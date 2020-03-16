@@ -73,17 +73,15 @@ void RefreshScoreboard (SInt16 mode)
 
 //--------------------------------------------------------------  HandleDynamicScoreboard
 
- void HandleDynamicScoreboard (void)
- {
-	return;
-#if 0
- 	#define		kFoilLow		2		// 25%
- 	#define		kBatteryLow		17		// 25%
- 	#define		kHeliumLow		-38		// 25%
- 	#define		kBandsLow		2		// 25%
- 	long		whosTurn;
+void HandleDynamicScoreboard (void)
+{
+	#define		kFoilLow		2		// 25%
+	#define		kBatteryLow		17		// 25%
+	#define		kHeliumLow		-38		// 25%
+	#define		kBandsLow		2		// 25%
+	SInt32		whosTurn;
 
- 	if (theScore > displayedScore)
+	if (theScore > displayedScore)
 	{
 		if (doRollScore)
 		{
@@ -135,8 +133,7 @@ void RefreshScoreboard (SInt16 mode)
 			QuickBandsRefresh(true);
 		break;
 	}
-#endif
- }
+}
 
 //--------------------------------------------------------------  RefreshRoomTitle
 
@@ -442,9 +439,7 @@ void QuickFoilRefresh (Boolean flash)
 
 void AdjustScoreboardHeight (void)
 {
-	return;
-#if 0
-	short		offset, newMode;
+	SInt16		offset, newMode;
 
 	if (numNeighbors == 9)
 		newMode = kScoreboardHigh;
@@ -479,16 +474,12 @@ void AdjustScoreboardHeight (void)
 
 		wasScoreboardMode = newMode;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  BlackenScoreboard
 
 void BlackenScoreboard (void)
 {
-	return;
-#if 0
 	UpdateMenuBarWindow();
-#endif
 }
 
