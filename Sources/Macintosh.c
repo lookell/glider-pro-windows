@@ -64,3 +64,20 @@ void Mac_InsetRect(Rect *r, SInt16 dh, SInt16 dv)
 		r->bottom = 0;
 	}
 }
+
+//--------------------------------------------------------------  PtInRect
+// Check if the given point is enclosed within the given rectangle.
+// Return nonzero (true) if the point is within the rectangle; otherwise
+// return zero (false). The point is considered within the rectangle
+// if it is within all four sides, or if it lies on the left or top side.
+// The point is not considered within the rectangle if it lies on the
+// right or bottom side (because its corresponding pixel would be
+// outside the rectangle).
+
+Boolean Mac_PtInRect(Point pt, const Rect *r)
+{
+	if (r == NULL)
+		return false;
+	return (pt.h >= r->left) && (pt.h < r->right) &&
+			(pt.v >= r->top) && (pt.v < r->bottom);
+}

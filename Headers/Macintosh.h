@@ -76,6 +76,7 @@ typedef struct FSSpec {
 
 void Mac_GetDateTime(UInt32 *secs);
 void Mac_InsetRect(Rect *r, SInt16 dh, SInt16 dv);
+Boolean Mac_PtInRect(Point pt, const Rect *r);
 
 // unknown types
 
