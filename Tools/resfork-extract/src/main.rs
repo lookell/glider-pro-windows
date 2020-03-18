@@ -24,25 +24,44 @@ fn main() {
             return;
         }
     };
+
     file.seek(SeekFrom::Start(0)).unwrap();
     match AppleDouble::read_from(&mut file) {
         Ok(Some(data)) => {
             println!("format: AppleSingle/AppleDouble");
-            println!("data length = {}; {:?}", data.data.len(), &data.data[..8.min(data.data.len())]);
-            println!("rsrc length = {}; {:?}", data.rsrc.len(), &data.rsrc[..8.min(data.rsrc.len())]);
+            println!(
+                "data length = {}; {:?}",
+                data.data.len(),
+                &data.data[..8.min(data.data.len())]
+            );
+            println!(
+                "rsrc length = {}; {:?}",
+                data.rsrc.len(),
+                &data.rsrc[..8.min(data.rsrc.len())]
+            );
             return;
         }
-        Err(_) | Ok(None) => {}, // keep trying
+        Err(_) | Ok(None) => {} // keep trying
     };
+
     file.seek(SeekFrom::Start(0)).unwrap();
     match MacBinary::read_from(&mut file) {
         Ok(Some(data)) => {
             println!("format: MacBinary");
-            println!("data length = {}; {:?}", data.data.len(), &data.data[..8.min(data.data.len())]);
-            println!("rsrc length = {}; {:?}", data.rsrc.len(), &data.rsrc[..8.min(data.rsrc.len())]);
+            println!(
+                "data length = {}; {:?}",
+                data.data.len(),
+                &data.data[..8.min(data.data.len())]
+            );
+            println!(
+                "rsrc length = {}; {:?}",
+                data.rsrc.len(),
+                &data.rsrc[..8.min(data.rsrc.len())]
+            );
             return;
         }
-        Err(_) | Ok(None) => {}, // keep trying
+        Err(_) | Ok(None) => {} // keep trying
     };
+
     eprintln!("e: could not determine file format");
 }
