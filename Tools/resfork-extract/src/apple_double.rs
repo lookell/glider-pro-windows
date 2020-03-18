@@ -1,6 +1,10 @@
 use crate::utils::ReadExt;
 use std::io::{self, Read, Seek, SeekFrom};
 
+// See
+// https://web.archive.org/web/20180311140826/http://kaiser-edv.de/documents/AppleSingle_AppleDouble.pdf
+// for format details.
+
 const SINGLE_MAGIC: u32 = 0x0005_1600;
 const DOUBLE_MAGIC: u32 = 0x0005_1607;
 const VERSION_ONE: u32 = 0x0001_0000;
@@ -54,11 +58,9 @@ impl AppleDouble {
     pub fn read_from(mut reader: impl Read + Seek) -> io::Result<Option<Self>> {
         let header = HeaderRaw::read_from(&mut reader)?;
         if header.magic != SINGLE_MAGIC && header.magic != DOUBLE_MAGIC {
-            dbg!(header.magic);
             return Ok(None);
         }
         if header.version != VERSION_ONE && header.version != VERSION_TWO {
-            dbg!(header.version);
             return Ok(None);
         }
         let mut data_entry = None;
@@ -73,15 +75,15 @@ impl AppleDouble {
         }
         let mut data = Vec::new();
         if let Some(data_entry) = data_entry {
-            reader.seek(SeekFrom::Start(data_entry.offset.into()))?;
             data.resize(data_entry.length as _, 0);
+            reader.seek(SeekFrom::Start(data_entry.offset.into()))?;
             reader.read_exact(data.as_mut_slice())?;
         }
         let mut rsrc = Vec::new();
         if let Some(rsrc_entry) = rsrc_entry {
-            reader.seek(SeekFrom::Start(rsrc_entry.offset.into()))?;
             rsrc.resize(rsrc_entry.length as _, 0);
-            reader.read_exact(data.as_mut_slice())?;
+            reader.seek(SeekFrom::Start(rsrc_entry.offset.into()))?;
+            reader.read_exact(rsrc.as_mut_slice())?;
         }
         Ok(Some(Self { data, rsrc }))
     }
