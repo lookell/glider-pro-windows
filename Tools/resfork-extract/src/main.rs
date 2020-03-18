@@ -7,7 +7,7 @@ use crate::apple_double::AppleDouble;
 use crate::macbinary::MacBinary;
 use std::env;
 use std::fs::File;
-use std::io::{Seek, SeekFrom};
+use std::io::{BufReader, Seek, SeekFrom};
 
 fn main() {
     let filename = match env::args().nth(1) {
@@ -18,7 +18,7 @@ fn main() {
         }
     };
     let mut file = match File::open(filename) {
-        Ok(file) => file,
+        Ok(file) => BufReader::new(file),
         Err(e) => {
             eprintln!("e: could not open file: {}", e);
             return;
