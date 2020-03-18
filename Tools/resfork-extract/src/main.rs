@@ -1,10 +1,13 @@
 mod apple_double;
 mod mac_roman;
+mod macbinary;
 mod utils;
 
 use crate::apple_double::AppleDouble;
+use crate::macbinary::MacBinary;
 use std::env;
 use std::fs::File;
+use std::io::{Seek, SeekFrom};
 
 fn main() {
     let filename = match env::args().nth(1) {
@@ -14,24 +17,32 @@ fn main() {
             return;
         }
     };
-    let file = match File::open(filename) {
+    let mut file = match File::open(filename) {
         Ok(file) => file,
         Err(e) => {
             eprintln!("e: could not open file: {}", e);
             return;
         }
     };
-    let apple_data = match AppleDouble::read_from(file) {
-        Ok(Some(data)) => data,
-        Ok(None) => {
-            eprintln!("e: could not read file as AppleSingle or AppleDouble");
+    file.seek(SeekFrom::Start(0)).unwrap();
+    match AppleDouble::read_from(&mut file) {
+        Ok(Some(data)) => {
+            println!("format: AppleSingle/AppleDouble");
+            println!("data length = {}; {:?}", data.data.len(), &data.data[..8.min(data.data.len())]);
+            println!("rsrc length = {}; {:?}", data.rsrc.len(), &data.rsrc[..8.min(data.rsrc.len())]);
             return;
         }
-        Err(e) => {
-            eprintln!("e: could not read file: {}", e);
-            return;
-        }
+        Err(_) | Ok(None) => {}, // keep trying
     };
-    println!("data length = {}", apple_data.data.len());
-    println!("rsrc length = {}", apple_data.rsrc.len());
+    file.seek(SeekFrom::Start(0)).unwrap();
+    match MacBinary::read_from(&mut file) {
+        Ok(Some(data)) => {
+            println!("format: MacBinary");
+            println!("data length = {}; {:?}", data.data.len(), &data.data[..8.min(data.data.len())]);
+            println!("rsrc length = {}; {:?}", data.rsrc.len(), &data.rsrc[..8.min(data.rsrc.len())]);
+            return;
+        }
+        Err(_) | Ok(None) => {}, // keep trying
+    };
+    eprintln!("e: could not determine file format");
 }
