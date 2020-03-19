@@ -6,11 +6,14 @@ mod utils;
 
 use crate::apple_double::AppleDouble;
 use crate::macbinary::MacBinary;
-use crate::rsrcfork::{ResType, ResourceFork};
+use crate::rsrcfork::{ResType, Resource, ResourceFork};
 use std::env;
+use std::error::Error;
 use std::fs::File;
 use std::io::{self, BufReader, BufWriter, Cursor, Read, Seek, SeekFrom, Write};
 use zip::ZipWriter;
+
+type AnyResult<T> = Result<T, Box<dyn Error>>;
 
 fn extract_resource_bytes(mut reader: impl Read + Seek) -> io::Result<Option<Vec<u8>>> {
     reader.seek(SeekFrom::Start(0))?;
@@ -74,7 +77,7 @@ fn escape_dquote(unescaped: &str) -> String {
     escaped
 }
 
-fn derez_resfork(resfork: &ResourceFork, mut writer: impl Write) -> io::Result<()> {
+fn derez_resfork(resfork: &ResourceFork, mut writer: impl Write) -> AnyResult<()> {
     for res in resfork.resources.iter() {
         let restype_str = escape_squote(&res.restype.to_string());
         write!(&mut writer, "data '{}' ({}", restype_str, res.id)?;
@@ -109,31 +112,31 @@ fn make_zip_entry_path(typ: ResType, id: i16) -> String {
     }
 }
 
-fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> io::Result<()> {
+fn write_raw_resource_to_zip(
+    res: &Resource,
+    zip_writer: &mut ZipWriter<impl Seek + Write>,
+) -> AnyResult<()> {
+    let entry_path = make_zip_entry_path(res.restype, res.id);
+    zip_writer.start_file(entry_path, Default::default())?;
+    zip_writer.write_all(&res.data)?;
+    Ok(())
+}
+
+fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
     zip_writer.set_comment("");
     for res in resfork.resources.iter() {
-        let entry_path = make_zip_entry_path(res.restype, res.id);
-        zip_writer
-            .start_file(entry_path, Default::default())
-            .unwrap();
-        zip_writer.write_all(&res.data)?;
+        write_raw_resource_to_zip(res, &mut zip_writer)?;
     }
     Ok(())
 }
 
-fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> io::Result<()> {
+fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
     zip_writer.set_comment("");
     for res in resfork.resources.iter() {
         match res.id.to_string().as_str() {
-            _ => {
-                let entry_path = make_zip_entry_path(res.restype, res.id);
-                zip_writer
-                    .start_file(entry_path, Default::default())
-                    .unwrap();
-                zip_writer.write_all(&res.data)?;
-            }
+            _ => write_raw_resource_to_zip(res, &mut zip_writer)?,
         }
     }
     Ok(())
@@ -184,11 +187,14 @@ fn main() {
             return;
         }
     };
-    let stdout_handle = io::stdout();
     let result = match command.as_str() {
         "derez" => match output_file {
             Some(file) => derez_resfork(&resfork, file),
-            None => derez_resfork(&resfork, &mut stdout_handle.lock()),
+            None => {
+                let stdout = io::stdout();
+                let stdout_handle = stdout.lock();
+                derez_resfork(&resfork, stdout_handle)
+            }
         },
         "dump" => match output_file {
             Some(file) => dump_resfork(&resfork, file),
