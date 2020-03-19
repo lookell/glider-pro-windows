@@ -24,27 +24,89 @@ fn extract_resource_bytes(mut reader: impl Read + Seek) -> io::Result<Option<Vec
     reader.read_to_end(&mut bytes).map(|_| Some(bytes))
 }
 
-fn derez_resfork(_resfork: ResourceFork, _writer: impl Write) {
-    unimplemented!("derez_resfork");
+fn unprintable_to_period(b: u8) -> u8 {
+    match b {
+        0x00..=0x1F | 0x7F => b'.',
+        _ => b,
+    }
 }
 
-fn dump_resfork(_resfork: ResourceFork, _writer: impl Write) {
+fn hex_byte_line(bytes: &[u8]) -> String {
+    let mut line = String::from("$\"");
+    for pair in bytes.chunks(2) {
+        match pair.len() {
+            1 => line.push_str(&format!("{:02X} ", pair[0])),
+            2 => line.push_str(&format!("{:02X}{:02X} ", pair[0], pair[1])),
+            _ => unreachable!(),
+        }
+    }
+    let _space = line.pop();
+    line.push('"');
+    let bytes_string = bytes
+        .iter()
+        .copied()
+        .map(unprintable_to_period)
+        .map(mac_roman::decode)
+        .collect::<String>();
+    format!("\t{: <53} /* {} */", line, bytes_string)
+}
+
+fn escape_squote(unescaped: &str) -> String {
+    let mut escaped = String::with_capacity(unescaped.len());
+    for c in unescaped.chars() {
+        if c == '\'' {
+            escaped.push('\\');
+        }
+        escaped.push(c);
+    }
+    escaped
+}
+
+fn escape_dquote(unescaped: &str) -> String {
+    let mut escaped = String::with_capacity(unescaped.len());
+    for c in unescaped.chars() {
+        if c == '\"' {
+            escaped.push('\\');
+        }
+        escaped.push(c);
+    }
+    escaped
+}
+
+fn derez_resfork(resfork: ResourceFork, mut writer: impl Write) -> io::Result<()> {
+    for res in resfork.resources.iter() {
+        let restype_str = escape_squote(&res.restype.to_string());
+        write!(&mut writer, "data '{}' ({}", restype_str, res.id)?;
+        if let Some(name) = &res.name {
+            write!(&mut writer, ", \"{}\"", escape_dquote(name))?;
+        }
+        writeln!(&mut writer, ") {{")?;
+        for row in res.data.chunks(16) {
+            writeln!(&mut writer, "{}", hex_byte_line(row))?;
+        }
+        writeln!(&mut writer, "}};")?;
+        writeln!(&mut writer, "")?;
+    }
+    Ok(())
+}
+
+fn dump_resfork(_resfork: ResourceFork, _writer: impl Write) -> io::Result<()> {
     unimplemented!("dump_resfork");
 }
 
-fn convert_resfork(_resfork: ResourceFork, _writer: impl Write) {
+fn convert_resfork(_resfork: ResourceFork, _writer: impl Write) -> io::Result<()> {
     unimplemented!("convert_resfork");
 }
 
 fn main() {
     let arguments = env::args().skip(1).collect::<Vec<_>>();
-    if arguments.len() < 3 {
+    if arguments.len() < 2 {
         print_usage();
         return;
     }
     let command = &arguments[0];
     let input_name = &arguments[1];
-    let output_name = &arguments[2];
+    let output_name = arguments.get(2);
     let input_file = match File::open(input_name) {
         Ok(file) => BufReader::new(file),
         Err(e) => {
@@ -52,12 +114,16 @@ fn main() {
             return;
         }
     };
-    let output_file = match File::create(output_name) {
-        Ok(file) => BufWriter::new(file),
-        Err(e) => {
-            eprintln!("error: could not open output file: {}", e);
-            return;
+    let stdout_handle = io::stdout();
+    let output_file: Box<dyn Write> = match output_name {
+        Some(name) => match File::create(name) {
+            Ok(file) => Box::new(BufWriter::new(file)),
+            Err(e) => {
+                eprintln!("error: could not open output file: {}", e);
+                return;
+            }
         }
+        None => Box::new(BufWriter::new(stdout_handle.lock())),
     };
     let resfork_bytes = match extract_resource_bytes(input_file) {
         Ok(Some(bytes)) => bytes,
@@ -78,7 +144,7 @@ fn main() {
             return;
         }
     };
-    match command.as_str() {
+    let result = match command.as_str() {
         "derez" => derez_resfork(resfork, output_file),
         "dump" => dump_resfork(resfork, output_file),
         "convert" => convert_resfork(resfork, output_file),
@@ -87,6 +153,10 @@ fn main() {
             print_usage();
             return;
         }
+    };
+    if let Err(e) = result {
+        eprintln!("error: output writing failed: {}", e);
+        return;
     }
 }
 

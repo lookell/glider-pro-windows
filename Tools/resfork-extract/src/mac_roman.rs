@@ -1,4 +1,4 @@
-pub fn decode_byte(byte: u8) -> char {
+pub fn decode(byte: u8) -> char {
     match byte {
         0x00..=0x7F => char::from(byte),
         0x80 => '\u{00C4}', // LATIN CAPITAL LETTER A WITH DIAERESIS

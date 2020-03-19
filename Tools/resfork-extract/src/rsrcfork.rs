@@ -28,10 +28,10 @@ impl ResType {
         reader.read_exact(&mut bytes)?;
         Ok(Self {
             chars: [
-                mac_roman::decode_byte(bytes[0]),
-                mac_roman::decode_byte(bytes[1]),
-                mac_roman::decode_byte(bytes[2]),
-                mac_roman::decode_byte(bytes[3]),
+                mac_roman::decode(bytes[0]),
+                mac_roman::decode(bytes[1]),
+                mac_roman::decode(bytes[2]),
+                mac_roman::decode(bytes[3]),
             ],
         })
     }
@@ -155,7 +155,7 @@ impl ResourceName {
         let length = reader.read_be_u8()?;
         let mut buffer = vec![0x00; length.into()];
         reader.read_exact(buffer.as_mut_slice())?;
-        let name = buffer.into_iter().map(mac_roman::decode_byte).collect();
+        let name = buffer.into_iter().map(mac_roman::decode).collect();
         Ok(Self { name })
     }
 }
