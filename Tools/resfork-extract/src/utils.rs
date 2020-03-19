@@ -11,6 +11,11 @@ fn read_two_bytes(mut reader: impl Read) -> io::Result<[u8; 2]> {
     reader.read_exact(&mut buf).map(|_| buf)
 }
 
+fn read_three_bytes(mut reader: impl Read) -> io::Result<[u8; 3]> {
+    let mut buf = [0; 3];
+    reader.read_exact(&mut buf).map(|_| buf)
+}
+
 fn read_four_bytes(mut reader: impl Read) -> io::Result<[u8; 4]> {
     let mut buf = [0; 4];
     reader.read_exact(&mut buf).map(|_| buf)
@@ -49,6 +54,22 @@ pub(crate) trait ReadExt: Read {
 
     fn read_le_i16(&mut self) -> io::Result<i16> {
         read_two_bytes(self).map(i16::from_le_bytes)
+    }
+
+    fn read_be_u24(&mut self) -> io::Result<u32> {
+        read_three_bytes(self).map(|b| u32::from_be_bytes([0x00, b[0], b[1], b[2]]))
+    }
+
+    fn read_le_u24(&mut self) -> io::Result<u32> {
+        read_three_bytes(self).map(|b| u32::from_le_bytes([b[0], b[1], b[2], 0x00]))
+    }
+
+    fn read_be_i24(&mut self) -> io::Result<i32> {
+        read_three_bytes(self).map(|b| i32::from_be_bytes([0x00, b[0], b[1], b[2]]))
+    }
+
+    fn read_le_i24(&mut self) -> io::Result<i32> {
+        read_three_bytes(self).map(|b| i32::from_le_bytes([b[0], b[1], b[2], 0x00]))
     }
 
     fn read_be_u32(&mut self) -> io::Result<u32> {

@@ -1,13 +1,29 @@
 mod apple_double;
 mod mac_roman;
 mod macbinary;
+mod rsrcfork;
 mod utils;
 
 use crate::apple_double::AppleDouble;
 use crate::macbinary::MacBinary;
+use crate::rsrcfork::ResourceFork;
 use std::env;
 use std::fs::File;
-use std::io::{BufReader, Seek, SeekFrom};
+use std::io::{BufReader, Cursor, Seek, SeekFrom};
+
+fn deal_with_resource_fork(rsrc_bytes: &[u8]) {
+    let cursor = Cursor::new(rsrc_bytes);
+    let resfork = match ResourceFork::read_from(cursor) {
+        Ok(fork) => fork,
+        Err(e) => {
+            eprintln!("e: could not parse resource fork: {}", e);
+            return;
+        }
+    };
+    for res in resfork.resources.iter() {
+        println!("'{}' ({}) [{} bytes];", res.restype, res.id, res.data.len());
+    }
+}
 
 fn main() {
     let filename = match env::args().nth(1) {
@@ -17,47 +33,30 @@ fn main() {
             return;
         }
     };
-    let mut file = match File::open(filename) {
-        Ok(file) => BufReader::new(file),
+    let file = match File::open(filename) {
+        Ok(file) => file,
         Err(e) => {
             eprintln!("e: could not open file: {}", e);
             return;
         }
     };
+    let mut reader = BufReader::new(file);
 
-    file.seek(SeekFrom::Start(0)).unwrap();
-    match AppleDouble::read_from(&mut file) {
+    reader.seek(SeekFrom::Start(0)).unwrap();
+    match AppleDouble::read_from(&mut reader) {
         Ok(Some(data)) => {
             println!("format: AppleSingle/AppleDouble");
-            println!(
-                "data length = {}; {:?}",
-                data.data.len(),
-                &data.data[..8.min(data.data.len())]
-            );
-            println!(
-                "rsrc length = {}; {:?}",
-                data.rsrc.len(),
-                &data.rsrc[..8.min(data.rsrc.len())]
-            );
+            deal_with_resource_fork(data.rsrc.as_slice());
             return;
         }
         Err(_) | Ok(None) => {} // keep trying
     };
 
-    file.seek(SeekFrom::Start(0)).unwrap();
-    match MacBinary::read_from(&mut file) {
+    reader.seek(SeekFrom::Start(0)).unwrap();
+    match MacBinary::read_from(&mut reader) {
         Ok(Some(data)) => {
             println!("format: MacBinary");
-            println!(
-                "data length = {}; {:?}",
-                data.data.len(),
-                &data.data[..8.min(data.data.len())]
-            );
-            println!(
-                "rsrc length = {}; {:?}",
-                data.rsrc.len(),
-                &data.rsrc[..8.min(data.rsrc.len())]
-            );
+            deal_with_resource_fork(data.rsrc.as_slice());
             return;
         }
         Err(_) | Ok(None) => {} // keep trying
