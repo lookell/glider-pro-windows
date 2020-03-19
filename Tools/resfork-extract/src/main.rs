@@ -1,6 +1,7 @@
 mod apple_double;
 mod mac_roman;
 mod macbinary;
+mod res;
 mod rsrcfork;
 mod utils;
 
@@ -13,7 +14,7 @@ use std::fs::File;
 use std::io::{self, BufReader, BufWriter, Cursor, Read, Seek, SeekFrom, Write};
 use zip::ZipWriter;
 
-type AnyResult<T> = Result<T, Box<dyn Error>>;
+pub type AnyResult<T> = Result<T, Box<dyn Error>>;
 
 fn extract_resource_bytes(mut reader: impl Read + Seek) -> io::Result<Option<Vec<u8>>> {
     reader.seek(SeekFrom::Start(0))?;
@@ -135,7 +136,8 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
     let mut zip_writer = ZipWriter::new(writer);
     zip_writer.set_comment("");
     for res in resfork.resources.iter() {
-        match res.id.to_string().as_str() {
+        match res.restype.to_string().as_str() {
+            "STR#" => res::string_list::write_entry(res, &mut zip_writer)?,
             _ => write_raw_resource_to_zip(res, &mut zip_writer)?,
         }
     }
