@@ -6,10 +6,11 @@ mod utils;
 
 use crate::apple_double::AppleDouble;
 use crate::macbinary::MacBinary;
-use crate::rsrcfork::ResourceFork;
+use crate::rsrcfork::{ResType, ResourceFork};
 use std::env;
 use std::fs::File;
 use std::io::{self, BufReader, BufWriter, Cursor, Read, Seek, SeekFrom, Write};
+use zip::ZipWriter;
 
 fn extract_resource_bytes(mut reader: impl Read + Seek) -> io::Result<Option<Vec<u8>>> {
     reader.seek(SeekFrom::Start(0))?;
@@ -73,7 +74,7 @@ fn escape_dquote(unescaped: &str) -> String {
     escaped
 }
 
-fn derez_resfork(resfork: ResourceFork, mut writer: impl Write) -> io::Result<()> {
+fn derez_resfork(resfork: &ResourceFork, mut writer: impl Write) -> io::Result<()> {
     for res in resfork.resources.iter() {
         let restype_str = escape_squote(&res.restype.to_string());
         write!(&mut writer, "data '{}' ({}", restype_str, res.id)?;
@@ -85,17 +86,57 @@ fn derez_resfork(resfork: ResourceFork, mut writer: impl Write) -> io::Result<()
             writeln!(&mut writer, "{}", hex_byte_line(row))?;
         }
         writeln!(&mut writer, "}};")?;
-        writeln!(&mut writer, "")?;
+        writeln!(&mut writer)?;
     }
     Ok(())
 }
 
-fn dump_resfork(_resfork: ResourceFork, _writer: impl Write) -> io::Result<()> {
-    unimplemented!("dump_resfork");
+fn make_zip_entry_path(typ: ResType, id: i16) -> String {
+    fn valid_char(c: char) -> bool {
+        c.is_ascii_alphanumeric() || "-_.#() ".contains(c)
+    }
+    if typ.chars.iter().copied().all(valid_char) {
+        return format!("({})/{}.bin", typ, id);
+    } else {
+        return format!(
+            "({:02X}-{:02X}-{:02X}-{:02X})/{}.bin",
+            u32::from(typ.chars[0]),
+            u32::from(typ.chars[1]),
+            u32::from(typ.chars[2]),
+            u32::from(typ.chars[3]),
+            id
+        );
+    }
 }
 
-fn convert_resfork(_resfork: ResourceFork, _writer: impl Write) -> io::Result<()> {
-    unimplemented!("convert_resfork");
+fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> io::Result<()> {
+    let mut zip_writer = ZipWriter::new(writer);
+    zip_writer.set_comment("");
+    for res in resfork.resources.iter() {
+        let entry_path = make_zip_entry_path(res.restype, res.id);
+        zip_writer
+            .start_file(entry_path, Default::default())
+            .unwrap();
+        zip_writer.write_all(&res.data)?;
+    }
+    Ok(())
+}
+
+fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> io::Result<()> {
+    let mut zip_writer = ZipWriter::new(writer);
+    zip_writer.set_comment("");
+    for res in resfork.resources.iter() {
+        match res.id.to_string().as_str() {
+            _ => {
+                let entry_path = make_zip_entry_path(res.restype, res.id);
+                zip_writer
+                    .start_file(entry_path, Default::default())
+                    .unwrap();
+                zip_writer.write_all(&res.data)?;
+            }
+        }
+    }
+    Ok(())
 }
 
 fn main() {
@@ -114,16 +155,15 @@ fn main() {
             return;
         }
     };
-    let stdout_handle = io::stdout();
-    let output_file: Box<dyn Write> = match output_name {
+    let output_file: Option<BufWriter<File>> = match output_name {
         Some(name) => match File::create(name) {
-            Ok(file) => Box::new(BufWriter::new(file)),
+            Ok(file) => Some(BufWriter::new(file)),
             Err(e) => {
                 eprintln!("error: could not open output file: {}", e);
                 return;
             }
-        }
-        None => Box::new(BufWriter::new(stdout_handle.lock())),
+        },
+        None => None,
     };
     let resfork_bytes = match extract_resource_bytes(input_file) {
         Ok(Some(bytes)) => bytes,
@@ -144,10 +184,26 @@ fn main() {
             return;
         }
     };
+    let stdout_handle = io::stdout();
     let result = match command.as_str() {
-        "derez" => derez_resfork(resfork, output_file),
-        "dump" => dump_resfork(resfork, output_file),
-        "convert" => convert_resfork(resfork, output_file),
+        "derez" => match output_file {
+            Some(file) => derez_resfork(&resfork, file),
+            None => derez_resfork(&resfork, &mut stdout_handle.lock()),
+        },
+        "dump" => match output_file {
+            Some(file) => dump_resfork(&resfork, file),
+            None => {
+                eprintln!("error: 'dump' command cannot be used with stdout");
+                return;
+            }
+        },
+        "convert" => match output_file {
+            Some(file) => convert_resfork(&resfork, file),
+            None => {
+                eprintln!("error: 'convert' command cannot be used with stdout");
+                return;
+            }
+        },
         _ => {
             eprintln!("error: unknown command");
             print_usage();

@@ -7,7 +7,7 @@ use std::io::{self, Cursor, Read, Seek, SeekFrom};
 
 #[derive(Clone, Copy)]
 pub struct ResType {
-    chars: [char; 4],
+    pub chars: [char; 4],
 }
 
 impl Display for ResType {
