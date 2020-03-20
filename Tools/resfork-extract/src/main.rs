@@ -7,7 +7,7 @@ mod utils;
 
 use crate::apple_double::AppleDouble;
 use crate::macbinary::MacBinary;
-use crate::rsrcfork::{ResType, Resource, ResourceFork};
+use crate::rsrcfork::{Resource, ResourceFork};
 use std::env;
 use std::error::Error;
 use std::fs::File;
@@ -89,13 +89,14 @@ fn derez_resfork(resfork: &ResourceFork, mut writer: impl Write) -> AnyResult<()
         for row in res.data.chunks(16) {
             writeln!(&mut writer, "{}", hex_byte_line(row))?;
         }
-        writeln!(&mut writer, "}};")?;
-        writeln!(&mut writer)?;
+        writeln!(&mut writer, "}};\n")?;
     }
     Ok(())
 }
 
-fn make_zip_entry_path(typ: ResType, id: i16) -> String {
+fn make_zip_entry_path(res: &Resource) -> String {
+    let typ = res.restype;
+    let id = res.id;
     fn valid_char(c: char) -> bool {
         c.is_ascii_alphanumeric() || "-_.#() ".contains(c)
     }
@@ -113,21 +114,13 @@ fn make_zip_entry_path(typ: ResType, id: i16) -> String {
     }
 }
 
-fn write_raw_resource_to_zip(
-    res: &Resource,
-    zip_writer: &mut ZipWriter<impl Seek + Write>,
-) -> AnyResult<()> {
-    let entry_path = make_zip_entry_path(res.restype, res.id);
-    zip_writer.start_file(entry_path, Default::default())?;
-    zip_writer.write_all(&res.data)?;
-    Ok(())
-}
-
 fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
     zip_writer.set_comment("");
     for res in resfork.resources.iter() {
-        write_raw_resource_to_zip(res, &mut zip_writer)?;
+        let entry_name = make_zip_entry_path(&res);
+        zip_writer.start_file(entry_name, Default::default())?;
+        zip_writer.write_all(res.data.as_slice())?;
     }
     Ok(())
 }
@@ -174,8 +167,16 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
 
     for res in resfork.resources.iter() {
         match res.restype.to_string().as_str() {
-            "STR#" => res::string_list::write_entry(res, &mut zip_writer)?,
-            _ => write_raw_resource_to_zip(res, &mut zip_writer)?,
+            "STR#" => {
+                let entry_name = res::string_list::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::string_list::convert(res.data.as_slice(), &mut zip_writer)?;
+            }
+            _ => {
+                let entry_name = make_zip_entry_path(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                zip_writer.write_all(res.data.as_slice())?;
+            }
         }
     }
 
