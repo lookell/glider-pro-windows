@@ -132,15 +132,53 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
     Ok(())
 }
 
+// TODO:
+//   'acur': Animated Cursor
+//   'ALRT': Alert
+//   'BNDL': Bundle
+//   'cctb': Control Color Table
+//   'CDEF': Control Definition Function
+//   'cicn': Color Icon
+//   'clut': Color Table
+//   'CNTL': Control
+//   'crsr': Color Cursor
+//   'CURS': Cursor
+//   'dctb': Dialog Color Table
+//   'demo': Glider Pro Demo
+//   'DITL': Item List
+//   'DLGX': (unknown)
+//   'DLOG': Dialog
+//   'FREF': File Reference
+//   'icl4': Large 4-Bit Color Icon
+//   'icl8': Large 8-Bit Color Icon
+//   'ICN#': Icon List
+//   'ICON': Icon
+//   'ics#': Small Icon List
+//   'ics4': Small 4-Bit Color Icon
+//   'ics8': Small 8-Bit Color Icon
+//   'ictb': Item Color Table
+//   'mctb': Menu Color Information Table
+//   'MENU': Menu
+//   'ozm5': Glider Pro Copyright String
+//   'PAT#': Pattern List
+//   'PICT': Picture
+//   'snd ': Sound
+//   'vers': Version
+//   'wctb': Window Color Table
+//   'WDEF': Window Definition Function
+//   'WIND': Window
+
 fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
     zip_writer.set_comment("");
+
     for res in resfork.resources.iter() {
         match res.restype.to_string().as_str() {
             "STR#" => res::string_list::write_entry(res, &mut zip_writer)?,
             _ => write_raw_resource_to_zip(res, &mut zip_writer)?,
         }
     }
+
     Ok(())
 }
 
