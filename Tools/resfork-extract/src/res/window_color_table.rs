@@ -4,16 +4,15 @@ use crate::utils::ReadExt;
 use crate::AnyResult;
 use std::io::{self, Read, Write};
 
-#[derive(Clone)]
-pub struct WinCTab {
-    pub wCSeed: i32,
-    pub wCReserved: i16,
-    pub ctSize: i16,
-    pub ctTable: Vec<ColorSpec>,
+struct WinCTab {
+    wCSeed: i32,
+    wCReserved: i16,
+    ctSize: i16,
+    ctTable: Vec<ColorSpec>,
 }
 
 impl WinCTab {
-    pub fn read_from(mut reader: impl Read) -> io::Result<Self> {
+    fn read_from(mut reader: impl Read) -> io::Result<Self> {
         let wCSeed = reader.read_be_i32()?;
         let wCReserved = reader.read_be_i16()?;
         let ctSize = reader.read_be_i16()?;

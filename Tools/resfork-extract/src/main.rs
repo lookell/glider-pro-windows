@@ -114,9 +114,23 @@ fn make_zip_entry_path(res: &Resource) -> String {
     }
 }
 
+fn write_names_txt(resfork: &ResourceFork, mut writer: impl Write) -> io::Result<()> {
+    for res in resfork.resources.iter() {
+        if let Some(name) = &res.name {
+            writeln!(&mut writer, "('{}', {}): {:?}", res.restype, res.id, name)?;
+        }
+    }
+    Ok(())
+}
+
 fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
     zip_writer.set_comment("");
+
+    if resfork.resources.iter().any(|res| res.name.is_some()) {
+        zip_writer.start_file("names.txt", Default::default())?;
+        write_names_txt(resfork, &mut zip_writer)?;
+    }
 
     for res in resfork.resources.iter() {
         let entry_name = make_zip_entry_path(&res);
@@ -130,7 +144,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'acur': Animated Cursor
 //   'ALRT': Alert
 //   'BNDL': Bundle
-//   'cctb': Control Color Table
 //   'CDEF': Control Definition Function
 //   'cicn': Color Icon
 //   'clut': Color Table
@@ -162,6 +175,11 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
     zip_writer.set_comment("");
+
+    if resfork.resources.iter().any(|res| res.name.is_some()) {
+        zip_writer.start_file("names.txt", Default::default())?;
+        write_names_txt(resfork, &mut zip_writer)?;
+    }
 
     for res in resfork.resources.iter() {
         match res.restype.to_string().as_str() {

@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 #![allow(nonstandard_style)]
 
 use crate::utils::ReadExt;
