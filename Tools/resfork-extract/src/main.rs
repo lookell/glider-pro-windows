@@ -187,6 +187,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::control_color_table::convert(&res.data, &mut zip_writer)?;
             }
+            "CDEF" => {
+                let entry_name = format!("ControlDefinitionFunction/{}.bin", res.id);
+                zip_writer.start_file(entry_name, Default::default())?;
+                zip_writer.write_all(&res.data)?;
+            }
             "CNTL" => {
                 let entry_name = res::control::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
