@@ -136,7 +136,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'CNTL': Control
 //   'crsr': Color Cursor
 //   'CURS': Cursor
-//   'dctb': Dialog Color Table
 //   'demo': Glider Pro Demo
 //   'DITL': Item List
 //   'DLGX': (unknown)
@@ -163,9 +162,13 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
     zip_writer.set_comment("");
-
     for res in resfork.resources.iter() {
         match res.restype.to_string().as_str() {
+            "dctb" => {
+                let entry_name = res::dialog_color_table::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::dialog_color_table::convert(res.data.as_slice(), &mut zip_writer)?;
+            }
             "STR#" => {
                 let entry_name = res::string_list::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
@@ -183,7 +186,6 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
             }
         }
     }
-
     Ok(())
 }
 

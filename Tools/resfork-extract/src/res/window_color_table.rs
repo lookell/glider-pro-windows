@@ -9,7 +9,7 @@ pub struct WinCTab {
     pub wCSeed: i32,
     pub wCReserved: i16,
     pub ctSize: i16,
-    pub ctTable: Vec<ColorSpec>
+    pub ctTable: Vec<ColorSpec>,
 }
 
 impl WinCTab {
@@ -49,7 +49,6 @@ pub fn get_entry_name(res: &Resource) -> String {
 }
 
 pub fn convert(data: &[u8], mut writer: impl Write) -> AnyResult<()> {
-    eprintln!("{:?}", data);
     let clut = WinCTab::read_from(data)?;
     for entry in clut.ctTable.into_iter() {
         match entry.value {

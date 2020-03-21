@@ -3,6 +3,7 @@
 use crate::utils::ReadExt;
 use std::io::{self, Read};
 
+pub mod dialog_color_table;
 pub mod string_list;
 pub mod window_color_table;
 
