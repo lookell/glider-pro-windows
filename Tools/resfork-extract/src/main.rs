@@ -157,7 +157,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'PICT': Picture
 //   'snd ': Sound
 //   'vers': Version
-//   'wctb': Window Color Table
 //   'WDEF': Window Definition Function
 //   'WIND': Window
 
@@ -171,6 +170,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = res::string_list::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::string_list::convert(res.data.as_slice(), &mut zip_writer)?;
+            }
+            "wctb" => {
+                let entry_name = res::window_color_table::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::window_color_table::convert(res.data.as_slice(), &mut zip_writer)?;
             }
             _ => {
                 let entry_name = make_zip_entry_path(&res);

@@ -32,10 +32,8 @@ pub fn get_entry_name(res: &Resource) -> String {
 
 pub fn convert(data: &[u8], mut writer: impl Write) -> AnyResult<()> {
     let string_list = StringList::read_from(data)?;
-    let mut output = String::new();
     for (idx, string) in string_list.strings.into_iter().enumerate() {
-        output.push_str(&format!("{}: {:?}\n", idx + 1, string));
+        writeln!(&mut writer, "{}: {:?}\n", idx + 1, string)?;
     }
-    writer.write_all(output.as_bytes())?;
     Ok(())
 }
