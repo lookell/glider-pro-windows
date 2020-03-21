@@ -149,7 +149,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'crsr': Color Cursor
 //   'CURS': Cursor
 //   'DITL': Item List
-//   'DLGX': (unknown)
 //   'DLOG': Dialog
 //   'FREF': File Reference
 //   'icl4': Large 4-Bit Color Icon
