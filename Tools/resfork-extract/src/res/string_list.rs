@@ -1,15 +1,8 @@
-use crate::mac_roman;
+use super::read_pstring;
 use crate::rsrcfork::Resource;
 use crate::utils::ReadExt;
 use crate::AnyResult;
 use std::io::{self, Read, Write};
-
-fn read_pstring(mut reader: impl Read) -> io::Result<String> {
-    let length = reader.read_be_u8()?;
-    let mut buffer = vec![0x00; length.into()];
-    reader.read_exact(buffer.as_mut_slice())?;
-    Ok(buffer.into_iter().map(mac_roman::decode).collect())
-}
 
 struct StringList {
     strings: Vec<String>,

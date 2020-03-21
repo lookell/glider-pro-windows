@@ -147,7 +147,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'CDEF': Control Definition Function
 //   'cicn': Color Icon
 //   'clut': Color Table
-//   'CNTL': Control
 //   'crsr': Color Cursor
 //   'CURS': Cursor
 //   'DITL': Item List
@@ -187,6 +186,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = res::control_color_table::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::control_color_table::convert(&res.data, &mut zip_writer)?;
+            }
+            "CNTL" => {
+                let entry_name = res::control::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::control::convert(&res.data, &mut zip_writer)?;
             }
             "dctb" => {
                 let entry_name = res::dialog_color_table::get_entry_name(&res);
