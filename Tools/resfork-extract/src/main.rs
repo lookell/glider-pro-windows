@@ -136,7 +136,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'CNTL': Control
 //   'crsr': Color Cursor
 //   'CURS': Cursor
-//   'demo': Glider Pro Demo
 //   'DITL': Item List
 //   'DLGX': (unknown)
 //   'DLOG': Dialog
@@ -168,6 +167,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = res::dialog_color_table::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::dialog_color_table::convert(res.data.as_slice(), &mut zip_writer)?;
+            }
+            "demo" => {
+                let entry_name = format!("DemoData/{}.bin", res.id);
+                zip_writer.start_file(entry_name, Default::default())?;
+                zip_writer.write_all(res.data.as_slice())?;
             }
             "STR#" => {
                 let entry_name = res::string_list::get_entry_name(&res);
