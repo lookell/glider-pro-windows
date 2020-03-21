@@ -1,7 +1,6 @@
 use super::ColorSpec;
 use crate::rsrcfork::Resource;
 use crate::utils::ReadExt;
-use crate::AnyResult;
 use std::io::{self, Read, Write};
 
 struct WinCTab {
@@ -47,7 +46,7 @@ pub fn get_entry_name(res: &Resource) -> String {
     format!("WindowColorTable/{}.txt", res.id)
 }
 
-pub fn convert(data: &[u8], mut writer: impl Write) -> AnyResult<()> {
+pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {
     let clut = WinCTab::read_from(data)?;
     for entry in clut.ctTable.into_iter() {
         match entry.value {

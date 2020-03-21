@@ -29,11 +29,11 @@ impl Rect {
         })
     }
 
-    pub fn width(&self) -> i32 {
+    pub fn width(self) -> i32 {
         i32::from(self.right) - i32::from(self.left)
     }
 
-    pub fn height(&self) -> i32 {
+    pub fn height(self) -> i32 {
         i32::from(self.bottom) - i32::from(self.top)
     }
 }
