@@ -141,11 +141,9 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 }
 
 // TODO:
-//   'acur': Animated Cursor
 //   'ALRT': Alert
 //   'BNDL': Bundle
 //   'cicn': Color Icon
-//   'clut': Color Table
 //   'crsr': Color Cursor
 //   'CURS': Cursor
 //   'DITL': Item List
@@ -193,6 +191,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = format!("ControlDefinitionFunction/{}.bin", res.id);
                 zip_writer.start_file(entry_name, Default::default())?;
                 zip_writer.write_all(&res.data)?;
+            }
+            "clut" => {
+                let entry_name = res::color_table::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::color_table::convert(&res.data, &mut zip_writer)?;
             }
             "CNTL" => {
                 let entry_name = res::control::get_entry_name(&res);
