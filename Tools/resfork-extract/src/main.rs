@@ -144,7 +144,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'acur': Animated Cursor
 //   'ALRT': Alert
 //   'BNDL': Bundle
-//   'CDEF': Control Definition Function
 //   'cicn': Color Icon
 //   'clut': Color Table
 //   'crsr': Color Cursor
@@ -168,7 +167,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'PICT': Picture
 //   'snd ': Sound
 //   'vers': Version
-//   'WDEF': Window Definition Function
 //   'WIND': Window
 
 fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
@@ -216,6 +214,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = res::window_color_table::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::window_color_table::convert(&res.data, &mut zip_writer)?;
+            }
+            "WDEF" => {
+                let entry_name = format!("WindowDefinitionFunction/{}.bin", res.id);
+                zip_writer.start_file(entry_name, Default::default())?;
+                zip_writer.write_all(&res.data)?;
             }
             _ => {
                 let entry_name = make_zip_entry_path(&res);
