@@ -117,6 +117,7 @@ fn make_zip_entry_path(res: &Resource) -> String {
 fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
     zip_writer.set_comment("");
+
     for res in resfork.resources.iter() {
         let entry_name = make_zip_entry_path(&res);
         zip_writer.start_file(entry_name, Default::default())?;
@@ -161,32 +162,38 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
     zip_writer.set_comment("");
+
     for res in resfork.resources.iter() {
         match res.restype.to_string().as_str() {
+            "cctb" => {
+                let entry_name = res::control_color_table::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::control_color_table::convert(&res.data, &mut zip_writer)?;
+            }
             "dctb" => {
                 let entry_name = res::dialog_color_table::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
-                res::dialog_color_table::convert(res.data.as_slice(), &mut zip_writer)?;
+                res::dialog_color_table::convert(&res.data, &mut zip_writer)?;
             }
             "demo" => {
                 let entry_name = format!("DemoData/{}.bin", res.id);
                 zip_writer.start_file(entry_name, Default::default())?;
-                zip_writer.write_all(res.data.as_slice())?;
+                zip_writer.write_all(&res.data)?;
             }
             "STR#" => {
                 let entry_name = res::string_list::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
-                res::string_list::convert(res.data.as_slice(), &mut zip_writer)?;
+                res::string_list::convert(&res.data, &mut zip_writer)?;
             }
             "wctb" => {
                 let entry_name = res::window_color_table::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
-                res::window_color_table::convert(res.data.as_slice(), &mut zip_writer)?;
+                res::window_color_table::convert(&res.data, &mut zip_writer)?;
             }
             _ => {
                 let entry_name = make_zip_entry_path(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
-                zip_writer.write_all(res.data.as_slice())?;
+                zip_writer.write_all(&res.data)?;
             }
         }
     }
