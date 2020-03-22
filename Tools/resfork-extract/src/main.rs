@@ -147,7 +147,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'crsr': Color Cursor
 //   'CURS': Cursor
 //   'DITL': Item List
-//   'DLOG': Dialog
 //   'FREF': File Reference
 //   'icl4': Large 4-Bit Color Icon
 //   'icl8': Large 8-Bit Color Icon
@@ -211,6 +210,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = format!("DemoData/{}.bin", res.id);
                 zip_writer.start_file(entry_name, Default::default())?;
                 zip_writer.write_all(&res.data)?;
+            }
+            "DLOG" => {
+                let entry_name = res::dialog::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::dialog::convert(&res.data, &mut zip_writer)?;
             }
             "STR#" => {
                 let entry_name = res::string_list::get_entry_name(&res);
