@@ -5,6 +5,7 @@ use crate::mac_roman;
 use crate::utils::ReadExt;
 use std::io::{self, Read};
 
+pub mod alert; // 'ALRT'
 pub mod animated_cursor; // 'acur'
 pub mod color_table; // 'clut'
 pub mod control; // 'CNTL'

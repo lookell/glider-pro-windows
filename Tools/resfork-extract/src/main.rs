@@ -141,7 +141,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 }
 
 // TODO:
-//   'ALRT': Alert
 //   'BNDL': Bundle
 //   'cicn': Color Icon
 //   'crsr': Color Cursor
@@ -180,6 +179,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = res::animated_cursor::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::animated_cursor::convert(&res.data, &mut zip_writer)?;
+            }
+            "ALRT" => {
+                let entry_name = res::alert::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::alert::convert(&res.data, &mut zip_writer)?;
             }
             "cctb" => {
                 let entry_name = res::control_color_table::get_entry_name(&res);
