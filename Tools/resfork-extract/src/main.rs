@@ -141,11 +141,23 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 }
 
 // TODO:
+//  General:
 //   'BNDL': Bundle
-//   'cicn': Color Icon
+//   'FREF': File Reference
+//   'ictb': Item Color Table
+//   'mctb': Menu Color Information Table
+//   'MENU': Menu
+//   'PAT#': Pattern List
+//   'PICT': Picture
+//   'snd ': Sound
+//   'vers': Version
+//
+//  Cursors:
 //   'crsr': Color Cursor
 //   'CURS': Cursor
-//   'FREF': File Reference
+//
+//  Icons:
+//   'cicn': Color Icon
 //   'icl4': Large 4-Bit Color Icon
 //   'icl8': Large 8-Bit Color Icon
 //   'ICN#': Icon List
@@ -153,15 +165,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'ics#': Small Icon List
 //   'ics4': Small 4-Bit Color Icon
 //   'ics8': Small 8-Bit Color Icon
-//   'ictb': Item Color Table
-//   'mctb': Menu Color Information Table
-//   'MENU': Menu
-//   'ozm5': Glider Pro Copyright String
-//   'PAT#': Pattern List
-//   'PICT': Picture
-//   'snd ': Sound
-//   'vers': Version
-//   'WIND': Window
 
 fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
@@ -238,6 +241,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = format!("WindowDefinitionFunction/{}.bin", res.id);
                 zip_writer.start_file(entry_name, Default::default())?;
                 zip_writer.write_all(&res.data)?;
+            }
+            "WIND" => {
+                let entry_name = res::window::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::window::convert(&res.data, &mut zip_writer)?;
             }
             _ => {
                 let entry_name = make_zip_entry_path(&res);

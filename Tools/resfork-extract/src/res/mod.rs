@@ -14,6 +14,7 @@ pub mod dialog; // 'DLOG'
 pub mod dialog_color_table; // 'dctb'
 pub mod item_list; // 'DITL'
 pub mod string_list; // 'STR#'
+pub mod window; // 'WIND'
 pub mod window_color_table; // 'wctb'
 
 #[derive(Clone, Copy, Debug)]
