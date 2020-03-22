@@ -12,6 +12,7 @@ pub mod control; // 'CNTL'
 pub mod control_color_table; // 'cctb'
 pub mod dialog; // 'DLOG'
 pub mod dialog_color_table; // 'dctb'
+pub mod item_list; // 'DITL'
 pub mod string_list; // 'STR#'
 pub mod window_color_table; // 'wctb'
 
