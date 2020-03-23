@@ -275,11 +275,8 @@ void StartGliderDuctingIn (gliderPtr thisGlider)
 
 void StartGliderTransporting (gliderPtr thisGlider, hotPtr who)
 {
-	return;
-#if 0
-	short		whoLinked;
+	SInt16		whoLinked;
 	Byte		objLinked;
-	char		wasState;
 
 	PlayPrioritySound(kTransOutSound, kTransOutPriority);
 
@@ -293,10 +290,7 @@ void StartGliderTransporting (gliderPtr thisGlider, hotPtr who)
 	objLinked = masterObjects[whoLinked].objectLink;
 	linkedToWhat = WhatAreWeLinkedTo(transRoom, objLinked);
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	GetObjectRect(&(*thisHouse)->rooms[transRoom].objects[objLinked], &transRect);
-	HSetState((Handle)thisHouse, wasState);
+	GetObjectRect(&thisHouse->rooms[transRoom].objects[objLinked], &transRect);
 
 	thisGlider->dest.right = thisGlider->dest.left + kGliderWide;
 	thisGlider->dest.bottom = thisGlider->dest.top + kGliderHigh;
@@ -317,7 +311,6 @@ void StartGliderTransporting (gliderPtr thisGlider, hotPtr who)
 		thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame]];
 		thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
 	}
-#endif
 }
 
 //--------------------------------------------------------------  FlagGliderNormal
