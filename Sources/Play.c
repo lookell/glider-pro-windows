@@ -615,26 +615,18 @@ void PlayGame (void)
 
 void SetObjectsToDefaults (void)
 {
-	return;
-#if 0
-	houseType	*thisHousePtr;
-	short		numRooms;
-	short		r, i;
-	char		wasState;
+	SInt16		numRooms;
+	SInt16		r, i;
 	Boolean		initState;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
-
-	numRooms = thisHousePtr->nRooms;
+	numRooms = thisHouse->nRooms;
 
 	for (r = 0; r < numRooms; r++)
 	{
-		thisHousePtr->rooms[r].visited = false;
+		thisHouse->rooms[r].visited = false;
 		for (i = 0; i < kMaxRoomObs; i++)
 		{
-			switch (thisHousePtr->rooms[r].objects[i].what)
+			switch (thisHouse->rooms[r].objects[i].what)
 			{
 				case kFloorVent:
 				case kCeilingVent:
@@ -647,8 +639,8 @@ void SetObjectsToDefaults (void)
 				case kGrecoVent:
 				case kSewerBlower:
 				case kLiftArea:
-				thisHousePtr->rooms[r].objects[i].data.a.state =
-					thisHousePtr->rooms[r].objects[i].data.a.initial;
+				thisHouse->rooms[r].objects[i].data.a.state =
+					thisHouse->rooms[r].objects[i].data.a.initial;
 				break;
 
 				case kRedClock:
@@ -665,14 +657,14 @@ void SetObjectsToDefaults (void)
 				case kStar:
 				case kSparkle:
 				case kHelium:
-				thisHousePtr->rooms[r].objects[i].data.c.state =
-					thisHousePtr->rooms[r].objects[i].data.c.initial;
+				thisHouse->rooms[r].objects[i].data.c.state =
+					thisHouse->rooms[r].objects[i].data.c.initial;
 				break;
 
 				case kDeluxeTrans:
-				initState = (thisHousePtr->rooms[r].objects[i].data.d.wide & 0xF0) >> 4;
-				thisHousePtr->rooms[r].objects[i].data.d.wide &= 0xF0;
-				thisHousePtr->rooms[r].objects[i].data.d.wide += initState;
+				initState = (thisHouse->rooms[r].objects[i].data.d.wide & 0xF0) >> 4;
+				thisHouse->rooms[r].objects[i].data.d.wide &= 0xF0;
+				thisHouse->rooms[r].objects[i].data.d.wide += initState;
 				break;
 
 				case kCeilingLight:
@@ -683,12 +675,12 @@ void SetObjectsToDefaults (void)
 				case kFlourescent:
 				case kTrackLight:
 				case kInvisLight:
-				thisHousePtr->rooms[r].objects[i].data.f.state =
-					thisHousePtr->rooms[r].objects[i].data.f.initial;
+				thisHouse->rooms[r].objects[i].data.f.state =
+					thisHouse->rooms[r].objects[i].data.f.initial;
 				break;
 
 				case kStereo:
-				thisHousePtr->rooms[r].objects[i].data.g.state = isPlayMusicGame;
+				thisHouse->rooms[r].objects[i].data.g.state = isPlayMusicGame;
 				break;
 
 				case kShredder:
@@ -700,8 +692,8 @@ void SetObjectsToDefaults (void)
 				case kOutlet:
 				case kVCR:
 				case kMicrowave:
-				thisHousePtr->rooms[r].objects[i].data.g.state =
-					thisHousePtr->rooms[r].objects[i].data.g.initial;
+				thisHouse->rooms[r].objects[i].data.g.state =
+					thisHouse->rooms[r].objects[i].data.g.initial;
 				break;
 
 				case kBalloon:
@@ -712,15 +704,13 @@ void SetObjectsToDefaults (void)
 				case kBall:
 				case kDrip:
 				case kFish:
-				thisHousePtr->rooms[r].objects[i].data.h.state =
-					thisHousePtr->rooms[r].objects[i].data.h.initial;
+				thisHouse->rooms[r].objects[i].data.h.state =
+					thisHouse->rooms[r].objects[i].data.h.initial;
 				break;
 
 			}
 		}
 	}
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 
 //--------------------------------------------------------------  HideGlider
