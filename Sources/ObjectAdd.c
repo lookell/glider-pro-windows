@@ -826,30 +826,22 @@ SInt16 FindEmptyObjectSlot (void)
 
 SInt16 FindObjectSlotInRoom (SInt16 roomNumber)
 {
-	return (-1);
-#if 0
-	roomType	*testRoomPtr;
-	short		i, emptySlot;
-	char		wasState;
+	roomPtr		testRoomPtr;
+	SInt16		i, emptySlot;
 
 	emptySlot = -1;
-
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	testRoomPtr = &((*thisHouse)->rooms[roomNumber]);
+	testRoomPtr = &(thisHouse->rooms[roomNumber]);
 
 	for (i = 0; i < kMaxRoomObs; i++)
+	{
 		if (testRoomPtr->objects[i].what == kObjectIsEmpty)
 		{
 			emptySlot = i;
 			break;
 		}
-
-
-	HSetState((Handle)thisHouse, wasState);
+	}
 
 	return (emptySlot);
-#endif
 }
 
 //--------------------------------------------------------------  DoesRoomNumHaveObject
