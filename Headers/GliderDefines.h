@@ -12,7 +12,7 @@
 //#define COMPILEDEMO
 //#define CAREFULDEBUG
 #define COMPILENOCP
-#define COMPILEQT
+//#define COMPILEQT
 #define BUILD_ARCADE_VERSION		1
 
 #define kYellowUnaccounted			1
