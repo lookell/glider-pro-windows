@@ -1137,20 +1137,14 @@ void OffsetRectRoomRelative (Rect *theRect, SInt16 neighbor)
 
 SInt16 GetUpStairsRightEdge (void)
 {
-	return kRoomWide;
-#if 0
 	objectType	thisObject;
-	short		i, rightEdge;
-	char		wasState;
+	SInt16		i, rightEdge;
 
 	rightEdge = kRoomWide;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-
 	for (i = 0; i < kMaxRoomObs; i++)
 	{
-		thisObject = (*thisHouse)->rooms[thisRoomNumber].objects[i];
+		thisObject = thisHouse->rooms[thisRoomNumber].objects[i];
 		if (thisObject.what == kDownStairs)
 		{
 			rightEdge = thisObject.data.d.topLeft.h + srcRects[kDownStairs].right - 1;
@@ -1158,10 +1152,7 @@ SInt16 GetUpStairsRightEdge (void)
 		}
 	}
 
-	HSetState((Handle)thisHouse, wasState);
-
 	return (rightEdge);
-#endif
 }
 
 //--------------------------------------------------------------  GetDownStairsLeftEdge
