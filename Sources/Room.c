@@ -430,11 +430,8 @@ Boolean RoomNumExists (SInt16 roomNum)
 
 void DeleteRoom (Boolean doWarn)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	short		wasFloor, wasSuite;
-	char		wasState;
+	SInt16		wasFloor, wasSuite;
 	Boolean		firstDeleted;
 
 	if ((theMode != kEditMode) || (noRoomAtAll))
@@ -448,14 +445,11 @@ void DeleteRoom (Boolean doWarn)
 
 	DeselectObject();
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	wasFloor = (*thisHouse)->rooms[thisRoomNumber].floor;
-	wasSuite = (*thisHouse)->rooms[thisRoomNumber].suite;
-	firstDeleted = ((*thisHouse)->firstRoom == thisRoomNumber);	// is room "first"
+	wasFloor = thisHouse->rooms[thisRoomNumber].floor;
+	wasSuite = thisHouse->rooms[thisRoomNumber].suite;
+	firstDeleted = (thisHouse->firstRoom == thisRoomNumber);	// is room "first"
 	thisRoom->suite = kRoomIsEmpty;
-	(*thisHouse)->rooms[thisRoomNumber].suite = kRoomIsEmpty;
-	HSetState((Handle)thisHouse, wasState);
+	thisHouse->rooms[thisRoomNumber].suite = kRoomIsEmpty;
 
 	noRoomAtAll = (RealRoomNumberCount() == 0);					// see if now no rooms
 	if (noRoomAtAll)
@@ -465,17 +459,13 @@ void DeleteRoom (Boolean doWarn)
 
 	if (firstDeleted)
 	{
-		wasState = HGetState((Handle)thisHouse);
-		HLock((Handle)thisHouse);
-		(*thisHouse)->firstRoom = thisRoomNumber;
-		HSetState((Handle)thisHouse, wasState);
+		thisHouse->firstRoom = thisRoomNumber;
 	}
 
 	newRoomNow = false;
 	fileDirty = true;
 	UpdateMenus(false);
 	ReflectCurrentRoom(false);
-#endif
 #endif
 }
 
