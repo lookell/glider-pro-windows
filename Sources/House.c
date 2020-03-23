@@ -9,6 +9,7 @@
 //#include <NumberFormatting.h>
 //#include <Resources.h>
 //#include <Sound.h>
+#include <stdlib.h>
 #include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
@@ -428,11 +429,7 @@ void SortRoomsObjects (SInt16 which)
 #ifndef COMPILEDEMO
 void SortHouseObjects (void)
 {
-	return;
-#if 0
-	houseType	*thisHousePtr;
-	short		numLinks, numRooms, r, i, l;
-	char		wasState;
+	SInt16		numLinks, numRooms, r, i, l;
 
 	SpinCursor(3);
 
@@ -442,17 +439,14 @@ void SortHouseObjects (void)
 	if (numLinks == 0)
 		return;
 
-	linksList = nil;
-	linksList = (linksPtr)NewPtr(sizeof(linksType) * numLinks);
-	if (linksList == nil)
+	linksList = NULL;
+	linksList = malloc(sizeof(*linksList) * numLinks);
+	if (linksList == NULL)
 		RedAlert(kErrNoMemory);
 
 	GenerateLinksList();
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
-	numRooms = thisHousePtr->nRooms;
+	numRooms = thisHouse->nRooms;
 
 	for (r = 0; r < numRooms; r++)
 	{
@@ -479,11 +473,8 @@ void SortHouseObjects (void)
 	}
 
 	SpinCursor(3);
-	HSetState((Handle)thisHouse, wasState);
-	if (linksList != nil)
-		DisposePtr((Ptr)linksList);
+	free(linksList);
 	ForceThisRoom(thisRoomNumber);
-#endif
 }
 #endif
 
