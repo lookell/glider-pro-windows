@@ -363,18 +363,10 @@ void CopyRoomToThisRoom (SInt16 roomNumber)
 
 void CopyThisRoomToRoom (void)
 {
-	return;
-#if 0
-	char		tagByte;
-
 	if ((noRoomAtAll) || (thisRoomNumber == -1))
 		return;
 
-	tagByte = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);		// copy back to house
-	(*thisHouse)->rooms[thisRoomNumber] = *thisRoom;
-	HSetState((Handle)thisHouse, tagByte);
-#endif
+	thisHouse->rooms[thisRoomNumber] = *thisRoom;	// copy back to house
 }
 
 //--------------------------------------------------------------  ForceThisRoom
