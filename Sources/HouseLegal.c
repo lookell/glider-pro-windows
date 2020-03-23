@@ -620,8 +620,15 @@ void WrapBannerAndTrailer (void)
 
 void ValidateNumberOfRooms (void)
 {
+	// This function was useful when the house file reading routine was
+	// essentially an `fread` call (i.e., `FSRead` for classic Mac OS).
+	// The house reading routine in this source port, however, allocates
+	// memory for rooms in a separate array, and makes sure that there
+	// are enough bytes in the house file to fully construct every room.
+	// As a result, the stated room count and actual number of rooms
+	// will always match.
 	return;
-#if 0
+	/*
 	long		countedRooms, reportsRooms;
 	char		wasState;
 
@@ -639,7 +646,7 @@ void ValidateNumberOfRooms (void)
 	}
 
 	HSetState((Handle)thisHouse, wasState);
-#endif
+	*/
 }
 
 //--------------------------------------------------------------  CheckDuplicateFloorSuite
