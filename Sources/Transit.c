@@ -30,15 +30,9 @@ extern	Boolean		playerDead, playerSuicide, tvOn;
 
 SInt16 WhatAreWeLinkedTo (SInt16 where, Byte who)
 {
-	return kLinkedToOther;
-#if 0
-	short		what, whatType;
-	char		wasState;
+	SInt16		what, whatType;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	what = (*thisHouse)->rooms[where].objects[who].what;
-	HSetState((Handle)thisHouse, wasState);
+	what = thisHouse->rooms[where].objects[who].what;
 
 	switch (what)
 	{
@@ -60,7 +54,6 @@ SInt16 WhatAreWeLinkedTo (SInt16 where, Byte who)
 	}
 
 	return (whatType);
-#endif
 }
 
 //--------------------------------------------------------------  ReadyGliderFromTransit
