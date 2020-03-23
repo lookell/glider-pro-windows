@@ -249,23 +249,18 @@ Boolean ObjectIsLinkSwitch (objectType *who)
 
 void ListOneRoomsObjects (SInt16 where)
 {
-	return;
-#if 0
 	objectType	thisObject;
-	short		roomNum, n;
-	char		wasState;
+	SInt16		roomNum, n;
 
 	roomNum = localNumbers[where];
 	if (roomNum == kRoomIsEmpty)
 		return;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
 	for (n = 0; n < kMaxRoomObs; n++)
 	{
 		if (numMasterObjects < kMaxMasterObjects)
 		{
-			thisObject = (*thisHouse)->rooms[roomNum].objects[n];
+			thisObject = thisHouse->rooms[roomNum].objects[n];
 
 			masterObjects[numMasterObjects].roomNum = roomNum;
 			masterObjects[numMasterObjects].objectNum = n;
@@ -276,7 +271,7 @@ void ListOneRoomsObjects (SInt16 where)
 			masterObjects[numMasterObjects].localLink = -1;
 
 			masterObjects[numMasterObjects].theObject =
-					(*thisHouse)->rooms[roomNum].objects[n];
+					thisHouse->rooms[roomNum].objects[n];
 
 			if ((where == kCentralRoom) && (IsThisValid(roomNum, n)))
 				masterObjects[numMasterObjects].hotNum = CreateActiveRects(n);
@@ -290,8 +285,6 @@ void ListOneRoomsObjects (SInt16 where)
 				numLocalMasterObjects++;
 		}
 	}
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 
 //--------------------------------------------------------------  ListAllLocalObjects
