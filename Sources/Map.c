@@ -121,21 +121,15 @@ void FlagMapRoomsForUpdate (void)
 #ifndef COMPILEDEMO
 void FindNewActiveRoomRect (void)
 {
-	return;
-#if 0
 	Rect		aRoom;
-	short		h, i;
-	short		floor, suite, whoCares;
-	char		wasState;
+	SInt16		h, i;
+	SInt16		floor, suite, whoCares;
 	Boolean		activeRoomVisible;
 
 	if (mapWindow == nil)
 		return;
 
 	activeRoomVisible = false;
-
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
 
 	for (i = 0; i < mapRoomsHigh; i++)
 	{
@@ -158,15 +152,12 @@ void FindNewActiveRoomRect (void)
 		}
 	}
 
-	HSetState((Handle)thisHouse, wasState);
-
 	if (activeRoomVisible)
 	{
 		activeRoomRect.right++;
 		activeRoomRect.bottom++;
-		InsetRect(&activeRoomRect, -1, -1);
+		Mac_InsetRect(&activeRoomRect, -1, -1);
 	}
-#endif
 }
 #endif
 
