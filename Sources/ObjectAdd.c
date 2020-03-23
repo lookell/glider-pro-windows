@@ -848,31 +848,23 @@ SInt16 FindObjectSlotInRoom (SInt16 roomNumber)
 
 Boolean DoesRoomNumHaveObject (SInt16 room, SInt16 what)
 {
-	return false;
-#if 0
-	roomType	*testRoomPtr;
-	short		i;
-	char		wasState;
+	roomPtr		testRoomPtr;
+	SInt16		i;
 	Boolean		hasIt;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	testRoomPtr = &((*thisHouse)->rooms[room]);
-
+	testRoomPtr = &(thisHouse->rooms[room]);
 	hasIt = false;
 
 	for (i = 0; i < kMaxRoomObs; i++)
+	{
 		if (testRoomPtr->objects[i].what == what)
 		{
 			hasIt = true;
 			break;
 		}
-
-
-	HSetState((Handle)thisHouse, wasState);
+	}
 
 	return (hasIt);
-#endif
 }
 
 //--------------------------------------------------------------  ShoutNoMoreObjects
