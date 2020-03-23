@@ -88,16 +88,11 @@ extern	SInt16		numNeighbors;
 
 Boolean IsThisValid (SInt16 where, SInt16 who)
 {
-	return true;
-#if 0
-	char		wasState;
 	Boolean		itsGood;
 
 	itsGood = true;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	switch ((*thisHouse)->rooms[where].objects[who].what)
+	switch (thisHouse->rooms[where].objects[who].what)
 	{
 		case kObjectIsEmpty:
 		itsGood = false;
@@ -115,13 +110,11 @@ Boolean IsThisValid (SInt16 where, SInt16 who)
 		case kStar:
 		case kSparkle:
 		case kHelium:
-		itsGood = (*thisHouse)->rooms[where].objects[who].data.c.state;
+		itsGood = thisHouse->rooms[where].objects[who].data.c.state;
 		break;
 	}
-	HSetState((Handle)thisHouse, wasState);
 
 	return (itsGood);
-#endif
 }
 
 //--------------------------------------------------------------  GetRoomLinked
