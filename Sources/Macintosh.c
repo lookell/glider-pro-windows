@@ -1,5 +1,8 @@
 #include "Macintosh.h"
 #include "WinAPI.h"
+#include <inttypes.h>
+#include <string.h>
+#include <strsafe.h>
 
 
 //--------------------------------------------------------------  GetDateTime
@@ -63,6 +66,29 @@ void Mac_InsetRect(Rect *r, SInt16 dh, SInt16 dv)
 		r->right = 0;
 		r->bottom = 0;
 	}
+}
+
+//--------------------------------------------------------------  NumToString
+// Convert the given number to a decimal string representation.
+// The string is written to the given output string.
+
+void Mac_NumToString(SInt32 theNum, Str255 *theString)
+{
+	CHAR buffer[sizeof("-2147483648")];
+	size_t length;
+	HRESULT hr;
+
+	if (theString == NULL)
+		return;
+	(*theString)[0] = 0; // return an empty string if an error occurs.
+	hr = StringCchPrintfA(buffer, ARRAYSIZE(buffer), PRId32, theNum);
+	if (FAILED(hr))
+		return;
+	hr = StringCchLengthA(buffer, ARRAYSIZE(buffer), &length);
+	if (FAILED(hr))
+		return;
+	(*theString)[0] = length;
+	memcpy(&(*theString)[1], buffer, length);
 }
 
 //--------------------------------------------------------------  PtInRect
