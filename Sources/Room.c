@@ -690,14 +690,9 @@ void SetToNearestNeighborRoom (SInt16 wasFloor, SInt16 wasSuite)
 
 Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite)
 {
-	return false;
-#if 0
-	char		wasState;
 	Boolean		isRoom;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	if ((*thisHouse)->rooms[room].suite == kRoomIsEmpty)
+	if (thisHouse->rooms[room].suite == kRoomIsEmpty)
 	{
 		*floor = 0;
 		*suite = kRoomIsEmpty;
@@ -705,14 +700,12 @@ Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite)
 	}
 	else
 	{
-		*suite = (*thisHouse)->rooms[room].suite;
-		*floor = (*thisHouse)->rooms[room].floor;
+		*suite = thisHouse->rooms[room].suite;
+		*floor = thisHouse->rooms[room].floor;
 		isRoom = true;
 	}
-	HSetState((Handle)thisHouse, wasState);
 
 	return (isRoom);
-#endif
 }
 
 //--------------------------------------------------------------  GetRoomNumber
