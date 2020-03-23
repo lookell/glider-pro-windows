@@ -700,32 +700,26 @@ void CheckDuplicateFloorSuite (void)
 
 void CompressHouse (void)
 {
-	return;
-#if 0
-	short		wasFirstRoom, roomNumber, probe;
-	char		wasState;
+	SInt16		wasFirstRoom, roomNumber, probe;
 	Boolean		compressing, probing;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-
-	wasFirstRoom = (*thisHouse)->firstRoom;
+	wasFirstRoom = thisHouse->firstRoom;
 	compressing = true;
-	roomNumber = (*thisHouse)->nRooms - 1;	// start with last room
+	roomNumber = thisHouse->nRooms - 1;		// start with last room
 	do
 	{
-		if ((*thisHouse)->rooms[roomNumber].suite != kRoomIsEmpty)
+		if (thisHouse->rooms[roomNumber].suite != kRoomIsEmpty)
 		{									// if not an empty room…
 			probe = 0;						// start looking for empty slot
 			probing = true;
 			do
 			{								// test room at probe to see if empty
-				if ((*thisHouse)->rooms[probe].suite == kRoomIsEmpty)
+				if (thisHouse->rooms[probe].suite == kRoomIsEmpty)
 				{							// if it is, copy room there
-					(*thisHouse)->rooms[probe] = (*thisHouse)->rooms[roomNumber];
-					(*thisHouse)->rooms[roomNumber].suite = kRoomIsEmpty;
+					thisHouse->rooms[probe] = thisHouse->rooms[roomNumber];
+					thisHouse->rooms[roomNumber].suite = kRoomIsEmpty;
 					if (roomNumber == wasFirstRoom)
-						(*thisHouse)->firstRoom = probe;
+						thisHouse->firstRoom = probe;
 					if (roomNumber == wasRoom)
 						wasRoom = probe;
 					probing = false;
@@ -744,9 +738,6 @@ void CompressHouse (void)
 			compressing = false;
 	}
 	while (compressing);
-
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 
 //--------------------------------------------------------------  LopOffExtraRooms
