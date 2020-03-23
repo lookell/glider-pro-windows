@@ -624,18 +624,12 @@ SInt16 GetNeighborRoomNumber (SInt16 which)
 
 void SetToNearestNeighborRoom (SInt16 wasFloor, SInt16 wasSuite)
 {
-	return;
-#if 0
 	// searches in a clockwise spiral pattern (from thisRoom) for a…
 	// legitimate neighboring room - then sets thisRoom to it
-	short		distance, h, v;
-	short		hStep, vStep;
-	short		testRoomNum, testH, testV;
-	char		wasState;
+	SInt16		distance, h, v;
+	SInt16		hStep, vStep;
+	SInt16		testRoomNum, testH, testV;
 	Boolean		finished;
-
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
 
 	finished = false;
 	distance = 1;	// we begin our walk a distance of one from source room
@@ -690,9 +684,6 @@ void SetToNearestNeighborRoom (SInt16 wasFloor, SInt16 wasSuite)
 			}
 		}
 	} while (!finished);
-
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 
 //--------------------------------------------------------------  GetRoomFloorSuite
