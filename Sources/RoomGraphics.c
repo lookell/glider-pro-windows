@@ -455,16 +455,10 @@ void DrawLighting (void)
 
 void RedrawRoomLighting (void)
 {
-	return;
-#if 0
-	short		roomV;
-	char		wasState;
+	SInt16		roomV;
 	Boolean		wasLit, isLit;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	roomV = (*thisHouse)->rooms[thisRoomNumber].floor;
-	HSetState((Handle)thisHouse, wasState);
+	roomV = thisHouse->rooms[thisRoomNumber].floor;
 
 	wasLit = numLights > 0;
 	numLights = GetNumberOfLights(localNumbers[kCentralRoom]);
@@ -482,6 +476,5 @@ void RedrawRoomLighting (void)
 		AddRectToWorkRects(&localRoomsDest[kCentralRoom]);
 		shadowVisible = IsShadowVisible();
 	}
-#endif
 }
 
