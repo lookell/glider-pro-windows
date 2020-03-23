@@ -333,7 +333,7 @@ void GenerateLinksList (void)
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
 					roomLinked = GetRoomNumber(floor, suite);
-					objectLinked = (short)thisObject.data.e.who;
+					objectLinked = (SInt16)thisObject.data.e.who;
 					linksList[numLinks].srcRoom = r;
 					linksList[numLinks].srcObj = i;
 					linksList[numLinks].destRoom = roomLinked;
@@ -353,7 +353,7 @@ void GenerateLinksList (void)
 				{
 					ExtractFloorSuite(thisObject.data.d.where, &floor, &suite);
 					roomLinked = GetRoomNumber(floor, suite);
-					objectLinked = (short)thisObject.data.d.who;
+					objectLinked = (SInt16)thisObject.data.d.who;
 					linksList[numLinks].srcRoom = r;
 					linksList[numLinks].srcObj = i;
 					linksList[numLinks].destRoom = roomLinked;
@@ -506,27 +506,20 @@ SInt16 CountRoomsVisited (void)
 
 void GenerateRetroLinks (void)
 {
-	return;
-#if 0
-	houseType	*thisHousePtr;
 	objectType	thisObject;
-	short		i, r, numRooms, floor, suite;
-	short		what, roomLinked, objectLinked;
-	char		wasState;
+	SInt16		i, r, numRooms, floor, suite;
+	SInt16		what, roomLinked, objectLinked;
 
 	for (i = 0; i < kMaxRoomObs; i++)		// Initialize array.
 		retroLinkList[i].room = -1;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
-	numRooms = thisHousePtr->nRooms;
+	numRooms = thisHouse->nRooms;
 
 	for (r = 0; r < numRooms; r++)
 	{
 		for (i = 0; i < kMaxRoomObs; i++)
 		{
-			what = thisHousePtr->rooms[r].objects[i].what;
+			what = thisHouse->rooms[r].objects[i].what;
 			switch (what)
 			{
 				case kLightSwitch:
@@ -537,14 +530,14 @@ void GenerateRetroLinks (void)
 				case kInvisSwitch:
 				case kTrigger:
 				case kLgTrigger:
-				thisObject = thisHousePtr->rooms[r].objects[i];
+				thisObject = thisHouse->rooms[r].objects[i];
 				if (thisObject.data.e.where != -1)
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
 					roomLinked = GetRoomNumber(floor, suite);
 					if (roomLinked == thisRoomNumber)
 					{
-						objectLinked = (short)thisObject.data.e.who;
+						objectLinked = (SInt16)thisObject.data.e.who;
 						if (retroLinkList[objectLinked].room == -1)
 						{
 							retroLinkList[objectLinked].room = r;
@@ -560,14 +553,14 @@ void GenerateRetroLinks (void)
 				case kCeilingTrans:
 				case kInvisTrans:
 				case kDeluxeTrans:
-				thisObject = thisHousePtr->rooms[r].objects[i];
+				thisObject = thisHouse->rooms[r].objects[i];
 				if (thisObject.data.d.where != -1)
 				{
 					ExtractFloorSuite(thisObject.data.d.where, &floor, &suite);
 					roomLinked = GetRoomNumber(floor, suite);
 					if (roomLinked == thisRoomNumber)
 					{
-						objectLinked = (short)thisObject.data.d.who;
+						objectLinked = (SInt16)thisObject.data.d.who;
 						if (retroLinkList[objectLinked].room == -1)
 						{
 							retroLinkList[objectLinked].room = r;
@@ -579,9 +572,6 @@ void GenerateRetroLinks (void)
 			}
 		}
 	}
-
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 
 //--------------------------------------------------------------  UpdateGoToDialog
