@@ -92,29 +92,22 @@ void DrawBanner (Point *topLeft)
 
 SInt16 CountStarsInHouse (void)
 {
-	return 0;
-#if 0
 	short		i, h, numRooms, numStars;
-	char		wasState;
 
 	numStars = 0;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	numRooms = (*thisHouse)->nRooms;
+	numRooms = thisHouse->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if ((*thisHouse)->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				if ((*thisHouse)->rooms[i].objects[h].what == kStar)
+				if (thisHouse->rooms[i].objects[h].what == kStar)
 					numStars++;
 			}
 	}
-	HSetState((Handle)thisHouse, wasState);
 
 	return (numStars);
-#endif
 }
 
 //--------------------------------------------------------------  DrawBannerMessage
