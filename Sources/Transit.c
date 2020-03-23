@@ -425,22 +425,12 @@ void MoveMailToMail (gliderPtr thisGlider)
 
 void HandleRoomVisitation (void)
 {
-	return;
-#if 0
-	houseType	*thisHousePtr;
-	char		wasState;
-
 	if (!thisRoom->visited)
 	{
-		wasState = HGetState((Handle)thisHouse);
-		HLock((Handle)thisHouse);
-		thisHousePtr = *thisHouse;
-		thisHousePtr->rooms[localNumbers[kCentralRoom]].visited = true;
-		HSetState((Handle)thisHouse, wasState);
+		thisHouse->rooms[localNumbers[kCentralRoom]].visited = true;
 		theScore += kRoomVisitScore;
 		thisRoom->visited = true;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  ForceKillGlider
