@@ -485,27 +485,18 @@ void SortHouseObjects (void)
 
 SInt16 CountRoomsVisited (void)
 {
-	return 0;
-#if 0
-	houseType	*thisHousePtr;
-	short		numRooms, r, count;
-	char		wasState;
+	SInt16		numRooms, r, count;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
-	numRooms = thisHousePtr->nRooms;
+	numRooms = thisHouse->nRooms;
 	count = 0;
 
 	for (r = 0; r < numRooms; r++)
 	{
-		if (thisHousePtr->rooms[r].visited)
+		if (thisHouse->rooms[r].visited)
 			count++;
 	}
 
-	HSetState((Handle)thisHouse, wasState);
 	return (count);
-#endif
 }
 
 //--------------------------------------------------------------  GenerateRetroLinks
