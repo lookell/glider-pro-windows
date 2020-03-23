@@ -734,25 +734,20 @@ SInt16 GetRoomNumber (SInt16 floor, SInt16 suite)
 
 Boolean	IsRoomAStructure (SInt16 roomNum)
 {
-	return false;
-#if 0
-	char		wasState;
 	Boolean		isStructure;
 
 	if (roomNum == kRoomIsEmpty)
 		return (false);
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	if ((*thisHouse)->rooms[roomNum].background >= kUserBackground)
+	if (thisHouse->rooms[roomNum].background >= kUserBackground)
 	{
-		if ((*thisHouse)->rooms[roomNum].bounds != 0)
+		if (thisHouse->rooms[roomNum].bounds != 0)
 		{
-			isStructure = (((*thisHouse)->rooms[roomNum].bounds & 32) == 32);
+			isStructure = ((thisHouse->rooms[roomNum].bounds & 32) == 32);
 		}
 		else
 		{
-			if ((*thisHouse)->rooms[roomNum].background < kUserStructureRange)
+			if (thisHouse->rooms[roomNum].background < kUserStructureRange)
 				isStructure = true;
 			else
 				isStructure = false;
@@ -760,7 +755,7 @@ Boolean	IsRoomAStructure (SInt16 roomNum)
 	}
 	else
 	{
-		switch ((*thisHouse)->rooms[roomNum].background)
+		switch (thisHouse->rooms[roomNum].background)
 		{
 			case kPaneledRoom:
 			case kSimpleRoom:
@@ -780,10 +775,8 @@ Boolean	IsRoomAStructure (SInt16 roomNum)
 			break;
 		}
 	}
-	HSetState((Handle)thisHouse, wasState);
 
 	return (isStructure);
-#endif
 }
 
 //--------------------------------------------------------------  DetermineRoomOpenings
