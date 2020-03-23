@@ -332,10 +332,6 @@ void DoLink (void)
 #ifndef COMPILEDEMO
 void DoUnlink (void)
 {
-	return;
-#if 0
-	char		wasState;
-
 	if (thisRoomNumber == linkRoom)
 	{
 		if (linkerIsSwitch)
@@ -351,24 +347,20 @@ void DoUnlink (void)
 	}
 	else
 	{
-		wasState = HGetState((Handle)thisHouse);
-		HLock((Handle)thisHouse);
 		if (linkerIsSwitch)
 		{
-			(*thisHouse)->rooms[linkRoom].objects[linkObject].data.e.where = -1;
-			(*thisHouse)->rooms[linkRoom].objects[linkObject].data.e.who = 255;
+			thisHouse->rooms[linkRoom].objects[linkObject].data.e.where = -1;
+			thisHouse->rooms[linkRoom].objects[linkObject].data.e.who = 255;
 		}
 		else
 		{
-			(*thisHouse)->rooms[linkRoom].objects[linkObject].data.d.where = -1;
-			(*thisHouse)->rooms[linkRoom].objects[linkObject].data.d.who = 255;
+			thisHouse->rooms[linkRoom].objects[linkObject].data.d.where = -1;
+			thisHouse->rooms[linkRoom].objects[linkObject].data.d.who = 255;
 		}
-		HSetState((Handle)thisHouse, wasState);
 	}
 	fileDirty = true;
 	UpdateMenus(false);
 	CloseLinkWindow();
-#endif
 }
 #endif
 
