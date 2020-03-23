@@ -1159,20 +1159,14 @@ SInt16 GetUpStairsRightEdge (void)
 
 SInt16 GetDownStairsLeftEdge (void)
 {
-	return 0;
-#if 0
 	objectType	thisObject;
-	short		i, leftEdge;
-	char		wasState;
+	SInt16		i, leftEdge;
 
 	leftEdge = 0;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-
 	for (i = 0; i < kMaxRoomObs; i++)
 	{
-		thisObject = (*thisHouse)->rooms[thisRoomNumber].objects[i];
+		thisObject = thisHouse->rooms[thisRoomNumber].objects[i];
 		if (thisObject.what == kUpStairs)
 		{
 			leftEdge = thisObject.data.d.topLeft.h + 1;
@@ -1180,9 +1174,6 @@ SInt16 GetDownStairsLeftEdge (void)
 		}
 	}
 
-	HSetState((Handle)thisHouse, wasState);
-
 	return (leftEdge);
-#endif
 }
 
