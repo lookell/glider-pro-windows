@@ -894,35 +894,26 @@ void CheckRoomNameLength (void)
 
 void MakeSureNumObjectsJives (void)
 {
-	return;
-#if 0
-	short		i, h, numRooms, count;
-	char		wasState;
+	SInt16		i, h, numRooms, count;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-
-	numRooms = (*thisHouse)->nRooms;
+	numRooms = thisHouse->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if ((*thisHouse)->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
 		{
 			count = 0;
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				if ((*thisHouse)->rooms[i].objects[h].what != kObjectIsEmpty)
+				if (thisHouse->rooms[i].objects[h].what != kObjectIsEmpty)
 					count++;
 			}
-			if (count != (*thisHouse)->rooms[i].numObjects)
+			if (count != thisHouse->rooms[i].numObjects)
 			{
 				houseErrors++;
-				(*thisHouse)->rooms[i].numObjects = count;
+				thisHouse->rooms[i].numObjects = count;
 			}
 		}
 	}
-
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 
 //--------------------------------------------------------------  KeepAllObjectsLegal
