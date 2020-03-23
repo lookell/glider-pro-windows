@@ -373,24 +373,16 @@ void CopyThisRoomToRoom (void)
 
 void ForceThisRoom (SInt16 roomNumber)
 {
-	return;
-#if 0
-	char		tagByte;
-
 	if (roomNumber == -1)
 		return;
 
-	tagByte = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	if (roomNumber < (*thisHouse)->nRooms)
-		*thisRoom = (*thisHouse)->rooms[roomNumber];
+	if (roomNumber < thisHouse->nRooms)
+		*thisRoom = thisHouse->rooms[roomNumber];
 	else
 		YellowAlert(kYellowIllegalRoomNum, 0);
-	HSetState((Handle)thisHouse, tagByte);
 
 	previousRoom = thisRoomNumber;
 	thisRoomNumber = roomNumber;
-#endif
 }
 
 //--------------------------------------------------------------  RoomExists
