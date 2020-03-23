@@ -386,8 +386,6 @@ void MoveDuctToDuct (gliderPtr thisGlider)
 
 void MoveMailToMail (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	Boolean		sameRoom;
 
 	SetMusicalMode(kKickGameScoreMode);
@@ -420,7 +418,6 @@ void MoveMailToMail (gliderPtr thisGlider)
 		GoToBeginningOfMovie(theMovie);
 		StartMovie(theMovie);
 	}
-#endif
 #endif
 }
 
