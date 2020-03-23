@@ -40,9 +40,7 @@ SInt16 MergeFloorSuite (SInt16 floor, SInt16 suite)
 
 void ExtractFloorSuite (SInt16 combo, SInt16 *floor, SInt16 *suite)
 {
-	return;
-#if 0
-	if ((*thisHouse)->version < 0x0200)		// old floor/suite combo
+	if (thisHouse->version < 0x0200)		// old floor/suite combo
 	{
 		*floor = (combo / 100) - kNumUndergroundFloors;
 		*suite = combo % 100;
@@ -52,7 +50,6 @@ void ExtractFloorSuite (SInt16 combo, SInt16 *floor, SInt16 *suite)
 		*suite = combo / 100;
 		*floor = (combo % 100) - kNumUndergroundFloors;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  UpdateLinkControl
