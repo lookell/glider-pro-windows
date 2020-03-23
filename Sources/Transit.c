@@ -347,8 +347,6 @@ void TransportRoomToRoom (gliderPtr thisGlider)
 
 void MoveDuctToDuct (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	Boolean		sameRoom;
 
 	SetMusicalMode(kKickGameScoreMode);
@@ -381,7 +379,6 @@ void MoveDuctToDuct (gliderPtr thisGlider)
 		GoToBeginningOfMovie(theMovie);
 		StartMovie(theMovie);
 	}
-#endif
 #endif
 }
 
