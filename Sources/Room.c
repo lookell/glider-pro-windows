@@ -940,11 +940,7 @@ SInt16 GetOriginalBounding (SInt16 theID)
 
 SInt16 GetNumberOfLights (SInt16 where)
 {
-	return 1;
-#if 0
-	houseType	*thisHousePtr;
-	short		i, count;
-	char		wasState;
+	SInt16		i, count;
 
 	if (theMode == kEditMode)
 	{
@@ -1005,10 +1001,7 @@ SInt16 GetNumberOfLights (SInt16 where)
 	}
 	else
 	{
-		wasState = HGetState((Handle)thisHouse);
-		HLock((Handle)thisHouse);
-		thisHousePtr = *thisHouse;
-		switch (thisHousePtr->rooms[where].background)
+		switch (thisHouse->rooms[where].background)
 		{
 			case kGarden:
 			case kSkywalk:
@@ -1023,14 +1016,14 @@ SInt16 GetNumberOfLights (SInt16 where)
 
 			case kDirt:
 			count = 0;
-			if ((thisHousePtr->rooms[where].tiles[0] == 0) &&
-					(thisHousePtr->rooms[where].tiles[1] == 0) &&
-					(thisHousePtr->rooms[where].tiles[2] == 0) &&
-					(thisHousePtr->rooms[where].tiles[3] == 0) &&
-					(thisHousePtr->rooms[where].tiles[4] == 0) &&
-					(thisHousePtr->rooms[where].tiles[5] == 0) &&
-					(thisHousePtr->rooms[where].tiles[6] == 0) &&
-					(thisHousePtr->rooms[where].tiles[7] == 0))
+			if ((thisHouse->rooms[where].tiles[0] == 0) &&
+					(thisHouse->rooms[where].tiles[1] == 0) &&
+					(thisHouse->rooms[where].tiles[2] == 0) &&
+					(thisHouse->rooms[where].tiles[3] == 0) &&
+					(thisHouse->rooms[where].tiles[4] == 0) &&
+					(thisHouse->rooms[where].tiles[5] == 0) &&
+					(thisHouse->rooms[where].tiles[6] == 0) &&
+					(thisHouse->rooms[where].tiles[7] == 0))
 				count = 1;
 			break;
 
@@ -1042,7 +1035,7 @@ SInt16 GetNumberOfLights (SInt16 where)
 		{
 			for (i = 0; i < kMaxRoomObs; i++)
 			{
-				switch (thisHousePtr->rooms[where].objects[i].what)
+				switch (thisHouse->rooms[where].objects[i].what)
 				{
 					case kDoorInLf:
 					case kDoorInRt:
@@ -1060,16 +1053,14 @@ SInt16 GetNumberOfLights (SInt16 where)
 					case kFlourescent:
 					case kTrackLight:
 					case kInvisLight:
-					if (thisHousePtr->rooms[where].objects[i].data.f.state)
+					if (thisHouse->rooms[where].objects[i].data.f.state)
 						count++;
 					break;
 				}
 			}
 		}
-		HSetState((Handle)thisHouse, wasState);
 	}
 	return (count);
-#endif
 }
 
 //--------------------------------------------------------------  IsShadowVisible
