@@ -351,14 +351,11 @@ void AddTempManholeRect (Rect *manHole)
 
 Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 {
-	return false;
-#if 0
-	char		wasState;
 	Boolean		changed;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	switch ((*thisHouse)->rooms[room].objects[object].what)
+	changed = false;
+
+	switch (thisHouse->rooms[room].objects[object].what)
 	{
 		case kFloorVent:
 		case kCeilingVent:
@@ -374,21 +371,21 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		switch (action)
 		{
 			case kToggle:
-			newState = !(*thisHouse)->rooms[room].objects[object].data.a.state;
-			(*thisHouse)->rooms[room].objects[object].data.a.state = newState;
+			newState = !thisHouse->rooms[room].objects[object].data.a.state;
+			thisHouse->rooms[room].objects[object].data.a.state = newState;
 			changed = true;
 			break;
 
 			case kForceOn:
-			changed = ((*thisHouse)->rooms[room].objects[object].data.a.state == false);
+			changed = (thisHouse->rooms[room].objects[object].data.a.state == false);
 			newState = true;
-			(*thisHouse)->rooms[room].objects[object].data.a.state = newState;
+			thisHouse->rooms[room].objects[object].data.a.state = newState;
 			break;
 
 			case kForceOff:
-			changed = ((*thisHouse)->rooms[room].objects[object].data.a.state == true);
+			changed = (thisHouse->rooms[room].objects[object].data.a.state == true);
 			newState = false;
-			(*thisHouse)->rooms[room].objects[object].data.a.state = newState;
+			thisHouse->rooms[room].objects[object].data.a.state = newState;
 			break;
 		}
 		if ((changed) && (local != -1))
@@ -445,9 +442,9 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		case kStar:
 		case kSparkle:
 		case kHelium:
-		changed = ((*thisHouse)->rooms[room].objects[object].data.c.state == true);
+		changed = (thisHouse->rooms[room].objects[object].data.c.state == true);
 		newState = false;
-		(*thisHouse)->rooms[room].objects[object].data.c.state = newState;
+		thisHouse->rooms[room].objects[object].data.c.state = newState;
 		if ((changed) && (local != -1))
 		{
 			masterObjects[local].theObject.data.a.state = false;
@@ -461,6 +458,7 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		break;
 
 		case kSlider:
+		changed = false;
 		break;
 
 		case kUpStairs:
@@ -485,34 +483,34 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		switch (action)
 		{
 			case kToggle:
-			newState = (*thisHouse)->rooms[room].objects[object].data.d.wide & 0x0F;
+			newState = thisHouse->rooms[room].objects[object].data.d.wide & 0x0F;
 			newState = !newState;
-			(*thisHouse)->rooms[room].objects[object].data.d.wide &= 0xF0;
-			(*thisHouse)->rooms[room].objects[object].data.d.wide += newState;
+			thisHouse->rooms[room].objects[object].data.d.wide &= 0xF0;
+			thisHouse->rooms[room].objects[object].data.d.wide += newState;
 			changed = true;
 			break;
 
 			case kForceOn:
-			changed = (((*thisHouse)->rooms[room].objects[object].data.d.wide & 0x0F) == 0x00);
+			changed = ((thisHouse->rooms[room].objects[object].data.d.wide & 0x0F) == 0x00);
 			newState = true;
-			(*thisHouse)->rooms[room].objects[object].data.d.wide &= 0xF0;
-			(*thisHouse)->rooms[room].objects[object].data.d.wide += newState;
+			thisHouse->rooms[room].objects[object].data.d.wide &= 0xF0;
+			thisHouse->rooms[room].objects[object].data.d.wide += newState;
 			break;
 
 			case kForceOff:
-			changed = (((*thisHouse)->rooms[room].objects[object].data.d.wide & 0x0F) != 0x00);
+			changed = ((thisHouse->rooms[room].objects[object].data.d.wide & 0x0F) != 0x00);
 			newState = false;
-			(*thisHouse)->rooms[room].objects[object].data.d.wide &= 0xF0;
-			(*thisHouse)->rooms[room].objects[object].data.d.wide += newState;
+			thisHouse->rooms[room].objects[object].data.d.wide &= 0xF0;
+			thisHouse->rooms[room].objects[object].data.d.wide += newState;
 			break;
 		}
 		if ((changed) && (local != -1))
 		{
 			masterObjects[local].theObject.data.d.wide =
-					(*thisHouse)->rooms[room].objects[object].data.d.wide;
+					thisHouse->rooms[room].objects[object].data.d.wide;
 			if (room == thisRoomNumber)
 				thisRoom->objects[object].data.d.wide =
-						(*thisHouse)->rooms[room].objects[object].data.d.wide;
+						thisHouse->rooms[room].objects[object].data.d.wide;
 			if (masterObjects[local].hotNum != -1)
 				hotSpots[masterObjects[local].hotNum].isOn = newState;
 		}
@@ -540,21 +538,21 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		switch (action)
 		{
 			case kToggle:
-			newState = !(*thisHouse)->rooms[room].objects[object].data.f.state;
-			(*thisHouse)->rooms[room].objects[object].data.f.state = newState;
+			newState = !thisHouse->rooms[room].objects[object].data.f.state;
+			thisHouse->rooms[room].objects[object].data.f.state = newState;
 			changed = true;
 			break;
 
 			case kForceOn:
-			changed = ((*thisHouse)->rooms[room].objects[object].data.f.state == false);
+			changed = (thisHouse->rooms[room].objects[object].data.f.state == false);
 			newState = true;
-			(*thisHouse)->rooms[room].objects[object].data.f.state = newState;
+			thisHouse->rooms[room].objects[object].data.f.state = newState;
 			break;
 
 			case kForceOff:
-			changed = ((*thisHouse)->rooms[room].objects[object].data.f.state == true);
+			changed = (thisHouse->rooms[room].objects[object].data.f.state == true);
 			newState = false;
-			(*thisHouse)->rooms[room].objects[object].data.f.state = newState;
+			thisHouse->rooms[room].objects[object].data.f.state = newState;
 			break;
 		}
 		if ((changed) && (local != -1))
@@ -586,21 +584,21 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		switch (action)
 		{
 			case kToggle:
-			newState = !(*thisHouse)->rooms[room].objects[object].data.g.state;
-			(*thisHouse)->rooms[room].objects[object].data.g.state = newState;
+			newState = !thisHouse->rooms[room].objects[object].data.g.state;
+			thisHouse->rooms[room].objects[object].data.g.state = newState;
 			changed = true;
 			break;
 
 			case kForceOn:
-			changed = ((*thisHouse)->rooms[room].objects[object].data.g.state == false);
+			changed = (thisHouse->rooms[room].objects[object].data.g.state == false);
 			newState = true;
-			(*thisHouse)->rooms[room].objects[object].data.g.state = newState;
+			thisHouse->rooms[room].objects[object].data.g.state = newState;
 			break;
 
 			case kForceOff:
-			changed = ((*thisHouse)->rooms[room].objects[object].data.g.state == true);
+			changed = (thisHouse->rooms[room].objects[object].data.g.state == true);
 			newState = false;
-			(*thisHouse)->rooms[room].objects[object].data.g.state = newState;
+			thisHouse->rooms[room].objects[object].data.g.state = newState;
 			break;
 		}
 		if ((changed) && (local != -1))
@@ -609,7 +607,7 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 			if (room == thisRoomNumber)
 			{
 				thisRoom->objects[object].data.g.state = newState;
-				if ((*thisHouse)->rooms[room].objects[object].what == kShredder)
+				if (thisHouse->rooms[room].objects[object].what == kShredder)
 					hotSpots[masterObjects[local].hotNum].isOn = newState;
 			}
 		}
@@ -633,21 +631,21 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		switch (action)
 		{
 			case kToggle:
-			newState = !(*thisHouse)->rooms[room].objects[object].data.h.state;
-			(*thisHouse)->rooms[room].objects[object].data.h.state = newState;
+			newState = !thisHouse->rooms[room].objects[object].data.h.state;
+			thisHouse->rooms[room].objects[object].data.h.state = newState;
 			changed = true;
 			break;
 
 			case kForceOn:
-			changed = ((*thisHouse)->rooms[room].objects[object].data.h.state == false);
+			changed = (thisHouse->rooms[room].objects[object].data.h.state == false);
 			newState = true;
-			(*thisHouse)->rooms[room].objects[object].data.h.state = newState;
+			thisHouse->rooms[room].objects[object].data.h.state = newState;
 			break;
 
 			case kForceOff:
-			changed = ((*thisHouse)->rooms[room].objects[object].data.h.state == true);
+			changed = (thisHouse->rooms[room].objects[object].data.h.state == true);
 			newState = false;
-			(*thisHouse)->rooms[room].objects[object].data.h.state = newState;
+			thisHouse->rooms[room].objects[object].data.h.state = newState;
 			break;
 		}
 		if ((changed) && (local != -1))
@@ -679,12 +677,9 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		case kChimes:
 		changed = false;
 		break;
-
 	}
-	HSetState((Handle)thisHouse, wasState);
 
 	return (changed);
-#endif
 }
 
 //--------------------------------------------------------------  GetObjectState
