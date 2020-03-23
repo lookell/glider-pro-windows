@@ -208,11 +208,8 @@ void StartGliderMailingOut (gliderPtr thisGlider)
 
 void StartGliderDuctingDown (gliderPtr thisGlider, Rect *bounds, hotPtr who)
 {
-	return;
-#if 0
-	short		leftSought, whoLinked;
+	SInt16		leftSought, whoLinked;
 	Byte		objLinked;
-	char		wasState;
 
 	PlayPrioritySound(kTransOutSound, kTransOutPriority);
 
@@ -226,10 +223,7 @@ void StartGliderDuctingDown (gliderPtr thisGlider, Rect *bounds, hotPtr who)
 	objLinked = masterObjects[whoLinked].objectLink;
 	linkedToWhat = WhatAreWeLinkedTo(transRoom, objLinked);
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	GetObjectRect(&(*thisHouse)->rooms[transRoom].objects[objLinked], &transRect);
-	HSetState((Handle)thisHouse, wasState);
+	GetObjectRect(&thisHouse->rooms[transRoom].objects[objLinked], &transRect);
 
 	thisGlider->frame = 0;
 	thisGlider->clip = *bounds;
@@ -237,7 +231,6 @@ void StartGliderDuctingDown (gliderPtr thisGlider, Rect *bounds, hotPtr who)
 	thisGlider->clip.left = leftSought;
 
 	thisGlider->mode = kGliderDuctingDown;
-#endif
 }
 
 //--------------------------------------------------------------  StartGliderDuctingUp
