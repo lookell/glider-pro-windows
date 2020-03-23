@@ -671,9 +671,7 @@ void DoDirSearch (void)
 
 void BuildHouseList (void)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	if (thisMac.hasSystem7)
 	{
@@ -685,7 +683,6 @@ void BuildHouseList (void)
 		}
 		DoDirSearch();							// now, search folders for the rest
 	}
-#endif
 }
 
 //--------------------------------------------------------------  AddExtraHouse
