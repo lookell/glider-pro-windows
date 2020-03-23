@@ -373,9 +373,7 @@ void GenerateLinksList (void)
 #ifndef COMPILEDEMO
 void SortRoomsObjects (SInt16 which)
 {
-	return;
-#if 0
-	short		probe, probe2, room, obj;
+	SInt16		probe, probe2, room, obj;
 	Boolean		busy, looking;
 
 	busy = true;
@@ -383,17 +381,17 @@ void SortRoomsObjects (SInt16 which)
 
 	do
 	{
-		if ((*thisHouse)->rooms[which].objects[probe].what == kObjectIsEmpty)
+		if (thisHouse->rooms[which].objects[probe].what == kObjectIsEmpty)
 		{
 			looking = true;
 			probe2 = probe + 1;			// begin by looking at the next object
 			do
 			{
-				if ((*thisHouse)->rooms[which].objects[probe2].what != kObjectIsEmpty)
+				if (thisHouse->rooms[which].objects[probe2].what != kObjectIsEmpty)
 				{
-					(*thisHouse)->rooms[which].objects[probe] =
-							(*thisHouse)->rooms[which].objects[probe2];
-					(*thisHouse)->rooms[which].objects[probe2].what = kObjectIsEmpty;
+					thisHouse->rooms[which].objects[probe] =
+							thisHouse->rooms[which].objects[probe2];
+					thisHouse->rooms[which].objects[probe2].what = kObjectIsEmpty;
 					if (srcLocations[probe2] != -1)
 						linksList[srcLocations[probe2]].srcObj = probe;
 					if (destLocations[probe2] != -1)
@@ -401,7 +399,7 @@ void SortRoomsObjects (SInt16 which)
 						linksList[destLocations[probe2]].destObj = probe;
 						room = linksList[destLocations[probe2]].srcRoom;
 						obj = linksList[destLocations[probe2]].srcObj;
-						(*thisHouse)->rooms[room].objects[obj].data.e.who = probe;
+						thisHouse->rooms[room].objects[obj].data.e.who = probe;
 					}
 					fileDirty = true;
 					looking = false;
@@ -420,7 +418,6 @@ void SortRoomsObjects (SInt16 which)
 			busy = false;
 	}
 	while (busy);
-#endif
 }
 #endif
 
