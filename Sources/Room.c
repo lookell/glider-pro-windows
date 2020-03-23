@@ -551,12 +551,9 @@ void SelectNeighborRoom (SInt16 whichNeighbor)
 
 SInt16 GetNeighborRoomNumber (SInt16 which)
 {
-	return kRoomIsEmpty;
-#if 0
-	short		hDelta, vDelta, i;
-	short		roomH, roomV;
-	short		roomNum;
-	char		wasState;
+	SInt16		hDelta, vDelta, i;
+	SInt16		roomH, roomV;
+	SInt16		roomNum;
 
 	switch (which)
 	{
@@ -607,24 +604,20 @@ SInt16 GetNeighborRoomNumber (SInt16 which)
 	}
 
 	roomNum = kRoomIsEmpty;
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	roomH = (*thisHouse)->rooms[thisRoomNumber].suite + hDelta;
-	roomV = (*thisHouse)->rooms[thisRoomNumber].floor + vDelta;
+	roomH = thisHouse->rooms[thisRoomNumber].suite + hDelta;
+	roomV = thisHouse->rooms[thisRoomNumber].floor + vDelta;
 
 	for (i = 0; i < numberRooms; i++)
 	{
-		if (((*thisHouse)->rooms[i].suite == roomH) &&
-				((*thisHouse)->rooms[i].floor == roomV))
+		if ((thisHouse->rooms[i].suite == roomH) &&
+				(thisHouse->rooms[i].floor == roomV))
 		{
 			roomNum = i;
 			break;
 		}
 	}
-	HSetState((Handle)thisHouse, wasState);
 
 	return (roomNum);
-#endif
 }
 
 //--------------------------------------------------------------  SetToNearestNeighborRoom
