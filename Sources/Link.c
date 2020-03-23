@@ -281,10 +281,7 @@ void CloseLinkWindow (void)
 #ifndef COMPILEDEMO
 void DoLink (void)
 {
-	return;
-#if 0
-	short		floor, suite;
-	char		wasState;
+	SInt16		floor, suite;
 
 	if (GetRoomFloorSuite(thisRoomNumber, &floor, &suite))
 	{
@@ -308,29 +305,25 @@ void DoLink (void)
 		}
 		else
 		{
-			wasState = HGetState((Handle)thisHouse);
-			HLock((Handle)thisHouse);
 			if (linkerIsSwitch)
 			{
-				(*thisHouse)->rooms[linkRoom].objects[linkObject].data.e.where =
+				thisHouse->rooms[linkRoom].objects[linkObject].data.e.where =
 						MergeFloorSuite(floor, suite);
-				(*thisHouse)->rooms[linkRoom].objects[linkObject].data.e.who =
+				thisHouse->rooms[linkRoom].objects[linkObject].data.e.who =
 						objActive;
 			}
 			else	// linker is transport
 			{
-				(*thisHouse)->rooms[linkRoom].objects[linkObject].data.d.where =
+				thisHouse->rooms[linkRoom].objects[linkObject].data.d.where =
 						MergeFloorSuite(floor, suite);
-				(*thisHouse)->rooms[linkRoom].objects[linkObject].data.d.who =
+				thisHouse->rooms[linkRoom].objects[linkObject].data.d.who =
 						objActive;
 			}
-			HSetState((Handle)thisHouse, wasState);
 		}
 		fileDirty = true;
 		UpdateMenus(false);
 		CloseLinkWindow();
 	}
-#endif
 }
 #endif
 
