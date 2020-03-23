@@ -11,6 +11,7 @@
 //#include <Sound.h>
 //#include <TextUtils.h>
 //#include <ToolUtils.h>
+#include <stdlib.h>
 #include "Macintosh.h"
 #include "Externs.h"
 #include "Utilities.h"
@@ -150,7 +151,7 @@ UInt32 RandomLongQUS (void)
 
 void RedAlert (SInt16 errorNumber)
 {
-	return;
+	exit(EXIT_FAILURE);
 #if 0
 	#define			rDeathAlertID	170		// alert res. ID for death error
 	#define			rErrTitleID		170		// string ID for death error title
