@@ -309,8 +309,6 @@ void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 
 void TransportRoomToRoom (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	Boolean		sameRoom;
 
 	SetMusicalMode(kKickGameScoreMode);
@@ -342,7 +340,6 @@ void TransportRoomToRoom (gliderPtr thisGlider)
 		GoToBeginningOfMovie(theMovie);
 		StartMovie(theMovie);
 	}
-#endif
 #endif
 }
 
