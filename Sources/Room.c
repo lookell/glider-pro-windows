@@ -712,29 +712,22 @@ Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite)
 
 SInt16 GetRoomNumber (SInt16 floor, SInt16 suite)
 {
-	return kRoomIsEmpty;
-#if 0
 	// pass in a floor and suite; returns the room index into the house file
-	short		roomNum, i;
-	char		wasState;
+	SInt16		roomNum, i;
 
 	roomNum = kRoomIsEmpty;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
 	for (i = 0; i < numberRooms; i++)
 	{
-		if (((*thisHouse)->rooms[i].suite == suite) &&
-				((*thisHouse)->rooms[i].floor == floor))
+		if ((thisHouse->rooms[i].suite == suite) &&
+				(thisHouse->rooms[i].floor == floor))
 		{
 			roomNum = i;
 			break;
 		}
 	}
-	HSetState((Handle)thisHouse, wasState);
 
 	return (roomNum);
-#endif
 }
 
 //--------------------------------------------------------------  IsRoomAStructure
