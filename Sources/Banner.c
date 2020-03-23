@@ -92,7 +92,7 @@ void DrawBanner (Point *topLeft)
 
 SInt16 CountStarsInHouse (void)
 {
-	short		i, h, numRooms, numStars;
+	SInt16		i, h, numRooms, numStars;
 
 	numStars = 0;
 

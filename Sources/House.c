@@ -176,7 +176,7 @@ Boolean InitializeEmptyHouse (void)
 
 SInt16 RealRoomNumberCount (void)
 {
-	short		realRoomCount, i;
+	SInt16		realRoomCount, i;
 
 	realRoomCount = thisHouse->nRooms;
 	if (realRoomCount != 0)
@@ -198,7 +198,7 @@ SInt16 RealRoomNumberCount (void)
 
 SInt16 GetFirstRoomNumber (void)
 {
-	short		firstRoom;
+	SInt16		firstRoom;
 
 	if (thisHouse->nRooms <= 0)
 	{
@@ -254,25 +254,17 @@ Boolean HouseHasOriginalPicts (void)
 
 SInt16 CountHouseLinks (void)
 {
-	return 0;
-#if 0
-	houseType	*thisHousePtr;
-	short		numRooms, numLinks;
-	short		r, i, what;
-	char		wasState;
+	SInt16		numRooms, numLinks;
+	SInt16		r, i, what;
 
 	numLinks = 0;
-
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
-	numRooms = thisHousePtr->nRooms;
+	numRooms = thisHouse->nRooms;
 
 	for (r = 0; r < numRooms; r++)
 	{
 		for (i = 0; i < kMaxRoomObs; i++)
 		{
-			what = thisHousePtr->rooms[r].objects[i].what;
+			what = thisHouse->rooms[r].objects[i].what;
 			switch (what)
 			{
 				case kLightSwitch:
@@ -283,7 +275,7 @@ SInt16 CountHouseLinks (void)
 				case kInvisSwitch:
 				case kTrigger:
 				case kLgTrigger:
-				if (thisHousePtr->rooms[r].objects[i].data.e.where != -1)
+				if (thisHouse->rooms[r].objects[i].data.e.where != -1)
 					numLinks++;
 				break;
 
@@ -293,17 +285,14 @@ SInt16 CountHouseLinks (void)
 				case kCeilingTrans:
 				case kInvisTrans:
 				case kDeluxeTrans:
-				if (thisHousePtr->rooms[r].objects[i].data.d.where != -1)
+				if (thisHouse->rooms[r].objects[i].data.d.where != -1)
 					numLinks++;
 				break;
 			}
 		}
 	}
 
-	HSetState((Handle)thisHouse, wasState);
-
 	return (numLinks);
-#endif
 }
 
 //--------------------------------------------------------------  GenerateLinksList
