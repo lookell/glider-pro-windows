@@ -631,17 +631,17 @@ pascal Boolean GoToFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 // "Go To Room..." dialog.
 
- void DoGoToDialog (void)
- {
-	 return;
+void DoGoToDialog (void)
+{
+	return;
 #if 0
- 	#define			kGoToFirstButt		2
- 	#define			kGoToPrevButt		3
- 	#define			kGoToFSButt			4
- 	#define			kFloorEditText		5
- 	#define			kSuiteEditText		6
- 	DialogPtr		theDialog;
- 	long			tempLong;
+	#define			kGoToFirstButt		2
+	#define			kGoToPrevButt		3
+	#define			kGoToFSButt			4
+	#define			kFloorEditText		5
+	#define			kSuiteEditText		6
+	DialogPtr		theDialog;
+	long			tempLong;
 	short			item, roomToGoTo;
 	Boolean			leaving, canceled;
 	ModalFilterUPP	goToFilterUPP;

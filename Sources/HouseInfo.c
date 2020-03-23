@@ -51,25 +51,19 @@ extern	Boolean		phoneBitSet;
 
 SInt32 CountTotalHousePoints (void)
 {
-	return 0;
-#if 0
-	long		pointTotal;
-	short		numRooms, h, i;
-	char		wasState;
+	SInt32		pointTotal;
+	SInt16		numRooms, h, i;
 
-	pointTotal = (long)RealRoomNumberCount() * (long)kRoomVisitScore;
+	pointTotal = (SInt32)RealRoomNumberCount() * (SInt32)kRoomVisitScore;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-
-	numRooms = (*thisHouse)->nRooms;
+	numRooms = thisHouse->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if ((*thisHouse)->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
 		{
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				switch ((*thisHouse)->rooms[i].objects[h].what)
+				switch (thisHouse->rooms[i].objects[h].what)
 				{
 					case kRedClock:
 					pointTotal += kRedClockPoints;
@@ -92,7 +86,7 @@ SInt32 CountTotalHousePoints (void)
 					break;
 
 					case kInvisBonus:
-					pointTotal += (*thisHouse)->rooms[i].objects[h].data.c.points;
+					pointTotal += thisHouse->rooms[i].objects[h].data.c.points;
 					break;
 
 					default:
@@ -102,10 +96,7 @@ SInt32 CountTotalHousePoints (void)
 		}
 	}
 
-	HSetState((Handle)thisHouse, wasState);
-
 	return (pointTotal);
-#endif
 }
 
 //--------------------------------------------------------------  UpdateHouseInfoDialog
