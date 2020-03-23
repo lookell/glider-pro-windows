@@ -176,26 +176,19 @@ Boolean InitializeEmptyHouse (void)
 
 SInt16 RealRoomNumberCount (void)
 {
-	return 0;
-#if 0
 	short		realRoomCount, i;
-	char		wasState;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	realRoomCount = (*thisHouse)->nRooms;
+	realRoomCount = thisHouse->nRooms;
 	if (realRoomCount != 0)
 	{
-		for (i = 0; i < (*thisHouse)->nRooms; i++)
+		for (i = 0; i < thisHouse->nRooms; i++)
 		{
-			if ((*thisHouse)->rooms[i].suite == kRoomIsEmpty)
+			if (thisHouse->rooms[i].suite == kRoomIsEmpty)
 				realRoomCount--;
 		}
 	}
-	HSetState((Handle)thisHouse, wasState);
 
 	return (realRoomCount);
-#endif
 }
 
 //--------------------------------------------------------------  GetFirstRoomNumber
