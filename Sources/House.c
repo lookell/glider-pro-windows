@@ -222,23 +222,15 @@ SInt16 GetFirstRoomNumber (void)
 
 void WhereDoesGliderBegin (Rect *theRect, SInt16 mode)
 {
-	return;
-#if 0
 	Point		initialPt;
-	char		wasState;
-
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
 
 	if (mode == kResumeGameMode)
 		initialPt = smallGame.where;
 	else if (mode == kNewGameMode)
-		initialPt = (*thisHouse)->initial;
+		initialPt = thisHouse->initial;
 
-	HSetState((Handle)thisHouse, wasState);
 	QSetRect(theRect, 0, 0, kGliderWide, kGliderHigh);
 	QOffsetRect(theRect, initialPt.h, initialPt.v);
-#endif
 }
 
 //--------------------------------------------------------------  HouseHasOriginalPicts
