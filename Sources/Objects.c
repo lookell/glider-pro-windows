@@ -291,17 +291,11 @@ void ListOneRoomsObjects (SInt16 where)
 
 void ListAllLocalObjects (void)
 {
-	return;
-#if 0
-	short		i, n;
-	char		wasState;
+	SInt16		i, n;
 
 	numMasterObjects = 0;
 	numLocalMasterObjects = 0;
 	nHotSpots = 0;
-
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
 
 	ListOneRoomsObjects(kCentralRoom);
 
@@ -321,8 +315,6 @@ void ListAllLocalObjects (void)
 		ListOneRoomsObjects(kNorthWestRoom);
 	}
 
-	HSetState((Handle)thisHouse, wasState);
-
 	for (i = 0; i < numMasterObjects; i++)				// correlate links with…
 	{													// index into this list
 		if ((masterObjects[i].roomLink != -1) && 		// if object has a link
@@ -338,7 +330,6 @@ void ListAllLocalObjects (void)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  AddTempManholeRect
