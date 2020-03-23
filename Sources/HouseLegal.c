@@ -42,12 +42,9 @@ extern	SInt16		numberRooms;
 
 Boolean KeepObjectLegal (void)
 {
-	return true;
-#if 0
 	objectType	*theObject;
 	Rect		bounds, roomRect;
-	short		direction, dist;
-	char		wasState;
+	SInt16		direction, dist;
 	Boolean		unchanged;
 
 	unchanged = true;
@@ -57,17 +54,14 @@ Boolean KeepObjectLegal (void)
 
 	if (objActive == kInitialGliderSelected)
 	{
-		wasState = HGetState((Handle)thisHouse);
-		HLock((Handle)thisHouse);
-		if ((*thisHouse)->initial.h < 0)
-			(*thisHouse)->initial.h = 0;
-		if ((*thisHouse)->initial.v < 0)
-			(*thisHouse)->initial.v = 0;
-		if ((*thisHouse)->initial.h > (kRoomWide - kGliderWide))
-			(*thisHouse)->initial.h = kRoomWide - kGliderWide;
-		if ((*thisHouse)->initial.v > (kTileHigh - kGliderHigh))
-			(*thisHouse)->initial.v = kTileHigh - kGliderHigh;
-		HSetState((Handle)thisHouse, wasState);
+		if (thisHouse->initial.h < 0)
+			thisHouse->initial.h = 0;
+		if (thisHouse->initial.v < 0)
+			thisHouse->initial.v = 0;
+		if (thisHouse->initial.h > (kRoomWide - kGliderWide))
+			thisHouse->initial.h = kRoomWide - kGliderWide;
+		if (thisHouse->initial.v > (kTileHigh - kGliderHigh))
+			thisHouse->initial.v = kTileHigh - kGliderHigh;
 		return (true);
 	}
 
@@ -597,7 +591,6 @@ Boolean KeepObjectLegal (void)
 #endif
 
 	return (unchanged);
-#endif
 }
 
 //--------------------------------------------------------------  WrapBannerAndTrailer
