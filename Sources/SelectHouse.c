@@ -689,13 +689,10 @@ void BuildHouseList (void)
 
 void AddExtraHouse (FSSpec *newHouse)
 {
-	return;
-#if 0
 	if (numExtraHouses >= kMaxExtraHouses)
 		return;
 
 	extraHouseSpecs[numExtraHouses] = *newHouse;
 	numExtraHouses++;
-#endif
 }
 
