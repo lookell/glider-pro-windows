@@ -808,10 +808,8 @@ void KillNailOffscreen (void)
 
 void MoveRoom (Point wherePt)
 {
-	return;
-#if 0
-	short		localH, localV;
-	short		roomH, roomV, itsNumber;
+	SInt16		localH, localV;
+	SInt16		roomH, roomV, itsNumber;
 
 	localH = wherePt.h / kMapRoomWidth;
 	localV = wherePt.v / kMapRoomHeight;
@@ -834,6 +832,5 @@ void MoveRoom (Point wherePt)
 		UpdateMenus(false);
 		RedrawMapContents();
 	}
-#endif
 }
 
