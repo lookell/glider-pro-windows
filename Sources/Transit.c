@@ -146,8 +146,6 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 
 void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 {
-	return;
-#if 0
 	Rect		enterRect;
 
 	HandleRoomVisitation();
@@ -171,7 +169,7 @@ void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 			OffsetGlider(&theGlider2, kToLeft);
 			QSetRect(&enterRect, 0, 0, 48, 20);
 			QOffsetRect(&enterRect, 0,
-					kGliderStartsDown + (short)thisRoom->leftStart - 2);
+					kGliderStartsDown + (SInt16)thisRoom->leftStart - 2);
 			theGlider.enteredRect = enterRect;
 			theGlider2.enteredRect = enterRect;
 		}
@@ -180,7 +178,7 @@ void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 			OffsetGlider(thisGlider, kToLeft);
 			QSetRect(&enterRect, 0, 0, 48, 20);
 			QOffsetRect(&enterRect, 0,
-					kGliderStartsDown + (short)thisRoom->leftStart - 2);
+					kGliderStartsDown + (SInt16)thisRoom->leftStart - 2);
 			thisGlider->enteredRect = enterRect;
 		}
 		break;
@@ -203,7 +201,7 @@ void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 			OffsetGlider(&theGlider2, kToRight);
 			QSetRect(&enterRect, 0, 0, 48, 20);
 			QOffsetRect(&enterRect, kRoomWide - 48,
-					kGliderStartsDown + (short)thisRoom->rightStart - 2);
+					kGliderStartsDown + (SInt16)thisRoom->rightStart - 2);
 			theGlider.enteredRect = enterRect;
 			theGlider2.enteredRect = enterRect;
 		}
@@ -212,7 +210,7 @@ void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 			OffsetGlider(thisGlider, kToRight);
 			QSetRect(&enterRect, 0, 0, 48, 20);
 			QOffsetRect(&enterRect, kRoomWide - 48,
-					kGliderStartsDown + (short)thisRoom->rightStart - 2);
+					kGliderStartsDown + (SInt16)thisRoom->rightStart - 2);
 			thisGlider->enteredRect = enterRect;
 		}
 		break;
@@ -304,7 +302,6 @@ void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 		GoToBeginningOfMovie(theMovie);
 		StartMovie(theMovie);
 	}
-#endif
 #endif
 }
 
