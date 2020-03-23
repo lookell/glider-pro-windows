@@ -39,9 +39,8 @@ void ToggleMacPlus (SInt16 index)
 
 void ToggleTV (SInt16 index)
 {
-	return;
-#if 0
 	dinahs[index].active = !dinahs[index].active;
+#ifdef COMPILEQT
 	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) && (tvWithMovieNumber == index))
 	{
 		if (dinahs[index].active)
@@ -56,8 +55,8 @@ void ToggleTV (SInt16 index)
 			tvOn = false;
 		}
 	}
-	dinahs[index].timer = 4;
 #endif
+	dinahs[index].timer = 4;
 }
 
 //--------------------------------------------------------------  ToggleCoffee
