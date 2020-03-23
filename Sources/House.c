@@ -198,28 +198,21 @@ SInt16 RealRoomNumberCount (void)
 
 SInt16 GetFirstRoomNumber (void)
 {
-	return -1;
-#if 0
 	short		firstRoom;
-	char		wasState;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	if ((*thisHouse)->nRooms <= 0)
+	if (thisHouse->nRooms <= 0)
 	{
 		firstRoom = -1;
 		noRoomAtAll = true;
 	}
 	else
 	{
-		firstRoom = (*thisHouse)->firstRoom;
-		if ((firstRoom >= (*thisHouse)->nRooms) || (firstRoom < 0))
+		firstRoom = thisHouse->firstRoom;
+		if ((firstRoom >= thisHouse->nRooms) || (firstRoom < 0))
 			firstRoom = 0;
 	}
-	HSetState((Handle)thisHouse, wasState);
 
 	return (firstRoom);
-#endif
 }
 
 //--------------------------------------------------------------  WhereDoesGliderBegin
