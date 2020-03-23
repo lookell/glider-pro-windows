@@ -872,29 +872,20 @@ void CountUntitledRooms (void)
 
 void CheckRoomNameLength (void)
 {
-	return;
-#if 0
-	short		i, numRooms;
-	char		wasState;
+	SInt16		i, numRooms;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-
-	numRooms = (*thisHouse)->nRooms;
+	numRooms = thisHouse->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		(*thisHouse)->rooms[i].unusedByte = 0;
+		thisHouse->rooms[i].unusedByte = 0;
 
-		if (((*thisHouse)->rooms[i].suite != kRoomIsEmpty) &&
-				((*thisHouse)->rooms[i].name[0] > 27))
+		if ((thisHouse->rooms[i].suite != kRoomIsEmpty) &&
+				(thisHouse->rooms[i].name[0] > 27))
 		{
-			(*thisHouse)->rooms[i].name[0] = 27;
+			thisHouse->rooms[i].name[0] = 27;
 			houseErrors++;
 		}
 	}
-
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 
 //--------------------------------------------------------------  MakeSureNumObjectsJives
