@@ -389,12 +389,8 @@ void ForceThisRoom (SInt16 roomNumber)
 
 Boolean RoomExists (SInt16 suite, SInt16 floor, SInt16 *roomNum)
 {
-	return false;
-#if 0
 	// pass in a suite and floor; returns true is it is a legitimate room
-	houseType	*thisHousePtr;
-	short		i;
-	char		wasState;
+	SInt16		i;
 	Boolean		foundIt;
 
 	foundIt = false;
@@ -402,14 +398,10 @@ Boolean RoomExists (SInt16 suite, SInt16 floor, SInt16 *roomNum)
 	if (suite < 0)
 		return (foundIt);
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
-
 	for (i = 0; i < numberRooms; i++)
 	{
-		if ((thisHousePtr->rooms[i].floor == floor) &&
-				(thisHousePtr->rooms[i].suite == suite))
+		if ((thisHouse->rooms[i].floor == floor) &&
+				(thisHouse->rooms[i].suite == suite))
 		{
 			foundIt = true;
 			*roomNum = i;
@@ -417,10 +409,7 @@ Boolean RoomExists (SInt16 suite, SInt16 floor, SInt16 *roomNum)
 		}
 	}
 
-	HSetState((Handle)thisHouse, wasState);
-
 	return (foundIt);
-#endif
 }
 
 //--------------------------------------------------------------  RoomNumExists
