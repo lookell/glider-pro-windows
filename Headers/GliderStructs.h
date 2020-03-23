@@ -140,28 +140,28 @@ typedef struct
 	Byte		unusedByte;					// 1
 	Boolean		visited;					// 1
 	objectType	objects[kMaxRoomObs];		// 24 * 12
-} savedRoom, *saveRoomPtr;					// total = 292
+} savedRoom, *savedRoomPtr;					// total = 292
 
 typedef struct
 {
-	FSSpec		house;						// 70
-	SInt16		version;					// 2
-	SInt16		wasStarsLeft;				// 2
-	SInt32		timeStamp;					// 4
-	Point		where;						// 4
-	SInt32		score;						// 4
-	SInt32		unusedLong;					// 4
-	SInt32		unusedLong2;				// 4
-	SInt16		energy;						// 2
-	SInt16		bands;						// 2
-	SInt16		roomNumber;					// 2
-	SInt16		gliderState;				// 2
-	SInt16		numGliders;					// 2
-	SInt16		foil;						// 2
-	SInt16		nRooms;						// 2
-	Boolean		facing;						// 1
-	Boolean		showFoil;					// 1
-	savedRoom	savedData[];				// 4
+	FSSpec			house;					// 70
+	SInt16			version;				// 2
+	SInt16			wasStarsLeft;			// 2
+	SInt32			timeStamp;				// 4
+	Point			where;					// 4
+	SInt32			score;					// 4
+	SInt32			unusedLong;				// 4
+	SInt32			unusedLong2;			// 4
+	SInt16			energy;					// 2
+	SInt16			bands;					// 2
+	SInt16			roomNumber;				// 2
+	SInt16			gliderState;			// 2
+	SInt16			numGliders;				// 2
+	SInt16			foil;					// 2
+	SInt16			nRooms;					// 2
+	Boolean			facing;					// 1
+	Boolean			showFoil;				// 1
+	savedRoomPtr	savedData;				// 4
 } game2Type, *gamePtr;						// total = 114
 
 typedef struct
@@ -195,7 +195,7 @@ typedef struct
 	Boolean		unusedBoolean;				// 1
 	SInt16		firstRoom;					// 2
 	SInt16		nRooms;						// 2
-	roomType	rooms[];					// 348 * nRooms
+	roomPtr		rooms;						// 348 * nRooms
 } houseType, *housePtr, **houseHand;		// total = 866 +
 
 typedef struct
