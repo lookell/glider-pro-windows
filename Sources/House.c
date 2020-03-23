@@ -305,26 +305,18 @@ SInt16 CountHouseLinks (void)
 #ifndef COMPILEDEMO
 void GenerateLinksList (void)
 {
-	return;
-#if 0
-	houseType	*thisHousePtr;
 	objectType	thisObject;
-	short		numLinks, numRooms, r, i, what;
-	short		floor, suite, roomLinked, objectLinked;
-	char		wasState;
+	SInt16		numLinks, numRooms, r, i, what;
+	SInt16		floor, suite, roomLinked, objectLinked;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
-	numRooms = thisHousePtr->nRooms;
-
+	numRooms = thisHouse->nRooms;
 	numLinks = 0;
 
 	for (r = 0; r < numRooms; r++)
 	{
 		for (i = 0; i < kMaxRoomObs; i++)
 		{
-			what = thisHousePtr->rooms[r].objects[i].what;
+			what = thisHouse->rooms[r].objects[i].what;
 			switch (what)
 			{
 				case kLightSwitch:
@@ -335,7 +327,7 @@ void GenerateLinksList (void)
 				case kInvisSwitch:
 				case kTrigger:
 				case kLgTrigger:
-				thisObject = thisHousePtr->rooms[r].objects[i];
+				thisObject = thisHouse->rooms[r].objects[i];
 				if (thisObject.data.e.where != -1)
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
@@ -355,7 +347,7 @@ void GenerateLinksList (void)
 				case kCeilingTrans:
 				case kInvisTrans:
 				case kDeluxeTrans:
-				thisObject = thisHousePtr->rooms[r].objects[i];
+				thisObject = thisHouse->rooms[r].objects[i];
 				if (thisObject.data.d.where != -1)
 				{
 					ExtractFloorSuite(thisObject.data.d.where, &floor, &suite);
@@ -371,9 +363,6 @@ void GenerateLinksList (void)
 			}
 		}
 	}
-
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 #endif
 
