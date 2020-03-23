@@ -691,16 +691,11 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 
 Boolean GetObjectState (SInt16 room, SInt16 object)
 {
-	return false;
-#if 0
-	char		wasState;
 	Boolean		theState;
 
 	theState = true;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	switch ((*thisHouse)->rooms[room].objects[object].what)
+	switch (thisHouse->rooms[room].objects[object].what)
 	{
 		case kFloorVent:
 		case kCeilingVent:
@@ -713,7 +708,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kGrecoVent:
 		case kSewerBlower:
 		case kLiftArea:
-		theState = (*thisHouse)->rooms[room].objects[object].data.a.state;
+		theState = thisHouse->rooms[room].objects[object].data.a.state;
 		break;
 
 		case kTaper:
@@ -754,7 +749,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kStar:
 		case kSparkle:
 		case kHelium:
-		theState = (*thisHouse)->rooms[room].objects[object].data.c.state;
+		theState = thisHouse->rooms[room].objects[object].data.c.state;
 		break;
 
 		case kSlider:
@@ -778,7 +773,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		break;
 
 		case kDeluxeTrans:
-		theState = (*thisHouse)->rooms[room].objects[object].data.d.wide & 0x0F;
+		theState = thisHouse->rooms[room].objects[object].data.d.wide & 0x0F;
 		break;
 
 		case kLightSwitch:
@@ -799,7 +794,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kFlourescent:
 		case kTrackLight:
 		case kInvisLight:
-		theState = (*thisHouse)->rooms[room].objects[object].data.f.state;
+		theState = thisHouse->rooms[room].objects[object].data.f.state;
 		break;
 
 		case kStereo:
@@ -815,7 +810,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kOutlet:
 		case kVCR:
 		case kMicrowave:
-		theState = (*thisHouse)->rooms[room].objects[object].data.g.state;
+		theState = thisHouse->rooms[room].objects[object].data.g.state;
 		break;
 
 		case kCinderBlock:
@@ -832,7 +827,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kBall:
 		case kDrip:
 		case kFish:
-		theState = (*thisHouse)->rooms[room].objects[object].data.h.state;
+		theState = thisHouse->rooms[room].objects[object].data.h.state;
 		break;
 
 		case kCobweb:
@@ -856,10 +851,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		break;
 	}
 
-	HSetState((Handle)thisHouse, wasState);
-
 	return (theState);
-#endif
 }
 
 //--------------------------------------------------------------  SendObjectToBack
