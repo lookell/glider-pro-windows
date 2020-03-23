@@ -49,7 +49,7 @@ extern	objDataPtr	masterObjects;
 extern	Rect		workSrcRect;
 extern	Rect		backSrcRect;
 extern	Rect		mainWindowRect, houseRect;
-extern	houseHand	thisHouse;
+extern	housePtr	thisHouse;
 extern	roomPtr		thisRoom;
 extern	WindowPtr	mainWindow, coordWindow;
 extern	SInt32		theScore;

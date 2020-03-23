@@ -23,7 +23,7 @@ void UpdateGoToDialog (DialogPtr);
 pascal Boolean GoToFilter (DialogPtr, EventRecord *, SInt16 *);
 
 
-houseHand	thisHouse;
+housePtr	thisHouse;
 linksPtr	linksList;
 Str32		thisHouseName;
 SInt16		srcLocations[kMaxRoomObs];
