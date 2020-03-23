@@ -99,10 +99,7 @@ void HandleTriggers (void)
 
 void FireTrigger (SInt16 index)
 {
-	return;
-#if 0
-	short		triggerIs, triggeredIs;
-	char		wasState;
+	SInt16		triggerIs, triggeredIs;
 
 	triggerIs = triggers[index].index;
 
@@ -175,10 +172,8 @@ void FireTrigger (SInt16 index)
 	}
 	else
 	{
-		wasState = HGetState((Handle)thisHouse);
-		HLock((Handle)thisHouse);
 		triggeredIs = masterObjects[triggerIs].localLink;
-		switch ((*thisHouse)->rooms[triggers[index].room].
+		switch (thisHouse->rooms[triggers[index].room].
 				objects[triggers[index].object].what)
 		{
 			case kGreaseRt:
@@ -191,9 +186,7 @@ void FireTrigger (SInt16 index)
 			}
 			break;
 		}
-		HSetState((Handle)thisHouse, wasState);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  ZeroTriggers
