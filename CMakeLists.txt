@@ -19,9 +19,11 @@ target_sources(
   # resources
   Resources/gliderpro.manifest
   # added headers
+  Headers/ByteIO.h
   Headers/Macintosh.h
   Headers/WinAPI.h
   # added sources
+  Sources/ByteIO.c
   Sources/Macintosh.c
   # original headers
   Headers/About.h
