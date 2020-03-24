@@ -78,3 +78,91 @@ void byteio_close(byteio *stream)
 	if (stream != NULL)
 		stream->fn_close(stream);
 }
+
+//--------------------------------------------------------------
+
+int byteio_read_be_u8(byteio *stream, uint8_t *num)
+{
+	unsigned char buf[sizeof(*num)];
+	if (num == NULL || byteio_read(stream, buf, sizeof(buf)) == 0)
+		return 0;
+	*num = (uint8_t)buf[0];
+	return 1;
+}
+
+int byteio_read_le_u8(byteio *stream, uint8_t *num)
+{
+	unsigned char buf[sizeof(*num)];
+	if (num == NULL || byteio_read(stream, buf, sizeof(buf)) == 0)
+		return 0;
+	*num = (uint8_t)buf[0];
+	return 1;
+}
+
+int byteio_read_be_i8(byteio *stream, int8_t *num)
+{
+	return byteio_read_be_u8(stream, (uint8_t *)num);
+}
+
+int byteio_read_le_i8(byteio *stream, int8_t *num)
+{
+	return byteio_read_le_u8(stream, (uint8_t *)num);
+}
+
+int byteio_read_be_u16(byteio *stream, uint16_t *num)
+{
+	unsigned char buf[sizeof(*num)];
+	if (num == NULL || byteio_read(stream, buf, sizeof(buf)) == 0)
+		return 0;
+	*num = ((uint16_t)buf[0] << 8) | (uint16_t)buf[1];
+	return 1;
+}
+
+int byteio_read_le_u16(byteio *stream, uint16_t *num)
+{
+	unsigned char buf[sizeof(*num)];
+	if (num == NULL || byteio_read(stream, buf, sizeof(buf)) == 0)
+		return 0;
+	*num = (uint16_t)buf[0] | ((uint16_t)buf[1] << 8);
+	return 1;
+}
+
+int byteio_read_be_i16(byteio *stream, int16_t *num)
+{
+	return byteio_read_be_u16(stream, (uint16_t *)num);
+}
+
+int byteio_read_le_i16(byteio *stream, int16_t *num)
+{
+	return byteio_read_le_u16(stream, (uint16_t *)num);
+}
+
+int byteio_read_be_u32(byteio *stream, uint32_t *num)
+{
+	unsigned char buf[sizeof(*num)];
+	if (num == NULL || byteio_read(stream, buf, sizeof(buf)) == 0)
+		return 0;
+	*num = ((uint32_t)buf[0] << 24) | ((uint32_t)buf[1] << 16) |
+			((uint32_t)buf[2] << 8) | (uint32_t)buf[3];
+	return 1;
+}
+
+int byteio_read_le_u32(byteio *stream, uint32_t *num)
+{
+	unsigned char buf[sizeof(*num)];
+	if (num == NULL || byteio_read(stream, buf, sizeof(buf)) == 0)
+		return 0;
+	*num = (uint32_t)buf[0] | ((uint32_t)buf[1] << 8) |
+			((uint32_t)buf[2] << 16) | ((uint32_t)buf[3] << 24);
+	return 1;
+}
+
+int byteio_read_be_i32(byteio *stream, int32_t *num)
+{
+	return byteio_read_be_u32(stream, (uint32_t *)num);
+}
+
+int byteio_read_le_i32(byteio *stream, int32_t *num)
+{
+	return byteio_read_le_u32(stream, (uint32_t *)num);
+}
