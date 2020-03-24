@@ -472,3 +472,55 @@ int byteio_init_memory_reader(byteio *stream, const void *buffer, size_t size)
 		return 0;
 	return 1;
 }
+
+//--------------------------------------------------------------
+
+static memory_writer *memory_writer_init(void *buffer, size_t size)
+{
+	memory_writer *self = malloc(sizeof(*self));
+	if (self == NULL)
+		return NULL;
+	self->size = size;
+	self->pos = 0;
+	self->buffer = buffer;
+	return self;
+}
+
+static int memory_writer_write(byteio *stream, const void *buffer, size_t size)
+{
+	memory_writer *self = stream->priv;
+	unsigned char *inptr;
+	if (self == NULL || self->buffer == NULL || buffer == NULL)
+		return 0;
+	if (self->pos >= self->size)
+		return 0;
+	if (self->size - self->pos < size)
+	{
+		self->pos = self->size;
+		return 0;
+	}
+	inptr = self->buffer;
+	memcpy(&inptr[self->pos], buffer, size);
+	self->pos += size;
+	return 1;
+}
+
+static int memory_writer_close(byteio *stream)
+{
+	free(stream->priv);
+	stream->priv = NULL;
+	return 1;
+}
+
+int byteio_init_memory_writer(byteio *stream, void *buffer, size_t size)
+{
+	if (stream == NULL || buffer == NULL)
+		return 0;
+	stream->fn_read = minimal_read;
+	stream->fn_write = memory_writer_write;
+	stream->fn_close = memory_writer_close;
+	stream->priv = memory_writer_init(buffer, size);
+	if (stream->priv == NULL)
+		return 0;
+	return 1;
+}
