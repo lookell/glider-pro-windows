@@ -421,3 +421,54 @@ int byteio_init_handle_writer(byteio *stream, void *hFile)
 		return 0;
 	return 1;
 }
+
+//--------------------------------------------------------------
+
+static memory_reader *memory_reader_init(const void *buffer, size_t size)
+{
+	memory_reader *self = malloc(sizeof(*self));
+	if (self == NULL)
+		return NULL;
+	self->size = size;
+	self->pos = 0;
+	self->buffer = buffer;
+	return self;
+}
+
+static int memory_reader_read(byteio *stream, void *buffer, size_t size)
+{
+	memory_reader *self = stream->priv;
+	if (self == NULL || self->buffer == NULL)
+		return 0;
+	if (self->pos >= self->size)
+		return 0;
+	if (self->size - self->pos < size)
+	{
+		self->pos = self->size;
+		return 0;
+	}
+	if (buffer != NULL)
+		memcpy(buffer, &self->buffer[self->pos], size);
+	self->pos += size;
+	return 1;
+}
+
+static int memory_reader_close(byteio *stream)
+{
+	free(stream->priv);
+	stream->priv = NULL;
+	return 1;
+}
+
+int byteio_init_memory_reader(byteio *stream, const void *buffer, size_t size)
+{
+	if (stream == NULL || buffer == NULL)
+		return 0;
+	stream->fn_read = memory_reader_read;
+	stream->fn_write = minimal_write;
+	stream->fn_close = memory_reader_close;
+	stream->priv = memory_reader_init(buffer, size);
+	if (stream->priv == NULL)
+		return 0;
+	return 1;
+}
