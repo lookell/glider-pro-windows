@@ -49,3 +49,32 @@ typedef struct memory_writer {
 static int memory_writer_init(byteio *stream, void *buffer, size_t size);
 static int memory_writer_write(byteio *stream, const void *buffer, size_t size);
 static int memory_writer_close(byteio *stream);
+
+//--------------------------------------------------------------
+
+int byteio_read(byteio *stream, void *buffer, size_t size)
+{
+	if (stream == NULL || buffer == NULL)
+		return 0;
+	return stream->fn_read(stream, buffer, size);
+}
+
+int byteio_skip(byteio *stream, size_t size)
+{
+	if (stream == NULL)
+		return 0;
+	return stream->fn_read(stream, NULL, size);
+}
+
+int byteio_write(byteio *stream, const void *buffer, size_t size)
+{
+	if (stream == NULL || buffer == NULL)
+		return 0;
+	return stream->fn_write(stream, buffer, size);
+}
+
+void byteio_close(byteio *stream)
+{
+	if (stream != NULL)
+		stream->fn_close(stream);
+}
