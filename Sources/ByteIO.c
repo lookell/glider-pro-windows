@@ -19,7 +19,7 @@ typedef struct handle_reader {
 
 static handle_reader *handle_reader_init(HANDLE hFile);
 static int handle_reader_read(byteio *stream, void *buffer, size_t size);
-static void handle_reader_close(byteio *stream);
+static int handle_reader_close(byteio *stream);
 
 typedef struct handle_writer {
 	HANDLE hFile;
@@ -30,7 +30,7 @@ typedef struct handle_writer {
 
 static handle_writer *handle_writer_init(HANDLE hFile);
 static int handle_writer_write(byteio *stream, const void *buffer, size_t size);
-static void handle_writer_close(byteio *stream);
+static int handle_writer_close(byteio *stream);
 
 typedef struct memory_reader {
 	size_t size;
@@ -75,10 +75,11 @@ int byteio_write(byteio *stream, const void *buffer, size_t size)
 	return stream->fn_write(stream, buffer, size);
 }
 
-void byteio_close(byteio *stream)
+int byteio_close(byteio *stream)
 {
-	if (stream != NULL)
-		stream->fn_close(stream);
+	if (stream == NULL)
+		return 0;
+	return stream->fn_close(stream);
 }
 
 //--------------------------------------------------------------
@@ -317,10 +318,20 @@ static int handle_reader_read(byteio *stream, void *buffer, size_t size)
 	return 1;
 }
 
-static void handle_reader_close(byteio *stream)
+static int handle_reader_close(byteio *stream)
 {
+	LARGE_INTEGER li;
+	BOOL result;
+	handle_reader *self = stream->priv;
+	if (stream->priv == NULL)
+		return 1;
+	li.QuadPart = -((LONGLONG)self->size);
+	result = SetFilePointerEx(self->hFile, li, NULL, FILE_CURRENT);
 	free(stream->priv);
 	stream->priv = NULL;
+	if (result == FALSE)
+		return 0;
+	return 1;
 }
 
 int byteio_init_handle_reader(byteio *stream, void *hFile)
@@ -381,20 +392,21 @@ static int handle_writer_write(byteio *stream, const void *buffer, size_t size)
 	return 1;
 }
 
-static void handle_writer_close(byteio *stream)
+static int handle_writer_close(byteio *stream)
 {
+	BOOL result;
 	handle_writer *self = stream->priv;
 	DWORD numWritten;
 	DWORD numToWrite;
 	if (stream->priv == NULL)
-		return;
+		return 1;
 	numToWrite = sizeof(self->buffer) - self->size;
-	if (!WriteFile(self->hFile, self->buffer, numToWrite, &numWritten, NULL))
-		; // TODO: handle error
-	if (numWritten != numToWrite)
-		; // TODO: handle error
+	result = WriteFile(self->hFile, self->buffer, numToWrite, &numWritten, NULL);
 	free(stream->priv);
 	stream->priv = NULL;
+	if (result == FALSE || numWritten != numToWrite)
+		return 0;
+	return 1;
 }
 
 int byteio_init_handle_writer(byteio *stream, void *hFile)

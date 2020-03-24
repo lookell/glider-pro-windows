@@ -9,7 +9,7 @@
 typedef struct byteio {
 	int (*fn_read)(struct byteio *stream, void *buffer, size_t size);
 	int (*fn_write)(struct byteio *stream, const void *buffer, size_t size);
-	void (*fn_close)(struct byteio *stream);
+	int (*fn_close)(struct byteio *stream);
 	void *priv;
 } byteio;
 
@@ -31,7 +31,7 @@ int byteio_init_memory_writer(byteio *stream, void *buffer, size_t size);
 // Close an initialized `byteio` structure. The `byteio` structure must have
 // been previously initialized by one of the `byteio_init_XXX` functions, and
 // must not have been closed before this call.
-void byteio_close(byteio *stream);
+int byteio_close(byteio *stream);
 
 // Read exactly `size` bytes into the array `buffer`.
 int byteio_read(byteio *stream, void *buffer, size_t size);
