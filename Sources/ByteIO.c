@@ -166,3 +166,85 @@ int byteio_read_le_i32(byteio *stream, int32_t *num)
 {
 	return byteio_read_le_u32(stream, (uint32_t *)num);
 }
+
+//--------------------------------------------------------------
+
+int byteio_write_be_u8(byteio *stream, uint8_t num)
+{
+	unsigned char buf[sizeof(num)];
+	buf[0] = (unsigned char)(num & 0xff);
+	return byteio_write(stream, buf, sizeof(buf));
+}
+
+int byteio_write_le_u8(byteio *stream, uint8_t num)
+{
+	unsigned char buf[sizeof(num)];
+	buf[0] = (unsigned char)(num & 0xff);
+	return byteio_write(stream, buf, sizeof(buf));
+}
+
+int byteio_write_be_i8(byteio *stream, int8_t num)
+{
+	return byteio_write_be_u8(stream, (uint8_t)num);
+}
+
+int byteio_write_le_i8(byteio *stream, int8_t num)
+{
+	return byteio_write_le_u8(stream, (uint8_t)num);
+}
+
+int byteio_write_be_u16(byteio *stream, uint16_t num)
+{
+	unsigned char buf[sizeof(num)];
+	buf[0] = (unsigned char)((num >> 8) & 0xff);
+	buf[1] = (unsigned char)(num & 0xff);
+	return byteio_write(stream, buf, sizeof(buf));
+}
+
+int byteio_write_le_u16(byteio *stream, uint16_t num)
+{
+	unsigned char buf[sizeof(num)];
+	buf[0] = (unsigned char)(num & 0xff);
+	buf[1] = (unsigned char)((num >> 8) & 0xff);
+	return byteio_write(stream, buf, sizeof(buf));
+}
+
+int byteio_write_be_i16(byteio *stream, int16_t num)
+{
+	return byteio_write_be_u16(stream, (uint16_t)num);
+}
+
+int byteio_write_le_i16(byteio *stream, int16_t num)
+{
+	return byteio_write_le_u16(stream, (uint16_t)num);
+}
+
+int byteio_write_be_u32(byteio *stream, uint32_t num)
+{
+	unsigned char buf[sizeof(num)];
+	buf[0] = (unsigned char)((num >> 24) & 0xff);
+	buf[1] = (unsigned char)((num >> 16) & 0xff);
+	buf[2] = (unsigned char)((num >> 8) & 0xff);
+	buf[3] = (unsigned char)(num & 0xff);
+	return byteio_write(stream, buf, sizeof(buf));
+}
+
+int byteio_write_le_u32(byteio *stream, uint32_t num)
+{
+	unsigned char buf[sizeof(num)];
+	buf[0] = (unsigned char)(num & 0xff);
+	buf[1] = (unsigned char)((num >> 8) & 0xff);
+	buf[2] = (unsigned char)((num >> 16) & 0xff);
+	buf[3] = (unsigned char)((num >> 24) & 0xff);
+	return byteio_write(stream, buf, sizeof(buf));
+}
+
+int byteio_write_be_i32(byteio *stream, int32_t num)
+{
+	return byteio_write_be_u32(stream, (uint32_t)num);
+}
+
+int byteio_write_le_i32(byteio *stream, int32_t num)
+{
+	return byteio_write_le_u32(stream, (uint32_t)num);
+}

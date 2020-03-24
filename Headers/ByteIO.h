@@ -51,7 +51,7 @@ int byteio_read_le_u8(byteio *stream, uint8_t *num);
 // Read a big-endian, 8-bit signed integer.
 int byteio_read_be_i8(byteio *stream, int8_t *num);
 
-// Read a little-endian, 8-bit unsigned integer.
+// Read a little-endian, 8-bit signed integer.
 int byteio_read_le_i8(byteio *stream, int8_t *num);
 
 // Read a big-endian, 16-bit unsigned integer.
@@ -63,7 +63,7 @@ int byteio_read_le_u16(byteio *stream, uint16_t *num);
 // Read a big-endian, 16-bit signed integer.
 int byteio_read_be_i16(byteio *stream, int16_t *num);
 
-// Read a little-endian, 16-bit unsigned integer.
+// Read a little-endian, 16-bit signed integer.
 int byteio_read_le_i16(byteio *stream, int16_t *num);
 
 // Read a big-endian, 32-bit unsigned integer.
@@ -75,7 +75,43 @@ int byteio_read_le_u32(byteio *stream, uint32_t *num);
 // Read a big-endian, 32-bit signed integer.
 int byteio_read_be_i32(byteio *stream, int32_t *num);
 
-// Read a little-endian, 32-bit unsigned integer.
+// Read a little-endian, 32-bit signed integer.
 int byteio_read_le_i32(byteio *stream, int32_t *num);
+
+// Write a big-endian, 8-bit unsigned integer.
+int byteio_write_be_u8(byteio *stream, uint8_t num);
+
+// Write a little-endian, 8-bit unsigned integer.
+int byteio_write_le_u8(byteio *stream, uint8_t num);
+
+// Write a big-endian, 8-bit signed integer.
+int byteio_write_be_i8(byteio *stream, int8_t num);
+
+// Write a little-endian, 8-bit signed integer.
+int byteio_write_le_i8(byteio *stream, int8_t num);
+
+// Write a big-endian, 16-bit unsigned integer.
+int byteio_write_be_u16(byteio *stream, uint16_t num);
+
+// Write a little-endian, 16-bit unsigned integer.
+int byteio_write_le_u16(byteio *stream, uint16_t num);
+
+// Write a big-endian, 16-bit signed integer.
+int byteio_write_be_i16(byteio *stream, int16_t num);
+
+// Write a little-endian, 16-bit signed integer.
+int byteio_write_le_i16(byteio *stream, int16_t num);
+
+// Write a big-endian, 32-bit unsigned integer.
+int byteio_write_be_u32(byteio *stream, uint32_t num);
+
+// Write a little-endian, 32-bit unsigned integer.
+int byteio_write_le_u32(byteio *stream, uint32_t num);
+
+// Write a big-endian, 32-bit signed integer.
+int byteio_write_be_i32(byteio *stream, int32_t num);
+
+// Write a little-endian, 32-bit signed integer.
+int byteio_write_le_i32(byteio *stream, int32_t num);
 
 #endif
