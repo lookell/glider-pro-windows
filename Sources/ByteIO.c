@@ -301,7 +301,7 @@ static int handle_reader_read(byteio *stream, void *buffer, size_t size)
 				return 0;
 			self->size = numRead;
 		}
-		// Read as much as we can into the output
+		// Read as much as we can from the buffer
 		readsize = (self->size <= size) ? self->size : size;
 		if (readsize == 0)
 			return 0;
@@ -331,6 +331,80 @@ int byteio_init_handle_reader(byteio *stream, void *hFile)
 	stream->fn_write = minimal_write;
 	stream->fn_close = handle_reader_close;
 	stream->priv = handle_reader_init(hFile);
+	if (stream->priv == NULL)
+		return 0;
+	return 1;
+}
+
+//--------------------------------------------------------------
+
+static handle_writer *handle_writer_init(HANDLE hFile)
+{
+	handle_writer *self = malloc(sizeof(*self));
+	if (self == NULL)
+		return NULL;
+	self->hFile = hFile;
+	self->bufptr = &self->buffer[0];
+	self->size = sizeof(self->buffer);
+	return self;
+}
+
+static int handle_writer_write(byteio *stream, const void *buffer, size_t size)
+{
+	const unsigned char *inptr = buffer;
+	size_t writesize;
+	handle_writer *self = stream->priv;
+
+	if (self == NULL || buffer == NULL)
+		return 0;
+	while (size != 0)
+	{
+		// Empty the buffer, if needed
+		if (self->size == 0)
+		{
+			DWORD numWritten;
+			self->bufptr = &self->buffer[0];
+			if (!WriteFile(self->hFile, self->buffer, sizeof(self->buffer), &numWritten, NULL))
+				return 0;
+			if (numWritten != sizeof(self->buffer))
+				return 0;
+			self->size = sizeof(self->buffer);
+		}
+		// Write as much as we can into the buffer
+		writesize = (self->size <= size) ? self->size : size;
+		memcpy(self->bufptr, inptr, writesize);
+		inptr += writesize;
+		size -= writesize;
+		self->bufptr += writesize;
+		self->size -= writesize;
+	}
+	return 1;
+}
+
+static void handle_writer_close(byteio *stream)
+{
+	handle_writer *self = stream->priv;
+	DWORD numWritten;
+	DWORD numToWrite;
+	if (stream->priv == NULL)
+		return;
+	numToWrite = sizeof(self->buffer) - self->size;
+	if (!WriteFile(self->hFile, self->buffer, numToWrite, &numWritten, NULL))
+		; // TODO: handle error
+	if (numWritten != numToWrite)
+		; // TODO: handle error
+	free(stream->priv);
+	stream->priv = NULL;
+}
+
+int byteio_init_handle_writer(byteio *stream, void *hFile)
+{
+	if (stream == NULL)
+		return 0;
+	stream->fn_read = minimal_read;
+	stream->fn_write = handle_writer_write;
+	stream->fn_close = handle_writer_close;
+	stream->priv = handle_writer_init(hFile);
 	if (stream->priv == NULL)
 		return 0;
 	return 1;
