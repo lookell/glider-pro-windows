@@ -12,21 +12,23 @@ static int minimal_write(byteio *stream, const void *buffer, size_t size);
 
 typedef struct handle_reader {
 	HANDLE hFile;
-	const unsigned char *buf_begin;
-	const unsigned char *buf_end;
+	size_t size;
+	const unsigned char *bufptr;
 	unsigned char buffer[8 * 1024];
 } handle_reader;
 
-static int handle_reader_init(byteio *stream, HANDLE hFile);
+static handle_reader *handle_reader_init(HANDLE hFile);
 static int handle_reader_read(byteio *stream, void *buffer, size_t size);
 static void handle_reader_close(byteio *stream);
 
 typedef struct handle_writer {
 	HANDLE hFile;
+	size_t size;
+	unsigned char *bufptr;
 	unsigned char buffer[8 * 1024];
 } handle_writer;
 
-static int handle_writer_init(byteio *stream, HANDLE hFile);
+static handle_writer *handle_writer_init(HANDLE hFile);
 static int handle_writer_write(byteio *stream, const void *buffer, size_t size);
 static void handle_writer_close(byteio *stream);
 
@@ -36,7 +38,7 @@ typedef struct memory_reader {
 	const unsigned char *buffer;
 } memory_reader;
 
-static int memory_reader_init(byteio *stream, const void *buffer, size_t size);
+static memory_reader *memory_reader_init(const void *buffer, size_t size);
 static int memory_reader_read(byteio *stream, void *buffer, size_t size);
 static int memory_reader_close(byteio *stream);
 
@@ -46,7 +48,7 @@ typedef struct memory_writer {
 	unsigned char *buffer;
 } memory_writer;
 
-static int memory_writer_init(byteio *stream, void *buffer, size_t size);
+static memory_writer *memory_writer_init(void *buffer, size_t size);
 static int memory_writer_write(byteio *stream, const void *buffer, size_t size);
 static int memory_writer_close(byteio *stream);
 
@@ -247,4 +249,89 @@ int byteio_write_be_i32(byteio *stream, int32_t num)
 int byteio_write_le_i32(byteio *stream, int32_t num)
 {
 	return byteio_write_le_u32(stream, (uint32_t)num);
+}
+
+//--------------------------------------------------------------
+
+static int minimal_read(byteio *stream, void *buffer, size_t num)
+{
+	UNREFERENCED_PARAMETER(stream);
+	UNREFERENCED_PARAMETER(buffer);
+	UNREFERENCED_PARAMETER(num);
+	return 0;
+}
+
+static int minimal_write(byteio *stream, const void *buffer, size_t num)
+{
+	UNREFERENCED_PARAMETER(stream);
+	UNREFERENCED_PARAMETER(buffer);
+	UNREFERENCED_PARAMETER(num);
+	return 0;
+}
+
+//--------------------------------------------------------------
+
+static handle_reader *handle_reader_init(HANDLE hFile)
+{
+	handle_reader *self = malloc(sizeof(*self));
+	if (self == NULL)
+		return NULL;
+	self->hFile = hFile;
+	self->bufptr = &self->buffer[0];
+	self->size = 0;
+	return self;
+}
+
+static int handle_reader_read(byteio *stream, void *buffer, size_t size)
+{
+	unsigned char *outptr = buffer;
+	size_t readsize;
+	handle_reader *self = stream->priv;
+
+	if (self == NULL)
+		return 0;
+	while (size != 0)
+	{
+		// Fill up the buffer, if needed
+		if (self->size == 0)
+		{
+			DWORD numRead;
+			self->bufptr = &self->buffer[0];
+			if (!ReadFile(self->hFile, self->buffer, sizeof(self->buffer), &numRead, NULL))
+				return 0;
+			self->size = numRead;
+		}
+		// Read as much as we can into the output
+		readsize = (self->size <= size) ? self->size : size;
+		if (readsize == 0)
+			return 0;
+		if (outptr != NULL)
+		{
+			memcpy(outptr, self->bufptr, readsize);
+			outptr += readsize;
+		}
+		size -= readsize;
+		self->bufptr += readsize;
+		self->size -= readsize;
+	}
+	return 1;
+}
+
+static void handle_reader_close(byteio *stream)
+{
+	free(stream->priv);
+	stream->priv = NULL;
+}
+
+int byteio_init_handle_reader(byteio *stream, void *hFile)
+{
+	if (stream == NULL)
+		return 0;
+	stream->fn_read = handle_reader_read;
+	stream->fn_write = minimal_write;
+	stream->fn_close = handle_reader_close;
+	stream->priv = handle_reader_init(hFile);
+	if (stream->priv == NULL)
+		return 0;
+	return 1;
 }
