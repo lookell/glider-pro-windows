@@ -81,7 +81,7 @@ void Mac_NumToString(SInt32 theNum, Str255 *theString)
 	if (theString == NULL)
 		return;
 	(*theString)[0] = 0; // return an empty string if an error occurs.
-	hr = StringCchPrintfA(buffer, ARRAYSIZE(buffer), PRId32, theNum);
+	hr = StringCchPrintfA(buffer, ARRAYSIZE(buffer), "%" PRId32, theNum);
 	if (FAILED(hr))
 		return;
 	hr = StringCchLengthA(buffer, ARRAYSIZE(buffer), &length);
