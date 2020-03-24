@@ -51,7 +51,7 @@ void GetWindowLeftTop (WindowPtr theWindow, SInt16 *left, SInt16 *top)
 
 // Returns bounding rectangle of the specified window in global coords.
 
-void GetWindowRect (WindowPtr theWindow, Rect *bounds)
+void Gp_GetWindowRect (WindowPtr theWindow, Rect *bounds)
 {
 	return;
 	#if 0

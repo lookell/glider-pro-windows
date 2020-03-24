@@ -307,7 +307,7 @@ void DrawARoomsObjects (SInt16, Boolean);				// --- ObjectDrawAll.c
 
 void DoSelectionClick (Point, Boolean);					// --- ObjectEdit.c
 void DoNewObjectClick (Point);
-void DeleteObject (void);
+void Gp_DeleteObject (void);
 void DuplicateObject (void);
 void MoveObject (SInt16, Boolean);
 void DeselectObject (void);

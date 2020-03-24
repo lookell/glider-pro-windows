@@ -1164,7 +1164,7 @@ void AddObjectPairing (void)
 
 //--------------------------------------------------------------  DeleteObject
 
-void DeleteObject (void)
+void Gp_DeleteObject (void)
 {
 	return;
 #if 0
