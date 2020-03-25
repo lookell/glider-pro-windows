@@ -58,7 +58,14 @@ pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {
         _ => format!("[procID #{}]", template.procID),
     };
     writeln!(&mut writer, "Window {{")?;
-    writeln!(&mut writer, "\tboundsRect = {{ x = {}, y = {}, w = {}, h = {} }}", template.boundsRect.left, template.boundsRect.top, template.boundsRect.width(), template.boundsRect.height())?;
+    writeln!(
+        &mut writer,
+        "\tboundsRect = {{ x = {}, y = {}, w = {}, h = {} }}",
+        template.boundsRect.left,
+        template.boundsRect.top,
+        template.boundsRect.width(),
+        template.boundsRect.height()
+    )?;
     writeln!(&mut writer, "\tprocID = {}", proc_name)?;
     writeln!(&mut writer, "\tvisible = {}", template.visible)?;
     writeln!(&mut writer, "\tgoAwayFlag = {}", template.goAwayFlag)?;

@@ -1,6 +1,17 @@
 use std::io;
 use std::io::{Read, Seek, SeekFrom, Write};
 
+pub(crate) trait ReadFrom
+where
+    Self: Sized,
+{
+    fn read_from(reader: impl Read) -> io::Result<Self>;
+}
+
+pub(crate) trait WriteTo {
+    fn write_to(&self, writer: impl Write) -> io::Result<()>;
+}
+
 fn read_one_byte(mut reader: impl Read) -> io::Result<[u8; 1]> {
     let mut buf = [0; 1];
     reader.read_exact(&mut buf).map(|_| buf)

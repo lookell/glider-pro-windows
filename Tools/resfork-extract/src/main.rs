@@ -1,9 +1,13 @@
 mod apple_double;
+mod bitmap;
 mod mac_roman;
 mod macbinary;
 mod res;
 mod rsrcfork;
 mod utils;
+
+#[cfg(not(windows))]
+compile_error!("This program requires Windows, for RLE compression of bitmaps");
 
 use crate::apple_double::AppleDouble;
 use crate::macbinary::MacBinary;

@@ -72,7 +72,11 @@ impl ItemData {
         let mut data = vec![0; length.into()];
         reader.read_exact(&mut data)?;
         reader.align_to(2)?;
-        let text_string = data.iter().copied().map(mac_roman::decode).collect::<String>();
+        let text_string = data
+            .iter()
+            .copied()
+            .map(mac_roman::decode)
+            .collect::<String>();
         Ok(match item_type {
             Button => Self::Button(text_string),
             CheckBox => Self::CheckBox(text_string),
@@ -114,8 +118,17 @@ pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {
         } else {
             write!(&mut writer, ", enabled")?;
         }
-        write!(&mut writer, ", x = {}, y = {}, ", item.bounds.left, item.bounds.top)?;
-        write!(&mut writer, "w = {}, h = {} ", item.bounds.width(), item.bounds.height())?;
+        write!(
+            &mut writer,
+            ", x = {}, y = {}, ",
+            item.bounds.left, item.bounds.top
+        )?;
+        write!(
+            &mut writer,
+            "w = {}, h = {} ",
+            item.bounds.width(),
+            item.bounds.height()
+        )?;
         writeln!(&mut writer, "}}")?;
     }
     writeln!(&mut writer, "]")?;
