@@ -14,7 +14,7 @@ impl WinCTab {
     fn read_from(mut reader: impl Read) -> io::Result<Self> {
         let wCSeed = reader.read_be_i32()?;
         let wCReserved = reader.read_be_i16()?;
-        let ctSize = reader.read_be_i16()?;
+        let ctSize = reader.read_be_i16()?.wrapping_add(1);
         let mut ctTable = Vec::with_capacity((ctSize.max(0) as u16).into());
         for _ in 0..ctSize {
             ctTable.push(ColorSpec::read_from(&mut reader)?);
