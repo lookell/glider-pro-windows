@@ -24,6 +24,7 @@ target_sources(
   Headers/WinAPI.h
   # added sources
   Sources/ByteIO.c
+  Sources/GliderStructs.c
   Sources/Macintosh.c
   # original headers
   Headers/About.h
