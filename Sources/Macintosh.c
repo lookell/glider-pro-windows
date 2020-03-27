@@ -107,3 +107,16 @@ Boolean Mac_PtInRect(Point pt, const Rect *r)
 	return (pt.h >= r->left) && (pt.h < r->right) &&
 			(pt.v >= r->top) && (pt.v < r->bottom);
 }
+
+//--------------------------------------------------------------  Global Data
+
+const RGBColor QDColors[] = {
+	{ 0x0000, 0x0000, 0x0000 }, // black
+	{ 0xFC00, 0xF37D, 0x052F }, // yellow
+	{ 0xF2D7, 0x0856, 0x84EC }, // magenta
+	{ 0xDD6B, 0x08C2, 0x06A2 }, // red
+	{ 0x0241, 0xAB54, 0xEAFF }, // cyan
+	{ 0x0000, 0x8000, 0x11B0 }, // green
+	{ 0x0000, 0x0000, 0xD400 }, // blue
+	{ 0xFFFF, 0xFFFF, 0xFFFF }, // white
+};
