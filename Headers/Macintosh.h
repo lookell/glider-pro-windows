@@ -84,6 +84,8 @@ typedef struct FSSpec {
 #define QDWhite		QDColors[7]
 extern const RGBColor QDColors[8];
 
+extern const RGBColor MacColor8[256];
+
 void Mac_GetDateTime(UInt32 *secs);
 void Mac_InsetRect(Rect *r, SInt16 dh, SInt16 dv);
 void Mac_NumToString(SInt32 theNum, Str255 *theString);
