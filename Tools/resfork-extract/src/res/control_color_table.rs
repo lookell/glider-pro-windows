@@ -69,10 +69,11 @@ pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {
             TINGE_DARK => write!(&mut writer, "cTingeDark")?,
             _ => write!(&mut writer, "[color #{}]", entry.value)?,
         }
-        let r = entry.rgb.red >> 8;
-        let g = entry.rgb.green >> 8;
-        let b = entry.rgb.blue >> 8;
-        writeln!(&mut writer, ": rgb({}, {}, {});", r, g, b)?;
+        writeln!(
+            &mut writer,
+            ": rgb(${:04X}, ${:04X}, ${:04X});",
+            entry.rgb.red, entry.rgb.green, entry.rgb.blue
+        )?;
     }
     Ok(())
 }

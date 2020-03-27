@@ -35,13 +35,10 @@ pub fn get_entry_name(res: &Resource) -> String {
 pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {
     let clut = ColorTable::read_from(data)?;
     for entry in clut.ctTable {
-        let r = entry.rgb.red >> 8;
-        let g = entry.rgb.green >> 8;
-        let b = entry.rgb.blue >> 8;
         writeln!(
             &mut writer,
-            "color {}: rgb({}, {}, {});",
-            entry.value, r, g, b
+            "color {}: rgb(${:04X}, ${:04X}, ${:04X});",
+            entry.value, entry.rgb.red, entry.rgb.green, entry.rgb.blue
         )?;
     }
     Ok(())
