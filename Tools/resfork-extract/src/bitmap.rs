@@ -22,6 +22,39 @@ impl RgbQuad {
     }
 }
 
+#[derive(Clone, Copy, Eq, PartialEq)]
+pub struct RGBColor {
+    pub red: u16,
+    pub green: u16,
+    pub blue: u16,
+}
+
+impl RGBColor {
+    pub const BLACK: Self = Self::new(0x0000, 0x0000, 0x0000);
+
+    pub const fn new(red: u16, green: u16, blue: u16) -> Self {
+        Self { red, green, blue }
+    }
+}
+
+impl From<RgbQuad> for RGBColor {
+    fn from(value: RgbQuad) -> RGBColor {
+        let red = u16::from(value.red) * 0x0101;
+        let green = u16::from(value.green) * 0x0101;
+        let blue = u16::from(value.blue) * 0x0101;
+        RGBColor::new(red, green, blue)
+    }
+}
+
+impl From<RGBColor> for RgbQuad {
+    fn from(value: RGBColor) -> RgbQuad {
+        let red = (value.red >> 8) as u8;
+        let green = (value.green >> 8) as u8;
+        let blue = (value.blue >> 8) as u8;
+        RgbQuad::new(red, green, blue)
+    }
+}
+
 #[derive(Clone, Copy)]
 pub struct BitmapFileHeader {
     pub type_: u16,
@@ -144,8 +177,9 @@ fn zeroed_bitmap(width: u16, height: u16, depth: u16) -> Vec<u8> {
     vec![0x00; bitmap_size(width, height, depth)]
 }
 
-pub trait Bitmap {
+pub trait Bitmap: Sized {
     const BIT_COUNT: u16;
+    type Pixel: Copy;
 
     fn new(width: u16, height: u16) -> Self;
     fn width(&self) -> u16;
@@ -153,6 +187,8 @@ pub trait Bitmap {
     fn bits(&self) -> &[u8];
     fn palette(&self) -> &[RgbQuad];
     fn set_palette(&mut self, new_palette: &[RgbQuad]);
+    fn get_pixel(&self, x: u16, y: u16) -> Self::Pixel;
+    fn set_pixel(&mut self, x: u16, y: u16, pixel: Self::Pixel);
 
     fn bit_count(&self) -> u16 {
         Self::BIT_COUNT
@@ -204,6 +240,7 @@ pub struct BitmapOne {
 }
 
 impl Bitmap for BitmapOne {
+    type Pixel = u8;
     const BIT_COUNT: u16 = 1;
 
     fn new(width: u16, height: u16) -> Self {
@@ -237,6 +274,34 @@ impl Bitmap for BitmapOne {
             .zip(new_palette)
             .for_each(|(dst, src)| *dst = *src)
     }
+
+    fn get_pixel(&self, x: u16, y: u16) -> u8 {
+        if (x >= self.width) || (y >= self.height) {
+            return 0;
+        }
+        let y = (self.height - 1) - y;
+        let stride = byte_stride(self.width, Self::BIT_COUNT);
+        let row_start = stride * usize::from(y);
+        let byte_offset = row_start + usize::from(x / 8);
+        let shift = 7 - (x % 8);
+        let mask = 0x1 << shift;
+        (self.bits[byte_offset] & mask) >> shift
+    }
+
+    fn set_pixel(&mut self, x: u16, y: u16, pixel: u8) {
+        if (x >= self.width) || (y >= self.height) {
+            return;
+        }
+        let pixel = pixel & 0x1;
+        let y = (self.height - 1) - y;
+        let stride = byte_stride(self.width, Self::BIT_COUNT);
+        let row_start = stride * usize::from(y);
+        let byte_offset = row_start + usize::from(x / 8);
+        let shift = 7 - (x % 8);
+        let mask = 0x1 << shift;
+        self.bits[byte_offset] &= !mask;
+        self.bits[byte_offset] |= pixel << shift;
+    }
 }
 
 #[derive(Clone)]
@@ -248,6 +313,7 @@ pub struct BitmapFour {
 }
 
 impl Bitmap for BitmapFour {
+    type Pixel = u8;
     const BIT_COUNT: u16 = 4;
 
     fn new(width: u16, height: u16) -> Self {
@@ -281,6 +347,34 @@ impl Bitmap for BitmapFour {
             .zip(new_palette)
             .for_each(|(dst, src)| *dst = *src)
     }
+
+    fn get_pixel(&self, x: u16, y: u16) -> u8 {
+        if (x >= self.width) || (y >= self.height) {
+            return 0;
+        }
+        let y = (self.height - 1) - y;
+        let stride = byte_stride(self.width, Self::BIT_COUNT);
+        let row_start = stride * usize::from(y);
+        let byte_offset = row_start + usize::from(x / 2);
+        let shift = 4 * (1 - (x % 2));
+        let mask = 0xF << shift;
+        (self.bits[byte_offset] & mask) >> shift
+    }
+
+    fn set_pixel(&mut self, x: u16, y: u16, pixel: u8) {
+        if (x >= self.width) || (y >= self.height) {
+            return;
+        }
+        let pixel = pixel & 0xF;
+        let y = (self.height - 1) - y;
+        let stride = byte_stride(self.width, Self::BIT_COUNT);
+        let row_start = stride * usize::from(y);
+        let byte_offset = row_start + usize::from(x / 2);
+        let shift = 4 * (1 - (x % 2));
+        let mask = 0xF << shift;
+        self.bits[byte_offset] &= !mask;
+        self.bits[byte_offset] |= pixel << shift;
+    }
 }
 
 #[derive(Clone)]
@@ -292,6 +386,7 @@ pub struct BitmapEight {
 }
 
 impl Bitmap for BitmapEight {
+    type Pixel = u8;
     const BIT_COUNT: u16 = 8;
 
     fn new(width: u16, height: u16) -> Self {
@@ -325,6 +420,28 @@ impl Bitmap for BitmapEight {
             .zip(new_palette)
             .for_each(|(dst, src)| *dst = *src)
     }
+
+    fn get_pixel(&self, x: u16, y: u16) -> u8 {
+        if (x >= self.width) || (y >= self.height) {
+            return 0;
+        }
+        let y = (self.height - 1) - y;
+        let stride = byte_stride(self.width, Self::BIT_COUNT);
+        let row_start = stride * usize::from(y);
+        let byte_offset = row_start + usize::from(x);
+        self.bits[byte_offset]
+    }
+
+    fn set_pixel(&mut self, x: u16, y: u16, pixel: u8) {
+        if (x >= self.width) || (y >= self.height) {
+            return;
+        }
+        let y = (self.height - 1) - y;
+        let stride = byte_stride(self.width, Self::BIT_COUNT);
+        let row_start = stride * usize::from(y);
+        let byte_offset = row_start + usize::from(x);
+        self.bits[byte_offset] = pixel;
+    }
 }
 
 #[derive(Clone)]
@@ -335,6 +452,7 @@ pub struct BitmapSixteen {
 }
 
 impl Bitmap for BitmapSixteen {
+    type Pixel = RgbQuad;
     const BIT_COUNT: u16 = 16;
 
     fn new(width: u16, height: u16) -> Self {
@@ -362,6 +480,42 @@ impl Bitmap for BitmapSixteen {
     }
 
     fn set_palette(&mut self, new_palette: &[RgbQuad]) {}
+
+    fn get_pixel(&self, x: u16, y: u16) -> RgbQuad {
+        if (x >= self.width) || (y >= self.height) {
+            return RgbQuad::BLACK;
+        }
+        let y = (self.height - 1) - y;
+        let stride = byte_stride(self.width, Self::BIT_COUNT);
+        let row_start = stride * usize::from(y);
+        let byte_offset = row_start + 2 * usize::from(x);
+        let word = u16::from_le_bytes([self.bits[byte_offset], self.bits[byte_offset + 1]]);
+        let red = ((word >> 10) & 0x1F) as u8;
+        let green = ((word >> 5) & 0x1F) as u8;
+        let blue = (word & 0x1F) as u8;
+        RgbQuad::new(
+            red << 3 | red >> 2,
+            green << 3 | green >> 2,
+            blue << 3 | blue >> 2,
+        )
+    }
+
+    fn set_pixel(&mut self, x: u16, y: u16, pixel: RgbQuad) {
+        if (x >= self.width) || (y >= self.height) {
+            return;
+        }
+        let y = (self.height - 1) - y;
+        let stride = byte_stride(self.width, Self::BIT_COUNT);
+        let row_start = stride * usize::from(y);
+        let byte_offset = row_start + 2 * usize::from(x);
+        let mut word = 0;
+        word |= u16::from(pixel.red >> 3) << 10;
+        word |= u16::from(pixel.green >> 3) << 5;
+        word |= u16::from(pixel.blue >> 3);
+        let bytes = word.to_le_bytes();
+        self.bits[byte_offset] = bytes[0];
+        self.bits[byte_offset + 1] = bytes[1];
+    }
 }
 
 #[derive(Clone)]
@@ -372,6 +526,7 @@ pub struct BitmapTwentyFour {
 }
 
 impl Bitmap for BitmapTwentyFour {
+    type Pixel = RgbQuad;
     const BIT_COUNT: u16 = 24;
 
     fn new(width: u16, height: u16) -> Self {
@@ -399,4 +554,31 @@ impl Bitmap for BitmapTwentyFour {
     }
 
     fn set_palette(&mut self, new_palette: &[RgbQuad]) {}
+
+    fn get_pixel(&self, x: u16, y: u16) -> RgbQuad {
+        if (x >= self.width) || (y >= self.height) {
+            return RgbQuad::BLACK;
+        }
+        let y = (self.height - 1) - y;
+        let stride = byte_stride(self.width, Self::BIT_COUNT);
+        let row_start = stride * usize::from(y);
+        let byte_offset = row_start + 3 * usize::from(x);
+        let blue = self.bits[byte_offset];
+        let green = self.bits[byte_offset + 1];
+        let red = self.bits[byte_offset + 2];
+        RgbQuad::new(red, green, blue)
+    }
+
+    fn set_pixel(&mut self, x: u16, y: u16, pixel: RgbQuad) {
+        if (x >= self.width) || (y >= self.height) {
+            return;
+        }
+        let y = (self.height - 1) - y;
+        let stride = byte_stride(self.width, Self::BIT_COUNT);
+        let row_start = stride * usize::from(y);
+        let byte_offset = row_start + 3 * usize::from(x);
+        self.bits[byte_offset] = pixel.blue;
+        self.bits[byte_offset + 1] = pixel.green;
+        self.bits[byte_offset + 2] = pixel.red;
+    }
 }
