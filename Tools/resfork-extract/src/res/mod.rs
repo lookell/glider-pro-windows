@@ -17,7 +17,26 @@ pub mod string_list; // 'STR#'
 pub mod window; // 'WIND'
 pub mod window_color_table; // 'wctb'
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy)]
+pub struct Point {
+    pub v: i16,
+    pub h: i16,
+}
+
+impl Point {
+    pub fn new(h: i16, v: i16) -> Self {
+        Self { v, h }
+    }
+
+    pub fn read_from(mut reader: impl Read) -> io::Result<Self> {
+        Ok(Self {
+            v: reader.read_be_i16()?,
+            h: reader.read_be_i16()?,
+        })
+    }
+}
+
+#[derive(Clone, Copy)]
 pub struct Rect {
     pub top: i16,
     pub left: i16,

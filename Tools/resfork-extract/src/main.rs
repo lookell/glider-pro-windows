@@ -1,5 +1,6 @@
 mod apple_double;
 mod bitmap;
+mod icocur;
 mod mac_roman;
 mod macbinary;
 mod res;

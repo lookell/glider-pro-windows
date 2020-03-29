@@ -3,7 +3,6 @@ use crate::rsrcfork::Resource;
 use crate::utils::ReadExt;
 use std::io::{self, Read, Write};
 
-#[derive(Debug)]
 struct ControlTemplate {
     controlRect: Rect,
     controlValue: i16,
