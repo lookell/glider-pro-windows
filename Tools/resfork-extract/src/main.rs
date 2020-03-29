@@ -164,7 +164,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'cicn': Color Icon
 //   'icl4': Large 4-Bit Color Icon
 //   'icl8': Large 8-Bit Color Icon
-//   'ICN#': Icon List
 //   'ics#': Small Icon List
 //   'ics4': Small 4-Bit Color Icon
 //   'ics8': Small 8-Bit Color Icon
@@ -239,6 +238,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = res::icon::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::icon::convert(&res.data, &mut zip_writer)?;
+            }
+            "ICN#" => {
+                let entry_name = res::icon_list::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::icon_list::convert(&res.data, &mut zip_writer)?;
             }
             "STR#" => {
                 let entry_name = res::string_list::get_entry_name(&res);
