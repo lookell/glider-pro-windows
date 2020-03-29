@@ -11,6 +11,7 @@ pub struct RgbQuad {
 
 impl RgbQuad {
     pub const BLACK: Self = Self::new(0x00, 0x00, 0x00);
+    pub const WHITE: Self = Self::new(0xFF, 0xFF, 0xFF);
     pub const SIZE: u32 = 4;
 
     pub const fn new(red: u8, green: u8, blue: u8) -> Self {

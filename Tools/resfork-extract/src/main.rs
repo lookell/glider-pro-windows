@@ -212,6 +212,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::control::convert(&res.data, &mut zip_writer)?;
             }
+            "CURS" => {
+                let entry_name = res::cursor::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::cursor::convert(&res.data, &mut zip_writer)?;
+            }
             "dctb" => {
                 let entry_name = res::dialog_color_table::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
