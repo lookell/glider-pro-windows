@@ -3,31 +3,31 @@ use crate::icocur::IconFile;
 use crate::rsrcfork::Resource;
 use std::io::{self, Read, Write};
 
-struct IconList {
-    data: [u8; 128],
-    mask: [u8; 128],
+struct SmallIconList {
+    data: [u8; 32],
+    mask: [u8; 32],
 }
 
-impl IconList {
+impl SmallIconList {
     fn read_from(mut reader: impl Read) -> io::Result<Self> {
-        let mut data = [0; 128];
+        let mut data = [0; 32];
         reader.read_exact(&mut data)?;
-        let mut mask = [0; 128];
+        let mut mask = [0; 32];
         reader.read_exact(&mut mask)?;
         Ok(Self { data, mask })
     }
 }
 
 pub fn get_entry_name(res: &Resource) -> String {
-    format!("FinderIcon/{}-large-mono.ico", res.id)
+    format!("FinderIcon/{}-small-mono.ico", res.id)
 }
 
 pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
-    let icon = IconList::read_from(data)?;
+    let icon = SmallIconList::read_from(data)?;
 
-    let mut data_bits = BitmapOne::new(32, 32);
+    let mut data_bits = BitmapOne::new(16, 16);
     data_bits.set_palette([RgbQuad::BLACK, RgbQuad::WHITE].iter().copied());
-    for (y, quad) in icon.data.chunks_exact(4).enumerate() {
+    for (y, quad) in icon.data.chunks_exact(2).enumerate() {
         let y = y as u16;
         for (xbase, byte) in quad.iter().copied().enumerate() {
             let xbase = (8 * xbase) as u16;
@@ -43,9 +43,9 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
     }
     let data_bits = data_bits;
 
-    let mut mask_bits = BitmapOne::new(32, 32);
+    let mut mask_bits = BitmapOne::new(16, 16);
     mask_bits.set_palette([RgbQuad::BLACK, RgbQuad::WHITE].iter().copied());
-    for (y, quad) in icon.mask.chunks_exact(4).enumerate() {
+    for (y, quad) in icon.mask.chunks_exact(2).enumerate() {
         let y = y as u16;
         for (xbase, byte) in quad.iter().copied().enumerate() {
             let xbase = (8 * xbase) as u16;

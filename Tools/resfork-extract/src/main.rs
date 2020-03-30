@@ -163,11 +163,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //
 //  Icons:
 //   'cicn': Color Icon
-//   'icl4': Large 4-Bit Color Icon
-//   'icl8': Large 8-Bit Color Icon
-//   'ics#': Small Icon List
-//   'ics4': Small 4-Bit Color Icon
-//   'ics8': Small 8-Bit Color Icon
 
 fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
@@ -240,10 +235,35 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::icon::convert(&res.data, &mut zip_writer)?;
             }
+            "icl4" => {
+                let entry_name = res::large_4bit_icon::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::large_4bit_icon::convert(&res.data, &mut zip_writer)?;
+            }
+            "icl8" => {
+                let entry_name = res::large_8bit_icon::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::large_8bit_icon::convert(&res.data, &mut zip_writer)?;
+            }
             "ICN#" => {
                 let entry_name = res::icon_list::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::icon_list::convert(&res.data, &mut zip_writer)?;
+            }
+            "ics4" => {
+                let entry_name = res::small_4bit_icon::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::small_4bit_icon::convert(&res.data, &mut zip_writer)?;
+            }
+            "ics8" => {
+                let entry_name = res::small_8bit_icon::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::small_8bit_icon::convert(&res.data, &mut zip_writer)?;
+            }
+            "ics#" => {
+                let entry_name = res::small_icon_list::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::small_icon_list::convert(&res.data, &mut zip_writer)?;
             }
             "STR#" => {
                 let entry_name = res::string_list::get_entry_name(&res);

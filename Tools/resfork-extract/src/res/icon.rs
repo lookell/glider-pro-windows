@@ -23,7 +23,7 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
     let icon = Icon::read_from(data)?;
 
     let mut data_bits = BitmapOne::new(32, 32);
-    data_bits.set_palette(&[RgbQuad::BLACK, RgbQuad::WHITE]);
+    data_bits.set_palette([RgbQuad::BLACK, RgbQuad::WHITE].iter().copied());
     for (y, quad) in icon.data.chunks_exact(4).enumerate() {
         data_bits.set_pixel(0, y as _, ((quad[0] & 0x80) == 0).into());
         data_bits.set_pixel(1, y as _, ((quad[0] & 0x40) == 0).into());
@@ -64,7 +64,7 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
     let data_bits = data_bits;
 
     let mut mask_bits = BitmapOne::new(32, 32);
-    mask_bits.set_palette(&[RgbQuad::BLACK, RgbQuad::WHITE]);
+    mask_bits.set_palette([RgbQuad::BLACK, RgbQuad::WHITE].iter().copied());
     let mask_bits = mask_bits;
     // bitmaps start out with all zeros, and that's exactly what's needed
     // for an opaque icon mask

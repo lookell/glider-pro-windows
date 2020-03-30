@@ -16,6 +16,11 @@ pub mod dialog_color_table; // 'dctb'
 pub mod icon; // 'ICON'
 pub mod icon_list; // 'ICN#'
 pub mod item_list; // 'DITL'
+pub mod large_4bit_icon; // 'icl4'
+pub mod large_8bit_icon; // 'icl8'
+pub mod small_4bit_icon; // 'ics4'
+pub mod small_8bit_icon; // 'ics8'
+pub mod small_icon_list; // 'ics#'
 pub mod string_list; // 'STR#'
 pub mod window; // 'WIND'
 pub mod window_color_table; // 'wctb'
@@ -73,7 +78,7 @@ pub fn read_pstring(mut reader: impl Read) -> io::Result<String> {
     Ok(buffer.into_iter().map(mac_roman::decode).collect())
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Eq, PartialEq)]
 pub struct RGBColor {
     pub red: u16,
     pub green: u16,

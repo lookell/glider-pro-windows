@@ -1,4 +1,5 @@
 #![allow(unused)]
+use crate::res::RGBColor;
 use crate::utils::WriteExt;
 use std::io::{self, Write};
 
@@ -20,21 +21,6 @@ impl RgbQuad {
 
     pub fn write_to(self, mut writer: impl Write) -> io::Result<()> {
         writer.write_all(&[self.blue, self.green, self.red, 0x00])
-    }
-}
-
-#[derive(Clone, Copy, Eq, PartialEq)]
-pub struct RGBColor {
-    pub red: u16,
-    pub green: u16,
-    pub blue: u16,
-}
-
-impl RGBColor {
-    pub const BLACK: Self = Self::new(0x0000, 0x0000, 0x0000);
-
-    pub const fn new(red: u16, green: u16, blue: u16) -> Self {
-        Self { red, green, blue }
     }
 }
 
@@ -187,7 +173,7 @@ pub trait Bitmap: Sized {
     fn height(&self) -> u16;
     fn bits(&self) -> &[u8];
     fn palette(&self) -> &[RgbQuad];
-    fn set_palette(&mut self, new_palette: &[RgbQuad]);
+    fn set_palette<I: IntoIterator<Item = RgbQuad>>(&mut self, new_palette: I);
     fn get_pixel(&self, x: u16, y: u16) -> Self::Pixel;
     fn set_pixel(&mut self, x: u16, y: u16, pixel: Self::Pixel);
 
@@ -269,11 +255,11 @@ impl Bitmap for BitmapOne {
         &self.palette
     }
 
-    fn set_palette(&mut self, new_palette: &[RgbQuad]) {
+    fn set_palette<I: IntoIterator<Item = RgbQuad>>(&mut self, new_palette: I) {
         self.palette
             .iter_mut()
             .zip(new_palette)
-            .for_each(|(dst, src)| *dst = *src)
+            .for_each(|(dst, src)| *dst = src)
     }
 
     fn get_pixel(&self, x: u16, y: u16) -> u8 {
@@ -342,11 +328,11 @@ impl Bitmap for BitmapFour {
         &self.palette
     }
 
-    fn set_palette(&mut self, new_palette: &[RgbQuad]) {
+    fn set_palette<I: IntoIterator<Item = RgbQuad>>(&mut self, new_palette: I) {
         self.palette
             .iter_mut()
             .zip(new_palette)
-            .for_each(|(dst, src)| *dst = *src)
+            .for_each(|(dst, src)| *dst = src)
     }
 
     fn get_pixel(&self, x: u16, y: u16) -> u8 {
@@ -415,11 +401,11 @@ impl Bitmap for BitmapEight {
         &self.palette
     }
 
-    fn set_palette(&mut self, new_palette: &[RgbQuad]) {
+    fn set_palette<I: IntoIterator<Item = RgbQuad>>(&mut self, new_palette: I) {
         self.palette
             .iter_mut()
             .zip(new_palette)
-            .for_each(|(dst, src)| *dst = *src)
+            .for_each(|(dst, src)| *dst = src)
     }
 
     fn get_pixel(&self, x: u16, y: u16) -> u8 {
@@ -480,7 +466,7 @@ impl Bitmap for BitmapSixteen {
         &[]
     }
 
-    fn set_palette(&mut self, new_palette: &[RgbQuad]) {}
+    fn set_palette<I: IntoIterator<Item = RgbQuad>>(&mut self, new_palette: I) {}
 
     fn get_pixel(&self, x: u16, y: u16) -> RgbQuad {
         if (x >= self.width) || (y >= self.height) {
@@ -554,7 +540,7 @@ impl Bitmap for BitmapTwentyFour {
         &[]
     }
 
-    fn set_palette(&mut self, new_palette: &[RgbQuad]) {}
+    fn set_palette<I: IntoIterator<Item = RgbQuad>>(&mut self, new_palette: I) {}
 
     fn get_pixel(&self, x: u16, y: u16) -> RgbQuad {
         if (x >= self.width) || (y >= self.height) {

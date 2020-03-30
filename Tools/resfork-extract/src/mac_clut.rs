@@ -1,6 +1,6 @@
 use crate::res::RGBColor;
 
-static MAC_COLOR_4: [RGBColor; 16] = [
+pub static MAC_COLOR_4: [RGBColor; 16] = [
     RGBColor::new(0xFFFF, 0xFFFF, 0xFFFF),
     RGBColor::new(0xFFFF, 0xFFFF, 0x0000),
     RGBColor::new(0xFFFF, 0x6666, 0x0000),
@@ -19,7 +19,7 @@ static MAC_COLOR_4: [RGBColor; 16] = [
     RGBColor::new(0x0000, 0x0000, 0x0000),
 ];
 
-static MAC_COLOR_8: [RGBColor; 256] = [
+pub static MAC_COLOR_8: [RGBColor; 256] = [
     //
     RGBColor::new(0xFFFF, 0xFFFF, 0xFFFF),
     RGBColor::new(0xFFFF, 0xFFFF, 0xCCCC),
