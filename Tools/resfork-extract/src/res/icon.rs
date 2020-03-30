@@ -16,7 +16,7 @@ impl Icon {
 }
 
 pub fn get_entry_name(res: &Resource) -> String {
-    format!("Icon/{}.ico", res.id)
+    format!("AppIcon/{}-mono.ico", res.id)
 }
 
 pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {

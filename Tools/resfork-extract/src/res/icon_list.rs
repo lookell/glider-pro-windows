@@ -19,7 +19,7 @@ impl IconList {
 }
 
 pub fn get_entry_name(res: &Resource) -> String {
-    format!("IconList/{}.ico", res.id)
+    format!("FinderIcon/{}-large-mono.ico", res.id)
 }
 
 pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
