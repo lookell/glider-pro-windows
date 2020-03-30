@@ -158,9 +158,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'snd ': Sound
 //   'vers': Version
 //
-//  Cursors:
-//   'crsr': Color Cursor
-//
 //  Icons:
 //   'cicn': Color Icon
 
@@ -204,6 +201,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = res::control::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::control::convert(&res.data, &mut zip_writer)?;
+            }
+            "crsr" => {
+                let entry_name = res::color_cursor::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::color_cursor::convert(&res.data, &mut zip_writer)?;
             }
             "CURS" => {
                 let entry_name = res::cursor::get_entry_name(&res);
