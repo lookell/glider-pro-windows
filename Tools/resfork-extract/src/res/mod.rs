@@ -81,6 +81,10 @@ pub struct RGBColor {
 }
 
 impl RGBColor {
+    pub const fn new(red: u16, green: u16, blue: u16) -> Self {
+        Self { red, green, blue }
+    }
+
     pub fn read_from(mut reader: impl Read) -> io::Result<Self> {
         Ok(Self {
             red: reader.read_be_u16()?,

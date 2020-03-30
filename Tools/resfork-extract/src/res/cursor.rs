@@ -17,7 +17,11 @@ impl Cursor {
         let mut mask = [0; 32];
         reader.read_exact(&mut mask)?;
         let hotspot = Point::read_from(&mut reader)?;
-        Ok(Self { data, mask, hotspot })
+        Ok(Self {
+            data,
+            mask,
+            hotspot,
+        })
     }
 }
 
