@@ -26,7 +26,7 @@ impl Cursor {
 }
 
 pub fn get_entry_name(res: &Resource) -> String {
-    format!("Cursor/{}.cur", res.id)
+    format!("Cursor/{}-mono.cur", res.id)
 }
 
 pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
@@ -35,44 +35,36 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
     let mut data_bits = BitmapOne::new(16, 16);
     data_bits.set_palette(&[RgbQuad::BLACK, RgbQuad::WHITE]);
     for (y, pair) in cursor.data.chunks_exact(2).enumerate() {
-        data_bits.set_pixel(0, y as _, ((pair[0] & 0x80) == 0).into());
-        data_bits.set_pixel(1, y as _, ((pair[0] & 0x40) == 0).into());
-        data_bits.set_pixel(2, y as _, ((pair[0] & 0x20) == 0).into());
-        data_bits.set_pixel(3, y as _, ((pair[0] & 0x10) == 0).into());
-        data_bits.set_pixel(4, y as _, ((pair[0] & 0x08) == 0).into());
-        data_bits.set_pixel(5, y as _, ((pair[0] & 0x04) == 0).into());
-        data_bits.set_pixel(6, y as _, ((pair[0] & 0x02) == 0).into());
-        data_bits.set_pixel(7, y as _, ((pair[0] & 0x01) == 0).into());
-        data_bits.set_pixel(8, y as _, ((pair[1] & 0x80) == 0).into());
-        data_bits.set_pixel(9, y as _, ((pair[1] & 0x40) == 0).into());
-        data_bits.set_pixel(10, y as _, ((pair[1] & 0x20) == 0).into());
-        data_bits.set_pixel(11, y as _, ((pair[1] & 0x10) == 0).into());
-        data_bits.set_pixel(12, y as _, ((pair[1] & 0x08) == 0).into());
-        data_bits.set_pixel(13, y as _, ((pair[1] & 0x04) == 0).into());
-        data_bits.set_pixel(14, y as _, ((pair[1] & 0x02) == 0).into());
-        data_bits.set_pixel(15, y as _, ((pair[1] & 0x01) == 0).into());
+        let y = y as u16;
+        for (xbase, byte) in pair.iter().copied().enumerate() {
+            let xbase = (8 * xbase) as u16;
+            data_bits.set_pixel(xbase, y, ((byte & 0x80) == 0).into());
+            data_bits.set_pixel(xbase + 1, y, ((byte & 0x40) == 0).into());
+            data_bits.set_pixel(xbase + 2, y, ((byte & 0x20) == 0).into());
+            data_bits.set_pixel(xbase + 3, y, ((byte & 0x10) == 0).into());
+            data_bits.set_pixel(xbase + 4, y, ((byte & 0x08) == 0).into());
+            data_bits.set_pixel(xbase + 5, y, ((byte & 0x04) == 0).into());
+            data_bits.set_pixel(xbase + 6, y, ((byte & 0x02) == 0).into());
+            data_bits.set_pixel(xbase + 7, y, ((byte & 0x01) == 0).into());
+        }
     }
     let data_bits = data_bits;
 
     let mut mask_bits = BitmapOne::new(16, 16);
     mask_bits.set_palette(&[RgbQuad::BLACK, RgbQuad::WHITE]);
     for (y, pair) in cursor.mask.chunks_exact(2).enumerate() {
-        mask_bits.set_pixel(0, y as _, ((pair[0] & 0x80) == 0).into());
-        mask_bits.set_pixel(1, y as _, ((pair[0] & 0x40) == 0).into());
-        mask_bits.set_pixel(2, y as _, ((pair[0] & 0x20) == 0).into());
-        mask_bits.set_pixel(3, y as _, ((pair[0] & 0x10) == 0).into());
-        mask_bits.set_pixel(4, y as _, ((pair[0] & 0x08) == 0).into());
-        mask_bits.set_pixel(5, y as _, ((pair[0] & 0x04) == 0).into());
-        mask_bits.set_pixel(6, y as _, ((pair[0] & 0x02) == 0).into());
-        mask_bits.set_pixel(7, y as _, ((pair[0] & 0x01) == 0).into());
-        mask_bits.set_pixel(8, y as _, ((pair[1] & 0x80) == 0).into());
-        mask_bits.set_pixel(9, y as _, ((pair[1] & 0x40) == 0).into());
-        mask_bits.set_pixel(10, y as _, ((pair[1] & 0x20) == 0).into());
-        mask_bits.set_pixel(11, y as _, ((pair[1] & 0x10) == 0).into());
-        mask_bits.set_pixel(12, y as _, ((pair[1] & 0x08) == 0).into());
-        mask_bits.set_pixel(13, y as _, ((pair[1] & 0x04) == 0).into());
-        mask_bits.set_pixel(14, y as _, ((pair[1] & 0x02) == 0).into());
-        mask_bits.set_pixel(15, y as _, ((pair[1] & 0x01) == 0).into());
+        let y = y as u16;
+        for (xbase, byte) in pair.iter().copied().enumerate() {
+            let xbase = (8 * xbase) as u16;
+            mask_bits.set_pixel(xbase, y, ((byte & 0x80) == 0).into());
+            mask_bits.set_pixel(xbase + 1, y, ((byte & 0x40) == 0).into());
+            mask_bits.set_pixel(xbase + 2, y, ((byte & 0x20) == 0).into());
+            mask_bits.set_pixel(xbase + 3, y, ((byte & 0x10) == 0).into());
+            mask_bits.set_pixel(xbase + 4, y, ((byte & 0x08) == 0).into());
+            mask_bits.set_pixel(xbase + 5, y, ((byte & 0x04) == 0).into());
+            mask_bits.set_pixel(xbase + 6, y, ((byte & 0x02) == 0).into());
+            mask_bits.set_pixel(xbase + 7, y, ((byte & 0x01) == 0).into());
+        }
     }
     let mask_bits = mask_bits;
 
