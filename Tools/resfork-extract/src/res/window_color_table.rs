@@ -1,32 +1,6 @@
-use super::ColorSpec;
+use super::ColorTable;
 use crate::rsrcfork::Resource;
-use crate::utils::ReadExt;
-use std::io::{self, Read, Write};
-
-struct WinCTab {
-    wCSeed: i32,
-    wCReserved: i16,
-    ctSize: i16,
-    ctTable: Vec<ColorSpec>,
-}
-
-impl WinCTab {
-    fn read_from(mut reader: impl Read) -> io::Result<Self> {
-        let wCSeed = reader.read_be_i32()?;
-        let wCReserved = reader.read_be_i16()?;
-        let ctSize = reader.read_be_i16()?.wrapping_add(1);
-        let mut ctTable = Vec::with_capacity((ctSize.max(0) as u16).into());
-        for _ in 0..ctSize {
-            ctTable.push(ColorSpec::read_from(&mut reader)?);
-        }
-        Ok(Self {
-            wCSeed,
-            wCReserved,
-            ctSize,
-            ctTable,
-        })
-    }
-}
+use std::io::{self, Write};
 
 const CONTENT_COLOR: i16 = 0;
 const FRAME_COLOR: i16 = 1;
@@ -47,7 +21,7 @@ pub fn get_entry_name(res: &Resource) -> String {
 }
 
 pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {
-    let clut = WinCTab::read_from(data)?;
+    let clut = ColorTable::read_from(data)?;
     for entry in clut.ctTable.into_iter() {
         match entry.value {
             CONTENT_COLOR => write!(&mut writer, "wContentColor")?,

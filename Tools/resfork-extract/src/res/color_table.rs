@@ -1,32 +1,6 @@
-use super::ColorSpec;
+use super::ColorTable;
 use crate::rsrcfork::Resource;
-use crate::utils::ReadExt;
-use std::io::{self, Read, Write};
-
-struct ColorTable {
-    ctSeed: i32,
-    ctFlags: i16,
-    ctSize: i16,
-    ctTable: Vec<ColorSpec>,
-}
-
-impl ColorTable {
-    fn read_from(mut reader: impl Read) -> io::Result<Self> {
-        let ctSeed = reader.read_be_i32()?;
-        let ctFlags = reader.read_be_i16()?;
-        let ctSize = reader.read_be_i16()?.wrapping_add(1);
-        let mut ctTable = Vec::with_capacity((ctSize.max(0) as u16).into());
-        for _ in 0..ctSize {
-            ctTable.push(ColorSpec::read_from(&mut reader)?);
-        }
-        Ok(Self {
-            ctSeed,
-            ctFlags,
-            ctSize,
-            ctTable,
-        })
-    }
-}
+use std::io::{self, Write};
 
 pub fn get_entry_name(res: &Resource) -> String {
     format!("ColorTable/{}.txt", res.id)
