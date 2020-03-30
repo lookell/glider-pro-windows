@@ -6,25 +6,20 @@ use crate::utils::WriteExt;
 use std::io::{self, Write};
 use std::iter;
 
-#[derive(Clone)]
-pub struct IconFile<B: Bitmap> {
-    entries: Vec<IconFileEntry<B>>,
+#[derive(Clone, Default)]
+pub struct IconFile {
+    entries: Vec<IconFileEntry>,
 }
 
 #[derive(Clone)]
-struct IconFileEntry<B: Bitmap> {
+struct IconFileEntry {
     dir_entry: IconDirEntry,
-    image: B,
-    mask: BitmapOne,
+    bitmap_info: BitmapInfo,
+    image_bits: Vec<u8>,
+    mask_bits: Vec<u8>,
 }
 
-impl<B: Bitmap> Default for IconFile<B> {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-impl<B: Bitmap> IconFile<B> {
+impl IconFile {
     pub fn new() -> Self {
         Self {
             entries: Vec::new(),
@@ -41,7 +36,7 @@ impl<B: Bitmap> IconFile<B> {
         next_offset
     }
 
-    pub fn add_entry(&mut self, image: B, mask: BitmapOne) {
+    pub fn add_entry(&mut self, image: impl Bitmap, mask: BitmapOne) {
         assert_ne!(image.bit_count(), 24, "24-bit images are not supported");
         assert_ne!(self.entries.len(), usize::from(u16::max_value()));
         assert_eq!(image.width(), mask.width());
@@ -51,14 +46,19 @@ impl<B: Bitmap> IconFile<B> {
         for entry in self.entries.iter_mut() {
             entry.dir_entry.image_offset += IconDirEntry::SIZE;
         }
-        let dir_entry = IconDirEntry {
-            image_offset: self.next_image_offset(),
-            ..IconDirEntry::new(&image, &mask)
-        };
+        // the height and image data size are adjusted to compensate
+        // for the hybrid bitmap data
+        let mut info_header = image.info_header();
+        info_header.height *= 2;
+        info_header.size_image += mask.bits().len() as u32;
         self.entries.push(IconFileEntry {
-            dir_entry,
-            image,
-            mask,
+            dir_entry: IconDirEntry {
+                image_offset: self.next_image_offset(),
+                ..IconDirEntry::new(&image, &mask)
+            },
+            bitmap_info: BitmapInfo::new(info_header, image.palette()),
+            image_bits: image.bits().to_vec(),
+            mask_bits: mask.bits().to_vec(),
         });
     }
 
@@ -80,39 +80,28 @@ impl<B: Bitmap> IconFile<B> {
             dir_entry.write_to(&mut writer)?;
         }
         for entry in self.entries.iter() {
-            // the height and image data size are adjusted to compensate
-            // for the hybrid bitmap data
-            let mut info_header = entry.image.info_header();
-            info_header.height *= 2;
-            info_header.size_image += entry.mask.bits().len() as u32;
-            let info = BitmapInfo::new(info_header, entry.image.palette());
-            info.write_to(&mut writer)?;
-            writer.write_all(entry.image.bits())?;
-            writer.write_all(entry.mask.bits())?;
+            entry.bitmap_info.write_to(&mut writer)?;
+            writer.write_all(&entry.image_bits)?;
+            writer.write_all(&entry.mask_bits)?;
         }
         Ok(())
     }
 }
 
-#[derive(Clone)]
-pub struct CursorFile<B: Bitmap> {
-    entries: Vec<CursorFileEntry<B>>,
+#[derive(Clone, Default)]
+pub struct CursorFile {
+    entries: Vec<CursorFileEntry>,
 }
 
 #[derive(Clone)]
-struct CursorFileEntry<B: Bitmap> {
+struct CursorFileEntry {
     dir_entry: CursorDirEntry,
-    image: B,
-    mask: BitmapOne,
+    bitmap_info: BitmapInfo,
+    image_bits: Vec<u8>,
+    mask_bits: Vec<u8>,
 }
 
-impl<B: Bitmap> Default for CursorFile<B> {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-impl<B: Bitmap> CursorFile<B> {
+impl CursorFile {
     pub fn new() -> Self {
         Self {
             entries: Vec::new(),
@@ -129,7 +118,7 @@ impl<B: Bitmap> CursorFile<B> {
         next_offset
     }
 
-    pub fn add_entry(&mut self, image: B, mask: BitmapOne, hotspot: Point) {
+    pub fn add_entry(&mut self, image: impl Bitmap, mask: BitmapOne, hotspot: Point) {
         assert_ne!(image.bit_count(), 24, "24-bit images are not supported");
         assert_ne!(self.entries.len(), usize::from(u16::max_value()));
         assert_eq!(image.width(), mask.width());
@@ -139,14 +128,19 @@ impl<B: Bitmap> CursorFile<B> {
         for entry in self.entries.iter_mut() {
             entry.dir_entry.image_offset += CursorDirEntry::SIZE;
         }
-        let dir_entry = CursorDirEntry {
-            image_offset: self.next_image_offset(),
-            ..CursorDirEntry::new(&image, &mask, hotspot)
-        };
+        // the height and image data size are adjusted to compensate
+        // for the hybrid bitmap data
+        let mut info_header = image.info_header();
+        info_header.height *= 2;
+        info_header.size_image += mask.bits().len() as u32;
         self.entries.push(CursorFileEntry {
-            dir_entry,
-            image,
-            mask,
+            dir_entry: CursorDirEntry {
+                image_offset: self.next_image_offset(),
+                ..CursorDirEntry::new(&image, &mask, hotspot)
+            },
+            bitmap_info: BitmapInfo::new(info_header, image.palette()),
+            image_bits: image.bits().to_vec(),
+            mask_bits: mask.bits().to_vec(),
         });
     }
 
@@ -168,15 +162,9 @@ impl<B: Bitmap> CursorFile<B> {
             dir_entry.write_to(&mut writer)?;
         }
         for entry in self.entries.iter() {
-            // the height and image data size are adjusted to compensate
-            // for the hybrid bitmap data
-            let mut info_header = entry.image.info_header();
-            info_header.height *= 2;
-            info_header.size_image += entry.mask.bits().len() as u32;
-            let info = BitmapInfo::new(info_header, entry.image.palette());
-            info.write_to(&mut writer)?;
-            writer.write_all(entry.image.bits())?;
-            writer.write_all(entry.mask.bits())?;
+            entry.bitmap_info.write_to(&mut writer)?;
+            writer.write_all(&entry.image_bits)?;
+            writer.write_all(&entry.mask_bits)?;
         }
         Ok(())
     }
