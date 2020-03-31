@@ -24,5 +24,9 @@ pub fn get_entry_name(res: &Resource) -> String {
 
 pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {
     let file_ref = FileReference::read_from(data)?;
-    writeln!(writer, "type '{}' uses icon ({})", file_ref.file_type, file_ref.icon_id)
+    writeln!(
+        writer,
+        "type '{}' uses icon ({})",
+        file_ref.file_type, file_ref.icon_id
+    )
 }

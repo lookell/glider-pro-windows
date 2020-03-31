@@ -38,10 +38,7 @@ impl TypeMapping {
         for _ in 0..num_mappings {
             id_map.push(IDMapping::read_from(&mut reader)?);
         }
-        Ok(Self {
-            restype,
-            id_map,
-        })
+        Ok(Self { restype, id_map })
     }
 }
 

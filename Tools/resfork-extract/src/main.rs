@@ -150,7 +150,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'mctb': Menu Color Information Table
 //   'MENU': Menu
 //   'PICT': Picture
-//   'snd ': Sound
 
 fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
@@ -280,6 +279,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                     zip_writer.start_file(entry_name, Default::default())?;
                     patt.write_bmp_file(&mut zip_writer)?;
                 }
+            }
+            "snd " => {
+                let entry_name = res::sound::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::sound::convert(&res.data, &mut zip_writer)?;
             }
             "STR#" => {
                 let entry_name = res::string_list::get_entry_name(&res);

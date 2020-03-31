@@ -33,7 +33,11 @@ pub fn get_entry_name(res: &Resource) -> String {
 pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {
     let version = Version::read_from(data)?;
     writeln!(&mut writer, "majorRev: 0x{:02X}", version.majorRev)?;
-    writeln!(&mut writer, "minorAndBugRev: 0x{:02X}", version.minorAndBugRev)?;
+    writeln!(
+        &mut writer,
+        "minorAndBugRev: 0x{:02X}",
+        version.minorAndBugRev
+    )?;
     match version.stage {
         0x20 => writeln!(&mut writer, "stage: development")?,
         0x40 => writeln!(&mut writer, "stage: alpha")?,
