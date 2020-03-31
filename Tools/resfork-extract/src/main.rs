@@ -148,7 +148,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 
 // TODO:
 //  General:
-//   'FREF': File Reference
 //   'ictb': Item Color Table
 //   'mctb': Menu Color Information Table
 //   'MENU': Menu
@@ -236,6 +235,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = res::dialog::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::dialog::convert(&res.data, &mut zip_writer)?;
+            }
+            "FREF" => {
+                let entry_name = res::file_reference::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::file_reference::convert(&res.data, &mut zip_writer)?;
             }
             "ICON" => {
                 let entry_name = res::icon::get_entry_name(&res);
