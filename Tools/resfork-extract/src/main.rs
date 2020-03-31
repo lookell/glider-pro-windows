@@ -8,10 +8,8 @@ mod res;
 mod rsrcfork;
 mod utils;
 
-#[cfg(not(windows))]
-compile_error!("This program requires Windows, for RLE compression of bitmaps");
-
 use crate::apple_double::AppleDouble;
+use crate::bitmap::Bitmap;
 use crate::macbinary::MacBinary;
 use crate::rsrcfork::{Resource, ResourceFork};
 use std::env;
@@ -151,7 +149,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'ictb': Item Color Table
 //   'mctb': Menu Color Information Table
 //   'MENU': Menu
-//   'PAT#': Pattern List
 //   'PICT': Picture
 //   'snd ': Sound
 
@@ -275,6 +272,14 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = res::small_icon_list::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::small_icon_list::convert(&res.data, &mut zip_writer)?;
+            }
+            "PAT#" => {
+                let patterns = res::pattern_list::convert(&res.data)?;
+                for (i, patt) in patterns.into_iter().enumerate() {
+                    let entry_name = format!("PatternList/{}/{}.bmp", res.id, i);
+                    zip_writer.start_file(entry_name, Default::default())?;
+                    patt.write_bmp_file(&mut zip_writer)?;
+                }
             }
             "STR#" => {
                 let entry_name = res::string_list::get_entry_name(&res);
