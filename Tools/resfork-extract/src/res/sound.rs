@@ -212,7 +212,8 @@ fn write_aiff_file(header: SoundHeader, mut writer: impl Write) -> io::Result<()
     writer.write_be_u32(8 + header.sampleArea.len() as u32)?;
     writer.write_be_u32(0)?;
     writer.write_be_u32(0)?;
-    let adjustedSamples = header.sampleArea
+    let adjustedSamples = header
+        .sampleArea
         .iter()
         .map(|byte| byte.wrapping_add(0x80))
         .collect::<Vec<_>>();

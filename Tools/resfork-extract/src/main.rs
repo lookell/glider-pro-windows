@@ -148,7 +148,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //  General:
 //   'ictb': Item Color Table
 //   'mctb': Menu Color Information Table
-//   'MENU': Menu
 //   'PICT': Picture
 
 fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
@@ -271,6 +270,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = res::small_icon_list::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::small_icon_list::convert(&res.data, &mut zip_writer)?;
+            }
+            "MENU" => {
+                let entry_name = res::menu::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::menu::convert(&res.data, &mut zip_writer)?;
             }
             "PAT#" => {
                 let patterns = res::pattern_list::convert(&res.data)?;
