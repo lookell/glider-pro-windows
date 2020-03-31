@@ -193,7 +193,8 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
     match cursor.pixelSize {
         2 => {
             let mut palette = vec![RgbQuad::BLACK; 16];
-            palette.iter_mut()
+            palette
+                .iter_mut()
                 .rev()
                 .zip(&cursor.pixelCTab.ctTable)
                 .for_each(|(dst, src)| *dst = src.rgb.into());
@@ -204,7 +205,8 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
         }
         4 => {
             let mut palette = vec![RgbQuad::BLACK; 16];
-            palette.iter_mut()
+            palette
+                .iter_mut()
                 .rev()
                 .zip(&cursor.pixelCTab.ctTable)
                 .for_each(|(dst, src)| *dst = src.rgb.into());

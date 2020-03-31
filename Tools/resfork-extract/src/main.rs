@@ -157,9 +157,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'PICT': Picture
 //   'snd ': Sound
 //   'vers': Version
-//
-//  Icons:
-//   'cicn': Color Icon
 
 fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
@@ -191,6 +188,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = format!("ControlDefinitionFunction/{}.bin", res.id);
                 zip_writer.start_file(entry_name, Default::default())?;
                 zip_writer.write_all(&res.data)?;
+            }
+            "cicn" => {
+                let entry_name = res::color_icon::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::color_icon::convert(&res.data, &mut zip_writer)?;
             }
             "clut" => {
                 let entry_name = res::color_table::get_entry_name(&res);

@@ -8,6 +8,7 @@ use std::io::{self, Read};
 pub mod alert; // 'ALRT'
 pub mod animated_cursor; // 'acur'
 pub mod color_cursor; // 'crsr'
+pub mod color_icon; // 'cicn'
 pub mod color_table; // 'clut'
 pub mod control; // 'CNTL'
 pub mod control_color_table; // 'cctb'
