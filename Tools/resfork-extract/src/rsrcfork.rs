@@ -23,7 +23,7 @@ impl Debug for ResType {
 }
 
 impl ResType {
-    fn read_from(mut reader: impl Read) -> io::Result<Self> {
+    pub fn read_from(mut reader: impl Read) -> io::Result<Self> {
         let mut bytes = [0; 4];
         reader.read_exact(&mut bytes)?;
         Ok(Self {

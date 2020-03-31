@@ -148,7 +148,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 
 // TODO:
 //  General:
-//   'BNDL': Bundle
 //   'FREF': File Reference
 //   'ictb': Item Color Table
 //   'mctb': Menu Color Information Table
@@ -177,6 +176,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = res::alert::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::alert::convert(&res.data, &mut zip_writer)?;
+            }
+            "BNDL" => {
+                let entry_name = res::bundle::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::bundle::convert(&res.data, &mut zip_writer)?;
             }
             "cctb" => {
                 let entry_name = res::control_color_table::get_entry_name(&res);
