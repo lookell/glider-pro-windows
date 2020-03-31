@@ -36,7 +36,7 @@ impl IconFile {
         next_offset
     }
 
-    pub fn add_entry(&mut self, image: impl Bitmap, mask: BitmapOne) {
+    pub fn add_entry(&mut self, mut image: impl Bitmap, mask: BitmapOne) {
         assert_ne!(image.bit_count(), 24, "24-bit images are not supported");
         assert_ne!(self.entries.len(), usize::from(u16::max_value()));
         assert_eq!(image.width(), mask.width());
@@ -46,8 +46,11 @@ impl IconFile {
         for entry in self.entries.iter_mut() {
             entry.dir_entry.image_offset += IconDirEntry::SIZE;
         }
-        // the height and image data size are adjusted to compensate
-        // for the hybrid bitmap data
+        // Apply the mask to the image, to make sure that the transparent
+        // parts will actually be transparent.
+        image.apply_mask(&mask);
+        // The height and image data size are adjusted to compensate
+        // for the hybrid bitmap data.
         let mut info_header = image.info_header();
         info_header.height *= 2;
         info_header.size_image += mask.bits().len() as u32;
@@ -118,7 +121,7 @@ impl CursorFile {
         next_offset
     }
 
-    pub fn add_entry(&mut self, image: impl Bitmap, mask: BitmapOne, hotspot: Point) {
+    pub fn add_entry(&mut self, mut image: impl Bitmap, mask: BitmapOne, hotspot: Point) {
         assert_ne!(image.bit_count(), 24, "24-bit images are not supported");
         assert_ne!(self.entries.len(), usize::from(u16::max_value()));
         assert_eq!(image.width(), mask.width());
@@ -128,8 +131,11 @@ impl CursorFile {
         for entry in self.entries.iter_mut() {
             entry.dir_entry.image_offset += CursorDirEntry::SIZE;
         }
-        // the height and image data size are adjusted to compensate
-        // for the hybrid bitmap data
+        // Apply the mask to the image, to make sure that the transparent
+        // parts will actually be transparent.
+        image.apply_mask(&mask);
+        // The height and image data size are adjusted to compensate
+        // for the hybrid bitmap data.
         let mut info_header = image.info_header();
         info_header.height *= 2;
         info_header.size_image += mask.bits().len() as u32;

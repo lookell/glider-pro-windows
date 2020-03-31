@@ -165,8 +165,9 @@ fn zeroed_bitmap(width: u16, height: u16, depth: u16) -> Vec<u8> {
 }
 
 pub trait Bitmap: Sized {
-    const BIT_COUNT: u16;
     type Pixel: Copy;
+    const BIT_COUNT: u16;
+    const BLACK: Self::Pixel;
 
     fn new(width: u16, height: u16) -> Self;
     fn width(&self) -> u16;
@@ -179,6 +180,16 @@ pub trait Bitmap: Sized {
 
     fn bit_count(&self) -> u16 {
         Self::BIT_COUNT
+    }
+
+    fn apply_mask(&mut self, mask: &BitmapOne) {
+        for y in 0..mask.height() {
+            for x in 0..mask.width() {
+                if mask.get_pixel(x, y) == 1 {
+                    self.set_pixel(x, y, Self::BLACK);
+                }
+            }
+        }
     }
 
     fn info_header(&self) -> BitmapInfoHeader {
@@ -229,6 +240,7 @@ pub struct BitmapOne {
 impl Bitmap for BitmapOne {
     type Pixel = u8;
     const BIT_COUNT: u16 = 1;
+    const BLACK: Self::Pixel = 0;
 
     fn new(width: u16, height: u16) -> Self {
         Self {
@@ -302,6 +314,7 @@ pub struct BitmapFour {
 impl Bitmap for BitmapFour {
     type Pixel = u8;
     const BIT_COUNT: u16 = 4;
+    const BLACK: Self::Pixel = 0;
 
     fn new(width: u16, height: u16) -> Self {
         Self {
@@ -375,6 +388,7 @@ pub struct BitmapEight {
 impl Bitmap for BitmapEight {
     type Pixel = u8;
     const BIT_COUNT: u16 = 8;
+    const BLACK: Self::Pixel = 0;
 
     fn new(width: u16, height: u16) -> Self {
         Self {
@@ -441,6 +455,7 @@ pub struct BitmapSixteen {
 impl Bitmap for BitmapSixteen {
     type Pixel = RgbQuad;
     const BIT_COUNT: u16 = 16;
+    const BLACK: Self::Pixel = RgbQuad::BLACK;
 
     fn new(width: u16, height: u16) -> Self {
         Self {
@@ -515,6 +530,7 @@ pub struct BitmapTwentyFour {
 impl Bitmap for BitmapTwentyFour {
     type Pixel = RgbQuad;
     const BIT_COUNT: u16 = 24;
+    const BLACK: Self::Pixel = RgbQuad::BLACK;
 
     fn new(width: u16, height: u16) -> Self {
         Self {
