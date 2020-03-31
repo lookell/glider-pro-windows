@@ -156,7 +156,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 //   'PAT#': Pattern List
 //   'PICT': Picture
 //   'snd ': Sound
-//   'vers': Version
 
 fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
@@ -273,6 +272,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 let entry_name = res::string_list::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::string_list::convert(&res.data, &mut zip_writer)?;
+            }
+            "vers" => {
+                let entry_name = res::version::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::version::convert(&res.data, &mut zip_writer)?;
             }
             "wctb" => {
                 let entry_name = res::window_color_table::get_entry_name(&res);

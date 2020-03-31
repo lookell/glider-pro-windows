@@ -24,6 +24,7 @@ pub mod small_4bit_icon; // 'ics4'
 pub mod small_8bit_icon; // 'ics8'
 pub mod small_icon_list; // 'ics#'
 pub mod string_list; // 'STR#'
+pub mod version; // 'vers'
 pub mod window; // 'WIND'
 pub mod window_color_table; // 'wctb'
 
