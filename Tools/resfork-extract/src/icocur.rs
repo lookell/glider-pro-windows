@@ -198,7 +198,7 @@ const RES_ICON: u16 = 1;
 const RES_CURSOR: u16 = 2;
 
 fn get_color_count(bitmap: &impl Bitmap) -> u8 {
-    if bitmap.bit_count() <= 8 {
+    if bitmap.bit_count() < 8 {
         1 << bitmap.bit_count()
     } else {
         0
