@@ -29,6 +29,7 @@ fn extract_resource_bytes(mut reader: impl Read + Seek) -> io::Result<Option<Vec
     if let Ok(Some(data)) = MacBinary::read_from(&mut reader) {
         return Ok(Some(data.rsrc));
     }
+    reader.seek(SeekFrom::Start(0))?;
     let mut bytes = Vec::new();
     reader.read_to_end(&mut bytes).map(|_| Some(bytes))
 }
@@ -147,7 +148,6 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
 // TODO:
 //  General:
 //   'ictb': Item Color Table
-//   'PICT': Picture
 
 fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
@@ -288,6 +288,11 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                     patt.write_bmp_file(&mut zip_writer)?;
                 }
             }
+            "PICT" => {
+                let entry_name = res::picture::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                res::picture::convert(&res.data, &mut zip_writer)?;
+            }
             "snd " => {
                 let entry_name = res::sound::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
@@ -337,7 +342,7 @@ fn main() {
     let command = &arguments[0];
     let input_name = &arguments[1];
     let output_name = arguments.get(2);
-    let input_file = match File::open(input_name) {
+    let mut input_file = match File::open(input_name) {
         Ok(file) => BufReader::new(file),
         Err(e) => {
             eprintln!("error: could not open input file: {}", e);
@@ -354,7 +359,7 @@ fn main() {
         },
         None => None,
     };
-    let resfork_bytes = match extract_resource_bytes(input_file) {
+    let resfork_bytes = match extract_resource_bytes(&mut input_file) {
         Ok(Some(bytes)) => bytes,
         Ok(None) => {
             eprintln!("error: could not determine file format");
@@ -368,9 +373,18 @@ fn main() {
     let resfork_cursor = Cursor::new(resfork_bytes);
     let resfork = match ResourceFork::read_from(resfork_cursor) {
         Ok(fork) => fork,
-        Err(e) => {
-            eprintln!("error: could not parse resource fork: {}", e);
-            return;
+        Err(_) => {
+            // try again with the raw file bytes
+            let mut bytes = Vec::new();
+            input_file.seek(SeekFrom::Start(0)).unwrap();
+            input_file.read_to_end(&mut bytes).unwrap();
+            match ResourceFork::read_from(Cursor::new(bytes)) {
+                Ok(fork) => fork,
+                Err(e) => {
+                    eprintln!("error: could not parse resource fork: {}", e);
+                    return;
+                }
+            }
         }
     };
     let result = match command.as_str() {

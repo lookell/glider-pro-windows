@@ -1,5 +1,5 @@
 #![allow(unused)]
-use crate::res::RGBColor;
+use crate::res::{Point, Rect, RGBColor};
 use crate::utils::WriteExt;
 use std::io::{self, Write};
 
@@ -180,6 +180,18 @@ pub trait Bitmap: Sized {
 
     fn bit_count(&self) -> u16 {
         Self::BIT_COUNT
+    }
+
+    fn bitblt(&mut self, src: &Self, dst_origin: Point, src_rect: Rect) {
+        for y in src_rect.top..src_rect.bottom {
+            for x in src_rect.left..src_rect.right {
+                let src_x = x as u16;
+                let src_y = y as u16;
+                let dst_x = dst_origin.h as u16 + src_x - src_rect.left as u16;
+                let dst_y = dst_origin.v as u16 + src_y - src_rect.top as u16;
+                self.set_pixel(dst_x, dst_y, src.get_pixel(src_x, src_y));
+            }
+        }
     }
 
     fn apply_mask(&mut self, mask: &BitmapOne) {

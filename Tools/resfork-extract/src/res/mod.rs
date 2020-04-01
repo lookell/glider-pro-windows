@@ -25,6 +25,7 @@ pub mod large_8bit_icon; // 'icl8'
 pub mod menu; // 'MENU'
 pub mod menu_color_table; // 'mctb'
 pub mod pattern_list; // 'PAT#'
+pub mod picture; // 'PICT'
 pub mod small_4bit_icon; // 'ics4'
 pub mod small_8bit_icon; // 'ics8'
 pub mod small_icon_list; // 'ics#'
@@ -53,7 +54,7 @@ impl Point {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct Rect {
     pub top: i16,
     pub left: i16,
@@ -123,7 +124,7 @@ impl ColorSpec {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct ColorTable {
     pub ctSeed: i32,
     pub ctFlags: i16,
