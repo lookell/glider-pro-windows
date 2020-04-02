@@ -10,10 +10,15 @@ end_of_line = lf
 indent_size = 2
 indent_style = space
 
-[*.{c,h,rc}]
+[*.{c,h}]
 end_of_line = lf
 indent_size = 4
 indent_style = tab
+
+[*.rc]
+end_of_line = lf
+indent_size = 4
+indent_style = space
 
 [*.rs]
 end_of_line = lf

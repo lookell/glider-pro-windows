@@ -18,6 +18,7 @@ target_sources(
   gliderpro PRIVATE
   # resources
   Resources/gliderpro.manifest
+  Resources/gliderpro.rc
   # added headers
   Headers/ByteIO.h
   Headers/Macintosh.h
