@@ -25,6 +25,18 @@ void PasStringCopy (StringPtr p1, StringPtr p2)
 		*p2++ = *p1++;
 }
 
+//--------------------------------------------------------------  PasStringCopyC
+
+void PasStringCopyC (const char *s1, StringPtr p2)
+{
+	size_t		stringLength;
+
+	stringLength = 0;
+	while (*s1 != '\0' && stringLength < 255)
+		p2[++stringLength] = *s1++;
+	p2[0] = stringLength;
+}
+
 //--------------------------------------------------------------  WhichStringFirst
 
 // This is a sorting function that handles two Pascal strings.  It…
@@ -129,6 +141,18 @@ void PasStringConcat (StringPtr p1, StringPtr p2)
 
 	for (i = 0; i < addedLength; i++)
 		*p1++ = *p2++;
+}
+
+//--------------------------------------------------------------  PasStringConcatC
+
+void PasStringConcatC (StringPtr p1, const char *s2)
+{
+	size_t		stringLength;
+
+	stringLength = p1[0];
+	while (*s2 != '\0' && stringLength < 255)
+		p1[++stringLength] = *s2++;
+	p1[0] = stringLength;
 }
 
 //--------------------------------------------------------------  GetLineOfText

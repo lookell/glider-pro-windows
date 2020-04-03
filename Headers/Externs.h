@@ -328,9 +328,11 @@ Boolean SavePrefs (prefsInfo *, SInt16);				// --- Prefs.c
 Boolean LoadPrefs (prefsInfo *, SInt16);
 
 void PasStringCopy (StringPtr, StringPtr);				// --- StringUtils.c
+void PasStringCopyC (const char *, StringPtr);
 SInt16 WhichStringFirst (StringPtr, StringPtr);
 void PasStringCopyNum (StringPtr, StringPtr, SInt16);
 void PasStringConcat (StringPtr, StringPtr);
+void PasStringConcatC (StringPtr, const char *);
 void GetLineOfText (StringPtr, SInt16, StringPtr);
 void WrapText (StringPtr, SInt16);
 void GetFirstWordOfString (StringPtr, StringPtr);
