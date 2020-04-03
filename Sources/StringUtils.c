@@ -164,12 +164,10 @@ void PasStringConcatC (StringPtr p1, const char *s2)
 
 void GetLineOfText (StringPtr srcStr, SInt16 index, StringPtr textLine)
 {
-	return;
-#if 0
-	short		i, srcLength, count, start, stop;
+	SInt16		i, srcLength, count, start, stop;
 	Boolean		foundIt;
 
-	PasStringCopy("\p", textLine);
+	PasStringCopyC("", textLine);
 	srcLength = srcStr[0];
 
 	if (index == 0)						// walk through to "index"
@@ -232,7 +230,6 @@ void GetLineOfText (StringPtr srcStr, SInt16 index, StringPtr textLine)
 		}
 		textLine[0] = count;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  WrapText
@@ -243,9 +240,7 @@ void GetLineOfText (StringPtr srcStr, SInt16 index, StringPtr textLine)
 
 void WrapText (StringPtr theText, SInt16 maxChars)
 {
-	return;
-#if 0
-	short		lastChar, count, chars, spaceIs;
+	SInt16		lastChar, count, chars, spaceIs;
 	Boolean		foundEdge, foundSpace;
 
 	lastChar = theText[0];
@@ -277,7 +272,6 @@ void WrapText (StringPtr theText, SInt16 maxChars)
 		}
 	}
 	while (count < lastChar);
-#endif
 }
 
 //--------------------------------------------------------------  GetFirstWordOfString
@@ -286,9 +280,7 @@ void WrapText (StringPtr theText, SInt16 maxChars)
 
 void GetFirstWordOfString (StringPtr stringIn, StringPtr stringOut)
 {
-	return;
-#if 0
-	short		isLong, spaceAt, i;
+	SInt16		isLong, spaceAt, i;
 
 	isLong = stringIn[0];
 	spaceAt = isLong;
@@ -300,10 +292,9 @@ void GetFirstWordOfString (StringPtr stringIn, StringPtr stringOut)
 	}
 
 	if (spaceAt <= 0)
-		PasStringCopy("\p", stringOut);
+		PasStringCopyC("", stringOut);
 	else
 		PasStringCopyNum(stringIn, stringOut, spaceAt);
-#endif
 }
 
 //--------------------------------------------------------------  CollapseStringToWidth
@@ -338,6 +329,7 @@ void CollapseStringToWidth (StringPtr theStr, SInt16 wide)
 
 void GetChooserName (StringPtr thisName)
 {
+	PasStringCopyC("", thisName);
 	return;
 #if 0
 	#define		kChooserStringID	-16096
@@ -360,6 +352,7 @@ void GetChooserName (StringPtr thisName)
 
 StringPtr GetLocalizedString (SInt16 index, StringPtr theString)
 {
+	PasStringCopyC("", theString);
 	return (theString);
 #if 0
 	#define		kLocalizedStringsID		150
