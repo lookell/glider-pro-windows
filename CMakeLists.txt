@@ -22,6 +22,7 @@ target_sources(
   # added headers
   Headers/ByteIO.h
   Headers/Macintosh.h
+  Headers/ResourceIDs.h
   Headers/WinAPI.h
   # added sources
   Sources/ByteIO.c

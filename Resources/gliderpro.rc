@@ -1,8 +1,94 @@
 #pragma code_page(65001)
 
 #include <windows.h>
+#include "ResourceIDs.h"
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+1 MENUEX
+{
+    POPUP "@", IDM_APPLE
+    {
+        MENUITEM "About Glider PRO…", ID_ABOUT
+        MENUITEM "", 0, MFT_SEPARATOR
+    }
+    POPUP "Game", IDM_GAME
+    {
+        MENUITEM "New Game\tCtrl+N", ID_NEW_GAME
+        MENUITEM "Two Player Game\tCtrl+2", ID_TWO_PLAYER
+        MENUITEM "Open Saved Game…\tCtrl+O", ID_OPEN_SAVED_GAME
+        MENUITEM "", 0, MFT_SEPARATOR
+        MENUITEM "Load House…\tCtrl+L", ID_LOAD_HOUSE
+        MENUITEM "", 0, MFT_SEPARATOR
+        MENUITEM "Quit\tCtrl+Q", ID_QUIT
+    }
+    POPUP "Options", IDM_OPTIONS
+    {
+        MENUITEM "Room Editor\tCtrl+E", ID_EDITOR
+        MENUITEM "", 0, MFT_SEPARATOR
+        MENUITEM "High Scores…\tCtrl+H", ID_HIGH_SCORES
+        MENUITEM "Preferences…\tCtrl+P", ID_PREFS
+        MENUITEM "Demo…\tCtrl+D", ID_DEMO
+    }
+    POPUP "House", IDM_HOUSE
+    {
+        MENUITEM "New House…\tCtrl+N", ID_NEW_HOUSE
+        MENUITEM "Save House\tCtrl+S", ID_SAVE_HOUSE
+        MENUITEM "", 0, MFT_SEPARATOR
+        MENUITEM "House Info…", ID_HOUSE_INFO
+        MENUITEM "Room Info…\tCtrl+R", ID_ROOM_INFO
+        MENUITEM "Object Info…\tCtrl+I", ID_OBJECT_INFO
+        MENUITEM "", 0, MFT_SEPARATOR
+        MENUITEM "Cut Room\tCtrl+X", ID_CUT
+        MENUITEM "Copy Room\tCtrl+C", ID_COPY
+        MENUITEM "Paste Room\tCtrl+V", ID_PASTE
+        MENUITEM "Delete Room", ID_CLEAR
+        MENUITEM "Duplicate Object\tCtrl+D", ID_DUPLICATE
+        MENUITEM "", 0, MFT_SEPARATOR
+        MENUITEM "Bring To Front\tCtrl+=", ID_BRING_FORWARD
+        MENUITEM "Send To Back\tCtrl+-", ID_SEND_BACK
+        MENUITEM "", 0, MFT_SEPARATOR
+        MENUITEM "Go To Room…\tCtrl+G", ID_GO_TO_ROOM
+        MENUITEM "", 0, MFT_SEPARATOR
+        MENUITEM "Map Window\tCtrl+M", ID_MAP_WINDOW
+        MENUITEM "Tools Window\tCtrl+T", ID_OBJECT_WINDOW
+        MENUITEM "Coordinate Window\tCtrl+K", ID_COORDINATE_WINDOW
+    }
+    POPUP "Rooms", 140
+    {
+        MENUITEM "Simple Room"
+        MENUITEM "Paneled Room"
+        MENUITEM "Basement"
+        MENUITEM "Child's Room"
+        MENUITEM "Asian Room"
+        MENUITEM "Unfinished Room"
+        MENUITEM "Swinger's Room"
+        MENUITEM "Bathroom"
+        MENUITEM "Library"
+        MENUITEM "Garden"
+        MENUITEM "Skywalk"
+        MENUITEM "Dirt"
+        MENUITEM "Meadow"
+        MENUITEM "Field"
+        MENUITEM "Roof"
+        MENUITEM "Sky"
+        MENUITEM "Stratosphere"
+        MENUITEM "Stars"
+        MENUITEM "Original Artwork"
+    }
+    POPUP "Tools", 141
+    {
+        MENUITEM "Blowers"
+        MENUITEM "Furniture"
+        MENUITEM "Prizes"
+        MENUITEM "Transport"
+        MENUITEM "Switches"
+        MENUITEM "Lighting"
+        MENUITEM "Appliances Etc."
+        MENUITEM "Enemies"
+        MENUITEM "Clutter"
+    }
+}
 
 150     BITMAP  "Pictures\\150.bmp"
 151     BITMAP  "Pictures\\151.bmp"
