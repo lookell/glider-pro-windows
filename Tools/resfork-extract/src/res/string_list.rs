@@ -25,7 +25,7 @@ pub fn get_entry_name(res: &Resource) -> String {
 pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {
     let string_list = StringList::read_from(data)?;
     for (idx, string) in string_list.strings.into_iter().enumerate() {
-        writeln!(&mut writer, "{}: {:?}\n", idx + 1, string)?;
+        writeln!(&mut writer, "{}: {:?}", idx + 1, string)?;
     }
     Ok(())
 }
