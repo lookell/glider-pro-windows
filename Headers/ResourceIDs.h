@@ -1,3 +1,13 @@
+#ifdef RC_INVOKED
+#define RT_DEMO DEMO
+#else
+#define RT_DEMO L"DEMO"
+#endif
+
+#define IDR_DEMO				128
+
+#define IDM_ROOT				1
+
 #define IDM_APPLE				128
 #define ID_ABOUT				40101
 
