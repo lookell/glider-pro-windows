@@ -18,14 +18,11 @@
 
 void PasStringCopy (StringPtr p1, StringPtr p2)
 {
-	return;
-#if 0
-	register short		stringLength;
+	register SInt16		stringLength;
 
 	stringLength = *p2++ = *p1++;
 	while (--stringLength >= 0)
 		*p2++ = *p1++;
-#endif
 }
 
 //--------------------------------------------------------------  WhichStringFirst
@@ -37,10 +34,8 @@ void PasStringCopy (StringPtr p1, StringPtr p2)
 
 SInt16 WhichStringFirst (StringPtr p1, StringPtr p2)
 {
-	return 0;
-#if 0
-	short		smallestLength, seek, greater;
-	char		char1, char2;
+	SInt16		smallestLength, seek, greater;
+	Byte		char1, char2;
 	Boolean		foundIt;
 
 	smallestLength = p1[0];
@@ -85,7 +80,6 @@ SInt16 WhichStringFirst (StringPtr p1, StringPtr p2)
 	while (!foundIt);
 
 	return (greater);
-#endif
 }
 
 //--------------------------------------------------------------  PasStringCopyNum
@@ -95,9 +89,7 @@ SInt16 WhichStringFirst (StringPtr p1, StringPtr p2)
 
 void PasStringCopyNum (StringPtr p1, StringPtr p2, SInt16 charsToCopy)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	if (charsToCopy > *p1)		// if trying to copy more chars than there are
 		charsToCopy = *p1;		// reduce the number of chars to copy to this size
@@ -109,7 +101,6 @@ void PasStringCopyNum (StringPtr p1, StringPtr p2, SInt16 charsToCopy)
 
 	for (i = 0; i < charsToCopy; i++)
 		*p2++ = *p1++;
-#endif
 }
 
 //--------------------------------------------------------------  PasStringConcat
@@ -118,9 +109,7 @@ void PasStringCopyNum (StringPtr p1, StringPtr p2, SInt16 charsToCopy)
 
 void PasStringConcat (StringPtr p1, StringPtr p2)
 {
-	return;
-#if 0
-	short		wasLength, addedLength, i;
+	SInt16		wasLength, addedLength, i;
 
 	wasLength = *p1;
 	if (wasLength > 255)
@@ -140,7 +129,6 @@ void PasStringConcat (StringPtr p1, StringPtr p2)
 
 	for (i = 0; i < addedLength; i++)
 		*p1++ = *p2++;
-#endif
 }
 
 //--------------------------------------------------------------  GetLineOfText
