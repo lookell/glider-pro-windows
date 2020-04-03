@@ -339,6 +339,8 @@ typedef struct
 	Byte		padding;
 } demoType, *demoPtr;
 
+#define demoTypeByteSize 6
+
 typedef struct
 {
 	SInt16		room;

@@ -6,13 +6,18 @@
 
 
 //#include <Resources.h>
+#include <stdlib.h>
 #include "Macintosh.h"
+#include "WinAPI.h"
+
+#include "ByteIO.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "GameOver.h"
 #include "MainWindow.h"
 #include "Objects.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 #include "Room.h"
 #include "RoomGraphics.h"
 #include "Utilities.h"
@@ -199,113 +204,126 @@ void CreateOffscreens (void)
 
 void CreatePointers (void)
 {
-	return;
-#if 0
-	Handle		tempHandle;
-	short		i;
+	HRSRC		resBlock;
+	HGLOBAL		resHandle;
+	DWORD		resByteSize;
+	LPVOID		resPointer;
+	byteio		demoReader;
+	size_t		i;
 
-	thisRoom = nil;
-	thisRoom = (roomPtr)NewPtr(sizeof(roomType));
-	if (thisRoom == nil)
+	thisRoom = NULL;
+	thisRoom = (roomPtr)malloc(sizeof(roomType));
+	if (thisRoom == NULL)
 		RedAlert(kErrNoMemory);
 
-	hotSpots = nil;
-	hotSpots = (hotPtr)NewPtr(sizeof(hotObject) * kMaxHotSpots);
-	if (hotSpots == nil)
+	hotSpots = NULL;
+	hotSpots = (hotPtr)malloc(sizeof(hotObject) * kMaxHotSpots);
+	if (hotSpots == NULL)
 		RedAlert(kErrNoMemory);
 
-	sparkles = nil;
-	sparkles = (sparklePtr)NewPtr(sizeof(sparkleType) * kMaxSparkles);
-	if (sparkles == nil)
+	sparkles = NULL;
+	sparkles = (sparklePtr)malloc(sizeof(sparkleType) * kMaxSparkles);
+	if (sparkles == NULL)
 		RedAlert(kErrNoMemory);
 
-	flyingPoints = nil;
-	flyingPoints = (flyingPtPtr)NewPtr(sizeof(flyingPtType) * kMaxFlyingPts);
-	if (flyingPoints == nil)
+	flyingPoints = NULL;
+	flyingPoints = (flyingPtPtr)malloc(sizeof(flyingPtType) * kMaxFlyingPts);
+	if (flyingPoints == NULL)
 		RedAlert(kErrNoMemory);
 
-	flames = nil;
-	flames = (flamePtr)NewPtr(sizeof(flameType) * kMaxCandles);
-	if (flames == nil)
+	flames = NULL;
+	flames = (flamePtr)malloc(sizeof(flameType) * kMaxCandles);
+	if (flames == NULL)
 		RedAlert(kErrNoMemory);
 
-	tikiFlames = nil;
-	tikiFlames = (flamePtr)NewPtr(sizeof(flameType) * kMaxTikis);
-	if (tikiFlames == nil)
+	tikiFlames = NULL;
+	tikiFlames = (flamePtr)malloc(sizeof(flameType) * kMaxTikis);
+	if (tikiFlames == NULL)
 		RedAlert(kErrNoMemory);
 
-	bbqCoals = nil;
-	bbqCoals = (flamePtr)NewPtr(sizeof(flameType) * kMaxCoals);
-	if (bbqCoals == nil)
+	bbqCoals = NULL;
+	bbqCoals = (flamePtr)malloc(sizeof(flameType) * kMaxCoals);
+	if (bbqCoals == NULL)
 		RedAlert(kErrNoMemory);
 
-	pendulums = nil;
-	pendulums = (pendulumPtr)NewPtr(sizeof(pendulumType) * kMaxPendulums);
-	if (pendulums == nil)
+	pendulums = NULL;
+	pendulums = (pendulumPtr)malloc(sizeof(pendulumType) * kMaxPendulums);
+	if (pendulums == NULL)
 		RedAlert(kErrNoMemory);
 
 	for (i = 0; i < kMaxSavedMaps; i++)
-		savedMaps[i].map = nil;
+		savedMaps[i].map = NULL;
 
-	bands = nil;
-	bands = (bandPtr)NewPtr(sizeof(bandType) * kMaxRubberBands);
-	if (bands == nil)
+	bands = NULL;
+	bands = (bandPtr)malloc(sizeof(bandType) * kMaxRubberBands);
+	if (bands == NULL)
 		RedAlert(kErrNoMemory);
 
-	grease = nil;
-	grease = (greasePtr)NewPtr(sizeof(greaseType) * kMaxGrease);
-	if (grease == nil)
+	grease = NULL;
+	grease = (greasePtr)malloc(sizeof(greaseType) * kMaxGrease);
+	if (grease == NULL)
 		RedAlert(kErrNoMemory);
 
-	theStars = nil;
-	theStars = (starPtr)NewPtr(sizeof(starType) * kMaxStars);
-	if (theStars == nil)
+	theStars = NULL;
+	theStars = (starPtr)malloc(sizeof(starType) * kMaxStars);
+	if (theStars == NULL)
 		RedAlert(kErrNoMemory);
 
-	shreds = nil;
-	shreds = (shredPtr)NewPtr(sizeof(shredType) * kMaxShredded);
-	if (shreds == nil)
+	shreds = NULL;
+	shreds = (shredPtr)malloc(sizeof(shredType) * kMaxShredded);
+	if (shreds == NULL)
 		RedAlert(kErrNoMemory);
 
-	dinahs = nil;
-	dinahs = (dynaPtr)NewPtr(sizeof(dynaType) * kMaxDynamicObs);
-	if (dinahs == nil)
+	dinahs = NULL;
+	dinahs = (dynaPtr)malloc(sizeof(dynaType) * kMaxDynamicObs);
+	if (dinahs == NULL)
 		RedAlert(kErrNoMemory);
 
-	masterObjects = nil;
-	masterObjects = (objDataPtr)NewPtr(sizeof(objDataType) * kMaxMasterObjects);
-	if (masterObjects == nil)
+	masterObjects = NULL;
+	masterObjects = (objDataPtr)malloc(sizeof(objDataType) * kMaxMasterObjects);
+	if (masterObjects == NULL)
 		RedAlert(kErrNoMemory);
 
-	srcRects = nil;
-	srcRects = (Rect *)NewPtr(sizeof(Rect) * kNumSrcRects);
-	if (srcRects == nil)
+	srcRects = NULL;
+	srcRects = (Rect *)malloc(sizeof(Rect) * kNumSrcRects);
+	if (srcRects == NULL)
 		RedAlert(kErrNoMemory);
 
-	theHousesSpecs = nil;
-	theHousesSpecs = (FSSpecPtr)NewPtr(sizeof(FSSpec) * maxFiles);
-	if (theHousesSpecs == nil)
+	theHousesSpecs = NULL;
+	theHousesSpecs = (FSSpecPtr)malloc(sizeof(FSSpec) * maxFiles);
+	if (theHousesSpecs == NULL)
 		RedAlert(kErrNoMemory);
 
 #ifdef CREATEDEMODATA
-	demoData = nil;
-	demoData = (demoPtr)NewPtr(sizeof(demoType) * 2000);
-	if (demoData == nil)
+	demoData = NULL;
+	demoData = (demoPtr)malloc(sizeof(demoType) * 2000);
+	if (demoData == NULL)
 		RedAlert(kErrNoMemory);
 #else
-	demoData = nil;
-	demoData = (demoPtr)NewPtr(kDemoLength);
-	if (demoData == nil)
+	demoData = NULL;
+	demoData = (demoPtr)malloc(sizeof(demoType) * (kDemoLength / demoTypeByteSize));
+	if (demoData == NULL)
 		RedAlert(kErrNoMemory);
-	tempHandle = GetResource('demo', 128);
-	if (tempHandle == nil)
+	resBlock = FindResource(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDR_DEMO), RT_DEMO);
+	if (resBlock == NULL)
+		RedAlert(kErrFailedResourceLoad);
+	resByteSize = SizeofResource(HINST_THISCOMPONENT, resBlock);
+	if (resByteSize < kDemoLength)
+		RedAlert(kErrFailedResourceLoad);
+	resHandle = LoadResource(HINST_THISCOMPONENT, resBlock);
+	if (resHandle == NULL)
+		RedAlert(kErrFailedResourceLoad);
+	resPointer = LockResource(resHandle);
+	if (resPointer == NULL)
+		RedAlert(kErrFailedResourceLoad);
+	if (!byteio_init_memory_reader(&demoReader, resPointer, resByteSize))
 		RedAlert(kErrNoMemory);
-	else
+	for (i = 0; i < (kDemoLength / demoTypeByteSize); i++)
 	{
-		BlockMove(*tempHandle, demoData, kDemoLength);
-		ReleaseResource(tempHandle);
+		if (!ReadDemoType(&demoReader, &demoData[i]))
+			RedAlert(kErrFailedResourceLoad);
 	}
-#endif
+	byteio_close(&demoReader);
 #endif
 }
 
