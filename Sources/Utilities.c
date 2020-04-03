@@ -13,6 +13,8 @@
 //#include <ToolUtils.h>
 #include <stdlib.h>
 #include "Macintosh.h"
+#include "WinAPI.h"
+
 #include "Externs.h"
 #include "Utilities.h"
 
@@ -30,17 +32,17 @@ extern	Boolean		switchedOut;
 
 Point MyGetGlobalMouse (void)
 {
-	Point tmp;
-	tmp.v = 0;
-	tmp.h = 0;
-	return tmp;
-#if 0
-	Point	localWhere;
+	Point	globalWhere;
+	POINT	cursorPos;
 
-	GetMouse(&localWhere);
-	LocalToGlobal(&localWhere);
-	return (localWhere);
-#endif
+	globalWhere.h = 0;
+	globalWhere.v = 0;
+	if (GetCursorPos(&cursorPos))
+	{
+		globalWhere.h = cursorPos.x;
+		globalWhere.v = cursorPos.y;
+	}
+	return globalWhere;
 }
 
 //--------------------------------------------------------------  ToolBoxInit
@@ -585,6 +587,7 @@ char GetKeyMapFromMessage (SInt32 message)
 
 void GetKeyName (SInt32 message, StringPtr theName)
 {
+	PasStringCopyC("", theName);
 	return;
 #if 0
 	long		theASCII, theVirtual;
@@ -800,6 +803,7 @@ void DelayTicks (SInt32 howLong)
 
 void UnivGetSoundVolume (SInt16 *volume, Boolean hasSM3)
 {
+	*volume = 0;
 	return;
 #if 0
 #pragma unused (hasSM3)
