@@ -349,6 +349,10 @@ SInt16 HowManyUsableScreens (Boolean use1Bit, Boolean use4Bit, Boolean use8Bit)
 
 void GetDeviceRect (Rect *theRect)
 {
+	theRect->left = 0;
+	theRect->top = 0;
+	theRect->right = 640;
+	theRect->bottom = 480;
 	return;
 #if 0
 	char		wasState;
@@ -535,8 +539,6 @@ void ReflectSecondMonitorEnvirons (Boolean use1Bit, Boolean use4Bit, Boolean use
 
 void HandleDepthSwitching (void)
 {
-	return;
-#if 0
 	if (thisMac.hasColor)
 	{
 		switch (isDepthPref)
@@ -573,7 +575,6 @@ void HandleDepthSwitching (void)
 	}
 
 	thisMac.isDepth = WhatsOurDepth();
-#endif
 }
 
 //--------------------------------------------------------------  RestoreColorDepth
@@ -582,12 +583,9 @@ void HandleDepthSwitching (void)
 
 void RestoreColorDepth (void)
 {
-	return;
-#if 0
 	if ((thisMac.hasColor) && ((thisMac.wasDepth != thisMac.isDepth) ||
 			(thisMac.wasColorOrGray != AreWeColorOrGrayscale())))
 		SwitchToDepth(thisMac.wasDepth, true);
-#endif
 }
 
 //--------------------------------------------------------------  CheckMemorySize
