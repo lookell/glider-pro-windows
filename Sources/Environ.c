@@ -469,12 +469,11 @@ void SwitchDepthOrAbort (void)
 
 void CheckOurEnvirons (void)
 {
-	return;
-#if 0
-	RgnHandle	grayRegion;
-	char		wasState;
+	//RgnHandle	grayRegion;
+	//char		wasState;
 
-	thisMac.thisResFile = CurResFile();
+	//thisMac.thisResFile = CurResFile();
+	thisMac.thisResFile = 0;	// TEMP
 	thisMac.vRefNum = 0;		// TEMP
 	thisMac.dirID = 0;			// TEMP
 	thisMac.hasGestalt = true;	// TEMP
@@ -487,21 +486,20 @@ void CheckOurEnvirons (void)
 	thisMac.hasDrag = DoWeHaveDragManager();
 
 	FindOurDevice();
-	wasState = HGetState((Handle)thisGDevice);
-	HLock((Handle)thisGDevice);
+	//wasState = HGetState((Handle)thisGDevice);
+	//HLock((Handle)thisGDevice);
 	thisMac.can1Bit = true;
-	thisMac.can4Bit = true;
+	thisMac.can4Bit = false;
 	thisMac.can8Bit = true;
-	HSetState((Handle)thisGDevice, wasState);
+	//HSetState((Handle)thisGDevice, wasState);
 	thisMac.numScreens = HowManyUsableScreens(false, true, true);
 	GetDeviceRect(&thisMac.screen);
 
 	thisMac.wasDepth = WhatsOurDepth();
 	thisMac.wasColorOrGray = AreWeColorOrGrayscale();
 
-	grayRegion = GetGrayRgn();
-	(void) GetRegionBounds(grayRegion, &(thisMac.gray));
-#endif
+	//grayRegion = GetGrayRgn();
+	//(void) GetRegionBounds(grayRegion, &(thisMac.gray));
 }
 
 //--------------------------------------------------------------  ReflectMonitor2Environs
