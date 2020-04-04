@@ -8,6 +8,7 @@
 
 //#include <Resources.h>
 //#include <Sound.h>
+#include "WinAPI.h"
 #include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
@@ -52,14 +53,12 @@ extern Boolean		doPrettyMap, doBitchDialogs;
 
 void ReadInPrefs (void)
 {
-	return;
-#if 0
 	prefsInfo	thePrefs;
 
 	if (LoadPrefs(&thePrefs, kPrefsVersion))
 	{
 #ifdef COMPILEDEMO
-		PasStringCopy("\pDemo House", thisHouseName);
+		PasStringCopyC("Demo House", thisHouseName);
 #else
 		PasStringCopy(thePrefs.wasDefaultName, thisHouseName);
 #endif
@@ -125,16 +124,16 @@ void ReadInPrefs (void)
 	else
 	{
 #ifdef COMPILEDEMO
-		PasStringCopy("\pDemo House", thisHouseName);
+		PasStringCopyC("Demo House", thisHouseName);
 #else
-		PasStringCopy("\pSlumberland", thisHouseName);
+		PasStringCopyC("Slumberland", thisHouseName);
 #endif
-		PasStringCopy("\plf arrow", leftName);
-		PasStringCopy("\prt arrow", rightName);
-		PasStringCopy("\pdn arrow", batteryName);
-		PasStringCopy("\pup arrow", bandName);
-		PasStringCopy("\pYour Name", highName);
-		PasStringCopy("\pYour Message Here", highBanner);
+		PasStringCopyC("lf arrow", leftName);
+		PasStringCopyC("rt arrow", rightName);
+		PasStringCopyC("dn arrow", batteryName);
+		PasStringCopyC("up arrow", bandName);
+		PasStringCopyC("Your Name", highName);
+		PasStringCopyC("Your Message Here", highBanner);
 		theGlider.leftKey = kLeftArrowKeyMap;
 		theGlider.rightKey = kRightArrowKeyMap;
 		theGlider.battKey = kDownArrowKeyMap;
@@ -201,7 +200,6 @@ void ReadInPrefs (void)
 		isSoundOn = false;
 	else
 		isSoundOn = true;
-#endif
 }
 
 //--------------------------------------------------------------  WriteOutPrefs
@@ -211,14 +209,12 @@ void ReadInPrefs (void)
 
 void WriteOutPrefs (void)
 {
-	return;
-#if 0
 	prefsInfo	thePrefs;
 
 	UnivGetSoundVolume(&isVolume, thisMac.hasSM3);
 
 #ifdef COMPILEDEMO
-	PasStringCopy("\pDemo House", thePrefs.wasDefaultName);
+	PasStringCopyC("Demo House", thePrefs.wasDefaultName);
 #else
 	PasStringCopy(thisHouseName, thePrefs.wasDefaultName);
 #endif
@@ -279,10 +275,9 @@ void WriteOutPrefs (void)
 	thePrefs.wasBitchDialogs = doBitchDialogs;
 
 	if (!SavePrefs(&thePrefs, kPrefsVersion))
-		SysBeep(1);
+		MessageBeep(MB_ICONWARNING);
 
 	UnivSetSoundVolume(wasVolume, thisMac.hasSM3);
-#endif
 }
 
 //--------------------------------------------------------------  main
