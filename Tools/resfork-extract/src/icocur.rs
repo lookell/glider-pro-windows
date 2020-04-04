@@ -53,7 +53,6 @@ impl IconFile {
         // for the hybrid bitmap data.
         let mut info_header = image.info_header();
         info_header.height *= 2;
-        info_header.size_image += mask.bits().len() as u32;
         self.entries.push(IconFileEntry {
             dir_entry: IconDirEntry {
                 image_offset: self.next_image_offset(),
@@ -138,7 +137,6 @@ impl CursorFile {
         // for the hybrid bitmap data.
         let mut info_header = image.info_header();
         info_header.height *= 2;
-        info_header.size_image += mask.bits().len() as u32;
         self.entries.push(CursorFileEntry {
             dir_entry: CursorDirEntry {
                 image_offset: self.next_image_offset(),
@@ -197,14 +195,6 @@ impl DirectoryHeader {
 const RES_ICON: u16 = 1;
 const RES_CURSOR: u16 = 2;
 
-fn get_color_count(bitmap: &impl Bitmap) -> u8 {
-    if bitmap.bit_count() < 8 {
-        1 << bitmap.bit_count()
-    } else {
-        0
-    }
-}
-
 #[derive(Clone, Copy)]
 struct IconDirEntry {
     width: u8,
@@ -224,13 +214,13 @@ impl IconDirEntry {
         Self {
             width: image.width() as u8,
             height: image.height() as u8,
-            color_count: get_color_count(image),
+            color_count: 0,
             reserved: 0,
-            planes: 1,
+            planes: 0,
             bit_count: image.bit_count(),
             bytes_in_res: image.info().byte_size()
-                + image.info_header().size_image
-                + mask.info_header().size_image,
+                + image.bits().len() as u32
+                + mask.bits().len() as u32,
             image_offset: 0,
         }
     }
@@ -267,13 +257,13 @@ impl CursorDirEntry {
         Self {
             width: image.width() as u8,
             height: image.height() as u8,
-            color_count: get_color_count(image),
+            color_count: 0,
             reserved: 0,
             x_hot_spot: hotspot.h as u16,
             y_hot_spot: hotspot.v as u16,
             bytes_in_res: image.info().byte_size()
-                + image.info_header().size_image
-                + mask.info_header().size_image,
+                + image.bits().len() as u32
+                + mask.bits().len() as u32,
             image_offset: 0,
         }
     }

@@ -212,7 +212,7 @@ pub trait Bitmap: Sized {
             planes: 1,
             bit_count: self.bit_count(),
             compression: Compression::Rgb,
-            size_image: self.bits().len() as _,
+            size_image: 0,
             x_pels_per_meter: 0,
             y_pels_per_meter: 0,
             clr_used: 0,
@@ -229,7 +229,7 @@ pub trait Bitmap: Sized {
         let bits_offset = BitmapFileHeader::SIZE + info.byte_size();
         let file_header = BitmapFileHeader {
             type_: BitmapFileHeader::TYPE,
-            size: bits_offset + info.header().size_image,
+            size: bits_offset + self.bits().len() as u32,
             reserved1: 0,
             reserved2: 0,
             off_bits: bits_offset,
