@@ -37,10 +37,10 @@
 void UpdateRoomInfoDialog (DialogPtr);
 void DragMiniTile (Point, SInt16 *);
 void HiliteTileOver (Point);
-pascal Boolean RoomFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean RoomFilter (DialogPtr, EventRecord *, SInt16 *);
 SInt16 ChooseOriginalArt (SInt16);
 void UpdateOriginalArt (DialogPtr);
-pascal Boolean OriginalArtFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean OriginalArtFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean PictIDExists (SInt16);
 SInt16 GetFirstPICT (void);
 void BitchAboutPICTNotFound (void);
@@ -306,7 +306,7 @@ void HiliteTileOver (Point mouseIs)
 //--------------------------------------------------------------  RoomFilter
 #ifndef COMPILEDEMO
 
-pascal Boolean RoomFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean RoomFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -645,7 +645,7 @@ void UpdateOriginalArt (DialogPtr theDialog)
 //--------------------------------------------------------------  OriginalArtFilter
 #ifndef COMPILEDEMO
 
-pascal Boolean OriginalArtFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean OriginalArtFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0

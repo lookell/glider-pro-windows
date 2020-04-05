@@ -33,10 +33,10 @@
 
 void DrawHighScores (void);
 void UpdateNameDialog (DialogPtr);
-pascal Boolean NameFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean NameFilter (DialogPtr, EventRecord *, SInt16 *);
 void GetHighScoreName (SInt16);
 void UpdateBannerDialog (DialogPtr);
-pascal Boolean BannerFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean BannerFilter (DialogPtr, EventRecord *, SInt16 *);
 void GetHighScoreBanner (void);
 Boolean CreateScoresFolder (SInt32 *);
 Boolean FindHighScoresFolder (SInt16 *, SInt32 *);
@@ -464,7 +464,7 @@ void UpdateNameDialog (DialogPtr theDialog)
 //--------------------------------------------------------------  NameFilter
 // Dialog filter for the "Enter High Score Name" dialog.
 
-pascal Boolean NameFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean NameFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return (false);
 #if 0
@@ -580,7 +580,7 @@ void UpdateBannerDialog (DialogPtr theDialog)
 //--------------------------------------------------------------  BannerFilter
 // Dialog filter for the "Enter Message" dialog.
 
-pascal Boolean BannerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean BannerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return (false);
 #if 0

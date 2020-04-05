@@ -27,7 +27,7 @@
 
 SInt32 CountTotalHousePoints (void);
 void UpdateHouseInfoDialog (DialogPtr);
-pascal Boolean HouseFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean HouseFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean WarnLockingHouse (void);
 void HowToZeroScores (void);
 
@@ -120,7 +120,7 @@ void UpdateHouseInfoDialog (DialogPtr theDialog)
 
 //--------------------------------------------------------------  HouseFilter
 
-pascal Boolean HouseFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean HouseFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0

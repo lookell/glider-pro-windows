@@ -19,7 +19,7 @@
 #define kLastGamePiece				6
 
 
-pascal void MusicCallBack (SndChannelPtr, SndCommand *);
+void MusicCallBack (SndChannelPtr, SndCommand *);
 OSErr LoadMusicSounds (void);
 OSErr DumpMusicSounds (void);
 OSErr OpenMusicChannel (void);
@@ -174,7 +174,7 @@ void SetMusicalMode (SInt16 newMode)
 
 //--------------------------------------------------------------  MusicCallBack
 
-pascal void MusicCallBack (SndChannelPtr theChannel, SndCommand *theCommand)
+void MusicCallBack (SndChannelPtr theChannel, SndCommand *theCommand)
 {
 	return;
 #if 0

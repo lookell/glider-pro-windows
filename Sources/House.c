@@ -21,7 +21,7 @@
 
 
 void UpdateGoToDialog (DialogPtr);
-pascal Boolean GoToFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean GoToFilter (DialogPtr, EventRecord *, SInt16 *);
 
 
 housePtr	thisHouse;
@@ -590,7 +590,7 @@ void UpdateGoToDialog (DialogPtr theDialog)
 //--------------------------------------------------------------  GoToFilter
 // Dialog filter for the "Go To Room..." dialog.
 
-pascal Boolean GoToFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean GoToFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return (false);
 #if 0

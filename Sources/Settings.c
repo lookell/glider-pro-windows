@@ -60,27 +60,27 @@
 
 void SetBrainsToDefaults (DialogPtr);
 void UpdateSettingsBrains (DialogPtr);
-pascal Boolean BrainsFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean BrainsFilter (DialogPtr, EventRecord *, SInt16 *);
 void DoBrainsPrefs (void);
 void SetControlsToDefaults (DialogPtr);
 void UpdateControlKeyName (DialogPtr);
 void UpdateSettingsControl (DialogPtr);
-pascal Boolean ControlFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean ControlFilter (DialogPtr, EventRecord *, SInt16 *);
 void DoControlPrefs (void);
 void SoundDefaults (DialogPtr);
 void UpdateSettingsSound (DialogPtr);
 void HandleSoundMusicChange (SInt16, Boolean);
-pascal Boolean SoundFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean SoundFilter (DialogPtr, EventRecord *, SInt16 *);
 void DoSoundPrefs (void);
 void DisplayDefaults (void);
 void FrameDisplayIcon (DialogPtr);
 void DisplayUpdate (DialogPtr);
-pascal Boolean DisplayFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean DisplayFilter (DialogPtr, EventRecord *, SInt16 *);
 void DoDisplayPrefs (void);
 void SetAllDefaults (void);
 void FlashSettingsButton (SInt16);
 void UpdateSettingsMain (DialogPtr);
-pascal Boolean PrefsFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean PrefsFilter (DialogPtr, EventRecord *, SInt16 *);
 void BitchAboutChanges (void);
 
 
@@ -148,7 +148,7 @@ void UpdateSettingsBrains (DialogPtr theDialog)
 
 //--------------------------------------------------------------  BrainsFilter
 
-pascal Boolean BrainsFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean BrainsFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -399,7 +399,7 @@ void UpdateSettingsControl (DialogPtr theDialog)
 
 //--------------------------------------------------------------  ControlFilter
 
-pascal Boolean ControlFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean ControlFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -695,7 +695,7 @@ void HandleSoundMusicChange (SInt16 newVolume, Boolean sayIt)
 
 //--------------------------------------------------------------  SoundFilter
 
-pascal Boolean SoundFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean SoundFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -996,7 +996,7 @@ void DisplayUpdate (DialogPtr theDialog)
 
 //--------------------------------------------------------------  DisplayFilter
 
-pascal Boolean DisplayFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean DisplayFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -1369,7 +1369,7 @@ void UpdateSettingsMain (DialogPtr theDialog)
 
 //--------------------------------------------------------------  PrefsFilter
 
-pascal Boolean PrefsFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean PrefsFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0

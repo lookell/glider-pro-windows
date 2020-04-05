@@ -15,11 +15,11 @@
 #define kNoPrintingAlert			1031
 
 
-pascal OSErr DoOpenAppAE (const AppleEvent *, AppleEvent *, UInt32);
-pascal OSErr DoOpenDocAE (const AppleEvent *, AppleEvent *, UInt32);
-pascal OSErr DoPrintDocAE (const AppleEvent *, AppleEvent *, UInt32);
-pascal OSErr DoQuitAE (const AppleEvent *, AppleEvent *, UInt32);
-pascal OSErr MyGotRequiredParams (const AppleEvent *);
+OSErr DoOpenAppAE (const AppleEvent *, AppleEvent *, UInt32);
+OSErr DoOpenDocAE (const AppleEvent *, AppleEvent *, UInt32);
+OSErr DoPrintDocAE (const AppleEvent *, AppleEvent *, UInt32);
+OSErr DoQuitAE (const AppleEvent *, AppleEvent *, UInt32);
+OSErr MyGotRequiredParams (const AppleEvent *);
 
 
 AEEventHandlerUPP	openAppAEUPP, openDocAEUPP, printDocAEUPP, quitAEUPP;
@@ -35,7 +35,7 @@ extern	Boolean		quitting;
 //--------------------------------------------------------------  DoOpenAppAE
 // Handles an "Open Application" Apple Event.
 
-pascal OSErr DoOpenAppAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
+OSErr DoOpenAppAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 {
 	return (-1);
 #if 0
@@ -50,7 +50,7 @@ pascal OSErr DoOpenAppAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref
 //--------------------------------------------------------------  DoOpenDocAE
 // Handles an "Open Document" Apple Event.
 
-pascal OSErr DoOpenDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
+OSErr DoOpenDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 {
 	return (-1);
 #if 0
@@ -136,7 +136,7 @@ pascal OSErr DoOpenDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref
 //--------------------------------------------------------------  DoPrintDocAE
 // Handles a "Print Document" Apple Event.
 
-pascal OSErr DoPrintDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
+OSErr DoPrintDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 {
 	return (-1);
 #if 0
@@ -154,7 +154,7 @@ pascal OSErr DoPrintDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 re
 //--------------------------------------------------------------  DoQuitAE
 // Handles a "Quit Application" Apple Event.
 
-pascal OSErr DoQuitAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
+OSErr DoQuitAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 {
 	return (-1);
 #if 0
@@ -172,7 +172,7 @@ pascal OSErr DoQuitAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 //--------------------------------------------------------------  MyGotRequiredParams
 // Have no clue!  :)
 
-pascal OSErr MyGotRequiredParams (const AppleEvent *theAE)
+OSErr MyGotRequiredParams (const AppleEvent *theAE)
 {
 	return (-1);
 #if 0

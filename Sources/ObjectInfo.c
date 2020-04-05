@@ -76,19 +76,19 @@ void UpdateInvisBonusInfo (DialogPtr);
 void UpdateTransInfo (DialogPtr);
 void UpdateEnemyInfo (DialogPtr);
 void UpdateFlowerInfo (DialogPtr);
-pascal Boolean BlowerFilter (DialogPtr, EventRecord *, SInt16 *);
-pascal Boolean FurnitureFilter (DialogPtr, EventRecord *, SInt16 *);
-pascal Boolean CustPictFilter (DialogPtr, EventRecord *, SInt16 *);
-pascal Boolean SwitchFilter (DialogPtr, EventRecord *, SInt16 *);
-pascal Boolean TriggerFilter (DialogPtr, EventRecord *, SInt16 *);
-pascal Boolean LightFilter (DialogPtr, EventRecord *, SInt16 *);
-pascal Boolean ApplianceFilter (DialogPtr, EventRecord *, SInt16 *);
-pascal Boolean MicrowaveFilter (DialogPtr, EventRecord *, SInt16 *);
-pascal Boolean GreaseFilter (DialogPtr, EventRecord *, SInt16 *);
-pascal Boolean InvisBonusFilter (DialogPtr, EventRecord *, SInt16 *);
-pascal Boolean TransFilter (DialogPtr, EventRecord *, SInt16 *);
-pascal Boolean EnemyFilter (DialogPtr, EventRecord *, SInt16 *);
-pascal Boolean FlowerFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean BlowerFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean FurnitureFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean CustPictFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean SwitchFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean TriggerFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean LightFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean ApplianceFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean MicrowaveFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean GreaseFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean InvisBonusFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean TransFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean EnemyFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean FlowerFilter (DialogPtr, EventRecord *, SInt16 *);
 void DoBlowerObjectInfo (SInt16);
 void DoFurnitureObjectInfo (void);
 void DoCustPictObjectInfo (void);
@@ -375,7 +375,7 @@ void UpdateFlowerInfo (DialogPtr theDialog)
 
 //--------------------------------------------------------------  BlowerFilter
 
-pascal Boolean BlowerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean BlowerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -433,7 +433,7 @@ pascal Boolean BlowerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  FurnitureFilter
 
-pascal Boolean FurnitureFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean FurnitureFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -472,7 +472,7 @@ pascal Boolean FurnitureFilter (DialogPtr dial, EventRecord *event, SInt16 *item
 
 //--------------------------------------------------------------  CustPictFilter
 
-pascal Boolean CustPictFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean CustPictFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -511,7 +511,7 @@ pascal Boolean CustPictFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  SwitchFilter
 
-pascal Boolean SwitchFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean SwitchFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -556,7 +556,7 @@ pascal Boolean SwitchFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  TriggerFilter
 
-pascal Boolean TriggerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean TriggerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -606,7 +606,7 @@ pascal Boolean TriggerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  LightFilter
 
-pascal Boolean LightFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean LightFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -659,7 +659,7 @@ pascal Boolean LightFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  ApplianceFilter
 
-pascal Boolean ApplianceFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean ApplianceFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -717,7 +717,7 @@ pascal Boolean ApplianceFilter (DialogPtr dial, EventRecord *event, SInt16 *item
 
 //--------------------------------------------------------------  MicrowaveFilter
 
-pascal Boolean MicrowaveFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean MicrowaveFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -770,7 +770,7 @@ pascal Boolean MicrowaveFilter (DialogPtr dial, EventRecord *event, SInt16 *item
 
 //--------------------------------------------------------------  GreaseFilter
 
-pascal Boolean GreaseFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean GreaseFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -815,7 +815,7 @@ pascal Boolean GreaseFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  InvisBonusFilter
 
-pascal Boolean InvisBonusFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean InvisBonusFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -854,7 +854,7 @@ pascal Boolean InvisBonusFilter (DialogPtr dial, EventRecord *event, SInt16 *ite
 
 //--------------------------------------------------------------  TransFilter
 
-pascal Boolean TransFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean TransFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -899,7 +899,7 @@ pascal Boolean TransFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  EnemyFilter
 
-pascal Boolean EnemyFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean EnemyFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0
@@ -957,7 +957,7 @@ pascal Boolean EnemyFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  EnemyFilter
 
-pascal Boolean FlowerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean FlowerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0

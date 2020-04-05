@@ -25,7 +25,7 @@ void UpdateMenusNonEditMode (void);
 void UpdateMenusHouseOpen (void);
 void UpdateMenusHouseClosed (void);
 void UpdateResumeDialog (DialogPtr);
-pascal Boolean ResumeFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean ResumeFilter (DialogPtr, EventRecord *, SInt16 *);
 SInt16 QueryResumeGame (void);
 void HeyYourPissingAHighScore (void);
 
@@ -711,7 +711,7 @@ void UpdateResumeDialog (DialogPtr theDialog)
 //--------------------------------------------------------------  ResumeFilter
 // Dialog filter for the Resume dialog (below).
 
-pascal Boolean ResumeFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+Boolean ResumeFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 {
 	return false;
 #if 0

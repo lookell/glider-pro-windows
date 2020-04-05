@@ -15,9 +15,6 @@
 #define TRUE 1
 #endif
 #define nil NULL
-#ifndef pascal
-#define pascal /* ... */
-#endif
 
 typedef uint8_t UInt8;
 typedef int8_t SInt8;

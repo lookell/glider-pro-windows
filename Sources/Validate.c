@@ -31,7 +31,7 @@ Boolean NoFloppyException (void);
 OSErr GetIndVolumeDate (SInt16, SInt32 *);
 Boolean LoopThruMountedVolumes (void);
 Boolean SpecificVolumeCreated (void);
-pascal Boolean MasterFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean MasterFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean GetMasterDisk (void);
 
 
@@ -242,7 +242,7 @@ Boolean SpecificVolumeCreated (void)
 // Dialog filter for the function that follows this one.  It handles…
 // disk inserts and ejects disks that don't match in the previous function.
 
-pascal Boolean MasterFilter (DialogPtr theDialog, EventRecord *theEvent, SInt16 *itemHit)
+Boolean MasterFilter (DialogPtr theDialog, EventRecord *theEvent, SInt16 *itemHit)
 {
 #pragma unused (theDialog, theEvent, itemHit)
 	EventRecord		diskEvent;

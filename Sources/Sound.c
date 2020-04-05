@@ -17,9 +17,9 @@
 #define kNoSoundPlaying				-1
 
 
-pascal void CallBack0 (SndChannelPtr, SndCommand *);
-pascal void CallBack1 (SndChannelPtr, SndCommand *);
-pascal void CallBack2 (SndChannelPtr, SndCommand *);
+void CallBack0 (SndChannelPtr, SndCommand *);
+void CallBack1 (SndChannelPtr, SndCommand *);
+void CallBack2 (SndChannelPtr, SndCommand *);
 OSErr LoadBufferSounds (void);
 void DumpBufferSounds (void);
 OSErr OpenSoundChannels (void);
@@ -227,7 +227,7 @@ void PlaySound2 (SInt16 soundID, SInt16 priority)
 
 //--------------------------------------------------------------  CallBack0
 
-pascal void CallBack0 (SndChannelPtr theChannel, SndCommand *theCommand)
+void CallBack0 (SndChannelPtr theChannel, SndCommand *theCommand)
 {
 	return;
 #if 0
@@ -246,7 +246,7 @@ pascal void CallBack0 (SndChannelPtr theChannel, SndCommand *theCommand)
 
 //--------------------------------------------------------------  CallBack1
 
-pascal void CallBack1 (SndChannelPtr theChannel, SndCommand *theCommand)
+void CallBack1 (SndChannelPtr theChannel, SndCommand *theCommand)
 {
 	return;
 #if 0
@@ -265,7 +265,7 @@ pascal void CallBack1 (SndChannelPtr theChannel, SndCommand *theCommand)
 
 //--------------------------------------------------------------  CallBack2
 
-pascal void CallBack2 (SndChannelPtr theChannel, SndCommand *theCommand)
+void CallBack2 (SndChannelPtr theChannel, SndCommand *theCommand)
 {
 	return;
 #if 0

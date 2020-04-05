@@ -28,8 +28,8 @@
 
 void LoadGraphicPlus (SInt16, Rect *);
 void RedrawMapContents (void);
-pascal void LiveHScrollAction (ControlHandle, SInt16);
-pascal void LiveVScrollAction (ControlHandle, SInt16);
+void LiveHScrollAction (ControlHandle, SInt16);
+void LiveVScrollAction (ControlHandle, SInt16);
 Boolean QueryNewRoom (void);
 void CreateNailOffscreen (void);
 void KillNailOffscreen (void);
@@ -476,7 +476,7 @@ void ToggleMapWindow (void)
 //--------------------------------------------------------------  LiveHScrollAction
 #ifndef COMPILEDEMO
 
-pascal void LiveHScrollAction (ControlHandle theControl, SInt16 thePart)
+void LiveHScrollAction (ControlHandle theControl, SInt16 thePart)
 {
 	return;
 #if 0
@@ -536,7 +536,7 @@ pascal void LiveHScrollAction (ControlHandle theControl, SInt16 thePart)
 //--------------------------------------------------------------  LiveVScrollAction
 #ifndef COMPILEDEMO
 
-pascal void LiveVScrollAction (ControlHandle theControl, SInt16 thePart)
+void LiveVScrollAction (ControlHandle theControl, SInt16 thePart)
 {
 	return;
 #if 0
