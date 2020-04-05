@@ -22,8 +22,8 @@ GWorldPtr	blowerMaskMap;
 Rect		flame[kNumCandleFlames], tikiFlame[kNumTikiFlames];
 Rect		coals[kNumBBQCoals];
 Rect		furnitureSrcRect;								// Furniture
-GWorldPtr	furnitureSrcMap;
-GWorldPtr	furnitureMaskMap;
+HDC			furnitureSrcMap;
+HDC			furnitureMaskMap;
 Rect		tableSrc, shelfSrc, hingeSrc, handleSrc, knobSrc;
 Rect		leftFootSrc, rightFootSrc, deckSrc;
 Rect		bonusSrcRect;									// Bonuses

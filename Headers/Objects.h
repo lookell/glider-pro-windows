@@ -7,8 +7,8 @@
 
 extern GWorldPtr		blowerSrcMap;
 extern GWorldPtr		blowerMaskMap;
-extern GWorldPtr		furnitureSrcMap;
-extern GWorldPtr		furnitureMaskMap;
+extern HDC				furnitureSrcMap;
+extern HDC				furnitureMaskMap;
 extern HDC				bonusSrcMap;
 extern HDC				bonusMaskMap;
 extern HDC				pointsSrcMap;

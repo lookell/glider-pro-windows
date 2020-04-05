@@ -303,22 +303,14 @@ void InitBlowers (void)
 
 void InitFurniture (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	QSetRect(&furnitureSrcRect, 0, 0, 64, 278);		// 17856 pixels
 	theErr = CreateOffScreenGWorld(&furnitureSrcMap, &furnitureSrcRect, kPreferredDepth);
-	SetGWorld(furnitureSrcMap, nil);
-	LoadGraphic(kFurniturePictID);
+	LoadGraphic(furnitureSrcMap, kFurniturePictID);
 
 	theErr = CreateOffScreenGWorld(&furnitureMaskMap, &furnitureSrcRect, 1);
-	SetGWorld(furnitureMaskMap, nil);
-	LoadGraphic(kFurniturePictID + 1000);
+	LoadGraphic(furnitureMaskMap, kFurniturePictID + 1000);
 
 	QSetRect(&tableSrc, 0, 0, 64, 22);
 	QOffsetRect(&tableSrc, 0, 0);
@@ -343,9 +335,6 @@ void InitFurniture (void)
 
 	QSetRect(&deckSrc, 0, 0, 64, 21);
 	QOffsetRect(&deckSrc, 0, 162);
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
 }
 
 //--------------------------------------------------------------  InitPrizes
