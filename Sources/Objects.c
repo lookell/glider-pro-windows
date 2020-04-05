@@ -27,11 +27,11 @@ GWorldPtr	furnitureMaskMap;
 Rect		tableSrc, shelfSrc, hingeSrc, handleSrc, knobSrc;
 Rect		leftFootSrc, rightFootSrc, deckSrc;
 Rect		bonusSrcRect;									// Bonuses
-GWorldPtr	bonusSrcMap;
-GWorldPtr	bonusMaskMap;
+HDC			bonusSrcMap;
+HDC			bonusMaskMap;
 Rect		pointsSrcRect;
-GWorldPtr	pointsSrcMap;
-GWorldPtr	pointsMaskMap;
+HDC			pointsSrcMap;
+HDC			pointsMaskMap;
 Rect		starSrc[6], sparkleSrc[kNumSparkleModes];
 Rect		digits[11], pendulumSrc[3], greaseSrcRt[4], greaseSrcLf[4];
 Rect		transSrcRect;									// Transport

@@ -354,23 +354,15 @@ void InitFurniture (void)
 
 void InitPrizes (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-	short		i;
+	size_t		i;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	QSetRect(&bonusSrcRect, 0, 0, 88, 378);		// 33264 pixels
 	theErr = CreateOffScreenGWorld(&bonusSrcMap, &bonusSrcRect, kPreferredDepth);
-	SetGWorld(bonusSrcMap, nil);
-	LoadGraphic(kBonusPictID);
+	LoadGraphic(bonusSrcMap, kBonusPictID);
 
 	theErr = CreateOffScreenGWorld(&bonusMaskMap, &bonusSrcRect, 1);
-	SetGWorld(bonusMaskMap, nil);
-	LoadGraphic(kBonusPictID + 1000);
+	LoadGraphic(bonusMaskMap, kBonusPictID + 1000);
 
 	for (i = 0; i < 11; i++)
 	{
@@ -418,21 +410,16 @@ void InitPrizes (void)
 
 	QSetRect(&pointsSrcRect, 0, 0, 24, 120);		// 2880 pixels
 	theErr = CreateOffScreenGWorld(&pointsSrcMap, &pointsSrcRect, kPreferredDepth);
-	SetGWorld(pointsSrcMap, nil);
-	LoadGraphic(kPointsPictID);
+	LoadGraphic(pointsSrcMap, kPointsPictID);
 
 	theErr = CreateOffScreenGWorld(&pointsMaskMap, &pointsSrcRect, 1);
-	SetGWorld(pointsMaskMap, nil);
-	LoadGraphic(kPointsPictID + 1000);
+	LoadGraphic(pointsMaskMap, kPointsPictID + 1000);
 
 	for (i = 0; i < 15; i++)
 	{
 		QSetRect(&pointsSrc[i], 0, 0, 24, 8);
 		QOffsetRect(&pointsSrc[i], 0, i * 8);
 	}
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
 }
 
 //--------------------------------------------------------------  InitTransports
