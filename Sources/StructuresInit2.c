@@ -95,21 +95,11 @@ void InitClutter (void)
 
 void InitSupport (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	QSetRect(&suppSrcRect, 0, 0, kRoomWide, kFloorSupportTall);		// 44
 	theErr = CreateOffScreenGWorld(&suppSrcMap, &suppSrcRect, kPreferredDepth);
-	SetGWorld(suppSrcMap, nil);
-	LoadGraphic(kSupportPictID);
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	LoadGraphic(suppSrcMap, kSupportPictID);
 }
 
 //--------------------------------------------------------------  InitAngel

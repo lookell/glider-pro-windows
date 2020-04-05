@@ -26,7 +26,7 @@ void DrawLighting (void);
 
 
 Rect		suppSrcRect;
-GWorldPtr	suppSrcMap;
+HDC			suppSrcMap;
 Rect		localRoomsDest[9];
 Rect		houseRect;
 SInt16		numNeighbors, numLights, thisTiles[kNumTiles];
