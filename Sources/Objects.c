@@ -42,8 +42,8 @@ GWorldPtr	switchSrcMap;
 Rect		lightSwitchSrc[2], machineSwitchSrc[2], thermostatSrc[2];
 Rect		powerSrc[2], knifeSwitchSrc[2];
 Rect		lightSrcRect;									// Lights
-GWorldPtr	lightSrcMap;
-GWorldPtr	lightMaskMap;
+HDC			lightSrcMap;
+HDC			lightMaskMap;
 Rect		flourescentSrc1, flourescentSrc2, trackLightSrc[kNumTrackLights];
 Rect		applianceSrcRect, toastSrcRect, shredSrcRect;	// Appliances
 HDC			applianceSrcMap, toastSrcMap, shredSrcMap;

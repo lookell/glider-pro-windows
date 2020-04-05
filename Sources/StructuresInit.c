@@ -516,23 +516,15 @@ void InitSwitches (void)
 
 void InitLights (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-	short		i;
+	size_t		i;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	QSetRect(&lightSrcRect, 0, 0, 72, 126);		// 9144 pixels
 	theErr = CreateOffScreenGWorld(&lightSrcMap, &lightSrcRect, kPreferredDepth);
-	SetGWorld(lightSrcMap, nil);
-	LoadGraphic(kLightPictID);
+	LoadGraphic(lightSrcMap, kLightPictID);
 
 	theErr = CreateOffScreenGWorld(&lightMaskMap, &lightSrcRect, 1);
-	SetGWorld(lightMaskMap, nil);
-	LoadGraphic(kLightPictID + 1000);
+	LoadGraphic(lightMaskMap, kLightPictID + 1000);
 
 	QSetRect(&flourescentSrc1, 0, 0, 16, 12);
 	QOffsetRect(&flourescentSrc1, 0, 78);
@@ -545,9 +537,6 @@ void InitLights (void)
 		QSetRect(&trackLightSrc[i], 0, 0, 24, 24);
 		QOffsetRect(&trackLightSrc[i], 24 * i, 102);
 	}
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
 }
 
 //--------------------------------------------------------------  InitAppliances
