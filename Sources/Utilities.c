@@ -288,21 +288,45 @@ void CreateOffScreenPixMap (Rect *theRect, CGrafPtr *offScreen)
 //--------------------------------------------------------------------  CreateOffScreenGWorld
 // Creates an offscreen GWorld using the depth passed in.
 
-OSErr CreateOffScreenGWorld (GWorldPtr *theGWorld, Rect *bounds, SInt16 depth)
+OSErr CreateOffScreenGWorld (HDC *theGWorld, Rect *bounds, SInt16 depth)
 {
-	return (-1);
-#if 0
-	OSErr		theErr;
+	HDC			hdcDisplay, hdcSurface;
+	HBITMAP		hbmSurface;
+	INT			cxSurface, cySurface;
+	BOOL		succeeded;
 
-	theErr = NewGWorld(theGWorld, depth, bounds, nil, nil, useTempMem);
+	*theGWorld = NULL;
 
-	if (theErr)
-		theErr = NewGWorld(theGWorld, depth, bounds, nil, nil, 0);
-
-	LockPixels(GetGWorldPixMap(*theGWorld));
-
-	return theErr;
-#endif
+	hdcDisplay = GetDC(NULL);
+	if (hdcDisplay == NULL)
+		return (-1);
+	hdcSurface = CreateCompatibleDC(hdcDisplay);
+	cxSurface = bounds->right - bounds->left;
+	cySurface = bounds->bottom - bounds->top;
+	if (depth == 1)
+		hbmSurface = CreateBitmap(cxSurface, cySurface, 1, 1, NULL);
+	else
+		hbmSurface = CreateCompatibleBitmap(hdcDisplay, cxSurface, cySurface);
+	ReleaseDC(NULL, hdcDisplay);
+	if (hdcSurface == NULL || hbmSurface == NULL)
+	{
+		if (hdcSurface)
+			DeleteDC(hdcSurface);
+		if (hbmSurface)
+			DeleteObject(hbmSurface);
+		return (-1);
+	}
+	SaveDC(hdcSurface);
+	SetWindowOrgEx(hdcSurface, bounds->left, bounds->top, NULL);
+	SelectObject(hdcSurface, hbmSurface);
+	SelectObject(hdcSurface, GetStockObject(DC_BRUSH));
+	SelectObject(hdcSurface, GetStockObject(DC_PEN));
+	SetDCBrushColor(hdcSurface, RGB(0xFF, 0xFF, 0xFF));
+	SetDCPenColor(hdcSurface, RGB(0x00, 0x00, 0x00));
+	SetBkColor(hdcSurface, RGB(0xFF, 0xFF, 0xFF));
+	SetTextColor(hdcSurface, RGB(0x00, 0x00, 0x00));
+	*theGWorld = hdcSurface;
+	return noErr;
 }
 
 
@@ -337,6 +361,19 @@ void KillOffScreenBitMap (GrafPtr offScreen)
 	}
 }
 */
+//--------------------------------------------------------------  DisposeGWorld
+// Destroys memory allocated by an offscreen GWorld.
+
+void DisposeGWorld (HDC theGWorld)
+{
+	HGDIOBJ		hbmSurface;
+
+	hbmSurface = GetCurrentObject(theGWorld, OBJ_BITMAP);
+	RestoreDC(theGWorld, -1);
+	DeleteDC(theGWorld);
+	DeleteObject(hbmSurface);
+}
+
 //--------------------------------------------------------------  LoadGraphic
 // Function loads the specified 'PICT' from disk and draws it to…
 // the current port (no scaling, clipping, etc, are done).  Always…

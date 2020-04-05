@@ -6,7 +6,8 @@
 
 
 //#include <QDOffscreen.h>
+#include "WinAPI.h"
 #include "Macintosh.h"
 
-
-OSErr CreateOffScreenGWorld (GWorldPtr *theGWorld, Rect *bounds, SInt16 depth);
+OSErr CreateOffScreenGWorld (HDC *theGWorld, Rect *bounds, SInt16 depth);
+void DisposeGWorld (HDC theGWorld);
