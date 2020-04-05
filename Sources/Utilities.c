@@ -151,8 +151,29 @@ UInt32 RandomLongQUS (void)
 // Called when we must quit app.  Brings up a dialog informing user…
 // of the problem and the exits to shell.
 
+#include <stdio.h>
 void RedAlert (SInt16 errorNumber)
 {
+	const char *message = "unknown error";
+	switch (errorNumber)
+	{
+		#define RED_ALERT_CASE(num) case (num): message = #num; break
+		RED_ALERT_CASE(kErrUnnaccounted);
+		RED_ALERT_CASE(kErrNoMemory);
+		RED_ALERT_CASE(kErrDialogDidntLoad);
+		RED_ALERT_CASE(kErrFailedResourceLoad);
+		RED_ALERT_CASE(kErrFailedGraphicLoad);
+		RED_ALERT_CASE(kErrFailedOurDirect);
+		RED_ALERT_CASE(kErrFailedValidation);
+		RED_ALERT_CASE(kErrNeedSystem7);
+		RED_ALERT_CASE(kErrFailedGetDevice);
+		RED_ALERT_CASE(kErrFailedMemoryOperation);
+		RED_ALERT_CASE(kErrFailedCatSearch);
+		RED_ALERT_CASE(kErrNeedColorQD);
+		RED_ALERT_CASE(kErrNeed16Or256Colors);
+		#undef RED_ALERT_CASE
+	}
+	fprintf(stderr, "RedAlert: %s\n", message);
 	exit(EXIT_FAILURE);
 #if 0
 	#define			rDeathAlertID	170		// alert res. ID for death error
