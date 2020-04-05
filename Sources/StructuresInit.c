@@ -441,25 +441,14 @@ void InitPrizes (void)
 
 void InitTransports (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld); //~ NOTE: THIS WAS ORIGINALLY MISSING
 
 	QSetRect(&transSrcRect, 0, 0, 56, 32);	// 1848 pixels
 	theErr = CreateOffScreenGWorld(&transSrcMap, &transSrcRect, kPreferredDepth);
-	SetGWorld(transSrcMap, nil);
-	LoadGraphic(kTransportPictID);
+	LoadGraphic(transSrcMap, kTransportPictID);
 
 	theErr = CreateOffScreenGWorld(&transMaskMap, &transSrcRect, 1);
-	SetGWorld(transMaskMap, nil);
-	LoadGraphic(kTransportPictID + 1000);
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	LoadGraphic(transMaskMap, kTransportPictID + 1000);
 }
 
 //--------------------------------------------------------------  InitSwitches

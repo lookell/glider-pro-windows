@@ -35,8 +35,8 @@ GWorldPtr	pointsMaskMap;
 Rect		starSrc[6], sparkleSrc[kNumSparkleModes];
 Rect		digits[11], pendulumSrc[3], greaseSrcRt[4], greaseSrcLf[4];
 Rect		transSrcRect;									// Transport
-GWorldPtr	transSrcMap;
-GWorldPtr	transMaskMap;
+HDC			transSrcMap;
+HDC			transMaskMap;
 Rect		switchSrcRect;									// Switches
 HDC			switchSrcMap;
 Rect		lightSwitchSrc[2], machineSwitchSrc[2], thermostatSrc[2];
