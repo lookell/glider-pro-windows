@@ -15,7 +15,7 @@ extern GWorldPtr		pointsSrcMap;
 extern GWorldPtr		pointsMaskMap;
 extern GWorldPtr		transSrcMap;
 extern GWorldPtr		transMaskMap;
-extern GWorldPtr		switchSrcMap;
+extern HDC				switchSrcMap;
 extern HDC				lightSrcMap;
 extern HDC				lightMaskMap;
 extern HDC				applianceSrcMap;

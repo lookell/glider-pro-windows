@@ -38,7 +38,7 @@ Rect		transSrcRect;									// Transport
 GWorldPtr	transSrcMap;
 GWorldPtr	transMaskMap;
 Rect		switchSrcRect;									// Switches
-GWorldPtr	switchSrcMap;
+HDC			switchSrcMap;
 Rect		lightSwitchSrc[2], machineSwitchSrc[2], thermostatSrc[2];
 Rect		powerSrc[2], knifeSwitchSrc[2];
 Rect		lightSrcRect;									// Lights

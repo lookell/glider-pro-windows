@@ -468,18 +468,11 @@ void InitTransports (void)
 
 void InitSwitches (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	QSetRect(&switchSrcRect, 0, 0, 32, 104);	// 3360 pixels
 	theErr = CreateOffScreenGWorld(&switchSrcMap, &switchSrcRect, kPreferredDepth);
-	SetGWorld(switchSrcMap, nil);
-	LoadGraphic(kSwitchPictID);
+	LoadGraphic(switchSrcMap, kSwitchPictID);
 
 	QSetRect(&lightSwitchSrc[0], 0, 0, 15, 24);
 	QOffsetRect(&lightSwitchSrc[0], 0, 0);
@@ -505,9 +498,6 @@ void InitSwitches (void)
 	QOffsetRect(&knifeSwitchSrc[0], 0, 80);
 	QSetRect(&knifeSwitchSrc[1], 0, 0, 16, 24);
 	QOffsetRect(&knifeSwitchSrc[1], 16, 80);
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
 }
 
 //--------------------------------------------------------------  InitLights
