@@ -6,8 +6,8 @@
 
 
 //#include <QDOffscreen.h>
-#include "Macintosh.h"
+#include "WinAPI.h"
 
 
-extern GWorldPtr		shadowSrcMap;
-extern GWorldPtr		shadowMaskMap;
+extern HDC		shadowSrcMap;
+extern HDC		shadowMaskMap;

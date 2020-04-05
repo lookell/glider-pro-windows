@@ -47,8 +47,8 @@ SInt16 GetNumStarsRemaining (SInt16, SInt16);
 
 phoneType	thePhone, theChimes;
 Rect		glidSrcRect, justRoomsRect;
-GWorldPtr	glidSrcMap, glid2SrcMap;
-GWorldPtr	glidMaskMap;
+HDC			glidSrcMap, glid2SrcMap;
+HDC			glidMaskMap;
 SInt32		gameFrame;
 SInt16		batteryTotal, bandsTotal, foilTotal, mortals;
 Boolean		playing, evenFrame, twoPlayerGame, showFoil, demoGoing;

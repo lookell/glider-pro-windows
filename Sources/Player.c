@@ -42,8 +42,8 @@ void HandleIdleGlider (gliderPtr);
 
 gliderType	theGlider, theGlider2;
 Rect		shadowSrcRect;
-GWorldPtr	shadowSrcMap;
-GWorldPtr	shadowMaskMap;
+HDC			shadowSrcMap;
+HDC			shadowMaskMap;
 Rect		shadowSrc[kNumShadowSrcRects];
 Rect		gliderSrc[kNumGliderSrcRects];
 Rect		transRect;

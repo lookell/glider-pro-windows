@@ -6,8 +6,8 @@
 
 
 //#include <QDOffscreen.h>
-#include "Macintosh.h"
+#include "WinAPI.h"
 
 
-extern GWorldPtr		bandsSrcMap;
-extern GWorldPtr		bandsMaskMap;
+extern HDC		bandsSrcMap;
+extern HDC		bandsMaskMap;

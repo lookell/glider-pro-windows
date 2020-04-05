@@ -173,27 +173,18 @@ void InitScoreboardMap (void)
 
 void InitGliderMap (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
 	OSErr		theErr;
 	short		i;
 
-	GetGWorld(&wasCPort, &wasWorld);
-
 	QSetRect(&glidSrcRect, 0, 0, kGliderWide, 668);	// 32112 pixels
 	theErr = CreateOffScreenGWorld(&glidSrcMap, &glidSrcRect, kPreferredDepth);
-	SetGWorld(glidSrcMap, nil);
-	LoadGraphic(kGliderPictID);
+	LoadGraphic(glidSrcMap, kGliderPictID);
 
 	theErr = CreateOffScreenGWorld(&glid2SrcMap, &glidSrcRect, kPreferredDepth);
-	SetGWorld(glid2SrcMap, nil);
-	LoadGraphic(kGlider2PictID);
+	LoadGraphic(glid2SrcMap, kGlider2PictID);
 
 	theErr = CreateOffScreenGWorld(&glidMaskMap, &glidSrcRect, 1);
-	SetGWorld(glidMaskMap, nil);
-	LoadGraphic(kGliderPictID + 1000);
+	LoadGraphic(glidMaskMap, kGliderPictID + 1000);
 
 	for (i = 0; i <= 20; i++)
 	{
@@ -213,12 +204,10 @@ void InitGliderMap (void)
 
 	QSetRect(&shadowSrcRect, 0, 0, kGliderWide, kShadowHigh * kNumShadowSrcRects);
 	theErr = CreateOffScreenGWorld(&shadowSrcMap, &shadowSrcRect, kPreferredDepth);
-	SetGWorld(shadowSrcMap, nil);
-	LoadGraphic(kShadowPictID);
+	LoadGraphic(shadowSrcMap, kShadowPictID);
 
 	theErr = CreateOffScreenGWorld(&shadowMaskMap, &shadowSrcRect, 1);
-	SetGWorld(shadowMaskMap, nil);
-	LoadGraphic(kShadowPictID + 1000);
+	LoadGraphic(shadowMaskMap, kShadowPictID + 1000);
 
 	for (i = 0; i < kNumShadowSrcRects; i++)
 	{
@@ -228,21 +217,16 @@ void InitGliderMap (void)
 
 	QSetRect(&bandsSrcRect, 0, 0, 16, 18);		// 304 pixels
 	theErr = CreateOffScreenGWorld(&bandsSrcMap, &bandsSrcRect, kPreferredDepth);
-	SetGWorld(bandsSrcMap, nil);
-	LoadGraphic(kRubberBandsPictID);
+	LoadGraphic(bandsSrcMap, kRubberBandsPictID);
 
 	theErr = CreateOffScreenGWorld(&bandsMaskMap, &bandsSrcRect, 1);
-	SetGWorld(bandsMaskMap, nil);
-	LoadGraphic(kRubberBandsPictID + 1000);
+	LoadGraphic(bandsMaskMap, kRubberBandsPictID + 1000);
 
 	for (i = 0; i < 3; i++)
 	{
 		QSetRect(&bandRects[i], 0, 0, 16, 6);
 		QOffsetRect(&bandRects[i], 0, 6 * i);
 	}
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
 }
 
 //--------------------------------------------------------------  InitBlowers

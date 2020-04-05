@@ -6,9 +6,9 @@
 
 
 //#include <QDOffscreen.h>
-#include "Macintosh.h"
+#include "WinAPI.h"
 
 
-extern GWorldPtr		glidSrcMap;
-extern GWorldPtr		glid2SrcMap;
-extern GWorldPtr		glidMaskMap;
+extern HDC		glidSrcMap;
+extern HDC		glid2SrcMap;
+extern HDC		glidMaskMap;

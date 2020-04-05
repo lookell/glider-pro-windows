@@ -21,8 +21,8 @@ void KillBand (SInt16);
 bandPtr		bands;
 Rect		bandsSrcRect;
 Rect		bandRects[3];
-GWorldPtr	bandsSrcMap;
-GWorldPtr	bandsMaskMap;
+HDC			bandsSrcMap;
+HDC			bandsMaskMap;
 SInt16		numBands, bandHitLast;
 
 extern	hotPtr		hotSpots;
