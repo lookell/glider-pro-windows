@@ -10,6 +10,7 @@
 
 
 //#include <Menus.h>
+#include "WinAPI.h"
 #include "Macintosh.h"
 
 
@@ -353,8 +354,8 @@ void RedAlert (SInt16);
 //void CreateOffScreenPixMap (Rect *, CGrafPtr *);
 //void KillOffScreenPixMap (CGrafPtr);
 //void KillOffScreenBitMap (GrafPtr);
-void LoadGraphic (SInt16);
-void LoadScaledGraphic (SInt16, Rect *);
+void LoadGraphic (HDC, SInt16);
+void LoadScaledGraphic (HDC, SInt16, Rect *);
 //void PlotSICN (Rect *, SICNHand, SInt32);
 void LargeIconPlot (Rect *, SInt16);
 void DrawCIcon (SInt16, SInt16, SInt16);

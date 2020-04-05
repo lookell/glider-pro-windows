@@ -8,6 +8,7 @@
 
 #include "Externs.h"
 #include "RectUtils.h"
+#undef small // Remove <windows.h> definition, since it's not wanted here
 
 
 

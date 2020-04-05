@@ -21,7 +21,7 @@
 
 SInt16 FindObjectSelected (Point);
 void DragHandle (Point);
-void DragObject (Point);
+void Gp_DragObject (Point);
 void AddObjectPairing (void);
 Boolean ObjectIsUpBlower (objectType *);
 
@@ -355,7 +355,7 @@ void DragHandle (Point where)
 //--------------------------------------------------------------  DragObject
 
 #ifndef COMPILEDEMO
-void DragObject (Point where)
+void Gp_DragObject (Point where)
 {
 	return;
 #if 0

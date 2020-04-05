@@ -2,7 +2,9 @@
 #include "Externs.h"
 #include <stdlib.h>
 
+#ifndef ARRAYSIZE
 #define ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))
+#endif
 #define FORWARD_FALSE(x) do { if ((x) == 0) return 0; } while (0)
 
 static int ReadPoint(byteio *reader, Point *data)

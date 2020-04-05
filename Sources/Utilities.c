@@ -379,25 +379,40 @@ void DisposeGWorld (HDC theGWorld)
 // the current port (no scaling, clipping, etc, are done).  Always…
 // draws in the upper left corner of current port.
 
-void LoadGraphic (SInt16 resID)
+void LoadGraphic (HDC hdc, SInt16 resID)
 {
-	return;
-#if 0
-	Rect		bounds;
-	PicHandle	thePicture;
+	HBITMAP		thePicture, hbmPrev;
+	BITMAP		bitmapInfo;
+	HDC			hdcSrc;
 
-	thePicture = GetPicture(resID);
-	if (thePicture == nil)
+	thePicture = LoadImage(
+		HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(resID),
+		IMAGE_BITMAP,
+		0,
+		0,
+		LR_DEFAULTCOLOR
+	);
+	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
-	HLock((Handle)thePicture);
-	bounds = (*thePicture)->picFrame;
-	HUnlock((Handle)thePicture);
-	OffsetRect(&bounds, -bounds.left, -bounds.top);
-	DrawPicture(thePicture, &bounds);
-
-	ReleaseResource((Handle)thePicture);
-#endif
+	GetObject(thePicture, sizeof(bitmapInfo), &bitmapInfo);
+	hdcSrc = CreateCompatibleDC(NULL);
+	hbmPrev = SelectObject(hdcSrc, thePicture);
+	BitBlt(
+		hdc,
+		0,
+		0,
+		bitmapInfo.bmWidth,
+		bitmapInfo.bmHeight,
+		hdcSrc,
+		0,
+		0,
+		SRCCOPY
+	);
+	SelectObject(hdcSrc, hbmPrev);
+	DeleteDC(hdcSrc);
+	DeleteObject(thePicture);
 }
 
 //--------------------------------------------------------------  LoadScaledGraphic
@@ -405,18 +420,47 @@ void LoadGraphic (SInt16 resID)
 // specified.  If this rect isn't the same size of the 'PICT', scaling…
 // will occur.
 
-void LoadScaledGraphic (SInt16 resID, Rect *theRect)
+void LoadScaledGraphic (HDC hdc, SInt16 resID, Rect *theRect)
 {
-	return;
-#if 0
-	PicHandle	thePicture;
+	HBITMAP		thePicture, hbmPrev;
+	BITMAP		bitmapInfo;
+	HDC			hdcSrc;
 
-	thePicture = GetPicture(resID);
-	if (thePicture == nil)
+	if ((theRect->right - theRect->left) < 0)
+		return;
+	if ((theRect->bottom - theRect->top) < 0)
+		return;
+
+	thePicture = LoadImage(
+		HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(resID),
+		IMAGE_BITMAP,
+		0,
+		0,
+		LR_DEFAULTCOLOR
+	);
+	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
-	DrawPicture(thePicture, theRect);
-	ReleaseResource((Handle)thePicture);
-#endif
+
+	GetObject(thePicture, sizeof(bitmapInfo), &bitmapInfo);
+	hdcSrc = CreateCompatibleDC(NULL);
+	hbmPrev = SelectObject(hdcSrc, thePicture);
+	StretchBlt(
+		hdc,
+		theRect->left,
+		theRect->top,
+		theRect->right - theRect->left,
+		theRect->bottom - theRect->top,
+		hdcSrc,
+		0,
+		0,
+		bitmapInfo.bmWidth,
+		bitmapInfo.bmHeight,
+		SRCCOPY
+	);
+	SelectObject(hdcSrc, hbmPrev);
+	DeleteDC(hdcSrc);
+	DeleteObject(thePicture);
 }
 
 //--------------------------------------------------------------  PlotSICN
