@@ -64,8 +64,8 @@ HDC			fishMaskMap;
 Rect		balloonSrc[kNumBalloonFrames], copterSrc[kNumCopterFrames];
 Rect		dartSrc[kNumDartFrames], ballSrc[kNumBallFrames];
 Rect		dripSrc[kNumDripFrames], fishSrc[kNumFishFrames];
-GWorldPtr	clutterSrcMap;									// Clutter
-GWorldPtr	clutterMaskMap;
+HDC			clutterSrcMap;									// Clutter
+HDC			clutterMaskMap;
 Rect		clutterSrcRect;
 Rect		flowerSrc[kNumFlowers];
 Rect		*srcRects;

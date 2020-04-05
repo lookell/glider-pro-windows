@@ -38,5 +38,5 @@ extern HDC				enemySrcMap;
 extern HDC				enemyMaskMap;
 extern HDC				fishSrcMap;
 extern HDC				fishMaskMap;
-extern GWorldPtr		clutterSrcMap;
-extern GWorldPtr		clutterMaskMap;
+extern HDC				clutterSrcMap;
+extern HDC				clutterMaskMap;

@@ -60,22 +60,14 @@ extern	SInt16		maxFiles;
 
 void InitClutter (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	QSetRect(&clutterSrcRect, 0, 0, 128, 69);
 	theErr = CreateOffScreenGWorld(&clutterSrcMap, &clutterSrcRect, kPreferredDepth);
-	SetGWorld(clutterSrcMap, nil);
-	LoadGraphic(kClutterPictID);
+	LoadGraphic(clutterSrcMap, kClutterPictID);
 
 	theErr = CreateOffScreenGWorld(&clutterMaskMap, &clutterSrcRect, 1);
-	SetGWorld(clutterMaskMap, nil);
-	LoadGraphic(kClutterPictID + 1000);
+	LoadGraphic(clutterMaskMap, kClutterPictID + 1000);
 
 	QSetRect(&flowerSrc[0], 0, 0, 10, 28);
 	QOffsetRect(&flowerSrc[0], 0, 23);
@@ -94,9 +86,6 @@ void InitClutter (void)
 
 	QSetRect(&flowerSrc[5], 0, 0, 32, 51);
 	QOffsetRect(&flowerSrc[5], 95, 0);
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
 }
 
 //--------------------------------------------------------------  InitSupport
