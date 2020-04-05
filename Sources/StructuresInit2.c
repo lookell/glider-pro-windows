@@ -109,25 +109,14 @@ void InitSupport (void)
 
 void InitAngel (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	QSetRect(&angelSrcRect, 0, 0, 96, 44);
 	theErr = CreateOffScreenGWorld(&angelSrcMap, &angelSrcRect, kPreferredDepth);
-	SetGWorld(angelSrcMap, nil);
-	LoadGraphic(kAngelPictID);
+	LoadGraphic(angelSrcMap, kAngelPictID);
 
 	theErr = CreateOffScreenGWorld(&angelMaskMap, &angelSrcRect, 1);
-	SetGWorld(angelMaskMap, nil);
-	LoadGraphic(kAngelPictID + 1);
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	LoadGraphic(angelMaskMap, kAngelPictID + 1);
 }
 
 //--------------------------------------------------------------  CreateOffscreens

@@ -41,8 +41,8 @@ void DrawPages (void);
 pageType	pages[8];
 Rect		pageSrcRect, pageSrc[kPageFrames], lettersSrc[8], angelSrcRect;
 RgnHandle	roomRgn;
-GWorldPtr	pageSrcMap, gameOverSrcMap, angelSrcMap;
-GWorldPtr	pageMaskMap, angelMaskMap;
+HDC			pageSrcMap, gameOverSrcMap, angelSrcMap;
+HDC			pageMaskMap, angelMaskMap;
 SInt16		countDown, stopPages, pagesStuck;
 Boolean		gameOver;
 
