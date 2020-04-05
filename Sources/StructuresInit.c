@@ -6,6 +6,7 @@
 
 
 //#include <Resources.h>
+#include <stddef.h>
 #include "Macintosh.h"
 #include "Externs.h"
 #include "Objects.h"
@@ -643,77 +644,57 @@ void InitAppliances (void)
 
 void InitEnemies (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-	short		i;
+	size_t		i;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	QSetRect(&balloonSrcRect, 0, 0, 24, 30 * kNumBalloonFrames);
 	theErr = CreateOffScreenGWorld(&balloonSrcMap, &balloonSrcRect, kPreferredDepth);
-	SetGWorld(balloonSrcMap, nil);
-	LoadGraphic(kBalloonPictID);
+	LoadGraphic(balloonSrcMap, kBalloonPictID);
 
 	theErr = CreateOffScreenGWorld(&balloonMaskMap, &balloonSrcRect, 1);
-	SetGWorld(balloonMaskMap, nil);
-	LoadGraphic(kBalloonPictID + 1000);
+	LoadGraphic(balloonMaskMap, kBalloonPictID + 1000);
 
 	QSetRect(&copterSrcRect, 0, 0, 32, 30 * kNumCopterFrames);
 	theErr = CreateOffScreenGWorld(&copterSrcMap, &copterSrcRect, kPreferredDepth);
-	SetGWorld(copterSrcMap, nil);
-	LoadGraphic(kCopterPictID);
+	LoadGraphic(copterSrcMap, kCopterPictID);
 
 	theErr = CreateOffScreenGWorld(&copterMaskMap, &copterSrcRect, 1);
-	SetGWorld(copterMaskMap, nil);
-	LoadGraphic(kCopterPictID + 1000);
+	LoadGraphic(copterMaskMap, kCopterPictID + 1000);
 
 	QSetRect(&dartSrcRect, 0, 0, 64, 19 * kNumDartFrames);
 	theErr = CreateOffScreenGWorld(&dartSrcMap, &dartSrcRect, kPreferredDepth);
-	SetGWorld(dartSrcMap, nil);
-	LoadGraphic(kDartPictID);
+	LoadGraphic(dartSrcMap, kDartPictID);
 
 	theErr = CreateOffScreenGWorld(&dartMaskMap, &dartSrcRect, 1);
-	SetGWorld(dartMaskMap, nil);
-	LoadGraphic(kDartPictID + 1000);
+	LoadGraphic(dartMaskMap, kDartPictID + 1000);
 
 	QSetRect(&ballSrcRect, 0, 0, 32, 32 * kNumBallFrames);
 	theErr = CreateOffScreenGWorld(&ballSrcMap, &ballSrcRect, kPreferredDepth);
-	SetGWorld(ballSrcMap, nil);
-	LoadGraphic(kBallPictID);
+	LoadGraphic(ballSrcMap, kBallPictID);
 
 	theErr = CreateOffScreenGWorld(&ballMaskMap, &ballSrcRect, 1);
-	SetGWorld(ballMaskMap, nil);
-	LoadGraphic(kBallPictID + 1000);
+	LoadGraphic(ballMaskMap, kBallPictID + 1000);
 
 	QSetRect(&dripSrcRect, 0, 0, 16, 12 * kNumDripFrames);
 	theErr = CreateOffScreenGWorld(&dripSrcMap, &dripSrcRect, kPreferredDepth);
-	SetGWorld(dripSrcMap, nil);
-	LoadGraphic(kDripPictID);
+	LoadGraphic(dripSrcMap, kDripPictID);
 
 	theErr = CreateOffScreenGWorld(&dripMaskMap, &dripSrcRect, 1);
-	SetGWorld(dripMaskMap, nil);
-	LoadGraphic(kDripPictID + 1000);
+	LoadGraphic(dripMaskMap, kDripPictID + 1000);
 
 	QSetRect(&enemySrcRect, 0, 0, 36, 33);
 	theErr = CreateOffScreenGWorld(&enemySrcMap, &enemySrcRect, kPreferredDepth);
-	SetGWorld(enemySrcMap, nil);
-	LoadGraphic(kEnemyPictID);
+	LoadGraphic(enemySrcMap, kEnemyPictID);
 
 	theErr = CreateOffScreenGWorld(&enemyMaskMap, &enemySrcRect, 1);
-	SetGWorld(enemyMaskMap, nil);
-	LoadGraphic(kEnemyPictID + 1000);
+	LoadGraphic(enemyMaskMap, kEnemyPictID + 1000);
 
 	QSetRect(&fishSrcRect, 0, 0, 16, 16 * kNumFishFrames);
 	theErr = CreateOffScreenGWorld(&fishSrcMap, &fishSrcRect, kPreferredDepth);
-	SetGWorld(fishSrcMap, nil);
-	LoadGraphic(kFishPictID);
+	LoadGraphic(fishSrcMap, kFishPictID);
 
 	theErr = CreateOffScreenGWorld(&fishMaskMap, &fishSrcRect, 1);
-	SetGWorld(fishMaskMap, nil);
-	LoadGraphic(kFishPictID + 1000);
+	LoadGraphic(fishMaskMap, kFishPictID + 1000);
 
 	for (i = 0; i < kNumBalloonFrames; i++)
 	{
@@ -750,8 +731,5 @@ void InitEnemies (void)
 		QSetRect(&fishSrc[i], 0, 0, 16, 16);
 		QOffsetRect(&fishSrc[i], 0, 16 * i);
 	}
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
 }
 

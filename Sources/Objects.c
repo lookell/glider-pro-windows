@@ -55,12 +55,12 @@ Rect		outletSrc[kNumOutletPicts];
 Rect		balloonSrcRect, copterSrcRect, dartSrcRect;		// Enemies
 Rect		ballSrcRect, dripSrcRect, enemySrcRect;
 Rect		fishSrcRect;
-GWorldPtr	balloonSrcMap, copterSrcMap, dartSrcMap;
-GWorldPtr	ballSrcMap, dripSrcMap, enemySrcMap;
-GWorldPtr	fishSrcMap;
-GWorldPtr	balloonMaskMap, copterMaskMap, dartMaskMap;
-GWorldPtr	ballMaskMap, dripMaskMap, enemyMaskMap;
-GWorldPtr	fishMaskMap;
+HDC			balloonSrcMap, copterSrcMap, dartSrcMap;
+HDC			ballSrcMap, dripSrcMap, enemySrcMap;
+HDC			fishSrcMap;
+HDC			balloonMaskMap, copterMaskMap, dartMaskMap;
+HDC			ballMaskMap, dripMaskMap, enemyMaskMap;
+HDC			fishMaskMap;
 Rect		balloonSrc[kNumBalloonFrames], copterSrc[kNumCopterFrames];
 Rect		dartSrc[kNumDartFrames], ballSrc[kNumBallFrames];
 Rect		dripSrc[kNumDripFrames], fishSrc[kNumFishFrames];
