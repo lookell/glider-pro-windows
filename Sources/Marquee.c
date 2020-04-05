@@ -25,7 +25,7 @@ Rect		marqueeGliderRect;
 Boolean		gliderMarqueeUp;
 
 
-extern	Cursor		handCursor, vertCursor, horiCursor, diagCursor;
+extern	HCURSOR		handCursor, vertCursor, horiCursor, diagCursor;
 extern	Rect		leftStartGliderSrc;
 
 

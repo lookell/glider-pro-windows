@@ -54,7 +54,7 @@ SInt16		tileOver, tempBack, cursorIs;
 Boolean		originalLeftOpen, originalTopOpen, originalRightOpen, originalBottomOpen;
 Boolean		originalFloor;
 
-extern	Cursor		handCursor, beamCursor;
+extern	HCURSOR		handCursor, beamCursor;
 extern	SInt16		houseResFork, lastBackground;
 
 

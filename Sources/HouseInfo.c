@@ -37,7 +37,7 @@ Rect		houseEditText1, houseEditText2;
 SInt16		houseCursorIs;
 Boolean		keyHit, tempPhoneBit;
 
-extern	Cursor		beamCursor;
+extern	HCURSOR		beamCursor;
 extern	Boolean		noRoomAtAll, changeLockStateOfHouse, saveHouseLocked;
 extern	Boolean		phoneBitSet;
 

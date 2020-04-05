@@ -98,7 +98,6 @@ typedef struct CGrafPtr__ *CGrafPtr;
 typedef struct ControlHandle__ *ControlHandle;
 typedef struct CTabHandle__ *CTabHandle;
 typedef struct CursHandle__ *CursHandle;
-typedef struct Cursor__ *Cursor;
 typedef struct DialogPtr__ *DialogPtr;
 typedef struct EventRecord__ *EventRecord;
 typedef struct GDHandle__ *GDHandle;

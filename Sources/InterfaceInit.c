@@ -23,10 +23,8 @@ extern	RgnHandle		mirrorRgn;
 extern	WindowPtr		mapWindow, toolsWindow, linkWindow;
 extern	WindowPtr		menuWindow;
 extern	Rect			shieldRect, boardSrcRect, localRoomsDest[];
-extern	CursHandle		handCursorH, beamCursorH, vertCursorH, horiCursorH;
-extern	CursHandle		diagCursorH;
-extern	Cursor			handCursor, beamCursor, vertCursor, horiCursor;
-extern	Cursor			diagCursor;
+extern	HCURSOR			handCursor, beamCursor, vertCursor, horiCursor;
+extern	HCURSOR			diagCursor;
 extern	MenuHandle		appleMenu, gameMenu, optionsMenu, houseMenu;
 extern	Point			shieldPt;
 extern	SInt32			incrementModeTime;
@@ -82,38 +80,60 @@ void InitializeMenus (void)
 
 void GetExtraCursors (void)
 {
-	return;
-#if 0
-	handCursorH = GetCursor(kHandCursorID);
-	if (handCursorH == nil)
+	handCursor = LoadImage(
+		HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(kHandCursorID), // TODO: replace with OCR_HAND
+		IMAGE_CURSOR,
+		0,
+		0,
+		LR_DEFAULTCOLOR
+	);
+	if (handCursor == NULL)
 		RedAlert(kErrFailedResourceLoad);
-	HLock((Handle)handCursorH);
-	handCursor = **handCursorH;
 
-	beamCursorH = GetCursor(iBeamCursor);
-	if (beamCursorH == nil)
+	beamCursor = LoadImage(
+		NULL,
+		MAKEINTRESOURCE(OCR_IBEAM),
+		IMAGE_CURSOR,
+		0,
+		0,
+		LR_DEFAULTCOLOR | LR_SHARED
+	);
+	if (beamCursor == NULL)
 		RedAlert(kErrFailedResourceLoad);
-	HLock((Handle)beamCursorH);
-	beamCursor = **beamCursorH;
 
-	vertCursorH = GetCursor(kVertCursorID);
-	if (vertCursorH == nil)
+	vertCursor = LoadImage(
+		HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(kVertCursorID), // TODO: replace with OCR_SIZENS
+		IMAGE_CURSOR,
+		0,
+		0,
+		LR_DEFAULTCOLOR
+	);
+	if (vertCursor == NULL)
 		RedAlert(kErrFailedResourceLoad);
-	HLock((Handle)vertCursorH);
-	vertCursor = **vertCursorH;
 
-	horiCursorH = GetCursor(kHoriCursorID);
-	if (horiCursorH == nil)
+	horiCursor = LoadImage(
+		HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(kHoriCursorID), // TODO: replace with OCR_SIZEWE
+		IMAGE_CURSOR,
+		0,
+		0,
+		LR_DEFAULTCOLOR
+	);
+	if (horiCursor == NULL)
 		RedAlert(kErrFailedResourceLoad);
-	HLock((Handle)horiCursorH);
-	horiCursor = **horiCursorH;
 
-	diagCursorH = GetCursor(kDiagCursorID);
-	if (diagCursorH == nil)
+	diagCursor = LoadImage(
+		HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(kDiagCursorID), // TODO: replace with OCR_SIZENWSE
+		IMAGE_CURSOR,
+		0,
+		0,
+		LR_DEFAULTCOLOR
+	);
+	if (diagCursor == NULL)
 		RedAlert(kErrFailedResourceLoad);
-	HLock((Handle)diagCursorH);
-	diagCursor = **diagCursorH;
-#endif
 }
 
 //--------------------------------------------------------------  VariableInit

@@ -6,6 +6,7 @@
 
 #define STRICT
 #define UNICODE
+#define OEMRESOURCE
 #define WINVER _WIN32_WINNT
 #define _WIN32_WINNT _WIN32_WINNT_WINXP
 #define _WIN32_IE_ _WIN32_IE_WINXP
