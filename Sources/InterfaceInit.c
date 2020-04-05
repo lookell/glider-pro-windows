@@ -123,8 +123,6 @@ void GetExtraCursors (void)
 
 void VariableInit (void)
 {
-	return;
-#if 0
 	short		i;
 
 	shieldPt.h = 0;
@@ -168,7 +166,7 @@ void VariableInit (void)
 	wasFlower = RandomInt(kNumFlowers);
 	lastHighScore = -1;
 	idleMode = kIdleSplashMode;
-	incrementModeTime = TickCount() + kIdleSplashTicks;
+	incrementModeTime = (GetTickCount() * 60 / 1000) + kIdleSplashTicks;
 	willMaxFiles = maxFiles;
 	numExtraHouses = 0;
 
@@ -189,7 +187,8 @@ void VariableInit (void)
 	fadeInSequence[14] = 9;
 	fadeInSequence[15] = 10;
 
-	doubleTime = GetDblTime();
+	//doubleTime = GetDblTime();
+	doubleTime = GetDoubleClickTime() * 60 / 1000;
 
 	mirrorRgn = nil;
 	mainWindow = nil;
@@ -224,6 +223,5 @@ void VariableInit (void)
 	QOffsetRect(&localRoomsDest[kSouthWestRoom], -kRoomWide, kVertLocalOffset);
 	QOffsetRect(&localRoomsDest[kWestRoom], -kRoomWide, 0);
 	QOffsetRect(&localRoomsDest[kNorthWestRoom], -kRoomWide, -kVertLocalOffset);
-#endif
 }
 
