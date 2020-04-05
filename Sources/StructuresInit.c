@@ -7,6 +7,7 @@
 
 //#include <Resources.h>
 #include <stddef.h>
+#include <wchar.h>
 #include "Macintosh.h"
 #include "Externs.h"
 #include "Objects.h"
@@ -60,43 +61,60 @@ extern	SInt16		wasScoreboardMode;
 
 void InitScoreboardMap (void)
 {
-	return;
-#if 0
 	Rect		bounds;
-	PicHandle	thePicture;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	HBITMAP		thePicture, hbmPrev;
+	BITMAP		bm;
+	LOGFONT		lfScoreboard;
+	HDC			hdcSrc;
 	OSErr		theErr;
 	short		hOffset;
 
-	GetGWorld(&wasCPort, &wasWorld);
+	lfScoreboard.lfHeight = 12;
+	lfScoreboard.lfWidth = 0;
+	lfScoreboard.lfEscapement = 0;
+	lfScoreboard.lfOrientation = 0;
+	lfScoreboard.lfWeight = FW_BOLD;
+	lfScoreboard.lfItalic = FALSE;
+	lfScoreboard.lfUnderline = FALSE;
+	lfScoreboard.lfStrikeOut = FALSE;
+	lfScoreboard.lfCharSet = DEFAULT_CHARSET;
+	lfScoreboard.lfOutPrecision = OUT_DEFAULT_PRECIS;
+	lfScoreboard.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+	lfScoreboard.lfQuality = DEFAULT_QUALITY;
+	lfScoreboard.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
+	wcscpy_s(lfScoreboard.lfFaceName, LF_FACESIZE, L"Tahoma");
 
 	wasScoreboardMode = kScoreboardHigh;
 	boardSrcRect = houseRect;
 	ZeroRectCorner(&boardSrcRect);
 	boardSrcRect.bottom = kScoreboardTall;
 	theErr = CreateOffScreenGWorld(&boardSrcMap, &boardSrcRect, kPreferredDepth);
-	SetGWorld(boardSrcMap, nil);
 
 	if (boardSrcRect.right >= 640)
 		hOffset = (RectWide(&boardSrcRect) - kMaxViewWidth) / 2;
 	else
 		hOffset = -576;
-	thePicture = GetPicture(kScoreboardPictID);
-	if (thePicture == nil)
+	thePicture = LoadImage(
+		HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(kScoreboardPictID),
+		IMAGE_BITMAP,
+		0,
+		0,
+		LR_DEFAULTCOLOR
+	);
+	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
-	HLock((Handle)thePicture);
-	bounds = (*thePicture)->picFrame;
-	HUnlock((Handle)thePicture);
-	QOffsetRect(&bounds, -bounds.left, -bounds.top);
-	QOffsetRect(&bounds, hOffset, 0);
-	DrawPicture(thePicture, &bounds);
-	ReleaseResource((Handle)thePicture);
+	GetObject(thePicture, sizeof(bm), &bm);
+	hdcSrc = CreateCompatibleDC(NULL);
+	hbmPrev = SelectObject(hdcSrc, thePicture);
+	BitBlt(boardSrcMap, hOffset, 0, bm.bmWidth, bm.bmHeight, hdcSrc, 0, 0, SRCCOPY);
+	SelectObject(hdcSrc, hbmPrev);
+	DeleteDC(hdcSrc);
+	DeleteObject(thePicture);
 
 	QSetRect(&badgeSrcRect, 0, 0, 32, 66);				// 2144 pixels
 	theErr = CreateOffScreenGWorld(&badgeSrcMap, &badgeSrcRect, kPreferredDepth);
-	SetGWorld(badgeSrcMap, nil);
-	LoadGraphic(kBadgePictID);
+	LoadGraphic(badgeSrcMap, kBadgePictID);
 
 	boardDestRect = boardSrcRect;
 	QOffsetRect(&boardDestRect, 0, -kScoreboardTall);
@@ -107,34 +125,25 @@ void InitScoreboardMap (void)
 
 	QSetRect(&boardTSrcRect, 0, 0, 256, 12);			// room title
 	theErr = CreateOffScreenGWorld(&boardTSrcMap, &boardTSrcRect, kPreferredDepth);
-	SetGWorld(boardTSrcMap, nil);
 	boardTDestRect = boardTSrcRect;
 	QOffsetRect(&boardTDestRect, 137 + hOffset, 5);
-	TextFont(applFont);
-	TextSize(12);
-	TextFace(bold);
+	SelectObject(boardTSrcMap, CreateFontIndirect(&lfScoreboard));
 
 	QSetRect(&boardGSrcRect, 0, 0, 20, 10);				// # gliders
 	theErr = CreateOffScreenGWorld(&boardGSrcMap, &boardGSrcRect, kPreferredDepth);
-	SetGWorld(boardGSrcMap, nil);
 	boardGDestRect = boardGSrcRect;
 	QOffsetRect(&boardGDestRect, 526 + hOffset, 5);
-	TextFont(applFont);
-	TextSize(12);
-	TextFace(bold);
+	SelectObject(boardGSrcMap, CreateFontIndirect(&lfScoreboard));
 
 	QSetRect(&boardPSrcRect, 0, 0, 64, 10);				// points
 	theErr = CreateOffScreenGWorld(&boardPSrcMap, &boardPSrcRect, kPreferredDepth);
-	SetGWorld(boardPSrcMap, nil);
 	boardPDestRect = boardPSrcRect;
 	QOffsetRect(&boardPDestRect, 570 + hOffset, 5);		// total = 6396 pixels
 	boardPQDestRect = boardPDestRect;
 	QOffsetRect(&boardPQDestRect, 0, -kScoreboardTall);
 	boardGQDestRect = boardGDestRect;
 	QOffsetRect(&boardGQDestRect, 0, -kScoreboardTall);
-	TextFont(applFont);
-	TextSize(12);
-	TextFace(bold);
+	SelectObject(boardPSrcMap, CreateFontIndirect(&lfScoreboard));
 
 	QSetRect(&badgesBlankRects[0], 0, 0, 16, 16);		// foil
 	QOffsetRect(&badgesBlankRects[0], 0, 0);
@@ -162,9 +171,6 @@ void InitScoreboardMap (void)
 	QOffsetRect(&badgesDestRects[2], 467 + hOffset, 1 - kScoreboardTall);
 	QSetRect(&badgesDestRects[3], 0, 0, 16, 17);		// helium
 	QOffsetRect(&badgesDestRects[3], 467 + hOffset, 1 - kScoreboardTall);
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
 }
 
 //--------------------------------------------------------------  InitGliderMap

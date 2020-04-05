@@ -28,16 +28,16 @@ void RefreshPoints (void);
 
 
 Rect		boardSrcRect, badgeSrcRect, boardDestRect;
-GWorldPtr	boardSrcMap, badgeSrcMap;
+HDC			boardSrcMap, badgeSrcMap;
 Rect		boardTSrcRect, boardTDestRect;
-GWorldPtr	boardTSrcMap;
+HDC			boardTSrcMap;
 Rect		boardGSrcRect, boardGDestRect;
-GWorldPtr	boardGSrcMap;
+HDC			boardGSrcMap;
 Rect		boardPSrcRect, boardPDestRect;
 Rect		boardPQDestRect, boardGQDestRect;
 Rect		badgesBlankRects[4], badgesBadgesRects[4];
 Rect		badgesDestRects[4];
-GWorldPtr	boardPSrcMap;
+HDC			boardPSrcMap;
 SInt32		displayedScore;
 SInt16		wasScoreboardMode;
 Boolean		doRollScore;

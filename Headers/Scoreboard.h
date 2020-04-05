@@ -6,11 +6,11 @@
 
 
 //#include <QDOffscreen.h>
-#include "Macintosh.h"
+#include "WinAPI.h"
 
 
-extern GWorldPtr		boardSrcMap;
-extern GWorldPtr		badgeSrcMap;
-extern GWorldPtr		boardTSrcMap;
-extern GWorldPtr		boardGSrcMap;
-extern GWorldPtr		boardPSrcMap;
+extern HDC		boardSrcMap;
+extern HDC		badgeSrcMap;
+extern HDC		boardTSrcMap;
+extern HDC		boardGSrcMap;
+extern HDC		boardPSrcMap;
