@@ -37,7 +37,7 @@ void KillNailOffscreen (void);
 Rect			nailSrcRect, activeRoomRect, wasActiveRoomRect;
 Rect			mapHScrollRect, mapVScrollRect, mapCenterRect;
 Rect			mapWindowRect;
-GWorldPtr		nailSrcMap;
+HDC				nailSrcMap;
 WindowPtr		mapWindow;
 ControlHandle	mapHScroll, mapVScroll;
 SInt16			isMapH, isMapV, mapRoomsHigh, mapRoomsWide;
@@ -766,24 +766,14 @@ Boolean QueryNewRoom (void)
 #ifndef COMPILEDEMO
 void CreateNailOffscreen (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
 	OSErr		theErr;
 
-	if (nailSrcMap == nil)
+	if (nailSrcMap == NULL)
 	{
-		GetGWorld(&wasCPort, &wasWorld);
-
 		QSetRect(&nailSrcRect, 0, 0, kMapRoomWidth, kMapRoomHeight * (kNumBackgrounds + 1));
 		theErr = CreateOffScreenGWorld(&nailSrcMap, &nailSrcRect, kPreferredDepth);
-		SetGWorld(nailSrcMap, nil);
-		LoadGraphic(kThumbnailPictID);
-
-		SetGWorld(wasCPort, wasWorld);
+		LoadGraphic(nailSrcMap, kThumbnailPictID);
 	}
-#endif
 }
 #endif
 
@@ -792,15 +782,11 @@ void CreateNailOffscreen (void)
 #ifndef COMPILEDEMO
 void KillNailOffscreen (void)
 {
-	return;
-#if 0
-	if (nailSrcMap != nil)
+	if (nailSrcMap != NULL)
 	{
-//		KillOffScreenPixMap(nailSrcMap);
 		DisposeGWorld(nailSrcMap);
-		nailSrcMap = nil;
+		nailSrcMap = NULL;
 	}
-#endif
 }
 #endif
 

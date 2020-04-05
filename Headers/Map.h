@@ -9,5 +9,5 @@
 #include "Macintosh.h"
 
 
-extern GWorldPtr		nailSrcMap;
+extern HDC		nailSrcMap;
 extern WindowPtr		mapWindow;
