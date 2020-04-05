@@ -127,13 +127,7 @@ void InitAngel (void)
 
 void CreateOffscreens (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	justRoomsRect = houseRect;
 	ZeroRectCorner(&justRoomsRect);
@@ -163,7 +157,6 @@ void CreateOffscreens (void)
 	QSetRect(&tileSrcRect, 0, 0, 128, 80);
 	tileSrcMap = nil;
 //	????
-#endif
 }
 
 //--------------------------------------------------------------  CreatePointers

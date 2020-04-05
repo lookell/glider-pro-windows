@@ -32,7 +32,7 @@ ColorSpec *		newColors;
 HCURSOR			handCursor, beamCursor, vertCursor, horiCursor;
 HCURSOR			diagCursor;
 Rect			workSrcRect;
-GWorldPtr		workSrcMap;
+HDC				workSrcMap;
 Rect			mainWindowRect;
 WindowPtr		mainWindow, menuWindow;
 SInt16			isEditH, isEditV;

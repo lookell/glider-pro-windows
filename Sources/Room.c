@@ -24,7 +24,7 @@ void SetToNearestNeighborRoom (SInt16, SInt16);
 
 roomPtr		thisRoom;
 Rect		backSrcRect;
-GWorldPtr	backSrcMap;
+HDC			backSrcMap;
 SInt16		numberRooms, thisRoomNumber, previousRoom;
 SInt16		leftThresh, rightThresh, lastBackground;
 Boolean		autoRoomEdit, newRoomNow, noRoomAtAll;

@@ -6,7 +6,7 @@
 
 
 //#include <QDOffscreen.h>
-#include "Macintosh.h"
+#include "WinAPI.h"
 
 
-extern GWorldPtr		workSrcMap;
+extern HDC		workSrcMap;
