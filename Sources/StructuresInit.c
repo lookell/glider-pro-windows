@@ -556,41 +556,29 @@ void InitLights (void)
 
 void InitAppliances (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-	short		i;
+	size_t		i;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	QSetRect(&applianceSrcRect, 0, 0, 80, 269);		// 21600 pixels
 	theErr = CreateOffScreenGWorld(&applianceSrcMap, &applianceSrcRect, kPreferredDepth);
-	SetGWorld(applianceSrcMap, nil);
-	LoadGraphic(kAppliancePictID);
+	LoadGraphic(applianceSrcMap, kAppliancePictID);
 
 	theErr = CreateOffScreenGWorld(&applianceMaskMap, &applianceSrcRect, 1);
-	SetGWorld(applianceMaskMap, nil);
-	LoadGraphic(kAppliancePictID + 1000);
+	LoadGraphic(applianceMaskMap, kAppliancePictID + 1000);
 
 	QSetRect(&toastSrcRect, 0, 0, 32, 174);			// 5600 pixels
 	theErr = CreateOffScreenGWorld(&toastSrcMap, &toastSrcRect, kPreferredDepth);
-	SetGWorld(toastSrcMap, nil);
-	LoadGraphic(kToastPictID);
+	LoadGraphic(toastSrcMap, kToastPictID);
 
 	theErr = CreateOffScreenGWorld(&toastMaskMap, &toastSrcRect, 1);
-	SetGWorld(toastMaskMap, nil);
-	LoadGraphic(kToastPictID + 1000);
+	LoadGraphic(toastMaskMap, kToastPictID + 1000);
 
 	QSetRect(&shredSrcRect, 0, 0, 40, 35);			// 1440 pixels
 	theErr = CreateOffScreenGWorld(&shredSrcMap, &shredSrcRect, kPreferredDepth);
-	SetGWorld(shredSrcMap, nil);
-	LoadGraphic(kShreddedPictID);
+	LoadGraphic(shredSrcMap, kShreddedPictID);
 
 	theErr = CreateOffScreenGWorld(&shredMaskMap, &shredSrcRect, 1);
-	SetGWorld(shredMaskMap, nil);
-	LoadGraphic(kShreddedPictID + 1000);
+	LoadGraphic(shredMaskMap, kShreddedPictID + 1000);
 
 	QSetRect(&plusScreen1, 0, 0, 32, 22);
 	QOffsetRect(&plusScreen1, 48, 127);
@@ -633,9 +621,6 @@ void InitAppliances (void)
 	QOffsetRect(&microOn, 64, 222);
 	QSetRect(&microOff, 0, 0, 16, 35);
 	QOffsetRect(&microOff, 64, 187);
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
 }
 
 //--------------------------------------------------------------  InitEnemies

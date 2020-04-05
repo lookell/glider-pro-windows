@@ -46,8 +46,8 @@ GWorldPtr	lightSrcMap;
 GWorldPtr	lightMaskMap;
 Rect		flourescentSrc1, flourescentSrc2, trackLightSrc[kNumTrackLights];
 Rect		applianceSrcRect, toastSrcRect, shredSrcRect;	// Appliances
-GWorldPtr	applianceSrcMap, toastSrcMap, shredSrcMap;
-GWorldPtr	applianceMaskMap, toastMaskMap, shredMaskMap;
+HDC			applianceSrcMap, toastSrcMap, shredSrcMap;
+HDC			applianceMaskMap, toastMaskMap, shredMaskMap;
 Rect		plusScreen1, plusScreen2, tvScreen1, tvScreen2;
 Rect		coffeeLight1, coffeeLight2, vcrTime1, vcrTime2;
 Rect		stereoLight1, stereoLight2, microOn, microOff;
