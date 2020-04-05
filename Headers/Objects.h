@@ -5,8 +5,8 @@
 //============================================================================
 
 
-extern GWorldPtr		blowerSrcMap;
-extern GWorldPtr		blowerMaskMap;
+extern HDC				blowerSrcMap;
+extern HDC				blowerMaskMap;
 extern HDC				furnitureSrcMap;
 extern HDC				furnitureMaskMap;
 extern HDC				bonusSrcMap;

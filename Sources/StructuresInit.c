@@ -251,23 +251,15 @@ void InitGliderMap (void)
 
 void InitBlowers (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-	short		i;
+	size_t		i;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	QSetRect(&blowerSrcRect, 0, 0, 48, 402);	// 19344 pixels
 	theErr = CreateOffScreenGWorld(&blowerSrcMap, &blowerSrcRect, kPreferredDepth);
-	SetGWorld(blowerSrcMap, nil);
-	LoadGraphic(kBlowerPictID);
+	LoadGraphic(blowerSrcMap, kBlowerPictID);
 
 	theErr = CreateOffScreenGWorld(&blowerMaskMap, &blowerSrcRect, 1);
-	SetGWorld(blowerMaskMap, nil);
-	LoadGraphic(kBlowerPictID + 1000);
+	LoadGraphic(blowerMaskMap, kBlowerPictID + 1000);
 
 	for (i = 0; i < kNumCandleFlames; i++)
 	{
@@ -292,9 +284,6 @@ void InitBlowers (void)
 
 	QSetRect(&rightStartGliderSrc, 0, 0, 48, 16);
 	QOffsetRect(&rightStartGliderSrc, 0, 374);
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
 }
 
 //--------------------------------------------------------------  InitFurniture

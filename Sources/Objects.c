@@ -17,8 +17,8 @@ void ListOneRoomsObjects (SInt16);
 
 
 Rect		blowerSrcRect;									// Blowers
-GWorldPtr	blowerSrcMap;
-GWorldPtr	blowerMaskMap;
+HDC			blowerSrcMap;
+HDC			blowerMaskMap;
 Rect		flame[kNumCandleFlames], tikiFlame[kNumTikiFlames];
 Rect		coals[kNumBBQCoals];
 Rect		furnitureSrcRect;								// Furniture
