@@ -422,28 +422,22 @@ void AddTikiFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 
 void BackUpBBQCoals (Rect *src, SInt16 index)
 {
-	return;
-#if 0
 	Rect		dest;
-	short		i;
+	SInt16		i;
 
 	QSetRect(&dest, 0, 0, 32, 9);
 	for (i = 0; i < kNumBBQCoals; i++)
 	{
 				// copy background to map
-		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
-				GetPortBitMapForCopyBits(savedMaps[index].map),
-				src, &dest, srcCopy, nil);
+		Mac_CopyBits(backSrcMap, savedMaps[index].map,
+				src, &dest, srcCopy, NULL);
 
 				// copy flame to map
-		CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap),
-				(BitMap *)*GetGWorldPixMap(blowerMaskMap),
-				GetPortBitMapForCopyBits(savedMaps[index].map),
+		Mac_CopyMask(blowerSrcMap, blowerMaskMap, savedMaps[index].map,
 				&coals[i], &coals[i], &dest);
 
 		QOffsetRect(&dest, 0, 9);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  ReBackUpBBQCoals
