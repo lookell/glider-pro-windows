@@ -512,7 +512,7 @@ void BackUpPendulum (Rect *src, SInt16 index)
 	for (i = 0; i < kNumPendulums; i++)
 	{
 		Mac_CopyBits(backSrcMap, savedMaps[index].map,
-				src, &dest, srcCopy, nil);
+				src, &dest, srcCopy, NULL);
 
 		Mac_CopyMask(bonusSrcMap, bonusMaskMap, savedMaps[index].map,
 				&pendulumSrc[i], &pendulumSrc[i], &dest);
@@ -593,27 +593,21 @@ void AddPendulum (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 
 void BackUpStar (Rect *src, SInt16 index)
 {
-	return;
-#if 0
 	Rect		dest;
-	short		i;
+	SInt16		i;
 
 	QSetRect(&dest, 0, 0, 32, 31);
 	for (i = 0; i < 6; i++)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
-				GetPortBitMapForCopyBits(savedMaps[index].map),
-				src, &dest, srcCopy, nil);
+		Mac_CopyBits(backSrcMap, savedMaps[index].map,
+				src, &dest, srcCopy, NULL);
 
 				// copy flame to map
-		CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
-				(BitMap *)*GetGWorldPixMap(bonusMaskMap),
-				GetPortBitMapForCopyBits(savedMaps[index].map),
+		Mac_CopyMask(bonusSrcMap, bonusMaskMap, savedMaps[index].map,
 				&starSrc[i], &starSrc[i], &dest);
 
 		QOffsetRect(&dest, 0, 31);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  ReBackUpStar
