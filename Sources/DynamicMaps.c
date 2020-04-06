@@ -49,10 +49,10 @@ void NilSavedMaps (void)
 
 	for (i = 0; i < kMaxSavedMaps; i++)
 	{
-		if (savedMaps[i].map != nil)
+		if (savedMaps[i].map != NULL)
 		{
 			DisposeGWorld(savedMaps[i].map);
-			savedMaps[i].map = nil;
+			savedMaps[i].map = NULL;
 		}
 		savedMaps[i].where = -1;
 		savedMaps[i].who = -1;
@@ -339,28 +339,22 @@ void AddCandleFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 
 void BackUpTikiFlames (Rect *src, SInt16 index)
 {
-	return;
-#if 0
 	Rect		dest;
-	short		i;
+	SInt16		i;
 
 	QSetRect(&dest, 0, 0, 8, 10);
 	for (i = 0; i < kNumTikiFlames; i++)
 	{
 				// copy background to map
-		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
-				GetPortBitMapForCopyBits(savedMaps[index].map),
-				src, &dest, srcCopy, nil);
+		Mac_CopyBits(backSrcMap, savedMaps[index].map,
+				src, &dest, srcCopy, NULL);
 
 				// copy flame to map
-		CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap),
-				(BitMap *)*GetGWorldPixMap(blowerMaskMap),
-				GetPortBitMapForCopyBits(savedMaps[index].map),
+		Mac_CopyMask(blowerSrcMap, blowerMaskMap, savedMaps[index].map,
 				&tikiFlame[i], &tikiFlame[i], &dest);
 
 		QOffsetRect(&dest, 0, 10);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  ReBackUpTikiFlames
