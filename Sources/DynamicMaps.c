@@ -126,25 +126,21 @@ SInt16 ReBackUpSavedMap (Rect *theRect, SInt16 where, SInt16 who)
 
 void RestoreFromSavedMap (SInt16 where, SInt16 who, Boolean doSparkle)
 {
-	return;
-#if 0
 	Rect		mapRect, bounds;
-	short		i;
+	SInt16		i;
 
 	for (i = 0; i < numSavedMaps; i++)
 	{
 		if ((savedMaps[i].where == where) && (savedMaps[i].who == who) &&
-				(savedMaps[i].map != nil))
+				(savedMaps[i].map != NULL))
 		{
 			mapRect = savedMaps[i].dest;
 			ZeroRectCorner(&mapRect);
 
-			CopyBits(GetPortBitMapForCopyBits(savedMaps[i].map),
-					(BitMap *)*GetGWorldPixMap(backSrcMap),
-					&mapRect, &savedMaps[i].dest, srcCopy, nil);
-			CopyBits(GetPortBitMapForCopyBits(savedMaps[i].map),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
-					&mapRect, &savedMaps[i].dest, srcCopy, nil);
+			Mac_CopyBits(savedMaps[i].map, backSrcMap,
+					&mapRect, &savedMaps[i].dest, srcCopy, NULL);
+			Mac_CopyBits(savedMaps[i].map, workSrcMap,
+					&mapRect, &savedMaps[i].dest, srcCopy, NULL);
 
 			AddRectToWorkRects(&savedMaps[i].dest);
 
@@ -158,7 +154,6 @@ void RestoreFromSavedMap (SInt16 where, SInt16 who, Boolean doSparkle)
 			break;
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  AddSparkle
