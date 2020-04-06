@@ -79,7 +79,8 @@ SInt16 BackUpToSavedMap (Rect *theRect, SInt16 where, SInt16 who)
 	savedMaps[numSavedMaps].dest = *theRect;
 	theErr = CreateOffScreenGWorld(&savedMaps[numSavedMaps].map, &mapRect, kPreferredDepth);
 
-	Mac_CopyBits(backSrcMap, savedMaps[numSavedMaps].map, theRect, &mapRect, srcCopy, NULL);
+	Mac_CopyBits(backSrcMap, savedMaps[numSavedMaps].map,
+			theRect, &mapRect, srcCopy, NULL);
 
 	savedMaps[numSavedMaps].where = where;
 	savedMaps[numSavedMaps].who = who;
@@ -95,10 +96,8 @@ SInt16 BackUpToSavedMap (Rect *theRect, SInt16 where, SInt16 who)
 
 SInt16 ReBackUpSavedMap (Rect *theRect, SInt16 where, SInt16 who)
 {
-	return (-1);
-#if 0
 	Rect		mapRect;
-	short		i, foundIndex;
+	SInt16		i, foundIndex;
 
 	foundIndex = -1;
 
@@ -110,16 +109,14 @@ SInt16 ReBackUpSavedMap (Rect *theRect, SInt16 where, SInt16 who)
 			mapRect = *theRect;
 			ZeroRectCorner(&mapRect);
 
-			CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
-					GetPortBitMapForCopyBits(savedMaps[foundIndex].map),
-					theRect, &mapRect, srcCopy, nil);
+			Mac_CopyBits(backSrcMap, savedMaps[foundIndex].map,
+					theRect, &mapRect, srcCopy, NULL);
 
 			return (foundIndex);
 		}
 	}
 
 	return (foundIndex);
-#endif
 }
 
 //--------------------------------------------------------------  RestoreFromSavedMap
