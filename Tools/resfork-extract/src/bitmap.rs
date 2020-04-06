@@ -1,5 +1,5 @@
 #![allow(unused)]
-use crate::res::{Point, Rect, RGBColor};
+use crate::res::{Point, RGBColor, Rect};
 use crate::utils::WriteExt;
 use std::io::{self, Write};
 

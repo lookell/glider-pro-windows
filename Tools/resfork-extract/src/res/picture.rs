@@ -757,7 +757,11 @@ fn convert_32bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapTwentyFou
     image
 }
 
-fn convert_pict(picFrame: Rect, bits_data: Vec<BitsRect>, mut writer: impl Write) -> io::Result<()> {
+fn convert_pict(
+    picFrame: Rect,
+    bits_data: Vec<BitsRect>,
+    mut writer: impl Write,
+) -> io::Result<()> {
     if bits_data.is_empty() {
         let mut image = BitmapOne::new(picFrame.width() as _, picFrame.height() as _);
         image.set_palette([RgbQuad::BLACK, RgbQuad::WHITE].iter().copied());
@@ -813,11 +817,19 @@ fn convert_pict(picFrame: Rect, bits_data: Vec<BitsRect>, mut writer: impl Write
 }
 
 fn convert_v1(picture: PictureV1, writer: impl Write) -> io::Result<()> {
-    convert_pict(picture.picFrame, extract_bits_data_v1(&picture.picOps), writer)
+    convert_pict(
+        picture.picFrame,
+        extract_bits_data_v1(&picture.picOps),
+        writer,
+    )
 }
 
 fn convert_v2(picture: PictureV2, writer: impl Write) -> io::Result<()> {
-    convert_pict(picture.picFrame, extract_bits_data_v2(&picture.picOps), writer)
+    convert_pict(
+        picture.picFrame,
+        extract_bits_data_v2(&picture.picOps),
+        writer,
+    )
 }
 
 pub fn get_entry_name(res: &Resource) -> String {

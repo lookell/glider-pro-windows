@@ -35,6 +35,16 @@ pub mod version; // 'vers'
 pub mod window; // 'WIND'
 pub mod window_color_table; // 'wctb'
 
+pub fn pix_to_xdlu(pix: i32) -> i32 {
+    const MS_SHELL_DLG_BASE_X: f64 = 6.0;
+    (f64::from(pix) * 4.0 / MS_SHELL_DLG_BASE_X) as i32
+}
+
+pub fn pix_to_ydlu(pix: i32) -> i32 {
+    const MS_SHELL_DLG_BASE_Y: f64 = 13.0;
+    (f64::from(pix) * 8.0 / MS_SHELL_DLG_BASE_Y) as i32
+}
+
 #[derive(Clone, Copy)]
 pub struct Point {
     pub v: i16,

@@ -80,6 +80,14 @@ pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {
 
     let template = AlertTemplate::read_from(data)?;
     writeln!(
+        &mut writer,
+        "# dlu({}, {}, {}, {})",
+        super::pix_to_xdlu(template.boundsRect.left.into()),
+        super::pix_to_ydlu(template.boundsRect.top.into()),
+        super::pix_to_xdlu(template.boundsRect.width()),
+        super::pix_to_ydlu(template.boundsRect.height()),
+    )?;
+    writeln!(
         writer,
         "Alert {{\n\
          \tboundsRect = {{ left = {left}, top = {top}, width = {width}, height = {height} }}\n\

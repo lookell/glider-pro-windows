@@ -100,6 +100,14 @@ pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {
     let item_list = ItemList::read_from(Cursor::new(data))?;
     writeln!(&mut writer, "Dialog [")?;
     for item in item_list.items.into_iter() {
+        writeln!(
+            &mut writer,
+            "\t# dlu({}, {}, {}, {})",
+            super::pix_to_xdlu(item.bounds.left.into()),
+            super::pix_to_ydlu(item.bounds.top.into()),
+            super::pix_to_xdlu(item.bounds.width()),
+            super::pix_to_ydlu(item.bounds.height()),
+        )?;
         write!(&mut writer, "\t{{ ")?;
         match item.data {
             ItemData::Button(text) => write!(&mut writer, "Button({:?})", text)?,
