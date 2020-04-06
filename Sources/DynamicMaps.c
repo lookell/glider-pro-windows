@@ -68,8 +68,6 @@ void NilSavedMaps (void)
 
 SInt16 BackUpToSavedMap (Rect *theRect, SInt16 where, SInt16 who)
 {
-	return (-1);
-#if 0
 	Rect		mapRect;
 	OSErr		theErr;
 
@@ -79,19 +77,15 @@ SInt16 BackUpToSavedMap (Rect *theRect, SInt16 where, SInt16 who)
 	mapRect = *theRect;
 	ZeroRectCorner(&mapRect);
 	savedMaps[numSavedMaps].dest = *theRect;
-//	CreateOffScreenPixMap(&mapRect, &savedMaps[numSavedMaps].map);
 	theErr = CreateOffScreenGWorld(&savedMaps[numSavedMaps].map, &mapRect, kPreferredDepth);
 
-	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
-			GetPortBitMapForCopyBits(savedMaps[numSavedMaps].map),
-			theRect, &mapRect, srcCopy, nil);
+	Mac_CopyBits(backSrcMap, savedMaps[numSavedMaps].map, theRect, &mapRect, srcCopy, NULL);
 
 	savedMaps[numSavedMaps].where = where;
 	savedMaps[numSavedMaps].who = who;
 	numSavedMaps++;
 
 	return (numSavedMaps - 1);	// return array index
-#endif
 }
 
 //--------------------------------------------------------------  ReBackUpSavedMap
