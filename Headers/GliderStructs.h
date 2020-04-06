@@ -228,7 +228,7 @@ typedef struct
 typedef struct
 {
 	Rect		dest;
-	GWorldPtr	map;
+	HDC			map;
 	SInt16		where;
 	SInt16		who;
 } savedType, *savedPtr;

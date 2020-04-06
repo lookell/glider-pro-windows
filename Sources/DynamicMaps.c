@@ -45,23 +45,19 @@ extern	SInt16		numGrease, numDynamics;
 
 void NilSavedMaps (void)
 {
-	return;
-#if 0
-	short		i;
+	size_t		i;
 
 	for (i = 0; i < kMaxSavedMaps; i++)
 	{
 		if (savedMaps[i].map != nil)
 		{
 			DisposeGWorld(savedMaps[i].map);
-//			KillOffScreenPixMap(savedMaps[i].map);
 			savedMaps[i].map = nil;
 		}
 		savedMaps[i].where = -1;
 		savedMaps[i].who = -1;
 	}
 	numSavedMaps = 0;
-#endif
 }
 
 //--------------------------------------------------------------  BackUpToSavedMap
