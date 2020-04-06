@@ -481,6 +481,8 @@ IDM_ROOT MENUEX
 159     CURSOR  "Cursors\\159.cur"
 160     CURSOR  "Cursors\\160.cur"
 
+128     BITMAP  "Patterns\\128.bmp"
+
 150     BITMAP  "Pictures\\150.bmp"
 151     BITMAP  "Pictures\\151.bmp"
 153     BITMAP  "Pictures\\153.bmp"
