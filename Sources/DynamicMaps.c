@@ -256,29 +256,23 @@ void AddFlyingPoint (Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVel)
 
 void BackUpFlames (Rect *src, SInt16 index)
 {
-	return;
-#if 0
 	Rect		dest;
-	short		i;
+	SInt16		i;
 
 	QSetRect(&dest, 0, 0, 16, 15);
 	for (i = 0; i < kNumCandleFlames; i++)
 	{
 				// Copy background to map.
-		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
-				GetPortBitMapForCopyBits(savedMaps[index].map),
-				src, &dest, srcCopy, nil);
+		Mac_CopyBits(backSrcMap, savedMaps[index].map,
+				src, &dest, srcCopy, NULL);
 
 				// Copy flame to map.
-		CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap),
-				(BitMap *)*GetGWorldPixMap(blowerMaskMap),
-				GetPortBitMapForCopyBits(savedMaps[index].map),
+		Mac_CopyMask(blowerSrcMap, blowerMaskMap, savedMaps[index].map,
 				&flame[i], &flame[i], &dest);
 
 
 		QOffsetRect(&dest, 0, 15);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  ReBackUpFlames
