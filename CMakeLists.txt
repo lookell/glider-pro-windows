@@ -14,6 +14,7 @@ set(CMAKE_RC_FLAGS "${CMAKE_RC_FLAGS} /nologo")
 
 add_executable(gliderpro)
 target_include_directories(gliderpro PRIVATE Headers)
+target_link_libraries(gliderpro msimg32)
 target_sources(
   gliderpro PRIVATE
   # resources

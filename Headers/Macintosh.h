@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "WinAPI.h"
 
 #ifndef __cplusplus
 #define false 0
@@ -85,6 +86,24 @@ extern const RGBColor QDColors[8];
 extern const RGBColor MacColor4[16];
 extern const RGBColor MacColor8[256];
 
+#define srcCopy 0
+#define srcXor 2
+#define transparent 36
+
+void Mac_CopyBits(
+	HDC srcBits,
+	HDC dstBits,
+	const Rect *srcRect,
+	const Rect *dstRect,
+	SInt16 mode,
+	HRGN maskRgn);
+void Mac_CopyMask(
+	HDC srcBits,
+	HDC maskBits,
+	HDC dstBits,
+	const Rect *srcRect,
+	const Rect *maskRect,
+	const Rect *dstRect);
 void Mac_GetDateTime(UInt32 *secs);
 void Mac_InsetRect(Rect *r, SInt16 dh, SInt16 dv);
 void Mac_NumToString(SInt32 theNum, Str255 *theString);

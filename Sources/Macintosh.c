@@ -5,6 +5,132 @@
 #include <strsafe.h>
 
 
+//--------------------------------------------------------------  CopyBits
+// Copy some portion of a bitmap from one graphics port to another.
+
+void Mac_CopyBits(
+	HDC srcBits,
+	HDC dstBits,
+	const Rect* srcRect,
+	const Rect* dstRect,
+	SInt16 mode,
+	HRGN maskRgn)
+{
+	INT xSrc, ySrc, wSrc, hSrc;
+	INT xDst, yDst, wDst, hDst;
+
+	if (srcRect->left >= srcRect->right || srcRect->top >= srcRect->bottom)
+		return;
+	if (dstRect->left >= dstRect->right || dstRect->top >= dstRect->bottom)
+		return;
+	if (mode != srcCopy && mode != srcXor && mode != transparent)
+		return;
+
+	xSrc = srcRect->left;
+	ySrc = srcRect->top;
+	wSrc = srcRect->right - srcRect->left;
+	hSrc = srcRect->bottom - srcRect->top;
+	xDst = dstRect->left;
+	yDst = dstRect->top;
+	wDst = dstRect->right - dstRect->left;
+	hDst = dstRect->bottom - dstRect->top;
+
+	SaveDC(dstBits);
+	if (maskRgn != NULL)
+		SelectClipRgn(dstBits, maskRgn);
+
+	switch (mode)
+	{
+		case srcCopy:
+		StretchBlt(dstBits, xDst, yDst, wDst, hDst,
+				srcBits, xSrc, ySrc, wSrc, hSrc, SRCCOPY);
+		break;
+
+		case srcXor:
+		// invert the destination where the source is black
+		// and keep the destination where the source is white
+		BitBlt(dstBits, xDst, yDst, wDst, hDst, NULL, 0, 0, DSTINVERT);
+		SetBkColor(dstBits, RGB(0xFF, 0xFF, 0xFF));
+		SetTextColor(dstBits, RGB(0x00, 0x00, 0x00));
+		StretchBlt(dstBits, xDst, yDst, wDst, hDst,
+				srcBits, xSrc, ySrc, wSrc, hSrc, SRCINVERT);
+		break;
+
+		case transparent:
+		TransparentBlt(dstBits, xDst, yDst, wDst, hDst,
+				srcBits, xSrc, ySrc, wSrc, hSrc, GetBkColor(dstBits));
+		break;
+	}
+
+	RestoreDC(dstBits, -1);
+}
+
+//--------------------------------------------------------------  CopyBits
+// Copy some portion of a bitmap from one graphics port to another,
+// with a mask to specify how much of each pixel is copied over.
+
+void Mac_CopyMask(
+	HDC srcBits,
+	HDC maskBits,
+	HDC dstBits,
+	const Rect* srcRect,
+	const Rect* maskRect,
+	const Rect* dstRect)
+{
+	// TODO: add support for masks where pixels are between black and white
+	HDC newSrcBits;
+	HBITMAP newSrcBitmap, hbmPrev;
+	INT xSrc, ySrc, wSrc, hSrc;
+	INT xMask, yMask, wMask, hMask;
+	INT xDst, yDst, wDst, hDst;
+
+	if (srcRect->left >= srcRect->right || srcRect->top >= srcRect->bottom)
+		return;
+	if (maskRect->left >= maskRect->right || maskRect->top >= maskRect->bottom)
+		return;
+	if (dstRect->left >= dstRect->right || dstRect->top >= dstRect->bottom)
+		return;
+
+	xSrc = srcRect->left;
+	ySrc = srcRect->top;
+	wSrc = srcRect->right - srcRect->left;
+	hSrc = srcRect->bottom - srcRect->top;
+	xMask = maskRect->left;
+	yMask = maskRect->top;
+	wMask = maskRect->right - maskRect->left;
+	hMask = maskRect->bottom - maskRect->top;
+	xDst = dstRect->left;
+	yDst = dstRect->top;
+	wDst = dstRect->right - dstRect->left;
+	hDst = dstRect->bottom - dstRect->top;
+
+	SaveDC(dstBits);
+	// make sure that monochrome masks are colorized correctly
+	SetTextColor(dstBits, RGB(0x00, 0x00, 0x00));
+	SetBkColor(dstBits, RGB(0xFF, 0xFF, 0xFF));
+	// apply the mask to the destination
+	StretchBlt(dstBits, xDst, yDst, wDst, hDst,
+		maskBits, xMask, yMask, wMask, hMask, SRCAND); // DSa
+	// create temporary drawing surface to adjust the source bits
+	newSrcBits = CreateCompatibleDC(srcBits);
+	SetTextColor(newSrcBits, RGB(0x00, 0x00, 0x00));
+	SetBkColor(newSrcBits, RGB(0xFF, 0xFF, 0xFF));
+	newSrcBitmap = CreateCompatibleBitmap(srcBits, wSrc, hSrc);
+	hbmPrev = SelectObject(newSrcBits, newSrcBitmap);
+	BitBlt(newSrcBits, 0, 0, wSrc, hSrc, srcBits, xSrc, ySrc, SRCCOPY);
+	// black out unwanted source bits with the inverted mask
+	StretchBlt(newSrcBits, 0, 0, wSrc, hSrc,
+		maskBits, xMask, yMask, wMask, hMask, 0x00220326); // DSna
+	// apply adjusted source bits to the destination
+	StretchBlt(dstBits, xDst, yDst, wDst, hDst,
+		newSrcBits, 0, 0, wSrc, hSrc, SRCPAINT); // DSo
+	// clean up
+	RestoreDC(dstBits, -1);
+	SelectObject(newSrcBits, hbmPrev);
+	DeleteObject(newSrcBitmap);
+	DeleteDC(newSrcBits);
+}
+
 //--------------------------------------------------------------  GetDateTime
 // Retrieve the number of seconds since midnight, January 1, 1904.
 // The time difference is in terms of the local time zone.
