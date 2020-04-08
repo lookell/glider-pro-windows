@@ -1,0 +1,19 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1027 DIALOGEX 0, 0, 171, 98
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    PUSHBUTTON "Okay", 1, 127, 81, 39, 12
+    PUSHBUTTON "Cancel", 2, 83, 81, 39, 12
+    LTEXT "Object Kind: ^1", -1, 5, 25, 160, 10, SS_NOPREFIX
+    CONTROL "", 4, STATIC, SS_OWNERDRAW, 5, 74, 160, 1
+    LTEXT "Object Number: ^0", -1, 5, 36, 85, 10, SS_NOPREFIX
+    CONTROL 1002, -1, STATIC, SS_BITMAP, 0, 0, 171, 20
+    EDITTEXT 7, 142, 50, 21, 10, ES_AUTOHSCROLL
+    LTEXT "Idle Delay:", -1, 87, 50, 49, 10, SS_NOPREFIX
+    LTEXT "(1/10 secs.)", -1, 87, 60, 53, 10, SS_NOPREFIX
+    CHECKBOX "Initially ""On""", 10, 5, 50, 71, 11
+    PUSHBUTTON "Linked From?", 11, 5, 81, 64, 12
+}

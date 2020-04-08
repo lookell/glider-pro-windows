@@ -1,0 +1,21 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1018 DIALOGEX 27, 25, 211, 108
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    PUSHBUTTON "Okay", 1, 167, 91, 39, 12
+    PUSHBUTTON "Cancel", 2, 123, 91, 39, 12
+    ICON 1030, 3, 163, 32, 21, 20
+    ICON 1032, 4, 184, 42, 21, 20
+    ICON 1031, 5, 184, 22, 21, 20
+    LTEXT "Volume:", -1, 109, 37, 36, 10, SS_NOPREFIX
+    LTEXT "", 7, 145, 37, 17, 10, SS_NOPREFIX
+    CHECKBOX "Play music when idle", 8, 5, 59, 120, 11
+    CHECKBOX "Play music during game", 9, 5, 70, 120, 10
+    LTEXT "Set the game volume and background music options.", -1, 5, 25, 97, 30, SS_NOPREFIX
+    CONTROL "", 11, STATIC, SS_OWNERDRAW, 5, 85, 200, 1
+    CONTROL 1008, -1, STATIC, SS_BITMAP, 0, 0, 211, 20
+    PUSHBUTTON "Defaults", 13, 5, 91, 43, 12
+}

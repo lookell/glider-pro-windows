@@ -1,0 +1,25 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1007 DIALOGEX 0, 0, 171, 103
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    PUSHBUTTON "Okay", 1, 127, 86, 39, 12
+    PUSHBUTTON "Cancel", 2, 83, 86, 39, 12
+    LTEXT "Object Number: ^0", -1, 5, 36, 85, 10, SS_NOPREFIX
+    LTEXT "Object Kind: ^1", -1, 5, 25, 160, 10, SS_NOPREFIX
+    CONTROL "", 5, STATIC, SS_OWNERDRAW, 5, 79, 160, 1
+    CHECKBOX "Initially On", 6, 5, 54, 75, 11
+    CHECKBOX "Extra Forceful", 7, 267, 62, 75, 11
+    CONTROL "", 8, STATIC, SS_OWNERDRAW, 140, 50, 17, 16
+    LTEXT "Direction:", -1, 88, 54, 43, 10, SS_NOPREFIX
+    CONTROL 1002, -1, STATIC, SS_BITMAP, 0, 0, 171, 20
+    CONTROL "", 11, STATIC, SS_OWNERDRAW, 145, 42, 8, 7
+    CONTROL "", 12, STATIC, SS_OWNERDRAW, 159, 55, 8, 7
+    CONTROL "", 13, STATIC, SS_OWNERDRAW, 145, 68, 8, 7
+    CONTROL "", 14, STATIC, SS_OWNERDRAW, 131, 55, 8, 7
+    PUSHBUTTON "Linked From?", 15, 5, 86, 64, 12
+    RADIOBUTTON "Left Facing", 16, 88, 54, 71, 11
+    RADIOBUTTON "Right Facing", 17, 88, 65, 71, 11
+}

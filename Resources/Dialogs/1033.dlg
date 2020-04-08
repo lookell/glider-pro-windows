@@ -1,0 +1,21 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1033 DIALOGEX 0, 0, 171, 108
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    PUSHBUTTON "Okay", 1, 127, 90, 39, 12
+    LTEXT "Object Number: ^0", -1, 5, 36, 85, 10, SS_NOPREFIX
+    LTEXT "Object Kind: ^1", -1, 5, 25, 160, 10, SS_NOPREFIX
+    CONTROL "", 4, STATIC, SS_OWNERDRAW, 5, 84, 160, 1
+    CONTROL 1002, -1, STATIC, SS_BITMAP, 0, 0, 171, 20
+    RADIOBUTTON "Dandelion", 6, 16, 48, 61, 11
+    RADIOBUTTON "Tulip", 7, 16, 59, 61, 11
+    RADIOBUTTON "Orchid", 8, 16, 70, 61, 11
+    RADIOBUTTON "Violets", 9, 94, 48, 61, 11
+    RADIOBUTTON "Daisies", 10, 94, 59, 61, 11
+    RADIOBUTTON "Sunflower", 11, 94, 70, 61, 11
+    PUSHBUTTON "Cancel", 12, 83, 90, 39, 12
+    PUSHBUTTON "Linked From?", 13, 5, 90, 64, 12
+}

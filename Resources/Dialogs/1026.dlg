@@ -1,0 +1,12 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1026 DIALOGEX 33, 31, 208, 64
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    PUSHBUTTON "Cancel", 1, 164, 47, 39, 12
+    LTEXT "Insert your original Glider PRO disk.", -1, 5, 5, 171, 10, SS_NOPREFIX
+    LTEXT "Your orginal disk is required only once, right after you install the game.", -1, 5, 20, 171, 20, SS_NOPREFIX
+    ICON 140, -1, 181, 5, 21, 20
+}

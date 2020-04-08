@@ -1,0 +1,23 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1024 DIALOGEX 27, 25, 211, 118
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    PUSHBUTTON "Okay", 1, 167, 101, 39, 12
+    PUSHBUTTON "Cancel", 2, 123, 101, 39, 12
+    CONTROL "", 3, STATIC, SS_OWNERDRAW, 5, 95, 200, 1
+    CONTROL 1014, -1, STATIC, SS_BITMAP, 0, 0, 211, 20
+    EDITTEXT 5, 179, 29, 24, 10, ES_AUTOHSCROLL
+    LTEXT "Maximum houses displayed (12-500):\r\n(larger = more memory)", -1, 5, 25, 171, 20, SS_NOPREFIX
+    CHECKBOX "Quick Transitions", 7, 5, 46, 93, 11
+    CHECKBOX "Zoom Windows", 8, 5, 57, 93, 11
+    PUSHBUTTON "Defaults", 9, 5, 101, 43, 12
+    CHECKBOX "Automatic Demo", 10, 5, 69, 93, 11
+    CHECKBOX "Background Tasks", 11, 5, 81, 93, 11
+    CHECKBOX "Error-Check House", 12, 104, 57, 101, 11
+    CHECKBOX "Use ""Pretty Map""", 13, 104, 69, 101, 11
+    CHECKBOX "Do Create Dialog", 14, 104, 81, 101, 11
+    LTEXT "Editor Options:", -1, 104, 47, 101, 10, SS_NOPREFIX
+}

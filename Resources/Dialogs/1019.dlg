@@ -1,0 +1,16 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1019 DIALOGEX 0, 0, 171, 90
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    PUSHBUTTON "Okay", 1, 127, 73, 39, 12
+    PUSHBUTTON "Cancel", 2, 83, 73, 39, 12
+    LTEXT "Object Number: ^0", -1, 5, 36, 85, 10, SS_NOPREFIX
+    LTEXT "Object Kind: ^1", -1, 5, 25, 160, 10, SS_NOPREFIX
+    CONTROL "", 5, STATIC, SS_OWNERDRAW, 5, 66, 160, 1
+    CHECKBOX "Grease initially tipped", 6, 5, 50, 111, 11
+    CONTROL 1002, -1, STATIC, SS_BITMAP, 0, 0, 171, 20
+    PUSHBUTTON "Linked From?", 8, 5, 73, 64, 12
+}

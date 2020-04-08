@@ -1,0 +1,14 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1020 DIALOGEX 0, 0, 211, 67
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION
+{
+    PUSHBUTTON "Okay", 1, 167, 50, 39, 12
+    EDITTEXT 2, 105, 32, 93, 10, ES_AUTOHSCROLL
+    LTEXT "Your score of ^0 is #^1 on the top ten high scores for ^2.", -1, 5, 5, 200, 20, SS_NOPREFIX
+    LTEXT "Enter your name:\r\n(15 letters max.)", -1, 11, 30, 77, 20, SS_NOPREFIX
+    LTEXT "", 5, 103, 50, 13, 10, SS_NOPREFIX
+    LTEXT "letters", -1, 117, 50, 33, 10, SS_NOPREFIX
+}

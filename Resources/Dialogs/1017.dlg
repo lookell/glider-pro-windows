@@ -1,0 +1,25 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1017 DIALOGEX 27, 25, 222, 148
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    PUSHBUTTON "Okay", 1, 178, 130, 39, 12
+    PUSHBUTTON "Cancel", 2, 134, 130, 39, 12
+    ICON 1020, 3, 139, 25, 21, 20
+    ICON 1021, 4, 166, 25, 21, 20
+    ICON 1022, 5, 193, 25, 21, 20
+    LTEXT "Number of Rooms to Display:\r\n(the less rooms, the faster)", -1, 5, 25, 130, 20, SS_NOPREFIX
+    CONTROL 1006, -1, STATIC, SS_BITMAP, 0, 0, 222, 20
+    CONTROL "", 8, STATIC, SS_OWNERDRAW, 5, 49, 211, 1
+    CHECKBOX "Beautiful opening color fade", 9, 5, 87, 171, 11
+    RADIOBUTTON "Use current depth when possible", 10, 5, 52, 171, 10
+    RADIOBUTTON "Always play in 256 colors", 11, 5, 62, 171, 10
+    RADIOBUTTON "Always play in 16 grays", 12, 5, 72, 171, 10
+    CONTROL "", 13, STATIC, SS_OWNERDRAW, 5, 84, 211, 1
+    CONTROL "", 14, STATIC, SS_OWNERDRAW, 5, 123, 211, 1
+    PUSHBUTTON "Defaults", 15, 5, 130, 43, 12
+    CHECKBOX "Use Quickdraw™ (slower)", 16, 5, 98, 171, 11
+    CHECKBOX "Run on second monitor", 17, 5, 110, 171, 11
+}

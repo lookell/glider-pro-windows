@@ -1,0 +1,20 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1016 DIALOGEX 0, 0, 171, 89
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    PUSHBUTTON "Okay", 1, 127, 71, 39, 12
+    PUSHBUTTON "Cancel", 2, 83, 71, 39, 12
+    LTEXT "Enter the ID number of the PICT in your house you would like to use.", -1, 5, 5, 160, 20, SS_NOPREFIX
+    LTEXT "PICT ID:", -1, 5, 31, 36, 10, SS_NOPREFIX
+    EDITTEXT 5, 45, 31, 23, 10, ES_AUTOHSCROLL
+    LTEXT "(3000 - 3499)", -1, 7, 43, 61, 10, SS_NOPREFIX
+    CONTROL "", 7, STATIC, SS_OWNERDRAW, 93, 33, 7, 25
+    CONTROL "", 8, STATIC, SS_OWNERDRAW, 99, 27, 43, 6
+    CONTROL "", 9, STATIC, SS_OWNERDRAW, 142, 33, 7, 25
+    CONTROL "", 10, STATIC, SS_OWNERDRAW, 99, 58, 43, 6
+    LTEXT "Bounded", -1, 101, 41, 39, 10, SS_NOPREFIX
+    CHECKBOX "Floor Support", 12, 5, 55, 71, 11
+}
