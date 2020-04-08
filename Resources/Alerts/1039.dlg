@@ -1,0 +1,11 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1039 DIALOGEX 64, 33, 183, 66
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    DEFPUSHBUTTON "Whatever", 1, 124, 50, 53, 12
+    LTEXT "Okay, with your monitor & color depth, there isn't enough memory. To run Glider PRO™, the music & sounds won't be loaded.", -1, 5, 5, 150, 39, SS_NOPREFIX
+    ICON 1011, -1, 156, 5, 21, 20
+}

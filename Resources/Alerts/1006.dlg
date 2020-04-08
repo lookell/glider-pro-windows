@@ -1,0 +1,13 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1006 DIALOGEX 27, 25, 200, 79
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    DEFPUSHBUTTON "Okay", 1, 156, 62, 39, 12
+    LTEXT "^0", -1, 6, 15, 163, 39, SS_NOPREFIX
+    LTEXT "A problem came up:", -1, 6, 6, 124, 10, SS_NOPREFIX
+    LTEXT "Error #: ^1", -1, 6, 63, 93, 10, SS_NOPREFIX
+    ICON 1006, -1, 173, 6, 21, 20
+}

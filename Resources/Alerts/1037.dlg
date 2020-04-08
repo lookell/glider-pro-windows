@@ -1,0 +1,10 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1037 DIALOGEX 27, 25, 191, 76
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    DEFPUSHBUTTON "Okay", 1, 147, 59, 39, 12
+    LTEXT "This feature is not in the Demo version of Glider PRO™. Glider PRO™ is published by Casady & Greene, Inc. Call them at (408) 484-9228 during normal business hours (Pacific time, USA).", -1, 5, 5, 180, 49, SS_NOPREFIX
+}

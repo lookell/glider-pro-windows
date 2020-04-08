@@ -1,4 +1,5 @@
 #pragma code_page(65001)
+/* this comment enforces υτƒ-8 encoding */
 
 #include <windows.h>
 #include "ResourceIDs.h"
@@ -411,6 +412,33 @@ IDM_ROOT MENUEX
         MENUITEM "Clutter"
     }
 }
+
+#include "Alerts\\130.dlg"
+#include "Alerts\\140.dlg"
+#include "Alerts\\160.dlg"
+#include "Alerts\\170.dlg"
+#include "Alerts\\180.dlg"
+#include "Alerts\\181.dlg"
+#include "Alerts\\1002.dlg"
+#include "Alerts\\1004.dlg"
+#include "Alerts\\1005.dlg"
+#include "Alerts\\1006.dlg"
+#include "Alerts\\1008.dlg"
+#include "Alerts\\1009.dlg"
+#include "Alerts\\1028.dlg"
+#include "Alerts\\1029.dlg"
+#include "Alerts\\1030.dlg"
+#include "Alerts\\1031.dlg"
+#include "Alerts\\1032.dlg"
+#include "Alerts\\1036.dlg"
+#include "Alerts\\1037.dlg"
+#include "Alerts\\1038.dlg"
+#include "Alerts\\1039.dlg"
+#include "Alerts\\1040.dlg"
+#include "Alerts\\1041.dlg"
+#include "Alerts\\1042.dlg"
+#include "Alerts\\1044.dlg"
+#include "Alerts\\1046.dlg"
 
 1       ICON    "Icons\\Appl.ico"
 2       ICON    "Icons\\Prefs.ico"

@@ -1,0 +1,11 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1031 DIALOGEX 27, 25, 179, 44
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    DEFPUSHBUTTON "Bye!", 1, 135, 30, 39, 12
+    LTEXT "Glider PRO doesn't know what the word ""Print"" means. Sorry.", -1, 5, 5, 141, 20, SS_NOPREFIX
+    ICON 900, -1, 152, 5, 21, 20
+}

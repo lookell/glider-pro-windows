@@ -1,0 +1,11 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1046 DIALOGEX 27, 25, 173, 57
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    DEFPUSHBUTTON "So What?", 1, 120, 39, 48, 12
+    LTEXT "If you resume a saved game, you are ineligible to get on the high scores for that game.", -1, 5, 5, 139, 30, SS_NOPREFIX
+    ICON 1073, -1, 147, 5, 21, 20
+}

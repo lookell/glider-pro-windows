@@ -1,0 +1,13 @@
+/* this comment enforces υτƒ-8 encoding */
+
+140 DIALOGEX 40, 57, 257, 79
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    DEFPUSHBUTTON "Okay", 1, 209, 57, 39, 12
+    LTEXT "^0", -1, 9, 18, 187, 37, SS_NOPREFIX
+    LTEXT "(error = ^1)", -1, 9, 57, 159, 11, SS_NOPREFIX
+    ICON 140, -1, 227, 8, 21, 20
+    LTEXT "A File Error Loading/Saving ^2", -1, 9, 4, 212, 10, SS_NOPREFIX
+}

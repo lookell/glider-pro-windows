@@ -1,0 +1,13 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1002 DIALOGEX 0, 0, 213, 79
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    DEFPUSHBUTTON "Save", 1, 169, 61, 39, 12
+    PUSHBUTTON "Discard", 2, 169, 44, 39, 12
+    PUSHBUTTON "Cancel", 3, 123, 61, 39, 12
+    LTEXT "You have made changes to ^0 and haven't saved these changes. Save the house before proceeding?", -1, 5, 4, 158, 46, SS_NOPREFIX
+    ICON 1000, -1, 185, 4, 21, 20
+}

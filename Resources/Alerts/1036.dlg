@@ -1,0 +1,11 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1036 DIALOGEX 27, 25, 183, 66
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    DEFPUSHBUTTON "Okay", 1, 139, 49, 39, 12
+    LTEXT "Where is your PICT? I'm going to drop back to the Simple room background and see if that comes up.", -1, 5, 5, 145, 39, SS_NOPREFIX
+    ICON 1071, -1, 156, 5, 21, 20
+}

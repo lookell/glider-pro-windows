@@ -1,0 +1,11 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1028 DIALOGEX 27, 25, 187, 66
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    DEFPUSHBUTTON "Okay", 1, 143, 49, 39, 12
+    LTEXT "There is an absolute maximum number of these objects you can add per room. You cannot add this additional one.", -1, 5, 5, 149, 39, SS_NOPREFIX
+    ICON 1008, -1, 160, 5, 21, 20
+}

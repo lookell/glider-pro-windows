@@ -1,0 +1,13 @@
+/* this comment enforces υτƒ-8 encoding */
+
+130 DIALOGEX 0, 0, 183, 59
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION
+{
+    DEFPUSHBUTTON "256", 1, 139, 42, 39, 12
+    PUSHBUTTON "16", 2, 95, 42, 39, 12
+    PUSHBUTTON "Quit", 3, 35, 42, 39, 12
+    ICON 130, -1, 156, 5, 21, 20
+    LTEXT "Glider PRO™ requires 256 colors (or grays) or 16 grays. Select the option you would like.", -1, 5, 5, 143, 30, SS_NOPREFIX
+}

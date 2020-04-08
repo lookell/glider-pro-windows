@@ -1,0 +1,12 @@
+/* this comment enforces υτƒ-8 encoding */
+
+1009 DIALOGEX 0, 0, 231, 92
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    DEFPUSHBUTTON "Begin", 1, 187, 75, 39, 12
+    LTEXT "^0", -1, 5, 5, 193, 10, SS_NOPREFIX
+    LTEXT "^1", -1, 5, 20, 193, 49, SS_NOPREFIX
+    ICON 1000, -1, 204, 5, 21, 20
+}

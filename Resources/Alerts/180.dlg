@@ -1,0 +1,12 @@
+/* this comment enforces υτƒ-8 encoding */
+
+180 DIALOGEX 27, 25, 196, 71
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    DEFPUSHBUTTON "Quit", 1, 152, 54, 39, 12
+    LTEXT "Glider PRO™ requires more memory. Get Info on Glider PRO™ in the Finder to increase its memory size or try quitting other applications.", -1, 5, 5, 159, 39, SS_NOPREFIX
+    ICON 180, -1, 169, 5, 21, 20
+    LTEXT "(We need about: ^0K)", -1, 5, 47, 138, 10, SS_NOPREFIX
+}

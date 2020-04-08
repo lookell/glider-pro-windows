@@ -15,7 +15,7 @@ end_of_line = lf
 indent_size = 4
 indent_style = tab
 
-[*.rc]
+[*.{dlg,rc}]
 end_of_line = lf
 indent_size = 4
 indent_style = space
