@@ -649,13 +649,13 @@ void DoMenuChoice (SInt32 menuChoice)
 
 void UpdateMapCheckmark (Boolean checkIt)
 {
-	return;
-#if 0
 	if (!menusUp)
 		return;
 
-	CheckMenuItem(houseMenu, iMapWindow, checkIt);
-#endif
+	if (checkIt)
+		CheckMenuItem(houseMenu, ID_MAP_WINDOW, MF_CHECKED);
+	else
+		CheckMenuItem(houseMenu, ID_MAP_WINDOW, MF_UNCHECKED);
 }
 
 //--------------------------------------------------------------  UpdateToolsCheckmark
