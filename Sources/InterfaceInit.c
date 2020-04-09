@@ -20,8 +20,8 @@
 
 
 extern	RgnHandle		mirrorRgn;
-extern	WindowPtr		mapWindow, toolsWindow, linkWindow;
-extern	WindowPtr		menuWindow;
+extern	HWND			mapWindow, toolsWindow, linkWindow;
+extern	HWND			menuWindow;
 extern	Rect			shieldRect, boardSrcRect, localRoomsDest[];
 extern	HCURSOR			handCursor, beamCursor, vertCursor, horiCursor;
 extern	HCURSOR			diagCursor;

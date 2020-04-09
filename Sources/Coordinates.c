@@ -15,7 +15,7 @@
 
 
 Rect			coordWindowRect;
-WindowPtr		coordWindow;
+HWND			coordWindow;
 SInt16			isCoordH, isCoordV;
 SInt16			coordH, coordV, coordD;
 Boolean			isCoordOpen;

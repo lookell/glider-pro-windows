@@ -15,7 +15,7 @@
 #define kMessageWindowTall	48
 
 
-WindowPtr	mssgWindow;
+HWND	mssgWindow;
 
 
 //==============================================================  Functions

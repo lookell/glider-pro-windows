@@ -6,8 +6,8 @@
 
 
 //#include <QDOffscreen.h>
-#include "Macintosh.h"
+#include "WinAPI.h"
 
 
 extern HDC		nailSrcMap;
-extern WindowPtr		mapWindow;
+extern HWND		mapWindow;

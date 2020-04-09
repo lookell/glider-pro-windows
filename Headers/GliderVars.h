@@ -51,7 +51,7 @@ extern	Rect		backSrcRect;
 extern	Rect		mainWindowRect, houseRect;
 extern	housePtr	thisHouse;
 extern	roomPtr		thisRoom;
-extern	WindowPtr	mainWindow, coordWindow;
+extern	HWND		mainWindow, coordWindow;
 extern	SInt32		theScore;
 extern	SInt16		playOriginH, playOriginV;
 extern	SInt16		thisRoomNumber, theMode, batteryTotal, bandsTotal;

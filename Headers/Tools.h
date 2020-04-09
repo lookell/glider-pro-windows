@@ -10,4 +10,4 @@
 
 
 extern GWorldPtr		toolSrcMap;
-extern WindowPtr		toolsWindow;
+extern HWND		toolsWindow;

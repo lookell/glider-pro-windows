@@ -54,7 +54,7 @@ SInt16		batteryTotal, bandsTotal, foilTotal, mortals;
 Boolean		playing, evenFrame, twoPlayerGame, showFoil, demoGoing;
 Boolean		doBackground, playerSuicide, phoneBitSet, tvOn;
 
-extern	WindowPtr	menuWindow;
+extern	HWND		menuWindow;
 extern	FSSpecPtr	theHousesSpecs;
 extern	demoPtr		demoData;
 extern	gameType	smallGame;

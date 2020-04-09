@@ -16,7 +16,7 @@ Boolean DropLocationIsTrash (AEDesc *);
 
 Boolean		hasScrap, scrapIsARoom;
 
-extern	WindowPtr	mapWindow;
+extern	HWND		mapWindow;
 extern	Rect		roomObjectRects[];
 extern	short		objActive;
 

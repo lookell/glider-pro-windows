@@ -34,7 +34,7 @@ HCURSOR			diagCursor;
 Rect			workSrcRect;
 HDC				workSrcMap;
 Rect			mainWindowRect;
-WindowPtr		mainWindow, menuWindow;
+HWND			mainWindow, menuWindow;
 SInt16			isEditH, isEditV;
 SInt16			playOriginH, playOriginV;
 SInt16			splashOriginH, splashOriginV;

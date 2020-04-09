@@ -38,7 +38,7 @@ Rect			nailSrcRect, activeRoomRect, wasActiveRoomRect;
 Rect			mapHScrollRect, mapVScrollRect, mapCenterRect;
 Rect			mapWindowRect;
 HDC				nailSrcMap;
-WindowPtr		mapWindow;
+HWND			mapWindow;
 ControlHandle	mapHScroll, mapVScroll;
 SInt16			isMapH, isMapV, mapRoomsHigh, mapRoomsWide;
 SInt16			mapLeftRoom, mapTopRoom;

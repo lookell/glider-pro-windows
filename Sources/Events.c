@@ -31,8 +31,8 @@ Point			lastWhere;
 SInt16			idleMode;
 Boolean			doAutoDemo, switchedOut;
 
-extern	WindowPtr	mapWindow, toolsWindow, linkWindow;
-extern	WindowPtr	menuWindow;
+extern	HWND		mapWindow, toolsWindow, linkWindow;
+extern	HWND		menuWindow;
 extern	SInt16		isEditH, isEditV, isMapH, isMapV, isToolsH, isToolsV;
 extern	SInt16		isLinkH, isLinkV, isCoordH, isCoordV;
 extern	Boolean		quitting, isMusicOn, failedMusic;

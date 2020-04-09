@@ -59,7 +59,7 @@ Rect			toolsWindowRect, toolSrcRect, toolTextRect;
 Rect			toolRects[kTotalTools];
 ControlHandle	classPopUp;
 GWorldPtr		toolSrcMap;
-WindowPtr		toolsWindow;
+HWND			toolsWindow;
 SInt16			isToolsH, isToolsV;
 SInt16			toolSelected, toolMode;
 SInt16			firstTool, lastTool, objectBase;
