@@ -1,8 +1,12 @@
 #include "Macintosh.h"
 #include "WinAPI.h"
 #include <inttypes.h>
+#include <limits.h>
 #include <string.h>
 #include <strsafe.h>
+
+
+#define CP_MACROMAN 10000
 
 
 //--------------------------------------------------------------  CopyBits
@@ -232,6 +236,64 @@ Boolean Mac_PtInRect(Point pt, const Rect *r)
 		return false;
 	return (pt.h >= r->left) && (pt.h < r->right) &&
 			(pt.v >= r->top) && (pt.v < r->bottom);
+}
+
+//--------------------------------------------------------------  WinFromMacString
+// Convert a MacRoman Pascal-style string to a UTF-16 C-style string.
+// This is a wrapper around the Windows API function 'MultiByteToWideChar'.
+// The return value of this function is the return value of 'MultiByteToWideChar'.
+
+int WinFromMacString(wchar_t *winbuf, int winlen, StringPtr macbuf)
+{
+	int result;
+	size_t maclen;
+
+	if (macbuf == NULL)
+		return 0;
+	maclen = macbuf[0];
+	memmove(&macbuf[0], &macbuf[1], maclen);
+	macbuf[maclen] = '\0';
+	result = MultiByteToWideChar(
+		CP_MACROMAN,
+		0,
+		(LPCCH)macbuf,
+		-1,
+		winbuf,
+		winlen
+	);
+	memmove(&macbuf[1], &macbuf[0], maclen);
+	macbuf[0] = maclen;
+	return result;
+}
+
+//--------------------------------------------------------------  MacFromWinString
+// Convert a UTF-16 C-style string to a MacRoman Pascal-style string.
+// (This may result in data-loss!)
+// This is a wrapper around the Windows API function 'WideCharToMultiByte'.
+// The return value of this function is the return value of 'WideCharToMultiByte'.
+
+int MacFromWinString(StringPtr macbuf, int maclen, const wchar_t *winbuf)
+{
+	int result;
+	size_t winlen;
+
+	if (macbuf == NULL)
+		return 0;
+	if (FAILED(StringCchLengthW(winbuf, INT_MAX, &winlen)))
+		return 0;
+	result = WideCharToMultiByte(
+		CP_MACROMAN,
+		0,
+		winbuf,
+		winlen,
+		(LPSTR)&macbuf[1],
+		maclen - 1,
+		NULL,
+		NULL
+	);
+	if (maclen != 0)
+		macbuf[0] = result & 0xFF;
+	return result;
 }
 
 //--------------------------------------------------------------  Global Data
