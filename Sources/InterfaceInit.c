@@ -10,6 +10,7 @@
 #include "Environ.h"
 #include "Map.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 #include "Tools.h"
 
 
@@ -19,13 +20,17 @@
 #define kDiagCursorID		131
 
 
+static HMENU DetachPopupMenu(HMENU rootMenu, UINT id, LPWSTR *title);
+
+
 extern	RgnHandle		mirrorRgn;
 extern	HWND			mapWindow, toolsWindow, linkWindow;
 extern	HWND			menuWindow;
 extern	Rect			shieldRect, boardSrcRect, localRoomsDest[];
 extern	HCURSOR			handCursor, beamCursor, vertCursor, horiCursor;
 extern	HCURSOR			diagCursor;
-extern	MenuHandle		appleMenu, gameMenu, optionsMenu, houseMenu;
+extern	HMENU			appleMenu, gameMenu, optionsMenu, houseMenu;
+extern	LPWSTR			appleMenuTitle, gameMenuTitle, optionsMenuTitle, houseMenuTitle;
 extern	Point			shieldPt;
 extern	SInt32			incrementModeTime;
 extern	UInt32			doubleTime;
@@ -38,39 +43,100 @@ extern	Boolean			twoPlayerGame, paused, hasMirror, splashDrawn;
 
 
 //==============================================================  Functions
+//--------------------------------------------------------------  DetachPopupMenu
+
+// Given a menu containing popup menus, detach a menu and retrieve its
+// handle and title. The title string must be released with the standard
+// `free` function. If the function succeeds, the return value is the menu
+// handle. If the function fails, the return value is NULL and the title
+// output paramter is set to NULL.
+
+static HMENU DetachPopupMenu(HMENU rootMenu, UINT id, LPWSTR *title)
+{
+	MENUITEMINFO mii;
+	BOOL succeeded;
+
+	if (title == NULL)
+		return NULL;
+	*title = NULL;
+
+	mii.cbSize = sizeof(mii);
+	mii.fMask = MIIM_STRING | MIIM_SUBMENU;
+	mii.dwTypeData = NULL;
+	mii.cch = 0;
+	if (!GetMenuItemInfo(rootMenu, id, FALSE, &mii))
+		return NULL;
+	mii.cch += 1;
+	mii.dwTypeData = calloc(mii.cch, sizeof(*mii.dwTypeData));
+	if (mii.dwTypeData == NULL)
+		return NULL;
+	if (!GetMenuItemInfo(rootMenu, id, FALSE, &mii))
+	{
+		free(mii.dwTypeData);
+		return NULL;
+	}
+	if (!RemoveMenu(rootMenu, id, MF_BYCOMMAND))
+	{
+		free(mii.dwTypeData);
+		return NULL;
+	}
+	*title = mii.dwTypeData;
+	return mii.hSubMenu;
+}
+
 //--------------------------------------------------------------  InitializeMenus
 
 // The menus are loaded from disk and the menu bar set up and drawn.
 
 void InitializeMenus (void)
 {
-	return;
-#if 0
-	appleMenu = GetMenu(kAppleMenuID);
-	if (appleMenu == nil)
-		RedAlert(kErrFailedResourceLoad);
-	AppendResMenu(appleMenu, 'DRVR');
-	InsertMenu(appleMenu, 0);
+	MENUITEMINFO mii;
+	HMENU menuBar, rootMenu;
 
-	gameMenu = GetMenu(kGameMenuID);
-	if (gameMenu == nil)
+	mii.cbSize = sizeof(mii);
+	mii.fMask = MIIM_ID | MIIM_STRING | MIIM_SUBMENU;
+	menuBar = CreateMenu();
+	rootMenu = LoadMenu(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDM_ROOT));
+	if (rootMenu == NULL)
 		RedAlert(kErrFailedResourceLoad);
-	InsertMenu(gameMenu, 0);
 
-	optionsMenu = GetMenu(kOptionsMenuID);
-	if (optionsMenu == nil)
+	appleMenu = DetachPopupMenu(rootMenu, kAppleMenuID, &appleMenuTitle);
+	if (appleMenu == NULL)
 		RedAlert(kErrFailedResourceLoad);
-	InsertMenu(optionsMenu, 0);
+	mii.wID = kAppleMenuID;
+	mii.hSubMenu = appleMenu;
+	mii.dwTypeData = appleMenuTitle;
+	InsertMenuItem(menuBar, GetMenuItemCount(menuBar), TRUE, &mii);
+
+	gameMenu = DetachPopupMenu(rootMenu, kGameMenuID, &gameMenuTitle);
+	if (gameMenu == NULL)
+		RedAlert(kErrFailedResourceLoad);
+	mii.wID = kGameMenuID;
+	mii.hSubMenu = gameMenu;
+	mii.dwTypeData = gameMenuTitle;
+	InsertMenuItem(menuBar, GetMenuItemCount(menuBar), TRUE, &mii);
+
+	optionsMenu = DetachPopupMenu(rootMenu, kOptionsMenuID, &optionsMenuTitle);
+	if (optionsMenu == NULL)
+		RedAlert(kErrFailedResourceLoad);
+	mii.wID = kOptionsMenuID;
+	mii.hSubMenu = optionsMenu;
+	mii.dwTypeData = optionsMenuTitle;
+	InsertMenuItem(menuBar, GetMenuItemCount(menuBar), TRUE, &mii);
 
 	menusUp = true;
-	DrawMenuBar();
+	if (mainWindow != NULL)
+	{
+		SetMenu(mainWindow, menuBar);
+		DrawMenuBar(mainWindow);
+	}
 
-	houseMenu = GetMenu(kHouseMenuID);
-	if (houseMenu == nil)
+	houseMenu = DetachPopupMenu(rootMenu, kHouseMenuID, &houseMenuTitle);
+	if (houseMenu == NULL)
 		RedAlert(kErrFailedResourceLoad);
 
 	UpdateMenus(false);
-#endif
+	DestroyMenu(rootMenu);
 }
 
 //--------------------------------------------------------------  GetExtraCursors

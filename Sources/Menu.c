@@ -30,7 +30,8 @@ SInt16 QueryResumeGame (void);
 void HeyYourPissingAHighScore (void);
 
 
-MenuHandle	appleMenu, gameMenu, optionsMenu, houseMenu;
+HMENU		appleMenu, gameMenu, optionsMenu, houseMenu;
+LPWSTR		appleMenuTitle, gameMenuTitle, optionsMenuTitle, houseMenuTitle;
 Boolean		menusUp, resumedSavedGame;
 
 
