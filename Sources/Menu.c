@@ -677,13 +677,13 @@ void UpdateToolsCheckmark (Boolean checkIt)
 
 void UpdateCoordinateCheckmark (Boolean checkIt)
 {
-	return;
-#if 0
 	if (!menusUp)
 		return;
 
-	CheckMenuItem(houseMenu, iCoordinateWindow, checkIt);
-#endif
+	if (checkIt)
+		CheckMenuItem(houseMenu, ID_COORDINATE_WINDOW, MF_CHECKED);
+	else
+		CheckMenuItem(houseMenu, ID_COORDINATE_WINDOW, MF_UNCHECKED);
 }
 
 //--------------------------------------------------------------  UpdateResumeDialog
