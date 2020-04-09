@@ -148,20 +148,17 @@ void UpdateMenusHouseOpen (void)
 
 void UpdateMenusHouseClosed (void)
 {
-	return;
-#if 0
-	DisableMenuItem(gameMenu, iLoadHouse);
-	DisableMenuItem(houseMenu, iSave);
+	EnableMenuItem(gameMenu, ID_LOAD_HOUSE, MF_GRAYED);
+	EnableMenuItem(houseMenu, ID_SAVE_HOUSE, MF_GRAYED);
 	// DisableMenuItem(houseMenu, iSaveAs);
-	DisableMenuItem(houseMenu, iHouse);
-	DisableMenuItem(houseMenu, iRoom);
-	DisableMenuItem(houseMenu, iObject);
-	DisableMenuItem(houseMenu, iCut);
-	DisableMenuItem(houseMenu, iCopy);
-	DisableMenuItem(houseMenu, iPaste);
-	DisableMenuItem(houseMenu, iClear);
-	DisableMenuItem(houseMenu, iDuplicate);
-#endif
+	EnableMenuItem(houseMenu, ID_HOUSE_INFO, MF_GRAYED);
+	EnableMenuItem(houseMenu, ID_ROOM_INFO, MF_GRAYED);
+	EnableMenuItem(houseMenu, ID_OBJECT_INFO, MF_GRAYED);
+	EnableMenuItem(houseMenu, ID_CUT, MF_GRAYED);
+	EnableMenuItem(houseMenu, ID_COPY, MF_GRAYED);
+	EnableMenuItem(houseMenu, ID_PASTE, MF_GRAYED);
+	EnableMenuItem(houseMenu, ID_CLEAR, MF_GRAYED);
+	EnableMenuItem(houseMenu, ID_DUPLICATE, MF_GRAYED);
 }
 
 //--------------------------------------------------------------  UpdateClipboardMenus
