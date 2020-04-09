@@ -209,7 +209,7 @@ void GetExtraCursors (void)
 
 void VariableInit (void)
 {
-	short		i;
+	size_t		i;
 
 	shieldPt.h = 0;
 	shieldPt.v = 0;
@@ -276,15 +276,15 @@ void VariableInit (void)
 	//doubleTime = GetDblTime();
 	doubleTime = GetDoubleClickTime() * 60 / 1000;
 
-	mirrorRgn = nil;
-	mainWindow = nil;
-	mapWindow = nil;
-	toolsWindow = nil;
-	linkWindow = nil;
-	coordWindow = nil;
-	toolSrcMap = nil;
-	nailSrcMap = nil;
-	menuWindow = nil;
+	mirrorRgn = NULL;
+	mainWindow = NULL;
+	mapWindow = NULL;
+	toolsWindow = NULL;
+	linkWindow = NULL;
+	coordWindow = NULL;
+	toolSrcMap = NULL;
+	nailSrcMap = NULL;
+	menuWindow = NULL;
 
 	houseRect = thisMac.screen;
 	houseRect.bottom -= kScoreboardTall;
