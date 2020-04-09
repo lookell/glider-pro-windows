@@ -14,6 +14,7 @@
 #include "Externs.h"
 #include "House.h"
 #include "ObjectEdit.h"
+#include "ResourceIDs.h"
 
 
 #define kSheWantsNewGame		1
@@ -50,15 +51,12 @@ extern	Boolean		houseOpen;
 
 void UpdateMenusEditMode (void)
 {
-	return;
-#if 0
-	DisableMenuItem(gameMenu, iNewGame);
-	DisableMenuItem(gameMenu, iTwoPlayer);
-	DisableMenuItem(gameMenu, iOpenSavedGame);
-	DisableMenuItem(optionsMenu, iHighScores);
-	DisableMenuItem(optionsMenu, iHelp);
-	CheckMenuItem(optionsMenu, iEditor, true);
-#endif
+	EnableMenuItem(gameMenu, ID_NEW_GAME, MF_GRAYED);
+	EnableMenuItem(gameMenu, ID_TWO_PLAYER, MF_GRAYED);
+	EnableMenuItem(gameMenu, ID_OPEN_SAVED_GAME, MF_GRAYED);
+	EnableMenuItem(optionsMenu, ID_HIGH_SCORES, MF_GRAYED);
+	EnableMenuItem(optionsMenu, ID_DEMO, MF_GRAYED);
+	CheckMenuItem(optionsMenu, ID_EDITOR, MF_CHECKED);
 }
 
 //--------------------------------------------------------------  UpdateMenusNonEditMode
