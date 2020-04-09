@@ -663,13 +663,13 @@ void UpdateMapCheckmark (Boolean checkIt)
 
 void UpdateToolsCheckmark (Boolean checkIt)
 {
-	return;
-#if 0
 	if (!menusUp)
 		return;
 
-	CheckMenuItem(houseMenu, iObjectWindow, checkIt);
-#endif
+	if (checkIt)
+		CheckMenuItem(houseMenu, ID_OBJECT_WINDOW, MF_CHECKED);
+	else
+		CheckMenuItem(houseMenu, ID_OBJECT_WINDOW, MF_UNCHECKED);
 }
 
 //--------------------------------------------------------------  UpdateCoordinateCheckmark
