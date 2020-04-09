@@ -64,38 +64,35 @@ void UpdateMenusEditMode (void)
 
 void UpdateMenusNonEditMode (void)
 {
-	return;
-#if 0
 	if ((noRoomAtAll) || (!houseOpen) || (numberRooms <= 0))
 	{
-		DisableMenuItem(gameMenu, iNewGame);
-		DisableMenuItem(gameMenu, iTwoPlayer);
-		DisableMenuItem(gameMenu, iOpenSavedGame);
+		EnableMenuItem(gameMenu, ID_NEW_GAME, MF_GRAYED);
+		EnableMenuItem(gameMenu, ID_TWO_PLAYER, MF_GRAYED);
+		EnableMenuItem(gameMenu, ID_OPEN_SAVED_GAME, MF_GRAYED);
 		if (houseOpen)
 		{
-			EnableMenuItem(gameMenu, iLoadHouse);
-			EnableMenuItem(optionsMenu, iHighScores);
+			EnableMenuItem(gameMenu, ID_LOAD_HOUSE, MF_ENABLED);
+			EnableMenuItem(optionsMenu, ID_HIGH_SCORES, MF_ENABLED);
 		}
 		else
 		{
-			DisableMenuItem(gameMenu, iLoadHouse);
-			DisableMenuItem(optionsMenu, iHighScores);
+			EnableMenuItem(gameMenu, ID_LOAD_HOUSE, MF_GRAYED);
+			EnableMenuItem(optionsMenu, ID_HIGH_SCORES, MF_GRAYED);
 		}
 	}
 	else
 	{
-		EnableMenuItem(gameMenu, iNewGame);
-		EnableMenuItem(gameMenu, iTwoPlayer);
-		EnableMenuItem(gameMenu, iOpenSavedGame);
-		EnableMenuItem(gameMenu, iLoadHouse);
-		EnableMenuItem(optionsMenu, iHighScores);
+		EnableMenuItem(gameMenu, ID_NEW_GAME, MF_ENABLED);
+		EnableMenuItem(gameMenu, ID_TWO_PLAYER, MF_ENABLED);
+		EnableMenuItem(gameMenu, ID_OPEN_SAVED_GAME, MF_ENABLED);
+		EnableMenuItem(gameMenu, ID_LOAD_HOUSE, MF_ENABLED);
+		EnableMenuItem(optionsMenu, ID_HIGH_SCORES, MF_ENABLED);
 	}
 	if (demoHouseIndex == -1)
-		DisableMenuItem(optionsMenu, iHelp);
+		EnableMenuItem(optionsMenu, ID_DEMO, MF_GRAYED);
 	else
-		EnableMenuItem(optionsMenu, iHelp);
-	CheckMenuItem(optionsMenu, iEditor, false);
-#endif
+		EnableMenuItem(optionsMenu, ID_DEMO, MF_ENABLED);
+	CheckMenuItem(optionsMenu, ID_EDITOR, MF_UNCHECKED);
 }
 
 //--------------------------------------------------------------  UpdateMenusHouseOpen
