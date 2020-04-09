@@ -100,50 +100,47 @@ void UpdateMenusNonEditMode (void)
 
 void UpdateMenusHouseOpen (void)
 {
-	return;
-#if 0
-	EnableMenuItem(gameMenu, iLoadHouse);
+	EnableMenuItem(gameMenu, ID_LOAD_HOUSE, MF_ENABLED);
 	if ((fileDirty) && (houseUnlocked))
-		EnableMenuItem(houseMenu, iSave);
+		EnableMenuItem(houseMenu, ID_SAVE_HOUSE, MF_ENABLED);
 	else
-		DisableMenuItem(houseMenu, iSave);
+		EnableMenuItem(houseMenu, ID_SAVE_HOUSE, MF_GRAYED);
 	if (houseUnlocked)
 	{
 		// EnableMenuItem(houseMenu, iSaveAs);
-		EnableMenuItem(houseMenu, iHouse);
+		EnableMenuItem(houseMenu, ID_HOUSE_INFO, MF_ENABLED);
 	}
 	else
 	{
 		// DisableMenuItem(houseMenu, iSaveAs);
-		DisableMenuItem(houseMenu, iHouse);
+		EnableMenuItem(houseMenu, ID_HOUSE_INFO, MF_GRAYED);
 	}
 	if ((noRoomAtAll) || (!houseUnlocked))
-		DisableMenuItem(houseMenu, iRoom);
+		EnableMenuItem(houseMenu, ID_ROOM_INFO, MF_GRAYED);
 	else
-		EnableMenuItem(houseMenu, iRoom);
+		EnableMenuItem(houseMenu, ID_ROOM_INFO, MF_ENABLED);
 	if ((objActive == kNoObjectSelected) || (!houseUnlocked))
 	{
-		DisableMenuItem(houseMenu, iObject);
-		DisableMenuItem(houseMenu, iBringForward);
-		DisableMenuItem(houseMenu, iSendBack);
+		EnableMenuItem(houseMenu, ID_OBJECT_INFO, MF_GRAYED);
+		EnableMenuItem(houseMenu, ID_BRING_FORWARD, MF_GRAYED);
+		EnableMenuItem(houseMenu, ID_SEND_BACK, MF_GRAYED);
 	}
 	else
 	{
-		EnableMenuItem(houseMenu, iObject);
+		EnableMenuItem(houseMenu, ID_OBJECT_INFO, MF_ENABLED);
 		if ((objActive == kInitialGliderSelected) ||
 				(objActive == kLeftGliderSelected) ||
 				(objActive == kRightGliderSelected))
 		{
-			DisableMenuItem(houseMenu, iBringForward);
-			DisableMenuItem(houseMenu, iSendBack);
+			EnableMenuItem(houseMenu, ID_BRING_FORWARD, MF_GRAYED);
+			EnableMenuItem(houseMenu, ID_SEND_BACK, MF_GRAYED);
 		}
 		else
 		{
-			EnableMenuItem(houseMenu, iBringForward);
-			EnableMenuItem(houseMenu, iSendBack);
+			EnableMenuItem(houseMenu, ID_BRING_FORWARD, MF_ENABLED);
+			EnableMenuItem(houseMenu, ID_SEND_BACK, MF_ENABLED);
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  UpdateMenusHouseClosed
