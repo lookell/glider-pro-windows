@@ -357,7 +357,7 @@ void HandleToast (SInt16 who)
 		{
 			if (dinahs[who].active)
 			{
-				dinahs[who].vVel = (short)-dinahs[who].count;
+				dinahs[who].vVel = (SInt16)-dinahs[who].count;
 				dinahs[who].frame = 0;
 				dinahs[who].moving = true;
 				PlayPrioritySound(kToastLaunchSound, kToastLaunchPriority);
@@ -372,8 +372,6 @@ void HandleToast (SInt16 who)
 
 void HandleMacPlus (SInt16 who)
 {
-	return;
-#if 0
 	if (dinahs[who].timer > 0)
 	{
 		dinahs[who].timer--;
@@ -384,8 +382,7 @@ void HandleMacPlus (SInt16 who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacBeepSound, kMacBeepPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&plusScreen2, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
@@ -400,23 +397,19 @@ void HandleMacPlus (SInt16 who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&plusScreen1, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleTV
 
 void HandleTV (SInt16 who)
 {
-	return;
-#if 0
 	if (dinahs[who].timer > 0)
 	{
 		dinahs[who].timer--;
@@ -442,8 +435,7 @@ void HandleTV (SInt16 who)
 				}
 				else
 				{
-					CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-							(BitMap *)*GetGWorldPixMap(backSrcMap),
+					Mac_CopyBits(applianceSrcMap, backSrcMap,
 							&tvScreen2, &dinahs[who].dest,
 							srcCopy, nil);
 					AddRectToBackRects(&dinahs[who].dest);
@@ -457,23 +449,19 @@ void HandleTV (SInt16 who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kTVOffSound, kTVOffPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&tvScreen1, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleCoffee
 
 void HandleCoffee (SInt16 who)
 {
-	return;
-#if 0
 	if (dinahs[who].timer > 0)
 	{
 		dinahs[who].timer--;
@@ -487,8 +475,7 @@ void HandleCoffee (SInt16 who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&coffeeLight2, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
@@ -506,23 +493,21 @@ void HandleCoffee (SInt16 who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&coffeeLight1, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleOutlet
 
 void HandleOutlet (SInt16 who)
 {
-	return;
-#if 0
+	RECT	rect;
+
 	if (dinahs[who].position != 0)
 	{
 		dinahs[who].timer--;
@@ -562,8 +547,7 @@ void HandleOutlet (SInt16 who)
 
 		if ((dinahs[who].position != 0) || (dinahs[who].hVel > 0))
 		{
-			CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
+			Mac_CopyBits(applianceSrcMap, workSrcMap,
 					&outletSrc[dinahs[who].frame],
 					&dinahs[who].dest,
 					srcCopy, nil);
@@ -571,7 +555,12 @@ void HandleOutlet (SInt16 who)
 		else
 		{
 //			SetPort((GrafPtr)workSrcMap);
-			PaintRect(&dinahs[who].dest);
+			//PaintRect(&dinahs[who].dest);
+			rect.left = dinahs[who].dest.left;
+			rect.top = dinahs[who].dest.top;
+			rect.right = dinahs[who].dest.right;
+			rect.bottom = dinahs[who].dest.bottom;
+			FillRect(workSrcMap, &rect, GetStockObject(BLACK_BRUSH));
 		}
 		AddRectToWorkRects(&dinahs[who].dest);
 	}
@@ -592,15 +581,12 @@ void HandleOutlet (SInt16 who)
 				dinahs[who].timer = dinahs[who].count;
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleVCR
 
 void HandleVCR (SInt16 who)
 {
-	return;
-#if 0
 	if (dinahs[who].timer > 0)
 	{
 		dinahs[who].timer--;
@@ -616,8 +602,7 @@ void HandleVCR (SInt16 who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kVCRSound, kVCRPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&vcrTime2, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
@@ -632,16 +617,14 @@ void HandleVCR (SInt16 who)
 			{
 				if (dinahs[who].frame == 0)
 				{
-					CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-							(BitMap *)*GetGWorldPixMap(backSrcMap),
+					Mac_CopyBits(applianceSrcMap, backSrcMap,
 							&vcrTime2, &dinahs[who].dest,
 							srcCopy, nil);
 					AddRectToBackRects(&dinahs[who].dest);
 				}
 				else
 				{
-					CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-							(BitMap *)*GetGWorldPixMap(backSrcMap),
+					Mac_CopyBits(applianceSrcMap, backSrcMap,
 							&vcrTime1, &dinahs[who].dest,
 							srcCopy, nil);
 					AddRectToBackRects(&dinahs[who].dest);
@@ -655,23 +638,19 @@ void HandleVCR (SInt16 who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&vcrTime1, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleStereo
 
 void HandleStereo (SInt16 who)
 {
-	return;
-#if 0
 	if (dinahs[who].timer > 0)
 	{
 		dinahs[who].timer--;
@@ -685,8 +664,7 @@ void HandleStereo (SInt16 who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&stereoLight2, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
@@ -702,23 +680,19 @@ void HandleStereo (SInt16 who)
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&stereoLight1, &dinahs[who].dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleMicrowave
 
 void HandleMicrowave (SInt16 who)
 {
-	return;
-#if 0
 	Rect		dest;
 
 	if (dinahs[who].timer > 0)
@@ -733,18 +707,15 @@ void HandleMicrowave (SInt16 who)
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
 				dest = dinahs[who].dest;
 				dest.right = dest.left + 16;
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&microOn, &dest,
 						srcCopy, nil);
 				QOffsetRect(&dest, 16, 0);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&microOn, &dest,
 						srcCopy, nil);
 				QOffsetRect(&dest, 16, 0);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&microOn, &dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
@@ -759,24 +730,20 @@ void HandleMicrowave (SInt16 who)
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
 				dest = dinahs[who].dest;
 				dest.right = dest.left + 16;
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&microOff, &dest,
 						srcCopy, nil);
 				QOffsetRect(&dest, 16, 0);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&microOff, &dest,
 						srcCopy, nil);
 				QOffsetRect(&dest, 16, 0);
-				CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-						(BitMap *)*GetGWorldPixMap(backSrcMap),
+				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&microOff, &dest,
 						srcCopy, nil);
 				AddRectToBackRects(&dinahs[who].dest);
 			}
 		}
 	}
-#endif
 }
 
