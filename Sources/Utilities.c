@@ -67,28 +67,8 @@ void ToolBoxInit (void)
 	wcMain.lpszClassName = WC_MAINWINDOW;
 	wcMain.hIconSm = NULL;
 	RegisterClassEx(&wcMain);
-#if 0
-#if !TARGET_CARBON
-	InitGraf(&qd.thePort);
-	InitFonts();
-	FlushEvents(everyEvent, 0);
-	InitWindows();
-	InitMenus();
-	TEInit();
-	InitDialogs(nil);
 
-	MaxApplZone();
-
-	MoreMasters();
-	MoreMasters();
-	MoreMasters();
-	MoreMasters();
-
-	GetDateTime((UInt32 *)&qd.randSeed);
-
-#endif
-#endif
-
+	InitRandomLongQUS();
 	//InitCursor();
 	switchedOut = false;
 }
