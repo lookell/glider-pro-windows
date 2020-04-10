@@ -136,7 +136,7 @@ void VariableInit (void);
 void GetDemoInput (gliderPtr);							// --- Input.c
 void GetInput (gliderPtr);
 
-SInt16 MergeFloorSuite (SInt16, SInt16);					// --- Link.c
+SInt16 MergeFloorSuite (SInt16, SInt16);				// --- Link.c
 void ExtractFloorSuite (SInt16, SInt16 *, SInt16 *);
 void UpdateLinkControl (void);
 void UpdateLinkWindow (void);
@@ -153,6 +153,7 @@ void ZoomBetweenWindows (void);
 void UpdateEditWindowTitle (void);
 void HandleMainClick (Point, Boolean);
 //void WashColorIn (void);
+LRESULT CALLBACK MainWindowProc (HWND, UINT, WPARAM, LPARAM);
 
 void CenterMapOnRoom (SInt16, SInt16);					// --- Map.c
 Boolean ThisRoomVisibleOnMap (void);

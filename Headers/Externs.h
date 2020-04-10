@@ -223,6 +223,8 @@
 #define iObjectWindow			20
 #define iCoordinateWindow		21
 
+#define WC_MAINWINDOW			L"GliderMainWindow"
+
 //--------------------------------------------------------------  Structs
 /*
 typedef	SInt16		SICN[16];

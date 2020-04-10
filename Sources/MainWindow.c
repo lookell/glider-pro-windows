@@ -184,12 +184,12 @@ void UpdateMenuBarWindow (void)
 
 void OpenMainWindow (void)
 {
-	return;
-#if 0
-//	long		wasSeed;
-	short		whichRoom;
+//	SInt32		wasSeed;
+	SInt16		whichRoom;
+	RECT		rcClient;
+	DWORD		windowStyle;
 
-	if (mainWindow != nil)
+	if (mainWindow != NULL)
 	{
 		YellowAlert(kYellowUnaccounted, 6);
 		return;
@@ -197,6 +197,7 @@ void OpenMainWindow (void)
 
 	if (theMode == kEditMode)
 	{
+#if 0
 		if (menuWindow != nil)
 			DisposeWindow(menuWindow);
 		menuWindow = nil;
@@ -221,9 +222,11 @@ void OpenMainWindow (void)
 		whichRoom = GetFirstRoomNumber();
 		CopyRoomToThisRoom(whichRoom);
 		ReflectCurrentRoom(false);
+#endif
 	}
 	else
 	{
+#if 0
 		if (menuWindow == nil)
 		{
 			menuWindow = GetNewCWindow(kMenuWindowID, nil, kPutInFront);
@@ -232,9 +235,28 @@ void OpenMainWindow (void)
 					thisMac.screen.top, true);
 			ShowWindow(menuWindow);
 		}
+#endif
 		mainWindowRect = thisMac.screen;
 		ZeroRectCorner(&mainWindowRect);
 		mainWindowRect.bottom -= 20;		// thisMac.menuHigh
+		windowStyle = WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME;
+		SetRect(&rcClient, 0, 0, mainWindowRect.right, mainWindowRect.bottom);
+		AdjustWindowRect(&rcClient, windowStyle, TRUE);
+		mainWindow = CreateWindow(
+			WC_MAINWINDOW,
+			L"Main Window",
+			windowStyle,
+			CW_USEDEFAULT,
+			CW_USEDEFAULT,
+			rcClient.right - rcClient.left,
+			rcClient.bottom - rcClient.top,
+			NULL,
+			NULL,
+			HINST_THISCOMPONENT,
+			NULL
+		);
+		ShowWindow(mainWindow, SW_SHOWDEFAULT);
+#if 0
 		mainWindow = GetNewCWindow(kMainWindowID, nil, kPutInFront);
 		SizeWindow(mainWindow, mainWindowRect.right - mainWindowRect.left,
 				mainWindowRect.bottom - mainWindowRect.top, false);
@@ -247,6 +269,7 @@ void OpenMainWindow (void)
 		ForeColor(blackColor);
 		BackColor(whiteColor);
 		PaintRect(&mainWindowRect);
+#endif
 
 		splashOriginH = ((thisMac.screen.right - thisMac.screen.left) - 640) / 2;
 		if (splashOriginH < 0)
@@ -255,6 +278,7 @@ void OpenMainWindow (void)
 		if (splashOriginV < 0)
 			splashOriginV = 0;
 
+#if 0
 		SetPort((GrafPtr)workSrcMap);
 		PaintRect(&workSrcRect);
 		LoadGraphic(kSplash8BitPICT);
@@ -270,8 +294,8 @@ void OpenMainWindow (void)
 //		}
 
 		SetPortWindowPort(mainWindow);
-	}
 #endif
+	}
 }
 
 //--------------------------------------------------------------  CloseMainWindow
@@ -622,3 +646,15 @@ void WashColorIn (void)
 		DisposePtr((Ptr)newColors);
 }
 */
+//--------------------------------------------------------------  MainWindowProc
+
+LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+		case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	}
+	return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}

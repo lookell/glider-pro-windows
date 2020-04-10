@@ -52,7 +52,21 @@ Point MyGetGlobalMouse (void)
 
 void ToolBoxInit (void)
 {
-	return;
+	WNDCLASSEX	wcMain;
+
+	wcMain.cbSize = sizeof(wcMain);
+	wcMain.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+	wcMain.lpfnWndProc = MainWindowProc;
+	wcMain.cbClsExtra = 0;
+	wcMain.cbWndExtra = 0;
+	wcMain.hInstance = HINST_THISCOMPONENT;
+	wcMain.hIcon = LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(1));
+	wcMain.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wcMain.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcMain.lpszMenuName = NULL;
+	wcMain.lpszClassName = WC_MAINWINDOW;
+	wcMain.hIconSm = NULL;
+	RegisterClassEx(&wcMain);
 #if 0
 #if !TARGET_CARBON
 	InitGraf(&qd.thePort);

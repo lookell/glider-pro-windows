@@ -285,11 +285,10 @@ void WriteOutPrefs (void)
 
 int main (void)
 {
-	return 0;
-#if 0
-//	long		wasSeed;
-	long		theErr;
+//	SInt32		wasSeed;
+	SInt32		theErr;
 	OSErr		fileErr;
+	MSG			message;
 	Boolean		whoCares, copyGood;
 
 	ToolBoxInit();
@@ -331,12 +330,14 @@ int main (void)
 	CreateOffscreens();					SpinCursor(2);
 	OpenMainWindow();
 
+#ifdef COMPILEQT
 	if (thisMac.hasQT)
 	{
 		theErr = EnterMovies();
 		if (theErr != noErr)
 			thisMac.hasQT = false;
 	}
+#endif
 
 	InitSound();						SpinCursor(2);
 	InitMusic();						SpinCursor(2);
@@ -346,7 +347,7 @@ int main (void)
 
 	PlayPrioritySound(kBirdSound, kBirdPriority);
 	DelayTicks(6);
-	InitializeMenus();					InitCursor();
+	InitializeMenus();					//InitCursor();
 
 #if BUILD_ARCADE_VERSION
 //	HideMenuBarOld();
@@ -364,6 +365,13 @@ int main (void)
 //		BitchAboutSM3();
 //	}
 
+	while (GetMessage(&message, NULL, 0, 0))
+	{
+		TranslateMessage(&message);
+		DispatchMessage(&message);
+	}
+	return (int)message.wParam;
+#if 0
 	while (!quitting)		// this is the main loop
 		HandleEvent();
 /*
