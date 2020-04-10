@@ -847,16 +847,13 @@ void GetKeyName (SInt32 message, StringPtr theName)
 
 Boolean OptionKeyDown (void)
 {
-	return false;
-#if 0
-	KeyMap		theKeys;
+	BYTE		theKeys[256];
 
-	GetKeys(theKeys);
-	if (BitTst(&theKeys, kOptionKeyMap))
+	GetKeyboardState(theKeys);
+	if (theKeys[VK_MENU] & 0x80)
 		return (true);
 	else
 		return (false);
-#endif
 }
 
 //--------------------------------------------------------------  ExtractCTSeed
