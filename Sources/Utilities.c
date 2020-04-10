@@ -882,12 +882,7 @@ void ForceCTSeed (CGrafPtr porter, SInt32 newSeed)
 
 void DelayTicks (SInt32 howLong)
 {
-	return;
-#if 0
-	UInt32		whoCares;
-
-	Delay(howLong, &whoCares);
-#endif
+	Sleep(TicksToMillis(howLong));
 }
 
 //--------------------------------------------------------------  UnivGetSoundVolume
