@@ -111,10 +111,8 @@ Boolean DidBandHitDynamic (SInt16 who)
 
 void RenderToast (SInt16 who)
 {
-	return;
-#if 0
 	Rect		src, dest;
-	short		vClip;
+	SInt16		vClip;
 
 	if (dinahs[who].moving)
 	{
@@ -128,9 +126,7 @@ void RenderToast (SInt16 who)
 			dest.bottom -= vClip;
 		}
 
-		CopyMask((BitMap *)*GetGWorldPixMap(toastSrcMap),
-				(BitMap *)*GetGWorldPixMap(toastMaskMap),
-				(BitMap *)*GetGWorldPixMap(workSrcMap),
+		Mac_CopyMask(toastSrcMap, toastMaskMap, workSrcMap,
 				&src, &src, &dest);
 
 		AddRectToBackRects(&dest);
@@ -138,15 +134,12 @@ void RenderToast (SInt16 who)
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  RenderBalloon
 
 void RenderBalloon (SInt16 who)
 {
-	return;
-#if 0
 	Rect		src, dest;
 
 	if (dinahs[who].moving)
@@ -155,9 +148,7 @@ void RenderBalloon (SInt16 who)
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		src = balloonSrc[dinahs[who].frame];
 
-		CopyMask((BitMap *)*GetGWorldPixMap(balloonSrcMap),
-				(BitMap *)*GetGWorldPixMap(balloonMaskMap),
-				(BitMap *)*GetGWorldPixMap(workSrcMap),
+		Mac_CopyMask(balloonSrcMap, balloonMaskMap, workSrcMap,
 				&src, &src, &dest);
 
 		AddRectToBackRects(&dest);
@@ -165,15 +156,12 @@ void RenderBalloon (SInt16 who)
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  RenderCopter
 
 void RenderCopter (SInt16 who)
 {
-	return;
-#if 0
 	Rect		src, dest;
 
 	if (dinahs[who].moving)
@@ -182,9 +170,7 @@ void RenderCopter (SInt16 who)
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		src = copterSrc[dinahs[who].frame];
 
-		CopyMask((BitMap *)*GetGWorldPixMap(copterSrcMap),
-				(BitMap *)*GetGWorldPixMap(copterMaskMap),
-				(BitMap *)*GetGWorldPixMap(workSrcMap),
+		Mac_CopyMask(copterSrcMap, copterMaskMap, workSrcMap,
 				&src, &src, &dest);
 
 		AddRectToBackRects(&dest);
@@ -192,15 +178,12 @@ void RenderCopter (SInt16 who)
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  RenderDart
 
 void RenderDart (SInt16 who)
 {
-	return;
-#if 0
 	Rect		src, dest;
 
 	if (dinahs[who].moving)
@@ -209,9 +192,7 @@ void RenderDart (SInt16 who)
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		src = dartSrc[dinahs[who].frame];
 
-		CopyMask((BitMap *)*GetGWorldPixMap(dartSrcMap),
-				(BitMap *)*GetGWorldPixMap(dartMaskMap),
-				(BitMap *)*GetGWorldPixMap(workSrcMap),
+		Mac_CopyMask(dartSrcMap, dartMaskMap, workSrcMap,
 				&src, &src, &dest);
 
 		AddRectToBackRects(&dest);
@@ -219,63 +200,50 @@ void RenderDart (SInt16 who)
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  RenderBall
 
 void RenderBall (SInt16 who)
 {
-	return;
-#if 0
 	Rect		src, dest;
 
 	dest = dinahs[who].dest;
 	QOffsetRect(&dest, playOriginH, playOriginV);
 	src = ballSrc[dinahs[who].frame];
 
-	CopyMask((BitMap *)*GetGWorldPixMap(ballSrcMap),
-			(BitMap *)*GetGWorldPixMap(ballMaskMap),
-			(BitMap *)*GetGWorldPixMap(workSrcMap),
+	Mac_CopyMask(ballSrcMap, ballMaskMap, workSrcMap,
 			&src, &src, &dest);
 
 	AddRectToBackRects(&dest);
 	dest = dinahs[who].whole;
 	QOffsetRect(&dest, playOriginH, playOriginV);
 	AddRectToWorkRects(&dest);
-#endif
 }
 
 //--------------------------------------------------------------  RenderDrip
 
 void RenderDrip (SInt16 who)
 {
-	return;
-#if 0
 	Rect		src, dest;
 
 	dest = dinahs[who].dest;
 	QOffsetRect(&dest, playOriginH, playOriginV);
 	src = dripSrc[dinahs[who].frame];
 
-	CopyMask((BitMap *)*GetGWorldPixMap(dripSrcMap),
-			(BitMap *)*GetGWorldPixMap(dripMaskMap),
-			(BitMap *)*GetGWorldPixMap(workSrcMap),
+	Mac_CopyMask(dripSrcMap, dripMaskMap, workSrcMap,
 			&src, &src, &dest);
 
 	AddRectToBackRects(&dest);
 	dest = dinahs[who].whole;
 	QOffsetRect(&dest, playOriginH, playOriginV);
 	AddRectToWorkRects(&dest);
-#endif
 }
 
 //--------------------------------------------------------------  RenderFish
 
 void RenderFish (SInt16 who)
 {
-	return;
-#if 0
 	Rect		src, dest;
 
 	dest = dinahs[who].dest;
@@ -284,9 +252,7 @@ void RenderFish (SInt16 who)
 
 	if (dinahs[who].moving)
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(fishSrcMap),
-				(BitMap *)*GetGWorldPixMap(fishMaskMap),
-				(BitMap *)*GetGWorldPixMap(workSrcMap),
+		Mac_CopyMask(fishSrcMap, fishMaskMap, workSrcMap,
 				&src, &src, &dest);
 		AddRectToBackRects(&dest);
 		dest = dinahs[who].whole;
@@ -295,15 +261,13 @@ void RenderFish (SInt16 who)
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(fishSrcMap),
-				(BitMap *)*GetGWorldPixMap(workSrcMap),
-				&src, &dest, srcCopy, nil);
+		Mac_CopyBits(fishSrcMap, workSrcMap,
+				&src, &dest, srcCopy, NULL);
 		AddRectToBackRects(&dest);
 		dest = dinahs[who].whole;
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleSparkleObject
