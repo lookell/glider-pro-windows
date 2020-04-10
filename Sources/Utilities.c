@@ -78,17 +78,12 @@ void ToolBoxInit (void)
 
 SInt16 RandomInt (SInt16 range)
 {
-	return 0;
-#if 0
-	register long	rawResult;
+	register SInt32	rawResult;
 
-	rawResult = Random();
-	if (rawResult < 0L)
-		rawResult *= -1L;
-	rawResult = (rawResult * (long)range) / 32768L;
+	rawResult = (RandomLongQUS() & 0x7FFF);
+	rawResult = (rawResult * (SInt32)range) / 32768L;
 
-	return ((short)rawResult);
-#endif
+	return ((SInt16)rawResult);
 }
 
 //--------------------------------------------------------------  RandomLong
