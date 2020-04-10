@@ -252,7 +252,7 @@ void VariableInit (void)
 	wasFlower = RandomInt(kNumFlowers);
 	lastHighScore = -1;
 	idleMode = kIdleSplashMode;
-	incrementModeTime = (GetTickCount() * 60 / 1000) + kIdleSplashTicks;
+	incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
 	willMaxFiles = maxFiles;
 	numExtraHouses = 0;
 
@@ -274,7 +274,7 @@ void VariableInit (void)
 	fadeInSequence[15] = 10;
 
 	//doubleTime = GetDblTime();
-	doubleTime = GetDoubleClickTime() * 60 / 1000;
+	doubleTime = MillisToTicks(GetDoubleClickTime());
 
 	mirrorRgn = NULL;
 	mainWindow = NULL;

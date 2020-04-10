@@ -18,6 +18,12 @@
 #endif
 #define nil NULL
 
+// Convert Macintosh ticks (1/60 second units) to milliseconds
+#define TicksToMillis(ticks) ((ticks) * 50 / 3)
+
+// Convert milliseconds to Macintosh ticks (1/60 second units)
+#define MillisToTicks(millis) ((millis) * 3 / 50)
+
 typedef uint8_t UInt8;
 typedef int8_t SInt8;
 typedef uint16_t UInt16;
