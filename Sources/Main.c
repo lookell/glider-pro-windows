@@ -288,7 +288,6 @@ int main (void)
 //	SInt32		wasSeed;
 	SInt32		theErr;
 	OSErr		fileErr;
-	MSG			message;
 	Boolean		whoCares, copyGood;
 
 	ToolBoxInit();
@@ -365,13 +364,6 @@ int main (void)
 //		BitchAboutSM3();
 //	}
 
-	while (GetMessage(&message, NULL, 0, 0))
-	{
-		TranslateMessage(&message);
-		DispatchMessage(&message);
-	}
-	return (int)message.wParam;
-#if 0
 	while (!quitting)		// this is the main loop
 		HandleEvent();
 /*
@@ -386,14 +378,15 @@ int main (void)
 		if (!CloseHouse())
 		{
 			CloseHouseResFork();
+#if 0
 			fileErr = FSClose(houseRefNum);
+#endif
 			houseOpen = false;
 		}
 	}
 	WriteOutPrefs();
 	RestoreColorDepth();
-	FlushEvents(everyEvent, 0);
+//	FlushEvents(everyEvent, 0);
 //	theErr = LoadScrap();
-#endif
 }
 

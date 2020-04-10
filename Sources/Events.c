@@ -500,58 +500,60 @@ void HandleIdleTask (void)
 
 void HandleEvent (void)
 {
-	return;
-#if 0
-	KeyMap		eventKeys;
-	EventRecord	theEvent;
-	long		sleep = 2;
-	Boolean		itHappened;
+	BYTE		eventKeys[256];
+	MSG			theEvent;
+	SInt32		sleep = 2;
+	DWORD		result;
 
-	GetKeys(eventKeys);
-	if ((BitTst(&eventKeys, kCommandKeyMap)) &&
-			(BitTst(&eventKeys, kOptionKeyMap)))
+	GetKeyboardState(eventKeys);
+	if ((eventKeys[VK_CONTROL] & 0x80) &&
+			(eventKeys[VK_MENU] & 0x80))
 	{
 		HiliteAllObjects();
 	}
-	else if ((BitTst(&eventKeys, kOptionKeyMap)) && (theMode == kEditMode) &&
+	else if ((eventKeys[VK_MENU] & 0x80) && (theMode == kEditMode) &&
 			(houseUnlocked))
 	{
 		EraseSelectedTool();
 		SelectTool(kSelectTool);
 	}
 
-	if (thisMac.hasWNE)
-		itHappened = WaitNextEvent(everyEvent, &theEvent, sleep, nil);
-	else
-	{
-//		SystemTask();
-		itHappened = GetNextEvent(everyEvent, &theEvent);
-	}
+	result = MsgWaitForMultipleObjects(0, NULL, FALSE,
+			TicksToMillis(sleep), QS_ALLINPUT);
 
-	if (itHappened)
+	if (result == WAIT_OBJECT_0)
 	{
+#if 0
 		switch (theEvent.what)
 		{
-			case mouseDown:
+		case mouseDown:
 			HandleMouseEvent(&theEvent);
 			break;
 
-			case keyDown:
-			case autoKey:
+		case keyDown:
+		case autoKey:
 			HandleKeyEvent(&theEvent);
 			break;
 
-			case updateEvt:
+		case updateEvt:
 			HandleUpdateEvent(&theEvent);
 			break;
 
-			case osEvt:
+		case osEvt:
 			HandleOSEvent(&theEvent);
 			break;
 
-			case kHighLevelEvent:
+		case kHighLevelEvent:
 			HandleHighLevelEvent(&theEvent);
 			break;
+		}
+#endif
+		while (PeekMessage(&theEvent, NULL, 0, 0, PM_REMOVE))
+		{
+			if (theEvent.message == WM_QUIT)
+				quitting = true;
+			TranslateMessage(&theEvent);
+			DispatchMessage(&theEvent);
 		}
 	}
 	else
@@ -559,10 +561,9 @@ void HandleEvent (void)
 
 	if ((theMode == kSplashMode) && doAutoDemo && !switchedOut)
 	{
-		if (TickCount() >= incrementModeTime)
+		if ((MillisToTicks(GetTickCount()) - incrementModeTime) >= 0)
 			DoDemoGame();
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HiliteAllWindows

@@ -87,10 +87,10 @@ void ToolBoxInit (void)
 	GetDateTime((UInt32 *)&qd.randSeed);
 
 #endif
-
-	InitCursor();
-	switchedOut = false;
 #endif
+
+	//InitCursor();
+	switchedOut = false;
 }
 
 //--------------------------------------------------------------  RandomInt
