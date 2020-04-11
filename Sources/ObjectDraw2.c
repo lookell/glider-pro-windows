@@ -420,13 +420,8 @@ void DrawSoundTrigger (Rect *theRect)
 
 void DrawSimpleLight (SInt16 what, Rect *theRect)
 {
-	return;
-#if 0
-	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap),
-			(BitMap *)*GetGWorldPixMap(lightMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(lightSrcMap, lightMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawFlourescent
