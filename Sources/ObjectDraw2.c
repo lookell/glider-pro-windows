@@ -762,40 +762,25 @@ void DrawVCR (Rect *theRect, Boolean isOn, Boolean isLit)
 
 void DrawStereo (Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	return;
-#if 0
 	Rect		bounds;
-	GWorldPtr	tempMap;
-	GWorldPtr	tempMask;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	HDC			tempMap;
+	HDC			tempMask;
 	OSErr		theErr;
-
 
 	if (isLit)
 	{
-		GetGWorld(&wasCPort, &wasWorld);
-
 		bounds = srcRects[kStereo];
-		theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
-		SetGWorld(tempMap, nil);
-		LoadGraphic(kStereoPictID);
+		theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth); 
+		LoadGraphic(tempMap, kStereoPictID);
 
 		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
-		SetGWorld(tempMask, nil);
-		LoadGraphic(kStereoMaskID);
+		LoadGraphic(tempMask, kStereoMaskID);
 
-		CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
-				(BitMap *)*GetGWorldPixMap(tempMask),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyMask(tempMap, tempMask, backSrcMap,
 				&srcRects[kStereo], &srcRects[kStereo], theRect);
-
-		SetGWorld(wasCPort, wasWorld);
 
 		DisposeGWorld(tempMap);
 		DisposeGWorld(tempMask);
-
-//		SetPort((GrafPtr)backSrcMap);
 	}
 
 	bounds = stereoLight1;
@@ -803,17 +788,14 @@ void DrawStereo (Rect *theRect, Boolean isOn, Boolean isLit)
 	QOffsetRect(&bounds, theRect->left + 56, theRect->top + 20);
 	if (isOn)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&stereoLight2, &bounds, srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&stereoLight1, &bounds, srcCopy, nil);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DrawMicrowave
