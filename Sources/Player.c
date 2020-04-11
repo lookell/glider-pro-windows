@@ -1141,16 +1141,14 @@ void MoveGliderInMailRight (gliderPtr thisGlider)
 
 void DeckGliderInFoil (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	showFoil = true;
 
 	if (twoPlayerGame)
 	{
-		SetPort((GrafPtr)glidSrcMap);
-		LoadGraphic(kGliderFoilPictID);
-		SetPort((GrafPtr)glid2SrcMap);
-		LoadGraphic(kGliderFoil2PictID);
+		//SetPort((GrafPtr)glidSrcMap);
+		LoadGraphic(glidSrcMap, kGliderFoilPictID);
+		//SetPort((GrafPtr)glid2SrcMap);
+		LoadGraphic(glid2SrcMap, kGliderFoil2PictID);
 	}
 
 	if (thisGlider->facing == kFaceLeft)
@@ -1165,7 +1163,6 @@ void DeckGliderInFoil (gliderPtr thisGlider)
 		thisGlider->src = gliderSrc[thisGlider->frame + 2];
 		thisGlider->mask = gliderSrc[thisGlider->frame + 2];
 	}
-#endif
 }
 
 //--------------------------------------------------------------  MoveGliderFoilGoing
