@@ -714,13 +714,8 @@ void DrawCoffee (Rect *theRect, Boolean isOn, Boolean isLit)
 
 void DrawOutlet (Rect *theRect)
 {
-	return;
-#if 0
-	CopyMask((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-			(BitMap *)*GetGWorldPixMap(applianceMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(applianceSrcMap, applianceMaskMap, backSrcMap,
 			&srcRects[kOutlet], &srcRects[kOutlet], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawVCR
