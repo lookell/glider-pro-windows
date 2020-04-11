@@ -503,13 +503,8 @@ void DrawCabinet (Rect *cabinet)
 
 void DrawSimpleFurniture (SInt16 what, Rect *theRect)
 {
-	return;
-#if 0
-	CopyMask((BitMap *)*GetGWorldPixMap(furnitureSrcMap),
-			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawCounter
