@@ -24,27 +24,23 @@ HWND	mssgWindow;
 // Returns the top left coordinate of the specified window.  Corrdinates…
 // are (of course) global (local coordinates would always be (0, 0)).
 
-void GetWindowLeftTop (WindowPtr theWindow, SInt16 *left, SInt16 *top)
+void GetWindowLeftTop (HWND theWindow, SInt16 *left, SInt16 *top)
 {
-	return;
-	#if 0
-	Point		thePoint;
-	Rect		bounds;
+	POINT		thePoint;
+	RECT		bounds;
 
 	*left = 0;
 	*top = 0;
 
-	if (theWindow != nil)
+	if (theWindow != NULL)
 	{
-		SetPortWindowPort(theWindow);
-		GetWindowBounds(theWindow, kWindowContentRgn, &bounds);
-		thePoint.h = bounds.left;
-		thePoint.v = bounds.top;
-		LocalToGlobal(&thePoint);
-		*left = thePoint.h;
-		*top = thePoint.v;
+		GetClientRect(theWindow, &bounds);
+		thePoint.x = bounds.left;
+		thePoint.y = bounds.top;
+		ClientToScreen(theWindow, &thePoint);
+		*left = thePoint.x;
+		*top = thePoint.y;
 	}
-	#endif
 }
 
 //--------------------------------------------------------------  GetWindowRect
