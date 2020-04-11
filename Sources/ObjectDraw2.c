@@ -647,38 +647,25 @@ void DrawMacPlus (Rect *theRect, Boolean isOn, Boolean isLit)
 
 void DrawTV (Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	return;
-#if 0
 	Rect		bounds;
-	GWorldPtr	tempMap;
-	GWorldPtr	tempMask;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	HDC			tempMap;
+	HDC			tempMask;
 	OSErr		theErr;
 
 	if (isLit)
 	{
-		GetGWorld(&wasCPort, &wasWorld);
-
 		bounds = srcRects[kTV];
 		theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
-		SetGWorld(tempMap, nil);
-		LoadGraphic(kTVPictID);
+		LoadGraphic(tempMap, kTVPictID);
 
 		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
-		SetGWorld(tempMask, nil);
-		LoadGraphic(kTVMaskID);
+		LoadGraphic(tempMask, kTVMaskID);
 
-		CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
-				(BitMap *)*GetGWorldPixMap(tempMask),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyMask(tempMap, tempMask, backSrcMap,
 				&srcRects[kTV], &srcRects[kTV], theRect);
-
-		SetGWorld(wasCPort, wasWorld);
 
 		DisposeGWorld(tempMap);
 		DisposeGWorld(tempMask);
-//		SetPort((GrafPtr)backSrcMap);
 	}
 
 	bounds = tvScreen1;
@@ -686,17 +673,14 @@ void DrawTV (Rect *theRect, Boolean isOn, Boolean isLit)
 	QOffsetRect(&bounds, theRect->left + 17, theRect->top + 10);
 	if (isOn)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&tvScreen2, &bounds, srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&tvScreen1, &bounds, srcCopy, nil);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DrawCoffee
