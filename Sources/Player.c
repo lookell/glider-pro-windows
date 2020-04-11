@@ -1201,16 +1201,14 @@ void MoveGliderFoilGoing (gliderPtr thisGlider)
 
 void RemoveFoilFromGlider (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	showFoil = false;
 
 	if (twoPlayerGame)
 	{
-		SetPort((GrafPtr)glidSrcMap);
-		LoadGraphic(kGliderPictID);
-		SetPort((GrafPtr)glid2SrcMap);
-		LoadGraphic(kGlider2PictID);
+		//SetPort((GrafPtr)glidSrcMap);
+		LoadGraphic(glidSrcMap, kGliderPictID);
+		//SetPort((GrafPtr)glid2SrcMap);
+		LoadGraphic(glid2SrcMap, kGlider2PictID);
 	}
 
 	if (thisGlider->facing == kFaceLeft)
@@ -1225,7 +1223,6 @@ void RemoveFoilFromGlider (gliderPtr thisGlider)
 		thisGlider->src = gliderSrc[thisGlider->frame + 2];
 		thisGlider->mask = gliderSrc[thisGlider->frame + 2];
 	}
-#endif
 }
 
 //--------------------------------------------------------------  MoveGliderFoilLosing
