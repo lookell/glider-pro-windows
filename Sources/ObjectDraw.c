@@ -1425,13 +1425,8 @@ void DrawGreaseLf (Rect *theRect, SInt16 distance, Boolean state)
 
 void DrawFoil (Rect *theRect)
 {
-	return;
-#if 0
-	CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
-			(BitMap *)*GetGWorldPixMap(bonusMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
 			&srcRects[kFoil], &srcRects[kFoil], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawInvisBonus
