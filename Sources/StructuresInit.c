@@ -94,14 +94,7 @@ void InitScoreboardMap (void)
 		hOffset = (RectWide(&boardSrcRect) - kMaxViewWidth) / 2;
 	else
 		hOffset = -576;
-	thePicture = LoadImage(
-		HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(kScoreboardPictID),
-		IMAGE_BITMAP,
-		0,
-		0,
-		LR_DEFAULTCOLOR
-	);
+	thePicture = GetPicture(kScoreboardPictID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 	GetObject(thePicture, sizeof(bm), &bm);

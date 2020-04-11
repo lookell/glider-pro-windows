@@ -356,6 +356,7 @@ void RedAlert (SInt16);
 //void CreateOffScreenPixMap (Rect *, CGrafPtr *);
 //void KillOffScreenPixMap (CGrafPtr);
 //void KillOffScreenBitMap (GrafPtr);
+HBITMAP GetPicture (SInt16);
 void LoadGraphic (HDC, SInt16);
 void LoadScaledGraphic (HDC, SInt16, Rect *);
 //void PlotSICN (Rect *, SICNHand, SInt32);

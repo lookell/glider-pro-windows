@@ -384,6 +384,27 @@ void DisposeGWorld (HDC theGWorld)
 	DeleteObject(hbmSurface);
 }
 
+//--------------------------------------------------------------  GetPicture
+// Function loads the specified 'PICT' from the house's resources
+// (if the house has that 'PICT') or the game's resources otherwise.
+// TODO: Attempt to load from house's resources.
+
+HBITMAP GetPicture (SInt16 resID)
+{
+	HBITMAP hbm;
+
+	hbm = LoadImage(
+		HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(resID),
+		IMAGE_BITMAP,
+		0,
+		0,
+		LR_DEFAULTCOLOR
+	);
+
+	return hbm;
+}
+
 //--------------------------------------------------------------  LoadGraphic
 // Function loads the specified 'PICT' from disk and draws it to…
 // the current port (no scaling, clipping, etc, are done).  Always…
@@ -395,14 +416,7 @@ void LoadGraphic (HDC hdc, SInt16 resID)
 	BITMAP		bitmapInfo;
 	HDC			hdcSrc;
 
-	thePicture = LoadImage(
-		HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(resID),
-		IMAGE_BITMAP,
-		0,
-		0,
-		LR_DEFAULTCOLOR
-	);
+	thePicture = GetPicture(resID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
@@ -441,14 +455,7 @@ void LoadScaledGraphic (HDC hdc, SInt16 resID, Rect *theRect)
 	if ((theRect->bottom - theRect->top) < 0)
 		return;
 
-	thePicture = LoadImage(
-		HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(resID),
-		IMAGE_BITMAP,
-		0,
-		0,
-		LR_DEFAULTCOLOR
-	);
+	thePicture = GetPicture(resID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
