@@ -266,15 +266,9 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 
 void DrawFloorSupport (void)
 {
-	return;
-#if 0
 	Rect		src, dest, whoCares;
-	short		i;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	SInt16		i;
 
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
 	src = suppSrcRect;
 
 	if (isStructure[kNorthWestRoom])
@@ -282,16 +276,15 @@ void DrawFloorSupport (void)
 		dest = suppSrcRect;			// left room's ceiling
 		QOffsetRect(&dest, localRoomsDest[kWestRoom].left,
 				localRoomsDest[kCentralRoom].top - suppSrcRect.bottom);
-		CopyBits((BitMap *)*GetGWorldPixMap(suppSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(suppSrcMap, backSrcMap,
 				&src, &dest, srcCopy, nil);
 
 		for (i = 0; i < numTempManholes; i++)
-			if (SectRect(&dest, &tempManholes[i], &whoCares))
+			if (Mac_SectRect(&dest, &tempManholes[i], &whoCares))
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(kManholeThruFloor, &tempManholes[i]);
+				LoadScaledGraphic(backSrcMap, kManholeThruFloor, &tempManholes[i]);
 			}
 	}
 
@@ -300,16 +293,15 @@ void DrawFloorSupport (void)
 		dest = suppSrcRect;			// left room's floor
 		QOffsetRect(&dest, localRoomsDest[kWestRoom].left,
 				localRoomsDest[kCentralRoom].bottom);
-		CopyBits((BitMap *)*GetGWorldPixMap(suppSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(suppSrcMap, backSrcMap,
 				&src, &dest, srcCopy, nil);
 
 		for (i = 0; i < numTempManholes; i++)
-			if (SectRect(&dest, &tempManholes[i], &whoCares))
+			if (Mac_SectRect(&dest, &tempManholes[i], &whoCares))
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(kManholeThruFloor, &tempManholes[i]);
+				LoadScaledGraphic(backSrcMap, kManholeThruFloor, &tempManholes[i]);
 			}
 	}
 
@@ -318,15 +310,14 @@ void DrawFloorSupport (void)
 		dest = suppSrcRect;			// directly above main room
 		QOffsetRect(&dest, localRoomsDest[kCentralRoom].left,
 				localRoomsDest[kCentralRoom].top - suppSrcRect.bottom);
-		CopyBits((BitMap *)*GetGWorldPixMap(suppSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(suppSrcMap, backSrcMap,
 				&src, &dest, srcCopy, nil);
 		for (i = 0; i < numTempManholes; i++)
-			if (SectRect(&dest, &tempManholes[i], &whoCares))
+			if (Mac_SectRect(&dest, &tempManholes[i], &whoCares))
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(kManholeThruFloor, &tempManholes[i]);
+				LoadScaledGraphic(backSrcMap, kManholeThruFloor, &tempManholes[i]);
 			}
 	}
 
@@ -335,16 +326,15 @@ void DrawFloorSupport (void)
 		dest = suppSrcRect;			// directly below main room
 		QOffsetRect(&dest, localRoomsDest[kCentralRoom].left,
 				localRoomsDest[kCentralRoom].bottom);
-		CopyBits((BitMap *)*GetGWorldPixMap(suppSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(suppSrcMap, backSrcMap,
 				&src, &dest, srcCopy, nil);
 
 		for (i = 0; i < numTempManholes; i++)
-			if (SectRect(&dest, &tempManholes[i], &whoCares))
+			if (Mac_SectRect(&dest, &tempManholes[i], &whoCares))
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(kManholeThruFloor, &tempManholes[i]);
+				LoadScaledGraphic(backSrcMap, kManholeThruFloor, &tempManholes[i]);
 			}
 	}
 
@@ -353,16 +343,15 @@ void DrawFloorSupport (void)
 		dest = suppSrcRect;
 		QOffsetRect(&dest, localRoomsDest[kEastRoom].left,
 				localRoomsDest[kCentralRoom].top - suppSrcRect.bottom);
-		CopyBits((BitMap *)*GetGWorldPixMap(suppSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(suppSrcMap, backSrcMap,
 				&src, &dest, srcCopy, nil);
 
 		for (i = 0; i < numTempManholes; i++)
-			if (SectRect(&dest, &tempManholes[i], &whoCares))
+			if (Mac_SectRect(&dest, &tempManholes[i], &whoCares))
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(kManholeThruFloor, &tempManholes[i]);
+				LoadScaledGraphic(backSrcMap, kManholeThruFloor, &tempManholes[i]);
 			}
 	}
 
@@ -371,21 +360,17 @@ void DrawFloorSupport (void)
 		dest = suppSrcRect;
 		QOffsetRect(&dest, localRoomsDest[kEastRoom].left,
 				localRoomsDest[kCentralRoom].bottom);
-		CopyBits((BitMap *)*GetGWorldPixMap(suppSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(suppSrcMap, backSrcMap,
 				&src, &dest, srcCopy, nil);
 
 		for (i = 0; i < numTempManholes; i++)
-			if (SectRect(&dest, &tempManholes[i], &whoCares))
+			if (Mac_SectRect(&dest, &tempManholes[i], &whoCares))
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(kManholeThruFloor, &tempManholes[i]);
+				LoadScaledGraphic(backSrcMap, kManholeThruFloor, &tempManholes[i]);
 			}
 	}
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
 }
 
 //--------------------------------------------------------------  ReadyBackMap
