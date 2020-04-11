@@ -63,16 +63,18 @@ void Gp_GetWindowRect (HWND theWindow, Rect *bounds)
 // Returns bounding rectangle of the specified window in local coords.
 // (When you just need its width and height.)
 
-void GetLocalWindowRect (WindowPtr theWindow, Rect *bounds)
+void GetLocalWindowRect (HWND theWindow, Rect *bounds)
 {
-	return;
-	#if 0
-	if (theWindow != nil)
+	RECT		theRect;
+
+	if (theWindow != NULL)
 	{
-		SetPortWindowPort(theWindow);
-		GetWindowBounds(theWindow, kWindowContentRgn, bounds);
+		GetClientRect(theWindow, &theRect);
+		bounds->left = theRect.left;
+		bounds->top = theRect.top;
+		bounds->right = theRect.right;
+		bounds->bottom = theRect.bottom;
 	}
-	#endif
 }
 
 //--------------------------------------------------------------  FlagWindowFloating
