@@ -612,13 +612,8 @@ void DrawInvisLight (Rect *theRect)
 
 void DrawSimpleAppliance (SInt16 what, Rect *theRect)
 {
-	return;
-#if 0
-	CopyMask((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-			(BitMap *)*GetGWorldPixMap(applianceMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(applianceSrcMap, applianceMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawMacPlus
