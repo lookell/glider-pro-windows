@@ -26,7 +26,6 @@ HWND	mssgWindow;
 
 void GetWindowLeftTop (HWND theWindow, SInt16 *left, SInt16 *top)
 {
-	POINT		thePoint;
 	RECT		bounds;
 
 	*left = 0;
@@ -35,11 +34,9 @@ void GetWindowLeftTop (HWND theWindow, SInt16 *left, SInt16 *top)
 	if (theWindow != NULL)
 	{
 		GetClientRect(theWindow, &bounds);
-		thePoint.x = bounds.left;
-		thePoint.y = bounds.top;
-		ClientToScreen(theWindow, &thePoint);
-		*left = thePoint.x;
-		*top = thePoint.y;
+		MapWindowPoints(theWindow, HWND_DESKTOP, (LPPOINT)&bounds, 2);
+		*left = bounds.left;
+		*top = bounds.top;
 	}
 }
 
