@@ -1328,30 +1328,18 @@ void DrawPictSansWhiteObject (SInt16 what, Rect *theRect)
 
 void DrawCustPictSansWhite (SInt16 pictID, Rect *theRect)
 {
-	return;
-#if 0
 	Rect		bounds;
-	GWorldPtr	tempMap;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	HDC			tempMap;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	bounds = *theRect;
 	ZeroRectCorner(&bounds);
 	theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
-	SetGWorld(tempMap, nil);
-	LoadGraphic(pictID);
+	LoadGraphic(tempMap, pictID);
 
-	CopyBits((BitMap *)*GetGWorldPixMap(tempMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyBits(tempMap, backSrcMap,
 			&bounds, theRect, transparent, nil);
 
-	SetGWorld(wasCPort, wasWorld);
-
 	DisposeGWorld(tempMap);
-//	SetPort((GrafPtr)backSrcMap);
-#endif
 }
 
