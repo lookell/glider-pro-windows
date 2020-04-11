@@ -360,17 +360,12 @@ void DrawPowerSwitch (Rect *theRect, Boolean state)
 
 void DrawKnifeSwitch (Rect *theRect, Boolean state)
 {
-	return;
-#if 0
 	if (state)
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(switchSrcMap, backSrcMap,
 				&knifeSwitchSrc[0], theRect, srcCopy, nil);
 	else
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(switchSrcMap, backSrcMap,
 				&knifeSwitchSrc[1], theRect, srcCopy, nil);
-#endif
 }
 
 //--------------------------------------------------------------  DrawInvisibleSwitch
