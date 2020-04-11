@@ -403,24 +403,19 @@ void HandlePages (void)
 
 void DrawPages (void)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	for (i = 0; i < 8; i++)
 	{
 		if (pages[i].stuck)
 		{
-			CopyBits((BitMap *)*GetGWorldPixMap(gameOverSrcMap),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
+			Mac_CopyBits(gameOverSrcMap, workSrcMap,
 					&lettersSrc[i], &pages[i].dest,
 					srcCopy, roomRgn);
 		}
 		else
 		{
-			CopyMask((BitMap *)*GetGWorldPixMap(pageSrcMap),
-					(BitMap *)*GetGWorldPixMap(pageMaskMap),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
+			Mac_CopyMask(pageSrcMap, pageMaskMap, workSrcMap,
 					&pageSrc[pages[i].frame],
 					&pageSrc[pages[i].frame],
 					&pages[i].dest);
@@ -437,7 +432,6 @@ void DrawPages (void)
 
 		pages[i].was = pages[i].dest;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoDiedGameOver
