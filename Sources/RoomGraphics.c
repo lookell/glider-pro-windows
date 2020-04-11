@@ -392,12 +392,8 @@ void DrawFloorSupport (void)
 
 void ReadyBackMap (void)
 {
-	return;
-#if 0
-	CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyBits(workSrcMap, backSrcMap,
 			&workSrcRect, &workSrcRect, srcCopy, nil);
-#endif
 }
 
 //--------------------------------------------------------------  RestoreWorkMap
