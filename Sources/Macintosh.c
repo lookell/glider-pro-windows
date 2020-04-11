@@ -238,6 +238,45 @@ Boolean Mac_PtInRect(Point pt, const Rect *r)
 			(pt.v >= r->top) && (pt.v < r->bottom);
 }
 
+//--------------------------------------------------------------  SectRect
+// Calculate the intersection of the two source rectangles, and write
+// that intersection into the destination rectangle. If the source
+// rectangles do not intersect, then the destination rectangle is set
+// to all zeroes. The return value is TRUE if the source rectangles
+// intersect, and FALSE if they do not intersect.
+
+Boolean Mac_SectRect(const Rect *src1, const Rect *src2, Rect *dstRect)
+{
+	Rect sectRect;
+
+	sectRect.left = 0;
+	sectRect.top = 0;
+	sectRect.right = 0;
+	sectRect.bottom = 0;
+	// If either source rectangle is empty, then the intersection is empty.
+	if ((src1->left >= src1->right) || (src1->top >= src1->bottom) ||
+		(src2->left >= src2->right) || (src2->top >= src2->bottom))
+	{
+		*dstRect = sectRect;
+		return false;
+	}
+	// If the first rectangle is above, below, or to the side of the second
+	// rectangle (touching or not), then the intersection is empty.
+	if ((src1->bottom <= src2->top) || (src2->bottom <= src1->top) ||
+		(src1->right <= src2->left) || (src2->right <= src1->left))
+	{
+		*dstRect = sectRect;
+		return false;
+	}
+	// The two rectangles intersect, so calculate the intersection's boundary.
+	sectRect.left = (src1->left > src2->left) ? src1->left : src2->left;
+	sectRect.top = (src1->top > src2->top) ? src1->top : src2->top;
+	sectRect.right = (src1->right <= src2->right) ? src1->right : src2->right;
+	sectRect.bottom = (src1->bottom <= src2->bottom) ? src1->bottom : src2->bottom;
+	*dstRect = sectRect;
+	return true;
+}
+
 //--------------------------------------------------------------  WinFromMacString
 // Convert a MacRoman Pascal-style string to a UTF-16 C-style string.
 // This is a wrapper around the Windows API function 'MultiByteToWideChar'.
