@@ -135,37 +135,29 @@ void HandleGrease (void)
 
 void BackupGrease (Rect *src, SInt16 index, Boolean isRight)
 {
-	return;
-#if 0
 	Rect		dest;
-	short		i;
+	SInt16		i;
 
 	QSetRect(&dest, 0, 0, 32, 27);
 	for (i = 0; i < 4; i++)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
-				(BitMap *)*GetGWorldPixMap(savedMaps[index].map),
+		Mac_CopyBits(backSrcMap, savedMaps[index].map,
 				src, &dest, srcCopy, nil);
 
 		if (isRight)
 		{
-			CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
-					(BitMap *)*GetGWorldPixMap(bonusMaskMap),
-					(BitMap *)*GetGWorldPixMap(savedMaps[index].map),
+			Mac_CopyMask(bonusSrcMap, bonusMaskMap, savedMaps[index].map,
 					&greaseSrcRt[i], &greaseSrcRt[i], &dest);
 			QOffsetRect(src, 2, 0);
 		}
 		else
 		{
-			CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
-					(BitMap *)*GetGWorldPixMap(bonusMaskMap),
-					(BitMap *)*GetGWorldPixMap(savedMaps[index].map),
+			Mac_CopyMask(bonusSrcMap, bonusMaskMap, savedMaps[index].map,
 					&greaseSrcLf[i], &greaseSrcLf[i], &dest);
 			QOffsetRect(src, -2, 0);
 		}
 		QOffsetRect(&dest, 0, 27);
 	}
-#endif
 
 }
 
