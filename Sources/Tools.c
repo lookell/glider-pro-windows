@@ -88,15 +88,11 @@ void CreateToolsOffscreen (void)
 #ifndef COMPILEDEMO
 void KillToolsOffscreen (void)
 {
-	return;
-#if 0
-	if (toolSrcMap != nil)
+	if (toolSrcMap != NULL)
 	{
 		DisposeGWorld(toolSrcMap);
-//		KillOffScreenPixMap(toolSrcMap);
-		toolSrcMap = nil;
+		toolSrcMap = NULL;
 	}
-#endif
 }
 #endif
 
