@@ -308,21 +308,16 @@ void DrawInvisTransport (Rect *theRect)
 
 void DrawLightSwitch (Rect *theRect, Boolean state)
 {
-	return;
-#if 0
 	if (state)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(switchSrcMap, backSrcMap,
 				&lightSwitchSrc[0], theRect, srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(switchSrcMap, backSrcMap,
 				&lightSwitchSrc[1], theRect, srcCopy, nil);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DrawMachineSwitch
