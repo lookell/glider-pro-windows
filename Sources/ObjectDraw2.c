@@ -854,13 +854,8 @@ void DrawMicrowave (Rect *theRect, Boolean isOn, Boolean isLit)
 
 void DrawBalloon (Rect *theRect)
 {
-	return;
-#if 0
-	CopyMask((BitMap *)*GetGWorldPixMap(balloonSrcMap),
-			(BitMap *)*GetGWorldPixMap(balloonMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(balloonSrcMap, balloonMaskMap, backSrcMap,
 			&balloonSrc[1], &balloonSrc[1], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawCopter
