@@ -248,17 +248,28 @@ void UpdateClipboardMenus (void)
 
 void UpdateMenus (Boolean newMode)
 {
-	return;
-#if 0
+	MENUITEMINFO	mii;
+	HMENU			menuBar;
+
 	if (!menusUp)
 		return;
 
 	if (newMode)
 	{
+		menuBar = GetMenu(mainWindow);
 		if (theMode == kEditMode)
-			InsertMenu(houseMenu, 0);
+		{
+			mii.cbSize = sizeof(mii);
+			mii.fMask = MIIM_ID | MIIM_STRING | MIIM_SUBMENU;
+			mii.wID = kHouseMenuID;
+			mii.hSubMenu = houseMenu;
+			mii.dwTypeData = houseMenuTitle;
+			InsertMenuItem(menuBar, GetMenuItemCount(menuBar), TRUE, &mii);
+		}
 		else
-			DeleteMenu(kHouseMenuID);
+		{
+			RemoveMenu(menuBar, kHouseMenuID, MF_BYCOMMAND);
+		}
 	}
 
 	if (theMode == kEditMode)
@@ -276,8 +287,7 @@ void UpdateMenus (Boolean newMode)
 	else
 		UpdateMenusNonEditMode();
 
-	DrawMenuBar();
-#endif
+	DrawMenuBar(mainWindow);
 }
 
 //--------------------------------------------------------------  DoAppleMenu
