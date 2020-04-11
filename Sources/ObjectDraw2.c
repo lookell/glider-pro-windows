@@ -722,39 +722,25 @@ void DrawOutlet (Rect *theRect)
 
 void DrawVCR (Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	return;
-#if 0
 	Rect		bounds;
-	GWorldPtr	tempMap;
-	GWorldPtr	tempMask;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	HDC			tempMap;
+	HDC			tempMask;
 	OSErr		theErr;
 
 	if (isLit)
 	{
-		GetGWorld(&wasCPort, &wasWorld);
-
 		bounds = srcRects[kVCR];
 		theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
-		SetGWorld(tempMap, nil);
-		LoadGraphic(kVCRPictID);
+		LoadGraphic(tempMap, kVCRPictID);
 
 		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
-		SetGWorld(tempMask, nil);
-		LoadGraphic(kVCRMaskID);
+		LoadGraphic(tempMask, kVCRMaskID);
 
-		CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
-				(BitMap *)*GetGWorldPixMap(tempMask),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyMask(tempMap, tempMask, backSrcMap,
 				&srcRects[kVCR], &srcRects[kVCR], theRect);
-
-		SetGWorld(wasCPort, wasWorld);
 
 		DisposeGWorld(tempMap);
 		DisposeGWorld(tempMask);
-
-//		SetPort((GrafPtr)backSrcMap);
 	}
 
 	bounds = vcrTime1;
@@ -762,17 +748,14 @@ void DrawVCR (Rect *theRect, Boolean isOn, Boolean isLit)
 	QOffsetRect(&bounds, theRect->left + 64, theRect->top + 6);
 	if (isOn)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&vcrTime2, &bounds, srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&vcrTime1, &bounds, srcCopy, nil);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DrawStereo
