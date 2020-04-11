@@ -1190,17 +1190,11 @@ void DrawPictObject (SInt16 what, Rect *theRect)
 
 void DrawPictWithMaskObject (SInt16 what, Rect *theRect)
 {
-	return;
-#if 0
 	Rect		bounds;
-	GWorldPtr	tempMap;
-	GWorldPtr	tempMask;
-	short		pictID, maskID;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	HDC			tempMap;
+	HDC			tempMask;
+	SInt16		pictID, maskID;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	switch (what)
 	{
@@ -1217,25 +1211,16 @@ void DrawPictWithMaskObject (SInt16 what, Rect *theRect)
 
 	bounds = srcRects[what];
 	theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
-	SetGWorld(tempMap, nil);
-	LoadGraphic(pictID);
+	LoadGraphic(tempMap, pictID);
 
 	theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
-	SetGWorld(tempMask, nil);
-	LoadGraphic(maskID);
+	LoadGraphic(tempMask, maskID);
 
-	CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
-			(BitMap *)*GetGWorldPixMap(tempMask),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(tempMap, tempMask, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
-
-	SetGWorld(wasCPort, wasWorld);
 
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
-
-//	SetPort((GrafPtr)backSrcMap);
-#endif
 }
 
 //--------------------------------------------------------------  DrawPictSansWhiteObject
