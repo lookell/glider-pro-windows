@@ -886,13 +886,8 @@ void DrawDart (Rect *theRect, SInt16 which)
 
 void DrawBall (SInt16 what, Rect *theRect)
 {
-	return;
-#if 0
-	CopyMask((BitMap *)*GetGWorldPixMap(ballSrcMap),
-			(BitMap *)*GetGWorldPixMap(ballMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(ballSrcMap, ballMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawFish
