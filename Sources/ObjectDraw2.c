@@ -902,13 +902,8 @@ void DrawFish (SInt16 what, Rect *theRect)
 
 void DrawDrip (Rect *theRect)
 {
-	return;
-#if 0
-	CopyMask((BitMap *)*GetGWorldPixMap(dripSrcMap),
-			(BitMap *)*GetGWorldPixMap(dripMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(dripSrcMap, dripMaskMap, backSrcMap,
 			&dripSrc[3], &dripSrc[3], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawMirror
