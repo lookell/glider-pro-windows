@@ -58,13 +58,8 @@ void DrawLargeClockHands (Point, SInt16, SInt16);
 
 void DrawSimpleBlowers (SInt16 what, Rect *theRect)
 {
-	return;
-#if 0
-	CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap),
-			(BitMap *)*GetGWorldPixMap(blowerMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(blowerSrcMap, blowerMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawTiki
