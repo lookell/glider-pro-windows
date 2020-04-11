@@ -687,15 +687,11 @@ void DrawTV (Rect *theRect, Boolean isOn, Boolean isLit)
 
 void DrawCoffee (Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	return;
-#if 0
 	Rect		light;
 
 	if (isLit)
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(applianceMaskMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyMask(applianceSrcMap, applianceMaskMap, backSrcMap,
 				&srcRects[kCoffee], &srcRects[kCoffee], theRect);
 	}
 
@@ -704,17 +700,14 @@ void DrawCoffee (Rect *theRect, Boolean isOn, Boolean isLit)
 	QOffsetRect(&light, theRect->left + 32, theRect->top + 57);
 	if (isOn)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&coffeeLight2, &light, srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&coffeeLight1, &light, srcCopy, nil);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DrawOutlet
