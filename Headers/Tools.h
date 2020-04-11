@@ -6,8 +6,8 @@
 
 
 //#include <QDOffscreen.h>
-#include "Macintosh.h"
+#include "WinAPI.h"
 
 
-extern GWorldPtr		toolSrcMap;
+extern HDC		toolSrcMap;
 extern HWND		toolsWindow;

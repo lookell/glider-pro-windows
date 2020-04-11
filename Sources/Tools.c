@@ -58,7 +58,7 @@ void SwitchToolModes (SInt16);
 Rect			toolsWindowRect, toolSrcRect, toolTextRect;
 Rect			toolRects[kTotalTools];
 ControlHandle	classPopUp;
-GWorldPtr		toolSrcMap;
+HDC				toolSrcMap;
 HWND			toolsWindow;
 SInt16			isToolsH, isToolsV;
 SInt16			toolSelected, toolMode;
@@ -72,24 +72,14 @@ Boolean			isToolsOpen;
 #ifndef COMPILEDEMO
 void CreateToolsOffscreen (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
 	OSErr		theErr;
 
-	if (toolSrcMap == nil)
+	if (toolSrcMap == NULL)
 	{
-		GetGWorld(&wasCPort, &wasWorld);
-
 		QSetRect(&toolSrcRect, 0, 0, 360, 216);
 		theErr = CreateOffScreenGWorld(&toolSrcMap, &toolSrcRect, kPreferredDepth);
-		SetGWorld(toolSrcMap, nil);
-		LoadGraphic(kToolsPictID);
-
-		SetGWorld(wasCPort, wasWorld);
+		LoadGraphic(toolSrcMap, kToolsPictID);
 	}
-#endif
 }
 #endif
 
