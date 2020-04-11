@@ -295,8 +295,6 @@ void UpdateMenus (Boolean newMode)
 
 void DoAppleMenu (SInt16 theItem)
 {
-	return;
-#if 0
 //	Str255		daName;
 //	GrafPtr		wasPort;
 //	short		daNumber;
@@ -314,7 +312,6 @@ void DoAppleMenu (SInt16 theItem)
 //		SetPort((GrafPtr)wasPort);
 		break;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoGameMenu
