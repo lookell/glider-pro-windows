@@ -1024,12 +1024,8 @@ void DrawRedClock (Rect *theRect)
 
 void DrawClockDigit (SInt16 number, Rect *dest)
 {
-	return;
-#if 0
-	CopyBits((BitMap *)*GetGWorldPixMap(bonusSrcMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyBits(bonusSrcMap, backSrcMap,
 			&digits[number], dest, srcCopy, nil);
-#endif
 }
 
 //--------------------------------------------------------------  DrawBlueClock
