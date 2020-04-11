@@ -400,16 +400,8 @@ void ReadyBackMap (void)
 
 void RestoreWorkMap (void)
 {
-	return;
-#if 0
-	Rect		dest;
-
-	dest = backSrcRect;
-
-	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
-			(BitMap *)*GetGWorldPixMap(workSrcMap),
+	Mac_CopyBits(backSrcMap, workSrcMap,
 			&backSrcRect, &backSrcRect, srcCopy, nil);
-#endif
 }
 
 //--------------------------------------------------------------  ReadyLevel
