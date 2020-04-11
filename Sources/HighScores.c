@@ -287,17 +287,9 @@ void DrawHighScores (void)
 
 void SortHighScores (void)
 {
-	return;
-#if 0
 	scoresType	tempScores;
-	houseType	*thisHousePtr;
-	long		greatest;
-	short		i, h, which;
-	char		wasState;
-
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
+	SInt32		greatest;
+	SInt16		i, h, which;
 
 	for (h = 0; h < kMaxScores; h++)
 	{
@@ -305,26 +297,23 @@ void SortHighScores (void)
 		which = -1;
 		for (i = 0; i < kMaxScores; i++)
 		{
-			if (thisHousePtr->highScores.scores[i] > greatest)
+			if (thisHouse->highScores.scores[i] > greatest)
 			{
-				greatest = thisHousePtr->highScores.scores[i];
+				greatest = thisHouse->highScores.scores[i];
 				which = i;
 			}
 		}
 		if (which != -1)
 		{
-			PasStringCopy(thisHousePtr->highScores.names[which], tempScores.names[h]);
-			tempScores.scores[h] = thisHousePtr->highScores.scores[which];
-			tempScores.timeStamps[h] = thisHousePtr->highScores.timeStamps[which];
-			tempScores.levels[h] = thisHousePtr->highScores.levels[which];
-			thisHousePtr->highScores.scores[which] = -1L;
+			PasStringCopy(thisHouse->highScores.names[which], tempScores.names[h]);
+			tempScores.scores[h] = thisHouse->highScores.scores[which];
+			tempScores.timeStamps[h] = thisHouse->highScores.timeStamps[which];
+			tempScores.levels[h] = thisHouse->highScores.levels[which];
+			thisHouse->highScores.scores[which] = -1L;
 		}
 	}
-	PasStringCopy(thisHousePtr->highScores.banner, tempScores.banner);
-	thisHousePtr->highScores = tempScores;
-
-	HSetState((Handle)thisHouse, wasState);
-#endif
+	PasStringCopy(thisHouse->highScores.banner, tempScores.banner);
+	thisHouse->highScores = tempScores;
 }
 
 //--------------------------------------------------------------  ZeroHighScores
