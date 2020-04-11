@@ -947,13 +947,8 @@ void DrawMirror (Rect *mirror)
 
 void DrawSimpleClutter (SInt16 what, Rect *theRect)
 {
-	return;
-#if 0
-	CopyMask((BitMap *)*GetGWorldPixMap(clutterSrcMap),
-			(BitMap *)*GetGWorldPixMap(clutterMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(clutterSrcMap, clutterMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawFlower
