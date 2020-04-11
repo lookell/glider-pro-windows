@@ -321,27 +321,16 @@ void SortHighScores (void)
 
 void ZeroHighScores (void)
 {
-	return;
-#if 0
-	houseType	*thisHousePtr;
-	short		i;
-	char		wasState;
+	SInt16		i;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
-
-	PasStringCopy(thisHouseName, thisHousePtr->highScores.banner);
+	PasStringCopy(thisHouseName, thisHouse->highScores.banner);
 	for (i = 0; i < kMaxScores; i++)
 	{
-		PasStringCopy("\p--------------", thisHousePtr->highScores.names[i]);
-		thisHousePtr->highScores.scores[i] = 0L;
-		thisHousePtr->highScores.timeStamps[i] = 0L;
-		thisHousePtr->highScores.levels[i] = 0;
+		PasStringCopyC("--------------", thisHouse->highScores.names[i]);
+		thisHouse->highScores.scores[i] = 0L;
+		thisHouse->highScores.timeStamps[i] = 0L;
+		thisHouse->highScores.levels[i] = 0;
 	}
-
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 
 //--------------------------------------------------------------  ZeroAllButHighestScore
