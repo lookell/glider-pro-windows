@@ -870,23 +870,16 @@ void DrawCopter (Rect *theRect)
 
 void DrawDart (Rect *theRect, SInt16 which)
 {
-	return;
-#if 0
 	if (which == kDartLf)
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(dartSrcMap),
-				(BitMap *)*GetGWorldPixMap(dartMaskMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyMask(dartSrcMap, dartMaskMap, backSrcMap,
 				&dartSrc[0], &dartSrc[0], theRect);
 	}
 	else
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(dartSrcMap),
-				(BitMap *)*GetGWorldPixMap(dartMaskMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyMask(dartSrcMap, dartMaskMap, backSrcMap,
 				&dartSrc[2], &dartSrc[2], theRect);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DrawBall
