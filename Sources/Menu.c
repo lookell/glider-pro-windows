@@ -387,8 +387,6 @@ void DoGameMenu (SInt16 theItem)
 
 void DoOptionsMenu (SInt16 theItem)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
 	OSErr		theErr;
 #endif
@@ -423,7 +421,7 @@ void DoOptionsMenu (SInt16 theItem)
 			}
 			CloseMainWindow();
 			OpenMainWindow();
-			incrementModeTime = TickCount() + kIdleSplashTicks;
+			incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
 		}
 		else if (theMode == kSplashMode)	// switching to edit mode
 		{
@@ -433,26 +431,25 @@ void DoOptionsMenu (SInt16 theItem)
 			OpenMainWindow();
 			OpenCloseEditWindows();
 		}
-		InitCursor();
+		//InitCursor();
 		UpdateMenus(true);
 #endif
 		break;
 
 		case iHighScores:
 		DoHighScores();
-		incrementModeTime = TickCount() + kIdleSplashTicks;
+		incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
 		break;
 
 		case iPrefs:
 		DoSettingsMain();
-		incrementModeTime = TickCount() + kIdleSplashTicks;
+		incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
 		break;
 
 		case iHelp:
 		DoDemoGame();
 		break;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoHouseMenu
