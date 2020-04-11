@@ -600,18 +600,8 @@ Boolean KeepObjectLegal (void)
 #ifndef COMPILEDEMO
 void WrapBannerAndTrailer (void)
 {
-	return;
-#if 0
-	char		wasState;
-
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-
-	WrapText((*thisHouse)->banner, 40);
-	WrapText((*thisHouse)->trailer, 64);
-
-	HSetState((Handle)thisHouse, wasState);
-#endif
+	WrapText(thisHouse->banner, 40);
+	WrapText(thisHouse->trailer, 64);
 }
 
 //--------------------------------------------------------------  ValidateNumberOfRooms
