@@ -379,7 +379,7 @@ void  UnivSetSoundVolume (SInt16, Boolean);
 Boolean ValidInstallation (Boolean);					// --- Validate.c
 
 void GetWindowLeftTop (HWND, SInt16 *, SInt16 *);	// --- WindowUtils.c
-void Gp_GetWindowRect (WindowPtr, Rect *);
+void Gp_GetWindowRect (HWND, Rect *);
 void GetLocalWindowRect (WindowPtr, Rect *);
 //void FlagWindowFloating (WindowPtr);
 //Boolean	IsWindowFloating (WindowPtr);

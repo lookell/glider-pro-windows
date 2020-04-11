@@ -44,17 +44,19 @@ void GetWindowLeftTop (HWND theWindow, SInt16 *left, SInt16 *top)
 
 // Returns bounding rectangle of the specified window in global coords.
 
-void Gp_GetWindowRect (WindowPtr theWindow, Rect *bounds)
+void Gp_GetWindowRect (HWND theWindow, Rect *bounds)
 {
-	return;
-	#if 0
-	if (theWindow != nil)
+	RECT		theRect;
+
+	if (theWindow != NULL)
 	{
-		SetPortWindowPort(theWindow);
-		GetWindowBounds(theWindow, kWindowContentRgn, bounds);
-		LocalToGlobalRect(bounds);
+		GetClientRect(theWindow, &theRect);
+		MapWindowPoints(theWindow, HWND_DESKTOP, (LPPOINT)&theRect, 2);
+		bounds->left = theRect.left;
+		bounds->top = theRect.top;
+		bounds->right = theRect.right;
+		bounds->bottom = theRect.bottom;
 	}
-	#endif
 }
 
 //--------------------------------------------------------------  GetLocalWindowRect
