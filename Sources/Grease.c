@@ -42,10 +42,8 @@ extern	Rect		greaseSrcRt[], greaseSrcLf[], shieldRect;
 
 void HandleGrease (void)
 {
-	return;
-#if 0
 	Rect		src;
-	short		i;
+	SInt16		i;
 
 	if (numGrease == 0)
 		return;
@@ -72,12 +70,10 @@ void HandleGrease (void)
 
 			QSetRect(&src, 0, 0, 32, 27);
 			QOffsetRect(&src, 0, grease[i].frame * 27);
-			CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[grease[i].mapNum].map),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
+			Mac_CopyBits(savedMaps[grease[i].mapNum].map, workSrcMap,
 					&src, &grease[i].dest,
 					srcCopy, nil);
-			CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[grease[i].mapNum].map),
-					(BitMap *)*GetGWorldPixMap(backSrcMap),
+			Mac_CopyBits(savedMaps[grease[i].mapNum].map, backSrcMap,
 					&src, &grease[i].dest,
 					srcCopy, nil);
 
@@ -105,19 +101,16 @@ void HandleGrease (void)
 			}
 
 			{
-				CGrafPtr	wasCPort;
-				GDHandle	wasWorld;
+				RECT		theRect;
 
-				GetGWorld(&wasCPort, &wasWorld);
+				theRect.left = src.left;
+				theRect.top = src.top;
+				theRect.right = src.right;
+				theRect.bottom = src.bottom;
 
-				SetGWorld(backSrcMap, nil);
-				PaintRect(&src);
-
-				SetGWorld(workSrcMap, nil);
-				PaintRect(&src);
+				FillRect(backSrcMap, &theRect, GetStockObject(BLACK_BRUSH));
+				FillRect(workSrcMap, &theRect, GetStockObject(BLACK_BRUSH));
 				AddRectToWorkRects(&src);
-
-				SetGWorld(wasCPort, wasWorld);
 			}
 
 			if (grease[i].isRight)
@@ -132,7 +125,6 @@ void HandleGrease (void)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  BackupGrease
