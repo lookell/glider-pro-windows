@@ -259,12 +259,9 @@ void SpillGrease (SInt16 who, SInt16 index)
 
 void RedrawAllGrease (void)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	RECT		theRect;
 	Rect		src;
-	short		i;
+	SInt16		i;
 
 	if (numGrease == 0)
 		return;
@@ -278,18 +275,14 @@ void RedrawAllGrease (void)
 		{
 			QOffsetRect(&src, playOriginH, playOriginV);
 
-			GetGWorld(&wasCPort, &wasWorld);
-
-			SetGWorld(backSrcMap, nil);
-			PaintRect(&src);
-
-			SetGWorld(workSrcMap, nil);
-			PaintRect(&src);
+			theRect.left = src.left;
+			theRect.top = src.top;
+			theRect.right = src.right;
+			theRect.bottom = src.bottom;
+			FillRect(backSrcMap, &theRect, GetStockObject(BLACK_BRUSH));
+			FillRect(workSrcMap, &theRect, GetStockObject(BLACK_BRUSH));
 			AddRectToWorkRects(&src);
-
-			SetGWorld(wasCPort, wasWorld);
 		}
 	}
-#endif
 }
 
