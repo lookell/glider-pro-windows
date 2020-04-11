@@ -862,13 +862,8 @@ void DrawBalloon (Rect *theRect)
 
 void DrawCopter (Rect *theRect)
 {
-	return;
-#if 0
-	CopyMask((BitMap *)*GetGWorldPixMap(copterSrcMap),
-			(BitMap *)*GetGWorldPixMap(copterMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(copterSrcMap, copterMaskMap, backSrcMap,
 			&copterSrc[1], &copterSrc[1], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawDart
