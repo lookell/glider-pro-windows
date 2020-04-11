@@ -620,15 +620,11 @@ void DrawSimpleAppliance (SInt16 what, Rect *theRect)
 
 void DrawMacPlus (Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	return;
-#if 0
 	Rect		screen;
 
 	if (isLit)
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(applianceMaskMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyMask(applianceSrcMap, applianceMaskMap, backSrcMap,
 				&srcRects[kMacPlus], &srcRects[kMacPlus], theRect);
 	}
 
@@ -637,17 +633,14 @@ void DrawMacPlus (Rect *theRect, Boolean isOn, Boolean isLit)
 	QOffsetRect(&screen, theRect->left + 10, theRect->top + 7);
 	if (isOn)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&plusScreen2, &screen, srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&plusScreen1, &screen, srcCopy, nil);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DrawTV
