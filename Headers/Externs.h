@@ -386,7 +386,7 @@ void GetLocalWindowRect (HWND, Rect *);
 void OpenMessageWindow (StringPtr);
 void SetMessageWindowMessage (StringPtr);
 void CloseMessageWindow (void);
-void CloseThisWindow (WindowPtr *);
+void CloseThisWindow (HWND *);
 
 #ifdef powerc
 //	extern pascal void SetSoundVol(SInt16 level);		// for old Sound Manager

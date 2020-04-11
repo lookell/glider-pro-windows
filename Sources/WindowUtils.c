@@ -178,13 +178,10 @@ void CloseMessageWindow (void)
 // Given a specific window, this function will close it and set the window…
 // pointer to null.
 
-void CloseThisWindow (WindowPtr *theWindow)
+void CloseThisWindow (HWND *theWindow)
 {
-	return;
-	#if 0
-	if (*theWindow != nil)
-		DisposeWindow(*theWindow);
-	*theWindow = nil;
-	#endif
+	if (*theWindow != NULL)
+		DestroyWindow(*theWindow);
+	*theWindow = NULL;
 }
 
