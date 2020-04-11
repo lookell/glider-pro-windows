@@ -40,7 +40,7 @@ void DrawPages (void);
 
 pageType	pages[8];
 Rect		pageSrcRect, pageSrc[kPageFrames], lettersSrc[8], angelSrcRect;
-RgnHandle	roomRgn;
+HRGN		roomRgn;
 HDC			pageSrcMap, gameOverSrcMap, angelSrcMap;
 HDC			pageMaskMap, angelMaskMap;
 SInt16		countDown, stopPages, pagesStuck;
@@ -258,31 +258,22 @@ void FlagGameOver (void)
 
 void InitDiedGameOver (void)
 {
-	return;
-#if 0
 	#define		kPageSpacing		40
 	#define		kPageRightOffset	128
 	#define		kPageBackUp			128
-	short		i;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	SInt16		i;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	QSetRect(&pageSrcRect, 0, 0, 25, 32 * 8);
 	theErr = CreateOffScreenGWorld(&gameOverSrcMap, &pageSrcRect, kPreferredDepth);
-	SetGWorld(gameOverSrcMap, nil);
-	LoadGraphic(kLettersPictID);
+	LoadGraphic(gameOverSrcMap, kLettersPictID);
 
 	QSetRect(&pageSrcRect, 0, 0, 32, 32 * kPageFrames);
 	theErr = CreateOffScreenGWorld(&pageSrcMap, &pageSrcRect, kPreferredDepth);
-	SetGWorld(pageSrcMap, nil);
-	LoadGraphic(kPagesPictID);
+	LoadGraphic(pageSrcMap, kPagesPictID);
 
 	theErr = CreateOffScreenGWorld(&pageMaskMap, &pageSrcRect, 1);
-	SetGWorld(pageMaskMap, nil);
-	LoadGraphic(kPagesMaskID);
+	LoadGraphic(pageMaskMap, kPagesMaskID);
 
 	for (i = 0; i < kPageFrames; i++)	// initialize src page rects
 	{
@@ -315,11 +306,10 @@ void InitDiedGameOver (void)
 		QOffsetRect(&lettersSrc[i], 0, 32 * i);
 	}
 
-	roomRgn = NewRgn();
-	RectRgn(roomRgn, &justRoomsRect);
+	roomRgn = CreateRectRgn(justRoomsRect.left, justRoomsRect.top,
+			justRoomsRect.right, justRoomsRect.bottom);
 	pagesStuck = 0;
 	stopPages = ((thisMac.screen.bottom - thisMac.screen.top) / 2) - 16;
-#endif
 }
 
 //--------------------------------------------------------------  HandlePages
