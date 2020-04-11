@@ -336,17 +336,12 @@ void DrawMachineSwitch (Rect *theRect, Boolean state)
 
 void DrawThermostat (Rect *theRect, Boolean state)
 {
-	return;
-#if 0
 	if (state)
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(switchSrcMap, backSrcMap,
 				&thermostatSrc[0], theRect, srcCopy, nil);
 	else
-		CopyBits((BitMap *)*GetGWorldPixMap(switchSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(switchSrcMap, backSrcMap,
 				&thermostatSrc[1], theRect, srcCopy, nil);
-#endif
 }
 
 //--------------------------------------------------------------  DrawPowerSwitch
