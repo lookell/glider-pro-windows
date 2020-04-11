@@ -31,10 +31,9 @@ extern	SInt16		nHotSpots, numChimes;
 
 void GetObjectRect (objectPtr who, Rect *itsRect)
 {
-	return;
-#if 0
-	PicHandle	thePict;
-	short		wide, tall;
+	HBITMAP		thePict;
+	SInt16		wide, tall;
+	BITMAP		bmInfo;
 
 	switch (who->what)
 	{
@@ -148,7 +147,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 				who->data.d.topLeft.h,
 				who->data.d.topLeft.v);
 		itsRect->bottom = itsRect->top + who->data.d.tall;
-		itsRect->right += (short)who->data.d.wide;
+		itsRect->right += (SInt16)who->data.d.wide;
 		break;
 
 		case kDeluxeTrans:
@@ -221,16 +220,16 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 
 		case kCustomPict:
 		thePict = GetPicture(who->data.g.height);
-		if (thePict == nil)
+		if (thePict == NULL)
 		{
 			who->data.g.height = 10000;
 			*itsRect = srcRects[who->what];
 		}
 		else
 		{
-			HLock((Handle)thePict);
-			*itsRect = (*thePict)->picFrame;
-			HUnlock((Handle)thePict);
+			GetObject(thePict, sizeof(bmInfo), &bmInfo);
+			QSetRect(itsRect, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+			DeleteObject(thePict);
 		}
 		ZeroRectCorner(itsRect);
 		QOffsetRect(itsRect,
@@ -272,7 +271,6 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		*itsRect = who->data.i.bounds;
 		break;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  AddActiveRect
