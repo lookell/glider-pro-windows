@@ -1345,13 +1345,8 @@ void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 
 void DrawSimplePrizes (SInt16 what, Rect *theRect)
 {
-	return;
-#if 0
-	CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
-			(BitMap *)*GetGWorldPixMap(bonusMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawGreaseRt
