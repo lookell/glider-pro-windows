@@ -284,13 +284,8 @@ void DrawMailboxRight (Rect *theRect, SInt16 down)
 
 void DrawSimpleTransport (SInt16 what, Rect *theRect)
 {
-	return;
-#if 0
-	CopyMask((BitMap *)*GetGWorldPixMap(transSrcMap),
-			(BitMap *)*GetGWorldPixMap(transMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(transSrcMap, transMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawInvisTransport
