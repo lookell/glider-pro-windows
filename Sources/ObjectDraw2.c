@@ -955,13 +955,8 @@ void DrawSimpleClutter (SInt16 what, Rect *theRect)
 
 void DrawFlower (Rect *theRect, SInt16 which)
 {
-	return;
-#if 0
-	CopyMask((BitMap *)*GetGWorldPixMap(clutterSrcMap),
-			(BitMap *)*GetGWorldPixMap(clutterMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(clutterSrcMap, clutterMaskMap, backSrcMap,
 			&flowerSrc[which], &flowerSrc[which], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawWallWindow
