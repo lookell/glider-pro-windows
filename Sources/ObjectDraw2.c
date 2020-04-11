@@ -802,40 +802,25 @@ void DrawStereo (Rect *theRect, Boolean isOn, Boolean isLit)
 
 void DrawMicrowave (Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	return;
-#if 0
 	Rect		bounds;
-	GWorldPtr	tempMap;
-	GWorldPtr	tempMask;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	HDC			tempMap;
+	HDC			tempMask;
 	OSErr		theErr;
-
 
 	if (isLit)
 	{
-		GetGWorld(&wasCPort, &wasWorld);
-
 		bounds = srcRects[kMicrowave];
 		theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
-		SetGWorld(tempMap, nil);
-		LoadGraphic(kMicrowavePictID);
+		LoadGraphic(tempMap, kMicrowavePictID);
 
 		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
-		SetGWorld(tempMask, nil);
-		LoadGraphic(kMicrowaveMaskID);
+		LoadGraphic(tempMask, kMicrowaveMaskID);
 
-		CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
-				(BitMap *)*GetGWorldPixMap(tempMask),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyMask(tempMap, tempMask, backSrcMap,
 				&srcRects[kMicrowave], &srcRects[kMicrowave], theRect);
-
-		SetGWorld(wasCPort, wasWorld);
 
 		DisposeGWorld(tempMap);
 		DisposeGWorld(tempMask);
-
-//		SetPort((GrafPtr)backSrcMap);
 	}
 
 	bounds = microOn;
@@ -843,33 +828,26 @@ void DrawMicrowave (Rect *theRect, Boolean isOn, Boolean isLit)
 	QOffsetRect(&bounds, theRect->left + 14, theRect->top + 13);
 	if (isOn)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&microOn, &bounds, srcCopy, nil);
 		QOffsetRect(&bounds, 16, 0);
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&microOn, &bounds, srcCopy, nil);
 		QOffsetRect(&bounds, 16, 0);
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&microOn, &bounds, srcCopy, nil);
 	}
 	else if (isLit)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&microOff, &bounds, srcCopy, nil);
 		QOffsetRect(&bounds, 16, 0);
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&microOff, &bounds, srcCopy, nil);
 		QOffsetRect(&bounds, 16, 0);
-		CopyBits((BitMap *)*GetGWorldPixMap(applianceSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(applianceSrcMap, backSrcMap,
 				&microOff, &bounds, srcCopy, nil);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DrawBalloon
