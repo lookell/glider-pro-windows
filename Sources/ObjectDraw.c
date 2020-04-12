@@ -66,15 +66,8 @@ void DrawSimpleBlowers (SInt16 what, Rect *theRect)
 
 void DrawTiki (Rect *theRect, SInt16 down)
 {
-	return;
-#if 0
 #define kTikiPoleBase	300
-	long		darkGrayC, lightWoodC, darkWoodC;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
+	SInt32		darkGrayC, lightWoodC, darkWoodC;
 
 	if (thisMac.isDepth == 4)
 	{
@@ -91,25 +84,20 @@ void DrawTiki (Rect *theRect, SInt16 down)
 
 	if (theRect->bottom < kTikiPoleBase + down)
 	{
-		ColorLine(theRect->left + 11, theRect->bottom - 1,
+		ColorLine(backSrcMap, theRect->left + 11, theRect->bottom - 1,
 				theRect->left + 11, kTikiPoleBase + down - 1, darkGrayC);
-		ColorLine(theRect->left + 12, theRect->bottom - 1,
+		ColorLine(backSrcMap, theRect->left + 12, theRect->bottom - 1,
 				theRect->left + 12, kTikiPoleBase + down, lightWoodC);
-		ColorLine(theRect->left + 13, theRect->bottom - 1,
+		ColorLine(backSrcMap, theRect->left + 13, theRect->bottom - 1,
 				theRect->left + 13, kTikiPoleBase + down, darkWoodC);
-		ColorLine(theRect->left + 14, theRect->bottom - 1,
+		ColorLine(backSrcMap, theRect->left + 14, theRect->bottom - 1,
 				theRect->left + 14, kTikiPoleBase + down, darkWoodC);
-		ColorLine(theRect->left + 15, theRect->bottom - 1,
+		ColorLine(backSrcMap, theRect->left + 15, theRect->bottom - 1,
 				theRect->left + 15, kTikiPoleBase + down - 1, darkGrayC);
 	}
 
-	SetGWorld(wasCPort, wasWorld);
-
-	CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap),
-			(BitMap *)*GetGWorldPixMap(blowerMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(blowerSrcMap, blowerMaskMap, backSrcMap,
 			&srcRects[kTiki], &srcRects[kTiki], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawInvisibleBlower
