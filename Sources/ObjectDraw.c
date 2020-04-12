@@ -1373,16 +1373,7 @@ void DrawFoil (Rect *theRect)
 
 void DrawInvisBonus (Rect *theRect)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-	ColorFrameOval(theRect, 227);
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	ColorFrameOval(backSrcMap, theRect, 227);
 }
 
 //--------------------------------------------------------------  DrawSlider
