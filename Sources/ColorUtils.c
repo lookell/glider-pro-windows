@@ -161,18 +161,20 @@ void HiliteRect (HDC hdc, Rect *theRect, SInt16 color1, SInt16 color2)
 // Given a rectangle and color index, this function frames a…
 // rectangle in that color.  Current port, pen mode, etc. assumed.
 
-void ColorFrameRect (Rect *theRect, SInt32 color)
+void ColorFrameRect (HDC hdc, Rect *theRect, SInt32 color)
 {
-	return;
-#if 0
-	RGBColor	theRGBColor, wasColor;
+	COLORREF	theRGBColor, wasColor;
+	HGDIOBJ		wasBrush, wasPen;
 
-	GetForeColor(&wasColor);
-	Index2Color(color, &theRGBColor);
-	RGBForeColor(&theRGBColor);
-	FrameRect(theRect);
-	RGBForeColor(&wasColor);
-#endif
+	theRGBColor = Index2ColorRef(color);
+	wasColor = SetDCPenColor(hdc, theRGBColor);
+	wasBrush = SelectObject(hdc, GetStockObject(NULL_BRUSH));
+	wasPen = SelectObject(hdc, GetStockObject(DC_PEN));
+	Rectangle(hdc, theRect->left, theRect->top,
+			theRect->right, theRect->bottom);
+	SelectObject(hdc, wasPen);
+	SelectObject(hdc, wasBrush);
+	SetDCPenColor(hdc, wasColor);
 }
 
 //--------------------------------------------------------------  ColorFrameWHRect

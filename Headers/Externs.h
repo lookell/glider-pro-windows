@@ -290,7 +290,7 @@ void ColorOval (HDC, Rect *, SInt32);
 void ColorRegion (HDC, HRGN, SInt32);
 void ColorLine (HDC, SInt16, SInt16, SInt16, SInt16, SInt32);
 void HiliteRect (HDC, Rect *, SInt16, SInt16);
-void ColorFrameRect (Rect *, SInt32);
+void ColorFrameRect (HDC, Rect *, SInt32);
 void ColorFrameWHRect (SInt16, SInt16, SInt16, SInt16, SInt32);
 void ColorFrameOval (Rect *, SInt32);
 void LtGrayForeColor (void);
