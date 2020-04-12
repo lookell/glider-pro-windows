@@ -17,27 +17,28 @@
 
 // Given an index into the current palette, this function returns the
 // corresponding COLORREF value. If the index is out of bounds, then
-// CLR_INVALID is returned.
+// RGB(0,0,0) is returned.
 
 COLORREF Index2ColorRef (SInt32 color)
 {
+	const COLORREF defaultClr = RGB(0x00, 0x00, 0x00);
 	RGBColor rgb;
 	size_t index;
 
 	if (color < 0)
-		return CLR_INVALID;
+		return defaultClr;
 	index = (size_t)color;
 
 	if (thisMac.isDepth == 4)
 	{
 		if (index >= ARRAYSIZE(MacColor4))
-			return CLR_INVALID;
+			return defaultClr;
 		rgb = MacColor4[index];
 	}
 	else
 	{
 		if (index >= ARRAYSIZE(MacColor8))
-			return CLR_INVALID;
+			return defaultClr;
 		rgb = MacColor8[index];
 	}
 
