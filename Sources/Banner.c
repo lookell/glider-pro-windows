@@ -41,16 +41,10 @@ extern	Boolean		quickerTransitions, demoGoing, isUseSecondScreen;
 
 void DrawBanner (Point *topLeft)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
 	Rect		wholePage, partPage, mapBounds;
-	GWorldPtr	tempMap;
-	GWorldPtr	tempMask;
+	HDC			tempMap;
+	HDC			tempMask;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
 
 	QSetRect(&wholePage, 0, 0, 330, 220);
 	mapBounds = thisMac.screen;
@@ -60,31 +54,23 @@ void DrawBanner (Point *topLeft)
 	topLeft->v = wholePage.top;
 	partPage = wholePage;
 	partPage.bottom = partPage.top + 190;
-	SetGWorld(workSrcMap, nil);
-	LoadScaledGraphic(kBannerPageTopPICT, &partPage);
+	LoadScaledGraphic(workSrcMap, kBannerPageTopPICT, &partPage);
 
 	partPage = wholePage;
 	partPage.top = partPage.bottom - 30;
 	mapBounds = partPage;
 	ZeroRectCorner(&mapBounds);
 	theErr = CreateOffScreenGWorld(&tempMap, &mapBounds, kPreferredDepth);
-	SetGWorld(tempMap, nil);
-	LoadGraphic(kBannerPageBottomPICT);
+	LoadGraphic(tempMap, kBannerPageBottomPICT);
 
 	theErr = CreateOffScreenGWorld(&tempMask, &mapBounds, 1);
-	SetGWorld(tempMask, nil);
-	LoadGraphic(kBannerPageBottomMask);
+	LoadGraphic(tempMask, kBannerPageBottomMask);
 
-	CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
-			(BitMap *)*GetGWorldPixMap(tempMask),
-			(BitMap *)*GetGWorldPixMap(workSrcMap),
+	Mac_CopyMask(tempMap, tempMask, workSrcMap,
 			&mapBounds, &mapBounds, &partPage);
-	SetPort((GrafPtr)workSrcMap);
 
-	SetGWorld(wasCPort, wasWorld);
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
-#endif
 }
 
 //--------------------------------------------------------------  CountStarsInHouse
