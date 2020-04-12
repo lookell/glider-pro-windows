@@ -125,14 +125,8 @@ void ColorLine (HDC hdc, SInt16 h0, SInt16 v0, SInt16 h1, SInt16 v1, SInt32 colo
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCPenColor(hdc, theRGBColor);
 	wasPen = SelectObject(hdc, GetStockObject(DC_PEN));
-	// GDI draws lines by including the start point and excluding the
-	// end point. QuickDraw includes the end point when it draws lines.
-	// To emulate QuickDraw's behavior in GDI, the line is drawn twice
-	// in opposite directions, so that the start and end points are
-	// both included.
-	MoveToEx(hdc, h1, v1, NULL);
-	LineTo(hdc, h0, v0);
-	LineTo(hdc, h1, v1);
+	MoveToEx(hdc, h0, v1, NULL);
+	Mac_LineTo(hdc, h1, v1);
 	SelectObject(hdc, wasPen);
 	SetDCPenColor(hdc, wasColor);
 }
