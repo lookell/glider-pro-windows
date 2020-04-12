@@ -9,6 +9,7 @@
 //#include <TextUtils.h>
 #include "Macintosh.h"
 #include "Externs.h"
+#include "ResourceIDs.h"
 
 
 //==============================================================  Functions
@@ -352,14 +353,15 @@ void GetChooserName (StringPtr thisName)
 
 StringPtr GetLocalizedString (SInt16 index, StringPtr theString)
 {
-	PasStringCopyC("", theString);
-	return (theString);
-#if 0
-	#define		kLocalizedStringsID		150
+	WCHAR buffer[256];
+	int length;
 
-	GetIndString(theString, kLocalizedStringsID, index);
+	length = LoadString(HINST_THISCOMPONENT, IDS_LOCALIZED_BASE + index,
+			buffer, ARRAYSIZE(buffer));
+	if (length <= 0)
+		buffer[0] = L'\0';
+	MacFromWinString(theString, sizeof(Str255), buffer);
 	return (theString);
-#endif
 }
 
 
