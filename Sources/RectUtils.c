@@ -303,21 +303,18 @@ void QUnionSimilarRect (Rect *rectA, Rect *rectB, Rect *rectC)
 // This is similar to the ToolBox FrameRect() call.  However, it doesn't…
 // draw the pixels in the 4 corners of the Rect.
 
-void FrameRectSansCorners (Rect *theRect)
+void FrameRectSansCorners (HDC hdc, Rect *theRect)
 {
-	return;
-#if 0
-	MoveTo(theRect->left + 1, theRect->top);
-	LineTo(theRect->right - 2, theRect->top);
+	MoveToEx(hdc, theRect->left + 1, theRect->top, NULL);
+	Mac_LineTo(hdc, theRect->right - 2, theRect->top);
 
-	MoveTo(theRect->right - 1, theRect->top + 1);
-	LineTo(theRect->right - 1, theRect->bottom - 2);
+	MoveToEx(hdc, theRect->right - 1, theRect->top + 1, NULL);
+	Mac_LineTo(hdc, theRect->right - 1, theRect->bottom - 2);
 
-	MoveTo(theRect->left + 1, theRect->bottom - 1);
-	LineTo(theRect->right - 2, theRect->bottom - 1);
+	MoveToEx(hdc, theRect->left + 1, theRect->bottom - 1, NULL);
+	Mac_LineTo(hdc, theRect->right - 2, theRect->bottom - 1);
 
-	MoveTo(theRect->left, theRect->top + 1);
-	LineTo(theRect->left, theRect->bottom - 2);
-#endif
+	MoveToEx(hdc, theRect->left, theRect->top + 1, NULL);
+	Mac_LineTo(hdc, theRect->left, theRect->bottom - 2);
 }
 

@@ -30,5 +30,5 @@ void QOffsetRect (Rect *, SInt16, SInt16);
 void QSetRect (Rect *, SInt16, SInt16, SInt16, SInt16);
 Boolean ForceRectInRect (Rect *, Rect *);
 void QUnionSimilarRect (Rect *, Rect *, Rect *);
-void FrameRectSansCorners (Rect *);
+void FrameRectSansCorners (HDC, Rect *);
 void SetEraseRect (SInt16, SInt16, SInt16, SInt16);
