@@ -183,18 +183,16 @@ void ColorFrameRect (HDC hdc, Rect *theRect, SInt32 color)
 // and a color index, this function frames a rectangle in that color.
 // Current port, pen mode, etc. assumed.
 
-void ColorFrameWHRect (SInt16 left, SInt16 top, SInt16 wide, SInt16 high, SInt32 color)
+void ColorFrameWHRect (HDC hdc, SInt16 left, SInt16 top, SInt16 wide, SInt16 high,
+		SInt32 color)
 {
-	return;
-#if 0
 	Rect		theRect;
 
 	theRect.left = left;
 	theRect.top = top;
 	theRect.right = left + wide;
 	theRect.bottom = top + high;
-	ColorFrameRect(&theRect, color);
-#endif
+	ColorFrameRect(hdc, &theRect, color);
 }
 
 //--------------------------------------------------------------  ColorFrameOval
