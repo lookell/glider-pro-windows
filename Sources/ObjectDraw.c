@@ -930,22 +930,18 @@ void DrawInvisBounce (Rect *theRect)
 
 void DrawRedClock (Rect *theRect)
 {
-	return;
-#if 0
-	DateTimeRec	timeRec;
+	SYSTEMTIME	localTime;
 	Rect		dest;
-	short		hour, minutes;
+	SInt16		hour, minutes;
 
-	CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
-			(BitMap *)*GetGWorldPixMap(bonusMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
 			&srcRects[kRedClock], &srcRects[kRedClock], theRect);
 
-	GetTime(&timeRec);
-	hour = timeRec.hour % 12;
+	GetLocalTime(&localTime);
+	hour = localTime.wHour % 12;
 	if (hour == 0)
 		hour = 12;
-	minutes = timeRec.minute;
+	minutes = localTime.wMinute;
 
 	QSetRect(&dest, 0, 0, 4, 6);
 	QOffsetRect(&dest, theRect->left + 5, theRect->top + 7);
@@ -957,7 +953,6 @@ void DrawRedClock (Rect *theRect)
 	DrawClockDigit(minutes / 10, &dest);
 	QOffsetRect(&dest, 4, 0);
 	DrawClockDigit(minutes % 10, &dest);
-#endif
 }
 
 //--------------------------------------------------------------  DrawClockDigit
