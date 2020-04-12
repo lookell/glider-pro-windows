@@ -144,19 +144,16 @@ void ColorLine (HDC hdc, SInt16 h0, SInt16 v0, SInt16 h1, SInt16 v1, SInt32 colo
 // sides with color 2.  A rect can be made to appear "hi-lit" or "3D"…
 // in this way.
 
-void HiliteRect (Rect *theRect, SInt16 color1, SInt16 color2)
+void HiliteRect (HDC hdc, Rect *theRect, SInt16 color1, SInt16 color2)
 {
-	return;
-#if 0
-	ColorLine(theRect->left, theRect->top, theRect->right - 2,
+	ColorLine(hdc, theRect->left, theRect->top, theRect->right - 2,
 			theRect->top, color1);
-	ColorLine(theRect->left, theRect->top, theRect->left,
+	ColorLine(hdc, theRect->left, theRect->top, theRect->left,
 			theRect->bottom - 2, color1);
-	ColorLine(theRect->right - 1, theRect->top, theRect->right - 1,
+	ColorLine(hdc, theRect->right - 1, theRect->top, theRect->right - 1,
 			theRect->bottom - 2, color2);
-	ColorLine(theRect->left + 1, theRect->bottom - 1, theRect->right - 1,
+	ColorLine(hdc, theRect->left + 1, theRect->bottom - 1, theRect->right - 1,
 			theRect->bottom - 1, color2);
-#endif
 }
 
 //--------------------------------------------------------------  ColorFrameRect
