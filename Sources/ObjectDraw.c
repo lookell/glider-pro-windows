@@ -116,16 +116,7 @@ void DrawInvisibleBlower (Rect *theRect)
 
 void DrawLiftArea (Rect *theRect)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-	ColorFrameRect(theRect, 192);
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	ColorFrameRect(backSrcMap, theRect, 192);
 }
 
 //--------------------------------------------------------------  DrawTable
