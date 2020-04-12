@@ -51,18 +51,14 @@ COLORREF Index2ColorRef (SInt32 color)
 // this function draws text in that color.  It assumes the current port,…
 // the current font, the current pen location, etc.
 
-void ColorText (StringPtr theStr, SInt32 color)
+void ColorText (HDC hdc, StringPtr theStr, SInt32 color)
 {
-	return;
-#if 0
-	RGBColor	theRGBColor, wasColor;
+	COLORREF	theRGBColor, wasColor;
 
-	GetForeColor(&wasColor);
-	Index2Color(color, &theRGBColor);
-	RGBForeColor(&theRGBColor);
-	DrawString(theStr);
-	RGBForeColor(&wasColor);
-#endif
+	theRGBColor = Index2ColorRef(color);
+	wasColor = SetTextColor(hdc, theRGBColor);
+	Mac_DrawString(hdc, theStr);
+	SetTextColor(hdc, wasColor);
 }
 
 //--------------------------------------------------------------  ColorRect
