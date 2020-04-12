@@ -117,19 +117,24 @@ void ColorRegion (HDC hdc, HRGN theRgn, SInt32 color)
 // Given a the end points for a line and color index, this function…
 // draws a line in that color.  Current port, pen mode, etc. assumed.
 
-void ColorLine (SInt16 h0, SInt16 v0, SInt16 h1, SInt16 v1, SInt32 color)
+void ColorLine (HDC hdc, SInt16 h0, SInt16 v0, SInt16 h1, SInt16 v1, SInt32 color)
 {
-	return;
-#if 0
-	RGBColor	theRGBColor, wasColor;
+	COLORREF	theRGBColor, wasColor;
+	HGDIOBJ		wasPen;
 
-	GetForeColor(&wasColor);
-	Index2Color(color, &theRGBColor);
-	RGBForeColor(&theRGBColor);
-	MoveTo(h0, v0);
-	LineTo(h1, v1);
-	RGBForeColor(&wasColor);
-#endif
+	theRGBColor = Index2ColorRef(color);
+	wasColor = SetDCPenColor(hdc, theRGBColor);
+	wasPen = SelectObject(hdc, GetStockObject(DC_PEN));
+	// GDI draws lines by including the start point and excluding the
+	// end point. QuickDraw includes the end point when it draws lines.
+	// To emulate QuickDraw's behavior in GDI, the line is drawn twice
+	// in opposite directions, so that the start and end points are
+	// both included.
+	MoveToEx(hdc, h1, v1, NULL);
+	LineTo(hdc, h0, v0);
+	LineTo(hdc, h1, v1);
+	SelectObject(hdc, wasPen);
+	SetDCPenColor(hdc, wasColor);
 }
 
 //--------------------------------------------------------------  HiliteRect
