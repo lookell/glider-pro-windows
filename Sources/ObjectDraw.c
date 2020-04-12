@@ -878,15 +878,8 @@ void DrawDeckTable (Rect *tableTop, SInt16 down)
 
 void DrawStool (Rect *theRect, SInt16 down)
 {
-	return;
-#if 0
 	#define		kStoolBase	304
-	long		grayC, dkGrayC;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
+	SInt32		grayC, dkGrayC;
 
 	if (thisMac.isDepth == 4)
 	{
@@ -901,27 +894,22 @@ void DrawStool (Rect *theRect, SInt16 down)
 
 	if (theRect->bottom < kStoolBase + down)
 	{
-		ColorLine(theRect->left + 21, theRect->bottom - 1,
+		ColorLine(backSrcMap, theRect->left + 21, theRect->bottom - 1,
 				theRect->left + 21, kStoolBase + down - 1, k8DkGrayColor);
-		ColorLine(theRect->left + 22, theRect->bottom - 1,
+		ColorLine(backSrcMap, theRect->left + 22, theRect->bottom - 1,
 				theRect->left + 22, kStoolBase + down, k8Gray2Color);
-		ColorLine(theRect->left + 23, theRect->bottom - 1,
+		ColorLine(backSrcMap, theRect->left + 23, theRect->bottom - 1,
 				theRect->left + 23, kStoolBase + down, k8DkGrayColor);
-		ColorLine(theRect->left + 24, theRect->bottom - 1,
+		ColorLine(backSrcMap, theRect->left + 24, theRect->bottom - 1,
 				theRect->left + 24, kStoolBase + down, k8DkGray3Color);
-		ColorLine(theRect->left + 25, theRect->bottom - 1,
+		ColorLine(backSrcMap, theRect->left + 25, theRect->bottom - 1,
 				theRect->left + 25, kStoolBase + down, grayC);
-		ColorLine(theRect->left + 26, theRect->bottom - 1,
+		ColorLine(backSrcMap, theRect->left + 26, theRect->bottom - 1,
 				theRect->left + 26, kStoolBase + down - 1, dkGrayC);
 	}
 
-	SetGWorld(wasCPort, wasWorld);
-
-	CopyMask((BitMap *)*GetGWorldPixMap(furnitureSrcMap),
-			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
 			&srcRects[kStool], &srcRects[kStool], theRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawInvisObstacle
