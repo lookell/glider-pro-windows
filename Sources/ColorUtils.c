@@ -6,12 +6,44 @@
 //============================================================================
 
 
+#include "Environ.h"
 #include "Externs.h"
 //#include <Palettes.h>
 #include "Macintosh.h"
 
 
 //==============================================================  Functions
+//--------------------------------------------------------------  Index2ColorRef
+
+// Given an index into the current palette, this function returns the
+// corresponding COLORREF value. If the index is out of bounds, then
+// CLR_INVALID is returned.
+
+COLORREF Index2ColorRef (SInt32 color)
+{
+	RGBColor rgb;
+	size_t index;
+
+	if (color < 0)
+		return CLR_INVALID;
+	index = (size_t)color;
+
+	if (thisMac.isDepth == 4)
+	{
+		if (index >= ARRAYSIZE(MacColor4))
+			return CLR_INVALID;
+		rgb = MacColor4[index];
+	}
+	else
+	{
+		if (index >= ARRAYSIZE(MacColor8))
+			return CLR_INVALID;
+		rgb = MacColor8[index];
+	}
+
+	return RGB(rgb.red >> 8, rgb.green >> 8, rgb.blue >> 8);
+}
+
 //--------------------------------------------------------------  ColorText
 
 // Given a string and a color index (index into the current palette),…
