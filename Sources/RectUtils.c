@@ -17,18 +17,18 @@
 // Given the top left corner and a width and height, this function…
 // simply creates the necessary rectangle and frames it.
 
-void FrameWHRect (SInt16 left, SInt16 top, SInt16 wide, SInt16 high)
+void FrameWHRect (HDC hdc, SInt16 left, SInt16 top, SInt16 wide, SInt16 high)
 {
-	return;
-#if 0
 	Rect		theRect;
+	HGDIOBJ		wasBrush;
 
 	theRect.left = left;
 	theRect.top = top;
 	theRect.right = left + wide;
 	theRect.bottom = top + high;
-	FrameRect(&theRect);
-#endif
+	wasBrush = SelectObject(hdc, GetStockObject(NULL_BRUSH));
+	Rectangle(hdc, theRect.left, theRect.top, theRect.right, theRect.bottom);
+	SelectObject(hdc, wasBrush);
 }
 
 //--------------------------------------------------------------  NormalizeRect

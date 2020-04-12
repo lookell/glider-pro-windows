@@ -12,7 +12,7 @@
 #include "Macintosh.h"
 
 
-void FrameWHRect (SInt16, SInt16, SInt16, SInt16);
+void FrameWHRect (HDC, SInt16, SInt16, SInt16, SInt16);
 void NormalizeRect (Rect *);
 void ZeroRectCorner (Rect *);
 void CenterRectOnPoint (Rect *, Point);
