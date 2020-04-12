@@ -170,8 +170,7 @@ void ColorFrameRect (HDC hdc, Rect *theRect, SInt32 color)
 	wasColor = SetDCPenColor(hdc, theRGBColor);
 	wasBrush = SelectObject(hdc, GetStockObject(NULL_BRUSH));
 	wasPen = SelectObject(hdc, GetStockObject(DC_PEN));
-	Rectangle(hdc, theRect->left, theRect->top,
-			theRect->right, theRect->bottom);
+	Rectangle(hdc, theRect->left, theRect->top, theRect->right, theRect->bottom);
 	SelectObject(hdc, wasPen);
 	SelectObject(hdc, wasBrush);
 	SetDCPenColor(hdc, wasColor);
@@ -200,18 +199,19 @@ void ColorFrameWHRect (HDC hdc, SInt16 left, SInt16 top, SInt16 wide, SInt16 hig
 // Given a rectangle and color index, this function frames an…
 // oval in that color.  Current port, pen mode, etc. assumed.
 
-void ColorFrameOval (Rect *theRect, SInt32 color)
+void ColorFrameOval (HDC hdc, Rect *theRect, SInt32 color)
 {
-	return;
-#if 0
-	RGBColor	theRGBColor, wasColor;
+	COLORREF	theRGBColor, wasColor;
+	HGDIOBJ		wasBrush, wasPen;
 
-	GetForeColor(&wasColor);
-	Index2Color(color, &theRGBColor);
-	RGBForeColor(&theRGBColor);
-	FrameOval(theRect);
-	RGBForeColor(&wasColor);
-#endif
+	theRGBColor = Index2ColorRef(color);
+	wasColor = SetDCPenColor(hdc, theRGBColor);
+	wasBrush = SelectObject(hdc, GetStockObject(NULL_BRUSH));
+	wasPen = SelectObject(hdc, GetStockObject(DC_PEN));
+	Ellipse(hdc, theRect->left, theRect->top, theRect->right, theRect->bottom);
+	SelectObject(hdc, wasPen);
+	SelectObject(hdc, wasBrush);
+	SetDCPenColor(hdc, wasColor);
 }
 
 //--------------------------------------------------------------  LtGrayForeColor
