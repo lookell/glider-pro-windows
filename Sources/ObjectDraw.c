@@ -923,16 +923,7 @@ void DrawInvisObstacle (Rect *theRect)
 
 void DrawInvisBounce (Rect *theRect)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-	ColorFrameRect(theRect, k8RedColor);
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	ColorFrameRect(backSrcMap, theRect, k8RedColor);
 }
 
 //--------------------------------------------------------------  DrawRedClock
