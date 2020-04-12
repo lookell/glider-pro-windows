@@ -916,16 +916,7 @@ void DrawStool (Rect *theRect, SInt16 down)
 
 void DrawInvisObstacle (Rect *theRect)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-	ColorFrameRect(theRect, k8BrownColor);
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	ColorFrameRect(backSrcMap, theRect, k8BrownColor);
 }
 
 //--------------------------------------------------------------  DrawInvisBounce
