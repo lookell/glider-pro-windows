@@ -221,6 +221,38 @@ void Mac_InsetRect(Rect *r, SInt16 dh, SInt16 dv)
 	}
 }
 
+//--------------------------------------------------------------  Line
+// Draw a line from the current position to the specified offsets.
+// 'dh' specifies the horizontal movement and 'dv' specifies the
+// vertical movement of the current pen. Negative values move the
+// pen left or up, and positive values move the pen right or down.
+// NOTE: Macintosh lines include the end pixel, unlike GDI lines.
+
+void Mac_Line(HDC hdc, SInt16 dh, SInt16 dv)
+{
+	POINT curPos;
+
+	GetCurrentPositionEx(hdc, &curPos);
+	MoveToEx(hdc, curPos.x + dh, curPos.y + dv, NULL);
+	LineTo(hdc, curPos.x, curPos.y);
+	LineTo(hdc, curPos.x + dh, curPos.y + dv);
+}
+
+//--------------------------------------------------------------  LineTo
+// Draw a line from the current position to the specified position.
+// 'h' and 'v' specify the coordinates of the line's end point.
+// NOTE: Macintosh lines include the end pixel, unlike GDI lines.
+
+void Mac_LineTo(HDC hdc, SInt16 h, SInt16 v)
+{
+	POINT curPos;
+
+	GetCurrentPositionEx(hdc, &curPos);
+	MoveToEx(hdc, h, v, NULL);
+	LineTo(hdc, curPos.x, curPos.y);
+	LineTo(hdc, h, v);
+}
+
 //--------------------------------------------------------------  NumToString
 // Convert the given number to a decimal string representation.
 // The string is written to the given output string.
