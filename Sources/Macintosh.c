@@ -135,6 +135,29 @@ void Mac_CopyMask(
 	DeleteDC(newSrcBits);
 }
 
+//--------------------------------------------------------------  DrawString
+// Draw the given character string, starting from the current position
+// and using the current settings. The reference point of the text is
+// the left edge, at the baseline (TA_LEFT | TA_BASELINE in GDI).
+// The current position is updated by this function to the right edge
+// of the text, at the baseline (TA_UPDATECP in GDI).
+
+void Mac_DrawString(HDC hdc, StringPtr s)
+{
+	WCHAR buffer[256];
+	INT prevBkMode;
+	UINT prevTextAlign;
+
+	WinFromMacString(buffer, ARRAYSIZE(buffer), s);
+	prevBkMode = SetBkMode(hdc, TRANSPARENT);
+	prevTextAlign = SetTextAlign(hdc, TA_LEFT | TA_BASELINE | TA_UPDATECP);
+	// The MacRoman string's length byte is used here, because each
+	// MacRoman byte corresponds to only one UTF-16 code unit.
+	TextOut(hdc, 0, 0, buffer, s[0]);
+	SetTextAlign(hdc, prevTextAlign);
+	SetBkMode(hdc, prevBkMode);
+}
+
 //--------------------------------------------------------------  GetDateTime
 // Retrieve the number of seconds since midnight, January 1, 1904.
 // The time difference is in terms of the local time zone.

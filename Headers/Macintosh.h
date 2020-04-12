@@ -111,6 +111,7 @@ void Mac_CopyMask(
 	const Rect *srcRect,
 	const Rect *maskRect,
 	const Rect *dstRect);
+void Mac_DrawString(HDC hdc, StringPtr s);
 void Mac_GetDateTime(UInt32 *secs);
 void Mac_InsetRect(Rect *r, SInt16 dh, SInt16 dv);
 void Mac_NumToString(SInt32 theNum, Str255 *theString);
