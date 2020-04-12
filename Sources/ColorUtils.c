@@ -83,18 +83,18 @@ void ColorRect (HDC hdc, Rect *theRect, SInt32 color)
 // Given a rectangle and color index, this function draws a solid…
 // oval in that color.  Current port, pen mode, etc. assumed.
 
-void ColorOval (Rect *theRect, SInt32 color)
+void ColorOval (HDC hdc, Rect *theRect, SInt32 color)
 {
-	return;
-#if 0
-	RGBColor	theRGBColor, wasColor;
+	COLORREF	theRGBColor, wasColor;
+	HRGN		theRegion;
 
-	GetForeColor(&wasColor);
-	Index2Color(color, &theRGBColor);
-	RGBForeColor(&theRGBColor);
-	PaintOval(theRect);
-	RGBForeColor(&wasColor);
-#endif
+	theRGBColor = Index2ColorRef(color);
+	wasColor = SetDCBrushColor(hdc, theRGBColor);
+	theRegion = CreateEllipticRgn(theRect->left, theRect->top,
+			theRect->right, theRect->bottom);
+	FillRgn(hdc, theRegion, GetStockObject(DC_BRUSH));
+	DeleteObject(theRegion);
+	SetDCBrushColor(hdc, wasColor);
 }
 
 //--------------------------------------------------------------  ColorRegion
