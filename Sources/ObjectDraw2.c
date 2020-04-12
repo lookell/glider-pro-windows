@@ -292,16 +292,7 @@ void DrawSimpleTransport (SInt16 what, Rect *theRect)
 
 void DrawInvisTransport (Rect *theRect)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-	ColorFrameRect(theRect, 32);
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	ColorFrameRect(backSrcMap, theRect, 32);
 }
 
 //--------------------------------------------------------------  DrawLightSwitch
