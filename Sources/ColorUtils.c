@@ -102,18 +102,14 @@ void ColorOval (HDC hdc, Rect *theRect, SInt32 color)
 // Given a region and color index, this function draws a solid…
 // region in that color.  Current port, pen mode, etc. assumed.
 
-void ColorRegion (RgnHandle theRgn, SInt32 color)
+void ColorRegion (HDC hdc, HRGN theRgn, SInt32 color)
 {
-	return;
-#if 0
-	RGBColor	theRGBColor, wasColor;
+	COLORREF	theRGBColor, wasColor;
 
-	GetForeColor(&wasColor);
-	Index2Color(color, &theRGBColor);
-	RGBForeColor(&theRGBColor);
-	PaintRgn(theRgn);
-	RGBForeColor(&wasColor);
-#endif
+	theRGBColor = Index2ColorRef(color);
+	wasColor = SetDCBrushColor(hdc, theRGBColor);
+	FillRgn(hdc, theRgn, GetStockObject(DC_BRUSH));
+	SetDCBrushColor(hdc, wasColor);
 }
 
 //--------------------------------------------------------------  ColorLine

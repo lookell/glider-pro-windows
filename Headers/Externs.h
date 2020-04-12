@@ -287,7 +287,7 @@ COLORREF Index2ColorRef (SInt32);						// --- ColorUtils.c
 void ColorText (HDC, StringPtr, SInt32);
 void ColorRect (HDC, Rect *, SInt32);
 void ColorOval (HDC, Rect *, SInt32);
-void ColorRegion (RgnHandle, SInt32);
+void ColorRegion (HDC, HRGN, SInt32);
 void ColorLine (SInt16, SInt16, SInt16, SInt16, SInt32);
 void HiliteRect (Rect *, SInt16, SInt16);
 void ColorFrameRect (Rect *, SInt32);
