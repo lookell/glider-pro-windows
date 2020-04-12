@@ -66,18 +66,16 @@ void ColorText (HDC hdc, StringPtr theStr, SInt32 color)
 // Given a rectangle and color index, this function draws a solid…
 // rectangle in that color.  Current port, pen mode, etc. assumed.
 
-void ColorRect (Rect *theRect, SInt32 color)
+void ColorRect (HDC hdc, Rect *theRect, SInt32 color)
 {
-	return;
-#if 0
-	RGBColor	theRGBColor, wasColor;
+	COLORREF	theRGBColor, wasColor;
+	RECT		rc;
 
-	GetForeColor(&wasColor);
-	Index2Color(color, &theRGBColor);
-	RGBForeColor(&theRGBColor);
-	PaintRect(theRect);
-	RGBForeColor(&wasColor);
-#endif
+	theRGBColor = Index2ColorRef(color);
+	wasColor = SetDCBrushColor(hdc, theRGBColor);
+	SetRect(&rc, theRect->left, theRect->top, theRect->right, theRect->bottom);
+	FillRect(hdc, &rc, GetStockObject(DC_BRUSH));
+	SetDCBrushColor(hdc, wasColor);
 }
 
 //--------------------------------------------------------------  ColorOval
