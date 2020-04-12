@@ -21,7 +21,7 @@ SInt16 HalfRectTall (Rect *);
 SInt16 RectWide (Rect *);
 SInt16 RectTall (Rect *);
 void GlobalToLocalRect (HWND, Rect *);
-void LocalToGlobalRect (Rect *);
+void LocalToGlobalRect (HWND, Rect *);
 void CenterRectInRect (Rect *, Rect *);
 void HOffsetRect (Rect *, SInt16);
 void VOffsetRect (Rect *, SInt16);

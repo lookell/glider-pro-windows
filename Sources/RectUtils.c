@@ -128,17 +128,13 @@ void GlobalToLocalRect (HWND hwnd, Rect *theRect)
 // This function offsets a rectangle from local to global coordinates.
 // The "local" coordinate system is assumed to be the current port (window).
 
-void LocalToGlobalRect (Rect *theRect)
+void LocalToGlobalRect (HWND hwnd, Rect *theRect)
 {
-	return;
-#if 0
-	Point			upperLeftPt;
+	RECT	rc;
 
-	upperLeftPt.h = 0;
-	upperLeftPt.v = 0;
-	LocalToGlobal(&upperLeftPt);
-	QOffsetRect(theRect, upperLeftPt.h, upperLeftPt.v);
-#endif
+	SetRect(&rc, theRect->left, theRect->top, theRect->right, theRect->bottom);
+	MapWindowPoints(hwnd, HWND_DESKTOP, (LPPOINT)&rc, 2);
+	QSetRect(theRect, rc.left, rc.top, rc.right, rc.bottom);
 }
 
 //--------------------------------------------------------------  CenterRectInRect
