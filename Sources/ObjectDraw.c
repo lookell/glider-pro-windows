@@ -104,21 +104,12 @@ void DrawTiki (Rect *theRect, SInt16 down)
 
 void DrawInvisibleBlower (Rect *theRect)
 {
-	return;
-#if 0
 	Rect		tempRect;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
 
 	QSetRect(&tempRect, 0, 0, 24, 24);
 	QOffsetRect(&tempRect, theRect->left, theRect->top);
 
-	ColorFrameRect(&tempRect, 192);
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	ColorFrameRect(backSrcMap, &tempRect, 192);
 }
 
 //--------------------------------------------------------------  DrawLiftArea
