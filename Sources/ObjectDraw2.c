@@ -972,30 +972,19 @@ void DrawCalendar (Rect *theRect)
 
 void DrawBulletin (Rect *theRect)
 {
-	return;
-#if 0
 	Rect		bounds;
-	PicHandle	thePicture;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
+	HBITMAP		thePicture;
+	BITMAP		bmInfo;
 
 	thePicture = GetPicture(kBulletinPictID);
-	if (thePicture == nil)
+	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
-	HLock((Handle)thePicture);
-	bounds = (*thePicture)->picFrame;
-	HUnlock((Handle)thePicture);
-	QOffsetRect(&bounds, -bounds.left, -bounds.top);
+	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
+	QSetRect(&bounds, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
 	QOffsetRect(&bounds, theRect->left, theRect->top);
-	DrawPicture(thePicture, &bounds);
-	ReleaseResource((Handle)thePicture);
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	Mac_DrawPicture(backSrcMap, thePicture, &bounds);
+	DeleteObject(thePicture);
 }
 
 //--------------------------------------------------------------  DrawPictObject
