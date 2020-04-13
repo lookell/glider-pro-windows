@@ -1262,36 +1262,25 @@ void DrawSimplePrizes (SInt16 what, Rect *theRect)
 
 void DrawGreaseRt (Rect *theRect, SInt16 distance, Boolean state)
 {
-	return;
-#if 0
-	Rect		spill, dest;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	RECT		spill;
+	Rect		dest;
 
 	dest = *theRect;
 	if (state)		// grease upright
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
-				(BitMap *)*GetGWorldPixMap(bonusMaskMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
 				&greaseSrcRt[0], &greaseSrcRt[0], &dest);
 	}
 	else			// grease spilled
 	{
 		QOffsetRect(&dest, 6, 0);
-		CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
-				(BitMap *)*GetGWorldPixMap(bonusMaskMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
 				&greaseSrcRt[3], &greaseSrcRt[3], &dest);
 
-		GetGWorld(&wasCPort, &wasWorld);
-		SetGWorld(backSrcMap, nil);
-		QSetRect(&spill, 0, -2, distance - 5, 0);
-		QOffsetRect(&spill, dest.right - 1, dest.bottom);
-		PaintRect(&spill);
-		SetGWorld(wasCPort, wasWorld);
+		SetRect(&spill, 0, -2, distance - 5, 0);
+		OffsetRect(&spill, dest.right - 1, dest.bottom);
+		FillRect(backSrcMap, &spill, GetStockObject(BLACK_BRUSH));
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DrawGreaseLf
