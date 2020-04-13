@@ -434,37 +434,12 @@ void LoadGraphic (HDC hdc, SInt16 resID)
 
 void LoadScaledGraphic (HDC hdc, SInt16 resID, Rect *theRect)
 {
-	HBITMAP		thePicture, hbmPrev;
-	BITMAP		bitmapInfo;
-	HDC			hdcSrc;
-
-	if ((theRect->right - theRect->left) < 0)
-		return;
-	if ((theRect->bottom - theRect->top) < 0)
-		return;
+	HBITMAP		thePicture;
 
 	thePicture = GetPicture(resID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
-
-	GetObject(thePicture, sizeof(bitmapInfo), &bitmapInfo);
-	hdcSrc = CreateCompatibleDC(NULL);
-	hbmPrev = SelectObject(hdcSrc, thePicture);
-	StretchBlt(
-		hdc,
-		theRect->left,
-		theRect->top,
-		theRect->right - theRect->left,
-		theRect->bottom - theRect->top,
-		hdcSrc,
-		0,
-		0,
-		bitmapInfo.bmWidth,
-		bitmapInfo.bmHeight,
-		SRCCOPY
-	);
-	SelectObject(hdcSrc, hbmPrev);
-	DeleteDC(hdcSrc);
+	Mac_DrawPicture(hdc, thePicture, theRect);
 	DeleteObject(thePicture);
 }
 
