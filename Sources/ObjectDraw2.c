@@ -496,16 +496,7 @@ void DrawTrackLight (Rect *theRect)
 
 void DrawInvisLight (Rect *theRect)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-	ColorFrameOval(theRect, 17);
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	ColorFrameOval(backSrcMap, theRect, 17);
 }
 
 //--------------------------------------------------------------  DrawSimpleAppliance
