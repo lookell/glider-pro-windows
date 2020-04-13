@@ -515,10 +515,8 @@ void RenderGlider (gliderPtr thisGlider, Boolean oneOrTwo)
 
 void RenderBands (void)
 {
-	return;
-#if 0
 	Rect		dest;
-	short		i;
+	SInt16		i;
 
 	if (numBands == 0)
 		return;
@@ -527,16 +525,13 @@ void RenderBands (void)
 	{
 		dest = bands[i].dest;
 		QOffsetRect(&dest, playOriginH, playOriginV);
-		CopyMask((BitMap *)*GetGWorldPixMap(bandsSrcMap),
-				(BitMap *)*GetGWorldPixMap(bandsMaskMap),
-				(BitMap *)*GetGWorldPixMap(workSrcMap),
+		Mac_CopyMask(bandsSrcMap, bandsMaskMap, workSrcMap,
 				&bandRects[bands[i].mode],
 				&bandRects[bands[i].mode], &dest);
 
 		AddRectToWorkRects(&dest);
 		AddRectToBackRects(&dest);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  RenderShreds
