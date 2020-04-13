@@ -801,12 +801,8 @@ void DrawDrip (Rect *theRect)
 
 void DrawMirror (Rect *mirror)
 {
-	return;
-#if 0
 	Rect		tempRect;
-	long		grayC;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	SInt32		grayC;
 
 	if (thisMac.isDepth == 4)
 	{
@@ -817,21 +813,15 @@ void DrawMirror (Rect *mirror)
 		grayC = k8DkGray2Color;
 	}
 
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-
 	tempRect = *mirror;
-	ColorRect(&tempRect, k8WhiteColor);
-	ColorFrameRect(&tempRect, grayC);
-	InsetRect(&tempRect, 1, 1);
-	ColorFrameRect(&tempRect, k8EarthBlueColor);
-	InsetRect(&tempRect, 1, 1);
-	ColorFrameRect(&tempRect, k8EarthBlueColor);
-	InsetRect(&tempRect, 1, 1);
-	ColorFrameRect(&tempRect, grayC);
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	ColorRect(backSrcMap, &tempRect, k8WhiteColor);
+	ColorFrameRect(backSrcMap, &tempRect, grayC);
+	Mac_InsetRect(&tempRect, 1, 1);
+	ColorFrameRect(backSrcMap, &tempRect, k8EarthBlueColor);
+	Mac_InsetRect(&tempRect, 1, 1);
+	ColorFrameRect(backSrcMap, &tempRect, k8EarthBlueColor);
+	Mac_InsetRect(&tempRect, 1, 1);
+	ColorFrameRect(backSrcMap, &tempRect, grayC);
 }
 
 //--------------------------------------------------------------  DrawSimpleClutter
