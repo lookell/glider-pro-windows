@@ -445,10 +445,8 @@ void RenderStars (void)
 
 void RenderGlider (gliderPtr thisGlider, Boolean oneOrTwo)
 {
-	return;
-#if 0
 	Rect		src, dest;
-	short		which;
+	SInt16		which;
 
 	if (thisGlider->dontDraw)
 		return;
@@ -469,9 +467,7 @@ void RenderGlider (gliderPtr thisGlider, Boolean oneOrTwo)
 			src = shadowSrc[which];
 			src.right = src.left + (dest.right - dest.left);
 
-			CopyMask((BitMap *)*GetGWorldPixMap(shadowSrcMap),
-					(BitMap *)*GetGWorldPixMap(shadowMaskMap),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
+			Mac_CopyMask(shadowSrcMap, shadowMaskMap, workSrcMap,
 					&src, &src, &dest);
 		}
 		else if (thisGlider->mode == kGliderComingDown)
@@ -479,17 +475,13 @@ void RenderGlider (gliderPtr thisGlider, Boolean oneOrTwo)
 			src = shadowSrc[which];
 			src.left = src.right - (dest.right - dest.left);
 
-			CopyMask((BitMap *)*GetGWorldPixMap(shadowSrcMap),
-					(BitMap *)*GetGWorldPixMap(shadowMaskMap),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
+			Mac_CopyMask(shadowSrcMap, shadowMaskMap, workSrcMap,
 					&src, &src, &dest);
 		}
 		else
-			CopyMask((BitMap *)*GetGWorldPixMap(shadowSrcMap),
-					(BitMap *)*GetGWorldPixMap(shadowMaskMap),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
+			Mac_CopyMask(shadowSrcMap, shadowMaskMap, workSrcMap,
 					&shadowSrc[which], &shadowSrc[which], &dest);
-		src =thisGlider->wholeShadow;
+		src = thisGlider->wholeShadow;
 		QOffsetRect(&src, playOriginH, playOriginV);
 		AddRectToWorkRects(&src);
 		AddRectToBackRects(&dest);
@@ -501,29 +493,22 @@ void RenderGlider (gliderPtr thisGlider, Boolean oneOrTwo)
 	if (oneOrTwo)
 	{
 		if ((!twoPlayerGame) && (showFoil))
-			CopyMask((BitMap *)*GetGWorldPixMap(glid2SrcMap),
-					(BitMap *)*GetGWorldPixMap(glidMaskMap),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
+			Mac_CopyMask(glid2SrcMap, glidMaskMap, workSrcMap,
 					&thisGlider->src, &thisGlider->mask, &dest);
 		else
-			CopyMask((BitMap *)*GetGWorldPixMap(glidSrcMap),
-					(BitMap *)*GetGWorldPixMap(glidMaskMap),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
+			Mac_CopyMask(glidSrcMap, glidMaskMap, workSrcMap,
 					&thisGlider->src, &thisGlider->mask, &dest);
 	}
 	else
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(glid2SrcMap),
-				(BitMap *)*GetGWorldPixMap(glidMaskMap),
-				(BitMap *)*GetGWorldPixMap(workSrcMap),
+		Mac_CopyMask(glid2SrcMap, glidMaskMap, workSrcMap,
 				&thisGlider->src, &thisGlider->mask, &dest);
 	}
 
-	src =thisGlider->whole;
+	src = thisGlider->whole;
 	QOffsetRect(&src, playOriginH, playOriginV);
 	AddRectToWorkRects(&src);
 	AddRectToBackRects(&dest);
-#endif
 }
 
 //--------------------------------------------------------------  RenderBands
