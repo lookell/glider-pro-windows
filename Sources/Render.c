@@ -323,9 +323,7 @@ void RenderPendulums (void)
 
 void RenderFlyingPoints (void)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	if (numFlyingPts == 0)
 		return;
@@ -364,9 +362,7 @@ void RenderFlyingPoints (void)
 				else
 					flyingPoints[i].whole.top = flyingPoints[i].dest.top;
 
-				CopyMask((BitMap *)*GetGWorldPixMap(pointsSrcMap),
-						(BitMap *)*GetGWorldPixMap(pointsMaskMap),
-						(BitMap *)*GetGWorldPixMap(workSrcMap),
+				Mac_CopyMask(pointsSrcMap, pointsMaskMap, workSrcMap,
 						&pointsSrc[flyingPoints[i].mode],
 						&pointsSrc[flyingPoints[i].mode],
 						&flyingPoints[i].dest);
@@ -378,7 +374,6 @@ void RenderFlyingPoints (void)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  RenderSparkles
