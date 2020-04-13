@@ -1024,6 +1024,10 @@ void DrawCuckoo (Rect *theRect)
 
 void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 {
+	HGDIOBJ		wasPen;
+
+	wasPen = SelectObject(backSrcMap, GetStockObject(BLACK_PEN));
+
 	MoveToEx(backSrcMap, where.h, where.v, NULL);
 	switch (bigHand)
 	{
@@ -1127,6 +1131,8 @@ void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 		Mac_Line(backSrcMap, -2, -3);
 		break;
 	}
+
+	SelectObject(backSrcMap, wasPen);
 }
 
 //--------------------------------------------------------------  DrawClockHands
