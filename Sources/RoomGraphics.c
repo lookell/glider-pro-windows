@@ -17,7 +17,7 @@
 #define kManholeThruFloor		3957
 
 
-void LoadGraphicSpecial (SInt16);
+void LoadGraphicSpecial (HDC, SInt16);
 void DrawRoomBackground (SInt16, SInt16, SInt16);
 void DrawFloorSupport (void);
 void ReadyBackMap (void);
@@ -135,33 +135,30 @@ void DrawLocale (void)
 
 //--------------------------------------------------------------  LoadGraphicSpecial
 
-void LoadGraphicSpecial (SInt16 resID)
+void LoadGraphicSpecial (HDC hdc, SInt16 resID)
 {
-	return;
-#if 0
 	Rect		bounds;
-	PicHandle	thePicture;
+	HBITMAP		thePicture;
+	BITMAP		bmInfo;
 
 	thePicture = GetPicture(resID);
-	if (thePicture == nil)
+	if (thePicture == NULL)
 	{
-		thePicture = (PicHandle)GetResource('Date', resID);
-		if (thePicture == nil)
+		// TODO: Find out what the 'Date' resource type is.
+		//thePicture = (PicHandle)GetResource('Date', resID);
+		//if (thePicture == nil)
 		{
 			thePicture = GetPicture(2000);
-			if (thePicture == nil)
+			if (thePicture == NULL)
 				RedAlert(kErrFailedGraphicLoad);
 		}
 	}
 
-	HLock((Handle)thePicture);
-	bounds = (*thePicture)->picFrame;
-	HUnlock((Handle)thePicture);
-	OffsetRect(&bounds, -bounds.left, -bounds.top);
-	DrawPicture(thePicture, &bounds);
+	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
+	QSetRect(&bounds, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+	Mac_DrawPicture(hdc, thePicture, &bounds);
 
-	ReleaseResource((Handle)thePicture);
-#endif
+	DeleteObject(thePicture);
 }
 
 //--------------------------------------------------------------  DrawRoomBackground
