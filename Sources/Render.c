@@ -538,10 +538,8 @@ void RenderBands (void)
 
 void RenderShreds (void)
 {
-	return;
-#if 0
 	Rect		src, dest;
-	short		i, high;
+	SInt16		i, high;
 
 	if (numShredded > 0)
 	{
@@ -557,9 +555,7 @@ void RenderShreds (void)
 				src.top = src.bottom - high;
 				dest = shreds[i].bounds;
 				QOffsetRect(&dest, playOriginH, playOriginV);
-				CopyMask((BitMap *)*GetGWorldPixMap(shredSrcMap),
-						(BitMap *)*GetGWorldPixMap(shredMaskMap),
-						(BitMap *)*GetGWorldPixMap(workSrcMap),
+				Mac_CopyMask(shredSrcMap, shredMaskMap, workSrcMap,
 						&src, &src, &dest);
 				AddRectToBackRects(&dest);
 				dest.top--;
@@ -575,9 +571,7 @@ void RenderShreds (void)
 				shreds[i].frame++;
 				if (shreds[i].frame < 20)
 				{
-					CopyMask((BitMap *)*GetGWorldPixMap(shredSrcMap),
-						(BitMap *)*GetGWorldPixMap(shredMaskMap),
-							(BitMap *)*GetGWorldPixMap(workSrcMap),
+					Mac_CopyMask(shredSrcMap, shredMaskMap, workSrcMap,
 							&shredSrcRect, &shredSrcRect, &dest);
 				}
 				else
@@ -591,7 +585,6 @@ void RenderShreds (void)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  CopyRectsQD
