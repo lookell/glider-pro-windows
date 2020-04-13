@@ -135,6 +135,41 @@ void Mac_CopyMask(
 	DeleteDC(newSrcBits);
 }
 
+//--------------------------------------------------------------  DrawPicture
+// Draw the given bitmap into the destination output device. The bitmap
+// is stretched or shrinked as necessary to fit exactly with the given
+// destination rectangle.
+
+void Mac_DrawPicture(HDC hdcDst, HBITMAP myPicture, const Rect *dstRect)
+{
+	HDC hdcSrc;
+	HGDIOBJ prevBitmap;
+	BITMAP bmInfo;
+	INT xSrc, ySrc, wSrc, hSrc;
+	INT xDst, yDst, wDst, hDst;
+
+	if (dstRect->left >= dstRect->right || dstRect->top >= dstRect->bottom)
+		return;
+	if (GetObject(myPicture, sizeof(bmInfo), &bmInfo) != sizeof(bmInfo))
+		return;
+
+	xSrc = 0;
+	ySrc = 0;
+	wSrc = bmInfo.bmWidth;
+	hSrc = bmInfo.bmHeight;
+	xDst = dstRect->left;
+	yDst = dstRect->top;
+	wDst = dstRect->right - dstRect->left;
+	hDst = dstRect->bottom - dstRect->top;
+
+	hdcSrc = CreateCompatibleDC(NULL);
+	prevBitmap = SelectObject(hdcSrc, myPicture);
+	StretchBlt(hdcDst, xDst, yDst, wDst, hDst,
+		hdcSrc, xSrc, ySrc, wSrc, hSrc, SRCCOPY);
+	SelectObject(hdcSrc, prevBitmap);
+	DeleteDC(hdcSrc);
+}
+
 //--------------------------------------------------------------  DrawString
 // Draw the given character string, starting from the current position
 // and using the current settings. The reference point of the text is
