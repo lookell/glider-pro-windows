@@ -1024,119 +1024,109 @@ void DrawCuckoo (Rect *theRect)
 
 void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-	MoveTo(where.h, where.v);
+	MoveToEx(backSrcMap, where.h, where.v, NULL);
 	switch (bigHand)
 	{
 		case 0:
-		Line(0, -6);
+		Mac_Line(backSrcMap, 0, -6);
 		break;
 
 		case 1:
-		Line(3, -5);
+		Mac_Line(backSrcMap, 3, -5);
 		break;
 
 		case 2:
-		Line(5, -3);
+		Mac_Line(backSrcMap, 5, -3);
 		break;
 
 		case 3:
-		Line(6, 0);
+		Mac_Line(backSrcMap, 6, 0);
 		break;
 
 		case 4:
-		Line(5, 3);
+		Mac_Line(backSrcMap, 5, 3);
 		break;
 
 		case 5:
-		Line(3, 5);
+		Mac_Line(backSrcMap, 3, 5);
 		break;
 
 		case 6:
-		Line(0, 6);
+		Mac_Line(backSrcMap, 0, 6);
 		break;
 
 		case 7:
-		Line(-3, 5);
+		Mac_Line(backSrcMap, -3, 5);
 		break;
 
 		case 8:
-		Line(-5, 3);
+		Mac_Line(backSrcMap, -5, 3);
 		break;
 
 		case 9:
-		Line(-6, 0);
+		Mac_Line(backSrcMap, -6, 0);
 		break;
 
 		case 10:
-		Line(-5, -3);
+		Mac_Line(backSrcMap, -5, -3);
 		break;
 
 		case 11:
-		Line(-3, -5);
+		Mac_Line(backSrcMap, -3, -5);
 		break;
 	}
 
-	MoveTo(where.h, where.v);
+	MoveToEx(backSrcMap, where.h, where.v, NULL);
 	switch (littleHand)
 	{
 		case 0:
-		Line(0, -4);
+		Mac_Line(backSrcMap, 0, -4);
 		break;
 
 		case 1:
-		Line(2, -3);
+		Mac_Line(backSrcMap, 2, -3);
 		break;
 
 		case 2:
-		Line(3, -2);
+		Mac_Line(backSrcMap, 3, -2);
 		break;
 
 		case 3:
-		Line(4, 0);
+		Mac_Line(backSrcMap, 4, 0);
 		break;
 
 		case 4:
-		Line(3, 2);
+		Mac_Line(backSrcMap, 3, 2);
 		break;
 
 		case 5:
-		Line(2, 3);
+		Mac_Line(backSrcMap, 2, 3);
 		break;
 
 		case 6:
-		Line(0, 4);
+		Mac_Line(backSrcMap, 0, 4);
 		break;
 
 		case 7:
-		Line(-2, 3);
+		Mac_Line(backSrcMap, -2, 3);
 		break;
 
 		case 8:
-		Line(-3, 2);
+		Mac_Line(backSrcMap, -3, 2);
 		break;
 
 		case 9:
-		Line(-4, 0);
+		Mac_Line(backSrcMap, -4, 0);
 		break;
 
 		case 10:
-		Line(-3, -2);
+		Mac_Line(backSrcMap, -3, -2);
 		break;
 
 		case 11:
-		Line(-2, -3);
+		Mac_Line(backSrcMap, -2, -3);
 		break;
 	}
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
 }
 
 //--------------------------------------------------------------  DrawClockHands
