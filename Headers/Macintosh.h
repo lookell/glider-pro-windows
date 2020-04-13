@@ -117,7 +117,7 @@ void Mac_GetDateTime(UInt32 *secs);
 void Mac_InsetRect(Rect *r, SInt16 dh, SInt16 dv);
 void Mac_Line(HDC hdc, SInt16 dh, SInt16 dv);
 void Mac_LineTo(HDC hdc, SInt16 h, SInt16 v);
-void Mac_NumToString(SInt32 theNum, Str255 *theString);
+void Mac_NumToString(SInt32 theNum, StringPtr theString);
 Boolean Mac_PtInRect(Point pt, const Rect *r);
 Boolean Mac_SectRect(const Rect *src1, const Rect *src2, Rect *dstRect);
 

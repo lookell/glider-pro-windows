@@ -343,32 +343,31 @@ void ZoomBetweenWindows (void)
 #ifndef COMPILEDEMO
 void UpdateEditWindowTitle (void)
 {
-	return;
-#if 0
 	Str255		newTitle, tempStr;
+	WCHAR		windowText[256];
 
-	if (mainWindow == nil)
+	if (mainWindow == NULL)
 		return;
 
 	PasStringCopy(thisHouseName, newTitle);
-	PasStringConcat(newTitle, "\p - ");
+	PasStringConcatC(newTitle, " - ");
 	if (noRoomAtAll)
-		PasStringConcat(newTitle, "\pNo rooms");
+		PasStringConcatC(newTitle, "No rooms");
 	else if (houseUnlocked)
 	{
 		PasStringConcat(newTitle, thisRoom->name);
-		PasStringConcat(newTitle, "\p (");
-		NumToString((long)thisRoom->floor, tempStr);
+		PasStringConcatC(newTitle, " (");
+		Mac_NumToString((SInt32)thisRoom->floor, tempStr);
 		PasStringConcat(newTitle, tempStr);
-		PasStringConcat(newTitle, "\p, ");
-		NumToString((long)thisRoom->suite, tempStr);
+		PasStringConcatC(newTitle, ", ");
+		Mac_NumToString((SInt32)thisRoom->suite, tempStr);
 		PasStringConcat(newTitle, tempStr);
-		PasStringConcat(newTitle, "\p)");
+		PasStringConcatC(newTitle, ")");
 	}
 	else
-		PasStringConcat(newTitle, "\pHouse Locked");
-	SetWTitle(mainWindow, newTitle);
-#endif
+		PasStringConcatC(newTitle, "House Locked");
+	WinFromMacString(windowText, ARRAYSIZE(windowText), newTitle);
+	SetWindowText(mainWindow, windowText);
 }
 #endif
 
