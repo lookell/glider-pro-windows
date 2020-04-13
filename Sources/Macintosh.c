@@ -256,6 +256,14 @@ void Mac_InsetRect(Rect *r, SInt16 dh, SInt16 dv)
 	}
 }
 
+void Mac_InvalWindowRect(HWND window, const Rect *bounds)
+{
+	RECT rcDirty;
+
+	SetRect(&rcDirty, bounds->left, bounds->top, bounds->right, bounds->bottom);
+	InvalidateRect(window, &rcDirty, TRUE);
+}
+
 //--------------------------------------------------------------  Line
 // Draw a line from the current position to the specified offsets.
 // 'dh' specifies the horizontal movement and 'dv' specifies the
