@@ -297,6 +297,9 @@ void LtGrayForeColor (void);
 void GrayForeColor (void);
 void DkGrayForeColor (void);
 void RestoreColorsSlam (void);
+void ColorShadowRect (HDC, Rect *, SInt32);
+void ColorShadowOval (HDC, Rect *, SInt32);
+void ColorShadowRegion (HDC, HRGN, SInt32);
 
 void MonitorWait (void);								// --- DebugUtils.c
 void DisplayRect (Rect *);

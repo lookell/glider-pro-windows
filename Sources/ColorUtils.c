@@ -281,3 +281,61 @@ void RestoreColorsSlam (void)
 #endif
 }
 
+//--------------------------------------------------------------  ColorRectShadow
+
+// Similar to ColorRect, but every other pixel is set to the specified color
+// to create a dithered shadow.
+
+void ColorShadowRect (HDC hdc, Rect *theRect, SInt32 color)
+{
+	HRGN theRgn = CreateRectRgn(theRect->left, theRect->top,
+			theRect->right, theRect->bottom);
+	ColorShadowRegion(hdc, theRgn, color);
+	DeleteObject(theRgn);
+}
+
+//--------------------------------------------------------------  ColorOvalShadow
+
+// Similar to ColorOval, but every other pixel is set to the specified color
+// to create a dithered shadow.
+
+void ColorShadowOval (HDC hdc, Rect *theRect, SInt32 color)
+{
+	HRGN theRgn = CreateEllipticRgn(theRect->left, theRect->top,
+			theRect->right, theRect->bottom);
+	ColorShadowRegion(hdc, theRgn, color);
+	DeleteObject(theRgn);
+}
+
+//--------------------------------------------------------------  ColorRegionShadow
+
+// Similar to ColorRegion, but every other pixel is set to the specified color
+// to create a dithered shadow.
+
+void ColorShadowRegion (HDC hdc, HRGN theRgn, SInt32 color)
+{
+	const WORD	grayBits[8] = {
+		0x5555, 0xAAAA, 0x5555, 0xAAAA, 0x5555, 0xAAAA, 0x5555, 0xAAAA,
+	};
+	HBITMAP		hbmGray;
+	HBRUSH		hbrShadow;
+
+	// create the shadow bitmap and brush, and save the DC's settings
+	hbmGray = CreateBitmap(8, 8, 1, 1, grayBits);
+	hbrShadow = CreatePatternBrush(hbmGray);
+	SaveDC(hdc);
+	// set the black bits in the brush to white on the destination
+	SetTextColor(hdc, RGB(0x00, 0x00, 0x00));
+	SetBkColor(hdc, RGB(0xFF, 0xFF, 0xFF));
+	SetROP2(hdc, R2_MERGENOTPEN); // DPno
+	FillRgn(hdc, theRgn, hbrShadow);
+	// set the black bits in the brush to the desired color on the destination
+	SetTextColor(hdc, Index2ColorRef(color));
+	SetROP2(hdc, R2_MASKPEN); // DPa
+	FillRgn(hdc, theRgn, hbrShadow);
+	// restore the DC's settings, and delete the shadow bitmap and brush
+	RestoreDC(hdc, -1);
+	DeleteObject(hbrShadow);
+	DeleteObject(hbmGray);
+}
+
