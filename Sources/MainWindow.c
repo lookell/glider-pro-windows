@@ -239,7 +239,7 @@ void OpenMainWindow (void)
 		mainWindowRect = thisMac.screen;
 		ZeroRectCorner(&mainWindowRect);
 		mainWindowRect.bottom -= 20;		// thisMac.menuHigh
-		windowStyle = WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME;
+		windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 		SetRect(&rcClient, 0, 0, mainWindowRect.right, mainWindowRect.bottom);
 		AdjustWindowRect(&rcClient, windowStyle, TRUE);
 		mainWindow = CreateWindow(
