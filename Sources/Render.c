@@ -195,9 +195,7 @@ void DrawReflection (gliderPtr thisGlider, Boolean oneOrTwo)
 
 void RenderFlames (void)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	if ((numFlames == 0) && (numTikiFlames == 0) && (numCoals == 0))
 		return;
@@ -214,8 +212,7 @@ void RenderFlames (void)
 			flames[i].src.bottom = 15;
 		}
 
-		CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[flames[i].who].map),
-				(BitMap *)*GetGWorldPixMap(workSrcMap),
+		Mac_CopyBits(savedMaps[flames[i].who].map, workSrcMap,
 				&flames[i].src, &flames[i].dest, srcCopy, nil);
 
 		AddRectToWorkRects(&flames[i].dest);
@@ -233,8 +230,7 @@ void RenderFlames (void)
 			tikiFlames[i].src.bottom = 10;
 		}
 
-		CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[tikiFlames[i].who].map),
-				(BitMap *)*GetGWorldPixMap(workSrcMap),
+		Mac_CopyBits(savedMaps[tikiFlames[i].who].map, workSrcMap,
 				&tikiFlames[i].src, &tikiFlames[i].dest, srcCopy, nil);
 
 		AddRectToWorkRects(&tikiFlames[i].dest);
@@ -252,13 +248,11 @@ void RenderFlames (void)
 			bbqCoals[i].src.bottom = 9;
 		}
 
-		CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[bbqCoals[i].who].map),
-				(BitMap *)*GetGWorldPixMap(workSrcMap),
+		Mac_CopyBits(savedMaps[bbqCoals[i].who].map, workSrcMap,
 				&bbqCoals[i].src, &bbqCoals[i].dest, srcCopy, nil);
 
 		AddRectToWorkRects(&bbqCoals[i].dest);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  RenderPendulums
