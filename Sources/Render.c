@@ -259,9 +259,7 @@ void RenderFlames (void)
 
 void RenderPendulums (void)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 	Boolean		playedTikTok;
 
 	playedTikTok = false;
@@ -312,15 +310,13 @@ void RenderPendulums (void)
 					}
 				}
 
-				CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[pendulums[i].who].map),
-						(BitMap *)*GetGWorldPixMap(workSrcMap),
+				Mac_CopyBits(savedMaps[pendulums[i].who].map, workSrcMap,
 						&pendulums[i].src, &pendulums[i].dest, srcCopy, nil);
 
 				AddRectToWorkRects(&pendulums[i].dest);
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  RenderFlyingPoints
