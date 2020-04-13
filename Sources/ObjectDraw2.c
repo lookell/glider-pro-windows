@@ -844,14 +844,10 @@ void DrawFlower (Rect *theRect, SInt16 which)
 
 void DrawWallWindow (Rect *window)
 {
-	return;
-#if 0
 	#define		kWindowSillThick	7
 	Rect		tempRect, tempRect2;
-	long		brownC, tanC, dkstRedC;
-	short		halfWay;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	SInt32		brownC, tanC, dkstRedC;
+	SInt16		halfWay;
 
 	if (thisMac.isDepth == 4)
 	{
@@ -866,75 +862,69 @@ void DrawWallWindow (Rect *window)
 		dkstRedC = k8DkRed2Color;
 	}
 
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-
 	tempRect = *window;
-	InsetRect(&tempRect, 3, 0);
-	ColorRect(&tempRect, brownC);
-	HiliteRect(&tempRect, tanC, dkstRedC);
+	Mac_InsetRect(&tempRect, 3, 0);
+	ColorRect(backSrcMap, &tempRect, brownC);
+	HiliteRect(backSrcMap, &tempRect, tanC, dkstRedC);
 
 	tempRect = *window;			// top sill
 	tempRect.bottom = tempRect.top + kWindowSillThick;
 	tempRect.left++;
 	tempRect.right--;
-	ColorRect(&tempRect, brownC);
-	HiliteRect(&tempRect, tanC, dkstRedC);
+	ColorRect(backSrcMap, &tempRect, brownC);
+	HiliteRect(backSrcMap, &tempRect, tanC, dkstRedC);
 	tempRect.left--;
 	tempRect.right++;
 	tempRect.top += 2;
 	tempRect.bottom -= 2;
-	ColorRect(&tempRect, brownC);
-	HiliteRect(&tempRect, tanC, dkstRedC);
+	ColorRect(backSrcMap, &tempRect, brownC);
+	HiliteRect(backSrcMap, &tempRect, tanC, dkstRedC);
 
 	tempRect = *window;			// bottom sill
 	tempRect.top = tempRect.bottom - kWindowSillThick;
 	QOffsetRect(&tempRect, 0, -4);
 	tempRect.left++;
 	tempRect.right--;
-	ColorRect(&tempRect, brownC);
-	HiliteRect(&tempRect, tanC, dkstRedC);
+	ColorRect(backSrcMap, &tempRect, brownC);
+	HiliteRect(backSrcMap, &tempRect, tanC, dkstRedC);
 	tempRect.left--;
 	tempRect.right++;
 	tempRect.top += 2;
 	tempRect.bottom -= 2;
-	ColorRect(&tempRect, brownC);
-	HiliteRect(&tempRect, tanC, dkstRedC);
+	ColorRect(backSrcMap, &tempRect, brownC);
+	HiliteRect(backSrcMap, &tempRect, tanC, dkstRedC);
 
 	tempRect = *window;			// inside frame
 	tempRect.left += 8;
 	tempRect.right -= 8;
 	tempRect.top += 11;
 	tempRect.bottom -= 15;
-	HiliteRect(&tempRect, dkstRedC, tanC);
+	HiliteRect(backSrcMap, &tempRect, dkstRedC, tanC);
 
 	halfWay = (tempRect.top + tempRect.bottom) / 2;
 
 	tempRect2 = tempRect;		// top pane
 	tempRect2.bottom = halfWay + 2;
-	InsetRect(&tempRect2, 5, 5);
-	HiliteRect(&tempRect2, dkstRedC, tanC);
-	InsetRect(&tempRect2, 1, 1);
+	Mac_InsetRect(&tempRect2, 5, 5);
+	HiliteRect(backSrcMap, &tempRect2, dkstRedC, tanC);
+	Mac_InsetRect(&tempRect2, 1, 1);
 	if (thisMac.isDepth == 4)
-		ColorRect(&tempRect2, 5);
+		ColorRect(backSrcMap, &tempRect2, 5);
 	else
-		ColorRect(&tempRect2, k8SkyColor);
+		ColorRect(backSrcMap, &tempRect2, k8SkyColor);
 
 	tempRect2 = tempRect;		// bottom pane
 	tempRect2.top = halfWay - 3;
-	InsetRect(&tempRect2, 5, 5);
-	HiliteRect(&tempRect2, dkstRedC, tanC);
-	InsetRect(&tempRect2, 1, 1);
+	Mac_InsetRect(&tempRect2, 5, 5);
+	HiliteRect(backSrcMap, &tempRect2, dkstRedC, tanC);
+	Mac_InsetRect(&tempRect2, 1, 1);
 	if (thisMac.isDepth == 4)
-		ColorRect(&tempRect2, 5);
+		ColorRect(backSrcMap, &tempRect2, 5);
 	else
-		ColorRect(&tempRect2, k8SkyColor);
+		ColorRect(backSrcMap, &tempRect2, k8SkyColor);
 
-	ColorLine(tempRect2.left - 5, tempRect2.top - 7,
+	ColorLine(backSrcMap, tempRect2.left - 5, tempRect2.top - 7,
 			tempRect2.right + 5, tempRect2.top - 7, tanC);
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
 }
 
 //--------------------------------------------------------------  DrawCalendar
