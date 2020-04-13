@@ -336,16 +336,7 @@ void DrawInvisibleSwitch (Rect *theRect)
 
 void DrawTrigger (Rect *theRect)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-	ColorFrameRect(theRect, kIntenseBlueColor);
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	ColorFrameRect(backSrcMap, theRect, kIntenseBlueColor);
 }
 
 //--------------------------------------------------------------  DrawSoundTrigger
