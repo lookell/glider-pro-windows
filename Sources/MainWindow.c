@@ -304,12 +304,9 @@ void OpenMainWindow (void)
 
 void CloseMainWindow (void)
 {
-	return;
-#if 0
-	if (mainWindow != nil)
-		DisposeWindow(mainWindow);
-	mainWindow = nil;
-#endif
+	if (mainWindow != NULL)
+		DestroyWindow(mainWindow);
+	mainWindow = NULL;
 }
 
 //--------------------------------------------------------------  ZoomBetweenWindows
