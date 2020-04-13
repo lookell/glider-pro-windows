@@ -2070,10 +2070,9 @@ void SelectPrevObject (void)
 #ifndef COMPILEDEMO
 void GetThisRoomsObjRects (void)
 {
-	return;
-#if 0
-	PicHandle	thePict;
-	short		i, wide, tall;
+	HBITMAP		thePict;
+	SInt16		i, wide, tall;
+	BITMAP		bmInfo;
 
 	isFirstRoom = (GetFirstRoomNumber() == thisRoomNumber);
 
@@ -2084,11 +2083,11 @@ void GetThisRoomsObjRects (void)
 
 	QSetRect(&leftStartGliderDest, 0, 0, 48, 16);
 	QOffsetRect(&leftStartGliderDest, 0,
-			kGliderStartsDown + (short)thisRoom->leftStart);
+			kGliderStartsDown + (SInt16)thisRoom->leftStart);
 
 	QSetRect(&rightStartGliderDest, 0, 0, 48, 16);
 	QOffsetRect(&rightStartGliderDest, kRoomWide - 48,
-			kGliderStartsDown + (short)thisRoom->rightStart);
+			kGliderStartsDown + (SInt16)thisRoom->rightStart);
 
 	if ((noRoomAtAll) || (!houseUnlocked))
 	{
@@ -2304,16 +2303,16 @@ void GetThisRoomsObjRects (void)
 
 				case kCustomPict:
 				thePict = GetPicture(thisRoom->objects[i].data.g.height);
-				if (thePict == nil)
+				if (thePict == NULL)
 				{
 					thisRoom->objects[i].data.g.height = 10000;
 					roomObjectRects[i] = srcRects[thisRoom->objects[i].what];
 				}
 				else
 				{
-					HLock((Handle)thePict);
-					roomObjectRects[i] = (*thePict)->picFrame;
-					HUnlock((Handle)thePict);
+					GetObject(thePict, sizeof(bmInfo), &bmInfo);
+					QSetRect(&roomObjectRects[i], 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+					DeleteObject(thePict);
 				}
 				ZeroRectCorner(&roomObjectRects[i]);
 				QOffsetRect(&roomObjectRects[i],
@@ -2362,7 +2361,6 @@ void GetThisRoomsObjRects (void)
 			}
 		}
 	}
-#endif
 }
 #endif
 
