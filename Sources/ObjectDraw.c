@@ -123,17 +123,12 @@ void DrawLiftArea (Rect *theRect)
 
 void DrawTable (Rect *tableTop, SInt16 down)
 {
-	return;
-#if 0
 	#define		kTableBaseTop		296
 	#define		kTableShadowTop		312
 	#define		kTableShadowOffset	12
 	Rect		tempRect;
-	long		brownC, tanC, dkRedC, blackC;
-	short		hCenter, vShadow;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-	Pattern		dummyPattern;
+	SInt32		brownC, tanC, dkRedC, blackC;
+	SInt16		hCenter, vShadow;
 
 	if (thisMac.isDepth == 4)
 	{
@@ -150,92 +145,81 @@ void DrawTable (Rect *tableTop, SInt16 down)
 		blackC = k8BlackColor;
 	}
 
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-
 	QSetRect(&tempRect, tableTop->left, 0, tableTop->right,
 			RectWide(tableTop) / 10);
 	QOffsetRect(&tempRect, 0,
 			-HalfRectTall(&tempRect) + kTableShadowTop + down);
 	QOffsetRect(&tempRect, kTableShadowOffset, -kTableShadowOffset);
-	PenPat(GetQDGlobalsGray(&dummyPattern));
-	PenMode(patOr);
 	if (thisMac.isDepth == 4)
-		ColorOval(&tempRect, 15);
+		ColorShadowOval(backSrcMap, &tempRect, 15);
 	else
-		ColorOval(&tempRect, k8DkstGrayColor);
-	PenNormal();
+		ColorShadowOval(backSrcMap, &tempRect, k8DkstGrayColor);
 
-	InsetRect(tableTop, 0, 1);
-	ColorRect(tableTop, brownC);
-	InsetRect(tableTop, 0, -1);
+	Mac_InsetRect(tableTop, 0, 1);
+	ColorRect(backSrcMap, tableTop, brownC);
+	Mac_InsetRect(tableTop, 0, -1);
 
-	ColorLine(tableTop->left, tableTop->top + 1,
+	ColorLine(backSrcMap, tableTop->left, tableTop->top + 1,
 			tableTop->left, tableTop->top + 1, k8WhiteColor);
-	ColorLine(tableTop->left + 1, tableTop->top,
+	ColorLine(backSrcMap, tableTop->left + 1, tableTop->top,
 			tableTop->right - 2, tableTop->top, k8WhiteColor);
-	ColorLine(tableTop->right - 1, tableTop->top + 1,
+	ColorLine(backSrcMap, tableTop->right - 1, tableTop->top + 1,
 			tableTop->right - 1, tableTop->top + 1, k8WhiteColor);
 
-	ColorLine(tableTop->left + 1, tableTop->top + 1,
+	ColorLine(backSrcMap, tableTop->left + 1, tableTop->top + 1,
 			tableTop->right - 2, tableTop->top + 1, tanC);
-	ColorLine(tableTop->left, tableTop->top + 2,
+	ColorLine(backSrcMap, tableTop->left, tableTop->top + 2,
 			tableTop->left, tableTop->bottom - 2, tanC);
 
-	ColorLine(tableTop->left + 1, tableTop->bottom - 1,
+	ColorLine(backSrcMap, tableTop->left + 1, tableTop->bottom - 1,
 			tableTop->right - 2, tableTop->bottom - 1, blackC);
-	ColorLine(tableTop->right - 1, tableTop->top + 2,
+	ColorLine(backSrcMap, tableTop->right - 1, tableTop->top + 2,
 			tableTop->right - 1, tableTop->bottom - 2, blackC);
 
-	ColorLine(tableTop->left + 1, tableTop->bottom - 2,
+	ColorLine(backSrcMap, tableTop->left + 1, tableTop->bottom - 2,
 			tableTop->right - 2, tableTop->bottom - 2, dkRedC);
 
 	if (tableTop->bottom < kTableBaseTop + down)
 	{
 		hCenter = (tableTop->left + tableTop->right) / 2;
 
-		ColorLine(hCenter - 3, tableTop->bottom,
+		ColorLine(backSrcMap, hCenter - 3, tableTop->bottom,
 				hCenter - 3, kTableBaseTop + down, blackC);
-		ColorLine(hCenter - 2, tableTop->bottom,
+		ColorLine(backSrcMap, hCenter - 2, tableTop->bottom,
 				hCenter - 2, kTableBaseTop + down, k8LtGrayColor);
-		ColorLine(hCenter - 1, tableTop->bottom,
+		ColorLine(backSrcMap, hCenter - 1, tableTop->bottom,
 				hCenter - 1, kTableBaseTop + down, k8GrayColor);
-		ColorLine(hCenter, tableTop->bottom,
+		ColorLine(backSrcMap, hCenter, tableTop->bottom,
 				hCenter, kTableBaseTop + down, k8DkGrayColor);
-		ColorLine(hCenter + 1, tableTop->bottom,
+		ColorLine(backSrcMap, hCenter + 1, tableTop->bottom,
 				hCenter + 1, kTableBaseTop + down, blackC);
 
 		vShadow = tableTop->bottom + RectWide(tableTop) / 4 - 2;
 		if (vShadow > kTableBaseTop + down)
 		{
-			ColorLine(hCenter - 2, tableTop->bottom,
+			ColorLine(backSrcMap, hCenter - 2, tableTop->bottom,
 					hCenter - 2, kTableBaseTop + down, k8DkGrayColor);
-			ColorLine(hCenter - 1, tableTop->bottom,
+			ColorLine(backSrcMap, hCenter - 1, tableTop->bottom,
 					hCenter - 1, kTableBaseTop + down, k8DkGrayColor);
-			ColorLine(hCenter, tableTop->bottom,
+			ColorLine(backSrcMap, hCenter, tableTop->bottom,
 					hCenter, kTableBaseTop + down, blackC);
 		}
 		else
 		{
-			ColorLine(hCenter - 2, tableTop->bottom,
+			ColorLine(backSrcMap, hCenter - 2, tableTop->bottom,
 					hCenter - 2, vShadow, k8DkGrayColor);
-			ColorLine(hCenter - 1, tableTop->bottom,
+			ColorLine(backSrcMap, hCenter - 1, tableTop->bottom,
 					hCenter - 1, vShadow + 1, k8DkGrayColor);
-			ColorLine(hCenter, tableTop->bottom,
+			ColorLine(backSrcMap, hCenter, tableTop->bottom,
 					hCenter, vShadow + 2, blackC);
 		}
 	}
 
-	SetGWorld(wasCPort, wasWorld);
-
 	tempRect = tableSrc;
 	QOffsetRect(&tempRect, -HalfRectWide(&tableSrc) + tableTop->left +
 			HalfRectWide(tableTop), kTableBaseTop + down);
-	CopyMask((BitMap *)*GetGWorldPixMap(furnitureSrcMap),
-			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
 			&tableSrc, &tableSrc, &tempRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawShelf
