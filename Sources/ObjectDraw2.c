@@ -329,16 +329,7 @@ void DrawKnifeSwitch (Rect *theRect, Boolean state)
 
 void DrawInvisibleSwitch (Rect *theRect)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-	ColorFrameRect(theRect, kIntenseGreenColor);
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	ColorFrameRect(backSrcMap, theRect, kIntenseGreenColor);
 }
 
 //--------------------------------------------------------------  DrawTrigger
