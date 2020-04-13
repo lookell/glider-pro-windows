@@ -1139,122 +1139,115 @@ void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 
 void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	HGDIOBJ		wasPen;
 
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-	ForeColor(whiteColor);
+	wasPen = SelectObject(backSrcMap, GetStockObject(WHITE_PEN));
 
-	MoveTo(where.h, where.v);
+	MoveToEx(backSrcMap, where.h, where.v, NULL);
 	switch (bigHand)
 	{
 		case 0:
-		Line(0, -10);
+		Mac_Line(backSrcMap, 0, -10);
 		break;
 
 		case 1:
-		Line(5, -9);
+		Mac_Line(backSrcMap, 5, -9);
 		break;
 
 		case 2:
-		Line(9, -5);
+		Mac_Line(backSrcMap, 9, -5);
 		break;
 
 		case 3:
-		Line(10, 0);
+		Mac_Line(backSrcMap, 10, 0);
 		break;
 
 		case 4:
-		Line(9, 5);
+		Mac_Line(backSrcMap, 9, 5);
 		break;
 
 		case 5:
-		Line(5, 9);
+		Mac_Line(backSrcMap, 5, 9);
 		break;
 
 		case 6:
-		Line(0, 10);
+		Mac_Line(backSrcMap, 0, 10);
 		break;
 
 		case 7:
-		Line(-5, 9);
+		Mac_Line(backSrcMap, -5, 9);
 		break;
 
 		case 8:
-		Line(-9, 5);
+		Mac_Line(backSrcMap, -9, 5);
 		break;
 
 		case 9:
-		Line(-10, 0);
+		Mac_Line(backSrcMap, -10, 0);
 		break;
 
 		case 10:
-		Line(-9, -5);
+		Mac_Line(backSrcMap, -9, -5);
 		break;
 
 		case 11:
-		Line(-5, -9);
+		Mac_Line(backSrcMap, -5, -9);
 		break;
 	}
 
-	MoveTo(where.h, where.v);
+	MoveToEx(backSrcMap, where.h, where.v, NULL);
 	switch (littleHand)
 	{
 		case 0:
-		Line(0, -6);
+		Mac_Line(backSrcMap, 0, -6);
 		break;
 
 		case 1:
-		Line(3, -5);
+		Mac_Line(backSrcMap, 3, -5);
 		break;
 
 		case 2:
-		Line(5, -3);
+		Mac_Line(backSrcMap, 5, -3);
 		break;
 
 		case 3:
-		Line(6, 0);
+		Mac_Line(backSrcMap, 6, 0);
 		break;
 
 		case 4:
-		Line(5, 3);
+		Mac_Line(backSrcMap, 5, 3);
 		break;
 
 		case 5:
-		Line(3, 5);
+		Mac_Line(backSrcMap, 3, 5);
 		break;
 
 		case 6:
-		Line(0, 6);
+		Mac_Line(backSrcMap, 0, 6);
 		break;
 
 		case 7:
-		Line(-3, 5);
+		Mac_Line(backSrcMap, -3, 5);
 		break;
 
 		case 8:
-		Line(-5, 3);
+		Mac_Line(backSrcMap, -5, 3);
 		break;
 
 		case 9:
-		Line(-6, 0);
+		Mac_Line(backSrcMap, -6, 0);
 		break;
 
 		case 10:
-		Line(-5, -3);
+		Mac_Line(backSrcMap, -5, -3);
 		break;
 
 		case 11:
-		Line(-3, -5);
+		Mac_Line(backSrcMap, -3, -5);
 		break;
 	}
 
-	ForeColor(blackColor);
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	SelectObject(backSrcMap, wasPen);
 }
 
 //--------------------------------------------------------------  DrawSimplePrizes
