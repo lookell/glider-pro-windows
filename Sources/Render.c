@@ -380,9 +380,7 @@ void RenderFlyingPoints (void)
 
 void RenderSparkles (void)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	if (numSparkles == 0)
 		return;
@@ -399,9 +397,7 @@ void RenderSparkles (void)
 			}
 			else
 			{
-				CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
-						(BitMap *)*GetGWorldPixMap(bonusMaskMap),
-						(BitMap *)*GetGWorldPixMap(workSrcMap),
+				Mac_CopyMask(bonusSrcMap, bonusMaskMap, workSrcMap,
 						&sparkleSrc[sparkles[i].mode],
 						&sparkleSrc[sparkles[i].mode],
 						&sparkles[i].bounds);
@@ -412,7 +408,6 @@ void RenderSparkles (void)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  RenderStars
