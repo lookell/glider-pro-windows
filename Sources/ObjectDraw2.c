@@ -358,12 +358,8 @@ void DrawSimpleLight (SInt16 what, Rect *theRect)
 
 void DrawFlourescent (Rect *theRect)
 {
-	return;
-#if 0
 	Rect		partRect;
-	long		grayC, gray2C, gray3C, gray4C, violetC;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	SInt32		grayC, gray2C, gray3C, gray4C, violetC;
 
 	if (thisMac.isDepth == 4)
 	{
@@ -382,43 +378,36 @@ void DrawFlourescent (Rect *theRect)
 		violetC = kPaleVioletColor;
 	}
 
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-
-	ColorLine(theRect->left + 16, theRect->top,
+	ColorLine(backSrcMap, theRect->left + 16, theRect->top,
 			theRect->right - 17, theRect->top, grayC);
-	ColorLine(theRect->left + 16, theRect->top + 1,
+	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 1,
 			theRect->right - 17, theRect->top + 1, gray2C);
-	ColorLine(theRect->left + 16, theRect->top + 2,
+	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 2,
 			theRect->right - 17, theRect->top + 2, gray2C);
-	ColorLine(theRect->left + 16, theRect->top + 3,
+	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 3,
 			theRect->right - 17, theRect->top + 3, gray3C);
-	ColorLine(theRect->left + 16, theRect->top + 4,
+	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 4,
 			theRect->right - 17, theRect->top + 4, gray4C);
-	ColorLine(theRect->left + 16, theRect->top + 5,
+	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 5,
 			theRect->right - 17, theRect->top + 5, violetC);
-	ColorLine(theRect->left + 16, theRect->top + 6,
+	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 6,
 			theRect->right - 17, theRect->top + 6, k8WhiteColor);
-	ColorLine(theRect->left + 16, theRect->top + 7,
+	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 7,
 			theRect->right - 17, theRect->top + 7, k8WhiteColor);
-	ColorLine(theRect->left + 16, theRect->top + 8,
+	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 8,
 			theRect->right - 17, theRect->top + 8, k8WhiteColor);
-	ColorLine(theRect->left + 16, theRect->top + 9,
+	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 9,
 			theRect->right - 17, theRect->top + 9, k8WhiteColor);
-	ColorLine(theRect->left + 16, theRect->top + 10,
+	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 10,
 			theRect->right - 17, theRect->top + 10, k8WhiteColor);
-	ColorLine(theRect->left + 16, theRect->top + 11,
+	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 11,
 			theRect->right - 17, theRect->top + 11, violetC);
-
-	SetGWorld(wasCPort, wasWorld);
 
 	partRect = flourescentSrc1;
 	ZeroRectCorner(&partRect);
 	QOffsetRect(&partRect, theRect->left, theRect->top);
 
-	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap),
-			(BitMap *)*GetGWorldPixMap(lightMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(lightSrcMap, lightMaskMap, backSrcMap,
 			&flourescentSrc1, &flourescentSrc1, &partRect);
 
 	partRect = flourescentSrc2;
@@ -426,11 +415,8 @@ void DrawFlourescent (Rect *theRect)
 	QOffsetRect(&partRect, -partRect.right, 0);
 	QOffsetRect(&partRect, theRect->right, theRect->top);
 
-	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap),
-			(BitMap *)*GetGWorldPixMap(lightMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(lightSrcMap, lightMaskMap, backSrcMap,
 			&flourescentSrc2, &flourescentSrc2, &partRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawTrackLight
