@@ -14,8 +14,8 @@
 #include <stdlib.h>
 #include "Macintosh.h"
 #include "WinAPI.h"
-
 #include "Externs.h"
+#include "RectUtils.h"
 #include "Utilities.h"
 
 
@@ -412,30 +412,18 @@ HBITMAP GetPicture (SInt16 resID)
 
 void LoadGraphic (HDC hdc, SInt16 resID)
 {
-	HBITMAP		thePicture, hbmPrev;
-	BITMAP		bitmapInfo;
-	HDC			hdcSrc;
+	Rect		bounds;
+	HBITMAP		thePicture;
+	BITMAP		bmInfo;
 
 	thePicture = GetPicture(resID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
-	GetObject(thePicture, sizeof(bitmapInfo), &bitmapInfo);
-	hdcSrc = CreateCompatibleDC(NULL);
-	hbmPrev = SelectObject(hdcSrc, thePicture);
-	BitBlt(
-		hdc,
-		0,
-		0,
-		bitmapInfo.bmWidth,
-		bitmapInfo.bmHeight,
-		hdcSrc,
-		0,
-		0,
-		SRCCOPY
-	);
-	SelectObject(hdcSrc, hbmPrev);
-	DeleteDC(hdcSrc);
+	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
+	QSetRect(&bounds, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+	Mac_DrawPicture(hdc, thePicture, &bounds);
+
 	DeleteObject(thePicture);
 }
 
