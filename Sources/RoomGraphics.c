@@ -393,8 +393,6 @@ void RestoreWorkMap (void)
 
 void ReadyLevel (void)
 {
-	return;
-#if 0
 	NilSavedMaps();
 
 #ifdef COMPILEQT
@@ -409,7 +407,6 @@ void ReadyLevel (void)
 	DetermineRoomOpenings();
 	DrawLocale();
 	InitGarbageRects();
-#endif
 }
 
 //--------------------------------------------------------------  DrawLighting
