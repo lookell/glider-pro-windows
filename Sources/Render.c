@@ -684,12 +684,8 @@ void CopyRectBackToWork (Rect *theRect)
 
 void CopyRectWorkToBack (Rect *theRect)
 {
-	return;
-#if 0
-	CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyBits(workSrcMap, backSrcMap,
 			theRect, theRect, srcCopy, nil);
-#endif
 }
 
 //--------------------------------------------------------------  CopyRectWorkToMain
