@@ -991,13 +991,9 @@ void DrawBulletin (Rect *theRect)
 
 void DrawPictObject (SInt16 what, Rect *theRect)
 {
-	return;
-#if 0
 	Rect		bounds;
-	PicHandle	thePicture;
-	short		pictID;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	HBITMAP		thePicture;
+	SInt16		pictID;
 
 	switch (what)
 	{
@@ -1030,20 +1026,14 @@ void DrawPictObject (SInt16 what, Rect *theRect)
 		break;
 	}
 
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-
 	thePicture = GetPicture(pictID);
-	if (thePicture == nil)
+	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
 	bounds = srcRects[what];
 	QOffsetRect(&bounds, theRect->left, theRect->top);
-	DrawPicture(thePicture, &bounds);
-	ReleaseResource((Handle)thePicture);
-
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	Mac_DrawPicture(backSrcMap, thePicture, &bounds);
+	DeleteObject(thePicture);
 }
 
 //--------------------------------------------------------------  DrawPictWithMaskObject
