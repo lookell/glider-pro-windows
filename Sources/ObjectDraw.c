@@ -1005,24 +1005,19 @@ void DrawYellowClock (Rect *theRect)
 
 void DrawCuckoo (Rect *theRect)
 {
-	return;
-#if 0
-	DateTimeRec	timeRec;
+	SYSTEMTIME	localTime;
 	Point		dest;
-	short		hour, minutes;
+	SInt16		hour, minutes;
 
-	CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
-			(BitMap *)*GetGWorldPixMap(bonusMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
 			&srcRects[kCuckoo], &srcRects[kCuckoo], theRect);
 
 	dest.h = theRect->left + 19;
 	dest.v = theRect->top + 31;
-	GetTime(&timeRec);
-	hour = timeRec.hour % 12;
-	minutes = ((timeRec.minute + 2) / 5) % 12;
+	GetLocalTime(&localTime);
+	hour = localTime.wHour % 12;
+	minutes = ((localTime.wMinute + 2) / 5) % 12;
 	DrawLargeClockHands(dest, minutes, hour);
-#endif
 }
 
 //--------------------------------------------------------------  DrawClockHands
