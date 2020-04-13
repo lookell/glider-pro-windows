@@ -414,9 +414,7 @@ void RenderSparkles (void)
 
 void RenderStars (void)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	if (numStars == 0)
 		return;
@@ -435,14 +433,12 @@ void RenderStars (void)
 				theStars[i].src.bottom = 31;
 			}
 
-			CopyBits((BitMap *)*GetGWorldPixMap(savedMaps[theStars[i].who].map),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
+			Mac_CopyBits(savedMaps[theStars[i].who].map, workSrcMap,
 					&theStars[i].src, &theStars[i].dest, srcCopy, nil);
 
 			AddRectToWorkRects(&theStars[i].dest);
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  RenderGlider
