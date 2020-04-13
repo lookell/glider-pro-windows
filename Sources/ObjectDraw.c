@@ -1327,15 +1327,12 @@ void DrawInvisBonus (Rect *theRect)
 
 void DrawSlider (Rect *theRect)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	HGDIOBJ		wasBrush, wasPen;
 
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-	FrameRect(theRect);
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	wasBrush = SelectObject(backSrcMap, GetStockObject(NULL_BRUSH));
+	wasPen = SelectObject(backSrcMap, GetStockObject(BLACK_PEN));
+	Rectangle(backSrcMap, theRect->left, theRect->top, theRect->right, theRect->bottom);
+	SelectObject(backSrcMap, wasPen);
+	SelectObject(backSrcMap, wasBrush);
 }
 
