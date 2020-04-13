@@ -656,9 +656,7 @@ void RenderFrame (void)
 
 void InitGarbageRects (void)
 {
-	return;
-#if 0
-	short		i;
+	SInt16		i;
 
 	numWork2Main = 0;
 	numBack2Work = 0;
@@ -671,8 +669,7 @@ void InitGarbageRects (void)
 	for (i = 0; i < kMaxFlyingPts; i++)
 		flyingPoints[i].mode = -1;
 
-	nextFrame = TickCount() + kTicksPerFrame;
-#endif
+	nextFrame = MillisToTicks(GetTickCount()) + kTicksPerFrame;
 }
 
 //--------------------------------------------------------------  CopyRectBackToWork
