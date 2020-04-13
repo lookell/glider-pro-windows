@@ -181,18 +181,11 @@ void DrawMailboxLeft (Rect *theRect, SInt16 down)
 
 void DrawMailboxRight (Rect *theRect, SInt16 down)
 {
-	return;
-#if 0
 	Rect		bounds;
-	GWorldPtr	tempMap;
-	GWorldPtr	tempMask;
-	long		darkGrayC, lightWoodC, darkWoodC;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	HDC			tempMap;
+	HDC			tempMask;
+	SInt32		darkGrayC, lightWoodC, darkWoodC;
 	OSErr		theErr;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
 
 	if (thisMac.isDepth == 4)
 	{
@@ -209,58 +202,48 @@ void DrawMailboxRight (Rect *theRect, SInt16 down)
 
 	if (theRect->bottom < down + kMailboxBase)
 	{
-		ColorLine(theRect->left + 34, theRect->bottom,
+		ColorLine(backSrcMap, theRect->left + 34, theRect->bottom,
 				theRect->left + 34, down + kMailboxBase, darkGrayC);
-		ColorLine(theRect->left + 35, theRect->bottom,
+		ColorLine(backSrcMap, theRect->left + 35, theRect->bottom,
 				theRect->left + 35, down + kMailboxBase + 1, lightWoodC);
-		ColorLine(theRect->left + 36, theRect->bottom,
+		ColorLine(backSrcMap, theRect->left + 36, theRect->bottom,
 				theRect->left + 36, down + kMailboxBase + 2, lightWoodC);
-		ColorLine(theRect->left + 37, theRect->bottom,
+		ColorLine(backSrcMap, theRect->left + 37, theRect->bottom,
 				theRect->left + 37, down + kMailboxBase + 3, lightWoodC);
-		ColorLine(theRect->left + 38, theRect->bottom,
+		ColorLine(backSrcMap, theRect->left + 38, theRect->bottom,
 				theRect->left + 38, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 39, theRect->bottom,
+		ColorLine(backSrcMap, theRect->left + 39, theRect->bottom,
 				theRect->left + 39, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 40, theRect->bottom,
+		ColorLine(backSrcMap, theRect->left + 40, theRect->bottom,
 				theRect->left + 40, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 41, theRect->bottom,
+		ColorLine(backSrcMap, theRect->left + 41, theRect->bottom,
 				theRect->left + 41, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 42, theRect->bottom,
+		ColorLine(backSrcMap, theRect->left + 42, theRect->bottom,
 				theRect->left + 42, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 43, theRect->bottom,
+		ColorLine(backSrcMap, theRect->left + 43, theRect->bottom,
 				theRect->left + 43, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 44, theRect->bottom,
+		ColorLine(backSrcMap, theRect->left + 44, theRect->bottom,
 				theRect->left + 44, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 45, theRect->bottom,
+		ColorLine(backSrcMap, theRect->left + 45, theRect->bottom,
 				theRect->left + 45, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 46, theRect->bottom,
+		ColorLine(backSrcMap, theRect->left + 46, theRect->bottom,
 				theRect->left + 46, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(theRect->left + 47, theRect->bottom,
+		ColorLine(backSrcMap, theRect->left + 47, theRect->bottom,
 				theRect->left + 47, down + kMailboxBase + 3, darkGrayC);
 	}
 
-	SetGWorld(wasCPort, wasWorld);
-
 	bounds = srcRects[kMailboxRt];
 	theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
-	SetGWorld(tempMap, nil);
-	LoadGraphic(kMailboxRightPictID);
+	LoadGraphic(tempMap, kMailboxRightPictID);
 
 	theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
-	SetGWorld(tempMask, nil);
-	LoadGraphic(kMailboxRightMaskID);
+	LoadGraphic(tempMask, kMailboxRightMaskID);
 
-	CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
-			(BitMap *)*GetGWorldPixMap(tempMask),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(tempMap, tempMask, backSrcMap,
 			&srcRects[kMailboxRt], &srcRects[kMailboxRt], theRect);
-
-	SetGWorld(wasCPort, wasWorld);
 
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
-//	SetPort((GrafPtr)backSrcMap);
-#endif
 }
 
 //--------------------------------------------------------------  DrawSimpleTransport
