@@ -343,16 +343,7 @@ void DrawTrigger (Rect *theRect)
 
 void DrawSoundTrigger (Rect *theRect)
 {
-	return;
-#if 0
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-	ColorFrameRect(theRect, kIntenseYellowColor);
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	ColorFrameRect(backSrcMap, theRect, kIntenseYellowColor);
 }
 
 //--------------------------------------------------------------  DrawSimpleLight
