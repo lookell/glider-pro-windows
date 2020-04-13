@@ -423,14 +423,10 @@ void DrawFlourescent (Rect *theRect)
 
 void DrawTrackLight (Rect *theRect)
 {
-	return;
-#if 0
 	#define		kTrackLightSpacing	64
 	Rect		partRect;
-	long		grayC, gray2C, gray3C, gray4C;
-	short		which, howMany, i, spread;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	SInt32		grayC, gray2C, gray3C, gray4C;
+	SInt16		which, howMany, i, spread;
 
 	if (thisMac.isDepth == 4)
 	{
@@ -447,31 +443,24 @@ void DrawTrackLight (Rect *theRect)
 		gray4C = k8DkGrayColor;
 	}
 
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-
-	ColorLine(theRect->left, theRect->top - 3,
+	ColorLine(backSrcMap, theRect->left, theRect->top - 3,
 			theRect->right - 1, theRect->top - 3, gray2C);
-	ColorLine(theRect->left, theRect->top - 2,
+	ColorLine(backSrcMap, theRect->left, theRect->top - 2,
 			theRect->right - 1, theRect->top - 2, grayC);
-	ColorLine(theRect->left, theRect->top - 1,
+	ColorLine(backSrcMap, theRect->left, theRect->top - 1,
 			theRect->right - 1, theRect->top - 1, grayC);
-	ColorLine(theRect->left, theRect->top,
+	ColorLine(backSrcMap, theRect->left, theRect->top,
 			theRect->right - 1, theRect->top, gray3C);
-	ColorLine(theRect->left, theRect->top + 1,
+	ColorLine(backSrcMap, theRect->left, theRect->top + 1,
 			theRect->right - 1, theRect->top + 1, gray4C);
-	ColorLine(theRect->left, theRect->top + 2,
+	ColorLine(backSrcMap, theRect->left, theRect->top + 2,
 			theRect->right - 1, theRect->top + 2, gray3C);
-
-	SetGWorld(wasCPort, wasWorld);
 
 	partRect = trackLightSrc[0];			// left most track light
 	ZeroRectCorner(&partRect);
 	QOffsetRect(&partRect, theRect->left, theRect->top);
 	which = 0;
-	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap),
-			(BitMap *)*GetGWorldPixMap(lightMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(lightSrcMap, lightMaskMap, backSrcMap,
 			&trackLightSrc[which], &trackLightSrc[which], &partRect);
 
 	partRect = trackLightSrc[0];			// right most track light
@@ -479,9 +468,7 @@ void DrawTrackLight (Rect *theRect)
 	QOffsetRect(&partRect, -partRect.right, 0);
 	QOffsetRect(&partRect, theRect->right, theRect->top);
 	which = 2;
-	CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap),
-			(BitMap *)*GetGWorldPixMap(lightMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(lightSrcMap, lightMaskMap, backSrcMap,
 			&trackLightSrc[which], &trackLightSrc[which], &partRect);
 
 	howMany = ((RectWide(theRect) - RectWide(&trackLightSrc[0])) /
@@ -499,13 +486,10 @@ void DrawTrackLight (Rect *theRect)
 			which++;
 			if (which >= kNumTrackLights)
 				which = 0;
-			CopyMask((BitMap *)*GetGWorldPixMap(lightSrcMap),
-					(BitMap *)*GetGWorldPixMap(lightMaskMap),
-					(BitMap *)*GetGWorldPixMap(backSrcMap),
+			Mac_CopyMask(lightSrcMap, lightMaskMap, backSrcMap,
 					&trackLightSrc[which], &trackLightSrc[which], &partRect);
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DrawInvisLight
