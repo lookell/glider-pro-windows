@@ -62,12 +62,11 @@ extern	SInt16		wasScoreboardMode;
 void InitScoreboardMap (void)
 {
 	Rect		bounds;
-	HBITMAP		thePicture, hbmPrev;
-	BITMAP		bm;
+	HBITMAP		thePicture;
+	BITMAP		bmInfo;
 	LOGFONT		lfScoreboard;
-	HDC			hdcSrc;
 	OSErr		theErr;
-	short		hOffset;
+	SInt16		hOffset;
 
 	lfScoreboard.lfHeight = 12;
 	lfScoreboard.lfWidth = 0;
@@ -97,12 +96,10 @@ void InitScoreboardMap (void)
 	thePicture = GetPicture(kScoreboardPictID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
-	GetObject(thePicture, sizeof(bm), &bm);
-	hdcSrc = CreateCompatibleDC(NULL);
-	hbmPrev = SelectObject(hdcSrc, thePicture);
-	BitBlt(boardSrcMap, hOffset, 0, bm.bmWidth, bm.bmHeight, hdcSrc, 0, 0, SRCCOPY);
-	SelectObject(hdcSrc, hbmPrev);
-	DeleteDC(hdcSrc);
+	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
+	QSetRect(&bounds, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+	QOffsetRect(&bounds, hOffset, 0);
+	Mac_DrawPicture(boardSrcMap, thePicture, &bounds);
 	DeleteObject(thePicture);
 
 	QSetRect(&badgeSrcRect, 0, 0, 32, 66);				// 2144 pixels
@@ -173,7 +170,7 @@ void InitScoreboardMap (void)
 void InitGliderMap (void)
 {
 	OSErr		theErr;
-	short		i;
+	SInt16		i;
 
 	QSetRect(&glidSrcRect, 0, 0, kGliderWide, 668);	// 32112 pixels
 	theErr = CreateOffScreenGWorld(&glidSrcMap, &glidSrcRect, kPreferredDepth);
