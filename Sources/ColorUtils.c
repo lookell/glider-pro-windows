@@ -91,7 +91,7 @@ void ColorOval (HDC hdc, Rect *theRect, SInt32 color)
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
 	theRegion = CreateEllipticRgn(theRect->left, theRect->top,
-			theRect->right, theRect->bottom);
+			theRect->right + 1, theRect->bottom + 1);
 	FillRgn(hdc, theRegion, GetStockObject(DC_BRUSH));
 	DeleteObject(theRegion);
 	SetDCBrushColor(hdc, wasColor);
@@ -196,16 +196,15 @@ void ColorFrameWHRect (HDC hdc, SInt16 left, SInt16 top, SInt16 wide, SInt16 hig
 void ColorFrameOval (HDC hdc, Rect *theRect, SInt32 color)
 {
 	COLORREF	theRGBColor, wasColor;
-	HGDIOBJ		wasBrush, wasPen;
+	HRGN		theRegion;
 
 	theRGBColor = Index2ColorRef(color);
-	wasColor = SetDCPenColor(hdc, theRGBColor);
-	wasBrush = SelectObject(hdc, GetStockObject(NULL_BRUSH));
-	wasPen = SelectObject(hdc, GetStockObject(DC_PEN));
-	Ellipse(hdc, theRect->left, theRect->top, theRect->right, theRect->bottom);
-	SelectObject(hdc, wasPen);
-	SelectObject(hdc, wasBrush);
-	SetDCPenColor(hdc, wasColor);
+	wasColor = SetDCBrushColor(hdc, theRGBColor);
+	theRegion = CreateEllipticRgn(theRect->left, theRect->top,
+			theRect->right + 1, theRect->bottom + 1);
+	FrameRgn(hdc, theRegion, GetStockObject(DC_BRUSH), 1, 1);
+	DeleteObject(theRegion);
+	SetDCBrushColor(hdc, wasColor);
 }
 
 //--------------------------------------------------------------  LtGrayForeColor
@@ -302,7 +301,7 @@ void ColorShadowRect (HDC hdc, Rect *theRect, SInt32 color)
 void ColorShadowOval (HDC hdc, Rect *theRect, SInt32 color)
 {
 	HRGN theRgn = CreateEllipticRgn(theRect->left, theRect->top,
-			theRect->right, theRect->bottom);
+			theRect->right + 1, theRect->bottom + 1);
 	ColorShadowRegion(hdc, theRgn, color);
 	DeleteObject(theRgn);
 }
