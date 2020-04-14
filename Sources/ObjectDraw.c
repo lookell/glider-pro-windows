@@ -226,18 +226,13 @@ void DrawTable (Rect *tableTop, SInt16 down)
 
 void DrawShelf (Rect *shelfTop)
 {
-	return;
-#if 0
 	#define		kBracketInset		18
 	#define		kShelfDeep			4
 	#define		kBracketThick		5
 	#define		kShelfShadowOff		12
 	Rect		tempRect;
-	long		brownC, ltTanC, tanC, dkRedC, blackC;
-	RgnHandle	shadowRgn;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-	Pattern		dummyPattern;
+	SInt32		brownC, ltTanC, tanC, dkRedC, blackC;
+	HRGN		shadowRgn;
 
 	if (thisMac.isDepth == 4)
 	{
@@ -256,68 +251,55 @@ void DrawShelf (Rect *shelfTop)
 		blackC = k8BlackColor;
 	}
 
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-
-	MoveTo(shelfTop->left, shelfTop->bottom);
-	shadowRgn = NewRgn();
-	if (shadowRgn == nil)
+	BeginPath(backSrcMap);
+	MoveToEx(backSrcMap, shelfTop->left, shelfTop->bottom, NULL);
+	Mac_Line(backSrcMap, kShelfShadowOff, kShelfShadowOff);
+	Mac_Line(backSrcMap, RectWide(shelfTop) - kShelfDeep, 0);
+	Mac_Line(backSrcMap, 0, -kShelfThick + 1);
+	Mac_Line(backSrcMap, -kShelfShadowOff, -kShelfShadowOff);
+	Mac_LineTo(backSrcMap, shelfTop->left, shelfTop->bottom);
+	EndPath(backSrcMap);
+	shadowRgn = PathToRegion(backSrcMap);
+	if (shadowRgn == NULL)
 		RedAlert(kErrUnnaccounted);
-	OpenRgn();
-	Line(kShelfShadowOff, kShelfShadowOff);
-	Line(RectWide(shelfTop) - kShelfDeep, 0);
-	Line(0, -kShelfThick + 1);
-	Line(-kShelfShadowOff, -kShelfShadowOff);
-	LineTo(shelfTop->left, shelfTop->bottom);
-	CloseRgn(shadowRgn);
-	PenPat(GetQDGlobalsGray(&dummyPattern));
-	PenMode(patOr);
 	if (thisMac.isDepth == 4)
-		ColorRegion(shadowRgn, 15);
+		ColorShadowRegion(backSrcMap, shadowRgn, 15);
 	else
-		ColorRegion(shadowRgn, k8DkstGrayColor);
-	PenNormal();
-	DisposeRgn(shadowRgn);
+		ColorShadowRegion(backSrcMap, shadowRgn, k8DkstGrayColor);
+	DeleteObject(shadowRgn);
 
-	InsetRect(shelfTop, 0, 1);
-	ColorRect(shelfTop, brownC);
-	InsetRect(shelfTop, 0, -1);
+	Mac_InsetRect(shelfTop, 0, 1);
+	ColorRect(backSrcMap, shelfTop, brownC);
+	Mac_InsetRect(shelfTop, 0, -1);
 
-	ColorLine(shelfTop->left + 1, shelfTop->top,
+	ColorLine(backSrcMap, shelfTop->left + 1, shelfTop->top,
 			shelfTop->left + 1 + kShelfDeep, shelfTop->top, ltTanC);
-	ColorLine(shelfTop->left, shelfTop->top + 1,
+	ColorLine(backSrcMap, shelfTop->left, shelfTop->top + 1,
 			shelfTop->left + kShelfDeep, shelfTop->top + 1, tanC);
-	ColorLine(shelfTop->left, shelfTop->top + 2,
+	ColorLine(backSrcMap, shelfTop->left, shelfTop->top + 2,
 			shelfTop->left + kShelfDeep, shelfTop->top + 2, tanC);
-	ColorLine(shelfTop->left, shelfTop->top + 3,
+	ColorLine(backSrcMap, shelfTop->left, shelfTop->top + 3,
 			shelfTop->left + kShelfDeep, shelfTop->top + 3, tanC);
-	ColorLine(shelfTop->left + 1, shelfTop->bottom - 1,
+	ColorLine(backSrcMap, shelfTop->left + 1, shelfTop->bottom - 1,
 			shelfTop->left + 1 + kShelfDeep, shelfTop->bottom - 1, dkRedC);
-	ColorLine(shelfTop->left + 2 + kShelfDeep, shelfTop->bottom - 1,
+	ColorLine(backSrcMap, shelfTop->left + 2 + kShelfDeep, shelfTop->bottom - 1,
 			shelfTop->right - 2, shelfTop->bottom - 1, blackC);
-	ColorLine(shelfTop->left + 2 + kShelfDeep, shelfTop->top,
+	ColorLine(backSrcMap, shelfTop->left + 2 + kShelfDeep, shelfTop->top,
 			shelfTop->right - 2, shelfTop->top, tanC);
-	ColorLine(shelfTop->right - 1, shelfTop->top + 1,
+	ColorLine(backSrcMap, shelfTop->right - 1, shelfTop->top + 1,
 			shelfTop->right - 1, shelfTop->bottom - 2, blackC);
-
-	SetGWorld(wasCPort, wasWorld);
 
 	tempRect = shelfSrc;
 	ZeroRectCorner(&tempRect);
 	QOffsetRect(&tempRect, shelfTop->left + kBracketInset, shelfTop->bottom);
-	CopyMask((BitMap *)*GetGWorldPixMap(furnitureSrcMap),
-			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
 			&shelfSrc, &shelfSrc, &tempRect);
 
 	ZeroRectCorner(&tempRect);
 	QOffsetRect(&tempRect, shelfTop->right - kBracketInset - kShelfDeep -
 			kBracketThick, shelfTop->bottom);
-	CopyMask((BitMap *)*GetGWorldPixMap(furnitureSrcMap),
-			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
 			&shelfSrc, &shelfSrc, &tempRect);
-#endif
 }
 
 //--------------------------------------------------------------  DrawCabinet
