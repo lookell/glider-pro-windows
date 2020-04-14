@@ -276,7 +276,8 @@ void Mac_Line(HDC hdc, SInt16 dh, SInt16 dv)
 	POINT curPos;
 
 	GetCurrentPositionEx(hdc, &curPos);
-	MoveToEx(hdc, curPos.x + dh, curPos.y + dv, NULL);
+	//MoveToEx(hdc, curPos.x + dh, curPos.y + dv, NULL);
+	LineTo(hdc, curPos.x + dh, curPos.y + dv);
 	LineTo(hdc, curPos.x, curPos.y);
 	LineTo(hdc, curPos.x + dh, curPos.y + dv);
 }
@@ -291,7 +292,8 @@ void Mac_LineTo(HDC hdc, SInt16 h, SInt16 v)
 	POINT curPos;
 
 	GetCurrentPositionEx(hdc, &curPos);
-	MoveToEx(hdc, h, v, NULL);
+	//MoveToEx(hdc, h, v, NULL);
+	LineTo(hdc, h, v);
 	LineTo(hdc, curPos.x, curPos.y);
 	LineTo(hdc, h, v);
 }
