@@ -563,6 +563,7 @@ enum PicV2Op {
     NOP,
     Clip(Region),
     DefHilite,
+    OpColor(Vec<u8>),
     BitsRect(BitsRect),
     BitsRgn(BitsRgn),
     PackBitsRect(BitsRect),
@@ -570,6 +571,7 @@ enum PicV2Op {
     DirectBitsRect(DirectBitsRect),
     DirectBitsRgn(DirectBitsRgn),
     ShortComment(u16),
+    LongComment(u16, Vec<u8>),
     HeaderOp(Vec<u8>),
 }
 
@@ -586,6 +588,7 @@ impl PicV2Op {
             0x0000 => Some(Self::NOP),
             0x0001 => Some(Self::Clip(Region::read_from(reader)?)),
             0x001E => Some(Self::DefHilite),
+            0x001F => Some(Self::OpColor(read_bytes(reader, 6)?)),
             0x0090 => Some(Self::BitsRect(BitsRect::read_from(reader)?)),
             0x0091 => Some(Self::BitsRgn(BitsRgn::read_from(reader)?)),
             0x0098 => Some(Self::PackBitsRect(BitsRect::read_from(reader)?)),
@@ -593,6 +596,11 @@ impl PicV2Op {
             0x009A => Some(Self::DirectBitsRect(DirectBitsRect::read_from(reader)?)),
             0x009B => Some(Self::DirectBitsRgn(DirectBitsRgn::read_from(reader)?)),
             0x00A0 => Some(Self::ShortComment(reader.read_be_u16()?)),
+            0x00A1 => {
+                let kind = reader.read_be_u16()?;
+                let length = reader.read_be_u16()?;
+                Some(Self::LongComment(kind, read_bytes(reader, length.into())?))
+            }
             0x00FF => None,
             0x0C00 => Some(Self::HeaderOp(read_bytes(reader, 24)?)),
             _ => unimplemented!("PICT V2 opcode ${:04X}", opcode),
