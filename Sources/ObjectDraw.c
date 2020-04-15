@@ -306,16 +306,12 @@ void DrawShelf (Rect *shelfTop)
 
 void DrawCabinet (Rect *cabinet)
 {
-	return;
-#if 0
 	#define		kCabinetDeep		4
 	#define		kCabinetShadowOff	6
 	Rect		tempRect;
-	long		brownC, dkGrayC, ltTanC, tanC, dkRedC, blackC;
-	RgnHandle	shadowRgn;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-	Pattern		dummyPattern;
+	SInt32		brownC, dkGrayC, ltTanC, tanC, dkRedC, blackC;
+	HRGN		shadowRgn;
+	HGDIOBJ		wasBrush;
 
 	if (thisMac.isDepth == 4)
 	{
@@ -336,103 +332,90 @@ void DrawCabinet (Rect *cabinet)
 		blackC = k8BlackColor;
 	}
 
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-
-	MoveTo(cabinet->left, cabinet->bottom);
-	shadowRgn = NewRgn();
-	if (shadowRgn == nil)
+	BeginPath(backSrcMap);
+	MoveToEx(backSrcMap, cabinet->left, cabinet->bottom, NULL);
+	Mac_Line(backSrcMap, kCabinetShadowOff, kCabinetShadowOff);
+	Mac_Line(backSrcMap, RectWide(cabinet), 0);
+	Mac_Line(backSrcMap, 0, -RectTall(cabinet) + kCabinetDeep);
+	Mac_Line(backSrcMap, -kCabinetShadowOff, -kCabinetShadowOff);
+	Mac_LineTo(backSrcMap, cabinet->left, cabinet->bottom);
+	EndPath(backSrcMap);
+	shadowRgn = PathToRegion(backSrcMap);
+	if (shadowRgn == NULL)
 		RedAlert(kErrUnnaccounted);
-	OpenRgn();
-	Line(kCabinetShadowOff, kCabinetShadowOff);
-	Line(RectWide(cabinet), 0);
-	Line(0, -RectTall(cabinet) + kCabinetDeep);
-	Line(-kCabinetShadowOff, -kCabinetShadowOff);
-	LineTo(cabinet->left, cabinet->bottom);
-	CloseRgn(shadowRgn);
-	PenPat(GetQDGlobalsGray(&dummyPattern));
-	PenMode(patOr);
 	if (thisMac.isDepth == 4)
-		ColorRegion(shadowRgn, 15);
+		ColorShadowRegion(backSrcMap, shadowRgn, 15);
 	else
-		ColorRegion(shadowRgn, dkGrayC);
-	PenNormal();
-	DisposeRgn(shadowRgn);
+		ColorShadowRegion(backSrcMap, shadowRgn, dkGrayC);
+	DeleteObject(shadowRgn);
 
-	InsetRect(cabinet, 1, 1);		// fill bulk of cabinet brown
-	ColorRect(cabinet, brownC);
-	InsetRect(cabinet, -1, -1);
+	Mac_InsetRect(cabinet, 1, 1);	// fill bulk of cabinet brown
+	ColorRect(backSrcMap, cabinet, brownC);
+	Mac_InsetRect(cabinet, -1, -1);
 
 	tempRect = *cabinet;			// add lighter left side
 	tempRect.right = tempRect.left + kCabinetDeep;
-	ColorRect(&tempRect, tanC);
+	ColorRect(backSrcMap, &tempRect, tanC);
 									// hilight top edge
-	ColorLine(cabinet->left + 1, cabinet->top + 1,
+	ColorLine(backSrcMap, cabinet->left + 1, cabinet->top + 1,
 			cabinet->left + kCabinetDeep, cabinet->top + 1, ltTanC);
-	ColorLine(cabinet->left + kCabinetDeep, cabinet->top + 1,
+	ColorLine(backSrcMap, cabinet->left + kCabinetDeep, cabinet->top + 1,
 			cabinet->right - 3, cabinet->top + 1, tanC);
 									// shadow bottom edge
 
-	ColorLine(cabinet->left + kCabinetDeep + 3, cabinet->top + 5,
+	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 3, cabinet->top + 5,
 			cabinet->left + kCabinetDeep + 3, cabinet->bottom - 6, tanC);
-	ColorLine(cabinet->left + kCabinetDeep + 4, cabinet->top + 5,
+	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 4, cabinet->top + 5,
 			cabinet->left + kCabinetDeep + 4, cabinet->bottom - 6, tanC);
-	ColorLine(cabinet->left + kCabinetDeep + 9, cabinet->top + 10,
+	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 9, cabinet->top + 10,
 			cabinet->left + kCabinetDeep + 9, cabinet->bottom - 11, dkGrayC);
 
-	ColorLine(cabinet->right - 4, cabinet->top + 6,
+	ColorLine(backSrcMap, cabinet->right - 4, cabinet->top + 6,
 			cabinet->right - 4, cabinet->bottom - 5, dkRedC);
-	ColorLine(cabinet->right - 5, cabinet->top + 5,
+	ColorLine(backSrcMap, cabinet->right - 5, cabinet->top + 5,
 			cabinet->right - 5, cabinet->bottom - 6, dkGrayC);
-	ColorLine(cabinet->right - 10, cabinet->top + 10,
+	ColorLine(backSrcMap, cabinet->right - 10, cabinet->top + 10,
 			cabinet->right - 10, cabinet->bottom - 11, tanC);
 
-	ColorLine(cabinet->left + kCabinetDeep + 4, cabinet->top + 4,
+	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 4, cabinet->top + 4,
 			cabinet->left + kCabinetDeep + 4, cabinet->top + 4, ltTanC);
-	ColorLine(cabinet->left + kCabinetDeep + 5, cabinet->top + 4,
+	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 5, cabinet->top + 4,
 			cabinet->right - 6, cabinet->top + 4, tanC);
-	ColorLine(cabinet->left + kCabinetDeep + 10, cabinet->top + 9,
+	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 10, cabinet->top + 9,
 			cabinet->right - 11, cabinet->top + 9, dkGrayC);
 
-	ColorLine(cabinet->right - 5, cabinet->bottom - 5,
+	ColorLine(backSrcMap, cabinet->right - 5, cabinet->bottom - 5,
 			cabinet->right - 5, cabinet->bottom - 5, dkRedC);
-	ColorLine(cabinet->left + kCabinetDeep + 6, cabinet->bottom - 4,
+	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 6, cabinet->bottom - 4,
 			cabinet->right - 5, cabinet->bottom - 4, dkRedC);
-	ColorLine(cabinet->left + kCabinetDeep + 5, cabinet->bottom - 5,
+	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 5, cabinet->bottom - 5,
 			cabinet->right - 6, cabinet->bottom - 5, dkGrayC);
 
-	ColorLine(cabinet->left + kCabinetDeep + 10, cabinet->bottom - 10,
+	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 10, cabinet->bottom - 10,
 			cabinet->right - 11, cabinet->bottom - 10, tanC);
-
-	SetGWorld(wasCPort, wasWorld);
 
 	tempRect = hingeSrc;
 	ZeroRectCorner(&tempRect);
 	QOffsetRect(&tempRect, cabinet->left + kCabinetDeep + 2, cabinet->top + 10);
-	CopyMask((BitMap *)*GetGWorldPixMap(furnitureSrcMap),
-			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
 			&hingeSrc, &hingeSrc, &tempRect);
 
 	tempRect = hingeSrc;
 	ZeroRectCorner(&tempRect);
 	QOffsetRect(&tempRect, cabinet->left + kCabinetDeep + 2, cabinet->bottom - 26);
-	CopyMask((BitMap *)*GetGWorldPixMap(furnitureSrcMap),
-			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
 			&hingeSrc, &hingeSrc, &tempRect);
 
 	tempRect = handleSrc;
 	ZeroRectCorner(&tempRect);
 	QOffsetRect(&tempRect, cabinet->right - 8, cabinet->top +
 			HalfRectTall(cabinet) - HalfRectTall(&handleSrc));
-	CopyMask((BitMap *)*GetGWorldPixMap(furnitureSrcMap),
-			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
 			&handleSrc, &handleSrc, &tempRect);
 
-	FrameRect(cabinet);
-#endif
+	wasBrush = SelectObject(backSrcMap, GetStockObject(BLACK_BRUSH));
+	Mac_FrameRect(backSrcMap, cabinet, 1, 1);
+	SelectObject(backSrcMap, wasBrush);
 }
 
 //--------------------------------------------------------------  DrawSimpleFurniture
