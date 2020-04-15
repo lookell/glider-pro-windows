@@ -193,6 +193,18 @@ void Mac_DrawString(HDC hdc, StringPtr s)
 	SetBkMode(hdc, prevBkMode);
 }
 
+//--------------------------------------------------------------  FrameRect
+// Draw a frame within the specified rectangle using the current brush.
+// The vertical strokes use the specified width, and the horizontal
+// strokes use the specified height.
+
+void Mac_FrameRect(HDC hdc, const Rect *r, SInt16 w, SInt16 h)
+{
+	HRGN theRgn = CreateRectRgn(r->left, r->top, r->right, r->bottom);
+	FrameRgn(hdc, theRgn, GetCurrentObject(hdc, OBJ_BRUSH), w, h);
+	DeleteObject(theRgn);
+}
+
 //--------------------------------------------------------------  GetDateTime
 // Retrieve the number of seconds since midnight, January 1, 1904.
 // The time difference is in terms of the local time zone.
@@ -319,6 +331,16 @@ void Mac_NumToString(SInt32 theNum, StringPtr theString)
 		return;
 	theString[0] = length;
 	memcpy(&theString[1], buffer, length);
+}
+
+//--------------------------------------------------------------  PaintRect
+// Fill the specified rectangle with the current brush.
+
+void Mac_PaintRect(HDC hdc, const Rect *r)
+{
+	HRGN theRgn = CreateRectRgn(r->left, r->top, r->right, r->bottom);
+	FillRgn(hdc, theRgn, GetCurrentObject(hdc, OBJ_BRUSH));
+	DeleteObject(theRgn);
 }
 
 //--------------------------------------------------------------  PtInRect
