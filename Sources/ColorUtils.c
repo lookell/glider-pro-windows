@@ -69,12 +69,10 @@ void ColorText (HDC hdc, StringPtr theStr, SInt32 color)
 void ColorRect (HDC hdc, Rect *theRect, SInt32 color)
 {
 	COLORREF	theRGBColor, wasColor;
-	RECT		rc;
 
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
-	SetRect(&rc, theRect->left, theRect->top, theRect->right, theRect->bottom);
-	FillRect(hdc, &rc, GetStockObject(DC_BRUSH));
+	Mac_PaintRect(hdc, theRect, GetStockObject(DC_BRUSH));
 	SetDCBrushColor(hdc, wasColor);
 }
 
@@ -158,16 +156,11 @@ void HiliteRect (HDC hdc, Rect *theRect, SInt16 color1, SInt16 color2)
 void ColorFrameRect (HDC hdc, Rect *theRect, SInt32 color)
 {
 	COLORREF	theRGBColor, wasColor;
-	HGDIOBJ		wasBrush, wasPen;
 
 	theRGBColor = Index2ColorRef(color);
-	wasColor = SetDCPenColor(hdc, theRGBColor);
-	wasBrush = SelectObject(hdc, GetStockObject(NULL_BRUSH));
-	wasPen = SelectObject(hdc, GetStockObject(DC_PEN));
-	Rectangle(hdc, theRect->left, theRect->top, theRect->right, theRect->bottom);
-	SelectObject(hdc, wasPen);
-	SelectObject(hdc, wasBrush);
-	SetDCPenColor(hdc, wasColor);
+	wasColor = SetDCBrushColor(hdc, theRGBColor);
+	Mac_FrameRect(hdc, theRect, GetStockObject(DC_BRUSH), 1, 1);
+	SetDCBrushColor(hdc, wasColor);
 }
 
 //--------------------------------------------------------------  ColorFrameWHRect

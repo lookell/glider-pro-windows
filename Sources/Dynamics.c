@@ -506,8 +506,6 @@ void HandleCoffee (SInt16 who)
 
 void HandleOutlet (SInt16 who)
 {
-	RECT	rect;
-
 	if (dinahs[who].position != 0)
 	{
 		dinahs[who].timer--;
@@ -555,12 +553,7 @@ void HandleOutlet (SInt16 who)
 		else
 		{
 //			SetPort((GrafPtr)workSrcMap);
-			//PaintRect(&dinahs[who].dest);
-			rect.left = dinahs[who].dest.left;
-			rect.top = dinahs[who].dest.top;
-			rect.right = dinahs[who].dest.right;
-			rect.bottom = dinahs[who].dest.bottom;
-			FillRect(workSrcMap, &rect, GetStockObject(BLACK_BRUSH));
+			Mac_PaintRect(workSrcMap, &dinahs[who].dest, GetStockObject(BLACK_BRUSH));
 		}
 		AddRectToWorkRects(&dinahs[who].dest);
 	}

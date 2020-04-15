@@ -311,7 +311,6 @@ void DrawCabinet (Rect *cabinet)
 	Rect		tempRect;
 	SInt32		brownC, dkGrayC, ltTanC, tanC, dkRedC, blackC;
 	HRGN		shadowRgn;
-	HGDIOBJ		wasBrush;
 
 	if (thisMac.isDepth == 4)
 	{
@@ -413,9 +412,7 @@ void DrawCabinet (Rect *cabinet)
 	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
 			&handleSrc, &handleSrc, &tempRect);
 
-	wasBrush = SelectObject(backSrcMap, GetStockObject(BLACK_BRUSH));
-	Mac_FrameRect(backSrcMap, cabinet, 1, 1);
-	SelectObject(backSrcMap, wasBrush);
+	Mac_FrameRect(backSrcMap, cabinet, GetStockObject(BLACK_BRUSH), 1, 1);
 }
 
 //--------------------------------------------------------------  DrawSimpleFurniture
@@ -1161,8 +1158,7 @@ void DrawSimplePrizes (SInt16 what, Rect *theRect)
 
 void DrawGreaseRt (Rect *theRect, SInt16 distance, Boolean state)
 {
-	RECT		spill;
-	Rect		dest;
+	Rect		spill, dest;
 
 	dest = *theRect;
 	if (state)		// grease upright
@@ -1176,9 +1172,9 @@ void DrawGreaseRt (Rect *theRect, SInt16 distance, Boolean state)
 		Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
 				&greaseSrcRt[3], &greaseSrcRt[3], &dest);
 
-		SetRect(&spill, 0, -2, distance - 5, 0);
-		OffsetRect(&spill, dest.right - 1, dest.bottom);
-		FillRect(backSrcMap, &spill, GetStockObject(BLACK_BRUSH));
+		QSetRect(&spill, 0, -2, distance - 5, 0);
+		QOffsetRect(&spill, dest.right - 1, dest.bottom);
+		Mac_PaintRect(backSrcMap, &spill, GetStockObject(BLACK_BRUSH));
 	}
 }
 
@@ -1186,8 +1182,7 @@ void DrawGreaseRt (Rect *theRect, SInt16 distance, Boolean state)
 
 void DrawGreaseLf (Rect *theRect, SInt16 distance, Boolean state)
 {
-	RECT		spill;
-	Rect		dest;
+	Rect		spill, dest;
 
 	dest = *theRect;
 	if (state)		// grease upright
@@ -1201,9 +1196,9 @@ void DrawGreaseLf (Rect *theRect, SInt16 distance, Boolean state)
 		Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
 				&greaseSrcLf[3], &greaseSrcLf[3], &dest);
 
-		SetRect(&spill, -distance + 5, -2, 0, 0);
-		OffsetRect(&spill, dest.left + 1, dest.bottom);
-		FillRect(backSrcMap, &spill, GetStockObject(BLACK_BRUSH));
+		QSetRect(&spill, -distance + 5, -2, 0, 0);
+		QOffsetRect(&spill, dest.left + 1, dest.bottom);
+		Mac_PaintRect(backSrcMap, &spill, GetStockObject(BLACK_BRUSH));
 	}
 }
 
@@ -1226,12 +1221,6 @@ void DrawInvisBonus (Rect *theRect)
 
 void DrawSlider (Rect *theRect)
 {
-	HGDIOBJ		wasBrush, wasPen;
-
-	wasBrush = SelectObject(backSrcMap, GetStockObject(NULL_BRUSH));
-	wasPen = SelectObject(backSrcMap, GetStockObject(BLACK_PEN));
-	Rectangle(backSrcMap, theRect->left, theRect->top, theRect->right, theRect->bottom);
-	SelectObject(backSrcMap, wasPen);
-	SelectObject(backSrcMap, wasBrush);
+	Mac_FrameRect(backSrcMap, theRect, GetStockObject(BLACK_BRUSH), 1, 1);
 }
 

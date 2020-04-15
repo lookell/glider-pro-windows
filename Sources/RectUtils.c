@@ -20,15 +20,12 @@
 void FrameWHRect (HDC hdc, SInt16 left, SInt16 top, SInt16 wide, SInt16 high)
 {
 	Rect		theRect;
-	HGDIOBJ		wasBrush;
 
 	theRect.left = left;
 	theRect.top = top;
 	theRect.right = left + wide;
 	theRect.bottom = top + high;
-	wasBrush = SelectObject(hdc, GetStockObject(NULL_BRUSH));
-	Rectangle(hdc, theRect.left, theRect.top, theRect.right, theRect.bottom);
-	SelectObject(hdc, wasBrush);
+	Mac_FrameRect(hdc, &theRect, GetCurrentObject(hdc, OBJ_BRUSH), 1, 1);
 }
 
 //--------------------------------------------------------------  NormalizeRect

@@ -198,10 +198,10 @@ void Mac_DrawString(HDC hdc, StringPtr s)
 // The vertical strokes use the specified width, and the horizontal
 // strokes use the specified height.
 
-void Mac_FrameRect(HDC hdc, const Rect *r, SInt16 w, SInt16 h)
+void Mac_FrameRect(HDC hdc, const Rect *r, HBRUSH hbr, SInt16 w, SInt16 h)
 {
 	HRGN theRgn = CreateRectRgn(r->left, r->top, r->right, r->bottom);
-	FrameRgn(hdc, theRgn, GetCurrentObject(hdc, OBJ_BRUSH), w, h);
+	FrameRgn(hdc, theRgn, hbr, w, h);
 	DeleteObject(theRgn);
 }
 
@@ -336,10 +336,10 @@ void Mac_NumToString(SInt32 theNum, StringPtr theString)
 //--------------------------------------------------------------  PaintRect
 // Fill the specified rectangle with the current brush.
 
-void Mac_PaintRect(HDC hdc, const Rect *r)
+void Mac_PaintRect(HDC hdc, const Rect *r, HBRUSH hbr)
 {
 	HRGN theRgn = CreateRectRgn(r->left, r->top, r->right, r->bottom);
-	FillRgn(hdc, theRgn, GetCurrentObject(hdc, OBJ_BRUSH));
+	FillRgn(hdc, theRgn, hbr);
 	DeleteObject(theRgn);
 }
 
