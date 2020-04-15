@@ -8,11 +8,14 @@
 
 //#include <Resources.h>
 //#include <TextUtils.h>
+#define _CRT_SECURE_NO_WARNINGS
+#include <wchar.h>
 #include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "Objects.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 #include "Room.h"
 #include "Utilities.h"
 
@@ -931,41 +934,54 @@ void DrawWallWindow (Rect *window)
 
 void DrawCalendar (Rect *theRect)
 {
-	return;
-#if 0
-	DateTimeRec	timeRec;
+	SYSTEMTIME	localTime;
 	Rect		bounds;
-	PicHandle	thePicture;
-	Str255		monthStr;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
+	HBITMAP		thePicture;
+	BITMAP		bmInfo;
+	WCHAR		monthStr[256];
+	INT			monthLen;
+	LOGFONT		lfCalendar;
+	HFONT		theFont;
 
 	thePicture = GetPicture(kCalendarPictID);
-	if (thePicture == nil)
+	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
-	HLock((Handle)thePicture);
-	bounds = (*thePicture)->picFrame;
-	HUnlock((Handle)thePicture);
-	QOffsetRect(&bounds, -bounds.left, -bounds.top);
+	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
+	QSetRect(&bounds, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
 	QOffsetRect(&bounds, theRect->left, theRect->top);
-	DrawPicture(thePicture, &bounds);
-	ReleaseResource((Handle)thePicture);
+	Mac_DrawPicture(backSrcMap, thePicture, &bounds);
+	DeleteObject(thePicture);
 
-	SetPort((GrafPtr)backSrcMap);
-	TextFace(bold);
-	TextFont(applFont);
-	TextSize(9);
-	GetTime(&timeRec);
-	GetIndString(monthStr, kMonthStringID, timeRec.month);
-	MoveTo(theRect->left + ((64 - StringWidth(monthStr)) / 2), theRect->top + 55);
-	ColorText(monthStr, kDarkFleshColor);
+	lfCalendar.lfHeight = -9;
+	lfCalendar.lfWidth = 0;
+	lfCalendar.lfEscapement = 0;
+	lfCalendar.lfOrientation = 0;
+	lfCalendar.lfWeight = FW_BOLD;
+	lfCalendar.lfItalic = FALSE;
+	lfCalendar.lfUnderline = FALSE;
+	lfCalendar.lfStrikeOut = FALSE;
+	lfCalendar.lfCharSet = DEFAULT_CHARSET;
+	lfCalendar.lfOutPrecision = OUT_DEFAULT_PRECIS;
+	lfCalendar.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+	lfCalendar.lfQuality = DEFAULT_QUALITY;
+	lfCalendar.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
+	wcscpy(lfCalendar.lfFaceName, L"Tahoma");
 
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	GetLocalTime(&localTime);
+	monthLen = LoadString(HINST_THISCOMPONENT,
+			IDS_MONTHS_BASE + localTime.wMonth,
+			monthStr, ARRAYSIZE(monthStr));
+
+	SaveDC(backSrcMap);
+	SetBkMode(backSrcMap, TRANSPARENT);
+	SetTextAlign(backSrcMap, TA_CENTER | TA_BASELINE);
+	SetTextColor(backSrcMap, Index2ColorRef(kDarkFleshColor));
+	theFont = CreateFontIndirect(&lfCalendar);
+	SelectObject(backSrcMap, theFont);
+	TextOut(backSrcMap, theRect->left + 32, theRect->top + 55, monthStr, monthLen);
+	RestoreDC(backSrcMap, -1);
+	DeleteObject(theFont);
 }
 
 //--------------------------------------------------------------  DrawBulletin
