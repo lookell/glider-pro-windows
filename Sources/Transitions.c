@@ -137,11 +137,11 @@ void WipeScreenOn (SInt16 direction, Rect *theRect)
 
 void DumpScreenOn (Rect *theRect)
 {
-	return;
-#if 0
-	CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
-			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+	HDC			mainWindowDC;
+
+	mainWindowDC = GetDC(mainWindow);
+	Mac_CopyBits(workSrcMap, mainWindowDC,
 			theRect, theRect, srcCopy, nil);
-#endif
+	ReleaseDC(mainWindow, mainWindowDC);
 }
 
