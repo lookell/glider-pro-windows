@@ -430,20 +430,15 @@ void DrawSimpleFurniture (SInt16 what, Rect *theRect)
 
 void DrawCounter (Rect *counter)
 {
-	return;
-#if 0
 	#define		kCounterFooterHigh	12
 	#define		kCounterStripWide	6
 	#define		kCounterStripTall	29
 	#define		kCounterPanelDrop	12
 	Rect		tempRect;
-	RgnHandle	shadowRgn;
-	long		brownC, dkGrayC, tanC, blackC, dkstRedC;
-	short		nRects, width, i;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-	Pattern		dummyPattern;
-
+	HRGN		shadowRgn;
+	SInt32		brownC, dkGrayC, tanC, blackC, dkstRedC;
+	SInt16		nRects, width, i;
+	
 	if (thisMac.isDepth == 4)
 	{
 		brownC = 11;
@@ -461,100 +456,92 @@ void DrawCounter (Rect *counter)
 		dkstRedC = k8DkRed2Color;
 	}
 
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-
-	MoveTo(counter->right - 2, counter->bottom);
-	shadowRgn = NewRgn();
-	if (shadowRgn == nil)
+	BeginPath(backSrcMap);
+	MoveToEx(backSrcMap, counter->right - 2, counter->bottom, NULL);
+	Mac_Line(backSrcMap, 10, -10);
+	Mac_Line(backSrcMap, 0, -RectTall(counter) + 29);
+	Mac_Line(backSrcMap, 2, 0);
+	Mac_Line(backSrcMap, 0, -7);
+	Mac_Line(backSrcMap, -12, -12);
+	Mac_LineTo(backSrcMap, counter->right - 2, counter->bottom);
+	EndPath(backSrcMap);
+	shadowRgn = PathToRegion(backSrcMap);
+	if (shadowRgn == NULL)
 		RedAlert(kErrUnnaccounted);
-	OpenRgn();
-	Line(10, -10);
-	Line(0, -RectTall(counter) + 29);
-	Line(2, 0);
-	Line(0, -7);
-	Line(-12, -12);
-	LineTo(counter->right - 2, counter->bottom);
-	CloseRgn(shadowRgn);
-	PenPat(GetQDGlobalsGray(&dummyPattern));
-	PenMode(patOr);
 	if (thisMac.isDepth == 4)
-		ColorRegion(shadowRgn, 15);
+		ColorShadowRegion(backSrcMap, shadowRgn, 15);
 	else
-		ColorRegion(shadowRgn, dkGrayC);
-	PenNormal();
-	DisposeRgn(shadowRgn);
+		ColorShadowRegion(backSrcMap, shadowRgn, dkGrayC);
+	DeleteObject(shadowRgn);
 
-	InsetRect(counter, 2, 2);
-	ColorRect(counter, brownC);
-	InsetRect(counter, -2, -2);
+	Mac_InsetRect(counter, 2, 2);
+	ColorRect(backSrcMap, counter, brownC);
+	Mac_InsetRect(counter, -2, -2);
 
 	tempRect = *counter;
 	tempRect.top = tempRect.bottom - kCounterFooterHigh;
 	tempRect.left += 2;
 	tempRect.right -= 2;
-	ColorRect(&tempRect, dkGrayC);
-	ColorLine(counter->left + 2, counter->bottom - kCounterFooterHigh,
+	ColorRect(backSrcMap, &tempRect, dkGrayC);
+	ColorLine(backSrcMap, counter->left + 2, counter->bottom - kCounterFooterHigh,
 			counter->right - 3, counter->bottom - kCounterFooterHigh, blackC);
-	ColorLine(counter->left + 2, counter->bottom - kCounterFooterHigh + 1,
+	ColorLine(backSrcMap, counter->left + 2, counter->bottom - kCounterFooterHigh + 1,
 			counter->right - 3, counter->bottom - kCounterFooterHigh + 1, blackC);
-	ColorLine(counter->right - 3, counter->bottom - kCounterFooterHigh,
+	ColorLine(backSrcMap, counter->right - 3, counter->bottom - kCounterFooterHigh,
 			counter->right - 3, counter->bottom - 1, blackC);
-	ColorLine(counter->left + 2, counter->bottom - kCounterFooterHigh,
+	ColorLine(backSrcMap, counter->left + 2, counter->bottom - kCounterFooterHigh,
 			counter->left + 2, counter->bottom - 1, k8DkGrayColor);
 
-	ColorLine(counter->right - 2, counter->top,
+	ColorLine(backSrcMap, counter->right - 2, counter->top,
 			counter->right - 2, counter->bottom - kCounterFooterHigh - 1, dkstRedC);
-	ColorLine(counter->left + 1, counter->top + 8,
+	ColorLine(backSrcMap, counter->left + 1, counter->top + 8,
 			counter->left + 1, counter->bottom - kCounterFooterHigh - 1, tanC);
 
 	if (thisMac.isDepth == 4)
 	{
-		ColorLine(counter->left - 1, counter->top,
+		ColorLine(backSrcMap, counter->left - 1, counter->top,
 				counter->right, counter->top, 1);
-		ColorLine(counter->left - 1, counter->top + 1,
+		ColorLine(backSrcMap, counter->left - 1, counter->top + 1,
 				counter->right, counter->top + 1, 2);
-		ColorLine(counter->left - 1, counter->top + 2,
+		ColorLine(backSrcMap, counter->left - 1, counter->top + 2,
 				counter->right, counter->top + 2, 3);
-		ColorLine(counter->left - 1, counter->top + 3,
+		ColorLine(backSrcMap, counter->left - 1, counter->top + 3,
 				counter->right, counter->top + 3, 4);
-		ColorLine(counter->left - 1, counter->top + 4,
+		ColorLine(backSrcMap, counter->left - 1, counter->top + 4,
 				counter->right, counter->top + 4, 5);
-		ColorLine(counter->left - 1, counter->top + 5,
+		ColorLine(backSrcMap, counter->left - 1, counter->top + 5,
 				counter->right, counter->top + 5, 5);
-		ColorLine(counter->left - 1, counter->top + 6,
+		ColorLine(backSrcMap, counter->left - 1, counter->top + 6,
 				counter->right, counter->top + 6, 5);
-		ColorLine(counter->left - 1, counter->top,
+		ColorLine(backSrcMap, counter->left - 1, counter->top,
 				counter->left - 1, counter->top + 6, 1);
 	}
 	else
 	{
-		ColorLine(counter->left - 1, counter->top,
+		ColorLine(backSrcMap, counter->left - 1, counter->top,
 				counter->right, counter->top, k8LtstGrayColor);
-		ColorLine(counter->left - 1, counter->top + 1,
+		ColorLine(backSrcMap, counter->left - 1, counter->top + 1,
 				counter->right, counter->top + 1, k8LtstGray2Color);
-		ColorLine(counter->left - 1, counter->top + 2,
+		ColorLine(backSrcMap, counter->left - 1, counter->top + 2,
 				counter->right, counter->top + 2, k8LtstGray3Color);
-		ColorLine(counter->left - 1, counter->top + 3,
+		ColorLine(backSrcMap, counter->left - 1, counter->top + 3,
 				counter->right, counter->top + 3, k8LtstGray4Color);
-		ColorLine(counter->left - 1, counter->top + 4,
+		ColorLine(backSrcMap, counter->left - 1, counter->top + 4,
 				counter->right, counter->top + 4, k8LtstGray5Color);
-		ColorLine(counter->left - 1, counter->top + 5,
+		ColorLine(backSrcMap, counter->left - 1, counter->top + 5,
 				counter->right, counter->top + 5, k8LtstGray5Color);
-		ColorLine(counter->left - 1, counter->top + 6,
+		ColorLine(backSrcMap, counter->left - 1, counter->top + 6,
 				counter->right, counter->top + 6, k8LtstGray5Color);
-		ColorLine(counter->left - 1, counter->top,
+		ColorLine(backSrcMap, counter->left - 1, counter->top,
 				counter->left - 1, counter->top + 6, k8LtstGrayColor);
 	}
 
-	ColorLine(counter->right, counter->top,
+	ColorLine(backSrcMap, counter->right, counter->top,
 			counter->right, counter->top + 6, k8LtGrayColor);
-	ColorLine(counter->left + 1, counter->top + 7,
+	ColorLine(backSrcMap, counter->left + 1, counter->top + 7,
 			counter->right - 2, counter->top + 7, dkstRedC);
-	ColorLine(counter->left + 1, counter->top + 8,
+	ColorLine(backSrcMap, counter->left + 1, counter->top + 8,
 			counter->right - 2, counter->top + 8, dkstRedC);
-
-	SetGWorld(wasCPort, wasWorld);
 
 	nRects = RectWide(counter) / 40;
 	if (nRects == 0)
@@ -565,13 +552,12 @@ void DrawCounter (Rect *counter)
 			counter->top + kCounterPanelDrop);
 	for (i = 0; i < nRects; i++)
 	{
-		HiliteRect(&tempRect, tanC, dkstRedC);
-		InsetRect(&tempRect, 4, 4);
-		HiliteRect(&tempRect, dkstRedC, tanC);
-		InsetRect(&tempRect, -4, -4);
+		HiliteRect(backSrcMap, &tempRect, tanC, dkstRedC);
+		Mac_InsetRect(&tempRect, 4, 4);
+		HiliteRect(backSrcMap, &tempRect, dkstRedC, tanC);
+		Mac_InsetRect(&tempRect, -4, -4);
 		QOffsetRect(&tempRect, kCounterStripWide + width, 0);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DrawDresser
