@@ -5,6 +5,7 @@
 //============================================================================
 
 
+#define _CRT_SECURE_NO_WARNINGS
 //#include <Resources.h>
 #include <stddef.h>
 #include <wchar.h>
@@ -68,7 +69,7 @@ void InitScoreboardMap (void)
 	OSErr		theErr;
 	SInt16		hOffset;
 
-	lfScoreboard.lfHeight = 12;
+	lfScoreboard.lfHeight = -12;
 	lfScoreboard.lfWidth = 0;
 	lfScoreboard.lfEscapement = 0;
 	lfScoreboard.lfOrientation = 0;
@@ -81,7 +82,7 @@ void InitScoreboardMap (void)
 	lfScoreboard.lfClipPrecision = CLIP_DEFAULT_PRECIS;
 	lfScoreboard.lfQuality = DEFAULT_QUALITY;
 	lfScoreboard.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	wcscpy_s(lfScoreboard.lfFaceName, LF_FACESIZE, L"Tahoma");
+	wcscpy(lfScoreboard.lfFaceName, L"Tahoma");
 
 	wasScoreboardMode = kScoreboardHigh;
 	boardSrcRect = houseRect;
