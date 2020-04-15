@@ -17,15 +17,14 @@
 
 void PourScreenOn (Rect *theRect)
 {
-	return;
-#if 0
 	#define		kMaxColumnsWide	96
 	#define		kChipHigh		20
 	#define		kChipWide		16
 	Rect		columnRects[kMaxColumnsWide];
-	short		columnProgress[kMaxColumnsWide];
-	short		i, colsComplete, colWide, rowTall;
+	SInt16		columnProgress[kMaxColumnsWide];
+	SInt16		i, colsComplete, colWide, rowTall;
 	Boolean		working;
+	HDC			mainWindowDC;
 
 	colWide = theRect->right / kChipWide;			// determine # of cols
 	rowTall = (theRect->bottom / kChipHigh) + 1;	// determine # of rows
@@ -39,6 +38,7 @@ void PourScreenOn (Rect *theRect)
 		QOffsetRect(&columnRects[i], (i * kChipWide) + theRect->left, theRect->top);
 	}
 
+	mainWindowDC = GetDC(mainWindow);
 	while (working)
 	{
 		do
@@ -56,8 +56,7 @@ void PourScreenOn (Rect *theRect)
 		if (columnRects[i].bottom > theRect->bottom)
 			columnRects[i].bottom = theRect->bottom;
 
-		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+		Mac_CopyBits(workSrcMap, mainWindowDC,
 				&columnRects[i], &columnRects[i], srcCopy, nil);
 
 		QOffsetRect(&columnRects[i], 0, kChipHigh);
@@ -69,7 +68,7 @@ void PourScreenOn (Rect *theRect)
 				working = false;
 		}
 	}
-#endif
+	ReleaseDC(mainWindow, mainWindowDC);
 }
 
 //--------------------------------------------------------------  WipeScreenOn
