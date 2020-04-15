@@ -188,6 +188,7 @@ void OpenMainWindow (void)
 	SInt16		whichRoom;
 	RECT		rcClient;
 	DWORD		windowStyle;
+	HDC			mainWindowDC;
 
 	if (mainWindow != NULL)
 	{
@@ -197,12 +198,12 @@ void OpenMainWindow (void)
 
 	if (theMode == kEditMode)
 	{
-#if 0
-		if (menuWindow != nil)
-			DisposeWindow(menuWindow);
-		menuWindow = nil;
+		if (menuWindow != NULL)
+			DestroyWindow(menuWindow);
+		menuWindow = NULL;
 
 		QSetRect(&mainWindowRect, 0, 0, 512, 322);
+#if 0
 		mainWindow = GetNewCWindow(kEditWindowID, nil, kPutInFront);
 		SizeWindow(mainWindow, mainWindowRect.right,
 				mainWindowRect.bottom, false);
@@ -255,21 +256,12 @@ void OpenMainWindow (void)
 			HINST_THISCOMPONENT,
 			NULL
 		);
+		if (mainWindow == NULL)
+			RedAlert(kErrDialogDidntLoad);
 		ShowWindow(mainWindow, SW_SHOWDEFAULT);
-#if 0
-		mainWindow = GetNewCWindow(kMainWindowID, nil, kPutInFront);
-		SizeWindow(mainWindow, mainWindowRect.right - mainWindowRect.left,
-				mainWindowRect.bottom - mainWindowRect.top, false);
-		MoveWindow(mainWindow, thisMac.screen.left,
-				thisMac.screen.top + 20, true);	// thisMac.menuHigh
-		ShowWindow(mainWindow);
-		SetPortWindowPort(mainWindow);
-		ClipRect(&mainWindowRect);
-//		CopyRgn(mainWindow->clipRgn, mainWindow->visRgn);
-		ForeColor(blackColor);
-		BackColor(whiteColor);
-		PaintRect(&mainWindowRect);
-#endif
+		mainWindowDC = GetDC(mainWindow);
+		Mac_PaintRect(mainWindowDC, &mainWindowRect, GetStockObject(BLACK_BRUSH));
+		ReleaseDC(mainWindow, mainWindowDC);
 
 		splashOriginH = ((thisMac.screen.right - thisMac.screen.left) - 640) / 2;
 		if (splashOriginH < 0)
@@ -278,11 +270,10 @@ void OpenMainWindow (void)
 		if (splashOriginV < 0)
 			splashOriginV = 0;
 
-#if 0
-		SetPort((GrafPtr)workSrcMap);
-		PaintRect(&workSrcRect);
-		LoadGraphic(kSplash8BitPICT);
+		Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
+		LoadGraphic(workSrcMap, kSplash8BitPICT);
 
+#if 0
 //		if ((fadeGraysOut) && (isDoColorFade))
 //		{
 //			wasSeed = ExtractCTSeed((CGrafPtr)mainWindow);
