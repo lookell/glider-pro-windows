@@ -564,19 +564,14 @@ void DrawCounter (Rect *counter)
 
 void DrawDresser (Rect *dresser)
 {
-	return;
-#if 0
 	#define		kDresserTopThick	4
 	#define		kDresserCrease		9
 	#define		kDresserDrawerDrop	12
 	#define		kDresserSideSpare	14
 	Rect		tempRect, dest;
-	long		yellowC, brownC, dkGrayC, ltTanC, dkstRedC;
-	RgnHandle	shadowRgn;
-	short		nRects, height, i;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-	Pattern		dummyPattern;
+	SInt32		yellowC, brownC, dkGrayC, ltTanC, dkstRedC;
+	HRGN		shadowRgn;
+	SInt16		nRects, height, i;
 
 	if (thisMac.isDepth == 4)
 	{
@@ -595,45 +590,39 @@ void DrawDresser (Rect *dresser)
 		dkstRedC = k8DkRed2Color;
 	}
 
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-
-	MoveTo(dresser->left + 10, dresser->bottom + 9);
-	shadowRgn = NewRgn();
-	if (shadowRgn == nil)
+	BeginPath(backSrcMap);
+	MoveToEx(backSrcMap, dresser->left + 10, dresser->bottom + 9, NULL);
+	Mac_Line(backSrcMap, RectWide(dresser) - 11, 0);
+	Mac_Line(backSrcMap, 9, -9);
+	Mac_Line(backSrcMap, 0, -RectTall(dresser) + 12);
+	Mac_Line(backSrcMap, -9, -9);
+	Mac_Line(backSrcMap, -RectWide(dresser) + 11, 0);
+	Mac_LineTo(backSrcMap, dresser->left + 10, dresser->bottom + 9);
+	EndPath(backSrcMap);
+	shadowRgn = PathToRegion(backSrcMap);
+	if (shadowRgn == NULL)
 		RedAlert(kErrUnnaccounted);
-	OpenRgn();
-	Line(RectWide(dresser) - 11, 0);
-	Line(9, -9);
-	Line(0, -RectTall(dresser) + 12);
-	Line(-9, -9);
-	Line(-RectWide(dresser) + 11, 0);
-	LineTo(dresser->left + 10, dresser->bottom + 9);
-	CloseRgn(shadowRgn);
-	PenPat(GetQDGlobalsGray(&dummyPattern));
-	PenMode(patOr);
 	if (thisMac.isDepth == 4)
-		ColorRegion(shadowRgn, 15);
+		ColorShadowRegion(backSrcMap, shadowRgn, 15);
 	else
-		ColorRegion(shadowRgn, k8DkstGrayColor);
-	PenNormal();
-	DisposeRgn(shadowRgn);
+		ColorShadowRegion(backSrcMap, shadowRgn, k8DkstGrayColor);
+	DeleteObject(shadowRgn);
 
-	InsetRect(dresser, 2, 2);
-	ColorRect(dresser, k8PumpkinColor);
-	HiliteRect(dresser, k8OrangeColor, dkstRedC);
-	InsetRect(dresser, -2, -2);
+	Mac_InsetRect(dresser, 2, 2);
+	ColorRect(backSrcMap, dresser, k8PumpkinColor);
+	HiliteRect(backSrcMap, dresser, k8OrangeColor, dkstRedC);
+	Mac_InsetRect(dresser, -2, -2);
 
 	tempRect = *dresser;
 	tempRect.bottom = tempRect.top + kDresserTopThick;
-	ColorRect(&tempRect, k8PissYellowColor);
-	HiliteRect(&tempRect, ltTanC, dkstRedC);
-	ColorLine(dresser->left + 2, dresser->top + kDresserTopThick,
+	ColorRect(backSrcMap, &tempRect, k8PissYellowColor);
+	HiliteRect(backSrcMap, &tempRect, ltTanC, dkstRedC);
+	ColorLine(backSrcMap, dresser->left + 2, dresser->top + kDresserTopThick,
 			dresser->right - 3, dresser->top + kDresserTopThick, k8Red4Color);
 
-	ColorLine(dresser->left + kDresserCrease, dresser->top + kDresserTopThick + 1,
+	ColorLine(backSrcMap, dresser->left + kDresserCrease, dresser->top + kDresserTopThick + 1,
 			dresser->left + kDresserCrease, dresser->bottom - 4, k8Red4Color);
-	ColorLine(dresser->right - kDresserCrease, dresser->top + kDresserTopThick + 1,
+	ColorLine(backSrcMap, dresser->right - kDresserCrease, dresser->top + kDresserTopThick + 1,
 			dresser->right - kDresserCrease, dresser->bottom - 4, k8OrangeColor);
 
 	nRects = RectTall(dresser) / 30;
@@ -644,53 +633,44 @@ void DrawDresser (Rect *dresser)
 	QOffsetRect(&tempRect, dresser->left + 7, dresser->top + 10);
 	for (i = 0; i < nRects; i++)
 	{
-		ColorLine(tempRect.left + 1, tempRect.bottom,
+		ColorLine(backSrcMap, tempRect.left + 1, tempRect.bottom,
 				tempRect.right, tempRect.bottom, dkstRedC);
-		ColorLine(tempRect.right, tempRect.top + 1,
+		ColorLine(backSrcMap, tempRect.right, tempRect.top + 1,
 				tempRect.right, tempRect.bottom, dkstRedC);
-		ColorRect(&tempRect, yellowC);
-		HiliteRect(&tempRect, ltTanC, brownC);
-		InsetRect(&tempRect, 1, 1);
-		HiliteRect(&tempRect, ltTanC, brownC);
-		InsetRect(&tempRect, -1, -1);
+		ColorRect(backSrcMap, &tempRect, yellowC);
+		HiliteRect(backSrcMap, &tempRect, ltTanC, brownC);
+		Mac_InsetRect(&tempRect, 1, 1);
+		HiliteRect(backSrcMap, &tempRect, ltTanC, brownC);
+		Mac_InsetRect(&tempRect, -1, -1);
 
 		QSetRect(&dest, -4, -4, 4, 4);
 		QOffsetRect(&dest, HalfRectTall(&tempRect), HalfRectTall(&tempRect));
 		QOffsetRect(&dest, tempRect.left, tempRect.top);
-		CopyBits((BitMap *)*GetGWorldPixMap(furnitureSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(furnitureSrcMap, backSrcMap,
 				&knobSrc, &dest, srcCopy, nil);
 
 		QSetRect(&dest, -4, -4, 4, 4);
 		QOffsetRect(&dest, -HalfRectTall(&tempRect), HalfRectTall(&tempRect));
 		QOffsetRect(&dest, tempRect.right, tempRect.top);
-		CopyBits((BitMap *)*GetGWorldPixMap(furnitureSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(furnitureSrcMap, backSrcMap,
 				&knobSrc, &dest, srcCopy, nil);
 
 		QOffsetRect(&tempRect, 0, kDresserTopThick + height);
 	}
 
-	SetGWorld(wasCPort, wasWorld);
-
 	dest = leftFootSrc;
 	ZeroRectCorner(&dest);
 	QOffsetRect(&dest, dresser->left + 6, dresser->bottom - 2);
 
-	CopyMask((BitMap *)*GetGWorldPixMap(furnitureSrcMap),
-			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
 			&leftFootSrc, &leftFootSrc, &dest);
 
 	dest = rightFootSrc;
 	ZeroRectCorner(&dest);
 	QOffsetRect(&dest, dresser->right - 19, dresser->bottom - 2);
 
-	CopyMask((BitMap *)*GetGWorldPixMap(furnitureSrcMap),
-			(BitMap *)*GetGWorldPixMap(furnitureMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
 			&rightFootSrc, &rightFootSrc, &dest);
-#endif
 }
 
 //--------------------------------------------------------------  DrawDeckTable
