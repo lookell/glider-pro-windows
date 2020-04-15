@@ -5,8 +5,10 @@
 //============================================================================
 
 
+#define _CRT_SECURE_NO_WARNINGS
 //#include <NumberFormatting.h>
 //#include <ToolUtils.h>
+#include <wchar.h>
 #include "Macintosh.h"
 #include "Externs.h"
 #include "Environ.h"
@@ -19,7 +21,7 @@
 #define kMenuWindowID			130
 
 
-void DrawOnSplash (void);
+void DrawOnSplash (HDC);
 void SetPaletteToGrays (void);
 void HardDrawMainWindow (void);
 void RestoreColorsSlam (void);
@@ -52,47 +54,69 @@ extern	Boolean		quickerTransitions, houseIsReadOnly;
 
 // Draws additional text on top of splash screen.
 
-void DrawOnSplash (void)
+void DrawOnSplash (HDC hdc)
 {
-	return;
-#if 0
-	Str255		houseLoadedStr;
+	Str255		houseLoadedStr, tempStr;
+	LOGFONT		lfHouse, lfNative;
+	HGDIOBJ		theFont, wasFont;
+	COLORREF	wasTextColor;
 
-	PasStringCopy("\pHouse: ", houseLoadedStr);
+	lfHouse.lfHeight = -9;
+	lfHouse.lfWidth = 0;
+	lfHouse.lfEscapement = 0;
+	lfHouse.lfOrientation = 0;
+	lfHouse.lfWeight = FW_BOLD;
+	lfHouse.lfItalic = FALSE;
+	lfHouse.lfUnderline = FALSE;
+	lfHouse.lfStrikeOut = FALSE;
+	lfHouse.lfCharSet = DEFAULT_CHARSET;
+	lfHouse.lfOutPrecision = OUT_DEFAULT_PRECIS;
+	lfHouse.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+	lfHouse.lfQuality = DEFAULT_QUALITY;
+	lfHouse.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
+	wcscpy(lfHouse.lfFaceName, L"Tahoma");
+	lfNative = lfHouse;
+	lfNative.lfHeight = -12;
+	lfNative.lfWeight = FW_BOLD;
+	wcscpy(lfNative.lfFaceName, L"Tahoma");
+
+	PasStringCopyC("House: ", houseLoadedStr);
 	PasStringConcat(houseLoadedStr, thisHouseName);
 	if ((thisMac.hasQT) && (hasMovie))
-		PasStringConcat(houseLoadedStr, "\p (QT)");
-	TextSize(9);
-	TextFace(1);
-	TextFont(applFont);
-	MoveTo(splashOriginH + 436, splashOriginV + 314);
+		PasStringConcatC(houseLoadedStr, " (QT)");
+	MoveToEx(hdc, splashOriginH + 436, splashOriginV + 314, NULL);
+	theFont = CreateFontIndirect(&lfHouse);
+	wasFont = SelectObject(hdc, theFont);
 	if (thisMac.isDepth == 4)
 	{
-		ForeColor(whiteColor);
-		DrawString(houseLoadedStr);
-		ForeColor(blackColor);
+		wasTextColor = SetTextColor(hdc, whiteColor);
+		Mac_DrawString(hdc, houseLoadedStr);
+		SetTextColor(hdc, wasTextColor);
 	}
 	else
 	{
 		if (houseIsReadOnly)
-			ColorText(houseLoadedStr, 5L);
+			ColorText(hdc, houseLoadedStr, 5L);
 		else
-			ColorText(houseLoadedStr, 28L);
+			ColorText(hdc, houseLoadedStr, 28L);
 	}
+	SelectObject(hdc, wasFont);
+	DeleteObject(theFont);
 
-	#if defined(powerc) || defined(__powerc)
-	TextSize(12);
-	TextFace(0);
-	TextFont(systemFont);
-	ForeColor(blackColor);
-	MoveTo(splashOriginH + 5, splashOriginV + 457);
-	DrawString("\pPowerPC Native!");
-	ForeColor(whiteColor);
-	MoveTo(splashOriginH + 4, splashOriginV + 456);
-	DrawString("\pPowerPC Native!");
-	ForeColor(blackColor);
+	#if defined(powerc) || defined(__powerc) // TODO: Change message to "Windows Native!"?
+	theFont = CreateFontIndirect(&lfNative);
+	wasFont = SelectObject(hdc, theFont);
+	PasStringCopyC("PowerPC Native!", tempStr);
+	wasTextColor = SetTextColor(hdc, blackColor);
+	MoveToEx(hdc, splashOriginH + 5, splashOriginV + 457, NULL);
+	Mac_DrawString(hdc, tempStr);
+	SetTextColor(hdc, whiteColor);
+	MoveToEx(hdc, splashOriginH + 4, splashOriginV + 456, NULL);
+	Mac_DrawString(hdc, tempStr);
+	SetTextColor(hdc, wasTextColor);
+	SelectObject(hdc, wasFont);
+	DeleteObject(theFont);
 	#endif
-#endif
 }
 
 //--------------------------------------------------------------  RedrawSplashScreen
@@ -639,7 +663,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 {
 	switch (uMsg)
 	{
-		case WM_DESTROY:
+	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
 	}

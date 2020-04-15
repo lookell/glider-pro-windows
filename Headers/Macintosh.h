@@ -93,6 +93,16 @@ extern const RGBColor QDColors[8];
 extern const RGBColor MacColor4[16];
 extern const RGBColor MacColor8[256];
 
+#define MAKE_MAC_COLOR_(rgb) RGB((rgb).red >> 8, (rgb).green >> 8, (rgb).blue >> 8)
+#define blackColor MAKE_MAC_COLOR_(QDBlack)
+#define yellowColor MAKE_MAC_COLOR_(QDYellow)
+#define magentaColor MAKE_MAC_COLOR_(QDMagenta)
+#define redColor MAKE_MAC_COLOR_(QDRed)
+#define cyanColor MAKE_MAC_COLOR_(QDCyan)
+#define greenColor MAKE_MAC_COLOR_(QDGreen)
+#define blueColor MAKE_MAC_COLOR_(QDBlue)
+#define whiteColor MAKE_MAC_COLOR_(QDWhite)
+
 #define srcCopy 0
 #define srcXor 2
 #define transparent 36
