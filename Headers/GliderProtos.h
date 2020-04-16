@@ -496,7 +496,7 @@ void FollowTheLeader (void);
 void PourScreenOn (Rect *);								// --- Transitions.c
 void WipeScreenOn (SInt16, Rect *);
 void DumpScreenOn (Rect *);
-//void DissBits (Rect *);
+void DissBits (Rect *);
 //void DissBitsChunky (Rect *);
 //void FillColorNoise (Rect *);
 //void FillSnow (Rect *);
