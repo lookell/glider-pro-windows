@@ -411,25 +411,24 @@ void QuickBandsRefresh (Boolean flash)
 
 void QuickFoilRefresh (Boolean flash)
 {
-	return;
-#if 0
+	HDC			mainWindowDC;
+
+	mainWindowDC = GetMainWindowDC();
 	if ((foilTotal > 0) && (!flash))
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+		Mac_CopyBits(badgeSrcMap, mainWindowDC,
 				&badgesBadgesRects[kFoilBadge],
 				&badgesDestRects[kFoilBadge],
 				srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+		Mac_CopyBits(badgeSrcMap, mainWindowDC,
 				&badgesBlankRects[kFoilBadge],
 				&badgesDestRects[kFoilBadge],
 				srcCopy, nil);
 	}
-#endif
+	ReleaseMainWindowDC(mainWindowDC);
 }
 
 //--------------------------------------------------------------  AdjustScoreboardHeight
