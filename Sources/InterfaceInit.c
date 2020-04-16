@@ -23,7 +23,7 @@
 static HMENU DetachPopupMenu(HMENU rootMenu, UINT id, LPWSTR *title);
 
 
-extern	RgnHandle		mirrorRgn;
+extern	HRGN			mirrorRgn;
 extern	HWND			mapWindow, toolsWindow, linkWindow;
 extern	HWND			menuWindow;
 extern	Rect			shieldRect, boardSrcRect, localRoomsDest[];

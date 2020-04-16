@@ -35,7 +35,7 @@ void CopyRectsAssm (void);
 Rect		work2MainRects[kMaxGarbageRects];
 Rect		back2WorkRects[kMaxGarbageRects];
 Rect		shieldRect;
-RgnHandle	mirrorRgn;
+HRGN		mirrorRgn;
 Point		shieldPt;
 SInt32		nextFrame;
 SInt16		numWork2Main, numBack2Work;
@@ -726,28 +726,24 @@ void CopyRectMainToBack (Rect *theRect)
 
 void AddToMirrorRegion (Rect *theRect)
 {
-	return;
-#if 0
-	RgnHandle	tempRgn;
+	HRGN		tempRgn;
 
-	if (mirrorRgn == nil)
+	if (mirrorRgn == NULL)
 	{
-		mirrorRgn = NewRgn();
-		if (mirrorRgn != nil)
-			RectRgn(mirrorRgn, theRect);
+		mirrorRgn = CreateRectRgn(theRect->left, theRect->top,
+				theRect->right, theRect->bottom);
 	}
 	else
 	{
-		tempRgn = NewRgn();
-		if (tempRgn != nil)
+		tempRgn = CreateRectRgn(theRect->left, theRect->top,
+				theRect->right, theRect->bottom);
+		if (tempRgn != NULL)
 		{
-			RectRgn(tempRgn, theRect);
-			UnionRgn(mirrorRgn, tempRgn, mirrorRgn);
-			DisposeRgn(tempRgn);
+			CombineRgn(mirrorRgn, mirrorRgn, tempRgn, RGN_OR);
+			DeleteObject(tempRgn);
 		}
 	}
 	hasMirror = true;
-#endif
 }
 
 //--------------------------------------------------------------  ZeroMirrorRegion
