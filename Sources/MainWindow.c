@@ -123,23 +123,20 @@ void DrawOnSplash (HDC hdc)
 
 void RedrawSplashScreen (void)
 {
-	return;
-#if 0
 	Rect		tempRect;
 
-	SetPort((GrafPtr)workSrcMap);
-	PaintRect(&workSrcRect);
+//	SetPort((GrafPtr)workSrcMap);
+	Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
 	QSetRect(&tempRect, 0, 0, 640, 460);
 	QOffsetRect(&tempRect, splashOriginH, splashOriginV);
-	LoadScaledGraphic(kSplash8BitPICT, &tempRect);
-	DrawOnSplash();
-	SetPortWindowPort(mainWindow);
-//	if (quickerTransitions)
-//		DissBitsChunky(&workSrcRect);
-//	else
-//		DissBits(&workSrcRect);
+	LoadScaledGraphic(workSrcMap, kSplash8BitPICT, &tempRect);
+	DrawOnSplash(workSrcMap);
+//	SetPortWindowPort(mainWindow);
+	if (quickerTransitions)
+		DissBitsChunky(&workSrcRect);
+	else
+		DissBits(&workSrcRect);
 	CopyRectMainToWork(&workSrcRect);
-#endif
 }
 
 //--------------------------------------------------------------  UpdateMainWindow
