@@ -702,12 +702,12 @@ void CopyRectWorkToMain (Rect *theRect)
 
 void CopyRectMainToWork (Rect *theRect)
 {
-	return;
-#if 0
-	CopyBits(GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
-			(BitMap *)*GetGWorldPixMap(workSrcMap),
+	HDC			mainWindowDC;
+
+	mainWindowDC = GetMainWindowDC();
+	Mac_CopyBits(mainWindowDC, workSrcMap,
 			theRect, theRect, srcCopy, nil);
-#endif
+	ReleaseMainWindowDC(mainWindowDC);
 }
 
 //--------------------------------------------------------------  CopyRectMainToBack
