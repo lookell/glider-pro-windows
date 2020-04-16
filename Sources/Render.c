@@ -750,12 +750,9 @@ void AddToMirrorRegion (Rect *theRect)
 
 void ZeroMirrorRegion (void)
 {
-	return;
-#if 0
-	if (mirrorRgn != nil)
-		DisposeRgn(mirrorRgn);
-	mirrorRgn = nil;
+	if (mirrorRgn != NULL)
+		DeleteObject(mirrorRgn);
+	mirrorRgn = NULL;
 	hasMirror = false;
-#endif
 }
 
