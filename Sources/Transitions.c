@@ -221,3 +221,41 @@ void DissBits (Rect *theRect)
 	ReleaseDC(mainWindow, mainWindowDC);
 }
 
+//--------------------------------------------------------------  DissBitsChunky
+
+void DissBitsChunky(Rect* theRect)
+{
+	UInt32		lfsrMask = 0x8016;		// 1 to 65535 (2^16 - 1)
+	HDC			mainWindowDC;
+	HRGN		theClipRgn;
+	INT			chunkH, chunkV;
+	INT			chunkSize = 8;
+	UInt32		state;
+
+	mainWindowDC = GetDC(mainWindow);
+	SaveDC(mainWindowDC);
+	theClipRgn = CreateRectRgn(theRect->left, theRect->top,
+		theRect->right, theRect->bottom);
+	SelectClipRgn(mainWindowDC, theClipRgn);
+	DeleteObject(theClipRgn);
+	state = 1;
+	do
+	{
+		if (state & 1)
+			state = (state >> 1) ^ lfsrMask;
+		else
+			state = (state >> 1);
+		chunkH = chunkSize * (state & 0xFF); // 8 * (0 to 255)
+		if ((theRect->left > chunkH + chunkSize - 1) || (chunkH >= theRect->right))
+			continue;
+		chunkV = chunkSize * ((state >> 8) & 0xFF); // 8 * (0 to 255)
+		if ((theRect->top > chunkV + chunkSize - 1) || (chunkV >= theRect->bottom))
+			continue;
+		BitBlt(mainWindowDC, chunkH, chunkV, chunkSize, chunkSize,
+			workSrcMap, chunkH, chunkV, SRCCOPY);
+	} while (state != 1);
+	BitBlt(mainWindowDC, 0, 0, chunkSize, chunkSize, workSrcMap, 0, 0, SRCCOPY);
+	RestoreDC(mainWindowDC, -1);
+	ReleaseDC(mainWindow, mainWindowDC);
+}
+
