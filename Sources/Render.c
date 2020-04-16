@@ -591,26 +591,24 @@ void RenderShreds (void)
 
 void CopyRectsQD (void)
 {
-	return;
-#if 0
-	short		i;
+	HDC			mainWindowDC;
+	SInt16		i;
 
+	mainWindowDC = GetMainWindowDC();
 	for (i = 0; i < numWork2Main; i++)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+		Mac_CopyBits(workSrcMap, mainWindowDC,
 				&work2MainRects[i], &work2MainRects[i],
 				srcCopy, nil);
 	}
+	ReleaseMainWindowDC(mainWindowDC);
 
 	for (i = 0; i < numBack2Work; i++)
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
-				(BitMap *)*GetGWorldPixMap(workSrcMap),
+		Mac_CopyBits(backSrcMap, workSrcMap,
 				&back2WorkRects[i], &back2WorkRects[i],
 				srcCopy, nil);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  RenderFrame
