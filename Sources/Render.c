@@ -714,12 +714,12 @@ void CopyRectMainToWork (Rect *theRect)
 
 void CopyRectMainToBack (Rect *theRect)
 {
-	return;
-#if 0
-	CopyBits(GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	HDC			mainWindowDC;
+
+	mainWindowDC = GetMainWindowDC();
+	Mac_CopyBits(mainWindowDC, backSrcMap,
 			theRect, theRect, srcCopy, nil);
-#endif
+	ReleaseMainWindowDC(mainWindowDC);
 }
 
 //--------------------------------------------------------------  AddToMirrorRegion
