@@ -47,6 +47,7 @@ extern	GDHandle	thisGDevice;
 extern	SInt16		toolSelected;
 extern	Boolean		noRoomAtAll, isUseSecondScreen;
 extern	Boolean		quickerTransitions, houseIsReadOnly;
+extern	HMENU		theMenuBar;
 
 
 //==============================================================  Functions
@@ -232,7 +233,7 @@ void OpenMainWindow (void)
 			rcClient.right - rcClient.left,
 			rcClient.bottom - rcClient.top,
 			NULL,
-			NULL,
+			theMenuBar,
 			HINST_THISCOMPONENT,
 			NULL
 		);
@@ -284,7 +285,7 @@ void OpenMainWindow (void)
 			rcClient.right - rcClient.left,
 			rcClient.bottom - rcClient.top,
 			NULL,
-			NULL,
+			theMenuBar,
 			HINST_THISCOMPONENT,
 			NULL
 		);
@@ -696,6 +697,10 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	switch (uMsg)
 	{
 	case WM_DESTROY:
+		// Remove the menu bar from the window so that it isn't destroyed
+		// with the window. It will be reattached to the main window if
+		// it is recreated.
+		SetMenu(hwnd, NULL);
 		PostQuitMessage(0);
 		return 0;
 

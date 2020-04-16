@@ -28,6 +28,7 @@ SInt16		isDepthPref, dataResFile, numSMWarnings;
 Boolean		quitting, doZooms, quickerTransitions, isUseSecondScreen;
 
 
+extern HMENU		theMenuBar, appleMenu, gameMenu, optionsMenu, houseMenu;
 extern Str31		highBanner;
 extern Str15		leftName, rightName, batteryName, bandName;
 extern Str15		highName;
@@ -384,6 +385,18 @@ int main (void)
 			houseOpen = false;
 		}
 	}
+
+	// Detach all submenus from the menu bar, and then destroy all menus.
+	RemoveMenu(theMenuBar, kAppleMenuID, MF_BYCOMMAND);
+	RemoveMenu(theMenuBar, kGameMenuID, MF_BYCOMMAND);
+	RemoveMenu(theMenuBar, kOptionsMenuID, MF_BYCOMMAND);
+	RemoveMenu(theMenuBar, kHouseMenuID, MF_BYCOMMAND);
+	DestroyMenu(appleMenu);
+	DestroyMenu(gameMenu);
+	DestroyMenu(optionsMenu);
+	DestroyMenu(houseMenu);
+	DestroyMenu(theMenuBar);
+
 	WriteOutPrefs();
 	RestoreColorDepth();
 //	FlushEvents(everyEvent, 0);

@@ -31,7 +31,7 @@ SInt16 QueryResumeGame (void);
 void HeyYourPissingAHighScore (void);
 
 
-HMENU		appleMenu, gameMenu, optionsMenu, houseMenu;
+HMENU		theMenuBar, appleMenu, gameMenu, optionsMenu, houseMenu;
 LPWSTR		appleMenuTitle, gameMenuTitle, optionsMenuTitle, houseMenuTitle;
 Boolean		menusUp, resumedSavedGame;
 
@@ -249,14 +249,12 @@ void UpdateClipboardMenus (void)
 void UpdateMenus (Boolean newMode)
 {
 	MENUITEMINFO	mii;
-	HMENU			menuBar;
 
 	if (!menusUp)
 		return;
 
 	if (newMode)
 	{
-		menuBar = GetMenu(mainWindow);
 		if (theMode == kEditMode)
 		{
 			mii.cbSize = sizeof(mii);
@@ -264,11 +262,11 @@ void UpdateMenus (Boolean newMode)
 			mii.wID = kHouseMenuID;
 			mii.hSubMenu = houseMenu;
 			mii.dwTypeData = houseMenuTitle;
-			InsertMenuItem(menuBar, GetMenuItemCount(menuBar), TRUE, &mii);
+			InsertMenuItem(theMenuBar, GetMenuItemCount(theMenuBar), TRUE, &mii);
 		}
 		else
 		{
-			RemoveMenu(menuBar, kHouseMenuID, MF_BYCOMMAND);
+			RemoveMenu(theMenuBar, kHouseMenuID, MF_BYCOMMAND);
 		}
 	}
 
@@ -287,7 +285,8 @@ void UpdateMenus (Boolean newMode)
 	else
 		UpdateMenusNonEditMode();
 
-	DrawMenuBar(mainWindow);
+	if (mainWindow != NULL)
+		DrawMenuBar(mainWindow);
 }
 
 //--------------------------------------------------------------  DoAppleMenu

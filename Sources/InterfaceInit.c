@@ -29,7 +29,7 @@ extern	HWND			menuWindow;
 extern	Rect			shieldRect, boardSrcRect, localRoomsDest[];
 extern	HCURSOR			handCursor, beamCursor, vertCursor, horiCursor;
 extern	HCURSOR			diagCursor;
-extern	HMENU			appleMenu, gameMenu, optionsMenu, houseMenu;
+extern	HMENU			theMenuBar, appleMenu, gameMenu, optionsMenu, houseMenu;
 extern	LPWSTR			appleMenuTitle, gameMenuTitle, optionsMenuTitle, houseMenuTitle;
 extern	Point			shieldPt;
 extern	SInt32			incrementModeTime;
@@ -91,11 +91,11 @@ static HMENU DetachPopupMenu(HMENU rootMenu, UINT id, LPWSTR *title)
 void InitializeMenus (void)
 {
 	MENUITEMINFO mii;
-	HMENU menuBar, rootMenu;
+	HMENU rootMenu;
 
 	mii.cbSize = sizeof(mii);
 	mii.fMask = MIIM_ID | MIIM_STRING | MIIM_SUBMENU;
-	menuBar = CreateMenu();
+	theMenuBar = CreateMenu();
 	rootMenu = LoadMenu(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDM_ROOT));
 	if (rootMenu == NULL)
 		RedAlert(kErrFailedResourceLoad);
@@ -106,7 +106,7 @@ void InitializeMenus (void)
 	mii.wID = kAppleMenuID;
 	mii.hSubMenu = appleMenu;
 	mii.dwTypeData = appleMenuTitle;
-	InsertMenuItem(menuBar, GetMenuItemCount(menuBar), TRUE, &mii);
+	InsertMenuItem(theMenuBar, GetMenuItemCount(theMenuBar), TRUE, &mii);
 
 	gameMenu = DetachPopupMenu(rootMenu, kGameMenuID, &gameMenuTitle);
 	if (gameMenu == NULL)
@@ -114,7 +114,7 @@ void InitializeMenus (void)
 	mii.wID = kGameMenuID;
 	mii.hSubMenu = gameMenu;
 	mii.dwTypeData = gameMenuTitle;
-	InsertMenuItem(menuBar, GetMenuItemCount(menuBar), TRUE, &mii);
+	InsertMenuItem(theMenuBar, GetMenuItemCount(theMenuBar), TRUE, &mii);
 
 	optionsMenu = DetachPopupMenu(rootMenu, kOptionsMenuID, &optionsMenuTitle);
 	if (optionsMenu == NULL)
@@ -122,14 +122,11 @@ void InitializeMenus (void)
 	mii.wID = kOptionsMenuID;
 	mii.hSubMenu = optionsMenu;
 	mii.dwTypeData = optionsMenuTitle;
-	InsertMenuItem(menuBar, GetMenuItemCount(menuBar), TRUE, &mii);
+	InsertMenuItem(theMenuBar, GetMenuItemCount(theMenuBar), TRUE, &mii);
 
 	menusUp = true;
 	if (mainWindow != NULL)
-	{
-		SetMenu(mainWindow, menuBar);
-		DrawMenuBar(mainWindow);
-	}
+		SetMenu(mainWindow, theMenuBar);
 
 	houseMenu = DetachPopupMenu(rootMenu, kHouseMenuID, &houseMenuTitle);
 	if (houseMenu == NULL)
@@ -215,6 +212,7 @@ void VariableInit (void)
 	shieldPt.v = 0;
 	shieldRect = thisMac.screen;
 
+	theMenuBar = NULL;
 	menusUp = false;
 	quitting = false;
 	houseOpen = false;
