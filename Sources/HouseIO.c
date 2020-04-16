@@ -70,8 +70,6 @@ void LoopMovie (void)
 
 void OpenHouseMovie (void)
 {
-	return;
-#if 0
 #ifdef COMPILEQT
 	TimeBase	theTime;
 	FSSpec		theSpec;
@@ -145,15 +143,12 @@ void OpenHouseMovie (void)
 		hasMovie = true;
 	}
 #endif
-#endif
 }
 
 //--------------------------------------------------------------  CloseHouseMovie
 
 void CloseHouseMovie (void)
 {
-	return;
-#if 0
 #ifdef COMPILEQT
 	OSErr		theErr;
 
@@ -165,7 +160,6 @@ void CloseHouseMovie (void)
 	}
 #endif
 	hasMovie = false;
-#endif
 }
 
 //--------------------------------------------------------------  OpenHouse
@@ -256,8 +250,6 @@ Boolean OpenSpecificHouse (FSSpec *specs)
 #ifndef COMPILEDEMO
 Boolean SaveHouseAs (void)
 {
-	return false;
-#if 0
 	// TEMP - fix this later -- use NavServices (see House.c)
 /*
 	StandardFileReply	theReply;
@@ -323,7 +315,6 @@ Boolean SaveHouseAs (void)
 	return (noProblems);
 	*/
 	return false;
-#endif
 }
 #endif
 
@@ -469,7 +460,7 @@ Boolean ReadHouse (void)
 
 Boolean WriteHouse (Boolean checkIt)
 {
-	return false;
+	return true;
 #if 0
 	UInt32			timeStamp;
 	long			byteCount;
@@ -548,7 +539,7 @@ Boolean WriteHouse (Boolean checkIt)
 
 Boolean CloseHouse (void)
 {
-	return false;
+	return true;
 #if 0
 	OSErr		theErr;
 
@@ -629,7 +620,7 @@ void CloseHouseResFork (void)
 #ifndef COMPILEDEMO
 Boolean QuerySaveChanges (void)
 {
-	return false;
+	return true;
 #if 0
 	short		hitWhat;
 	Boolean		whoCares;
