@@ -148,42 +148,35 @@ void RedrawSplashScreen (void)
 
 void UpdateMainWindow (void)
 {
-	return;
-#if 0
 	Rect		tempRect;
-	RgnHandle	dummyRgn;
+	HDC			mainWindowDC;
 
-	dummyRgn = NewRgn();
-	SetPortWindowPort(mainWindow);
+//	SetPortWindowPort(mainWindow);
+	mainWindowDC = GetMainWindowDC();
 
 	if (theMode == kEditMode)
 	{
 		PauseMarquee();
-		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
-				&mainWindowRect, &mainWindowRect, srcCopy,
-				GetPortVisibleRegion(GetWindowPort(mainWindow), dummyRgn));
+		Mac_CopyBits(workSrcMap, mainWindowDC,
+				&mainWindowRect, &mainWindowRect, srcCopy, nil);
 		ResumeMarquee();
 	}
 	else if ((theMode == kSplashMode) || (theMode == kPlayMode))
 	{
-		SetPort((GrafPtr)workSrcMap);
-		PaintRect(&workSrcRect);
+//		SetPort((GrafPtr)workSrcMap);
+		Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
 		QSetRect(&tempRect, 0, 0, 640, 460);
 		QOffsetRect(&tempRect, splashOriginH, splashOriginV);
-		LoadScaledGraphic(kSplash8BitPICT, &tempRect);
-		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
-				&workSrcRect, &mainWindowRect, srcCopy,
-				GetPortVisibleRegion(GetWindowPort(mainWindow), dummyRgn));
-		SetPortWindowPort(mainWindow);
+		LoadScaledGraphic(workSrcMap, kSplash8BitPICT, &tempRect);
+		Mac_CopyBits(workSrcMap, mainWindowDC,
+				&workSrcRect, &mainWindowRect, srcCopy, nil);
+//		SetPortWindowPort(mainWindow);
 
-		DrawOnSplash();
+		DrawOnSplash(mainWindowDC);
 	}
 
-	DisposeRgn(dummyRgn);
+	ReleaseMainWindowDC(mainWindowDC);
 	splashDrawn = true;
-#endif
 }
 
 //--------------------------------------------------------------  UpdateMenuBarWindow
@@ -683,10 +676,18 @@ void WashColorIn (void)
 
 LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	PAINTSTRUCT ps;
+
 	switch (uMsg)
 	{
 	case WM_DESTROY:
 		PostQuitMessage(0);
+		return 0;
+
+	case WM_PAINT:
+		BeginPaint(hwnd, &ps);
+		EndPaint(hwnd, &ps);
+		UpdateMainWindow();
 		return 0;
 	}
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
