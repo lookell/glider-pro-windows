@@ -217,27 +217,45 @@ void OpenMainWindow (void)
 		menuWindow = NULL;
 
 		QSetRect(&mainWindowRect, 0, 0, 512, 322);
-#if 0
-		mainWindow = GetNewCWindow(kEditWindowID, nil, kPutInFront);
-		SizeWindow(mainWindow, mainWindowRect.right,
-				mainWindowRect.bottom, false);
+		rcClient.left = mainWindowRect.left;
+		rcClient.top = mainWindowRect.top;
+		rcClient.right = mainWindowRect.right;
+		rcClient.bottom = mainWindowRect.bottom;
+		windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+		AdjustWindowRect(&rcClient, windowStyle, TRUE);
+		mainWindow = CreateWindow(
+			WC_MAINWINDOW,
+			L"Main Window",
+			windowStyle,
+			CW_USEDEFAULT,
+			CW_USEDEFAULT,
+			rcClient.right - rcClient.left,
+			rcClient.bottom - rcClient.top,
+			NULL,
+			NULL,
+			HINST_THISCOMPONENT,
+			NULL
+		);
 
 		if (OptionKeyDown())
 		{
 			isEditH = 3;
 			isEditV = 41;
 		}
+#if 0
 		MoveWindow(mainWindow, isEditH, isEditV, true);
-		ShowWindow(mainWindow);
+#endif
+		ShowWindow(mainWindow, SW_SHOWDEFAULT);
+#if 0
 		SetPortWindowPort(mainWindow);
 		ClipRect(&mainWindowRect);
 		ForeColor(blackColor);
 		BackColor(whiteColor);
+#endif
 
 		whichRoom = GetFirstRoomNumber();
 		CopyRoomToThisRoom(whichRoom);
 		ReflectCurrentRoom(false);
-#endif
 	}
 	else
 	{
