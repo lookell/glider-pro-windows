@@ -153,6 +153,8 @@ void ZoomBetweenWindows (void);
 void UpdateEditWindowTitle (void);
 void HandleMainClick (Point, Boolean);
 //void WashColorIn (void);
+HDC GetMainWindowDC (void);
+void ReleaseMainWindowDC (HDC);
 LRESULT CALLBACK MainWindowProc (HWND, UINT, WPARAM, LPARAM);
 
 void CenterMapOnRoom (SInt16, SInt16);					// --- Map.c

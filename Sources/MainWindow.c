@@ -283,9 +283,9 @@ void OpenMainWindow (void)
 		if (mainWindow == NULL)
 			RedAlert(kErrDialogDidntLoad);
 		ShowWindow(mainWindow, SW_SHOWDEFAULT);
-		mainWindowDC = GetDC(mainWindow);
+		mainWindowDC = GetMainWindowDC();
 		Mac_PaintRect(mainWindowDC, &mainWindowRect, GetStockObject(BLACK_BRUSH));
-		ReleaseDC(mainWindow, mainWindowDC);
+		ReleaseMainWindowDC(mainWindowDC);
 
 		splashOriginH = ((thisMac.screen.right - thisMac.screen.left) - 640) / 2;
 		if (splashOriginH < 0)
@@ -415,6 +415,28 @@ void HandleMainClick (Point wherePt, Boolean isDoubleClick)
 		SelectTool(kSelectTool);
 	}
 #endif
+}
+
+//--------------------------------------------------------------  GetMainWindowDC
+
+HDC GetMainWindowDC (void)
+{
+	HDC hdc;
+
+	if (mainWindow != NULL)
+		hdc = GetDC(mainWindow);
+	else
+		return NULL;
+
+	return hdc;
+}
+
+//--------------------------------------------------------------  ReleaseMainWindowDC
+
+void ReleaseMainWindowDC (HDC hdc)
+{
+	if (hdc != NULL)
+		ReleaseDC(mainWindow, hdc);
 }
 
 //--------------------------------------------------------------  ShowMenuBarOld

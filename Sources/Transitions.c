@@ -38,7 +38,7 @@ void PourScreenOn (Rect *theRect)
 		QOffsetRect(&columnRects[i], (i * kChipWide) + theRect->left, theRect->top);
 	}
 
-	mainWindowDC = GetDC(mainWindow);
+	mainWindowDC = GetMainWindowDC();
 	while (working)
 	{
 		do
@@ -68,7 +68,7 @@ void PourScreenOn (Rect *theRect)
 				working = false;
 		}
 	}
-	ReleaseDC(mainWindow, mainWindowDC);
+	ReleaseMainWindowDC(mainWindowDC);
 }
 
 //--------------------------------------------------------------  WipeScreenOn
@@ -113,7 +113,7 @@ void WipeScreenOn (SInt16 direction, Rect *theRect)
 		break;
 	}
 
-	mainWindowDC = GetDC(mainWindow);
+	mainWindowDC = GetMainWindowDC();
 	for (i = 0; i < count; i++)
 	{
 		Mac_CopyBits(workSrcMap, mainWindowDC,
@@ -130,7 +130,7 @@ void WipeScreenOn (SInt16 direction, Rect *theRect)
 		else if (wipeRect.bottom > theRect->bottom)
 			wipeRect.bottom = theRect->bottom;
 	}
-	ReleaseDC(mainWindow, mainWindowDC);
+	ReleaseMainWindowDC(mainWindowDC);
 }
 
 //--------------------------------------------------------------  DumpScreenOn
@@ -139,10 +139,10 @@ void DumpScreenOn (Rect *theRect)
 {
 	HDC			mainWindowDC;
 
-	mainWindowDC = GetDC(mainWindow);
+	mainWindowDC = GetMainWindowDC();
 	Mac_CopyBits(workSrcMap, mainWindowDC,
 			theRect, theRect, srcCopy, nil);
-	ReleaseDC(mainWindow, mainWindowDC);
+	ReleaseMainWindowDC(mainWindowDC);
 }
 
 // The functions DissBits and DissBitsChunky were originally missing,
@@ -194,7 +194,7 @@ void DissBits (Rect *theRect)
 	INT			chunkSize = 4;
 	UInt32		state;
 
-	mainWindowDC = GetDC(mainWindow);
+	mainWindowDC = GetMainWindowDC();
 	SaveDC(mainWindowDC);
 	theClipRgn = CreateRectRgn(theRect->left, theRect->top,
 		theRect->right, theRect->bottom);
@@ -218,7 +218,7 @@ void DissBits (Rect *theRect)
 	} while (state != 1);
 	BitBlt(mainWindowDC, 0, 0, chunkSize, chunkSize, workSrcMap, 0, 0, SRCCOPY);
 	RestoreDC(mainWindowDC, -1);
-	ReleaseDC(mainWindow, mainWindowDC);
+	ReleaseMainWindowDC(mainWindowDC);
 }
 
 //--------------------------------------------------------------  DissBitsChunky
@@ -232,7 +232,7 @@ void DissBitsChunky(Rect* theRect)
 	INT			chunkSize = 8;
 	UInt32		state;
 
-	mainWindowDC = GetDC(mainWindow);
+	mainWindowDC = GetMainWindowDC();
 	SaveDC(mainWindowDC);
 	theClipRgn = CreateRectRgn(theRect->left, theRect->top,
 		theRect->right, theRect->bottom);
@@ -256,6 +256,6 @@ void DissBitsChunky(Rect* theRect)
 	} while (state != 1);
 	BitBlt(mainWindowDC, 0, 0, chunkSize, chunkSize, workSrcMap, 0, 0, SRCCOPY);
 	RestoreDC(mainWindowDC, -1);
-	ReleaseDC(mainWindow, mainWindowDC);
+	ReleaseMainWindowDC(mainWindowDC);
 }
 
