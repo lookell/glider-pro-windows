@@ -387,25 +387,24 @@ void QuickBatteryRefresh (Boolean flash)
 
 void QuickBandsRefresh (Boolean flash)
 {
-	return;
-#if 0
+	HDC			mainWindowDC;
+
+	mainWindowDC = GetMainWindowDC();
 	if ((bandsTotal > 0) && (!flash))
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+		Mac_CopyBits(badgeSrcMap, mainWindowDC,
 				&badgesBadgesRects[kBandsBadge],
 				&badgesDestRects[kBandsBadge],
 				srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+		Mac_CopyBits(badgeSrcMap, mainWindowDC,
 				&badgesBlankRects[kBandsBadge],
 				&badgesDestRects[kBandsBadge],
 				srcCopy, nil);
 	}
-#endif
+	ReleaseMainWindowDC(mainWindowDC);
 }
 
 //--------------------------------------------------------------  QuickFoilRefresh
