@@ -187,10 +187,11 @@ void DumpScreenOn (Rect *theRect)
 
 void DissBits (Rect *theRect)
 {
-	#define		lfsrMask		0x20013		// 1 to 262143 (2^18 - 1)
+	UInt32		lfsrMask = 0x20013;		// 1 to 262143 (2^18 - 1)
 	HDC			mainWindowDC;
 	HRGN		theClipRgn;
 	INT			chunkH, chunkV;
+	INT			chunkSize = 4;
 	UInt32		state;
 
 	mainWindowDC = GetDC(mainWindow);
@@ -206,15 +207,16 @@ void DissBits (Rect *theRect)
 			state = (state >> 1) ^ lfsrMask;
 		else
 			state = (state >> 1);
-		chunkH = 4 * (state & 0x1FF); // 4 * (0 to 511)
-		if ((theRect->left > chunkH) || (chunkH >= theRect->right))
+		chunkH = chunkSize * (state & 0x1FF); // 4 * (0 to 511)
+		if ((theRect->left > chunkH + chunkSize - 1) || (chunkH >= theRect->right))
 			continue;
-		chunkV = 4 * ((state >> 9) & 0x1FF); // 4 * (0 to 511)
-		if ((theRect->top > chunkV) || (chunkV >= theRect->bottom))
+		chunkV = chunkSize * ((state >> 9) & 0x1FF); // 4 * (0 to 511)
+		if ((theRect->top > chunkV + chunkSize - 1) || (chunkV >= theRect->bottom))
 			continue;
-		BitBlt(mainWindowDC, chunkH, chunkV, 4, 4, workSrcMap, chunkH, chunkV, SRCCOPY);
+		BitBlt(mainWindowDC, chunkH, chunkV, chunkSize, chunkSize,
+				workSrcMap, chunkH, chunkV, SRCCOPY);
 	} while (state != 1);
-	BitBlt(mainWindowDC, 0, 0, 4, 4, workSrcMap, 0, 0, SRCCOPY);
+	BitBlt(mainWindowDC, 0, 0, chunkSize, chunkSize, workSrcMap, 0, 0, SRCCOPY);
 	RestoreDC(mainWindowDC, -1);
 	ReleaseDC(mainWindow, mainWindowDC);
 }
