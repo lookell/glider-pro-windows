@@ -112,44 +112,37 @@ Boolean CreateNewHouse (void)
 #ifndef COMPILEDEMO
 Boolean InitializeEmptyHouse (void)
 {
-	return false;
-#if 0
-	houseType		*thisHousePtr;
 	Str255			tempStr;
 
-	if (thisHouse != nil)
-		DisposeHandle((Handle)thisHouse);
+	if (thisHouse != NULL)
+		free(thisHouse->rooms);
+	free(thisHouse);
 
-	thisHouse = (houseHand)NewHandle(sizeof(houseType));
+	thisHouse = malloc(sizeof(*thisHouse));
 
-	if (thisHouse == nil)
+	if (thisHouse == NULL)
 	{
 		YellowAlert(kYellowUnaccounted, 1);
 		return (false);
 	}
 
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
-
-	thisHousePtr->version = kHouseVersion;
-	thisHousePtr->firstRoom = -1;
-	thisHousePtr->timeStamp = 0L;
-	thisHousePtr->flags = 0L;
-	thisHousePtr->initial.h = 32;
-	thisHousePtr->initial.v = 32;
+	thisHouse->version = kHouseVersion;
+	thisHouse->firstRoom = -1;
+	thisHouse->timeStamp = 0L;
+	thisHouse->flags = 0L;
+	thisHouse->initial.h = 32;
+	thisHouse->initial.v = 32;
 	ZeroHighScores();
 
 	GetLocalizedString(11, tempStr);
-	PasStringCopy(tempStr, thisHousePtr->banner);
+	PasStringCopy(tempStr, thisHouse->banner);
 	GetLocalizedString(12, tempStr);
-	PasStringCopy(tempStr, thisHousePtr->trailer);
-	thisHousePtr->hasGame = false;
-	thisHousePtr->nRooms = 0;
+	PasStringCopy(tempStr, thisHouse->trailer);
+	thisHouse->hasGame = false;
+	thisHouse->nRooms = 0;
 
 	wardBitSet = false;
 	phoneBitSet = false;
-
-	HUnlock((Handle)thisHouse);
 
 	numberRooms = 0;
 	mapLeftRoom = 60;
@@ -165,7 +158,6 @@ Boolean InitializeEmptyHouse (void)
 	ReflectCurrentRoom(true);
 
 	return (true);
-#endif
 }
 #endif
 
