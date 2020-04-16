@@ -696,12 +696,15 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	switch (uMsg)
 	{
+	case WM_CLOSE:
+		PostQuitMessage(0);
+		return DefWindowProc(hwnd, uMsg, wParam, lParam);
+
 	case WM_DESTROY:
 		// Remove the menu bar from the window so that it isn't destroyed
 		// with the window. It will be reattached to the main window if
 		// it is recreated.
 		SetMenu(hwnd, NULL);
-		PostQuitMessage(0);
 		return 0;
 
 	case WM_PAINT:
