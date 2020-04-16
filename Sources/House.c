@@ -708,12 +708,9 @@ void DoGoToDialog (void)
 
 void ConvertHouseVer1To2 (void)
 {
-	return;
-#if 0
 	Str255		roomStr, message;
-	short		wasRoom, floor, suite;
-	short		i, h, numRooms;
-	char		wasState;
+	SInt16		wasRoom, floor, suite;
+	SInt16		i, h, numRooms;
 
 	CopyThisRoomToRoom();
 	wasRoom = thisRoomNumber;
@@ -722,15 +719,12 @@ void ConvertHouseVer1To2 (void)
 
 	SpinCursor(3);
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-
-	numRooms = (*thisHouse)->nRooms;
+	numRooms = thisHouse->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if ((*thisHouse)->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
 		{
-			NumToString((long)i, roomStr);
+			Mac_NumToString(i, roomStr);
 			GetLocalizedString(14, message);
 			PasStringConcat(message, roomStr);
 			SetMessageWindowMessage(message);
@@ -776,13 +770,11 @@ void ConvertHouseVer1To2 (void)
 		}
 	}
 
-	(*thisHouse)->version = kHouseVersion;
-	HSetState((Handle)thisHouse, wasState);
+	thisHouse->version = kHouseVersion;
 
-	InitCursor();
+	//InitCursor();
 	CloseMessageWindow();
 	ForceThisRoom(wasRoom);
-#endif
 }
 
 //--------------------------------------------------------------  ShiftWholeHouse
