@@ -356,33 +356,31 @@ void QuickScoreRefresh (void)
 
 void QuickBatteryRefresh (Boolean flash)
 {
-	return;
-#if 0
+	HDC			mainWindowDC;
+
+	mainWindowDC = GetMainWindowDC();
 	if ((batteryTotal > 0) && (!flash))
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+		Mac_CopyBits(badgeSrcMap, mainWindowDC,
 				&badgesBadgesRects[kBatteryBadge],
 				&badgesDestRects[kBatteryBadge],
 				srcCopy, nil);
 	}
 	else if ((batteryTotal < 0) && (!flash))
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+		Mac_CopyBits(badgeSrcMap, mainWindowDC,
 				&badgesBadgesRects[kHeliumBadge],
 				&badgesDestRects[kHeliumBadge],
 				srcCopy, nil);
 	}
 	else
 	{
-		CopyBits((BitMap *)*GetGWorldPixMap(badgeSrcMap),
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+		Mac_CopyBits(badgeSrcMap, mainWindowDC,
 				&badgesBlankRects[kBatteryBadge],
 				&badgesDestRects[kBatteryBadge],
 				srcCopy, nil);
 	}
-#endif
+	ReleaseMainWindowDC(mainWindowDC);
 }
 
 //--------------------------------------------------------------  QuickBandsRefresh
