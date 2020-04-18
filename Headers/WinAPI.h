@@ -12,6 +12,7 @@
 #define _WIN32_IE_ _WIN32_IE_WINXP
 
 #include <windows.h>
+#include <strsafe.h>
 
 // The following pseudo-variable gives access to the hInstance
 // of the current module.

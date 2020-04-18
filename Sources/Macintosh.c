@@ -3,7 +3,6 @@
 #include <inttypes.h>
 #include <limits.h>
 #include <string.h>
-#include <strsafe.h>
 
 
 #define CP_MACROMAN 10000
