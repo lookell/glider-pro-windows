@@ -347,4 +347,10 @@ typedef struct
 	SInt16		object;
 } retroLink, *retroLinkPtr;
 
+typedef struct
+{
+	WCHAR		path[MAX_PATH];
+	Str32		name;
+} houseSpec, *houseSpecPtr;
+
 

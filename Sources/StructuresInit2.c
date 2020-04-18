@@ -33,24 +33,24 @@ void InitSupport (void);
 void InitAngel (void);
 
 
-extern	Rect		suppSrcRect, justRoomsRect;
-extern	Rect		tileSrcRect, angelSrcRect;
-extern	GDHandle	thisGDevice;
-extern	CGrafPtr	tileSrcMap;
-extern	FSSpecPtr	theHousesSpecs;
-extern	hotPtr		hotSpots;
-extern	sparklePtr	sparkles;
-extern	flyingPtPtr	flyingPoints;
-extern	flamePtr	flames, tikiFlames, bbqCoals;
-extern	pendulumPtr	pendulums;
-extern	savedType	savedMaps[];
-extern	bandPtr		bands;
-extern	greasePtr	grease;
-extern	starPtr		theStars;
-extern	shredPtr	shreds;
-extern	dynaPtr		dinahs;
-extern	demoPtr		demoData;
-extern	SInt16		maxFiles;
+extern	Rect			suppSrcRect, justRoomsRect;
+extern	Rect			tileSrcRect, angelSrcRect;
+extern	GDHandle		thisGDevice;
+extern	CGrafPtr		tileSrcMap;
+extern	houseSpecPtr	theHousesSpecs;
+extern	hotPtr			hotSpots;
+extern	sparklePtr		sparkles;
+extern	flyingPtPtr		flyingPoints;
+extern	flamePtr		flames, tikiFlames, bbqCoals;
+extern	pendulumPtr		pendulums;
+extern	savedType		savedMaps[];
+extern	bandPtr			bands;
+extern	greasePtr		grease;
+extern	starPtr			theStars;
+extern	shredPtr		shreds;
+extern	dynaPtr			dinahs;
+extern	demoPtr			demoData;
+extern	SInt16			maxFiles;
 
 
 //==============================================================  Functions
@@ -251,7 +251,7 @@ void CreatePointers (void)
 		RedAlert(kErrNoMemory);
 
 	theHousesSpecs = NULL;
-	theHousesSpecs = (FSSpecPtr)malloc(sizeof(FSSpec) * maxFiles);
+	theHousesSpecs = (houseSpecPtr)malloc(sizeof(houseSpec) * maxFiles);
 	if (theHousesSpecs == NULL)
 		RedAlert(kErrNoMemory);
 

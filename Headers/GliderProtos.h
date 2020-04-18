@@ -443,7 +443,7 @@ Boolean HasDragManager (void);
 
 void DoLoadHouse (void);								// --- SelectHouse.c
 void BuildHouseList (void);
-void AddExtraHouse (FSSpec *);
+void AddExtraHouse (houseSpec *);
 
 void DoSettingsMain (void);								// --- Settings.c
 

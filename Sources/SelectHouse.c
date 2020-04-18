@@ -44,14 +44,14 @@ void SortHouseList (void);
 void DoDirSearch (void);
 
 
-Rect		loadHouseRects[12];
-FSSpecPtr	theHousesSpecs;
-FSSpec		extraHouseSpecs[kMaxExtraHouses];
-SInt32		lastWhenClick;
-Point		lastWhereClick;
-SInt16		housesFound, thisHouseIndex, maxFiles, willMaxFiles;
-SInt16		housePage, demoHouseIndex, numExtraHouses;
-Byte		fileFirstChar[12];
+Rect			loadHouseRects[12];
+houseSpecPtr	theHousesSpecs;
+houseSpec		extraHouseSpecs[kMaxExtraHouses];
+SInt32			lastWhenClick;
+Point			lastWhereClick;
+SInt16			housesFound, thisHouseIndex, maxFiles, willMaxFiles;
+SInt16			housePage, demoHouseIndex, numExtraHouses;
+Byte			fileFirstChar[12];
 
 extern	UInt32			doubleTime;
 
@@ -687,7 +687,7 @@ void BuildHouseList (void)
 
 //--------------------------------------------------------------  AddExtraHouse
 
-void AddExtraHouse (FSSpec *newHouse)
+void AddExtraHouse (houseSpec *newHouse)
 {
 	if (numExtraHouses >= kMaxExtraHouses)
 		return;

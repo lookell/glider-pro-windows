@@ -20,9 +20,9 @@ void SavedGameMismatchError (StringPtr);
 
 gameType	smallGame;
 
-extern	FSSpecPtr	theHousesSpecs;
-extern	SInt16		numStarsRemaining, thisHouseIndex;
-extern	Boolean		twoPlayerGame;
+extern	houseSpecPtr	theHousesSpecs;
+extern	SInt16			numStarsRemaining, thisHouseIndex;
+extern	Boolean			twoPlayerGame;
 
 
 //==============================================================  Functions

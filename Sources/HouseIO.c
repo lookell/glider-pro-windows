@@ -36,11 +36,11 @@ Boolean		houseOpen, fileDirty, gameDirty;
 Boolean		changeLockStateOfHouse, saveHouseLocked, houseIsReadOnly;
 Boolean		hasMovie, tvInRoom;
 
-extern	FSSpecPtr	theHousesSpecs;
-extern	SInt16		thisHouseIndex, tvWithMovieNumber;
-extern	SInt16		numberRooms, housesFound;
-extern	Boolean		noRoomAtAll, quitting, wardBitSet;
-extern	Boolean		phoneBitSet, bannerStarCountOn;
+extern	houseSpecPtr	theHousesSpecs;
+extern	SInt16			thisHouseIndex, tvWithMovieNumber;
+extern	SInt16			numberRooms, housesFound;
+extern	Boolean			noRoomAtAll, quitting, wardBitSet;
+extern	Boolean			phoneBitSet, bannerStarCountOn;
 
 
 //==============================================================  Functions

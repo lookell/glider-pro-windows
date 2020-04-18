@@ -54,19 +54,19 @@ SInt16		batteryTotal, bandsTotal, foilTotal, mortals;
 Boolean		playing, evenFrame, twoPlayerGame, showFoil, demoGoing;
 Boolean		doBackground, playerSuicide, phoneBitSet, tvOn;
 
-extern	HWND		menuWindow;
-extern	FSSpecPtr	theHousesSpecs;
-extern	demoPtr		demoData;
-extern	gameType	smallGame;
-extern	Rect		gliderSrc[kNumGliderSrcRects];
-extern	Rect		boardDestRect, boardSrcRect;
-extern	SInt32		incrementModeTime;
-extern	SInt16		numBands, otherPlayerEscaped, demoIndex, demoHouseIndex;
-extern	SInt16		splashOriginH, splashOriginV, countDown, thisHouseIndex;
-extern	SInt16		numStarsRemaining, numChimes, saidFollow;
-extern	Boolean		quitting, isMusicOn, gameOver, hasMirror, onePlayerLeft;
-extern	Boolean		isPlayMusicIdle, failedMusic, quickerTransitions;
-extern	Boolean		switchedOut;
+extern	HWND			menuWindow;
+extern	houseSpecPtr	theHousesSpecs;
+extern	demoPtr			demoData;
+extern	gameType		smallGame;
+extern	Rect			gliderSrc[kNumGliderSrcRects];
+extern	Rect			boardDestRect, boardSrcRect;
+extern	SInt32			incrementModeTime;
+extern	SInt16			numBands, otherPlayerEscaped, demoIndex, demoHouseIndex;
+extern	SInt16			splashOriginH, splashOriginV, countDown, thisHouseIndex;
+extern	SInt16			numStarsRemaining, numChimes, saidFollow;
+extern	Boolean			quitting, isMusicOn, gameOver, hasMirror, onePlayerLeft;
+extern	Boolean			isPlayMusicIdle, failedMusic, quickerTransitions;
+extern	Boolean			switchedOut;
 
 
 //==============================================================  Functions

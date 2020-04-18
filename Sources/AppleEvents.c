@@ -25,10 +25,10 @@ OSErr MyGotRequiredParams (const AppleEvent *);
 AEEventHandlerUPP	openAppAEUPP, openDocAEUPP, printDocAEUPP, quitAEUPP;
 
 
-extern	FSSpecPtr	theHousesSpecs;
-extern	SInt32		incrementModeTime;
-extern	SInt16		thisHouseIndex, splashOriginH, splashOriginV;
-extern	Boolean		quitting;
+extern	houseSpecPtr	theHousesSpecs;
+extern	SInt32			incrementModeTime;
+extern	SInt16			thisHouseIndex, splashOriginH, splashOriginV;
+extern	Boolean			quitting;
 
 
 //==============================================================  Functions
