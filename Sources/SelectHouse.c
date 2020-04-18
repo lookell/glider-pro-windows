@@ -531,10 +531,8 @@ void DoLoadHouse (void)
 
 void SortHouseList (void)
 {
-	return;
-#if 0
-	FSSpec		tempSpec;
-	short		i, h, whosFirst;
+	houseSpec	tempSpec;
+	SInt16		i, h, whosFirst;
 
 	i = 0;			// remove exact duplicate houses
 	while (i < housesFound)
@@ -542,9 +540,7 @@ void SortHouseList (void)
 		h = i + 1;
 		while (h < housesFound)
 		{
-			if ((EqualString(theHousesSpecs[i].name, theHousesSpecs[h].name, true, true)) &&
-					(theHousesSpecs[i].vRefNum == theHousesSpecs[i].vRefNum) &&
-					(theHousesSpecs[i].parID == theHousesSpecs[i].parID))
+			if (Mac_EqualString(theHousesSpecs[i].name, theHousesSpecs[h].name, true))
 			{
 				theHousesSpecs[h] = theHousesSpecs[housesFound - 1];
 				housesFound--;
@@ -568,7 +564,6 @@ void SortHouseList (void)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoDirSearch
