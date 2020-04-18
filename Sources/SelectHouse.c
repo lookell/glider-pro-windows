@@ -41,6 +41,7 @@ void PageUpHouses (DialogPtr);
 void PageDownHouses (DialogPtr);
 Boolean LoadFilter (DialogPtr, EventRecord *, SInt16 *);
 void SortHouseList (void);
+BOOL GetHouseFolderPath (LPWSTR, DWORD);
 void DoDirSearch (void);
 
 
@@ -564,6 +565,25 @@ void SortHouseList (void)
 			}
 		}
 	}
+}
+
+//--------------------------------------------------------------  GetHouseFolderPath
+
+BOOL GetHouseFolderPath(LPWSTR buffer, DWORD cch)
+{
+	DWORD result;
+	PWCH backSlashPtr;
+
+	if (buffer == NULL || cch == 0)
+		return FALSE;
+	result = GetModuleFileName(NULL, buffer, cch);
+	if (result == 0 || result == cch)
+		return FALSE;
+	backSlashPtr = wcsrchr(buffer, L'\\');
+	if (backSlashPtr == NULL)
+		return FALSE;
+	*backSlashPtr = L'\0';
+	return TRUE;
 }
 
 //--------------------------------------------------------------  DoDirSearch
