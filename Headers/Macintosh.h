@@ -123,6 +123,7 @@ void Mac_CopyMask(
 	const Rect *dstRect);
 void Mac_DrawPicture(HDC hdcDst, HBITMAP myPicture, const Rect *dstRect);
 void Mac_DrawString(HDC hdc, StringPtr s);
+Boolean Mac_EqualString(StringPtr aStr, StringPtr bStr, Boolean caseSens);
 void Mac_FrameRect(HDC hdc, const Rect *r, HBRUSH hbr, SInt16 w, SInt16 h);
 void Mac_GetDateTime(UInt32 *secs);
 void Mac_InsetRect(Rect *r, SInt16 dh, SInt16 dv);

@@ -192,6 +192,27 @@ void Mac_DrawString(HDC hdc, StringPtr s)
 	SetBkMode(hdc, prevBkMode);
 }
 
+//--------------------------------------------------------------  EqualString
+// Compare two Pascal strings for equality. If the third parameter is
+// nonzero (true), then the comparison is case-sensitive. If the third
+// parameter is zero (false), then the comparison is case-insensitive.
+
+Boolean Mac_EqualString(StringPtr aStr, StringPtr bStr, Boolean caseSens)
+{
+	WCHAR firstString[256];
+	WCHAR secondString[256];
+
+	if (aStr[0] != bStr[0])
+		return false;
+
+	WinFromMacString(firstString, ARRAYSIZE(firstString), aStr);
+	WinFromMacString(secondString, ARRAYSIZE(secondString), bStr);
+	if (caseSens)
+		return (lstrcmp(firstString, secondString) == 0);
+	else
+		return (lstrcmpi(firstString, secondString) == 0);
+}
+
 //--------------------------------------------------------------  FrameRect
 // Draw a frame within the specified rectangle using the current brush.
 // The vertical strokes use the specified width, and the horizontal
