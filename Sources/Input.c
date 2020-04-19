@@ -282,12 +282,9 @@ void GetDemoInput (gliderPtr thisGlider)
 
 void GetInput (gliderPtr thisGlider)
 {
-	return;
-#if 0
 	if (thisGlider->which == kPlayer1)
 	{
-		GetKeys(theKeys);
-		if (BitTst(&theKeys, kCommandKeyMap))
+		if (GetKeyState(VK_CONTROL) < 0)
 			DoCommandKey();
 	}
 
@@ -302,12 +299,12 @@ void GetInput (gliderPtr thisGlider)
 	{
 		thisGlider->heldLeft = false;
 		thisGlider->heldRight = false;
-		if (BitTst(&theKeys, thisGlider->rightKey))			// right key
+		if (GetKeyState(thisGlider->rightKey) < 0)			// right key
 		{
 		#ifdef CREATEDEMODATA
 			LogDemoKey(0);
 		#endif
-			if (BitTst(&theKeys, thisGlider->leftKey))
+			if (GetKeyState(thisGlider->leftKey) < 0)
 			{
 				ToggleGliderFacing(thisGlider);
 				thisGlider->heldLeft = true;
@@ -319,7 +316,7 @@ void GetInput (gliderPtr thisGlider)
 				thisGlider->heldRight = true;
 			}
 		}
-		else if (BitTst(&theKeys, thisGlider->leftKey))		// left key
+		else if (GetKeyState(thisGlider->leftKey) < 0)		// left key
 		{
 		#ifdef CREATEDEMODATA
 			LogDemoKey(1);
@@ -331,7 +328,7 @@ void GetInput (gliderPtr thisGlider)
 		else
 			thisGlider->tipped = false;
 
-		if ((BitTst(&theKeys, thisGlider->battKey)) && (batteryTotal != 0) &&
+		if ((GetKeyState(thisGlider->battKey) < 0) && (batteryTotal != 0) &&
 				(thisGlider->mode == kGliderNormal))
 		{
 		#ifdef CREATEDEMODATA
@@ -345,7 +342,7 @@ void GetInput (gliderPtr thisGlider)
 		else
 			batteryWasEngaged = false;
 
-		if ((BitTst(&theKeys, thisGlider->bandKey)) && (bandsTotal > 0) &&
+		if ((GetKeyState(thisGlider->bandKey) < 0) && (bandsTotal > 0) &&
 				(thisGlider->mode == kGliderNormal))
 		{
 		#ifdef CREATEDEMODATA
@@ -368,19 +365,18 @@ void GetInput (gliderPtr thisGlider)
 			thisGlider->fireHeld = false;
 
 		if ((otherPlayerEscaped != kNoOneEscaped) &&
-				(BitTst(&theKeys, kDeleteKeyMap)) &&
+				(GetKeyState(VK_DELETE) < 0) &&
 				(thisGlider->which) && (!onePlayerLeft))
 		{
 			ForceKillGlider();
 		}
 
-		if ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) ||
-				(!isEscPauseKey && BitTst(&theKeys, kTabKeyMap)))
+		if ((isEscPauseKey && GetKeyState(VK_ESCAPE) < 0) ||
+				(!isEscPauseKey && GetKeyState(VK_TAB) < 0))
 		{
 			DoPause();
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  QuerySaveGame
