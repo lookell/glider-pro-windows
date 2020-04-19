@@ -608,39 +608,114 @@ void DoHouseMenu (SInt16 theItem)
 // Users has selected a menu item - determin which menu was selected…
 // and call the appropriate function above.
 
-void DoMenuChoice (SInt32 menuChoice)
+void DoMenuChoice (WORD menuChoice)
 {
-	return;
-#if 0
-	short		theMenu, theItem;
-
-	if (menuChoice == 0)
-		return;
-
-	theMenu = HiWord(menuChoice);
-	theItem = LoWord(menuChoice);
-
-	switch (theMenu)
+	switch (menuChoice)
 	{
-		case kAppleMenuID:
-		DoAppleMenu(theItem);
+		case ID_ABOUT:
+		DoAppleMenu(iAbout);
 		break;
 
-		case kGameMenuID:
-		DoGameMenu(theItem);
+		case ID_NEW_GAME:
+		DoGameMenu(iNewGame);
 		break;
 
-		case kOptionsMenuID:
-		DoOptionsMenu(theItem);
+		case ID_TWO_PLAYER:
+		DoGameMenu(iTwoPlayer);
 		break;
 
-		case kHouseMenuID:
-		DoHouseMenu(theItem);
+		case ID_OPEN_SAVED_GAME:
+		DoGameMenu(iOpenSavedGame);
+		break;
+
+		case ID_LOAD_HOUSE:
+		DoGameMenu(iLoadHouse);
+		break;
+
+		case ID_QUIT:
+		DoGameMenu(iQuit);
+		break;
+
+		case ID_EDITOR:
+		DoOptionsMenu(iEditor);
+		break;
+
+		case ID_HIGH_SCORES:
+		DoOptionsMenu(iHighScores);
+		break;
+
+		case ID_PREFS:
+		DoOptionsMenu(iPrefs);
+		break;
+
+		case ID_DEMO:
+		DoOptionsMenu(iHelp);
+		break;
+
+		case ID_NEW_HOUSE:
+		DoHouseMenu(iNewHouse);
+		break;
+
+		case ID_SAVE_HOUSE:
+		DoHouseMenu(iSave);
+		break;
+
+		case ID_HOUSE_INFO:
+		DoHouseMenu(iHouse);
+		break;
+
+		case ID_ROOM_INFO:
+		DoHouseMenu(iRoom);
+		break;
+
+		case ID_OBJECT_INFO:
+		DoHouseMenu(iObject);
+		break;
+
+		case ID_CUT:
+		DoHouseMenu(iCut);
+		break;
+
+		case ID_COPY:
+		DoHouseMenu(iCopy);
+		break;
+
+		case ID_PASTE:
+		DoHouseMenu(iPaste);
+		break;
+
+		case ID_CLEAR:
+		DoHouseMenu(iClear);
+		break;
+
+		case ID_DUPLICATE:
+		DoHouseMenu(iDuplicate);
+		break;
+
+		case ID_BRING_FORWARD:
+		DoHouseMenu(iBringForward);
+		break;
+
+		case ID_SEND_BACK:
+		DoHouseMenu(iSendBack);
+		break;
+
+		case ID_GO_TO_ROOM:
+		DoHouseMenu(iGoToRoom);
+		break;
+
+		case ID_MAP_WINDOW:
+		DoHouseMenu(iMapWindow);
+		break;
+
+		case ID_OBJECT_WINDOW:
+		DoHouseMenu(iObjectWindow);
+		break;
+
+		case ID_COORDINATE_WINDOW:
+		DoHouseMenu(iCoordinateWindow);
 		break;
 	}
-
-	HiliteMenu(0);
-#endif
 }
 
 //--------------------------------------------------------------  UpdateMapCheckmark

@@ -700,6 +700,10 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		PostQuitMessage(0);
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 
+	case WM_COMMAND:
+		DoMenuChoice(LOWORD(wParam));
+		return 0;
+
 	case WM_DESTROY:
 		// Remove the menu bar from the window so that it isn't destroyed
 		// with the window. It will be reattached to the main window if

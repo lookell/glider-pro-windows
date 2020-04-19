@@ -189,7 +189,7 @@ void DoAppleMenu (SInt16);
 void DoGameMenu (SInt16);
 void DoOptionsMenu (SInt16);
 void DoHouseMenu (SInt16);
-void DoMenuChoice (SInt32);
+void DoMenuChoice (WORD);
 void UpdateMenus (Boolean);
 void UpdateMapCheckmark (Boolean);
 void UpdateToolsCheckmark (Boolean);
