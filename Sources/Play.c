@@ -74,12 +74,11 @@ extern	Boolean			switchedOut;
 
 void NewGame (SInt16 mode)
 {
-	return;
-#if 0
 	Rect		tempRect;
-	Size		freeBytes, growBytes;
+	//Size		freeBytes, growBytes;
 	OSErr		theErr;
 	Boolean		wasPlayMusicPref;
+	HDC			mainWindowDC;
 
 	AdjustScoreboardHeight();
 	gameOver = false;
@@ -104,7 +103,7 @@ void NewGame (SInt16 mode)
 	}
 	if (mode != kResumeGameMode)
 		SetObjectsToDefaults();
-	HideCursor();
+	//HideCursor();
 	if (mode == kResumeGameMode)
 		SetHouseToSavedRoom();
 	else if (mode == kNewGameMode)
@@ -124,28 +123,26 @@ void NewGame (SInt16 mode)
 	{
 		InitGlider(&theGlider, kNewGameMode);
 		InitGlider(&theGlider2, kNewGameMode);
-		SetPort((GrafPtr)glidSrcMap);
-		LoadGraphic(kGliderPictID);
-		SetPort((GrafPtr)glid2SrcMap);
-		LoadGraphic(kGlider2PictID);
+		LoadGraphic(glidSrcMap, kGliderPictID);
+		LoadGraphic(glid2SrcMap, kGlider2PictID);
 	}
 	else
 	{
 		InitGlider(&theGlider, mode);
-		SetPort((GrafPtr)glidSrcMap);
-		LoadGraphic(kGliderPictID);
-		SetPort((GrafPtr)glid2SrcMap);
-		LoadGraphic(kGliderFoilPictID);
+		LoadGraphic(glidSrcMap, kGliderPictID);
+		LoadGraphic(glid2SrcMap, kGliderFoilPictID);
 	}
 
 #if !BUILD_ARCADE_VERSION
 //	HideMenuBarOld();		// TEMP
 #endif
 
-	SetPort((GrafPtr)mainWindow);		// paint strip on screen black
+	//SetPort((GrafPtr)mainWindow);		// paint strip on screen black
 	tempRect = thisMac.screen;
 	tempRect.top = tempRect.bottom - 20;	// thisMac.menuHigh
-	PaintRect(&tempRect);
+	mainWindowDC = GetMainWindowDC();
+	Mac_PaintRect(mainWindowDC, &tempRect, GetStockObject(BLACK_BRUSH));
+	ReleaseMainWindowDC(mainWindowDC);
 
 #ifdef COMPILEQT
 	if ((thisMac.hasQT) && (hasMovie))
@@ -154,21 +151,21 @@ void NewGame (SInt16 mode)
 	}
 #endif
 
-	SetPort((GrafPtr)workSrcMap);
-	PaintRect(&workSrcRect);
-//	if (quickerTransitions)
-//		DissBitsChunky(&workSrcRect);
-//	else
-//		DissBits(&workSrcRect);
+	//SetPort((GrafPtr)workSrcMap);
+	Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
+	if (quickerTransitions)
+		DissBitsChunky(&workSrcRect);
+	else
+		DissBits(&workSrcRect);
 
 //	DebugStr("\pIf screen isn't black, exit to shell.");	// TEMP TEMP TEMP
 
 	DrawLocale();
 	RefreshScoreboard(kNormalTitleMode);
-//	if (quickerTransitions)
-//		DissBitsChunky(&justRoomsRect);
-//	else
-//		DissBits(&justRoomsRect);
+	if (quickerTransitions)
+		DissBitsChunky(&justRoomsRect);
+	else
+		DissBits(&justRoomsRect);
 	if (mode == kNewGameMode)
 	{
 		BringUpBanner();
@@ -195,7 +192,7 @@ void NewGame (SInt16 mode)
 	InitTelephone();
 	wasPlayMusicPref = isPlayMusicGame;
 
-	freeBytes = MaxMem(&growBytes);
+	//freeBytes = MaxMem(&growBytes);
 
 #ifdef CREATEDEMODATA
 	SysBeep(1);
@@ -234,7 +231,7 @@ void NewGame (SInt16 mode)
 
 	twoPlayerGame = false;
 	theMode = kSplashMode;
-	InitCursor();
+	//InitCursor();
 	if (isPlayMusicIdle)
 	{
 		if (!isMusicOn)
@@ -254,31 +251,22 @@ void NewGame (SInt16 mode)
 			StopTheMusic();
 	}
 	NilSavedMaps();
-	SetPortWindowPort(mainWindow);
-	BlackenScoreboard();
+	//SetPortWindowPort(mainWindow);
+	//BlackenScoreboard();
 	UpdateMenus(false);
 
 	if (!gameOver)
 	{
-		CGrafPtr	wasCPort;
-		GDHandle	wasWorld;
+		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 
-		GetGWorld(&wasCPort, &wasWorld);
-
-		InvalWindowRect(mainWindow, &mainWindowRect);
-
-		SetGWorld(workSrcMap, nil);
-		PaintRect(&workSrcRect);
+		Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
 		QSetRect(&tempRect, 0, 0, 640, 460);
 		QOffsetRect(&tempRect, splashOriginH, splashOriginV);
-		LoadScaledGraphic(kSplash8BitPICT, &tempRect);
-
-		SetGWorld(wasCPort, wasWorld);
+		LoadScaledGraphic(workSrcMap, kSplash8BitPICT, &tempRect);
 	}
 	WaitCommandQReleased();
 	demoGoing = false;
-	incrementModeTime = TickCount() + kIdleSplashTicks;
-#endif
+	incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
 }
 
 //--------------------------------------------------------------  DoDemoGame
@@ -436,6 +424,7 @@ void HandlePlayEvent (void)
 
 void PlayGame (void)
 {
+	MessageBox(mainWindow, L"PlayGame() unimplemented", NULL, MB_ICONERROR);
 	return;
 #if 0
 	while ((playing) && (!quitting))
