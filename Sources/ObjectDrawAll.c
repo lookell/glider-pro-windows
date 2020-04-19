@@ -22,14 +22,11 @@ extern	Boolean		tvOn;
 
 void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 {
-	return;
-#if 0
 	objectType	thisObject;
 	Rect		whoCares, itsRect, rectA, rectB, testRect;
-	RgnHandle	theRgn;
-	short		i, legit, dynamicNum, n;
-	short		floor, suite, room, obj;
-	char		wasState;
+	HRGN		theRgn;
+	SInt16		i, legit, dynamicNum, n;
+	SInt16		floor, suite, room, obj;
 	Boolean		isLit;
 
 	if (localNumbers[neighbor] == kRoomIsEmpty)
@@ -39,9 +36,6 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 	ZeroRectCorner(&testRect);
 	isLit = (numLights > 0);
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-
 	for (i = 0; i < kMaxRoomObs; i++)
 	{
 		dynamicNum = -1;
@@ -49,7 +43,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 
 		if (IsThisValid(localNumbers[neighbor], i))
 		{
-			thisObject = (*thisHouse)->rooms[localNumbers[neighbor]].objects[i];
+			thisObject = thisHouse->rooms[localNumbers[neighbor]].objects[i];
 			switch (thisObject.what)
 			{
 				case kObjectIsEmpty:
@@ -66,14 +60,14 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kSewerBlower:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawSimpleBlowers(thisObject.what, &itsRect);
 				break;
 
 				case kTaper:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (isLit)
 						DrawSimpleBlowers(thisObject.what, &itsRect);
@@ -92,7 +86,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 						rectB = localRoomsDest[kCentralRoom];
 						rectB.top -= kFloorSupportTall;
 						rectB.bottom += kFloorSupportTall;
-						if (!SectRect(&rectA, &rectB, &whoCares))
+						if (!Mac_SectRect(&rectA, &rectB, &whoCares))
 						{
 							if (redraw)
 								ReBackUpFlames(localNumbers[neighbor], i);
@@ -107,7 +101,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kCandle:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (isLit)
 						DrawSimpleBlowers(thisObject.what, &itsRect);
@@ -126,7 +120,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 						rectB = localRoomsDest[kCentralRoom];
 						rectB.top -= kFloorSupportTall;
 						rectB.bottom += kFloorSupportTall;
-						if (!SectRect(&rectA, &rectB, &whoCares))
+						if (!Mac_SectRect(&rectA, &rectB, &whoCares))
 						{
 							if (redraw)
 								ReBackUpFlames(localNumbers[neighbor], i);
@@ -141,7 +135,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kStubby:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (isLit)
 						DrawSimpleBlowers(thisObject.what, &itsRect);
@@ -160,7 +154,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 						rectB = localRoomsDest[kCentralRoom];
 						rectB.top -= kFloorSupportTall;
 						rectB.bottom += kFloorSupportTall;
-						if (!SectRect(&rectA, &rectB, &whoCares))
+						if (!Mac_SectRect(&rectA, &rectB, &whoCares))
 						{
 							if (redraw)
 								ReBackUpFlames(localNumbers[neighbor], i);
@@ -187,7 +181,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kBBQ:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (isLit)
 						DrawPictSansWhiteObject(thisObject.what, &itsRect);
@@ -220,7 +214,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kCabinet:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawCabinet(&itsRect);
 				break;
 
@@ -228,7 +222,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kOzma:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawPictObject(thisObject.what, &itsRect);
 				break;
 
@@ -236,14 +230,14 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kMilkCrate:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawSimpleFurniture(thisObject.what, &itsRect);
 				break;
 
 				case kCounter:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawCounter(&itsRect);
 				break;
 
@@ -274,7 +268,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kManhole:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					AddTempManholeRect(&itsRect);
 					if (isLit)
@@ -288,7 +282,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kRedClock:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (redraw)
 						legit = ReBackUpSavedMap(&itsRect, localNumbers[neighbor], i);
@@ -302,7 +296,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kBlueClock:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (redraw)
 						legit = ReBackUpSavedMap(&itsRect, localNumbers[neighbor], i);
@@ -316,7 +310,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kYellowClock:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (redraw)
 						legit = ReBackUpSavedMap(&itsRect, localNumbers[neighbor], i);
@@ -330,7 +324,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kCuckoo:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (redraw)
 						legit = ReBackUpSavedMap(&itsRect, localNumbers[neighbor], i);
@@ -354,7 +348,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kHelium:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (redraw)
 						legit = ReBackUpSavedMap(&itsRect, localNumbers[neighbor], i);
@@ -370,7 +364,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (thisObject.data.c.state)		// standing
 				{
-					if (SectRect(&itsRect, &testRect, &whoCares))
+					if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 					{
 						if (redraw)
 							dynamicNum = ReBackUpGrease(localNumbers[neighbor], i);
@@ -391,7 +385,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (thisObject.data.c.state)
 				{
-					if (SectRect(&itsRect, &testRect, &whoCares))
+					if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 					{
 						if (redraw)
 							dynamicNum = ReBackUpGrease(localNumbers[neighbor], i);
@@ -410,7 +404,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kFoil:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (redraw)
 						legit = ReBackUpSavedMap(&itsRect, localNumbers[neighbor], i);
@@ -428,7 +422,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kStar:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (redraw)
 						legit = ReBackUpSavedMap(&itsRect, localNumbers[neighbor], i);
@@ -449,7 +443,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kSparkle:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					if ((!redraw) && (neighbor == kCentralRoom))
 					{
@@ -468,7 +462,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kWindowInRt:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 					DrawPictSansWhiteObject(thisObject.what, &itsRect);
 				break;
 
@@ -479,7 +473,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kWindowExLf:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 					DrawPictObject(thisObject.what, &itsRect);
 				break;
 
@@ -499,7 +493,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kCeilingTrans:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 					DrawSimpleTransport(thisObject.what, &itsRect);
 				break;
 
@@ -510,11 +504,11 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kLightSwitch:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
 					room = GetRoomNumber(floor, suite);
-					obj = (short)thisObject.data.e.who;
+					obj = (SInt16)thisObject.data.e.who;
 					DrawLightSwitch(&itsRect, GetObjectState(room, obj));
 				}
 				dynamicNum = masterObjects[i].hotNum;
@@ -523,11 +517,11 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kMachineSwitch:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
 					room = GetRoomNumber(floor, suite);
-					obj = (short)thisObject.data.e.who;
+					obj = (SInt16)thisObject.data.e.who;
 					DrawMachineSwitch(&itsRect, GetObjectState(room, obj));
 				}
 				dynamicNum = masterObjects[i].hotNum;
@@ -536,11 +530,11 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kThermostat:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
 					room = GetRoomNumber(floor, suite);
-					obj = (short)thisObject.data.e.who;
+					obj = (SInt16)thisObject.data.e.who;
 					DrawThermostat(&itsRect, GetObjectState(room, obj));
 				}
 				dynamicNum = masterObjects[i].hotNum;
@@ -549,11 +543,11 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kPowerSwitch:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
 					room = GetRoomNumber(floor, suite);
-					obj = (short)thisObject.data.e.who;
+					obj = (SInt16)thisObject.data.e.who;
 					DrawPowerSwitch(&itsRect, GetObjectState(room, obj));
 				}
 				dynamicNum = masterObjects[i].hotNum;
@@ -562,11 +556,11 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kKnifeSwitch:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
 					room = GetRoomNumber(floor, suite);
-					obj = (short)thisObject.data.e.who;
+					obj = (SInt16)thisObject.data.e.who;
 					DrawKnifeSwitch(&itsRect, GetObjectState(room, obj));
 				}
 				dynamicNum = masterObjects[i].hotNum;
@@ -586,7 +580,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kTableLamp:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawSimpleLight(thisObject.what, &itsRect);
 				break;
 
@@ -605,28 +599,28 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kChimes:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawPictSansWhiteObject(thisObject.what, &itsRect);
 				break;
 
 				case kCustomPict:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawCustPictSansWhite(thisObject.data.g.height, &itsRect);
 				break;
 
 				case kFlourescent:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawFlourescent(&itsRect);
 				break;
 
 				case kTrackLight:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawTrackLight(&itsRect);
 				break;
 
@@ -637,14 +631,14 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kCDs:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawSimpleAppliance(thisObject.what, &itsRect);
 				break;
 
 				case kToaster:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					DrawSimpleAppliance(thisObject.what, &itsRect);
 					if ((!redraw) && (neighbor == kCentralRoom))
@@ -660,7 +654,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kMacPlus:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					DrawMacPlus(&itsRect, thisObject.data.g.state, isLit);
 					if (!redraw)
@@ -676,7 +670,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kTV:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 #ifdef COMPILEQT
 					if ((thisMac.hasQT) && (hasMovie) && (neighbor == kCentralRoom) &&
@@ -717,7 +711,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kCoffee:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					DrawCoffee(&itsRect, thisObject.data.g.state, isLit);
 					if (!redraw)
@@ -733,7 +727,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kOutlet:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (isLit)
 						DrawOutlet(&itsRect);
@@ -750,7 +744,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kVCR:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					DrawVCR(&itsRect, thisObject.data.g.state, isLit);
 					if (!redraw)
@@ -766,7 +760,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kStereo:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					DrawStereo(&itsRect, isPlayMusicGame, isLit);
 					if (!redraw)
@@ -782,7 +776,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kMicrowave:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					DrawMicrowave(&itsRect, thisObject.data.g.state, isLit);
 					if (!redraw)
@@ -864,7 +858,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kDrip:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					DrawDrip(&itsRect);
 					if ((!redraw) && (neighbor == kCentralRoom))
@@ -880,7 +874,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kFish:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 				{
 					DrawFish(thisObject.what, &itsRect);
 					if ((!redraw) && (neighbor == kCentralRoom))
@@ -897,18 +891,18 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kCloud:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawPictWithMaskObject(thisObject.what, &itsRect);
 				break;
 
 				case kMirror:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawMirror(&itsRect);
 				if ((neighbor == kCentralRoom) && (!redraw))
 				{
-					InsetRect(&itsRect, 4, 4);
+					Mac_InsetRect(&itsRect, 4, 4);
 					AddToMirrorRegion(&itsRect);
 				}
 				break;
@@ -917,35 +911,35 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kFaucet:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawSimpleClutter(thisObject.what, &itsRect);
 				break;
 
 				case kFlower:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawFlower(&itsRect, thisObject.data.i.pict);
 				break;
 
 				case kWallWindow:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (SectRect(&itsRect, &testRect, &whoCares))
+				if (Mac_SectRect(&itsRect, &testRect, &whoCares))
 					DrawWallWindow(&itsRect);
 				break;
 
 				case kCalendar:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawCalendar(&itsRect);
 				break;
 
 				case kBulletin:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if ((SectRect(&itsRect, &testRect, &whoCares)) && isLit)
+				if ((Mac_SectRect(&itsRect, &testRect, &whoCares)) && isLit)
 					DrawBulletin(&itsRect);
 				break;
 
@@ -962,8 +956,5 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 			}
 		}
 	}
-
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 
