@@ -303,8 +303,6 @@ void ReadyBackground (SInt16 theID, SInt16 *theTiles)
 
 void ReflectCurrentRoom (Boolean forceMapRedraw)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
 	if (theMode != kEditMode)
 		return;
@@ -332,8 +330,7 @@ void ReflectCurrentRoom (Boolean forceMapRedraw)
 	ReadyBackground(thisRoom->background, thisRoom->tiles);
 	GetThisRoomsObjRects();
 	DrawThisRoomsObjects();
-	InvalWindowRect(mainWindow, &mainWindowRect);
-#endif
+	Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 #endif
 }
 
