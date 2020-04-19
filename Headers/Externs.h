@@ -295,7 +295,7 @@ void ColorFrameWHRect (HDC, SInt16, SInt16, SInt16, SInt16, SInt32);
 void ColorFrameOval (HDC, Rect *, SInt32);
 COLORREF LtGrayForeColor (void);
 COLORREF GrayForeColor (void);
-void DkGrayForeColor (void);
+COLORREF DkGrayForeColor (void);
 void RestoreColorsSlam (void);
 void ColorShadowRect (HDC, Rect *, SInt32);
 void ColorShadowOval (HDC, Rect *, SInt32);

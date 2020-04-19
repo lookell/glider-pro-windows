@@ -237,18 +237,15 @@ COLORREF GrayForeColor (void)
 // This function finds the closest match to a "dark gray" in the…
 // current palette and sets the pen color to that.
 
-void DkGrayForeColor (void)
+COLORREF DkGrayForeColor (void)
 {
-	return;
-#if 0
 	RGBColor	color;
 
-	color.red = (unsigned short) 0x3FFF;
-	color.green = (unsigned short) 0x3FFF;
-	color.blue = (unsigned short) 0x3FFF;
+	color.red = 0x3FFF;
+	color.green = 0x3FFF;
+	color.blue = 0x3FFF;
 
-	RGBForeColor(&color);
-#endif
+	return RGB(color.red >> 8, color.green >> 8, color.blue >> 8);
 }
 
 //--------------------------------------------------------------  RestoreColorsSlam
