@@ -987,6 +987,8 @@ SInt16 GetNumberOfLights (SInt16 where)
 	}
 	else
 	{
+		if (where < 0 || where >= thisHouse->nRooms)
+			return 0;
 		switch (thisHouse->rooms[where].background)
 		{
 			case kGarden:
