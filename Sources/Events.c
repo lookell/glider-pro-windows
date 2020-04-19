@@ -503,7 +503,7 @@ void HandleEvent (void)
 	BYTE		eventKeys[256];
 	MSG			theEvent;
 	SInt32		sleep = 2;
-	DWORD		result;
+	DWORD		result, startMillis, stopMillis;
 
 	GetKeyboardState(eventKeys);
 	if ((eventKeys[VK_CONTROL] & 0x80) &&
@@ -561,7 +561,9 @@ void HandleEvent (void)
 
 	if ((theMode == kSplashMode) && doAutoDemo && !switchedOut)
 	{
-		if ((MillisToTicks(GetTickCount()) - incrementModeTime) >= 0)
+		startMillis = TicksToMillis((UInt32)incrementModeTime - kIdleSplashTicks);
+		stopMillis = GetTickCount();
+		if (stopMillis - startMillis >= TicksToMillis(kIdleSplashTicks))
 			DoDemoGame();
 	}
 }
