@@ -443,46 +443,52 @@ void DrawPages (void)
 
 void DoDiedGameOver (void)
 {
-	return;
-#if 0
-	EventRecord	theEvent;
-	KeyMap		theKeys;
-	long		nextLoop;
+	MSG			msg;
+	SInt32		nextLoop;
 	Boolean		userAborted;
 
 	userAborted = false;
 	InitDiedGameOver();
 	CopyRectMainToWork(&workSrcRect);
 	CopyRectMainToBack(&workSrcRect);
-	FlushEvents(everyEvent, 0);
 
-	nextLoop = TickCount() + 2;
+	nextLoop = MillisToTicks(GetTickCount()) + 2;
 	while (pagesStuck < 8)
 	{
 		HandlePages();
 		DrawPages();
 		do
 		{
-			GetKeys(theKeys);
-			if ((BitTst(&theKeys, kCommandKeyMap)) || (BitTst(&theKeys, kOptionKeyMap)) ||
-					(BitTst(&theKeys, kShiftKeyMap)) || (BitTst(&theKeys, kControlKeyMap)))
+			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 			{
-				pagesStuck = 8;
-				userAborted = true;
-			}
-			if (GetNextEvent(everyEvent, &theEvent))
-				if ((theEvent.what == mouseDown) || (theEvent.what == keyDown))
+				if (msg.message == WM_QUIT)
 				{
+					PostQuitMessage(msg.wParam);
 					pagesStuck = 8;
 					userAborted = true;
+					break;
 				}
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+				switch (msg.message)
+				{
+					case WM_KEYDOWN:
+					case WM_LBUTTONDOWN:
+					case WM_MBUTTONDOWN:
+					case WM_RBUTTONDOWN:
+					case WM_XBUTTONDOWN:
+					pagesStuck = 8;
+					userAborted = true;
+					break;
+				}
+			}
 		}
-		while (TickCount() < nextLoop);
-		nextLoop = TickCount() + 2;
+		while ((SInt32)MillisToTicks(GetTickCount()) < nextLoop);
+		nextLoop = MillisToTicks(GetTickCount()) + 2;
 	}
 
 	if (roomRgn != nil)
-		DisposeRgn(roomRgn);
+		DeleteObject(roomRgn);
 
 	DisposeGWorld(pageSrcMap);
 	pageSrcMap = nil;
@@ -506,6 +512,5 @@ void DoDiedGameOver (void)
 		TestHighScore();
 	}
 	RedrawSplashScreen();
-#endif
 }
 
