@@ -285,9 +285,7 @@ void NewGame (SInt16 mode)
 
 void DoDemoGame (void)
 {
-	return;
-#if 0
-	short		wasHouseIndex;
+	SInt16		wasHouseIndex;
 	Boolean		whoCares;
 
 	wasHouseIndex = thisHouseIndex;
@@ -305,8 +303,7 @@ void DoDemoGame (void)
 	PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
 	if (OpenHouse())
 		whoCares = ReadHouse();
-	incrementModeTime = TickCount() + kIdleSplashTicks;
-#endif
+	incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
 }
 
 //--------------------------------------------------------------  InitGlider
