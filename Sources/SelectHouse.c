@@ -588,71 +588,117 @@ BOOL GetHouseFolderPath(LPWSTR buffer, DWORD cch)
 
 //--------------------------------------------------------------  DoDirSearch
 
+static HANDLE OpenFindFile(LPCWSTR lpPath, LPWIN32_FIND_DATA lpFindFileData)
+{
+	WCHAR pattern[MAX_PATH];
+	if (FAILED(StringCchCopy(pattern, ARRAYSIZE(pattern), lpPath)))
+		return INVALID_HANDLE_VALUE;
+	if (FAILED(StringCchCat(pattern, ARRAYSIZE(pattern), L"\\*")))
+		return INVALID_HANDLE_VALUE;
+	return FindFirstFile(pattern, lpFindFileData);
+}
+
 void DoDirSearch (void)
 {
-	return;
-#if 0
-	#define		kMaxDirectories		32
-	CInfoPBRec	theBlock;
-	Str255		nameString;
-	long		theDirs[kMaxDirectories];
-	OSErr		theErr, notherErr;
-	short		count, i, currentDir, numDirs;
+	#define			kMaxDirectories		32
+	WIN32_FIND_DATA	ffd;
+	WCHAR			pathString[MAX_PATH];
+	WCHAR			newPathString[MAX_PATH];
+	HANDLE			findFileHandles[kMaxDirectories];
+	HANDLE			hff;
+	SInt16			i, currentDir, numDirs;
+	PWCH			extPtr, sepPtr;
+	HRESULT			hr;
 
-	for (i = 0; i < kMaxDirectories; i++)
-		theDirs[i] = 0L;
 	currentDir = 0;
-	theDirs[currentDir] = thisMac.dirID;
 	numDirs = 1;
+	if (!GetHouseFolderPath(pathString, ARRAYSIZE(pathString)))
+		RedAlert(kErrFailedCatSearch);
+	hff = OpenFindFile(pathString, &ffd);
+	if (hff == INVALID_HANDLE_VALUE || hff == NULL)
+		RedAlert(kErrFailedCatSearch);
+	findFileHandles[currentDir] = hff;
 
-	theBlock.hFileInfo.ioCompletion = nil;
-	theBlock.hFileInfo.ioVRefNum = thisMac.vRefNum;
-	theBlock.hFileInfo.ioNamePtr = nameString;
-
-	while ((currentDir < numDirs) && (currentDir < kMaxDirectories))
+	while (numDirs > 0)
 	{
-		count = 1;
-		theErr = noErr;
-
-		while (theErr == noErr)
+		SpinCursor(1);
+		if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
-			SpinCursor(1);
-			theBlock.hFileInfo.ioFDirIndex = count;
-			theBlock.hFileInfo.ioDirID = theDirs[currentDir];
-			theErr = PBGetCatInfo(&theBlock, false);
-
-			if (theErr == noErr)
+			// handle a directory entry
+			if ((numDirs < kMaxDirectories) &&
+					(wcscmp(ffd.cFileName, L".") != 0) &&
+					(wcscmp(ffd.cFileName, L"..") != 0))
 			{
-				if ((theBlock.hFileInfo.ioFlAttrib & 0x10) == 0x00)
+				hr = StringCchPrintf(
+					newPathString,
+					ARRAYSIZE(newPathString),
+					L"%s\\%s",
+					pathString,
+					ffd.cFileName
+				);
+				if (SUCCEEDED(hr))
 				{
-					if ((theBlock.hFileInfo.ioFlFndrInfo.fdType == 'gliH') &&
-							(theBlock.hFileInfo.ioFlFndrInfo.fdCreator == 'ozm5') &&
-							(housesFound < maxFiles))
+					hff = OpenFindFile(newPathString, &ffd);
+					if (hff != INVALID_HANDLE_VALUE && hff != NULL)
 					{
-						notherErr = FSMakeFSSpec(thisMac.vRefNum,
-								theBlock.hFileInfo.ioFlParID, nameString,
-								&theHousesSpecs[housesFound]);
-						if (notherErr == noErr)
-							housesFound++;
-					}
-				}
-				else if ((theBlock.hFileInfo.ioFlAttrib & 0x10) == 0x10)
-				{
-					if (numDirs < kMaxDirectories)
-					{
-						theDirs[numDirs] = theBlock.hFileInfo.ioDirID;
+						memcpy(pathString, newPathString, sizeof(pathString));
+						currentDir++;
 						numDirs++;
+						findFileHandles[currentDir] = hff;
+						continue; // restart the loop to use the file found just now
 					}
 				}
-				count++;
 			}
 		}
-		currentDir++;
+		else
+		{
+			// handle a file entry
+			extPtr = wcsrchr(ffd.cFileName, L'.');
+			if (extPtr == NULL)
+				extPtr = L"";
+			if ((housesFound < maxFiles) && (wcscmp(extPtr, L".glh") == 0))
+			{
+				hr = StringCchPrintf(
+					theHousesSpecs[housesFound].path,
+					ARRAYSIZE(theHousesSpecs[housesFound].path),
+					L"%s\\%s",
+					pathString,
+					ffd.cFileName
+				);
+				if (SUCCEEDED(hr))
+				{
+					// terminate at 31 characters or the file extension,
+					// whichever comes first
+					ffd.cFileName[ARRAYSIZE(theHousesSpecs[housesFound].name)] = L'\0';
+					*extPtr = L'\0';
+					MacFromWinString(
+						theHousesSpecs[housesFound].name,
+						ARRAYSIZE(theHousesSpecs[housesFound].name),
+						ffd.cFileName
+					);
+					housesFound++;
+				}
+			}
+		}
+		// advance to the next entry
+		while (!FindNextFile(findFileHandles[currentDir], &ffd))
+		{
+			FindClose(findFileHandles[currentDir]);
+			findFileHandles[currentDir] = INVALID_HANDLE_VALUE;
+			currentDir--;
+			numDirs--;
+			if (currentDir < 0)
+				break;
+			sepPtr = wcsrchr(pathString, L'\\');
+			if (sepPtr)
+				*sepPtr = L'\0';
+		}
 	}
 
 	if (housesFound < 1)
 	{
 		thisHouseIndex = -1;
+		demoHouseIndex = -1;
 		YellowAlert(kYellowNoHouses, 0);
 	}
 	else
@@ -661,7 +707,7 @@ void DoDirSearch (void)
 		thisHouseIndex = 0;
 		for (i = 0; i < housesFound; i++)
 		{
-			if (EqualString(theHousesSpecs[i].name, thisHouseName, false, true))
+			if (Mac_EqualString(theHousesSpecs[i].name, thisHouseName, false))
 			{
 				thisHouseIndex = i;
 				break;
@@ -672,14 +718,16 @@ void DoDirSearch (void)
 		demoHouseIndex = -1;
 		for (i = 0; i < housesFound; i++)
 		{
-			if (EqualString(theHousesSpecs[i].name, "\pDemo House", false, true))
+			Str32 demoHouseName;
+
+			PasStringCopyC("Demo House", demoHouseName);
+			if (Mac_EqualString(theHousesSpecs[i].name, demoHouseName, false))
 			{
 				demoHouseIndex = i;
 				break;
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  BuildHouseList
