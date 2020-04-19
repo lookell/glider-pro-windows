@@ -12,6 +12,7 @@
 //#include <StringCompare.h>
 //#include <TextUtils.h>
 #include "Macintosh.h"
+#include "ByteIO.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "House.h"
@@ -328,11 +329,9 @@ Boolean SaveHouseAs (void)
 
 Boolean ReadHouse (void)
 {
-	return false;
-#if 0
-	long		byteCount;
-	OSErr		theErr;
-	short		whichRoom;
+	LARGE_INTEGER	byteCount, distance;
+	SInt16			whichRoom;
+	byteio			byteReader;
 
 	if (!houseOpen)
 	{
@@ -354,68 +353,70 @@ Boolean ReadHouse (void)
 			return(false);
 	}
 
-	theErr = GetEOF(houseRefNum, &byteCount);
-	if (theErr != noErr)
+	if (!GetFileSizeEx(houseRefNum, &byteCount))
 	{
-		CheckFileError(theErr, thisHouseName);
+		CheckFileError(GetLastError(), thisHouseName);
 		return(false);
 	}
 
 	#ifdef COMPILEDEMO
-	if (byteCount != 16526L)
+	if (byteCount.QuadPart != 16526LL)
 		return (false);
 	#endif
 
-	if (thisHouse != nil)
-		DisposeHandle((Handle)thisHouse);
+	if (thisHouse != NULL)
+	{
+		free(thisHouse->rooms);
+		free(thisHouse);
+	}
 
-	thisHouse = (houseHand)NewHandle(byteCount);
-	if (thisHouse == nil)
+	thisHouse = malloc(sizeof(*thisHouse));
+	if (thisHouse == NULL)
 	{
 		YellowAlert(kYellowNoMemory, 10);
 		return(false);
 	}
-	MoveHHi((Handle)thisHouse);
 
-	theErr = SetFPos(houseRefNum, fsFromStart, 0L);
-	if (theErr != noErr)
+	distance.QuadPart = 0;
+	if (!SetFilePointerEx(houseRefNum, distance, NULL, FILE_BEGIN))
 	{
-		CheckFileError(theErr, thisHouseName);
+		CheckFileError(GetLastError(), thisHouseName);
 		return(false);
 	}
 
-	HLock((Handle)thisHouse);
-	theErr = FSRead(houseRefNum, &byteCount, *thisHouse);
-	if (theErr != noErr)
-	{
-		CheckFileError(theErr, thisHouseName);
-		HUnlock((Handle)thisHouse);
-		return(false);
-	}
-
-	numberRooms = (*thisHouse)->nRooms;
-	#ifdef COMPILEDEMO
-	if (numberRooms != 45)
-		return (false);
-	#endif
-	if ((numberRooms < 1) || (byteCount == 0L))
+	if (!byteio_init_handle_reader(&byteReader, houseRefNum))
+		RedAlert(kErrNoMemory);
+	if (!ReadHouseType(&byteReader, thisHouse))
 	{
 		numberRooms = 0;
 		noRoomAtAll = true;
 		YellowAlert(kYellowNoRooms, 0);
-		HUnlock((Handle)thisHouse);
+		CheckFileError(GetLastError(), thisHouseName);
+		return(false);
+	}
+	byteio_close(&byteReader);
+
+	numberRooms = thisHouse->nRooms;
+	#ifdef COMPILEDEMO
+	if (numberRooms != 45)
+		return (false);
+	#endif
+	if ((numberRooms < 1) || (byteCount.QuadPart == 0LL))
+	{
+		numberRooms = 0;
+		noRoomAtAll = true;
+		YellowAlert(kYellowNoRooms, 0);
 		return(false);
 	}
 
-	wasHouseVersion = (*thisHouse)->version;
+	wasHouseVersion = thisHouse->version;
 	if (wasHouseVersion >= kNewHouseVersion)
 	{
 		YellowAlert(kYellowNewerVersion, 0);
-		HUnlock((Handle)thisHouse);
 		return(false);
 	}
 
-	houseUnlocked = (((*thisHouse)->timeStamp & 0x00000001) == 0);
+	houseUnlocked = ((thisHouse->timeStamp & 0x00000001) == 0);
 	#ifdef COMPILEDEMO
 	if (houseUnlocked)
 		return (false);
@@ -423,17 +424,15 @@ Boolean ReadHouse (void)
 	changeLockStateOfHouse = false;
 	saveHouseLocked = false;
 
-	whichRoom = (*thisHouse)->firstRoom;
+	whichRoom = thisHouse->firstRoom;
 	#ifdef COMPILEDEMO
 	if (whichRoom != 0)
 		return (false);
 	#endif
 
-	wardBitSet = (((*thisHouse)->flags & 0x00000001) == 0x00000001);
-	phoneBitSet = (((*thisHouse)->flags & 0x00000002) == 0x00000002);
-	bannerStarCountOn = (((*thisHouse)->flags & 0x00000004) == 0x00000000);
-
-	HUnlock((Handle)thisHouse);
+	wardBitSet = ((thisHouse->flags & 0x00000001) == 0x00000001);
+	phoneBitSet = ((thisHouse->flags & 0x00000002) == 0x00000002);
+	bannerStarCountOn = ((thisHouse->flags & 0x00000004) == 0x00000000);
 
 	noRoomAtAll = (RealRoomNumberCount() == 0);
 	thisRoomNumber = -1;
@@ -456,7 +455,6 @@ Boolean ReadHouse (void)
 	UpdateMenus(false);
 
 	return (true);
-#endif
 }
 
 //--------------------------------------------------------------  WriteHouse
