@@ -14,6 +14,7 @@
 #include "Externs.h"
 #include "House.h"
 #include "ObjectEdit.h"
+#include "RectUtils.h"
 #include "ResourceIDs.h"
 
 
@@ -318,8 +319,6 @@ void DoAppleMenu (SInt16 theItem)
 
 void DoGameMenu (SInt16 theItem)
 {
-	return;
-#if 0
 	switch (theItem)
 	{
 		case iNewGame:
@@ -353,13 +352,14 @@ void DoGameMenu (SInt16 theItem)
 			DoLoadHouse();
 			OpenCloseEditWindows();
 			UpdateMenus(false);
-			incrementModeTime = TickCount() + kIdleSplashTicks;
+			incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
 			if ((theMode == kSplashMode) || (theMode == kPlayMode))
 			{
 				Rect		updateRect;
 
-				SetRect(&updateRect, splashOriginH + 474, splashOriginV + 304, splashOriginH + 474 + 166, splashOriginV + 304 + 12);
-				InvalWindowRect(mainWindow, &updateRect);
+				QSetRect(&updateRect, splashOriginH + 474, splashOriginV + 304,
+						splashOriginH + 474 + 166, splashOriginV + 304 + 12);
+				Mac_InvalWindowRect(mainWindow, &updateRect);
 			}
 		}
 #endif
@@ -378,7 +378,6 @@ void DoGameMenu (SInt16 theItem)
 		default:
 		break;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoOptionsMenu
