@@ -221,18 +221,15 @@ COLORREF LtGrayForeColor (void)
 // This function finds the closest match to a "medium gray" in the…
 // current palette and sets the pen color to that.
 
-void GrayForeColor (void)
+COLORREF GrayForeColor (void)
 {
-	return;
-#if 0
 	RGBColor	color;
 
-	color.red = (unsigned short) 0x7FFF;
-	color.green = (unsigned short) 0x7FFF;
-	color.blue = (unsigned short) 0x7FFF;
+	color.red = 0x7FFF;
+	color.green = 0x7FFF;
+	color.blue = 0x7FFF;
 
-	RGBForeColor(&color);
-#endif
+	return RGB(color.red >> 8, color.green >> 8, color.blue >> 8);
 }
 
 //--------------------------------------------------------------  DkGrayForeColor
