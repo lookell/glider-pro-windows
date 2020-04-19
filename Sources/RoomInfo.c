@@ -55,7 +55,8 @@ Boolean		originalLeftOpen, originalTopOpen, originalRightOpen, originalBottomOpe
 Boolean		originalFloor;
 
 extern	HCURSOR		handCursor, beamCursor;
-extern	SInt16		houseResFork, lastBackground;
+extern	HMODULE		houseResFork;
+extern	SInt16		lastBackground;
 
 
 //==============================================================  Functions

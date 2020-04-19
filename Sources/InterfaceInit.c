@@ -36,7 +36,8 @@ extern	SInt32			incrementModeTime;
 extern	UInt32			doubleTime;
 extern	SInt16			fadeInSequence[], idleMode;
 extern	SInt16			toolSelected, lastBackground, wasFlower, numExtraHouses;
-extern	SInt16			houseResFork, lastHighScore, maxFiles, willMaxFiles;
+extern	SInt16			lastHighScore, maxFiles, willMaxFiles;
+extern	HMODULE			houseResFork;
 extern	Boolean			quitting, playing, fadeGraysOut;
 extern	Boolean			houseOpen, newRoomNow, evenFrame, menusUp, demoGoing;
 extern	Boolean			twoPlayerGame, paused, hasMirror, splashDrawn;
@@ -245,7 +246,7 @@ void VariableInit (void)
 	thisRoomNumber = 0;
 	previousRoom = -1;
 	toolSelected = kSelectTool;
-	houseResFork = -1;
+	houseResFork = NULL;
 	lastBackground = kBaseBackgroundID;
 	wasFlower = RandomInt(kNumFlowers);
 	lastHighScore = -1;
