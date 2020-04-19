@@ -135,11 +135,8 @@ void AddRectToWorkRectsWhole (Rect *theRect)
 
 void DrawReflection (gliderPtr thisGlider, Boolean oneOrTwo)
 {
-	return;
-#if 0
-	RgnHandle	wasClip;
 	Rect		src, dest;
-	short		which;
+	SInt16		which;
 
 	if (thisGlider->dontDraw)
 		return;
@@ -152,43 +149,31 @@ void DrawReflection (gliderPtr thisGlider, Boolean oneOrTwo)
 	dest = thisGlider->dest;
 	QOffsetRect(&dest, playOriginH - 20, playOriginV - 16);
 
-	wasClip = NewRgn();
-	if (wasClip == nil)
-		return;
-
-	SetPort((GrafPtr)workSrcMap);
-	GetClip(wasClip);
-	SetClip(mirrorRgn);
+	//SetPort((GrafPtr)workSrcMap);
+	SaveDC(workSrcMap);
+	ExtSelectClipRgn(workSrcMap, mirrorRgn, RGN_AND);
 
 	if (oneOrTwo)
 	{
 		if (showFoil)
-			CopyMask((BitMap *)*GetGWorldPixMap(glid2SrcMap),
-					(BitMap *)*GetGWorldPixMap(glidMaskMap),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
+			Mac_CopyMask(glid2SrcMap, glidMaskMap, workSrcMap,
 					&thisGlider->src, &thisGlider->mask, &dest);
 		else
-			CopyMask((BitMap *)*GetGWorldPixMap(glidSrcMap),
-					(BitMap *)*GetGWorldPixMap(glidMaskMap),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
+			Mac_CopyMask(glidSrcMap, glidMaskMap, workSrcMap,
 					&thisGlider->src, &thisGlider->mask, &dest);
 	}
 	else
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(glid2SrcMap),
-				(BitMap *)*GetGWorldPixMap(glidMaskMap),
-				(BitMap *)*GetGWorldPixMap(workSrcMap),
+		Mac_CopyMask(glid2SrcMap, glidMaskMap, workSrcMap,
 				&thisGlider->src, &thisGlider->mask, &dest);
 	}
 
-	SetClip(wasClip);
-	DisposeRgn(wasClip);
+	RestoreDC(workSrcMap, -1);
 
-	src =thisGlider->whole;
+	src = thisGlider->whole;
 	QOffsetRect(&src, playOriginH - 20, playOriginV - 16);
 	AddRectToWorkRects(&src);
 	AddRectToBackRects(&dest);
-#endif
 }
 
 //--------------------------------------------------------------  RenderFlames
