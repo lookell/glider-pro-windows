@@ -187,20 +187,16 @@ void DoHeliumEngaged (gliderPtr thisGlider)
 
 //--------------------------------------------------------------  GetDemoInput
 
- void GetDemoInput (gliderPtr thisGlider)
- {
- 	return;
-#if 0
- 	if (thisGlider->which == kPlayer1)
+void GetDemoInput (gliderPtr thisGlider)
+{
+	if (thisGlider->which == kPlayer1)
 	{
-		GetKeys(theKeys);
-
 #if BUILD_ARCADE_VERSION
 
-		if ((BitTst(&theKeys, thisGlider->leftKey)) ||
-				(BitTst(&theKeys, thisGlider->rightKey)) ||
-				(BitTst(&theKeys, thisGlider->battKey)) ||
-				(BitTst(&theKeys, thisGlider->bandKey)))
+		if ((GetKeyState(thisGlider->leftKey) < 0) ||
+				(GetKeyState(thisGlider->rightKey) < 0) ||
+				(GetKeyState(thisGlider->battKey) < 0) ||
+				(GetKeyState(thisGlider->bandKey) < 0))
 		{
 			playing = false;
 			paused = false;
@@ -208,7 +204,7 @@ void DoHeliumEngaged (gliderPtr thisGlider)
 
 #else
 
-		if (BitTst(&theKeys, kCommandKeyMap))
+		if (GetKeyState(VK_CONTROL) < 0)
 			DoCommandKey();
 
 #endif
@@ -227,34 +223,34 @@ void DoHeliumEngaged (gliderPtr thisGlider)
 		thisGlider->heldRight = false;
 		thisGlider->tipped = false;
 
-	 	if (gameFrame == (long)demoData[demoIndex].frame)
-	 	{
-	 		switch (demoData[demoIndex].key)
-	 		{
-	 			case 0:		// left key
-	 			thisGlider->hDesiredVel += kNormalThrust;
+		if (gameFrame == demoData[demoIndex].frame)
+		{
+			switch (demoData[demoIndex].key)
+			{
+				case 0:		// left key
+				thisGlider->hDesiredVel += kNormalThrust;
 				thisGlider->tipped = (thisGlider->facing == kFaceLeft);
 				thisGlider->heldRight = true;
 				thisGlider->fireHeld = false;
-	 			break;
+				break;
 
-	 			case 1:		// right key
-	 			thisGlider->hDesiredVel -= kNormalThrust;
+				case 1:		// right key
+				thisGlider->hDesiredVel -= kNormalThrust;
 				thisGlider->tipped = (thisGlider->facing == kFaceRight);
 				thisGlider->heldLeft = true;
 				thisGlider->fireHeld = false;
-	 			break;
+				break;
 
-	 			case 2:		// battery key
-		 		if (batteryTotal > 0)
+				case 2:		// battery key
+				if (batteryTotal > 0)
 					DoBatteryEngaged(thisGlider);
 				else
 					DoHeliumEngaged(thisGlider);
-	 			thisGlider->fireHeld = false;
-	 			break;
+				thisGlider->fireHeld = false;
+				break;
 
-	 			case 3:		// rubber band key
-	 			if (!thisGlider->fireHeld)
+				case 3:		// rubber band key
+				if (!thisGlider->fireHeld)
 				{
 					if (AddBand(thisGlider, thisGlider->dest.left + 24,
 							thisGlider->dest.top + 10, thisGlider->facing))
@@ -266,22 +262,21 @@ void DoHeliumEngaged (gliderPtr thisGlider)
 						thisGlider->fireHeld = true;
 					}
 				}
-	 			break;
-	 		}
+				break;
+			}
 
-	 		demoIndex++;
-	 	}
-	 	else
-	 		thisGlider->fireHeld = false;
+			demoIndex++;
+		}
+		else
+			thisGlider->fireHeld = false;
 
-		if ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) ||
-				(!isEscPauseKey && BitTst(&theKeys, kTabKeyMap)))
+		if ((isEscPauseKey && GetKeyState(VK_ESCAPE) < 0) ||
+				(!isEscPauseKey && GetKeyState(VK_TAB) < 0))
 		{
 			DoPause();
 		}
- 	}
-#endif
- }
+	}
+}
 
 //--------------------------------------------------------------  GetInput
 
