@@ -205,18 +205,15 @@ void ColorFrameOval (HDC hdc, Rect *theRect, SInt32 color)
 // This function finds the closest match to a "light gray" in the…
 // current palette and sets the pen color to that.
 
-void LtGrayForeColor (void)
+COLORREF LtGrayForeColor (void)
 {
-	return;
-#if 0
 	RGBColor	color;
 
-	color.red = (unsigned short) 0xBFFF;
-	color.green = (unsigned short) 0xBFFF;
-	color.blue = (unsigned short) 0xBFFF;
+	color.red = 0xBFFF;
+	color.green = 0xBFFF;
+	color.blue = 0xBFFF;
 
-	RGBForeColor(&color);
-#endif
+	return RGB(color.red >> 8, color.green >> 8, color.blue >> 8);
 }
 
 //--------------------------------------------------------------  GrayForeColor
