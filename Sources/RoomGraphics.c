@@ -44,12 +44,9 @@ extern	Boolean		shadowVisible, takingTheStairs;
 
 void DrawLocale (void)
 {
-	return;
-#if 0
-	short		i, roomV;
-	char		wasState;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	SInt16		i, roomV;
+	//CGrafPtr	wasCPort;
+	//GDHandle	wasWorld;
 
 	ZeroFlamesAndTheLike();
 	ZeroDinahs();
@@ -62,10 +59,7 @@ void DrawLocale (void)
 	tvInRoom = false;
 	tvWithMovieNumber = -1;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	roomV = (*thisHouse)->rooms[thisRoomNumber].floor;
-	HSetState((Handle)thisHouse, wasState);
+	roomV = thisHouse->rooms[thisRoomNumber].floor;
 
 	for (i = 0; i < 9; i++)
 	{
@@ -74,9 +68,9 @@ void DrawLocale (void)
 	}
 	ListAllLocalObjects();
 
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
-	PaintRect(&backSrcRect);
+	//GetGWorld(&wasCPort, &wasWorld);
+	//SetGWorld(backSrcMap, nil);
+	Mac_PaintRect(backSrcMap, &backSrcRect, GetStockObject(BLACK_BRUSH));
 
 	if (numNeighbors > 3)
 	{
@@ -129,8 +123,7 @@ void DrawLocale (void)
 	shadowVisible = IsShadowVisible();
 	takingTheStairs = false;
 
-	SetGWorld(wasCPort, wasWorld);
-#endif
+	//SetGWorld(wasCPort, wasWorld);
 }
 
 //--------------------------------------------------------------  LoadGraphicSpecial
