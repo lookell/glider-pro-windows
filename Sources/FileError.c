@@ -26,7 +26,7 @@
 // bring up an alert but with "Miscellaneous file error" and the…
 // error ID.
 
-Boolean CheckFileError (SInt16 resultCode, StringPtr fileName)
+Boolean CheckFileError (DWORD resultCode, StringPtr fileName)
 {
 	return true;
 #if 0

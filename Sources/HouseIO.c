@@ -543,10 +543,6 @@ Boolean WriteHouse (Boolean checkIt)
 
 Boolean CloseHouse (void)
 {
-	return true;
-#if 0
-	OSErr		theErr;
-
 	if (!houseOpen)
 		return (true);
 
@@ -571,17 +567,15 @@ Boolean CloseHouse (void)
 	CloseHouseResFork();
 	CloseHouseMovie();
 
-	theErr = FSClose(houseRefNum);
-	if (theErr != noErr)
+	if (!CloseHandle(houseRefNum))
 	{
-		CheckFileError(theErr, thisHouseName);
+		CheckFileError(GetLastError(), thisHouseName);
 		return(false);
 	}
 
 	houseOpen = false;
 
 	return (true);
-#endif
 }
 
 //--------------------------------------------------------------  OpenHouseResFork

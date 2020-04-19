@@ -329,7 +329,7 @@ void RestoreColorDepth (void);
 void CheckMemorySize (void);
 void SetAppMemorySize (SInt32);
 
-Boolean CheckFileError (SInt16, StringPtr);				// --- File Error.c
+Boolean CheckFileError (DWORD, StringPtr);				// --- File Error.c
 
 Boolean SavePrefs (prefsInfo *, SInt16);				// --- Prefs.c
 Boolean LoadPrefs (prefsInfo *, SInt16);
