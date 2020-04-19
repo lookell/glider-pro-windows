@@ -615,8 +615,6 @@ void CopyRectsQD (void)
 
 void RenderFrame (void)
 {
-	return;
-#if 0
 	if (hasMirror)
 	{
 		DrawReflection(&theGlider, true);
@@ -638,16 +636,15 @@ void RenderFrame (void)
 	RenderShreds();
 	RenderBands();
 
-	while (TickCount() < nextFrame)
+	while ((SInt32)MillisToTicks(GetTickCount()) < nextFrame)
 	{
 	}
-	nextFrame = TickCount() + kTicksPerFrame;
+	nextFrame = MillisToTicks(GetTickCount()) + kTicksPerFrame;
 
 	CopyRectsQD();
 
 	numWork2Main = 0;
 	numBack2Work = 0;
-#endif
 }
 
 //--------------------------------------------------------------  InitGarbageRects
