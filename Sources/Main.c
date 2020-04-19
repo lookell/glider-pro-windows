@@ -136,10 +136,10 @@ void ReadInPrefs (void)
 		PasStringCopyC("up arrow", bandName);
 		PasStringCopyC("Your Name", highName);
 		PasStringCopyC("Your Message Here", highBanner);
-		theGlider.leftKey = kLeftArrowKeyMap;
-		theGlider.rightKey = kRightArrowKeyMap;
-		theGlider.battKey = kDownArrowKeyMap;
-		theGlider.bandKey = kUpArrowKeyMap;
+		theGlider.leftKey = VK_LEFT;
+		theGlider.rightKey = VK_RIGHT;
+		theGlider.battKey = VK_DOWN;
+		theGlider.bandKey = VK_UP;
 
 		UnivGetSoundVolume(&isVolume, thisMac.hasSM3);
 		if (isVolume < 1)

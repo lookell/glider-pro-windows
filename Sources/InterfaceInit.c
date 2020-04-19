@@ -235,10 +235,10 @@ void VariableInit (void)
 #endif
 
 	theGlider.which = kPlayer1;
-	theGlider2.leftKey = kControlKeyMap;
-	theGlider2.rightKey = kCommandKeyMap;
-	theGlider2.battKey = kOptionKeyMap;
-	theGlider2.bandKey = kShiftKeyMap;
+	theGlider2.leftKey = 'A'; // was kControlKeyMap
+	theGlider2.rightKey = 'D'; // was kCommandKeyMap
+	theGlider2.battKey = 'S'; // was kOptionKeyMap
+	theGlider2.bandKey = 'W'; // was kShiftKeyMap
 	theGlider2.which = kPlayer2;
 
 	theMode = kSplashMode;
