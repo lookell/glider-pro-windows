@@ -60,9 +60,8 @@ extern	Boolean		playing, shadowVisible, demoGoing;
 
 void DoGameOver (void)
 {
-	return;
-#if 0
 	playing = false;
+#if 0
 	SetUpFinalScreen();
 	SetPort((GrafPtr)mainWindow);
 	ColorRect(&mainWindowRect, 244);
