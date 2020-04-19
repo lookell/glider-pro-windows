@@ -462,11 +462,9 @@ Boolean ReadHouse (void)
 
 Boolean WriteHouse (Boolean checkIt)
 {
-	return true;
-#if 0
 	UInt32			timeStamp;
-	long			byteCount;
-	OSErr			theErr;
+	byteio			byteWriter;
+	LARGE_INTEGER	distance;
 
 	if (!houseOpen)
 	{
@@ -474,10 +472,10 @@ Boolean WriteHouse (Boolean checkIt)
 		return (false);
 	}
 
-	theErr = SetFPos(houseRefNum, fsFromStart, 0L);
-	if (theErr != noErr)
+	distance.QuadPart = 0;
+	if (!SetFilePointerEx(houseRefNum, distance, NULL, FILE_BEGIN))
 	{
-		CheckFileError(theErr, thisHouseName);
+		CheckFileError(GetLastError(), thisHouseName);
 		return(false);
 	}
 
@@ -486,12 +484,9 @@ Boolean WriteHouse (Boolean checkIt)
 	if (checkIt)
 		CheckHouseForProblems();
 
-	HLock((Handle)thisHouse);
-	byteCount = GetHandleSize((Handle)thisHouse);
-
 	if (fileDirty)
 	{
-		GetDateTime(&timeStamp);
+		Mac_GetDateTime(&timeStamp);
 		timeStamp &= 0x7FFFFFFF;
 
 		if (changeLockStateOfHouse)
@@ -501,27 +496,24 @@ Boolean WriteHouse (Boolean checkIt)
 			timeStamp &= 0x7FFFFFFE;
 		else
 			timeStamp |= 0x00000001;
-		(*thisHouse)->timeStamp = (long)timeStamp;
-		(*thisHouse)->version = wasHouseVersion;
+		thisHouse->timeStamp = (SInt32)timeStamp;
+		thisHouse->version = wasHouseVersion;
 	}
 
-	theErr = FSWrite(houseRefNum, &byteCount, *thisHouse);
-	if (theErr != noErr)
+	if (!byteio_init_handle_writer(&byteWriter, houseRefNum))
+		RedAlert(kErrNoMemory);
+	if (!WriteHouseType(&byteWriter, thisHouse))
 	{
-		CheckFileError(theErr, thisHouseName);
-		HUnlock((Handle)thisHouse);
+		CheckFileError(GetLastError(), thisHouseName);
 		return(false);
 	}
+	byteio_close(&byteWriter);
 
-	theErr = SetEOF(houseRefNum, byteCount);
-	if (theErr != noErr)
+	if (!SetEndOfFile(houseRefNum))
 	{
-		CheckFileError(theErr, thisHouseName);
-		HUnlock((Handle)thisHouse);
+		CheckFileError(GetLastError(), thisHouseName);
 		return(false);
 	}
-
-	HUnlock((Handle)thisHouse);
 
 	if (changeLockStateOfHouse)
 	{
@@ -533,7 +525,6 @@ Boolean WriteHouse (Boolean checkIt)
 	fileDirty = false;
 	UpdateMenus(false);
 	return (true);
-#endif
 }
 
 //--------------------------------------------------------------  CloseHouse
