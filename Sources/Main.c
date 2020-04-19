@@ -33,7 +33,8 @@ extern Str31		highBanner;
 extern Str15		leftName, rightName, batteryName, bandName;
 extern Str15		highName;
 //extern SInt32		encryptedNumber;
-extern SInt16		maxFiles, numNeighbors, houseRefNum, willMaxFiles;
+extern HANDLE		houseRefNum;
+extern SInt16		maxFiles, numNeighbors, willMaxFiles;
 extern SInt16		isEditH, isEditV, isMapH, isMapV;
 extern SInt16		isToolsH, isToolsV, isCoordH, isCoordV;
 extern SInt16		isLinkH, isLinkV, toolMode, mapLeftRoom, mapTopRoom;
@@ -379,9 +380,9 @@ int main (void)
 		if (!CloseHouse())
 		{
 			CloseHouseResFork();
-#if 0
-			fileErr = FSClose(houseRefNum);
-#endif
+			if (houseRefNum != INVALID_HANDLE_VALUE && houseRefNum != NULL)
+				CloseHandle(houseRefNum);
+			houseRefNum = INVALID_HANDLE_VALUE;
 			houseOpen = false;
 		}
 	}

@@ -26,12 +26,13 @@
 void LoopMovie (void);
 void OpenHouseMovie (void);
 void CloseHouseMovie (void);
-Boolean IsFileReadOnly (FSSpec *);
+Boolean IsFileReadOnly (houseSpec *);
 
 
 Movie		theMovie;
 Rect		movieRect;
-SInt16		houseRefNum, houseResFork, wasHouseVersion;
+HANDLE		houseRefNum;
+SInt16		houseResFork, wasHouseVersion;
 Boolean		houseOpen, fileDirty, gameDirty;
 Boolean		changeLockStateOfHouse, saveHouseLocked, houseIsReadOnly;
 Boolean		hasMovie, tvInRoom;
@@ -167,11 +168,9 @@ void CloseHouseMovie (void)
 
 Boolean OpenHouse (void)
 {
-	return false;
-#if 0
-	OSErr		theErr;
-	Boolean		targetIsFolder, wasAliased;
+	Str32		demoHouseName;
 
+	PasStringCopyC("Demo House", demoHouseName);
 	if (houseOpen)
 	{
 		if (!CloseHouse())
@@ -180,21 +179,27 @@ Boolean OpenHouse (void)
 	if ((housesFound < 1) || (thisHouseIndex == -1))
 		return(false);
 
-	theErr = ResolveAliasFile(&theHousesSpecs[thisHouseIndex], true,
-			&targetIsFolder, &wasAliased);
-	if (!CheckFileError(theErr, thisHouseName))
-		return (false);
-
 	#ifdef COMPILEDEMO
-	if (!EqualString(theHousesSpecs[thisHouseIndex].name, "\pDemo House", false, true))
+	if (!Mac_EqualString(theHousesSpecs[thisHouseIndex].name, demoHouseName, false))
 		return (false);
 	#endif
 
-	houseIsReadOnly = IsFileReadOnly(&theHousesSpecs[thisHouseIndex]);
-
-	theErr = FSpOpenDF(&theHousesSpecs[thisHouseIndex], fsCurPerm, &houseRefNum);
-	if (!CheckFileError(theErr, thisHouseName))
+	houseRefNum = CreateFile(theHousesSpecs[thisHouseIndex].path,
+			GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (houseRefNum == INVALID_HANDLE_VALUE)
+	{
+		houseIsReadOnly = true;
+		houseRefNum = CreateFile(theHousesSpecs[thisHouseIndex].path,
+				GENERIC_READ, FILE_SHARE_READ, NULL,
+				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	}
+	if (houseRefNum == INVALID_HANDLE_VALUE)
+	{
+		houseIsReadOnly = false;
+		CheckFileError(GetLastError(), thisHouseName);
 		return (false);
+	}
 
 	houseOpen = true;
 	OpenHouseResFork();
@@ -205,7 +210,6 @@ Boolean OpenHouse (void)
 	OpenHouseMovie();
 
 	return (true);
-#endif
 }
 
 //--------------------------------------------------------------  OpenSpecificHouse
@@ -687,7 +691,7 @@ void YellowAlert (SInt16 whichAlert, SInt16 identifier)
 
 //--------------------------------------------------------------  IsFileReadOnly
 
-Boolean IsFileReadOnly (FSSpec *theSpec)
+Boolean IsFileReadOnly (houseSpec *theSpec)
 {
 	return false;
 #if 0
