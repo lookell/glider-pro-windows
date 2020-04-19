@@ -53,9 +53,7 @@ void LogDemoKey (Byte keyIs)
 
 void DoCommandKey (void)
 {
-	return;
-#if 0
-	if (BitTst(&theKeys, kQKeyMap))
+	if (GetKeyState('Q') < 0)
 	{
 		playing = false;
 		paused = false;
@@ -65,15 +63,14 @@ void DoCommandKey (void)
 				SaveGame2();		// New save game.
 		}
 	}
-	else if ((BitTst(&theKeys, kSKeyMap)) && (!twoPlayerGame))
+	else if ((GetKeyState('S') < 0) && (!twoPlayerGame))
 	{
 		RefreshScoreboard(kSavingTitleMode);
 		SaveGame2();				// New save game.
-		HideCursor();
+		//HideCursor();
 		CopyRectWorkToMain(&workSrcRect);
 		RefreshScoreboard(kNormalTitleMode);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoPause
