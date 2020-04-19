@@ -158,34 +158,20 @@ void LoadGraphicSpecial (HDC hdc, SInt16 resID)
 
 void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 {
-	return;
-#if 0
 	Rect		src, dest;
-	short		i, pictID;
-	short		tiles[kNumTiles];
-	char		wasState;
+	SInt16		i, pictID;
+	SInt16		tiles[kNumTiles];
 
 	if (where == kCentralRoom)
 	{
-		wasState = HGetState((Handle)thisHouse);
-		HLock((Handle)thisHouse);
-		thisBackground = (*thisHouse)->rooms[who].background;
+		thisBackground = thisHouse->rooms[who].background;
 		for (i = 0; i < kNumTiles; i++)
-			thisTiles[i] = (*thisHouse)->rooms[who].tiles[i];
-		HSetState((Handle)thisHouse, wasState);
+			thisTiles[i] = thisHouse->rooms[who].tiles[i];
 	}
 
 	if ((numLights == 0) && (who != kRoomIsEmpty))
 	{
-		CGrafPtr	wasCPort;
-		GDHandle	wasWorld;
-
-		GetGWorld(&wasCPort, &wasWorld);
-		SetGWorld(backSrcMap, nil);
-
-		PaintRect(&localRoomsDest[where]);
-
-		SetGWorld(wasCPort, wasWorld);
+		Mac_PaintRect(backSrcMap, &localRoomsDest[where], GetStockObject(BLACK_BRUSH));
 		return;
 	}
 
@@ -193,15 +179,7 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 	{
 		if (wardBitSet)
 		{
-			CGrafPtr	wasCPort;
-			GDHandle	wasWorld;
-
-			GetGWorld(&wasCPort, &wasWorld);
-			SetGWorld(backSrcMap, nil);
-
-			PaintRect(&localRoomsDest[where]);
-
-			SetGWorld(wasCPort, wasWorld);
+			Mac_PaintRect(backSrcMap, &localRoomsDest[where], GetStockObject(BLACK_BRUSH));
 			return;
 		}
 
@@ -226,16 +204,13 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 	}
 	else
 	{
-		wasState = HGetState((Handle)thisHouse);
-		HLock((Handle)thisHouse);
-		pictID = (*thisHouse)->rooms[who].background;
+		pictID = thisHouse->rooms[who].background;
 		for (i = 0; i < kNumTiles; i++)
-			tiles[i] = (*thisHouse)->rooms[who].tiles[i];
-		HSetState((Handle)thisHouse, wasState);
+			tiles[i] = thisHouse->rooms[who].tiles[i];
 	}
 
-	SetPort((GrafPtr)workSrcMap);
-	LoadGraphicSpecial(pictID);
+	//SetPort((GrafPtr)workSrcMap);
+	LoadGraphicSpecial(workSrcMap, pictID);
 
 	QSetRect(&src, 0, 0, kTileWide, kTileHigh);
 	QSetRect(&dest, 0, 0, kTileWide, kTileHigh);
@@ -244,12 +219,10 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 	{
 		src.left = tiles[i] * kTileWide;
 		src.right = src.left + kTileWide;
-		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(workSrcMap, backSrcMap,
 				&src, &dest, srcCopy, nil);
 		QOffsetRect(&dest, kTileWide, 0);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DrawFloorSupport
