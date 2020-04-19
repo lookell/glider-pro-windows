@@ -424,13 +424,19 @@ void HandlePlayEvent (void)
 
 void PlayGame (void)
 {
-	MessageBox(mainWindow, L"PlayGame() unimplemented", NULL, MB_ICONERROR);
-	return;
-#if 0
 	while ((playing) && (!quitting))
 	{
 		gameFrame++;
 		evenFrame = !evenFrame;
+
+		{ // TEMP message loop here so that window doesn't freeze
+			MSG msg;
+			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+		}
 
 		if (doBackground)
 		{
@@ -499,10 +505,11 @@ void PlayGame (void)
 			countDown--;
 			if (countDown <= 0)
 			{
-				CGrafPtr	wasCPort;
-				GDHandle	wasWorld;
+				//CGrafPtr	wasCPort;
+				//GDHandle	wasWorld;
+				HDC			mainWindowDC;
 
-				GetGWorld(&wasCPort, &wasWorld);
+				//GetGWorld(&wasCPort, &wasWorld);
 
 				HideGlider(&theGlider);
 				RefreshScoreboard(kNormalTitleMode);
@@ -510,16 +517,18 @@ void PlayGame (void)
 #if BUILD_ARCADE_VERSION
 			// Need to paint over the scoreboard black.
 
-				SetGWorld(boardSrcMap, nil);
-				PaintRect(&boardSrcRect);
+				//SetGWorld(boardSrcMap, nil);
+				Mac_PaintRect(boardSrcMap, &boardSrcRect, GetStockObject(BLACK_BRUSH));
 
-				CopyBits((BitMap *)*GetGWorldPixMap(boardSrcMap),
-						GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+				mainWindowDC = GetMainWindowDC();
+				Mac_CopyBits(boardSrcMap, mainWindowDC,
 						&boardSrcRect, &boardDestRect, srcCopy, 0L);
+				ReleaseMainWindowDC(mainWindowDC);
 
 				{
 					Rect		bounds;
-					PicHandle	thePicture;
+					HBITMAP		thePicture;
+					BITMAP		bmInfo;
 					SInt16		hOffset;
 
 					if (boardSrcRect.right >= 640)
@@ -529,13 +538,11 @@ void PlayGame (void)
 					thePicture = GetPicture(kScoreboardPictID);
 					if (!thePicture)
 						RedAlert(kErrFailedGraphicLoad);
-					HLock((Handle)thePicture);
-					bounds = (*thePicture)->picFrame;
-					HUnlock((Handle)thePicture);
-					QOffsetRect(&bounds, -bounds.left, -bounds.top);
+					GetObject(thePicture, sizeof(bmInfo), &bmInfo);
+					QSetRect(&bounds, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
 					QOffsetRect(&bounds, hOffset, 0);
-					DrawPicture(thePicture, &bounds);
-					ReleaseResource((Handle)thePicture);
+					Mac_DrawPicture(boardSrcMap, thePicture, &bounds);
+					DeleteObject(thePicture);
 				}
 #else
 //				ShowMenuBarOld();	// TEMP
@@ -546,31 +553,27 @@ void PlayGame (void)
 				else
 					DoGameOver();
 
-				SetGWorld(wasCPort, wasWorld);
+				//SetGWorld(wasCPort, wasWorld);
 			}
 		}
 	}
 
 #if BUILD_ARCADE_VERSION
 	{
-		CGrafPtr	wasCPort;
-		GDHandle	wasWorld;
+		HDC			mainWindowDC;
 
-		GetGWorld(&wasCPort, &wasWorld);
+		Mac_PaintRect(boardSrcMap, &boardSrcRect, GetStockObject(BLACK_BRUSH));
 
-		SetGWorld(boardSrcMap, nil);
-		PaintRect(&boardSrcRect);
-
-		CopyBits((BitMap *)*GetGWorldPixMap(boardSrcMap),
-				GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+		mainWindowDC = GetMainWindowDC();
+		Mac_CopyBits(boardSrcMap, mainWindowDC,
 				&boardSrcRect, &boardDestRect, srcCopy, 0L);
-
-		SetGWorld(wasCPort, wasWorld);
+		ReleaseMainWindowDC(mainWindowDC);
 	}
 
 	{
 		Rect		bounds;
-		PicHandle	thePicture;
+		HBITMAP		thePicture;
+		BITMAP		bmInfo;
 		SInt16		hOffset;
 
 		if (boardSrcRect.right >= 640)
@@ -580,20 +583,17 @@ void PlayGame (void)
 		thePicture = GetPicture(kScoreboardPictID);
 		if (!thePicture)
 			RedAlert(kErrFailedGraphicLoad);
-		HLock((Handle)thePicture);
-		bounds = (*thePicture)->picFrame;
-		HUnlock((Handle)thePicture);
-		QOffsetRect(&bounds, -bounds.left, -bounds.top);
+		GetObject(thePicture, sizeof(bmInfo), &bmInfo);
+		QSetRect(&bounds, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
 		QOffsetRect(&bounds, hOffset, 0);
-		DrawPicture(thePicture, &bounds);
-		ReleaseResource((Handle)thePicture);
+		Mac_DrawPicture(boardSrcMap, thePicture, &bounds);
+		DeleteObject(thePicture);
 	}
 
 #else
 
 //	ShowMenuBarOld();	// TEMP
 
-#endif
 #endif
 }
 
