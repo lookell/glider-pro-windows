@@ -237,48 +237,50 @@ Boolean CreateNewRoom (SInt16 h, SInt16 v)
 
 void ReadyBackground (SInt16 theID, SInt16 *theTiles)
 {
-	return;
-#if 0
 	Rect		src, dest;
-	PicHandle	thePicture;
-	short		i;
+	HBITMAP		thePicture;
+	BITMAP		bmInfo;
+	COLORREF	wasColor;
+	Str255		theString;
+	SInt16		i;
 
-	SetPort((GrafPtr)workSrcMap);
+//	SetPort((GrafPtr)workSrcMap);
 
 	if ((noRoomAtAll) || (!houseUnlocked))
 	{
-		LtGrayForeColor();
-		PaintRect(&workSrcRect);
-		ForeColor(blackColor);
-		MoveTo(10, 20);
+		wasColor = SetDCBrushColor(workSrcMap, LtGrayForeColor());
+		Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(DC_BRUSH));
+		SetDCBrushColor(workSrcMap, wasColor);
+		MoveToEx(workSrcMap, 10, 20, NULL);
 		if (houseUnlocked)
-			DrawString("\pNo rooms");
+			PasStringCopyC("No Rooms", theString);
 		else
-			DrawString("\pNothing to show");
+			PasStringCopyC("Nothing to show", theString);
+		wasColor = SetTextColor(workSrcMap, blackColor);
+		Mac_DrawString(workSrcMap, theString);
+		SetTextColor(workSrcMap, wasColor);
 
-		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(workSrcMap, backSrcMap,
 				&workSrcRect, &workSrcRect, srcCopy, nil);
 		return;
 	}
 
 	thePicture = GetPicture(theID);
-	if (thePicture == nil)
+	if (thePicture == NULL)
 	{
-		thePicture = (PicHandle)GetResource('Date', theID);
-		if (thePicture == nil)
+		// TODO: Find out what the 'Date' resource type is
+		//thePicture = (PicHandle)GetResource('Date', theID);
+		//if (thePicture == NULL)
 		{
 			YellowAlert(kYellowNoBackground, 0);
 			return;
 		}
 	}
 
-	HLock((Handle)thePicture);
-	dest = (*thePicture)->picFrame;
-	HUnlock((Handle)thePicture);
-	QOffsetRect(&dest, -dest.left, -dest.top);
-	DrawPicture(thePicture, &dest);
-	ReleaseResource((Handle)thePicture);
+	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
+	QSetRect(&dest, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+	Mac_DrawPicture(workSrcMap, thePicture, &dest);
+	DeleteObject(thePicture);
 
 	QSetRect(&src, 0, 0, kTileWide, kTileHigh);
 	QSetRect(&dest, 0, 0, kTileWide, kTileHigh);
@@ -286,18 +288,15 @@ void ReadyBackground (SInt16 theID, SInt16 *theTiles)
 	{
 		src.left = theTiles[i] * kTileWide;
 		src.right = src.left + kTileWide;
-		CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyBits(workSrcMap, backSrcMap,
 				&src, &dest, srcCopy, nil);
 		QOffsetRect(&dest, kTileWide, 0);
 	}
 
 	QSetRect(&src, 0, 0, kRoomWide, kTileHigh);
 	QSetRect(&dest, 0, 0, kRoomWide, kTileHigh);
-	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
-			(BitMap *)*GetGWorldPixMap(workSrcMap),
+	Mac_CopyBits(backSrcMap, workSrcMap,
 			&src, &dest, srcCopy, nil);
-#endif
 }
 
 //--------------------------------------------------------------  ReflectCurrentRoom
