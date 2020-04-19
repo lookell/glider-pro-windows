@@ -159,17 +159,14 @@ void SetInitialTiles (SInt16 background, Boolean doRoom)
 #ifndef COMPILEDEMO
 Boolean CreateNewRoom (SInt16 h, SInt16 v)
 {
-	return false;
-#if 0
-	KeyMap		theKeys;
-	long		howMuch;
+	SInt32		howMuch;
 	OSErr		theErr;
-	short		i, availableRoom;
-	char		wasState;
+	SInt16		i, availableRoom;
+	roomPtr		newRoomsPtr;
 
 	CopyThisRoomToRoom();					// save off current room
 
-	PasStringCopy("\pUntitled Room", thisRoom->name);
+	PasStringCopyC("Untitled Room", thisRoom->name);
 	thisRoom->leftStart = 32;				// fill out fields of new room
 	thisRoom->rightStart = 32;
 	thisRoom->bounds = 0;
@@ -184,13 +181,10 @@ Boolean CreateNewRoom (SInt16 h, SInt16 v)
 	for (i = 0; i < kMaxRoomObs; i++)		// zero out all objects
 		thisRoom->objects[i].what = kObjectIsEmpty;
 
-	wasState = HGetState((Handle)thisHouse);
-	MoveHHi((Handle)thisHouse);
-	HLock((Handle)thisHouse);
 	availableRoom = -1;						// assume no available rooms
-	if ((*thisHouse)->nRooms > 0)			// look for an empty room
-		for (i = 0; i < (*thisHouse)->nRooms; i++)
-			if ((*thisHouse)->rooms[i].suite == kRoomIsEmpty)
+	if (thisHouse->nRooms > 0)				// look for an empty room
+		for (i = 0; i < thisHouse->nRooms; i++)
+			if (thisHouse->rooms[i].suite == kRoomIsEmpty)
 			{
 				availableRoom = i;
 				break;
@@ -198,20 +192,20 @@ Boolean CreateNewRoom (SInt16 h, SInt16 v)
 
 	if (availableRoom == -1)				// found no available rooms
 	{
-		HUnlock((Handle)thisHouse);
-		howMuch = sizeof(roomType);			// add new room to end of house
-		theErr = PtrAndHand((Ptr)thisRoom, (Handle)thisHouse, howMuch);
-		if (theErr != noErr)
+		if (thisHouse->nRooms < 0)
+			thisHouse->nRooms = 0;
+		newRoomsPtr = realloc(
+			thisHouse->rooms,
+			(thisHouse->nRooms + 1) * sizeof(*thisHouse->rooms)
+		);
+		if (newRoomsPtr == NULL)
 		{
-			YellowAlert(kYellowUnaccounted, theErr);
-			MoveHHi((Handle)thisHouse);
-			HLock((Handle)thisHouse);
+			YellowAlert(kYellowUnaccounted, -1);
 			return (false);
 		}
-		MoveHHi((Handle)thisHouse);
-		HLock((Handle)thisHouse);
-		(*thisHouse)->nRooms++;				// increment nRooms
-		numberRooms = (*thisHouse)->nRooms;
+		thisHouse->rooms = newRoomsPtr;
+		thisHouse->nRooms++;				// increment nRooms
+		numberRooms = thisHouse->nRooms;
 		previousRoom = thisRoomNumber;
 		thisRoomNumber = numberRooms - 1;
 	}
@@ -222,9 +216,7 @@ Boolean CreateNewRoom (SInt16 h, SInt16 v)
 	}
 
 	if (noRoomAtAll)
-		(*thisHouse)->firstRoom = thisRoomNumber;
-
-	HSetState((Handle)thisHouse, wasState);
+		thisHouse->firstRoom = thisRoomNumber;
 
 	CopyThisRoomToRoom();
 	UpdateEditWindowTitle();
@@ -232,14 +224,12 @@ Boolean CreateNewRoom (SInt16 h, SInt16 v)
 	fileDirty = true;
 	UpdateMenus(false);
 
-	GetKeys(theKeys);
-	if (BitTst(&theKeys, kShiftKeyMap))
+	if (GetKeyState(VK_SHIFT) < 0)
 		newRoomNow = false;
 	else
 		newRoomNow = autoRoomEdit;			// Flag to bring up RoomInfo
 
 	return (true);
-#endif
 }
 #endif
 
