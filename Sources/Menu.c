@@ -455,10 +455,8 @@ void DoOptionsMenu (SInt16 theItem)
 
 void DoHouseMenu (SInt16 theItem)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	short		direction, dist;
+	SInt16		direction, dist;
 	Boolean		whoCares;
 
 	switch (theItem)
@@ -523,7 +521,7 @@ void DoHouseMenu (SInt16 theItem)
 			if (objActive > kNoObjectSelected)
 			{
 //				PutObjectScrap();
-				DeleteObject();
+				Gp_DeleteObject();
 			}
 			else
 			{
@@ -561,7 +559,7 @@ void DoHouseMenu (SInt16 theItem)
 		if (houseUnlocked)
 		{
 			if (objActive > kNoObjectSelected)
-				DeleteObject();
+				Gp_DeleteObject();
 			else
 				DeleteRoom(false);
 			UpdateClipboardMenus();
@@ -603,7 +601,6 @@ void DoHouseMenu (SInt16 theItem)
 			ToggleCoordinateWindow();
 		break;
 	}
-#endif
 #endif
 }
 
