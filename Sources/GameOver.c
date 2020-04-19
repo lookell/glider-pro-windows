@@ -60,15 +60,17 @@ extern	Boolean		playing, shadowVisible, demoGoing;
 
 void DoGameOver (void)
 {
+	HDC			mainWindowDC;
+
 	playing = false;
-#if 0
 	SetUpFinalScreen();
-	SetPort((GrafPtr)mainWindow);
-	ColorRect(&mainWindowRect, 244);
+	//SetPort((GrafPtr)mainWindow);
+	mainWindowDC = GetMainWindowDC();
+	ColorRect(mainWindowDC, &mainWindowRect, 244);
+	ReleaseMainWindowDC(mainWindowDC);
 	DoGameOverStarAnimation();
 	if (!TestHighScore())
 		RedrawSplashScreen();
-#endif
 }
 
 //--------------------------------------------------------------  SetUpFinalScreen
