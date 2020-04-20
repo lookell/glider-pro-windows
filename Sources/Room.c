@@ -8,6 +8,7 @@
 //#include <Resources.h>
 //#include <ToolUtils.h>
 #include "Macintosh.h"
+#include "ByteIO.h"
 #include "Externs.h"
 #include "House.h"
 #include "MainWindow.h"
@@ -32,6 +33,7 @@ Boolean		leftOpen, rightOpen, topOpen, bottomOpen;
 Boolean		doBitchDialogs;
 
 extern	SInt16		tempTiles[];
+extern	HMODULE		houseResFork;
 
 
 //==============================================================  Functions
@@ -890,13 +892,32 @@ void DetermineRoomOpenings (void)
 
 SInt16 GetOriginalBounding (SInt16 theID)
 {
-	return 0;
-#if 0
-	boundsHand	boundsRes;
-	short		boundCode;
+	boundsType	boundsRes;
+	HRSRC		resBlock;
+	DWORD		resByteSize;
+	HGLOBAL		resHandle;
+	LPVOID		resPointer;
+	byteio		byteReader;
+	SInt16		boundCode;
 
-	boundsRes = (boundsHand)GetResource('bnds', theID);
-	if (boundsRes == nil)
+	if (houseResFork == NULL)
+		return 0;
+
+	resPointer = NULL;
+	resBlock = FindResource(houseResFork, MAKEINTRESOURCE(theID), L"BOUNDS");
+	if (resBlock != NULL)
+	{
+		resByteSize = SizeofResource(houseResFork, resBlock);
+		if (resByteSize != 0)
+		{
+			resHandle = LoadResource(houseResFork, resBlock);
+			if (resHandle != NULL)
+			{
+				resPointer = LockResource(resHandle);
+			}
+		}
+	}
+	if (resPointer == NULL)
 	{
 		if (PictIDExists(theID))
 			YellowAlert(kYellowNoBoundsRes, 0);
@@ -905,21 +926,23 @@ SInt16 GetOriginalBounding (SInt16 theID)
 	else
 	{
 		boundCode = 0;
-		HLock((Handle)boundsRes);
-		if ((*boundsRes)->left)
-			boundCode += 1;
-		if ((*boundsRes)->top)
-			boundCode += 2;
-		if ((*boundsRes)->right)
-			boundCode += 4;
-		if ((*boundsRes)->bottom)
-			boundCode += 8;
-		HUnlock((Handle)boundsRes);
-		ReleaseResource((Handle)boundsRes);
+		if (!byteio_init_memory_reader(&byteReader, resPointer, resByteSize))
+			RedAlert(kErrNoMemory);
+		if (ReadBoundsType(&byteReader, &boundsRes))
+		{
+			if (boundsRes.left)
+				boundCode += 1;
+			if (boundsRes.top)
+				boundCode += 2;
+			if (boundsRes.right)
+				boundCode += 4;
+			if (boundsRes.bottom)
+				boundCode += 8;
+		}
+		byteio_close(&byteReader);
 	}
 
 	return (boundCode);
-#endif
 }
 
 //--------------------------------------------------------------  GetNumberOfLights
