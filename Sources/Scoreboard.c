@@ -257,38 +257,36 @@ void RefreshPoints (void)
 
 void QuickGlidersRefresh (void)
 {
-	return;
-#if 0
-	RGBColor	theRGBColor, wasColor;
+	COLORREF	theRGBColor, wasColor;
 	Str255		nGlidersStr;
+	HDC			mainWindowDC;
 
-	SetPort((GrafPtr)boardGSrcMap);
+	//SetPort((GrafPtr)boardGSrcMap);
 
-	GetForeColor(&wasColor);
 	if (thisMac.isDepth == 4)
-		Index2Color(kGrayBackgroundColor4, &theRGBColor);
+		theRGBColor = Index2ColorRef(kGrayBackgroundColor4);
 	else
-		Index2Color(kGrayBackgroundColor, &theRGBColor);
-	RGBForeColor(&theRGBColor);
-	PaintRect(&boardGSrcRect);
-	RGBForeColor(&wasColor);
+		theRGBColor = Index2ColorRef(kGrayBackgroundColor);
+	wasColor = SetDCBrushColor(boardGSrcMap, theRGBColor);
+	Mac_PaintRect(boardGSrcMap, &boardGSrcRect, GetStockObject(DC_BRUSH));
+	SetDCBrushColor(boardGSrcMap, wasColor);
 
-	NumToString((long)mortals, nGlidersStr);
+	Mac_NumToString((SInt32)mortals, nGlidersStr);
 
-	MoveTo(1, 10);
-	ForeColor(blackColor);
-	DrawString(nGlidersStr);
+	MoveToEx(boardGSrcMap, 1, 10, NULL);
+	wasColor = SetTextColor(boardGSrcMap, blackColor);
+	Mac_DrawString(boardGSrcMap, nGlidersStr);
 
-	MoveTo(0, 9);
-	ForeColor(whiteColor);
-	DrawString(nGlidersStr);
+	MoveToEx(boardGSrcMap, 0, 9, NULL);
+	SetTextColor(boardGSrcMap, whiteColor);
+	Mac_DrawString(boardGSrcMap, nGlidersStr);
 
-	ForeColor(blackColor);
+	SetTextColor(boardGSrcMap, wasColor);
 
-	CopyBits((BitMap *)*GetGWorldPixMap(boardGSrcMap),
-			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+	mainWindowDC = GetMainWindowDC();
+	Mac_CopyBits(boardGSrcMap, mainWindowDC,
 			&boardGSrcRect, &boardGQDestRect, srcCopy, nil);
-#endif
+	ReleaseMainWindowDC(mainWindowDC);
 }
 
 //--------------------------------------------------------------  QuickScoreRefresh
