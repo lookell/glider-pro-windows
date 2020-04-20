@@ -159,6 +159,7 @@ void NewGame (SInt16 mode)
 	else
 		DissBits(&workSrcRect);
 	SetMenu(mainWindow, NULL);
+	UpdateWindow(mainWindow);
 
 //	DebugStr("\pIf screen isn't black, exit to shell.");	// TEMP TEMP TEMP
 
@@ -555,6 +556,7 @@ void PlayGame (void)
 #else
 //				ShowMenuBarOld();	// TEMP
 				SetMenu(mainWindow, theMenuBar);
+				UpdateWindow(mainWindow);
 #endif
 
 				if (mortals < 0)
@@ -603,6 +605,7 @@ void PlayGame (void)
 
 //	ShowMenuBarOld();	// TEMP
 	SetMenu(mainWindow, theMenuBar);
+	UpdateWindow(mainWindow); 
 
 #endif
 }
