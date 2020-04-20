@@ -610,14 +610,11 @@ void OpenHouseResFork (void)
 
 void CloseHouseResFork (void)
 {
-	return;
-#if 0
-	if (houseResFork != -1)
+	if (houseResFork != NULL)
 	{
-		CloseResFile(houseResFork);
-		houseResFork = -1;
+		FreeLibrary(houseResFork);
+		houseResFork = NULL;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  QuerySaveChanges
