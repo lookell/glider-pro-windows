@@ -77,47 +77,78 @@ void DoCommandKey (void)
 
 void DoPause (void)
 {
-	return;
-#if 0
 	Rect		bounds;
+	MSG			msg;
+	HDC			mainWindowDC;
 
-	SetPort((GrafPtr)mainWindow);
+	//SetPort((GrafPtr)mainWindow);
 	QSetRect(&bounds, 0, 0, 214, 54);
 	CenterRectInRect(&bounds, &houseRect);
+	mainWindowDC = GetMainWindowDC();
 	if (isEscPauseKey)
-		LoadScaledGraphic(kEscPausePictID, &bounds);
+		LoadScaledGraphic(mainWindowDC, kEscPausePictID, &bounds);
 	else
-		LoadScaledGraphic(kTabPausePictID, &bounds);
+		LoadScaledGraphic(mainWindowDC, kTabPausePictID, &bounds);
+	ReleaseMainWindowDC(mainWindowDC);
 
-	do
+	while (GetMessage(&msg, NULL, 0, 0))
 	{
-		GetKeys(theKeys);
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		// continue once the pause key is up
+		if ((isEscPauseKey && GetKeyState(VK_ESCAPE) >= 0) ||
+				(!isEscPauseKey && GetKeyState(VK_TAB) >= 0))
+			break;
 	}
-	while ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) ||
-			(!isEscPauseKey && BitTst(&theKeys, kTabKeyMap)));
+	if (msg.message == WM_QUIT)
+	{
+		PostQuitMessage(msg.wParam);
+		quitting = true;
+		return;
+	}
 
 	paused = true;
-	while (paused)
+	while (paused && GetMessage(&msg, NULL, 0, 0))
 	{
-		GetKeys(theKeys);
-		if ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) ||
-				(!isEscPauseKey && BitTst(&theKeys, kTabKeyMap)))
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		// continue once the pause key is down again
+		if ((isEscPauseKey && GetKeyState(VK_ESCAPE) < 0) ||
+				(!isEscPauseKey && GetKeyState(VK_TAB) < 0))
 			paused = false;
-		else if (BitTst(&theKeys, kCommandKeyMap))
+		else if (GetKeyState(VK_CONTROL) < 0)
 			DoCommandKey();
 	}
-
-	CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
-			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
-			&bounds, &bounds, srcCopy, nil);
-
-	do
-	{
-		GetKeys(theKeys);
+	if (msg.message == WM_QUIT)
+	{		
+		PostQuitMessage(msg.wParam);
+		paused = false;
+		quitting = true;
+		return;
 	}
-	while ((isEscPauseKey && BitTst(&theKeys, kEscKeyMap)) ||
-			(!isEscPauseKey && BitTst(&theKeys, kTabKeyMap)));
-#endif
+
+	mainWindowDC = GetMainWindowDC();
+	Mac_CopyBits(workSrcMap, mainWindowDC,
+			&bounds, &bounds, srcCopy, nil);
+	ReleaseMainWindowDC(mainWindowDC);
+
+	while (GetMessage(&msg, NULL, 0, 0))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		// continue once the pause key is up
+		if ((isEscPauseKey && GetKeyState(VK_ESCAPE) >= 0) ||
+			(!isEscPauseKey && GetKeyState(VK_TAB) >= 0))
+		{
+			break;
+		}
+	}
+	if (msg.message == WM_QUIT)
+	{
+		PostQuitMessage(msg.wParam);
+		quitting = true;
+		return;
+	}
 }
 
 //--------------------------------------------------------------  DoBatteryEngaged
