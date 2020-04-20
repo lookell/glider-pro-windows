@@ -573,17 +573,36 @@ Boolean CloseHouse (void)
 
 void OpenHouseResFork (void)
 {
-	return;
-#if 0
-	if (houseResFork == -1)
+	WCHAR		fileName[MAX_PATH];
+	PWCH		extPtr;
+	HRESULT		hr;
+
+	if (houseResFork == NULL)
 	{
-		houseResFork = FSpOpenResFile(&theHousesSpecs[thisHouseIndex], fsCurPerm);
-		if (houseResFork == -1)
-			YellowAlert(kYellowFailedResOpen, ResError());
-		else
-			UseResFile(houseResFork);
+		hr = StringCchCopy(fileName, ARRAYSIZE(fileName),
+				theHousesSpecs[thisHouseIndex].path);
+		if (FAILED(hr))
+		{
+			YellowAlert(kYellowFailedResOpen, -1);
+			return;
+		}
+		extPtr = wcsrchr(fileName, L'.');
+		if (extPtr == NULL)
+		{
+			YellowAlert(kYellowFailedResOpen, -1);
+			return;
+		}
+		*extPtr = L'\0';
+		hr = StringCchCat(fileName, ARRAYSIZE(fileName), L".glr");
+		if (FAILED(hr))
+		{
+			YellowAlert(kYellowFailedResOpen, -1);
+			return;
+		}
+		houseResFork = LoadLibraryEx(fileName, NULL, LOAD_LIBRARY_AS_DATAFILE);
+		if (houseResFork == NULL)
+			YellowAlert(kYellowFailedResOpen, GetLastError());
 	}
-#endif
 }
 
 //--------------------------------------------------------------  CloseHouseResFork
