@@ -68,7 +68,8 @@ void DoCommandKey (void)
 		RefreshScoreboard(kSavingTitleMode);
 		SaveGame2();				// New save game.
 		//HideCursor();
-		CopyRectWorkToMain(&workSrcRect);
+		// TODO: is this bitblt necessary? game works better without it
+		//CopyRectWorkToMain(&workSrcRect);
 		RefreshScoreboard(kNormalTitleMode);
 	}
 }
