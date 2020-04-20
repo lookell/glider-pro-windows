@@ -12,13 +12,17 @@ endif()
 # remove the annoying copyright banner when the resource compiler runs
 set(CMAKE_RC_FLAGS "${CMAKE_RC_FLAGS} /nologo")
 
+# disable the built-in manifest generation; we provide our own
+if(MSVC)
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /manifest:no")
+endif()
+
 add_executable(gliderpro)
 target_include_directories(gliderpro PRIVATE Headers)
 target_link_libraries(gliderpro msimg32)
 target_sources(
   gliderpro PRIVATE
   # resources
-  Resources/gliderpro.manifest
   Resources/gliderpro.rc
   # added headers
   Headers/ByteIO.h
