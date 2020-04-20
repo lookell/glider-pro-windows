@@ -5,6 +5,7 @@
 //============================================================================
 
 
+#define _CRT_SECURE_NO_WARNINGS
 //#include <NumberFormatting.h>
 #include "Macintosh.h"
 #include "Externs.h"
@@ -102,27 +103,38 @@ SInt16 CountStarsInHouse (void)
 
 void DrawBannerMessage (Point topLeft)
 {
-	return;
-#if 0
 	Str255		bannerStr, subStr;
-	short		count;
-	char		wasState;
+	SInt16		count;
+	LOGFONT		lfBanner;
+	HFONT		bannerFont;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	PasStringCopy((*thisHouse)->banner, bannerStr);
-	HSetState((Handle)thisHouse, wasState);
+	lfBanner.lfHeight = -12;
+	lfBanner.lfWidth = 0;
+	lfBanner.lfEscapement = 0;
+	lfBanner.lfOrientation = 0;
+	lfBanner.lfWeight = FW_BOLD;
+	lfBanner.lfItalic = FALSE;
+	lfBanner.lfUnderline = FALSE;
+	lfBanner.lfStrikeOut = FALSE;
+	lfBanner.lfCharSet = DEFAULT_CHARSET;
+	lfBanner.lfOutPrecision = OUT_DEFAULT_PRECIS;
+	lfBanner.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+	lfBanner.lfQuality = DEFAULT_QUALITY;
+	lfBanner.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
+	wcscpy(lfBanner.lfFaceName, L"Tahoma");
 
-	TextFont(applFont);
-	TextFace(bold);
-	TextSize(12);
-	ForeColor(blackColor);
+	PasStringCopy(thisHouse->banner, bannerStr);
+
+	bannerFont = CreateFontIndirect(&lfBanner);
+	SaveDC(workSrcMap);
+	SelectObject(workSrcMap, bannerFont);
+	SetTextColor(workSrcMap, blackColor);
 	count = 0;
 	do
 	{
 		GetLineOfText(bannerStr, count, subStr);
-		MoveTo(topLeft.h + 16, topLeft.v + 32 + (count * 20));
-		DrawString(subStr);
+		MoveToEx(workSrcMap, topLeft.h + 16, topLeft.v + 32 + (count * 20), NULL);
+		Mac_DrawString(workSrcMap, subStr);
 		count++;
 	}
 	while (subStr[0] > 0);
@@ -134,7 +146,7 @@ void DrawBannerMessage (Point topLeft)
 		else
 			GetLocalizedString(2, bannerStr);
 
-		NumToString((long)numStarsRemaining, subStr);
+		Mac_NumToString((SInt32)numStarsRemaining, subStr);
 		PasStringConcat(bannerStr, subStr);
 
 		if (numStarsRemaining != 1)
@@ -143,15 +155,15 @@ void DrawBannerMessage (Point topLeft)
 			GetLocalizedString(4, subStr);
 		PasStringConcat(bannerStr, subStr);
 
-		ForeColor(redColor);
-		MoveTo(topLeft.h + 16, topLeft.v + 164);
-		DrawString(bannerStr);
-		MoveTo(topLeft.h + 16, topLeft.v + 180);
+		SetTextColor(workSrcMap, redColor);
+		MoveToEx(workSrcMap, topLeft.h + 16, topLeft.v + 164, NULL);
+		Mac_DrawString(workSrcMap, bannerStr);
+		MoveToEx(workSrcMap, topLeft.h + 16, topLeft.v + 180, NULL);
 		GetLocalizedString(5, subStr);
-		DrawString(subStr);
+		Mac_DrawString(workSrcMap, subStr);
 	}
-	ForeColor(blackColor);
-#endif
+	RestoreDC(workSrcMap, -1);
+	DeleteObject(bannerFont);
 }
 
 //--------------------------------------------------------------  BringUpBanner
