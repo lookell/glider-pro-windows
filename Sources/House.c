@@ -38,6 +38,7 @@ extern	gameType	smallGame;
 extern	SInt16		numberRooms, mapLeftRoom, mapTopRoom, numStarsRemaining;
 extern	Boolean		houseOpen, noRoomAtAll;
 extern	Boolean		twoPlayerGame, wardBitSet, phoneBitSet;
+extern	HMODULE		houseResFork;
 
 
 //==============================================================  Functions
@@ -230,15 +231,22 @@ void WhereDoesGliderBegin (Rect *theRect, SInt16 mode)
 
 // Returns true is the current house has custom artwork imbedded.
 
+static BOOL CALLBACK EnumResTypeProc(HMODULE hModule, LPWSTR lpszType, LONG_PTR lParam)
+{
+	if (lpszType == RT_BITMAP)
+		*((Boolean *)lParam) = true;
+	return TRUE;
+}
+
 Boolean HouseHasOriginalPicts (void)
 {
-	return false;
-#if 0
-	short		nPicts;
+	Boolean		hasPicts;
 
-	nPicts = Count1Resources('PICT');
-	return (nPicts > 0);
-#endif
+	hasPicts = false;
+	if (houseResFork == NULL)
+		return hasPicts;
+	EnumResourceTypes(houseResFork, EnumResTypeProc, (LONG_PTR)&hasPicts);
+	return hasPicts;
 }
 
 //--------------------------------------------------------------  CountHouseLinks
