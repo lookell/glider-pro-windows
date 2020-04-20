@@ -171,22 +171,19 @@ void DrawBannerMessage (Point topLeft)
 
 void BringUpBanner (void)
 {
-	return;
-#if 0
 	Rect		wholePage;
 	Point		topLeft;
 
 	DrawBanner(&topLeft);
 	DrawBannerMessage(topLeft);
-//	if (quickerTransitions)
-//		DissBitsChunky(&justRoomsRect);		// was workSrcRect
-//	else
-//		DissBits(&justRoomsRect);
+	if (quickerTransitions)
+		DissBitsChunky(&justRoomsRect);		// was workSrcRect
+	else
+		DissBits(&justRoomsRect);
 	QSetRect(&wholePage, 0, 0, 330, 220);
 	QOffsetRect(&wholePage, topLeft.h, topLeft.v);
 
-	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
-			(BitMap *)*GetGWorldPixMap(workSrcMap),
+	Mac_CopyBits(backSrcMap, workSrcMap,
 			&wholePage, &wholePage, srcCopy, nil);
 
 	if (demoGoing)
@@ -194,11 +191,10 @@ void BringUpBanner (void)
 	else
 		WaitForInputEvent(15);
 
-//	if (quickerTransitions)
-//		DissBitsChunky(&justRoomsRect);
-//	else
-//		DissBits(&justRoomsRect);
-#endif
+	if (quickerTransitions)
+		DissBitsChunky(&justRoomsRect);
+	else
+		DissBits(&justRoomsRect);
 }
 
 //--------------------------------------------------------------  DisplayStarsRemaining
