@@ -55,6 +55,7 @@ Boolean		playing, evenFrame, twoPlayerGame, showFoil, demoGoing;
 Boolean		doBackground, playerSuicide, phoneBitSet, tvOn;
 
 extern	HWND			menuWindow;
+extern	HMENU			theMenuBar;
 extern	houseSpecPtr	theHousesSpecs;
 extern	demoPtr			demoData;
 extern	gameType		smallGame;
@@ -157,6 +158,7 @@ void NewGame (SInt16 mode)
 		DissBitsChunky(&workSrcRect);
 	else
 		DissBits(&workSrcRect);
+	SetMenu(mainWindow, NULL);
 
 //	DebugStr("\pIf screen isn't black, exit to shell.");	// TEMP TEMP TEMP
 
@@ -552,6 +554,7 @@ void PlayGame (void)
 				}
 #else
 //				ShowMenuBarOld();	// TEMP
+				SetMenu(mainWindow, theMenuBar);
 #endif
 
 				if (mortals < 0)
@@ -599,6 +602,7 @@ void PlayGame (void)
 #else
 
 //	ShowMenuBarOld();	// TEMP
+	SetMenu(mainWindow, theMenuBar);
 
 #endif
 }

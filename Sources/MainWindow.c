@@ -45,6 +45,7 @@ Boolean			fadeGraysOut, isDoColorFade, splashDrawn;
 
 extern	GDHandle	thisGDevice;
 extern	SInt16		toolSelected;
+extern	Rect		justRoomsRect;
 extern	Boolean		noRoomAtAll, isUseSecondScreen;
 extern	Boolean		quickerTransitions, houseIsReadOnly;
 extern	HMENU		theMenuBar;
@@ -159,7 +160,13 @@ void UpdateMainWindow (void)
 				&mainWindowRect, &mainWindowRect, srcCopy, nil);
 		ResumeMarquee();
 	}
-	else if ((theMode == kSplashMode) || (theMode == kPlayMode))
+	else if (theMode == kPlayMode)
+	{
+		Mac_CopyBits(workSrcMap, mainWindowDC,
+				&justRoomsRect, &justRoomsRect, srcCopy, nil);
+		RefreshScoreboard(kNormalTitleMode);
+	}
+	else if (theMode == kSplashMode)
 	{
 //		SetPort((GrafPtr)workSrcMap);
 		Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));

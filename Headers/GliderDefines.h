@@ -13,7 +13,7 @@
 //#define CAREFULDEBUG
 #define COMPILENOCP
 //#define COMPILEQT
-#define BUILD_ARCADE_VERSION		1
+#define BUILD_ARCADE_VERSION		0
 
 #define kYellowUnaccounted			1
 #define kYellowFailedResOpen		2
