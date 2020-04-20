@@ -24,6 +24,7 @@ UInt32		theSeed;
 
 
 extern	Boolean		switchedOut;
+extern	HMODULE		houseResFork;
 
 
 //==============================================================  Functions
@@ -387,20 +388,22 @@ void DisposeGWorld (HDC theGWorld)
 //--------------------------------------------------------------  GetPicture
 // Function loads the specified 'PICT' from the house's resources
 // (if the house has that 'PICT') or the game's resources otherwise.
-// TODO: Attempt to load from house's resources.
 
 HBITMAP GetPicture (SInt16 resID)
 {
 	HBITMAP hbm;
 
-	hbm = LoadImage(
-		HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(resID),
-		IMAGE_BITMAP,
-		0,
-		0,
-		LR_DEFAULTCOLOR
-	);
+	hbm = NULL;
+	if (houseResFork != NULL)
+	{
+		hbm = LoadImage(houseResFork, MAKEINTRESOURCE(resID),
+				IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+	}
+	if (hbm == NULL)
+	{
+		hbm = LoadImage(HINST_THISCOMPONENT, MAKEINTRESOURCE(resID),
+				IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+	}
 
 	return hbm;
 }
