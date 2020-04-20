@@ -433,6 +433,12 @@ void PlayGame (void)
 			MSG msg;
 			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 			{
+				if (msg.message == WM_QUIT)
+				{
+					PostQuitMessage(msg.wParam);
+					quitting = true;
+					break;
+				}
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
