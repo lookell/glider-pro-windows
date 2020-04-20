@@ -139,59 +139,44 @@ void HandleDynamicScoreboard (void)
 
 void RefreshRoomTitle (SInt16 mode)
 {
-	return;
-#if 0
-	RGBColor	theRGBColor, wasColor;
+	COLORREF	theRGBColor, wasColor;
+	Str255		titleString;
 
-	SetPort((GrafPtr)boardTSrcMap);
+	//SetPort((GrafPtr)boardTSrcMap);
 
-	GetForeColor(&wasColor);
 	if (thisMac.isDepth == 4)
-		Index2Color(kGrayBackgroundColor4, &theRGBColor);
+		theRGBColor = Index2ColorRef(kGrayBackgroundColor4);
 	else
-		Index2Color(kGrayBackgroundColor, &theRGBColor);
-	RGBForeColor(&theRGBColor);
-	PaintRect(&boardTSrcRect);
-	RGBForeColor(&wasColor);
+		theRGBColor = Index2ColorRef(kGrayBackgroundColor);
+	wasColor = SetDCBrushColor(boardTSrcMap, theRGBColor);
+	Mac_PaintRect(boardTSrcMap, &boardTSrcRect, GetStockObject(DC_BRUSH));
+	SetDCBrushColor(boardTSrcMap, wasColor);
 
-	MoveTo(1, 10);
-	ForeColor(blackColor);
 	switch (mode)
 	{
 		case kEscapedTitleMode:
-		DrawString("\pHit Delete key if unable to Follow");
+		PasStringCopyC("Hit Delete key if unable to Follow", titleString);
 		break;
 
 		case kSavingTitleMode:
-		DrawString("\pSaving Game…");
+		PasStringCopyC("Saving Game\xC9", titleString); // "Saving Game…"
 		break;
 
 		default:
-		DrawString(thisRoom->name);
+		PasStringCopy(thisRoom->name, titleString);
 		break;
 	}
-	MoveTo(0, 9);
-	ForeColor(whiteColor);
-	switch (mode)
-	{
-		case kEscapedTitleMode:
-		DrawString("\pHit Delete key if unable to Follow");
-		break;
 
-		case kSavingTitleMode:
-		DrawString("\pSaving Game…");
-		break;
+	MoveToEx(boardTSrcMap, 1, 10, NULL);
+	wasColor = SetTextColor(boardTSrcMap, blackColor);
+	Mac_DrawString(boardTSrcMap, titleString);
+	MoveToEx(boardTSrcMap, 0, 9, NULL);
+	SetTextColor(boardTSrcMap, whiteColor);
+	Mac_DrawString(boardTSrcMap, titleString);
+	SetTextColor(boardTSrcMap, wasColor);
 
-		default:
-		DrawString(thisRoom->name);
-		break;
-	}
-	ForeColor(blackColor);
-
-	CopyBits((BitMap *)*GetGWorldPixMap(boardTSrcMap),
-			(BitMap *)*GetGWorldPixMap(boardSrcMap),
+	Mac_CopyBits(boardTSrcMap, boardSrcMap,
 			&boardTSrcRect, &boardTDestRect, srcCopy, nil);
-#endif
 }
 
 //--------------------------------------------------------------  RefreshNumGliders
