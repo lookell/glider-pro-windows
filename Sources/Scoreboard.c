@@ -183,42 +183,37 @@ void RefreshRoomTitle (SInt16 mode)
 
 void RefreshNumGliders (void)
 {
-	return;
-#if 0
-	RGBColor	theRGBColor, wasColor;
+	COLORREF	theRGBColor, wasColor;
 	Str255		nGlidersStr;
-	long		displayMortals;
+	SInt32		displayMortals;
 
-	SetPort((GrafPtr)boardGSrcMap);
+	//SetPort((GrafPtr)boardGSrcMap);
 
-	GetForeColor(&wasColor);
 	if (thisMac.isDepth == 4)
-		Index2Color(kGrayBackgroundColor4, &theRGBColor);
+		theRGBColor = Index2ColorRef(kGrayBackgroundColor4);
 	else
-		Index2Color(kGrayBackgroundColor, &theRGBColor);
-	RGBForeColor(&theRGBColor);
-	PaintRect(&boardGSrcRect);
-	RGBForeColor(&wasColor);
+		theRGBColor = Index2ColorRef(kGrayBackgroundColor);
+	wasColor = SetDCBrushColor(boardGSrcMap, theRGBColor);
+	Mac_PaintRect(boardGSrcMap, &boardGSrcRect, GetStockObject(DC_BRUSH));
+	SetDCBrushColor(boardGSrcMap, wasColor);
 
 	displayMortals = mortals;
 	if (displayMortals < 0)
 		displayMortals = 0;
-	NumToString(displayMortals, nGlidersStr);
+	Mac_NumToString(displayMortals, nGlidersStr);
 
-	MoveTo(1, 10);
-	ForeColor(blackColor);
-	DrawString(nGlidersStr);
+	MoveToEx(boardGSrcMap, 1, 10, NULL);
+	wasColor = SetTextColor(boardGSrcMap, blackColor);
+	Mac_DrawString(boardGSrcMap, nGlidersStr);
 
-	MoveTo(0, 9);
-	ForeColor(whiteColor);
-	DrawString(nGlidersStr);
+	MoveToEx(boardGSrcMap, 0, 9, NULL);
+	SetTextColor(boardGSrcMap, whiteColor);
+	Mac_DrawString(boardGSrcMap, nGlidersStr);
 
-	ForeColor(blackColor);
+	SetTextColor(boardGSrcMap, wasColor);
 
-	CopyBits((BitMap *)*GetGWorldPixMap(boardGSrcMap),
-			(BitMap *)*GetGWorldPixMap(boardSrcMap),
+	Mac_CopyBits(boardGSrcMap, boardSrcMap,
 			&boardGSrcRect, &boardGDestRect, srcCopy, nil);
-#endif
 }
 
 //--------------------------------------------------------------  RefreshPoints
