@@ -2369,16 +2369,8 @@ void GetThisRoomsObjRects (void)
 #ifndef COMPILEDEMO
 void DrawThisRoomsObjects (void)
 {
-	return;
-#if 0
 	Rect		tempRect;
-	short		i;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
-	Pattern		dummyPattern;
-
-	GetGWorld(&wasCPort, &wasWorld);
-	SetGWorld(backSrcMap, nil);
+	SInt16		i;
 
 	if ((noRoomAtAll) || (!houseUnlocked))
 		return;
@@ -2386,10 +2378,12 @@ void DrawThisRoomsObjects (void)
 	{
 		if (GetNumberOfLights(thisRoomNumber) <= 0)
 		{
-			PenMode(srcOr);
-			PenPat(GetQDGlobalsGray(&dummyPattern));
-			PaintRect(&backSrcRect);
-			PenNormal();
+			// was this meant to be patOr? as-is, it does nothing
+			// if this is restored, it draws onto backSrcMap
+			//PenMode(srcOr);
+			//PenPat(GetQDGlobalsGray(&dummyPattern));
+			//PaintRect(&backSrcRect);
+			//PenNormal();
 		}
 
 		for (i = 0; i < kMaxRoomObs; i++)
@@ -2728,30 +2722,20 @@ void DrawThisRoomsObjects (void)
 		}
 	}
 
-	SetGWorld(wasCPort, wasWorld);
-
 	if (isFirstRoom)
 	{
-		CopyMask((BitMap *)*GetGWorldPixMap(glidSrcMap),
-				(BitMap *)*GetGWorldPixMap(glidMaskMap),
-				(BitMap *)*GetGWorldPixMap(backSrcMap),
+		Mac_CopyMask(glidSrcMap, glidMaskMap, backSrcMap,
 				&gliderSrc[0], &gliderSrc[0], &initialGliderRect);
 	}
 
-	CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap),
-			(BitMap *)*GetGWorldPixMap(blowerMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(blowerSrcMap, blowerMaskMap, backSrcMap,
 			&leftStartGliderSrc, &leftStartGliderSrc, &leftStartGliderDest);
 
-	CopyMask((BitMap *)*GetGWorldPixMap(blowerSrcMap),
-			(BitMap *)*GetGWorldPixMap(blowerMaskMap),
-			(BitMap *)*GetGWorldPixMap(backSrcMap),
+	Mac_CopyMask(blowerSrcMap, blowerMaskMap, backSrcMap,
 			&rightStartGliderSrc, &rightStartGliderSrc, &rightStartGliderDest);
 
-	CopyBits((BitMap *)*GetGWorldPixMap(backSrcMap),
-			(BitMap *)*GetGWorldPixMap(workSrcMap),
+	Mac_CopyBits(backSrcMap, workSrcMap,
 			&backSrcRect, &backSrcRect, srcCopy, nil);
-#endif
 }
 #endif
 
