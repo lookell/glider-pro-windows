@@ -444,6 +444,9 @@ HDC GetMainWindowDC (void)
 	else
 		return NULL;
 
+	if (GetMenu(mainWindow) == NULL)
+		SetWindowOrgEx(hdc, 0, -kScoreboardTall, NULL);
+
 	return hdc;
 }
 
