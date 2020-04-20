@@ -189,6 +189,7 @@ void DissBits (Rect *theRect)
 {
 	UInt32		lfsrMask = 0x20013;		// 1 to 262143 (2^18 - 1)
 	HDC			mainWindowDC;
+	POINT		topLeft, botRight;
 	HRGN		theClipRgn;
 	INT			chunkH, chunkV;
 	INT			chunkSize = 4;
@@ -196,9 +197,14 @@ void DissBits (Rect *theRect)
 
 	mainWindowDC = GetMainWindowDC();
 	SaveDC(mainWindowDC);
-	theClipRgn = CreateRectRgn(theRect->left, theRect->top,
-		theRect->right, theRect->bottom);
-	SelectClipRgn(mainWindowDC, theClipRgn);
+	topLeft.x = theRect->left;
+	topLeft.y = theRect->top;
+	botRight.x = theRect->right;
+	botRight.y = theRect->bottom;
+	LPtoDP(mainWindowDC, &topLeft, 1);
+	LPtoDP(mainWindowDC, &botRight, 1);
+	theClipRgn = CreateRectRgn(topLeft.x, topLeft.y, botRight.x, botRight.y);
+	ExtSelectClipRgn(mainWindowDC, theClipRgn, RGN_AND);
 	DeleteObject(theClipRgn);
 	state = 1;
 	do
@@ -227,6 +233,7 @@ void DissBitsChunky(Rect* theRect)
 {
 	UInt32		lfsrMask = 0x8016;		// 1 to 65535 (2^16 - 1)
 	HDC			mainWindowDC;
+	POINT		topLeft, botRight;
 	HRGN		theClipRgn;
 	INT			chunkH, chunkV;
 	INT			chunkSize = 8;
@@ -234,9 +241,14 @@ void DissBitsChunky(Rect* theRect)
 
 	mainWindowDC = GetMainWindowDC();
 	SaveDC(mainWindowDC);
-	theClipRgn = CreateRectRgn(theRect->left, theRect->top,
-		theRect->right, theRect->bottom);
-	SelectClipRgn(mainWindowDC, theClipRgn);
+	topLeft.x = theRect->left;
+	topLeft.y = theRect->top;
+	botRight.x = theRect->right;
+	botRight.y = theRect->bottom;
+	LPtoDP(mainWindowDC, &topLeft, 1);
+	LPtoDP(mainWindowDC, &botRight, 1);
+	theClipRgn = CreateRectRgn(topLeft.x, topLeft.y, botRight.x, botRight.y);
+	ExtSelectClipRgn(mainWindowDC, theClipRgn, RGN_AND);
 	DeleteObject(theClipRgn);
 	state = 1;
 	do
