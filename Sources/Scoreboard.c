@@ -170,9 +170,11 @@ void RefreshRoomTitle (SInt16 mode)
 	MoveToEx(boardTSrcMap, 1, 10, NULL);
 	wasColor = SetTextColor(boardTSrcMap, blackColor);
 	Mac_DrawString(boardTSrcMap, titleString);
+
 	MoveToEx(boardTSrcMap, 0, 9, NULL);
 	SetTextColor(boardTSrcMap, whiteColor);
 	Mac_DrawString(boardTSrcMap, titleString);
+
 	SetTextColor(boardTSrcMap, wasColor);
 
 	Mac_CopyBits(boardTSrcMap, boardSrcMap,
@@ -220,40 +222,35 @@ void RefreshNumGliders (void)
 
 void RefreshPoints (void)
 {
-	return;
-#if 0
-	RGBColor	theRGBColor, wasColor;
+	COLORREF	theRGBColor, wasColor;
 	Str255		scoreStr;
 
-	SetPort((GrafPtr)boardPSrcMap);
+	//SetPort((GrafPtr)boardPSrcMap);
 
-	GetForeColor(&wasColor);
 	if (thisMac.isDepth == 4)
-		Index2Color(kGrayBackgroundColor4, &theRGBColor);
+		theRGBColor = Index2ColorRef(kGrayBackgroundColor4);
 	else
-		Index2Color(kGrayBackgroundColor, &theRGBColor);
-	RGBForeColor(&theRGBColor);
-	PaintRect(&boardPSrcRect);
-	RGBForeColor(&wasColor);
+		theRGBColor = Index2ColorRef(kGrayBackgroundColor);
+	wasColor = SetDCBrushColor(boardPSrcMap, theRGBColor);
+	Mac_PaintRect(boardPSrcMap, &boardPSrcRect, GetStockObject(DC_BRUSH));
+	SetDCBrushColor(boardPSrcMap, wasColor);
 
-	NumToString(theScore, scoreStr);
+	Mac_NumToString(theScore, scoreStr);
 
-	MoveTo(1, 10);
-	ForeColor(blackColor);
-	DrawString(scoreStr);
+	MoveToEx(boardPSrcMap, 1, 10, NULL);
+	wasColor = SetTextColor(boardPSrcMap, blackColor);
+	Mac_DrawString(boardPSrcMap, scoreStr);
 
-	MoveTo(0, 9);
-	ForeColor(whiteColor);
-	DrawString(scoreStr);
+	MoveToEx(boardPSrcMap, 0, 9, NULL);
+	SetTextColor(boardPSrcMap, whiteColor);
+	Mac_DrawString(boardPSrcMap, scoreStr);
 
-	ForeColor(blackColor);
+	SetTextColor(boardPSrcMap, wasColor);
 
-	CopyBits((BitMap *)*GetGWorldPixMap(boardPSrcMap),
-			(BitMap *)*GetGWorldPixMap(boardSrcMap),
+	Mac_CopyBits(boardPSrcMap, boardSrcMap,
 			&boardPSrcRect, &boardPDestRect, srcCopy, nil);
 
 	displayedScore = theScore;
-#endif
 }
 
 //--------------------------------------------------------------  QuickGlidersRefresh
