@@ -855,51 +855,7 @@ SInt16 ChooseOriginalArt (SInt16 was)
 
 Boolean PictIDExists (SInt16 theID)
 {
-	return false;
-#if 0
-	PicHandle	thePicture;
-//	Handle		resHandle;
-//	Str255		resName;
-//	ResType		resType;
-//	short		numPicts, i;
-//	short		resID;
-	Boolean		foundIt;
-
-	foundIt = true;
-
-	thePicture = GetPicture(theID);
-	if (thePicture == nil)
-	{
-		thePicture = (PicHandle)GetResource('Date', theID);
-		if (thePicture == nil)
-		{
-			foundIt = false;
-		}
-		else
-			ReleaseResource((Handle)thePicture);
-	}
-	else
-		ReleaseResource((Handle)thePicture);
-
-//	foundIt = false;
-//	numPicts = Count1Resources('PICT');
-//	for (i = 1; i <= numPicts; i++)
-//	{
-//		resHandle = Get1IndResource('PICT', i);
-//		if (resHandle != nil)
-//		{
-//			GetResInfo(resHandle, &resID, &resType, resName);
-//			ReleaseResource(resHandle);
-//			if (resID == theID)
-//			{
-//				foundIt = true;
-//				break;
-//			}
-//		}
-//	}
-
-	return (foundIt);
-#endif
+	return (FindResource(houseResFork, MAKEINTRESOURCE(theID), RT_BITMAP) != NULL);
 }
 
 //--------------------------------------------------------------  GetFirstPICT
