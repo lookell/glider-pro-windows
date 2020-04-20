@@ -53,22 +53,22 @@ extern	Boolean		evenFrame, onePlayerLeft;
 
 void RefreshScoreboard (SInt16 mode)
 {
-	return;
-#if 0
+	HDC			mainWindowDC;
+
 	doRollScore = true;
 
 	RefreshRoomTitle(mode);
 	RefreshNumGliders();
 	RefreshPoints();
 
-	CopyBits((BitMap *)*GetGWorldPixMap(boardSrcMap),
-			GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
+	mainWindowDC = GetMainWindowDC();
+	Mac_CopyBits(boardSrcMap, mainWindowDC,
 			&boardSrcRect, &boardDestRect, srcCopy, 0L);
+	ReleaseMainWindowDC(mainWindowDC);
 
 	QuickBatteryRefresh(false);
 	QuickBandsRefresh(false);
 	QuickFoilRefresh(false);
-#endif
 }
 
 //--------------------------------------------------------------  HandleDynamicScoreboard
