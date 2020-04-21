@@ -211,6 +211,7 @@ SInt16 AddGrease (SInt16 where, SInt16 who, SInt16 h, SInt16 v,
 		grease[numGrease].mapNum = savedNum;
 		grease[numGrease].mode = kGreaseIdle;
 		grease[numGrease].frame = -1;
+		grease[numGrease].hotNum = -1;
 		if (isRight)
 		{
 			grease[numGrease].isRight = true;
@@ -258,6 +259,8 @@ void RedrawAllGrease (void)
 
 	for (i = 0; i < numGrease; i++)
 	{
+		if (grease[i].hotNum < 0 || grease[i].hotNum >= kMaxHotSpots)
+			continue;
 		src = hotSpots[grease[i].hotNum].bounds;
 		if ((grease[i].where == thisRoomNumber) &&
 				((src.bottom - src.top) == 2) &&
