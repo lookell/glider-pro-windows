@@ -5,6 +5,7 @@
 //============================================================================
 
 
+#define _CRT_SECURE_NO_WARNINGS
 //#include <ToolUtils.h>
 #include "Macintosh.h"
 #include "Externs.h"
@@ -80,46 +81,60 @@ void DoGameOver (void)
 
 void SetUpFinalScreen (void)
 {
-	return;
-#if 0
 	Rect		tempRect;
 	Str255		tempStr, subStr;
-	short		count, offset, i, textDown;
-	char		wasState;
+	WCHAR		outStr[256];
+	SInt16		count, hOffset, vOffset, i, textDown;
+	LOGFONT		lfGameOver;
+	HFONT		gameOverFont;
 
-	SetPort((GrafPtr)workSrcMap);
-	ColorRect(&workSrcRect, 244);
+	lfGameOver.lfHeight = -12;
+	lfGameOver.lfWidth = 0;
+	lfGameOver.lfEscapement = 0;
+	lfGameOver.lfOrientation = 0;
+	lfGameOver.lfWeight = FW_BOLD;
+	lfGameOver.lfItalic = FALSE;
+	lfGameOver.lfUnderline = FALSE;
+	lfGameOver.lfStrikeOut = FALSE;
+	lfGameOver.lfCharSet = DEFAULT_CHARSET;
+	lfGameOver.lfOutPrecision = OUT_DEFAULT_PRECIS;
+	lfGameOver.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+	lfGameOver.lfQuality = DEFAULT_QUALITY;
+	lfGameOver.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
+	wcscpy(lfGameOver.lfFaceName, L"Tahoma");
+
+	//SetPort((GrafPtr)workSrcMap);
+	ColorRect(workSrcMap, &workSrcRect, 244);
 	QSetRect(&tempRect, 0, 0, 640, 460);
 	CenterRectInRect(&tempRect, &workSrcRect);
-	LoadScaledGraphic(kMilkywayPictID, &tempRect);
+	LoadScaledGraphic(workSrcMap, kMilkywayPictID, &tempRect);
 	textDown = tempRect.top;
 	if (textDown < 0)
 		textDown = 0;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	PasStringCopy((*thisHouse)->trailer, tempStr);
-	HSetState((Handle)thisHouse, wasState);
+	PasStringCopy(thisHouse->trailer, tempStr);
 
+	SaveDC(workSrcMap);
+	gameOverFont = CreateFontIndirect(&lfGameOver);
+	SelectObject(workSrcMap, gameOverFont);
+	SetBkMode(workSrcMap, TRANSPARENT);
+	SetTextAlign(workSrcMap, TA_BASELINE | TA_CENTER);
 	count = 0;
 	do
 	{
 		GetLineOfText(tempStr, count, subStr);
-		offset = ((thisMac.screen.right - thisMac.screen.left) -
-				TextWidth(subStr, 1, subStr[0])) / 2;
-		TextFont(applFont);
-		TextFace(bold);
-		TextSize(12);
-		ForeColor(blackColor);
-		MoveTo(offset + 1, textDown + 33 + (count * 20));
-		DrawString(subStr);
-		ForeColor(whiteColor);
-		MoveTo(offset, textDown + 32 + (count * 20));
-		DrawString(subStr);
-		ForeColor(blackColor);
+		WinFromMacString(outStr, ARRAYSIZE(outStr), subStr);
+		hOffset = HalfRectWide(&thisMac.screen);
+		vOffset = textDown + 32 + (count * 20);
+		SetTextColor(workSrcMap, blackColor);
+		TextOut(workSrcMap, hOffset + 1, vOffset + 1, outStr, subStr[0]);
+		SetTextColor(workSrcMap, whiteColor);
+		TextOut(workSrcMap, hOffset, vOffset, outStr, subStr[0]);
 		count++;
 	}
 	while (subStr[0] > 0);
+	RestoreDC(workSrcMap, -1);
+	DeleteObject(gameOverFont);
 
 	CopyRectWorkToBack(&workSrcRect);
 
@@ -133,7 +148,6 @@ void SetUpFinalScreen (void)
 		pages[i].was = pages[i].dest;
 		pages[i].frame = RandomInt(6);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoGameOverStarAnimation
