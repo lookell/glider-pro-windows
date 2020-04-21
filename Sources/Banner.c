@@ -204,37 +204,57 @@ void BringUpBanner (void)
 
 void DisplayStarsRemaining (void)
 {
-	return;
-#if 0
 	Rect		src, bounds;
-	Str255		theStr;
+	WCHAR		theStr[256];
+	HDC			mainWindowDC;
+	LOGFONT		lfText;
+	HFONT		textFont;
 
-	SetPortWindowPort(mainWindow);
+	//SetPortWindowPort(mainWindow);
 	QSetRect(&bounds, 0, 0, 256, 64);
 	CenterRectInRect(&bounds, &thisMac.screen);
 	QOffsetRect(&bounds, -thisMac.screen.left, -thisMac.screen.top);
 	src = bounds;
-	InsetRect(&src, 64, 32);
+	Mac_InsetRect(&src, 64, 32);
 
-	TextFont(applFont);
-	TextFace(bold);
-	TextSize(12);
-	NumToString((long)numStarsRemaining, theStr);
+	lfText.lfHeight = -12;
+	lfText.lfWidth = 0;
+	lfText.lfEscapement = 0;
+	lfText.lfOrientation = 0;
+	lfText.lfWeight = FW_BOLD;
+	lfText.lfItalic = FALSE;
+	lfText.lfUnderline = FALSE;
+	lfText.lfStrikeOut = FALSE;
+	lfText.lfCharSet = DEFAULT_CHARSET;
+	lfText.lfOutPrecision = OUT_DEFAULT_PRECIS;
+	lfText.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+	lfText.lfQuality = DEFAULT_QUALITY;
+	lfText.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
+	wcscpy(lfText.lfFaceName, L"Tahoma");
+	StringCchPrintf(theStr, ARRAYSIZE(theStr), L"%d", (int)numStarsRemaining);
 
+	mainWindowDC = GetMainWindowDC();
 	QOffsetRect(&bounds, 0, -20);
 	if (numStarsRemaining < 2)
-		LoadScaledGraphic(kStarRemainingPICT, &bounds);
+		LoadScaledGraphic(mainWindowDC, kStarRemainingPICT, &bounds);
 	else
 	{
-		LoadScaledGraphic(kStarsRemainingPICT, &bounds);
-		MoveTo(bounds.left + 102 - (StringWidth(theStr) / 2), bounds.top + 23);
-		ColorText(theStr, 4L);
+		SaveDC(mainWindowDC);
+		LoadScaledGraphic(mainWindowDC, kStarsRemainingPICT, &bounds);
+		textFont = CreateFontIndirect(&lfText);
+		SelectObject(mainWindowDC, textFont);
+		SetTextAlign(mainWindowDC, TA_BASELINE | TA_CENTER);
+		SetTextColor(mainWindowDC, Index2ColorRef(4L));
+		SetBkMode(mainWindowDC, TRANSPARENT);
+		TextOut(mainWindowDC, bounds.left + 102, bounds.top + 23, theStr, wcslen(theStr));
+		RestoreDC(mainWindowDC, -1);
+		DeleteObject(textFont);
 	}
+	ReleaseMainWindowDC(mainWindowDC);
 
 	DelayTicks(60);
 	if (WaitForInputEvent(30))
 		RestoreEntireGameScreen();
 	CopyRectWorkToMain(&bounds);
-#endif
 }
 
