@@ -35,6 +35,7 @@ extern	HWND		mapWindow, toolsWindow, linkWindow;
 extern	HWND		menuWindow;
 extern	SInt16		isEditH, isEditV, isMapH, isMapV, isToolsH, isToolsV;
 extern	SInt16		isLinkH, isLinkV, isCoordH, isCoordV;
+extern	SInt16		demoHouseIndex;
 extern	Boolean		quitting, isMusicOn, failedMusic;
 extern	Boolean		autoRoomEdit, newRoomNow, isPlayMusicIdle;
 
@@ -559,7 +560,7 @@ void HandleEvent (void)
 	else
 		HandleIdleTask();
 
-	if ((theMode == kSplashMode) && doAutoDemo && !switchedOut)
+	if ((theMode == kSplashMode) && doAutoDemo && !switchedOut && (demoHouseIndex >= 0))
 	{
 		startMillis = TicksToMillis((UInt32)incrementModeTime - kIdleSplashTicks);
 		stopMillis = GetTickCount();
