@@ -157,23 +157,19 @@ void SetUpFinalScreen (void)
 
 void DoGameOverStarAnimation (void)
 {
-	return;
-#if 0
 	#define		kStarFalls	8
-	EventRecord	theEvent;
-	KeyMap		theKeys;
+	MSG			msg;
 	Rect		angelDest;
-	long		nextLoop;
-	short		which, i, count, pass;
+	SInt32		nextLoop;
+	SInt16		which, i, count, pass;
 	Boolean		noInteruption;
 
 	angelDest = angelSrcRect;
 	QOffsetRect(&angelDest, -96, 0);
 	noInteruption = true;
-	nextLoop = TickCount() + 2;
+	nextLoop = MillisToTicks(GetTickCount()) + 2;
 	count = 0;
 	pass = 0;
-	FlushEvents(everyEvent, 0);
 
 	while (noInteruption)
 	{
@@ -194,9 +190,7 @@ void DoGameOverStarAnimation (void)
 			if (pages[i].frame >= 6)
 				pages[i].frame = 0;
 
-			CopyMask((BitMap *)*GetGWorldPixMap(bonusSrcMap),
-					(BitMap *)*GetGWorldPixMap(bonusMaskMap),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
+			Mac_CopyMask(bonusSrcMap, bonusMaskMap, workSrcMap,
 					&starSrc[pages[i].frame],
 					&starSrc[pages[i].frame],
 					&pages[i].dest);
@@ -213,9 +207,7 @@ void DoGameOverStarAnimation (void)
 
 		if (angelDest.left <= (workSrcRect.right + 2))
 		{
-			CopyMask((BitMap *)*GetGWorldPixMap(angelSrcMap),
-					(BitMap *)*GetGWorldPixMap(angelMaskMap),
-					(BitMap *)*GetGWorldPixMap(workSrcMap),
+			Mac_CopyMask(angelSrcMap, angelMaskMap, workSrcMap,
 					&angelSrcRect, &angelSrcRect, &angelDest);
 			angelDest.left -= 2;
 			AddRectToWorkRectsWhole(&angelDest);
@@ -232,16 +224,30 @@ void DoGameOverStarAnimation (void)
 
 		do
 		{
-			GetKeys(theKeys);
-			if ((BitTst(&theKeys, kCommandKeyMap)) || (BitTst(&theKeys, kOptionKeyMap)) ||
-					(BitTst(&theKeys, kShiftKeyMap)) || (BitTst(&theKeys, kControlKeyMap)))
-				noInteruption = false;
-			if (GetNextEvent(everyEvent, &theEvent))
-				if ((theEvent.what == mouseDown) || (theEvent.what == keyDown))
+			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+			{
+				if (msg.message == WM_QUIT)
+				{
+					PostQuitMessage(msg.wParam);
 					noInteruption = false;
+					break;
+				}
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+				switch (msg.message)
+				{
+				case WM_KEYDOWN:
+				case WM_LBUTTONDOWN:
+				case WM_MBUTTONDOWN:
+				case WM_RBUTTONDOWN:
+				case WM_XBUTTONDOWN:
+					noInteruption = false;
+					break;
+				}
+			}
 		}
-		while (TickCount() < nextLoop);
-		nextLoop = TickCount() + 2;
+		while ((SInt32)MillisToTicks(GetTickCount()) < nextLoop);
+		nextLoop = MillisToTicks(GetTickCount()) + 2;
 
 		if (pass < 80)
 			pass++;
@@ -251,7 +257,6 @@ void DoGameOverStarAnimation (void)
 			noInteruption = false;
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  FlagGameOver
