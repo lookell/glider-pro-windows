@@ -4,8 +4,10 @@ use crate::mac_roman;
 use crate::utils::ReadExt;
 use std::fmt::{self, Debug, Display, Formatter};
 use std::io::{self, Cursor, Read, Seek, SeekFrom};
+use std::slice;
+use std::vec;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Eq, PartialEq)]
 pub struct ResType {
     pub chars: [char; 4],
 }
@@ -23,17 +25,21 @@ impl Debug for ResType {
 }
 
 impl ResType {
-    pub fn read_from(mut reader: impl Read) -> io::Result<Self> {
-        let mut bytes = [0; 4];
-        reader.read_exact(&mut bytes)?;
-        Ok(Self {
+    pub fn new(bytes: &[u8; 4]) -> Self {
+        Self {
             chars: [
                 mac_roman::decode(bytes[0]),
                 mac_roman::decode(bytes[1]),
                 mac_roman::decode(bytes[2]),
                 mac_roman::decode(bytes[3]),
             ],
-        })
+        }
+    }
+
+    pub fn read_from(mut reader: impl Read) -> io::Result<Self> {
+        let mut bytes = [0; 4];
+        reader.read_exact(&mut bytes)?;
+        Ok(Self::new(&bytes))
     }
 }
 
@@ -171,7 +177,50 @@ pub struct ResourceFork {
     pub resources: Vec<Resource>,
 }
 
+impl IntoIterator for ResourceFork {
+    type Item = Resource;
+    type IntoIter = vec::IntoIter<Resource>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.resources.into_iter()
+    }
+}
+
+impl<'a> IntoIterator for &'a ResourceFork {
+    type Item = &'a Resource;
+    type IntoIter = slice::Iter<'a, Resource>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.resources.iter()
+    }
+}
+
+impl<'a> IntoIterator for &'a mut ResourceFork {
+    type Item = &'a mut Resource;
+    type IntoIter = slice::IterMut<'a, Resource>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.resources.iter_mut()
+    }
+}
+
 impl ResourceFork {
+    pub fn iter(&self) -> impl Iterator<Item = &'_ Resource> {
+        self.resources.iter()
+    }
+
+    pub fn iter_type(&self, restype: ResType) -> impl Iterator<Item = &'_ Resource> {
+        self.iter().filter(move |res| res.restype == restype)
+    }
+
+    pub fn iter_mut(&mut self) -> impl Iterator<Item = &'_ mut Resource> {
+        self.resources.iter_mut()
+    }
+
+    pub fn iter_type_mut(&mut self, restype: ResType) -> impl Iterator<Item = &'_ mut Resource> {
+        self.iter_mut().filter(move |res| res.restype == restype)
+    }
+
     pub fn read_from(mut reader: impl Read + Seek) -> io::Result<Self> {
         let seek_base = reader.seek(SeekFrom::Current(0))?;
         let header = ForkHeader::read_from(&mut reader)?;

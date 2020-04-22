@@ -11,7 +11,7 @@ mod utils;
 use crate::apple_double::AppleDouble;
 use crate::bitmap::Bitmap;
 use crate::macbinary::MacBinary;
-use crate::rsrcfork::{Resource, ResourceFork};
+use crate::rsrcfork::{ResType, Resource, ResourceFork};
 use std::env;
 use std::error::Error;
 use std::fs::File;
@@ -84,7 +84,7 @@ fn escape_dquote(unescaped: &str) -> String {
 }
 
 fn derez_resfork(resfork: &ResourceFork, mut writer: impl Write) -> AnyResult<()> {
-    for res in resfork.resources.iter() {
+    for res in resfork.iter() {
         let restype_str = escape_squote(&res.restype.to_string());
         write!(&mut writer, "data '{}' ({}", restype_str, res.id)?;
         if let Some(name) = &res.name {
@@ -120,7 +120,7 @@ fn make_zip_entry_path(res: &Resource) -> String {
 }
 
 fn write_names_txt(resfork: &ResourceFork, mut writer: impl Write) -> io::Result<()> {
-    for res in resfork.resources.iter() {
+    for res in resfork.iter() {
         if let Some(name) = &res.name {
             writeln!(&mut writer, "('{}', {}): {:?}", res.restype, res.id, name)?;
         }
@@ -132,12 +132,12 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
     let mut zip_writer = ZipWriter::new(writer);
     zip_writer.set_comment("");
 
-    if resfork.resources.iter().any(|res| res.name.is_some()) {
+    if resfork.iter().any(|res| res.name.is_some()) {
         zip_writer.start_file("names.txt", Default::default())?;
         write_names_txt(resfork, &mut zip_writer)?;
     }
 
-    for res in resfork.resources.iter() {
+    for res in resfork.iter() {
         let entry_name = make_zip_entry_path(&res);
         zip_writer.start_file(entry_name, Default::default())?;
         zip_writer.write_all(res.data.as_slice())?;
@@ -145,20 +145,70 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
     Ok(())
 }
 
-// TODO:
-//  General:
-//   'ictb': Item Color Table
-
 fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
     zip_writer.set_comment("");
 
-    if resfork.resources.iter().any(|res| res.name.is_some()) {
+    if resfork.iter().any(|res| res.name.is_some()) {
         zip_writer.start_file("names.txt", Default::default())?;
         write_names_txt(resfork, &mut zip_writer)?;
     }
 
-    for res in resfork.resources.iter() {
+    let mut rc_script = String::new();
+    rc_script += "#pragma code_page(65001)\n";
+    rc_script += "#include <windows.h>\n";
+    rc_script += "LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US\n";
+    for res in resfork.iter_type(ResType::new(b"bnds")) {
+        rc_script += &format!("{0} BOUNDS \"build\\\\bnds_{0}.bin\"\n", res.id);
+    }
+    for res in resfork.iter_type(ResType::new(b"PICT")) {
+        rc_script += &format!("{0} BITMAP \"build\\\\pict_{0}.bmp\"\n", res.id);
+    }
+    for res in resfork.iter_type(ResType::new(b"snd ")) {
+        rc_script += &format!("{0} WAVE \"build\\\\snd_{0}.wav\"\n", res.id);
+    }
+    zip_writer.start_file("resource.rc", Default::default())?;
+    zip_writer.write_all(rc_script.as_bytes())?;
+
+    let mut do_rle_script = String::new();
+    do_rle_script += "magick convert %1 \"bmp3:%~2\"\n";
+    do_rle_script += "if %~z1 leq %~z2 copy %1 %2 >nul\n";
+    zip_writer.start_file("do_rle.cmd", Default::default())?;
+    zip_writer.write_all(do_rle_script.as_bytes())?;
+
+    let mut build_script = String::new();
+    build_script += "@echo off\n";
+    build_script += "rem This build script uses ImageMagick and FFmpeg for conversion\n";
+    build_script += "if not exist \"%~dp0build\" mkdir \"%~dp0build\"\n";
+    for res in resfork.iter_type(ResType::new(b"bnds")) {
+        build_script += &format!(
+            "copy \"%~dp0(bnds)\\{0}.bin\" \"%~dp0build\\bnds_{0}.bin\" >nul\n",
+            res.id
+        );
+    }
+    build_script += "echo Processing bitmap images...\n";
+    for res in resfork.iter_type(ResType::new(b"PICT")) {
+        build_script += &format!(
+            "call \"%~dp0do_rle.cmd\" \"%~dp0Picture\\{0}.bmp\" \"%~dp0build\\pict_{0}.bmp\"\n",
+            res.id
+        );
+    }
+    build_script += "echo Processing audio files...\n";
+    for res in resfork.iter_type(ResType::new(b"snd ")) {
+        build_script += &format!(
+            "ffmpeg -v quiet -y -i \"%~dp0Sound\\{0}.aif\" -acodec pcm_u8 \"%~dp0build\\snd_{0}.wav\"\n",
+            res.id
+        );
+    }
+    build_script += "echo Compiling resource script...\n";
+    build_script += "rc /nologo /fo \"%~dp0resource.res\" \"%~dp0resource.rc\"\n";
+    build_script += "echo Linking resource DLL...\n";
+    build_script +=
+        "link /nologo /dll /noentry /machine:x86 \"/out:%~dp0house.glr\" \"%~dp0resource.res\"\n";
+    zip_writer.start_file("build.cmd", Default::default())?;
+    zip_writer.write_all(build_script.as_bytes())?;
+
+    for res in resfork.iter() {
         match res.restype.to_string().as_str() {
             "acur" => {
                 let entry_name = res::animated_cursor::get_entry_name(&res);
