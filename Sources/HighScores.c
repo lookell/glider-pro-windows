@@ -58,34 +58,31 @@ extern	Boolean		quickerTransitions, resumedSavedGame;
 
 void DoHighScores (void)
 {
-	return;
-#if 0
 	Rect		tempRect;
 
 	SpinCursor(3);
-	SetPort((GrafPtr)workSrcMap);
-	PaintRect(&workSrcRect);
+	//SetPort((GrafPtr)workSrcMap);
+	Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
 	QSetRect(&tempRect, 0, 0, 640, 480);
 	QOffsetRect(&tempRect, splashOriginH, splashOriginV);
-	LoadScaledGraphic(kStarPictID, &tempRect);
-//	if (quickerTransitions)
-//		DissBitsChunky(&workSrcRect);
-//	else
-//		DissBits(&workSrcRect);
+	LoadScaledGraphic(workSrcMap, kStarPictID, &tempRect);
+	if (quickerTransitions)
+		DissBitsChunky(&workSrcRect);
+	else
+		DissBits(&workSrcRect);
 	SpinCursor(3);
-	SetPort((GrafPtr)workSrcMap);
+	//SetPort((GrafPtr)workSrcMap);
 	DrawHighScores();
 	SpinCursor(3);
-//	if (quickerTransitions)
-//		DissBitsChunky(&workSrcRect);
-//	else
-//		DissBits(&workSrcRect);
-	InitCursor();
+	if (quickerTransitions)
+		DissBitsChunky(&workSrcRect);
+	else
+		DissBits(&workSrcRect);
+	//InitCursor();
 	DelayTicks(60);
 	WaitForInputEvent(30);
 
 	RedrawSplashScreen();
-#endif
 }
 
 //--------------------------------------------------------------  DrawHighScores
