@@ -11,6 +11,7 @@
 //#include <Script.h>
 //#include <Sound.h>
 //#include <StringCompare.h>
+#define _CRT_SECURE_NO_WARNINGS
 #include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
@@ -94,189 +95,203 @@ void DoHighScores (void)
 
 void DrawHighScores (void)
 {
-	return;
-#if 0
-	GWorldPtr	tempMap, tempMask;
-	CGrafPtr	wasCPort;
-	GDHandle	wasWorld;
+	HDC			tempMap, tempMask;
 	OSErr		theErr;
-	houseType	*thisHousePtr;
 	Rect		tempRect, tempRect2;
 	Str255		tempStr;
-	short		scoreLeft, bannerWidth, i, dropIt;
-	char		wasState;
+	SInt16		scoreLeft, bannerWidth, i, dropIt;
+	INT			hOffset, vOffset;
+	LOGFONT		theLogFont;
+	HFONT		theFont;
+	COLORREF	wasColor;
+
+	theLogFont.lfHeight = 0;
+	theLogFont.lfWidth = 0;
+	theLogFont.lfEscapement = 0;
+	theLogFont.lfOrientation = 0;
+	theLogFont.lfWeight = FW_NORMAL;
+	theLogFont.lfItalic = FALSE;
+	theLogFont.lfUnderline = FALSE;
+	theLogFont.lfStrikeOut = FALSE;
+	theLogFont.lfCharSet = DEFAULT_CHARSET;
+	theLogFont.lfOutPrecision = OUT_DEFAULT_PRECIS;
+	theLogFont.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+	theLogFont.lfQuality = DEFAULT_QUALITY;
+	theLogFont.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
+	wcscpy(theLogFont.lfFaceName, L"Tahoma");
 
 	scoreLeft = ((thisMac.screen.right - thisMac.screen.left) - kScoreWide) / 2;
 	dropIt = 129 + splashOriginV;
 
-	GetGWorld(&wasCPort, &wasWorld);
-
 	QSetRect(&tempRect, 0, 0, 332, 30);
 	theErr = CreateOffScreenGWorld(&tempMap, &tempRect, kPreferredDepth);
-	SetGWorld(tempMap, nil);
-	LoadGraphic(kHighScoresPictID);
+	LoadGraphic(tempMap, kHighScoresPictID);
 
 	theErr = CreateOffScreenGWorld(&tempMask, &tempRect, 1);
-	SetGWorld(tempMask, nil);
-	LoadGraphic(kHighScoresMaskID);
+	LoadGraphic(tempMask, kHighScoresMaskID);
 
 	tempRect2 = tempRect;
 	QOffsetRect(&tempRect2, scoreLeft + (kScoreWide - 332) / 2, dropIt - 60);
 
-	CopyMask((BitMap *)*GetGWorldPixMap(tempMap),
-			(BitMap *)*GetGWorldPixMap(tempMask),
-			(BitMap *)*GetGWorldPixMap(workSrcMap),
+	Mac_CopyMask(tempMap, tempMask, workSrcMap,
 			&tempRect, &tempRect, &tempRect2);
 
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
 
-	SetGWorld(wasCPort, wasWorld);
+	theLogFont.lfHeight = -14;
+	theLogFont.lfWeight = FW_BOLD;
+	theFont = CreateFontIndirect(&theLogFont);
 
-	TextFont(applFont);
-	TextFace(bold);
-	TextSize(14);
-
-	PasStringCopy("\p• ", tempStr);
+	SaveDC(workSrcMap);
+	SelectObject(workSrcMap, theFont);
+	PasStringCopyC("\xA5 ", tempStr); // "• "
 	PasStringConcat(tempStr, thisHouseName);
-	PasStringConcat(tempStr, "\p •");
-	MoveTo(scoreLeft + ((kScoreWide - StringWidth(tempStr)) / 2) - 1, dropIt - 66);
-	ForeColor(blackColor);
-	DrawString(tempStr);
-	MoveTo(scoreLeft + ((kScoreWide - StringWidth(tempStr)) / 2), dropIt - 65);
-	ForeColor(cyanColor);
-	DrawString(tempStr);
-	ForeColor(blackColor);
+	PasStringConcatC(tempStr, " \xA5"); // " •"
+	hOffset = scoreLeft + ((kScoreWide - Mac_StringWidth(workSrcMap, tempStr)) / 2);
+	vOffset = dropIt - 65;
+	MoveToEx(workSrcMap, hOffset - 1, vOffset - 1, NULL);
+	SetTextColor(workSrcMap, blackColor);
+	Mac_DrawString(workSrcMap, tempStr);
+	MoveToEx(workSrcMap, hOffset, vOffset, NULL);
+	SetTextColor(workSrcMap, cyanColor);
+	Mac_DrawString(workSrcMap, tempStr);
+	RestoreDC(workSrcMap, -1);
+	DeleteObject(theFont);
 
-	TextFont(applFont);
-	TextFace(bold);
-	TextSize(12);
-
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
+	theLogFont.lfHeight = -12;
+	theLogFont.lfWeight = FW_BOLD;
+	theFont = CreateFontIndirect(&theLogFont);
+	SaveDC(workSrcMap);
+	SelectObject(workSrcMap, theFont);
 													// message for score #1
-	PasStringCopy(thisHousePtr->highScores.banner, tempStr);
-	bannerWidth = StringWidth(tempStr);
-	ForeColor(blackColor);
-	MoveTo(scoreLeft + (kScoreWide - bannerWidth) / 2, dropIt - kKimsLifted);
-	DrawString(tempStr);
-	ForeColor(yellowColor);
-	MoveTo(scoreLeft + (kScoreWide - bannerWidth) / 2, dropIt - kKimsLifted - 1);
-	DrawString(tempStr);
+	PasStringCopy(thisHouse->highScores.banner, tempStr);
+	bannerWidth = Mac_StringWidth(workSrcMap, tempStr);
+	hOffset = scoreLeft + (kScoreWide - bannerWidth) / 2;
+	vOffset = dropIt - kKimsLifted;
+	SetTextColor(workSrcMap, blackColor);
+	MoveToEx(workSrcMap, hOffset, vOffset, NULL);
+	Mac_DrawString(workSrcMap, tempStr);
+	SetTextColor(workSrcMap, yellowColor);
+	MoveToEx(workSrcMap, hOffset, vOffset - 1, NULL);
+	Mac_DrawString(workSrcMap, tempStr);
 
 	QSetRect(&tempRect, 0, 0, bannerWidth + 8, kScoreSpacing);
 	QOffsetRect(&tempRect, scoreLeft - 3 + (kScoreWide - bannerWidth) / 2,
 			dropIt + 5 - kScoreSpacing - kKimsLifted);
-	ForeColor(blackColor);
-	FrameRect(&tempRect);
+	wasColor = SetDCBrushColor(workSrcMap, blackColor);
+	Mac_FrameRect(workSrcMap, &tempRect, GetStockObject(DC_BRUSH), 1, 1);
 	QOffsetRect(&tempRect, -1, -1);
-	ForeColor(yellowColor);
-	FrameRect(&tempRect);
+	SetDCBrushColor(workSrcMap, yellowColor);
+	Mac_FrameRect(workSrcMap, &tempRect, GetStockObject(DC_BRUSH), 1, 1);
+	SetDCBrushColor(workSrcMap, wasColor);
 
 	for (i = 0; i < kMaxScores; i++)
 	{
-		if (thisHousePtr->highScores.scores[i] > 0L)
+		if (thisHouse->highScores.scores[i] > 0L)
 		{
 			SpinCursor(1);
-			NumToString((long)i + 1L, tempStr);		// draw placing number
-			ForeColor(blackColor);
+			Mac_NumToString(i + 1L, tempStr);		// draw placing number
+			SetTextColor(workSrcMap, blackColor);
 			if (i == 0)
-				MoveTo(scoreLeft + 1, dropIt - kScoreSpacing - kKimsLifted);
+				MoveToEx(workSrcMap, scoreLeft + 1, dropIt - kScoreSpacing - kKimsLifted, NULL);
 			else
-				MoveTo(scoreLeft + 1, dropIt + (i * kScoreSpacing));
-			DrawString(tempStr);
+				MoveToEx(workSrcMap, scoreLeft + 1, dropIt + (i * kScoreSpacing), NULL);
+			Mac_DrawString(workSrcMap, tempStr);
 			if (i == lastHighScore)
-				ForeColor(whiteColor);
+				SetTextColor(workSrcMap, whiteColor);
 			else
-				ForeColor(cyanColor);
+				SetTextColor(workSrcMap, cyanColor);
 			if (i == 0)
-				MoveTo(scoreLeft + 0, dropIt - 1 - kScoreSpacing - kKimsLifted);
+				MoveToEx(workSrcMap, scoreLeft + 0, dropIt - 1 - kScoreSpacing - kKimsLifted, NULL);
 			else
-				MoveTo(scoreLeft + 0, dropIt - 1 + (i * kScoreSpacing));
-			DrawString(tempStr);
+				MoveToEx(workSrcMap, scoreLeft + 0, dropIt - 1 + (i * kScoreSpacing), NULL);
+			Mac_DrawString(workSrcMap, tempStr);
 													// draw high score name
-			PasStringCopy(thisHousePtr->highScores.names[i], tempStr);
-			ForeColor(blackColor);
+			PasStringCopy(thisHouse->highScores.names[i], tempStr);
+			SetTextColor(workSrcMap, blackColor);
 			if (i == 0)
-				MoveTo(scoreLeft + 31, dropIt - kScoreSpacing - kKimsLifted);
+				MoveToEx(workSrcMap, scoreLeft + 31, dropIt - kScoreSpacing - kKimsLifted, NULL);
 			else
-				MoveTo(scoreLeft + 31, dropIt + (i * kScoreSpacing));
-			DrawString(tempStr);
+				MoveToEx(workSrcMap, scoreLeft + 31, dropIt + (i * kScoreSpacing), NULL);
+			Mac_DrawString(workSrcMap, tempStr);
 			if (i == lastHighScore)
-				ForeColor(whiteColor);
+				SetTextColor(workSrcMap, whiteColor);
 			else
-				ForeColor(yellowColor);
+				SetTextColor(workSrcMap, yellowColor);
 			if (i == 0)
-				MoveTo(scoreLeft + 30, dropIt - 1 - kScoreSpacing - kKimsLifted);
+				MoveToEx(workSrcMap, scoreLeft + 30, dropIt - 1 - kScoreSpacing - kKimsLifted, NULL);
 			else
-				MoveTo(scoreLeft + 30, dropIt - 1 + (i * kScoreSpacing));
-			DrawString(tempStr);
+				MoveToEx(workSrcMap, scoreLeft + 30, dropIt - 1 + (i * kScoreSpacing), NULL);
+			Mac_DrawString(workSrcMap, tempStr);
 													// draw level number
-			NumToString(thisHousePtr->highScores.levels[i], tempStr);
-			ForeColor(blackColor);
+			Mac_NumToString(thisHouse->highScores.levels[i], tempStr);
+			SetTextColor(workSrcMap, blackColor);
 			if (i == 0)
-				MoveTo(scoreLeft + 161, dropIt - kScoreSpacing - kKimsLifted);
+				MoveToEx(workSrcMap, scoreLeft + 161, dropIt - kScoreSpacing - kKimsLifted, NULL);
 			else
-				MoveTo(scoreLeft + 161, dropIt + (i * kScoreSpacing));
-			DrawString(tempStr);
+				MoveToEx(workSrcMap, scoreLeft + 161, dropIt + (i * kScoreSpacing), NULL);
+			Mac_DrawString(workSrcMap, tempStr);
 			if (i == lastHighScore)
-				ForeColor(whiteColor);
+				SetTextColor(workSrcMap, whiteColor);
 			else
-				ForeColor(yellowColor);
+				SetTextColor(workSrcMap, yellowColor);
 			if (i == 0)
-				MoveTo(scoreLeft + 160, dropIt - 1 - kScoreSpacing - kKimsLifted);
+				MoveToEx(workSrcMap, scoreLeft + 160, dropIt - 1 - kScoreSpacing - kKimsLifted, NULL);
 			else
-				MoveTo(scoreLeft + 160, dropIt - 1 + (i * kScoreSpacing));
-			DrawString(tempStr);
+				MoveToEx(workSrcMap, scoreLeft + 160, dropIt - 1 + (i * kScoreSpacing), NULL);
+			Mac_DrawString(workSrcMap, tempStr);
 													// draw word "rooms"
-			if (thisHousePtr->highScores.levels[i] == 1)
+			if (thisHouse->highScores.levels[i] == 1)
 				GetLocalizedString(6, tempStr);
 			else
 				GetLocalizedString(7, tempStr);
-			ForeColor(blackColor);
+			SetTextColor(workSrcMap, blackColor);
 			if (i == 0)
-				MoveTo(scoreLeft + 193, dropIt - kScoreSpacing - kKimsLifted);
+				MoveToEx(workSrcMap, scoreLeft + 193, dropIt - kScoreSpacing - kKimsLifted, NULL);
 			else
-				MoveTo(scoreLeft + 193, dropIt + (i * kScoreSpacing));
-			DrawString(tempStr);
-			ForeColor(cyanColor);
+				MoveToEx(workSrcMap, scoreLeft + 193, dropIt + (i * kScoreSpacing), NULL);
+			Mac_DrawString(workSrcMap, tempStr);
+			SetTextColor(workSrcMap, cyanColor);
 			if (i == 0)
-				MoveTo(scoreLeft + 192, dropIt - 1 - kScoreSpacing - kKimsLifted);
+				MoveToEx(workSrcMap, scoreLeft + 192, dropIt - 1 - kScoreSpacing - kKimsLifted, NULL);
 			else
-				MoveTo(scoreLeft + 192, dropIt - 1 + (i * kScoreSpacing));
-			DrawString(tempStr);
+				MoveToEx(workSrcMap, scoreLeft + 192, dropIt - 1 + (i * kScoreSpacing), NULL);
+			Mac_DrawString(workSrcMap, tempStr);
 													// draw high score points
-			NumToString(thisHousePtr->highScores.scores[i], tempStr);
-			ForeColor(blackColor);
+			Mac_NumToString(thisHouse->highScores.scores[i], tempStr);
+			SetTextColor(workSrcMap, blackColor);
 			if (i == 0)
-				MoveTo(scoreLeft + 291, dropIt - kScoreSpacing - kKimsLifted);
+				MoveToEx(workSrcMap, scoreLeft + 291, dropIt - kScoreSpacing - kKimsLifted, NULL);
 			else
-				MoveTo(scoreLeft + 291, dropIt + (i * kScoreSpacing));
-			DrawString(tempStr);
+				MoveToEx(workSrcMap, scoreLeft + 291, dropIt + (i * kScoreSpacing), NULL);
+			Mac_DrawString(workSrcMap, tempStr);
 			if (i == lastHighScore)
-				ForeColor(whiteColor);
+				SetTextColor(workSrcMap, whiteColor);
 			else
-				ForeColor(yellowColor);
+				SetTextColor(workSrcMap, yellowColor);
 			if (i == 0)
-				MoveTo(scoreLeft + 290, dropIt - 1 - kScoreSpacing - kKimsLifted);
+				MoveToEx(workSrcMap, scoreLeft + 290, dropIt - 1 - kScoreSpacing - kKimsLifted, NULL);
 			else
-				MoveTo(scoreLeft + 290, dropIt - 1 + (i * kScoreSpacing));
-			DrawString(tempStr);
+				MoveToEx(workSrcMap, scoreLeft + 290, dropIt - 1 + (i * kScoreSpacing), NULL);
+			Mac_DrawString(workSrcMap, tempStr);
 		}
 	}
 
-	ForeColor(blueColor);
-	TextFont(applFont);
-	TextFace(bold);
-	TextSize(9);
-	MoveTo(scoreLeft + 80, dropIt - 1 + (10 * kScoreSpacing));
-	GetLocalizedString(8, tempStr);
-	DrawString(tempStr);
+	RestoreDC(workSrcMap, -1);
+	DeleteObject(theFont);
 
-	ForeColor(blackColor);
-	HSetState((Handle)thisHouse, wasState);
-#endif
+	theLogFont.lfHeight = -9;
+	theLogFont.lfWeight = FW_BOLD;
+	theFont = CreateFontIndirect(&theLogFont);
+	SaveDC(workSrcMap);
+	SelectObject(workSrcMap, theFont);
+	SetTextColor(workSrcMap, blueColor);
+	MoveToEx(workSrcMap, scoreLeft + 80, dropIt - 1 + (10 * kScoreSpacing), NULL);
+	GetLocalizedString(8, tempStr);
+	Mac_DrawString(workSrcMap, tempStr);
+	RestoreDC(workSrcMap, -1);
+	DeleteObject(theFont);
 }
 
 //--------------------------------------------------------------  SortHighScores
