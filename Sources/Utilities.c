@@ -540,49 +540,61 @@ SInt32 LongSquareRoot (SInt32 theNumber)
 // Wait for either a key to be hit or the mouse button to be clicked.
 // Also has a "timeout" parameter ("seconds").
 
-Boolean WaitForInputEvent (SInt16 seconds)
+Boolean WaitForInputEvent (UInt16 seconds)
 {
-	return false;
-#if 0
-	EventRecord	theEvent;
-	KeyMap		theKeys;
-	long		timeToBail;
+	MSG			theEvent;
+	DWORD		startTime, elapsedTime, timeout;
+	DWORD		status;
 	Boolean		waiting, didResume;
 
-	timeToBail = TickCount() + 60L * (long)seconds;
-	FlushEvents(everyEvent, 0);
+	if (seconds < 0)
+		return false;
+
+	startTime = GetTickCount();
+	timeout = 1000 * seconds;
 	waiting = true;
 	didResume = false;
 
 	while (waiting)
 	{
-		GetKeys(theKeys);
-		if ((BitTst(&theKeys, kCommandKeyMap)) || (BitTst(&theKeys, kOptionKeyMap)) ||
-				(BitTst(&theKeys, kShiftKeyMap)) || (BitTst(&theKeys, kControlKeyMap)))
-			waiting = false;
-		if (GetNextEvent(everyEvent, &theEvent))
+		elapsedTime = GetTickCount() - startTime;
+		if (elapsedTime > timeout)
+			break;
+		status = MsgWaitForMultipleObjects(0, NULL, FALSE,
+				timeout - elapsedTime, QS_ALLINPUT);
+		if (status != WAIT_OBJECT_0)
+			break;
+		while (PeekMessage(&theEvent, NULL, 0, 0, PM_REMOVE))
 		{
-			if ((theEvent.what == mouseDown) || (theEvent.what == keyDown))
-				waiting = false;
-			else if ((theEvent.what == osEvt) && (theEvent.message & 0x01000000))
+			if (theEvent.message == WM_QUIT)
 			{
-				if (theEvent.message & 0x00000001)		// resuming
+				PostQuitMessage(theEvent.wParam);
+				waiting = false;
+				continue;
+			}
+			TranslateMessage(&theEvent);
+			DispatchMessage(&theEvent);
+			switch (theEvent.message)
+			{
+				case WM_KEYDOWN:
+				case WM_LBUTTONDOWN:
+				case WM_MBUTTONDOWN:
+				case WM_RBUTTONDOWN:
+				case WM_XBUTTONDOWN:
+				waiting = false;
+				break;
+
+				case WM_ACTIVATEAPP:
+				if (theEvent.wParam)
 				{
 					didResume = true;
 					waiting = false;
 				}
-				else									// suspending
-				{
-					InitCursor();
-				}
+				break;
 			}
 		}
-		if ((seconds != -1) && (TickCount() >= timeToBail))
-			waiting = false;
 	}
-	FlushEvents(everyEvent, 0);
 	return (didResume);
-#endif
 }
 
 //--------------------------------------------------------------  WaitCommandQReleased

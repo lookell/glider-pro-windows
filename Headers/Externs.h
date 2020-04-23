@@ -370,7 +370,7 @@ char KeyMapOffsetFromRawKey (char);
 SInt32 LongSquareRoot (SInt32);
 //void HideMenuBarOld (void);
 //void ShowMenuBarOld (void);
-Boolean WaitForInputEvent (SInt16);
+Boolean WaitForInputEvent (UInt16);
 void WaitCommandQReleased (void);
 char GetKeyMapFromMessage (SInt32);
 void GetKeyName (SInt32, StringPtr);
