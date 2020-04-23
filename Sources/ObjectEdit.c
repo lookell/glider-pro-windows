@@ -1203,11 +1203,9 @@ void Gp_DeleteObject (void)
 
 void DuplicateObject (void)
 {
-	return;
-#if 0
 	objectType	tempObject;
 	Point		placePt;
-	short		direction, dist;
+	SInt16		direction, dist;
 	Boolean		handled;
 
 	tempObject = thisRoom->objects[objActive];
@@ -1372,7 +1370,7 @@ void DuplicateObject (void)
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		GetThisRoomsObjRects();
 		DrawThisRoomsObjects();
-		InvalWindowRect(mainWindow, &mainWindowRect);
+		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 
 		if (handled)
 		{
@@ -1382,7 +1380,6 @@ void DuplicateObject (void)
 		else
 			StartMarquee(&roomObjectRects[objActive]);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  MoveObject
