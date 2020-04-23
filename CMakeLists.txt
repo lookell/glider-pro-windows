@@ -17,6 +17,11 @@ if(MSVC)
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /manifest:no")
 endif()
 
+# enable utf-8 support for source files
+if(MSVC)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
+endif()
+
 add_executable(gliderpro)
 target_include_directories(gliderpro PRIVATE Headers)
 target_link_libraries(gliderpro msimg32)
