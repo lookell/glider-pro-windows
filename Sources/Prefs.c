@@ -297,6 +297,7 @@ Boolean LoadPrefs (prefsInfo *thePrefs, SInt16 versionNeed)
 
 void BringUpDeletePrefsAlert (void)
 {
+	MessageBox(mainWindow, L"BringUpDeletePrefsAlert()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	short		whoCares;

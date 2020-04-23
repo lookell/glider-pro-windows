@@ -32,6 +32,7 @@ static Boolean			okayButtIsHiLit, clickedDownInOkay;
 
 void DoAbout (void)
 {
+	MessageBox(mainWindow, L"DoAbout()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	#define			kAboutDialogID			150		// res ID of About dialog

@@ -415,7 +415,7 @@ void GetInput (gliderPtr thisGlider)
 
 Boolean QuerySaveGame (void)
 {
-	return false;
+	return (MessageBox(mainWindow, L"QuerySaveGame()", NULL, MB_YESNO) == IDYES);
 #if 0
 	#define		kSaveGameAlert		1041
 	#define		kYesSaveGameButton	1

@@ -432,6 +432,7 @@ void SwitchToDepth (SInt16 newDepth, Boolean doColor)
 
 void SwitchDepthOrAbort (void)
 {
+	MessageBox(mainWindow, L"SwitchDepthOrAbort()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	short			usersDecision;

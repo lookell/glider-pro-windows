@@ -624,7 +624,8 @@ void CloseHouseResFork (void)
 #ifndef COMPILEDEMO
 Boolean QuerySaveChanges (void)
 {
-	return true;
+	MessageBox(mainWindow, L"QuerySaveChanges()", NULL, MB_ICONHAND);
+	return false;
 #if 0
 	short		hitWhat;
 	Boolean		whoCares;
@@ -671,6 +672,7 @@ Boolean QuerySaveChanges (void)
 
 void YellowAlert (SInt16 whichAlert, SInt16 identifier)
 {
+	MessageBox(mainWindow, L"YellowAlert()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	#define		kYellowAlert	1006

@@ -866,6 +866,7 @@ Boolean DoesRoomNumHaveObject (SInt16 room, SInt16 what)
 
 void ShoutNoMoreObjects (void)
 {
+	MessageBox(mainWindow, L"ShoutNoMoreObjects()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	short		hitWhat;
@@ -1066,6 +1067,7 @@ SInt16 HowManyDynamicObjects (void)
 
 void ShoutNoMoreSpecialObjects (void)
 {
+	MessageBox(mainWindow, L"ShoutNoMoreSpecialObjects()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	short		hitWhat;

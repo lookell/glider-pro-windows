@@ -155,6 +155,7 @@ void SaveGame2 (void)
 
 void SavedGameMismatchError (StringPtr gameName)
 {
+	MessageBox(mainWindow, L"SavedGameMismatchError()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	#define		kSavedGameErrorAlert	1044

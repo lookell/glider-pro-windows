@@ -490,6 +490,7 @@ Boolean NameFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void GetHighScoreName (SInt16 place)
 {
+	MessageBox(mainWindow, L"GetHighScoreName()", NULL, MB_ICONHAND);
 	PasStringCopyC("HighScoreName", highName);
 	return;
 #if 0
@@ -610,6 +611,7 @@ Boolean BannerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void GetHighScoreBanner (void)
 {
+	MessageBox(mainWindow, L"GetHighScoreBanner()", NULL, MB_ICONHAND);
 	PasStringCopyC("HighScoreBanner", highBanner);
 	return;
 #if 0

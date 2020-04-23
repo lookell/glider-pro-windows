@@ -747,7 +747,7 @@ void HandleMapClick (EventRecord *theEvent)
 #ifndef COMPILEDEMO
 Boolean QueryNewRoom (void)
 {
-	return true;
+	return (MessageBox(mainWindow, L"QueryNewRoom()", NULL, MB_YESNO) == IDYES);
 #if 0
 	short		hitWhat;
 

@@ -633,6 +633,7 @@ Boolean GoToFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void DoGoToDialog (void)
 {
+	MessageBox(mainWindow, L"DoGoToDialog()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	#define			kGoToFirstButt		2

@@ -236,6 +236,7 @@ Boolean BrainsFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void DoBrainsPrefs (void)
 {
+	MessageBox(mainWindow, L"DoBrainsPrefs()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		prefDlg;
@@ -526,6 +527,7 @@ Boolean ControlFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void DoControlPrefs (void)
 {
+	MessageBox(mainWindow, L"DoControlPrefs()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		prefDlg;
@@ -797,6 +799,7 @@ Boolean SoundFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void DoSoundPrefs (void)
 {
+	MessageBox(mainWindow, L"DoSoundPrefs", NULL, MB_ICONHAND);
 	return;
 #if 0
 	Rect			tempRect;
@@ -1160,6 +1163,7 @@ Boolean DisplayFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void DoDisplayPrefs (void)
 {
+	MessageBox(mainWindow, L"DoDisplayPrefs()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		prefDlg;
@@ -1464,6 +1468,7 @@ Boolean PrefsFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void DoSettingsMain (void)
 {
+	MessageBox(mainWindow, L"DoSettingsMain()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	#define			kAllDefaultsButton		11
@@ -1546,6 +1551,7 @@ void DoSettingsMain (void)
 
 void BitchAboutChanges (void)
 {
+	MessageBox(mainWindow, L"BitchAboutChanges()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	#define		kChangesEffectAlert	1040

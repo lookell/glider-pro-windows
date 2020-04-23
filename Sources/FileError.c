@@ -28,6 +28,7 @@
 
 Boolean CheckFileError (DWORD resultCode, StringPtr fileName)
 {
+	MessageBox(mainWindow, L"CheckFileError()", NULL, MB_ICONHAND);
 	return true;
 #if 0
 	short			dummyInt, stringIndex;

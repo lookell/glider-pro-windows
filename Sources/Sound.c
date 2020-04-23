@@ -565,6 +565,7 @@ SInt32 SoundBytesNeeded (void)
 
 void TellHerNoSounds (void)
 {
+	MessageBox(mainWindow, L"TellHerNoSounds()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	#define		kNoMemForSoundsAlert	1039
@@ -579,6 +580,7 @@ void TellHerNoSounds (void)
 
 void BitchAboutSM3 (void)
 {
+	MessageBox(mainWindow, L"BitchAboutSM3()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	#define		kNoSoundManager3Alert	1030

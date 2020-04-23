@@ -462,7 +462,7 @@ void DeleteRoom (Boolean doWarn)
 #ifndef COMPILEDEMO
 Boolean QueryDeleteRoom (void)
 {
-	return true;
+	return (MessageBox(mainWindow, L"QueryDeleteRoom()", NULL, MB_YESNO) == IDYES);
 #if 0
 	short		hitWhat;
 

@@ -891,6 +891,7 @@ SInt16 QueryResumeGame (void)
 #ifdef COMPILEDEMO
 void DoNotInDemo (void)
 {
+	MessageBox(mainWindow, L"DoNotInDemo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	#define		kNotInDemoAlert		1037
@@ -906,6 +907,7 @@ void DoNotInDemo (void)
 
 void HeyYourPissingAHighScore (void)
 {
+	MessageBox(mainWindow, L"HeyYourPissingAHighScore()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	#define		kNoHighScoreAlert	1046

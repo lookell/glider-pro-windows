@@ -435,6 +435,7 @@ SInt32 MusicBytesNeeded (void)
 
 void TellHerNoMusic (void)
 {
+	MessageBox(mainWindow, L"TellHerNoMusic", NULL, MB_ICONHAND);
 	return;
 #if 0
 	#define		kNoMemForMusicAlert	1038

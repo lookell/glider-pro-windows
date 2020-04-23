@@ -206,6 +206,7 @@ Boolean HouseFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void DoHouseInfo (void)
 {
+	MessageBox(mainWindow, L"DoHouseInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		houseInfoDialog;
@@ -310,7 +311,7 @@ void DoHouseInfo (void)
 
 Boolean WarnLockingHouse (void)
 {
-	return true;
+	return (MessageBox(mainWindow, L"WarnLockingHouse()", NULL, MB_OKCANCEL) == IDOK);
 #if 0
 	short		hitWhat;
 
@@ -325,6 +326,7 @@ Boolean WarnLockingHouse (void)
 
 void HowToZeroScores (void)
 {
+	MessageBox(mainWindow, L"HowToZeroScores()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	short		hitWhat;

@@ -389,6 +389,7 @@ Boolean RoomFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void DoRoomInfo (void)
 {
+	MessageBox(mainWindow, L"DoRoomInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 #ifndef COMPILEDEMO
@@ -733,6 +734,7 @@ Boolean OriginalArtFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 #ifndef COMPILEDEMO
 SInt16 ChooseOriginalArt (SInt16 was)
 {
+	MessageBox(mainWindow, L"ChooseOriginalArt", NULL, MB_ICONHAND);
 	return kUserBackground;
 #if 0
 	DialogPtr		theDialog;
@@ -886,6 +888,7 @@ SInt16 GetFirstPICT (void)
 #ifndef COMPILEDEMO
 void BitchAboutPICTNotFound (void)
 {
+	MessageBox(mainWindow, L"BitchAboutPICTNotFound", NULL, MB_ICONHAND);
 	return;
 #if 0
 	short		hitWhat;

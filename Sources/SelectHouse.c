@@ -368,6 +368,7 @@ Boolean LoadFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 #ifndef COMPILEDEMO
 void DoLoadHouse (void)
 {
+	MessageBox(mainWindow, L"DoLoadHouse()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	Rect			tempRect;
