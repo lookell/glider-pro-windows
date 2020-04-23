@@ -134,6 +134,7 @@ void Mac_NumToString(SInt32 theNum, StringPtr theString);
 void Mac_PaintRect(HDC hdc, const Rect *r, HBRUSH hbr);
 Boolean Mac_PtInRect(Point pt, const Rect *r);
 Boolean Mac_SectRect(const Rect *src1, const Rect *src2, Rect *dstRect);
+SInt16 Mac_StringWidth(HDC hdc, StringPtr s);
 
 int WinFromMacString(wchar_t *winbuf, int winlen, StringPtr macbuf);
 int MacFromWinString(StringPtr macbuf, int maclen, const wchar_t *winbuf);

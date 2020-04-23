@@ -419,6 +419,21 @@ Boolean Mac_SectRect(const Rect *src1, const Rect *src2, Rect *dstRect)
 	return true;
 }
 
+//--------------------------------------------------------------  StringWidth
+// Calculate the width, in logical units, of the given Pascal string,
+// using the currently selected font.
+
+SInt16 Mac_StringWidth(HDC hdc, StringPtr s)
+{
+	WCHAR buffer[256];
+	SIZE extents;
+
+	WinFromMacString(buffer, ARRAYSIZE(buffer), s);
+	if (!GetTextExtentPoint32(hdc, buffer, wcslen(buffer), &extents))
+		return 0;
+	return (SInt16)extents.cx;
+}
+
 //--------------------------------------------------------------  WinFromMacString
 // Convert a MacRoman Pascal-style string to a UTF-16 C-style string.
 // This is a wrapper around the Windows API function 'MultiByteToWideChar'.
