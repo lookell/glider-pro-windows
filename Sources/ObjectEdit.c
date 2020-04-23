@@ -1166,10 +1166,8 @@ void AddObjectPairing (void)
 
 void Gp_DeleteObject (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	short		i;
+	SInt16		i;
 
 	if ((theMode != kEditMode) || (objActive == kNoObjectSelected))
 		return;
@@ -1178,7 +1176,7 @@ void Gp_DeleteObject (void)
 			(objActive == kLeftGliderSelected) ||
 			(objActive == kRightGliderSelected))
 	{
-		SysBeep(1);
+		MessageBeep(MB_ICONWARNING);
 		return;
 	}
 
@@ -1193,12 +1191,11 @@ void Gp_DeleteObject (void)
 	thisRoom->numObjects--;
 	fileDirty = true;
 	UpdateMenus(false);
-	InvalWindowRect(mainWindow, &mainWindowRect);
+	Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 	QSetRect(&roomObjectRects[objActive], -1, -1, 0, 0);
 	DeselectObject();
 	ReadyBackground(thisRoom->background, thisRoom->tiles);
 	DrawThisRoomsObjects();
-#endif
 #endif
 }
 
