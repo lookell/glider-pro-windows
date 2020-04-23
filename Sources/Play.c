@@ -804,26 +804,26 @@ void StrikeChime (void)
 
 void RestoreEntireGameScreen (void)
 {
-	return;
-#if 0
 	Rect		tempRect;
+	HDC			mainWindowDC;
 
-	HideCursor();
+	//HideCursor();
 
 #if !BUILD_ARCADE_VERSION
 //	HideMenuBarOld();		// TEMP
 #endif
 
-	SetPort((GrafPtr)mainWindow);
+	//SetPort((GrafPtr)mainWindow);
 	tempRect = thisMac.screen;
-	PaintRect(&tempRect);
+	mainWindowDC = GetMainWindowDC();
+	Mac_PaintRect(mainWindowDC, &tempRect, GetStockObject(BLACK_BRUSH));
+	ReleaseMainWindowDC(mainWindowDC);
 
 	DrawLocale();
 	RefreshScoreboard(kNormalTitleMode);
-//	if (quickerTransitions)
-//		DissBitsChunky(&justRoomsRect);
-//	else
-//		DissBits(&justRoomsRect);
-#endif
+	if (quickerTransitions)
+		DissBitsChunky(&justRoomsRect);
+	else
+		DissBits(&justRoomsRect);
 }
 
