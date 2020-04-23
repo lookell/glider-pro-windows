@@ -44,7 +44,7 @@ extern	Boolean		isSoundOn;
 
 OSErr StartMusic (void)
 {
-	return (-1);
+	return noErr;
 #if 0
 	SndCommand	theCommand;
 	OSErr		theErr;

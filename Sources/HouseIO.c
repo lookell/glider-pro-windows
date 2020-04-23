@@ -624,8 +624,9 @@ void CloseHouseResFork (void)
 #ifndef COMPILEDEMO
 Boolean QuerySaveChanges (void)
 {
-	MessageBox(mainWindow, L"QuerySaveChanges()", NULL, MB_ICONHAND);
-	return false;
+	if (fileDirty)
+		MessageBox(mainWindow, L"QuerySaveChanges()", NULL, MB_ICONHAND);
+	return true;
 #if 0
 	short		hitWhat;
 	Boolean		whoCares;
