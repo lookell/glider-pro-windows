@@ -368,25 +368,17 @@ void ZeroAllButHighestScore (void)
 
 Boolean TestHighScore (void)
 {
-	return (false);
-#if 0
-	houseType	*thisHousePtr;
-	short		placing, i;
-	char		wasState;
+	SInt16		placing, i;
 
 	if (resumedSavedGame)
 		return (false);
-
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
 
 	lastHighScore = -1;
 	placing = -1;
 
 	for (i = 0; i < kMaxScores; i++)
 	{
-		if (theScore > thisHousePtr->highScores.scores[i])
+		if (theScore > thisHouse->highScores.scores[i])
 		{
 			placing = i;
 			lastHighScore = i;
@@ -396,22 +388,20 @@ Boolean TestHighScore (void)
 
 	if (placing != -1)
 	{
-		FlushEvents(everyEvent, 0);
+		//FlushEvents(everyEvent, 0);
 		GetHighScoreName(placing + 1);
-		PasStringCopy(highName, thisHousePtr->highScores.names[kMaxScores - 1]);
+		PasStringCopy(highName, thisHouse->highScores.names[kMaxScores - 1]);
 		if (placing == 0)
 		{
 			GetHighScoreBanner();
-			PasStringCopy(highBanner, thisHousePtr->highScores.banner);
+			PasStringCopy(highBanner, thisHouse->highScores.banner);
 		}
-		thisHousePtr->highScores.scores[kMaxScores - 1] = theScore;
-		GetDateTime(&thisHousePtr->highScores.timeStamps[kMaxScores - 1]);
-		thisHousePtr->highScores.levels[kMaxScores - 1] = CountRoomsVisited();
+		thisHouse->highScores.scores[kMaxScores - 1] = theScore;
+		Mac_GetDateTime(&thisHouse->highScores.timeStamps[kMaxScores - 1]);
+		thisHouse->highScores.levels[kMaxScores - 1] = CountRoomsVisited();
 		SortHighScores();
 		gameDirty = true;
 	}
-
-	HSetState((Handle)thisHouse, wasState);
 
 	if (placing != -1)
 	{
@@ -420,7 +410,6 @@ Boolean TestHighScore (void)
 	}
 	else
 		return (false);
-#endif
 }
 
 //--------------------------------------------------------------  UpdateNameDialog
@@ -501,6 +490,7 @@ Boolean NameFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void GetHighScoreName (SInt16 place)
 {
+	PasStringCopyC("HighScoreName", highName);
 	return;
 #if 0
 	DialogPtr		theDial;
@@ -620,6 +610,7 @@ Boolean BannerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void GetHighScoreBanner (void)
 {
+	PasStringCopyC("HighScoreBanner", highBanner);
 	return;
 #if 0
 	DialogPtr		theDial;
