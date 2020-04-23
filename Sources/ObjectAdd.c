@@ -48,11 +48,8 @@ SInt16		wasFlower;
 
 Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
 {
-	return false;
-#if 0
-	KeyMap		theseKeys;
 	Rect		srcRect, newRect;
-	short		direction, dist;
+	SInt16		direction, dist;
 	Boolean		handled, drawWholeRoom;
 
 #ifndef COMPILEDEMO
@@ -740,8 +737,7 @@ Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
 		break;
 
 		case kFlower:
-		GetKeys(theseKeys);
-		if (!BitTst(&theseKeys, kShiftKeyMap))
+		if (GetKeyState(VK_SHIFT) >= 0) // shift key up?
 			wasFlower = RandomInt(kNumFlowers);
 		newRect = flowerSrc[wasFlower];
 		CenterRectOnPoint(&newRect, where);
@@ -787,7 +783,7 @@ Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
 			ReadyBackground(thisRoom->background, thisRoom->tiles);
 		GetThisRoomsObjRects();
 		DrawThisRoomsObjects();
-		InvalWindowRect(mainWindow, &mainWindowRect);
+		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 
 		if (handled)
 		{
@@ -798,7 +794,6 @@ Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
 			StartMarquee(&roomObjectRects[objActive]);
 	}
 
-#endif
 
 	return (true);
 #endif
