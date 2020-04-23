@@ -166,10 +166,20 @@ void UpdateMenusHouseClosed (void)
 // Set the Cut/Copy/Paste menus to reflect if we have data in the…
 // Mac's "clipboard" or not.
 
+static BOOL SetMenuItemText(HMENU hMenu, UINT uID, StringPtr newTitle)
+{
+	MENUITEMINFO mii;
+	WCHAR theString[256];
+
+	WinFromMacString(theString, ARRAYSIZE(theString), newTitle);
+	mii.cbSize = sizeof(mii);
+	mii.fMask = MIIM_STRING;
+	mii.dwTypeData = theString;
+	return SetMenuItemInfo(hMenu, uID, FALSE, &mii);
+}
+
 void UpdateClipboardMenus (void)
 {
-	return;
-#if 0
 	Str255		title;
 
 	if (!houseOpen)
@@ -180,26 +190,26 @@ void UpdateClipboardMenus (void)
 		if (objActive > kNoObjectSelected)
 		{
 			GetLocalizedString(36, title);
-			SetMenuItemText(houseMenu, iCut, title);
+			SetMenuItemText(houseMenu, ID_CUT, title);
 			GetLocalizedString(37, title);
-			SetMenuItemText(houseMenu, iCopy, title);
+			SetMenuItemText(houseMenu, ID_COPY, title);
 			GetLocalizedString(38, title);
-			SetMenuItemText(houseMenu, iClear, title);
-			EnableMenuItem(houseMenu, iDuplicate);
+			SetMenuItemText(houseMenu, ID_CLEAR, title);
+			EnableMenuItem(houseMenu, ID_DUPLICATE, MF_ENABLED);
 		}
 		else
 		{
 			GetLocalizedString(39, title);
-			SetMenuItemText(houseMenu, iCut, title);
+			SetMenuItemText(houseMenu, ID_CUT, title);
 			GetLocalizedString(40, title);
-			SetMenuItemText(houseMenu, iCopy, title);
+			SetMenuItemText(houseMenu, ID_COPY, title);
 			GetLocalizedString(41, title);
-			SetMenuItemText(houseMenu, iClear, title);
-			DisableMenuItem(houseMenu, iDuplicate);
+			SetMenuItemText(houseMenu, ID_CLEAR, title);
+			EnableMenuItem(houseMenu, ID_DUPLICATE, MF_GRAYED);
 		}
 
-		EnableMenuItem(houseMenu, iCut);
-		EnableMenuItem(houseMenu, iCopy);
+		EnableMenuItem(houseMenu, ID_CUT, MF_ENABLED);
+		EnableMenuItem(houseMenu, ID_COPY, MF_ENABLED);
 //		if (hasScrap)
 //		{
 //			EnableMenuItem(houseMenu, iPaste);
@@ -216,29 +226,28 @@ void UpdateClipboardMenus (void)
 //		}
 //		else
 		{
-			DisableMenuItem(houseMenu, iPaste);
+			EnableMenuItem(houseMenu, ID_PASTE, MF_GRAYED);
 			GetLocalizedString(44, title);
-			SetMenuItemText(houseMenu, iPaste, title);
+			SetMenuItemText(houseMenu, ID_PASTE, title);
 		}
-		EnableMenuItem(houseMenu, iClear);
-		EnableMenuItem(houseMenu, iGoToRoom);
-		EnableMenuItem(houseMenu, iMapWindow);
-		EnableMenuItem(houseMenu, iObjectWindow);
-		EnableMenuItem(houseMenu, iCoordinateWindow);
+		EnableMenuItem(houseMenu, ID_CLEAR, MF_ENABLED);
+		EnableMenuItem(houseMenu, ID_GO_TO_ROOM, MF_ENABLED);
+		EnableMenuItem(houseMenu, ID_MAP_WINDOW, MF_ENABLED);
+		EnableMenuItem(houseMenu, ID_OBJECT_WINDOW, MF_ENABLED);
+		EnableMenuItem(houseMenu, ID_COORDINATE_WINDOW, MF_ENABLED);
 	}
 	else
 	{
-		DisableMenuItem(houseMenu, iCut);
-		DisableMenuItem(houseMenu, iCopy);
-		DisableMenuItem(houseMenu, iPaste);
-		DisableMenuItem(houseMenu, iClear);
-		DisableMenuItem(houseMenu, iDuplicate);
-		DisableMenuItem(houseMenu, iGoToRoom);
-		DisableMenuItem(houseMenu, iMapWindow);
-		DisableMenuItem(houseMenu, iObjectWindow);
-		DisableMenuItem(houseMenu, iCoordinateWindow);
+		EnableMenuItem(houseMenu, ID_CUT, MF_GRAYED);
+		EnableMenuItem(houseMenu, ID_COPY, MF_GRAYED);
+		EnableMenuItem(houseMenu, ID_PASTE, MF_GRAYED);
+		EnableMenuItem(houseMenu, ID_CLEAR, MF_GRAYED);
+		EnableMenuItem(houseMenu, ID_DUPLICATE, MF_GRAYED);
+		EnableMenuItem(houseMenu, ID_GO_TO_ROOM, MF_GRAYED);
+		EnableMenuItem(houseMenu, ID_MAP_WINDOW, MF_GRAYED);
+		EnableMenuItem(houseMenu, ID_OBJECT_WINDOW, MF_GRAYED);
+		EnableMenuItem(houseMenu, ID_COORDINATE_WINDOW, MF_GRAYED);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  UpdateMenus
