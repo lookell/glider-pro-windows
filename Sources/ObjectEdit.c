@@ -1386,13 +1386,10 @@ void DuplicateObject (void)
 
 void MoveObject (SInt16 whichWay, Boolean shiftDown)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
 	Rect		wasRect;
-	short		deltaH, deltaV, increment;
-	short		dist, direction;
-	char		wasState;
+	SInt16		deltaH, deltaV, increment;
+	SInt16		dist, direction;
 
 	if (theMode != kEditMode)
 		return;
@@ -1500,11 +1497,8 @@ void MoveObject (SInt16 whichWay, Boolean shiftDown)
 	if (objActive == kInitialGliderSelected)
 	{
 		wasRect = initialGliderRect;
-		wasState = HGetState((Handle)thisHouse);
-		HLock((Handle)thisHouse);
-		(*thisHouse)->initial.h += deltaH;
-		(*thisHouse)->initial.v += deltaV;
-		HSetState((Handle)thisHouse, wasState);
+		thisHouse->initial.h += deltaH;
+		thisHouse->initial.v += deltaV;
 	}
 	else if (objActive == kLeftGliderSelected)
 	{
@@ -1517,7 +1511,7 @@ void MoveObject (SInt16 whichWay, Boolean shiftDown)
 		thisRoom->leftStart = (Byte)increment;
 		QSetRect(&leftStartGliderDest, 0, 0, 48, 16);
 		QOffsetRect(&leftStartGliderDest, 0,
-				kGliderStartsDown + (short)thisRoom->leftStart);
+				kGliderStartsDown + (SInt16)thisRoom->leftStart);
 	}
 	else if (objActive == kRightGliderSelected)
 	{
@@ -1530,7 +1524,7 @@ void MoveObject (SInt16 whichWay, Boolean shiftDown)
 		thisRoom->rightStart = (Byte)increment;
 		QSetRect(&rightStartGliderDest, 0, 0, 48, 16);
 		QOffsetRect(&rightStartGliderDest, kRoomWide - 48,
-				kGliderStartsDown + (short)thisRoom->rightStart);
+				kGliderStartsDown + (SInt16)thisRoom->rightStart);
 	}
 	else
 	{
@@ -1721,18 +1715,18 @@ void MoveObject (SInt16 whichWay, Boolean shiftDown)
 
 	if (objActive == kInitialGliderSelected)
 	{
-		InvalWindowRect(mainWindow, &wasRect);
-		InvalWindowRect(mainWindow, &initialGliderRect);
+		Mac_InvalWindowRect(mainWindow, &wasRect);
+		Mac_InvalWindowRect(mainWindow, &initialGliderRect);
 	}
 	else if (objActive == kLeftGliderSelected)
 	{
-		InvalWindowRect(mainWindow, &wasRect);
-		InvalWindowRect(mainWindow, &leftStartGliderDest);
+		Mac_InvalWindowRect(mainWindow, &wasRect);
+		Mac_InvalWindowRect(mainWindow, &leftStartGliderDest);
 	}
 	else if (objActive == kRightGliderSelected)
 	{
-		InvalWindowRect(mainWindow, &wasRect);
-		InvalWindowRect(mainWindow, &rightStartGliderDest);
+		Mac_InvalWindowRect(mainWindow, &wasRect);
+		Mac_InvalWindowRect(mainWindow, &rightStartGliderDest);
 	}
 	else
 	{
@@ -1754,12 +1748,12 @@ void MoveObject (SInt16 whichWay, Boolean shiftDown)
 			case kTrackLight:
 			case kMirror:
 			case kWallWindow:
-			InvalWindowRect(mainWindow, &mainWindowRect);
+			Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 			break;
 
 			default:
-			InvalWindowRect(mainWindow, &wasRect);
-			InvalWindowRect(mainWindow, &roomObjectRects[objActive]);
+			Mac_InvalWindowRect(mainWindow, &wasRect);
+			Mac_InvalWindowRect(mainWindow, &roomObjectRects[objActive]);
 			break;
 		}
 	}
@@ -1783,7 +1777,6 @@ void MoveObject (SInt16 whichWay, Boolean shiftDown)
 		else
 			StartMarquee(&roomObjectRects[objActive]);
 	}
-#endif
 #endif
 }
 
