@@ -680,14 +680,13 @@ void YellowAlert (SInt16 whichAlert, SInt16 identifier)
 	INT			result;
 	SInt16		whoCares;
 
+	ZeroMemory(&alertData, sizeof(alertData));
 	alertData.hwndParent = mainWindow;
-	ZeroMemory(&alertData.params, sizeof(alertData.params));
-	result = LoadString(HINST_THISCOMPONENT,
-			IDS_YELLOW_ALERT_BASE + whichAlert,
-			alertData.params[0], ARRAYSIZE(alertData.params[0]));
+	result = LoadString(HINST_THISCOMPONENT, IDS_YELLOW_ALERT_BASE + whichAlert,
+			alertData.arg[0], ARRAYSIZE(alertData.arg[0]));
 	if (result <= 0)
-		StringCchCopy(alertData.params[0], ARRAYSIZE(alertData.params[0]), L"");
-	StringCchPrintf(alertData.params[1], ARRAYSIZE(alertData.params[1]),
+		StringCchCopy(alertData.arg[0], ARRAYSIZE(alertData.arg[0]), L"");
+	StringCchPrintf(alertData.arg[1], ARRAYSIZE(alertData.arg[1]),
 			L"%d", (int)identifier);
 
 	whoCares = Alert(kYellowAlert, &alertData);

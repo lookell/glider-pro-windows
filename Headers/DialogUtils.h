@@ -11,7 +11,7 @@
 
 typedef struct AlertData {
 	HWND hwndParent;
-	WCHAR params[4][256];
+	WCHAR arg[4][256];
 } AlertData;
 
 

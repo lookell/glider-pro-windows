@@ -80,22 +80,22 @@ static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
 			case L'0':
 				i++;
 				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
-					alert->params[0], ARRAYSIZE(alert->params[0]));
+					alert->arg[0], ARRAYSIZE(alert->arg[0]));
 				break;
 			case L'1':
 				i++;
 				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
-					alert->params[1], ARRAYSIZE(alert->params[1]));
+					alert->arg[1], ARRAYSIZE(alert->arg[1]));
 				break;
 			case L'2':
 				i++;
 				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
-					alert->params[2], ARRAYSIZE(alert->params[2]));
+					alert->arg[2], ARRAYSIZE(alert->arg[2]));
 				break;
 			case L'3':
 				i++;
 				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
-					alert->params[3], ARRAYSIZE(alert->params[3]));
+					alert->arg[3], ARRAYSIZE(alert->arg[3]));
 				break;
 			}
 		}
