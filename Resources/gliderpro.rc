@@ -4,6 +4,10 @@
 #include <windows.h>
 #include "ResourceIDs.h"
 
+#ifndef IDC_STATIC
+#define IDC_STATIC (-1)
+#endif
+
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "gliderpro.manifest"

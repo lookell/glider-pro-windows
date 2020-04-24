@@ -13,10 +13,12 @@
 //#include <TextUtils.h>
 #include "Macintosh.h"
 #include "ByteIO.h"
+#include "DialogUtils.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "House.h"
 #include "ObjectEdit.h"
+#include "ResourceIDs.h"
 
 
 #define kSaveChangesAlert		1002
@@ -673,23 +675,22 @@ Boolean QuerySaveChanges (void)
 
 void YellowAlert (SInt16 whichAlert, SInt16 identifier)
 {
-	MessageBox(mainWindow, L"YellowAlert()", NULL, MB_ICONHAND);
-	return;
-#if 0
 	#define		kYellowAlert	1006
-	Str255		errStr, errNumStr;
-	short		whoCares;
+	AlertData	alertData;
+	INT			result;
+	SInt16		whoCares;
 
-	InitCursor();
+	alertData.hwndParent = mainWindow;
+	ZeroMemory(&alertData.params, sizeof(alertData.params));
+	result = LoadString(HINST_THISCOMPONENT,
+			IDS_YELLOW_ALERT_BASE + whichAlert,
+			alertData.params[0], ARRAYSIZE(alertData.params[0]));
+	if (result <= 0)
+		StringCchCopy(alertData.params[0], ARRAYSIZE(alertData.params[0]), L"");
+	StringCchPrintf(alertData.params[1], ARRAYSIZE(alertData.params[1]),
+			L"%d", (int)identifier);
 
-	GetIndString(errStr, kYellowAlert, whichAlert);
-	NumToString((long)identifier, errNumStr);
-
-//	CenterAlert(kYellowAlert);
-	ParamText(errStr, errNumStr, "\p", "\p");
-
-	whoCares = Alert(kYellowAlert, nil);
-#endif
+	whoCares = Alert(kYellowAlert, &alertData);
 }
 
 //--------------------------------------------------------------  IsFileReadOnly
