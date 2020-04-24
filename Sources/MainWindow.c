@@ -14,6 +14,7 @@
 #include "Environ.h"
 #include "House.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 
 
 #define kMainWindowID			128
@@ -707,8 +708,8 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	switch (uMsg)
 	{
 	case WM_CLOSE:
-		PostQuitMessage(0);
-		return DefWindowProc(hwnd, uMsg, wParam, lParam);
+		SendMessage(hwnd, WM_COMMAND, ID_QUIT, 0);
+		return 0;
 
 	case WM_COMMAND:
 		DoMenuChoice(LOWORD(wParam));
