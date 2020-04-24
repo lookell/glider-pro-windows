@@ -5,8 +5,8 @@ CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION
 {
-    PUSHBUTTON "Save First", 1, 116, 30, 53, 12
-    DEFPUSHBUTTON "Don't Save", 2, 55, 30, 53, 12
-    LTEXT "Do you want to save the state of the game before quitting?", -1, 5, 5, 134, 20, SS_NOPREFIX
-    ICON 1072, -1, 148, 5, 21, 20
+    PUSHBUTTON "Save First", IDYES, 116, 30, 53, 12
+    DEFPUSHBUTTON "Don't Save", IDNO, 55, 30, 53, 12
+    LTEXT "Do you want to save the state of the game before quitting?", IDC_STATIC, 5, 5, 134, 20, SS_NOPREFIX
+    ICON 1072, IDC_STATIC, 148, 5, 21, 20
 }
