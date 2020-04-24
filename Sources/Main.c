@@ -375,6 +375,7 @@ int main (void)
 */
 	KillMusic();
 	KillSound();
+	CloseMainWindow();
 	if (houseOpen)
 	{
 		if (!CloseHouse())
