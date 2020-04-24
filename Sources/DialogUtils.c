@@ -17,7 +17,175 @@
 #define kInactive					255
 
 
+static BOOL CALLBACK FormatWindowText (HWND, LPARAM);
+static INT_PTR CALLBACK AlertProc (HWND, UINT, WPARAM, LPARAM);
+
+
 //==============================================================  Functions
+//--------------------------------------------------------------  FormatWindowText
+
+static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
+{
+	const AlertData *alert = (const AlertData *)lParam;
+	INT textLength;
+	PWSTR oldText, newText;
+	size_t i, oldTextSize, newTextSize, numCarets;
+	WCHAR paramStr[256];
+	HRESULT hr;
+
+	oldText = NULL;
+	newText = NULL;
+
+	textLength = GetWindowTextLength(hwnd);
+	if (textLength <= 0)
+		goto ending;
+	oldTextSize = textLength + 1;
+	oldText = calloc(oldTextSize, sizeof(*oldText));
+	if (oldText == NULL)
+		goto ending;
+	if (!GetWindowText(hwnd, oldText, oldTextSize))
+		goto ending;
+	oldText[oldTextSize - 1] = L'\0';
+
+	numCarets = 0;
+	for (i = 0; i < oldTextSize - 1; i++)
+	{
+		if (oldText[i] != L'^')
+			continue;
+		switch (oldText[i + 1])
+		{
+		case L'0':
+		case L'1':
+		case L'2':
+		case L'3':
+			numCarets += 1;
+			break;
+		}
+	}
+	if (numCarets == 0)
+		goto ending;
+
+	newTextSize = oldTextSize + (255 * numCarets);
+	newText = calloc(newTextSize, sizeof(*newText));
+	if (newText == NULL)
+		goto ending;
+	for (i = 0; i < oldTextSize - 1; i++)
+	{
+		paramStr[0] = oldText[i];
+		paramStr[1] = L'\0';
+		if (oldText[i] == L'^')
+		{
+			switch (oldText[i + 1])
+			{
+			case L'0':
+				i++;
+				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
+					alert->params[0], ARRAYSIZE(alert->params[0]));
+				break;
+			case L'1':
+				i++;
+				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
+					alert->params[1], ARRAYSIZE(alert->params[1]));
+				break;
+			case L'2':
+				i++;
+				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
+					alert->params[2], ARRAYSIZE(alert->params[2]));
+				break;
+			case L'3':
+				i++;
+				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
+					alert->params[3], ARRAYSIZE(alert->params[3]));
+				break;
+			}
+		}
+		StringCchCat(newText, newTextSize, paramStr);
+	}
+
+	SetWindowText(hwnd, newText);
+	
+ending:
+	free(newText);
+	free(oldText);
+	return TRUE;
+}
+
+//--------------------------------------------------------------  AlertProc
+
+static INT_PTR CALLBACK AlertProc (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+	case WM_INITDIALOG:
+		CenterOverOwner(hDlg);
+		EnumChildWindows(hDlg, FormatWindowText, lParam);
+		return TRUE;
+
+	case WM_COMMAND:
+		if (LOWORD(wParam) != 0 && LOWORD(wParam) != 0xFFFF)
+			EndDialog(hDlg, LOWORD(wParam));
+		SetWindowLongPtr(hDlg, DWLP_MSGRESULT, 0);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+//--------------------------------------------------------------  Alert
+// Given a dialog resource ID and four string parameters, this function
+// displays the dialog with a standard modal alert box procedure.
+
+SInt16 Alert (SInt16 dialogID, const AlertData *alertData)
+{
+	return DialogBoxParam(HINST_THISCOMPONENT, MAKEINTRESOURCE(dialogID),
+			alertData->hwndParent, AlertProc, (LPARAM)alertData);
+}
+
+//--------------------------------------------------------------  CenterOverOwner
+// Centers the given window over its owner. If the window has no
+// owner, then it is centered over the working area of the monitor
+// where it is located.
+
+void CenterOverOwner (HWND hwnd)
+{
+	HWND hwndOwner;
+	HMONITOR hMonitor;
+	MONITORINFO monitorInfo;
+	RECT rcWindow, rcOwner;
+	LONG hOffset, vOffset;
+	LONG cxWindow, cyWindow, cxOwner, cyOwner;
+
+	if (!GetWindowRect(hwnd, &rcWindow))
+		return;
+	hwndOwner = GetWindow(hwnd, GW_OWNER);
+	if (hwndOwner != NULL)
+	{
+		if (!GetWindowRect(hwndOwner, &rcOwner))
+			return;
+	}
+	else
+	{
+		hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+		if (hMonitor == NULL)
+			return;
+		monitorInfo.cbSize = sizeof(monitorInfo);
+		if (!GetMonitorInfo(hMonitor, &monitorInfo))
+			return;
+		rcOwner = monitorInfo.rcWork;
+	}
+
+	OffsetRect(&rcWindow, -rcWindow.left, -rcWindow.top);
+	OffsetRect(&rcWindow, rcOwner.left, rcOwner.top);
+	cxOwner = rcOwner.right - rcOwner.left;
+	cyOwner = rcOwner.bottom - rcOwner.top;
+	cxWindow = rcWindow.right - rcWindow.left;
+	cyWindow = rcWindow.bottom - rcWindow.top;
+	hOffset = (cxOwner - cxWindow) / 2; // 50% left, 50% right
+	vOffset = (cyOwner - cyWindow) * 9 / 20; // 45% top, 55% bottom
+	OffsetRect(&rcWindow, hOffset, vOffset);
+	SetWindowPos(hwnd, NULL, rcWindow.left, rcWindow.top, 0, 0,
+			SWP_NOSIZE | SWP_NOZORDER);
+}
+
 //--------------------------------------------------------------  BringUpDialog
 // Given a dialog pointer and a resource ID, this function brings it up…
 // centered, visible, and with the default button outlined.
