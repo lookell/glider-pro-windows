@@ -22,8 +22,8 @@
 
 
 #define kSaveChangesAlert		1002
-#define kSaveChanges			1
-#define kDiscardChanges			2
+#define kSaveChanges			IDYES
+#define kDiscardChanges			IDNO
 
 
 void LoopMovie (void);
@@ -626,20 +626,19 @@ void CloseHouseResFork (void)
 #ifndef COMPILEDEMO
 Boolean QuerySaveChanges (void)
 {
-	if (fileDirty)
-		MessageBox(mainWindow, L"QuerySaveChanges()", NULL, MB_ICONHAND);
-	return true;
-#if 0
-	short		hitWhat;
+	AlertData	alertData;
+	SInt16		hitWhat;
 	Boolean		whoCares;
 
 	if (!fileDirty)
 		return(true);
 
-	InitCursor();
-//	CenterAlert(kSaveChangesAlert);
-	ParamText(thisHouseName, "\p", "\p", "\p");
-	hitWhat = Alert(kSaveChangesAlert, nil);
+	alertData.hwndParent = mainWindow;
+	WinFromMacString(alertData.arg[0], ARRAYSIZE(alertData.arg[0]), thisHouseName);
+	StringCchCopy(alertData.arg[1], ARRAYSIZE(alertData.arg[1]), L"");
+	StringCchCopy(alertData.arg[2], ARRAYSIZE(alertData.arg[2]), L"");
+	StringCchCopy(alertData.arg[3], ARRAYSIZE(alertData.arg[3]), L"");
+	hitWhat = Alert(kSaveChangesAlert, &alertData);
 	if (hitWhat == kSaveChanges)
 	{
 		if (wasHouseVersion < kHouseVersion)
@@ -664,7 +663,6 @@ Boolean QuerySaveChanges (void)
 	}
 	else
 		return (false);
-#endif
 }
 #endif
 
