@@ -570,7 +570,7 @@ Boolean WaitForInputEvent (UInt16 seconds)
 			{
 				PostQuitMessage(theEvent.wParam);
 				waiting = false;
-				continue;
+				break;
 			}
 			TranslateMessage(&theEvent);
 			DispatchMessage(&theEvent);
