@@ -8,6 +8,7 @@
 
 //#include <StringCompare.h>
 #include "Macintosh.h"
+#include "DialogUtils.h"
 #include "Externs.h"
 #include "House.h"
 
@@ -155,19 +156,14 @@ void SaveGame2 (void)
 
 void SavedGameMismatchError (StringPtr gameName)
 {
-	MessageBox(mainWindow, L"SavedGameMismatchError()", NULL, MB_ICONHAND);
-	return;
-#if 0
 	#define		kSavedGameErrorAlert	1044
-	short		whoCares;
+	AlertData	alertData = { 0 };
+	SInt16		whoCares;
 
-	InitCursor();
-
-//	CenterAlert(kSavedGameErrorAlert);
-	ParamText(gameName, thisHouseName, "\p", "\p");
-
-	whoCares = Alert(kSavedGameErrorAlert, nil);
-#endif
+	alertData.hwndParent = mainWindow;
+	WinFromMacString(alertData.arg[0], ARRAYSIZE(alertData.arg[0]), gameName);
+	WinFromMacString(alertData.arg[1], ARRAYSIZE(alertData.arg[1]), thisHouseName);
+	whoCares = Alert(kSavedGameErrorAlert, &alertData);
 }
 
 //--------------------------------------------------------------  OpenSavedGame
