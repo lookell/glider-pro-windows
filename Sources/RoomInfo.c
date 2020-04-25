@@ -888,14 +888,11 @@ SInt16 GetFirstPICT (void)
 #ifndef COMPILEDEMO
 void BitchAboutPICTNotFound (void)
 {
-	MessageBox(mainWindow, L"BitchAboutPICTNotFound", NULL, MB_ICONHAND);
-	return;
-#if 0
-	short		hitWhat;
+	AlertData	alertData = { 0 };
+	SInt16		hitWhat;
 
-//	CenterAlert(kNoPICTFoundAlert);
-	hitWhat = Alert(kNoPICTFoundAlert, nil);
-#endif
+	alertData.hwndParent = mainWindow;
+	hitWhat = Alert(kNoPICTFoundAlert, &alertData);
 }
 #endif
 
