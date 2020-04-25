@@ -14,8 +14,10 @@
 #include <stdlib.h>
 #include "Macintosh.h"
 #include "WinAPI.h"
+#include "DialogUtils.h"
 #include "Externs.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 #include "Utilities.h"
 
 
@@ -141,56 +143,47 @@ UInt32 RandomLongQUS (void)
 // Called when we must quit app.  Brings up a dialog informing user…
 // of the problem and the exits to shell.
 
-#include <stdio.h>
 void RedAlert (SInt16 errorNumber)
 {
-	const char *message = "unknown error";
-	switch (errorNumber)
-	{
-		#define RED_ALERT_CASE(num) case (num): message = #num; break
-		RED_ALERT_CASE(kErrUnnaccounted);
-		RED_ALERT_CASE(kErrNoMemory);
-		RED_ALERT_CASE(kErrDialogDidntLoad);
-		RED_ALERT_CASE(kErrFailedResourceLoad);
-		RED_ALERT_CASE(kErrFailedGraphicLoad);
-		RED_ALERT_CASE(kErrFailedOurDirect);
-		RED_ALERT_CASE(kErrFailedValidation);
-		RED_ALERT_CASE(kErrNeedSystem7);
-		RED_ALERT_CASE(kErrFailedGetDevice);
-		RED_ALERT_CASE(kErrFailedMemoryOperation);
-		RED_ALERT_CASE(kErrFailedCatSearch);
-		RED_ALERT_CASE(kErrNeedColorQD);
-		RED_ALERT_CASE(kErrNeed16Or256Colors);
-		#undef RED_ALERT_CASE
-	}
-	fprintf(stderr, "RedAlert: %s\n", message);
-	exit(EXIT_FAILURE);
-#if 0
-	#define			rDeathAlertID	170		// alert res. ID for death error
-	#define			rErrTitleID		170		// string ID for death error title
-	#define			rErrMssgID		171		// string ID for death error message
-	short			dummyInt;
-	Str255			errTitle, errMessage, errNumberString;
-
-	InitCursor();
+	// alert res. ID for death error
+	#define			rDeathAlertID	170
+	// string base ID for death error title
+	#define			rErrTitleBase	IDS_ERROR_TITLE_BASE
+	// string base ID for death error message
+	#define			rErrMssgBase	IDS_ERROR_MSSG_BASE
+	SInt16			dummyInt;
+	INT				loadResult;
+	AlertData		alertData = { 0 };
 
 	if (errorNumber > 1)		// <= 0 is unaccounted for
 	{
-		GetIndString(errTitle, rErrTitleID, errorNumber);
-		GetIndString(errMessage, rErrMssgID, errorNumber);
+		loadResult = LoadString(HINST_THISCOMPONENT, rErrTitleBase + errorNumber,
+				alertData.arg[0], ARRAYSIZE(alertData.arg[0]));
+		if (loadResult <= 0)
+			alertData.arg[0][0] = L'\0';
+		loadResult = LoadString(HINST_THISCOMPONENT, rErrMssgBase + errorNumber,
+				alertData.arg[1], ARRAYSIZE(alertData.arg[1]));
+		if (loadResult <= 0)
+			alertData.arg[1][0] = L'\0';
 	}
 	else
 	{
-		GetIndString(errTitle, rErrTitleID, 1);
-		GetIndString(errMessage, rErrMssgID, 1);
+		loadResult = LoadString(HINST_THISCOMPONENT, rErrTitleBase + 1,
+				alertData.arg[0], ARRAYSIZE(alertData.arg[0]));
+		if (loadResult <= 0)
+			alertData.arg[0][0] = L'\0';
+		loadResult = LoadString(HINST_THISCOMPONENT, rErrMssgBase + 1,
+				alertData.arg[1], ARRAYSIZE(alertData.arg[1]));
+		if (loadResult <= 0)
+			alertData.arg[1][0] = L'\0';
 	}
-	NumToString((long)errorNumber, errNumberString);
-	ParamText(errTitle, errMessage, errNumberString, "\p");
-//	CenterAlert(rDeathAlertID);
+	StringCchPrintf(alertData.arg[2],
+			ARRAYSIZE(alertData.arg[2]),
+			L"%d", (int)errorNumber);
 
-	dummyInt = Alert(rDeathAlertID, nil);
-	ExitToShell();
-#endif
+	alertData.hwndParent = mainWindow;
+	dummyInt = Alert(rDeathAlertID, &alertData);
+	exit(EXIT_FAILURE);
 }
 
 //--------------------------------------------------------------  FindOurDevice
