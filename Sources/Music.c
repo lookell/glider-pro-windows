@@ -229,7 +229,7 @@ void MusicCallBack (SndChannelPtr theChannel, SndCommand *theCommand)
 
 OSErr LoadMusicSounds (void)
 {
-	return (-1);
+	return noErr;
 #if 0
 	Handle		theSound;
 	long		soundDataSize;
