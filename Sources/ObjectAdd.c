@@ -1065,14 +1065,11 @@ SInt16 HowManyDynamicObjects (void)
 
 void ShoutNoMoreSpecialObjects (void)
 {
-	MessageBox(mainWindow, L"ShoutNoMoreSpecialObjects()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	short		hitWhat;
+	AlertData	alertData = { 0 };
+	SInt16		hitWhat;
 
-//	CenterAlert(kNoMoreSpecialAlert);
-	hitWhat = Alert(kNoMoreSpecialAlert, nil);
-#endif
+	alertData.hwndParent = mainWindow;
+	hitWhat = Alert(kNoMoreSpecialAlert, &alertData);
 }
 
 #endif
