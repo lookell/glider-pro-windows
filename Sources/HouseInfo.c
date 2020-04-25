@@ -311,15 +311,13 @@ void DoHouseInfo (void)
 
 Boolean WarnLockingHouse (void)
 {
-	return (MessageBox(mainWindow, L"WarnLockingHouse()", NULL, MB_OKCANCEL) == IDOK);
-#if 0
-	short		hitWhat;
+	AlertData	alertData = { 0 };
+	SInt16		hitWhat;
 
-//	CenterAlert(kLockHouseAlert);
-	hitWhat = Alert(kLockHouseAlert, nil);
+	alertData.hwndParent = mainWindow;
+	hitWhat = Alert(kLockHouseAlert, &alertData);
 
-	return (hitWhat == 1);
-#endif
+	return (hitWhat == IDOK);
 }
 
 //--------------------------------------------------------------  HowToZeroScores
