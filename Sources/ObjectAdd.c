@@ -8,6 +8,7 @@
 
 //#include <ToolUtils.h>
 #include "Macintosh.h"
+#include "DialogUtils.h"
 #include "Externs.h"
 #include "ObjectEdit.h"
 #include "RectUtils.h"
@@ -866,14 +867,11 @@ Boolean DoesRoomNumHaveObject (SInt16 room, SInt16 what)
 
 void ShoutNoMoreObjects (void)
 {
-	MessageBox(mainWindow, L"ShoutNoMoreObjects()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	short		hitWhat;
+	AlertData	alertData = { 0 };
+	SInt16		hitWhat;
 
-//	CenterAlert(kNoMoreObjectsAlert);
-	hitWhat = Alert(kNoMoreObjectsAlert, nil);
-#endif
+	alertData.hwndParent = mainWindow;
+	hitWhat = Alert(kNoMoreObjectsAlert, &alertData);
 }
 
 //--------------------------------------------------------------  HowManyCandleObjects
