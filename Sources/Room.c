@@ -9,6 +9,7 @@
 //#include <ToolUtils.h>
 #include "Macintosh.h"
 #include "ByteIO.h"
+#include "DialogUtils.h"
 #include "Externs.h"
 #include "House.h"
 #include "MainWindow.h"
@@ -16,7 +17,7 @@
 
 
 #define kDeleteRoomAlert		1005
-#define kYesDoDeleteRoom		1
+#define kYesDoDeleteRoom		IDOK
 
 
 Boolean QueryDeleteRoom (void);
@@ -462,17 +463,15 @@ void DeleteRoom (Boolean doWarn)
 #ifndef COMPILEDEMO
 Boolean QueryDeleteRoom (void)
 {
-	return (MessageBox(mainWindow, L"QueryDeleteRoom()", NULL, MB_YESNO) == IDYES);
-#if 0
-	short		hitWhat;
+	AlertData	alertData = { 0 };
+	SInt16		hitWhat;
 
-//	CenterAlert(kDeleteRoomAlert);
-	hitWhat = Alert(kDeleteRoomAlert, nil);
+	alertData.hwndParent = mainWindow;
+	hitWhat = Alert(kDeleteRoomAlert, &alertData);
 	if (hitWhat == kYesDoDeleteRoom)
 		return (true);
 	else
 		return (false);
-#endif
 }
 #endif
 
