@@ -12,6 +12,7 @@
 #define _WIN32_IE_ _WIN32_IE_WINXP
 
 #include <windows.h>
+#include <shlobj.h>
 #include <strsafe.h>
 
 // The following pseudo-variable gives access to the hInstance

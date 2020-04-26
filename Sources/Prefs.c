@@ -26,7 +26,7 @@
 
 
 Boolean CanUseFindFolder (void);
-Boolean GetPrefsFPath (SInt32 *, SInt16 *);
+Boolean GetPrefsFPath (LPWSTR, size_t);
 Boolean CreatePrefsFolder (SInt16 *);
 Boolean WritePrefs (SInt32 *, SInt16 *, prefsInfo *);
 OSErr ReadPrefs (SInt32 *, SInt16 *, prefsInfo *);
@@ -60,19 +60,20 @@ Boolean CanUseFindFolder (void)
 
 //--------------------------------------------------------------  GetPrefsFPath
 
-Boolean GetPrefsFPath (SInt32 *prefDirID, SInt16 *systemVolRef)
+Boolean GetPrefsFPath (LPWSTR lpFolderPath, size_t cchFolderPath)
 {
-	return false;
-#if 0
-	OSErr		theErr;
+	WCHAR path[MAX_PATH];
 
-	theErr = FindFolder(kOnSystemDisk, kPreferencesFolderType, kCreateFolder,
-		systemVolRef, prefDirID);
-	if (theErr != noErr)
-		return(false);
+	if (FAILED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, path)))
+		return false;
+	if (FAILED(StringCchCat(path, ARRAYSIZE(path), L"\\glider-pro-windows")))
+		return false;
+	if (!CreateDirectory(path, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
+		return false;
+	if (FAILED(StringCchCopy(lpFolderPath, cchFolderPath, path)))
+		return false;
 
-	return(true);
-#endif
+	return true;
 }
 
 //--------------------------------------------------------------  CreatePrefsFolder
