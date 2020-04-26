@@ -26,7 +26,6 @@
 
 
 Boolean GetPrefsFPath (LPWSTR, size_t);
-Boolean CreatePrefsFolder (SInt16 *);
 Boolean WritePrefs (SInt32 *, SInt16 *, prefsInfo *);
 OSErr ReadPrefs (SInt32 *, SInt16 *, prefsInfo *);
 Boolean DeletePrefs (SInt32 *, SInt16 *);
@@ -50,33 +49,6 @@ Boolean GetPrefsFPath (LPWSTR lpFolderPath, size_t cchFolderPath)
 		return false;
 
 	return true;
-}
-
-//--------------------------------------------------------------  CreatePrefsFolder
-
-Boolean CreatePrefsFolder (SInt16 *systemVolRef)
-{
-	return false;
-#if 0
-	HFileParam	fileParamBlock;
-	Str255		folderName;
-	OSErr		theErr;
-
-	GetIndString(folderName, kPrefsStringsID, kPrefsFNameIndex);
-
-	fileParamBlock.ioVRefNum = *systemVolRef;
-	fileParamBlock.ioDirID = 0;
-	fileParamBlock.ioNamePtr = folderName;
-	fileParamBlock.ioCompletion = nil;
-
-	theErr = PBDirCreate((HParmBlkPtr)&fileParamBlock, false);
-	if (theErr != noErr)
-	{
-		CheckFileError(theErr, "\pPreferences");
-		return(false);
-	}
-	return(true);
-#endif
 }
 
 //--------------------------------------------------------------  WritePrefs
