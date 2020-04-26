@@ -25,7 +25,6 @@
 #define	kPrefsFNameIndex	1
 
 
-Boolean CanUseFindFolder (void);
 Boolean GetPrefsFPath (LPWSTR, size_t);
 Boolean CreatePrefsFolder (SInt16 *);
 Boolean WritePrefs (SInt32 *, SInt16 *, prefsInfo *);
@@ -35,29 +34,6 @@ void BringUpDeletePrefsAlert (void);
 
 
 //==============================================================  Functions
-//--------------------------------------------------------------  CanUseFindFolder
-
-Boolean CanUseFindFolder (void)
-{
-	return false;
-#if 0
-	OSErr		theErr;
-	long		theFeature;
-
-	if (!thisMac.hasGestalt)
-		return(false);
-
-	theErr = Gestalt(gestaltFindFolderAttr, &theFeature);
-	if (theErr != noErr)
-		return(false);
-
-	if (!BitTst(&theFeature, 31 - gestaltFindFolderPresent))
-		return(false);
-	else
-		return(true);
-#endif
-}
-
 //--------------------------------------------------------------  GetPrefsFPath
 
 Boolean GetPrefsFPath (LPWSTR lpFolderPath, size_t cchFolderPath)
