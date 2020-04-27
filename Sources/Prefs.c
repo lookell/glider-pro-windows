@@ -29,7 +29,7 @@
 Boolean GetPrefsFilePath (LPWSTR, size_t);
 Boolean WritePrefs (LPCWSTR, prefsInfo *);
 OSErr ReadPrefs (SInt32 *, SInt16 *, prefsInfo *);
-Boolean DeletePrefs (SInt32 *, SInt16 *);
+Boolean DeletePrefs (LPCWSTR);
 void BringUpDeletePrefsAlert (void);
 
 
@@ -177,25 +177,12 @@ OSErr ReadPrefs (SInt32 *prefDirID, SInt16 *systemVolRef, prefsInfo *thePrefs)
 
 //--------------------------------------------------------------  DeletePrefs
 
-Boolean DeletePrefs (SInt32 *dirID, SInt16 *volRef)
+Boolean DeletePrefs (LPCWSTR prefsFilePath)
 {
-	return false;
-#if 0
-	FSSpec		theSpecs;
-	Str255		fileName = kPrefFileName;
-	OSErr		theErr;
+	if (!DeleteFile(prefsFilePath))
+		return false;
 
-	theErr = FSMakeFSSpec(*volRef, *dirID, fileName, &theSpecs);
-	if (theErr != noErr)
-		return(false);
-	else
-		theErr = FSpDelete(&theSpecs);
-
-	if (theErr != noErr)
-		return(false);
-
-	return(true);
-#endif
+	return true;
 }
 
 //--------------------------------------------------------------  LoadPrefs
