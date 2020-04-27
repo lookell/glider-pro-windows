@@ -26,7 +26,7 @@
 #define	kPrefsFNameIndex	1
 
 
-Boolean GetPrefsFPath (LPWSTR, size_t);
+Boolean GetPrefsFilePath (LPWSTR, size_t);
 Boolean WritePrefs (LPCWSTR, prefsInfo *);
 OSErr ReadPrefs (SInt32 *, SInt16 *, prefsInfo *);
 Boolean DeletePrefs (SInt32 *, SInt16 *);
@@ -36,7 +36,7 @@ void BringUpDeletePrefsAlert (void);
 //==============================================================  Functions
 //--------------------------------------------------------------  GetPrefsFPath
 
-Boolean GetPrefsFPath (LPWSTR lpFolderPath, size_t cchFolderPath)
+Boolean GetPrefsFilePath (LPWSTR lpFilePath, size_t cchFilePath)
 {
 	WCHAR path[MAX_PATH];
 
@@ -46,7 +46,11 @@ Boolean GetPrefsFPath (LPWSTR lpFolderPath, size_t cchFolderPath)
 		return false;
 	if (!CreateDirectory(path, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
 		return false;
-	if (FAILED(StringCchCopy(lpFolderPath, cchFolderPath, path)))
+	if (FAILED(StringCchCat(path, ARRAYSIZE(path), L"\\")))
+		return false;
+	if (FAILED(StringCchCat(path, ARRAYSIZE(path), kPrefFileName)))
+		return false;
+	if (FAILED(StringCchCopy(lpFilePath, cchFilePath, path)))
 		return false;
 
 	return true;
@@ -54,21 +58,13 @@ Boolean GetPrefsFPath (LPWSTR lpFolderPath, size_t cchFolderPath)
 
 //--------------------------------------------------------------  WritePrefs
 
-Boolean WritePrefs (LPCWSTR prefsDirPath, prefsInfo *thePrefs)
+Boolean WritePrefs (LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 {
 	HANDLE		fileHandle;
 	byteio		byteWriter;
-	WCHAR		prefsFilePath[MAX_PATH];
 	Str255		fileType;
 
 	PasStringCopyC("Preferences", fileType);
-	if (FAILED(StringCchCopy(prefsFilePath, ARRAYSIZE(prefsFilePath), prefsDirPath)))
-		return false;
-	if (FAILED(StringCchCat(prefsFilePath, ARRAYSIZE(prefsFilePath), L"\\")))
-		return false;
-	if (FAILED(StringCchCat(prefsFilePath, ARRAYSIZE(prefsFilePath), kPrefFileName)))
-		return false;
-
 	fileHandle = CreateFile(prefsFilePath, GENERIC_WRITE, 0, NULL,
 			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (fileHandle == INVALID_HANDLE_VALUE)
@@ -109,14 +105,14 @@ Boolean WritePrefs (LPCWSTR prefsDirPath, prefsInfo *thePrefs)
 
 Boolean SavePrefs (prefsInfo *thePrefs, SInt16 versionNow)
 {
-	WCHAR prefsDirPath[MAX_PATH];
+	WCHAR prefsFilePath[MAX_PATH];
 
 	thePrefs->prefVersion = versionNow;
 
-	if (!GetPrefsFPath(prefsDirPath, ARRAYSIZE(prefsDirPath)))
+	if (!GetPrefsFilePath(prefsFilePath, ARRAYSIZE(prefsFilePath)))
 		return false;
 
-	if (!WritePrefs(prefsDirPath, thePrefs))
+	if (!WritePrefs(prefsFilePath, thePrefs))
 		return false;
 
 	return true;
