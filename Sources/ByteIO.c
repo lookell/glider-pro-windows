@@ -290,7 +290,10 @@ static int handle_reader_read(byteio *stream, void *buffer, size_t size)
 	handle_reader *self = stream->priv;
 
 	if (self == NULL)
+	{
+		SetLastError(ERROR_INVALID_PARAMETER);
 		return 0;
+	}
 	while (size != 0)
 	{
 		// Fill up the buffer, if needed
@@ -305,7 +308,10 @@ static int handle_reader_read(byteio *stream, void *buffer, size_t size)
 		// Read as much as we can from the buffer
 		readsize = (self->size <= size) ? self->size : size;
 		if (readsize == 0)
+		{
+			SetLastError(ERROR_HANDLE_EOF);
 			return 0;
+		}
 		if (outptr != NULL)
 		{
 			memcpy(outptr, self->bufptr, readsize);

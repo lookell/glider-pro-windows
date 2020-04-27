@@ -29,7 +29,7 @@
 
 Boolean GetPrefsFilePath (LPWSTR, size_t);
 Boolean WritePrefs (LPCWSTR, prefsInfo *);
-OSErr ReadPrefs (SInt32 *, SInt16 *, prefsInfo *);
+HRESULT ReadPrefs (LPCWSTR, prefsInfo *);
 Boolean DeletePrefs (LPCWSTR);
 void BringUpDeletePrefsAlert (void);
 
@@ -121,59 +121,54 @@ Boolean SavePrefs (prefsInfo *thePrefs, SInt16 versionNow)
 
 //--------------------------------------------------------------  ReadPrefs
 
-OSErr ReadPrefs (SInt32 *prefDirID, SInt16 *systemVolRef, prefsInfo *thePrefs)
+HRESULT ReadPrefs (LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 {
-	return (-1);
-#if 0
-	OSErr		theErr;
-	short		fileRefNum;
-	long		byteCount;
-	FSSpec		theSpecs;
-	Str255		fileName = kPrefFileName;
+	HANDLE		fileHandle;
+	byteio		byteReader;
+	Str255		fileType;
+	DWORD		lastError;
 
-	theErr = FSMakeFSSpec(*systemVolRef, *prefDirID, fileName, &theSpecs);
-	if (theErr != noErr)
+	PasStringCopyC("Preferences", fileType);
+	fileHandle = CreateFile(prefsFilePath, GENERIC_READ, FILE_SHARE_READ, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (fileHandle == INVALID_HANDLE_VALUE)
 	{
-		if (theErr == fnfErr)
-			return(theErr);
-		else
-		{
-			CheckFileError(theErr, "\pPreferences");
-			return(theErr);
-		}
+		lastError = GetLastError();
+		if (lastError != ERROR_FILE_NOT_FOUND)
+			CheckFileError(lastError, fileType);
+		return HRESULT_FROM_WIN32(lastError);
+	}
+	if (!byteio_init_handle_reader(&byteReader, fileHandle))
+	{
+		CloseHandle(fileHandle);
+		return E_OUTOFMEMORY;
 	}
 
-	theErr = FSpOpenDF(&theSpecs, fsRdWrPerm, &fileRefNum);
-	if (theErr != noErr)
+	if (!ReadPrefsInfo(&byteReader, thePrefs))
 	{
-		CheckFileError(theErr, "\pPreferences");
-		return(theErr);
+		lastError = GetLastError();
+		if (lastError != ERROR_HANDLE_EOF)
+			CheckFileError(lastError, fileType);
+		byteio_close(&byteReader);
+		CloseHandle(fileHandle);
+		return HRESULT_FROM_WIN32(lastError);
 	}
 
-	byteCount = sizeof(*thePrefs);
-
-	theErr = FSRead(fileRefNum, &byteCount, thePrefs);
-	if (theErr != noErr)
+	if (!byteio_close(&byteReader))
 	{
-		if (theErr == eofErr)
-			theErr = FSClose(fileRefNum);
-		else
-		{
-			CheckFileError(theErr, "\pPreferences");
-			theErr = FSClose(fileRefNum);
-		}
-		return(theErr);
+		lastError = GetLastError();
+		CheckFileError(lastError, fileType);
+		CloseHandle(fileHandle);
+		return HRESULT_FROM_WIN32(lastError);
+	}
+	if (!CloseHandle(fileHandle))
+	{
+		lastError = GetLastError();
+		CheckFileError(lastError, fileType);
+		return HRESULT_FROM_WIN32(lastError);
 	}
 
-	theErr = FSClose(fileRefNum);
-	if (theErr != noErr)
-	{
-		CheckFileError(theErr, "\pPreferences");
-		return(theErr);
-	}
-
-	return(theErr);
-#endif
+	return S_OK;
 }
 
 //--------------------------------------------------------------  DeletePrefs
@@ -190,36 +185,30 @@ Boolean DeletePrefs (LPCWSTR prefsFilePath)
 
 Boolean LoadPrefs (prefsInfo *thePrefs, SInt16 versionNeed)
 {
-	return false;
-#if 0
-	long		prefDirID;
-	OSErr		theErr;
-	short		systemVolRef;
-	Boolean		noProblems;
+	WCHAR prefsFilePath[MAX_PATH];
+	HRESULT hr;
 
-	noProblems = GetPrefsFPath(&prefDirID, &systemVolRef);
-	if (!noProblems)
-		return(false);
+	if (!GetPrefsFilePath(prefsFilePath, ARRAYSIZE(prefsFilePath)))
+		return false;
 
-	theErr = ReadPrefs(&prefDirID, &systemVolRef, thePrefs);
-	if (theErr == eofErr)
+	hr = ReadPrefs(prefsFilePath, thePrefs);
+	if (hr == HRESULT_FROM_WIN32(ERROR_HANDLE_EOF))
 	{
 		BringUpDeletePrefsAlert();
-		noProblems = DeletePrefs(&prefDirID, &systemVolRef);
-		return (false);
+		DeletePrefs(prefsFilePath);
+		return false;
 	}
-	else if (theErr != noErr)
-		return (false);
+	else if (FAILED(hr))
+		return false;
 
 	if (thePrefs->prefVersion != versionNeed)
 	{
 		BringUpDeletePrefsAlert();
-		noProblems = DeletePrefs(&prefDirID, &systemVolRef);
-		return(false);
+		DeletePrefs(prefsFilePath);
+		return false;
 	}
 
-	return (true);
-#endif
+	return true;
 }
 
 //--------------------------------------------------------------  BringUpDeletePrefsAlert
