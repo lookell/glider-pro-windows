@@ -12,13 +12,14 @@
 //#include <TextUtils.h>
 //#include <ToolUtils.h>
 #include "Macintosh.h"
+#include "ByteIO.h"
 #include "Externs.h"
 #include "Environ.h"
 
 
 #define	kPrefCreatorType	'ozm5'
 #define	kPrefFileType		'gliP'
-#define	kPrefFileName		"\pGlider Prefs"
+#define	kPrefFileName		L"Glider Prefs"
 #define	kDefaultPrefFName	"\pPreferences"
 #define kPrefsStringsID		160
 #define kNewPrefsAlertID	160
@@ -26,7 +27,7 @@
 
 
 Boolean GetPrefsFPath (LPWSTR, size_t);
-Boolean WritePrefs (SInt32 *, SInt16 *, prefsInfo *);
+Boolean WritePrefs (LPCWSTR, prefsInfo *);
 OSErr ReadPrefs (SInt32 *, SInt16 *, prefsInfo *);
 Boolean DeletePrefs (SInt32 *, SInt16 *);
 void BringUpDeletePrefsAlert (void);
@@ -53,77 +54,72 @@ Boolean GetPrefsFPath (LPWSTR lpFolderPath, size_t cchFolderPath)
 
 //--------------------------------------------------------------  WritePrefs
 
-Boolean WritePrefs (SInt32 *prefDirID, SInt16 *systemVolRef, prefsInfo *thePrefs)
+Boolean WritePrefs (LPCWSTR prefsDirPath, prefsInfo *thePrefs)
 {
-	return false;
-#if 0
-	OSErr		theErr;
-	short		fileRefNum;
-	long		byteCount;
-	FSSpec		theSpecs;
-	Str255		fileName = kPrefFileName;
+	HANDLE		fileHandle;
+	byteio		byteWriter;
+	WCHAR		prefsFilePath[MAX_PATH];
+	Str255		fileType;
 
-	theErr = FSMakeFSSpec(*systemVolRef, *prefDirID, fileName, &theSpecs);
-	if (theErr != noErr)
+	PasStringCopyC("Preferences", fileType);
+	if (FAILED(StringCchCopy(prefsFilePath, ARRAYSIZE(prefsFilePath), prefsDirPath)))
+		return false;
+	if (FAILED(StringCchCat(prefsFilePath, ARRAYSIZE(prefsFilePath), L"\\")))
+		return false;
+	if (FAILED(StringCchCat(prefsFilePath, ARRAYSIZE(prefsFilePath), kPrefFileName)))
+		return false;
+
+	fileHandle = CreateFile(prefsFilePath, GENERIC_WRITE, 0, NULL,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (fileHandle == INVALID_HANDLE_VALUE)
 	{
-		if (theErr != fnfErr)
-		{
-			CheckFileError(theErr, "\pPreferences");
-			return(false);
-		}
-		theErr = FSpCreate(&theSpecs, kPrefCreatorType, kPrefFileType, smSystemScript);
-		if (theErr != noErr)
-		{
-			CheckFileError(theErr, "\pPreferences");
-			return(false);
-		}
+		CheckFileError(GetLastError(), fileType);
+		return false;
 	}
-	theErr = FSpOpenDF(&theSpecs, fsRdWrPerm, &fileRefNum);
-	if (theErr != noErr)
+	if (!byteio_init_handle_writer(&byteWriter, fileHandle))
 	{
-		CheckFileError(theErr, "\pPreferences");
-		return(false);
+		CloseHandle(fileHandle);
+		return false;
 	}
 
-	byteCount = sizeof(*thePrefs);
-
-	theErr = FSWrite(fileRefNum, &byteCount, thePrefs);
-	if (theErr != noErr)
+	if (!WritePrefsInfo(&byteWriter, thePrefs))
 	{
-		CheckFileError(theErr, "\pPreferences");
-		return(false);
+		CheckFileError(GetLastError(), fileType);
+		byteio_close(&byteWriter);
+		CloseHandle(fileHandle);
+		return false;
 	}
 
-	theErr = FSClose(fileRefNum);
-	if (theErr != noErr)
+	if (!byteio_close(&byteWriter))
 	{
-		CheckFileError(theErr, "\pPreferences");
-		return(false);
+		CheckFileError(GetLastError(), fileType);
+		CloseHandle(fileHandle);
+		return false;
+	}
+	if (!CloseHandle(fileHandle))
+	{
+		CheckFileError(GetLastError(), fileType);
+		return false;
 	}
 
-	return(true);
-#endif
+	return true;
 }
 
 //--------------------------------------------------------------  SavePrefs
 
 Boolean SavePrefs (prefsInfo *thePrefs, SInt16 versionNow)
 {
-	return false;
-#if 0
-	long		prefDirID;
-	short		systemVolRef;
+	WCHAR prefsDirPath[MAX_PATH];
 
 	thePrefs->prefVersion = versionNow;
 
-	if (!GetPrefsFPath(&prefDirID, &systemVolRef))
-		return(false);
+	if (!GetPrefsFPath(prefsDirPath, ARRAYSIZE(prefsDirPath)))
+		return false;
 
-	if (!WritePrefs(&prefDirID, &systemVolRef, thePrefs))
-		return(false);
+	if (!WritePrefs(prefsDirPath, thePrefs))
+		return false;
 
-	return(true);
-#endif
+	return true;
 }
 
 //--------------------------------------------------------------  ReadPrefs
