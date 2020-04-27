@@ -55,7 +55,12 @@ Point MyGetGlobalMouse (void)
 
 void ToolBoxInit (void)
 {
-	WNDCLASSEX	wcMain;
+	INITCOMMONCONTROLSEX icc;
+	WNDCLASSEX wcMain;
+
+	icc.dwSize = sizeof(icc);
+	icc.dwICC = ICC_WIN95_CLASSES;
+	InitCommonControlsEx(&icc);
 
 	wcMain.cbSize = sizeof(wcMain);
 	wcMain.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
