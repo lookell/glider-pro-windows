@@ -13,6 +13,7 @@
 //#include <ToolUtils.h>
 #include "Macintosh.h"
 #include "ByteIO.h"
+#include "DialogUtils.h"
 #include "Externs.h"
 #include "Environ.h"
 
@@ -225,14 +226,10 @@ Boolean LoadPrefs (prefsInfo *thePrefs, SInt16 versionNeed)
 
 void BringUpDeletePrefsAlert (void)
 {
-	MessageBox(mainWindow, L"BringUpDeletePrefsAlert()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	short		whoCares;
+	AlertData	alertData = { 0 };
+	SInt16		whoCares;
 
-	InitCursor();
-//	CenterAlert(kNewPrefsAlertID);
-	whoCares = Alert(kNewPrefsAlertID, nil);
-#endif
+	alertData.hwndParent = mainWindow;
+	whoCares = Alert(kNewPrefsAlertID, &alertData);
 }
 
