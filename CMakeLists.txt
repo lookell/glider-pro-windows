@@ -23,6 +23,10 @@ if(MSVC)
 endif()
 
 add_executable(gliderpro)
+set_target_properties(
+  gliderpro PROPERTIES
+  WIN32_EXECUTABLE TRUE
+)
 target_include_directories(gliderpro PRIVATE Headers)
 target_link_libraries(gliderpro comctl32 msimg32)
 target_sources(

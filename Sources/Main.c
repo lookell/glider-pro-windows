@@ -20,7 +20,7 @@
 
 void ReadInPrefs (void);
 void WriteOutPrefs (void);
-int main (void);
+int WINAPI wWinMain (HINSTANCE, HINSTANCE, LPWSTR, int);
 
 
 SInt16		isVolume, wasVolume;
@@ -285,7 +285,8 @@ void WriteOutPrefs (void)
 //--------------------------------------------------------------  main
 // Here is main().  The first function called when Glider PRO comes up.
 
-int main (void)
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+		LPWSTR lpCmdLine, int nShowCmd)
 {
 //	SInt32		wasSeed;
 	SInt32		theErr;
@@ -403,5 +404,6 @@ int main (void)
 	RestoreColorDepth();
 //	FlushEvents(everyEvent, 0);
 //	theErr = LoadScrap();
+	return 0;
 }
 
