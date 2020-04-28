@@ -1,7 +1,6 @@
 use crate::bitmap::{Bitmap, BitmapOne, RgbQuad};
-use crate::icocur::IconFile;
 use crate::rsrcfork::Resource;
-use std::io::{self, Read, Write};
+use std::io::{self, Read};
 
 struct IconList {
     data: [u8; 128],
@@ -22,7 +21,7 @@ pub fn get_entry_name(res: &Resource) -> String {
     format!("FinderIcon/{}-large-mono.ico", res.id)
 }
 
-pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
+pub fn convert(data: &[u8]) -> io::Result<(BitmapOne, BitmapOne)> {
     let icon = IconList::read_from(data)?;
 
     let mut data_bits = BitmapOne::new(32, 32);
@@ -61,7 +60,5 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
     }
     let mask_bits = mask_bits;
 
-    let mut ico_file = IconFile::new();
-    ico_file.add_entry(data_bits, mask_bits);
-    ico_file.write_to(writer)
+    Ok((data_bits, mask_bits))
 }

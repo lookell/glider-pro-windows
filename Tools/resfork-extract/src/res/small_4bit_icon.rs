@@ -1,8 +1,7 @@
-use crate::bitmap::{Bitmap, BitmapFour, BitmapOne, RgbQuad};
-use crate::icocur::IconFile;
+use crate::bitmap::{Bitmap, BitmapFour};
 use crate::mac_clut::MAC_COLOR_4;
 use crate::rsrcfork::Resource;
-use std::io::{self, Read, Write};
+use std::io::{self, Read};
 
 struct Small4BitIcon {
     data: [u8; 128],
@@ -20,7 +19,7 @@ pub fn get_entry_name(res: &Resource) -> String {
     format!("FinderIcon/{}-small-4bit.ico", res.id)
 }
 
-pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
+pub fn convert(data: &[u8]) -> io::Result<BitmapFour> {
     let icon = Small4BitIcon::read_from(data)?;
 
     let mut data_bits = BitmapFour::new(16, 16);
@@ -35,12 +34,5 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
     }
     let data_bits = data_bits;
 
-    let mut mask_bits = BitmapOne::new(16, 16);
-    mask_bits.set_palette([RgbQuad::BLACK, RgbQuad::WHITE].iter().copied());
-    let mask_bits = mask_bits;
-    // bitmap is already all-black, as required for an opaque mask
-
-    let mut ico_file = IconFile::new();
-    ico_file.add_entry(data_bits, mask_bits);
-    ico_file.write_to(writer)
+    Ok(data_bits)
 }

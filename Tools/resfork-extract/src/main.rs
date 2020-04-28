@@ -9,9 +9,11 @@ mod rsrcfork;
 mod utils;
 
 use crate::apple_double::AppleDouble;
-use crate::bitmap::Bitmap;
+use crate::bitmap::{Bitmap, BitmapEight, BitmapFour, BitmapOne};
+use crate::icocur::IconFile;
 use crate::macbinary::MacBinary;
 use crate::rsrcfork::{ResType, Resource, ResourceFork};
+use std::collections::HashMap;
 use std::env;
 use std::error::Error;
 use std::fs::File;
@@ -290,35 +292,53 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::icon::convert(&res.data, &mut zip_writer)?;
             }
-            "icl4" => {
-                let entry_name = res::large_4bit_icon::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::large_4bit_icon::convert(&res.data, &mut zip_writer)?;
-            }
             "icl8" => {
                 let entry_name = res::large_8bit_icon::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
-                res::large_8bit_icon::convert(&res.data, &mut zip_writer)?;
+                let mut icon_file = IconFile::new();
+                let data_bits = res::large_8bit_icon::convert(&res.data)?;
+                icon_file.add_entry(data_bits, BitmapOne::new(32, 32));
+                icon_file.write_to(&mut zip_writer)?;
+            }
+            "icl4" => {
+                let entry_name = res::large_4bit_icon::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                let mut icon_file = IconFile::new();
+                let data_bits = res::large_4bit_icon::convert(&res.data)?;
+                icon_file.add_entry(data_bits, BitmapOne::new(32, 32));
+                icon_file.write_to(&mut zip_writer)?;
             }
             "ICN#" => {
                 let entry_name = res::icon_list::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
-                res::icon_list::convert(&res.data, &mut zip_writer)?;
-            }
-            "ics4" => {
-                let entry_name = res::small_4bit_icon::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::small_4bit_icon::convert(&res.data, &mut zip_writer)?;
+                let mut icon_file = IconFile::new();
+                let (data_bits, mask_bits) = res::icon_list::convert(&res.data)?;
+                icon_file.add_entry(data_bits, mask_bits);
+                icon_file.write_to(&mut zip_writer)?;
             }
             "ics8" => {
                 let entry_name = res::small_8bit_icon::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
-                res::small_8bit_icon::convert(&res.data, &mut zip_writer)?;
+                let mut icon_file = IconFile::new();
+                let data_bits = res::small_8bit_icon::convert(&res.data)?;
+                icon_file.add_entry(data_bits, BitmapOne::new(16, 16));
+                icon_file.write_to(&mut zip_writer)?;
+            }
+            "ics4" => {
+                let entry_name = res::small_4bit_icon::get_entry_name(&res);
+                zip_writer.start_file(entry_name, Default::default())?;
+                let mut icon_file = IconFile::new();
+                let data_bits = res::small_4bit_icon::convert(&res.data)?;
+                icon_file.add_entry(data_bits, BitmapOne::new(16, 16));
+                icon_file.write_to(&mut zip_writer)?;
             }
             "ics#" => {
                 let entry_name = res::small_icon_list::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
-                res::small_icon_list::convert(&res.data, &mut zip_writer)?;
+                let mut icon_file = IconFile::new();
+                let (data_bits, mask_bits) = res::small_icon_list::convert(&res.data)?;
+                icon_file.add_entry(data_bits, mask_bits);
+                icon_file.write_to(&mut zip_writer)?;
             }
             "mctb" => {
                 let entry_name = res::menu_color_table::get_entry_name(&res);
@@ -380,6 +400,89 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
             }
         }
     }
+
+    struct FinderIconBitmaps {
+        large_8bit: Option<BitmapEight>,
+        large_4bit: Option<BitmapFour>,
+        large_1bit: Option<BitmapOne>,
+        large_mask: BitmapOne,
+        small_8bit: Option<BitmapEight>,
+        small_4bit: Option<BitmapFour>,
+        small_1bit: Option<BitmapOne>,
+        small_mask: BitmapOne,
+    }
+    impl Default for FinderIconBitmaps {
+        fn default() -> Self {
+            Self {
+                large_8bit: None,
+                large_4bit: None,
+                large_1bit: None,
+                large_mask: BitmapOne::new(32, 32),
+                small_8bit: None,
+                small_4bit: None,
+                small_1bit: None,
+                small_mask: BitmapOne::new(16, 16),
+            }
+        }
+    }
+    let mut finder_icons = HashMap::<i16, FinderIconBitmaps>::new();
+    for res in resfork.iter() {
+        match res.restype.to_string().as_str() {
+            "icl8" => {
+                let data_bits = res::large_8bit_icon::convert(&res.data)?;
+                finder_icons.entry(res.id).or_default().large_8bit = Some(data_bits);
+            }
+            "icl4" => {
+                let data_bits = res::large_4bit_icon::convert(&res.data)?;
+                finder_icons.entry(res.id).or_default().large_4bit = Some(data_bits);
+            }
+            "ICN#" => {
+                let (data_bits, mask_bits) = res::icon_list::convert(&res.data)?;
+                let entry = finder_icons.entry(res.id).or_default();
+                entry.large_1bit = Some(data_bits);
+                entry.large_mask = mask_bits;
+            }
+            "ics8" => {
+                let data_bits = res::small_8bit_icon::convert(&res.data)?;
+                finder_icons.entry(res.id).or_default().small_8bit = Some(data_bits);
+            }
+            "ics4" => {
+                let data_bits = res::small_4bit_icon::convert(&res.data)?;
+                finder_icons.entry(res.id).or_default().small_4bit = Some(data_bits);
+            }
+            "ics#" => {
+                let (data_bits, mask_bits) = res::small_icon_list::convert(&res.data)?;
+                let entry = finder_icons.entry(res.id).or_default();
+                entry.small_1bit = Some(data_bits);
+                entry.small_mask = mask_bits;
+            }
+            _ => {}
+        }
+    }
+    for (icon_id, icon_entry) in finder_icons {
+        let mut icon_file = IconFile::new();
+        if let Some(large_8bit) = icon_entry.large_8bit {
+            icon_file.add_entry(large_8bit.clone(), icon_entry.large_mask.clone());
+        }
+        if let Some(large_4bit) = icon_entry.large_4bit {
+            icon_file.add_entry(large_4bit.clone(), icon_entry.large_mask.clone());
+        }
+        if let Some(large_1bit) = icon_entry.large_1bit {
+            icon_file.add_entry(large_1bit.clone(), icon_entry.large_mask.clone());
+        }
+        if let Some(small_8bit) = icon_entry.small_8bit {
+            icon_file.add_entry(small_8bit.clone(), icon_entry.small_mask.clone());
+        }
+        if let Some(small_4bit) = icon_entry.small_4bit {
+            icon_file.add_entry(small_4bit.clone(), icon_entry.small_mask.clone());
+        }
+        if let Some(small_1bit) = icon_entry.small_1bit {
+            icon_file.add_entry(small_1bit.clone(), icon_entry.small_mask.clone());
+        }
+        zip_writer.start_file(format!("FinderIcon/{}.ico", icon_id), Default::default())?;
+        icon_file.write_to(&mut zip_writer)?;
+    }
+
     Ok(())
 }
 
