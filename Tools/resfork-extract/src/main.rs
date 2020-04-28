@@ -13,7 +13,7 @@ use crate::bitmap::{Bitmap, BitmapEight, BitmapFour, BitmapOne};
 use crate::icocur::IconFile;
 use crate::macbinary::MacBinary;
 use crate::rsrcfork::{ResType, Resource, ResourceFork};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::env;
 use std::error::Error;
 use std::fs::File;
@@ -156,10 +156,24 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
         write_names_txt(resfork, &mut zip_writer)?;
     }
 
+    let mut finder_icon_ids = HashSet::new();
+    for res in resfork.iter() {
+        match res.restype.to_string().as_str() {
+            "icl8" | "icl4" | "ICN#" | "ics8" | "ics4" | "ics#" => {
+                finder_icon_ids.insert(res.id);
+            }
+            _ => {}
+        }
+    }
+
     let mut rc_script = String::new();
     rc_script += "#pragma code_page(65001)\n";
     rc_script += "#include <windows.h>\n";
     rc_script += "LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US\n";
+    for icon_id in finder_icon_ids.iter().copied() {
+        let unsigned_id = icon_id as i16 as u16;
+        rc_script += &format!("{0} ICON \"build\\\\icon_{1}.ico\"\n", unsigned_id, icon_id);
+    }
     for res in resfork.iter_type(ResType::new(b"bnds")) {
         rc_script += &format!("{0} BOUNDS \"build\\\\bnds_{0}.bin\"\n", res.id);
     }
@@ -182,6 +196,12 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
     build_script += "@echo off\n";
     build_script += "rem This build script uses ImageMagick and FFmpeg for conversion\n";
     build_script += "if not exist \"%~dp0build\" mkdir \"%~dp0build\"\n";
+    for icon_id in finder_icon_ids.iter().copied() {
+        build_script += &format!(
+            "copy \"%~dp0FinderIcon\\{0}.ico\" \"%~dp0build\\icon_{0}.ico\" >nul\n",
+            icon_id
+        );
+    }
     for res in resfork.iter_type(ResType::new(b"bnds")) {
         build_script += &format!(
             "copy \"%~dp0(bnds)\\{0}.bin\" \"%~dp0build\\bnds_{0}.bin\" >nul\n",
