@@ -52,3 +52,10 @@
 #define ID_MAP_WINDOW			40419
 #define ID_OBJECT_WINDOW		40420
 #define ID_COORDINATE_WINDOW	40421
+
+#define IDI_APPL				1
+#define IDI_PREFS				2
+#define IDI_HOUSE				3
+#define IDI_GAME				4
+#define IDI_SCORE				5
+#define IDI_MOVIE				6

@@ -16,6 +16,7 @@
 #include "Environ.h"
 #include "House.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 
 
 #define kLoadHouseDialogID		1000
@@ -27,6 +28,7 @@
 #define kLoadIconLastItem		28
 #define kScrollUpItem			29
 #define kScrollDownItem			30
+#define kHouseListItem			100
 #define kLoadTitlePict1			1001
 #define kLoadTitlePict8			1002
 #define kDefaultHousePict1		1003
@@ -36,10 +38,8 @@
 #define kMaxExtraHouses			8
 
 
-void UpdateLoadDialog (DialogPtr);
-void PageUpHouses (DialogPtr);
-void PageDownHouses (DialogPtr);
-Boolean LoadFilter (DialogPtr, EventRecord *, SInt16 *);
+BOOL InitLoadDialog (HWND);
+INT_PTR CALLBACK LoadFilter (HWND, UINT, WPARAM, LPARAM);
 void SortHouseList (void);
 BOOL GetHouseFolderPath (LPWSTR, DWORD);
 void DoDirSearch (void);
@@ -58,308 +58,139 @@ extern	UInt32			doubleTime;
 
 
 //==============================================================  Functions
-//--------------------------------------------------------------  UpdateLoadWindow
+//--------------------------------------------------------------  InitLoadDialog
 
 #ifndef COMPILEDEMO
-void UpdateLoadDialog (DialogPtr theDialog)
+BOOL InitLoadDialog (HWND hDlg)
 {
-	return;
-#if 0
-	Rect		tempRect, dialogRect, dummyRect;
-	short		houseStart, houseStop, i, wasResFile, isResFile, count;
-//	char		wasState;
-	WindowRef	theWindow;
-//	RgnHandle	theRegion;
+	HWND		houseListView;
+	WCHAR		glrPath[MAX_PATH];
+	PWCH		extPtr;
+	HICON		defaultIcon, loadedIcon;
+	INT			cxIcon, cyIcon;
+	LVITEM		lvItem;
+	HMODULE		houseResources;
+	HIMAGELIST	himl;
+	HRESULT		hr;
+	SInt16		i;
 
-	theWindow = GetDialogWindow(theDialog);
-	GetWindowBounds(theWindow, kWindowContentRgn, &dialogRect);
-	/*
-	wasState = HGetState((Handle)(((DialogPeek)theDialog)->window).port.visRgn);
-	HLock((Handle)(((DialogPeek)theDialog)->window).port.visRgn);
-	dialogRect = (**((((DialogPeek)theDialog)->window).port.visRgn)).rgnBBox;
-	HSetState((Handle)(((DialogPeek)theDialog)->window).port.visRgn, wasState);
-	*/
-
-	DrawDialog(theDialog);
-	ColorFrameWHRect(8, 39, 413, 184, kRedOrangeColor8);	// box around files
-
-	houseStart = housePage;
-	houseStop = housesFound;
-	if ((houseStop - houseStart) > kDispFiles)
-		houseStop = houseStart + kDispFiles;
-
-	wasResFile = CurResFile();
-	count = 0;
-
-	for (i = 0; i < 12; i++)
-		fileFirstChar[i] = 0x7F;
-
-	for (i = houseStart; i < houseStop; i++)
+	CenterOverOwner(hDlg);
+	houseListView = GetDlgItem(hDlg, kHouseListItem);
+	if (houseListView == NULL)
 	{
-		SpinCursor(1);
+		EndDialog(hDlg, IDCANCEL);
+		return TRUE;
+	}
+	cxIcon = GetSystemMetrics(SM_CXICON);
+	cyIcon = GetSystemMetrics(SM_CYICON);
+	defaultIcon = LoadImage(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(IDI_HOUSE), IMAGE_ICON,
+			cxIcon, cyIcon, LR_DEFAULTCOLOR | LR_SHARED);
+	if (defaultIcon == NULL)
+		RedAlert(kErrFailedResourceLoad);
+	himl = ImageList_Create(cxIcon, cyIcon, ILC_MASK | ILC_COLOR32, housesFound, 0);
 
-		GetDialogItemRect(theDialog, kLoadIconFirstItem + i - housePage,
-				&tempRect);
-
-		if (SectRect(&dialogRect, &tempRect, &dummyRect))
+	SendMessage(houseListView, WM_SETREDRAW, FALSE, 0);
+	ListView_SetImageList(houseListView, himl, LVSIL_NORMAL);
+	for (i = 0; i < housesFound; i++)
+	{
+		hr = StringCchCopy(glrPath, ARRAYSIZE(glrPath), theHousesSpecs[i].path);
+		if (SUCCEEDED(hr))
 		{
-			isResFile = HOpenResFile(theHousesSpecs[i].vRefNum,
-					theHousesSpecs[i].parID, theHousesSpecs[i].name, fsRdPerm);
-			if (isResFile != -1)
-			{
-				if (Get1Resource('icl8', -16455) != nil)
-				{
-					LargeIconPlot(&tempRect, -16455);
-				}
-				else
-					LoadDialogPICT(theDialog, kLoadIconFirstItem + i - housePage,
-							kDefaultHousePict8);
-				CloseResFile(isResFile);
-			}
-			else
-				LoadDialogPICT(theDialog, kLoadIconFirstItem + i - housePage,
-						kDefaultHousePict8);
+			extPtr = wcsrchr(glrPath, L'.');
+			if (extPtr != NULL)
+				*extPtr = L'\0';
+			hr = StringCchCat(glrPath, ARRAYSIZE(glrPath), L".glr");
 		}
+		houseResources = NULL;
+		if (SUCCEEDED(hr))
+			houseResources = LoadLibraryEx(glrPath, NULL, LOAD_LIBRARY_AS_DATAFILE);
+		loadedIcon = NULL;
+		if (houseResources != NULL)
+		{
+			loadedIcon = LoadImage(houseResources,
+					MAKEINTRESOURCE(-16455), IMAGE_ICON,
+					cxIcon, cyIcon, LR_DEFAULTCOLOR);
+			FreeLibrary(houseResources);
+		}
+		if (loadedIcon == NULL)
+			loadedIcon = defaultIcon;
 
-		fileFirstChar[count] = theHousesSpecs[i].name[1];
-		if ((fileFirstChar[count] <= 0x7A) && (fileFirstChar[count] > 0x60))
-			fileFirstChar[count] -= 0x20;
-		count++;
+		lvItem.mask = LVIF_IMAGE | LVIF_PARAM | LVIF_TEXT;
+		lvItem.iItem = housesFound; // insert at the end
+		lvItem.iSubItem = 0;
+		lvItem.pszText = theHousesSpecs[i].houseName;
+		lvItem.iImage = ImageList_AddIcon(himl, loadedIcon);
+		lvItem.lParam = i;
+		ListView_InsertItem(houseListView, &lvItem);
 
-		DrawDialogUserText(theDialog, kLoadNameFirstItem + i - housePage,
-				theHousesSpecs[i].name, i == (thisHouseIndex + housePage));
-
+		if (loadedIcon != defaultIcon)
+			DestroyIcon(loadedIcon);
 	}
-
-	InitCursor();
-	UseResFile(wasResFile);
-#endif
-}
-#endif
-
-//--------------------------------------------------------------  PageUpHouses
-
-#ifndef COMPILEDEMO
-void PageUpHouses (DialogPtr theDial)
-{
-	return;
-#if 0
-	Rect		tempRect;
-
-	if (housePage < kDispFiles)
-	{
-		SysBeep(1);
-		return;
-	}
-
-	housePage -= kDispFiles;
-	thisHouseIndex = kDispFiles - 1;
-
-	ShowDialogItem(theDial, kScrollDownItem);
-	if (housePage < kDispFiles)
-	{
-		GetDialogItemRect(theDial, kScrollUpItem, &tempRect);
-		HideDialogItem(theDial, kScrollUpItem);
-		DrawCIcon(kGrayedOutUpArrow, tempRect.left, tempRect.top);
-	}
-
-	QSetRect(&tempRect, 8, 39, 421, 223);
-	EraseRect(&tempRect);
-	InvalWindowRect(GetDialogWindow(theDial), &tempRect);
-#endif
-}
-#endif
-
-//--------------------------------------------------------------  PageDownHouses
-
-#ifndef COMPILEDEMO
-void PageDownHouses (DialogPtr theDial)
-{
-	return;
-#if 0
-	Rect		tempRect;
-
-	if (housePage >= (housesFound - kDispFiles))
-	{
-		SysBeep(1);
-		return;
-	}
-
-	housePage += kDispFiles;
-	thisHouseIndex = 0;
-
-	ShowDialogItem(theDial, kScrollUpItem);
-	if (housePage >= (housesFound - kDispFiles))
-	{
-		GetDialogItemRect(theDial, kScrollDownItem, &tempRect);
-		HideDialogItem(theDial, kScrollDownItem);
-		DrawCIcon(kGrayedOutDownArrow, tempRect.left, tempRect.top);
-	}
-
-	QSetRect(&tempRect, 8, 39, 421, 223);
-	EraseRect(&tempRect);
-	InvalWindowRect(GetDialogWindow(theDial), &tempRect);
-#endif
+	SendMessage(houseListView, WM_SETREDRAW, TRUE, 0);
+	return TRUE;
 }
 #endif
 
 //--------------------------------------------------------------  LoadFilter
+
 #ifndef COMPILEDEMO
-
-Boolean LoadFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	short		screenCount, i, wasIndex;
-	char		theChar;
+	HWND		houseListView;
+	INT			selectedIndex;
+	LVITEM		lvItem;
+	SInt16		whoCares;
 
-	switch (event->what)
+	switch (uMsg)
 	{
-		case keyDown:
-		theChar = (event->message) & charCodeMask;
-		switch (theChar)
+	case WM_INITDIALOG:
+		return InitLoadDialog(hDlg);
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
-			break;
-
-			case kEscapeKeyASCII:
-			FlashDialogButton(dial, kCancelButton);
-			*item = kCancelButton;
-			return(true);
-			break;
-
-			case kPageUpKeyASCII:
-			*item = kScrollUpItem;
-			return (true);
-			break;
-
-			case kPageDownKeyASCII:
-			*item = kScrollDownItem;
-			return (true);
-			break;
-
-			case kUpArrowKeyASCII:
-			InvalWindowRect(GetDialogWindow(dial), &loadHouseRects[thisHouseIndex]);
-			thisHouseIndex -= 4;
-			if (thisHouseIndex < 0)
+		case IDOK:
+			houseListView = GetDlgItem(hDlg, kHouseListItem);
+			selectedIndex = ListView_GetNextItem(houseListView, -1, LVNI_SELECTED);
+			if (selectedIndex != -1)
 			{
-				screenCount = housesFound - housePage;
-				if (screenCount > kDispFiles)
-					screenCount = kDispFiles;
-
-				thisHouseIndex += 4;
-				thisHouseIndex = (((screenCount - 1) / 4) * 4) +
-						(thisHouseIndex % 4);
-				if (thisHouseIndex >= screenCount)
-					thisHouseIndex -= 4;
-			}
-			InvalWindowRect(GetDialogWindow(dial), &loadHouseRects[thisHouseIndex]);
-			return(true);
-			break;
-
-			case kDownArrowKeyASCII:
-			InvalWindowRect(GetDialogWindow(dial), &loadHouseRects[thisHouseIndex]);
-			thisHouseIndex += 4;
-			screenCount = housesFound - housePage;
-			if (screenCount > kDispFiles)
-				screenCount = kDispFiles;
-			if (thisHouseIndex >= screenCount)
-				thisHouseIndex %= 4;
-			InvalWindowRect(GetDialogWindow(dial), &loadHouseRects[thisHouseIndex]);
-			return(true);
-			break;
-
-			case kLeftArrowKeyASCII:
-			InvalWindowRect(GetDialogWindow(dial), &loadHouseRects[thisHouseIndex]);
-			thisHouseIndex--;
-			if (thisHouseIndex < 0)
-			{
-				screenCount = housesFound - housePage;
-				if (screenCount > kDispFiles)
-					screenCount = kDispFiles;
-				thisHouseIndex = screenCount - 1;
-			}
-			InvalWindowRect(GetDialogWindow(dial), &loadHouseRects[thisHouseIndex]);
-			return(true);
-			break;
-
-			case kTabKeyASCII:
-			case kRightArrowKeyASCII:
-			InvalWindowRect(GetDialogWindow(dial), &loadHouseRects[thisHouseIndex]);
-			thisHouseIndex++;
-			screenCount = housesFound - housePage;
-			if (screenCount > kDispFiles)
-				screenCount = kDispFiles;
-			if (thisHouseIndex >= screenCount)
-				thisHouseIndex = 0;
-			InvalWindowRect(GetDialogWindow(dial), &loadHouseRects[thisHouseIndex]);
-			return(true);
-			break;
-
-			default:
-			if (((theChar > 0x40) && (theChar <= 0x5A)) ||
-					((theChar > 0x60) && (theChar <= 0x7A)))
-			{
-				if ((theChar > 0x60) && (theChar <= 0x7A))
-					theChar -= 0x20;
-				wasIndex = thisHouseIndex;
-				thisHouseIndex = -1;
-				i = 0;
-				do
+				lvItem.mask = LVIF_PARAM;
+				lvItem.iItem = selectedIndex;
+				lvItem.iSubItem = 0;
+				ListView_GetItem(houseListView, &lvItem);
+				if (lvItem.lParam != thisHouseIndex)
 				{
-					if ((fileFirstChar[i] >= theChar) && (fileFirstChar[i] != 0x7F))
-						thisHouseIndex = i;
-					i++;
+					thisHouseIndex = lvItem.lParam;
+					whoCares = CloseHouse();
+					PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
+					if (OpenHouse())
+						whoCares = ReadHouse();
 				}
-				while ((thisHouseIndex == -1) && (i < 12));
-				if (thisHouseIndex == -1)
-				{
-					screenCount = housesFound - housePage;
-					if (screenCount > kDispFiles)
-						screenCount = kDispFiles;
-					thisHouseIndex = screenCount - 1;
-				}
-				if (wasIndex != thisHouseIndex)
-				{
-					InvalWindowRect(GetDialogWindow(dial), &loadHouseRects[wasIndex]);
-					InvalWindowRect(GetDialogWindow(dial), &loadHouseRects[thisHouseIndex]);
-				}
-				return(true);
 			}
-			else
-				return(false);
+			EndDialog(hDlg, IDOK);
+			SetWindowLongPtr(hDlg, DWLP_MSGRESULT, 0);
+			return TRUE;
+
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
+			SetWindowLongPtr(hDlg, DWLP_MSGRESULT, 0);
+			return TRUE;
 		}
 		break;
 
-		case mouseDown:
-		lastWhenClick = event->when - lastWhenClick;
-		SubPt(event->where, &lastWhereClick);
-		return(false);
-		break;
-
-		case mouseUp:
-		lastWhenClick = event->when;
-		lastWhereClick = event->where;
-		return(false);
-		break;
-
-		case updateEvt:
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateLoadDialog(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
+	case WM_NOTIFY:
+		switch (((LPNMHDR)lParam)->code)
+		{
+		case NM_DBLCLK:
+			if (((LPNMHDR)lParam)->idFrom == kHouseListItem)
+				SendMessage(hDlg, WM_COMMAND, IDOK, 0);
+			SetWindowLongPtr(hDlg, DWLP_MSGRESULT, 0);
+			return TRUE;
+		}
 		break;
 	}
-#endif
+	return FALSE;
 }
 #endif
 
@@ -368,164 +199,9 @@ Boolean LoadFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 #ifndef COMPILEDEMO
 void DoLoadHouse (void)
 {
-	MessageBox(mainWindow, L"DoLoadHouse()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	Rect			tempRect;
-	DialogPtr		theDial;
-	short			i, item, wasIndex, screenCount;
-	Boolean			leaving, whoCares;
-	ModalFilterUPP	loadFilterUPP;
-
-	loadFilterUPP = NewModalFilterUPP(LoadFilter);
-
-	BringUpDialog(&theDial, kLoadHouseDialogID);
-	if (housesFound <= kDispFiles)
-	{
-		GetDialogItemRect(theDial, kScrollUpItem, &tempRect);
-		HideDialogItem(theDial, kScrollUpItem);
-		DrawCIcon(kGrayedOutUpArrow, tempRect.left, tempRect.top);
-
-		GetDialogItemRect(theDial, kScrollDownItem, &tempRect);
-		HideDialogItem(theDial, kScrollDownItem);
-		DrawCIcon(kGrayedOutDownArrow, tempRect.left, tempRect.top);
-	}
-	else
-	{
-		if (thisHouseIndex < kDispFiles)
-		{
-			GetDialogItemRect(theDial, kScrollUpItem, &tempRect);
-			HideDialogItem(theDial, kScrollUpItem);
-			DrawCIcon(kGrayedOutUpArrow, tempRect.left, tempRect.top);
-		}
-		else if (thisHouseIndex > (housesFound - kDispFiles))
-		{
-			GetDialogItemRect(theDial, kScrollDownItem, &tempRect);
-			HideDialogItem(theDial, kScrollDownItem);
-			DrawCIcon(kGrayedOutDownArrow, tempRect.left, tempRect.top);
-		}
-	}
-	wasIndex = thisHouseIndex;
-	housePage = (thisHouseIndex / kDispFiles) * kDispFiles;
-	thisHouseIndex -= housePage;
-
-	for (i = 0; i < 12; i++)
-	{
-		GetDialogItemRect(theDial, kLoadNameFirstItem + i,
-				&loadHouseRects[i]);
-		GetDialogItemRect(theDial, kLoadIconFirstItem + i,
-				&tempRect);
-		loadHouseRects[i].top = tempRect.top;
-		loadHouseRects[i].bottom++;
-	}
-
-	leaving = false;
-
-	while (!leaving)
-	{
-		ModalDialog(loadFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			thisHouseIndex += housePage;
-			if (thisHouseIndex != wasIndex)
-			{
-				whoCares = CloseHouse();
-				PasStringCopy(theHousesSpecs[thisHouseIndex].name,
-						thisHouseName);
-				if (OpenHouse())
-					whoCares = ReadHouse();
-			}
-			leaving = true;
-		}
-		else if (item == kCancelButton)
-		{
-			thisHouseIndex = wasIndex;
-			leaving = true;
-		}
-		else if ((item >= kLoadNameFirstItem) &&
-				(item <= kLoadNameLastItem))
-		{
-			screenCount = housesFound - housePage;
-			if (screenCount > kDispFiles)
-				screenCount = kDispFiles;
-			if ((item - kLoadNameFirstItem != thisHouseIndex) &&
-					(item - kLoadNameFirstItem < screenCount))
-			{
-				InvalWindowRect(GetDialogWindow(theDial), &loadHouseRects[thisHouseIndex]);
-				thisHouseIndex = item - kLoadNameFirstItem;
-				InvalWindowRect(GetDialogWindow(theDial), &loadHouseRects[thisHouseIndex]);
-			}
-
-			if (lastWhereClick.h < 0)
-				lastWhereClick.h = -lastWhereClick.h;
-			if (lastWhereClick.v < 0)
-				lastWhereClick.v = -lastWhereClick.v;
-			if ((lastWhenClick < doubleTime) && (lastWhereClick.h < 5) &&
-					(lastWhereClick.v < 5))
-			{
-				thisHouseIndex += housePage;
-				if (thisHouseIndex != wasIndex)
-				{
-					MyDisableControl(theDial, kOkayButton);
-					MyDisableControl(theDial, kCancelButton);
-					whoCares = CloseHouse();
-					PasStringCopy(theHousesSpecs[thisHouseIndex].name,
-							thisHouseName);
-					if (OpenHouse())
-						whoCares = ReadHouse();
-				}
-				leaving = true;
-			}
-		}
-		else if ((item >= kLoadIconFirstItem) &&
-				(item <= kLoadIconLastItem))
-		{
-			screenCount = housesFound - housePage;
-			if (screenCount > kDispFiles)
-				screenCount = kDispFiles;
-			if ((item - kLoadIconFirstItem != thisHouseIndex) &&
-					(item - kLoadIconFirstItem < screenCount))
-			{
-				InvalWindowRect(GetDialogWindow(theDial), &loadHouseRects[thisHouseIndex]);
-				thisHouseIndex = item - kLoadIconFirstItem;
-				InvalWindowRect(GetDialogWindow(theDial), &loadHouseRects[thisHouseIndex]);
-			}
-
-			if (lastWhereClick.h < 0)
-				lastWhereClick.h = -lastWhereClick.h;
-			if (lastWhereClick.v < 0)
-				lastWhereClick.v = -lastWhereClick.v;
-			if ((lastWhenClick < doubleTime) && (lastWhereClick.h < 5) &&
-					(lastWhereClick.v < 5))
-			{
-				thisHouseIndex += housePage;
-				if (thisHouseIndex != wasIndex)
-				{
-					MyDisableControl(theDial, kOkayButton);
-					MyDisableControl(theDial, kCancelButton);
-					whoCares = CloseHouse();
-					PasStringCopy(theHousesSpecs[thisHouseIndex].name,
-							thisHouseName);
-					if (OpenHouse())
-						whoCares = ReadHouse();
-				}
-				leaving = true;
-			}
-		}
-		else if (item == kScrollUpItem)
-		{
-			PageUpHouses(theDial);
-		}
-		else if (item == kScrollDownItem)
-		{
-			PageDownHouses(theDial);
-		}
-	}
-
-	DisposeDialog(theDial);
-	DisposeModalFilterUPP(loadFilterUPP);
-#endif
+	DialogBox(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kLoadHouseDialogID),
+			mainWindow, LoadFilter);
 }
 #endif
 
@@ -630,24 +306,20 @@ void DoDirSearch (void)
 					(wcscmp(ffd.cFileName, L".") != 0) &&
 					(wcscmp(ffd.cFileName, L"..") != 0))
 			{
-				hr = StringCchPrintf(
-					newPathString,
-					ARRAYSIZE(newPathString),
-					L"%s\\%s",
-					pathString,
-					ffd.cFileName
-				);
+				hff = NULL;
+				hr = StringCchPrintf(newPathString, ARRAYSIZE(newPathString),
+						L"%s\\%s", pathString, ffd.cFileName);
 				if (SUCCEEDED(hr))
 				{
 					hff = OpenFindFile(newPathString, &ffd);
-					if (hff != INVALID_HANDLE_VALUE && hff != NULL)
-					{
-						memcpy(pathString, newPathString, sizeof(pathString));
-						currentDir++;
-						numDirs++;
-						findFileHandles[currentDir] = hff;
-						continue; // restart the loop to use the file found just now
-					}
+				}
+				if (hff != INVALID_HANDLE_VALUE && hff != NULL)
+				{
+					memcpy(pathString, newPathString, sizeof(pathString));
+					currentDir++;
+					numDirs++;
+					findFileHandles[currentDir] = hff;
+					continue; // restart the loop to use the file found just now
 				}
 			}
 		}
@@ -659,24 +331,23 @@ void DoDirSearch (void)
 				extPtr = L"";
 			if ((housesFound < maxFiles) && (wcscmp(extPtr, L".glh") == 0))
 			{
-				hr = StringCchPrintf(
-					theHousesSpecs[housesFound].path,
-					ARRAYSIZE(theHousesSpecs[housesFound].path),
-					L"%s\\%s",
-					pathString,
-					ffd.cFileName
-				);
+				hr = StringCchPrintf(theHousesSpecs[housesFound].path,
+						ARRAYSIZE(theHousesSpecs[housesFound].path),
+						L"%s\\%s", pathString, ffd.cFileName);
 				if (SUCCEEDED(hr))
 				{
-					// terminate at 31 characters or the file extension,
-					// whichever comes first
-					ffd.cFileName[ARRAYSIZE(theHousesSpecs[housesFound].name)] = L'\0';
 					*extPtr = L'\0';
-					MacFromWinString(
-						theHousesSpecs[housesFound].name,
-						ARRAYSIZE(theHousesSpecs[housesFound].name),
-						ffd.cFileName
-					);
+					hr = StringCchCopy(theHousesSpecs[housesFound].houseName,
+							ARRAYSIZE(theHousesSpecs[housesFound].houseName),
+							ffd.cFileName);
+				}
+				if (SUCCEEDED(hr) || hr == STRSAFE_E_INSUFFICIENT_BUFFER)
+				{
+					// STRSAFE_E_INSUFFICIENT_BUFFER is okay. Just means that the
+					// house's name will be truncated on display.
+					MacFromWinString(theHousesSpecs[housesFound].name,
+							ARRAYSIZE(theHousesSpecs[housesFound].name),
+							theHousesSpecs[housesFound].houseName);
 					housesFound++;
 				}
 			}

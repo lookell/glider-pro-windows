@@ -2,6 +2,7 @@
 /* this comment enforces υτƒ-8 encoding */
 
 #include <windows.h>
+#include <commctrl.h>
 #include "ResourceIDs.h"
 
 #ifndef IDC_STATIC
@@ -503,12 +504,12 @@ IDM_ROOT MENUEX
 #include "Dialogs\\1043.dlg"
 #include "Dialogs\\1045.dlg"
 
-1       ICON    "Icons\\Appl.ico"
-2       ICON    "Icons\\Prefs.ico"
-3       ICON    "Icons\\House.ico"
-4       ICON    "Icons\\Game.ico"
-5       ICON    "Icons\\Score.ico"
-6       ICON    "Icons\\Movie.ico"
+IDI_APPL    ICON    "Icons\\Appl.ico"
+IDI_PREFS   ICON    "Icons\\Prefs.ico"
+IDI_HOUSE   ICON    "Icons\\House.ico"
+IDI_GAME    ICON    "Icons\\Game.ico"
+IDI_SCORE   ICON    "Icons\\Score.ico"
+IDI_MOVIE   ICON    "Icons\\Movie.ico"
 
 130     ICON    "Icons\\130.ico"
 140     ICON    "Icons\\140.ico"

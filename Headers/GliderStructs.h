@@ -350,6 +350,7 @@ typedef struct
 typedef struct
 {
 	WCHAR		path[MAX_PATH];
+	WCHAR		houseName[33];
 	Str32		name;
 } houseSpec, *houseSpecPtr;
 
