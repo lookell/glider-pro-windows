@@ -173,7 +173,7 @@ void DoGameOverStarAnimation (void)
 
 	while (noInteruption)
 	{
-		if ((angelDest.left % 32) == 0)		// add a star
+		if ((angelDest.left % 32) == 0 && angelDest.left >= 0)		// add a star
 		{
 			PlayPrioritySound(kMysticSound, kMysticPriority);
 			which = angelDest.left / 32;
