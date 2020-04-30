@@ -759,7 +759,7 @@ Boolean OpenHighScoresFile (FSSpec *scoreSpec, SInt16 *scoresRefNum)
 
 Boolean WriteScoresToDisk (void)
 {
-	return false;
+	return true;
 #if 0
 	scoresType	*theScores;
 	FSSpec		scoreSpec;
