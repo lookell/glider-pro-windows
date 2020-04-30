@@ -248,19 +248,19 @@ void SortHouseList (void)
 
 BOOL GetHouseFolderPath(LPWSTR buffer, DWORD cch)
 {
-	DWORD result;
-	PWCH backSlashPtr;
+	WCHAR pathBuffer[MAX_PATH];
+	HRESULT hr;
 
-	if (buffer == NULL || cch == 0)
+	if (!GetDataFolderPath(pathBuffer, ARRAYSIZE(pathBuffer)))
 		return FALSE;
-	result = GetModuleFileName(NULL, buffer, cch);
-	if (result == 0 || result == cch)
+	hr = StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\Houses");
+	if (FAILED(hr))
 		return FALSE;
-	backSlashPtr = wcsrchr(buffer, L'\\');
-	if (backSlashPtr == NULL)
+	if (!CreateDirectory(pathBuffer, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
 		return FALSE;
-	*backSlashPtr = L'\0';
-	return TRUE;
+
+	hr = StringCchCopy(buffer, cch, pathBuffer);
+	return SUCCEEDED(hr);
 }
 
 //--------------------------------------------------------------  DoDirSearch

@@ -39,19 +39,16 @@ void BringUpDeletePrefsAlert (void);
 
 Boolean GetPrefsFilePath (LPWSTR lpFilePath, size_t cchFilePath)
 {
-	WCHAR path[MAX_PATH];
+	WCHAR pathBuffer[MAX_PATH];
+	HRESULT hr;
 
-	if (FAILED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, path)))
+	if (!GetDataFolderPath(pathBuffer, ARRAYSIZE(pathBuffer)))
 		return false;
-	if (FAILED(StringCchCat(path, ARRAYSIZE(path), L"\\glider-pro-windows")))
+	hr = StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\" kPrefFileName);
+	if (FAILED(hr))
 		return false;
-	if (!CreateDirectory(path, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
-		return false;
-	if (FAILED(StringCchCat(path, ARRAYSIZE(path), L"\\")))
-		return false;
-	if (FAILED(StringCchCat(path, ARRAYSIZE(path), kPrefFileName)))
-		return false;
-	if (FAILED(StringCchCopy(lpFilePath, cchFilePath, path)))
+	hr = StringCchCopy(lpFilePath, cchFilePath, pathBuffer);
+	if (FAILED(hr))
 		return false;
 
 	return true;

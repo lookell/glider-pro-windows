@@ -379,7 +379,8 @@ SInt32 ExtractCTSeed (CGrafPtr);
 //void ForceCTSeed (CGrafPtr, SInt32);
 void DelayTicks (SInt32);
 void UnivGetSoundVolume (SInt16 *, Boolean);
-void  UnivSetSoundVolume (SInt16, Boolean);
+void UnivSetSoundVolume (SInt16, Boolean);
+BOOL GetDataFolderPath (LPWSTR, DWORD);
 
 Boolean ValidInstallation (Boolean);					// --- Validate.c
 

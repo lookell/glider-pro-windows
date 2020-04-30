@@ -921,3 +921,52 @@ void  UnivSetSoundVolume (SInt16 volume, Boolean hasSM3)
 #endif
 }
 
+//-----------------------------------------------------------------  GetDataFolderPath
+
+BOOL GetDataFolderPath (LPWSTR lpDataPath, DWORD cchDataPath)
+{
+	static int useProgramDirectory = -1;
+	WCHAR pathBuffer[MAX_PATH];
+	DWORD fileAttributes;
+	DWORD result;
+	PWCH sepPtr;
+	HRESULT hr;
+
+	if (lpDataPath == NULL)
+		return FALSE;
+
+	result = GetModuleFileName(HINST_THISCOMPONENT, pathBuffer, ARRAYSIZE(pathBuffer));
+	if (result == 0 || result == ARRAYSIZE(pathBuffer))
+		return FALSE;
+	sepPtr = wcsrchr(pathBuffer, L'\\');
+	if (sepPtr == NULL)
+		sepPtr = &pathBuffer[0];
+	*sepPtr = L'\0';
+
+	if (useProgramDirectory == -1)
+	{
+		hr = StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\portable.dat");
+		if (FAILED(hr))
+			return FALSE;
+		fileAttributes = GetFileAttributes(pathBuffer);
+		*sepPtr = L'\0';
+		useProgramDirectory = (fileAttributes != INVALID_FILE_ATTRIBUTES);
+	}
+	if (!useProgramDirectory)
+	{
+		hr = SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, pathBuffer);
+		if (FAILED(hr))
+			return FALSE;
+		hr = StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\glider-pro-windows");
+		if (FAILED(hr))
+			return FALSE;
+		if (!CreateDirectory(pathBuffer, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
+			return FALSE;
+	}
+	hr = StringCchCopy(lpDataPath, cchDataPath, pathBuffer);
+	if (FAILED(hr))
+		return FALSE;
+
+	return TRUE;
+}
+
