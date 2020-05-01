@@ -355,6 +355,11 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 
 	changed = false;
 
+	if (room < 0 || room >= thisHouse->nRooms)
+		return (changed);
+	if (object < 0 || object >= kMaxRoomObs)
+		return (changed);
+
 	switch (thisHouse->rooms[room].objects[object].what)
 	{
 		case kFloorVent:
