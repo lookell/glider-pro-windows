@@ -690,6 +690,11 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 
 	theState = true;
 
+	if (room < 0 || room >= thisHouse->nRooms)
+		return (theState);
+	if (object < 0 || object >= kMaxRoomObs)
+		return (theState);
+
 	switch (thisHouse->rooms[room].objects[object].what)
 	{
 		case kFloorVent:
