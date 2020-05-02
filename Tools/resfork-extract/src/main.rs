@@ -16,24 +16,27 @@ use crate::rsrcfork::{ResType, Resource, ResourceFork};
 use std::collections::{HashMap, HashSet};
 use std::env;
 use std::error::Error;
+use std::ffi::OsString;
 use std::fs::File;
-use std::io::{self, BufReader, BufWriter, Cursor, Read, Seek, SeekFrom, Write};
+use std::io::prelude::*;
+use std::io::{self, BufReader, BufWriter, Cursor, SeekFrom};
+use std::path::Path;
 use zip::ZipWriter;
 
 pub type AnyResult<T> = Result<T, Box<dyn Error>>;
 
-fn extract_resource_bytes(mut reader: impl Read + Seek) -> io::Result<Option<Vec<u8>>> {
+fn extract_resource_bytes(mut reader: impl Read + Seek) -> io::Result<Vec<u8>> {
     reader.seek(SeekFrom::Start(0))?;
     if let Ok(Some(data)) = AppleDouble::read_from(&mut reader) {
-        return Ok(Some(data.rsrc));
+        return Ok(data.rsrc);
     }
     reader.seek(SeekFrom::Start(0))?;
     if let Ok(Some(data)) = MacBinary::read_from(&mut reader) {
-        return Ok(Some(data.rsrc));
+        return Ok(data.rsrc);
     }
     reader.seek(SeekFrom::Start(0))?;
     let mut bytes = Vec::new();
-    reader.read_to_end(&mut bytes).map(|_| Some(bytes))
+    reader.read_to_end(&mut bytes).map(|_| bytes)
 }
 
 fn unprintable_to_period(b: u8) -> u8 {
@@ -506,99 +509,155 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
     Ok(())
 }
 
-fn main() {
-    let arguments = env::args().skip(1).collect::<Vec<_>>();
-    if arguments.len() < 2 {
-        print_usage();
-        return;
-    }
-    let command = &arguments[0];
-    let input_name = &arguments[1];
-    let output_name = arguments.get(2);
-    let mut input_file = match File::open(input_name) {
-        Ok(file) => BufReader::new(file),
-        Err(e) => {
-            eprintln!("error: could not open input file: {}", e);
-            return;
+fn parse_resfork<P: AsRef<Path>>(filename: P) -> io::Result<ResourceFork> {
+    let file_reader = BufReader::new(File::open(filename)?);
+    let rsrc_cursor = Cursor::new(extract_resource_bytes(file_reader)?);
+    ResourceFork::read_from(rsrc_cursor)
+}
+
+fn do_derez_command<I>(args: I) -> Result<(), Box<dyn Error>>
+where
+    I: IntoIterator<Item = OsString>,
+{
+    let mut args = args.into_iter();
+    let input_name = match args.next() {
+        Some(s) => s,
+        None => {
+            invalid_cmdline();
+            return Ok(());
         }
     };
-    let output_file: Option<BufWriter<File>> = match output_name {
-        Some(name) => match File::create(name) {
-            Ok(file) => Some(BufWriter::new(file)),
-            Err(e) => {
-                eprintln!("error: could not open output file: {}", e);
-                return;
-            }
+    let output_name = args.next();
+
+    let resfork = parse_resfork(input_name)?;
+    match output_name {
+        Some(filename) => {
+            let output_file = BufWriter::new(File::create(filename)?);
+            derez_resfork(&resfork, output_file)
         },
-        None => None,
-    };
-    let resfork_bytes = match extract_resource_bytes(&mut input_file) {
-        Ok(Some(bytes)) => bytes,
-        Ok(None) => {
-            eprintln!("error: could not determine file format");
-            return;
-        }
-        Err(e) => {
-            eprintln!("error: input reading failed: {}", e);
-            return;
-        }
-    };
-    let resfork_cursor = Cursor::new(resfork_bytes);
-    let resfork = match ResourceFork::read_from(resfork_cursor) {
-        Ok(fork) => fork,
-        Err(_) => {
-            // try again with the raw file bytes
-            let mut bytes = Vec::new();
-            input_file.seek(SeekFrom::Start(0)).unwrap();
-            input_file.read_to_end(&mut bytes).unwrap();
-            match ResourceFork::read_from(Cursor::new(bytes)) {
-                Ok(fork) => fork,
-                Err(e) => {
-                    eprintln!("error: could not parse resource fork: {}", e);
-                    return;
-                }
-            }
-        }
-    };
-    let result = match command.as_str() {
-        "derez" => match output_file {
-            Some(file) => derez_resfork(&resfork, file),
-            None => {
-                let stdout = io::stdout();
-                let stdout_handle = stdout.lock();
-                derez_resfork(&resfork, stdout_handle)
-            }
-        },
-        "dump" => match output_file {
-            Some(file) => dump_resfork(&resfork, file),
-            None => {
-                eprintln!("error: 'dump' command cannot be used with stdout");
-                return;
-            }
-        },
-        "convert" => match output_file {
-            Some(file) => convert_resfork(&resfork, file),
-            None => {
-                eprintln!("error: 'convert' command cannot be used with stdout");
-                return;
-            }
-        },
-        _ => {
-            eprintln!("error: unknown command");
-            print_usage();
-            return;
-        }
-    };
-    if let Err(e) = result {
-        eprintln!("error: output writing failed: {}", e);
-        return;
+        None => derez_resfork(&resfork, io::stdout().lock()),
     }
 }
 
-fn print_usage() {
-    eprintln!("usage: resfork-extract <command> <input> [output]");
-    eprintln!();
-    eprintln!("    <command>  One of 'derez', 'dump', or 'convert'.");
-    eprintln!("    <input>    Input file's name.");
-    eprintln!("    <output>   Output file's name. Defaults to stdout if omitted.");
+fn do_dump_command<I>(args: I) -> Result<(), Box<dyn Error>>
+where
+    I: IntoIterator<Item = OsString>,
+{
+    let mut args = args.into_iter();
+    let input_name = match args.next() {
+        Some(s) => s,
+        None => {
+            invalid_cmdline();
+            return Ok(());
+        }
+    };
+    let output_name = match args.next() {
+        Some(s) => s,
+        None => {
+            invalid_cmdline();
+            return Ok(());
+        }
+    };
+
+    let resfork = parse_resfork(input_name)?;
+    let output_file = BufWriter::new(File::create(output_name)?);
+    dump_resfork(&resfork, output_file)
+}
+
+fn do_convert_command<I>(args: I) -> Result<(), Box<dyn Error>>
+where
+    I: IntoIterator<Item = OsString>,
+{
+    let mut args = args.into_iter();
+    let input_name = match args.next() {
+        Some(s) => s,
+        None => {
+            invalid_cmdline();
+            return Ok(());
+        }
+    };
+    let output_name = match args.next() {
+        Some(s) => s,
+        None => {
+            invalid_cmdline();
+            return Ok(());
+        }
+    };
+
+    let resfork = parse_resfork(input_name)?;
+    let output_file = BufWriter::new(File::create(output_name)?);
+    convert_resfork(&resfork, output_file)
+}
+
+fn main() -> Result<(), Box<dyn Error>> {
+    let mut args = env::args_os().skip(1);
+    let command = args.next();
+    match command.as_ref().and_then(|s| s.to_str()) {
+        Some("derez") => do_derez_command(args)?,
+        Some("dump") => do_dump_command(args)?,
+        Some("convert") => do_convert_command(args)?,
+        Some("--help") => print_long_help(),
+        None => print_short_help(),
+        _ => invalid_cmdline(),
+    }
+    Ok(())
+}
+
+fn invalid_cmdline() {
+    eprintln!(
+        r#"error: invalid usage
+
+Run "resfork-extract --help" for usage information."#
+    );
+}
+
+fn print_short_help() {
+    eprintln!(
+        r#"resfork-extract
+Extract information from a Macintosh resource fork
+
+Run "resfork-extract --help" for usage information."#
+    );
+}
+
+fn print_long_help() {
+    eprintln!(
+        r#"resfork-extract
+Extract information from a Macintosh resource fork
+
+USAGE:
+    resfork-extract <subcommand>
+
+FLAGS:
+    --help          Print this help information
+
+SUBCOMMANDS:
+    derez <resource-fork> [<output-text>]
+
+        Produce output similar to Apple's old DeRez resource decompiler.
+        If <output-text> is omitted, then standard output is used.
+
+    dump <resource-fork> <output-zip>
+
+        Dump the raw bytes of each resource in the resource fork into
+        its own entry in the output .zip file. Each resource is grouped
+        under a directory named after its type (e.g., 'PICT' or 'DLOG'),
+        and named after its ID number.
+
+    convert <resource-fork> <output-zip>
+
+        Like the 'dump' command, but converts any resources that it
+        knows about into a more modern or human-readable format, if
+        possible. If a conversion fails or the format is unknown, then
+        the raw bytes are dumped. For example 'PICT' resources are
+        converted into BMP image files, and 'snd ' resources are
+        converted into AIFF audio files.
+
+REMARKS:
+
+    The resource fork input file can be in either an AppleDouble
+    container file, a MacBinary container file, or the raw resource
+    fork's bytes on its own. resfork-extract attempts to decode the
+    input file as AppleDouble, then as MacBinary, then as raw bytes."#
+    );
 }
