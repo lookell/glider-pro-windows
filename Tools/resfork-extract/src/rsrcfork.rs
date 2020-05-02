@@ -9,12 +9,13 @@ use std::vec;
 
 #[derive(Clone, Copy, Eq, PartialEq)]
 pub struct ResType {
-    pub chars: [char; 4],
+    pub bytes: [u8; 4],
 }
 
 impl Display for ResType {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        write!(f, "{}", self.chars.iter().collect::<String>())
+        let string: String = self.bytes.iter().map(|&b| mac_roman::decode(b)).collect();
+        write!(f, "{}", string)
     }
 }
 
@@ -26,20 +27,17 @@ impl Debug for ResType {
 
 impl ResType {
     pub fn new(bytes: &[u8; 4]) -> Self {
-        Self {
-            chars: [
-                mac_roman::decode(bytes[0]),
-                mac_roman::decode(bytes[1]),
-                mac_roman::decode(bytes[2]),
-                mac_roman::decode(bytes[3]),
-            ],
-        }
+        Self { bytes: *bytes }
+    }
+
+    pub fn as_bstr(&self) -> &[u8; 4] {
+        &self.bytes
     }
 
     pub fn read_from(mut reader: impl Read) -> io::Result<Self> {
         let mut bytes = [0; 4];
         reader.read_exact(&mut bytes)?;
-        Ok(Self::new(&bytes))
+        Ok(Self { bytes })
     }
 }
 

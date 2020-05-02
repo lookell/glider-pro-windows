@@ -107,18 +107,18 @@ fn derez_resfork(resfork: &ResourceFork, mut writer: impl Write) -> AnyResult<()
 fn make_zip_entry_path(res: &Resource) -> String {
     let typ = res.restype;
     let id = res.id;
-    fn valid_char(c: char) -> bool {
-        c.is_ascii_alphanumeric() || "-_.#() ".contains(c)
+    fn valid_char(b: u8) -> bool {
+        b.is_ascii_alphanumeric() || b"-_.#() ".contains(&b)
     }
-    if typ.chars.iter().copied().all(valid_char) {
+    if typ.bytes.iter().copied().all(valid_char) {
         return format!("({})/{}.bin", typ, id);
     } else {
         return format!(
             "({:02X}-{:02X}-{:02X}-{:02X})/{}.bin",
-            u32::from(typ.chars[0]),
-            u32::from(typ.chars[1]),
-            u32::from(typ.chars[2]),
-            u32::from(typ.chars[3]),
+            u32::from(typ.bytes[0]),
+            u32::from(typ.bytes[1]),
+            u32::from(typ.bytes[2]),
+            u32::from(typ.bytes[3]),
             id
         );
     }
@@ -161,8 +161,8 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
 
     let mut finder_icon_ids = HashSet::new();
     for res in resfork.iter() {
-        match res.restype.to_string().as_str() {
-            "icl8" | "icl4" | "ICN#" | "ics8" | "ics4" | "ics#" => {
+        match res.restype.as_bstr() {
+            b"icl8" | b"icl4" | b"ICN#" | b"ics8" | b"ics4" | b"ics#" => {
                 finder_icon_ids.insert(res.id);
             }
             _ => {}
@@ -234,88 +234,88 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
     zip_writer.write_all(build_script.as_bytes())?;
 
     for res in resfork.iter() {
-        match res.restype.to_string().as_str() {
-            "acur" => {
+        match res.restype.as_bstr() {
+            b"acur" => {
                 let entry_name = res::animated_cursor::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::animated_cursor::convert(&res.data, &mut zip_writer)?;
             }
-            "ALRT" => {
+            b"ALRT" => {
                 let entry_name = res::alert::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::alert::convert(&res.data, &mut zip_writer)?;
             }
-            "BNDL" => {
+            b"BNDL" => {
                 let entry_name = res::bundle::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::bundle::convert(&res.data, &mut zip_writer)?;
             }
-            "cctb" => {
+            b"cctb" => {
                 let entry_name = res::control_color_table::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::control_color_table::convert(&res.data, &mut zip_writer)?;
             }
-            "CDEF" => {
+            b"CDEF" => {
                 let entry_name = format!("ControlDefinitionFunction/{}.bin", res.id);
                 zip_writer.start_file(entry_name, Default::default())?;
                 zip_writer.write_all(&res.data)?;
             }
-            "cicn" => {
+            b"cicn" => {
                 let entry_name = res::color_icon::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::color_icon::convert(&res.data, &mut zip_writer)?;
             }
-            "clut" => {
+            b"clut" => {
                 let entry_name = res::color_table::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::color_table::convert(&res.data, &mut zip_writer)?;
             }
-            "CNTL" => {
+            b"CNTL" => {
                 let entry_name = res::control::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::control::convert(&res.data, &mut zip_writer)?;
             }
-            "crsr" => {
+            b"crsr" => {
                 let entry_name = res::color_cursor::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::color_cursor::convert(&res.data, &mut zip_writer)?;
             }
-            "CURS" => {
+            b"CURS" => {
                 let entry_name = res::cursor::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::cursor::convert(&res.data, &mut zip_writer)?;
             }
-            "dctb" => {
+            b"dctb" => {
                 let entry_name = res::dialog_color_table::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::dialog_color_table::convert(&res.data, &mut zip_writer)?;
             }
-            "demo" => {
+            b"demo" => {
                 let entry_name = format!("DemoData/{}.bin", res.id);
                 zip_writer.start_file(entry_name, Default::default())?;
                 zip_writer.write_all(&res.data)?;
             }
-            "DITL" => {
+            b"DITL" => {
                 let entry_name = res::item_list::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::item_list::convert(&res.data, &mut zip_writer)?;
             }
-            "DLOG" => {
+            b"DLOG" => {
                 let entry_name = res::dialog::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::dialog::convert(&res.data, &mut zip_writer)?;
             }
-            "FREF" => {
+            b"FREF" => {
                 let entry_name = res::file_reference::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::file_reference::convert(&res.data, &mut zip_writer)?;
             }
-            "ICON" => {
+            b"ICON" => {
                 let entry_name = res::icon::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::icon::convert(&res.data, &mut zip_writer)?;
             }
-            "icl8" => {
+            b"icl8" => {
                 let entry_name = res::large_8bit_icon::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 let mut icon_file = IconFile::new();
@@ -323,7 +323,7 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 icon_file.add_entry(data_bits, BitmapOne::new(32, 32));
                 icon_file.write_to(&mut zip_writer)?;
             }
-            "icl4" => {
+            b"icl4" => {
                 let entry_name = res::large_4bit_icon::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 let mut icon_file = IconFile::new();
@@ -331,7 +331,7 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 icon_file.add_entry(data_bits, BitmapOne::new(32, 32));
                 icon_file.write_to(&mut zip_writer)?;
             }
-            "ICN#" => {
+            b"ICN#" => {
                 let entry_name = res::icon_list::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 let mut icon_file = IconFile::new();
@@ -339,7 +339,7 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 icon_file.add_entry(data_bits, mask_bits);
                 icon_file.write_to(&mut zip_writer)?;
             }
-            "ics8" => {
+            b"ics8" => {
                 let entry_name = res::small_8bit_icon::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 let mut icon_file = IconFile::new();
@@ -347,7 +347,7 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 icon_file.add_entry(data_bits, BitmapOne::new(16, 16));
                 icon_file.write_to(&mut zip_writer)?;
             }
-            "ics4" => {
+            b"ics4" => {
                 let entry_name = res::small_4bit_icon::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 let mut icon_file = IconFile::new();
@@ -355,7 +355,7 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 icon_file.add_entry(data_bits, BitmapOne::new(16, 16));
                 icon_file.write_to(&mut zip_writer)?;
             }
-            "ics#" => {
+            b"ics#" => {
                 let entry_name = res::small_icon_list::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 let mut icon_file = IconFile::new();
@@ -363,17 +363,17 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 icon_file.add_entry(data_bits, mask_bits);
                 icon_file.write_to(&mut zip_writer)?;
             }
-            "mctb" => {
+            b"mctb" => {
                 let entry_name = res::menu_color_table::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::menu_color_table::convert(&res.data, &mut zip_writer)?;
             }
-            "MENU" => {
+            b"MENU" => {
                 let entry_name = res::menu::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::menu::convert(&res.data, &mut zip_writer)?;
             }
-            "PAT#" => {
+            b"PAT#" => {
                 let patterns = res::pattern_list::convert(&res.data)?;
                 for (i, patt) in patterns.into_iter().enumerate() {
                     let entry_name = format!("PatternList/{}/{}.bmp", res.id, i);
@@ -381,37 +381,37 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                     patt.write_bmp_file(&mut zip_writer)?;
                 }
             }
-            "PICT" => {
+            b"PICT" => {
                 let entry_name = res::picture::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::picture::convert(&res.data, &mut zip_writer)?;
             }
-            "snd " => {
+            b"snd " => {
                 let entry_name = res::sound::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::sound::convert(&res.data, &mut zip_writer)?;
             }
-            "STR#" => {
+            b"STR#" => {
                 let entry_name = res::string_list::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::string_list::convert(&res.data, &mut zip_writer)?;
             }
-            "vers" => {
+            b"vers" => {
                 let entry_name = res::version::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::version::convert(&res.data, &mut zip_writer)?;
             }
-            "wctb" => {
+            b"wctb" => {
                 let entry_name = res::window_color_table::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::window_color_table::convert(&res.data, &mut zip_writer)?;
             }
-            "WDEF" => {
+            b"WDEF" => {
                 let entry_name = format!("WindowDefinitionFunction/{}.bin", res.id);
                 zip_writer.start_file(entry_name, Default::default())?;
                 zip_writer.write_all(&res.data)?;
             }
-            "WIND" => {
+            b"WIND" => {
                 let entry_name = res::window::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::window::convert(&res.data, &mut zip_writer)?;
@@ -450,30 +450,30 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
     }
     let mut finder_icons = HashMap::<i16, FinderIconBitmaps>::new();
     for res in resfork.iter() {
-        match res.restype.to_string().as_str() {
-            "icl8" => {
+        match res.restype.as_bstr() {
+            b"icl8" => {
                 let data_bits = res::large_8bit_icon::convert(&res.data)?;
                 finder_icons.entry(res.id).or_default().large_8bit = Some(data_bits);
             }
-            "icl4" => {
+            b"icl4" => {
                 let data_bits = res::large_4bit_icon::convert(&res.data)?;
                 finder_icons.entry(res.id).or_default().large_4bit = Some(data_bits);
             }
-            "ICN#" => {
+            b"ICN#" => {
                 let (data_bits, mask_bits) = res::icon_list::convert(&res.data)?;
                 let entry = finder_icons.entry(res.id).or_default();
                 entry.large_1bit = Some(data_bits);
                 entry.large_mask = mask_bits;
             }
-            "ics8" => {
+            b"ics8" => {
                 let data_bits = res::small_8bit_icon::convert(&res.data)?;
                 finder_icons.entry(res.id).or_default().small_8bit = Some(data_bits);
             }
-            "ics4" => {
+            b"ics4" => {
                 let data_bits = res::small_4bit_icon::convert(&res.data)?;
                 finder_icons.entry(res.id).or_default().small_4bit = Some(data_bits);
             }
-            "ics#" => {
+            b"ics#" => {
                 let (data_bits, mask_bits) = res::small_icon_list::convert(&res.data)?;
                 let entry = finder_icons.entry(res.id).or_default();
                 entry.small_1bit = Some(data_bits);
@@ -534,7 +534,7 @@ where
         Some(filename) => {
             let output_file = BufWriter::new(File::create(filename)?);
             derez_resfork(&resfork, output_file)
-        },
+        }
         None => derez_resfork(&resfork, io::stdout().lock()),
     }
 }
