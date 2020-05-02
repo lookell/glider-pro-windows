@@ -36,7 +36,7 @@ impl IconFile {
         next_offset
     }
 
-    pub fn add_entry(&mut self, mut image: impl Bitmap, mask: BitmapOne) {
+    pub fn add_entry(&mut self, mut image: impl Bitmap, mask: BitmapOne) -> &mut Self {
         assert_ne!(image.bit_count(), 24, "24-bit images are not supported");
         assert_ne!(self.entries.len(), usize::from(u16::max_value()));
         assert_eq!(image.width(), mask.width());
@@ -62,6 +62,7 @@ impl IconFile {
             image_bits: image.bits().to_vec(),
             mask_bits: mask.bits().to_vec(),
         });
+        self
     }
 
     fn directory_header(&self) -> DirectoryHeader {

@@ -12,6 +12,7 @@ use crate::apple_double::AppleDouble;
 use crate::bitmap::{Bitmap, BitmapEight, BitmapFour, BitmapOne};
 use crate::icocur::IconFile;
 use crate::macbinary::MacBinary;
+use crate::res::*;
 use crate::rsrcfork::{ResType, Resource, ResourceFork};
 use std::collections::{HashMap, HashSet};
 use std::env;
@@ -19,7 +20,7 @@ use std::error::Error;
 use std::ffi::OsString;
 use std::fs::File;
 use std::io::prelude::*;
-use std::io::{self, BufReader, BufWriter, Cursor, SeekFrom};
+use std::io::{self, BufReader, BufWriter, Cursor, ErrorKind, SeekFrom};
 use std::path::Path;
 use zip::ZipWriter;
 
@@ -150,6 +151,102 @@ fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<
     Ok(())
 }
 
+fn get_entry_name(res: &Resource) -> String {
+    match res.restype.as_bstr() {
+        b"acur" => animated_cursor::get_entry_name(res),
+        b"ALRT" => alert::get_entry_name(res),
+        b"BNDL" => bundle::get_entry_name(res),
+        b"cctb" => control_color_table::get_entry_name(res),
+        b"CDEF" => format!("ControlDefinitionFunction/{}.bin", res.id),
+        b"cicn" => color_icon::get_entry_name(res),
+        b"clut" => color_table::get_entry_name(res),
+        b"CNTL" => control::get_entry_name(res),
+        b"crsr" => color_cursor::get_entry_name(res),
+        b"CURS" => cursor::get_entry_name(res),
+        b"dctb" => dialog_color_table::get_entry_name(res),
+        b"demo" => format!("DemoData/{}.bin", res.id),
+        b"DITL" => item_list::get_entry_name(res),
+        b"DLOG" => dialog::get_entry_name(res),
+        b"FREF" => file_reference::get_entry_name(res),
+        b"ICON" => icon::get_entry_name(res),
+        b"icl8" => large_8bit_icon::get_entry_name(res),
+        b"icl4" => large_4bit_icon::get_entry_name(res),
+        b"ICN#" => icon_list::get_entry_name(res),
+        b"ics8" => small_8bit_icon::get_entry_name(res),
+        b"ics4" => small_4bit_icon::get_entry_name(res),
+        b"ics#" => small_icon_list::get_entry_name(res),
+        b"mctb" => menu_color_table::get_entry_name(res),
+        b"MENU" => menu::get_entry_name(res),
+        b"PICT" => picture::get_entry_name(res),
+        b"snd " => sound::get_entry_name(res),
+        b"STR#" => string_list::get_entry_name(res),
+        b"vers" => version::get_entry_name(res),
+        b"wctb" => window_color_table::get_entry_name(res),
+        b"WDEF" => format!("WindowDefinitionFunction/{}.bin", res.id),
+        b"WIND" => window::get_entry_name(res),
+        _ => make_zip_entry_path(res),
+    }
+}
+
+fn convert_resource(resource: &Resource, mut writer: impl Write) -> io::Result<()> {
+    match resource.restype.as_bstr() {
+        b"acur" => animated_cursor::convert(&resource.data, writer),
+        b"ALRT" => alert::convert(&resource.data, writer),
+        b"BNDL" => bundle::convert(&resource.data, writer),
+        b"cctb" => control_color_table::convert(&resource.data, writer),
+        b"CDEF" => writer.write_all(&resource.data),
+        b"cicn" => color_icon::convert(&resource.data, writer),
+        b"clut" => color_table::convert(&resource.data, writer),
+        b"CNTL" => control::convert(&resource.data, writer),
+        b"crsr" => color_cursor::convert(&resource.data, writer),
+        b"CURS" => cursor::convert(&resource.data, writer),
+        b"dctb" => dialog_color_table::convert(&resource.data, writer),
+        b"demo" => writer.write_all(&resource.data),
+        b"DITL" => item_list::convert(&resource.data, writer),
+        b"DLOG" => dialog::convert(&resource.data, writer),
+        b"FREF" => file_reference::convert(&resource.data, writer),
+        b"ICON" => icon::convert(&resource.data, writer),
+        b"icl8" => {
+            let image = large_8bit_icon::convert(&resource.data)?;
+            let mask = BitmapOne::new(32, 32);
+            IconFile::new().add_entry(image, mask).write_to(writer)
+        }
+        b"icl4" => {
+            let image = large_4bit_icon::convert(&resource.data)?;
+            let mask = BitmapOne::new(32, 32);
+            IconFile::new().add_entry(image, mask).write_to(writer)
+        }
+        b"ICN#" => {
+            let (image, mask) = icon_list::convert(&resource.data)?;
+            IconFile::new().add_entry(image, mask).write_to(writer)
+        }
+        b"ics8" => {
+            let image = small_8bit_icon::convert(&resource.data)?;
+            let mask = BitmapOne::new(16, 16);
+            IconFile::new().add_entry(image, mask).write_to(writer)
+        }
+        b"ics4" => {
+            let image = small_4bit_icon::convert(&resource.data)?;
+            let mask = BitmapOne::new(16, 16);
+            IconFile::new().add_entry(image, mask).write_to(writer)
+        }
+        b"ics#" => {
+            let (image, mask) = small_icon_list::convert(&resource.data)?;
+            IconFile::new().add_entry(image, mask).write_to(writer)
+        }
+        b"mctb" => menu_color_table::convert(&resource.data, writer),
+        b"MENU" => menu::convert(&resource.data, writer),
+        b"PICT" => picture::convert(&resource.data, writer),
+        b"snd " => sound::convert(&resource.data, writer),
+        b"STR#" => string_list::convert(&resource.data, writer),
+        b"vers" => version::convert(&resource.data, writer),
+        b"wctb" => window_color_table::convert(&resource.data, writer),
+        b"WDEF" => writer.write_all(&resource.data),
+        b"WIND" => window::convert(&resource.data, writer),
+        _ => Err(ErrorKind::InvalidData.into()),
+    }
+}
+
 fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
     zip_writer.set_comment("");
@@ -233,187 +330,14 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
     zip_writer.start_file("build.cmd", Default::default())?;
     zip_writer.write_all(build_script.as_bytes())?;
 
-    for res in resfork.iter() {
-        match res.restype.as_bstr() {
-            b"acur" => {
-                let entry_name = res::animated_cursor::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::animated_cursor::convert(&res.data, &mut zip_writer)?;
-            }
-            b"ALRT" => {
-                let entry_name = res::alert::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::alert::convert(&res.data, &mut zip_writer)?;
-            }
-            b"BNDL" => {
-                let entry_name = res::bundle::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::bundle::convert(&res.data, &mut zip_writer)?;
-            }
-            b"cctb" => {
-                let entry_name = res::control_color_table::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::control_color_table::convert(&res.data, &mut zip_writer)?;
-            }
-            b"CDEF" => {
-                let entry_name = format!("ControlDefinitionFunction/{}.bin", res.id);
-                zip_writer.start_file(entry_name, Default::default())?;
-                zip_writer.write_all(&res.data)?;
-            }
-            b"cicn" => {
-                let entry_name = res::color_icon::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::color_icon::convert(&res.data, &mut zip_writer)?;
-            }
-            b"clut" => {
-                let entry_name = res::color_table::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::color_table::convert(&res.data, &mut zip_writer)?;
-            }
-            b"CNTL" => {
-                let entry_name = res::control::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::control::convert(&res.data, &mut zip_writer)?;
-            }
-            b"crsr" => {
-                let entry_name = res::color_cursor::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::color_cursor::convert(&res.data, &mut zip_writer)?;
-            }
-            b"CURS" => {
-                let entry_name = res::cursor::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::cursor::convert(&res.data, &mut zip_writer)?;
-            }
-            b"dctb" => {
-                let entry_name = res::dialog_color_table::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::dialog_color_table::convert(&res.data, &mut zip_writer)?;
-            }
-            b"demo" => {
-                let entry_name = format!("DemoData/{}.bin", res.id);
-                zip_writer.start_file(entry_name, Default::default())?;
-                zip_writer.write_all(&res.data)?;
-            }
-            b"DITL" => {
-                let entry_name = res::item_list::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::item_list::convert(&res.data, &mut zip_writer)?;
-            }
-            b"DLOG" => {
-                let entry_name = res::dialog::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::dialog::convert(&res.data, &mut zip_writer)?;
-            }
-            b"FREF" => {
-                let entry_name = res::file_reference::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::file_reference::convert(&res.data, &mut zip_writer)?;
-            }
-            b"ICON" => {
-                let entry_name = res::icon::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::icon::convert(&res.data, &mut zip_writer)?;
-            }
-            b"icl8" => {
-                let entry_name = res::large_8bit_icon::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                let mut icon_file = IconFile::new();
-                let data_bits = res::large_8bit_icon::convert(&res.data)?;
-                icon_file.add_entry(data_bits, BitmapOne::new(32, 32));
-                icon_file.write_to(&mut zip_writer)?;
-            }
-            b"icl4" => {
-                let entry_name = res::large_4bit_icon::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                let mut icon_file = IconFile::new();
-                let data_bits = res::large_4bit_icon::convert(&res.data)?;
-                icon_file.add_entry(data_bits, BitmapOne::new(32, 32));
-                icon_file.write_to(&mut zip_writer)?;
-            }
-            b"ICN#" => {
-                let entry_name = res::icon_list::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                let mut icon_file = IconFile::new();
-                let (data_bits, mask_bits) = res::icon_list::convert(&res.data)?;
-                icon_file.add_entry(data_bits, mask_bits);
-                icon_file.write_to(&mut zip_writer)?;
-            }
-            b"ics8" => {
-                let entry_name = res::small_8bit_icon::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                let mut icon_file = IconFile::new();
-                let data_bits = res::small_8bit_icon::convert(&res.data)?;
-                icon_file.add_entry(data_bits, BitmapOne::new(16, 16));
-                icon_file.write_to(&mut zip_writer)?;
-            }
-            b"ics4" => {
-                let entry_name = res::small_4bit_icon::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                let mut icon_file = IconFile::new();
-                let data_bits = res::small_4bit_icon::convert(&res.data)?;
-                icon_file.add_entry(data_bits, BitmapOne::new(16, 16));
-                icon_file.write_to(&mut zip_writer)?;
-            }
-            b"ics#" => {
-                let entry_name = res::small_icon_list::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                let mut icon_file = IconFile::new();
-                let (data_bits, mask_bits) = res::small_icon_list::convert(&res.data)?;
-                icon_file.add_entry(data_bits, mask_bits);
-                icon_file.write_to(&mut zip_writer)?;
-            }
-            b"mctb" => {
-                let entry_name = res::menu_color_table::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::menu_color_table::convert(&res.data, &mut zip_writer)?;
-            }
-            b"MENU" => {
-                let entry_name = res::menu::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::menu::convert(&res.data, &mut zip_writer)?;
-            }
-            b"PICT" => {
-                let entry_name = res::picture::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::picture::convert(&res.data, &mut zip_writer)?;
-            }
-            b"snd " => {
-                let entry_name = res::sound::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::sound::convert(&res.data, &mut zip_writer)?;
-            }
-            b"STR#" => {
-                let entry_name = res::string_list::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::string_list::convert(&res.data, &mut zip_writer)?;
-            }
-            b"vers" => {
-                let entry_name = res::version::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::version::convert(&res.data, &mut zip_writer)?;
-            }
-            b"wctb" => {
-                let entry_name = res::window_color_table::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::window_color_table::convert(&res.data, &mut zip_writer)?;
-            }
-            b"WDEF" => {
-                let entry_name = format!("WindowDefinitionFunction/{}.bin", res.id);
-                zip_writer.start_file(entry_name, Default::default())?;
-                zip_writer.write_all(&res.data)?;
-            }
-            b"WIND" => {
-                let entry_name = res::window::get_entry_name(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                res::window::convert(&res.data, &mut zip_writer)?;
-            }
-            _ => {
-                let entry_name = make_zip_entry_path(&res);
-                zip_writer.start_file(entry_name, Default::default())?;
-                zip_writer.write_all(&res.data)?;
-            }
-        }
+    for resource in resfork.iter() {
+        let mut buffer = Vec::new();
+        let (entry_name, output) = match convert_resource(resource, &mut buffer) {
+            Ok(_) => (get_entry_name(resource), &buffer),
+            Err(_) => (make_zip_entry_path(resource), &resource.data),
+        };
+        zip_writer.start_file(entry_name, Default::default())?;
+        zip_writer.write_all(output)?;
     }
 
     for resource in resfork.iter_type(ResType::new(b"PAT#")) {
