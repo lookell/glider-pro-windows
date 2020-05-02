@@ -373,14 +373,6 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 zip_writer.start_file(entry_name, Default::default())?;
                 res::menu::convert(&res.data, &mut zip_writer)?;
             }
-            b"PAT#" => {
-                let patterns = res::pattern_list::convert(&res.data)?;
-                for (i, patt) in patterns.into_iter().enumerate() {
-                    let entry_name = format!("PatternList/{}/{}.bmp", res.id, i);
-                    zip_writer.start_file(entry_name, Default::default())?;
-                    patt.write_bmp_file(&mut zip_writer)?;
-                }
-            }
             b"PICT" => {
                 let entry_name = res::picture::get_entry_name(&res);
                 zip_writer.start_file(entry_name, Default::default())?;
@@ -421,6 +413,15 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
                 zip_writer.start_file(entry_name, Default::default())?;
                 zip_writer.write_all(&res.data)?;
             }
+        }
+    }
+
+    for resource in resfork.iter_type(ResType::new(b"PAT#")) {
+        let patterns = res::pattern_list::convert(&resource.data)?;
+        for (idx, patt) in patterns.into_iter().enumerate() {
+            let entry_name = format!("PatternList/{}/{}.bmp", resource.id, idx);
+            zip_writer.start_file(entry_name, Default::default())?;
+            patt.write_bmp_file(&mut zip_writer)?;
         }
     }
 
