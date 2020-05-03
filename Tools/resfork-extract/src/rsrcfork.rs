@@ -25,6 +25,12 @@ impl Debug for ResType {
     }
 }
 
+impl From<&'_ [u8; 4]> for ResType {
+    fn from(src: &'_ [u8; 4]) -> Self {
+        Self::new(src)
+    }
+}
+
 impl ResType {
     pub fn new(bytes: &[u8; 4]) -> Self {
         Self { bytes: *bytes }
@@ -207,7 +213,11 @@ impl ResourceFork {
         self.resources.iter()
     }
 
-    pub fn iter_type(&self, restype: ResType) -> impl Iterator<Item = &'_ Resource> {
+    pub fn iter_type<T>(&self, restype: T) -> impl Iterator<Item = &'_ Resource>
+    where
+        T: Into<ResType>,
+    {
+        let restype = restype.into();
         self.iter().filter(move |res| res.restype == restype)
     }
 

@@ -13,7 +13,7 @@ use crate::bitmap::{Bitmap, BitmapEight, BitmapFour, BitmapOne};
 use crate::icocur::IconFile;
 use crate::macbinary::MacBinary;
 use crate::res::*;
-use crate::rsrcfork::{ResType, Resource, ResourceFork};
+use crate::rsrcfork::{Resource, ResourceFork};
 use std::collections::{HashMap, HashSet};
 use std::env;
 use std::error::Error;
@@ -247,88 +247,210 @@ fn convert_resource(resource: &Resource, mut writer: impl Write) -> io::Result<(
     }
 }
 
-fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
-    let mut zip_writer = ZipWriter::new(writer);
-    zip_writer.set_comment("");
-
-    if resfork.iter().any(|res| res.name.is_some()) {
-        zip_writer.start_file("names.txt", Default::default())?;
-        write_names_txt(resfork, &mut zip_writer)?;
-    }
-
-    let mut finder_icon_ids = HashSet::new();
-    for res in resfork.iter() {
-        match res.restype.as_bstr() {
+fn get_finder_icon_ids(resfork: &ResourceFork) -> Vec<i16> {
+    let mut ids = HashSet::new();
+    for resource in resfork.iter() {
+        match resource.restype.as_bstr() {
             b"icl8" | b"icl4" | b"ICN#" | b"ics8" | b"ics4" | b"ics#" => {
-                finder_icon_ids.insert(res.id);
+                ids.insert(resource.id);
             }
             _ => {}
         }
     }
+    ids.into_iter().collect()
+}
 
-    let mut rc_script = String::new();
-    rc_script += "#pragma code_page(65001)\n";
-    rc_script += "#include <windows.h>\n";
-    rc_script += "LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US\n";
-    for icon_id in finder_icon_ids.iter().copied() {
-        let unsigned_id = icon_id as i16 as u16;
-        rc_script += &format!("{0} ICON \"build\\\\icon_{1}.ico\"\n", unsigned_id, icon_id);
+fn write_rc_script<W: Write>(resfork: &ResourceFork, mut writer: W) -> io::Result<()> {
+    let icon_ids = get_finder_icon_ids(resfork);
+    writeln!(&mut writer, "#pragma code_page(65001)")?;
+    writeln!(&mut writer, "#include <windows.h>")?;
+    writeln!(&mut writer, "LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US")?;
+    for id in icon_ids.iter().copied() {
+        let uid = id as u16;
+        writeln!(&mut writer, r#"{0} ICON "build\\icon_{1}.ico""#, uid, id)?;
     }
-    for res in resfork.iter_type(ResType::new(b"bnds")) {
-        rc_script += &format!("{0} BOUNDS \"build\\\\bnds_{0}.bin\"\n", res.id);
+    for id in resfork.iter_type(b"bnds").map(|r| r.id) {
+        let uid = id as u16;
+        writeln!(&mut writer, r#"{0} BOUNDS "build\\bnds_{1}.bin""#, uid, id)?;
     }
-    for res in resfork.iter_type(ResType::new(b"PICT")) {
-        rc_script += &format!("{0} BITMAP \"build\\\\pict_{0}.bmp\"\n", res.id);
+    for id in resfork.iter_type(b"PICT").map(|r| r.id) {
+        let uid = id as u16;
+        writeln!(&mut writer, r#"{0} BITMAP "build\\pict_{1}.bmp""#, uid, id)?;
     }
-    for res in resfork.iter_type(ResType::new(b"snd ")) {
-        rc_script += &format!("{0} WAVE \"build\\\\snd_{0}.wav\"\n", res.id);
+    for id in resfork.iter_type(b"snd ").map(|r| r.id) {
+        let uid = id as u16;
+        writeln!(&mut writer, r#"{0} WAVE "build\\snd_{1}.wav""#, uid, id)?;
     }
-    zip_writer.start_file("resource.rc", Default::default())?;
-    zip_writer.write_all(rc_script.as_bytes())?;
+    Ok(())
+}
 
-    let mut do_rle_script = String::new();
-    do_rle_script += "magick convert %1 \"bmp3:%~2\"\n";
-    do_rle_script += "if %~z1 leq %~z2 copy %1 %2 >nul\n";
-    zip_writer.start_file("do_rle.cmd", Default::default())?;
-    zip_writer.write_all(do_rle_script.as_bytes())?;
+fn write_do_rle_script<W: Write>(mut writer: W) -> io::Result<()> {
+    writeln!(&mut writer, "magick convert %1 \"bmp3:%~2\"")?;
+    writeln!(&mut writer, "if %~z1 leq %~z2 copy %1 %2 >nul")?;
+    Ok(())
+}
 
-    let mut build_script = String::new();
-    build_script += "@echo off\n";
-    build_script += "rem This build script uses ImageMagick and FFmpeg for conversion\n";
-    build_script += "if not exist \"%~dp0build\" mkdir \"%~dp0build\"\n";
-    for icon_id in finder_icon_ids.iter().copied() {
-        build_script += &format!(
-            "copy \"%~dp0FinderIcon\\{0}.ico\" \"%~dp0build\\icon_{0}.ico\" >nul\n",
-            icon_id
-        );
+fn write_build_script<W: Write>(resfork: &ResourceFork, mut writer: W) -> io::Result<()> {
+    let icon_ids = get_finder_icon_ids(resfork);
+    writeln!(&mut writer, "@echo off")?;
+    writeln!(
+        &mut writer,
+        "rem This build script uses ImageMagick and FFmpeg for conversion"
+    )?;
+    writeln!(
+        &mut writer,
+        r#"if not exist "%~dp0build" mkdir "%~dp0build""#
+    )?;
+    for id in &icon_ids {
+        writeln!(
+            &mut writer,
+            r#"copy "%~dp0FinderIcon\{0}.ico" "%~dp0build\icon_{0}.ico" >nul"#,
+            id
+        )?;
     }
-    for res in resfork.iter_type(ResType::new(b"bnds")) {
-        build_script += &format!(
-            "copy \"%~dp0(bnds)\\{0}.bin\" \"%~dp0build\\bnds_{0}.bin\" >nul\n",
+    for resource in resfork.iter_type(b"bnds") {
+        writeln!(
+            &mut writer,
+            r#"copy "%~dp0(bnds)\{0}.bin" "%~dp0build\bnds_{0}.bin" >nul"#,
+            resource.id
+        )?;
+    }
+    writeln!(&mut writer, "echo Processing bitmap images...")?;
+    for res in resfork.iter_type(b"PICT") {
+        writeln!(
+            &mut writer,
+            r#"call "%~dp0do_rle.cmd" "%~dp0Picture\{0}.bmp" "%~dp0build\pict_{0}.bmp""#,
             res.id
-        );
+        )?;
     }
-    build_script += "echo Processing bitmap images...\n";
-    for res in resfork.iter_type(ResType::new(b"PICT")) {
-        build_script += &format!(
-            "call \"%~dp0do_rle.cmd\" \"%~dp0Picture\\{0}.bmp\" \"%~dp0build\\pict_{0}.bmp\"\n",
+    writeln!(&mut writer, "echo Processing audio files...")?;
+    for res in resfork.iter_type(b"snd ") {
+        writeln!(
+            &mut writer,
+            r#"ffmpeg -v quiet -y -i "%~dp0Sound\{0}.aif" -acodec pcm_u8 "%~dp0build\snd_{0}.wav""#,
             res.id
-        );
+        )?;
     }
-    build_script += "echo Processing audio files...\n";
-    for res in resfork.iter_type(ResType::new(b"snd ")) {
-        build_script += &format!(
-            "ffmpeg -v quiet -y -i \"%~dp0Sound\\{0}.aif\" -acodec pcm_u8 \"%~dp0build\\snd_{0}.wav\"\n",
-            res.id
-        );
+    writeln!(&mut writer, "echo Compiling resource script...")?;
+    writeln!(
+        &mut writer,
+        r#"rc /nologo /fo "%~dp0resource.res" "%~dp0resource.rc""#
+    )?;
+    writeln!(&mut writer, "echo Linking resource DLL...")?;
+    writeln!(
+        &mut writer,
+        r#"link /nologo /dll /noentry /machine:x86 "/out:%~dp0house.glr" "%~dp0resource.res""#
+    )?;
+    Ok(())
+}
+
+struct FinderIconBitmaps {
+    large_8bit: Option<BitmapEight>,
+    large_4bit: Option<BitmapFour>,
+    large_1bit: Option<BitmapOne>,
+    large_mask: BitmapOne,
+    small_8bit: Option<BitmapEight>,
+    small_4bit: Option<BitmapFour>,
+    small_1bit: Option<BitmapOne>,
+    small_mask: BitmapOne,
+}
+
+impl Default for FinderIconBitmaps {
+    fn default() -> Self {
+        Self {
+            large_8bit: None,
+            large_4bit: None,
+            large_1bit: None,
+            large_mask: BitmapOne::new(32, 32),
+            small_8bit: None,
+            small_4bit: None,
+            small_1bit: None,
+            small_mask: BitmapOne::new(16, 16),
+        }
     }
-    build_script += "echo Compiling resource script...\n";
-    build_script += "rc /nologo /fo \"%~dp0resource.res\" \"%~dp0resource.rc\"\n";
-    build_script += "echo Linking resource DLL...\n";
-    build_script +=
-        "link /nologo /dll /noentry /machine:x86 \"/out:%~dp0house.glr\" \"%~dp0resource.res\"\n";
-    zip_writer.start_file("build.cmd", Default::default())?;
-    zip_writer.write_all(build_script.as_bytes())?;
+}
+
+fn collate_icons<W>(resfork: &ResourceFork, mut zipfile: &mut ZipWriter<W>) -> AnyResult<()>
+where
+    W: Seek + Write,
+{
+    let mut finder_icons: HashMap<i16, FinderIconBitmaps> = HashMap::new();
+    for resource in resfork.iter() {
+        match resource.restype.as_bstr() {
+            b"icl8" => {
+                let image = large_8bit_icon::convert(&resource.data)?;
+                finder_icons.entry(resource.id).or_default().large_8bit = Some(image);
+            }
+            b"icl4" => {
+                let image = large_4bit_icon::convert(&resource.data)?;
+                finder_icons.entry(resource.id).or_default().large_4bit = Some(image);
+            }
+            b"ICN#" => {
+                let (image, mask) = icon_list::convert(&resource.data)?;
+                let entry = finder_icons.entry(resource.id).or_default();
+                entry.large_1bit = Some(image);
+                entry.large_mask = mask;
+            }
+            b"ics8" => {
+                let image = small_8bit_icon::convert(&resource.data)?;
+                finder_icons.entry(resource.id).or_default().small_8bit = Some(image);
+            }
+            b"ics4" => {
+                let image = small_4bit_icon::convert(&resource.data)?;
+                finder_icons.entry(resource.id).or_default().small_4bit = Some(image);
+            }
+            b"ics#" => {
+                let (image, mask) = small_icon_list::convert(&resource.data)?;
+                let entry = finder_icons.entry(resource.id).or_default();
+                entry.small_1bit = Some(image);
+                entry.small_mask = mask;
+            }
+            _ => {}
+        }
+    }
+    for (icon_id, mut icon_entry) in finder_icons {
+        let mut icon_file = IconFile::new();
+        if let Some(image) = icon_entry.large_8bit.take() {
+            icon_file.add_entry(image, icon_entry.large_mask.clone());
+        }
+        if let Some(image) = icon_entry.large_4bit.take() {
+            icon_file.add_entry(image, icon_entry.large_mask.clone());
+        }
+        if let Some(image) = icon_entry.large_1bit.take() {
+            icon_file.add_entry(image, icon_entry.large_mask.clone());
+        }
+        if let Some(image) = icon_entry.small_8bit.take() {
+            icon_file.add_entry(image, icon_entry.small_mask.clone());
+        }
+        if let Some(image) = icon_entry.small_4bit.take() {
+            icon_file.add_entry(image, icon_entry.small_mask.clone());
+        }
+        if let Some(image) = icon_entry.small_1bit.take() {
+            icon_file.add_entry(image, icon_entry.small_mask.clone());
+        }
+        zipfile.start_file(format!("FinderIcon/{}.ico", icon_id), Default::default())?;
+        icon_file.write_to(&mut zipfile)?;
+    }
+    Ok(())
+}
+
+fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
+    let mut zipfile = ZipWriter::new(writer);
+    zipfile.set_comment("");
+
+    if resfork.iter().any(|res| res.name.is_some()) {
+        zipfile.start_file("names.txt", Default::default())?;
+        write_names_txt(resfork, &mut zipfile)?;
+    }
+
+    zipfile.start_file("resource.rc", Default::default())?;
+    write_rc_script(resfork, &mut zipfile)?;
+
+    zipfile.start_file("do_rle.cmd", Default::default())?;
+    write_do_rle_script(&mut zipfile)?;
+
+    zipfile.start_file("build.cmd", Default::default())?;
+    write_build_script(resfork, &mut zipfile)?;
 
     for resource in resfork.iter() {
         let mut buffer = Vec::new();
@@ -336,100 +458,20 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
             Ok(_) => (get_entry_name(resource), &buffer),
             Err(_) => (make_zip_entry_path(resource), &resource.data),
         };
-        zip_writer.start_file(entry_name, Default::default())?;
-        zip_writer.write_all(output)?;
+        zipfile.start_file(entry_name, Default::default())?;
+        zipfile.write_all(output)?;
     }
 
-    for resource in resfork.iter_type(ResType::new(b"PAT#")) {
-        let patterns = res::pattern_list::convert(&resource.data)?;
+    for resource in resfork.iter_type(b"PAT#") {
+        let patterns = pattern_list::convert(&resource.data)?;
         for (idx, patt) in patterns.into_iter().enumerate() {
             let entry_name = format!("PatternList/{}/{}.bmp", resource.id, idx);
-            zip_writer.start_file(entry_name, Default::default())?;
-            patt.write_bmp_file(&mut zip_writer)?;
+            zipfile.start_file(entry_name, Default::default())?;
+            patt.write_bmp_file(&mut zipfile)?;
         }
     }
 
-    struct FinderIconBitmaps {
-        large_8bit: Option<BitmapEight>,
-        large_4bit: Option<BitmapFour>,
-        large_1bit: Option<BitmapOne>,
-        large_mask: BitmapOne,
-        small_8bit: Option<BitmapEight>,
-        small_4bit: Option<BitmapFour>,
-        small_1bit: Option<BitmapOne>,
-        small_mask: BitmapOne,
-    }
-    impl Default for FinderIconBitmaps {
-        fn default() -> Self {
-            Self {
-                large_8bit: None,
-                large_4bit: None,
-                large_1bit: None,
-                large_mask: BitmapOne::new(32, 32),
-                small_8bit: None,
-                small_4bit: None,
-                small_1bit: None,
-                small_mask: BitmapOne::new(16, 16),
-            }
-        }
-    }
-    let mut finder_icons = HashMap::<i16, FinderIconBitmaps>::new();
-    for res in resfork.iter() {
-        match res.restype.as_bstr() {
-            b"icl8" => {
-                let data_bits = res::large_8bit_icon::convert(&res.data)?;
-                finder_icons.entry(res.id).or_default().large_8bit = Some(data_bits);
-            }
-            b"icl4" => {
-                let data_bits = res::large_4bit_icon::convert(&res.data)?;
-                finder_icons.entry(res.id).or_default().large_4bit = Some(data_bits);
-            }
-            b"ICN#" => {
-                let (data_bits, mask_bits) = res::icon_list::convert(&res.data)?;
-                let entry = finder_icons.entry(res.id).or_default();
-                entry.large_1bit = Some(data_bits);
-                entry.large_mask = mask_bits;
-            }
-            b"ics8" => {
-                let data_bits = res::small_8bit_icon::convert(&res.data)?;
-                finder_icons.entry(res.id).or_default().small_8bit = Some(data_bits);
-            }
-            b"ics4" => {
-                let data_bits = res::small_4bit_icon::convert(&res.data)?;
-                finder_icons.entry(res.id).or_default().small_4bit = Some(data_bits);
-            }
-            b"ics#" => {
-                let (data_bits, mask_bits) = res::small_icon_list::convert(&res.data)?;
-                let entry = finder_icons.entry(res.id).or_default();
-                entry.small_1bit = Some(data_bits);
-                entry.small_mask = mask_bits;
-            }
-            _ => {}
-        }
-    }
-    for (icon_id, icon_entry) in finder_icons {
-        let mut icon_file = IconFile::new();
-        if let Some(large_8bit) = icon_entry.large_8bit {
-            icon_file.add_entry(large_8bit.clone(), icon_entry.large_mask.clone());
-        }
-        if let Some(large_4bit) = icon_entry.large_4bit {
-            icon_file.add_entry(large_4bit.clone(), icon_entry.large_mask.clone());
-        }
-        if let Some(large_1bit) = icon_entry.large_1bit {
-            icon_file.add_entry(large_1bit.clone(), icon_entry.large_mask.clone());
-        }
-        if let Some(small_8bit) = icon_entry.small_8bit {
-            icon_file.add_entry(small_8bit.clone(), icon_entry.small_mask.clone());
-        }
-        if let Some(small_4bit) = icon_entry.small_4bit {
-            icon_file.add_entry(small_4bit.clone(), icon_entry.small_mask.clone());
-        }
-        if let Some(small_1bit) = icon_entry.small_1bit {
-            icon_file.add_entry(small_1bit.clone(), icon_entry.small_mask.clone());
-        }
-        zip_writer.start_file(format!("FinderIcon/{}.ico", icon_id), Default::default())?;
-        icon_file.write_to(&mut zip_writer)?;
-    }
+    collate_icons(resfork, &mut zipfile)?;
 
     Ok(())
 }
