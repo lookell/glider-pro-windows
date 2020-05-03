@@ -64,7 +64,7 @@ void DoCommandKey (void)
 				SaveGame2();		// New save game.
 		}
 	}
-	else if ((GetKeyState('S') < 0) && (!twoPlayerGame))
+	else if ((GetKeyState('S') < 0) && (!twoPlayerGame) && (!demoGoing))
 	{
 		RefreshScoreboard(kSavingTitleMode);
 		SaveGame2();				// New save game.
