@@ -13,6 +13,7 @@
 
 #include <windows.h>
 #include <commctrl.h>
+#include <commdlg.h>
 #include <shlobj.h>
 #include <strsafe.h>
 

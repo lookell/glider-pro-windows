@@ -8,6 +8,7 @@
 
 //#include <StringCompare.h>
 #include "Macintosh.h"
+#include "ByteIO.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "House.h"
@@ -16,6 +17,7 @@
 #define kSavedGameVersion		0x0200
 
 
+BOOL GetSaveFolderPath (LPWSTR, DWORD);
 void SavedGameMismatchError (StringPtr);
 
 
@@ -27,92 +29,103 @@ extern	Boolean			twoPlayerGame;
 
 
 //==============================================================  Functions
+//--------------------------------------------------------------  GetSaveFolderPath
+
+BOOL GetSaveFolderPath (LPWSTR lpSavePath, DWORD cchSavePath)
+{
+	WCHAR pathBuffer[MAX_PATH];
+	HRESULT hr;
+
+	if (!GetDataFolderPath(pathBuffer, ARRAYSIZE(pathBuffer)))
+		return FALSE;
+	hr = StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\Saves");
+	if (FAILED(hr))
+		return FALSE;
+	if (!CreateDirectory(pathBuffer, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
+		return FALSE;
+
+	hr = StringCchCopy(lpSavePath, cchSavePath, pathBuffer);
+	return SUCCEEDED(hr);
+}
+
 //--------------------------------------------------------------  SaveGame2
 
 void SaveGame2 (void)
 {
-	return;
-#if 0
-		// Add NavServices later.
-/*
-	StandardFileReply	theReply;
-	FSSpec				tempSpec;
+	OPENFILENAME		ofn = { 0 };
 	Str255				gameNameStr;
-	Size				byteCount;
-	OSErr				theErr;
-	houseType			*thisHousePtr;
+	Str15				errorLabel;
+	WCHAR				startPath[MAX_PATH];
+	WCHAR				gamePath[MAX_PATH];
 	roomType			*srcRoom;
 	savedRoom			*destRoom;
-	gamePtr				savedGame;
-	short				r, i, numRooms, gameRefNum;
-	char				wasState;
+	game2Type			savedGame;
+	SInt16				r, i, numRooms;
+	HANDLE				gameFileHandle;
+	byteio				byteWriter;
 
-	FlushEvents(everyEvent, 0);
+	PasStringCopyC("Saved Game", errorLabel);
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
+	if (!GetSaveFolderPath(startPath, ARRAYSIZE(startPath)))
+		startPath[0] = L'\0';
 
-	numRooms = thisHousePtr->nRooms;
+	numRooms = thisHouse->nRooms;
 
-	HSetState((Handle)thisHouse, wasState);
-
-	byteCount = sizeof(game2Type) + sizeof(savedRoom) * numRooms;
-	savedGame = (gamePtr)NewPtr(byteCount);
-	if (savedGame == nil)
+	savedGame.savedData = calloc(numRooms, sizeof(savedRoom));
+	if (savedGame.savedData == NULL)
 	{
-		YellowAlert(kYellowFailedSaveGame, MemError());
+		YellowAlert(kYellowFailedSaveGame, -1);
 		return;
 	}
 
 	GetFirstWordOfString(thisHouseName, gameNameStr);
 	if (gameNameStr[0] > 23)
 		gameNameStr[0] = 23;
-	PasStringConcat(gameNameStr, "\p Game");
+	PasStringConcatC(gameNameStr, " Game");
 
-	StandardPutFile("\pSave Game As:", gameNameStr, &theReply);
-	if (!theReply.sfGood)
-		return;
-
-	if (theReply.sfReplacing)
+	WinFromMacString(gamePath, ARRAYSIZE(gamePath), gameNameStr);
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = mainWindow;
+	ofn.lpstrFilter = L"Glider PRO Saved Game (*.glg)\0*.glg\0\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFile = gamePath;
+	ofn.nMaxFile = ARRAYSIZE(gamePath);
+	if (startPath[0] != L'\0')
+		ofn.lpstrInitialDir = startPath;
+	ofn.lpstrTitle = L"Save Game As:";
+	ofn.Flags = OFN_NOCHANGEDIR | OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST;
+	ofn.lpstrDefExt = L"glg";
+	if (!GetSaveFileName(&ofn))
 	{
-		theErr = FSMakeFSSpec(theReply.sfFile.vRefNum, theReply.sfFile.parID,
-				theReply.sfFile.name, &tempSpec);
-		if (!CheckFileError(theErr, "\pSaved Game"))
-			return;
-
-		theErr = FSpDelete(&tempSpec);
-		if (!CheckFileError(theErr, "\pSaved Game"))
-			return;
+		free(savedGame.savedData);
+		return;
 	}
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
-
-	savedGame->house = theHousesSpecs[thisHouseIndex];
-	savedGame->version = kSavedGameVersion;
-	savedGame->wasStarsLeft = numStarsRemaining;
-	savedGame->timeStamp = thisHousePtr->timeStamp;
-	savedGame->where.h = theGlider.dest.left;
-	savedGame->where.v = theGlider.dest.top;
-	savedGame->score = theScore;
-	savedGame->unusedLong = 0L;
-	savedGame->unusedLong2 = 0L;
-	savedGame->energy = batteryTotal;
-	savedGame->bands = bandsTotal;
-	savedGame->roomNumber = thisRoomNumber;
-	savedGame->gliderState = theGlider.mode;
-	savedGame->numGliders = mortals;
-	savedGame->foil = foilTotal;
-	savedGame->nRooms = numRooms;
-	savedGame->facing = theGlider.facing;
-	savedGame->showFoil = showFoil;
+	savedGame.house.vRefNum = 0;
+	savedGame.house.parID = 0;
+	PasStringCopy(theHousesSpecs[thisHouseIndex].name, savedGame.house.name);
+	savedGame.version = kSavedGameVersion;
+	savedGame.wasStarsLeft = numStarsRemaining;
+	savedGame.timeStamp = thisHouse->timeStamp;
+	savedGame.where.h = theGlider.dest.left;
+	savedGame.where.v = theGlider.dest.top;
+	savedGame.score = theScore;
+	savedGame.unusedLong = 0L;
+	savedGame.unusedLong2 = 0L;
+	savedGame.energy = batteryTotal;
+	savedGame.bands = bandsTotal;
+	savedGame.roomNumber = thisRoomNumber;
+	savedGame.gliderState = theGlider.mode;
+	savedGame.numGliders = mortals;
+	savedGame.foil = foilTotal;
+	savedGame.nRooms = numRooms;
+	savedGame.facing = theGlider.facing;
+	savedGame.showFoil = showFoil;
 
 	for (r = 0; r < numRooms; r++)
 	{
-		destRoom = &(savedGame->savedData[r]);
-		srcRoom = &(thisHousePtr->rooms[r]);
+		destRoom = &(savedGame.savedData[r]);
+		srcRoom = &(thisHouse->rooms[r]);
 
 		destRoom->unusedShort = 0;
 		destRoom->unusedByte = 0;
@@ -121,35 +134,24 @@ void SaveGame2 (void)
 			destRoom->objects[i] = srcRoom->objects[i];
 	}
 
-	HSetState((Handle)thisHouse, wasState);
-
-	theErr = FSpCreate(&theReply.sfFile, 'ozm5', 'gliG', theReply.sfScript);
-	if (CheckFileError(theErr, "\pSaved Game"))
+	gameFileHandle = CreateFile(ofn.lpstrFile, GENERIC_WRITE, 0, NULL,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (gameFileHandle != INVALID_HANDLE_VALUE)
 	{
-		theErr = FSpOpenDF(&theReply.sfFile, fsCurPerm, &gameRefNum);
-		if (CheckFileError(theErr, "\pSaved Game"))
+		if (byteio_init_handle_writer(&byteWriter, gameFileHandle))
 		{
-			theErr = SetFPos(gameRefNum, fsFromStart, 0L);
-			if (CheckFileError(theErr, "\pSaved Game"))
-			{
-				theErr = FSWrite(gameRefNum, &byteCount, (Ptr)savedGame);
-				if (CheckFileError(theErr, "\pSaved Game"))
-				{
-					theErr = SetEOF(gameRefNum, byteCount);
-					if (CheckFileError(theErr, "\pSaved Game"))
-					{
-					}
-				}
-			}
-			theErr = FSClose(gameRefNum);
-			if (CheckFileError(theErr, "\pSaved Game"))
-			{
-			}
+			if (!WriteGame2Type(&byteWriter, &savedGame))
+				CheckFileError(GetLastError(), errorLabel);
+			if (!byteio_close(&byteWriter))
+				CheckFileError(GetLastError(), errorLabel);
 		}
+		CloseHandle(gameFileHandle);
 	}
-	DisposePtr((Ptr)savedGame);
-	*/
-#endif
+	else
+	{
+		CheckFileError(GetLastError(), errorLabel);
+	}
+	free(savedGame.savedData);
 }
 
 //--------------------------------------------------------------  SavedGameMismatchError
@@ -170,136 +172,115 @@ void SavedGameMismatchError (StringPtr gameName)
 
 Boolean OpenSavedGame (void)
 {
-	return false;
-#if 0
-return false;		// TEMP fix this iwth NavServices
-/*
-	StandardFileReply	theReply;
-	SFTypeList			theList;
-	houseType			*thisHousePtr;
+	OPENFILENAME		ofn = { 0 };
+	Str15				errorLabel;
+	WCHAR				startPath[MAX_PATH];
+	WCHAR				gamePath[MAX_PATH];
 	roomType			*destRoom;
 	savedRoom			*srcRoom;
-	gamePtr				savedGame;
-	long				byteCount;
-	OSErr				theErr;
-	short				r, i, gameRefNum;
-	char				wasState;
+	game2Type			savedGame;
+	SInt16				r, i;
+	HANDLE				gameFileHandle;
+	byteio				byteReader;
+	int					result;
+	DWORD				lastError;
 
-	theList[0] = 'gliG';
+	PasStringCopyC("Saved Game", errorLabel);
 
-	StandardGetFile(nil, 1, theList, &theReply);
-	if (!theReply.sfGood)
-		return(false);
+	if (!GetSaveFolderPath(startPath, ARRAYSIZE(startPath)))
+		startPath[0] = L'\0';
+	gamePath[0] = L'\0';
 
-	theErr = FSpOpenDF(&theReply.sfFile, fsCurPerm, &gameRefNum);
-	if (!CheckFileError(theErr, "\pSaved Game"))
-		return(false);
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = mainWindow;
+	ofn.lpstrFilter = L"Glider PRO Saved Game (*.glg)\0*.glg\0\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFile = gamePath;
+	ofn.nMaxFile = ARRAYSIZE(gamePath);
+	if (startPath[0] != L'\0')
+		ofn.lpstrInitialDir = startPath;
+	ofn.lpstrTitle = L"Open Saved Game:";
+	ofn.Flags = OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST;
+	ofn.lpstrDefExt = L"glg";
+	if (!GetOpenFileName(&ofn))
+		return false;
 
-	theErr = GetEOF(gameRefNum, &byteCount);
-	if (!CheckFileError(theErr, "\pSaved Game"))
+	gameFileHandle = CreateFile(ofn.lpstrFile, GENERIC_READ, FILE_SHARE_READ, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (gameFileHandle == INVALID_HANDLE_VALUE)
 	{
-		theErr = FSClose(gameRefNum);
-		return(false);
+		CheckFileError(GetLastError(), errorLabel);
+		return false;
+	}
+	if (!byteio_init_handle_reader(&byteReader, gameFileHandle))
+		RedAlert(kErrNoMemory);
+	savedGame.savedData = NULL;
+	result = ReadGame2Type(&byteReader, &savedGame);
+	lastError = GetLastError();
+	byteio_close(&byteReader);
+	CloseHandle(gameFileHandle);
+	if (result == 0)
+	{
+		CheckFileError(lastError, errorLabel);
+		free(savedGame.savedData);
+		return false;
 	}
 
-	savedGame = (gamePtr)NewPtr(byteCount);
-	if (savedGame == nil)
+	if (!Mac_EqualString(savedGame.house.name, thisHouseName, true))
 	{
-		YellowAlert(kYellowFailedSaveGame, MemError());
-		theErr = FSClose(gameRefNum);
-		return(false);
+		SavedGameMismatchError(savedGame.house.name);
+		free(savedGame.savedData);
+		return false;
 	}
-
-	theErr = SetFPos(gameRefNum, fsFromStart, 0L);
-	if (!CheckFileError(theErr, "\pSaved Game"))
-	{
-		DisposePtr((Ptr)savedGame);
-		theErr = FSClose(gameRefNum);
-		return(false);
-	}
-
-	theErr = FSRead(gameRefNum, &byteCount, savedGame);
-	if (!CheckFileError(theErr, "\pSaved Game"))
-	{
-		DisposePtr((Ptr)savedGame);
-		theErr = FSClose(gameRefNum);
-		return(false);
-	}
-
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
-
-	if (!EqualString(savedGame->house.name, thisHouseName, true, true))
-	{
-		SavedGameMismatchError(savedGame->house.name);
-		HSetState((Handle)thisHouse, wasState);
-		DisposePtr((Ptr)savedGame);
-		theErr = FSClose(gameRefNum);
-		return(false);
-	}
-	else if (thisHousePtr->timeStamp != savedGame->timeStamp)
+	else if (thisHouse->timeStamp != savedGame.timeStamp)
 	{
 		YellowAlert(kYellowSavedTimeWrong, 0);
-		HSetState((Handle)thisHouse, wasState);
-		DisposePtr((Ptr)savedGame);
-		theErr = FSClose(gameRefNum);
-		return(false);
+		free(savedGame.savedData);
+		return false;
 	}
-	else if (savedGame->version != kSavedGameVersion)
+	else if (savedGame.version != kSavedGameVersion)
 	{
 		YellowAlert(kYellowSavedVersWrong, kSavedGameVersion);
-		HSetState((Handle)thisHouse, wasState);
-		DisposePtr((Ptr)savedGame);
-		theErr = FSClose(gameRefNum);
-		return(false);
+		free(savedGame.savedData);
+		return false;
 	}
-	else if (savedGame->nRooms != thisHousePtr->nRooms)
+	else if (savedGame.nRooms != thisHouse->nRooms)
 	{
-		YellowAlert(kYellowSavedRoomsWrong, savedGame->nRooms - thisHousePtr->nRooms);
-		HSetState((Handle)thisHouse, wasState);
-		DisposePtr((Ptr)savedGame);
-		theErr = FSClose(gameRefNum);
-		return(false);
+		YellowAlert(kYellowSavedRoomsWrong, savedGame.nRooms - thisHouse->nRooms);
+		free(savedGame.savedData);
+		return false;
 	}
 	else
 	{
-		smallGame.wasStarsLeft = savedGame->wasStarsLeft;
-		smallGame.where.h = savedGame->where.h;
-		smallGame.where.v = savedGame->where.v;
-		smallGame.score = savedGame->score;
-		smallGame.unusedLong = savedGame->unusedLong;
-		smallGame.unusedLong2 = savedGame->unusedLong2;
-		smallGame.energy = savedGame->energy;
-		smallGame.bands = savedGame->bands;
-		smallGame.roomNumber = savedGame->roomNumber;
-		smallGame.gliderState = savedGame->gliderState;
-		smallGame.numGliders = savedGame->numGliders;
-		smallGame.foil = savedGame->foil;
+		smallGame.wasStarsLeft = savedGame.wasStarsLeft;
+		smallGame.where.h = savedGame.where.h;
+		smallGame.where.v = savedGame.where.v;
+		smallGame.score = savedGame.score;
+		smallGame.unusedLong = savedGame.unusedLong;
+		smallGame.unusedLong2 = savedGame.unusedLong2;
+		smallGame.energy = savedGame.energy;
+		smallGame.bands = savedGame.bands;
+		smallGame.roomNumber = savedGame.roomNumber;
+		smallGame.gliderState = savedGame.gliderState;
+		smallGame.numGliders = savedGame.numGliders;
+		smallGame.foil = savedGame.foil;
 		smallGame.unusedShort = 0;
-		smallGame.facing = savedGame->facing;
-		smallGame.showFoil = savedGame->showFoil;
+		smallGame.facing = savedGame.facing;
+		smallGame.showFoil = savedGame.showFoil;
 
-		for (r = 0; r < savedGame->nRooms; r++)
+		for (r = 0; r < savedGame.nRooms; r++)
 		{
-			srcRoom = &(savedGame->savedData[r]);
-			destRoom = &(thisHousePtr->rooms[r]);
+			srcRoom = &(savedGame.savedData[r]);
+			destRoom = &(thisHouse->rooms[r]);
 			destRoom->visited = srcRoom->visited;
 			for (i = 0; i < kMaxRoomObs; i++)
 				destRoom->objects[i] = srcRoom->objects[i];
 		}
 	}
-	HSetState((Handle)thisHouse, wasState);
 
-	DisposePtr((Ptr)savedGame);
+	free(savedGame.savedData);
 
-	theErr = FSClose(gameRefNum);
-	if (!CheckFileError(theErr, "\pSaved Game"))
-		return (false);
-
-	return (true);
-	*/
-#endif
+	return true;
 }
 
 //--------------------------------------------------------------  SaveGame
@@ -309,54 +290,43 @@ return false;		// TEMP fix this iwth NavServices
 
 void SaveGame (Boolean doSave)
 {
-	return;
-#if 0
-	houseType		*thisHousePtr;
 	UInt32			stamp;
-	char			wasState;
 
 	if (twoPlayerGame)
 		return;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
-
 	if (doSave)
 	{
-		thisHousePtr->savedGame.version = kSavedGameVersion;
-		thisHousePtr->savedGame.wasStarsLeft = numStarsRemaining;
-		GetDateTime(&stamp);
-		thisHousePtr->savedGame.timeStamp = (long)stamp;
-		thisHousePtr->savedGame.where.h = theGlider.dest.left;
-		thisHousePtr->savedGame.where.v = theGlider.dest.top;
-		thisHousePtr->savedGame.score = theScore;
-		thisHousePtr->savedGame.unusedLong = 0L;
-		thisHousePtr->savedGame.unusedLong2 = 0L;
-		thisHousePtr->savedGame.energy = batteryTotal;
-		thisHousePtr->savedGame.bands = bandsTotal;
-		thisHousePtr->savedGame.roomNumber = thisRoomNumber;
-		thisHousePtr->savedGame.gliderState = theGlider.mode;
-		thisHousePtr->savedGame.numGliders = mortals;
-		thisHousePtr->savedGame.foil = foilTotal;
-		thisHousePtr->savedGame.unusedShort = 0;
-		thisHousePtr->savedGame.facing = theGlider.facing;
-		thisHousePtr->savedGame.showFoil = showFoil;
+		thisHouse->savedGame.version = kSavedGameVersion;
+		thisHouse->savedGame.wasStarsLeft = numStarsRemaining;
+		Mac_GetDateTime(&stamp);
+		thisHouse->savedGame.timeStamp = (SInt32)stamp;
+		thisHouse->savedGame.where.h = theGlider.dest.left;
+		thisHouse->savedGame.where.v = theGlider.dest.top;
+		thisHouse->savedGame.score = theScore;
+		thisHouse->savedGame.unusedLong = 0L;
+		thisHouse->savedGame.unusedLong2 = 0L;
+		thisHouse->savedGame.energy = batteryTotal;
+		thisHouse->savedGame.bands = bandsTotal;
+		thisHouse->savedGame.roomNumber = thisRoomNumber;
+		thisHouse->savedGame.gliderState = theGlider.mode;
+		thisHouse->savedGame.numGliders = mortals;
+		thisHouse->savedGame.foil = foilTotal;
+		thisHouse->savedGame.unusedShort = 0;
+		thisHouse->savedGame.facing = theGlider.facing;
+		thisHouse->savedGame.showFoil = showFoil;
 
-		thisHousePtr->hasGame = true;
+		thisHouse->hasGame = true;
 	}
 	else
 	{
-		thisHousePtr->hasGame = false;
+		thisHouse->hasGame = false;
 	}
-
-	HSetState((Handle)thisHouse, wasState);
 
 	if (doSave)
 	{
 		if (!WriteHouse(theMode == kEditMode))
 			YellowAlert(kYellowFailedWrite, 0);
 	}
-#endif
 }
 
