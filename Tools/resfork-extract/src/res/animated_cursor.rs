@@ -1,13 +1,14 @@
-use crate::rsrcfork::Resource;
 use crate::utils::ReadExt;
 use std::io::{self, Read, Write};
 
+#[allow(dead_code)]
 struct Acur {
     n: i16,
     index: i16,
     frame: Vec<AcurEntry>,
 }
 
+#[allow(dead_code)]
 struct AcurEntry {
     resID: i16,
     reserved: i16,
@@ -32,10 +33,6 @@ impl AcurEntry {
             reserved: reader.read_be_i16()?,
         })
     }
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("AnimatedCursor/{}.txt", res.id)
 }
 
 pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {

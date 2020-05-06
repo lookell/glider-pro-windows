@@ -1,7 +1,6 @@
 use super::Point;
 use crate::bitmap::{Bitmap, BitmapOne, RgbQuad};
 use crate::icocur::CursorFile;
-use crate::rsrcfork::Resource;
 use std::io::{self, Read, Write};
 
 struct Cursor {
@@ -23,10 +22,6 @@ impl Cursor {
             hotspot,
         })
     }
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("Cursor/{}-mono.cur", res.id)
 }
 
 pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {

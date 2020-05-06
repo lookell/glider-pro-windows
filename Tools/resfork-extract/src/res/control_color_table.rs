@@ -1,5 +1,4 @@
 use super::ColorTable;
-use crate::rsrcfork::Resource;
 use std::io::{self, Write};
 
 const FRAME_COLOR: i16 = 0;
@@ -17,10 +16,6 @@ const TITLE_BAR_LIGHT: i16 = 11;
 const TITLE_BAR_DARK: i16 = 12;
 const TINGE_LIGHT: i16 = 13;
 const TINGE_DARK: i16 = 14;
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("ControlColorTable/{}.txt", res.id)
-}
 
 pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {
     let clut = ColorTable::read_from(data)?;

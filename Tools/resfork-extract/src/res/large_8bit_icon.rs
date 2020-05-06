@@ -1,6 +1,5 @@
 use crate::bitmap::{Bitmap, BitmapEight};
 use crate::mac_clut::MAC_COLOR_8;
-use crate::rsrcfork::Resource;
 use std::io::{self, Read};
 
 struct Large8BitIcon {
@@ -13,10 +12,6 @@ impl Large8BitIcon {
         reader.read_exact(&mut data)?;
         Ok(Self { data })
     }
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("FinderIcon/{}-large-8bit.ico", res.id)
 }
 
 pub fn convert(data: &[u8]) -> io::Result<BitmapEight> {

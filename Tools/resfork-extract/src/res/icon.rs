@@ -1,6 +1,5 @@
 use crate::bitmap::{Bitmap, BitmapOne, RgbQuad};
 use crate::icocur::IconFile;
-use crate::rsrcfork::Resource;
 use std::io::{self, Read, Write};
 
 struct Icon {
@@ -13,10 +12,6 @@ impl Icon {
         reader.read_exact(&mut data)?;
         Ok(Self { data })
     }
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("AppIcon/{}-mono.ico", res.id)
 }
 
 pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {

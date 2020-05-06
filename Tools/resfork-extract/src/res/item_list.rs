@@ -1,6 +1,5 @@
 use super::Rect;
 use crate::mac_roman;
-use crate::rsrcfork::Resource;
 use crate::utils::{ReadExt, SeekExt};
 use std::io::{self, Cursor, Read, Seek, Write};
 
@@ -90,10 +89,6 @@ impl ItemData {
             _ => Self::UnknownItem(data),
         })
     }
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("ItemList/{}.txt", res.id)
 }
 
 pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {

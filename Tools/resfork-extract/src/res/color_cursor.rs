@@ -1,7 +1,6 @@
 use super::{ColorTable, Point, Rect};
 use crate::bitmap::{Bitmap, BitmapFour, BitmapOne, RgbQuad};
 use crate::icocur::CursorFile;
-use crate::rsrcfork::Resource;
 use crate::utils::ReadExt;
 use std::io::{self, Read, Seek, SeekFrom, Write};
 
@@ -171,10 +170,6 @@ fn convert_4bit_data(pixel_data: &[u8], bitmap: &mut BitmapFour) {
             bitmap.set_pixel(xbase + 1, y, 15 - (byte % 16));
         }
     }
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("Cursor/{}-color.cur", res.id)
 }
 
 // HACK: In theory, the color table could contain any arrangement

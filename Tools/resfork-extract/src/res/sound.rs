@@ -1,4 +1,3 @@
-use crate::rsrcfork::Resource;
 use crate::utils::{ReadExt, WriteExt};
 use std::io::{self, Read, Write};
 
@@ -257,10 +256,6 @@ fn write_aiff_c_file(header: CmpSoundHeader, mut writer: impl Write) -> io::Resu
         writer.write_all(&[0])?; // padding
     }
     Ok(())
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("Sound/{}.aif", res.id)
 }
 
 pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {

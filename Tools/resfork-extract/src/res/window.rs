@@ -1,5 +1,4 @@
 use super::Rect;
-use crate::rsrcfork::Resource;
 use crate::utils::ReadExt;
 use std::io::{self, Read, Write};
 
@@ -27,10 +26,6 @@ impl Window {
             title: super::read_pstring(&mut reader)?,
         })
     }
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("Window/{}.txt", res.id)
 }
 
 const documentProc: i16 = 0;

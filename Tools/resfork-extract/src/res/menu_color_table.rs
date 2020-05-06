@@ -1,5 +1,4 @@
 use super::RGBColor;
-use crate::rsrcfork::Resource;
 use crate::utils::ReadExt;
 use std::io::{self, Read, Write};
 
@@ -40,10 +39,6 @@ impl MenuColorTable {
         }
         Ok(Self { table })
     }
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("MenuColorTable/{}.txt", res.id)
 }
 
 fn rgb(rgb: RGBColor) -> String {

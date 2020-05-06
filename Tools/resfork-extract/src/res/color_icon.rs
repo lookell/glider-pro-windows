@@ -1,7 +1,6 @@
 use super::{ColorTable, Rect};
 use crate::bitmap::{Bitmap, BitmapEight, BitmapFour, BitmapOne, RgbQuad};
 use crate::icocur::IconFile;
-use crate::rsrcfork::Resource;
 use crate::utils::ReadExt;
 use std::io::{self, Read, Write};
 
@@ -184,10 +183,6 @@ fn make_8bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapEight {
         }
     }
     output
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("AppIcon/{}-color.ico", res.id)
 }
 
 pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {

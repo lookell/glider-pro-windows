@@ -1,5 +1,4 @@
 use crate::mac_roman;
-use crate::rsrcfork::Resource;
 use crate::utils::ReadExt;
 use std::io::{self, Read, Write};
 
@@ -67,10 +66,6 @@ impl MenuItem {
             itemStyle,
         }))
     }
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("Menu/{}.txt", res.id)
 }
 
 pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {

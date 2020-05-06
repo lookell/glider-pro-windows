@@ -1,5 +1,4 @@
 use super::Rect;
-use crate::rsrcfork::Resource;
 use crate::utils::ReadExt;
 use std::io::{self, Read, Write};
 
@@ -39,10 +38,6 @@ const CHECK_BOX_PROC_USE_W_FONT: i16 = 9;
 const RADIO_BUT_PROC_USE_W_FONT: i16 = 10;
 const SCROLL_BAR_PROC: i16 = 16;
 const POPUP_MENU_CDEF_PROC: i16 = 1008;
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("ControlTemplate/{}.txt", res.id)
-}
 
 pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {
     let template = ControlTemplate::read_from(data)?;

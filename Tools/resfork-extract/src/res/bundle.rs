@@ -1,7 +1,8 @@
-use crate::rsrcfork::{ResType, Resource};
+use crate::rsrcfork::ResType;
 use crate::utils::ReadExt;
 use std::io::{self, Read, Write};
 
+#[allow(dead_code)]
 struct Bundle {
     signature: ResType,
     version: i16,
@@ -54,10 +55,6 @@ impl IDMapping {
             actual_id: reader.read_be_i16()?,
         })
     }
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("Bundle/{}.txt", res.id)
 }
 
 pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {

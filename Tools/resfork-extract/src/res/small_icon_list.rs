@@ -1,5 +1,4 @@
 use crate::bitmap::{Bitmap, BitmapOne, RgbQuad};
-use crate::rsrcfork::Resource;
 use std::io::{self, Read};
 
 struct SmallIconList {
@@ -15,10 +14,6 @@ impl SmallIconList {
         reader.read_exact(&mut mask)?;
         Ok(Self { data, mask })
     }
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("FinderIcon/{}-small-mono.ico", res.id)
 }
 
 pub fn convert(data: &[u8]) -> io::Result<(BitmapOne, BitmapOne)> {

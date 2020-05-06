@@ -1,5 +1,4 @@
 use super::Rect;
-use crate::rsrcfork::Resource;
 use crate::utils::ReadExt;
 use std::io::{self, Read, Write};
 
@@ -55,10 +54,6 @@ const silent: u8 = 0;
 const sound1: u8 = 1;
 const sound2: u8 = 2;
 const sound3: u8 = 3;
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("Alert/{}.txt", res.id)
-}
 
 pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {
     fn bold_to_str(bold: bool) -> &'static str {

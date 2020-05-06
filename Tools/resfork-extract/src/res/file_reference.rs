@@ -1,4 +1,4 @@
-use crate::rsrcfork::{ResType, Resource};
+use crate::rsrcfork::ResType;
 use crate::utils::ReadExt;
 use std::io::{self, Read, Write};
 
@@ -16,10 +16,6 @@ impl FileReference {
             _ignored: super::read_pstring(&mut reader)?,
         })
     }
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("FileReference/{}.txt", res.id)
 }
 
 pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {

@@ -1,5 +1,4 @@
 use super::read_pstring;
-use crate::rsrcfork::Resource;
 use crate::utils::ReadExt;
 use std::io::{self, Read, Write};
 
@@ -16,10 +15,6 @@ impl StringList {
         }
         Ok(Self { strings })
     }
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("StringList/{}.txt", res.id)
 }
 
 pub fn convert(data: &[u8], mut writer: impl Write) -> io::Result<()> {

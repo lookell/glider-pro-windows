@@ -2,7 +2,6 @@ use super::{ColorTable, Point, Rect};
 use crate::bitmap::{
     Bitmap, BitmapEight, BitmapFour, BitmapOne, BitmapSixteen, BitmapTwentyFour, RgbQuad,
 };
-use crate::rsrcfork::Resource;
 use crate::utils::{ReadExt, SeekExt};
 use std::io::{self, Read, Seek, Write};
 use std::iter;
@@ -838,10 +837,6 @@ fn convert_v2(picture: PictureV2, writer: impl Write) -> io::Result<()> {
         extract_bits_data_v2(&picture.picOps),
         writer,
     )
-}
-
-pub fn get_entry_name(res: &Resource) -> String {
-    format!("Picture/{}.bmp", res.id)
 }
 
 pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
