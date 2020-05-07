@@ -56,16 +56,14 @@ static int memory_writer_close(byteio *stream);
 
 int byteio_read(byteio *stream, void *buffer, size_t size)
 {
-	if (stream == NULL || buffer == NULL)
+	if (stream == NULL)
 		return 0;
 	return stream->fn_read(stream, buffer, size);
 }
 
 int byteio_skip(byteio *stream, size_t size)
 {
-	if (stream == NULL)
-		return 0;
-	return stream->fn_read(stream, NULL, size);
+	return byteio_read(stream, NULL, size);
 }
 
 int byteio_write(byteio *stream, const void *buffer, size_t size)

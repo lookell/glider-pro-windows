@@ -33,7 +33,8 @@ int byteio_init_memory_writer(byteio *stream, void *buffer, size_t size);
 // must not have been closed before this call.
 int byteio_close(byteio *stream);
 
-// Read exactly `size` bytes into the array `buffer`.
+// Read exactly `size` bytes into the array `buffer`. If the `buffer` parameter
+// is NULL, then the bytes are simply skipped over in the stream.
 int byteio_read(byteio *stream, void *buffer, size_t size);
 
 // Skip past `size` bytes in a `byteio` reader.
