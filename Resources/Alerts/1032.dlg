@@ -5,9 +5,9 @@ CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    DEFPUSHBUTTON "Cancel", 1, 143, 38, 39, 12
-    PUSHBUTTON "Clear All", 2, 89, 38, 48, 12
-    PUSHBUTTON "All But #1", 3, 36, 38, 48, 12
-    LTEXT "Do what? You can clear all but the highest score, all the scores, or cancel this operation.", -1, 5, 5, 149, 30, SS_NOPREFIX
-    ICON 910, -1, 160, 5, 21, 20
+    DEFPUSHBUTTON "Cancel", IDCANCEL, 143, 38, 39, 12
+    PUSHBUTTON "Clear All", 102, 89, 38, 48, 12
+    PUSHBUTTON "All But #1", 103, 36, 38, 48, 12
+    LTEXT "Do what? You can clear all but the highest score, all the scores, or cancel this operation.", IDC_STATIC, 5, 5, 149, 30, SS_NOPREFIX
+    ICON 910, IDC_STATIC, 160, 5, 21, 20
 }

@@ -324,29 +324,26 @@ Boolean WarnLockingHouse (void)
 
 void HowToZeroScores (void)
 {
-	MessageBox(mainWindow, L"HowToZeroScores()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	short		hitWhat;
+	SInt16		hitWhat;
+	AlertData	alertData = { 0 };
 
-//	CenterAlert(kZeroScoresAlert);
-	hitWhat = Alert(kZeroScoresAlert, nil);
+	alertData.hwndParent = mainWindow;
+	hitWhat = Alert(kZeroScoresAlert, &alertData);
 
 	switch (hitWhat)
 	{
-		case 2:		// zero all
+		case 102:	// zero all
 		ZeroHighScores();
 		fileDirty = true;
 		UpdateMenus(false);
 		break;
 
-		case 3:		// zero all but highest
+		case 103:	// zero all but highest
 		ZeroAllButHighestScore();
 		fileDirty = true;
 		UpdateMenus(false);
 		break;
 	}
-#endif
 }
 
 #endif

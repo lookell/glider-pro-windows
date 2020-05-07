@@ -9,6 +9,7 @@
 //#include <Resources.h>
 //#include <Sound.h>
 #include "Macintosh.h"
+#include "DialogUtils.h"
 #include "Externs.h"
 
 
@@ -565,29 +566,23 @@ SInt32 SoundBytesNeeded (void)
 
 void TellHerNoSounds (void)
 {
-	MessageBox(mainWindow, L"TellHerNoSounds()", NULL, MB_ICONHAND);
-	return;
-#if 0
 	#define		kNoMemForSoundsAlert	1039
-	short		hitWhat;
+	SInt16		hitWhat;
+	AlertData	alertData = { 0 };
 
-//	CenterAlert(kNoMemForSoundsAlert);
-	hitWhat = Alert(kNoMemForSoundsAlert, nil);
-#endif
+	alertData.hwndParent = mainWindow;
+	hitWhat = Alert(kNoMemForSoundsAlert, &alertData);
 }
 
 //--------------------------------------------------------------  BitchAboutSM3
 
 void BitchAboutSM3 (void)
 {
-	MessageBox(mainWindow, L"BitchAboutSM3()", NULL, MB_ICONHAND);
-	return;
-#if 0
 	#define		kNoSoundManager3Alert	1030
-	short		hitWhat;
+	SInt16		hitWhat;
+	AlertData	alertData = { 0 };
 
-//	CenterAlert(kNoSoundManager3Alert);
-	hitWhat = Alert(kNoSoundManager3Alert, nil);
-#endif
+	alertData.hwndParent = mainWindow;
+	hitWhat = Alert(kNoSoundManager3Alert, &alertData);
 }
 

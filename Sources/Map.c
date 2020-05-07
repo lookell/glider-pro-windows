@@ -8,6 +8,7 @@
 //#include <ControlDefinitions.h>
 //#include <Resources.h>
 #include "Macintosh.h"
+#include "DialogUtils.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "House.h"
@@ -22,7 +23,7 @@
 #define kVScrollRef				27L
 #define kMapGroundValue			56
 #define kNewRoomAlert			1004
-#define kYesDoNewRoom			1
+#define kYesDoNewRoom			IDOK
 #define kThumbnailPictID		1010
 
 
@@ -747,17 +748,15 @@ void HandleMapClick (EventRecord *theEvent)
 #ifndef COMPILEDEMO
 Boolean QueryNewRoom (void)
 {
-	return (MessageBox(mainWindow, L"QueryNewRoom()", NULL, MB_YESNO) == IDYES);
-#if 0
-	short		hitWhat;
+	SInt16		hitWhat;
+	AlertData	alertData = { 0 };
 
-//	CenterAlert(kNewRoomAlert);
-	hitWhat = Alert(kNewRoomAlert, nil);
+	alertData.hwndParent = mainWindow;
+	hitWhat = Alert(kNewRoomAlert, &alertData);
 	if (hitWhat == kYesDoNewRoom)
 		return (true);
 	else
 		return (false);
-#endif
 }
 #endif
 

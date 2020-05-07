@@ -626,7 +626,7 @@ void CloseHouseResFork (void)
 #ifndef COMPILEDEMO
 Boolean QuerySaveChanges (void)
 {
-	AlertData	alertData;
+	AlertData	alertData = { 0 };
 	SInt16		hitWhat;
 	Boolean		whoCares;
 
@@ -635,9 +635,6 @@ Boolean QuerySaveChanges (void)
 
 	alertData.hwndParent = mainWindow;
 	WinFromMacString(alertData.arg[0], ARRAYSIZE(alertData.arg[0]), thisHouseName);
-	StringCchCopy(alertData.arg[1], ARRAYSIZE(alertData.arg[1]), L"");
-	StringCchCopy(alertData.arg[2], ARRAYSIZE(alertData.arg[2]), L"");
-	StringCchCopy(alertData.arg[3], ARRAYSIZE(alertData.arg[3]), L"");
 	hitWhat = Alert(kSaveChangesAlert, &alertData);
 	if (hitWhat == kSaveChanges)
 	{
@@ -674,11 +671,10 @@ Boolean QuerySaveChanges (void)
 void YellowAlert (SInt16 whichAlert, SInt16 identifier)
 {
 	#define		kYellowAlert	1006
-	AlertData	alertData;
+	AlertData	alertData = { 0 };
 	INT			result;
 	SInt16		whoCares;
 
-	ZeroMemory(&alertData, sizeof(alertData));
 	alertData.hwndParent = mainWindow;
 	result = LoadString(HINST_THISCOMPONENT, IDS_YELLOW_ALERT_BASE + whichAlert,
 			alertData.arg[0], ARRAYSIZE(alertData.arg[0]));

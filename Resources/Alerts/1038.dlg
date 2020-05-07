@@ -5,7 +5,7 @@ CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    DEFPUSHBUTTON "Whatever", 1, 124, 50, 53, 12
-    LTEXT "Okay, with your monitor & color depth, there isn't enough memory. In order to run Glider PRO™, the music won't be loaded.", -1, 5, 5, 150, 39, SS_NOPREFIX
-    ICON 1011, -1, 156, 5, 21, 20
+    DEFPUSHBUTTON "Whatever", IDOK, 124, 50, 53, 12
+    LTEXT "Okay, with your monitor & color depth, there isn't enough memory. In order to run Glider PRO™, the music won't be loaded.", IDC_STATIC, 5, 5, 150, 39, SS_NOPREFIX
+    ICON 1011, IDC_STATIC, 156, 5, 21, 20
 }

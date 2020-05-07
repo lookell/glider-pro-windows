@@ -419,13 +419,9 @@ Boolean QuerySaveGame (void)
 	#define		kSaveGameAlert		1041
 	#define		kYesSaveGameButton	IDYES
 	SInt16		hitWhat;
-	AlertData	alertData;
+	AlertData	alertData = { 0 };
 
 	alertData.hwndParent = mainWindow;
-	StringCchCopy(alertData.arg[0], ARRAYSIZE(alertData.arg[0]), L"");
-	StringCchCopy(alertData.arg[1], ARRAYSIZE(alertData.arg[1]), L"");
-	StringCchCopy(alertData.arg[2], ARRAYSIZE(alertData.arg[2]), L"");
-	StringCchCopy(alertData.arg[3], ARRAYSIZE(alertData.arg[3]), L"");
 	hitWhat = Alert(kSaveGameAlert, &alertData);
 	if (hitWhat == kYesSaveGameButton)
 		return (true);

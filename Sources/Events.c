@@ -9,6 +9,7 @@
 //#include <AppleEvents.h>
 //#include <ToolUtils.h>
 #include "Macintosh.h"
+#include "DialogUtils.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "House.h"
@@ -47,16 +48,14 @@ extern	Boolean		autoRoomEdit, newRoomNow, isPlayMusicIdle;
 
 SInt16 BitchAboutColorDepth (void)
 {
-	return (1);
-#if 0
 	#define		kColorSwitchedAlert		1042
-	short		sheSaid;
+	SInt16		sheSaid;
+	AlertData	alertData = { 0 };
 
-//	CenterAlert(kColorSwitchedAlert);
-	sheSaid = Alert(kColorSwitchedAlert, nil);
+	alertData.hwndParent = mainWindow;
+	sheSaid = Alert(kColorSwitchedAlert, &alertData);
 
-	return (sheSaid);
-#endif
+	return (sheSaid - 100);
 }
 
 //--------------------------------------------------------------  HandleMouseEvent

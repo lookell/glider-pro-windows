@@ -5,8 +5,8 @@ CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    DEFPUSHBUTTON "Create", 1, 148, 42, 39, 12
-    PUSHBUTTON "Cancel", 2, 104, 42, 39, 12
-    LTEXT "Do you wish to create a New Room at this location?", -1, 9, 8, 132, 23, SS_NOPREFIX
-    ICON 1004, -1, 165, 8, 21, 20
+    DEFPUSHBUTTON "Create", IDOK, 148, 42, 39, 12
+    PUSHBUTTON "Cancel", IDCANCEL, 104, 42, 39, 12
+    LTEXT "Do you wish to create a New Room at this location?", IDC_STATIC, 9, 8, 132, 23, SS_NOPREFIX
+    ICON 1004, IDC_STATIC, 165, 8, 21, 20
 }

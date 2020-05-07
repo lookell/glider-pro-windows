@@ -9,6 +9,7 @@
 //#include <Resources.h>
 //#include <Sound.h>
 #include "Macintosh.h"
+#include "DialogUtils.h"
 #include "Environ.h"
 #include "Externs.h"
 
@@ -435,14 +436,11 @@ SInt32 MusicBytesNeeded (void)
 
 void TellHerNoMusic (void)
 {
-	MessageBox(mainWindow, L"TellHerNoMusic", NULL, MB_ICONHAND);
-	return;
-#if 0
 	#define		kNoMemForMusicAlert	1038
-	short		hitWhat;
+	SInt16		hitWhat;
+	AlertData	alertData = { 0 };
 
-//	CenterAlert(kNoMemForMusicAlert);
-	hitWhat = Alert(kNoMemForMusicAlert, nil);
-#endif
+	alertData.hwndParent = mainWindow;
+	hitWhat = Alert(kNoMemForMusicAlert, &alertData);
 }
 

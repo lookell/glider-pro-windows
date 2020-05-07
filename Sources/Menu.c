@@ -891,15 +891,12 @@ SInt16 QueryResumeGame (void)
 #ifdef COMPILEDEMO
 void DoNotInDemo (void)
 {
-	MessageBox(mainWindow, L"DoNotInDemo()", NULL, MB_ICONHAND);
-	return;
-#if 0
 	#define		kNotInDemoAlert		1037
-	short		whoCares;
+	SInt16		whoCares;
+	AlertData	alertData = { 0 };
 
-//	CenterAlert(kNotInDemoAlert);
-	whoCares = Alert(kNotInDemoAlert, nil);
-#endif
+	alertData.hwndParent = mainWindow;
+	whoCares = Alert(kNotInDemoAlert, &alertData);
 }
 #endif
 
@@ -907,15 +904,12 @@ void DoNotInDemo (void)
 
 void HeyYourPissingAHighScore (void)
 {
-	MessageBox(mainWindow, L"HeyYourPissingAHighScore()", NULL, MB_ICONHAND);
-	return;
-#if 0
 	#define		kNoHighScoreAlert	1046
-	short		whoCares;
+	SInt16		whoCares;
+	AlertData	alertData = { 0 };
 
-//	CenterAlert(kNoHighScoreAlert);
-	whoCares = Alert(kNoHighScoreAlert, nil);
-#endif
+	alertData.hwndParent = mainWindow;
+	whoCares = Alert(kNoHighScoreAlert, &alertData);
 }
 
 //--------------------------------------------------------------  OpenCloseEditWindows

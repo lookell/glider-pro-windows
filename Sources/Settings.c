@@ -1551,14 +1551,11 @@ void DoSettingsMain (void)
 
 void BitchAboutChanges (void)
 {
-	MessageBox(mainWindow, L"BitchAboutChanges()", NULL, MB_ICONHAND);
-	return;
-#if 0
 	#define		kChangesEffectAlert	1040
-	short		hitWhat;
+	SInt16		hitWhat;
+	AlertData	alertData = { 0 };
 
-//	CenterAlert(kChangesEffectAlert);
-	hitWhat = Alert(kChangesEffectAlert, nil);
-#endif
+	alertData.hwndParent = mainWindow;
+	hitWhat = Alert(kChangesEffectAlert, &alertData);
 }
 
