@@ -9,11 +9,13 @@
 //#include <NumberFormatting.h>
 //#include <TextUtils.h>
 #include "Macintosh.h"
+#include "DialogUtils.h"
 #include "Externs.h"
+#include "ResourceIDs.h"
 
 
 #define	rFileErrorAlert		140
-#define	rFileErrorStrings	140
+#define	rFileErrorStrings	140		// replaced with IDS_FILE_ERROR_BASE
 
 
 //==============================================================  Functions
@@ -26,17 +28,33 @@
 // bring up an alert but with "Miscellaneous file error" and the…
 // error ID.
 
+#define dirFulErr		(-33)	// directory full
+#define dskFulErr		(-34)	// disk full
+#define ioErr			(-36)	// I/O error
+#define bdNamErr		(-37)	// bad file name
+#define fnOpnErr		(-38)	// file not open
+#define mFulErr			(-41)	// memory full (open) or file won't fit (load)
+#define tmfoErr			(-42)	// too many files open
+#define wPrErr			(-44)	// diskette is write protected
+#define fLckdErr		(-45)	// file is locked
+#define vLckdErr		(-46)	// volume is locked
+#define fBsyErr			(-47)	// file is busy (delete)
+#define dupFNErr		(-48)	// duplicate filename (rename)
+#define opWrErr			(-49)	// file already open with write permission
+#define volOffLinErr	(-53)	// volume not on line error (was ejected)
+#define permErr			(-54)	// permissions error (on file open)
+#define wrPermErr		(-61)	// write permissions error
+
 Boolean CheckFileError (DWORD resultCode, StringPtr fileName)
 {
-	MessageBox(mainWindow, L"CheckFileError()", NULL, MB_ICONHAND);
-	return true;
-#if 0
-	short			dummyInt, stringIndex;
-	Str255			errMessage, errNumString;
+	SInt16			dummyInt, stringIndex;
+	AlertData		alertData = { 0 };
+	DWORD			result;
 
-	if (resultCode == noErr)		// No problems?  Then cruise
+	if (resultCode == ERROR_SUCCESS)	// No problems?  Then cruise
 		return(true);
 
+	/*
 	switch (resultCode)
 	{
 		case dirFulErr:
@@ -91,17 +109,26 @@ Boolean CheckFileError (DWORD resultCode, StringPtr fileName)
 			stringIndex = 1;
 			break;
 	}
-	InitCursor();
 
-	GetIndString(errMessage, rFileErrorStrings, stringIndex);
-	NumToString((long)resultCode, errNumString);
-	ParamText(errMessage, errNumString, fileName, "\p");
+	loadResult = LoadString(HINST_THISCOMPONENT, IDS_FILE_ERROR_BASE + stringIndex,
+			alertData.arg[0], ARRAYSIZE(alertData.arg[0]));
+	if (loadResult <= 0)
+		alertData.arg[0][0] = L'\0';
+	*/
 
-//	CenterAlert(rFileErrorAlert);
-	dummyInt = Alert(rFileErrorAlert, 0L);
+	result = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+			NULL, resultCode, 0, alertData.arg[0], ARRAYSIZE(alertData.arg[0]), NULL);
+	if (result == 0)
+		alertData.arg[0][0] = L'\0';
+
+	StringCchPrintf(alertData.arg[1], ARRAYSIZE(alertData.arg[1]),
+			L"%ld", (ULONG)resultCode);
+	WinFromMacString(alertData.arg[2], ARRAYSIZE(alertData.arg[2]), fileName);
+
+	alertData.hwndParent = mainWindow;
+	dummyInt = Alert(rFileErrorAlert, &alertData);
 
 	return(false);
-#endif
 }
 
 
