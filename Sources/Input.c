@@ -21,6 +21,10 @@
 #define	kSavingGameDial		1042
 
 
+#define IsKeyDown(vkey) (GetActiveWindow() == mainWindow && GetAsyncKeyState(vkey) < 0)
+#define IsKeyUp(vkey) (GetActiveWindow() != mainWindow || GetAsyncKeyState(vkey) >= 0)
+
+
 void LogDemoKey (Byte);
 void DoCommandKey (void);
 void DoPause (void);
@@ -54,7 +58,7 @@ void LogDemoKey (Byte keyIs)
 
 void DoCommandKey (void)
 {
-	if (GetKeyState('Q') < 0)
+	if (IsKeyDown('Q'))
 	{
 		playing = false;
 		paused = false;
@@ -64,7 +68,7 @@ void DoCommandKey (void)
 				SaveGame2();		// New save game.
 		}
 	}
-	else if ((GetKeyState('S') < 0) && (!twoPlayerGame) && (!demoGoing))
+	else if ((IsKeyDown('S')) && (!twoPlayerGame) && (!demoGoing))
 	{
 		RefreshScoreboard(kSavingTitleMode);
 		SaveGame2();				// New save game.
@@ -98,8 +102,8 @@ void DoPause (void)
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 		// continue once the pause key is up
-		if ((isEscPauseKey && GetKeyState(VK_ESCAPE) >= 0) ||
-				(!isEscPauseKey && GetKeyState(VK_TAB) >= 0))
+		if ((isEscPauseKey && IsKeyUp(VK_ESCAPE)) ||
+				(!isEscPauseKey && IsKeyUp(VK_TAB)))
 			break;
 	}
 	if (msg.message == WM_QUIT)
@@ -115,10 +119,10 @@ void DoPause (void)
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 		// continue once the pause key is down again
-		if ((isEscPauseKey && GetKeyState(VK_ESCAPE) < 0) ||
-				(!isEscPauseKey && GetKeyState(VK_TAB) < 0))
+		if ((isEscPauseKey && IsKeyDown(VK_ESCAPE)) ||
+				(!isEscPauseKey && IsKeyDown(VK_TAB)))
 			paused = false;
-		else if (GetKeyState(VK_CONTROL) < 0)
+		else if (IsKeyDown(VK_CONTROL))
 			DoCommandKey();
 	}
 	if (msg.message == WM_QUIT)
@@ -139,11 +143,9 @@ void DoPause (void)
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 		// continue once the pause key is up
-		if ((isEscPauseKey && GetKeyState(VK_ESCAPE) >= 0) ||
-			(!isEscPauseKey && GetKeyState(VK_TAB) >= 0))
-		{
+		if ((isEscPauseKey && IsKeyUp(VK_ESCAPE)) ||
+				(!isEscPauseKey && IsKeyUp(VK_TAB)))
 			break;
-		}
 	}
 	if (msg.message == WM_QUIT)
 	{
@@ -226,10 +228,10 @@ void GetDemoInput (gliderPtr thisGlider)
 	{
 #if BUILD_ARCADE_VERSION
 
-		if ((GetKeyState(thisGlider->leftKey) < 0) ||
-				(GetKeyState(thisGlider->rightKey) < 0) ||
-				(GetKeyState(thisGlider->battKey) < 0) ||
-				(GetKeyState(thisGlider->bandKey) < 0))
+		if ((IsKeyDown(thisGlider->leftKey)) ||
+				(IsKeyDown(thisGlider->rightKey)) ||
+				(IsKeyDown(thisGlider->battKey)) ||
+				(IsKeyDown(thisGlider->bandKey)))
 		{
 			playing = false;
 			paused = false;
@@ -237,7 +239,7 @@ void GetDemoInput (gliderPtr thisGlider)
 
 #else
 
-		if (GetKeyState(VK_CONTROL) < 0)
+		if (IsKeyDown(VK_CONTROL))
 			DoCommandKey();
 
 #endif
@@ -303,8 +305,8 @@ void GetDemoInput (gliderPtr thisGlider)
 		else
 			thisGlider->fireHeld = false;
 
-		if ((isEscPauseKey && GetKeyState(VK_ESCAPE) < 0) ||
-				(!isEscPauseKey && GetKeyState(VK_TAB) < 0))
+		if ((isEscPauseKey && IsKeyDown(VK_ESCAPE)) ||
+				(!isEscPauseKey && IsKeyDown(VK_TAB)))
 		{
 			DoPause();
 		}
@@ -317,7 +319,7 @@ void GetInput (gliderPtr thisGlider)
 {
 	if (thisGlider->which == kPlayer1)
 	{
-		if (GetKeyState(VK_CONTROL) < 0)
+		if (IsKeyDown(VK_CONTROL))
 			DoCommandKey();
 	}
 
@@ -332,12 +334,12 @@ void GetInput (gliderPtr thisGlider)
 	{
 		thisGlider->heldLeft = false;
 		thisGlider->heldRight = false;
-		if (GetKeyState(thisGlider->rightKey) < 0)			// right key
+		if (IsKeyDown(thisGlider->rightKey))			// right key
 		{
 		#ifdef CREATEDEMODATA
 			LogDemoKey(0);
 		#endif
-			if (GetKeyState(thisGlider->leftKey) < 0)
+			if (IsKeyDown(thisGlider->leftKey))
 			{
 				ToggleGliderFacing(thisGlider);
 				thisGlider->heldLeft = true;
@@ -349,7 +351,7 @@ void GetInput (gliderPtr thisGlider)
 				thisGlider->heldRight = true;
 			}
 		}
-		else if (GetKeyState(thisGlider->leftKey) < 0)		// left key
+		else if (IsKeyDown(thisGlider->leftKey))		// left key
 		{
 		#ifdef CREATEDEMODATA
 			LogDemoKey(1);
@@ -361,7 +363,7 @@ void GetInput (gliderPtr thisGlider)
 		else
 			thisGlider->tipped = false;
 
-		if ((GetKeyState(thisGlider->battKey) < 0) && (batteryTotal != 0) &&
+		if ((IsKeyDown(thisGlider->battKey)) && (batteryTotal != 0) &&
 				(thisGlider->mode == kGliderNormal))
 		{
 		#ifdef CREATEDEMODATA
@@ -375,7 +377,7 @@ void GetInput (gliderPtr thisGlider)
 		else
 			batteryWasEngaged = false;
 
-		if ((GetKeyState(thisGlider->bandKey) < 0) && (bandsTotal > 0) &&
+		if ((IsKeyDown(thisGlider->bandKey)) && (bandsTotal > 0) &&
 				(thisGlider->mode == kGliderNormal))
 		{
 		#ifdef CREATEDEMODATA
@@ -398,14 +400,14 @@ void GetInput (gliderPtr thisGlider)
 			thisGlider->fireHeld = false;
 
 		if ((otherPlayerEscaped != kNoOneEscaped) &&
-				(GetKeyState(VK_DELETE) < 0) &&
+				(IsKeyDown(VK_DELETE)) &&
 				(thisGlider->which) && (!onePlayerLeft))
 		{
 			ForceKillGlider();
 		}
 
-		if ((isEscPauseKey && GetKeyState(VK_ESCAPE) < 0) ||
-				(!isEscPauseKey && GetKeyState(VK_TAB) < 0))
+		if ((isEscPauseKey && IsKeyDown(VK_ESCAPE)) ||
+				(!isEscPauseKey && IsKeyDown(VK_TAB)))
 		{
 			DoPause();
 		}
