@@ -9,10 +9,12 @@
 #include "Externs.h"
 //#include <AppleEvents.h>
 #include "Macintosh.h"
+#include "DialogUtils.h"
 #include "House.h"
 
 
 #define kNoPrintingAlert			1031
+#define errAEEventNotHandled		(-1708)
 
 
 OSErr DoOpenAppAE (const AppleEvent *, AppleEvent *, UInt32);
@@ -138,17 +140,17 @@ OSErr DoOpenDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 
 OSErr DoPrintDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 {
-	return (-1);
-#if 0
-#pragma unused (theAE, reply, ref)
+	AlertData	alertData = { 0 };
+	SInt16		hitWhat;
 
-	short		hitWhat;
+	UNREFERENCED_PARAMETER(theAE);
+	UNREFERENCED_PARAMETER(reply);
+	UNREFERENCED_PARAMETER(ref);
 
-//	CenterAlert(kNoPrintingAlert);
-	hitWhat = Alert(kNoPrintingAlert, nil);
+	alertData.hwndParent = NULL;
+	hitWhat = Alert(kNoPrintingAlert, &alertData);
 
 	return errAEEventNotHandled;
-#endif
 }
 
 //--------------------------------------------------------------  DoQuitAE

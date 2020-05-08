@@ -11,6 +11,7 @@
 //#include <Gestalt.h>
 //#include <NumberFormatting.h>
 //#include <Sound.h>
+#include "DialogUtils.h"
 #include "Externs.h"
 #include "Environ.h"
 //#include <Palettes.h>
@@ -399,6 +400,7 @@ Boolean AreWeColorOrGrayscale (void)
 
 void SwitchToDepth (SInt16 newDepth, Boolean doColor)
 {
+	thisMac.isDepth = newDepth;
 	return;
 #if 0
 	OSErr			theErr;
@@ -432,36 +434,30 @@ void SwitchToDepth (SInt16 newDepth, Boolean doColor)
 
 void SwitchDepthOrAbort (void)
 {
-	MessageBox(mainWindow, L"SwitchDepthOrAbort()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	short			usersDecision;
+	AlertData		alertData = { 0 };
+	SInt16			usersDecision;
 
 	if (thisMac.canSwitch)
 	{
-		InitCursor();
-
-//		CenterAlert(kSwitchDepthAlert);
-
-		usersDecision = Alert(kSwitchDepthAlert, nil);
+		alertData.hwndParent = mainWindow;
+		usersDecision = Alert(kSwitchDepthAlert, &alertData);
 		switch (usersDecision)
 		{
-			case 1:
+			case 101:
 			SwitchToDepth(8, true);
 			break;
 
-			case 2:
+			case 102:
 			SwitchToDepth(4, false);
 			break;
 
-			case 3:
-			ExitToShell();
+			case 103:
+			exit(0);
 			break;
 		}
 	}
 	else
 		RedAlert(kErrUnnaccounted);
-#endif
 }
 
 //--------------------------------------------------------------  CheckOurEnvirons
@@ -595,14 +591,14 @@ void RestoreColorDepth (void)
 
 void CheckMemorySize (void)
 {
-	return;
-#if 0
 	#define		kBaseBytesNeeded	614400L					// 600K Base memory
 	#define		kPaddingBytes		204800L					// 200K Padding
-	long		bytesNeeded, bytesAvail;
-	long		soundBytes, musicBytes;
-	short		hitWhat;
+	AlertData	alertData = { 0 };
+	SInt32		bytesNeeded, bytesAvail;
+	SInt32		soundBytes, musicBytes;
+	SInt16		hitWhat;
 	Str255		sizeStr;
+	MEMORYSTATUSEX memoryStatus;
 
 	dontLoadMusic = false;
 	dontLoadSounds = false;
@@ -618,62 +614,62 @@ void CheckMemorySize (void)
 		RedAlert(kErrNoMemory);
 	else
 		bytesNeeded += musicBytes;
-	bytesNeeded += 4L * (long)thisMac.screen.bottom;		// main screen
-	bytesNeeded += (((long)houseRect.right - (long)houseRect.left) *
-			((long)houseRect.bottom + 1 - (long)houseRect.top) *
-			(long)thisMac.isDepth) / 8L;					// work map
-	bytesNeeded += 4L * (long)houseRect.bottom;
-	bytesNeeded += (((long)houseRect.right - (long)houseRect.left) *
-			((long)houseRect.bottom + 1 - (long)houseRect.top) *
-			(long)thisMac.isDepth) / 8L;					// back map
+	bytesNeeded += 4L * (SInt32)thisMac.screen.bottom;		// main screen
+	bytesNeeded += (((SInt32)houseRect.right - (SInt32)houseRect.left) *
+			((SInt32)houseRect.bottom + 1 - (SInt32)houseRect.top) *
+			(SInt32)thisMac.isDepth) / 8L;					// work map
+	bytesNeeded += 4L * (SInt32)houseRect.bottom;
+	bytesNeeded += (((SInt32)houseRect.right - (SInt32)houseRect.left) *
+			((SInt32)houseRect.bottom + 1 - (SInt32)houseRect.top) *
+			(SInt32)thisMac.isDepth) / 8L;					// back map
 	bytesNeeded += 4L * houseRect.bottom;
-	bytesNeeded += (((long)houseRect.right - (long)houseRect.left) * 21 *
-			(long)thisMac.isDepth) / 8L;					// scoreboard map
-	bytesNeeded += (6396L * (long)thisMac.isDepth) / 8L;	// more scoreboard
-	bytesNeeded += (32112L * (long)thisMac.isDepth) / 8L;	// glider map
-	bytesNeeded += (32112L * (long)thisMac.isDepth) / 8L;	// glider2 map
+	bytesNeeded += (((SInt32)houseRect.right - (SInt32)houseRect.left) * 21 *
+			(SInt32)thisMac.isDepth) / 8L;					// scoreboard map
+	bytesNeeded += (6396L * (SInt32)thisMac.isDepth) / 8L;	// more scoreboard
+	bytesNeeded += (32112L * (SInt32)thisMac.isDepth) / 8L;	// glider map
+	bytesNeeded += (32112L * (SInt32)thisMac.isDepth) / 8L;	// glider2 map
 	bytesNeeded += 32064L / 8L;								// glider mask
-	bytesNeeded += (912L * (long)thisMac.isDepth) / 8L;		// glider shadow
+	bytesNeeded += (912L * (SInt32)thisMac.isDepth) / 8L;	// glider shadow
 	bytesNeeded += 864L / 8L;								// shadow mask
-	bytesNeeded += (304L * (long)thisMac.isDepth) / 8L;		// rubber bands
+	bytesNeeded += (304L * (SInt32)thisMac.isDepth) / 8L;	// rubber bands
 	bytesNeeded += 288L / 8L;								// bands mask
-	bytesNeeded += (19344L * (long)thisMac.isDepth) / 8L;	// blower map
+	bytesNeeded += (19344L * (SInt32)thisMac.isDepth) / 8L;	// blower map
 	bytesNeeded += 19344L / 8L;								// blower mask
-	bytesNeeded += (17856L * (long)thisMac.isDepth) / 8L;	// furniture map
+	bytesNeeded += (17856L * (SInt32)thisMac.isDepth) / 8L;	// furniture map
 	bytesNeeded += 17792L / 8L;								// furniture mask
-	bytesNeeded += (33264L * (long)thisMac.isDepth) / 8L;	// prizes map
+	bytesNeeded += (33264L * (SInt32)thisMac.isDepth) / 8L;	// prizes map
 	bytesNeeded += 33176L / 8L;								// prizes mask
-	bytesNeeded += (2904L * (long)thisMac.isDepth) / 8L;	// points map
+	bytesNeeded += (2904L * (SInt32)thisMac.isDepth) / 8L;	// points map
 	bytesNeeded += 2880L / 8L;								// points mask
-	bytesNeeded += (1848L * (long)thisMac.isDepth) / 8L;	// transport map
+	bytesNeeded += (1848L * (SInt32)thisMac.isDepth) / 8L;	// transport map
 	bytesNeeded += 1792L / 8L;								// transport mask
-	bytesNeeded += (3360L * (long)thisMac.isDepth) / 8L;	// switches map
-	bytesNeeded += (9144L * (long)thisMac.isDepth) / 8L;	// lights map
+	bytesNeeded += (3360L * (SInt32)thisMac.isDepth) / 8L;	// switches map
+	bytesNeeded += (9144L * (SInt32)thisMac.isDepth) / 8L;	// lights map
 	bytesNeeded += 9072L / 8L;								// lights mask
-	bytesNeeded += (21600L * (long)thisMac.isDepth) / 8L;	// appliances map
+	bytesNeeded += (21600L * (SInt32)thisMac.isDepth) / 8L;	// appliances map
 	bytesNeeded += 21520L / 8L;								// appliances mask
-	bytesNeeded += (5600L * (long)thisMac.isDepth) / 8L;	// toast map
+	bytesNeeded += (5600L * (SInt32)thisMac.isDepth) / 8L;	// toast map
 	bytesNeeded += 5568L / 8L;								// toast mask
-	bytesNeeded += (1440L * (long)thisMac.isDepth) / 8L;	// shredded map
+	bytesNeeded += (1440L * (SInt32)thisMac.isDepth) / 8L;	// shredded map
 	bytesNeeded += 1400L / 8L;								// shredded mask
-	bytesNeeded += (5784L * (long)thisMac.isDepth) / 8L;	// balloon map
+	bytesNeeded += (5784L * (SInt32)thisMac.isDepth) / 8L;	// balloon map
 	bytesNeeded += 5760L / 8L;								// balloon mask
-	bytesNeeded += (9632L * (long)thisMac.isDepth) / 8L;	// copter map
+	bytesNeeded += (9632L * (SInt32)thisMac.isDepth) / 8L;	// copter map
 	bytesNeeded += 9600L / 8L;								// copter mask
-	bytesNeeded += (4928L * (long)thisMac.isDepth) / 8L;	// dart map
+	bytesNeeded += (4928L * (SInt32)thisMac.isDepth) / 8L;	// dart map
 	bytesNeeded += 4864L / 8L;								// dart mask
-	bytesNeeded += (2080L * (long)thisMac.isDepth) / 8L;	// ball map
+	bytesNeeded += (2080L * (SInt32)thisMac.isDepth) / 8L;	// ball map
 	bytesNeeded += 2048L / 8L;								// ball mask
-	bytesNeeded += (1168L * (long)thisMac.isDepth) / 8L;	// drip map
+	bytesNeeded += (1168L * (SInt32)thisMac.isDepth) / 8L;	// drip map
 	bytesNeeded += 1152L / 8L;								// drip mask
-	bytesNeeded += (1224L * (long)thisMac.isDepth) / 8L;	// enemy map
+	bytesNeeded += (1224L * (SInt32)thisMac.isDepth) / 8L;	// enemy map
 	bytesNeeded += 1188L / 8L;								// enemy mask
-	bytesNeeded += (2064L * (long)thisMac.isDepth) / 8L;	// fish map
+	bytesNeeded += (2064L * (SInt32)thisMac.isDepth) / 8L;	// fish map
 	bytesNeeded += 2048L / 8L;								// fish mask
-	bytesNeeded += (8960L * (long)thisMac.isDepth) / 8L;	// clutter map
+	bytesNeeded += (8960L * (SInt32)thisMac.isDepth) / 8L;	// clutter map
 	bytesNeeded += 8832L / 8L;								// clutter mask
-	bytesNeeded += (23040L * (long)thisMac.isDepth) / 8L;	// support map
-	bytesNeeded += (4320L * (long)thisMac.isDepth) / 8L;	// angel map
+	bytesNeeded += (23040L * (SInt32)thisMac.isDepth) / 8L;	// support map
+	bytesNeeded += (4320L * (SInt32)thisMac.isDepth) / 8L;	// angel map
 	bytesNeeded += 4224L / 8L;								// angel mask
 	bytesNeeded += sizeof(roomType);
 	bytesNeeded += sizeof(hotObject) * kMaxHotSpots;
@@ -692,11 +688,17 @@ void CheckMemorySize (void)
 	bytesNeeded += sizeof(objDataType) * kMaxMasterObjects;
 	bytesNeeded += kDemoLength;		SpinCursor(1);
 
-	bytesAvail = FreeMem();			SpinCursor(1);
+//	bytesAvail = FreeMem();			SpinCursor(1);
+	memoryStatus.dwLength = sizeof(memoryStatus);
+	if (!GlobalMemoryStatusEx(&memoryStatus))
+		return;
+	if (memoryStatus.ullAvailPhys > INT32_MAX)
+		return;
+	bytesAvail = (SInt32)memoryStatus.ullAvailPhys;
+	SpinCursor(1);
 
 	if (bytesAvail < bytesNeeded)
 	{
-		InitCursor();
 		if (bytesAvail >= (bytesNeeded - musicBytes))
 		{	// if we don't load the music we can run
 			TellHerNoMusic();
@@ -712,20 +714,17 @@ void CheckMemorySize (void)
 		}
 
 #ifdef COMPILEDEMO
-//		CenterAlert(kLowMemoryAlert);
-		NumToString((bytesNeeded + kPaddingBytes) / 1024L, sizeStr);
-		ParamText(sizeStr, "\p", "\p", "\p");
-		hitWhat = Alert(kLowMemoryAlert, nil);
+		Mac_NumToString((bytesNeeded + kPaddingBytes) / 1024L, sizeStr);
+		WinFromMacString(alertData.arg[0], ARRAYSIZE(alertData.arg[0]), sizeStr);
+		hitWhat = Alert(kLowMemoryAlert, &alertData);
 #else
-//		CenterAlert(kSetMemoryAlert);
-		NumToString((bytesNeeded + kPaddingBytes) / 1024L, sizeStr);
-		ParamText(sizeStr, "\p", "\p", "\p");
-		hitWhat = Alert(kSetMemoryAlert, nil);
+		Mac_NumToString((bytesNeeded + kPaddingBytes) / 1024L, sizeStr);
+		WinFromMacString(alertData.arg[0], ARRAYSIZE(alertData.arg[0]), sizeStr);
+		hitWhat = Alert(kSetMemoryAlert, &alertData);
 //		SetAppMemorySize(bytesNeeded + kPaddingBytes);
 #endif
-		ExitToShell();
+		exit(0);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  SetAppMemorySize

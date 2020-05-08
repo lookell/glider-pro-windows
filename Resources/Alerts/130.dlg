@@ -5,9 +5,9 @@ CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION
 {
-    DEFPUSHBUTTON "256", 1, 139, 42, 39, 12
-    PUSHBUTTON "16", 2, 95, 42, 39, 12
-    PUSHBUTTON "Quit", 3, 35, 42, 39, 12
-    ICON 130, -1, 156, 5, 21, 20
-    LTEXT "Glider PRO™ requires 256 colors (or grays) or 16 grays. Select the option you would like.", -1, 5, 5, 143, 30, SS_NOPREFIX
+    DEFPUSHBUTTON "256", 101, 139, 42, 39, 12
+    PUSHBUTTON "16", 102, 95, 42, 39, 12
+    PUSHBUTTON "Quit", 103, 35, 42, 39, 12
+    ICON 130, IDC_STATIC, 156, 5, 21, 20
+    LTEXT "Glider PRO™ requires 256 colors (or grays) or 16 grays. Select the option you would like.", IDC_STATIC, 5, 5, 143, 30, SS_NOPREFIX
 }
