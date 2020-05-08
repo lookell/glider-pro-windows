@@ -148,7 +148,7 @@ void LoadGraphicSpecial (HDC hdc, SInt16 resID)
 	}
 
 	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
-	QSetRect(&bounds, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+	QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
 	Mac_DrawPicture(hdc, thePicture, &bounds);
 
 	DeleteObject(thePicture);

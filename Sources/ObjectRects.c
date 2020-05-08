@@ -228,7 +228,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		else
 		{
 			GetObject(thePict, sizeof(bmInfo), &bmInfo);
-			QSetRect(itsRect, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+			QSetRect(itsRect, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
 			DeleteObject(thePict);
 		}
 		ZeroRectCorner(itsRect);

@@ -35,8 +35,8 @@ void GetWindowLeftTop (HWND theWindow, SInt16 *left, SInt16 *top)
 	{
 		GetClientRect(theWindow, &bounds);
 		MapWindowPoints(theWindow, HWND_DESKTOP, (LPPOINT)&bounds, 2);
-		*left = bounds.left;
-		*top = bounds.top;
+		*left = (SInt16)bounds.left;
+		*top = (SInt16)bounds.top;
 	}
 }
 
@@ -52,10 +52,10 @@ void Gp_GetWindowRect (HWND theWindow, Rect *bounds)
 	{
 		GetClientRect(theWindow, &theRect);
 		MapWindowPoints(theWindow, HWND_DESKTOP, (LPPOINT)&theRect, 2);
-		bounds->left = theRect.left;
-		bounds->top = theRect.top;
-		bounds->right = theRect.right;
-		bounds->bottom = theRect.bottom;
+		bounds->left = (SInt16)theRect.left;
+		bounds->top = (SInt16)theRect.top;
+		bounds->right = (SInt16)theRect.right;
+		bounds->bottom = (SInt16)theRect.bottom;
 	}
 }
 
@@ -70,10 +70,10 @@ void GetLocalWindowRect (HWND theWindow, Rect *bounds)
 	if (theWindow != NULL)
 	{
 		GetClientRect(theWindow, &theRect);
-		bounds->left = theRect.left;
-		bounds->top = theRect.top;
-		bounds->right = theRect.right;
-		bounds->bottom = theRect.bottom;
+		bounds->left = (SInt16)theRect.left;
+		bounds->top = (SInt16)theRect.top;
+		bounds->right = (SInt16)theRect.right;
+		bounds->bottom = (SInt16)theRect.bottom;
 	}
 }
 

@@ -108,7 +108,7 @@ void DoPause (void)
 	}
 	if (msg.message == WM_QUIT)
 	{
-		PostQuitMessage(msg.wParam);
+		PostQuitMessage((int)msg.wParam);
 		quitting = true;
 		return;
 	}
@@ -127,7 +127,7 @@ void DoPause (void)
 	}
 	if (msg.message == WM_QUIT)
 	{		
-		PostQuitMessage(msg.wParam);
+		PostQuitMessage((int)msg.wParam);
 		paused = false;
 		quitting = true;
 		return;
@@ -149,7 +149,7 @@ void DoPause (void)
 	}
 	if (msg.message == WM_QUIT)
 	{
-		PostQuitMessage(msg.wParam);
+		PostQuitMessage((int)msg.wParam);
 		quitting = true;
 		return;
 	}

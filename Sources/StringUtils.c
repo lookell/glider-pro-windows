@@ -30,7 +30,7 @@ void PasStringCopy (StringPtr p1, StringPtr p2)
 
 void PasStringCopyC (const char *s1, StringPtr p2)
 {
-	size_t		stringLength;
+	Byte		stringLength;
 
 	stringLength = 0;
 	while (*s1 != '\0' && stringLength < 255)
@@ -100,7 +100,7 @@ SInt16 WhichStringFirst (StringPtr p1, StringPtr p2)
 // This function copies a specified number of characters from one…
 // Pascal string to another.
 
-void PasStringCopyNum (StringPtr p1, StringPtr p2, SInt16 charsToCopy)
+void PasStringCopyNum (StringPtr p1, StringPtr p2, Byte charsToCopy)
 {
 	SInt16		i;
 
@@ -148,7 +148,7 @@ void PasStringConcat (StringPtr p1, StringPtr p2)
 
 void PasStringConcatC (StringPtr p1, const char *s2)
 {
-	size_t		stringLength;
+	Byte		stringLength;
 
 	stringLength = p1[0];
 	while (*s2 != '\0' && stringLength < 255)
@@ -229,7 +229,7 @@ void GetLineOfText (StringPtr srcStr, SInt16 index, StringPtr textLine)
 			count++;
 			textLine[count] = srcStr[i];
 		}
-		textLine[0] = count;
+		textLine[0] = (Byte)count;
 	}
 }
 
@@ -295,7 +295,7 @@ void GetFirstWordOfString (StringPtr stringIn, StringPtr stringOut)
 	if (spaceAt <= 0)
 		PasStringCopyC("", stringOut);
 	else
-		PasStringCopyNum(stringIn, stringOut, spaceAt);
+		PasStringCopyNum(stringIn, stringOut, (Byte)spaceAt);
 }
 
 //--------------------------------------------------------------  CollapseStringToWidth

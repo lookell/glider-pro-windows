@@ -113,11 +113,17 @@ SInt16 RectTall (Rect *theRect)
 
 void GlobalToLocalRect (HWND hwnd, Rect *theRect)
 {
-	RECT	rc;
+	RECT	rcWindow;
 
-	SetRect(&rc, theRect->left, theRect->top, theRect->right, theRect->bottom);
-	MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT)&rc, 2);
-	QSetRect(theRect, rc.left, rc.top, rc.right, rc.bottom);
+	rcWindow.left = theRect->left;
+	rcWindow.top = theRect->top;
+	rcWindow.right = theRect->right;
+	rcWindow.bottom = theRect->bottom;
+	MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT)&rcWindow, 2);
+	theRect->left = (SInt16)rcWindow.left;
+	theRect->top = (SInt16)rcWindow.top;
+	theRect->right = (SInt16)rcWindow.right;
+	theRect->bottom = (SInt16)rcWindow.bottom;
 }
 
 //--------------------------------------------------------------  LocalToGlobalRect
@@ -127,11 +133,17 @@ void GlobalToLocalRect (HWND hwnd, Rect *theRect)
 
 void LocalToGlobalRect (HWND hwnd, Rect *theRect)
 {
-	RECT	rc;
+	RECT	rcWindow;
 
-	SetRect(&rc, theRect->left, theRect->top, theRect->right, theRect->bottom);
-	MapWindowPoints(hwnd, HWND_DESKTOP, (LPPOINT)&rc, 2);
-	QSetRect(theRect, rc.left, rc.top, rc.right, rc.bottom);
+	rcWindow.left = theRect->left;
+	rcWindow.top = theRect->top;
+	rcWindow.right = theRect->right;
+	rcWindow.bottom = theRect->bottom;
+	MapWindowPoints(hwnd, HWND_DESKTOP, (LPPOINT)&rcWindow, 2);
+	theRect->left = (SInt16)rcWindow.left;
+	theRect->top = (SInt16)rcWindow.top;
+	theRect->right = (SInt16)rcWindow.right;
+	theRect->bottom = (SInt16)rcWindow.bottom;
 }
 
 //--------------------------------------------------------------  CenterRectInRect

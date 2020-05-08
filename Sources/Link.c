@@ -293,14 +293,14 @@ void DoLink (void)
 				thisRoom->objects[linkObject].data.e.where =
 						MergeFloorSuite(floor, suite);
 				thisRoom->objects[linkObject].data.e.who =
-						objActive;
+						(Byte)objActive;
 			}
 			else
 			{
 				thisRoom->objects[linkObject].data.d.where =
 						MergeFloorSuite(floor, suite);
 				thisRoom->objects[linkObject].data.d.who =
-						objActive;
+						(Byte)objActive;
 			}
 		}
 		else
@@ -310,14 +310,14 @@ void DoLink (void)
 				thisHouse->rooms[linkRoom].objects[linkObject].data.e.where =
 						MergeFloorSuite(floor, suite);
 				thisHouse->rooms[linkRoom].objects[linkObject].data.e.who =
-						objActive;
+						(Byte)objActive;
 			}
 			else	// linker is transport
 			{
 				thisHouse->rooms[linkRoom].objects[linkObject].data.d.where =
 						MergeFloorSuite(floor, suite);
 				thisHouse->rooms[linkRoom].objects[linkObject].data.d.who =
-						objActive;
+						(Byte)objActive;
 			}
 		}
 		fileDirty = true;

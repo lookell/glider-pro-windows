@@ -438,7 +438,7 @@ void PlayGame (void)
 			{
 				if (msg.message == WM_QUIT)
 				{
-					PostQuitMessage(msg.wParam);
+					PostQuitMessage((int)msg.wParam);
 					quitting = true;
 					break;
 				}
@@ -516,7 +516,9 @@ void PlayGame (void)
 			{
 				//CGrafPtr	wasCPort;
 				//GDHandle	wasWorld;
+#if BUILD_ARCADE_VERSION
 				HDC			mainWindowDC;
+#endif
 
 				//GetGWorld(&wasCPort, &wasWorld);
 

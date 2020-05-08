@@ -2298,7 +2298,8 @@ void GetThisRoomsObjRects (void)
 				else
 				{
 					GetObject(thePict, sizeof(bmInfo), &bmInfo);
-					QSetRect(&roomObjectRects[i], 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+					QSetRect(&roomObjectRects[i], 0, 0,
+							(SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
 					DeleteObject(thePict);
 				}
 				ZeroRectCorner(&roomObjectRects[i]);

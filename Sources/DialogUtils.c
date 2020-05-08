@@ -29,9 +29,8 @@ static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
 	const AlertData *alert = (const AlertData *)lParam;
 	INT textLength;
 	PWSTR oldText, newText;
-	size_t i, oldTextSize, newTextSize, numCarets;
+	INT i, oldTextSize, newTextSize, numCarets;
 	WCHAR paramStr[256];
-	HRESULT hr;
 
 	oldText = NULL;
 	newText = NULL;
@@ -136,7 +135,7 @@ static INT_PTR CALLBACK AlertProc (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM l
 
 SInt16 Alert (SInt16 dialogID, const AlertData *alertData)
 {
-	return DialogBoxParam(HINST_THISCOMPONENT, MAKEINTRESOURCE(dialogID),
+	return (SInt16)DialogBoxParam(HINST_THISCOMPONENT, MAKEINTRESOURCE(dialogID),
 			alertData->hwndParent, AlertProc, (LPARAM)alertData);
 }
 

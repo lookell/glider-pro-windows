@@ -349,8 +349,8 @@ void Mac_NumToString(SInt32 theNum, StringPtr theString)
 	hr = StringCchLengthA(buffer, ARRAYSIZE(buffer), &length);
 	if (FAILED(hr))
 		return;
-	theString[0] = length;
-	memcpy(&theString[1], buffer, length);
+	theString[0] = (Byte)length;
+	memcpy(&theString[1], buffer, theString[0]);
 }
 
 //--------------------------------------------------------------  PaintRect
@@ -429,7 +429,7 @@ SInt16 Mac_StringWidth(HDC hdc, StringPtr s)
 	SIZE extents;
 
 	WinFromMacString(buffer, ARRAYSIZE(buffer), s);
-	if (!GetTextExtentPoint32(hdc, buffer, wcslen(buffer), &extents))
+	if (!GetTextExtentPoint32(hdc, buffer, (int)wcslen(buffer), &extents))
 		return 0;
 	return (SInt16)extents.cx;
 }
@@ -442,7 +442,7 @@ SInt16 Mac_StringWidth(HDC hdc, StringPtr s)
 int WinFromMacString(wchar_t *winbuf, int winlen, StringPtr macbuf)
 {
 	int result;
-	size_t maclen;
+	Byte maclen;
 
 	if (macbuf == NULL)
 		return 0;
@@ -471,24 +471,21 @@ int WinFromMacString(wchar_t *winbuf, int winlen, StringPtr macbuf)
 int MacFromWinString(StringPtr macbuf, int maclen, const wchar_t *winbuf)
 {
 	int result;
-	size_t winlen;
 
 	if (macbuf == NULL)
-		return 0;
-	if (FAILED(StringCchLengthW(winbuf, INT_MAX, &winlen)))
 		return 0;
 	result = WideCharToMultiByte(
 		CP_MACROMAN,
 		0,
 		winbuf,
-		winlen,
+		(int)wcslen(winbuf),
 		(LPSTR)&macbuf[1],
 		maclen - 1,
 		NULL,
 		NULL
 	);
 	if (maclen != 0)
-		macbuf[0] = result & 0xFF;
+		macbuf[0] = (Byte)result;
 	return result;
 }
 

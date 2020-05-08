@@ -400,7 +400,7 @@ void SortRoomsObjects (SInt16 which)
 						linksList[destLocations[probe2]].destObj = probe;
 						room = linksList[destLocations[probe2]].srcRoom;
 						obj = linksList[destLocations[probe2]].srcObj;
-						thisHouse->rooms[room].objects[obj].data.e.who = probe;
+						thisHouse->rooms[room].objects[obj].data.e.who = (Byte)probe;
 					}
 					fileDirty = true;
 					looking = false;

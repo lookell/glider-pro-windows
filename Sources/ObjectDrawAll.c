@@ -24,7 +24,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 {
 	objectType	thisObject;
 	Rect		whoCares, itsRect, rectA, rectB, testRect;
+#ifdef COMPILEQT
 	HRGN		theRgn;
+#endif
 	SInt16		i, legit, dynamicNum, n;
 	SInt16		floor, suite, room, obj;
 	Boolean		isLit;

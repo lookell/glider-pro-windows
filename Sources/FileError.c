@@ -47,7 +47,7 @@
 
 Boolean CheckFileError (DWORD resultCode, StringPtr fileName)
 {
-	SInt16			dummyInt, stringIndex;
+	SInt16			dummyInt;
 	AlertData		alertData = { 0 };
 	DWORD			result;
 

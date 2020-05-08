@@ -161,7 +161,7 @@ INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				ListView_GetItem(houseListView, &lvItem);
 				if (lvItem.lParam != thisHouseIndex)
 				{
-					thisHouseIndex = lvItem.lParam;
+					thisHouseIndex = (SInt16)lvItem.lParam;
 					whoCares = CloseHouse();
 					PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
 					if (OpenHouse())

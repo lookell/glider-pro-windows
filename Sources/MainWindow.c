@@ -119,6 +119,8 @@ void DrawOnSplash (HDC hdc)
 	SetTextColor(hdc, wasTextColor);
 	SelectObject(hdc, wasFont);
 	DeleteObject(theFont);
+	#else
+	UNREFERENCED_PARAMETER(tempStr);
 	#endif
 }
 

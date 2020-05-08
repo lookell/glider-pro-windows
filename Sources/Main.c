@@ -289,8 +289,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		LPWSTR lpCmdLine, int nShowCmd)
 {
 //	SInt32		wasSeed;
-	SInt32		theErr;
-	OSErr		fileErr;
+//	SInt32		theErr;
 	Boolean		whoCares, copyGood;
 
 	ToolBoxInit();

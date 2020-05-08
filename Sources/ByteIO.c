@@ -404,7 +404,7 @@ static int handle_writer_close(byteio *stream)
 	DWORD numToWrite;
 	if (stream->priv == NULL)
 		return 1;
-	numToWrite = sizeof(self->buffer) - self->size;
+	numToWrite = (DWORD)(sizeof(self->buffer) - self->size);
 	result = WriteFile(self->hFile, self->buffer, numToWrite, &numWritten, NULL);
 	free(stream->priv);
 	stream->priv = NULL;

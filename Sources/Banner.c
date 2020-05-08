@@ -246,7 +246,7 @@ void DisplayStarsRemaining (void)
 		SetTextAlign(mainWindowDC, TA_BASELINE | TA_CENTER);
 		SetTextColor(mainWindowDC, Index2ColorRef(4L));
 		SetBkMode(mainWindowDC, TRANSPARENT);
-		TextOut(mainWindowDC, bounds.left + 102, bounds.top + 23, theStr, wcslen(theStr));
+		TextOut(mainWindowDC, bounds.left + 102, bounds.top + 23, theStr, (int)wcslen(theStr));
 		RestoreDC(mainWindowDC, -1);
 		DeleteObject(textFont);
 	}

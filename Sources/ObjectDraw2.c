@@ -948,7 +948,7 @@ void DrawCalendar (Rect *theRect)
 		RedAlert(kErrFailedGraphicLoad);
 
 	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
-	QSetRect(&bounds, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+	QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
 	QOffsetRect(&bounds, theRect->left, theRect->top);
 	Mac_DrawPicture(backSrcMap, thePicture, &bounds);
 	DeleteObject(thePicture);
@@ -997,7 +997,7 @@ void DrawBulletin (Rect *theRect)
 		RedAlert(kErrFailedGraphicLoad);
 
 	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
-	QSetRect(&bounds, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+	QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
 	QOffsetRect(&bounds, theRect->left, theRect->top);
 	Mac_DrawPicture(backSrcMap, thePicture, &bounds);
 	DeleteObject(thePicture);

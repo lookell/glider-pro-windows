@@ -55,7 +55,6 @@ extern	Boolean			twoPlayerGame, paused, hasMirror, splashDrawn;
 static HMENU DetachPopupMenu(HMENU rootMenu, UINT id, LPWSTR *title)
 {
 	MENUITEMINFO mii;
-	BOOL succeeded;
 
 	if (title == NULL)
 		return NULL;

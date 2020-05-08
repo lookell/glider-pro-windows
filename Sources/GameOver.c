@@ -228,7 +228,7 @@ void DoGameOverStarAnimation (void)
 			{
 				if (msg.message == WM_QUIT)
 				{
-					PostQuitMessage(msg.wParam);
+					PostQuitMessage((int)msg.wParam);
 					noInteruption = false;
 					break;
 				}
@@ -482,7 +482,7 @@ void DoDiedGameOver (void)
 			{
 				if (msg.message == WM_QUIT)
 				{
-					PostQuitMessage(msg.wParam);
+					PostQuitMessage((int)msg.wParam);
 					pagesStuck = 8;
 					userAborted = true;
 					break;

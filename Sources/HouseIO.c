@@ -603,7 +603,7 @@ void OpenHouseResFork (void)
 		}
 		houseResFork = LoadLibraryEx(fileName, NULL, LOAD_LIBRARY_AS_DATAFILE);
 		if (houseResFork == NULL)
-			YellowAlert(kYellowFailedResOpen, GetLastError());
+			YellowAlert(kYellowFailedResOpen, (SInt16)GetLastError());
 	}
 }
 

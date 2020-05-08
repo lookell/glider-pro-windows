@@ -162,8 +162,6 @@ void SetInitialTiles (SInt16 background, Boolean doRoom)
 #ifndef COMPILEDEMO
 Boolean CreateNewRoom (SInt16 h, SInt16 v)
 {
-	SInt32		howMuch;
-	OSErr		theErr;
 	SInt16		i, availableRoom;
 	roomPtr		newRoomsPtr;
 
@@ -281,7 +279,7 @@ void ReadyBackground (SInt16 theID, SInt16 *theTiles)
 	}
 
 	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
-	QSetRect(&dest, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+	QSetRect(&dest, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
 	Mac_DrawPicture(workSrcMap, thePicture, &dest);
 	DeleteObject(thePicture);
 

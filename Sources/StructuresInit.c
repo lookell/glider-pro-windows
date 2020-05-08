@@ -98,7 +98,7 @@ void InitScoreboardMap (void)
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
-	QSetRect(&bounds, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+	QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
 	QOffsetRect(&bounds, hOffset, 0);
 	Mac_DrawPicture(boardSrcMap, thePicture, &bounds);
 	DeleteObject(thePicture);
@@ -232,7 +232,7 @@ void InitGliderMap (void)
 
 void InitBlowers (void)
 {
-	size_t		i;
+	SInt16		i;
 	OSErr		theErr;
 
 	QSetRect(&blowerSrcRect, 0, 0, 48, 402);	// 19344 pixels
@@ -313,7 +313,7 @@ void InitFurniture (void)
 
 void InitPrizes (void)
 {
-	size_t		i;
+	SInt16		i;
 	OSErr		theErr;
 
 	QSetRect(&bonusSrcRect, 0, 0, 88, 378);		// 33264 pixels
@@ -441,7 +441,7 @@ void InitSwitches (void)
 
 void InitLights (void)
 {
-	size_t		i;
+	SInt16		i;
 	OSErr		theErr;
 
 	QSetRect(&lightSrcRect, 0, 0, 72, 126);		// 9144 pixels
@@ -470,7 +470,7 @@ void InitLights (void)
 
 void InitAppliances (void)
 {
-	size_t		i;
+	SInt16		i;
 	OSErr		theErr;
 
 	QSetRect(&applianceSrcRect, 0, 0, 80, 269);		// 21600 pixels
@@ -543,7 +543,7 @@ void InitAppliances (void)
 
 void InitEnemies (void)
 {
-	size_t		i;
+	SInt16		i;
 	OSErr		theErr;
 
 	QSetRect(&balloonSrcRect, 0, 0, 24, 30 * kNumBalloonFrames);
