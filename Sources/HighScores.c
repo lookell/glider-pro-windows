@@ -13,6 +13,7 @@
 //#include <StringCompare.h>
 #define _CRT_SECURE_NO_WARNINGS
 #include "Macintosh.h"
+#include "ByteIO.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "Environ.h"
@@ -39,9 +40,8 @@ void GetHighScoreName (SInt16);
 void UpdateBannerDialog (DialogPtr);
 Boolean BannerFilter (DialogPtr, EventRecord *, SInt16 *);
 void GetHighScoreBanner (void);
-Boolean CreateScoresFolder (SInt32 *);
-Boolean FindHighScoresFolder (SInt16 *, SInt32 *);
-Boolean OpenHighScoresFile (FSSpec *, SInt16 *);
+Boolean FindHighScoresFolder (LPWSTR, DWORD);
+Boolean GetHighScoresFilePath (LPWSTR, DWORD, StringPtr);
 
 
 Str31		highBanner;
@@ -646,235 +646,142 @@ void GetHighScoreBanner (void)
 #endif
 }
 
-//--------------------------------------------------------------  CreateScoresFolder
-
-Boolean CreateScoresFolder (SInt32 *scoresDirID)
-{
-	return (false);
-#if 0
-	FSSpec		scoresSpec;
-	long		prefsDirID;
-	OSErr		theErr;
-	short		volRefNum;
-
-	theErr = FindFolder(kOnSystemDisk, kPreferencesFolderType, kCreateFolder,
-			&volRefNum, &prefsDirID);
-	if (!CheckFileError(theErr, "\pPrefs Folder"))
-		return (false);
-
-	theErr = FSMakeFSSpec(volRefNum, prefsDirID, "\pG-PRO Scores ƒ", &scoresSpec);
-
-	theErr = FSpDirCreate(&scoresSpec, smSystemScript, scoresDirID);
-	if (!CheckFileError(theErr, "\pHigh Scores Folder"))
-		return (false);
-
-	return (true);
-#endif
-}
-
 //--------------------------------------------------------------  FindHighScoresFolder
 
-Boolean FindHighScoresFolder (SInt16 *volRefNum, SInt32 *scoresDirID)
+Boolean FindHighScoresFolder (LPWSTR scoresDirPath, DWORD cchDirPath)
 {
-	return false;
-#if 0
-	CInfoPBRec	theBlock;
-	Str255		nameString;
-	long		prefsDirID;
-	OSErr		theErr;
-	short		count;
-	Boolean		foundIt;
+	// This used to search the system preferences folder for a folder
+	// named "G-PRO Scores ƒ". Now it just uses the "Scores" folder under
+	// "%APPDATA%\glider-pro-windows" or next to the executable (depending
+	// on whether "portable.dat" exists next to the executable or not.
+	// (See the GetDataFolderPath function.)
 
-	theErr = FindFolder(kOnSystemDisk, kPreferencesFolderType, kCreateFolder,
-			volRefNum, &prefsDirID);
-	if (!CheckFileError(theErr, "\pPrefs Folder"))
-		return (false);
+	WCHAR pathBuffer[MAX_PATH];
+	HRESULT hr;
 
-	PasStringCopy("\pG-PRO Scores ƒ", nameString);
-	count = 1;
-	foundIt = false;
-
-	theBlock.dirInfo.ioCompletion = nil;
-	theBlock.dirInfo.ioVRefNum = *volRefNum;
-	theBlock.dirInfo.ioNamePtr = nameString;
-
-	while ((theErr == noErr) && (!foundIt))
+	if (!GetDataFolderPath(pathBuffer, ARRAYSIZE(pathBuffer)))
+		return false;
+	hr = StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\Scores");
+	if (FAILED(hr))
+		return false;
+	if (!CreateDirectory(pathBuffer, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
 	{
-		theBlock.dirInfo.ioFDirIndex = count;
-		theBlock.dirInfo.ioDrDirID = prefsDirID;
-		theErr = PBGetCatInfo(&theBlock, false);
-		if (theErr == noErr)
-		{
-			if ((theBlock.dirInfo.ioFlAttrib & 0x10) == 0x10)
-			{
-				if (EqualString(theBlock.dirInfo.ioNamePtr, "\pG-PRO Scores ƒ",
-						true, true))
-				{
-					foundIt = true;
-					*scoresDirID = theBlock.dirInfo.ioDrDirID;
-				}
-			}
-			count++;
-		}
+		Str255 label;
+		PasStringCopyC("Prefs Folder", label);
+		CheckFileError(GetLastError(), label);
+		return false;
 	}
 
-	if (theErr == fnfErr)
-	{
-		if (CreateScoresFolder(scoresDirID))
-			return (true);
-		else
-			return (false);
-	}
-	else
-		return (true);
-#endif
+	hr = StringCchCopy(scoresDirPath, cchDirPath, pathBuffer);
+	return SUCCEEDED(hr);
 }
 
-//--------------------------------------------------------------  OpenHighScoresFile
+//--------------------------------------------------------------  GetHighScoresFilePath
 
-Boolean OpenHighScoresFile (FSSpec *scoreSpec, SInt16 *scoresRefNum)
+Boolean GetHighScoresFilePath (LPWSTR lpPath, DWORD cchPath, StringPtr baseName)
 {
-	return false;
-#if 0
-	OSErr		theErr;
+	WCHAR pathBuffer[MAX_PATH];
+	WCHAR wideBaseName[256];
 
-	theErr = FSpOpenDF(scoreSpec, fsCurPerm, scoresRefNum);
-	if (theErr == fnfErr)
-	{
-		theErr = FSpCreate(scoreSpec, 'ozm5', 'gliS', smSystemScript);
-		if (!CheckFileError(theErr, "\pNew High Scores File"))
-			return (false);
-		theErr = FSpOpenDF(scoreSpec, fsCurPerm, scoresRefNum);
-		if (!CheckFileError(theErr, "\pHigh Score"))
-			return (false);
-	}
-	else if (!CheckFileError(theErr, "\pHigh Score"))
-		return (false);
+	if (!WinFromMacString(wideBaseName, ARRAYSIZE(wideBaseName), baseName))
+		return false;
+	if (!FindHighScoresFolder(pathBuffer, ARRAYSIZE(pathBuffer)))
+		return false;
+	if (FAILED(StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\")))
+		return false;
+	if (FAILED(StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), wideBaseName)))
+		return false;
+	if (FAILED(StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L".gls")))
+		return false;
 
-	return (true);
-#endif
+	return SUCCEEDED(StringCchCopy(lpPath, cchPath, pathBuffer));
 }
 
 //--------------------------------------------------------------  WriteScoresToDisk
 
 Boolean WriteScoresToDisk (void)
 {
+	Str255		fileLabel;
+	WCHAR		pathBuffer[MAX_PATH];
+	HANDLE		scoresFileHandle;
+	byteio		byteWriter;
+	Boolean		writeSucceeded;
+	DWORD		lastError;
+
+	PasStringCopyC("High Scores File", fileLabel);
+
+	if (!GetHighScoresFilePath(pathBuffer, ARRAYSIZE(pathBuffer), thisHouseName))
+		return false;
+
+	scoresFileHandle = CreateFile(pathBuffer, GENERIC_WRITE, 0, NULL,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (scoresFileHandle == INVALID_HANDLE_VALUE)
+	{
+		CheckFileError(GetLastError(), fileLabel);
+		return false;
+	}
+
+	if (!byteio_init_handle_writer(&byteWriter, scoresFileHandle))
+	{
+		CloseHandle(scoresFileHandle);
+		return false;
+	}
+	writeSucceeded = WriteScoresType(&byteWriter, &thisHouse->highScores);
+	lastError = GetLastError();
+	byteio_close(&byteWriter);
+	CloseHandle(scoresFileHandle);
+	if (!writeSucceeded)
+	{
+		CheckFileError(lastError, fileLabel);
+		return false;
+	}
+
 	return true;
-#if 0
-	scoresType	*theScores;
-	FSSpec		scoreSpec;
-	long		dirID, byteCount;
-	OSErr		theErr;
-	short		volRefNum, scoresRefNum;
-	char		wasState;
-
-	if (!FindHighScoresFolder(&volRefNum, &dirID))
-	{
-		SysBeep(1);
-		return (false);
-	}
-
-	theErr = FSMakeFSSpec(volRefNum, dirID, thisHouseName, &scoreSpec);
-	if (!OpenHighScoresFile(&scoreSpec, &scoresRefNum))
-	{
-		SysBeep(1);
-		return (false);
-	}
-
-	theErr = SetFPos(scoresRefNum, fsFromStart, 0L);
-	if (!CheckFileError(theErr, "\pHigh Scores File"))
-	{
-		theErr = FSClose(scoresRefNum);
-		return(false);
-	}
-
-	byteCount = sizeof(scoresType);
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	theScores = &((*thisHouse)->highScores);
-
-	theErr = FSWrite(scoresRefNum, &byteCount, (Ptr)theScores);
-	if (!CheckFileError(theErr, "\pHigh Scores File"))
-	{
-		HSetState((Handle)thisHouse, wasState);
-		theErr = FSClose(scoresRefNum);
-		return(false);
-	}
-	HSetState((Handle)thisHouse, wasState);
-
-	theErr = SetEOF(scoresRefNum, byteCount);
-	if (!CheckFileError(theErr, "\pHigh Scores File"))
-	{
-		theErr = FSClose(scoresRefNum);
-		return(false);
-	}
-
-	theErr = FSClose(scoresRefNum);
-	if (!CheckFileError(theErr, "\pHigh Scores File"))
-		return(false);
-
-	return (true);
-#endif
 }
 
 //--------------------------------------------------------------  ReadScoresFromDisk
 
 Boolean ReadScoresFromDisk (void)
 {
-	return false;
-#if 0
-	scoresType	*theScores;
-	FSSpec		scoreSpec;
-	long		dirID, byteCount;
-	OSErr		theErr;
-	short		volRefNum, scoresRefNum;
-	char		wasState;
+	scoresType	tempScores;
+	Str255		fileLabel;
+	WCHAR		pathBuffer[MAX_PATH];
+	HANDLE		scoresFileHandle;
+	byteio		byteReader;
+	Boolean		readSucceeded;
+	DWORD		lastError;
 
-	if (!FindHighScoresFolder(&volRefNum, &dirID))
+	PasStringCopyC("High Scores File", fileLabel);
+
+	if (!GetHighScoresFilePath(pathBuffer, ARRAYSIZE(pathBuffer), thisHouseName))
+		return false;
+
+	scoresFileHandle = CreateFile(pathBuffer, GENERIC_READ, 0, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	lastError = GetLastError();
+	if (scoresFileHandle == INVALID_HANDLE_VALUE)
 	{
-		SysBeep(1);
-		return (false);
+		if (lastError != ERROR_FILE_NOT_FOUND)
+			CheckFileError(lastError, fileLabel);
+		return false;
 	}
 
-	theErr = FSMakeFSSpec(volRefNum, dirID, thisHouseName, &scoreSpec);
-	if (!OpenHighScoresFile(&scoreSpec, &scoresRefNum))
+	if (!byteio_init_handle_reader(&byteReader, scoresFileHandle))
 	{
-		SysBeep(1);
-		return (false);
+		CloseHandle(scoresFileHandle);
+		return false;
+	}
+	readSucceeded = ReadScoresType(&byteReader, &tempScores);
+	lastError = GetLastError();
+	byteio_close(&byteReader);
+	CloseHandle(scoresFileHandle);
+	if (!readSucceeded)
+	{
+		CheckFileError(lastError, fileLabel);
+		return false;
 	}
 
-	theErr = GetEOF(scoresRefNum, &byteCount);
-	if (!CheckFileError(theErr, "\pHigh Scores File"))
-	{
-		theErr = FSClose(scoresRefNum);
-		return (false);
-	}
-
-	theErr = SetFPos(scoresRefNum, fsFromStart, 0L);
-	if (!CheckFileError(theErr, "\pHigh Scores File"))
-	{
-		theErr = FSClose(scoresRefNum);
-		return (false);
-	}
-
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-	theScores = &((*thisHouse)->highScores);
-
-	theErr = FSRead(scoresRefNum, &byteCount, theScores);
-	if (!CheckFileError(theErr, "\pHigh Scores File"))
-	{
-		HSetState((Handle)thisHouse, wasState);
-		theErr = FSClose(scoresRefNum);
-		return (false);
-	}
-	HSetState((Handle)thisHouse, wasState);
-
-	theErr = FSClose(scoresRefNum);
-	if (!CheckFileError(theErr, "\pHigh Scores File"))
-		return(false);
-
-	return (true);
-#endif
+	thisHouse->highScores = tempScores;
+	return true;
 }
 
