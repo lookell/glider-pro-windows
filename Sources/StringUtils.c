@@ -230,6 +230,10 @@ void GetLineOfText (StringPtr srcStr, SInt16 index, StringPtr textLine)
 			textLine[count] = srcStr[i];
 		}
 		textLine[0] = (Byte)count;
+
+		// strip out the lingering carriage return, if any
+		if (textLine[count] == kReturnKeyASCII)
+			textLine[0] -= 1;
 	}
 }
 
