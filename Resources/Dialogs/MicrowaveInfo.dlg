@@ -1,6 +1,6 @@
 /* this comment enforces υτƒ-8 encoding */
 
-1035 DIALOGEX 0, 0, 185, 98
+kMicrowaveInfoDialogID DIALOGEX 0, 0, 185, 98
 CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU

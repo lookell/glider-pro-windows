@@ -1,6 +1,6 @@
 /* this comment enforces υτƒ-8 encoding */
 
-1000 DIALOGEX 11, 22, 287, 162
+kLoadHouseDialogID DIALOGEX 11, 22, 287, 162
 CAPTION "Select House…"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU

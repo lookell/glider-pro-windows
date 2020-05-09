@@ -1,6 +1,6 @@
 /* this comment enforces υτƒ-8 encoding */
 
-1045 DIALOGEX 0, 0, 171, 87
+kCustPictInfoDialogID DIALOGEX 0, 0, 171, 87
 CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU

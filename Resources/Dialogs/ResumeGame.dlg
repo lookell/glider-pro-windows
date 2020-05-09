@@ -1,6 +1,6 @@
 /* this comment enforces υτƒ-8 encoding */
 
-1025 DIALOGEX 27, 25, 208, 76
+kResumeGameDial DIALOGEX 27, 25, 208, 76
 CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION

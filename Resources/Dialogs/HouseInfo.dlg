@@ -1,6 +1,6 @@
 /* this comment enforces υτƒ-8 encoding */
 
-1001 DIALOGEX 45, 20, 208, 200
+kHouseInfoDialogID DIALOGEX 45, 20, 208, 200
 CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU

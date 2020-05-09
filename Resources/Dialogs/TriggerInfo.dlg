@@ -1,6 +1,6 @@
 /* this comment enforces υτƒ-8 encoding */
 
-1034 DIALOGEX 0, 0, 171, 115
+kTriggerInfoDialogID DIALOGEX 0, 0, 171, 115
 CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU

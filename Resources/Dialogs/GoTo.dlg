@@ -1,6 +1,6 @@
 /* this comment enforces υτƒ-8 encoding */
 
-1043 DIALOGEX 27, 25, 187, 99
+kGoToDialogID DIALOGEX 27, 25, 187, 99
 CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU

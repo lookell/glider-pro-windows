@@ -1,6 +1,6 @@
 /* this comment enforces υτƒ-8 encoding */
 
-1020 DIALOGEX 0, 0, 211, 67
+kHighNameDialogID DIALOGEX 0, 0, 211, 67
 CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION
