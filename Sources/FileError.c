@@ -14,10 +14,6 @@
 #include "ResourceIDs.h"
 
 
-#define	rFileErrorAlert		140
-#define	rFileErrorStrings	140		// replaced with IDS_FILE_ERROR_BASE
-
-
 //==============================================================  Functions
 //--------------------------------------------------------------  CheckFileError
 
@@ -110,7 +106,7 @@ Boolean CheckFileError (DWORD resultCode, StringPtr fileName)
 			break;
 	}
 
-	loadResult = LoadString(HINST_THISCOMPONENT, IDS_FILE_ERROR_BASE + stringIndex,
+	loadResult = LoadString(HINST_THISCOMPONENT, rFileErrorStringsBase + stringIndex,
 			alertData.arg[0], ARRAYSIZE(alertData.arg[0]));
 	if (loadResult <= 0)
 		alertData.arg[0][0] = L'\0';

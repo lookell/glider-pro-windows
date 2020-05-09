@@ -14,9 +14,9 @@
 #include "House.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 
 
-#define kDeleteRoomAlert		1005
 #define kYesDoDeleteRoom		IDOK
 
 

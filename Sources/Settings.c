@@ -13,13 +13,9 @@
 #include "Externs.h"
 #include "Environ.h"
 #include "House.h"
+#include "ResourceIDs.h"
 
 
-#define kMainPrefsDialID		1012
-#define kDisplayPrefsDialID		1017
-#define kSoundPrefsDialID		1018
-#define kControlPrefsDialID		1023
-#define kBrainsPrefsDialID		1024
 #define kDisplayButton			3
 #define kSoundButton			4
 #define kControlsButton			5
@@ -1347,6 +1343,7 @@ void FlashSettingsButton (SInt16 who)
 
 void UpdateSettingsMain (DialogPtr theDialog)
 {
+	// NOTE: the string table "129" uses string table base index "kPrefMainStringBase"
 	return;
 #if 0
 	Str255		theStr;
@@ -1551,7 +1548,6 @@ void DoSettingsMain (void)
 
 void BitchAboutChanges (void)
 {
-	#define		kChangesEffectAlert	1040
 	SInt16		hitWhat;
 	AlertData	alertData = { 0 };
 

@@ -9,6 +9,7 @@
 #include "Externs.h"
 //#include <Gestalt.h>
 #include "Macintosh.h"
+#include "ResourceIDs.h"
 
 
 #ifndef COMPILEDEMO
@@ -16,7 +17,6 @@
 
 #define kEncryptMask			0x05218947
 #define kLegalVolumeCreation	0xAA2D3E41
-#define kMasterDialogID			1026
 #define kMasterFinderButton		1
 #define kMasterNetOnlyButton	2
 #define	kMasterUserBalloon		3

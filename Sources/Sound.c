@@ -11,6 +11,7 @@
 #include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
+#include "ResourceIDs.h"
 
 
 #define kBaseBufferSoundID			1000
@@ -566,7 +567,6 @@ SInt32 SoundBytesNeeded (void)
 
 void TellHerNoSounds (void)
 {
-	#define		kNoMemForSoundsAlert	1039
 	SInt16		hitWhat;
 	AlertData	alertData = { 0 };
 
@@ -578,7 +578,6 @@ void TellHerNoSounds (void)
 
 void BitchAboutSM3 (void)
 {
-	#define		kNoSoundManager3Alert	1030
 	SInt16		hitWhat;
 	AlertData	alertData = { 0 };
 

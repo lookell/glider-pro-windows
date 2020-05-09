@@ -21,7 +21,6 @@
 #include "ResourceIDs.h"
 
 
-#define kSaveChangesAlert		1002
 #define kSaveChanges			IDYES
 #define kDiscardChanges			IDNO
 
@@ -670,13 +669,12 @@ Boolean QuerySaveChanges (void)
 
 void YellowAlert (SInt16 whichAlert, SInt16 identifier)
 {
-	#define		kYellowAlert	1006
 	AlertData	alertData = { 0 };
 	INT			result;
 	SInt16		whoCares;
 
 	alertData.hwndParent = mainWindow;
-	result = LoadString(HINST_THISCOMPONENT, IDS_YELLOW_ALERT_BASE + whichAlert,
+	result = LoadString(HINST_THISCOMPONENT, kYellowAlertStringBase + whichAlert,
 			alertData.arg[0], ARRAYSIZE(alertData.arg[0]));
 	if (result <= 0)
 		StringCchCopy(alertData.arg[0], ARRAYSIZE(alertData.arg[0]), L"");

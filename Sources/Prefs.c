@@ -16,14 +16,13 @@
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "Environ.h"
+#include "ResourceIDs.h"
 
 
 #define	kPrefCreatorType	'ozm5'
 #define	kPrefFileType		'gliP'
 #define	kPrefFileName		L"Glider Prefs"
 #define	kDefaultPrefFName	"\pPreferences"
-#define kPrefsStringsID		160
-#define kNewPrefsAlertID	160
 #define	kPrefsFNameIndex	1
 
 

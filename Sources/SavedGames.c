@@ -12,6 +12,7 @@
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "House.h"
+#include "ResourceIDs.h"
 
 
 #define kSavedGameVersion		0x0200
@@ -158,7 +159,6 @@ void SaveGame2 (void)
 
 void SavedGameMismatchError (StringPtr gameName)
 {
-	#define		kSavedGameErrorAlert	1044
 	AlertData	alertData = { 0 };
 	SInt16		whoCares;
 

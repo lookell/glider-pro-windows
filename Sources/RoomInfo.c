@@ -13,12 +13,10 @@
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 #include "Utilities.h"
 
 
-#define kRoomInfoDialogID			1003
-#define kOriginalArtDialogID		1016
-#define kNoPICTFoundAlert			1036
 #define kRoomNameItem				3
 #define kRoomLocationBox			6
 #define kRoomTilesBox				10

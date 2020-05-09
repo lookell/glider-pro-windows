@@ -11,6 +11,7 @@
 #include "Externs.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 
 
 #define kNormalThrust		5
@@ -418,7 +419,6 @@ void GetInput (gliderPtr thisGlider)
 
 Boolean QuerySaveGame (void)
 {
-	#define		kSaveGameAlert		1041
 	#define		kYesSaveGameButton	IDYES
 	SInt16		hitWhat;
 	AlertData	alertData = { 0 };

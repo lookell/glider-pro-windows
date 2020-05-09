@@ -15,9 +15,7 @@
 #include "Externs.h"
 #include "House.h"
 #include "RectUtils.h"
-
-
-#define kGoToDialogID			1043
+#include "ResourceIDs.h"
 
 
 void UpdateGoToDialog (DialogPtr);

@@ -14,21 +14,9 @@
 #include "Externs.h"
 #include "ObjectEdit.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 
 
-#define kBlowerInfoDialogID			1007
-#define kFurnitureInfoDialogID		1010
-#define kSwitchInfoDialogID			1011
-#define kLightInfoDialogID			1013
-#define kApplianceInfoDialogID		1014
-#define kInvisBonusInfoDialogID		1015
-#define kGreaseInfoDialogID			1019
-#define kTransInfoDialogID			1022
-#define kEnemyInfoDialogID			1027
-#define kFlowerInfoDialogID			1033
-#define kTriggerInfoDialogID		1034
-#define kMicrowaveInfoDialogID		1035
-#define kCustPictInfoDialogID		1045
 #define kCustPictIDItem				7
 #define kInitialStateCheckbox		6
 #define kForceCheckbox				7

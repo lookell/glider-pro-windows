@@ -10,9 +10,9 @@
 #include "Macintosh.h"
 #include "Externs.h"
 #include "DialogUtils.h"
+#include "ResourceIDs.h"
 
 
-#define kHouseInfoDialogID		1001
 #define kBannerTextItem			4
 #define kLockHouseButton		6
 #define kClearScoresButton		9
@@ -21,8 +21,6 @@
 #define kBannerNCharsItem		15
 #define kTrailerNCharsItem		16
 #define kHouseSizeItem			18
-#define kLockHouseAlert			1029
-#define kZeroScoresAlert		1032
 
 
 SInt32 CountTotalHousePoints (void);

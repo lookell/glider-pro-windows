@@ -12,6 +12,7 @@
 #include "DialogUtils.h"
 #include "Environ.h"
 #include "Externs.h"
+#include "ResourceIDs.h"
 
 
 #define kBaseBufferMusicID			2000
@@ -436,7 +437,6 @@ SInt32 MusicBytesNeeded (void)
 
 void TellHerNoMusic (void)
 {
-	#define		kNoMemForMusicAlert	1038
 	SInt16		hitWhat;
 	AlertData	alertData = { 0 };
 

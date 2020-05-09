@@ -107,7 +107,6 @@
 #define kUpStairsPictID			3997
 
 #define	kMailboxBase			296
-#define kMonthStringID			1005
 
 
 //==============================================================  Functions
@@ -970,7 +969,7 @@ void DrawCalendar (Rect *theRect)
 
 	GetLocalTime(&localTime);
 	monthLen = LoadString(HINST_THISCOMPONENT,
-			IDS_MONTHS_BASE + localTime.wMonth,
+			kMonthStringBase + localTime.wMonth,
 			monthStr, ARRAYSIZE(monthStr));
 
 	SaveDC(backSrcMap);

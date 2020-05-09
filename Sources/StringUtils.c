@@ -360,7 +360,7 @@ StringPtr GetLocalizedString (SInt16 index, StringPtr theString)
 	WCHAR buffer[256];
 	int length;
 
-	length = LoadString(HINST_THISCOMPONENT, IDS_LOCALIZED_BASE + index,
+	length = LoadString(HINST_THISCOMPONENT, kLocalizedStringsBase + index,
 			buffer, ARRAYSIZE(buffer));
 	if (length <= 0)
 		buffer[0] = L'\0';

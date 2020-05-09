@@ -458,7 +458,7 @@
 #define kNumFlowers					6
 
 #define	kNumMarqueePats				7
-#define kObjectNameStrings			1007
+#define kObjectNameStrings			1007	// replaced by kObjectNameStringsBase
 
 #define kSwitchLinkOnly				3
 #define kTriggerLinkOnly			4

@@ -13,6 +13,7 @@
 #include "DialogUtils.h"
 #include "Environ.h"
 #include "Externs.h"
+#include "ResourceIDs.h"
 
 
 static void HiLiteOkayButton (void);
@@ -35,7 +36,6 @@ void DoAbout (void)
 	MessageBox(mainWindow, L"DoAbout()", NULL, MB_ICONHAND);
 	return;
 #if 0
-	#define			kAboutDialogID			150		// res ID of About dialog
 	#define			kTextItemVers			2		// item number of version text
 	#define			kPictItemMain			4		// item number of main PICT
 

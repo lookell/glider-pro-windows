@@ -11,9 +11,9 @@
 #include "Macintosh.h"
 #include "DialogUtils.h"
 #include "House.h"
+#include "ResourceIDs.h"
 
 
-#define kNoPrintingAlert			1031
 #define errAEEventNotHandled		(-1708)
 
 

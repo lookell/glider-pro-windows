@@ -150,12 +150,6 @@ UInt32 RandomLongQUS (void)
 
 void RedAlert (SInt16 errorNumber)
 {
-	// alert res. ID for death error
-	#define			rDeathAlertID	170
-	// string base ID for death error title
-	#define			rErrTitleBase	IDS_ERROR_TITLE_BASE
-	// string base ID for death error message
-	#define			rErrMssgBase	IDS_ERROR_MSSG_BASE
 	SInt16			dummyInt;
 	INT				loadResult;
 	AlertData		alertData = { 0 };

@@ -14,12 +14,10 @@
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "Environ.h"
+#include "ResourceIDs.h"
 //#include <Palettes.h>
 
 
-#define	kSwitchDepthAlert		130
-#define kSetMemoryAlert			180
-#define kLowMemoryAlert			181
 #define kWNETrap				0x60
 #define	kSetDepthTrap			0xA2
 #define kUnimpTrap				0x9F

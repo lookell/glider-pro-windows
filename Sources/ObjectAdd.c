@@ -12,10 +12,9 @@
 #include "Externs.h"
 #include "ObjectEdit.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 
 
-#define kNoMoreObjectsAlert		1008
-#define kNoMoreSpecialAlert		1028
 #define kMaxSoundTriggers		1
 #define kMaxStairs				1
 #define kMouseholeBottom		295

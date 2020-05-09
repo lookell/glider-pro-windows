@@ -13,6 +13,7 @@
 #include "Environ.h"
 #include "House.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 #include "Utilities.h"
 
 
@@ -22,7 +23,6 @@
 #define kHScrollRef				5L
 #define kVScrollRef				27L
 #define kMapGroundValue			56
-#define kNewRoomAlert			1004
 #define kYesDoNewRoom			IDOK
 #define kThumbnailPictID		1010
 

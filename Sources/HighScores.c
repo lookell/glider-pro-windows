@@ -20,13 +20,12 @@
 #include "House.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 #include "Utilities.h"
 
 
 #define kHighScoresPictID		1994
 #define kHighScoresMaskID		1998
-#define kHighNameDialogID		1020
-#define kHighBannerDialogID		1021
 #define kHighNameItem			2
 #define kNameNCharsItem			5
 #define kHighBannerItem			2

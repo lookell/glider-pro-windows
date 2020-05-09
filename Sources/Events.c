@@ -14,6 +14,7 @@
 #include "Environ.h"
 #include "House.h"
 #include "ObjectEdit.h"
+#include "ResourceIDs.h"
 
 
 SInt16 BitchAboutColorDepth (void);
@@ -48,7 +49,6 @@ extern	Boolean		autoRoomEdit, newRoomNow, isPlayMusicIdle;
 
 SInt16 BitchAboutColorDepth (void)
 {
-	#define		kColorSwitchedAlert		1042
 	SInt16		sheSaid;
 	AlertData	alertData = { 0 };
 

@@ -833,7 +833,6 @@ SInt16 QueryResumeGame (void)
 {
 	return kSheWantsNewGame;
 #if 0
-	#define			kResumeGameDial		1025
 	DialogPtr		theDial;
 	houseType		*thisHousePtr;
 	Str255			scoreStr, glidStr;
@@ -891,7 +890,6 @@ SInt16 QueryResumeGame (void)
 #ifdef COMPILEDEMO
 void DoNotInDemo (void)
 {
-	#define		kNotInDemoAlert		1037
 	SInt16		whoCares;
 	AlertData	alertData = { 0 };
 
@@ -904,7 +902,6 @@ void DoNotInDemo (void)
 
 void HeyYourPissingAHighScore (void)
 {
-	#define		kNoHighScoreAlert	1046
 	SInt16		whoCares;
 	AlertData	alertData = { 0 };
 

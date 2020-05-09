@@ -19,7 +19,6 @@
 #include "ResourceIDs.h"
 
 
-#define kLoadHouseDialogID		1000
 #define kDispFiles				12
 #define kLoadTitlePictItem		3
 #define kLoadNameFirstItem		5
