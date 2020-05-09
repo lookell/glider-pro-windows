@@ -116,9 +116,22 @@ static INT_PTR CALLBACK AlertProc (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM l
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
+	{
+		LRESULT defBtnId;
 		CenterOverOwner(hDlg);
 		EnumChildWindows(hDlg, FormatWindowText, lParam);
-		return TRUE;
+		defBtnId = SendMessage(hDlg, DM_GETDEFID, 0, 0);
+		if (HIWORD(defBtnId) == DC_HASDEFID)
+		{
+			HWND defBtnHandle = GetDlgItem(hDlg, LOWORD(defBtnId));
+			SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)defBtnHandle, TRUE);
+			return FALSE;
+		}
+		else
+		{
+			return TRUE;
+		}
+	}
 
 	case WM_COMMAND:
 		if (LOWORD(wParam) != 0 && LOWORD(wParam) != 0xFFFF)
