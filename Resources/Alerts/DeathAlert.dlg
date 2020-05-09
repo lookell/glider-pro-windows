@@ -1,6 +1,6 @@
 /* this comment enforces υτƒ-8 encoding */
 
-170 DIALOGEX 56, 57, 232, 79
+rDeathAlertID DIALOGEX 56, 57, 232, 79
 CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU

@@ -1,6 +1,6 @@
 /* this comment enforces υτƒ-8 encoding */
 
-1042 DIALOGEX 27, 25, 171, 66
+kColorSwitchedAlert DIALOGEX 27, 25, 171, 66
 CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION

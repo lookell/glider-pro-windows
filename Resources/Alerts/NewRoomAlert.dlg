@@ -1,6 +1,6 @@
 /* this comment enforces υτƒ-8 encoding */
 
-1004 DIALOGEX 27, 25, 192, 59
+kNewRoomAlert DIALOGEX 27, 25, 192, 59
 CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU

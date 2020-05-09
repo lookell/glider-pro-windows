@@ -1,6 +1,6 @@
 /* this comment enforces υτƒ-8 encoding */
 
-130 DIALOGEX 0, 0, 183, 59
+kSwitchDepthAlert DIALOGEX 0, 0, 183, 59
 CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION

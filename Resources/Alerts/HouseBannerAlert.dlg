@@ -1,6 +1,6 @@
 /* this comment enforces υτƒ-8 encoding */
 
-1009 DIALOGEX 0, 0, 231, 92
+kHouseBannerAlert DIALOGEX 0, 0, 231, 92
 CAPTION ""
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
