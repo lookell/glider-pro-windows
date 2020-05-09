@@ -1,7 +1,7 @@
 /* this comment enforces υτƒ-8 encoding */
 
 kColorSwitchedAlert DIALOGEX 27, 25, 171, 66
-CAPTION ""
+CAPTION "Color Depth Switched"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION
 {

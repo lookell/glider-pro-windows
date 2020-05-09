@@ -1,7 +1,7 @@
 /* this comment enforces υτƒ-8 encoding */
 
 kAboutDialogID DIALOGEX 41, 38, 256, 111
-CAPTION ""
+CAPTION "About"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {

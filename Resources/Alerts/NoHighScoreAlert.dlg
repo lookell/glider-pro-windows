@@ -1,7 +1,7 @@
 /* this comment enforces υτƒ-8 encoding */
 
 kNoHighScoreAlert DIALOGEX 27, 25, 173, 57
-CAPTION ""
+CAPTION "Ineligible For High Score"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {

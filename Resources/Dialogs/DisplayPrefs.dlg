@@ -1,7 +1,7 @@
 /* this comment enforces υτƒ-8 encoding */
 
 kDisplayPrefsDialID DIALOGEX 27, 25, 222, 148
-CAPTION ""
+CAPTION "Display Preferences"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {

@@ -1,7 +1,7 @@
 /* this comment enforces υτƒ-8 encoding */
 
 kLowMemoryAlert DIALOGEX 27, 25, 192, 79
-CAPTION ""
+CAPTION "Not Enough Memory"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
