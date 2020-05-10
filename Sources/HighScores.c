@@ -26,18 +26,16 @@
 
 #define kHighScoresPictID		1994
 #define kHighScoresMaskID		1998
-#define kHighNameItem			2
-#define kNameNCharsItem			5
-#define kHighBannerItem			2
-#define kBannerScoreNCharsItem	5
+#define kHighNameItem			102
+#define kNameNCharsItem			105
+#define kHighBannerItem			102
+#define kBannerScoreNCharsItem	105
 
 
 void DrawHighScores (void);
-void UpdateNameDialog (DialogPtr);
-Boolean NameFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK NameFilter (HWND, UINT, WPARAM, LPARAM);
 void GetHighScoreName (SInt16);
-void UpdateBannerDialog (DialogPtr);
-Boolean BannerFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK BannerFilter (HWND, UINT, WPARAM, LPARAM);
 void GetHighScoreBanner (void);
 Boolean FindHighScoresFolder (LPWSTR, DWORD);
 Boolean GetHighScoresFilePath (LPWSTR, DWORD, StringPtr);
@@ -411,77 +409,52 @@ Boolean TestHighScore (void)
 		return (false);
 }
 
-//--------------------------------------------------------------  UpdateNameDialog
-// Redraws the "Enter High Score Name" dialog.
-
-void UpdateNameDialog (DialogPtr theDialog)
-{
-	return;
-#if 0
-	short		nChars;
-
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-
-	nChars = GetDialogStringLen(theDialog, kHighNameItem);
-	SetDialogNumToStr(theDialog, kNameNCharsItem, (long)nChars);
-#endif
-}
-
 //--------------------------------------------------------------  NameFilter
 // Dialog filter for the "Enter High Score Name" dialog.
 
-Boolean NameFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK NameFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return (false);
-#if 0
-	short		nChars;
-
-	if (keyStroke)
+	switch (message)
 	{
-		nChars = GetDialogStringLen(dial, kHighNameItem);
-		SetDialogNumToStr(dial, kNameNCharsItem, (long)nChars);
-		keyStroke = false;
+	case WM_INITDIALOG:
+	{
+		HWND nameItem = GetDlgItem(hDlg, kHighNameItem);
+		WCHAR tempStr[ARRAYSIZE(highName)];
+		WinFromMacString(tempStr, ARRAYSIZE(tempStr), highName);
+		SetWindowText(nameItem, tempStr);
+		SendMessage(nameItem, EM_LIMITTEXT, ARRAYSIZE(highName) - 1, 0);
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams*)lParam);
+		PlayPrioritySound(kEnergizeSound, kEnergizePriority);
+		return TRUE;
 	}
 
-	switch (event->what)
-	{
-		case keyDown:
-		keyStroke = true;
-		switch ((event->message) & charCodeMask)
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
+		case IDOK:
+		{
+			WCHAR tempStr[ARRAYSIZE(highName)];
+			GetDlgItemText(hDlg, kHighNameItem, tempStr, ARRAYSIZE(tempStr));
+			MacFromWinString(highName, ARRAYSIZE(highName), tempStr);
 			PlayPrioritySound(kCarriageSound, kCarriagePriority);
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
+			EndDialog(hDlg, IDOK);
 			break;
-
-			case kTabKeyASCII:
-			SelectDialogItemText(dial, kHighNameItem, 0, 1024);
-			return(false);
-			break;
-
-			default:
-			PlayPrioritySound(kTypingSound, kTypingPriority);
-			return(false);
 		}
-		break;
 
-		case updateEvt:
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateNameDialog(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
+		case kHighNameItem:
+			if (HIWORD(wParam) == EN_CHANGE)
+			{
+				UINT nChars = GetWindowTextLength((HWND)lParam);
+				if (GetWindowTextLength(GetDlgItem(hDlg, kNameNCharsItem)) != 0)
+					PlayPrioritySound(kTypingSound, kTypingPriority);
+				SetDlgItemInt(hDlg, kNameNCharsItem, nChars, FALSE); 
+			}
+			break;
+		}
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  GetHighScoreName
@@ -489,118 +462,61 @@ Boolean NameFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void GetHighScoreName (SInt16 place)
 {
-	MessageBox(mainWindow, L"GetHighScoreName()", NULL, MB_ICONHAND);
-	PasStringCopyC("HighScoreName", highName);
-	return;
-#if 0
-	DialogPtr		theDial;
-	Str255			scoreStr, placeStr, tempStr;
-	short			item;
-	Boolean			leaving;
-	ModalFilterUPP	nameFilterUPP;
+	DialogParams	params = { 0 };
 
-	nameFilterUPP = NewModalFilterUPP(NameFilter);
-
-	InitCursor();
-	NumToString(theScore, scoreStr);
-	NumToString((long)place, placeStr);
-	ParamText(scoreStr, placeStr, thisHouseName, "\p");
-	PlayPrioritySound(kEnergizeSound, kEnergizePriority);
-	BringUpDialog(&theDial, kHighNameDialogID);
-	FlushEvents(everyEvent, 0);
-	SetDialogString(theDial, kHighNameItem, highName);
-	SelectDialogItemText(theDial, kHighNameItem, 0, 1024);
-	leaving = false;
-
-	while (!leaving)
-	{
-		ModalDialog(nameFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			GetDialogString(theDial, kHighNameItem, tempStr);
-			PasStringCopyNum(tempStr, highName, 15);
-			leaving = true;
-		}
-	}
-
-	DisposeDialog(theDial);
-	DisposeModalFilterUPP(nameFilterUPP);
-#endif
-}
-
-//--------------------------------------------------------------  UpdateBannerDialog
-// Redraws the "Enter Message" dialog.
-
-void UpdateBannerDialog (DialogPtr theDialog)
-{
-	return;
-#if 0
-	short		nChars;
-
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-
-	nChars = GetDialogStringLen(theDialog, kHighBannerItem);
-	SetDialogNumToStr(theDialog, kBannerScoreNCharsItem, (long)nChars);
-#endif
+	StringCchPrintf(params.arg[0], ARRAYSIZE(params.arg[0]), L"%ld", (long)theScore);
+	StringCchPrintf(params.arg[1], ARRAYSIZE(params.arg[1]), L"%ld", (long)place);
+	WinFromMacString(params.arg[2], ARRAYSIZE(params.arg[2]), thisHouseName);
+	DialogBoxParam(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kHighNameDialogID),
+			mainWindow, NameFilter, (LPARAM)&params);
 }
 
 //--------------------------------------------------------------  BannerFilter
 // Dialog filter for the "Enter Message" dialog.
 
-Boolean BannerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK BannerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return (false);
-#if 0
-	short		nChars;
-
-	if (keyStroke)
+	switch (message)
 	{
-		nChars = GetDialogStringLen(dial, kHighBannerItem);
-		SetDialogNumToStr(dial, kBannerScoreNCharsItem, (long)nChars);
-		keyStroke = false;
+	case WM_INITDIALOG:
+	{
+		HWND bannerItem = GetDlgItem(hDlg, kHighBannerItem);
+		WCHAR tempStr[ARRAYSIZE(highBanner)];
+		WinFromMacString(tempStr, ARRAYSIZE(tempStr), highBanner);
+		SetWindowText(bannerItem, tempStr);
+		SendMessage(bannerItem, EM_LIMITTEXT, ARRAYSIZE(highBanner) - 1, 0);
+		CenterOverOwner(hDlg);
+		PlayPrioritySound(kEnergizeSound, kEnergizePriority);
+		return TRUE;
 	}
 
-	switch (event->what)
-	{
-
-		case keyDown:
-		keyStroke = true;
-		switch ((event->message) & charCodeMask)
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
+		case IDOK:
+		{
+			WCHAR tempStr[ARRAYSIZE(highBanner)];
+			GetDlgItemText(hDlg, kHighBannerItem, tempStr, ARRAYSIZE(tempStr));
+			MacFromWinString(highBanner, ARRAYSIZE(highBanner), tempStr);
 			PlayPrioritySound(kCarriageSound, kCarriagePriority);
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
+			EndDialog(hDlg, IDOK);
 			break;
-
-			case kTabKeyASCII:
-			SelectDialogItemText(dial, kHighBannerItem, 0, 1024);
-			return(false);
-			break;
-
-			default:
-			PlayPrioritySound(kTypingSound, kTypingPriority);
-			return(false);
 		}
-		break;
 
-		case updateEvt:
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateBannerDialog(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
+		case kHighBannerItem:
+			if (HIWORD(wParam) == EN_CHANGE)
+			{
+				UINT nChars = GetWindowTextLength((HWND)lParam);
+				if (GetWindowTextLength(GetDlgItem(hDlg, kBannerScoreNCharsItem)) != 0)
+					PlayPrioritySound(kTypingSound, kTypingPriority);
+				SetDlgItemInt(hDlg, kBannerScoreNCharsItem, nChars, FALSE);
+			}
+			break;
+		}
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  GetHighScoreBanner
@@ -610,39 +526,9 @@ Boolean BannerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void GetHighScoreBanner (void)
 {
-	MessageBox(mainWindow, L"GetHighScoreBanner()", NULL, MB_ICONHAND);
-	PasStringCopyC("HighScoreBanner", highBanner);
-	return;
-#if 0
-	DialogPtr		theDial;
-	Str255			tempStr;
-	short			item;
-	Boolean			leaving;
-	ModalFilterUPP	bannerFilterUPP;
-
-	bannerFilterUPP = NewModalFilterUPP(BannerFilter);
-
-	PlayPrioritySound(kEnergizeSound, kEnergizePriority);
-	BringUpDialog(&theDial, kHighBannerDialogID);
-	SetDialogString(theDial, kHighBannerItem, highBanner);
-	SelectDialogItemText(theDial, kHighBannerItem, 0, 1024);
-	leaving = false;
-
-	while (!leaving)
-	{
-		ModalDialog(bannerFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			GetDialogString(theDial, kHighBannerItem, tempStr);
-			PasStringCopyNum(tempStr, highBanner, 31);
-			leaving = true;
-		}
-	}
-
-	DisposeDialog(theDial);
-	DisposeModalFilterUPP(bannerFilterUPP);
-#endif
+	DialogBox(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kHighBannerDialogID),
+			mainWindow, BannerFilter);
 }
 
 //--------------------------------------------------------------  FindHighScoresFolder

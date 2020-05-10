@@ -1,13 +1,16 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kHighBannerDialogID DIALOGEX 27, 25, 211, 75
+#define kHighBannerItem         102
+#define kBannerScoreNCharsItem  105
+
+kHighBannerDialogID DIALOGEX 27, 25, 211, 80
 CAPTION "Enter High Score Banner"
 FONT 8, "MS Shell Dlg"
-STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION
 {
-    PUSHBUTTON "Okay", 1, 167, 58, 39, 12
-    EDITTEXT 2, 7, 41, 196, 10, ES_AUTOHSCROLL
-    LTEXT "Getting #1 on the high scores entitles you to change the high score banner.\r\n(31 letters max.)", -1, 7, 5, 196, 30, SS_NOPREFIX
-    LTEXT "letters", -1, 19, 58, 33, 10, SS_NOPREFIX
-    LTEXT "", 5, 5, 58, 13, 10, SS_NOPREFIX
+    LTEXT "Getting #1 on the high scores entitles you to change the high score banner.\r\n(31 letters max.)", IDC_STATIC, 7, 7, 197, 24, SS_NOPREFIX
+    EDITTEXT kHighBannerItem, 7, 38, 197, 14, ES_AUTOHSCROLL
+    RTEXT "", kBannerScoreNCharsItem, 7, 59, 10, 8, SS_NOPREFIX
+    LTEXT "letters", IDC_STATIC, 22, 59, 33, 8, SS_NOPREFIX
+    DEFPUSHBUTTON "Okay", IDOK, 154, 59, 50, 14
 }
