@@ -748,11 +748,11 @@ void HandleMapClick (EventRecord *theEvent)
 #ifndef COMPILEDEMO
 Boolean QueryNewRoom (void)
 {
-	SInt16		hitWhat;
-	AlertData	alertData = { 0 };
+	SInt16			hitWhat;
+	DialogParams	params = { 0 };
 
-	alertData.hwndParent = mainWindow;
-	hitWhat = Alert(kNewRoomAlert, &alertData);
+	params.hwndParent = mainWindow;
+	hitWhat = Alert(kNewRoomAlert, &params);
 	if (hitWhat == kYesDoNewRoom)
 		return (true);
 	else

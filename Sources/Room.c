@@ -461,11 +461,11 @@ void DeleteRoom (Boolean doWarn)
 #ifndef COMPILEDEMO
 Boolean QueryDeleteRoom (void)
 {
-	AlertData	alertData = { 0 };
-	SInt16		hitWhat;
+	DialogParams	params = { 0 };
+	SInt16			hitWhat;
 
-	alertData.hwndParent = mainWindow;
-	hitWhat = Alert(kDeleteRoomAlert, &alertData);
+	params.hwndParent = mainWindow;
+	hitWhat = Alert(kDeleteRoomAlert, &params);
 	if (hitWhat == kYesDoDeleteRoom)
 		return (true);
 	else

@@ -437,10 +437,10 @@ SInt32 MusicBytesNeeded (void)
 
 void TellHerNoMusic (void)
 {
-	SInt16		hitWhat;
-	AlertData	alertData = { 0 };
+	SInt16			hitWhat;
+	DialogParams	params = { 0 };
 
-	alertData.hwndParent = mainWindow;
-	hitWhat = Alert(kNoMemForMusicAlert, &alertData);
+	params.hwndParent = mainWindow;
+	hitWhat = Alert(kNoMemForMusicAlert, &params);
 }
 

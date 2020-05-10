@@ -866,11 +866,11 @@ Boolean DoesRoomNumHaveObject (SInt16 room, SInt16 what)
 
 void ShoutNoMoreObjects (void)
 {
-	AlertData	alertData = { 0 };
-	SInt16		hitWhat;
+	DialogParams	params = { 0 };
+	SInt16			hitWhat;
 
-	alertData.hwndParent = mainWindow;
-	hitWhat = Alert(kNoMoreObjectsAlert, &alertData);
+	params.hwndParent = mainWindow;
+	hitWhat = Alert(kNoMoreObjectsAlert, &params);
 }
 
 //--------------------------------------------------------------  HowManyCandleObjects
@@ -1064,11 +1064,11 @@ SInt16 HowManyDynamicObjects (void)
 
 void ShoutNoMoreSpecialObjects (void)
 {
-	AlertData	alertData = { 0 };
-	SInt16		hitWhat;
+	DialogParams	params = { 0 };
+	SInt16			hitWhat;
 
-	alertData.hwndParent = mainWindow;
-	hitWhat = Alert(kNoMoreSpecialAlert, &alertData);
+	params.hwndParent = mainWindow;
+	hitWhat = Alert(kNoMoreSpecialAlert, &params);
 }
 
 #endif

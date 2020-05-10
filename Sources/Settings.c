@@ -1548,10 +1548,10 @@ void DoSettingsMain (void)
 
 void BitchAboutChanges (void)
 {
-	SInt16		hitWhat;
-	AlertData	alertData = { 0 };
+	SInt16			hitWhat;
+	DialogParams	params = { 0 };
 
-	alertData.hwndParent = mainWindow;
-	hitWhat = Alert(kChangesEffectAlert, &alertData);
+	params.hwndParent = mainWindow;
+	hitWhat = Alert(kChangesEffectAlert, &params);
 }
 

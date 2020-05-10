@@ -159,13 +159,13 @@ void SaveGame2 (void)
 
 void SavedGameMismatchError (StringPtr gameName)
 {
-	AlertData	alertData = { 0 };
-	SInt16		whoCares;
+	DialogParams	params = { 0 };
+	SInt16			whoCares;
 
-	alertData.hwndParent = mainWindow;
-	WinFromMacString(alertData.arg[0], ARRAYSIZE(alertData.arg[0]), gameName);
-	WinFromMacString(alertData.arg[1], ARRAYSIZE(alertData.arg[1]), thisHouseName);
-	whoCares = Alert(kSavedGameErrorAlert, &alertData);
+	params.hwndParent = mainWindow;
+	WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), gameName);
+	WinFromMacString(params.arg[1], ARRAYSIZE(params.arg[1]), thisHouseName);
+	whoCares = Alert(kSavedGameErrorAlert, &params);
 }
 
 //--------------------------------------------------------------  OpenSavedGame

@@ -567,21 +567,21 @@ SInt32 SoundBytesNeeded (void)
 
 void TellHerNoSounds (void)
 {
-	SInt16		hitWhat;
-	AlertData	alertData = { 0 };
+	SInt16			hitWhat;
+	DialogParams	params = { 0 };
 
-	alertData.hwndParent = mainWindow;
-	hitWhat = Alert(kNoMemForSoundsAlert, &alertData);
+	params.hwndParent = mainWindow;
+	hitWhat = Alert(kNoMemForSoundsAlert, &params);
 }
 
 //--------------------------------------------------------------  BitchAboutSM3
 
 void BitchAboutSM3 (void)
 {
-	SInt16		hitWhat;
-	AlertData	alertData = { 0 };
+	SInt16			hitWhat;
+	DialogParams	params = { 0 };
 
-	alertData.hwndParent = mainWindow;
-	hitWhat = Alert(kNoSoundManager3Alert, &alertData);
+	params.hwndParent = mainWindow;
+	hitWhat = Alert(kNoSoundManager3Alert, &params);
 }
 

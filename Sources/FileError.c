@@ -44,7 +44,7 @@
 Boolean CheckFileError (DWORD resultCode, StringPtr fileName)
 {
 	SInt16			dummyInt;
-	AlertData		alertData = { 0 };
+	DialogParams	params = { 0 };
 	DWORD			result;
 
 	if (resultCode == ERROR_SUCCESS)	// No problems?  Then cruise
@@ -107,22 +107,21 @@ Boolean CheckFileError (DWORD resultCode, StringPtr fileName)
 	}
 
 	loadResult = LoadString(HINST_THISCOMPONENT, rFileErrorStringsBase + stringIndex,
-			alertData.arg[0], ARRAYSIZE(alertData.arg[0]));
+			params.arg[0], ARRAYSIZE(params.arg[0]));
 	if (loadResult <= 0)
-		alertData.arg[0][0] = L'\0';
+		params.arg[0][0] = L'\0';
 	*/
 
 	result = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-			NULL, resultCode, 0, alertData.arg[0], ARRAYSIZE(alertData.arg[0]), NULL);
+			NULL, resultCode, 0, params.arg[0], ARRAYSIZE(params.arg[0]), NULL);
 	if (result == 0)
-		alertData.arg[0][0] = L'\0';
+		params.arg[0][0] = L'\0';
 
-	StringCchPrintf(alertData.arg[1], ARRAYSIZE(alertData.arg[1]),
-			L"%ld", (ULONG)resultCode);
-	WinFromMacString(alertData.arg[2], ARRAYSIZE(alertData.arg[2]), fileName);
+	StringCchPrintf(params.arg[1], ARRAYSIZE(params.arg[1]), L"%lu", (ULONG)resultCode);
+	WinFromMacString(params.arg[2], ARRAYSIZE(params.arg[2]), fileName);
 
-	alertData.hwndParent = mainWindow;
-	dummyInt = Alert(rFileErrorAlert, &alertData);
+	params.hwndParent = mainWindow;
+	dummyInt = Alert(rFileErrorAlert, &params);
 
 	return(false);
 }

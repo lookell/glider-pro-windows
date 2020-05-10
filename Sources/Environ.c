@@ -432,13 +432,13 @@ void SwitchToDepth (SInt16 newDepth, Boolean doColor)
 
 void SwitchDepthOrAbort (void)
 {
-	AlertData		alertData = { 0 };
+	DialogParams	params = { 0 };
 	SInt16			usersDecision;
 
 	if (thisMac.canSwitch)
 	{
-		alertData.hwndParent = mainWindow;
-		usersDecision = Alert(kSwitchDepthAlert, &alertData);
+		params.hwndParent = mainWindow;
+		usersDecision = Alert(kSwitchDepthAlert, &params);
 		switch (usersDecision)
 		{
 			case 101:
@@ -591,12 +591,12 @@ void CheckMemorySize (void)
 {
 	#define		kBaseBytesNeeded	614400L					// 600K Base memory
 	#define		kPaddingBytes		204800L					// 200K Padding
-	AlertData	alertData = { 0 };
-	SInt32		bytesNeeded, bytesAvail;
-	SInt32		soundBytes, musicBytes;
-	SInt16		hitWhat;
-	Str255		sizeStr;
-	MEMORYSTATUSEX memoryStatus;
+	DialogParams	params = { 0 };
+	SInt32			bytesNeeded, bytesAvail;
+	SInt32			soundBytes, musicBytes;
+	SInt16			hitWhat;
+	Str255			sizeStr;
+	MEMORYSTATUSEX	memoryStatus;
 
 	dontLoadMusic = false;
 	dontLoadSounds = false;
@@ -713,12 +713,12 @@ void CheckMemorySize (void)
 
 #ifdef COMPILEDEMO
 		Mac_NumToString((bytesNeeded + kPaddingBytes) / 1024L, sizeStr);
-		WinFromMacString(alertData.arg[0], ARRAYSIZE(alertData.arg[0]), sizeStr);
-		hitWhat = Alert(kLowMemoryAlert, &alertData);
+		WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), sizeStr);
+		hitWhat = Alert(kLowMemoryAlert, &params);
 #else
 		Mac_NumToString((bytesNeeded + kPaddingBytes) / 1024L, sizeStr);
-		WinFromMacString(alertData.arg[0], ARRAYSIZE(alertData.arg[0]), sizeStr);
-		hitWhat = Alert(kSetMemoryAlert, &alertData);
+		WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), sizeStr);
+		hitWhat = Alert(kSetMemoryAlert, &params);
 //		SetAppMemorySize(bytesNeeded + kPaddingBytes);
 #endif
 		exit(0);

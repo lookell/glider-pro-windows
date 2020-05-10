@@ -140,15 +140,15 @@ OSErr DoOpenDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 
 OSErr DoPrintDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref)
 {
-	AlertData	alertData = { 0 };
-	SInt16		hitWhat;
+	DialogParams	params = { 0 };
+	SInt16			hitWhat;
 
 	UNREFERENCED_PARAMETER(theAE);
 	UNREFERENCED_PARAMETER(reply);
 	UNREFERENCED_PARAMETER(ref);
 
-	alertData.hwndParent = NULL;
-	hitWhat = Alert(kNoPrintingAlert, &alertData);
+	params.hwndParent = NULL;
+	hitWhat = Alert(kNoPrintingAlert, &params);
 
 	return errAEEventNotHandled;
 }

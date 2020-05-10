@@ -625,16 +625,16 @@ void CloseHouseResFork (void)
 #ifndef COMPILEDEMO
 Boolean QuerySaveChanges (void)
 {
-	AlertData	alertData = { 0 };
-	SInt16		hitWhat;
-	Boolean		whoCares;
+	DialogParams	params = { 0 };
+	SInt16			hitWhat;
+	Boolean			whoCares;
 
 	if (!fileDirty)
 		return(true);
 
-	alertData.hwndParent = mainWindow;
-	WinFromMacString(alertData.arg[0], ARRAYSIZE(alertData.arg[0]), thisHouseName);
-	hitWhat = Alert(kSaveChangesAlert, &alertData);
+	params.hwndParent = mainWindow;
+	WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), thisHouseName);
+	hitWhat = Alert(kSaveChangesAlert, &params);
 	if (hitWhat == kSaveChanges)
 	{
 		if (wasHouseVersion < kHouseVersion)
@@ -669,19 +669,18 @@ Boolean QuerySaveChanges (void)
 
 void YellowAlert (SInt16 whichAlert, SInt16 identifier)
 {
-	AlertData	alertData = { 0 };
-	INT			result;
-	SInt16		whoCares;
+	DialogParams	params = { 0 };
+	INT				result;
+	SInt16			whoCares;
 
-	alertData.hwndParent = mainWindow;
+	params.hwndParent = mainWindow;
 	result = LoadString(HINST_THISCOMPONENT, kYellowAlertStringBase + whichAlert,
-			alertData.arg[0], ARRAYSIZE(alertData.arg[0]));
+			params.arg[0], ARRAYSIZE(params.arg[0]));
 	if (result <= 0)
-		StringCchCopy(alertData.arg[0], ARRAYSIZE(alertData.arg[0]), L"");
-	StringCchPrintf(alertData.arg[1], ARRAYSIZE(alertData.arg[1]),
-			L"%d", (int)identifier);
+		StringCchCopy(params.arg[0], ARRAYSIZE(params.arg[0]), L"");
+	StringCchPrintf(params.arg[1], ARRAYSIZE(params.arg[1]), L"%d", (int)identifier);
 
-	whoCares = Alert(kYellowAlert, &alertData);
+	whoCares = Alert(kYellowAlert, &params);
 }
 
 //--------------------------------------------------------------  IsFileReadOnly

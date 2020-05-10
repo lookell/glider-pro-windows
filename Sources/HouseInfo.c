@@ -309,11 +309,11 @@ void DoHouseInfo (void)
 
 Boolean WarnLockingHouse (void)
 {
-	AlertData	alertData = { 0 };
-	SInt16		hitWhat;
+	DialogParams	params = { 0 };
+	SInt16			hitWhat;
 
-	alertData.hwndParent = mainWindow;
-	hitWhat = Alert(kLockHouseAlert, &alertData);
+	params.hwndParent = mainWindow;
+	hitWhat = Alert(kLockHouseAlert, &params);
 
 	return (hitWhat == IDOK);
 }
@@ -322,11 +322,11 @@ Boolean WarnLockingHouse (void)
 
 void HowToZeroScores (void)
 {
-	SInt16		hitWhat;
-	AlertData	alertData = { 0 };
+	DialogParams	params = { 0 };
+	SInt16			hitWhat;
 
-	alertData.hwndParent = mainWindow;
-	hitWhat = Alert(kZeroScoresAlert, &alertData);
+	params.hwndParent = mainWindow;
+	hitWhat = Alert(kZeroScoresAlert, &params);
 
 	switch (hitWhat)
 	{

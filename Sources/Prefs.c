@@ -211,10 +211,10 @@ Boolean LoadPrefs (prefsInfo *thePrefs, SInt16 versionNeed)
 
 void BringUpDeletePrefsAlert (void)
 {
-	AlertData	alertData = { 0 };
-	SInt16		whoCares;
+	DialogParams	params = { 0 };
+	SInt16			whoCares;
 
-	alertData.hwndParent = mainWindow;
-	whoCares = Alert(kNewPrefsAlertID, &alertData);
+	params.hwndParent = mainWindow;
+	whoCares = Alert(kNewPrefsAlertID, &params);
 }
 

@@ -152,36 +152,34 @@ void RedAlert (SInt16 errorNumber)
 {
 	SInt16			dummyInt;
 	INT				loadResult;
-	AlertData		alertData = { 0 };
+	DialogParams	params = { 0 };
 
 	if (errorNumber > 1)		// <= 0 is unaccounted for
 	{
 		loadResult = LoadString(HINST_THISCOMPONENT, rErrTitleBase + errorNumber,
-				alertData.arg[0], ARRAYSIZE(alertData.arg[0]));
+				params.arg[0], ARRAYSIZE(params.arg[0]));
 		if (loadResult <= 0)
-			alertData.arg[0][0] = L'\0';
+			params.arg[0][0] = L'\0';
 		loadResult = LoadString(HINST_THISCOMPONENT, rErrMssgBase + errorNumber,
-				alertData.arg[1], ARRAYSIZE(alertData.arg[1]));
+				params.arg[1], ARRAYSIZE(params.arg[1]));
 		if (loadResult <= 0)
-			alertData.arg[1][0] = L'\0';
+			params.arg[1][0] = L'\0';
 	}
 	else
 	{
 		loadResult = LoadString(HINST_THISCOMPONENT, rErrTitleBase + 1,
-				alertData.arg[0], ARRAYSIZE(alertData.arg[0]));
+				params.arg[0], ARRAYSIZE(params.arg[0]));
 		if (loadResult <= 0)
-			alertData.arg[0][0] = L'\0';
+			params.arg[0][0] = L'\0';
 		loadResult = LoadString(HINST_THISCOMPONENT, rErrMssgBase + 1,
-				alertData.arg[1], ARRAYSIZE(alertData.arg[1]));
+				params.arg[1], ARRAYSIZE(params.arg[1]));
 		if (loadResult <= 0)
-			alertData.arg[1][0] = L'\0';
+			params.arg[1][0] = L'\0';
 	}
-	StringCchPrintf(alertData.arg[2],
-			ARRAYSIZE(alertData.arg[2]),
-			L"%d", (int)errorNumber);
+	StringCchPrintf(params.arg[2], ARRAYSIZE(params.arg[2]), L"%d", (int)errorNumber);
 
-	alertData.hwndParent = mainWindow;
-	dummyInt = Alert(rDeathAlertID, &alertData);
+	params.hwndParent = mainWindow;
+	dummyInt = Alert(rDeathAlertID, &params);
 	exit(EXIT_FAILURE);
 }
 

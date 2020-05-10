@@ -9,14 +9,17 @@
 #include "Macintosh.h"
 
 
-typedef struct AlertData {
+typedef struct DialogParams {
 	HWND hwndParent;
 	WCHAR arg[4][256];
-} AlertData;
+} DialogParams;
 
 
-SInt16 Alert (SInt16 dialogID, const AlertData *alertData);
+void ParamDialogText (HWND, const DialogParams *);
+SInt16 Alert (SInt16 dialogID, const DialogParams *params);
+BOOL FocusDefaultButton (HWND);
 void CenterOverOwner (HWND);
+
 void BringUpDialog (DialogPtr *theDialog, SInt16 dialogID);
 //void GetPutDialogCorner (Point *);
 //void GetGetDialogCorner (Point *);

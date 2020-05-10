@@ -49,11 +49,11 @@ extern	Boolean		autoRoomEdit, newRoomNow, isPlayMusicIdle;
 
 SInt16 BitchAboutColorDepth (void)
 {
-	SInt16		sheSaid;
-	AlertData	alertData = { 0 };
+	SInt16			sheSaid;
+	DialogParams	params = { 0 };
 
-	alertData.hwndParent = mainWindow;
-	sheSaid = Alert(kColorSwitchedAlert, &alertData);
+	params.hwndParent = mainWindow;
+	sheSaid = Alert(kColorSwitchedAlert, &params);
 
 	return (sheSaid - 100);
 }

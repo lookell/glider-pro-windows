@@ -26,7 +26,7 @@ static INT_PTR CALLBACK AlertProc (HWND, UINT, WPARAM, LPARAM);
 
 static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
 {
-	const AlertData *alert = (const AlertData *)lParam;
+	const DialogParams *params = (const DialogParams *)lParam;
 	INT textLength;
 	PWSTR oldText, newText;
 	INT i, oldTextSize, newTextSize, numCarets;
@@ -79,22 +79,22 @@ static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
 			case L'0':
 				i++;
 				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
-					alert->arg[0], ARRAYSIZE(alert->arg[0]));
+					params->arg[0], ARRAYSIZE(params->arg[0]));
 				break;
 			case L'1':
 				i++;
 				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
-					alert->arg[1], ARRAYSIZE(alert->arg[1]));
+					params->arg[1], ARRAYSIZE(params->arg[1]));
 				break;
 			case L'2':
 				i++;
 				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
-					alert->arg[2], ARRAYSIZE(alert->arg[2]));
+					params->arg[2], ARRAYSIZE(params->arg[2]));
 				break;
 			case L'3':
 				i++;
 				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
-					alert->arg[3], ARRAYSIZE(alert->arg[3]));
+					params->arg[3], ARRAYSIZE(params->arg[3]));
 				break;
 			}
 		}
@@ -109,6 +109,13 @@ ending:
 	return TRUE;
 }
 
+//--------------------------------------------------------------  ParamDialogText
+
+void ParamDialogText(HWND hDlg, const DialogParams *params)
+{
+	EnumChildWindows(hDlg, FormatWindowText, (LPARAM)params);
+}
+
 //--------------------------------------------------------------  AlertProc
 
 static INT_PTR CALLBACK AlertProc (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -116,22 +123,12 @@ static INT_PTR CALLBACK AlertProc (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM l
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
-	{
-		LRESULT defBtnId;
 		CenterOverOwner(hDlg);
-		EnumChildWindows(hDlg, FormatWindowText, lParam);
-		defBtnId = SendMessage(hDlg, DM_GETDEFID, 0, 0);
-		if (HIWORD(defBtnId) == DC_HASDEFID)
-		{
-			HWND defBtnHandle = GetDlgItem(hDlg, LOWORD(defBtnId));
-			SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)defBtnHandle, TRUE);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
+		if (FocusDefaultButton(hDlg))
 			return FALSE;
-		}
 		else
-		{
 			return TRUE;
-		}
-	}
 
 	case WM_COMMAND:
 		if (LOWORD(wParam) != 0 && LOWORD(wParam) != 0xFFFF)
@@ -146,10 +143,33 @@ static INT_PTR CALLBACK AlertProc (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM l
 // Given a dialog resource ID and four string parameters, this function
 // displays the dialog with a standard modal alert box procedure.
 
-SInt16 Alert (SInt16 dialogID, const AlertData *alertData)
+SInt16 Alert (SInt16 dialogID, const DialogParams *params)
 {
 	return (SInt16)DialogBoxParam(HINST_THISCOMPONENT, MAKEINTRESOURCE(dialogID),
-			alertData->hwndParent, AlertProc, (LPARAM)alertData);
+			params->hwndParent, AlertProc, (LPARAM)params);
+}
+
+//--------------------------------------------------------------  FocusDefaultButton
+// Gives focus to the default button on the dialog. This button's ID is
+// whatever is returned from sending the dialog a DM_GETDEFID message.
+// This function returns TRUE if the focus was changed, or FALSE otherwise.
+
+BOOL FocusDefaultButton (HWND hDlg)
+{
+	LRESULT defaultButtonId;
+	HWND defaultButton;
+
+	defaultButtonId = SendMessage(hDlg, DM_GETDEFID, 0, 0);
+	if (HIWORD(defaultButtonId) == DC_HASDEFID)
+	{
+		defaultButton = GetDlgItem(hDlg, LOWORD(defaultButtonId));
+		SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)defaultButton, TRUE);
+		return TRUE;
+	}
+	else
+	{
+		return FALSE;
+	}
 }
 
 //--------------------------------------------------------------  CenterOverOwner

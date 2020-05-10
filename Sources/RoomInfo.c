@@ -886,11 +886,11 @@ SInt16 GetFirstPICT (void)
 #ifndef COMPILEDEMO
 void BitchAboutPICTNotFound (void)
 {
-	AlertData	alertData = { 0 };
-	SInt16		hitWhat;
+	DialogParams	params = { 0 };
+	SInt16			hitWhat;
 
-	alertData.hwndParent = mainWindow;
-	hitWhat = Alert(kNoPICTFoundAlert, &alertData);
+	params.hwndParent = mainWindow;
+	hitWhat = Alert(kNoPICTFoundAlert, &params);
 }
 #endif
 

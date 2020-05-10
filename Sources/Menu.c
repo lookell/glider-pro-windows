@@ -890,11 +890,11 @@ SInt16 QueryResumeGame (void)
 #ifdef COMPILEDEMO
 void DoNotInDemo (void)
 {
-	SInt16		whoCares;
-	AlertData	alertData = { 0 };
+	SInt16			whoCares;
+	DialogParams	params = { 0 };
 
-	alertData.hwndParent = mainWindow;
-	whoCares = Alert(kNotInDemoAlert, &alertData);
+	params.hwndParent = mainWindow;
+	whoCares = Alert(kNotInDemoAlert, &params);
 }
 #endif
 
@@ -902,11 +902,11 @@ void DoNotInDemo (void)
 
 void HeyYourPissingAHighScore (void)
 {
-	SInt16		whoCares;
-	AlertData	alertData = { 0 };
+	SInt16			whoCares;
+	DialogParams	params = { 0 };
 
-	alertData.hwndParent = mainWindow;
-	whoCares = Alert(kNoHighScoreAlert, &alertData);
+	params.hwndParent = mainWindow;
+	whoCares = Alert(kNoHighScoreAlert, &params);
 }
 
 //--------------------------------------------------------------  OpenCloseEditWindows
