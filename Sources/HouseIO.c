@@ -394,6 +394,7 @@ Boolean ReadHouse (void)
 		noRoomAtAll = true;
 		YellowAlert(kYellowNoRooms, 0);
 		CheckFileError(GetLastError(), thisHouseName);
+		byteio_close(&byteReader);
 		return(false);
 	}
 	byteio_close(&byteReader);
@@ -507,6 +508,7 @@ Boolean WriteHouse (Boolean checkIt)
 	if (!WriteHouseType(&byteWriter, thisHouse))
 	{
 		CheckFileError(GetLastError(), thisHouseName);
+		byteio_close(&byteWriter);
 		return(false);
 	}
 	byteio_close(&byteWriter);
