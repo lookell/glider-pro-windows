@@ -187,6 +187,7 @@ Boolean OpenHouse (void)
 		return (false);
 	#endif
 
+	houseIsReadOnly = false;
 	houseRefNum = CreateFile(theHousesSpecs[thisHouseIndex].path,
 			GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL,
 			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
