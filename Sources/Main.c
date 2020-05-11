@@ -34,6 +34,7 @@ extern Str15		leftName, rightName, batteryName, bandName;
 extern Str15		highName;
 //extern SInt32		encryptedNumber;
 extern HANDLE		houseRefNum;
+extern SInt32		incrementModeTime;
 extern SInt16		maxFiles, numNeighbors, willMaxFiles;
 extern SInt16		isEditH, isEditV, isMapH, isMapV;
 extern SInt16		isToolsH, isToolsV, isCoordH, isCoordV;
@@ -366,6 +367,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 //		BitchAboutSM3();
 //	}
 
+	incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
 	while (!quitting)		// this is the main loop
 		HandleEvent();
 /*
