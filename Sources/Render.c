@@ -623,6 +623,8 @@ void RenderFrame (void)
 
 	while ((SInt32)MillisToTicks(GetTickCount()) < nextFrame)
 	{
+		// TODO: find a less hacky way of frame timing
+		Sleep(3);
 	}
 	nextFrame = MillisToTicks(GetTickCount()) + kTicksPerFrame;
 
