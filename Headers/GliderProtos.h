@@ -198,6 +198,8 @@ void UpdateCoordinateCheckmark (Boolean);
 void DoNotInDemo (void);
 #endif
 void OpenCloseEditWindows (void);
+void EnableMenuBar (void);
+void DisableMenuBar (void);
 
 void StartGliderFadingIn (gliderPtr);					// --- Modes.c
 void StartGliderTransportingIn (gliderPtr);

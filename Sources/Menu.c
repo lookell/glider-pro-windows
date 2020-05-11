@@ -333,13 +333,17 @@ void DoGameMenu (SInt16 theItem)
 		case iNewGame:
 		twoPlayerGame = false;
 		resumedSavedGame = false;
+		DisableMenuBar();
 		NewGame(kNewGameMode);
+		EnableMenuBar();
 		break;
 
 		case iTwoPlayer:
 		twoPlayerGame = true;
 		resumedSavedGame = false;
+		DisableMenuBar();
 		NewGame(kNewGameMode);
+		EnableMenuBar();
 		break;
 
 		case iOpenSavedGame:
@@ -348,7 +352,9 @@ void DoGameMenu (SInt16 theItem)
 		if (OpenSavedGame())
 		{
 			twoPlayerGame = false;
+			DisableMenuBar();
 			NewGame(kResumeGameMode);
+			EnableMenuBar();
 		}
 		break;
 
@@ -382,6 +388,8 @@ void DoGameMenu (SInt16 theItem)
 #else
 		quitting = true;
 #endif
+		if (quitting)
+			PostQuitMessage(0);
 		break;
 
 		default:
@@ -444,7 +452,9 @@ void DoOptionsMenu (SInt16 theItem)
 		break;
 
 		case iHighScores:
+		DisableMenuBar();
 		DoHighScores();
+		EnableMenuBar();
 		incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
 		break;
 
@@ -454,7 +464,9 @@ void DoOptionsMenu (SInt16 theItem)
 		break;
 
 		case iHelp:
+		DisableMenuBar();
 		DoDemoGame();
+		EnableMenuBar();
 		break;
 	}
 }
@@ -934,4 +946,35 @@ void OpenCloseEditWindows (void)
 		}
 	}
 }
+
+//--------------------------------------------------------------  EnableMenuBar
+// Iterate over the menu bar's items and enable all of them. This is to
+// prevent interaction and a weird state being set (for example, clicking
+// "Options > High Scores" and then clicking "Options > High Scores" again
+// while the high scores are still being shown.
+
+void EnableMenuBar (void)
+{
+	int i, n;
+
+	n = GetMenuItemCount(theMenuBar);
+	for (i = 0; i < n; i++)
+		EnableMenuItem(theMenuBar, i, MF_BYPOSITION | MF_ENABLED);
+	DrawMenuBar(mainWindow);
+}
+
+//--------------------------------------------------------------  EnableMenuBar
+// Similar to the above function, but this one disables all of the menu bar's
+// items, insteading of enabling them.
+
+void DisableMenuBar(void)
+{
+	int i, n;
+
+	n = GetMenuItemCount(theMenuBar);
+	for (i = 0; i < n; i++)
+		EnableMenuItem(theMenuBar, i, MF_BYPOSITION | MF_GRAYED);
+	DrawMenuBar(mainWindow);
+}
+
 
