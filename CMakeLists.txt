@@ -34,11 +34,13 @@ target_sources(
   # resources
   Resources/gliderpro.rc
   # added headers
+  Headers/Audio.h
   Headers/ByteIO.h
   Headers/Macintosh.h
   Headers/ResourceIDs.h
   Headers/WinAPI.h
   # added sources
+  Sources/Audio.c
   Sources/ByteIO.c
   Sources/GliderStructs.c
   Sources/Macintosh.c

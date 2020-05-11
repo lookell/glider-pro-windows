@@ -9,6 +9,7 @@
 //#include <Resources.h>
 //#include <Sound.h>
 #include "Macintosh.h"
+#include "Audio.h"
 #include "DialogUtils.h"
 #include "Environ.h"
 #include "Externs.h"
@@ -30,7 +31,7 @@ OSErr CloseMusicChannel (void);
 
 SndCallBackUPP	musicCallBackUPP;
 SndChannelPtr	musicChannel;
-Ptr				theMusicData[kMaxMusic];
+WaveData		theMusicData[kMaxMusic];
 SInt16			musicSoundID, musicCursor;
 SInt16			musicScore[kLastMusicPiece];
 SInt16			gameScore[kLastGamePiece];
@@ -231,60 +232,33 @@ void MusicCallBack (SndChannelPtr theChannel, SndCommand *theCommand)
 
 OSErr LoadMusicSounds (void)
 {
-	return noErr;
-#if 0
-	Handle		theSound;
-	long		soundDataSize;
-	OSErr		theErr;
-	short		i;
-
-	theErr = noErr;
-
-	for (i = 0; i < kMaxMusic; i++)
-		theMusicData[i] = nil;
+	WORD i;
 
 	for (i = 0; i < kMaxMusic; i++)
 	{
-		theSound = GetResource('snd ', i + kBaseBufferMusicID);
-		if (theSound == nil)
-			return (MemError());
-
-		HLock(theSound);
-		soundDataSize = GetHandleSize(theSound) - 20L;
-		HUnlock(theSound);
-
-		theMusicData[i] = NewPtr(soundDataSize);
-		if (theMusicData[i] == nil)
-			return (MemError());
-
-		HLock(theSound);
-		BlockMove((Ptr)(*theSound + 20L), theMusicData[i], soundDataSize);
-		ReleaseResource(theSound);
+		theMusicData[i].dataLength = 0;
+		theMusicData[i].dataBytes = NULL;
 	}
-	return (theErr);
-#endif
+
+	for (i = 0; i < kMaxMusic; i++)
+	{
+		if (!ReadWAVFromResource(HINST_THISCOMPONENT,
+				i + kBaseBufferMusicID, &theMusicData[i]))
+		{
+			return -1;
+		}
+	}
+	return noErr;
 }
 
 //--------------------------------------------------------------  DumpMusicSounds
 
 OSErr DumpMusicSounds (void)
 {
-	return (-1);
-#if 0
-	OSErr		theErr;
-	short		i;
-
-	theErr = noErr;
-
-	for (i = 0; i < kMaxMusic; i++)
-	{
-		if (theMusicData[i] != nil)
-			DisposePtr(theMusicData[i]);
-		theMusicData[i] = nil;
-	}
-
-	return (theErr);
-#endif
+	// The pointers to the built-in music data are actually pointers into
+	// the resources of this program. These resources don't go away until
+	// the program is unloaded, so the pointers don't need to be freed.
+	return noErr;
 }
 
 //--------------------------------------------------------------  OpenMusicChannel
@@ -409,28 +383,20 @@ void KillMusic (void)
 
 SInt32 MusicBytesNeeded (void)
 {
-	return 1;
-#if 0
-	Handle		theSound;
-	long		totalBytes;
-	short		i;
+	HRSRC		hRsrc;
+	DWORD		totalBytes;
+	WORD		i;
 
 	totalBytes = 0L;
-	SetResLoad(false);
 	for (i = 0; i < kMaxMusic; i++)
 	{
-		theSound = GetResource('snd ', i + kBaseBufferMusicID);
-		if (theSound == nil)
-		{
-			SetResLoad(true);
-			return ((long)ResError());
-		}
-		totalBytes += GetMaxResourceSize(theSound);
-//		ReleaseResource(theSound);
+		hRsrc = FindResource(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(i + kBaseBufferMusicID), L"WAVE");
+		if (hRsrc == NULL)
+			return -1;
+		totalBytes += SizeofResource(HINST_THISCOMPONENT, hRsrc);
 	}
-	SetResLoad(true);
-	return totalBytes;
-#endif
+	return (SInt32)totalBytes;
 }
 
 //--------------------------------------------------------------  TellHerNoMusic

@@ -9,6 +9,7 @@
 //#include <Resources.h>
 //#include <Sound.h>
 #include "Macintosh.h"
+#include "Audio.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "ResourceIDs.h"
@@ -30,7 +31,7 @@ OSErr CloseSoundChannels (void);
 
 SndCallBackUPP		callBack0UPP, callBack1UPP, callBack2UPP;
 SndChannelPtr		channel0, channel1, channel2;
-Ptr					theSoundData[kMaxSounds];
+WaveData			theSoundData[kMaxSounds];
 SInt16				numSoundsLoaded, priority0, priority1, priority2;
 SInt16				soundPlaying0, soundPlaying1, soundPlaying2;
 Boolean				soundLoaded[kMaxSounds], dontLoadSounds;
@@ -345,55 +346,31 @@ void DumpTriggerSound (void)
 
 OSErr LoadBufferSounds (void)
 {
-	return (-1);
-#if 0
-	Handle		theSound;
-	long		soundDataSize;
-	OSErr		theErr;
-	short		i;
-
-	theErr = noErr;
+	WORD i;
 
 	for (i = 0; i < kMaxSounds - 1; i++)
 	{
-		theSound = GetResource('snd ', i + kBaseBufferSoundID);
-		if (theSound == nil)
-			return (MemError());
-
-		HLock(theSound);
-		soundDataSize = GetHandleSize(theSound) - 20L;
-		HUnlock(theSound);
-
-		theSoundData[i] = NewPtr(soundDataSize);
-		if (theSoundData[i] == nil)
-			return (MemError());
-
-		HLock(theSound);
-		BlockMove((Ptr)(*theSound + 20L), theSoundData[i], soundDataSize);
-		ReleaseResource(theSound);
+		if (!ReadWAVFromResource(HINST_THISCOMPONENT,
+				i + kBaseBufferSoundID, &theSoundData[i]))
+		{
+			return -1;
+		}
 	}
 
-	theSoundData[kMaxSounds - 1] = nil;
+	theSoundData[kMaxSounds - 1].dataLength = 0;
+	theSoundData[kMaxSounds - 1].dataBytes = NULL;
 
-	return (theErr);
-#endif
+	return noErr;
 }
 
 //--------------------------------------------------------------  DumpBufferSounds
 
 void DumpBufferSounds (void)
 {
+	// The pointers to the built-in sound data are actually pointers into
+	// the resources of this program. These resources don't go away until
+	// the program is unloaded, so the pointers don't need to be freed.
 	return;
-#if 0
-	short		i;
-
-	for (i = 0; i < kMaxSounds; i++)
-	{
-		if (theSoundData[i] != nil)
-			DisposePtr(theSoundData[i]);
-		theSoundData[i] = nil;
-	}
-#endif
 }
 
 //--------------------------------------------------------------  OpenSoundChannels
@@ -479,9 +456,6 @@ OSErr CloseSoundChannels (void)
 
 void InitSound (void)
 {
-	failedSound = true;
-	return;
-#if 0
 	OSErr		theErr;
 
 	if (dontLoadSounds)
@@ -516,15 +490,12 @@ void InitSound (void)
 			failedSound = true;
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  KillSound
 
 void KillSound (void)
 {
-	return;
-#if 0
 	OSErr		theErr;
 
 	if (dontLoadSounds)
@@ -532,35 +503,26 @@ void KillSound (void)
 
 	DumpBufferSounds();
 	theErr = CloseSoundChannels();
-#endif
 }
 
 //--------------------------------------------------------------  SoundBytesNeeded
 
 SInt32 SoundBytesNeeded (void)
 {
-	return 1;
-#if 0
-	Handle		theSound;
-	long		totalBytes;
-	short		i;
+	HRSRC		hRsrc;
+	DWORD		totalBytes;
+	WORD		i;
 
 	totalBytes = 0L;
-	SetResLoad(false);
 	for (i = 0; i < kMaxSounds - 1; i++)
 	{
-		theSound = GetResource('snd ', i + kBaseBufferSoundID);
-		if (theSound == nil)
-		{
-			SetResLoad(true);
-			return ((long)ResError());
-		}
-		totalBytes += GetMaxResourceSize(theSound);
-//		ReleaseResource(theSound);
+		hRsrc = FindResource(HINST_THISCOMPONENT,
+				MAKEINTRESOURCE(i + kBaseBufferSoundID), L"WAVE");
+		if (hRsrc == NULL)
+			return -1;
+		totalBytes += SizeofResource(HINST_THISCOMPONENT, hRsrc);
 	}
-	SetResLoad(true);
-	return totalBytes;
-#endif
+	return (SInt32)totalBytes;
 }
 
 //--------------------------------------------------------------  TellHerNoSounds
