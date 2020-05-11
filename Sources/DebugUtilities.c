@@ -88,16 +88,13 @@ void FlashRect (Rect *theRect)
 
 void CheckLegitRect(Rect *srcRect, Rect *inRect)
 {
-	return;
-#if 0
 	Rect			dummyRect;
 
 	if ((srcRect->left > srcRect->right) || (srcRect->top > srcRect->bottom))
-		DebugStr("\pSource Rectangle not dimensional");
+		OutputDebugString(L"Source Rectangle not dimensional\n");
 
-	if (!SectRect(srcRect, inRect, &dummyRect))
-		DebugStr("\pSource Rectangle not Secting Target Rectangle");
-#endif
+	if (!Mac_SectRect(srcRect, inRect, &dummyRect))
+		OutputDebugString(L"Source Rectangle not Secting Target Rectangle\n");
 }
 
 
@@ -287,36 +284,27 @@ void DoBarGraph (SInt16 theValue, SInt16 downScreen, SInt16 maxDown, SInt16 scal
 /*==============================================================  BetaOkay  */
 
 SInt16 BetaOkay (void)
-
 {
-	return 0;
-#if 0
-	DateTimeRec		dateRecord;
-	UInt32	theseSeconds;
+	SYSTEMTIME		systemTime;
 	Boolean			stillCool;
 
-	GetDateTime(&theseSeconds);
-	SecondsToDate(theseSeconds, &dateRecord);
+	GetLocalTime(&systemTime);
 
-	if (dateRecord.month < 8)
+	if (systemTime.wMonth < 8)
 		stillCool = true;
 	else
 		stillCool = false;
 
-	return((short)stillCool);
-#endif
+	return (SInt16)stillCool;
 }
 
 //--------------------------------------------------------------  DebugNum
 
 void DebugNum (SInt32 theNum)
 {
-	return;
-#if 0
-	Str255		theStr;
-	NumToString(theNum, theStr);
-	DebugStr(theStr);
-#endif
+	WCHAR theStr[256];
+	StringCchPrintf(theStr, ARRAYSIZE(theStr), L"%ld\n", (long)theNum);
+	OutputDebugString(theStr);
 }
 
 //--------------------------------------------------------------  DisplayCTSeed
