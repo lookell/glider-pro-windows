@@ -569,6 +569,8 @@ Boolean CloseHouse (void)
 
 	houseOpen = false;
 
+	gameDirty = false;
+	fileDirty = false;
 	return (true);
 }
 

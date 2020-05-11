@@ -621,6 +621,7 @@ Boolean WriteScoresToDisk (void)
 		return false;
 	}
 
+	gameDirty = false;
 	return true;
 }
 
