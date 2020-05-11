@@ -500,22 +500,26 @@ void HandleIdleTask (void)
 
 void HandleEvent (void)
 {
-	BYTE		eventKeys[256];
 	MSG			theEvent;
 	SInt32		sleep = 2;
 	DWORD		result, startMillis, stopMillis;
 
-	GetKeyboardState(eventKeys);
-	if ((eventKeys[VK_CONTROL] & 0x80) &&
-			(eventKeys[VK_MENU] & 0x80))
+	if (mainWindow != NULL && GetActiveWindow() == mainWindow)
 	{
-		HiliteAllObjects();
-	}
-	else if ((eventKeys[VK_MENU] & 0x80) && (theMode == kEditMode) &&
-			(houseUnlocked))
-	{
-		EraseSelectedTool();
-		SelectTool(kSelectTool);
+		// TODO: Maybe don't use the Alt key as an Option key substitute, since
+		// it already has meaning for Windows (activating the menu bar, in this
+		// scenario).
+		if ((GetAsyncKeyState(VK_CONTROL) < 0) &&
+				(GetAsyncKeyState(VK_MENU) < 0))
+		{
+			HiliteAllObjects();
+		}
+		else if ((GetAsyncKeyState(VK_MENU) < 0) && (theMode == kEditMode) &&
+				(houseUnlocked))
+		{
+			EraseSelectedTool();
+			SelectTool(kSelectTool);
+		}
 	}
 
 	result = MsgWaitForMultipleObjects(0, NULL, FALSE,

@@ -816,13 +816,7 @@ void GetKeyName (SInt32 message, StringPtr theName)
 
 Boolean OptionKeyDown (void)
 {
-	BYTE		theKeys[256];
-
-	GetKeyboardState(theKeys);
-	if (theKeys[VK_MENU] & 0x80)
-		return (true);
-	else
-		return (false);
+	return (GetKeyState(VK_MENU) < 0);
 }
 
 //--------------------------------------------------------------  ExtractCTSeed
