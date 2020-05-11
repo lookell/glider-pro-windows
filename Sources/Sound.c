@@ -38,6 +38,9 @@ Boolean				soundLoaded[kMaxSounds], dontLoadSounds;
 Boolean				channelOpen, isSoundOn, failedSound;
 
 
+extern HMODULE		houseResFork;
+
+
 //==============================================================  Functions
 //--------------------------------------------------------------  PlayPrioritySound
 
@@ -289,57 +292,29 @@ void CallBack2 (SndChannelPtr theChannel, SndCommand *theCommand)
 
 OSErr LoadTriggerSound (SInt16 soundID)
 {
-	return (-1);
-#if 0
-	Handle		theSound;
-	long		soundDataSize;
-	OSErr		theErr;
-
-	if ((dontLoadSounds) || (theSoundData[kMaxSounds - 1] != nil))
-		theErr = -1;
-	else
+	if ((houseResFork == NULL) || (dontLoadSounds) ||
+			(theSoundData[kMaxSounds - 1].dataBytes != NULL))
 	{
-//		FlushAnyTriggerPlaying();
-
-		theErr = noErr;
-
-		theSound = GetResource('snd ', soundID);
-		if (theSound == nil)
-		{
-			theErr = -1;
-		}
-		else
-		{
-			soundDataSize = GetHandleSize(theSound) - 20L;
-			theSoundData[kMaxSounds - 1] = NewPtr(soundDataSize);
-			HLock(theSound);
-			if (theSoundData[kMaxSounds - 1] == nil)
-			{
-				ReleaseResource(theSound);
-				theErr = MemError();
-			}
-			else
-			{
-				BlockMove((Ptr)(*theSound + 20L), theSoundData[kMaxSounds - 1], soundDataSize);
-				ReleaseResource(theSound);
-			}
-		}
+		return -1;
 	}
 
-	return (theErr);
-#endif
+//	FlushAnyTriggerPlaying();
+
+	if (!ReadWAVFromResource(houseResFork, (WORD)soundID,
+			&theSoundData[kMaxSounds - 1]))
+	{
+		return -1;
+	}
+
+	return noErr;
 }
 
 //--------------------------------------------------------------  DumpTriggerSound
 
 void DumpTriggerSound (void)
 {
-	return;
-#if 0
-	if (theSoundData[kMaxSounds - 1] != nil)
-		DisposePtr(theSoundData[kMaxSounds - 1]);
-	theSoundData[kMaxSounds - 1] = nil;
-#endif
+	theSoundData[kMaxSounds - 1].dataLength = 0;
+	theSoundData[kMaxSounds - 1].dataBytes = NULL;
 }
 
 //--------------------------------------------------------------  LoadBufferSounds
