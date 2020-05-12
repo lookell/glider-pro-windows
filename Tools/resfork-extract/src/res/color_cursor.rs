@@ -112,66 +112,6 @@ impl CCrsr {
     }
 }
 
-fn convert_mask_data(cursor: &CCrsr) -> BitmapOne {
-    let mut mask_bits = BitmapOne::new(16, 16);
-    for (y, row) in cursor.crsrMask.chunks_exact(2).enumerate() {
-        let y = y as u16;
-        for (xbase, byte) in row.iter().copied().enumerate() {
-            let xbase = (8 * xbase) as u16;
-            mask_bits.set_pixel(xbase, y, ((byte & 0x80) == 0).into());
-            mask_bits.set_pixel(xbase + 1, y, ((byte & 0x40) == 0).into());
-            mask_bits.set_pixel(xbase + 2, y, ((byte & 0x20) == 0).into());
-            mask_bits.set_pixel(xbase + 3, y, ((byte & 0x10) == 0).into());
-            mask_bits.set_pixel(xbase + 4, y, ((byte & 0x08) == 0).into());
-            mask_bits.set_pixel(xbase + 5, y, ((byte & 0x04) == 0).into());
-            mask_bits.set_pixel(xbase + 6, y, ((byte & 0x02) == 0).into());
-            mask_bits.set_pixel(xbase + 7, y, ((byte & 0x01) == 0).into());
-        }
-    }
-    mask_bits
-}
-
-fn convert_1bit_data(pixel_data: &[u8], bitmap: &mut BitmapOne) {
-    for (y, row) in pixel_data.chunks_exact(2).enumerate() {
-        let y = y as u16;
-        for (xbase, byte) in row.iter().copied().enumerate() {
-            let xbase = (8 * xbase) as u16;
-            bitmap.set_pixel(xbase, y, ((byte & 0x80) == 0).into());
-            bitmap.set_pixel(xbase + 1, y, ((byte & 0x40) == 0).into());
-            bitmap.set_pixel(xbase + 2, y, ((byte & 0x20) == 0).into());
-            bitmap.set_pixel(xbase + 3, y, ((byte & 0x10) == 0).into());
-            bitmap.set_pixel(xbase + 4, y, ((byte & 0x08) == 0).into());
-            bitmap.set_pixel(xbase + 5, y, ((byte & 0x04) == 0).into());
-            bitmap.set_pixel(xbase + 6, y, ((byte & 0x02) == 0).into());
-            bitmap.set_pixel(xbase + 7, y, ((byte & 0x01) == 0).into());
-        }
-    }
-}
-
-fn convert_2bit_data(pixel_data: &[u8], bitmap: &mut BitmapFour) {
-    for (y, row) in pixel_data.chunks_exact(4).enumerate() {
-        let y = y as u16;
-        for (xbase, byte) in row.iter().copied().enumerate() {
-            let xbase = (4 * xbase) as u16;
-            bitmap.set_pixel(xbase, y, 15 - (byte / 64));
-            bitmap.set_pixel(xbase + 1, y, 15 - (byte / 16 % 4));
-            bitmap.set_pixel(xbase + 2, y, 15 - (byte / 4 % 4));
-            bitmap.set_pixel(xbase + 3, y, 15 - (byte % 4));
-        }
-    }
-}
-
-fn convert_4bit_data(pixel_data: &[u8], bitmap: &mut BitmapFour) {
-    for (y, row) in pixel_data.chunks_exact(8).enumerate() {
-        let y = y as u16;
-        for (xbase, byte) in row.iter().copied().enumerate() {
-            let xbase = (2 * xbase) as u16;
-            bitmap.set_pixel(xbase, y, 15 - (byte / 16));
-            bitmap.set_pixel(xbase + 1, y, 15 - (byte % 16));
-        }
-    }
-}
-
 // HACK: In theory, the color table could contain any arrangement
 // of colors. In practise, however, Macintosh color tables have
 // a white entry at the first index and a black entry at the last
@@ -183,7 +123,10 @@ fn convert_4bit_data(pixel_data: &[u8], bitmap: &mut BitmapFour) {
 pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
     let cursor = CCrsr::read_from(io::Cursor::new(data))?;
     let mut cur_file = CursorFile::new();
-    let cursor_mask = convert_mask_data(&cursor);
+
+    let mut cursor_mask = BitmapOne::new(16, 16);
+    cursor_mask.set_palette([RgbQuad::BLACK, RgbQuad::WHITE].iter().copied());
+    super::read_mask_bitmap_data(&mut cursor_mask, &cursor.crsrMask, 0);
 
     match cursor.pixelSize {
         2 => {
@@ -195,7 +138,7 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
                 .for_each(|(dst, src)| *dst = src.rgb.into());
             let mut bitmap = BitmapFour::new(16, 16);
             bitmap.set_palette(palette.iter().copied());
-            convert_2bit_data(&cursor.pixelData, &mut bitmap);
+            super::read_2bit_bitmap_data(&mut bitmap, &cursor.pixelData, 0);
             cur_file.add_entry(bitmap, cursor_mask.clone(), cursor.crsrHotSpot);
         }
         4 => {
@@ -207,15 +150,15 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
                 .for_each(|(dst, src)| *dst = src.rgb.into());
             let mut bitmap = BitmapFour::new(16, 16);
             bitmap.set_palette(palette.iter().copied());
-            convert_4bit_data(&cursor.pixelData, &mut bitmap);
+            super::read_4bit_bitmap_data(&mut bitmap, &cursor.pixelData, 0);
             cur_file.add_entry(bitmap, cursor_mask.clone(), cursor.crsrHotSpot);
         }
-        _ => panic!("'crsr': unsupported color depth ({})", cursor.cmpSize),
+        _ => panic!("'crsr': unsupported color depth ({})", cursor.pixelSize),
     }
 
     let mut mono_bits = BitmapOne::new(16, 16);
     mono_bits.set_palette([RgbQuad::BLACK, RgbQuad::WHITE].iter().copied());
-    convert_1bit_data(&cursor.crsr1Data, &mut mono_bits);
+    super::read_1bit_bitmap_data(&mut mono_bits, &cursor.crsr1Data, 0);
     cur_file.add_entry(mono_bits, cursor_mask, cursor.crsrHotSpot);
 
     cur_file.write_to(writer)

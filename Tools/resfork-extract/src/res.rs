@@ -1,6 +1,9 @@
 #![allow(dead_code)]
 #![allow(nonstandard_style)]
 
+use crate::bitmap::{
+    Bitmap, BitmapEight, BitmapFour, BitmapOne, BitmapSixteen, BitmapTwentyFour, RgbQuad,
+};
 use crate::mac_roman;
 use crate::utils::ReadExt;
 use std::io::{self, Read};
@@ -155,5 +158,134 @@ impl ColorTable {
             ctFlags,
             ctTable,
         })
+    }
+}
+
+// Everything that reads bitmap data in this converter reverses the palette
+// to conform to Windows conventions. In Windows, the lowest color palette
+// index is generally black, and the highest index is generally white. This
+// is the opposite of the Macintosh's conventions, where the lowest color
+// palette index is generally white, and the highest index is generally
+// black.
+//
+// To properly implement this palette reversal, the color indices in a
+// pixmap must also be tweaked to refer to the correct color. Where a pixel
+// was once index 0, it will be changed to index 255 (for an 8-bit pixmap).
+// For each pixmap depth, the color indices are converted as follows:
+//
+// * 1-bit pixmap: (1 - idx)
+// * 2-bit pixmap: (3 - idx)
+// * 4-bit pixmap: (15 - idx)
+// * 8-bit pixmap: (255 - idx)
+//
+// The reversal also works to convert the Macintosh OR masks into Windows
+// AND masks, for icons and cursors. This conveniently means that the same
+// function can be used to read both a monochrome image and mask for an
+// icon or cursor.
+
+pub fn read_1bit_bitmap_data(bitmap: &mut BitmapOne, data: &[u8], row_bytes: u16) {
+    let row_bytes = if row_bytes == 0 {
+        (bitmap.width() + 7) / 8
+    } else {
+        row_bytes
+    };
+    for (y, row) in data.chunks_exact(row_bytes.into()).enumerate() {
+        let y = y as u16;
+        for (x_base, packed) in row.iter().copied().enumerate() {
+            let x_base = 8 * x_base as u16;
+            bitmap.set_pixel(x_base, y, ((packed & 0x80) == 0).into());
+            bitmap.set_pixel(x_base + 1, y, ((packed & 0x40) == 0).into());
+            bitmap.set_pixel(x_base + 2, y, ((packed & 0x20) == 0).into());
+            bitmap.set_pixel(x_base + 3, y, ((packed & 0x10) == 0).into());
+            bitmap.set_pixel(x_base + 4, y, ((packed & 0x08) == 0).into());
+            bitmap.set_pixel(x_base + 5, y, ((packed & 0x04) == 0).into());
+            bitmap.set_pixel(x_base + 6, y, ((packed & 0x02) == 0).into());
+            bitmap.set_pixel(x_base + 7, y, ((packed & 0x01) == 0).into());
+        }
+    }
+}
+
+pub fn read_mask_bitmap_data(bitmap: &mut BitmapOne, data: &[u8], row_bytes: u16) {
+    read_1bit_bitmap_data(bitmap, data, row_bytes)
+}
+
+pub fn read_2bit_bitmap_data(bitmap: &mut BitmapFour, data: &[u8], row_bytes: u16) {
+    let row_bytes = if row_bytes == 0 {
+        (bitmap.width() + 3) / 4
+    } else {
+        row_bytes
+    };
+    for (y, row) in data.chunks_exact(row_bytes.into()).enumerate() {
+        let y = y as u16;
+        for (x_base, packed) in row.iter().copied().enumerate() {
+            let x_base = 4 * x_base as u16;
+            bitmap.set_pixel(x_base, y, 15 - (packed / 64 % 4));
+            bitmap.set_pixel(x_base + 1, y, 15 - (packed / 16 % 4));
+            bitmap.set_pixel(x_base + 2, y, 15 - (packed / 4 % 4));
+            bitmap.set_pixel(x_base + 3, y, 15 - (packed % 4));
+        }
+    }
+}
+
+pub fn read_4bit_bitmap_data(bitmap: &mut BitmapFour, data: &[u8], row_bytes: u16) {
+    let row_bytes = if row_bytes == 0 {
+        (bitmap.width() + 1) / 2
+    } else {
+        row_bytes
+    };
+    for (y, row) in data.chunks_exact(row_bytes.into()).enumerate() {
+        let y = y as u16;
+        for (x_base, packed) in row.iter().copied().enumerate() {
+            let x_base = 2 * x_base as u16;
+            bitmap.set_pixel(x_base, y, 15 - (packed / 16));
+            bitmap.set_pixel(x_base + 1, y, 15 - (packed % 16));
+        }
+    }
+}
+
+pub fn read_8bit_bitmap_data(bitmap: &mut BitmapEight, data: &[u8], row_bytes: u16) {
+    let row_bytes = if row_bytes == 0 {
+        bitmap.width()
+    } else {
+        row_bytes
+    };
+    for (y, row) in data.chunks_exact(row_bytes.into()).enumerate() {
+        let y = y as u16;
+        for (x, idx) in row.iter().copied().enumerate() {
+            let x = x as u16;
+            bitmap.set_pixel(x, y, 255 - idx);
+        }
+    }
+}
+
+pub fn read_16bit_bitmap_data(bitmap: &mut BitmapSixteen, data: &[u8], row_bytes: u16) {
+    let row_bytes = if row_bytes == 0 {
+        2 * bitmap.width()
+    } else {
+        row_bytes
+    };
+    for (y, row) in data.chunks_exact(row_bytes.into()).enumerate() {
+        for (x, pair) in row.chunks_exact(2).enumerate() {
+            let red = 8 * ((pair[0] & 0x7A) >> 2);
+            let green = 8 * (((pair[0] & 0x03) << 3) | ((pair[1] & 0xE0) >> 5));
+            let blue = 8 * (pair[1] & 0x1F);
+            bitmap.set_pixel(x as u16, y as u16, RgbQuad::new(red, green, blue));
+        }
+    }
+}
+
+pub fn read_32bit_bitmap_data(bitmap: &mut BitmapTwentyFour, data: &[u8], row_bytes: u16) {
+    let row_bytes = if row_bytes == 0 {
+        4 * bitmap.width()
+    } else {
+        row_bytes
+    };
+    for (y, row) in data.chunks_exact(row_bytes.into()).enumerate() {
+        for (x, quad) in row.chunks_exact(4).enumerate() {
+            let red = quad[1];
+            let green = quad[2];
+            let blue = quad[3];
+            bitmap.set_pixel(x as u16, y as u16, RgbQuad::new(red, green, blue));
+        }
     }
 }

@@ -413,73 +413,31 @@ fn unpack_words(packed: &[u8]) -> Option<Vec<u8>> {
 
 fn make_1bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapOne {
     let mut output = BitmapOne::new(pixmap.width(), pixmap.height());
-    let row_bytes = usize::from(pixmap.row_bytes());
-    for (y, row) in bits.chunks_exact(row_bytes).enumerate() {
-        let y = y as u16;
-        for (xbase, byte) in row.iter().copied().enumerate() {
-            let xbase = (8 * xbase) as u16;
-            output.set_pixel(xbase, y, ((byte & 0x80) == 0).into());
-            output.set_pixel(xbase + 1, y, ((byte & 0x40) == 0).into());
-            output.set_pixel(xbase + 2, y, ((byte & 0x20) == 0).into());
-            output.set_pixel(xbase + 3, y, ((byte & 0x10) == 0).into());
-            output.set_pixel(xbase + 4, y, ((byte & 0x08) == 0).into());
-            output.set_pixel(xbase + 5, y, ((byte & 0x04) == 0).into());
-            output.set_pixel(xbase + 6, y, ((byte & 0x02) == 0).into());
-            output.set_pixel(xbase + 7, y, ((byte & 0x01) == 0).into());
-        }
-    }
+    super::read_1bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
     output
 }
 
 fn make_4bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapFour {
     let mut output = BitmapFour::new(pixmap.width(), pixmap.height());
-    let row_bytes = usize::from(pixmap.row_bytes());
-    for (y, row) in bits.chunks_exact(row_bytes).enumerate() {
-        let y = y as u16;
-        for (xbase, byte) in row.iter().copied().enumerate() {
-            let xbase = (2 * xbase) as u16;
-            output.set_pixel(xbase, y, 15 - (byte / 16));
-            output.set_pixel(xbase + 1, y, 15 - (byte % 16));
-        }
-    }
+    super::read_4bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
     output
 }
 
 fn make_8bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapEight {
     let mut output = BitmapEight::new(pixmap.width(), pixmap.height());
-    let row_bytes = usize::from(pixmap.row_bytes());
-    for (y, row) in bits.chunks_exact(row_bytes).enumerate() {
-        for (x, byte) in row.iter().copied().enumerate() {
-            output.set_pixel(x as _, y as _, 255 - byte);
-        }
-    }
+    super::read_8bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
     output
 }
 
 fn make_16bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapSixteen {
     let mut output = BitmapSixteen::new(pixmap.width(), pixmap.height());
-    let row_bytes = usize::from(pixmap.row_bytes());
-    for (y, row) in bits.chunks_exact(row_bytes).enumerate() {
-        for (x, bytes) in row.chunks_exact(2).enumerate() {
-            let color = RgbQuad::new(
-                8 * ((bytes[0] & 0x7A) >> 2),
-                8 * (((bytes[0] & 0x03) << 3) | ((bytes[1] & 0xE0) >> 5)),
-                8 * (bytes[1] & 0x1F),
-            );
-            output.set_pixel(x as _, y as _, color);
-        }
-    }
+    super::read_16bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
     output
 }
 
 fn make_32bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapTwentyFour {
     let mut output = BitmapTwentyFour::new(pixmap.width(), pixmap.height());
-    let row_bytes = usize::from(pixmap.row_bytes());
-    for (y, row) in bits.chunks_exact(row_bytes).enumerate() {
-        for (x, bytes) in row.chunks_exact(4).enumerate() {
-            output.set_pixel(x as _, y as _, RgbQuad::new(bytes[1], bytes[2], bytes[3]));
-        }
-    }
+    super::read_32bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
     output
 }
 

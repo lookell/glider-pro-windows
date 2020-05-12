@@ -25,16 +25,7 @@ pub fn convert(data: &[u8]) -> io::Result<Vec<BitmapOne>> {
     for bits in pattern_list.list {
         let mut patt = BitmapOne::new(8, 8);
         patt.set_palette([RgbQuad::BLACK, RgbQuad::WHITE].iter().copied());
-        for (y, byte) in bits.iter().copied().enumerate() {
-            patt.set_pixel(0, y as _, ((byte & 0x80) == 0).into());
-            patt.set_pixel(1, y as _, ((byte & 0x40) == 0).into());
-            patt.set_pixel(2, y as _, ((byte & 0x20) == 0).into());
-            patt.set_pixel(3, y as _, ((byte & 0x10) == 0).into());
-            patt.set_pixel(4, y as _, ((byte & 0x08) == 0).into());
-            patt.set_pixel(5, y as _, ((byte & 0x04) == 0).into());
-            patt.set_pixel(6, y as _, ((byte & 0x02) == 0).into());
-            patt.set_pixel(7, y as _, ((byte & 0x01) == 0).into());
-        }
+        super::read_1bit_bitmap_data(&mut patt, &bits, 0);
         patterns.push(patt);
     }
     Ok(patterns)

@@ -133,21 +133,7 @@ impl ColorIcon {
 fn make_1bit_bitmap(bitmap: &BitMap, bits: &[u8]) -> BitmapOne {
     let mut output = BitmapOne::new(bitmap.width(), bitmap.height());
     output.set_palette([RgbQuad::BLACK, RgbQuad::WHITE].iter().copied());
-    let row_bytes = usize::from(bitmap.row_bytes());
-    for (y, row) in bits.chunks_exact(row_bytes).enumerate() {
-        let y = y as u16;
-        for (xbase, byte) in row.iter().copied().enumerate() {
-            let xbase = (8 * xbase) as u16;
-            output.set_pixel(xbase, y, ((byte & 0x80) == 0).into());
-            output.set_pixel(xbase + 1, y, ((byte & 0x40) == 0).into());
-            output.set_pixel(xbase + 2, y, ((byte & 0x20) == 0).into());
-            output.set_pixel(xbase + 3, y, ((byte & 0x10) == 0).into());
-            output.set_pixel(xbase + 4, y, ((byte & 0x08) == 0).into());
-            output.set_pixel(xbase + 5, y, ((byte & 0x04) == 0).into());
-            output.set_pixel(xbase + 6, y, ((byte & 0x02) == 0).into());
-            output.set_pixel(xbase + 7, y, ((byte & 0x01) == 0).into());
-        }
-    }
+    super::read_1bit_bitmap_data(&mut output, bits, bitmap.row_bytes());
     output
 }
 
@@ -160,28 +146,21 @@ fn make_1bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapOne {
     make_1bit_bitmap(&bitmap, bits)
 }
 
+fn make_2bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapFour {
+    let mut output = BitmapFour::new(pixmap.width(), pixmap.height());
+    super::read_2bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
+    output
+}
+
 fn make_4bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapFour {
     let mut output = BitmapFour::new(pixmap.width(), pixmap.height());
-    let row_bytes = usize::from(pixmap.row_bytes());
-    for (y, row) in bits.chunks_exact(row_bytes).enumerate() {
-        let y = y as u16;
-        for (xbase, byte) in row.iter().copied().enumerate() {
-            let xbase = (2 * xbase) as u16;
-            output.set_pixel(xbase, y, 15 - (byte / 16));
-            output.set_pixel(xbase + 1, y, 15 - (byte % 16));
-        }
-    }
+    super::read_4bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
     output
 }
 
 fn make_8bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapEight {
     let mut output = BitmapEight::new(pixmap.width(), pixmap.height());
-    let row_bytes = usize::from(pixmap.row_bytes());
-    for (y, row) in bits.chunks_exact(row_bytes).enumerate() {
-        for (x, byte) in row.iter().copied().enumerate() {
-            output.set_pixel(x as _, y as _, 255 - byte);
-        }
-    }
+    super::read_8bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
     output
 }
 
@@ -197,6 +176,17 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
         1 => {
             let mut image = make_1bit_pixmap(&icon.iconPMap, &icon.iconPMapData);
             let mut palette = vec![RgbQuad::BLACK; 2];
+            palette
+                .iter_mut()
+                .rev()
+                .zip(&icon.iconPMapCTab.ctTable)
+                .for_each(|(dst, src)| *dst = src.rgb.into());
+            image.set_palette(palette.into_iter());
+            ico_file.add_entry(image, mask);
+        }
+        2 => {
+            let mut image = make_2bit_pixmap(&icon.iconPMap, &icon.iconPMapData);
+            let mut palette = vec![RgbQuad::BLACK; 16];
             palette
                 .iter_mut()
                 .rev()

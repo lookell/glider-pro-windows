@@ -19,12 +19,7 @@ pub fn convert(data: &[u8]) -> io::Result<BitmapEight> {
 
     let mut data_bits = BitmapEight::new(16, 16);
     data_bits.set_palette(MAC_COLOR_8.iter().rev().map(|&c| c.into()));
-    for (y, row) in icon.data.chunks_exact(16).enumerate() {
-        for (x, byte) in row.iter().copied().enumerate() {
-            data_bits.set_pixel(x as _, y as _, 255 - byte);
-        }
-    }
-    let data_bits = data_bits;
+    super::read_8bit_bitmap_data(&mut data_bits, &icon.data, 0);
 
     Ok(data_bits)
 }
