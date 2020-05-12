@@ -22,6 +22,8 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::{self, BufReader, BufWriter, Cursor, ErrorKind, SeekFrom};
 use std::path::Path;
+use std::process;
+use std::sync::atomic::{AtomicUsize, Ordering};
 use zip::ZipWriter;
 
 pub type AnyResult<T> = Result<T, Box<dyn Error>>;
@@ -188,8 +190,18 @@ fn get_entry_name(res: &Resource) -> String {
     }
 }
 
+static EXIT_CODE: AtomicUsize = AtomicUsize::new(0);
+
+fn report_invalid_resource(resource: &Resource) {
+    EXIT_CODE.store(1, Ordering::SeqCst);
+    eprintln!(
+        "error: resource '{}' ({}) is invalid",
+        resource.restype, resource.id
+    );
+}
+
 fn convert_resource(resource: &Resource, mut writer: impl Write) -> io::Result<()> {
-    match resource.restype.as_bstr() {
+    let result = match resource.restype.as_bstr() {
         b"acur" => animated_cursor::convert(&resource.data, writer),
         b"ALRT" => alert::convert(&resource.data, writer),
         b"BNDL" => bundle::convert(&resource.data, writer),
@@ -206,34 +218,28 @@ fn convert_resource(resource: &Resource, mut writer: impl Write) -> io::Result<(
         b"DLOG" => dialog::convert(&resource.data, writer),
         b"FREF" => file_reference::convert(&resource.data, writer),
         b"ICON" => icon::convert(&resource.data, writer),
-        b"icl8" => {
-            let image = large_8bit_icon::convert(&resource.data)?;
+        b"icl8" => large_8bit_icon::convert(&resource.data).and_then(|image| {
             let mask = BitmapOne::new(32, 32);
             IconFile::new().add_entry(image, mask).write_to(writer)
-        }
-        b"icl4" => {
-            let image = large_4bit_icon::convert(&resource.data)?;
+        }),
+        b"icl4" => large_4bit_icon::convert(&resource.data).and_then(|image| {
             let mask = BitmapOne::new(32, 32);
             IconFile::new().add_entry(image, mask).write_to(writer)
-        }
-        b"ICN#" => {
-            let (image, mask) = icon_list::convert(&resource.data)?;
+        }),
+        b"ICN#" => icon_list::convert(&resource.data).and_then(|(image, mask)| {
             IconFile::new().add_entry(image, mask).write_to(writer)
-        }
-        b"ics8" => {
-            let image = small_8bit_icon::convert(&resource.data)?;
+        }),
+        b"ics8" => small_8bit_icon::convert(&resource.data).and_then(|image| {
             let mask = BitmapOne::new(16, 16);
             IconFile::new().add_entry(image, mask).write_to(writer)
-        }
-        b"ics4" => {
-            let image = small_4bit_icon::convert(&resource.data)?;
+        }),
+        b"ics4" => small_4bit_icon::convert(&resource.data).and_then(|image| {
             let mask = BitmapOne::new(16, 16);
             IconFile::new().add_entry(image, mask).write_to(writer)
-        }
-        b"ics#" => {
-            let (image, mask) = small_icon_list::convert(&resource.data)?;
+        }),
+        b"ics#" => small_icon_list::convert(&resource.data).and_then(|(image, mask)| {
             IconFile::new().add_entry(image, mask).write_to(writer)
-        }
+        }),
         b"mctb" => menu_color_table::convert(&resource.data, writer),
         b"MENU" => menu::convert(&resource.data, writer),
         b"PICT" => picture::convert(&resource.data, writer),
@@ -243,8 +249,13 @@ fn convert_resource(resource: &Resource, mut writer: impl Write) -> io::Result<(
         b"wctb" => window_color_table::convert(&resource.data, writer),
         b"WDEF" => writer.write_all(&resource.data),
         b"WIND" => window::convert(&resource.data, writer),
-        _ => Err(ErrorKind::InvalidData.into()),
+        // do not report the failure to convert unknown resources
+        _ => return Err(ErrorKind::InvalidData.into()),
+    };
+    if result.is_err() {
+        report_invalid_resource(resource);
     }
+    result
 }
 
 fn get_finder_icon_ids(resfork: &ResourceFork) -> Vec<i16> {
@@ -376,35 +387,40 @@ where
 {
     let mut finder_icons: HashMap<i16, FinderIconBitmaps> = HashMap::new();
     for resource in resfork.iter() {
+        let entry = finder_icons.entry(resource.id);
         match resource.restype.as_bstr() {
-            b"icl8" => {
-                let image = large_8bit_icon::convert(&resource.data)?;
-                finder_icons.entry(resource.id).or_default().large_8bit = Some(image);
-            }
-            b"icl4" => {
-                let image = large_4bit_icon::convert(&resource.data)?;
-                finder_icons.entry(resource.id).or_default().large_4bit = Some(image);
-            }
-            b"ICN#" => {
-                let (image, mask) = icon_list::convert(&resource.data)?;
-                let entry = finder_icons.entry(resource.id).or_default();
-                entry.large_1bit = Some(image);
-                entry.large_mask = mask;
-            }
-            b"ics8" => {
-                let image = small_8bit_icon::convert(&resource.data)?;
-                finder_icons.entry(resource.id).or_default().small_8bit = Some(image);
-            }
-            b"ics4" => {
-                let image = small_4bit_icon::convert(&resource.data)?;
-                finder_icons.entry(resource.id).or_default().small_4bit = Some(image);
-            }
-            b"ics#" => {
-                let (image, mask) = small_icon_list::convert(&resource.data)?;
-                let entry = finder_icons.entry(resource.id).or_default();
-                entry.small_1bit = Some(image);
-                entry.small_mask = mask;
-            }
+            b"icl8" => match large_8bit_icon::convert(&resource.data) {
+                Ok(image) => entry.or_default().large_8bit = Some(image),
+                Err(_) => report_invalid_resource(resource),
+            },
+            b"icl4" => match large_4bit_icon::convert(&resource.data) {
+                Ok(image) => entry.or_default().large_4bit = Some(image),
+                Err(_) => report_invalid_resource(resource),
+            },
+            b"ICN#" => match icon_list::convert(&resource.data) {
+                Ok((image, mask)) => {
+                    let entry = entry.or_default();
+                    entry.large_1bit = Some(image);
+                    entry.large_mask = mask;
+                }
+                Err(_) => report_invalid_resource(resource),
+            },
+            b"ics8" => match small_8bit_icon::convert(&resource.data) {
+                Ok(image) => entry.or_default().small_8bit = Some(image),
+                Err(_) => report_invalid_resource(resource),
+            },
+            b"ics4" => match small_4bit_icon::convert(&resource.data) {
+                Ok(image) => entry.or_default().small_4bit = Some(image),
+                Err(_) => report_invalid_resource(resource),
+            },
+            b"ics#" => match small_icon_list::convert(&resource.data) {
+                Ok((image, mask)) => {
+                    let entry = entry.or_default();
+                    entry.small_1bit = Some(image);
+                    entry.small_mask = mask;
+                }
+                Err(_) => report_invalid_resource(resource),
+            },
             _ => {}
         }
     }
@@ -463,7 +479,13 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
     }
 
     for resource in resfork.iter_type(b"PAT#") {
-        let patterns = pattern_list::convert(&resource.data)?;
+        let patterns = match pattern_list::convert(&resource.data) {
+            Ok(patterns) => patterns,
+            Err(_) => {
+                report_invalid_resource(resource);
+                continue;
+            }
+        };
         for (idx, patt) in patterns.into_iter().enumerate() {
             let entry_name = format!("PatternList/{}/{}.bmp", resource.id, idx);
             zipfile.start_file(entry_name, Default::default())?;
@@ -556,7 +578,7 @@ where
     convert_resfork(&resfork, output_file)
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn run() -> Result<(), Box<dyn Error>> {
     let mut args = env::args_os().skip(1);
     let command = args.next();
     match command.as_ref().and_then(|s| s.to_str()) {
@@ -568,6 +590,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         _ => invalid_cmdline(),
     }
     Ok(())
+}
+
+fn main() -> Result<(), Box<dyn Error>> {
+    run()?;
+    process::exit(EXIT_CODE.load(Ordering::SeqCst) as i32)
 }
 
 fn invalid_cmdline() {
