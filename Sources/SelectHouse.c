@@ -68,6 +68,7 @@ BOOL InitLoadDialog (HWND hDlg)
 	HICON		defaultIcon, loadedIcon;
 	INT			cxIcon, cyIcon;
 	LVITEM		lvItem;
+	LVFINDINFO	lvFindInfo;
 	HMODULE		houseResources;
 	HIMAGELIST	himl;
 	HRESULT		hr;
@@ -127,6 +128,19 @@ BOOL InitLoadDialog (HWND hDlg)
 			DestroyIcon(loadedIcon);
 	}
 	SendMessage(houseListView, WM_SETREDRAW, TRUE, 0);
+
+	// automatically select and focus the currently loaded house
+	lvFindInfo.flags = LVFI_PARAM;
+	lvFindInfo.lParam = thisHouseIndex;
+	i = ListView_FindItem(houseListView, -1, &lvFindInfo);
+	if (i < 0)
+	{
+		EndDialog(hDlg, IDCANCEL); // this shouldn't ever happen
+		return TRUE;
+	}
+	ListView_SetItemState(houseListView, i, LVIS_FOCUSED | LVIS_SELECTED, (UINT)-1);
+	ListView_EnsureVisible(houseListView, i, FALSE);
+
 	return TRUE;
 }
 #endif
