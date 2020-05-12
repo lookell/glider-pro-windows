@@ -8,4 +8,5 @@ publish = false
 zip = { version = "0.5", default-features = false, features = ["deflate", "time"] }
 
 [profile.release]
+opt-level = 2
 panic = "abort"
