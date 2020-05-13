@@ -18,29 +18,15 @@ use std::collections::{HashMap, HashSet};
 use std::env;
 use std::error::Error;
 use std::ffi::OsString;
-use std::fs::File;
+use std::fs::{self, File};
 use std::io::prelude::*;
-use std::io::{self, BufReader, BufWriter, Cursor, ErrorKind, SeekFrom};
+use std::io::{self, BufWriter, Cursor, ErrorKind};
 use std::path::Path;
 use std::process;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use zip::ZipWriter;
 
 pub type AnyResult<T> = Result<T, Box<dyn Error>>;
-
-fn extract_resource_bytes(mut reader: impl Read + Seek) -> io::Result<Vec<u8>> {
-    reader.seek(SeekFrom::Start(0))?;
-    if let Ok(Some(data)) = AppleDouble::read_from(&mut reader) {
-        return Ok(data.rsrc);
-    }
-    reader.seek(SeekFrom::Start(0))?;
-    if let Ok(Some(data)) = MacBinary::read_from(&mut reader) {
-        return Ok(data.rsrc);
-    }
-    reader.seek(SeekFrom::Start(0))?;
-    let mut bytes = Vec::new();
-    reader.read_to_end(&mut bytes).map(|_| bytes)
-}
 
 fn unprintable_to_period(b: u8) -> u8 {
     match b {
@@ -499,9 +485,21 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
 }
 
 fn parse_resfork<P: AsRef<Path>>(filename: P) -> io::Result<ResourceFork> {
-    let file_reader = BufReader::new(File::open(filename)?);
-    let rsrc_cursor = Cursor::new(extract_resource_bytes(file_reader)?);
-    ResourceFork::read_from(rsrc_cursor)
+    let file_bytes = fs::read(filename.as_ref())?;
+    if let Ok(Some(data)) = AppleDouble::read_from(Cursor::new(&file_bytes)) {
+        if let Ok(resfork) = ResourceFork::read_from(Cursor::new(&data.rsrc)) {
+            return Ok(resfork);
+        }
+    }
+    if let Ok(Some(data)) = MacBinary::read_from(Cursor::new(&file_bytes)) {
+        if let Ok(resfork) = ResourceFork::read_from(Cursor::new(&data.rsrc)) {
+            return Ok(resfork);
+        }
+    }
+    if let Ok(resfork) = ResourceFork::read_from(Cursor::new(&file_bytes)) {
+        return Ok(resfork);
+    }
+    Err(ErrorKind::InvalidData.into())
 }
 
 fn do_derez_command<I>(args: I) -> Result<(), Box<dyn Error>>
