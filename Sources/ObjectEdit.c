@@ -801,11 +801,8 @@ void DoNewObjectClick (Point where)
 
 void AddObjectPairing (void)
 {
-	return;
-#if 0
 	roomType	*testRoomPtr;
-	short		roomNum, emptySlot;
-	char		wasState;
+	SInt16		roomNum, emptySlot;
 	Str255		message;
 
 	if (thisRoom->objects[objActive].what == kDoorInRt)
@@ -816,9 +813,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorExLf)))
 			{
-				wasState = HGetState((Handle)thisHouse);
-				HLock((Handle)thisHouse);
-				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
+				testRoomPtr = &(thisHouse->rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kDoorExLf;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kDoorExLfLeft;
@@ -829,14 +824,13 @@ void AddObjectPairing (void)
 				testRoomPtr->objects[emptySlot].data.d.wide = 0;
 
 				testRoomPtr->numObjects++;
-				HSetState((Handle)thisHouse, wasState);
 
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
-				ForeColor(blueColor);
+				SetMessageTextColor(blueColor);
 				GetLocalizedString(46, message);
 				SetMessageWindowMessage(message);
-				ForeColor(blackColor);
+				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -850,9 +844,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorExRt)))
 			{
-				wasState = HGetState((Handle)thisHouse);
-				HLock((Handle)thisHouse);
-				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
+				testRoomPtr = &(thisHouse->rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kDoorExRt;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kDoorExRtLeft;
@@ -864,14 +856,12 @@ void AddObjectPairing (void)
 
 				testRoomPtr->numObjects++;
 
-				HSetState((Handle)thisHouse, wasState);
-
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
-				ForeColor(blueColor);
+				SetMessageTextColor(blueColor);
 				GetLocalizedString(46, message);
 				SetMessageWindowMessage(message);
-				ForeColor(blackColor);
+				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -885,9 +875,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorInLfLeft)))
 			{
-				wasState = HGetState((Handle)thisHouse);
-				HLock((Handle)thisHouse);
-				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
+				testRoomPtr = &(thisHouse->rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kDoorInLf;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kDoorInLfLeft;
@@ -899,14 +887,12 @@ void AddObjectPairing (void)
 
 				testRoomPtr->numObjects++;
 
-				HSetState((Handle)thisHouse, wasState);
-
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
-				ForeColor(blueColor);
+				SetMessageTextColor(blueColor);
 				GetLocalizedString(47, message);
 				SetMessageWindowMessage(message);
-				ForeColor(blackColor);
+				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -920,9 +906,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorInRtLeft)))
 			{
-				wasState = HGetState((Handle)thisHouse);
-				HLock((Handle)thisHouse);
-				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
+				testRoomPtr = &(thisHouse->rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kDoorInRt;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kDoorInRtLeft;
@@ -934,14 +918,12 @@ void AddObjectPairing (void)
 
 				testRoomPtr->numObjects++;
 
-				HSetState((Handle)thisHouse, wasState);
-
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
-				ForeColor(blueColor);
+				SetMessageTextColor(blueColor);
 				GetLocalizedString(47, message);
 				SetMessageWindowMessage(message);
-				ForeColor(blackColor);
+				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -955,9 +937,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowExRt)))
 			{
-				wasState = HGetState((Handle)thisHouse);
-				HLock((Handle)thisHouse);
-				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
+				testRoomPtr = &(thisHouse->rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kWindowExRt;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kWindowExRtLeft;
@@ -969,14 +949,12 @@ void AddObjectPairing (void)
 
 				testRoomPtr->numObjects++;
 
-				HSetState((Handle)thisHouse, wasState);
-
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
-				ForeColor(blueColor);
+				SetMessageTextColor(blueColor);
 				GetLocalizedString(48, message);
 				SetMessageWindowMessage(message);
-				ForeColor(blackColor);
+				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -990,9 +968,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowExLf)))
 			{
-				wasState = HGetState((Handle)thisHouse);
-				HLock((Handle)thisHouse);
-				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
+				testRoomPtr = &(thisHouse->rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kWindowExLf;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kWindowExLfLeft;
@@ -1004,14 +980,12 @@ void AddObjectPairing (void)
 
 				testRoomPtr->numObjects++;
 
-				HSetState((Handle)thisHouse, wasState);
-
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
-				ForeColor(blueColor);
+				SetMessageTextColor(blueColor);
 				GetLocalizedString(48, message);
 				SetMessageWindowMessage(message);
-				ForeColor(blackColor);
+				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -1025,9 +999,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowInLf)))
 			{
-				wasState = HGetState((Handle)thisHouse);
-				HLock((Handle)thisHouse);
-				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
+				testRoomPtr = &(thisHouse->rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kWindowInLf;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kWindowInLfLeft;
@@ -1039,14 +1011,12 @@ void AddObjectPairing (void)
 
 				testRoomPtr->numObjects++;
 
-				HSetState((Handle)thisHouse, wasState);
-
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
-				ForeColor(blueColor);
+				SetMessageTextColor(blueColor);
 				GetLocalizedString(49, message);
 				SetMessageWindowMessage(message);
-				ForeColor(blackColor);
+				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -1060,9 +1030,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowInRt)))
 			{
-				wasState = HGetState((Handle)thisHouse);
-				HLock((Handle)thisHouse);
-				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
+				testRoomPtr = &(thisHouse->rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kWindowInRt;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kWindowInRtLeft;
@@ -1074,14 +1042,12 @@ void AddObjectPairing (void)
 
 				testRoomPtr->numObjects++;
 
-				HSetState((Handle)thisHouse, wasState);
-
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
-				ForeColor(blueColor);
+				SetMessageTextColor(blueColor);
 				GetLocalizedString(49, message);
 				SetMessageWindowMessage(message);
-				ForeColor(blackColor);
+				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -1095,9 +1061,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDownStairs)))
 			{
-				wasState = HGetState((Handle)thisHouse);
-				HLock((Handle)thisHouse);
-				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
+				testRoomPtr = &(thisHouse->rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kDownStairs;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h =
@@ -1110,14 +1074,12 @@ void AddObjectPairing (void)
 
 				testRoomPtr->numObjects++;
 
-				HSetState((Handle)thisHouse, wasState);
-
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
-				ForeColor(blueColor);
+				SetMessageTextColor(blueColor);
 				GetLocalizedString(50, message);
 				SetMessageWindowMessage(message);
-				ForeColor(blackColor);
+				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -1131,9 +1093,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kUpStairs)))
 			{
-				wasState = HGetState((Handle)thisHouse);
-				HLock((Handle)thisHouse);
-				testRoomPtr = &((*thisHouse)->rooms[roomNum]);
+				testRoomPtr = &(thisHouse->rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kUpStairs;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h =
@@ -1146,20 +1106,17 @@ void AddObjectPairing (void)
 
 				testRoomPtr->numObjects++;
 
-				HSetState((Handle)thisHouse, wasState);
-
 				GetLocalizedString(45, message);
 				OpenMessageWindow(message);
-				ForeColor(blueColor);
+				SetMessageTextColor(blueColor);
 				GetLocalizedString(51, message);
 				SetMessageWindowMessage(message);
-				ForeColor(blackColor);
+				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DeleteObject
