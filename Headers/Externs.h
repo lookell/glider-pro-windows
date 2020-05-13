@@ -391,6 +391,7 @@ void GetLocalWindowRect (HWND, Rect *);
 //Boolean	IsWindowFloating (WindowPtr);
 void OpenMessageWindow (StringPtr);
 void SetMessageWindowMessage (StringPtr);
+void SetMessageTextColor (COLORREF);
 void CloseMessageWindow (void);
 void CloseThisWindow (HWND *);
 

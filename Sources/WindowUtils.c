@@ -159,6 +159,17 @@ void SetMessageWindowMessage (StringPtr message)
 	#endif
 }
 
+//--------------------------------------------------------------  SetMessageWindowColor
+
+// For the above message window, this function sets the color of the message
+// text displayed within the window. (This was originally done by calling the
+// QuickDraw function ForeColor before calling SetMessageWindowMessage.)
+
+void SetMessageTextColor (COLORREF textColor)
+{
+	// TODO: implement this
+}
+
 //--------------------------------------------------------------  CloseMessageWindow
 
 // Closes the previously referred to "message window".
