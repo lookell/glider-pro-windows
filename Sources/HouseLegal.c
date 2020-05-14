@@ -645,43 +645,34 @@ void ValidateNumberOfRooms (void)
 
 void CheckDuplicateFloorSuite (void)
 {
-	return;
-#if 0
 	#define		kRoomsTimesSuites	8192
-	short		i, numRooms, bitPlace;
+	SInt16		i, numRooms, bitPlace;
 	char		*pidgeonHoles;
-	char		wasState;
 
-	pidgeonHoles = (char *)NewPtrClear(sizeof(char) * kRoomsTimesSuites);
-	if (pidgeonHoles == nil)
+	pidgeonHoles = calloc(kRoomsTimesSuites, sizeof(*pidgeonHoles));
+	if (pidgeonHoles == NULL)
 		return;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-
-	numRooms = (*thisHouse)->nRooms;
+	numRooms = thisHouse->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if ((*thisHouse)->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
 		{
-			bitPlace = (((*thisHouse)->rooms[i].floor + 7) * 128) +
-					(*thisHouse)->rooms[i].suite;
+			bitPlace = ((thisHouse->rooms[i].floor + 7) * 128) +
+					thisHouse->rooms[i].suite;
 			if ((bitPlace < 0) || (bitPlace >= 8192))
-				DebugStr("\pBlew array");
+				OutputDebugString(L"Blew array\n");
 			if (pidgeonHoles[bitPlace] != 0)
 			{
 				houseErrors++;
-				(*thisHouse)->rooms[i].suite = kRoomIsEmpty;
+				thisHouse->rooms[i].suite = kRoomIsEmpty;
 			}
 			else
 				pidgeonHoles[bitPlace]++;
 		}
 	}
 
-	HSetState((Handle)thisHouse, wasState);
-
-	DisposePtr((Ptr)pidgeonHoles);
-#endif
+	free(pidgeonHoles);
 }
 
 //--------------------------------------------------------------  CompressHouse
@@ -736,22 +727,17 @@ void CompressHouse (void)
 
 void LopOffExtraRooms (void)
 {
-	return;
-#if 0
-	long		newSize;
-	short		r, count;
-	char		wasState;
+	size_t		newSize;
+	SInt32		r, count;
 	Str255		message;
-
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
+	roomPtr		newRoomsPtr;
 
 	count = 0;
-	r = (*thisHouse)->nRooms;		// begin at last room
+	r = thisHouse->nRooms;			// begin at last room
 	do
 	{
 		r--;						// look for trailing empties
-		if ((*thisHouse)->rooms[r].suite == kRoomIsEmpty)
+		if (thisHouse->rooms[r].suite == kRoomIsEmpty)
 			count++;
 		else
 			r = 0;
@@ -760,22 +746,24 @@ void LopOffExtraRooms (void)
 
 	if (count > 0)					// if there were trailing empties…
 	{
-		r = (*thisHouse)->nRooms - count;
-		newSize = sizeof(houseType) + (sizeof(roomType) * (long)r);
-		HUnlock((Handle)thisHouse);	// resize house handle (shrink)
-		SetHandleSize((Handle)thisHouse, newSize);
-		if (MemError() != noErr)	// problem?
+		r = thisHouse->nRooms - count;
+		newSize = sizeof(roomType) * (size_t)r;
+									// resize room array (shrink)
+		newRoomsPtr = realloc(thisHouse->rooms, newSize);
+		if (newRoomsPtr == NULL)	// problem?
 		{
-			ForeColor(redColor);
+			SetMessageTextColor(redColor);
 			GetLocalizedString(16, message);
 			SetMessageWindowMessage(message);
 		}
-		HLock((Handle)thisHouse);	// reflect new room count
-		(*thisHouse)->nRooms -= count;
-		numberRooms = (*thisHouse)->nRooms;
+		else
+		{
+			thisHouse->rooms = newRoomsPtr;
+		}
+									// reflect new room count
+		thisHouse->nRooms -= count;
+		numberRooms = thisHouse->nRooms;
 	}
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 
 //--------------------------------------------------------------  ValidateRoomNumbers
@@ -784,50 +772,41 @@ void LopOffExtraRooms (void)
 
 void ValidateRoomNumbers (void)
 {
-	return;
-#if 0
-	short		i, numRooms;
-	char		wasState;
+	SInt16		i, numRooms;
 	Str255		message;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-
-	numRooms = (*thisHouse)->nRooms;
+	numRooms = thisHouse->nRooms;
 	if (numRooms < 0)
 	{
-		(*thisHouse)->nRooms = 0;
+		thisHouse->nRooms = 0;
 		numRooms = 0;
 	}
 	for (i = 0; i < numRooms; i++)
 	{
-		if ((*thisHouse)->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
 		{
-			if (((*thisHouse)->rooms[i].floor > 56) ||
-					((*thisHouse)->rooms[i].floor < -7))
+			if ((thisHouse->rooms[i].floor > 56) ||
+					(thisHouse->rooms[i].floor < -7))
 			{
-				(*thisHouse)->rooms[i].suite = kRoomIsEmpty;
-				ForeColor(redColor);
+				thisHouse->rooms[i].suite = kRoomIsEmpty;
+				SetMessageTextColor(redColor);
 				GetLocalizedString(17, message);
 				SetMessageWindowMessage(message);
 				houseErrors++;
-				ForeColor(blackColor);
+				//SetMessageTextColor(blackColor); // TODO: remove; not needed any more
 			}
-			if (((*thisHouse)->rooms[i].suite >= 128) ||
-					((*thisHouse)->rooms[i].suite < 0))
+			if ((thisHouse->rooms[i].suite >= 128) ||
+					(thisHouse->rooms[i].suite < 0))
 			{
-				(*thisHouse)->rooms[i].suite = kRoomIsEmpty;
-				ForeColor(redColor);
+				thisHouse->rooms[i].suite = kRoomIsEmpty;
+				SetMessageTextColor(redColor);
 				GetLocalizedString(18, message);
 				SetMessageWindowMessage(message);
 				houseErrors++;
-				ForeColor(blackColor);
+				//SetMessageTextColor(blackColor); // TODO: remove; not needed any more
 			}
 		}
 	}
-
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 
 //--------------------------------------------------------------  CountUntitledRooms
@@ -836,24 +815,18 @@ void ValidateRoomNumbers (void)
 
 void CountUntitledRooms (void)
 {
-	return;
-#if 0
-	short		i, numRooms;
-	char		wasState;
+	SInt16		i, numRooms;
+	Str255		untitledRoomStr;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
+	PasStringCopyC("Untitled Room", untitledRoomStr);
 
-	numRooms = (*thisHouse)->nRooms;
+	numRooms = thisHouse->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (((*thisHouse)->rooms[i].suite != kRoomIsEmpty) &&
-				(EqualString((*thisHouse)->rooms[i].name, "\pUntitled Room", false, true)))
+		if ((thisHouse->rooms[i].suite != kRoomIsEmpty) &&
+				(Mac_EqualString(thisHouse->rooms[i].name, untitledRoomStr, false)))
 			houseErrors++;
 	}
-
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 
 //--------------------------------------------------------------  CheckRoomNameLength
@@ -912,19 +885,13 @@ void MakeSureNumObjectsJives (void)
 
 void KeepAllObjectsLegal (void)
 {
-	return;
-#if 0
-	short		i, h, numRooms;
-	char		wasState;
+	SInt16		i, h, numRooms;
 	Str255		message;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-
-	numRooms = (*thisHouse)->nRooms;
+	numRooms = thisHouse->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if ((*thisHouse)->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
 		{
 			ForceThisRoom(i);
 			for (h = 0; h < kMaxRoomObs; h++)
@@ -934,11 +901,11 @@ void KeepAllObjectsLegal (void)
 				{
 					if (!KeepObjectLegal())
 					{
-						ForeColor(redColor);
+						SetMessageTextColor(redColor);
 						GetLocalizedString(19, message);
 						SetMessageWindowMessage(message);
 						houseErrors++;
-						ForeColor(blackColor);
+						//SetMessageTextColor(blackColor); // TODO: remove; not needed any more
 						DelayTicks(60);
 					}
 				}
@@ -946,9 +913,6 @@ void KeepAllObjectsLegal (void)
 			CopyThisRoomToRoom();
 		}
 	}
-
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 
 //--------------------------------------------------------------  CheckForStaircasePairs
@@ -957,33 +921,27 @@ void KeepAllObjectsLegal (void)
 
 void CheckForStaircasePairs (void)
 {
-	return;
-#if 0
-	short		i, h, g, numRooms, neighbor;
-	char		wasState;
+	SInt16		i, h, g, numRooms, neighbor;
 	Boolean		hasStairs;
 	Str255		message;
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-
-	numRooms = (*thisHouse)->nRooms;
+	numRooms = thisHouse->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if ((*thisHouse)->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
 		{
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				if ((*thisHouse)->rooms[i].objects[h].what == kUpStairs)
+				if (thisHouse->rooms[i].objects[h].what == kUpStairs)
 				{
 					thisRoomNumber = i;
 					neighbor = GetNeighborRoomNumber(kNorthRoom);
 					if (neighbor == kRoomIsEmpty)
 					{
-						ForeColor(redColor);
+						SetMessageTextColor(redColor);
 						GetLocalizedString(20, message);
 						SetMessageWindowMessage(message);
-						ForeColor(blackColor);
+						//SetMessageTextColor(blackColor); // TODO: remove; not needed
 						DelayTicks(60);
 					}
 					else
@@ -991,30 +949,29 @@ void CheckForStaircasePairs (void)
 						hasStairs = false;
 						for (g = 0; g < kMaxRoomObs; g++)
 						{
-							if ((*thisHouse)->rooms[neighbor].objects[g].what ==
-									kDownStairs)
+							if (thisHouse->rooms[neighbor].objects[g].what == kDownStairs)
 								hasStairs = true;
 						}
 						if (!hasStairs)
 						{
-							ForeColor(redColor);
+							SetMessageTextColor(redColor);
 							GetLocalizedString(21, message);
 							SetMessageWindowMessage(message);
-							ForeColor(blackColor);
+							//SetMessageTextColor(blackColor); // TODO: remove; not needed
 							DelayTicks(60);
 						}
 					}
 				}
-				else if ((*thisHouse)->rooms[i].objects[h].what == kDownStairs)
+				else if (thisHouse->rooms[i].objects[h].what == kDownStairs)
 				{
 					thisRoomNumber = i;
 					neighbor = GetNeighborRoomNumber(kSouthRoom);
 					if (neighbor == kRoomIsEmpty)
 					{
-						ForeColor(redColor);
+						SetMessageTextColor(redColor);
 						GetLocalizedString(22, message);
 						SetMessageWindowMessage(message);
-						ForeColor(blackColor);
+						//SetMessageTextColor(blackColor); // TODO: remove; not needed
 						DelayTicks(60);
 					}
 					else
@@ -1022,16 +979,15 @@ void CheckForStaircasePairs (void)
 						hasStairs = false;
 						for (g = 0; g < kMaxRoomObs; g++)
 						{
-							if ((*thisHouse)->rooms[neighbor].objects[g].what ==
-									kUpStairs)
+							if (thisHouse->rooms[neighbor].objects[g].what == kUpStairs)
 								hasStairs = true;
 						}
 						if (!hasStairs)
 						{
-							ForeColor(redColor);
+							SetMessageTextColor(redColor);
 							GetLocalizedString(23, message);
 							SetMessageWindowMessage(message);
-							ForeColor(blackColor);
+							//SetMessageTextColor(blackColor); // TODO: remove; not needed
 							DelayTicks(60);
 						}
 					}
@@ -1039,9 +995,6 @@ void CheckForStaircasePairs (void)
 			}
 		}
 	}
-
-	HSetState((Handle)thisHouse, wasState);
-#endif
 }
 #endif
 
@@ -1051,11 +1004,9 @@ void CheckForStaircasePairs (void)
 
 void CheckHouseForProblems (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
 	Str255		message, message2;
-	short		wasActive;
+	SInt16		wasActive;
 
 	houseErrors = 0;
 	CopyThisRoomToRoom();
@@ -1091,12 +1042,12 @@ void CheckHouseForProblems (void)
 		CheckDuplicateFloorSuite();
 		if (houseErrors != 0)
 		{
-			NumToString((long)houseErrors, message);
+			Mac_NumToString((SInt32)houseErrors, message);
 			GetLocalizedString(28, message2);
 			PasStringConcat(message, message2);
-			ForeColor(redColor);
+			SetMessageTextColor(redColor);
 			SetMessageWindowMessage(message);
-			ForeColor(blackColor);
+			//SetMessageTextColor(blackColor); // TODO: remove; not needed any more
 			DelayTicks(45);
 		}
 	}
@@ -1112,12 +1063,12 @@ void CheckHouseForProblems (void)
 		ValidateRoomNumbers();
 		if (houseErrors != 0)
 		{
-			NumToString((long)houseErrors, message);
+			Mac_NumToString((SInt32)houseErrors, message);
 			GetLocalizedString(29, message2);
 			PasStringConcat(message, message2);
-			ForeColor(redColor);
+			SetMessageTextColor(redColor);
 			SetMessageWindowMessage(message);
-			ForeColor(blackColor);
+			//SetMessageTextColor(blackColor); // TODO: remove; not needed any more
 			DelayTicks(60);
 		}
 	}
@@ -1129,12 +1080,12 @@ void CheckHouseForProblems (void)
 		CountUntitledRooms();
 		if (houseErrors != 0)
 		{
-			NumToString((long)houseErrors, message);
+			Mac_NumToString((SInt32)houseErrors, message);
 			GetLocalizedString(30, message2);
 			PasStringConcat(message, message2);
-			ForeColor(blueColor);
+			SetMessageTextColor(blueColor);
 			SetMessageWindowMessage(message);
-			ForeColor(blackColor);
+			//SetMessageTextColor(blackColor); // TODO: remove; not needed any more
 			DelayTicks(45);
 		}
 	}
@@ -1146,12 +1097,12 @@ void CheckHouseForProblems (void)
 		CheckRoomNameLength();
 		if (houseErrors != 0)
 		{
-			NumToString((long)houseErrors, message);
+			Mac_NumToString((SInt32)houseErrors, message);
 			GetLocalizedString(31, message2);
 			PasStringConcat(message, message2);
-			ForeColor(blueColor);
+			SetMessageTextColor(blueColor);
 			SetMessageWindowMessage(message);
-			ForeColor(blackColor);
+			//SetMessageTextColor(blackColor); // TODO: remove; not needed
 			DelayTicks(45);
 		}
 	}
@@ -1163,12 +1114,12 @@ void CheckHouseForProblems (void)
 		MakeSureNumObjectsJives();
 		if (houseErrors != 0)
 		{
-			NumToString((long)houseErrors, message);
+			Mac_NumToString((SInt32)houseErrors, message);
 			GetLocalizedString(32, message2);
 			PasStringConcat(message, message2);
-			ForeColor(redColor);
+			SetMessageTextColor(redColor);
 			SetMessageWindowMessage(message);
-			ForeColor(blackColor);
+			//SetMessageTextColor(blackColor); // TODO: remove; not needed
 			DelayTicks(60);
 		}
 	}
@@ -1182,12 +1133,12 @@ void CheckHouseForProblems (void)
 		KeepAllObjectsLegal();
 		if (houseErrors != 0)
 		{
-			NumToString((long)houseErrors, message);
+			Mac_NumToString((SInt32)houseErrors, message);
 			GetLocalizedString(34, message2);
 			PasStringConcat(message, message2);
-			ForeColor(redColor);
+			SetMessageTextColor(redColor);
 			SetMessageWindowMessage(message);
-			ForeColor(blackColor);
+			//SetMessageTextColor(blackColor); // TODO: remove; not needed
 			DelayTicks(60);
 		}
 	}
@@ -1204,19 +1155,18 @@ void CheckHouseForProblems (void)
 		SpinCursor(3);
 		if (CountStarsInHouse() < 1)
 		{
-			ForeColor(redColor);
+			SetMessageTextColor(redColor);
 			GetLocalizedString(35, message);
 			SetMessageWindowMessage(message);
-			ForeColor(blackColor);
+			//SetMessageTextColor(blackColor); // TODO: remove when new implementation is in
 			DelayTicks(60);
 		}
 	}
 
-	InitCursor();
+	//InitCursor();
 	CloseMessageWindow();
 	ForceThisRoom(wasRoom);
 	objActive = wasActive;
-#endif
 #endif
 }
 
