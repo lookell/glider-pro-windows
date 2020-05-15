@@ -62,7 +62,7 @@ void HandleVCR (SInt16);
 void HandleStereo (SInt16);
 void HandleMicrowave (SInt16);
 
-void HandleBalloon (SInt16);								// --- Dynamics2.c
+void HandleBalloon (SInt16);							// --- Dynamics2.c
 void HandleCopter (SInt16);
 void HandleDart (SInt16);
 void HandleBall (SInt16);
@@ -242,7 +242,7 @@ SInt16 FindObjectSlotInRoom (SInt16);
 Boolean DoesRoomNumHaveObject (SInt16, SInt16);
 void ShoutNoMoreObjects (void);
 
-void DrawSimpleBlowers (SInt16, Rect *);					// --- ObjectDraw.c
+void DrawSimpleBlowers (SInt16, Rect *);				// --- ObjectDraw.c
 void DrawTiki (Rect *, SInt16);
 void DrawInvisibleBlower (Rect *);
 void DrawLiftArea (Rect *);
@@ -335,7 +335,7 @@ void OffsetRectRoomRelative (Rect *, SInt16);
 SInt16 GetUpStairsRightEdge (void);
 SInt16 GetDownStairsLeftEdge (void);
 
-SInt16 GetRoomLinked (objectType *);						// --- Objects.c
+SInt16 GetRoomLinked (objectType *);					// --- Objects.c
 Boolean ObjectIsLinkTransport (objectType *);
 Boolean ObjectIsLinkSwitch (objectType *);
 void ListAllLocalObjects (void);
@@ -424,7 +424,7 @@ void SaveGame2 (void);									// --- SavedGames.c
 Boolean OpenSavedGame (void);
 void SaveGame (Boolean);
 
-void RefreshScoreboard (SInt16);							// --- Scoreboard.c
+void RefreshScoreboard (SInt16);						// --- Scoreboard.c
 void HandleDynamicScoreboard (void);
 void QuickGlidersRefresh (void);
 void QuickScoreRefresh (void);
@@ -449,11 +449,8 @@ void AddExtraHouse (houseSpec *);
 
 void DoSettingsMain (void);								// --- Settings.c
 
-void PlayPrioritySound (SInt16, SInt16);					// --- Sound.c
+void PlayPrioritySound (SInt16, SInt16);				// --- Sound.c
 void FlushAnyTriggerPlaying (void);
-void PlaySound0 (SInt16, SInt16);
-void PlaySound1 (SInt16, SInt16);
-void PlaySound2 (SInt16, SInt16);
 OSErr LoadTriggerSound (SInt16);
 void DumpTriggerSound (void);
 void InitSound (void);
@@ -488,7 +485,7 @@ void NextToolMode (void);
 void PrevToolMode (void);
 void SetSpecificToolMode (SInt16);
 
-SInt16 WhatAreWeLinkedTo (SInt16, Byte);					// --- Transit.c
+SInt16 WhatAreWeLinkedTo (SInt16, Byte);				// --- Transit.c
 void ReadyGliderFromTransit (gliderPtr, SInt16);
 void MoveRoomToRoom (gliderPtr, SInt16);
 void TransportRoomToRoom (gliderPtr);
@@ -505,7 +502,7 @@ void DissBitsChunky (Rect *);
 //void FillColorNoise (Rect *);
 //void FillSnow (Rect *);
 
-void ToggleToaster (SInt16);								// --- Trip.c
+void ToggleToaster (SInt16);							// --- Trip.c
 void ToggleMacPlus (SInt16);
 void ToggleTV (SInt16);
 void ToggleCoffee (SInt16);

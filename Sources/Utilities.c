@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include "Macintosh.h"
 #include "WinAPI.h"
+
+#include "Audio.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "RectUtils.h"
@@ -854,56 +856,36 @@ void DelayTicks (SInt32 howLong)
 
 void UnivGetSoundVolume (SInt16 *volume, Boolean hasSM3)
 {
-	*volume = 0;
-	return;
-#if 0
-#pragma unused (hasSM3)
-	long		longVol;
-	OSErr		theErr;
+	float deviceVolume;
 
-//	if (hasSM3)
-//	{
-		theErr = GetDefaultOutputVolume(&longVol);
-		*volume = LoWord(longVol) / 0x0024;
-//	}
-//	else
-//		GetSoundVol(volume);
+	UNREFERENCED_PARAMETER(hasSM3);
+
+	Audio_GetMasterVolume(&deviceVolume);
+	*volume = (SInt16)(7.0f * deviceVolume);
 
 	if (*volume > 7)
 		*volume = 7;
 	else if (*volume < 0)
 		*volume = 0;
-#endif
 }
 
 //--------------------------------------------------------------  UnivSetSoundVolume
 // Sets the speaker volume to a specified value (in the range of…
 // zero to seven (handles Sound Manager 3 case as well).
 
-void  UnivSetSoundVolume (SInt16 volume, Boolean hasSM3)
+void UnivSetSoundVolume (SInt16 volume, Boolean hasSM3)
 {
-	return;
-#if 0
-#pragma unused (hasSM3)
-	long		longVol;
-	OSErr		theErr;
+	float deviceVolume;
+
+	UNREFERENCED_PARAMETER(hasSM3);
 
 	if (volume > 7)
 		volume = 7;
 	else if (volume < 0)
 		volume = 0;
 
-//	if (hasSM3)
-//	{
-		longVol = (long)volume * 0x0025;
-		if (longVol > 0x00000100)
-			longVol = 0x00000100;
-		longVol = longVol + (longVol << 16);
-		theErr = SetDefaultOutputVolume(longVol);
-//	}
-//	else
-//		SetSoundVol(volume);
-#endif
+	deviceVolume = (float)volume / 7.0f;
+	Audio_SetMasterVolume(deviceVolume);
 }
 
 //-----------------------------------------------------------------  GetDataFolderPath

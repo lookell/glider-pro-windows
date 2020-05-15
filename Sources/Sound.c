@@ -17,25 +17,30 @@
 
 #define kBaseBufferSoundID			1000
 #define kMaxSounds					64
+#define kNumSoundChannels			3
 #define kNoSoundPlaying				-1
 
 
-void CallBack0 (SndChannelPtr, SndCommand *);
-void CallBack1 (SndChannelPtr, SndCommand *);
-void CallBack2 (SndChannelPtr, SndCommand *);
+typedef struct StaticSound {
+	LPDIRECTSOUNDBUFFER8 dsBuffer;
+	WaveData wave;
+} StaticSound;
+
+
+void Gp_PlaySound(SInt16, SInt16, SInt16);
+void UpdateSoundState (SInt16);
+void FlushCurrentSound (SInt16);
 OSErr LoadBufferSounds (void);
 void DumpBufferSounds (void);
-OSErr OpenSoundChannels (void);
-OSErr CloseSoundChannels (void);
+LPDIRECTSOUNDBUFFER8 LoadStaticBuffer (SInt16);
+void RestoreStaticBuffer (SInt16, LPDIRECTSOUNDBUFFER8);
 
 
-SndCallBackUPP		callBack0UPP, callBack1UPP, callBack2UPP;
-SndChannelPtr		channel0, channel1, channel2;
-WaveData			theSoundData[kMaxSounds];
-SInt16				numSoundsLoaded, priority0, priority1, priority2;
-SInt16				soundPlaying0, soundPlaying1, soundPlaying2;
-Boolean				soundLoaded[kMaxSounds], dontLoadSounds;
-Boolean				channelOpen, isSoundOn, failedSound;
+StaticSound				theSoundData[kMaxSounds];
+Boolean					dontLoadSounds, isSoundOn, failedSound;
+LPDIRECTSOUNDBUFFER8	channels[kNumSoundChannels];
+SInt16					priorities[kNumSoundChannels];
+SInt16					soundsPlaying[kNumSoundChannels];
 
 
 extern HMODULE		houseResFork;
@@ -46,48 +51,40 @@ extern HMODULE		houseResFork;
 
 void PlayPrioritySound (SInt16 which, SInt16 priority)
 {
-	SInt16		lowestPriority, whosLowest;
+	SInt16		lowestPriority, whosLowest, i;
 
 	if (failedSound || dontLoadSounds)
 		return;
 
+	for (i = 0; i < kNumSoundChannels; i++)
+	{
+		UpdateSoundState(i);
+	}
+
 	if ((priority == kTriggerPriority) &&
-			((priority0 == kTriggerPriority) ||
-			((priority1 == kTriggerPriority)) ||
-			((priority2 == kTriggerPriority))))
+			((priorities[0] == kTriggerPriority) ||
+			((priorities[1] == kTriggerPriority)) ||
+			((priorities[2] == kTriggerPriority))))
 		return;
 
 	whosLowest = 0;
-	lowestPriority = priority0;
+	lowestPriority = priorities[0];
 
-	if (priority1 < lowestPriority)
+	if (priorities[1] < lowestPriority)
 	{
-		lowestPriority = priority1;
+		lowestPriority = priorities[1];
 		whosLowest = 1;
 	}
 
-	if (priority2 < lowestPriority)
+	if (priorities[2] < lowestPriority)
 	{
-		lowestPriority = priority2;
+		lowestPriority = priorities[2];
 		whosLowest = 2;
 	}
 
 	if (priority >= lowestPriority)
 	{
-		switch (whosLowest)
-		{
-			case 0:
-			PlaySound0(which, priority);
-			break;
-
-			case 1:
-			PlaySound1(which, priority);
-			break;
-
-			case 2:
-			PlaySound2(which, priority);
-			break;
-		}
+		Gp_PlaySound(whosLowest, which, priority);
 	}
 }
 
@@ -95,197 +92,83 @@ void PlayPrioritySound (SInt16 which, SInt16 priority)
 
 void FlushAnyTriggerPlaying (void)
 {
-	return;
-#if 0
-	SndCommand	theCommand;
-	OSErr		theErr;
+	SInt16 channelID;
 
-	if (priority0 == kTriggerPriority)
+	for (channelID = 0; channelID < kNumSoundChannels; channelID++)
 	{
-		theCommand.cmd = quietCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = 0;
-		theErr = SndDoImmediate(channel0, &theCommand);
-		theCommand.cmd = flushCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = 0;
-		theErr = SndDoImmediate(channel0, &theCommand);
+		if (priorities[channelID] == kTriggerPriority)
+		{
+			FlushCurrentSound(channelID);
+		}
 	}
-
-	if (priority1 == kTriggerPriority)
-	{
-		theCommand.cmd = quietCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = 0;
-		theErr = SndDoImmediate(channel1, &theCommand);
-		theCommand.cmd = flushCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = 0;
-		theErr = SndDoImmediate(channel1, &theCommand);
-	}
-
-	if (priority2 == kTriggerPriority)
-	{
-		theCommand.cmd = quietCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = 0;
-		theErr = SndDoImmediate(channel2, &theCommand);
-		theCommand.cmd = flushCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = 0;
-		theErr = SndDoImmediate(channel2, &theCommand);
-	}
-#endif
 }
 
-//--------------------------------------------------------------  PlaySound0
+//--------------------------------------------------------------  PlaySound
 
-void PlaySound0 (SInt16 soundID, SInt16 priority)
+void Gp_PlaySound (SInt16 channelID, SInt16 soundID, SInt16 priority)
 {
-	return;
-#if 0
-	SndCommand	theCommand;
-	OSErr		theErr;
+	HRESULT hr;
 
 	if (failedSound || dontLoadSounds)
 		return;
 
-	theErr = noErr;
 	if (isSoundOn)
 	{
-		priority0 = priority;
-		soundPlaying0 = soundID;
+		FlushCurrentSound(channelID);
 
-		theCommand.cmd = bufferCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = (long)(theSoundData[soundID]);
-		theErr = SndDoImmediate(channel0, &theCommand);
-
-		theCommand.cmd = callBackCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = SetCurrentA5();
-		theErr = SndDoCommand(channel0, &theCommand, true);
+		hr = Audio_DuplicateSoundBuffer(theSoundData[soundID].dsBuffer, &channels[channelID]);
+		if (SUCCEEDED(hr))
+		{
+			IDirectSoundBuffer8_SetCurrentPosition(channels[channelID], 0);
+			hr = IDirectSoundBuffer8_Play(channels[channelID], 0, 0, 0);
+			if (FAILED(hr) && hr == DSERR_BUFFERLOST)
+			{
+				RestoreStaticBuffer(soundID, channels[channelID]);
+				hr = IDirectSoundBuffer8_Play(channels[channelID], 0, 0, 0);
+			}
+			if (SUCCEEDED(hr))
+			{
+				priorities[channelID] = priority;
+				soundsPlaying[channelID] = soundID;
+			}
+			else
+			{
+				IDirectSoundBuffer8_Release(channels[channelID]);
+				channels[channelID] = NULL;
+			}
+		}
 	}
-#endif
 }
 
-//--------------------------------------------------------------  PlaySound1
+//--------------------------------------------------------------  UpdateSoundState
 
-void PlaySound1 (SInt16 soundID, SInt16 priority)
+void UpdateSoundState (SInt16 channelID)
 {
-	return;
-#if 0
-	SndCommand	theCommand;
-	OSErr		theErr;
+	DWORD bufferStatus;
+	HRESULT hr;
 
-	if (failedSound || dontLoadSounds)
-		return;
-
-	theErr = noErr;
-	if (isSoundOn)
+	if (channels[channelID] != NULL)
 	{
-		priority1 = priority;
-		soundPlaying1 = soundID;
-
-		theCommand.cmd = bufferCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = (long)(theSoundData[soundID]);
-		theErr = SndDoImmediate(channel1, &theCommand);
-
-		theCommand.cmd = callBackCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = SetCurrentA5();
-		theErr = SndDoCommand(channel1, &theCommand, true);
+		hr = IDirectSoundBuffer8_GetStatus(channels[channelID], &bufferStatus);
+		if (FAILED(hr) || (bufferStatus & DSBSTATUS_PLAYING) == 0)
+		{
+			FlushCurrentSound(channelID);
+		}
 	}
-#endif
 }
 
-//--------------------------------------------------------------  PlaySound2
+//--------------------------------------------------------------  FlushCurrentSound
 
-void PlaySound2 (SInt16 soundID, SInt16 priority)
+void FlushCurrentSound (SInt16 channelID)
 {
-	return;
-#if 0
-	SndCommand	theCommand;
-	OSErr		theErr;
-
-	if (failedSound || dontLoadSounds)
-		return;
-
-	theErr = noErr;
-	if (isSoundOn)
+	if (channels[channelID] != NULL)
 	{
-		theCommand.cmd = bufferCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = (long)(theSoundData[soundID]);
-		theErr = SndDoImmediate(channel2, &theCommand);
-
-		theCommand.cmd = callBackCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = SetCurrentA5();
-		theErr = SndDoCommand(channel2, &theCommand, true);
-
-		priority2 = priority;
-		soundPlaying2 = soundID;
+		IDirectSoundBuffer8_Stop(channels[channelID]);
+		IDirectSoundBuffer8_Release(channels[channelID]);
 	}
-#endif
-}
-
-//--------------------------------------------------------------  CallBack0
-
-void CallBack0 (SndChannelPtr theChannel, SndCommand *theCommand)
-{
-	return;
-#if 0
-#pragma unused (theChannel)
-	long		thisA5, gameA5;
-
-	gameA5 = theCommand->param2;
-	thisA5 = SetA5(gameA5);
-
-	priority0 = 0;
-	soundPlaying0 = kNoSoundPlaying;
-
-	thisA5 = SetA5(thisA5);
-#endif
-}
-
-//--------------------------------------------------------------  CallBack1
-
-void CallBack1 (SndChannelPtr theChannel, SndCommand *theCommand)
-{
-	return;
-#if 0
-#pragma unused (theChannel)
-	long		thisA5, gameA5;
-
-	gameA5 = theCommand->param2;
-	thisA5 = SetA5(gameA5);
-
-	priority1 = 0;
-	soundPlaying1 = kNoSoundPlaying;
-
-	thisA5 = SetA5(thisA5);
-#endif
-}
-
-//--------------------------------------------------------------  CallBack2
-
-void CallBack2 (SndChannelPtr theChannel, SndCommand *theCommand)
-{
-	return;
-#if 0
-#pragma unused (theChannel)
-	long		thisA5, gameA5;
-
-	gameA5 = theCommand->param2;
-	thisA5 = SetA5(gameA5);
-
-	priority2 = 0;
-	soundPlaying2 = kNoSoundPlaying;
-
-	thisA5 = SetA5(thisA5);
-#endif
+	channels[channelID] = NULL;
+	priorities[channelID] = 0;
+	soundsPlaying[channelID] = kNoSoundPlaying;
 }
 
 //--------------------------------------------------------------  LoadTriggerSound
@@ -293,7 +176,7 @@ void CallBack2 (SndChannelPtr theChannel, SndCommand *theCommand)
 OSErr LoadTriggerSound (SInt16 soundID)
 {
 	if ((houseResFork == NULL) || (dontLoadSounds) ||
-			(theSoundData[kMaxSounds - 1].dataBytes != NULL))
+			(theSoundData[kMaxSounds - 1].wave.dataBytes != NULL))
 	{
 		return -1;
 	}
@@ -301,7 +184,12 @@ OSErr LoadTriggerSound (SInt16 soundID)
 //	FlushAnyTriggerPlaying();
 
 	if (!ReadWAVFromResource(houseResFork, (WORD)soundID,
-			&theSoundData[kMaxSounds - 1]))
+			&theSoundData[kMaxSounds - 1].wave))
+	{
+		return -1;
+	}
+	theSoundData[kMaxSounds - 1].dsBuffer = LoadStaticBuffer(kMaxSounds - 1);
+	if (theSoundData[kMaxSounds - 1].dsBuffer == NULL)
 	{
 		return -1;
 	}
@@ -313,8 +201,13 @@ OSErr LoadTriggerSound (SInt16 soundID)
 
 void DumpTriggerSound (void)
 {
-	theSoundData[kMaxSounds - 1].dataLength = 0;
-	theSoundData[kMaxSounds - 1].dataBytes = NULL;
+	if (theSoundData[kMaxSounds - 1].dsBuffer != NULL)
+	{
+		Audio_ReleaseSoundBuffer(theSoundData[kMaxSounds - 1].dsBuffer);
+	}
+	theSoundData[kMaxSounds - 1].dsBuffer = NULL;
+	theSoundData[kMaxSounds - 1].wave.dataLength = 0;
+	theSoundData[kMaxSounds - 1].wave.dataBytes = NULL;
 }
 
 //--------------------------------------------------------------  LoadBufferSounds
@@ -326,14 +219,19 @@ OSErr LoadBufferSounds (void)
 	for (i = 0; i < kMaxSounds - 1; i++)
 	{
 		if (!ReadWAVFromResource(HINST_THISCOMPONENT,
-				i + kBaseBufferSoundID, &theSoundData[i]))
+				i + kBaseBufferSoundID, &theSoundData[i].wave))
+		{
+			return -1;
+		}
+		theSoundData[i].dsBuffer = LoadStaticBuffer(i);
+		if (theSoundData[i].dsBuffer == NULL)
 		{
 			return -1;
 		}
 	}
 
-	theSoundData[kMaxSounds - 1].dataLength = 0;
-	theSoundData[kMaxSounds - 1].dataBytes = NULL;
+	theSoundData[kMaxSounds - 1].wave.dataLength = 0;
+	theSoundData[kMaxSounds - 1].wave.dataBytes = NULL;
 
 	return noErr;
 }
@@ -342,89 +240,21 @@ OSErr LoadBufferSounds (void)
 
 void DumpBufferSounds (void)
 {
-	// The pointers to the built-in sound data are actually pointers into
-	// the resources of this program. These resources don't go away until
-	// the program is unloaded, so the pointers don't need to be freed.
-	return;
-}
+	WORD i;
 
-//--------------------------------------------------------------  OpenSoundChannels
+	for (i = 0; i < kNumSoundChannels; i++)
+	{
+		FlushCurrentSound(i);
+	}
 
-OSErr OpenSoundChannels (void)
-{
-	return (-1);
-#if 0
-	OSErr		theErr;
-
-	callBack0UPP = NewSndCallBackProc(CallBack0);
-	callBack1UPP = NewSndCallBackProc(CallBack1);
-	callBack2UPP = NewSndCallBackProc(CallBack2);
-
-	theErr = noErr;
-
-	if (channelOpen)
-		return (theErr);
-
-	theErr = SndNewChannel(&channel0,
-			sampledSynth, initNoInterp + initMono,
-			(SndCallBackUPP)callBack0UPP);
-	if (theErr == noErr)
-		channelOpen = true;
-	else
-		return (theErr);
-
-	theErr = SndNewChannel(&channel1,
-			sampledSynth, initNoInterp + initMono,
-			(SndCallBackUPP)callBack1UPP);
-	if (theErr == noErr)
-		channelOpen = true;
-	else
-		return (theErr);
-
-	theErr = SndNewChannel(&channel2,
-			sampledSynth, initNoInterp + initMono,
-			(SndCallBackUPP)callBack2UPP);
-	if (theErr == noErr)
-		channelOpen = true;
-
-	return (theErr);
-#endif
-}
-
-//--------------------------------------------------------------  CloseSoundChannels
-
-OSErr CloseSoundChannels (void)
-{
-	return (-1);
-#if 0
-	OSErr		theErr;
-
-	theErr = noErr;
-
-	if (!channelOpen)
-		return (theErr);
-
-	if (channel0 != nil)
-		theErr = SndDisposeChannel(channel0, true);
-	channel0 = nil;
-
-	if (channel1 != nil)
-		theErr = SndDisposeChannel(channel1, true);
-	channel1 = nil;
-
-	if (channel2 != nil)
-		theErr = SndDisposeChannel(channel2, true);
-	channel2 = nil;
-
-	if (theErr == noErr)
-		channelOpen = false;
-
-	DisposeSndCallBackUPP(callBack0UPP);
-	DisposeSndCallBackUPP(callBack1UPP);
-	DisposeSndCallBackUPP(callBack2UPP);
-
-	return (theErr);
-#endif
+	for (i = 0; i < kMaxSounds - 1; i++)
+	{
+		if (theSoundData[i].dsBuffer != NULL)
+		{
+			Audio_ReleaseSoundBuffer(theSoundData[i].dsBuffer);
+			theSoundData[i].dsBuffer = NULL;
+		}
+	}
 }
 
 //--------------------------------------------------------------  InitSound
@@ -432,22 +262,19 @@ OSErr CloseSoundChannels (void)
 void InitSound (void)
 {
 	OSErr		theErr;
+	SInt16		i;
 
 	if (dontLoadSounds)
 		return;
 
 	failedSound = false;
 
-	channel0 = nil;
-	channel1 = nil;
-	channel2 = nil;
-
-	priority0 = 0;
-	priority1 = 0;
-	priority2 = 0;
-	soundPlaying0 = kNoSoundPlaying;
-	soundPlaying1 = kNoSoundPlaying;
-	soundPlaying2 = kNoSoundPlaying;
+	for (i = 0; i < kNumSoundChannels; i++)
+	{
+		channels[i] = NULL;
+		priorities[i] = 0;
+		soundsPlaying[i] = kNoSoundPlaying;
+	}
 
 	theErr = LoadBufferSounds();
 	if (theErr != noErr)
@@ -455,29 +282,16 @@ void InitSound (void)
 		YellowAlert(kYellowFailedSound, theErr);
 		failedSound = true;
 	}
-
-	if (!failedSound)
-	{
-		theErr = OpenSoundChannels();
-		if (theErr != noErr)
-		{
-			YellowAlert(kYellowFailedSound, theErr);
-			failedSound = true;
-		}
-	}
 }
 
 //--------------------------------------------------------------  KillSound
 
 void KillSound (void)
 {
-	OSErr		theErr;
-
 	if (dontLoadSounds)
 		return;
 
 	DumpBufferSounds();
-	theErr = CloseSoundChannels();
 }
 
 //--------------------------------------------------------------  SoundBytesNeeded
@@ -520,5 +334,83 @@ void BitchAboutSM3 (void)
 
 	params.hwndParent = mainWindow;
 	hitWhat = Alert(kNoSoundManager3Alert, &params);
+}
+
+//--------------------------------------------------------------  LoadStaticBuffer
+
+LPDIRECTSOUNDBUFFER8 LoadStaticBuffer (SInt16 which)
+{
+	WAVEFORMATEX waveFormat;
+	DSBUFFERDESC bufferDesc;
+	LPDIRECTSOUNDBUFFER8 soundBuffer;
+	LPVOID audioPtr;
+	DWORD audioSize;
+	HRESULT hr;
+
+	waveFormat.wFormatTag = WAVE_FORMAT_PCM;
+	waveFormat.nChannels = theSoundData[which].wave.channels;
+	waveFormat.nSamplesPerSec = theSoundData[which].wave.samplesPerSec;
+	waveFormat.wBitsPerSample = theSoundData[which].wave.bitsPerSample;
+	waveFormat.nBlockAlign = waveFormat.nChannels * waveFormat.wBitsPerSample / 8;
+	waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
+	waveFormat.cbSize = 0;
+
+	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+	bufferDesc.dwSize = sizeof(bufferDesc);
+	bufferDesc.dwFlags = DSBCAPS_LOCSOFTWARE
+		| DSBCAPS_CTRLVOLUME
+		| DSBCAPS_GLOBALFOCUS
+		| DSBCAPS_GETCURRENTPOSITION2;
+	bufferDesc.dwBufferBytes = (DWORD)theSoundData[which].wave.dataLength;
+	bufferDesc.dwReserved = 0;
+	bufferDesc.lpwfxFormat = &waveFormat;
+	bufferDesc.guid3DAlgorithm = DS3DALG_DEFAULT;
+
+	hr = Audio_CreateSoundBuffer(&bufferDesc, &soundBuffer, NULL);
+	if (FAILED(hr))
+	{
+		return NULL;
+	}
+
+	hr = IDirectSoundBuffer8_Lock(soundBuffer, 0, 0,
+			&audioPtr, &audioSize, NULL, NULL, DSBLOCK_ENTIREBUFFER);
+	if (SUCCEEDED(hr))
+	{
+		memcpy(audioPtr, theSoundData[which].wave.dataBytes, audioSize);
+		IDirectSoundBuffer8_Unlock(soundBuffer, audioPtr, audioSize, NULL, 0);
+	}
+	else
+	{
+		Audio_ReleaseSoundBuffer(soundBuffer);
+		return NULL;
+	}
+
+	return soundBuffer;
+}
+
+//--------------------------------------------------------------  RestoreStaticBuffer
+
+void RestoreStaticBuffer (SInt16 which, LPDIRECTSOUNDBUFFER8 soundBuffer)
+{
+	LPVOID audioPtr;
+	DWORD audioSize;
+	HRESULT hr;
+
+	if (soundBuffer == NULL)
+	{
+		return;
+	}
+	hr = IDirectSoundBuffer8_Restore(soundBuffer);
+	if (SUCCEEDED(hr))
+	{
+		IDirectSoundBuffer8_Stop(soundBuffer);
+		hr = IDirectSoundBuffer8_Lock(soundBuffer, 0, 0,
+			&audioPtr, &audioSize, NULL, NULL, DSBLOCK_ENTIREBUFFER);
+		if (SUCCEEDED(hr))
+		{
+			memcpy(audioPtr, theSoundData[which].wave.dataBytes, audioSize);
+			IDirectSoundBuffer8_Unlock(soundBuffer, audioPtr, audioSize, NULL, 0);
+		}
+	}
 }
 

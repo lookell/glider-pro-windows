@@ -28,7 +28,7 @@ set_target_properties(
   WIN32_EXECUTABLE TRUE
 )
 target_include_directories(gliderpro PRIVATE Headers)
-target_link_libraries(gliderpro comctl32 msimg32)
+target_link_libraries(gliderpro comctl32 dsound dxguid msimg32)
 target_sources(
   gliderpro PRIVATE
   # resources

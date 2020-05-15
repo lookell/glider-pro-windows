@@ -10,6 +10,7 @@
 //#include <Sound.h>
 #include "WinAPI.h"
 #include "Macintosh.h"
+#include "Audio.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "House.h"
@@ -45,6 +46,7 @@ extern Boolean		houseOpen, isDoColorFade, isEscPauseKey;
 extern Boolean		autoRoomEdit, doAutoDemo, doBackground;
 extern Boolean		isMapOpen, isToolsOpen, isCoordOpen;
 extern Boolean		doPrettyMap, doBitchDialogs;
+extern Boolean		dontLoadMusic, dontLoadSounds;
 //extern Boolean		didValidation;
 
 //==============================================================  Functions
@@ -291,7 +293,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 {
 //	SInt32		wasSeed;
 //	SInt32		theErr;
-	Boolean		whoCares, copyGood;
+	Boolean		whoCares, copyGood, audioInitialized;
+	HRESULT		hr;
+
+	hr = Audio_InitDevice();
+	audioInitialized = SUCCEEDED(hr);
+	if (FAILED(hr))
+	{
+		dontLoadSounds = true;
+		dontLoadMusic = true;
+	}
 
 	ToolBoxInit();
 	CheckOurEnvirons();
@@ -405,6 +416,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	RestoreColorDepth();
 //	FlushEvents(everyEvent, 0);
 //	theErr = LoadScrap();
+
+	if (audioInitialized)
+	{
+		Audio_KillDevice();
+		audioInitialized = false;
+	}
+
 	return 0;
 }
 
