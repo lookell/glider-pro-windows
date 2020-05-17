@@ -323,6 +323,27 @@ pub struct BitmapFour {
     palette: Vec<RgbQuad>,
 }
 
+impl From<BitmapOne> for BitmapFour {
+    fn from(source: BitmapOne) -> BitmapFour {
+        BitmapFour::from(&source)
+    }
+}
+
+impl From<&BitmapOne> for BitmapFour {
+    fn from(source: &BitmapOne) -> BitmapFour {
+        let width = source.width();
+        let height = source.height();
+        let mut dest = BitmapFour::new(width, height);
+        dest.set_palette(source.palette().iter().copied());
+        for y in 0..height {
+            for x in 0..width {
+                dest.set_pixel(x, y, source.get_pixel(x, y));
+            }
+        }
+        dest
+    }
+}
+
 impl Bitmap for BitmapFour {
     type Pixel = u8;
     const BIT_COUNT: u16 = 4;
@@ -397,6 +418,48 @@ pub struct BitmapEight {
     palette: Vec<RgbQuad>,
 }
 
+impl From<BitmapOne> for BitmapEight {
+    fn from(source: BitmapOne) -> BitmapEight {
+        BitmapEight::from(&source)
+    }
+}
+
+impl From<&BitmapOne> for BitmapEight {
+    fn from(source: &BitmapOne) -> BitmapEight {
+        let width = source.width();
+        let height = source.height();
+        let mut dest = BitmapEight::new(width, height);
+        dest.set_palette(source.palette().iter().copied());
+        for y in 0..height {
+            for x in 0..width {
+                dest.set_pixel(x, y, source.get_pixel(x, y));
+            }
+        }
+        dest
+    }
+}
+
+impl From<BitmapFour> for BitmapEight {
+    fn from(source: BitmapFour) -> BitmapEight {
+        BitmapEight::from(&source)
+    }
+}
+
+impl From<&BitmapFour> for BitmapEight {
+    fn from(source: &BitmapFour) -> BitmapEight {
+        let width = source.width();
+        let height = source.height();
+        let mut dest = BitmapEight::new(width, height);
+        dest.set_palette(source.palette().iter().copied());
+        for y in 0..height {
+            for x in 0..width {
+                dest.set_pixel(x, y, source.get_pixel(x, y));
+            }
+        }
+        dest
+    }
+}
+
 impl Bitmap for BitmapEight {
     type Pixel = u8;
     const BIT_COUNT: u16 = 8;
@@ -462,6 +525,69 @@ pub struct BitmapSixteen {
     width: u16,
     height: u16,
     bits: Vec<u8>,
+}
+
+impl From<BitmapOne> for BitmapSixteen {
+    fn from(source: BitmapOne) -> BitmapSixteen {
+        BitmapSixteen::from(&source)
+    }
+}
+
+impl From<&BitmapOne> for BitmapSixteen {
+    fn from(source: &BitmapOne) -> BitmapSixteen {
+        let width = source.width();
+        let height = source.height();
+        let palette = source.palette();
+        let mut dest = BitmapSixteen::new(width, height);
+        for y in 0..height {
+            for x in 0..width {
+                dest.set_pixel(x, y, palette[usize::from(source.get_pixel(x, y))]);
+            }
+        }
+        dest
+    }
+}
+
+impl From<BitmapFour> for BitmapSixteen {
+    fn from(source: BitmapFour) -> BitmapSixteen {
+        BitmapSixteen::from(&source)
+    }
+}
+
+impl From<&BitmapFour> for BitmapSixteen {
+    fn from(source: &BitmapFour) -> BitmapSixteen {
+        let width = source.width();
+        let height = source.height();
+        let palette = source.palette();
+        let mut dest = BitmapSixteen::new(width, height);
+        for y in 0..height {
+            for x in 0..width {
+                dest.set_pixel(x, y, palette[usize::from(source.get_pixel(x, y))]);
+            }
+        }
+        dest
+    }
+}
+
+impl From<BitmapEight> for BitmapSixteen {
+    fn from(source: BitmapEight) -> BitmapSixteen {
+        BitmapSixteen::from(&source)
+    }
+}
+
+impl From<&BitmapEight> for BitmapSixteen {
+    fn from(source: &BitmapEight) -> BitmapSixteen {
+        let width = source.width();
+        let height = source.height();
+        let palette = source.palette();
+        let mut dest = BitmapSixteen::new(width, height);
+        for y in 0..height {
+            for x in 0..width {
+                dest.set_pixel(x, y, palette[usize::from(source.get_pixel(x, y))]);
+            }
+        }
+        dest
+    }
 }
 
 impl Bitmap for BitmapSixteen {
@@ -537,6 +663,89 @@ pub struct BitmapTwentyFour {
     width: u16,
     height: u16,
     bits: Vec<u8>,
+}
+
+impl From<BitmapOne> for BitmapTwentyFour {
+    fn from(source: BitmapOne) -> BitmapTwentyFour {
+        BitmapTwentyFour::from(&source)
+    }
+}
+
+impl From<&BitmapOne> for BitmapTwentyFour {
+    fn from(source: &BitmapOne) -> BitmapTwentyFour {
+        let width = source.width();
+        let height = source.height();
+        let palette = source.palette();
+        let mut dest = BitmapTwentyFour::new(width, height);
+        for y in 0..height {
+            for x in 0..width {
+                dest.set_pixel(x, y, palette[usize::from(source.get_pixel(x, y))]);
+            }
+        }
+        dest
+    }
+}
+
+impl From<BitmapFour> for BitmapTwentyFour {
+    fn from(source: BitmapFour) -> BitmapTwentyFour {
+        BitmapTwentyFour::from(&source)
+    }
+}
+
+impl From<&BitmapFour> for BitmapTwentyFour {
+    fn from(source: &BitmapFour) -> BitmapTwentyFour {
+        let width = source.width();
+        let height = source.height();
+        let palette = source.palette();
+        let mut dest = BitmapTwentyFour::new(width, height);
+        for y in 0..height {
+            for x in 0..width {
+                dest.set_pixel(x, y, palette[usize::from(source.get_pixel(x, y))]);
+            }
+        }
+        dest
+    }
+}
+
+impl From<BitmapEight> for BitmapTwentyFour {
+    fn from(source: BitmapEight) -> BitmapTwentyFour {
+        BitmapTwentyFour::from(&source)
+    }
+}
+
+impl From<&BitmapEight> for BitmapTwentyFour {
+    fn from(source: &BitmapEight) -> BitmapTwentyFour {
+        let width = source.width();
+        let height = source.height();
+        let palette = source.palette();
+        let mut dest = BitmapTwentyFour::new(width, height);
+        for y in 0..height {
+            for x in 0..width {
+                dest.set_pixel(x, y, palette[usize::from(source.get_pixel(x, y))]);
+            }
+        }
+        dest
+    }
+}
+
+impl From<BitmapSixteen> for BitmapTwentyFour {
+    fn from(source: BitmapSixteen) -> BitmapTwentyFour {
+        BitmapTwentyFour::from(&source)
+    }
+}
+
+impl From<&BitmapSixteen> for BitmapTwentyFour {
+    fn from(source: &BitmapSixteen) -> BitmapTwentyFour {
+        let width = source.width();
+        let height = source.height();
+        let mut dest = BitmapTwentyFour::new(width, height);
+        for y in 0..height {
+            for x in 0..width {
+                dest.set_pixel(x, y, source.get_pixel(x, y));
+            }
+        }
+        dest
+    }
 }
 
 impl Bitmap for BitmapTwentyFour {

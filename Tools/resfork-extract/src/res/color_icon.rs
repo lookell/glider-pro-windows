@@ -168,21 +168,24 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
     let icon = ColorIcon::read_from(data)?;
     let mut ico_file = IconFile::new();
     let mask = make_1bit_bitmap(&icon.iconMask, &icon.iconMaskData);
-    if !icon.iconBMapData.is_empty() {
-        let image = make_1bit_bitmap(&icon.iconBMap, &icon.iconBMapData);
-        ico_file.add_entry(image, mask.clone());
-    }
     match icon.iconPMap.pixelSize {
         1 => {
-            let mut image = make_1bit_pixmap(&icon.iconPMap, &icon.iconPMapData);
-            let mut palette = vec![RgbQuad::BLACK; 2];
+            let mono_image = make_1bit_pixmap(&icon.iconPMap, &icon.iconPMapData);
+            let mut image = BitmapFour::from(mono_image);
+            let mut palette = vec![RgbQuad::BLACK; 16];
             palette
                 .iter_mut()
                 .rev()
                 .zip(&icon.iconPMapCTab.ctTable)
                 .for_each(|(dst, src)| *dst = src.rgb.into());
             image.set_palette(palette.into_iter());
-            ico_file.add_entry(image, mask);
+            for y in 0..image.height() {
+                for x in 0..image.width() {
+                    let old = image.get_pixel(x, y);
+                    image.set_pixel(x, y, old + 14);
+                }
+            }
+            ico_file.add_entry(image, mask.clone());
         }
         2 => {
             let mut image = make_2bit_pixmap(&icon.iconPMap, &icon.iconPMapData);
@@ -193,7 +196,7 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
                 .zip(&icon.iconPMapCTab.ctTable)
                 .for_each(|(dst, src)| *dst = src.rgb.into());
             image.set_palette(palette.into_iter());
-            ico_file.add_entry(image, mask);
+            ico_file.add_entry(image, mask.clone());
         }
         4 => {
             let mut image = make_4bit_pixmap(&icon.iconPMap, &icon.iconPMapData);
@@ -204,7 +207,7 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
                 .zip(&icon.iconPMapCTab.ctTable)
                 .for_each(|(dst, src)| *dst = src.rgb.into());
             image.set_palette(palette.into_iter());
-            ico_file.add_entry(image, mask);
+            ico_file.add_entry(image, mask.clone());
         }
         8 => {
             let mut image = make_8bit_pixmap(&icon.iconPMap, &icon.iconPMapData);
@@ -215,9 +218,13 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
                 .zip(&icon.iconPMapCTab.ctTable)
                 .for_each(|(dst, src)| *dst = src.rgb.into());
             image.set_palette(palette.into_iter());
-            ico_file.add_entry(image, mask);
+            ico_file.add_entry(image, mask.clone());
         }
         _ => unimplemented!("unsupported 'cicn' depth: {}", icon.iconPMap.pixelSize),
     };
+    if !icon.iconBMapData.is_empty() {
+        let image = make_1bit_bitmap(&icon.iconBMap, &icon.iconBMapData);
+        ico_file.add_entry(image, mask.clone());
+    }
     ico_file.write_to(writer)
 }
