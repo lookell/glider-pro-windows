@@ -1,10 +1,10 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kHighBannerItem         102
-#define kBannerScoreNCharsItem  105
+#define kHighBannerItem         1002
+#define kBannerScoreNCharsItem  1005
 
 kHighBannerDialogID DIALOGEX 27, 25, 211, 80
-CAPTION "Enter High Score Banner"
+CAPTION "High Score Banner"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION
 {

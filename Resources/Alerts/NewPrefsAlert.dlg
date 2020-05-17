@@ -1,11 +1,11 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kNewPrefsAlertID DIALOGEX 27, 25, 200, 62
-CAPTION "Invalid Preferences File"
+kNewPrefsAlertID DIALOGEX 0, 0, 187, 59
+CAPTION "Incompatible Preferences File"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    DEFPUSHBUTTON "Okay", IDOK, 153, 42, 39, 12
-    LTEXT "You have a new Preferences file. All preferences have been set to their defaults.", IDC_STATIC, 9, 8, 145, 30, SS_NOPREFIX
-    ICON 160, IDC_STATIC, 173, 8, 21, 20
+    LTEXT "You have a new Preferences file. All preferences have been set to their defaults.", IDC_STATIC, 7, 7, 145, 24, SS_NOPREFIX
+    ICON 160, IDC_STATIC, 159, 7, 21, 20
+    DEFPUSHBUTTON "Okay", IDOK, 130, 38, 50, 14
 }

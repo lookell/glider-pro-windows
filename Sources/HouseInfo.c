@@ -330,13 +330,13 @@ void HowToZeroScores (void)
 
 	switch (hitWhat)
 	{
-		case 102:	// zero all
+		case 1002:	// zero all
 		ZeroHighScores();
 		fileDirty = true;
 		UpdateMenus(false);
 		break;
 
-		case 103:	// zero all but highest
+		case 1003:	// zero all but highest
 		ZeroAllButHighestScore();
 		fileDirty = true;
 		UpdateMenus(false);

@@ -1,10 +1,10 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kLowMemoryAlert DIALOGEX 27, 25, 192, 79
-CAPTION "Not Enough Memory"
+kLowMemoryAlert DIALOGEX 0, 0, 195, 75
+CAPTION "Low Memory"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    DEFPUSHBUTTON "Okay", IDOK, 148, 62, 39, 12
-    LTEXT "Glider PRO™ Demo requires more memory to run on this Mac. For this Mac, try giving the game ^0K. If the game is on a locked volume, copy it to your hard drive.", IDC_STATIC, 5, 5, 181, 52, SS_NOPREFIX
+    LTEXT "Glider PRO™ Demo requires more memory to run on this Mac. For this Mac, try giving the game ^0K. If the game is on a locked volume, copy it to your hard drive.", IDC_STATIC, 7, 7, 181, 40, SS_NOPREFIX
+    DEFPUSHBUTTON "Okay", IDOK, 138, 54, 50, 14
 }

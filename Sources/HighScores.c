@@ -26,10 +26,10 @@
 
 #define kHighScoresPictID		1994
 #define kHighScoresMaskID		1998
-#define kHighNameItem			102
-#define kNameNCharsItem			105
-#define kHighBannerItem			102
-#define kBannerScoreNCharsItem	105
+#define kHighNameItem			1002
+#define kNameNCharsItem			1005
+#define kHighBannerItem			1002
+#define kBannerScoreNCharsItem	1005
 
 
 void DrawHighScores (void);

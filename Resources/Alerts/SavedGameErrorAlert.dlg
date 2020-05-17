@@ -1,11 +1,11 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kSavedGameErrorAlert DIALOGEX 27, 25, 200, 79
+kSavedGameErrorAlert DIALOGEX 0, 0, 205, 75
 CAPTION "Saved Game Mismatch"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    DEFPUSHBUTTON "Okay", IDOK, 156, 62, 39, 12
-    LTEXT "This saved game was saved for the house ""^0"". ""^1"" is the current house open. Load ""^0"" before using this saved game.", IDC_STATIC, 5, 5, 163, 49, SS_NOPREFIX
-    ICON 1006, IDC_STATIC, 173, 6, 21, 20
+    LTEXT "This saved game was saved for the house ""^0"". ""^1"" is the current house open. Load ""^0"" before using this saved game.", IDC_STATIC, 7, 7, 163, 40, SS_NOPREFIX
+    ICON 1006, IDC_STATIC, 177, 7, 21, 20
+    DEFPUSHBUTTON "Okay", IDOK, 148, 54, 50, 14
 }

@@ -1,13 +1,13 @@
 /* this comment enforces υτƒ-8 encoding */
 
-rFileErrorAlert DIALOGEX 40, 57, 257, 79
+rFileErrorAlert DIALOGEX 0, 0, 242, 82
 CAPTION "File Error"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    DEFPUSHBUTTON "Okay", IDOK, 209, 57, 39, 12
-    LTEXT "^0", IDC_STATIC, 9, 18, 187, 37, SS_NOPREFIX
-    LTEXT "(error = ^1)", IDC_STATIC, 9, 57, 159, 11, SS_NOPREFIX
-    ICON 140, IDC_STATIC, 227, 8, 21, 20
-    LTEXT "A File Error Loading/Saving ^2", IDC_STATIC, 9, 4, 212, 10, SS_NOPREFIX
+    LTEXT "A File Error Loading/Saving ^2", IDC_STATIC, 7, 7, 200, 8, SS_NOPREFIX
+    ICON 140, IDC_STATIC, 214, 7, 21, 20
+    LTEXT "^0", IDC_STATIC, 7, 22, 200, 32, SS_NOPREFIX
+    LTEXT "(error = ^1)", IDC_STATIC, 7, 64, 171, 8, SS_NOPREFIX
+    DEFPUSHBUTTON "Okay", IDOK, 185, 61, 50, 14
 }

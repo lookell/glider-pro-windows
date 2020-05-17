@@ -1,13 +1,13 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kYellowAlert DIALOGEX 27, 25, 200, 79
+kYellowAlert DIALOGEX 0, 0, 205, 82
 CAPTION "Yellow Alert"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    DEFPUSHBUTTON "Okay", IDOK, 156, 62, 39, 12
-    LTEXT "^0", IDC_STATIC, 6, 15, 163, 39, SS_NOPREFIX
-    LTEXT "A problem came up:", IDC_STATIC, 6, 6, 124, 10, SS_NOPREFIX
-    LTEXT "Error #: ^1", IDC_STATIC, 6, 63, 93, 10, SS_NOPREFIX
-    ICON 1006, IDC_STATIC, 173, 6, 21, 20
+    LTEXT "A problem came up:", IDC_STATIC, 7, 7, 163, 8, SS_NOPREFIX
+    ICON 1006, IDC_STATIC, 177, 7, 21, 20
+    LTEXT "^0", IDC_STATIC, 7, 22, 163, 32, SS_NOPREFIX
+    LTEXT "Error #: ^1", IDC_STATIC, 7, 64, 134, 8, SS_NOPREFIX
+    DEFPUSHBUTTON "Okay", IDOK, 148, 61, 50, 14
 }

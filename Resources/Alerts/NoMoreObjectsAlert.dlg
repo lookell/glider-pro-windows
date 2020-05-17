@@ -1,11 +1,11 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kNoMoreObjectsAlert DIALOGEX 27, 25, 187, 59
+kNoMoreObjectsAlert DIALOGEX 0, 0, 182, 59
 CAPTION "Too Many Objects"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    DEFPUSHBUTTON "Okay", IDOK, 143, 42, 39, 12
-    LTEXT "A room can have no more than 24 objects! Delete an object if you want to add another.", IDC_STATIC, 5, 5, 140, 32, SS_NOPREFIX
-    ICON 1008, IDC_STATIC, 160, 5, 21, 20
+    LTEXT "A room can have no more than 24 objects! Delete an object if you want to add another.", IDC_STATIC, 7, 7, 140, 24, SS_NOPREFIX
+    ICON 1008, IDC_STATIC, 154, 7, 21, 20
+    DEFPUSHBUTTON "Okay", IDOK, 125, 38, 50, 14
 }

@@ -1,12 +1,12 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kLockHouseAlert DIALOGEX 27, 25, 199, 76
+kLockHouseAlert DIALOGEX 0, 0, 193, 75
 CAPTION "Lock House?"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    PUSHBUTTON "Lock It!", IDOK, 155, 59, 39, 12
-    DEFPUSHBUTTON "Don't Lock", IDCANCEL, 100, 59, 49, 12
-    LTEXT "Wait!!! If you lock this house, you will not be able to edit it in the future! You should keep an unlocked copy. This is your only warning!", IDC_STATIC, 5, 5, 151, 49, SS_NOPREFIX
-    ICON 1060, IDC_STATIC, 172, 5, 21, 20
+    LTEXT "Wait!!! If you lock this house, you will not be able to edit it in the future! You should keep an unlocked copy. This is your only warning!", IDC_STATIC, 7, 7, 151, 40, SS_NOPREFIX
+    ICON 1060, IDC_STATIC, 165, 7, 21, 20
+    PUSHBUTTON "Lock It!", IDOK, 82, 54, 50, 14
+    DEFPUSHBUTTON "Don't Lock", IDCANCEL, 136, 54, 50, 14
 }

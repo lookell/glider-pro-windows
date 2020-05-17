@@ -441,15 +441,15 @@ void SwitchDepthOrAbort (void)
 		usersDecision = Alert(kSwitchDepthAlert, &params);
 		switch (usersDecision)
 		{
-			case 101:
+			case 1001:
 			SwitchToDepth(8, true);
 			break;
 
-			case 102:
+			case 1002:
 			SwitchToDepth(4, false);
 			break;
 
-			case 103:
+			case 1003:
 			exit(0);
 			break;
 		}

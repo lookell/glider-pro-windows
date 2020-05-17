@@ -55,7 +55,7 @@ SInt16 BitchAboutColorDepth (void)
 	params.hwndParent = mainWindow;
 	sheSaid = Alert(kColorSwitchedAlert, &params);
 
-	return (sheSaid - 100);
+	return (sheSaid - 1000);
 }
 
 //--------------------------------------------------------------  HandleMouseEvent

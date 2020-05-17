@@ -1,12 +1,12 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kSetMemoryAlert DIALOGEX 27, 25, 196, 71
-CAPTION "Not Enough Memory"
+kSetMemoryAlert DIALOGEX 0, 0, 201, 67
+CAPTION "Low Memory"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    DEFPUSHBUTTON "Quit", IDOK, 152, 54, 39, 12
-    LTEXT "Glider PRO™ requires more memory. Get Info on Glider PRO™ in the Finder to increase its memory size or try quitting other applications.", IDC_STATIC, 5, 5, 159, 39, SS_NOPREFIX
-    ICON 180, IDC_STATIC, 169, 5, 21, 20
-    LTEXT "(We need about: ^0K)", IDC_STATIC, 5, 47, 138, 10, SS_NOPREFIX
+    LTEXT "Glider PRO™ requires more memory. Get Info on Glider PRO™ in the Finder to increase its memory size or try quitting other applications.", IDC_STATIC, 7, 7, 159, 32, SS_NOPREFIX
+    ICON 180, IDC_STATIC, 173, 7, 21, 20
+    LTEXT "(We need about: ^0K)", IDC_STATIC, 7, 49, 130, 8, SS_NOPREFIX
+    DEFPUSHBUTTON "Quit", IDOK, 144, 46, 50, 14
 }

@@ -1,12 +1,12 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kColorSwitchedAlert DIALOGEX 27, 25, 171, 66
-CAPTION "Color Depth Switched"
+kColorSwitchedAlert DIALOGEX 0, 0, 175, 67
+CAPTION "Color Depth"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION
 {
-    DEFPUSHBUTTON "Quit", 101, 127, 49, 39, 12
-    PUSHBUTTON "Restore", 102, 83, 49, 39, 12
-    LTEXT "You switched the number of colors! You must either Quit Glider PRO™ or Restore your monitor to its original colors.", IDC_STATIC, 5, 5, 133, 39, SS_NOPREFIX
-    ICON 130, IDC_STATIC, 144, 5, 21, 20
+    LTEXT "You switched the number of colors! You must either Quit Glider PRO™ or Restore your monitor to its original colors.", IDC_STATIC, 7, 7, 133, 32, SS_NOPREFIX
+    ICON 130, IDC_STATIC, 147, 7, 21, 20
+    PUSHBUTTON "Restore", 1002, 64, 46, 50, 14
+    DEFPUSHBUTTON "Quit", 1001, 118, 46, 50, 14
 }

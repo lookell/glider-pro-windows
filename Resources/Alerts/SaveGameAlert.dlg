@@ -1,12 +1,12 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kSaveGameAlert DIALOGEX 27, 25, 175, 47
+kSaveGameAlert DIALOGEX 0, 0, 176, 55
 CAPTION "Save Game?"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION
 {
-    PUSHBUTTON "Save First", IDYES, 116, 30, 53, 12
-    DEFPUSHBUTTON "Don't Save", IDNO, 55, 30, 53, 12
-    LTEXT "Do you want to save the state of the game before quitting?", IDC_STATIC, 5, 5, 134, 20, SS_NOPREFIX
-    ICON 1072, IDC_STATIC, 148, 5, 21, 20
+    LTEXT "Do you want to save the state of the game before quitting?", IDC_STATIC, 7, 7, 134, 16, SS_NOPREFIX
+    ICON 1072, IDC_STATIC, 148, 7, 21, 20
+    PUSHBUTTON "Save First", IDYES, 45, 34, 60, 14
+    DEFPUSHBUTTON "Don't Save", IDNO, 109, 34, 60, 14
 }

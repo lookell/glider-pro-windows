@@ -1,10 +1,10 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kNotInDemoAlert DIALOGEX 27, 25, 191, 76
+kNotInDemoAlert DIALOGEX 0, 0, 194, 75
 CAPTION "Not Available In Demo"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    DEFPUSHBUTTON "Okay", IDOK, 147, 59, 39, 12
-    LTEXT "This feature is not in the Demo version of Glider PRO™. Glider PRO™ is published by Casady & Greene, Inc. Call them at (408) 484-9228 during normal business hours (Pacific time, USA).", IDC_STATIC, 5, 5, 180, 49, SS_NOPREFIX
+    LTEXT "This feature is not in the Demo version of Glider PRO™. Glider PRO™ is published by Casady & Greene, Inc. Call them at (408) 484-9228 during normal business hours (Pacific time, USA).", IDC_STATIC, 7, 7, 180, 40, SS_NOPREFIX
+    DEFPUSHBUTTON "Okay", IDOK, 137, 54, 50, 14
 }

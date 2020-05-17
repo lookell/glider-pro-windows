@@ -1,10 +1,10 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kChangesEffectAlert DIALOGEX 64, 33, 187, 44
-CAPTION "Relaunch To Apply Changes"
+kChangesEffectAlert DIALOGEX 0, 0, 191, 51
+CAPTION "Preferences"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    DEFPUSHBUTTON "Okay", IDOK, 145, 27, 37, 12
-    LTEXT "Some preference changes will not take effect until Glider PRO™ is re-launched.", IDC_STATIC, 5, 5, 177, 20, SS_NOPREFIX
+    LTEXT "Some preference changes will not take effect until Glider PRO™ is re-launched.", IDC_STATIC, 7, 7, 177, 16, SS_NOPREFIX
+    DEFPUSHBUTTON "Okay", IDOK, 134, 30, 50, 14
 }

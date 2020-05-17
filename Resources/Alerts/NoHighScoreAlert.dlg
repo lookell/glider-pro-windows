@@ -1,11 +1,11 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kNoHighScoreAlert DIALOGEX 27, 25, 173, 57
+kNoHighScoreAlert DIALOGEX 0, 0, 181, 59
 CAPTION "Ineligible For High Score"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    DEFPUSHBUTTON "So What?", IDOK, 120, 39, 48, 12
-    LTEXT "If you resume a saved game, you are ineligible to get on the high scores for that game.", IDC_STATIC, 5, 5, 139, 30, SS_NOPREFIX
-    ICON 1073, IDC_STATIC, 147, 5, 21, 20
+    LTEXT "If you resume a saved game, you are ineligible to get on the high scores for that game.", IDC_STATIC, 7, 7, 139, 24, SS_NOPREFIX
+    ICON 1073, IDC_STATIC, 153, 7, 21, 20
+    DEFPUSHBUTTON "So What?", IDOK, 119, 38, 55, 14
 }

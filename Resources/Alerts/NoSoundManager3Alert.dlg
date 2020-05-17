@@ -1,11 +1,11 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kNoSoundManager3Alert DIALOGEX 27, 25, 183, 66
+kNoSoundManager3Alert DIALOGEX 0, 0, 187, 67
 CAPTION "No Sound Manager 3.0"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    DEFPUSHBUTTON "Okay", IDOK, 139, 49, 39, 12
-    LTEXT "Where is Sound Manager 3.0? I highly recommend you install it. It's fast, it's unobtrusive, and it's the law!", IDC_STATIC, 5, 5, 145, 39, SS_NOPREFIX
-    ICON 1070, IDC_STATIC, 156, 5, 21, 20
+    LTEXT "Where is Sound Manager 3.0? I highly recommend you install it. It's fast, it's unobtrusive, and it's the law!", IDC_STATIC, 7, 7, 145, 32, SS_NOPREFIX
+    ICON 1070, IDC_STATIC, 158, 7, 21, 20
+    DEFPUSHBUTTON "Okay", IDOK, 130, 46, 50, 14
 }
