@@ -116,6 +116,15 @@ void Gp_PlaySound (SInt16 channelID, SInt16 soundID, SInt16 priority)
 	{
 		FlushCurrentSound(channelID);
 
+		if (theSoundData[soundID].dsBuffer == NULL)
+		{
+			theSoundData[soundID].dsBuffer = LoadStaticBuffer(soundID);
+			if (theSoundData[soundID].dsBuffer == NULL)
+			{
+				return;
+			}
+		}
+
 		hr = Audio_DuplicateSoundBuffer(theSoundData[soundID].dsBuffer, &channels[channelID]);
 		if (SUCCEEDED(hr))
 		{
@@ -223,11 +232,7 @@ OSErr LoadBufferSounds (void)
 		{
 			return -1;
 		}
-		theSoundData[i].dsBuffer = LoadStaticBuffer(i);
-		if (theSoundData[i].dsBuffer == NULL)
-		{
-			return -1;
-		}
+		theSoundData[i].dsBuffer = NULL;
 	}
 
 	theSoundData[kMaxSounds - 1].wave.dataLength = 0;
