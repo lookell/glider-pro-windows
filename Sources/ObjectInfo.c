@@ -1000,6 +1000,7 @@ Boolean FlowerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 void DoBlowerObjectInfo (SInt16 what)
 {
+	MessageBox(mainWindow, L"DoBlowerObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1176,6 +1177,7 @@ void DoBlowerObjectInfo (SInt16 what)
 
 void DoFurnitureObjectInfo (void)
 {
+	MessageBox(mainWindow, L"DoFurnitureObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1244,6 +1246,7 @@ void DoFurnitureObjectInfo (void)
 
 void DoCustPictObjectInfo (void)
 {
+	MessageBox(mainWindow, L"DoCustPictObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1344,6 +1347,7 @@ void DoCustPictObjectInfo (void)
 
 void DoSwitchObjectInfo (void)
 {
+	MessageBox(mainWindow, L"DoSwitchObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1469,6 +1473,7 @@ void DoSwitchObjectInfo (void)
 
 void DoTriggerObjectInfo (void)
 {
+	MessageBox(mainWindow, L"DoTriggerObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1628,6 +1633,7 @@ void DoTriggerObjectInfo (void)
 
 void DoLightObjectInfo (void)
 {
+	MessageBox(mainWindow, L"DoLightObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1717,6 +1723,7 @@ void DoLightObjectInfo (void)
 
 void DoApplianceObjectInfo (SInt16 what)
 {
+	MessageBox(mainWindow, L"DoApplianceObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1836,6 +1843,7 @@ void DoApplianceObjectInfo (SInt16 what)
 
 void DoMicrowaveObjectInfo (void)
 {
+	MessageBox(mainWindow, L"DoMicrowaveObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1963,6 +1971,7 @@ void DoMicrowaveObjectInfo (void)
 
 void DoGreaseObjectInfo (void)
 {
+	MessageBox(mainWindow, L"DoGreaseObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -2040,6 +2049,7 @@ void DoGreaseObjectInfo (void)
 
 void DoInvisBonusObjectInfo (void)
 {
+	MessageBox(mainWindow, L"DoInvisBonusObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -2156,6 +2166,7 @@ void DoInvisBonusObjectInfo (void)
 
 void DoTransObjectInfo (SInt16 what)
 {
+	MessageBox(mainWindow, L"DoTransObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -2282,6 +2293,7 @@ void DoTransObjectInfo (SInt16 what)
 
 void DoEnemyObjectInfo (SInt16 what)
 {
+	MessageBox(mainWindow, L"DoEnemyObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -2395,6 +2407,7 @@ void DoEnemyObjectInfo (SInt16 what)
 
 void DoFlowerObjectInfo (void)
 {
+	MessageBox(mainWindow, L"DoFlowerObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -2497,8 +2510,6 @@ void DoFlowerObjectInfo (void)
 
 void DoObjectInfo (void)
 {
-	return;
-#if 0
 	if ((objActive == kInitialGliderSelected) ||
 			(objActive == kLeftGliderSelected) ||
 			(objActive == kRightGliderSelected))
@@ -2666,10 +2677,9 @@ void DoObjectInfo (void)
 		break;
 
 		default:
-		SysBeep(1);
+		MessageBeep(MB_ICONWARNING);
 		break;
 	}
-#endif
 }
 
 #endif
