@@ -864,15 +864,11 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 #ifndef COMPILEDEMO
 void BringSendFrontBack (Boolean bringFront)
 {
-	return;
-#if 0
-	houseType	*thisHousePtr;
 	objectType	savedObject;
-	short		numLinks, i;
-	short		srcRoom, srcObj;
-	short		sorting[kMaxRoomObs];
-	short		sorted[kMaxRoomObs];
-	char		wasState;
+	SInt16		numLinks, i;
+	SInt16		srcRoom, srcObj;
+	SInt16		sorting[kMaxRoomObs];
+	Byte		sorted[kMaxRoomObs];
 
 	if (bringFront)							// No need to bring to front…
 	{										// or send to back if the object…
@@ -890,54 +886,50 @@ void BringSendFrontBack (Boolean bringFront)
 	numLinks = CountHouseLinks();			// Determine space needed for all links.
 	if (numLinks != 0)						// Create links list of ALL house links.
 	{
-		linksList = nil;
-		linksList = (linksPtr)NewPtr(sizeof(linksType) * numLinks);
-		if (linksList == nil)
+		linksList = NULL;
+		linksList = (linksPtr)calloc(numLinks, sizeof(*linksList));
+		if (linksList == NULL)
 		{
-			YellowAlert(kYellowCantOrderLinks, MemError());
+			YellowAlert(kYellowCantOrderLinks, -1);
 			return;
 		}
 		GenerateLinksList();				// Fill in links list with src/dest…
 	}										// data on objects and room numbers.
 
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);				// Lock down house.
-	thisHousePtr = *thisHouse;				// Get a pointer to house structure.
-
 	for (i = 0; i < kMaxRoomObs; i++)		// Set up an ordered array.
 		sorting[i] = i;
 
-	savedObject = (*thisHouse)->rooms[thisRoomNumber].objects[objActive];
+	savedObject = thisHouse->rooms[thisRoomNumber].objects[objActive];
 
 	if (bringFront)
 	{
 		for (i = objActive; i < kMaxRoomObs - 1; i++)
 		{									// Pull all objects down to fill hole.
-			(*thisHouse)->rooms[thisRoomNumber].objects[i] =
-					(*thisHouse)->rooms[thisRoomNumber].objects[i + 1];
+			thisHouse->rooms[thisRoomNumber].objects[i] =
+					thisHouse->rooms[thisRoomNumber].objects[i + 1];
 			sorting[i] = sorting[i + 1];
 			SpinCursor(2);
 		}
 											// Insert object at end of array.
-		(*thisHouse)->rooms[thisRoomNumber].objects[kMaxRoomObs - 1] = savedObject;
+		thisHouse->rooms[thisRoomNumber].objects[kMaxRoomObs - 1] = savedObject;
 		sorting[kMaxRoomObs - 1] = objActive;
 	}
 	else
 	{
 		for (i = objActive; i > 0; i--)
 		{									// Move all objects up to fill hole.
-			(*thisHouse)->rooms[thisRoomNumber].objects[i] =
-					(*thisHouse)->rooms[thisRoomNumber].objects[i - 1];
+			thisHouse->rooms[thisRoomNumber].objects[i] =
+					thisHouse->rooms[thisRoomNumber].objects[i - 1];
 			sorting[i] = sorting[i - 1];
 			SpinCursor(2);
 		}
 											// Insert object at beginning of array.
-		(*thisHouse)->rooms[thisRoomNumber].objects[0] = savedObject;
+		thisHouse->rooms[thisRoomNumber].objects[0] = savedObject;
 		sorting[0] = objActive;
 	}
 
 	for (i = 0; i < kMaxRoomObs; i++)		// Set up retro-ordered array.
-		sorted[sorting[i]] = i;
+		sorted[sorting[i]] = (Byte)i;
 
 	for (i = 0; i < numLinks; i++)			// Walk links list in order to assign…
 	{										// corrected links to objects moved.
@@ -949,7 +941,7 @@ void BringSendFrontBack (Boolean bringFront)
 			else
 				srcObj = linksList[i].srcObj;
 
-			switch ((*thisHouse)->rooms[srcRoom].objects[srcObj].what)
+			switch (thisHouse->rooms[srcRoom].objects[srcObj].what)
 			{
 				case kLightSwitch:
 				case kMachineSwitch:
@@ -959,35 +951,32 @@ void BringSendFrontBack (Boolean bringFront)
 				case kInvisSwitch:
 				case kTrigger:
 				case kLgTrigger:
-				(*thisHouse)->rooms[srcRoom].objects[srcObj].data.d.who =
+				thisHouse->rooms[srcRoom].objects[srcObj].data.d.who =
 						sorted[linksList[i].destObj];
 				break;
 
 				default:
-				(*thisHouse)->rooms[srcRoom].objects[srcObj].data.e.who =
+				thisHouse->rooms[srcRoom].objects[srcObj].data.e.who =
 						sorted[linksList[i].destObj];
 				break;
 			}
 		}
 	}
 
-	HSetState((Handle)thisHouse, wasState);
-	if (linksList != nil)
-		DisposePtr((Ptr)linksList);
+	free(linksList);
 
 	ForceThisRoom(thisRoomNumber);
 
 	fileDirty = true;
 	UpdateMenus(false);
-	InvalWindowRect(mainWindow, &mainWindowRect);
+	Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 	DeselectObject();
 	GetThisRoomsObjRects();
 	ReadyBackground(thisRoom->background, thisRoom->tiles);
 	DrawThisRoomsObjects();
 	GenerateRetroLinks();
 
-	InitCursor();
-#endif
+	//InitCursor();
 }
 #endif
 
