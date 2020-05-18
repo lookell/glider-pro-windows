@@ -529,7 +529,10 @@ void HandleEvent (void)
 		while (PeekMessage(&theEvent, NULL, 0, 0, PM_REMOVE))
 		{
 			if (theEvent.message == WM_QUIT)
+			{
 				quitting = true;
+				return;
+			}
 			TranslateMessage(&theEvent);
 			DispatchMessage(&theEvent);
 		}

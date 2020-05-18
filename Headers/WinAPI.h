@@ -12,6 +12,7 @@
 #define _WIN32_IE_ _WIN32_IE_WINXP
 
 #include <windows.h>
+#include <windowsx.h>
 #include <commctrl.h>
 #include <commdlg.h>
 #include <shlobj.h>

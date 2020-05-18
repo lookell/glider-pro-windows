@@ -73,16 +73,17 @@ SInt16 FindObjectSelected (Point where)
 
 void DoSelectionClick (Point where, Boolean isDoubleClick)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	short		direction, dist;
+	SInt16		direction, dist;
+	POINT		pt;
 
 	StopMarquee();
 
+	pt.x = where.h;
+	pt.y = where.v;
 	if ((PtInMarqueeHandle(where)) && (objActive != kNoObjectSelected))
 	{
-		if (StillDown())
+		if (DragDetect(mainWindow, pt))
 			DragHandle(where);
 		if (ObjectHasHandle(&direction, &dist))
 		{
@@ -115,8 +116,9 @@ void DoSelectionClick (Point where, Boolean isDoubleClick)
 			}
 			else
 			{
-				if (StillDown())
-					DragObject(where);
+
+				if (DragDetect(mainWindow, pt))
+					Gp_DragObject(where);
 				if (ObjectHasHandle(&direction, &dist))
 				{
 					StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
@@ -138,7 +140,6 @@ void DoSelectionClick (Point where, Boolean isDoubleClick)
 	}
 	UpdateMenus(false);
 #endif
-#endif
 }
 
 //--------------------------------------------------------------  DragHandle
@@ -146,9 +147,7 @@ void DoSelectionClick (Point where, Boolean isDoubleClick)
 #ifndef COMPILEDEMO
 void DragHandle (Point where)
 {
-	return;
-#if 0
-	short		hDelta, vDelta;
+	SInt16		hDelta, vDelta;
 	Boolean		whoCares;
 
 	switch (thisRoom->objects[objActive].what)
@@ -178,7 +177,7 @@ void DragHandle (Point where)
 		thisRoom->objects[objActive].data.a.distance = hDelta;
 		thisRoom->objects[objActive].data.a.tall = vDelta / 2;
 		whoCares = KeepObjectLegal();
-		InvalWindowRect(mainWindow, &mainWindowRect);
+		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 		GetThisRoomsObjRects();
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -217,7 +216,7 @@ void DragHandle (Point where)
 		thisRoom->objects[objActive].data.b.bounds.right =
 			thisRoom->objects[objActive].data.b.bounds.left + hDelta;
 		whoCares = KeepObjectLegal();
-		InvalWindowRect(mainWindow, &mainWindowRect);
+		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 		GetThisRoomsObjRects();
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -234,7 +233,7 @@ void DragHandle (Point where)
 		thisRoom->objects[objActive].data.b.bounds.bottom =
 			thisRoom->objects[objActive].data.b.bounds.top + vDelta;
 		whoCares = KeepObjectLegal();
-		InvalWindowRect(mainWindow, &mainWindowRect);
+		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 		GetThisRoomsObjRects();
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -250,7 +249,7 @@ void DragHandle (Point where)
 		thisRoom->objects[objActive].data.b.bounds.top =
 			thisRoom->objects[objActive].data.b.bounds.bottom - vDelta;
 		whoCares = KeepObjectLegal();
-		InvalWindowRect(mainWindow, &mainWindowRect);
+		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 		GetThisRoomsObjRects();
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -263,7 +262,7 @@ void DragHandle (Point where)
 		DragMarqueeHandle(where, &hDelta);
 		thisRoom->objects[objActive].data.c.length = hDelta;
 		whoCares = KeepObjectLegal();
-		InvalWindowRect(mainWindow, &mainWindowRect);
+		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 		GetThisRoomsObjRects();
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -278,7 +277,7 @@ void DragHandle (Point where)
 		thisRoom->objects[objActive].data.d.wide = (Byte)hDelta;
 		thisRoom->objects[objActive].data.d.tall = vDelta;
 		whoCares = KeepObjectLegal();
-		InvalWindowRect(mainWindow, &mainWindowRect);
+		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 		GetThisRoomsObjRects();
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -294,7 +293,7 @@ void DragHandle (Point where)
 			vDelta = 32;
 		thisRoom->objects[objActive].data.d.tall = ((hDelta / 4) << 8) + (vDelta / 4);
 		whoCares = KeepObjectLegal();
-		InvalWindowRect(mainWindow, &mainWindowRect);
+		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 		GetThisRoomsObjRects();
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -306,7 +305,7 @@ void DragHandle (Point where)
 		DragMarqueeHandle(where, &hDelta);
 		thisRoom->objects[objActive].data.f.length = hDelta;
 		whoCares = KeepObjectLegal();
-		InvalWindowRect(mainWindow, &mainWindowRect);
+		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 		GetThisRoomsObjRects();
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -338,17 +337,15 @@ void DragHandle (Point where)
 		thisRoom->objects[objActive].data.i.bounds.bottom =
 			thisRoom->objects[objActive].data.i.bounds.top + vDelta;
 		whoCares = KeepObjectLegal();
-		InvalWindowRect(mainWindow, &mainWindowRect);
+		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 		GetThisRoomsObjRects();
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		DrawThisRoomsObjects();
 		break;
-
 	}
 
 	fileDirty = true;
 	UpdateMenus(false);
-#endif
 }
 #endif
 
@@ -357,12 +354,11 @@ void DragHandle (Point where)
 #ifndef COMPILEDEMO
 void Gp_DragObject (Point where)
 {
-	return;
-#if 0
 	Rect		newRect, wasRect;
-	short		deltaH, deltaV, increment;
-	char		wasState;
+	SInt16		deltaH, deltaV, increment;
 	Boolean		invalAll;
+
+	invalAll = false;
 
 	if (objActive == kInitialGliderSelected)
 	{
@@ -537,11 +533,8 @@ void Gp_DragObject (Point where)
 
 	if (objActive == kInitialGliderSelected)
 	{
-		wasState = HGetState((Handle)thisHouse);
-		HLock((Handle)thisHouse);
-		(*thisHouse)->initial.h += deltaH;
-		(*thisHouse)->initial.v += deltaV;
-		HSetState((Handle)thisHouse, wasState);
+		thisHouse->initial.h += deltaH;
+		thisHouse->initial.v += deltaV;
 	}
 	else if (objActive == kLeftGliderSelected)
 	{
@@ -553,7 +546,7 @@ void Gp_DragObject (Point where)
 		thisRoom->leftStart = (Byte)increment;
 		QSetRect(&leftStartGliderDest, 0, 0, 48, 16);
 		QOffsetRect(&leftStartGliderDest, 0,
-				kGliderStartsDown + (short)thisRoom->leftStart);
+				kGliderStartsDown + (SInt16)thisRoom->leftStart);
 	}
 	else if (objActive == kRightGliderSelected)
 	{
@@ -565,7 +558,7 @@ void Gp_DragObject (Point where)
 		thisRoom->rightStart = (Byte)increment;
 		QSetRect(&rightStartGliderDest, 0, 0, 48, 16);
 		QOffsetRect(&rightStartGliderDest, 0,
-				kGliderStartsDown + (short)thisRoom->rightStart);
+				kGliderStartsDown + (SInt16)thisRoom->rightStart);
 	}
 	else
 	{
@@ -758,23 +751,22 @@ void Gp_DragObject (Point where)
 	}
 	GetThisRoomsObjRects();
 	if (invalAll)
-		InvalWindowRect(mainWindow, &mainWindowRect);
+		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 	else
 	{
-		InvalWindowRect(mainWindow, &wasRect);
+		Mac_InvalWindowRect(mainWindow, &wasRect);
 		if (objActive == kInitialGliderSelected)
-			InvalWindowRect(mainWindow, &initialGliderRect);
+			Mac_InvalWindowRect(mainWindow, &initialGliderRect);
 		else if (objActive == kLeftGliderSelected)
-			InvalWindowRect(mainWindow, &leftStartGliderDest);
+			Mac_InvalWindowRect(mainWindow, &leftStartGliderDest);
 		else if (objActive == kRightGliderSelected)
-			InvalWindowRect(mainWindow, &rightStartGliderDest);
+			Mac_InvalWindowRect(mainWindow, &rightStartGliderDest);
 		else
-			InvalWindowRect(mainWindow, &roomObjectRects[objActive]);
+			Mac_InvalWindowRect(mainWindow, &roomObjectRects[objActive]);
 	}
 
 	ReadyBackground(thisRoom->background, thisRoom->tiles);
 	DrawThisRoomsObjects();
-#endif
 }
 #endif
 
@@ -2323,12 +2315,9 @@ void DrawThisRoomsObjects (void)
 	{
 		if (GetNumberOfLights(thisRoomNumber) <= 0)
 		{
-			// was this meant to be patOr? as-is, it does nothing
-			// if this is restored, it draws onto backSrcMap
-			//PenMode(srcOr);
-			//PenPat(GetQDGlobalsGray(&dummyPattern));
-			//PaintRect(&backSrcRect);
-			//PenNormal();
+			// Shadow the background to represent darkness.
+			// Color 255 == black.
+			ColorShadowRect(backSrcMap, &backSrcRect, 255);
 		}
 
 		for (i = 0; i < kMaxRoomObs; i++)
@@ -2688,37 +2677,52 @@ void DrawThisRoomsObjects (void)
 
 void HiliteAllObjects (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	KeyMap		theseKeys;
-	short		i;
-	Pattern		dummyPattern;
+	HDC			mainWindowDC;
+	RECT		focusRects[ARRAYSIZE(roomObjectRects)];
+	MSG			msg;
+	SInt16		i;
 
 	if (theMode != kEditMode)
 		return;
 
-	PauseMarquee();
-	SetPort((GrafPtr)mainWindow);
-	PenPat(GetQDGlobalsGray(&dummyPattern));
-	PenMode(patXor);
-
 	for (i = 0; i < kMaxRoomObs; i++)
-		FrameRect(&roomObjectRects[i]);
-
-	do
 	{
-		GetKeys(theseKeys);
+		focusRects[i].left = roomObjectRects[i].left;
+		focusRects[i].top = roomObjectRects[i].top;
+		focusRects[i].right = roomObjectRects[i].right;
+		focusRects[i].bottom = roomObjectRects[i].bottom;
 	}
-	while ((BitTst(&theseKeys, kCommandKeyMap)) &&
-			(BitTst(&theseKeys, kOptionKeyMap)));
 
+	PauseMarquee();
+
+	mainWindowDC = GetMainWindowDC();
 	for (i = 0; i < kMaxRoomObs; i++)
-		FrameRect(&roomObjectRects[i]);
+		DrawFocusRect(mainWindowDC, &focusRects[i]);
+	ReleaseMainWindowDC(mainWindowDC);
 
-	PenNormal();
+	while (GetMessage(&msg, NULL, 0, 0))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+
+		if (mainWindow != NULL && GetActiveWindow() != mainWindow)
+			break;
+		// TODO: consider changing the Option key substitute to the Shift key here
+		// (Also see function HandleEvent).
+		// if Command (CTRL) or Option (ALT) key go up
+		if ((GetKeyState(VK_CONTROL) >= 0) || (GetKeyState(VK_MENU) >= 0))
+			break;
+	}
+	if (msg.message == WM_QUIT)
+		PostQuitMessage((int)msg.wParam);
+
+	mainWindowDC = GetMainWindowDC();
+	for (i = 0; i < kMaxRoomObs; i++)
+		DrawFocusRect(mainWindowDC, &focusRects[i]);
+	ReleaseMainWindowDC(mainWindowDC);
+
 	ResumeMarquee();
-#endif
 #endif
 }
 

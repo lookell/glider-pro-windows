@@ -411,29 +411,22 @@ void UpdateEditWindowTitle (void)
 
 void HandleMainClick (Point wherePt, Boolean isDoubleClick)
 {
-	return;
-#if 0
-	KeyMap		theseKeys;
-
-	if ((theMode != kEditMode) || (mainWindow == nil) ||
-			(!houseUnlocked))
+	if ((theMode != kEditMode) || (mainWindow == NULL) || (!houseUnlocked))
 		return;
 
-	SetPortWindowPort(mainWindow);
-	GlobalToLocal(&wherePt);
+	//SetPortWindowPort(mainWindow);
+	//GlobalToLocal(&wherePt); // window procedures already get client coordinates
 
 	if (toolSelected == kSelectTool)
 		DoSelectionClick(wherePt, isDoubleClick);
 	else
 		DoNewObjectClick(wherePt);
 
-	GetKeys(theseKeys);
-	if (!BitTst(&theseKeys, kShiftKeyMap))
+	if (GetKeyState(VK_SHIFT) >= 0) // if shift key up
 	{
 		EraseSelectedTool();
 		SelectTool(kSelectTool);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  GetMainWindowDC
@@ -705,8 +698,6 @@ void WashColorIn (void)
 
 LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	PAINTSTRUCT ps;
-
 	switch (uMsg)
 	{
 	case WM_CLOSE:
@@ -728,11 +719,32 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		HandleKeyEvent((BYTE)wParam);
 		return 0;
 
+	case WM_LBUTTONDOWN:
+	{
+		Point wherePt;
+		wherePt.h = GET_X_LPARAM(lParam);
+		wherePt.v = GET_Y_LPARAM(lParam);
+		HandleMainClick(wherePt, false);
+		return 0;
+	}
+
+	case WM_LBUTTONDBLCLK:
+	{
+		Point wherePt;
+		wherePt.h = GET_X_LPARAM(lParam);
+		wherePt.v = GET_Y_LPARAM(lParam);
+		HandleMainClick(wherePt, true);
+		return 0;
+	}
+
 	case WM_PAINT:
+	{
+		PAINTSTRUCT ps;
 		BeginPaint(hwnd, &ps);
 		EndPaint(hwnd, &ps);
 		UpdateMainWindow();
 		return 0;
+	}
 	}
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }

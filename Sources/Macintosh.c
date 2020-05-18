@@ -293,7 +293,7 @@ void Mac_InvalWindowRect(HWND window, const Rect *bounds)
 	RECT rcDirty;
 
 	SetRect(&rcDirty, bounds->left, bounds->top, bounds->right, bounds->bottom);
-	InvalidateRect(window, &rcDirty, TRUE);
+	InvalidateRect(window, &rcDirty, FALSE);
 }
 
 //--------------------------------------------------------------  Line
