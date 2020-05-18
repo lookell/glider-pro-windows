@@ -454,11 +454,9 @@ void HandleHighLevelEvent (EventRecord *theEvent)
 
 void HandleIdleTask (void)
 {
-	return;
-#if 0
 	if (theMode == kEditMode)
 	{
-		SetPort((GrafPtr)mainWindow);
+		//SetPort((GrafPtr)mainWindow);
 		DoMarquee();
 
 		if ((autoRoomEdit) && (newRoomNow))
@@ -468,7 +466,6 @@ void HandleIdleTask (void)
 			newRoomNow = false;
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleEvent
