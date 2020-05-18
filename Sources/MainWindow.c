@@ -724,6 +724,10 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		SetMenu(hwnd, NULL);
 		return 0;
 
+	case WM_KEYDOWN:
+		HandleKeyEvent((BYTE)wParam);
+		return 0;
+
 	case WM_PAINT:
 		BeginPaint(hwnd, &ps);
 		EndPaint(hwnd, &ps);

@@ -19,7 +19,6 @@
 
 SInt16 BitchAboutColorDepth (void);
 void HandleMouseEvent (EventRecord *);
-void HandleKeyEvent (EventRecord *);
 void HandleUpdateEvent (EventRecord *);
 void HandleOSEvent (EventRecord *);
 void HandleHighLevelEvent (EventRecord *);
@@ -166,183 +165,161 @@ void HandleMouseEvent (EventRecord *theEvent)
 //--------------------------------------------------------------  HandleKeyEvent
 // Handle a key-down event.
 
-void HandleKeyEvent (EventRecord *theEvent)
+void HandleKeyEvent (BYTE vKey)
 {
-	return;
-#if 0
-	char		theChar;
-	Boolean		shiftDown, commandDown, optionDown;
+	BOOL		shiftDown, commandDown, optionDown;
 
-	theChar = theEvent->message & charCodeMask;
-	shiftDown = ((theEvent->modifiers & shiftKey) != 0);
-	commandDown = ((theEvent->modifiers & cmdKey) != 0);
-	optionDown = ((theEvent->modifiers & optionKey) != 0);
+	shiftDown = (GetKeyState(VK_SHIFT) < 0);
+	commandDown = (GetKeyState(VK_CONTROL) < 0);
+	optionDown = (GetKeyState(VK_MENU) < 0);
 
-	if ((commandDown) && (!optionDown))
-		DoMenuChoice(MenuKey(theChar));
-	else
+	switch (vKey)
 	{
-		switch (theChar)
-		{
-			case kHelpKeyASCII:
-			break;
+		case VK_PRIOR: // page up
+		if (houseUnlocked)
+			PrevToolMode();
+		break;
 
-			case kPageUpKeyASCII:
-			if (houseUnlocked)
-				PrevToolMode();
-			break;
-
-			case kPageDownKeyASCII:
-			if (houseUnlocked)
-				NextToolMode();
-			break;
+		case VK_NEXT: // page down
+		if (houseUnlocked)
+			NextToolMode();
+		break;
 
 #if BUILD_ARCADE_VERSION
 
-			case kLeftArrowKeyASCII:
-			DoOptionsMenu(iHighScores);
-			break;
+		case VK_LEFT:
+		DoOptionsMenu(iHighScores);
+		break;
 
-			case kRightArrowKeyASCII:
-			DoOptionsMenu(iHelp);
-			break;
+		case VK_RIGHT:
+		DoOptionsMenu(iHelp);
+		break;
 
-			case kUpArrowKeyASCII:
-			DoGameMenu(iNewGame);
-			break;
+		case VK_UP:
+		DoGameMenu(iNewGame);
+		break;
 
-			case kDownArrowKeyASCII:
-			DoGameMenu(iNewGame);
-			break;
+		case VK_DOWN:
+		DoGameMenu(iNewGame);
+		break;
 
 #else
 
-			case kLeftArrowKeyASCII:
-			if (houseUnlocked)
-			{
-				if (objActive == kNoObjectSelected)
-					SelectNeighborRoom(kRoomToLeft);
-				else
-					MoveObject(kBumpLeft, shiftDown);
-			}
-			break;
-
-			case kRightArrowKeyASCII:
-			if (houseUnlocked)
-			{
-				if (objActive == kNoObjectSelected)
-					SelectNeighborRoom(kRoomToRight);
-				else
-					MoveObject(kBumpRight, shiftDown);
-			}
-			break;
-
-			case kUpArrowKeyASCII:
-			if (houseUnlocked)
-			{
-				if (objActive == kNoObjectSelected)
-					SelectNeighborRoom(kRoomAbove);
-				else
-					MoveObject(kBumpUp, shiftDown);
-			}
-			break;
-
-			case kDownArrowKeyASCII:
-			if (houseUnlocked)
-			{
-				if (objActive == kNoObjectSelected)
-					SelectNeighborRoom(kRoomBelow);
-				else
-					MoveObject(kBumpDown, shiftDown);
-			}
-			break;
-
-#endif
-
-			case kDeleteKeyASCII:
-			if (houseUnlocked)
-			{
-				if (objActive == kNoObjectSelected)
-					DeleteRoom(true);
-				else
-					DeleteObject();
-			}
-			break;
-
-			case kTabKeyASCII:
-			if ((theMode == kEditMode) && (houseUnlocked))
-			{
-				if (shiftDown)
-					SelectPrevObject();
-				else
-					SelectNextObject();
-			}
-			break;
-
-			case kEscapeKeyASCII:
-			if ((theMode == kEditMode) && (houseUnlocked))
-				DeselectObject();
-			break;
-
-			case kAKeyASCII:
-			case kCapAKeyASCII:
-			if ((theMode == kEditMode) && (houseUnlocked))
-				SetSpecificToolMode(kApplianceMode);
-			break;
-
-			case kBKeyASCII:
-			case kCapBKeyASCII:
-			if ((theMode == kEditMode) && (houseUnlocked))
-				SetSpecificToolMode(kBlowerMode);
-			break;
-
-			case kCKeyASCII:
-			case kCapCKeyASCII:
-			if ((theMode == kEditMode) && (houseUnlocked))
-				SetSpecificToolMode(kClutterMode);
-			break;
-
-			case kEKeyASCII:
-			case kCapEKeyASCII:
-			if ((theMode == kEditMode) && (houseUnlocked))
-				SetSpecificToolMode(kEnemyMode);
-			break;
-
-			case kFKeyASCII:
-			case kCapFKeyASCII:
-			if ((theMode == kEditMode) && (houseUnlocked))
-				SetSpecificToolMode(kFurnitureMode);
-			break;
-
-			case kLKeyASCII:
-			case kCapLKeyASCII:
-			if ((theMode == kEditMode) && (houseUnlocked))
-				SetSpecificToolMode(kLightMode);
-			break;
-
-			case kPKeyASCII:
-			case kCapPKeyASCII:
-			if ((theMode == kEditMode) && (houseUnlocked))
-				SetSpecificToolMode(kBonusMode);
-			break;
-
-			case kSKeyASCII:
-			case kCapSKeyASCII:
-			if ((theMode == kEditMode) && (houseUnlocked))
-				SetSpecificToolMode(kSwitchMode);
-			break;
-
-			case kTKeyASCII:
-			case kCapTKeyASCII:
-			if ((theMode == kEditMode) && (houseUnlocked))
-				SetSpecificToolMode(kTransportMode);
-			break;
-
-			default:
-			break;
+		case VK_LEFT:
+		if (houseUnlocked)
+		{
+			if (objActive == kNoObjectSelected)
+				SelectNeighborRoom(kRoomToLeft);
+			else
+				MoveObject(kBumpLeft, shiftDown);
 		}
-	}
+		break;
+
+		case VK_RIGHT:
+		if (houseUnlocked)
+		{
+			if (objActive == kNoObjectSelected)
+				SelectNeighborRoom(kRoomToRight);
+			else
+				MoveObject(kBumpRight, shiftDown);
+		}
+		break;
+
+		case VK_UP:
+		if (houseUnlocked)
+		{
+			if (objActive == kNoObjectSelected)
+				SelectNeighborRoom(kRoomAbove);
+			else
+				MoveObject(kBumpUp, shiftDown);
+		}
+		break;
+
+		case VK_DOWN:
+		if (houseUnlocked)
+		{
+			if (objActive == kNoObjectSelected)
+				SelectNeighborRoom(kRoomBelow);
+			else
+				MoveObject(kBumpDown, shiftDown);
+		}
+		break;
+
 #endif
+
+		case VK_DELETE:
+		if (houseUnlocked)
+		{
+			if (objActive == kNoObjectSelected)
+				DeleteRoom(true);
+			else
+				Gp_DeleteObject();
+		}
+		break;
+
+		case VK_TAB:
+		if ((theMode == kEditMode) && (houseUnlocked))
+		{
+			if (shiftDown)
+				SelectPrevObject();
+			else
+				SelectNextObject();
+		}
+		break;
+
+		case VK_ESCAPE:
+		if ((theMode == kEditMode) && (houseUnlocked))
+			DeselectObject();
+		break;
+
+		case 'A':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kApplianceMode);
+		break;
+
+		case 'B':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kBlowerMode);
+		break;
+
+		case 'C':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kClutterMode);
+		break;
+
+		case 'E':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kEnemyMode);
+		break;
+
+		case 'F':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kFurnitureMode);
+		break;
+
+		case 'L':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kLightMode);
+		break;
+
+		case 'P':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kBonusMode);
+		break;
+
+		case 'S':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kSwitchMode);
+		break;
+
+		case 'T':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kTransportMode);
+		break;
+
+		default:
+		break;
+	}
 }
 
 //--------------------------------------------------------------  HandleUpdateEvent
@@ -534,10 +511,10 @@ void HandleEvent (void)
 			HandleMouseEvent(&theEvent);
 			break;
 
-		case keyDown:
-		case autoKey:
-			HandleKeyEvent(&theEvent);
-			break;
+		//case keyDown:
+		//case autoKey:
+		//	HandleKeyEvent(&theEvent);
+		//	break;
 
 		case updateEvt:
 			HandleUpdateEvent(&theEvent);

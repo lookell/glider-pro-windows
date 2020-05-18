@@ -316,7 +316,8 @@ void DisplayCTSeed (CGrafPtr);
 void FillScreenRed (void);
 void DumpToResEditFile (Ptr, SInt32);
 
-void HandleEvent (void);								// --- Event.c
+void HandleKeyEvent (BYTE);								// --- Event.c
+void HandleEvent (void);
 void HiliteAllWindows (void);
 void IgnoreThisClick (void);
 
