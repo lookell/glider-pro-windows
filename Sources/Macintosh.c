@@ -134,6 +134,22 @@ void Mac_CopyMask(
 	DeleteDC(newSrcBits);
 }
 
+//--------------------------------------------------------------  DeltaPoint
+// Calculate the difference between two points by subtracting the coordinates
+// of ptB from the coordinates of ptA. The high-order word of the result is
+// the difference in the vertical coordinates, and the low-order word of the
+// result is the difference of the horizontal coordinates.
+
+SInt32 Mac_DeltaPoint(Point ptA, Point ptB)
+{
+	UInt32 vertDiff, horzDiff;
+
+	vertDiff = (UInt32)(UInt16)(SInt16)(ptA.v - ptB.v);
+	horzDiff = (UInt32)(UInt16)(SInt16)(ptA.h - ptB.h);
+
+	return (vertDiff << 16) | (horzDiff);
+}
+
 //--------------------------------------------------------------  DrawPicture
 // Draw the given bitmap into the destination output device. The bitmap
 // is stretched or shrinked as necessary to fit exactly with the given

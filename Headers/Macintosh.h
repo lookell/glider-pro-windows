@@ -121,6 +121,7 @@ void Mac_CopyMask(
 	const Rect *srcRect,
 	const Rect *maskRect,
 	const Rect *dstRect);
+SInt32 Mac_DeltaPoint(Point ptA, Point ptB);
 void Mac_DrawPicture(HDC hdcDst, HBITMAP myPicture, const Rect *dstRect);
 void Mac_DrawString(HDC hdc, StringPtr s);
 Boolean Mac_EqualString(StringPtr aStr, StringPtr bStr, Boolean caseSens);
