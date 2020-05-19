@@ -27,16 +27,20 @@ static INT_PTR CALLBACK AlertProc (HWND, UINT, WPARAM, LPARAM);
 static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
 {
 	const DialogParams *params = (const DialogParams *)lParam;
-	INT textLength;
 	PWSTR oldText, newText;
-	INT i, oldTextSize, newTextSize, numCarets;
-	WCHAR paramStr[256];
+	int textLength;
+	int i, oldTextSize;
+	size_t newTextSize;
+	PCWSTR theParam;
+	PWSTR remainingText;
+	size_t remainingSize;
 
 	oldText = NULL;
 	newText = NULL;
 
+	// Get the original window text
 	textLength = GetWindowTextLength(hwnd);
-	if (textLength <= 0)
+	if (textLength <= 1)
 		goto ending;
 	oldTextSize = textLength + 1;
 	oldText = calloc(oldTextSize, sizeof(*oldText));
@@ -44,63 +48,63 @@ static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
 		goto ending;
 	if (!GetWindowText(hwnd, oldText, oldTextSize))
 		goto ending;
-	oldText[oldTextSize - 1] = L'\0';
+	oldText[textLength] = L'\0';
 
-	numCarets = 0;
-	for (i = 0; i < oldTextSize - 1; i++)
+	// Calculate the size of the new window text
+	newTextSize = oldTextSize;
+	for (i = 0; i < textLength; i++)
 	{
-		if (oldText[i] != L'^')
-			continue;
-		switch (oldText[i + 1])
-		{
-		case L'0':
-		case L'1':
-		case L'2':
-		case L'3':
-			numCarets += 1;
-			break;
-		}
-	}
-	if (numCarets == 0)
-		goto ending;
-
-	newTextSize = oldTextSize + (255 * numCarets);
-	newText = calloc(newTextSize, sizeof(*newText));
-	if (newText == NULL)
-		goto ending;
-	for (i = 0; i < oldTextSize - 1; i++)
-	{
-		paramStr[0] = oldText[i];
-		paramStr[1] = L'\0';
 		if (oldText[i] == L'^')
 		{
 			switch (oldText[i + 1])
 			{
 			case L'0':
-				i++;
-				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
-					params->arg[0], ARRAYSIZE(params->arg[0]));
-				break;
 			case L'1':
-				i++;
-				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
-					params->arg[1], ARRAYSIZE(params->arg[1]));
-				break;
 			case L'2':
-				i++;
-				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
-					params->arg[2], ARRAYSIZE(params->arg[2]));
-				break;
 			case L'3':
-				i++;
-				StringCchCopyN(paramStr, ARRAYSIZE(paramStr),
-					params->arg[3], ARRAYSIZE(params->arg[3]));
+				theParam = params->arg[oldText[i + 1] - L'0'];
+				if (theParam != NULL && theParam[0] != L'\0')
+				{
+					newTextSize += wcslen(theParam);
+				}
 				break;
 			}
 		}
-		StringCchCat(newText, newTextSize, paramStr);
 	}
 
+	// Format the window text
+	newText = calloc(newTextSize, sizeof(*newText));
+	if (newText == NULL)
+		goto ending;
+	remainingText = newText;
+	remainingSize = newTextSize;
+	for (i = 0; i < textLength; i++)
+	{
+		if (oldText[i] == L'^')
+		{
+			switch (oldText[i + 1])
+			{
+			case L'0':
+			case L'1':
+			case L'2':
+			case L'3':
+				theParam = params->arg[oldText[i + 1] - L'0'];
+				if (theParam != NULL && theParam[0] != L'\0')
+				{
+					i++;
+					StringCchCatEx(remainingText, remainingSize, theParam,
+							&remainingText, &remainingSize, 0);
+					continue;
+				}
+				break;
+			}
+		}
+		if (remainingSize >= 2)
+		{
+			*(remainingText++) = oldText[i];
+			remainingSize--;
+		}
+	}
 	SetWindowText(hwnd, newText);
 	
 ending:
@@ -113,6 +117,8 @@ ending:
 
 void ParamDialogText(HWND hDlg, const DialogParams *params)
 {
+	if (params == NULL)
+		return;
 	EnumChildWindows(hDlg, FormatWindowText, (LPARAM)params);
 }
 
