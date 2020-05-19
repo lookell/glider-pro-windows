@@ -353,15 +353,15 @@ void DoDirSearch (void)
 					hr = StringCchCopy(theHousesSpecs[housesFound].houseName,
 							ARRAYSIZE(theHousesSpecs[housesFound].houseName),
 							ffd.cFileName);
-				}
-				if (SUCCEEDED(hr) || hr == STRSAFE_E_INSUFFICIENT_BUFFER)
-				{
-					// STRSAFE_E_INSUFFICIENT_BUFFER is okay. Just means that the
-					// house's name will be truncated on display.
-					MacFromWinString(theHousesSpecs[housesFound].name,
-							ARRAYSIZE(theHousesSpecs[housesFound].name),
-							theHousesSpecs[housesFound].houseName);
-					housesFound++;
+					if (SUCCEEDED(hr) || hr == STRSAFE_E_INSUFFICIENT_BUFFER)
+					{
+						// STRSAFE_E_INSUFFICIENT_BUFFER is okay. Just means that the
+						// house's name will be truncated on display.
+						MacFromWinString(theHousesSpecs[housesFound].name,
+								ARRAYSIZE(theHousesSpecs[housesFound].name),
+								theHousesSpecs[housesFound].houseName);
+						housesFound++;
+					}
 				}
 			}
 		}
