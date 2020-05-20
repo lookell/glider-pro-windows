@@ -347,6 +347,8 @@ void GetFirstWordOfString (StringPtr, StringPtr);
 void CollapseStringToWidth (StringPtr, SInt16);
 void GetChooserName (StringPtr);
 StringPtr GetLocalizedString (SInt16, StringPtr);
+wchar_t *MacToWinLineEndings (const wchar_t *);
+wchar_t *WinToMacLineEndings (const wchar_t *);
 
 Point MyGetGlobalMouse (void);							// --- Utilities.c
 void ToolBoxInit (void);

@@ -368,4 +368,100 @@ StringPtr GetLocalizedString (SInt16 index, StringPtr theString)
 	return (theString);
 }
 
+//--------------------------------------------------------------  MacToWinLineEndings
 
+// This functions takes a wide string and replaces each instance of "\r" with "\r\n".
+// The new string is returned if the function succeeds, or NULL is returned if the
+// function fails (e.g., memory could not be allocated). The returned pointer must
+// be deallocated with the standard 'free' function.
+
+wchar_t *MacToWinLineEndings(const wchar_t *input)
+{
+	wchar_t *output;
+	size_t inputIndex, outputIndex, outputSize;
+
+	if (input == NULL)
+	{
+		return NULL;
+	}
+
+	outputSize = 1; // 1 element for L'\0'
+	for (inputIndex = 0; input[inputIndex] != L'\0'; inputIndex++)
+	{
+		outputSize++;
+		if (input[inputIndex] == L'\r')
+		{
+			outputSize++;
+		}
+	}
+
+	output = calloc(outputSize, sizeof(*output));
+	if (output == NULL)
+	{
+		return NULL;
+	}
+
+	outputIndex = 0;
+	for (inputIndex = 0; input[inputIndex] != L'\0'; inputIndex++)
+	{
+		output[outputIndex++] = input[inputIndex];
+		if (input[inputIndex] == L'\r')
+		{
+			output[outputIndex++] = L'\n';
+		}
+	}
+
+	return output;
+}
+
+//--------------------------------------------------------------  WinToMacLineEndings
+
+// This functions takes a wide string and replaces each instance of "\r\n" with "\r".
+// The new string is returned if the function succeeds. or NULL is returned if the
+// function fails (e.g., memory could not be allocated for the new string). The
+// returned pointer must be deallocated with the standard 'free' function.
+
+wchar_t *WinToMacLineEndings(const wchar_t *input)
+{
+	wchar_t *output;
+	size_t inputIndex, outputIndex, outputSize;
+
+	if (input == NULL)
+	{
+		return NULL;
+	}
+
+	outputSize = 1; // 1 element for L'\0'
+	for (inputIndex = 0; input[inputIndex] != L'\0'; inputIndex++)
+	{
+		outputSize++;
+		if (inputIndex != 0)
+		{
+			if (input[inputIndex - 1] == L'\r' && input[inputIndex] == L'\n')
+			{
+				--outputSize;
+			}
+		}
+	}
+
+	output = calloc(outputSize, sizeof(*output));
+	if (output == NULL)
+	{
+		return NULL;
+	}
+
+	outputIndex = 0;
+	for (inputIndex = 0; input[inputIndex] != L'\0'; inputIndex++)
+	{
+		output[outputIndex++] = input[inputIndex];
+		if (inputIndex != 0)
+		{
+			if (input[inputIndex - 1] == L'\r' && input[inputIndex] == L'\n')
+			{
+				output[--outputIndex] = L'\0';
+			}
+		}
+	}
+
+	return output;
+}
