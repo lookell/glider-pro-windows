@@ -585,51 +585,56 @@ void DrawDefaultButton (DialogPtr theDialog)
 //--------------------------------------------------------------  GetDialogString
 // Returns a string from a specific dialog item.
 
-void GetDialogString (DialogPtr theDialog, SInt16 item, StringPtr theString)
+void GetDialogString (HWND theDialog, int item, StringPtr theString, int stringCapacity)
 {
-	return;
-#if 0
-	Rect		itemRect;
-	Handle		itemHandle;
-	short		itemType;
+	wchar_t *itemText;
+	wchar_t *tmpPtr;
+	HWND dialogItem;
+	int itemTextLength;
 
-	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
-	GetDialogItemText(itemHandle, theString);
-#endif
+	PasStringCopyC("", theString);
+	dialogItem = GetDlgItem(theDialog, item);
+	itemTextLength = GetWindowTextLength(dialogItem);
+	if (itemTextLength == 0)
+		return;
+	tmpPtr = calloc(itemTextLength + 1, sizeof(*tmpPtr));
+	if (tmpPtr == NULL)
+		return;
+	GetWindowText(dialogItem, tmpPtr, itemTextLength + 1);
+	itemText = WinToMacLineEndings(tmpPtr);
+	free(tmpPtr);
+	if (itemText == NULL)
+		return;
+	MacFromWinString(theString, stringCapacity, itemText);
+	free(itemText);
 }
 
 //--------------------------------------------------------------  SetDialogString
 // Sets a specific string to a specific dialog item.
 
-void SetDialogString (DialogPtr theDialog, SInt16 item, StringPtr theString)
+void SetDialogString (HWND theDialog, int item, ConstStringPtr theString)
 {
-	return;
-#if 0
-	Rect		itemRect;
-	Handle		itemHandle;
-	short		itemType;
+	wchar_t buffer[256];
+	wchar_t *itemText;
 
-	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
-	SetDialogItemText(itemHandle, theString);
-#endif
+	WinFromMacString(buffer, ARRAYSIZE(buffer), theString);
+	itemText = MacToWinLineEndings(buffer);
+	if (itemText != NULL)
+	{
+		SetDlgItemText(theDialog, item, itemText);
+		free(itemText);
+	}
 }
 
 //--------------------------------------------------------------  GetDialogStringLen
 // Returns the length of a dialog item string (text).
 
-SInt16 GetDialogStringLen (DialogPtr theDialog, SInt16 item)
+int GetDialogStringLen (HWND theDialog, int item)
 {
-	return (0);
-#if 0
-	Rect		itemRect;
-	Str255		theString;
-	Handle		itemHandle;
-	short		itemType;
+	Str255 theString;
 
-	GetDialogItem(theDialog, item, &itemType, &itemHandle, &itemRect);
-	GetDialogItemText(itemHandle, theString);
-	return (theString[0]);
-#endif
+	GetDialogString(theDialog, item, theString, ARRAYSIZE(theString));
+	return theString[0];
 }
 
 //--------------------------------------------------------------  GetDialogItemValue

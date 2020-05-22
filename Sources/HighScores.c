@@ -417,38 +417,30 @@ INT_PTR CALLBACK NameFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 	switch (message)
 	{
 	case WM_INITDIALOG:
-	{
-		HWND nameItem = GetDlgItem(hDlg, kHighNameItem);
-		WCHAR tempStr[ARRAYSIZE(highName)];
-		WinFromMacString(tempStr, ARRAYSIZE(tempStr), highName);
-		SetWindowText(nameItem, tempStr);
-		SendMessage(nameItem, EM_LIMITTEXT, ARRAYSIZE(highName) - 1, 0);
 		CenterOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams*)lParam);
+		SetDialogString(hDlg, kHighNameItem, highName);
+		SendDlgItemMessage(hDlg, kHighNameItem,
+				EM_LIMITTEXT, ARRAYSIZE(highName) - 1, 0);
 		PlayPrioritySound(kEnergizeSound, kEnergizePriority);
 		return TRUE;
-	}
 
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
 		case IDOK:
-		{
-			WCHAR tempStr[ARRAYSIZE(highName)];
-			GetDlgItemText(hDlg, kHighNameItem, tempStr, ARRAYSIZE(tempStr));
-			MacFromWinString(highName, ARRAYSIZE(highName), tempStr);
+			GetDialogString(hDlg, kHighNameItem, highName, ARRAYSIZE(highName));
 			PlayPrioritySound(kCarriageSound, kCarriagePriority);
 			EndDialog(hDlg, IDOK);
 			break;
-		}
 
 		case kHighNameItem:
 			if (HIWORD(wParam) == EN_CHANGE)
 			{
-				UINT nChars = GetWindowTextLength((HWND)lParam);
+				int nChars = GetDialogStringLen(hDlg, kHighNameItem);
+				SetDlgItemInt(hDlg, kNameNCharsItem, nChars, FALSE); 
 				if (GetWindowTextLength(GetDlgItem(hDlg, kNameNCharsItem)) != 0)
 					PlayPrioritySound(kTypingSound, kTypingPriority);
-				SetDlgItemInt(hDlg, kNameNCharsItem, nChars, FALSE); 
 			}
 			break;
 		}
@@ -480,37 +472,29 @@ INT_PTR CALLBACK BannerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 	switch (message)
 	{
 	case WM_INITDIALOG:
-	{
-		HWND bannerItem = GetDlgItem(hDlg, kHighBannerItem);
-		WCHAR tempStr[ARRAYSIZE(highBanner)];
-		WinFromMacString(tempStr, ARRAYSIZE(tempStr), highBanner);
-		SetWindowText(bannerItem, tempStr);
-		SendMessage(bannerItem, EM_LIMITTEXT, ARRAYSIZE(highBanner) - 1, 0);
 		CenterOverOwner(hDlg);
+		SetDialogString(hDlg, kHighBannerItem, highBanner);
+		SendDlgItemMessage(hDlg, kHighBannerItem,
+				EM_LIMITTEXT, ARRAYSIZE(highBanner) - 1, 0);
 		PlayPrioritySound(kEnergizeSound, kEnergizePriority);
 		return TRUE;
-	}
 
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
 		case IDOK:
-		{
-			WCHAR tempStr[ARRAYSIZE(highBanner)];
-			GetDlgItemText(hDlg, kHighBannerItem, tempStr, ARRAYSIZE(tempStr));
-			MacFromWinString(highBanner, ARRAYSIZE(highBanner), tempStr);
+			GetDialogString(hDlg, kHighBannerItem, highBanner, ARRAYSIZE(highBanner));
 			PlayPrioritySound(kCarriageSound, kCarriagePriority);
 			EndDialog(hDlg, IDOK);
 			break;
-		}
 
 		case kHighBannerItem:
 			if (HIWORD(wParam) == EN_CHANGE)
 			{
-				UINT nChars = GetWindowTextLength((HWND)lParam);
+				int nChars = GetDialogStringLen(hDlg, kHighBannerItem);
+				SetDlgItemInt(hDlg, kBannerScoreNCharsItem, nChars, FALSE);
 				if (GetWindowTextLength(GetDlgItem(hDlg, kBannerScoreNCharsItem)) != 0)
 					PlayPrioritySound(kTypingSound, kTypingPriority);
-				SetDlgItemInt(hDlg, kBannerScoreNCharsItem, nChars, FALSE);
 			}
 			break;
 		}
