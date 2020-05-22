@@ -38,6 +38,7 @@ typedef SInt16 OSErr;
 #define noErr 0
 
 typedef UInt8 *StringPtr;
+typedef const UInt8 *ConstStringPtr;
 typedef UInt8 Str15[16];
 typedef UInt8 Str27[28];
 typedef UInt8 Str31[32];
@@ -137,7 +138,7 @@ Boolean Mac_PtInRect(Point pt, const Rect *r);
 Boolean Mac_SectRect(const Rect *src1, const Rect *src2, Rect *dstRect);
 SInt16 Mac_StringWidth(HDC hdc, StringPtr s);
 
-int WinFromMacString(wchar_t *winbuf, int winlen, StringPtr macbuf);
+int WinFromMacString(wchar_t *winbuf, int winlen, ConstStringPtr macbuf);
 int MacFromWinString(StringPtr macbuf, int maclen, const wchar_t *winbuf);
 
 // unknown types

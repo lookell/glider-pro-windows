@@ -452,56 +452,55 @@ SInt16 Mac_StringWidth(HDC hdc, StringPtr s)
 
 //--------------------------------------------------------------  WinFromMacString
 // Convert a MacRoman Pascal-style string to a UTF-16 C-style string.
+// If the length of the converted string exceeds the output buffer's capacity,
+// then the converted string is truncated.
 // This is a wrapper around the Windows API function 'MultiByteToWideChar'.
 // The return value of this function is the return value of 'MultiByteToWideChar'.
+// Return nonzero on success and zero on failure.
 
-int WinFromMacString(wchar_t *winbuf, int winlen, StringPtr macbuf)
+int WinFromMacString(wchar_t *winbuf, int winlen, ConstStringPtr macbuf)
 {
-	int result;
-	Byte maclen;
+	int copySize, result;
 
-	if (macbuf == NULL)
-		return 0;
-	maclen = macbuf[0];
-	memmove(&macbuf[0], &macbuf[1], maclen);
-	macbuf[maclen] = '\0';
-	result = MultiByteToWideChar(
-		CP_MACROMAN,
-		0,
-		(LPCCH)macbuf,
-		-1,
-		winbuf,
-		winlen
-	);
-	memmove(&macbuf[1], &macbuf[0], maclen);
-	macbuf[0] = maclen;
+	// Calculate the number of Mac characters to copy
+	copySize = macbuf[0];
+	if (copySize > winlen - 1)
+		copySize = winlen - 1;
+
+	// Do the conversion and terminate the output string
+	result = MultiByteToWideChar(CP_MACROMAN, 0,
+			(LPCCH)&macbuf[1], copySize, winbuf, winlen - 1);
+	winbuf[result] = L'\0';
 	return result;
 }
 
 //--------------------------------------------------------------  MacFromWinString
 // Convert a UTF-16 C-style string to a MacRoman Pascal-style string.
 // (This may result in data-loss!)
+// If the length of the converted string exceeds the output buffer's capacity,
+// then the converted string is truncated.
 // This is a wrapper around the Windows API function 'WideCharToMultiByte'.
 // The return value of this function is the return value of 'WideCharToMultiByte'.
+// Return nonzero on success and zero on failure.
 
 int MacFromWinString(StringPtr macbuf, int maclen, const wchar_t *winbuf)
 {
-	int result;
+	size_t inputSize;
+	int copySize, result;
 
-	if (macbuf == NULL)
-		return 0;
-	result = WideCharToMultiByte(
-		CP_MACROMAN,
-		0,
-		winbuf,
-		(int)wcslen(winbuf),
-		(LPSTR)&macbuf[1],
-		maclen - 1,
-		NULL,
-		NULL
-	);
-	if (maclen != 0)
-		macbuf[0] = (Byte)result;
+	// Calculate the number of wide characters to copy
+	inputSize = wcslen(winbuf);
+	if (inputSize > INT_MAX)
+		inputSize = INT_MAX;
+	copySize = (int)inputSize;
+	if (copySize > maclen - 1)
+		copySize = maclen - 1;
+
+	// Do the conversion and save the length
+	result = WideCharToMultiByte(CP_MACROMAN, 0,
+			winbuf, copySize, (LPSTR)&macbuf[1], maclen - 1,
+			NULL, NULL);
+	macbuf[0] = result;
 	return result;
 }
 
