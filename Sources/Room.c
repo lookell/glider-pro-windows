@@ -20,7 +20,7 @@
 #define kYesDoDeleteRoom		IDOK
 
 
-Boolean QueryDeleteRoom (void);
+Boolean QueryDeleteRoom (HWND);
 void SetToNearestNeighborRoom (SInt16, SInt16);
 
 
@@ -160,7 +160,7 @@ void SetInitialTiles (SInt16 background, Boolean doRoom)
 //--------------------------------------------------------------  CreateNewRoom
 
 #ifndef COMPILEDEMO
-Boolean CreateNewRoom (SInt16 h, SInt16 v)
+Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 {
 	SInt16		i, availableRoom;
 	roomPtr		newRoomsPtr;
@@ -201,7 +201,7 @@ Boolean CreateNewRoom (SInt16 h, SInt16 v)
 		);
 		if (newRoomsPtr == NULL)
 		{
-			YellowAlert(kYellowUnaccounted, -1);
+			YellowAlert(ownerWindow, kYellowUnaccounted, -1);
 			return (false);
 		}
 		thisHouse->rooms = newRoomsPtr;
@@ -273,7 +273,7 @@ void ReadyBackground (SInt16 theID, SInt16 *theTiles)
 		//thePicture = (PicHandle)GetResource('Date', theID);
 		//if (thePicture == NULL)
 		{
-			YellowAlert(kYellowNoBackground, 0);
+			YellowAlert(mainWindow, kYellowNoBackground, 0);
 			return;
 		}
 	}
@@ -366,7 +366,7 @@ void ForceThisRoom (SInt16 roomNumber)
 	if (roomNumber < thisHouse->nRooms)
 		*thisRoom = thisHouse->rooms[roomNumber];
 	else
-		YellowAlert(kYellowIllegalRoomNum, 0);
+		YellowAlert(mainWindow, kYellowIllegalRoomNum, 0);
 
 	previousRoom = thisRoomNumber;
 	thisRoomNumber = roomNumber;
@@ -415,7 +415,7 @@ Boolean RoomNumExists (SInt16 roomNum)
 
 //--------------------------------------------------------------  DeleteRoom
 
-void DeleteRoom (Boolean doWarn)
+void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 {
 #ifndef COMPILEDEMO
 	SInt16		wasFloor, wasSuite;
@@ -426,7 +426,7 @@ void DeleteRoom (Boolean doWarn)
 
 	if (doWarn)
 	{
-		if (!QueryDeleteRoom())
+		if (!QueryDeleteRoom(ownerWindow))
 			return;
 	}
 
@@ -459,13 +459,11 @@ void DeleteRoom (Boolean doWarn)
 //--------------------------------------------------------------  QueryDeleteRoom
 
 #ifndef COMPILEDEMO
-Boolean QueryDeleteRoom (void)
+Boolean QueryDeleteRoom (HWND ownerWindow)
 {
-	DialogParams	params = { 0 };
-	SInt16			hitWhat;
+	SInt16 hitWhat;
 
-	params.hwndParent = mainWindow;
-	hitWhat = Alert(kDeleteRoomAlert, &params);
+	hitWhat = Alert(kDeleteRoomAlert, ownerWindow, NULL);
 	if (hitWhat == kYesDoDeleteRoom)
 		return (true);
 	else
@@ -917,7 +915,7 @@ SInt16 GetOriginalBounding (SInt16 theID)
 	if (resPointer == NULL)
 	{
 		if (PictIDExists(theID))
-			YellowAlert(kYellowNoBoundsRes, 0);
+			YellowAlert(mainWindow, kYellowNoBoundsRes, 0);
 		boundCode = 0;
 	}
 	else

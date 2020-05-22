@@ -316,7 +316,7 @@ void DisplayCTSeed (CGrafPtr);
 void FillScreenRed (void);
 void DumpToResEditFile (Ptr, SInt32);
 
-void HandleKeyEvent (BYTE);								// --- Event.c
+void HandleKeyEvent (HWND, BYTE);						// --- Event.c
 void HandleEvent (void);
 void HiliteAllWindows (void);
 void IgnoreThisClick (void);
@@ -325,15 +325,15 @@ SInt16 WhatsOurDepth (void);							// --- Environs.c
 void SwitchToDepth (SInt16, Boolean);
 void CheckOurEnvirons (void);
 //void ReflectSecondMonitorEnvirons (Boolean, Boolean, Boolean);
-void HandleDepthSwitching (void);
+void HandleDepthSwitching (HWND);
 void RestoreColorDepth (void);
-void CheckMemorySize (void);
+void CheckMemorySize (HWND);
 void SetAppMemorySize (SInt32);
 
-Boolean CheckFileError (DWORD, StringPtr);				// --- File Error.c
+Boolean CheckFileError (HWND, DWORD, StringPtr);		// --- File Error.c
 
-Boolean SavePrefs (prefsInfo *, SInt16);				// --- Prefs.c
-Boolean LoadPrefs (prefsInfo *, SInt16);
+Boolean SavePrefs (HWND, prefsInfo *, SInt16);			// --- Prefs.c
+Boolean LoadPrefs (HWND, prefsInfo *, SInt16);
 
 void PasStringCopy (StringPtr, StringPtr);				// --- StringUtils.c
 void PasStringCopyC (const char *, StringPtr);

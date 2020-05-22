@@ -19,8 +19,8 @@
 #define kPrefsVersion			0x0034
 
 
-void ReadInPrefs (void);
-void WriteOutPrefs (void);
+void ReadInPrefs (HWND);
+void WriteOutPrefs (HWND);
 int WINAPI wWinMain (HINSTANCE, HINSTANCE, LPWSTR, int);
 
 
@@ -56,11 +56,11 @@ extern Boolean		dontLoadMusic, dontLoadSounds;
 // from the last time Glider PRO was launched.  If no prefs are found,…
 // it assigns default settings.
 
-void ReadInPrefs (void)
+void ReadInPrefs (HWND ownerWindow)
 {
 	prefsInfo	thePrefs;
 
-	if (LoadPrefs(&thePrefs, kPrefsVersion))
+	if (LoadPrefs(ownerWindow, &thePrefs, kPrefsVersion))
 	{
 #ifdef COMPILEDEMO
 		PasStringCopyC("Demo House", thisHouseName);
@@ -212,7 +212,7 @@ void ReadInPrefs (void)
 // Called just before Glider PRO quits.  This function writes out…
 // the user preferences to disk.
 
-void WriteOutPrefs (void)
+void WriteOutPrefs (HWND ownerWindow)
 {
 	prefsInfo	thePrefs;
 
@@ -279,7 +279,7 @@ void WriteOutPrefs (void)
 	thePrefs.wasPrettyMap = doPrettyMap;
 	thePrefs.wasBitchDialogs = doBitchDialogs;
 
-	if (!SavePrefs(&thePrefs, kPrefsVersion))
+	if (!SavePrefs(ownerWindow, &thePrefs, kPrefsVersion))
 		MessageBeep(MB_ICONWARNING);
 
 	UnivSetSoundVolume(wasVolume, thisMac.hasSM3);
@@ -325,7 +325,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 //	dataResFile = OpenResFile("\pMermaid");
 	SetUpAppleEvents();
 	LoadCursors();
-	ReadInPrefs();
+	ReadInPrefs(NULL);
 
 #if defined COMPILEDEMO
 	copyGood = true;
@@ -343,9 +343,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 //	if ((thisMac.numScreens > 1) && (isUseSecondScreen))
 //		ReflectSecondMonitorEnvirons(false, true, true);
-	HandleDepthSwitching();
+	HandleDepthSwitching(NULL);
 	VariableInit();						SpinCursor(2);
-	CheckMemorySize();
+	CheckMemorySize(NULL);
 	GetExtraCursors();					SpinCursor(2);
 	InitMarquee();
 	CreatePointers();					SpinCursor(2);
@@ -362,11 +362,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	}
 #endif
 
-	InitSound();						SpinCursor(2);
-	InitMusic();						SpinCursor(2);
-	BuildHouseList();
-	if (OpenHouse())
-		whoCares = ReadHouse();
+	InitSound(mainWindow);				SpinCursor(2);
+	InitMusic(mainWindow);				SpinCursor(2);
+	BuildHouseList(mainWindow);
+	if (OpenHouse(mainWindow))
+		whoCares = ReadHouse(mainWindow);
 
 	PlayPrioritySound(kBirdSound, kBirdPriority);
 	DelayTicks(6);
@@ -401,7 +401,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	CloseMainWindow();
 	if (houseOpen)
 	{
-		if (!CloseHouse())
+		if (!CloseHouse(NULL))
 		{
 			CloseHouseResFork();
 			if (houseRefNum != INVALID_HANDLE_VALUE && houseRefNum != NULL)
@@ -422,7 +422,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	DestroyMenu(houseMenu);
 	DestroyMenu(theMenuBar);
 
-	WriteOutPrefs();
+	WriteOutPrefs(NULL);
 	RestoreColorDepth();
 //	FlushEvents(everyEvent, 0);
 //	theErr = LoadScrap();

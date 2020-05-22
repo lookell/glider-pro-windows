@@ -188,8 +188,7 @@ void RedAlert (SInt16 errorNumber)
 	StringCchPrintf(params.arg[2], ARRAYSIZE(params.arg[2]), L"%d", (int)errorNumber);
 
 	EnumThreadWindows(GetCurrentThreadId(), DisableThreadWndProc, 0);
-	params.hwndParent = mainWindow;
-	dummyInt = Alert(rDeathAlertID, &params);
+	dummyInt = Alert(rDeathAlertID, mainWindow, &params);
 
 	if (mainWindow != NULL)
 		DestroyWindow(mainWindow);

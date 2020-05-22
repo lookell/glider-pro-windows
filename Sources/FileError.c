@@ -41,7 +41,7 @@
 #define permErr			(-54)	// permissions error (on file open)
 #define wrPermErr		(-61)	// write permissions error
 
-Boolean CheckFileError (DWORD resultCode, StringPtr fileName)
+Boolean CheckFileError (HWND ownerWindow, DWORD resultCode, StringPtr fileName)
 {
 	SInt16			dummyInt;
 	DialogParams	params = { 0 };
@@ -120,8 +120,7 @@ Boolean CheckFileError (DWORD resultCode, StringPtr fileName)
 	StringCchPrintf(params.arg[1], ARRAYSIZE(params.arg[1]), L"%lu", (ULONG)resultCode);
 	WinFromMacString(params.arg[2], ARRAYSIZE(params.arg[2]), fileName);
 
-	params.hwndParent = mainWindow;
-	dummyInt = Alert(rFileErrorAlert, &params);
+	dummyInt = Alert(rFileErrorAlert, ownerWindow, &params);
 
 	return(false);
 }

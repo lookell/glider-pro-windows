@@ -149,10 +149,11 @@ static INT_PTR CALLBACK AlertProc (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM l
 // Given a dialog resource ID and four string parameters, this function
 // displays the dialog with a standard modal alert box procedure.
 
-SInt16 Alert (SInt16 dialogID, const DialogParams *params)
+SInt16 Alert (SInt16 dialogID, HWND ownerWindow, const DialogParams *params)
 {
-	return (SInt16)DialogBoxParam(HINST_THISCOMPONENT, MAKEINTRESOURCE(dialogID),
-			params->hwndParent, AlertProc, (LPARAM)params);
+	return (SInt16)DialogBoxParam(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(dialogID), ownerWindow,
+			AlertProc, (LPARAM)params);
 }
 
 //--------------------------------------------------------------  FocusDefaultButton

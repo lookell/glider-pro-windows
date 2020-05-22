@@ -88,12 +88,12 @@ void DoHighScores (void);								// --- HighScores.c
 void SortHighScores (void);
 void ZeroHighScores (void);
 void ZeroAllButHighestScore (void);
-Boolean TestHighScore (void);
-Boolean WriteScoresToDisk (void);
-Boolean ReadScoresFromDisk (void);
+Boolean TestHighScore (HWND);
+Boolean WriteScoresToDisk (HWND);
+Boolean ReadScoresFromDisk (HWND);
 
 Boolean CreateNewHouse (void);							// --- House.c
-Boolean InitializeEmptyHouse (void);
+Boolean InitializeEmptyHouse (HWND);
 SInt16 RealRoomNumberCount (void);
 SInt16 GetFirstRoomNumber (void);
 void WhereDoesGliderBegin (Rect *, SInt16);
@@ -110,16 +110,16 @@ void ShiftWholeHouse (SInt16);
 
 void DoHouseInfo (void);								// --- HouseInfo.c
 
-Boolean OpenHouse (void);								// --- HouseIO.c
+Boolean OpenHouse (HWND);								// --- HouseIO.c
 Boolean OpenSpecificHouse (FSSpec *);
 Boolean SaveHouseAs (void);
-Boolean ReadHouse (void);
-Boolean WriteHouse (Boolean);
-Boolean CloseHouse (void);
-void OpenHouseResFork (void);
+Boolean ReadHouse (HWND);
+Boolean WriteHouse (HWND, Boolean);
+Boolean CloseHouse (HWND);
+void OpenHouseResFork (HWND);
 void CloseHouseResFork (void);
-Boolean QuerySaveChanges (void);
-void YellowAlert (SInt16, SInt16);
+Boolean QuerySaveChanges (HWND);
+void YellowAlert (HWND, SInt16, SInt16);
 
 Boolean KeepObjectLegal (void);							// --- HouseLegal.c
 void CheckHouseForProblems (void);
@@ -151,7 +151,7 @@ void OpenMainWindow (void);
 void CloseMainWindow (void);
 void ZoomBetweenWindows (void);
 void UpdateEditWindowTitle (void);
-void HandleMainClick (Point, Boolean);
+void HandleMainClick (HWND, Point, Boolean);
 //void WashColorIn (void);
 HDC GetMainWindowDC (void);
 void ReleaseMainWindowDC (HDC);
@@ -186,16 +186,16 @@ void InitMarquee (void);
 
 void UpdateClipboardMenus (void);						// --- Menu.c
 void DoAppleMenu (SInt16);
-void DoGameMenu (SInt16);
-void DoOptionsMenu (SInt16);
-void DoHouseMenu (SInt16);
-void DoMenuChoice (WORD);
+void DoGameMenu (HWND, SInt16);
+void DoOptionsMenu (HWND, SInt16);
+void DoHouseMenu (HWND, SInt16);
+void DoMenuChoice (HWND, WORD);
 void UpdateMenus (Boolean);
 void UpdateMapCheckmark (Boolean);
 void UpdateToolsCheckmark (Boolean);
 void UpdateCoordinateCheckmark (Boolean);
 #ifdef COMPILEDEMO
-void DoNotInDemo (void);
+void DoNotInDemo (HWND);
 #endif
 void OpenCloseEditWindows (void);
 void EnableMenuBar (void);
@@ -232,15 +232,15 @@ OSErr StartMusic (void);								// --- Music.c
 void StopTheMusic (void);
 void ToggleMusicWhilePlaying (void);
 void SetMusicalMode (SInt16);
-void InitMusic (void);
+void InitMusic (HWND);
 void KillMusic (void);
 SInt32 MusicBytesNeeded (void);
-void TellHerNoMusic (void);
+void TellHerNoMusic (HWND);
 
-Boolean AddNewObject (Point, SInt16, Boolean);			// --- ObjectAdd.c
+Boolean AddNewObject (HWND, Point, SInt16, Boolean);	// --- ObjectAdd.c
 SInt16 FindObjectSlotInRoom (SInt16);
 Boolean DoesRoomNumHaveObject (SInt16, SInt16);
-void ShoutNoMoreObjects (void);
+void ShoutNoMoreObjects (HWND);
 
 void DrawSimpleBlowers (SInt16, Rect *);				// --- ObjectDraw.c
 void DrawTiki (Rect *, SInt16);
@@ -311,9 +311,9 @@ void DrawCustPictSansWhite (SInt16, Rect *);
 void DrawARoomsObjects (SInt16, Boolean);				// --- ObjectDrawAll.c
 
 void DoSelectionClick (Point, Boolean);					// --- ObjectEdit.c
-void DoNewObjectClick (Point);
+void DoNewObjectClick (HWND, Point);
 void Gp_DeleteObject (void);
-void DuplicateObject (void);
+void DuplicateObject (HWND);
 void MoveObject (SInt16, Boolean);
 void DeselectObject (void);
 Boolean ObjectHasHandle (SInt16 *, SInt16 *);
@@ -341,12 +341,12 @@ Boolean ObjectIsLinkSwitch (objectType *);
 void ListAllLocalObjects (void);
 Boolean SetObjectState (SInt16, SInt16, SInt16, SInt16);
 Boolean GetObjectState (SInt16, SInt16);
-void BringSendFrontBack (Boolean);
+void BringSendFrontBack (HWND, Boolean);
 Boolean IsThisValid (SInt16, SInt16);
 void AddTempManholeRect (Rect *);
 
-void NewGame (SInt16);									// --- Play.c
-void DoDemoGame (void);
+void NewGame (HWND, SInt16);							// --- Play.c
+void DoDemoGame (HWND);
 void HideGlider (gliderPtr);
 void StrikeChime (void);
 void RestoreEntireGameScreen (void);
@@ -387,7 +387,7 @@ void AddToMirrorRegion (Rect *);
 void ZeroMirrorRegion (void);
 
 void SetInitialTiles (SInt16, Boolean);					// --- Room.c
-Boolean CreateNewRoom (SInt16, SInt16);
+Boolean CreateNewRoom (HWND, SInt16, SInt16);
 void DoRoomInfo (void);
 void ReadyBackground (SInt16, SInt16 *);
 void ReflectCurrentRoom (Boolean);
@@ -396,7 +396,7 @@ void CopyThisRoomToRoom (void);
 void ForceThisRoom (SInt16);
 Boolean RoomExists (SInt16, SInt16, SInt16 *);
 Boolean RoomNumExists (SInt16);
-void DeleteRoom (Boolean);
+void DeleteRoom (HWND, Boolean);
 SInt16 DoesNeighborRoomExist (SInt16);
 void SelectNeighborRoom (SInt16);
 SInt16 GetNeighborRoomNumber (SInt16);
@@ -420,9 +420,9 @@ void HandleBands (void);								// --- RubberBands.c
 Boolean AddBand (gliderPtr, SInt16, SInt16, Boolean);
 void KillAllBands (void);
 
-void SaveGame2 (void);									// --- SavedGames.c
-Boolean OpenSavedGame (void);
-void SaveGame (Boolean);
+void SaveGame2 (HWND);									// --- SavedGames.c
+Boolean OpenSavedGame (HWND);
+void SaveGame (HWND, Boolean);
 
 void RefreshScoreboard (SInt16);						// --- Scoreboard.c
 void HandleDynamicScoreboard (void);
@@ -443,8 +443,8 @@ void GetObjectScrap (void);
 Boolean HasDragManager (void);
 //Boolean DragRoom (EventRecord *, Rect *, SInt16);
 
-void DoLoadHouse (void);								// --- SelectHouse.c
-void BuildHouseList (void);
+void DoLoadHouse (HWND);								// --- SelectHouse.c
+void BuildHouseList (HWND);
 void AddExtraHouse (houseSpec *);
 
 void DoSettingsMain (void);								// --- Settings.c
@@ -453,11 +453,11 @@ void PlayPrioritySound (SInt16, SInt16);				// --- Sound.c
 void FlushAnyTriggerPlaying (void);
 OSErr LoadTriggerSound (SInt16);
 void DumpTriggerSound (void);
-void InitSound (void);
+void InitSound (HWND);
 void KillSound (void);
 SInt32 SoundBytesNeeded (void);
-void TellHerNoSounds (void);
-void BitchAboutSM3 (void);
+void TellHerNoSounds (HWND);
+void BitchAboutSM3 (HWND);
 
 void InitScoreboardMap (void);							// --- StructuresInit.c
 void InitGliderMap (void);

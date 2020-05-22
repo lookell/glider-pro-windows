@@ -17,7 +17,7 @@
 #include "ResourceIDs.h"
 
 
-SInt16 BitchAboutColorDepth (void);
+SInt16 BitchAboutColorDepth (HWND);
 void HandleMouseEvent (EventRecord *);
 void HandleUpdateEvent (EventRecord *);
 void HandleOSEvent (EventRecord *);
@@ -46,14 +46,11 @@ extern	Boolean		autoRoomEdit, newRoomNow, isPlayMusicIdle;
 // Display a dialog that alerts the user that they have switched the bit…
 // depth of the monitor under our noses.  They must return it to previous.
 
-SInt16 BitchAboutColorDepth (void)
+SInt16 BitchAboutColorDepth (HWND ownerWindow)
 {
-	SInt16			sheSaid;
-	DialogParams	params = { 0 };
+	SInt16 sheSaid;
 
-	params.hwndParent = mainWindow;
-	sheSaid = Alert(kColorSwitchedAlert, &params);
-
+	sheSaid = Alert(kColorSwitchedAlert, ownerWindow, NULL);
 	return (sheSaid - 1000);
 }
 
@@ -165,7 +162,7 @@ void HandleMouseEvent (EventRecord *theEvent)
 //--------------------------------------------------------------  HandleKeyEvent
 // Handle a key-down event.
 
-void HandleKeyEvent (BYTE vKey)
+void HandleKeyEvent (HWND hwnd, BYTE vKey)
 {
 	BOOL		shiftDown, commandDown, optionDown;
 
@@ -188,19 +185,19 @@ void HandleKeyEvent (BYTE vKey)
 #if BUILD_ARCADE_VERSION
 
 		case VK_LEFT:
-		DoOptionsMenu(iHighScores);
+		DoOptionsMenu(hwnd, iHighScores);
 		break;
 
 		case VK_RIGHT:
-		DoOptionsMenu(iHelp);
+		DoOptionsMenu(hwnd, iHelp);
 		break;
 
 		case VK_UP:
-		DoGameMenu(iNewGame);
+		DoGameMenu(hwnd, iNewGame);
 		break;
 
 		case VK_DOWN:
-		DoGameMenu(iNewGame);
+		DoGameMenu(hwnd, iNewGame);
 		break;
 
 #else
@@ -251,7 +248,7 @@ void HandleKeyEvent (BYTE vKey)
 		if (houseUnlocked)
 		{
 			if (objActive == kNoObjectSelected)
-				DeleteRoom(true);
+				DeleteRoom(hwnd, true);
 			else
 				Gp_DeleteObject();
 		}
@@ -545,7 +542,11 @@ void HandleEvent (void)
 		startMillis = TicksToMillis((UInt32)incrementModeTime - kIdleSplashTicks);
 		stopMillis = GetTickCount();
 		if (stopMillis - startMillis >= TicksToMillis(kIdleSplashTicks))
-			DoDemoGame();
+		{
+			DisableMenuBar();
+			DoDemoGame(mainWindow);
+			EnableMenuBar();
+		}
 	}
 }
 

@@ -27,10 +27,10 @@
 
 
 Boolean GetPrefsFilePath (LPWSTR, size_t);
-Boolean WritePrefs (LPCWSTR, prefsInfo *);
-HRESULT ReadPrefs (LPCWSTR, prefsInfo *);
+Boolean WritePrefs (HWND, LPCWSTR, prefsInfo *);
+HRESULT ReadPrefs (HWND, LPCWSTR, prefsInfo *);
 Boolean DeletePrefs (LPCWSTR);
-void BringUpDeletePrefsAlert (void);
+void BringUpDeletePrefsAlert (HWND);
 
 
 //==============================================================  Functions
@@ -55,7 +55,7 @@ Boolean GetPrefsFilePath (LPWSTR lpFilePath, size_t cchFilePath)
 
 //--------------------------------------------------------------  WritePrefs
 
-Boolean WritePrefs (LPCWSTR prefsFilePath, prefsInfo *thePrefs)
+Boolean WritePrefs (HWND ownerWindow, LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 {
 	HANDLE		fileHandle;
 	byteio		byteWriter;
@@ -66,7 +66,7 @@ Boolean WritePrefs (LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (fileHandle == INVALID_HANDLE_VALUE)
 	{
-		CheckFileError(GetLastError(), fileType);
+		CheckFileError(ownerWindow, GetLastError(), fileType);
 		return false;
 	}
 	if (!byteio_init_handle_writer(&byteWriter, fileHandle))
@@ -77,7 +77,7 @@ Boolean WritePrefs (LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 
 	if (!WritePrefsInfo(&byteWriter, thePrefs))
 	{
-		CheckFileError(GetLastError(), fileType);
+		CheckFileError(ownerWindow, GetLastError(), fileType);
 		byteio_close(&byteWriter);
 		CloseHandle(fileHandle);
 		return false;
@@ -85,13 +85,13 @@ Boolean WritePrefs (LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 
 	if (!byteio_close(&byteWriter))
 	{
-		CheckFileError(GetLastError(), fileType);
+		CheckFileError(ownerWindow, GetLastError(), fileType);
 		CloseHandle(fileHandle);
 		return false;
 	}
 	if (!CloseHandle(fileHandle))
 	{
-		CheckFileError(GetLastError(), fileType);
+		CheckFileError(ownerWindow, GetLastError(), fileType);
 		return false;
 	}
 
@@ -100,7 +100,7 @@ Boolean WritePrefs (LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 
 //--------------------------------------------------------------  SavePrefs
 
-Boolean SavePrefs (prefsInfo *thePrefs, SInt16 versionNow)
+Boolean SavePrefs (HWND ownerWindow, prefsInfo *thePrefs, SInt16 versionNow)
 {
 	WCHAR prefsFilePath[MAX_PATH];
 
@@ -109,7 +109,7 @@ Boolean SavePrefs (prefsInfo *thePrefs, SInt16 versionNow)
 	if (!GetPrefsFilePath(prefsFilePath, ARRAYSIZE(prefsFilePath)))
 		return false;
 
-	if (!WritePrefs(prefsFilePath, thePrefs))
+	if (!WritePrefs(ownerWindow, prefsFilePath, thePrefs))
 		return false;
 
 	return true;
@@ -117,7 +117,7 @@ Boolean SavePrefs (prefsInfo *thePrefs, SInt16 versionNow)
 
 //--------------------------------------------------------------  ReadPrefs
 
-HRESULT ReadPrefs (LPCWSTR prefsFilePath, prefsInfo *thePrefs)
+HRESULT ReadPrefs (HWND ownerWindow, LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 {
 	HANDLE		fileHandle;
 	byteio		byteReader;
@@ -131,7 +131,7 @@ HRESULT ReadPrefs (LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 	{
 		lastError = GetLastError();
 		if (lastError != ERROR_FILE_NOT_FOUND)
-			CheckFileError(lastError, fileType);
+			CheckFileError(ownerWindow, lastError, fileType);
 		return HRESULT_FROM_WIN32(lastError);
 	}
 	if (!byteio_init_handle_reader(&byteReader, fileHandle))
@@ -144,7 +144,7 @@ HRESULT ReadPrefs (LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 	{
 		lastError = GetLastError();
 		if (lastError != ERROR_HANDLE_EOF)
-			CheckFileError(lastError, fileType);
+			CheckFileError(ownerWindow, lastError, fileType);
 		byteio_close(&byteReader);
 		CloseHandle(fileHandle);
 		return HRESULT_FROM_WIN32(lastError);
@@ -153,14 +153,14 @@ HRESULT ReadPrefs (LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 	if (!byteio_close(&byteReader))
 	{
 		lastError = GetLastError();
-		CheckFileError(lastError, fileType);
+		CheckFileError(ownerWindow, lastError, fileType);
 		CloseHandle(fileHandle);
 		return HRESULT_FROM_WIN32(lastError);
 	}
 	if (!CloseHandle(fileHandle))
 	{
 		lastError = GetLastError();
-		CheckFileError(lastError, fileType);
+		CheckFileError(ownerWindow, lastError, fileType);
 		return HRESULT_FROM_WIN32(lastError);
 	}
 
@@ -179,7 +179,7 @@ Boolean DeletePrefs (LPCWSTR prefsFilePath)
 
 //--------------------------------------------------------------  LoadPrefs
 
-Boolean LoadPrefs (prefsInfo *thePrefs, SInt16 versionNeed)
+Boolean LoadPrefs (HWND ownerWindow, prefsInfo *thePrefs, SInt16 versionNeed)
 {
 	WCHAR prefsFilePath[MAX_PATH];
 	HRESULT hr;
@@ -187,10 +187,10 @@ Boolean LoadPrefs (prefsInfo *thePrefs, SInt16 versionNeed)
 	if (!GetPrefsFilePath(prefsFilePath, ARRAYSIZE(prefsFilePath)))
 		return false;
 
-	hr = ReadPrefs(prefsFilePath, thePrefs);
+	hr = ReadPrefs(ownerWindow, prefsFilePath, thePrefs);
 	if (hr == HRESULT_FROM_WIN32(ERROR_HANDLE_EOF))
 	{
-		BringUpDeletePrefsAlert();
+		BringUpDeletePrefsAlert(ownerWindow);
 		DeletePrefs(prefsFilePath);
 		return false;
 	}
@@ -199,7 +199,7 @@ Boolean LoadPrefs (prefsInfo *thePrefs, SInt16 versionNeed)
 
 	if (thePrefs->prefVersion != versionNeed)
 	{
-		BringUpDeletePrefsAlert();
+		BringUpDeletePrefsAlert(ownerWindow);
 		DeletePrefs(prefsFilePath);
 		return false;
 	}
@@ -209,12 +209,8 @@ Boolean LoadPrefs (prefsInfo *thePrefs, SInt16 versionNeed)
 
 //--------------------------------------------------------------  BringUpDeletePrefsAlert
 
-void BringUpDeletePrefsAlert (void)
+void BringUpDeletePrefsAlert (HWND ownerWindow)
 {
-	DialogParams	params = { 0 };
-	SInt16			whoCares;
-
-	params.hwndParent = mainWindow;
-	whoCares = Alert(kNewPrefsAlertID, &params);
+	Alert(kNewPrefsAlertID, ownerWindow, NULL);
 }
 

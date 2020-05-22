@@ -264,7 +264,7 @@ void DumpBufferSounds (void)
 
 //--------------------------------------------------------------  InitSound
 
-void InitSound (void)
+void InitSound (HWND ownerWindow)
 {
 	OSErr		theErr;
 	SInt16		i;
@@ -284,7 +284,7 @@ void InitSound (void)
 	theErr = LoadBufferSounds();
 	if (theErr != noErr)
 	{
-		YellowAlert(kYellowFailedSound, theErr);
+		YellowAlert(ownerWindow, kYellowFailedSound, theErr);
 		failedSound = true;
 	}
 }
@@ -321,24 +321,16 @@ SInt32 SoundBytesNeeded (void)
 
 //--------------------------------------------------------------  TellHerNoSounds
 
-void TellHerNoSounds (void)
+void TellHerNoSounds (HWND ownerWindow)
 {
-	SInt16			hitWhat;
-	DialogParams	params = { 0 };
-
-	params.hwndParent = mainWindow;
-	hitWhat = Alert(kNoMemForSoundsAlert, &params);
+	Alert(kNoMemForSoundsAlert, ownerWindow, NULL);
 }
 
 //--------------------------------------------------------------  BitchAboutSM3
 
-void BitchAboutSM3 (void)
+void BitchAboutSM3 (HWND ownerWindow)
 {
-	SInt16			hitWhat;
-	DialogParams	params = { 0 };
-
-	params.hwndParent = mainWindow;
-	hitWhat = Alert(kNoSoundManager3Alert, &params);
+	Alert(kNoSoundManager3Alert, ownerWindow, NULL);
 }
 
 //--------------------------------------------------------------  LoadStaticBuffer

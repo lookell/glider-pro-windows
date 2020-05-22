@@ -307,7 +307,7 @@ OSErr CloseMusicChannel (void)
 
 //--------------------------------------------------------------  InitMusic
 
-void InitMusic (void)
+void InitMusic (HWND ownerWindow)
 {
 	OSErr		theErr;
 
@@ -321,7 +321,7 @@ void InitMusic (void)
 	theErr = LoadMusicSounds();
 	if (theErr != noErr)
 	{
-		YellowAlert(kYellowNoMusic, theErr);
+		YellowAlert(ownerWindow, kYellowNoMusic, theErr);
 		failedMusic = true;
 		return;
 	}
@@ -360,7 +360,7 @@ void InitMusic (void)
 		theErr = StartMusic();
 		if (theErr != noErr)
 		{
-			YellowAlert(kYellowNoMusic, theErr);
+			YellowAlert(ownerWindow, kYellowNoMusic, theErr);
 			failedMusic = true;
 		}
 	}
@@ -401,12 +401,8 @@ SInt32 MusicBytesNeeded (void)
 
 //--------------------------------------------------------------  TellHerNoMusic
 
-void TellHerNoMusic (void)
+void TellHerNoMusic (HWND ownerWindow)
 {
-	SInt16			hitWhat;
-	DialogParams	params = { 0 };
-
-	params.hwndParent = mainWindow;
-	hitWhat = Alert(kNoMemForMusicAlert, &params);
+	Alert(kNoMemForMusicAlert, ownerWindow, NULL);
 }
 

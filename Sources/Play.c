@@ -73,7 +73,7 @@ extern	Boolean			switchedOut;
 //==============================================================  Functions
 //--------------------------------------------------------------  NewGame
 
-void NewGame (SInt16 mode)
+void NewGame (HWND ownerWindow, SInt16 mode)
 {
 	Rect		tempRect;
 	//Size		freeBytes, growBytes;
@@ -91,7 +91,7 @@ void NewGame (SInt16 mode)
 			theErr = StartMusic();
 			if (theErr != noErr)
 			{
-				YellowAlert(kYellowNoMusic, theErr);
+				YellowAlert(ownerWindow, kYellowNoMusic, theErr);
 				failedMusic = true;
 			}
 		}
@@ -242,7 +242,7 @@ void NewGame (SInt16 mode)
 			theErr = StartMusic();
 			if (theErr != noErr)
 			{
-				YellowAlert(kYellowNoMusic, theErr);
+				YellowAlert(ownerWindow, kYellowNoMusic, theErr);
 				failedMusic = true;
 			}
 		}
@@ -274,26 +274,26 @@ void NewGame (SInt16 mode)
 
 //--------------------------------------------------------------  DoDemoGame
 
-void DoDemoGame (void)
+void DoDemoGame (HWND ownerWindow)
 {
 	SInt16		wasHouseIndex;
 	Boolean		whoCares;
 
 	wasHouseIndex = thisHouseIndex;
-	whoCares = CloseHouse();
+	whoCares = CloseHouse(ownerWindow);
 	thisHouseIndex = demoHouseIndex;
 	PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
-	if (OpenHouse())
+	if (OpenHouse(ownerWindow))
 	{
-		whoCares = ReadHouse();
+		whoCares = ReadHouse(ownerWindow);
 		demoGoing = true;
-		NewGame(kNewGameMode);
+		NewGame(ownerWindow, kNewGameMode);
 	}
-	whoCares = CloseHouse();
+	whoCares = CloseHouse(ownerWindow);
 	thisHouseIndex = wasHouseIndex;
 	PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
-	if (OpenHouse())
-		whoCares = ReadHouse();
+	if (OpenHouse(ownerWindow))
+		whoCares = ReadHouse(ownerWindow);
 	incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
 }
 
@@ -550,7 +550,7 @@ void PlayGame (void)
 					if (!thePicture)
 						RedAlert(kErrFailedGraphicLoad);
 					GetObject(thePicture, sizeof(bmInfo), &bmInfo);
-					QSetRect(&bounds, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+					QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
 					QOffsetRect(&bounds, hOffset, 0);
 					Mac_DrawPicture(boardSrcMap, thePicture, &bounds);
 					DeleteObject(thePicture);
@@ -597,7 +597,7 @@ void PlayGame (void)
 		if (!thePicture)
 			RedAlert(kErrFailedGraphicLoad);
 		GetObject(thePicture, sizeof(bmInfo), &bmInfo);
-		QSetRect(&bounds, 0, 0, bmInfo.bmWidth, bmInfo.bmHeight);
+		QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
 		QOffsetRect(&bounds, hOffset, 0);
 		Mac_DrawPicture(boardSrcMap, thePicture, &bounds);
 		DeleteObject(thePicture);

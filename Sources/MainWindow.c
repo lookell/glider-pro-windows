@@ -217,7 +217,7 @@ void OpenMainWindow (void)
 
 	if (mainWindow != NULL)
 	{
-		YellowAlert(kYellowUnaccounted, 6);
+		YellowAlert(mainWindow, kYellowUnaccounted, 6);
 		return;
 	}
 
@@ -409,7 +409,7 @@ void UpdateEditWindowTitle (void)
 
 // Handle a mouse click in the main window (relevant only when editing).
 
-void HandleMainClick (Point wherePt, Boolean isDoubleClick)
+void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick)
 {
 	if ((theMode != kEditMode) || (mainWindow == NULL) || (!houseUnlocked))
 		return;
@@ -420,7 +420,7 @@ void HandleMainClick (Point wherePt, Boolean isDoubleClick)
 	if (toolSelected == kSelectTool)
 		DoSelectionClick(wherePt, isDoubleClick);
 	else
-		DoNewObjectClick(wherePt);
+		DoNewObjectClick(hwnd, wherePt);
 
 	if (GetKeyState(VK_SHIFT) >= 0) // if shift key up
 	{
@@ -705,7 +705,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		return 0;
 
 	case WM_COMMAND:
-		DoMenuChoice(LOWORD(wParam));
+		DoMenuChoice(hwnd, LOWORD(wParam));
 		return 0;
 
 	case WM_DESTROY:
@@ -716,7 +716,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		return 0;
 
 	case WM_KEYDOWN:
-		HandleKeyEvent((BYTE)wParam);
+		HandleKeyEvent(hwnd, (BYTE)wParam);
 		return 0;
 
 	case WM_LBUTTONDOWN:
@@ -724,7 +724,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		Point wherePt;
 		wherePt.h = GET_X_LPARAM(lParam);
 		wherePt.v = GET_Y_LPARAM(lParam);
-		HandleMainClick(wherePt, false);
+		HandleMainClick(hwnd, wherePt, false);
 		return 0;
 	}
 
@@ -733,7 +733,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		Point wherePt;
 		wherePt.h = GET_X_LPARAM(lParam);
 		wherePt.v = GET_Y_LPARAM(lParam);
-		HandleMainClick(wherePt, true);
+		HandleMainClick(hwnd, wherePt, true);
 		return 0;
 	}
 

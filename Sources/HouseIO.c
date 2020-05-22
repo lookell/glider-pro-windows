@@ -169,14 +169,14 @@ void CloseHouseMovie (void)
 //--------------------------------------------------------------  OpenHouse
 // Opens a house (whatever current selection is).  Returns true if all went well.
 
-Boolean OpenHouse (void)
+Boolean OpenHouse (HWND ownerWindow)
 {
 	Str32		demoHouseName;
 
 	PasStringCopyC("Demo House", demoHouseName);
 	if (houseOpen)
 	{
-		if (!CloseHouse())
+		if (!CloseHouse(ownerWindow))
 			return(false);
 	}
 	if ((housesFound < 1) || (thisHouseIndex == -1))
@@ -201,12 +201,12 @@ Boolean OpenHouse (void)
 	if (houseRefNum == INVALID_HANDLE_VALUE)
 	{
 		houseIsReadOnly = false;
-		CheckFileError(GetLastError(), thisHouseName);
+		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
 		return (false);
 	}
 
 	houseOpen = true;
-	OpenHouseResFork();
+	OpenHouseResFork(ownerWindow);
 
 	hasMovie = false;
 	tvInRoom = false;
@@ -330,7 +330,7 @@ Boolean SaveHouseAs (void)
 // With a house open, this function reads in the actual bits of data…
 // into memory.
 
-Boolean ReadHouse (void)
+Boolean ReadHouse (HWND ownerWindow)
 {
 	LARGE_INTEGER	byteCount, distance;
 	SInt16			whichRoom;
@@ -338,7 +338,7 @@ Boolean ReadHouse (void)
 
 	if (!houseOpen)
 	{
-		YellowAlert(kYellowUnaccounted, 2);
+		YellowAlert(ownerWindow, kYellowUnaccounted, 2);
 		return (false);
 	}
 
@@ -346,19 +346,19 @@ Boolean ReadHouse (void)
 	{
 		if (houseIsReadOnly)
 		{
-			if (!WriteScoresToDisk())
+			if (!WriteScoresToDisk(ownerWindow))
 			{
-				YellowAlert(kYellowFailedWrite, 0);
+				YellowAlert(ownerWindow, kYellowFailedWrite, 0);
 				return(false);
 			}
 		}
-		else if (!WriteHouse(false))
+		else if (!WriteHouse(ownerWindow, false))
 			return(false);
 	}
 
 	if (!GetFileSizeEx(houseRefNum, &byteCount))
 	{
-		CheckFileError(GetLastError(), thisHouseName);
+		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
 		return(false);
 	}
 
@@ -376,14 +376,14 @@ Boolean ReadHouse (void)
 	thisHouse = malloc(sizeof(*thisHouse));
 	if (thisHouse == NULL)
 	{
-		YellowAlert(kYellowNoMemory, 10);
+		YellowAlert(ownerWindow, kYellowNoMemory, 10);
 		return(false);
 	}
 
 	distance.QuadPart = 0;
 	if (!SetFilePointerEx(houseRefNum, distance, NULL, FILE_BEGIN))
 	{
-		CheckFileError(GetLastError(), thisHouseName);
+		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
 		return(false);
 	}
 
@@ -393,8 +393,8 @@ Boolean ReadHouse (void)
 	{
 		numberRooms = 0;
 		noRoomAtAll = true;
-		YellowAlert(kYellowNoRooms, 0);
-		CheckFileError(GetLastError(), thisHouseName);
+		YellowAlert(ownerWindow, kYellowNoRooms, 0);
+		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
 		byteio_close(&byteReader);
 		return(false);
 	}
@@ -409,14 +409,14 @@ Boolean ReadHouse (void)
 	{
 		numberRooms = 0;
 		noRoomAtAll = true;
-		YellowAlert(kYellowNoRooms, 0);
+		YellowAlert(ownerWindow, kYellowNoRooms, 0);
 		return(false);
 	}
 
 	wasHouseVersion = thisHouse->version;
 	if (wasHouseVersion >= kNewHouseVersion)
 	{
-		YellowAlert(kYellowNewerVersion, 0);
+		YellowAlert(ownerWindow, kYellowNewerVersion, 0);
 		return(false);
 	}
 
@@ -447,7 +447,7 @@ Boolean ReadHouse (void)
 	if (houseIsReadOnly)
 	{
 		houseUnlocked = false;
-		if (ReadScoresFromDisk())
+		if (ReadScoresFromDisk(ownerWindow))
 		{
 		}
 	}
@@ -464,7 +464,7 @@ Boolean ReadHouse (void)
 //--------------------------------------------------------------  WriteHouse
 // This function writes out the house data to disk.
 
-Boolean WriteHouse (Boolean checkIt)
+Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 {
 	UInt32			timeStamp;
 	byteio			byteWriter;
@@ -472,14 +472,14 @@ Boolean WriteHouse (Boolean checkIt)
 
 	if (!houseOpen)
 	{
-		YellowAlert(kYellowUnaccounted, 4);
+		YellowAlert(ownerWindow, kYellowUnaccounted, 4);
 		return (false);
 	}
 
 	distance.QuadPart = 0;
 	if (!SetFilePointerEx(houseRefNum, distance, NULL, FILE_BEGIN))
 	{
-		CheckFileError(GetLastError(), thisHouseName);
+		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
 		return(false);
 	}
 
@@ -508,7 +508,7 @@ Boolean WriteHouse (Boolean checkIt)
 		RedAlert(kErrNoMemory);
 	if (!WriteHouseType(&byteWriter, thisHouse))
 	{
-		CheckFileError(GetLastError(), thisHouseName);
+		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
 		byteio_close(&byteWriter);
 		return(false);
 	}
@@ -516,7 +516,7 @@ Boolean WriteHouse (Boolean checkIt)
 
 	if (!SetEndOfFile(houseRefNum))
 	{
-		CheckFileError(GetLastError(), thisHouseName);
+		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
 		return(false);
 	}
 
@@ -535,7 +535,7 @@ Boolean WriteHouse (Boolean checkIt)
 //--------------------------------------------------------------  CloseHouse
 // This function closes the current house that is open.
 
-Boolean CloseHouse (void)
+Boolean CloseHouse (HWND ownerWindow)
 {
 	if (!houseOpen)
 		return (true);
@@ -544,28 +544,23 @@ Boolean CloseHouse (void)
 	{
 		if (houseIsReadOnly)
 		{
-			if (!WriteScoresToDisk())
-				YellowAlert(kYellowFailedWrite, 0);
+			if (!WriteScoresToDisk(ownerWindow))
+				YellowAlert(ownerWindow, kYellowFailedWrite, 0);
 		}
-		else if (!WriteHouse(theMode == kEditMode))
-			YellowAlert(kYellowFailedWrite, 0);
+		else if (!WriteHouse(ownerWindow, theMode == kEditMode))
+			YellowAlert(ownerWindow, kYellowFailedWrite, 0);
 	}
 	else if (fileDirty)
 	{
 #ifndef COMPILEDEMO
-		if (!QuerySaveChanges())	// false signifies user canceled
+		if (!QuerySaveChanges(ownerWindow)) // false signifies user canceled
 			return(false);
 #endif
 	}
 
 	CloseHouseResFork();
 	CloseHouseMovie();
-
-	if (!CloseHandle(houseRefNum))
-	{
-		CheckFileError(GetLastError(), thisHouseName);
-		return(false);
-	}
+	CloseHandle(houseRefNum);
 
 	houseOpen = false;
 
@@ -577,7 +572,7 @@ Boolean CloseHouse (void)
 //--------------------------------------------------------------  OpenHouseResFork
 // Opens the resource fork of the current house that is open.
 
-void OpenHouseResFork (void)
+void OpenHouseResFork (HWND ownerWindow)
 {
 	WCHAR		fileName[MAX_PATH];
 	PWCH		extPtr;
@@ -589,25 +584,25 @@ void OpenHouseResFork (void)
 				theHousesSpecs[thisHouseIndex].path);
 		if (FAILED(hr))
 		{
-			YellowAlert(kYellowFailedResOpen, -1);
+			YellowAlert(ownerWindow, kYellowFailedResOpen, -1);
 			return;
 		}
 		extPtr = wcsrchr(fileName, L'.');
 		if (extPtr == NULL)
 		{
-			YellowAlert(kYellowFailedResOpen, -1);
+			YellowAlert(ownerWindow, kYellowFailedResOpen, -1);
 			return;
 		}
 		*extPtr = L'\0';
 		hr = StringCchCat(fileName, ARRAYSIZE(fileName), L".glr");
 		if (FAILED(hr))
 		{
-			YellowAlert(kYellowFailedResOpen, -1);
+			YellowAlert(ownerWindow, kYellowFailedResOpen, -1);
 			return;
 		}
 		houseResFork = LoadLibraryEx(fileName, NULL, LOAD_LIBRARY_AS_DATAFILE);
 		if (houseResFork == NULL)
-			YellowAlert(kYellowFailedResOpen, (SInt16)GetLastError());
+			YellowAlert(ownerWindow, kYellowFailedResOpen, (SInt16)GetLastError());
 	}
 }
 
@@ -628,7 +623,7 @@ void CloseHouseResFork (void)
 // dialog asking them if they would like to save the changes.
 
 #ifndef COMPILEDEMO
-Boolean QuerySaveChanges (void)
+Boolean QuerySaveChanges (HWND ownerWindow)
 {
 	DialogParams	params = { 0 };
 	SInt16			hitWhat;
@@ -637,15 +632,14 @@ Boolean QuerySaveChanges (void)
 	if (!fileDirty)
 		return(true);
 
-	params.hwndParent = mainWindow;
 	WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), thisHouseName);
-	hitWhat = Alert(kSaveChangesAlert, &params);
+	hitWhat = Alert(kSaveChangesAlert, ownerWindow, &params);
 	if (hitWhat == kSaveChanges)
 	{
 		if (wasHouseVersion < kHouseVersion)
 			ConvertHouseVer1To2();
 		wasHouseVersion = kHouseVersion;
-		if (WriteHouse(true))
+		if (WriteHouse(ownerWindow, true))
 			return (true);
 		else
 			return (false);
@@ -655,9 +649,9 @@ Boolean QuerySaveChanges (void)
 		fileDirty = false;
 		if (!quitting)
 		{
-			whoCares = CloseHouse();
-			if (OpenHouse())
-				whoCares = ReadHouse();
+			whoCares = CloseHouse(ownerWindow);
+			if (OpenHouse(ownerWindow))
+				whoCares = ReadHouse(ownerWindow);
 		}
 		UpdateMenus(false);
 		return (true);
@@ -672,20 +666,21 @@ Boolean QuerySaveChanges (void)
 // to the user when a non-lethal error has occurred.  Ideally, of…
 // course, this never is called.
 
-void YellowAlert (SInt16 whichAlert, SInt16 identifier)
+void YellowAlert (HWND ownerWindow, SInt16 whichAlert, SInt16 identifier)
 {
 	DialogParams	params = { 0 };
 	INT				result;
 	SInt16			whoCares;
 
-	params.hwndParent = mainWindow;
 	result = LoadString(HINST_THISCOMPONENT, kYellowAlertStringBase + whichAlert,
 			params.arg[0], ARRAYSIZE(params.arg[0]));
 	if (result <= 0)
+	{
 		StringCchCopy(params.arg[0], ARRAYSIZE(params.arg[0]), L"");
+	}
 	StringCchPrintf(params.arg[1], ARRAYSIZE(params.arg[1]), L"%d", (int)identifier);
 
-	whoCares = Alert(kYellowAlert, &params);
+	whoCares = Alert(kYellowAlert, ownerWindow, &params);
 }
 
 //--------------------------------------------------------------  IsFileReadOnly

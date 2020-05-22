@@ -862,7 +862,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 //--------------------------------------------------------------  SendObjectToBack
 
 #ifndef COMPILEDEMO
-void BringSendFrontBack (Boolean bringFront)
+void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 {
 	objectType	savedObject;
 	SInt16		numLinks, i;
@@ -890,7 +890,7 @@ void BringSendFrontBack (Boolean bringFront)
 		linksList = (linksPtr)calloc(numLinks, sizeof(*linksList));
 		if (linksList == NULL)
 		{
-			YellowAlert(kYellowCantOrderLinks, -1);
+			YellowAlert(ownerWindow, kYellowCantOrderLinks, -1);
 			return;
 		}
 		GenerateLinksList();				// Fill in links list with src/dest…

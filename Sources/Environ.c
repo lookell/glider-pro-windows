@@ -54,7 +54,7 @@ Boolean CanWeDisplay8Bit (GDHandle);
 SInt16 HowManyUsableScreens (Boolean, Boolean, Boolean);
 void GetDeviceRect (Rect *);
 Boolean AreWeColorOrGrayscale (void);
-void SwitchDepthOrAbort (void);
+void SwitchDepthOrAbort (HWND);
 
 
 macEnviron	thisMac;
@@ -430,15 +430,13 @@ void SwitchToDepth (SInt16 newDepth, Boolean doColor)
 
 // Brings up a dialog allowing user to select bit depth or exit to shell.
 
-void SwitchDepthOrAbort (void)
+void SwitchDepthOrAbort (HWND ownerWindow)
 {
-	DialogParams	params = { 0 };
 	SInt16			usersDecision;
 
 	if (thisMac.canSwitch)
 	{
-		params.hwndParent = mainWindow;
-		usersDecision = Alert(kSwitchDepthAlert, &params);
+		usersDecision = Alert(kSwitchDepthAlert, ownerWindow, NULL);
 		switch (usersDecision)
 		{
 			case 1001:
@@ -530,7 +528,7 @@ void ReflectSecondMonitorEnvirons (Boolean use1Bit, Boolean use4Bit, Boolean use
 
 // Handles setting up a monitor's depth to play on.
 
-void HandleDepthSwitching (void)
+void HandleDepthSwitching (HWND ownerWindow)
 {
 	if (thisMac.hasColor)
 	{
@@ -539,7 +537,7 @@ void HandleDepthSwitching (void)
 			case kSwitchIfNeeded:
 			if ((thisMac.wasDepth != 8) &&
 					((thisMac.wasDepth != 4) || (thisMac.wasColorOrGray)))
-				SwitchDepthOrAbort();
+				SwitchDepthOrAbort(ownerWindow);
 			break;
 
 			case kSwitchTo256Colors:
@@ -548,7 +546,7 @@ void HandleDepthSwitching (void)
 				if (thisMac.can8Bit)
 					SwitchToDepth(8, true);
 				else
-					SwitchDepthOrAbort();
+					SwitchDepthOrAbort(ownerWindow);
 			}
 			break;
 
@@ -558,7 +556,7 @@ void HandleDepthSwitching (void)
 				if (thisMac.can4Bit)
 					SwitchToDepth(4, false);
 				else
-					SwitchDepthOrAbort();
+					SwitchDepthOrAbort(ownerWindow);
 			}
 			break;
 
@@ -587,7 +585,7 @@ void RestoreColorDepth (void)
 // is not available, attempts to turn off various game features (music, etc.)…
 // in order to accomodate the constrained memory available.
 
-void CheckMemorySize (void)
+void CheckMemorySize (HWND ownerWindow)
 {
 	#define		kBaseBytesNeeded	614400L					// 600K Base memory
 	#define		kPaddingBytes		204800L					// 200K Padding
@@ -699,13 +697,13 @@ void CheckMemorySize (void)
 	{
 		if (bytesAvail >= (bytesNeeded - musicBytes))
 		{	// if we don't load the music we can run
-			TellHerNoMusic();
+			TellHerNoMusic(ownerWindow);
 			dontLoadMusic = true;
 			return;
 		}
 		else if (bytesAvail >= (bytesNeeded - (musicBytes + soundBytes)))
 		{	// if we don't load the music AND sounds, we can run
-			TellHerNoSounds();
+			TellHerNoSounds(ownerWindow);
 			dontLoadMusic = true;
 			dontLoadSounds = true;
 			return;
@@ -714,11 +712,11 @@ void CheckMemorySize (void)
 #ifdef COMPILEDEMO
 		Mac_NumToString((bytesNeeded + kPaddingBytes) / 1024L, sizeStr);
 		WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), sizeStr);
-		hitWhat = Alert(kLowMemoryAlert, &params);
+		hitWhat = Alert(kLowMemoryAlert, ownerWindow, &params);
 #else
 		Mac_NumToString((bytesNeeded + kPaddingBytes) / 1024L, sizeStr);
 		WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), sizeStr);
-		hitWhat = Alert(kSetMemoryAlert, &params);
+		hitWhat = Alert(kSetMemoryAlert, ownerWindow, &params);
 //		SetAppMemorySize(bytesNeeded + kPaddingBytes);
 #endif
 		exit(0);

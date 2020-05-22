@@ -41,7 +41,7 @@ void UpdateOriginalArt (DialogPtr);
 Boolean OriginalArtFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean PictIDExists (SInt16);
 SInt16 GetFirstPICT (void);
-void BitchAboutPICTNotFound (void);
+void BitchAboutPICTNotFound (HWND);
 
 
 Rect		tileSrc, tileDest, tileSrcRect, editTETextBox;
@@ -884,13 +884,9 @@ SInt16 GetFirstPICT (void)
 //--------------------------------------------------------------  BitchAboutPICTNotFound
 
 #ifndef COMPILEDEMO
-void BitchAboutPICTNotFound (void)
+void BitchAboutPICTNotFound (HWND ownerWindow)
 {
-	DialogParams	params = { 0 };
-	SInt16			hitWhat;
-
-	params.hwndParent = mainWindow;
-	hitWhat = Alert(kNoPICTFoundAlert, &params);
+	Alert(kNoPICTFoundAlert, ownerWindow, NULL);
 }
 #endif
 

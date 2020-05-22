@@ -37,7 +37,7 @@ SInt16 HowManyUpStairsObjects (void);
 SInt16 HowManyDownStairsObjects (void);
 SInt16 HowManyShredderObjects (void);
 SInt16 HowManyDynamicObjects (void);
-void ShoutNoMoreSpecialObjects (void);
+void ShoutNoMoreSpecialObjects (HWND);
 
 
 SInt16		wasFlower;
@@ -46,18 +46,19 @@ SInt16		wasFlower;
 //==============================================================  Functions
 //--------------------------------------------------------------  AddNewObject
 
-Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
+Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showItNow)
 {
 	Rect		srcRect, newRect;
 	SInt16		direction, dist;
 	Boolean		handled, drawWholeRoom;
 
-#ifndef COMPILEDEMO
-
+#ifdef COMPILEDEMO
+	return (false);
+#else
 	objActive = FindEmptyObjectSlot();
 	if (objActive == -1)
 	{
-		ShoutNoMoreObjects();
+		ShoutNoMoreObjects(ownerWindow);
 		return (false);
 	}
 
@@ -80,17 +81,17 @@ Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
 		if (((what == kTaper) || (what == kCandle) || (what == kStubby)) &&
 				(HowManyCandleObjects() >= kMaxCandles))
 		{
-			ShoutNoMoreSpecialObjects();
+			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
 		else if ((what == kTiki) && (HowManyTikiObjects() >= kMaxTikis))
 		{
-			ShoutNoMoreSpecialObjects();
+			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
 		else if ((what == kBBQ) && (HowManyBBQObjects() >= kMaxCoals))
 		{
-			ShoutNoMoreSpecialObjects();
+			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
 		srcRect = srcRects[what];
@@ -214,22 +215,22 @@ Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
 		case kHelium:
 		if ((what == kCuckoo) && (HowManyCuckooObjects() >= kMaxPendulums))
 		{
-			ShoutNoMoreSpecialObjects();
+			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
 		else if ((what == kBands) && (HowManyBandsObjects() >= kMaxRubberBands))
 		{
-			ShoutNoMoreSpecialObjects();
+			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
 		else if ((what == kStar) && (HowManyStarsObjects() >= kMaxStars))
 		{
-			ShoutNoMoreSpecialObjects();
+			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
 		else if ((what == kSparkle) && (HowManyDynamicObjects() >= kMaxDynamicObs))
 		{
-			ShoutNoMoreSpecialObjects();
+			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
 		thisRoom->objects[objActive].data.c.topLeft.h =
@@ -250,7 +251,7 @@ Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
 		case kGreaseLf:
 		if (HowManyGreaseObjects() >= kMaxGrease)
 		{
-			ShoutNoMoreSpecialObjects();
+			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
 		thisRoom->objects[objActive].data.c.topLeft.h =
@@ -298,12 +299,12 @@ Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
 		case kDownStairs:
 		if ((what == kUpStairs) && (HowManyUpStairsObjects() >= kMaxStairs))
 		{
-			ShoutNoMoreSpecialObjects();
+			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
 		else if ((what == kDownStairs) && (HowManyDownStairsObjects() >= kMaxStairs))
 		{
-			ShoutNoMoreSpecialObjects();
+			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
 		thisRoom->objects[objActive].data.d.topLeft.h =
@@ -483,7 +484,7 @@ Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
 		case kSoundTrigger:
 		if ((what == kSoundTrigger) && (HowManySoundObjects() >= kMaxSoundTriggers))
 		{
-			ShoutNoMoreSpecialObjects();
+			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
 		thisRoom->objects[objActive].data.e.topLeft.h =
@@ -604,7 +605,7 @@ Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
 				(what != kCDs) && (what != kCustomPict) &&
 				(HowManyShredderObjects() >= kMaxShredded))
 		{
-			ShoutNoMoreSpecialObjects();
+			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
 		thisRoom->objects[objActive].data.g.topLeft.h =
@@ -651,7 +652,7 @@ Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
 		case kCobweb:
 		if ((what != kCobweb) && (HowManyDynamicObjects() >= kMaxDynamicObs))
 		{
-			ShoutNoMoreSpecialObjects();
+			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
 		if (what == kDartLf)
@@ -697,7 +698,7 @@ Boolean AddNewObject (Point where, SInt16 what, Boolean showItNow)
 		case kFish:
 		if (HowManyDynamicObjects() >= kMaxDynamicObs)
 		{
-			ShoutNoMoreSpecialObjects();
+			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
 		thisRoom->objects[objActive].data.h.topLeft.h =
@@ -864,13 +865,9 @@ Boolean DoesRoomNumHaveObject (SInt16 room, SInt16 what)
 
 //--------------------------------------------------------------  ShoutNoMoreObjects
 
-void ShoutNoMoreObjects (void)
+void ShoutNoMoreObjects (HWND ownerWindow)
 {
-	DialogParams	params = { 0 };
-	SInt16			hitWhat;
-
-	params.hwndParent = mainWindow;
-	hitWhat = Alert(kNoMoreObjectsAlert, &params);
+	Alert(kNoMoreObjectsAlert, ownerWindow, NULL);
 }
 
 //--------------------------------------------------------------  HowManyCandleObjects
@@ -1062,13 +1059,9 @@ SInt16 HowManyDynamicObjects (void)
 
 //--------------------------------------------------------------  ShoutNoMoreSpecialObjects
 
-void ShoutNoMoreSpecialObjects (void)
+void ShoutNoMoreSpecialObjects (HWND ownerWindow)
 {
-	DialogParams	params = { 0 };
-	SInt16			hitWhat;
-
-	params.hwndParent = mainWindow;
-	hitWhat = Alert(kNoMoreSpecialAlert, &params);
+	Alert(kNoMoreSpecialAlert, ownerWindow, NULL);
 }
 
 #endif

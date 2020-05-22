@@ -19,7 +19,7 @@
 
 
 BOOL GetSaveFolderPath (LPWSTR, DWORD);
-void SavedGameMismatchError (StringPtr);
+void SavedGameMismatchError (HWND, StringPtr);
 
 
 gameType	smallGame;
@@ -51,7 +51,7 @@ BOOL GetSaveFolderPath (LPWSTR lpSavePath, DWORD cchSavePath)
 
 //--------------------------------------------------------------  SaveGame2
 
-void SaveGame2 (void)
+void SaveGame2 (HWND ownerWindow)
 {
 	OPENFILENAME		ofn = { 0 };
 	Str255				gameNameStr;
@@ -75,7 +75,7 @@ void SaveGame2 (void)
 	savedGame.savedData = calloc(numRooms, sizeof(savedRoom));
 	if (savedGame.savedData == NULL)
 	{
-		YellowAlert(kYellowFailedSaveGame, -1);
+		YellowAlert(ownerWindow, kYellowFailedSaveGame, -1);
 		return;
 	}
 
@@ -86,7 +86,7 @@ void SaveGame2 (void)
 
 	WinFromMacString(gamePath, ARRAYSIZE(gamePath), gameNameStr);
 	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner = mainWindow;
+	ofn.hwndOwner = ownerWindow;
 	ofn.lpstrFilter = L"Glider PRO Saved Game (*.glg)\0*.glg\0\0";
 	ofn.nFilterIndex = 1;
 	ofn.lpstrFile = gamePath;
@@ -142,35 +142,33 @@ void SaveGame2 (void)
 		if (byteio_init_handle_writer(&byteWriter, gameFileHandle))
 		{
 			if (!WriteGame2Type(&byteWriter, &savedGame))
-				CheckFileError(GetLastError(), errorLabel);
+				CheckFileError(ownerWindow, GetLastError(), errorLabel);
 			if (!byteio_close(&byteWriter))
-				CheckFileError(GetLastError(), errorLabel);
+				CheckFileError(ownerWindow, GetLastError(), errorLabel);
 		}
 		CloseHandle(gameFileHandle);
 	}
 	else
 	{
-		CheckFileError(GetLastError(), errorLabel);
+		CheckFileError(ownerWindow, GetLastError(), errorLabel);
 	}
 	free(savedGame.savedData);
 }
 
 //--------------------------------------------------------------  SavedGameMismatchError
 
-void SavedGameMismatchError (StringPtr gameName)
+void SavedGameMismatchError (HWND ownerWindow, StringPtr gameName)
 {
-	DialogParams	params = { 0 };
-	SInt16			whoCares;
+	DialogParams params = { 0 };
 
-	params.hwndParent = mainWindow;
 	WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), gameName);
 	WinFromMacString(params.arg[1], ARRAYSIZE(params.arg[1]), thisHouseName);
-	whoCares = Alert(kSavedGameErrorAlert, &params);
+	Alert(kSavedGameErrorAlert, ownerWindow, &params);
 }
 
 //--------------------------------------------------------------  OpenSavedGame
 
-Boolean OpenSavedGame (void)
+Boolean OpenSavedGame (HWND ownerWindow)
 {
 	OPENFILENAME		ofn = { 0 };
 	Str15				errorLabel;
@@ -192,7 +190,7 @@ Boolean OpenSavedGame (void)
 	gamePath[0] = L'\0';
 
 	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner = mainWindow;
+	ofn.hwndOwner = ownerWindow;
 	ofn.lpstrFilter = L"Glider PRO Saved Game (*.glg)\0*.glg\0\0";
 	ofn.nFilterIndex = 1;
 	ofn.lpstrFile = gamePath;
@@ -209,7 +207,7 @@ Boolean OpenSavedGame (void)
 			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (gameFileHandle == INVALID_HANDLE_VALUE)
 	{
-		CheckFileError(GetLastError(), errorLabel);
+		CheckFileError(ownerWindow, GetLastError(), errorLabel);
 		return false;
 	}
 	if (!byteio_init_handle_reader(&byteReader, gameFileHandle))
@@ -221,32 +219,33 @@ Boolean OpenSavedGame (void)
 	CloseHandle(gameFileHandle);
 	if (result == 0)
 	{
-		CheckFileError(lastError, errorLabel);
+		CheckFileError(ownerWindow, lastError, errorLabel);
 		free(savedGame.savedData);
 		return false;
 	}
 
 	if (!Mac_EqualString(savedGame.house.name, thisHouseName, true))
 	{
-		SavedGameMismatchError(savedGame.house.name);
+		SavedGameMismatchError(ownerWindow, savedGame.house.name);
 		free(savedGame.savedData);
 		return false;
 	}
 	else if (thisHouse->timeStamp != savedGame.timeStamp)
 	{
-		YellowAlert(kYellowSavedTimeWrong, 0);
+		YellowAlert(ownerWindow, kYellowSavedTimeWrong, 0);
 		free(savedGame.savedData);
 		return false;
 	}
 	else if (savedGame.version != kSavedGameVersion)
 	{
-		YellowAlert(kYellowSavedVersWrong, kSavedGameVersion);
+		YellowAlert(ownerWindow, kYellowSavedVersWrong, kSavedGameVersion);
 		free(savedGame.savedData);
 		return false;
 	}
 	else if (savedGame.nRooms != thisHouse->nRooms)
 	{
-		YellowAlert(kYellowSavedRoomsWrong, savedGame.nRooms - thisHouse->nRooms);
+		YellowAlert(ownerWindow, kYellowSavedRoomsWrong,
+				savedGame.nRooms - thisHouse->nRooms);
 		free(savedGame.savedData);
 		return false;
 	}
@@ -288,7 +287,7 @@ Boolean OpenSavedGame (void)
 // This is probably about 3 days away from becoming the "old" function…
 // for saving games.
 
-void SaveGame (Boolean doSave)
+void SaveGame (HWND ownerWindow, Boolean doSave)
 {
 	UInt32			stamp;
 
@@ -325,8 +324,8 @@ void SaveGame (Boolean doSave)
 
 	if (doSave)
 	{
-		if (!WriteHouse(theMode == kEditMode))
-			YellowAlert(kYellowFailedWrite, 0);
+		if (!WriteHouse(ownerWindow, theMode == kEditMode))
+			YellowAlert(ownerWindow, kYellowFailedWrite, 0);
 	}
 }
 

@@ -31,7 +31,7 @@ void DoCommandKey (void);
 void DoPause (void);
 void DoBatteryEngaged (gliderPtr);
 void DoHeliumEngaged (gliderPtr);
-Boolean QuerySaveGame (void);
+Boolean QuerySaveGame (HWND);
 
 
 demoPtr		demoData;
@@ -65,14 +65,14 @@ void DoCommandKey (void)
 		paused = false;
 		if ((!twoPlayerGame) && (!demoGoing))
 		{
-			if (QuerySaveGame())
-				SaveGame2();		// New save game.
+			if (QuerySaveGame(mainWindow))
+				SaveGame2(mainWindow); // New save game.
 		}
 	}
 	else if ((IsKeyDown('S')) && (!twoPlayerGame) && (!demoGoing))
 	{
 		RefreshScoreboard(kSavingTitleMode);
-		SaveGame2();				// New save game.
+		SaveGame2(mainWindow); // New save game.
 		//HideCursor();
 		// TODO: is this bitblt necessary? game works better without it
 		//CopyRectWorkToMain(&workSrcRect);
@@ -417,14 +417,12 @@ void GetInput (gliderPtr thisGlider)
 
 //--------------------------------------------------------------  QuerySaveGame
 
-Boolean QuerySaveGame (void)
+Boolean QuerySaveGame (HWND ownerWindow)
 {
 	#define			kYesSaveGameButton	IDYES
 	SInt16			hitWhat;
-	DialogParams	params = { 0 };
 
-	params.hwndParent = mainWindow;
-	hitWhat = Alert(kSaveGameAlert, &params);
+	hitWhat = Alert(kSaveGameAlert, ownerWindow, NULL);
 	if (hitWhat == kYesSaveGameButton)
 		return (true);
 	else

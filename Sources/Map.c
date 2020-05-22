@@ -31,7 +31,7 @@ void LoadGraphicPlus (SInt16, Rect *);
 void RedrawMapContents (void);
 void LiveHScrollAction (ControlHandle, SInt16);
 void LiveVScrollAction (ControlHandle, SInt16);
-Boolean QueryNewRoom (void);
+Boolean QueryNewRoom (HWND);
 void CreateNailOffscreen (void);
 void KillNailOffscreen (void);
 
@@ -746,13 +746,11 @@ void HandleMapClick (EventRecord *theEvent)
 //--------------------------------------------------------------  QueryNewRoom
 
 #ifndef COMPILEDEMO
-Boolean QueryNewRoom (void)
+Boolean QueryNewRoom (HWND ownerWindow)
 {
-	SInt16			hitWhat;
-	DialogParams	params = { 0 };
+	SInt16 hitWhat;
 
-	params.hwndParent = mainWindow;
-	hitWhat = Alert(kNewRoomAlert, &params);
+	hitWhat = Alert(kNewRoomAlert, ownerWindow, NULL);
 	if (hitWhat == kYesDoNewRoom)
 		return (true);
 	else

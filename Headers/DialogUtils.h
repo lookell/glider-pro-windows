@@ -10,13 +10,12 @@
 
 
 typedef struct DialogParams {
-	HWND hwndParent;
 	WCHAR arg[4][256];
 } DialogParams;
 
 
 void ParamDialogText (HWND, const DialogParams *);
-SInt16 Alert (SInt16 dialogID, const DialogParams *params);
+SInt16 Alert (SInt16 dialogID, HWND ownerWindow, const DialogParams *params);
 BOOL FocusDefaultButton (HWND);
 void CenterOverOwner (HWND);
 

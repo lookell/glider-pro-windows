@@ -77,7 +77,7 @@ void SetAllDefaults (void);
 void FlashSettingsButton (SInt16);
 void UpdateSettingsMain (DialogPtr);
 Boolean PrefsFilter (DialogPtr, EventRecord *, SInt16 *);
-void BitchAboutChanges (void);
+void BitchAboutChanges (HWND);
 
 
 Rect		prefButton[4], controlRects[4];
@@ -1546,12 +1546,8 @@ void DoSettingsMain (void)
 
 //--------------------------------------------------------------  BitchAboutChanges
 
-void BitchAboutChanges (void)
+void BitchAboutChanges (HWND ownerWindow)
 {
-	SInt16			hitWhat;
-	DialogParams	params = { 0 };
-
-	params.hwndParent = mainWindow;
-	hitWhat = Alert(kChangesEffectAlert, &params);
+	Alert(kChangesEffectAlert, ownerWindow, NULL);
 }
 

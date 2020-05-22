@@ -109,7 +109,7 @@ Boolean CreateNewHouse (void)
 // Initializes all the structures for an empty (new) house.
 
 #ifndef COMPILEDEMO
-Boolean InitializeEmptyHouse (void)
+Boolean InitializeEmptyHouse (HWND ownerWindow)
 {
 	Str255			tempStr;
 
@@ -121,7 +121,7 @@ Boolean InitializeEmptyHouse (void)
 
 	if (thisHouse == NULL)
 	{
-		YellowAlert(kYellowUnaccounted, 1);
+		YellowAlert(ownerWindow, kYellowUnaccounted, 1);
 		return (false);
 	}
 

@@ -772,7 +772,7 @@ void Gp_DragObject (Point where)
 
 //--------------------------------------------------------------  DoNewObjectClick
 
-void DoNewObjectClick (Point where)
+void DoNewObjectClick (HWND ownerWindow, Point where)
 {
 #ifndef COMPILEDEMO
 	SInt16		whatObject;
@@ -781,7 +781,7 @@ void DoNewObjectClick (Point where)
 	objActive = kNoObjectSelected;
 
 	whatObject = toolSelected + ((toolMode - 1) * 0x0010);
-	if (AddNewObject(where, whatObject, true))
+	if (AddNewObject(ownerWindow, where, whatObject, true))
 		IgnoreThisClick();
 	UpdateMenus(false);
 
@@ -1150,7 +1150,7 @@ void Gp_DeleteObject (void)
 
 //--------------------------------------------------------------  DuplicateObject
 
-void DuplicateObject (void)
+void DuplicateObject (HWND ownerWindow)
 {
 	objectType	tempObject;
 	Point		placePt;
@@ -1166,7 +1166,7 @@ void DuplicateObject (void)
 
 	StopMarquee();
 
-	if (AddNewObject(placePt, tempObject.what, false))
+	if (AddNewObject(ownerWindow, placePt, tempObject.what, false))
 	{
 		switch (tempObject.what)
 		{

@@ -70,7 +70,7 @@ void DoGameOver (void)
 	ColorRect(mainWindowDC, &mainWindowRect, 244);
 	ReleaseMainWindowDC(mainWindowDC);
 	DoGameOverStarAnimation();
-	if (!TestHighScore())
+	if (!TestHighScore(mainWindow))
 		RedrawSplashScreen();
 }
 
@@ -528,7 +528,7 @@ void DoDiedGameOver (void)
 	{
 		if (!userAborted)
 			WaitForInputEvent(10);
-		TestHighScore();
+		TestHighScore(mainWindow);
 	}
 	RedrawSplashScreen();
 }

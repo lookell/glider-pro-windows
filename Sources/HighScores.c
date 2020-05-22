@@ -34,9 +34,9 @@
 
 void DrawHighScores (void);
 INT_PTR CALLBACK NameFilter (HWND, UINT, WPARAM, LPARAM);
-void GetHighScoreName (SInt16);
+void GetHighScoreName (HWND, SInt16);
 INT_PTR CALLBACK BannerFilter (HWND, UINT, WPARAM, LPARAM);
-void GetHighScoreBanner (void);
+void GetHighScoreBanner (HWND);
 Boolean FindHighScoresFolder (LPWSTR, DWORD);
 Boolean GetHighScoresFilePath (LPWSTR, DWORD, StringPtr);
 
@@ -363,7 +363,7 @@ void ZeroAllButHighestScore (void)
 // current high score against the high score list.  It returns true…
 // if the player is on the high score list now.
 
-Boolean TestHighScore (void)
+Boolean TestHighScore (HWND ownerWindow)
 {
 	SInt16		placing, i;
 
@@ -386,11 +386,11 @@ Boolean TestHighScore (void)
 	if (placing != -1)
 	{
 		//FlushEvents(everyEvent, 0);
-		GetHighScoreName(placing + 1);
+		GetHighScoreName(ownerWindow, placing + 1);
 		PasStringCopy(highName, thisHouse->highScores.names[kMaxScores - 1]);
 		if (placing == 0)
 		{
-			GetHighScoreBanner();
+			GetHighScoreBanner(ownerWindow);
 			PasStringCopy(highBanner, thisHouse->highScores.banner);
 		}
 		thisHouse->highScores.scores[kMaxScores - 1] = theScore;
@@ -460,7 +460,7 @@ INT_PTR CALLBACK NameFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 //--------------------------------------------------------------  GetHighScoreName
 // Brings up a dialog to get player's name (due to a high score).
 
-void GetHighScoreName (SInt16 place)
+void GetHighScoreName (HWND ownerWindow, SInt16 place)
 {
 	DialogParams	params = { 0 };
 
@@ -469,7 +469,7 @@ void GetHighScoreName (SInt16 place)
 	WinFromMacString(params.arg[2], ARRAYSIZE(params.arg[2]), thisHouseName);
 	DialogBoxParam(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kHighNameDialogID),
-			mainWindow, NameFilter, (LPARAM)&params);
+			ownerWindow, NameFilter, (LPARAM)&params);
 }
 
 //--------------------------------------------------------------  BannerFilter
@@ -524,11 +524,11 @@ INT_PTR CALLBACK BannerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 // appears across the top of the high scores list).  This dialog…
 // gets that message.
 
-void GetHighScoreBanner (void)
+void GetHighScoreBanner (HWND ownerWindow)
 {
 	DialogBox(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kHighBannerDialogID),
-			mainWindow, BannerFilter);
+			ownerWindow, BannerFilter);
 }
 
 //--------------------------------------------------------------  FindHighScoresFolder
@@ -550,12 +550,7 @@ Boolean FindHighScoresFolder (LPWSTR scoresDirPath, DWORD cchDirPath)
 	if (FAILED(hr))
 		return false;
 	if (!CreateDirectory(pathBuffer, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
-	{
-		Str255 label;
-		PasStringCopyC("Prefs Folder", label);
-		CheckFileError(GetLastError(), label);
 		return false;
-	}
 
 	hr = StringCchCopy(scoresDirPath, cchDirPath, pathBuffer);
 	return SUCCEEDED(hr);
@@ -584,7 +579,7 @@ Boolean GetHighScoresFilePath (LPWSTR lpPath, DWORD cchPath, StringPtr baseName)
 
 //--------------------------------------------------------------  WriteScoresToDisk
 
-Boolean WriteScoresToDisk (void)
+Boolean WriteScoresToDisk (HWND ownerWindow)
 {
 	Str255		fileLabel;
 	WCHAR		pathBuffer[MAX_PATH];
@@ -602,7 +597,7 @@ Boolean WriteScoresToDisk (void)
 			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (scoresFileHandle == INVALID_HANDLE_VALUE)
 	{
-		CheckFileError(GetLastError(), fileLabel);
+		CheckFileError(ownerWindow, GetLastError(), fileLabel);
 		return false;
 	}
 
@@ -617,7 +612,7 @@ Boolean WriteScoresToDisk (void)
 	CloseHandle(scoresFileHandle);
 	if (!writeSucceeded)
 	{
-		CheckFileError(lastError, fileLabel);
+		CheckFileError(ownerWindow, lastError, fileLabel);
 		return false;
 	}
 
@@ -627,7 +622,7 @@ Boolean WriteScoresToDisk (void)
 
 //--------------------------------------------------------------  ReadScoresFromDisk
 
-Boolean ReadScoresFromDisk (void)
+Boolean ReadScoresFromDisk (HWND ownerWindow)
 {
 	scoresType	tempScores;
 	Str255		fileLabel;
@@ -648,7 +643,7 @@ Boolean ReadScoresFromDisk (void)
 	if (scoresFileHandle == INVALID_HANDLE_VALUE)
 	{
 		if (lastError != ERROR_FILE_NOT_FOUND)
-			CheckFileError(lastError, fileLabel);
+			CheckFileError(ownerWindow, lastError, fileLabel);
 		return false;
 	}
 
@@ -663,7 +658,7 @@ Boolean ReadScoresFromDisk (void)
 	CloseHandle(scoresFileHandle);
 	if (!readSucceeded)
 	{
-		CheckFileError(lastError, fileLabel);
+		CheckFileError(ownerWindow, lastError, fileLabel);
 		return false;
 	}
 

@@ -26,8 +26,8 @@
 SInt32 CountTotalHousePoints (void);
 void UpdateHouseInfoDialog (DialogPtr);
 Boolean HouseFilter (DialogPtr, EventRecord *, SInt16 *);
-Boolean WarnLockingHouse (void);
-void HowToZeroScores (void);
+Boolean WarnLockingHouse (HWND);
+void HowToZeroScores (HWND);
 
 
 Str255		banner, trailer;
@@ -307,27 +307,21 @@ void DoHouseInfo (void)
 
 //--------------------------------------------------------------  WarnLockingHouse
 
-Boolean WarnLockingHouse (void)
+Boolean WarnLockingHouse (HWND ownerWindow)
 {
-	DialogParams	params = { 0 };
-	SInt16			hitWhat;
+	SInt16 hitWhat;
 
-	params.hwndParent = mainWindow;
-	hitWhat = Alert(kLockHouseAlert, &params);
-
+	hitWhat = Alert(kLockHouseAlert, ownerWindow, NULL);
 	return (hitWhat == IDOK);
 }
 
 //--------------------------------------------------------------  HowToZeroScores
 
-void HowToZeroScores (void)
+void HowToZeroScores (HWND ownerWindow)
 {
-	DialogParams	params = { 0 };
-	SInt16			hitWhat;
+	SInt16 hitWhat;
 
-	params.hwndParent = mainWindow;
-	hitWhat = Alert(kZeroScoresAlert, &params);
-
+	hitWhat = Alert(kZeroScoresAlert, ownerWindow, NULL);
 	switch (hitWhat)
 	{
 		case 1002:	// zero all

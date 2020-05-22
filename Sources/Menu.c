@@ -29,7 +29,7 @@ void UpdateMenusHouseClosed (void);
 void UpdateResumeDialog (DialogPtr);
 Boolean ResumeFilter (DialogPtr, EventRecord *, SInt16 *);
 SInt16 QueryResumeGame (void);
-void HeyYourPissingAHighScore (void);
+void HeyYourPissingAHighScore (HWND);
 
 
 HMENU		theMenuBar, appleMenu, gameMenu, optionsMenu, houseMenu;
@@ -326,7 +326,7 @@ void DoAppleMenu (SInt16 theItem)
 //--------------------------------------------------------------  DoGameMenu
 // Handle the user selecting an item from the Game menu.
 
-void DoGameMenu (SInt16 theItem)
+void DoGameMenu (HWND hwnd, SInt16 theItem)
 {
 	switch (theItem)
 	{
@@ -334,7 +334,7 @@ void DoGameMenu (SInt16 theItem)
 		twoPlayerGame = false;
 		resumedSavedGame = false;
 		DisableMenuBar();
-		NewGame(kNewGameMode);
+		NewGame(hwnd, kNewGameMode);
 		EnableMenuBar();
 		break;
 
@@ -342,29 +342,29 @@ void DoGameMenu (SInt16 theItem)
 		twoPlayerGame = true;
 		resumedSavedGame = false;
 		DisableMenuBar();
-		NewGame(kNewGameMode);
+		NewGame(hwnd, kNewGameMode);
 		EnableMenuBar();
 		break;
 
 		case iOpenSavedGame:
 		resumedSavedGame = true;
-		HeyYourPissingAHighScore();
-		if (OpenSavedGame())
+		HeyYourPissingAHighScore(hwnd);
+		if (OpenSavedGame(hwnd))
 		{
 			twoPlayerGame = false;
 			DisableMenuBar();
-			NewGame(kResumeGameMode);
+			NewGame(hwnd, kResumeGameMode);
 			EnableMenuBar();
 		}
 		break;
 
 		case iLoadHouse:
 #ifdef COMPILEDEMO
-		DoNotInDemo();
+		DoNotInDemo(hwnd);
 #else
 		if (splashDrawn)
 		{
-			DoLoadHouse();
+			DoLoadHouse(hwnd);
 			OpenCloseEditWindows();
 			UpdateMenus(false);
 			incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
@@ -383,7 +383,7 @@ void DoGameMenu (SInt16 theItem)
 		case iQuit:
 #ifndef COMPILEDEMO
 		quitting = true;
-		if (!QuerySaveChanges())
+		if (!QuerySaveChanges(hwnd))
 			quitting = false;
 #else
 		quitting = true;
@@ -400,7 +400,7 @@ void DoGameMenu (SInt16 theItem)
 //--------------------------------------------------------------  DoOptionsMenu
 // Handle the user selecting an item from the Options menu.
 
-void DoOptionsMenu (SInt16 theItem)
+void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 {
 #ifndef COMPILEDEMO
 	OSErr		theErr;
@@ -410,13 +410,13 @@ void DoOptionsMenu (SInt16 theItem)
 	{
 		case iEditor:
 #ifdef COMPILEDEMO
-		DoNotInDemo();
+		DoNotInDemo(hwnd);
 #else
 		if (theMode == kEditMode)			// switching to splash mode
 		{
 			if (fileDirty)
 				SortHouseObjects();
-			if (!QuerySaveChanges())
+			if (!QuerySaveChanges(hwnd))
 				break;
 			theMode = kSplashMode;
 			CloseMapWindow();
@@ -430,7 +430,7 @@ void DoOptionsMenu (SInt16 theItem)
 				theErr = StartMusic();
 				if (theErr != noErr)
 				{
-					YellowAlert(kYellowNoMusic, theErr);
+					YellowAlert(hwnd, kYellowNoMusic, theErr);
 					failedMusic = true;
 				}
 			}
@@ -465,7 +465,7 @@ void DoOptionsMenu (SInt16 theItem)
 
 		case iHelp:
 		DisableMenuBar();
-		DoDemoGame();
+		DoDemoGame(hwnd);
 		EnableMenuBar();
 		break;
 	}
@@ -474,7 +474,7 @@ void DoOptionsMenu (SInt16 theItem)
 //--------------------------------------------------------------  DoHouseMenu
 // Handle the user selecting an item from the House menu (only in Edit mode).
 
-void DoHouseMenu (SInt16 theItem)
+void DoHouseMenu (HWND hwnd, SInt16 theItem)
 {
 #ifndef COMPILEDEMO
 	SInt16		direction, dist;
@@ -485,7 +485,7 @@ void DoHouseMenu (SInt16 theItem)
 		case iNewHouse:
 		if (CreateNewHouse())
 		{
-			whoCares = InitializeEmptyHouse();
+			whoCares = InitializeEmptyHouse(hwnd);
 			OpenCloseEditWindows();
 		}
 		break;
@@ -500,7 +500,7 @@ void DoHouseMenu (SInt16 theItem)
 			if (wasHouseVersion < kHouseVersion)
 				ConvertHouseVer1To2();
 			wasHouseVersion = kHouseVersion;
-			whoCares = WriteHouse(true);
+			whoCares = WriteHouse(hwnd, true);
 			ForceThisRoom(thisRoomNumber);
 			ReadyBackground(thisRoom->background, thisRoom->tiles);
 			GetThisRoomsObjRects();
@@ -547,7 +547,7 @@ void DoHouseMenu (SInt16 theItem)
 			else
 			{
 //				PutRoomScrap();
-				DeleteRoom(false);
+				DeleteRoom(hwnd, false);
 			}
 			UpdateClipboardMenus();
 		}
@@ -582,24 +582,24 @@ void DoHouseMenu (SInt16 theItem)
 			if (objActive > kNoObjectSelected)
 				Gp_DeleteObject();
 			else
-				DeleteRoom(false);
+				DeleteRoom(hwnd, false);
 			UpdateClipboardMenus();
 		}
 		break;
 
 		case iDuplicate:
 		if (houseUnlocked)
-			DuplicateObject();
+			DuplicateObject(hwnd);
 		break;
 
 		case iBringForward:
 		if (houseUnlocked)
-			BringSendFrontBack(true);
+			BringSendFrontBack(hwnd, true);
 		break;
 
 		case iSendBack:
 		if (houseUnlocked)
-			BringSendFrontBack(false);
+			BringSendFrontBack(hwnd, false);
 		break;
 
 		case iGoToRoom:
@@ -629,7 +629,7 @@ void DoHouseMenu (SInt16 theItem)
 // Users has selected a menu item - determin which menu was selected…
 // and call the appropriate function above.
 
-void DoMenuChoice (WORD menuChoice)
+void DoMenuChoice (HWND hwnd, WORD menuChoice)
 {
 	switch (menuChoice)
 	{
@@ -638,103 +638,103 @@ void DoMenuChoice (WORD menuChoice)
 		break;
 
 		case ID_NEW_GAME:
-		DoGameMenu(iNewGame);
+		DoGameMenu(hwnd, iNewGame);
 		break;
 
 		case ID_TWO_PLAYER:
-		DoGameMenu(iTwoPlayer);
+		DoGameMenu(hwnd, iTwoPlayer);
 		break;
 
 		case ID_OPEN_SAVED_GAME:
-		DoGameMenu(iOpenSavedGame);
+		DoGameMenu(hwnd, iOpenSavedGame);
 		break;
 
 		case ID_LOAD_HOUSE:
-		DoGameMenu(iLoadHouse);
+		DoGameMenu(hwnd, iLoadHouse);
 		break;
 
 		case ID_QUIT:
-		DoGameMenu(iQuit);
+		DoGameMenu(hwnd, iQuit);
 		break;
 
 		case ID_EDITOR:
-		DoOptionsMenu(iEditor);
+		DoOptionsMenu(hwnd, iEditor);
 		break;
 
 		case ID_HIGH_SCORES:
-		DoOptionsMenu(iHighScores);
+		DoOptionsMenu(hwnd, iHighScores);
 		break;
 
 		case ID_PREFS:
-		DoOptionsMenu(iPrefs);
+		DoOptionsMenu(hwnd, iPrefs);
 		break;
 
 		case ID_DEMO:
-		DoOptionsMenu(iHelp);
+		DoOptionsMenu(hwnd, iHelp);
 		break;
 
 		case ID_NEW_HOUSE:
-		DoHouseMenu(iNewHouse);
+		DoHouseMenu(hwnd, iNewHouse);
 		break;
 
 		case ID_SAVE_HOUSE:
-		DoHouseMenu(iSave);
+		DoHouseMenu(hwnd, iSave);
 		break;
 
 		case ID_HOUSE_INFO:
-		DoHouseMenu(iHouse);
+		DoHouseMenu(hwnd, iHouse);
 		break;
 
 		case ID_ROOM_INFO:
-		DoHouseMenu(iRoom);
+		DoHouseMenu(hwnd, iRoom);
 		break;
 
 		case ID_OBJECT_INFO:
-		DoHouseMenu(iObject);
+		DoHouseMenu(hwnd, iObject);
 		break;
 
 		case ID_CUT:
-		DoHouseMenu(iCut);
+		DoHouseMenu(hwnd, iCut);
 		break;
 
 		case ID_COPY:
-		DoHouseMenu(iCopy);
+		DoHouseMenu(hwnd, iCopy);
 		break;
 
 		case ID_PASTE:
-		DoHouseMenu(iPaste);
+		DoHouseMenu(hwnd, iPaste);
 		break;
 
 		case ID_CLEAR:
-		DoHouseMenu(iClear);
+		DoHouseMenu(hwnd, iClear);
 		break;
 
 		case ID_DUPLICATE:
-		DoHouseMenu(iDuplicate);
+		DoHouseMenu(hwnd, iDuplicate);
 		break;
 
 		case ID_BRING_FORWARD:
-		DoHouseMenu(iBringForward);
+		DoHouseMenu(hwnd, iBringForward);
 		break;
 
 		case ID_SEND_BACK:
-		DoHouseMenu(iSendBack);
+		DoHouseMenu(hwnd, iSendBack);
 		break;
 
 		case ID_GO_TO_ROOM:
-		DoHouseMenu(iGoToRoom);
+		DoHouseMenu(hwnd, iGoToRoom);
 		break;
 
 		case ID_MAP_WINDOW:
-		DoHouseMenu(iMapWindow);
+		DoHouseMenu(hwnd, iMapWindow);
 		break;
 
 		case ID_OBJECT_WINDOW:
-		DoHouseMenu(iObjectWindow);
+		DoHouseMenu(hwnd, iObjectWindow);
 		break;
 
 		case ID_COORDINATE_WINDOW:
-		DoHouseMenu(iCoordinateWindow);
+		DoHouseMenu(hwnd, iCoordinateWindow);
 		break;
 	}
 }
@@ -900,25 +900,17 @@ SInt16 QueryResumeGame (void)
 // the demo version.
 
 #ifdef COMPILEDEMO
-void DoNotInDemo (void)
+void DoNotInDemo (HWND ownerWindow)
 {
-	SInt16			whoCares;
-	DialogParams	params = { 0 };
-
-	params.hwndParent = mainWindow;
-	whoCares = Alert(kNotInDemoAlert, &params);
+	Alert(kNotInDemoAlert, ownerWindow, NULL);
 }
 #endif
 
 //--------------------------------------------------------------  HeyYourPissingAHighScore
 
-void HeyYourPissingAHighScore (void)
+void HeyYourPissingAHighScore (HWND ownerWindow)
 {
-	SInt16			whoCares;
-	DialogParams	params = { 0 };
-
-	params.hwndParent = mainWindow;
-	whoCares = Alert(kNoHighScoreAlert, &params);
+	Alert(kNoHighScoreAlert, ownerWindow, NULL);
 }
 
 //--------------------------------------------------------------  OpenCloseEditWindows

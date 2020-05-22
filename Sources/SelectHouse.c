@@ -41,7 +41,7 @@ BOOL InitLoadDialog (HWND);
 INT_PTR CALLBACK LoadFilter (HWND, UINT, WPARAM, LPARAM);
 void SortHouseList (void);
 BOOL GetHouseFolderPath (LPWSTR, DWORD);
-void DoDirSearch (void);
+void DoDirSearch (HWND);
 
 
 Rect			loadHouseRects[12];
@@ -175,10 +175,10 @@ INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				if (lvItem.lParam != thisHouseIndex)
 				{
 					thisHouseIndex = (SInt16)lvItem.lParam;
-					whoCares = CloseHouse();
+					whoCares = CloseHouse(hDlg);
 					PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
-					if (OpenHouse())
-						whoCares = ReadHouse();
+					if (OpenHouse(hDlg))
+						whoCares = ReadHouse(hDlg);
 				}
 			}
 			EndDialog(hDlg, IDOK);
@@ -210,11 +210,11 @@ INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //--------------------------------------------------------------  DoLoadHouse
 
 #ifndef COMPILEDEMO
-void DoLoadHouse (void)
+void DoLoadHouse (HWND ownerWindow)
 {
 	DialogBox(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kLoadHouseDialogID),
-			mainWindow, LoadFilter);
+			ownerWindow, LoadFilter);
 }
 #endif
 
@@ -288,7 +288,7 @@ static HANDLE OpenFindFile(LPCWSTR lpPath, LPWIN32_FIND_DATA lpFindFileData)
 	return FindFirstFile(pattern, lpFindFileData);
 }
 
-void DoDirSearch (void)
+void DoDirSearch (HWND ownerWindow)
 {
 	#define			kMaxDirectories		32
 	WIN32_FIND_DATA	ffd;
@@ -384,7 +384,7 @@ void DoDirSearch (void)
 	{
 		thisHouseIndex = -1;
 		demoHouseIndex = -1;
-		YellowAlert(kYellowNoHouses, 0);
+		YellowAlert(ownerWindow, kYellowNoHouses, 0);
 	}
 	else
 	{
@@ -417,7 +417,7 @@ void DoDirSearch (void)
 
 //--------------------------------------------------------------  BuildHouseList
 
-void BuildHouseList (void)
+void BuildHouseList (HWND ownerWindow)
 {
 	SInt16		i;
 
@@ -429,7 +429,7 @@ void BuildHouseList (void)
 			theHousesSpecs[housesFound] = extraHouseSpecs[i];
 			housesFound++;
 		}
-		DoDirSearch();							// now, search folders for the rest
+		DoDirSearch(ownerWindow);				// now, search folders for the rest
 	}
 }
 
