@@ -150,6 +150,13 @@ UInt32 RandomLongQUS (void)
 // Called when we must quit app.  Brings up a dialog informing user…
 // of the problem and the exits to shell.
 
+static BOOL DisableThreadWndProc(HWND window, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	EnableWindow(window, FALSE);
+	return TRUE;
+}
+
 void RedAlert (SInt16 errorNumber)
 {
 	SInt16			dummyInt;
@@ -180,8 +187,13 @@ void RedAlert (SInt16 errorNumber)
 	}
 	StringCchPrintf(params.arg[2], ARRAYSIZE(params.arg[2]), L"%d", (int)errorNumber);
 
+	EnumThreadWindows(GetCurrentThreadId(), DisableThreadWndProc, 0);
 	params.hwndParent = mainWindow;
 	dummyInt = Alert(rDeathAlertID, &params);
+
+	if (mainWindow != NULL)
+		DestroyWindow(mainWindow);
+	CoUninitialize();
 	exit(EXIT_FAILURE);
 }
 
