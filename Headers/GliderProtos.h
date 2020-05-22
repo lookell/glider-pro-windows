@@ -108,7 +108,7 @@ void DoGoToDialog (void);
 void ConvertHouseVer1To2 (void);
 void ShiftWholeHouse (SInt16);
 
-void DoHouseInfo (void);								// --- HouseInfo.c
+void DoHouseInfo (HWND);								// --- HouseInfo.c
 
 Boolean OpenHouse (HWND);								// --- HouseIO.c
 Boolean OpenSpecificHouse (FSSpec *);

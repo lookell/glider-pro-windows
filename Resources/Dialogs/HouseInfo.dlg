@@ -1,26 +1,33 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kHouseInfoDialogID DIALOGEX 45, 20, 208, 200
+#define kBannerTextItem         1004
+#define kLockHouseButton        1006
+#define kClearScoresButton      1009
+#define kTrailerTextItem        1011
+#define kNoPhoneCheck           1014
+#define kBannerNCharsItem       1015
+#define kTrailerNCharsItem      1016
+#define kHouseSizeItem          1018
+
+kHouseInfoDialogID DIALOGEX 0, 0, 210, 192
 CAPTION "House Info"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    PUSHBUTTON "Okay", 1, 164, 183, 39, 12
-    PUSHBUTTON "Cancel", 2, 117, 183, 39, 12
-    LTEXT "v. ^0.^1", -1, 5, 148, 40, 10, SS_NOPREFIX
-    EDITTEXT 4, 7, 36, 193, 39, WS_VSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN
-    LTEXT "Number of rooms: ^2", -1, 5, 138, 115, 10, SS_NOPREFIX
-    PUSHBUTTON "Lock House", 6, 5, 162, 61, 10
-    CONTROL "", 7, STATIC, SS_OWNERDRAW, 6, 185, 61, 10
-    CONTROL 1005, -1, STATIC, SS_BITMAP, 0, 0, 208, 20
-    PUSHBUTTON "Clear Scores", 9, 72, 162, 61, 10
-    CONTROL "", 10, STATIC, SS_OWNERDRAW, 5, 177, 197, 1
-    EDITTEXT 11, 7, 92, 193, 39, WS_VSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN
-    LTEXT "Opening Message:", -1, 5, 25, 160, 10, SS_NOPREFIX
-    LTEXT "Finished House Message:", -1, 5, 80, 160, 10, SS_NOPREFIX
-    CHECKBOX "No Phone", 14, 125, 138, 77, 10
-    LTEXT "()", 15, 179, 25, 24, 10, SS_NOPREFIX
-    LTEXT "()", 16, 179, 80, 24, 10, SS_NOPREFIX
-    LTEXT "Highest Score:", -1, 139, 153, 64, 10, SS_NOPREFIX
-    LTEXT "", 18, 139, 162, 64, 10, SS_NOPREFIX
+    LTEXT "Opening Message:", IDC_STATIC, 7, 7, 173, 8, SS_NOPREFIX
+    EDITTEXT kBannerTextItem, 7, 18, 196, 36, ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | WS_VSCROLL
+    RTEXT "()", kBannerNCharsItem, 185, 7, 15, 8, SS_NOPREFIX
+    LTEXT "Finished House Message:", IDC_STATIC, 7, 61, 173, 8, SS_NOPREFIX
+    EDITTEXT kTrailerTextItem, 7, 72, 196, 36, ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | WS_VSCROLL
+    RTEXT "()", kTrailerNCharsItem, 185, 61, 15, 8, SS_NOPREFIX
+    LTEXT "Number of rooms: ^2", IDC_STATIC, 7, 115, 124, 8, SS_NOPREFIX
+    LTEXT "v. ^0.^1", IDC_STATIC, 7, 125, 124, 8, SS_NOPREFIX
+    LTEXT "Highest Score:", IDC_STATIC, 138, 115, 65, 8, SS_NOPREFIX
+    LTEXT "", kHouseSizeItem, 138, 125, 65, 8, SS_NOPREFIX
+    PUSHBUTTON "Lock House", kLockHouseButton, 7, 142, 60, 14
+    PUSHBUTTON "Clear Scores", kClearScoresButton, 71, 142, 60, 14
+    AUTOCHECKBOX "No Phone", kNoPhoneCheck, 138, 142, 65, 14
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ, 7, 163, 196, 1
+    DEFPUSHBUTTON "Okay", IDOK, 99, 171, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 153, 171, 50, 14
 }

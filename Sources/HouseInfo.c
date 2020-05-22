@@ -13,34 +13,26 @@
 #include "ResourceIDs.h"
 
 
-#define kBannerTextItem			4
-#define kLockHouseButton		6
-#define kClearScoresButton		9
-#define kTrailerTextItem		11
-#define kNoPhoneCheck			14
-#define kBannerNCharsItem		15
-#define kTrailerNCharsItem		16
-#define kHouseSizeItem			18
+#define kBannerTextItem			1004
+#define kLockHouseButton		1006
+#define kClearScoresButton		1009
+#define kTrailerTextItem		1011
+#define kNoPhoneCheck			1014
+#define kBannerNCharsItem		1015
+#define kTrailerNCharsItem		1016
+#define kHouseSizeItem			1018
 
 
 SInt32 CountTotalHousePoints (void);
-void UpdateHouseInfoDialog (DialogPtr);
-Boolean HouseFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK HouseFilter (HWND, UINT, WPARAM, LPARAM);
 Boolean WarnLockingHouse (HWND);
 void HowToZeroScores (HWND);
 
 
-Str255		banner, trailer;
-Rect		houseEditText1, houseEditText2;
-SInt16		houseCursorIs;
-Boolean		keyHit, tempPhoneBit;
-
-extern	HCURSOR		beamCursor;
 extern	Boolean		noRoomAtAll, changeLockStateOfHouse, saveHouseLocked;
 extern	Boolean		phoneBitSet;
 
 #ifndef COMPILEDEMO
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  CountTotalHousePoints
@@ -97,212 +89,124 @@ SInt32 CountTotalHousePoints (void)
 	return (pointTotal);
 }
 
-//--------------------------------------------------------------  UpdateHouseInfoDialog
-
-void UpdateHouseInfoDialog (DialogPtr theDialog)
-{
-	return;
-#if 0
-	short		nChars;
-
-	DrawDialog(theDialog);
-	nChars = GetDialogStringLen(theDialog, kBannerTextItem);
-	SetDialogNumToStr(theDialog, kBannerNCharsItem, (long)nChars);
-	nChars = GetDialogStringLen(theDialog, kTrailerTextItem);
-	SetDialogNumToStr(theDialog, kTrailerNCharsItem, (long)nChars);
-	SetDialogNumToStr(theDialog, kHouseSizeItem, CountTotalHousePoints());
-	FrameDialogItemC(theDialog, 10, kRedOrangeColor8);
-	SetDialogItemValue(theDialog, kNoPhoneCheck, (short)tempPhoneBit);
-#endif
-}
-
 //--------------------------------------------------------------  HouseFilter
 
-Boolean HouseFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+static void SendEditChangeNotification(HWND hwndParent, int itemID)
 {
-	return false;
-#if 0
-	Point		mouseIs;
-	short		nChars;
-
-	if (keyHit)
-	{
-		nChars = GetDialogStringLen(dial, kBannerTextItem);
-		SetDialogNumToStr(dial, kBannerNCharsItem, (long)nChars);
-		nChars = GetDialogStringLen(dial, kTrailerTextItem);
-		SetDialogNumToStr(dial, kTrailerNCharsItem, (long)nChars);
-		keyHit = false;
-	}
-
-	switch (event->what)
-	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
-		{
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
-			break;
-
-			case kEscapeKeyASCII:
-			FlashDialogButton(dial, kCancelButton);
-			*item = kCancelButton;
-			return(true);
-			break;
-
-			default:
-			keyHit = true;
-			return(false);
-		}
-		break;
-
-		case mouseDown:
-		return(false);
-		break;
-
-		case mouseUp:
-		return(false);
-		break;
-
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateHouseInfoDialog(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		mouseIs = event->where;
-		GlobalToLocal(&mouseIs);
-		if ((PtInRect(mouseIs, &houseEditText1)) ||
-				(PtInRect(mouseIs, &houseEditText2)))
-		{
-			if (houseCursorIs != kBeamCursor)
-			{
-				SetCursor(&beamCursor);
-				houseCursorIs = kBeamCursor;
-			}
-		}
-		else
-		{
-			if (houseCursorIs != kArrowCursor)
-			{
-				InitCursor();
-				houseCursorIs = kArrowCursor;
-			}
-		}
-		return(false);
-		break;
-	}
-#endif
+	SendMessage(hwndParent, WM_COMMAND, MAKEWPARAM(itemID, EN_CHANGE),
+			(LPARAM)GetDlgItem(hwndParent, itemID));
 }
 
-//--------------------------------------------------------------  DoHouseInfo
-
-void DoHouseInfo (void)
+INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	MessageBox(mainWindow, L"DoHouseInfo()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		houseInfoDialog;
-	Str255			versStr, loVers, nRoomsStr;
-	long			h, v;
-	short			item, numRooms, version;
-	char			wasState;
-	Boolean			leaving;
-	ModalFilterUPP	houseFilterUPP;
-
-	houseFilterUPP = NewModalFilterUPP(HouseFilter);
-	tempPhoneBit = phoneBitSet;
-
-	wasState = HGetState((Handle)thisHouse);
-	numRooms = RealRoomNumberCount();
-	HLock((Handle)thisHouse);
-	PasStringCopy((*thisHouse)->banner, banner);
-	PasStringCopy((*thisHouse)->trailer, trailer);
-	version = (*thisHouse)->version;
-	if (!noRoomAtAll)
+	switch (message)
 	{
-		h = (long)(*thisHouse)->rooms[(*thisHouse)->firstRoom].suite;
-		v = (long)(*thisHouse)->rooms[(*thisHouse)->firstRoom].floor;
-	}
-	HSetState((Handle)thisHouse, wasState);
+	case WM_INITDIALOG:
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
 
-	NumToString((long)version >> 8, versStr);		// Convert version to two strings…
-	NumToString((long)version % 0x0100, loVers);	// the 1's and 1/10th's part.
-	NumToString((long)numRooms, nRoomsStr);			// Number of rooms -> string.
+		// NOTE: Multiline edit controls don't send EN_CHANGE notifications
+		// to their parent when the text is set via WM_SETTEXT, so we'll send
+		// these notifications manually.
+		SetDialogString(hDlg, kBannerTextItem, thisHouse->banner);
+		SendEditChangeNotification(hDlg, kBannerTextItem);
+		SetDialogString(hDlg, kTrailerTextItem, thisHouse->trailer);
+		SendEditChangeNotification(hDlg, kTrailerTextItem);
 
-	ParamText(versStr, loVers, nRoomsStr, "\p");
+		SetDlgItemInt(hDlg, kHouseSizeItem, CountTotalHousePoints(), TRUE);
+		if (phoneBitSet)
+			CheckDlgButton(hDlg, kNoPhoneCheck, BST_CHECKED);
+		else
+			CheckDlgButton(hDlg, kNoPhoneCheck, BST_UNCHECKED);
+		return TRUE;
 
-//	CenterDialog(kHouseInfoDialogID);
-	houseInfoDialog = GetNewDialog(kHouseInfoDialogID, nil, kPutInFront);
-	if (houseInfoDialog == nil)
-		RedAlert(kErrDialogDidntLoad);
-	SetPort((GrafPtr)houseInfoDialog);
-	ShowWindow(GetDialogWindow(houseInfoDialog));
-
-	SetDialogString(houseInfoDialog, kBannerTextItem, banner);
-	SetDialogString(houseInfoDialog, kTrailerTextItem, trailer);
-	SelectDialogItemText(houseInfoDialog, kBannerTextItem, 0, 1024);
-	GetDialogItemRect(houseInfoDialog, kBannerTextItem, &houseEditText1);
-	GetDialogItemRect(houseInfoDialog, kTrailerTextItem, &houseEditText2);
-	houseCursorIs = kArrowCursor;
-	leaving = false;
-
-	while (!leaving)
-	{
-		ModalDialog(houseFilterUPP, &item);
-
-		if (item == kOkayButton)
+	case WM_COMMAND:
+		switch (GET_WM_COMMAND_ID(wParam, lParam))
 		{
-			GetDialogString(houseInfoDialog, kBannerTextItem, banner);
-			GetDialogString(houseInfoDialog, kTrailerTextItem, trailer);
+		case IDOK:
+			GetDialogString(hDlg, kBannerTextItem,
+					thisHouse->banner, ARRAYSIZE(thisHouse->banner));
+			GetDialogString(hDlg, kTrailerTextItem,
+					thisHouse->trailer, ARRAYSIZE(thisHouse->trailer));
 
-			wasState = HGetState((Handle)thisHouse);
-			HLock((Handle)thisHouse);
-			PasStringCopyNum(banner, (*thisHouse)->banner, 255);
-			PasStringCopyNum(trailer, (*thisHouse)->trailer, 255);
-			if (tempPhoneBit != phoneBitSet)
-			{
-				phoneBitSet = tempPhoneBit;
-				if (phoneBitSet)
-					(*thisHouse)->flags = (*thisHouse)->flags | 0x00000002;
-				else
-					(*thisHouse)->flags = (*thisHouse)->flags & 0xFFFFDFFD;
-			}
-			HSetState((Handle)thisHouse, wasState);
+			phoneBitSet = (IsDlgButtonChecked(hDlg, kNoPhoneCheck) != BST_UNCHECKED);
+			if (phoneBitSet)
+				thisHouse->flags = thisHouse->flags | 0x00000002;
+			else
+				thisHouse->flags = thisHouse->flags & 0xFFFFFFFD;
 
 			fileDirty = true;
 			UpdateMenus(false);
-			leaving = true;
-		}
-		else if (item == kCancelButton)
-			leaving = true;
-		else if (item == kLockHouseButton)
-		{
-			if (WarnLockingHouse())
+			EndDialog(hDlg, IDOK);
+			break;
+
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
+			break;
+
+		case kLockHouseButton:
+			if (WarnLockingHouse(hDlg))
 			{
 				changeLockStateOfHouse = true;
 				saveHouseLocked = true;
 				fileDirty = true;
 				UpdateMenus(false);
 			}
+			break;
+
+		case kClearScoresButton:
+			HowToZeroScores(hDlg);
+			break;
+
+		case kBannerTextItem:
+			if (HIWORD(wParam) == EN_CHANGE)
+			{
+				int nChars = GetDialogStringLen(hDlg, kBannerTextItem);
+				SetDlgItemInt(hDlg, kBannerNCharsItem, nChars, FALSE);
+			}
+			break;
+
+		case kTrailerTextItem:
+			if (HIWORD(wParam) == EN_CHANGE)
+			{
+				int nChars = GetDialogStringLen(hDlg, kTrailerTextItem);
+				SetDlgItemInt(hDlg, kTrailerNCharsItem, nChars, FALSE);
+			}
+			break;
 		}
-		else if (item == kClearScoresButton)
-			HowToZeroScores();
-		else if (item == kNoPhoneCheck)
-		{
-			tempPhoneBit = !tempPhoneBit;
-			SetDialogItemValue(houseInfoDialog, kNoPhoneCheck, (short)tempPhoneBit);
-		}
+		return TRUE;
 	}
-	InitCursor();
-	DisposeDialog(houseInfoDialog);
-	DisposeModalFilterUPP(houseFilterUPP);
-#endif
+	return FALSE;
+}
+
+//--------------------------------------------------------------  DoHouseInfo
+
+void DoHouseInfo (HWND ownerWindow)
+{
+	DialogParams	params = { 0 };
+	Str255			versStr, loVers, nRoomsStr;
+	SInt32			h, v;
+	SInt16			numRooms, version;
+
+	numRooms = RealRoomNumberCount();
+	version = thisHouse->version;
+	if (!noRoomAtAll)
+	{
+		h = (SInt32)thisHouse->rooms[thisHouse->firstRoom].suite;
+		v = (SInt32)thisHouse->rooms[thisHouse->firstRoom].floor;
+	}
+
+	Mac_NumToString((SInt32)version >> 8, versStr);		// Convert version to two strings…
+	Mac_NumToString((SInt32)version % 0x0100, loVers);	// the 1's and 1/10th's part.
+	Mac_NumToString((SInt32)numRooms, nRoomsStr);		// Number of rooms -> string.
+
+	WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), versStr);
+	WinFromMacString(params.arg[1], ARRAYSIZE(params.arg[1]), loVers);
+	WinFromMacString(params.arg[2], ARRAYSIZE(params.arg[2]), nRoomsStr);
+
+	DialogBoxParam(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kHouseInfoDialogID),
+			ownerWindow, HouseFilter, (LPARAM)&params);
 }
 
 //--------------------------------------------------------------  WarnLockingHouse

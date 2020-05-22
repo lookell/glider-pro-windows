@@ -514,7 +514,7 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 
 		case iHouse:
 		if (houseUnlocked)
-			DoHouseInfo();
+			DoHouseInfo(hwnd);
 		break;
 
 		case iRoom:
