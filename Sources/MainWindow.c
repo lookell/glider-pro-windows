@@ -719,19 +719,19 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	case WM_ENABLE:
 		if (mapWindow != NULL && IsWindow(mapWindow))
 		{
-			EnableWindow(mapWindow, wParam);
+			EnableWindow(mapWindow, !!wParam);
 		}
 		if (toolsWindow != NULL && IsWindow(toolsWindow))
 		{
-			EnableWindow(toolsWindow, wParam);
+			EnableWindow(toolsWindow, !!wParam);
 		}
 		if (linkWindow != NULL && IsWindow(linkWindow))
 		{
-			EnableWindow(linkWindow, wParam);
+			EnableWindow(linkWindow, !!wParam);
 		}
 		if (coordWindow != NULL && IsWindow(coordWindow))
 		{
-			EnableWindow(coordWindow, wParam);
+			EnableWindow(coordWindow, !!wParam);
 		}
 		return 0;
 
