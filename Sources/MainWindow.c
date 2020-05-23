@@ -44,6 +44,7 @@ SInt16			splashOriginH, splashOriginV;
 SInt16			theMode;
 Boolean			fadeGraysOut, isDoColorFade, splashDrawn;
 
+extern	HWND		mapWindow, toolsWindow, linkWindow;
 extern	GDHandle	thisGDevice;
 extern	SInt16		toolSelected;
 extern	Rect		justRoomsRect;
@@ -713,6 +714,25 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		// with the window. It will be reattached to the main window if
 		// it is recreated.
 		SetMenu(hwnd, NULL);
+		return 0;
+
+	case WM_ENABLE:
+		if (mapWindow != NULL && IsWindow(mapWindow))
+		{
+			EnableWindow(mapWindow, wParam);
+		}
+		if (toolsWindow != NULL && IsWindow(toolsWindow))
+		{
+			EnableWindow(toolsWindow, wParam);
+		}
+		if (linkWindow != NULL && IsWindow(linkWindow))
+		{
+			EnableWindow(linkWindow, wParam);
+		}
+		if (coordWindow != NULL && IsWindow(coordWindow))
+		{
+			EnableWindow(coordWindow, wParam);
+		}
 		return 0;
 
 	case WM_KEYDOWN:
