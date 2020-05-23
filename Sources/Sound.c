@@ -130,7 +130,7 @@ void Gp_PlaySound (SInt16 channelID, SInt16 soundID, SInt16 priority)
 		{
 			IDirectSoundBuffer8_SetCurrentPosition(channels[channelID], 0);
 			hr = IDirectSoundBuffer8_Play(channels[channelID], 0, 0, 0);
-			if (FAILED(hr) && hr == DSERR_BUFFERLOST)
+			if (hr == DSERR_BUFFERLOST)
 			{
 				RestoreStaticBuffer(soundID, channels[channelID]);
 				hr = IDirectSoundBuffer8_Play(channels[channelID], 0, 0, 0);
@@ -142,7 +142,7 @@ void Gp_PlaySound (SInt16 channelID, SInt16 soundID, SInt16 priority)
 			}
 			else
 			{
-				IDirectSoundBuffer8_Release(channels[channelID]);
+				Audio_ReleaseSoundBuffer(channels[channelID]);
 				channels[channelID] = NULL;
 			}
 		}
@@ -173,7 +173,7 @@ void FlushCurrentSound (SInt16 channelID)
 	if (channels[channelID] != NULL)
 	{
 		IDirectSoundBuffer8_Stop(channels[channelID]);
-		IDirectSoundBuffer8_Release(channels[channelID]);
+		Audio_ReleaseSoundBuffer(channels[channelID]);
 	}
 	channels[channelID] = NULL;
 	priorities[channelID] = 0;

@@ -264,13 +264,55 @@ HRESULT Audio_GetDevice(LPDIRECTSOUND8 *ppDS8)
 	return S_OK;
 }
 
+static HRESULT Audio_AllocBufferSlot(DWORD *pBufferSlot)
+{
+	LPDIRECTSOUNDBUFFER8 *newBuffersPtr;
+	DWORD newCapacity;
+	DWORD i;
+
+	if (pBufferSlot == NULL)
+	{
+		return E_POINTER;
+	}
+	for (i = 0; i < g_audioBuffersCapacity; i++)
+	{
+		if (g_audioBuffers[i] == NULL)
+		{
+			*pBufferSlot = i;
+			return S_OK;
+		}
+	}
+
+	if (g_audioBuffersCapacity == 0)
+	{
+		newCapacity = 16;
+	}
+	else
+	{
+		newCapacity = 2 * g_audioBuffersCapacity;
+	}
+	newBuffersPtr = realloc(g_audioBuffers, newCapacity * sizeof(*newBuffersPtr));
+	if (newBuffersPtr == NULL)
+	{
+		return E_OUTOFMEMORY;
+	}
+	g_audioBuffers = newBuffersPtr;
+	for (i = g_audioBuffersCapacity; i < newCapacity; i++)
+	{
+		g_audioBuffers[i] = NULL;
+	}
+	*pBufferSlot = g_audioBuffersCapacity;
+	g_audioBuffersCapacity = newCapacity;
+	return S_OK;
+}
+
 HRESULT Audio_CreateSoundBuffer(
 	LPCDSBUFFERDESC pcDSBufferDesc,
 	LPDIRECTSOUNDBUFFER8 *ppDSBuffer,
 	LPUNKNOWN pUnkOuter)
 {
 	LPDIRECTSOUNDBUFFER tempBuffer;
-	LPDIRECTSOUNDBUFFER8 *newBuffersPtr;
+	LPDIRECTSOUNDBUFFER8 newBuffer;
 	DWORD bufferSlot;
 	HRESULT hr;
 
@@ -284,43 +326,28 @@ HRESULT Audio_CreateSoundBuffer(
 		return DSERR_UNINITIALIZED;
 	}
 
-	for (bufferSlot = 0; bufferSlot < g_audioBuffersCapacity; bufferSlot++)
+	hr = Audio_AllocBufferSlot(&bufferSlot);
+	if (FAILED(hr))
 	{
-		if (g_audioBuffers[bufferSlot] == NULL)
-		{
-			break;
-		}
+		return hr;
 	}
-	if (bufferSlot == g_audioBuffersCapacity)
-	{
-		newBuffersPtr = realloc(
-			g_audioBuffers,
-			(g_audioBuffersCapacity + 1) * sizeof(*newBuffersPtr)
-		);
-		if (newBuffersPtr == NULL)
-		{
-			return E_OUTOFMEMORY;
-		}
-		g_audioBuffers = newBuffersPtr;
-		g_audioBuffers[bufferSlot] = NULL;
-		g_audioBuffersCapacity += 1;
-	}
-
 	hr = IDirectSound8_CreateSoundBuffer(g_audioDevice,
 			pcDSBufferDesc, &tempBuffer, pUnkOuter);
 	if (FAILED(hr))
 	{
 		return hr;
 	}
-	hr = IDirectSoundBuffer_QueryInterface(tempBuffer, &IID_IDirectSoundBuffer8, ppDSBuffer);
+	hr = IDirectSoundBuffer_QueryInterface(tempBuffer, &IID_IDirectSoundBuffer8, &newBuffer);
 	IDirectSoundBuffer_Release(tempBuffer);
 	if (FAILED(hr))
 	{
 		return hr;
 	}
+	IDirectSoundBuffer8_SetVolume(newBuffer, g_masterAttenuation);
 
-	g_audioBuffers[bufferSlot] = *ppDSBuffer;
-	IDirectSoundBuffer8_SetVolume(g_audioBuffers[bufferSlot], g_masterAttenuation);
+	IDirectSoundBuffer_AddRef(newBuffer);
+	g_audioBuffers[bufferSlot] = newBuffer;
+	*ppDSBuffer = newBuffer;
 	return S_OK;
 }
 
@@ -331,6 +358,7 @@ HRESULT Audio_DuplicateSoundBuffer(
 	LPDIRECTSOUNDBUFFER tempOriginal, tempDuplicate;
 	LPDIRECTSOUNDBUFFER8 newBuffer;
 	LONG bufferVolume;
+	DWORD bufferSlot;
 	HRESULT hr;
 
 	if (ppDSBufferDuplicate == NULL)
@@ -345,6 +373,12 @@ HRESULT Audio_DuplicateSoundBuffer(
 	if (pDSBufferOriginal == NULL)
 	{
 		return E_INVALIDARG;
+	}
+
+	hr = Audio_AllocBufferSlot(&bufferSlot);
+	if (FAILED(hr))
+	{
+		return hr;
 	}
 
 	hr = IDirectSoundBuffer8_QueryInterface(pDSBufferOriginal,
@@ -383,6 +417,8 @@ HRESULT Audio_DuplicateSoundBuffer(
 		hr = IDirectSoundBuffer8_SetVolume(newBuffer, bufferVolume);
 	}
 
+	IDirectSoundBuffer8_AddRef(newBuffer);
+	g_audioBuffers[bufferSlot] = newBuffer;
 	*ppDSBufferDuplicate = newBuffer;
 	return S_OK;
 }
@@ -395,6 +431,7 @@ ULONG Audio_ReleaseSoundBuffer(LPDIRECTSOUNDBUFFER8 pBuffer)
 	{
 		if (pBuffer == g_audioBuffers[bufferSlot])
 		{
+			IDirectSoundBuffer8_Release(g_audioBuffers[bufferSlot]);
 			g_audioBuffers[bufferSlot] = NULL;
 			break;
 		}

@@ -66,9 +66,8 @@ HRESULT Audio_CreateSoundBuffer(
 // sound buffer. The parameters of this function are similar to those of
 // IDirectSound8::DuplicateSoundBuffer, except that LPDIRECTSOUNDBUFFER8 is used
 // instead of LPDIRECTSOUNDBUFFER (without the 8). The interface pointer returned
-// by this function should be released using IDirectSoundBuffer8::Release when you
-// are finished using it. The original sound buffer should be released using
-// Audio_ReleaseSoundBuffer, if it was allocated using Audio_CreateSoundBuffer.
+// by this function should be released using Audio_ReleaseSoundBuffer, so that it
+// can be removed from the interface list for volume control.
 //
 // This function provides a wrapper around the QueryInterface dance to convert from
 // IDirectSoundBuffer8 into IDirectSoundBuffer and then back. It also handles the
@@ -89,16 +88,17 @@ HRESULT Audio_DuplicateSoundBuffer(
 	LPDIRECTSOUNDBUFFER8 *ppDSBufferDuplicate);
 
 // Release an IDirectSoundBuffer8 interface pointer previously allocated
-// with Audio_CreateSoundBuffer.
+// with Audio_CreateSoundBuffer or Audio_DuplicateSoundBuffer.
 ULONG Audio_ReleaseSoundBuffer(LPDIRECTSOUNDBUFFER8 pBuffer);
 
-// Get the master volume used for buffers created by Audio_CreateSoundBuffer.
-// The value ranges between 0.0 (for complete silence) and 1.0 (for full volume).
-// If the function fails, the volume is set to 0.0.
+// Get the master volume used for buffers created by Audio_CreateSoundBuffer or
+// Audio_DuplicateSoundBuffer. The value ranges between 0.0 (for complete silence)
+//and 1.0 (for full volume).
 HRESULT Audio_GetMasterVolume(float *pVolume);
 
-// Set the master volume used for buffers created by Audio_CreateSoundBuffer.
-// The value ranges between 0.0 (for complete silence) and 1.0 (for full volume).
+// Set the master volume used for buffers created by Audio_CreateSoundBuffer or
+// Audio_DuplicateSoundBuffer. The value ranges between 0.0 (for complete silence)
+//and 1.0 (for full volume).
 HRESULT Audio_SetMasterVolume(float newVolume);
 
 #endif
