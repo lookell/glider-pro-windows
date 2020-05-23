@@ -530,6 +530,9 @@ void HandleEvent (void)
 				quitting = true;
 				return;
 			}
+
+			if (IsWindow(coordWindow) && IsDialogMessage(coordWindow, &theEvent))
+				continue;
 			TranslateMessage(&theEvent);
 			DispatchMessage(&theEvent);
 		}

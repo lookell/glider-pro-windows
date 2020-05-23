@@ -504,6 +504,8 @@ IDM_ROOT MENUEX
 #include "Dialogs\\GoTo.dlg"
 #include "Dialogs\\CustPictInfo.dlg"
 
+#include "Windows\\Coordinate.dlg"
+
 IDI_APPL    ICON    "Icons\\Appl.ico"
 IDI_PREFS   ICON    "Icons\\Prefs.ico"
 IDI_HOUSE   ICON    "Icons\\House.ico"

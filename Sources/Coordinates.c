@@ -12,9 +12,17 @@
 #include "Marquee.h"
 #include "ObjectEdit.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 
 
-Rect			coordWindowRect;
+#define kHoriCoordItem		1001
+#define kVertCoordItem		1002
+#define kDistCoordItem		1003
+
+
+INT_PTR CALLBACK CoordWindowProc(HWND, UINT, WPARAM, LPARAM);
+
+
 HWND			coordWindow;
 SInt16			isCoordH, isCoordV;
 SInt16			coordH, coordV, coordD;
@@ -55,62 +63,66 @@ void DeltaCoordinateD (SInt16 d)
 #endif
 }
 
+//--------------------------------------------------------------  CoordWindowProc
+
+// Handles messages for the Coordinate window with a dialog procedure.
+
+INT_PTR CALLBACK CoordWindowProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return TRUE;
+
+	case WM_CLOSE:
+		ToggleCoordinateWindow();
+		return TRUE;
+
+	case WM_MOVE:
+		isCoordH = GET_X_LPARAM(lParam);
+		isCoordV = GET_Y_LPARAM(lParam);
+		return TRUE;
+
+	case WM_CTLCOLORSTATIC:
+		SetBkColor((HDC)wParam, GetSysColor(COLOR_BTNFACE));
+		if (GetDlgCtrlID((HWND)lParam) == kDistCoordItem)
+			SetTextColor((HDC)wParam, blueColor);
+		else
+			SetTextColor((HDC)wParam, GetSysColor(COLOR_BTNTEXT));
+		return (INT_PTR)GetSysColorBrush(COLOR_BTNFACE);
+	}
+	return FALSE;
+}
+
 //--------------------------------------------------------------  UpdateCoordWindow
 
 // Completely redraws and updates the Coordinate window.
 
 void UpdateCoordWindow (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	Str255		tempStr, numStr;
-	GrafPtr		wasPort;
+	WCHAR text[256];
 
-	if (coordWindow == nil)
+	if (coordWindow == NULL)
 		return;
 
-	GetPort(&wasPort);
-	SetPort((GrafPtr)coordWindow);
-	EraseRect(&coordWindowRect);
-
-	PasStringCopy("\ph: ", tempStr);
 	if (coordH != -1)
-	{
-		NumToString((long)coordH, numStr);
-		PasStringConcat(tempStr, numStr);
-	}
+		StringCchPrintf(text, ARRAYSIZE(text), L"h: %ld", (long)coordH);
 	else
-		PasStringConcat(tempStr, "\p-");
-	MoveTo(5, 12);
-	DrawString(tempStr);
+		StringCchCopy(text, ARRAYSIZE(text), L"h: -");
+	SetDlgItemText(coordWindow, kHoriCoordItem, text);
 
-	PasStringCopy("\pv: ", tempStr);
 	if (coordV != -1)
-	{
-		NumToString((long)coordV, numStr);
-		PasStringConcat(tempStr, numStr);
-	}
+		StringCchPrintf(text, ARRAYSIZE(text), L"v: %ld", (long)coordV);
 	else
-		PasStringConcat(tempStr, "\p-");
-	MoveTo(4, 22);
-	DrawString(tempStr);
+		StringCchCopy(text, ARRAYSIZE(text), L"v: -");
+	SetDlgItemText(coordWindow, kVertCoordItem, text);
 
-	ForeColor(blueColor);
-	PasStringCopy("\pd: ", tempStr);
 	if (coordD != -1)
-	{
-		NumToString((long)coordD, numStr);
-		PasStringConcat(tempStr, numStr);
-	}
+		StringCchPrintf(text, ARRAYSIZE(text), L"d: %ld", (long)coordD);
 	else
-		PasStringConcat(tempStr, "\p-");
-	MoveTo(5, 32);
-	DrawString(tempStr);
-	ForeColor(blackColor);
-
-	SetPort((GrafPtr)wasPort);
-#endif
+		StringCchCopy(text, ARRAYSIZE(text), L"d: -");
+	SetDlgItemText(coordWindow, kDistCoordItem, text);
 #endif
 }
 
@@ -119,24 +131,18 @@ void UpdateCoordWindow (void)
 
 void OpenCoordWindow (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
 	Rect		src, dest;
 	Point		globalMouse;
 	short		direction, dist;
 
-	if (coordWindow == nil)
+	if (coordWindow == NULL)
 	{
-		QSetRect(&coordWindowRect, 0, 0, 50, 38);
-		if (thisMac.hasColor)
-			coordWindow = NewCWindow(nil, &coordWindowRect,
-					"\pTools", false, kWindoidWDEF, kPutInFront, true, 0L);
-		else
-			coordWindow = NewWindow(nil, &coordWindowRect,
-					"\pTools", false, kWindoidWDEF, kPutInFront, true, 0L);
+		coordWindow = CreateDialog(HINST_THISCOMPONENT,
+				MAKEINTRESOURCE(kCoordinateWindowID),
+				mainWindow, CoordWindowProc);
 
-		if (coordWindow == nil)
+		if (coordWindow == NULL)
 			RedAlert(kErrNoMemory);
 
 //		if (OptionKeyDown())
@@ -144,21 +150,14 @@ void OpenCoordWindow (void)
 //			isCoordH = qd.screenBits.bounds.right - 55;
 //			isCoordV = 204;
 //		}
-		MoveWindow(coordWindow, isCoordH, isCoordV, true);
-		globalMouse = MyGetGlobalMouse();
-		QSetRect(&src, 0, 0, 1, 1);
-		QOffsetRect(&src, globalMouse.h, globalMouse.v);
-		GetWindowRect(coordWindow, &dest);
-		BringToFront(coordWindow);
-		ShowHide(coordWindow, true);
-//		FlagWindowFloating(coordWindow);	TEMP - use flaoting windows
-		HiliteAllWindows();
+		SetWindowPos(coordWindow, NULL, isCoordH, isCoordV, 0, 0,
+				SWP_NOACTIVATE | SWP_NOSIZE | SWP_NOZORDER);
+		ShowWindow(coordWindow, SW_SHOW);
 
 		coordH = -1;
 		coordV = -1;
 		coordD = -1;
-		TextFace(applFont);
-		TextSize(9);
+		UpdateCoordWindow();
 
 		if (objActive != kNoObjectSelected)
 		{
@@ -170,7 +169,6 @@ void OpenCoordWindow (void)
 
 	UpdateCoordinateCheckmark(true);
 #endif
-#endif
 }
 
 //--------------------------------------------------------------  CloseCoordWindow
@@ -178,11 +176,8 @@ void OpenCoordWindow (void)
 
 void CloseCoordWindow (void)
 {
-	return;
-#if 0
 	CloseThisWindow(&coordWindow);
 	UpdateCoordinateCheckmark(false);
-#endif
 }
 
 //--------------------------------------------------------------  ToggleCoordinateWindow
@@ -190,10 +185,8 @@ void CloseCoordWindow (void)
 
 void ToggleCoordinateWindow (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	if (coordWindow == nil)
+	if (coordWindow == NULL)
 	{
 		OpenCoordWindow();
 		isCoordOpen = true;
@@ -203,7 +196,6 @@ void ToggleCoordinateWindow (void)
 		CloseCoordWindow();
 		isCoordOpen = false;
 	}
-#endif
 #endif
 }
 

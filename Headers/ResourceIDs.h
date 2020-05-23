@@ -119,4 +119,6 @@
 #define kGoToDialogID				1043
 #define kCustPictInfoDialogID		1045
 
+#define kCoordinateWindowID			10001
+
 #endif
