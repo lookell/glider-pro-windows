@@ -69,18 +69,22 @@ void DeltaCoordinateD (SInt16 d)
 
 INT_PTR CALLBACK CoordWindowProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	WINDOWPLACEMENT placement;
+
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		return TRUE;
+		return FALSE; // don't change the focused window
 
 	case WM_CLOSE:
 		ToggleCoordinateWindow();
 		return TRUE;
 
 	case WM_MOVE:
-		isCoordH = GET_X_LPARAM(lParam);
-		isCoordV = GET_Y_LPARAM(lParam);
+		placement.length = sizeof(placement);
+		GetWindowPlacement(hDlg, &placement);
+		isCoordH = (SInt16)placement.rcNormalPosition.left;
+		isCoordV = (SInt16)placement.rcNormalPosition.top;
 		return TRUE;
 
 	case WM_CTLCOLORSTATIC:
@@ -132,9 +136,8 @@ void UpdateCoordWindow (void)
 void OpenCoordWindow (void)
 {
 #ifndef COMPILEDEMO
-	Rect		src, dest;
-	Point		globalMouse;
-	short		direction, dist;
+	WINDOWPLACEMENT placement;
+	SInt16 direction, dist;
 
 	if (coordWindow == NULL)
 	{
@@ -150,9 +153,14 @@ void OpenCoordWindow (void)
 //			isCoordH = qd.screenBits.bounds.right - 55;
 //			isCoordV = 204;
 //		}
-		SetWindowPos(coordWindow, NULL, isCoordH, isCoordV, 0, 0,
-				SWP_NOACTIVATE | SWP_NOSIZE | SWP_NOZORDER);
-		ShowWindow(coordWindow, SW_SHOW);
+		placement.length = sizeof(placement);
+		GetWindowPlacement(coordWindow, &placement);
+		OffsetRect(&placement.rcNormalPosition,
+				-placement.rcNormalPosition.left,
+				-placement.rcNormalPosition.top);
+		OffsetRect(&placement.rcNormalPosition, isCoordH, isCoordV);
+		placement.showCmd = SW_SHOWNOACTIVATE;
+		SetWindowPlacement(coordWindow, &placement);
 
 		coordH = -1;
 		coordV = -1;
