@@ -459,7 +459,7 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 		break;
 
 		case iPrefs:
-		DoSettingsMain();
+		DoSettingsMain(hwnd);
 		incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
 		break;
 

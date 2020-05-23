@@ -447,7 +447,7 @@ void DoLoadHouse (HWND);								// --- SelectHouse.c
 void BuildHouseList (HWND);
 void AddExtraHouse (houseSpec *);
 
-void DoSettingsMain (void);								// --- Settings.c
+void DoSettingsMain (HWND);								// --- Settings.c
 
 void PlayPrioritySound (SInt16, SInt16);				// --- Sound.c
 void FlushAnyTriggerPlaying (void);

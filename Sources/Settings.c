@@ -16,67 +16,72 @@
 #include "ResourceIDs.h"
 
 
-#define kDisplayButton			3
-#define kSoundButton			4
-#define kControlsButton			5
-#define kBrainsButton			6
-#define kDisplay1Item			3
-#define kDisplay3Item			4
-#define kDisplay9Item			5
-#define kDoColorFadeItem		9
-#define kCurrentDepth			10
-#define k256Depth				11
-#define k16Depth				12
-#define kDispDefault			15
-#define kUseQDItem				16
-#define kUseScreen2Item			17
-#define kSofterItem				4
-#define kLouderItem				5
-#define kVolNumberItem			7
-#define kIdleMusicItem			8
-#define kPlayMusicItem			9
-#define kSoundDefault			13
-#define kRightControl			5
-#define kLeftControl			6
-#define kBattControl			7
-#define kBandControl			8
-#define kControlDefaults		13
-#define kESCPausesRadio			14
-#define kTABPausesRadio			15
-#define kMaxFilesItem			5
-#define kQuickTransitCheck		7
-#define kDoZoomsCheck			8
-#define kBrainsDefault			9
-#define kDoDemoCheck			10
-#define kDoBackgroundCheck		11
-#define kDoErrorCheck			12
-#define kDoPrettyMapCheck		13
-#define kDoBitchDlgsCheck		14
+#define kDisplayButton			1003
+#define kSoundButton			1004
+#define kControlsButton			1005
+#define kBrainsButton			1006
+#define kAllDefaultsButton		1011
+
+#define kDisplay1Item			1003
+#define kDisplay3Item			1004
+#define kDisplay9Item			1005
+#define kDoColorFadeItem		1009
+#define kCurrentDepth			1010
+#define k256Depth				1011
+#define k16Depth				1012
+#define kDispDefault			1015
+#define kUseQDItem				1016
+#define kUseScreen2Item			1017
+
+#define kSofterItem				1004
+#define kLouderItem				1005
+#define kVolNumberItem			1007
+#define kIdleMusicItem			1008
+#define kPlayMusicItem			1009
+#define kSoundDefault			1013
+
+#define kRightControl			1005
+#define kLeftControl			1006
+#define kBattControl			1007
+#define kBandControl			1008
+#define kControlDefaults		1013
+#define kESCPausesRadio			1014
+#define kTABPausesRadio			1015
+
+#define kMaxFilesItem			1005
+#define kQuickTransitCheck		1007
+#define kDoZoomsCheck			1008
+#define kBrainsDefault			1009
+#define kDoDemoCheck			1010
+#define kDoBackgroundCheck		1011
+#define kDoErrorCheck			1012
+#define kDoPrettyMapCheck		1013
+#define kDoBitchDlgsCheck		1014
 
 
 void SetBrainsToDefaults (DialogPtr);
 void UpdateSettingsBrains (DialogPtr);
 Boolean BrainsFilter (DialogPtr, EventRecord *, SInt16 *);
-void DoBrainsPrefs (void);
+void DoBrainsPrefs (HWND);
 void SetControlsToDefaults (DialogPtr);
 void UpdateControlKeyName (DialogPtr);
 void UpdateSettingsControl (DialogPtr);
 Boolean ControlFilter (DialogPtr, EventRecord *, SInt16 *);
-void DoControlPrefs (void);
+void DoControlPrefs (HWND);
 void SoundDefaults (DialogPtr);
 void UpdateSettingsSound (DialogPtr);
 void HandleSoundMusicChange (SInt16, Boolean);
 Boolean SoundFilter (DialogPtr, EventRecord *, SInt16 *);
-void DoSoundPrefs (void);
+void DoSoundPrefs (HWND);
 void DisplayDefaults (void);
 void FrameDisplayIcon (DialogPtr);
 void DisplayUpdate (DialogPtr);
 Boolean DisplayFilter (DialogPtr, EventRecord *, SInt16 *);
-void DoDisplayPrefs (void);
-void SetAllDefaults (void);
-void FlashSettingsButton (SInt16);
-void UpdateSettingsMain (DialogPtr);
-Boolean PrefsFilter (DialogPtr, EventRecord *, SInt16 *);
+void DoDisplayPrefs (HWND);
+void SetAllDefaults (HWND);
+//void FlashSettingsButton (SInt16);
+//void UpdateSettingsMain (DialogPtr);
+INT_PTR CALLBACK PrefsFilter (HWND, UINT, WPARAM, LPARAM);
 void BitchAboutChanges (HWND);
 
 
@@ -230,9 +235,9 @@ Boolean BrainsFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  DoBrainsPrefs
 
-void DoBrainsPrefs (void)
+void DoBrainsPrefs (HWND ownerWindow)
 {
-	MessageBox(mainWindow, L"DoBrainsPrefs()", NULL, MB_ICONHAND);
+	MessageBox(ownerWindow, L"DoBrainsPrefs()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		prefDlg;
@@ -521,9 +526,9 @@ Boolean ControlFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  DoControlPrefs
 
-void DoControlPrefs (void)
+void DoControlPrefs (HWND ownerWindow)
 {
-	MessageBox(mainWindow, L"DoControlPrefs()", NULL, MB_ICONHAND);
+	MessageBox(ownerWindow, L"DoControlPrefs()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		prefDlg;
@@ -793,9 +798,9 @@ Boolean SoundFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  DoSettingsMain
 
-void DoSoundPrefs (void)
+void DoSoundPrefs (HWND ownerWindow)
 {
-	MessageBox(mainWindow, L"DoSoundPrefs", NULL, MB_ICONHAND);
+	MessageBox(ownerWindow, L"DoSoundPrefs", NULL, MB_ICONHAND);
 	return;
 #if 0
 	Rect			tempRect;
@@ -1157,9 +1162,9 @@ Boolean DisplayFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  DoDisplayPrefs
 
-void DoDisplayPrefs (void)
+void DoDisplayPrefs (HWND ownerWindow)
 {
-	MessageBox(mainWindow, L"DoDisplayPrefs()", NULL, MB_ICONHAND);
+	MessageBox(ownerWindow, L"DoDisplayPrefs()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		prefDlg;
@@ -1276,10 +1281,8 @@ void DoDisplayPrefs (void)
 
 //--------------------------------------------------------------  SetAllDefaults
 
-void SetAllDefaults (void)
+void SetAllDefaults (HWND ownerWindow)
 {
-	return;
-#if 0
 	OSErr		theErr;
 								// Default brain settings
 	willMaxFiles = 48;
@@ -1290,14 +1293,14 @@ void SetAllDefaults (void)
 	doPrettyMap = true;
 	doBitchDialogs = true;
 								// Default control settings
-	PasStringCopy("\plf arrow", leftName);
-	PasStringCopy("\prt arrow", rightName);
-	PasStringCopy("\pdn arrow", batteryName);
-	PasStringCopy("\pup arrow", bandName);
-	theGlider.leftKey = kLeftArrowKeyMap;
-	theGlider.rightKey = kRightArrowKeyMap;
-	theGlider.battKey = kDownArrowKeyMap;
-	theGlider.bandKey = kUpArrowKeyMap;
+	PasStringCopyC("lf arrow", leftName);
+	PasStringCopyC("rt arrow", rightName);
+	PasStringCopyC("dn arrow", batteryName);
+	PasStringCopyC("up arrow", bandName);
+	theGlider.leftKey = VK_LEFT;
+	theGlider.rightKey = VK_RIGHT;
+	theGlider.battKey = VK_DOWN;
+	theGlider.bandKey = VK_UP;
 	isEscPauseKey = false;
 								// Default sound settings
 	isPlayMusicIdle = true;
@@ -1309,7 +1312,7 @@ void SetAllDefaults (void)
 		theErr = StartMusic();
 		if (theErr != noErr)
 		{
-			YellowAlert(kYellowNoMusic, theErr);
+			YellowAlert(ownerWindow, kYellowNoMusic, theErr);
 			failedMusic = true;
 		}
 	}
@@ -1318,15 +1321,12 @@ void SetAllDefaults (void)
 	quickerTransitions = false;
 	isDepthPref = kSwitchIfNeeded;
 	isDoColorFade = true;
-#endif
 }
 
 //--------------------------------------------------------------  FlashSettingsButton
-
+/*
 void FlashSettingsButton (SInt16 who)
 {
-	return;
-#if 0
 	#define		kNormalSettingsIcon		1010
 	#define		kInvertedSettingsIcon	1014
 	short		theID;
@@ -1336,22 +1336,19 @@ void FlashSettingsButton (SInt16 who)
 	DelayTicks(8);
 	theID = kNormalSettingsIcon + who;
 	DrawCIcon (theID, prefButton[who].left + 4, prefButton[who].top + 4);
-#endif
 }
-
+*/
 //--------------------------------------------------------------  UpdateSettingsMain
-
+/*
 void UpdateSettingsMain (DialogPtr theDialog)
 {
-	// NOTE: the string table "129" uses string table base index "kPrefMainStringBase"
-	return;
-#if 0
 	Str255		theStr;
 
 	DrawDialog(theDialog);
 
 	DrawDefaultButton(theDialog);
 
+	// NOTE: the string table "129" uses string table base index "kPrefMainStringBase"
 	GetIndString(theStr, 129, 1);
 	DrawDialogUserText(theDialog, 7, theStr, false);
 	GetIndString(theStr, 129, 2);
@@ -1367,181 +1364,79 @@ void UpdateSettingsMain (DialogPtr theDialog)
 	ColorFrameRect(&prefButton[3], kRedOrangeColor8);
 #endif
 }
-
+*/
 //--------------------------------------------------------------  PrefsFilter
 
-Boolean PrefsFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK PrefsFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	Point		testPt;
-	short		i;
-	Boolean		foundHit;
-
-	switch (event->what)
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		CenterOverOwner(hDlg);
+		SendDlgItemMessage(hDlg, kDisplayButton, BM_SETIMAGE, IMAGE_ICON,
+				(LPARAM)LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(1010)));
+		SendDlgItemMessage(hDlg, kSoundButton, BM_SETIMAGE, IMAGE_ICON,
+				(LPARAM)LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(1011)));
+		SendDlgItemMessage(hDlg, kControlsButton, BM_SETIMAGE, IMAGE_ICON,
+				(LPARAM)LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(1012)));
+		SendDlgItemMessage(hDlg, kBrainsButton, BM_SETIMAGE, IMAGE_ICON,
+				(LPARAM)LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(1013)));
+		FocusDefaultButton(hDlg);
+		return FALSE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
+		case IDOK:
+		case IDCANCEL:
+			EndDialog(hDlg, LOWORD(wParam));
 			break;
 
-			case kCapBKeyASCII:
-			case kBKeyASCII:
-			*item = kBrainsButton;
-			return(true);
+		case kDisplayButton:
+			DoDisplayPrefs(hDlg);
 			break;
 
-			case kCapCKeyASCII:
-			case kCKeyASCII:
-			*item = kControlsButton;
-			return(true);
+		case kSoundButton:
+			DoSoundPrefs(hDlg);
 			break;
 
-			case kCapDKeyASCII:
-			case kDKeyASCII:
-			*item = kDisplayButton;
-			return(true);
+		case kControlsButton:
+			DoControlPrefs(hDlg);
 			break;
 
-			case kCapSKeyASCII:
-			case kSKeyASCII:
-			*item = kSoundButton;
-			return(true);
-			break;
-
-			default:
-			return(false);
-		}
-		break;
-
-		case mouseDown:
-		testPt = event->where;
-		GlobalToLocal(&testPt);
-		foundHit = false;
-		for (i = 0; i < 4; i++)
-		{
-			if (PtInRect(testPt, &prefButton[i]))
-			{
-				*item = kDisplayButton + i;
-				foundHit = true;
-			}
-		}
-		return(foundHit);
-		break;
-
-		case updateEvt:
-		if ((WindowPtr)event->message == (WindowPtr)mainWindow)
-		{
-			SetPortWindowPort(mainWindow);
-			BeginUpdate(mainWindow);
-			UpdateMainWindow();
-			EndUpdate(mainWindow);
-			SetPort((GrafPtr)dial);
-		}
-		else if ((WindowPtr)event->message == GetDialogWindow(dial))
-		{
-			SetPortDialogPort(dial);
-			BeginUpdate(GetDialogWindow(dial));
-			UpdateSettingsMain(dial);
-			EndUpdate(GetDialogWindow(dial));
-		}
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
-	}
-#endif
-}
-
-//--------------------------------------------------------------  DoSettingsMain
-
-void DoSettingsMain (void)
-{
-	MessageBox(mainWindow, L"DoSettingsMain()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	#define			kAllDefaultsButton		11
-	DialogPtr		prefDlg;
-	short			itemHit;
-	Boolean			leaving;
-	ModalFilterUPP	prefsFilterUPP;
-
-	prefsFilterUPP = NewModalFilterUPP(PrefsFilter);
-
-	BringUpDialog(&prefDlg, kMainPrefsDialID);
-
-	GetDialogItemRect(prefDlg, kDisplayButton, &prefButton[0]);
-	InsetRect(&prefButton[0], -4, -4);
-	GetDialogItemRect(prefDlg, 4, &prefButton[1]);
-	InsetRect(&prefButton[1], -4, -4);
-	GetDialogItemRect(prefDlg, 5, &prefButton[2]);
-	InsetRect(&prefButton[2], -4, -4);
-	GetDialogItemRect(prefDlg, 6, &prefButton[3]);
-	InsetRect(&prefButton[3], -4, -4);
-
-	leaving = false;
-	nextRestartChange = false;
-
-	while (!leaving)
-	{
-		ModalDialog(prefsFilterUPP, &itemHit);
-		switch (itemHit)
-		{
-			case kOkayButton:
-			leaving = true;
-			break;
-
-			case kDisplayButton:
-			FlashSettingsButton(0);
-			DoDisplayPrefs();
-			SetPort((GrafPtr)prefDlg);
-			break;
-
-			case kSoundButton:
-			FlashSettingsButton(1);
-			DoSoundPrefs();
-			SetPort((GrafPtr)prefDlg);
-			FlushEvents(everyEvent, 0);
-			break;
-
-			case kControlsButton:
-			FlashSettingsButton(2);
-			DoControlPrefs();
-			SetPort((GrafPtr)prefDlg);
-			break;
-
-			case kBrainsButton:
+		case kBrainsButton:
+			// TODO: reconsider using the Option key (Alt in Windows) as a
+			// modifier key, because it already has special meaning in Windows.
 			if ((OptionKeyDown()) && (!houseUnlocked))
 			{
 				houseUnlocked = true;
 				changeLockStateOfHouse = true;
 				saveHouseLocked = false;
 			}
-			FlashSettingsButton(3);
-			DoBrainsPrefs();
-			SetPort((GrafPtr)prefDlg);
+			DoBrainsPrefs(hDlg);
 			break;
 
-			case kAllDefaultsButton:
-			SetAllDefaults();
+		case kAllDefaultsButton:
+			SetAllDefaults(hDlg);
 			break;
 		}
+		return TRUE;
 	}
+	return FALSE;
+}
 
-	DisposeDialog(prefDlg);
-	DisposeModalFilterUPP(prefsFilterUPP);
+//--------------------------------------------------------------  DoSettingsMain
+
+void DoSettingsMain (HWND ownerWindow)
+{
+	nextRestartChange = false;
+
+	DialogBox(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kMainPrefsDialID),
+			ownerWindow, PrefsFilter);
 
 	if (nextRestartChange)
-		BitchAboutChanges();
-#endif
+		BitchAboutChanges(ownerWindow);
 }
 
 //--------------------------------------------------------------  BitchAboutChanges
