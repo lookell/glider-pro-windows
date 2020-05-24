@@ -150,7 +150,7 @@ UInt32 RandomLongQUS (void)
 // Called when we must quit app.  Brings up a dialog informing user…
 // of the problem and the exits to shell.
 
-static BOOL DisableThreadWndProc(HWND window, LPARAM lParam)
+static BOOL CALLBACK DisableThreadWndProc(HWND window, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 	EnableWindow(window, FALSE);
