@@ -14,6 +14,7 @@
 #include "Environ.h"
 #include "House.h"
 #include "ResourceIDs.h"
+#include <shlwapi.h> // for DLLGETVERSIONPROC and DLLGETVERSIONINFO
 
 
 #define kDisplayButton			1003
@@ -73,10 +74,10 @@ void UpdateSettingsSound (DialogPtr);
 void HandleSoundMusicChange (SInt16, Boolean);
 Boolean SoundFilter (DialogPtr, EventRecord *, SInt16 *);
 void DoSoundPrefs (HWND);
-void DisplayDefaults (void);
-void FrameDisplayIcon (DialogPtr);
-void DisplayUpdate (DialogPtr);
-Boolean DisplayFilter (DialogPtr, EventRecord *, SInt16 *);
+void DisplayDefaults (HWND);
+void DisplayInit (HWND);
+void DisplayApply (HWND);
+INT_PTR CALLBACK DisplayFilter (HWND, UINT, WPARAM, LPARAM);
 void DoDisplayPrefs (HWND);
 void SetAllDefaults (HWND);
 //void FlashSettingsButton (SInt16);
@@ -85,13 +86,14 @@ INT_PTR CALLBACK PrefsFilter (HWND, UINT, WPARAM, LPARAM);
 void BitchAboutChanges (HWND);
 
 
-Rect		prefButton[4], controlRects[4];
+//Rect		prefButton[4];
+Rect		controlRects[4];
 Str15		leftName, rightName, batteryName, bandName;
 Str15		tempLeftStr, tempRightStr, tempBattStr, tempBandStr;
 SInt32		tempLeftMap, tempRightMap, tempBattMap, tempBandMap;
-SInt16		whichCtrl, wasDepthPref;
-Boolean		wasFade, wasIdle, wasPlay, wasTransit, wasZooms, wasBackground;
-Boolean		wasEscPauseKey, wasDemos, wasScreen2, nextRestartChange, wasErrorCheck;
+SInt16		whichCtrl;
+Boolean		wasIdle, wasPlay, wasTransit, wasZooms, wasBackground;
+Boolean		wasEscPauseKey, wasDemos, nextRestartChange, wasErrorCheck;
 Boolean		wasPrettyMap, wasBitchDialogs;
 
 extern	SInt16		numNeighbors, isDepthPref, maxFiles, willMaxFiles;
@@ -930,353 +932,239 @@ void DoSoundPrefs (HWND ownerWindow)
 
 //--------------------------------------------------------------  DisplayDefaults
 
-void DisplayDefaults (void)
+void DisplayDefaults (HWND prefsDialog)
 {
-	return;
-#if 0
-	numNeighbors = 9;
-	wasDepthPref = kSwitchIfNeeded;
-	wasFade = true;
-	wasScreen2 = false;
-#endif
+	CheckRadioButton(prefsDialog, kDisplay1Item, kDisplay9Item, kDisplay9Item);
+	CheckRadioButton(prefsDialog, kCurrentDepth, k16Depth, kCurrentDepth);
+	CheckDlgButton(prefsDialog, kDoColorFadeItem, BST_CHECKED);
+	CheckDlgButton(prefsDialog, kUseScreen2Item, BST_UNCHECKED);
 }
 
-//--------------------------------------------------------------  FrameDisplayIcon
+//--------------------------------------------------------------  DisplayInit
 
-void FrameDisplayIcon (DialogPtr theDialog)
+static BOOL AreCommonControlsVersionSix(void)
 {
-	return;
-#if 0
-	Rect		theRect;
+	HANDLE comctl32;
+	DLLGETVERSIONPROC comctl32_DllGetVersion;
+	DLLVERSIONINFO versionInfo;
+	HRESULT hr;
 
-	switch (numNeighbors)
+	// NOTE: This assumes that comctl32.dll has already been loaded by the
+	// process (which is true for this program, because we call the function
+	// InitCommonControlsEx).
+	comctl32 = GetModuleHandle(L"comctl32");
+	if (comctl32 == NULL)
 	{
-		case 1:
-		GetDialogItemRect(theDialog, kDisplay1Item, &theRect);
-		break;
+		return FALSE;
+	}
+	comctl32_DllGetVersion = (DLLGETVERSIONPROC)GetProcAddress(comctl32, "DllGetVersion");
+	if (comctl32_DllGetVersion == NULL)
+	{
+		return FALSE;
+	}
+	ZeroMemory(&versionInfo, sizeof(versionInfo));
+	versionInfo.cbSize = sizeof(versionInfo);
+	hr = comctl32_DllGetVersion(&versionInfo);
+	if (FAILED(hr))
+	{
+		return FALSE;
+	}
+	return (versionInfo.dwMajorVersion >= 6);
+}
 
-		case 3:
-		GetDialogItemRect(theDialog, kDisplay3Item, &theRect);
-		break;
+void DisplayInit (HWND hDlg)
+{
+	HWND display1Control, display3Control, display9Control;
+	UINT loadFlags, enabledLoadFlags, disabledLoadFlags;
+	HICON display1Icon, display3Icon, display9Icon;
 
-		default:
-		GetDialogItemRect(theDialog, kDisplay9Item, &theRect);
-		break;
+	display1Control = GetDlgItem(hDlg, kDisplay1Item);
+	display3Control = GetDlgItem(hDlg, kDisplay3Item);
+	display9Control = GetDlgItem(hDlg, kDisplay9Item);
+
+	if (AreCommonControlsVersionSix())
+	{
+		// Version 6 of the common controls will render a disabled icon radio button
+		// with a faded-out version, so enabled and disabled icons are loaded in the
+		// same way.
+		enabledLoadFlags = LR_DEFAULTSIZE | LR_DEFAULTCOLOR;
+		disabledLoadFlags = LR_DEFAULTSIZE | LR_DEFAULTCOLOR;
+	}
+	else
+	{
+		// Previous versions of the common controls render a disabled icon radio button
+		// by first converting the icon to monochrome and then tinting it. To allow this
+		// to happen nicely, load our monochrome icons instead of letting our color icons
+		// be converted to a completely black blob.
+		enabledLoadFlags = LR_DEFAULTSIZE | LR_DEFAULTCOLOR;
+		disabledLoadFlags = LR_DEFAULTSIZE | LR_MONOCHROME;
 	}
 
-	theRect.left -= 3;
-	theRect.top += 0;
-	theRect.right += 3;
-	theRect.bottom -= 1;
-	FrameRect(&theRect);
-	InsetRect(&theRect, 1, 1);
-	FrameRect(&theRect);
-#endif
+	if (!thisMac.can8Bit)
+	{
+		EnableWindow(GetDlgItem(hDlg, kDoColorFadeItem), FALSE);
+		EnableWindow(GetDlgItem(hDlg, k256Depth), FALSE);
+	}
+	if (!thisMac.can4Bit)
+		EnableWindow(GetDlgItem(hDlg, k16Depth), FALSE);
+	if (thisMac.numScreens < 2)
+		EnableWindow(GetDlgItem(hDlg, kUseScreen2Item), FALSE);
+	if (thisMac.screen.right <= 512)
+	{
+		EnableWindow(display3Control, FALSE);
+		EnableWindow(display9Control, FALSE);
+	}
+
+	if (IsWindowEnabled(display1Control))
+		loadFlags = enabledLoadFlags;
+	else
+		loadFlags = disabledLoadFlags;
+	display1Icon = LoadImage(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(1020), IMAGE_ICON, 0, 0, loadFlags);
+	SendMessage(display1Control, BM_SETIMAGE, IMAGE_ICON, (LPARAM)display1Icon);
+
+	if (IsWindowEnabled(display3Control))
+		loadFlags = enabledLoadFlags;
+	else
+		loadFlags = disabledLoadFlags;
+	display3Icon = LoadImage(HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(1021), IMAGE_ICON, 0, 0, loadFlags);
+	SendMessage(display3Control, BM_SETIMAGE, IMAGE_ICON, (LPARAM)display3Icon);
+
+	if (IsWindowEnabled(display9Control))
+		loadFlags = enabledLoadFlags;
+	else
+		loadFlags = disabledLoadFlags;
+	display9Icon = LoadImage(HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(1022), IMAGE_ICON, 0, 0, loadFlags);
+	SendMessage(display9Control, BM_SETIMAGE, IMAGE_ICON, (LPARAM)display9Icon);
+
+	if (numNeighbors == 1)
+		CheckRadioButton(hDlg, kDisplay1Item, kDisplay9Item, kDisplay1Item);
+	else if (numNeighbors == 3)
+		CheckRadioButton(hDlg, kDisplay1Item, kDisplay9Item, kDisplay3Item);
+	else if (numNeighbors == 9)
+		CheckRadioButton(hDlg, kDisplay1Item, kDisplay9Item, kDisplay9Item);
+	else
+		CheckRadioButton(hDlg, kDisplay1Item, kDisplay9Item, kDisplay9Item);
+
+	if (isDepthPref == kSwitchIfNeeded)
+		CheckRadioButton(hDlg, kCurrentDepth, k16Depth, kCurrentDepth);
+	else if (isDepthPref == kSwitchTo256Colors)
+		CheckRadioButton(hDlg, kCurrentDepth, k16Depth, k256Depth);
+	else if (isDepthPref == kSwitchTo16Grays)
+		CheckRadioButton(hDlg, kCurrentDepth, k16Depth, k16Depth);
+	else
+		CheckRadioButton(hDlg, kCurrentDepth, k16Depth, kCurrentDepth);
+
+	if (isDoColorFade)
+		CheckDlgButton(hDlg, kDoColorFadeItem, BST_CHECKED);
+	else
+		CheckDlgButton(hDlg, kDoColorFadeItem, BST_UNCHECKED);
+
+	CheckDlgButton(hDlg, kUseQDItem, BST_CHECKED);
+
+	if (isUseSecondScreen)
+		CheckDlgButton(hDlg, kUseScreen2Item, BST_CHECKED);
+	else
+		CheckDlgButton(hDlg, kUseScreen2Item, BST_UNCHECKED);
 }
 
-//--------------------------------------------------------------  DisplayUpdate
+//--------------------------------------------------------------  DisplayApply
 
-void DisplayUpdate (DialogPtr theDialog)
+void DisplayApply (HWND hDlg)
 {
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
+	Boolean wasScreen2;
 
-	SetDialogItemValue(theDialog, kDoColorFadeItem, (short)wasFade);
-	SelectFromRadioGroup(theDialog, kCurrentDepth + wasDepthPref,
-			kCurrentDepth, k16Depth);
-//	SetDialogItemValue(theDialog, kUseQDItem, (short)wasQD);
-	SetDialogItemValue(theDialog, kUseScreen2Item, (short)wasScreen2);
+	if (IsDlgButtonChecked(hDlg, kDisplay1Item))
+		numNeighbors = 1;
+	else if (IsDlgButtonChecked(hDlg, kDisplay3Item))
+		numNeighbors = 3;
+	else if (IsDlgButtonChecked(hDlg, kDisplay9Item))
+		numNeighbors = 9;
+	else
+		numNeighbors = 9;
 
-	ForeColor(redColor);
-	FrameDisplayIcon(theDialog);
-	ForeColor(blackColor);
-	FrameDialogItemC(theDialog, 8, kRedOrangeColor8);
-	FrameDialogItemC(theDialog, 13, kRedOrangeColor8);
-	FrameDialogItemC(theDialog, 14, kRedOrangeColor8);
-#endif
+	if (IsDlgButtonChecked(hDlg, kCurrentDepth))
+		isDepthPref = kSwitchIfNeeded;
+	else if (IsDlgButtonChecked(hDlg, k256Depth))
+		isDepthPref = kSwitchTo256Colors;
+	else if (IsDlgButtonChecked(hDlg, k16Depth))
+		isDepthPref = kSwitchTo16Grays;
+	else
+		isDepthPref = kSwitchIfNeeded;
+
+	if (IsDlgButtonChecked(hDlg, kDoColorFadeItem))
+		isDoColorFade = true;
+	else
+		isDoColorFade = false;
+
+	wasScreen2 = (isUseSecondScreen != 0);
+	if (IsDlgButtonChecked(hDlg, kUseScreen2Item))
+		isUseSecondScreen = true;
+	else
+		isUseSecondScreen = false;
+	if (wasScreen2 != isUseSecondScreen)
+		nextRestartChange = true;
 }
 
 //--------------------------------------------------------------  DisplayFilter
 
-Boolean DisplayFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK DisplayFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
-		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
-			break;
+	case WM_INITDIALOG:
+		CenterOverOwner(hDlg);
+		DisplayInit(hDlg);
+		return TRUE;
 
-			case kEscapeKeyASCII:
-			FlashDialogButton(dial, kCancelButton);
-			*item = kCancelButton;
-			return(true);
-			break;
-
-			case kLeftArrowKeyASCII:
-			switch (numNeighbors)
-			{
-				case 1:
-				*item = kDisplay9Item;
-				break;
-
-				case 3:
-				*item = kDisplay1Item;
-				break;
-
-				case 9:
-				*item = kDisplay3Item;
-				break;
-			}
-			return(true);
-			break;
-
-			case kRightArrowKeyASCII:
-			switch (numNeighbors)
-			{
-				case 1:
-				*item = kDisplay3Item;
-				break;
-
-				case 3:
-				*item = kDisplay9Item;
-				break;
-
-				case 9:
-				*item = kDisplay1Item;
-				break;
-			}
-			return(true);
-			break;
-
-			case kUpArrowKeyASCII:
-			switch (wasDepthPref)
-			{
-				case kSwitchIfNeeded:
-				*item = k16Depth;
-				break;
-
-				case kSwitchTo256Colors:
-				*item = kCurrentDepth;
-				break;
-
-				case kSwitchTo16Grays:
-				*item = k256Depth;
-				break;
-			}
-			return(true);
-			break;
-
-			case kDownArrowKeyASCII:
-			switch (wasDepthPref)
-			{
-				case kSwitchIfNeeded:
-				*item = k256Depth;
-				break;
-
-				case kSwitchTo256Colors:
-				*item = k16Depth;
-				break;
-
-				case kSwitchTo16Grays:
-				*item = kCurrentDepth;
-				break;
-			}
-			return(true);
-			break;
-
-			case k1KeyASCII:
-			*item = kDisplay1Item;
-			return(true);
-			break;
-
-			case k3KeyASCII:
-			*item = kDisplay3Item;
-			return(true);
-			break;
-
-			case k9KeyASCII:
-			*item = kDisplay9Item;
-			return(true);
-			break;
-
-			case kCapBKeyASCII:
-			case kBKeyASCII:
-			*item = kDoColorFadeItem;
-			return(true);
-			break;
-
-			case kCapDKeyASCII:
-			case kDKeyASCII:
-			*item = kDispDefault;
-			FlashDialogButton(dial, kDispDefault);
-			return(true);
-			break;
-
-			case kCapRKeyASCII:
-			case kRKeyASCII:
-			*item = kUseScreen2Item;
-			FlashDialogButton(dial, kUseQDItem);
-			return(true);
-			break;
-
-			case kCapUKeyASCII:
-			case kUKeyASCII:
-			*item = kUseQDItem;
-			return(true);
-			break;
-
-			default:
-			return(false);
-		}
-		break;
-
-		case mouseDown:
-		return(false);
-		break;
-
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		DisplayUpdate(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
+	case WM_DESTROY:
+	{
+		HICON hIcon;
+		hIcon = (HICON)SendDlgItemMessage(hDlg, kDisplay1Item,
+				BM_SETIMAGE, IMAGE_ICON, (LPARAM)NULL);
+		if (hIcon != NULL)
+			DestroyIcon(hIcon);
+		hIcon = (HICON)SendDlgItemMessage(hDlg, kDisplay3Item,
+				BM_SETIMAGE, IMAGE_ICON, (LPARAM)NULL);
+		if (hIcon != NULL)
+			DestroyIcon(hIcon);
+		hIcon = (HICON)SendDlgItemMessage(hDlg, kDisplay9Item,
+				BM_SETIMAGE, IMAGE_ICON, (LPARAM)NULL);
+		if (hIcon != NULL)
+			DestroyIcon(hIcon);
+		return FALSE;
 	}
-#endif
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDOK:
+			DisplayApply(hDlg);
+			EndDialog(hDlg, IDOK);
+			break;
+
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
+			break;
+
+		case kDispDefault:
+			DisplayDefaults(hDlg);
+			break;
+		}
+		return TRUE;
+	}
+	return FALSE;
 }
 
 //--------------------------------------------------------------  DoDisplayPrefs
 
 void DoDisplayPrefs (HWND ownerWindow)
 {
-	MessageBox(ownerWindow, L"DoDisplayPrefs()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		prefDlg;
-	short			itemHit, wasNeighbors;
-	Boolean			leaving;
-	ModalFilterUPP	displayFilterUPP;
-
-	displayFilterUPP = NewModalFilterUPP(DisplayFilter);
-
-	BringUpDialog(&prefDlg, kDisplayPrefsDialID);
-	if (!thisMac.can8Bit)
-	{
-		MyDisableControl(prefDlg, kDoColorFadeItem);
-		MyDisableControl(prefDlg, k256Depth);
-	}
-	if (!thisMac.can4Bit)
-		MyDisableControl(prefDlg, k16Depth);
-	if (thisMac.numScreens < 2)
-		MyDisableControl(prefDlg, kUseScreen2Item);
-	wasNeighbors = numNeighbors;
-	wasFade = isDoColorFade;
-	wasDepthPref = isDepthPref;
-	wasScreen2 = isUseSecondScreen;
-	leaving = false;
-
-	while (!leaving)
-	{
-		ModalDialog(displayFilterUPP, &itemHit);
-		switch (itemHit)
-		{
-			case kOkayButton:
-			isDoColorFade = wasFade;
-			isDepthPref = wasDepthPref;
-			if (isUseSecondScreen != wasScreen2)
-				nextRestartChange = true;
-			isUseSecondScreen = wasScreen2;
-			leaving = true;
-			break;
-
-			case kCancelButton:
-			numNeighbors = wasNeighbors;
-			leaving = true;
-			break;
-
-			case kDisplay1Item:
-			ForeColor(whiteColor);
-			FrameDisplayIcon(prefDlg);
-			numNeighbors = 1;
-			ForeColor(redColor);
-			FrameDisplayIcon(prefDlg);
-			ForeColor(blackColor);
-			break;
-
-			case kDisplay3Item:
-			if (thisMac.screen.right > 512)
-			{
-				ForeColor(whiteColor);
-				FrameDisplayIcon(prefDlg);
-				numNeighbors = 3;
-				ForeColor(redColor);
-				FrameDisplayIcon(prefDlg);
-				ForeColor(blackColor);
-			}
-			break;
-
-			case kDisplay9Item:
-			if (thisMac.screen.right > 512)
-			{
-				ForeColor(whiteColor);
-				FrameDisplayIcon(prefDlg);
-				numNeighbors = 9;
-				ForeColor(redColor);
-				FrameDisplayIcon(prefDlg);
-				ForeColor(blackColor);
-			}
-			break;
-
-			case kDoColorFadeItem:
-			wasFade = !wasFade;
-			SetDialogItemValue(prefDlg, kDoColorFadeItem, (short)wasFade);
-			break;
-
-			case kCurrentDepth:
-			case k256Depth:
-			case k16Depth:
-			wasDepthPref = itemHit - kCurrentDepth;
-			SelectFromRadioGroup(prefDlg, itemHit, kCurrentDepth, k16Depth);
-			break;
-
-			case kDispDefault:
-			ForeColor(whiteColor);
-			FrameDisplayIcon(prefDlg);
-			ForeColor(blackColor);
-			DisplayDefaults();
-			DisplayUpdate(prefDlg);
-			break;
-
-			case kUseQDItem:
-//			wasQD = !wasQD;
-//			SetDialogItemValue(prefDlg, kUseQDItem, (short)wasQD);
-			break;
-
-			case kUseScreen2Item:
-			wasScreen2 = !wasScreen2;
-			SetDialogItemValue(prefDlg, kUseScreen2Item, (short)wasScreen2);
-			break;
-		}
-	}
-
-	DisposeDialog(prefDlg);
-	DisposeModalFilterUPP(displayFilterUPP);
-#endif
+	DialogBox(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kDisplayPrefsDialID),
+			ownerWindow, DisplayFilter);
 }
 
 //--------------------------------------------------------------  SetAllDefaults

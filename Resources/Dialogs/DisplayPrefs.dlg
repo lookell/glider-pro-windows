@@ -1,25 +1,35 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kDisplayPrefsDialID DIALOGEX 27, 25, 222, 148
+#define kDisplay1Item           1003
+#define kDisplay3Item           1004
+#define kDisplay9Item           1005
+#define kDoColorFadeItem        1009
+#define kCurrentDepth           1010
+#define k256Depth               1011
+#define k16Depth                1012
+#define kDispDefault            1015
+#define kUseQDItem              1016
+#define kUseScreen2Item         1017
+
+kDisplayPrefsDialID DIALOGEX 0, 0, 243, 157
 CAPTION "Display Preferences"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    PUSHBUTTON "Okay", 1, 178, 130, 39, 12
-    PUSHBUTTON "Cancel", 2, 134, 130, 39, 12
-    ICON 1020, 3, 139, 25, 21, 20
-    ICON 1021, 4, 166, 25, 21, 20
-    ICON 1022, 5, 193, 25, 21, 20
-    LTEXT "Number of Rooms to Display:\r\n(the less rooms, the faster)", -1, 5, 25, 130, 20, SS_NOPREFIX
-    CONTROL 1006, -1, STATIC, SS_BITMAP, 0, 0, 222, 20
-    CONTROL "", 8, STATIC, SS_OWNERDRAW, 5, 49, 211, 1
-    CHECKBOX "Beautiful opening color fade", 9, 5, 87, 171, 11
-    RADIOBUTTON "Use current depth when possible", 10, 5, 52, 171, 10
-    RADIOBUTTON "Always play in 256 colors", 11, 5, 62, 171, 10
-    RADIOBUTTON "Always play in 16 grays", 12, 5, 72, 171, 10
-    CONTROL "", 13, STATIC, SS_OWNERDRAW, 5, 84, 211, 1
-    CONTROL "", 14, STATIC, SS_OWNERDRAW, 5, 123, 211, 1
-    PUSHBUTTON "Defaults", 15, 5, 130, 43, 12
-    CHECKBOX "Use Quickdraw™ (slower)", 16, 5, 98, 171, 11
-    CHECKBOX "Run on second monitor", 17, 5, 110, 171, 11
+    LTEXT "Number of Rooms to Display:\r\n(the less rooms, the faster)", IDC_STATIC, 7, 7, 109, 16, SS_NOPREFIX | WS_GROUP
+    AUTORADIOBUTTON "&1", kDisplay1Item, 123, 7, 35, 20, BS_ICON | WS_GROUP | WS_TABSTOP
+    AUTORADIOBUTTON "&3", kDisplay3Item, 162, 7, 35, 20, BS_ICON
+    AUTORADIOBUTTON "&9", kDisplay9Item, 201, 7, 35, 20, BS_ICON
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ | WS_GROUP, 7, 34, 229, 1
+    AUTORADIOBUTTON "U&se current depth when possible", kCurrentDepth, 7, 41, 229, 10, WS_GROUP | WS_TABSTOP
+    AUTORADIOBUTTON "Always play in 256 &colors", k256Depth, 7, 53, 229, 10
+    AUTORADIOBUTTON "Always play in 16 &grays", k16Depth, 7, 65, 229, 10
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ | WS_GROUP, 7, 81, 229, 1
+    AUTOCHECKBOX "&Beautiful opening color fade", kDoColorFadeItem, 7, 88, 229, 10, WS_GROUP
+    AUTOCHECKBOX "&Use Quickdraw™ (slower)", kUseQDItem, 7, 100, 229, 10
+    AUTOCHECKBOX "&Run on second monitor", kUseScreen2Item, 7, 112, 229, 10
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ | WS_GROUP, 7, 128, 229, 1
+    PUSHBUTTON "&Defaults", kDispDefault, 7, 136, 50, 14, WS_GROUP
+    DEFPUSHBUTTON "Okay", IDOK, 132, 136, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 186, 136, 50, 14
 }
