@@ -63,21 +63,28 @@ void BrainsInit (HWND);
 void BrainsApply (HWND);
 INT_PTR CALLBACK BrainsFilter (HWND, UINT, WPARAM, LPARAM);
 void DoBrainsPrefs (HWND);
-void SetControlsToDefaults (DialogPtr);
-void UpdateControlKeyName (DialogPtr);
-void UpdateSettingsControl (DialogPtr);
-Boolean ControlFilter (DialogPtr, EventRecord *, SInt16 *);
+
+BYTE GetHotKeyValue (HWND, int);
+void SetHotKeyValue (HWND, int, BYTE);
+void HandleHotKeyChange (HWND, int);
+void SetControlsToDefaults (HWND);
+void ControlInit (HWND);
+void ControlApply (HWND);
+INT_PTR CALLBACK ControlFilter (HWND, UINT, WPARAM, LPARAM);
 void DoControlPrefs (HWND);
+
 void SoundDefaults (DialogPtr);
 void UpdateSettingsSound (DialogPtr);
 void HandleSoundMusicChange (SInt16, Boolean);
 Boolean SoundFilter (DialogPtr, EventRecord *, SInt16 *);
 void DoSoundPrefs (HWND);
+
 void DisplayDefaults (HWND);
 void DisplayInit (HWND);
 void DisplayApply (HWND);
 INT_PTR CALLBACK DisplayFilter (HWND, UINT, WPARAM, LPARAM);
 void DoDisplayPrefs (HWND);
+
 void SetAllDefaults (HWND);
 //void FlashSettingsButton (SInt16);
 //void UpdateSettingsMain (DialogPtr);
@@ -86,13 +93,11 @@ void BitchAboutChanges (HWND);
 
 
 //Rect		prefButton[4];
-Rect		controlRects[4];
 Str15		leftName, rightName, batteryName, bandName;
-Str15		tempLeftStr, tempRightStr, tempBattStr, tempBandStr;
-SInt32		tempLeftMap, tempRightMap, tempBattMap, tempBandMap;
-SInt16		whichCtrl;
 Boolean		wasIdle, wasPlay;
-Boolean		wasEscPauseKey, nextRestartChange;
+Boolean		nextRestartChange;
+
+static	BYTE		tempLeftKey, tempRightKey, tempBattKey, tempBandKey;
 
 extern	SInt16		numNeighbors, isDepthPref, maxFiles, willMaxFiles;
 extern	Boolean		isDoColorFade, isPlayMusicIdle, isUseSecondScreen;
@@ -197,286 +202,222 @@ void DoBrainsPrefs (HWND ownerWindow)
 			ownerWindow, BrainsFilter);
 }
 
+//--------------------------------------------------------------  GetHotKeyValue
+
+BYTE GetHotKeyValue (HWND prefDlg, int itemID)
+{
+	return LOBYTE(SendDlgItemMessage(prefDlg, itemID, HKM_GETHOTKEY, 0, 0));
+}
+
+//--------------------------------------------------------------  SetHotKeyValue
+
+void SetHotKeyValue (HWND prefDlg, int itemID, BYTE virtualKey)
+{
+	SendDlgItemMessage(prefDlg, itemID, HKM_SETHOTKEY, MAKEWORD(virtualKey, 0), 0);
+	HandleHotKeyChange(prefDlg, itemID);
+}
+
+//--------------------------------------------------------------  HandleHotKeyChange
+
+void HandleHotKeyChange (HWND prefDlg, int itemID)
+{
+	WORD oldHotKey, newHotKey;
+	BYTE virtualKey;
+
+	oldHotKey = LOWORD(SendDlgItemMessage(prefDlg, itemID, HKM_GETHOTKEY, 0, 0));
+	virtualKey = LOBYTE(oldHotKey);
+
+	if (virtualKey == 0x00)
+	{
+		// Don't let the hotkey control be cleared
+		switch (itemID)
+		{
+		case kLeftControl:
+			virtualKey = tempLeftKey;
+			break;
+		case kRightControl:
+			virtualKey = tempRightKey;
+			break;
+		case kBattControl:
+			virtualKey = tempBattKey;
+			break;
+		case kBandControl:
+			virtualKey = tempBandKey;
+			break;
+		}
+	}
+
+	// Block attempts to have one key bound to more than one action
+	switch (itemID)
+	{
+	case kLeftControl:
+		if (virtualKey == tempRightKey ||
+			virtualKey == tempBattKey ||
+			virtualKey == tempBandKey)
+		{
+			virtualKey = tempLeftKey;
+			MessageBeep(MB_ICONWARNING);
+		}
+		tempLeftKey = virtualKey;
+		break;
+
+	case kRightControl:
+		if (virtualKey == tempLeftKey ||
+			virtualKey == tempBattKey ||
+			virtualKey == tempBandKey)
+		{
+			virtualKey = tempRightKey;
+			MessageBeep(MB_ICONWARNING);
+		}
+		tempRightKey = virtualKey;
+		break;
+
+	case kBattControl:
+		if (virtualKey == tempLeftKey ||
+			virtualKey == tempRightKey ||
+			virtualKey == tempBandKey)
+		{
+			virtualKey = tempBattKey;
+			MessageBeep(MB_ICONWARNING);
+		}
+		tempBattKey = virtualKey;
+		break;
+
+	case kBandControl:
+		if (virtualKey == tempLeftKey ||
+			virtualKey == tempRightKey ||
+			virtualKey == tempBattKey)
+		{
+			virtualKey = tempBandKey;
+			MessageBeep(MB_ICONWARNING);
+		}
+		tempBandKey = virtualKey;
+		break;
+	}
+
+	switch (virtualKey)
+	{
+	case VK_RMENU:
+	case VK_RCONTROL:
+	case VK_INSERT:
+	case VK_DELETE:
+	case VK_HOME:
+	case VK_END:
+	case VK_PRIOR:
+	case VK_NEXT:
+	case VK_LEFT:
+	case VK_UP:
+	case VK_RIGHT:
+	case VK_DOWN:
+	case VK_NUMLOCK:
+	case VK_CANCEL:
+	case VK_SNAPSHOT:
+	case VK_DIVIDE:
+		// extended keys need their flag re-set
+		newHotKey = MAKEWORD(virtualKey, HOTKEYF_EXT);
+		break;
+
+	default:
+		newHotKey = MAKEWORD(virtualKey, 0);
+		break;
+	}
+
+	if (newHotKey != oldHotKey)
+		SendDlgItemMessage(prefDlg, itemID, HKM_SETHOTKEY, newHotKey, 0);
+}
+
 //--------------------------------------------------------------  SetControlsToDefaults
 
-void SetControlsToDefaults (DialogPtr theDialog)
+void SetControlsToDefaults (HWND prefDlg)
 {
-	return;
-#if 0
-	PasStringCopy("\plf arrow", tempLeftStr);
-	PasStringCopy("\prt arrow", tempRightStr);
-	PasStringCopy("\pdn arrow", tempBattStr);
-	PasStringCopy("\pup arrow", tempBandStr);
-	tempLeftMap = kLeftArrowKeyMap;
-	tempRightMap = kRightArrowKeyMap;
-	tempBattMap = kDownArrowKeyMap;
-	tempBandMap = kUpArrowKeyMap;
-	wasEscPauseKey = false;
-	SelectFromRadioGroup(theDialog, kTABPausesRadio,
-				kESCPausesRadio, kTABPausesRadio);
-#endif
+	SetHotKeyValue(prefDlg, kLeftControl, VK_LEFT);
+	SetHotKeyValue(prefDlg, kRightControl, VK_RIGHT);
+	SetHotKeyValue(prefDlg, kBattControl, VK_DOWN);
+	SetHotKeyValue(prefDlg, kBandControl, VK_UP);
+	CheckRadioButton(prefDlg, kESCPausesRadio, kTABPausesRadio, kTABPausesRadio);
 }
 
-//--------------------------------------------------------------  UpdateControlKeyName
+//--------------------------------------------------------------  ControlInit
 
-void UpdateControlKeyName (DialogPtr theDialog)
+void ControlInit (HWND prefDlg)
 {
-	return;
-#if 0
-	DrawDialogUserText(theDialog, kRightControl + 4, tempRightStr, whichCtrl == 0);
-	DrawDialogUserText(theDialog, kLeftControl + 4, tempLeftStr, whichCtrl == 1);
-	DrawDialogUserText(theDialog, kBattControl + 4, tempBattStr, whichCtrl == 2);
-	DrawDialogUserText(theDialog, kBandControl + 4, tempBandStr, whichCtrl == 3);
-#endif
+	tempLeftKey = 0;
+	tempRightKey = 0;
+	tempBattKey = 0;
+	tempBandKey = 0;
+	SetHotKeyValue(prefDlg, kLeftControl, (BYTE)theGlider.leftKey);
+	SetHotKeyValue(prefDlg, kRightControl, (BYTE)theGlider.rightKey);
+	SetHotKeyValue(prefDlg, kBattControl, (BYTE)theGlider.battKey);
+	SetHotKeyValue(prefDlg, kBandControl, (BYTE)theGlider.bandKey);
+	if (isEscPauseKey)
+		CheckRadioButton(prefDlg, kESCPausesRadio, kTABPausesRadio, kESCPausesRadio);
+	else
+		CheckRadioButton(prefDlg, kESCPausesRadio, kTABPausesRadio, kTABPausesRadio);
 }
 
-//--------------------------------------------------------------  UpdateSettingsControl
+//--------------------------------------------------------------  ControlApply
 
-void UpdateSettingsControl (DialogPtr theDialog)
+void ControlApply (HWND prefDlg)
 {
-	return;
-#if 0
-	short		i;
-
-	DrawDialog(theDialog);
-
-	PenSize(2, 2);
-	ForeColor(whiteColor);
-	for (i = 0; i < 4; i++)
-		FrameRect(&controlRects[i]);
-	ForeColor(redColor);
-	FrameRect(&controlRects[whichCtrl]);
-	ForeColor(blackColor);
-	PenNormal();
-	UpdateControlKeyName(theDialog);
-	FrameDialogItemC(theDialog, 3, kRedOrangeColor8);
-#endif
+	theGlider.leftKey = tempLeftKey;
+	theGlider.rightKey = tempRightKey;
+	theGlider.battKey = tempBattKey;
+	theGlider.bandKey = tempBandKey;
+	if (IsDlgButtonChecked(prefDlg, kESCPausesRadio))
+		isEscPauseKey = true;
+	else if (IsDlgButtonChecked(prefDlg, kTABPausesRadio))
+		isEscPauseKey = false;
+	else
+		isEscPauseKey = false;
 }
 
 //--------------------------------------------------------------  ControlFilter
 
-Boolean ControlFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK ControlFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	long		wasKeyMap;
-
-	switch (event->what)
+	switch (message)
 	{
-		case keyDown:
-		switch (whichCtrl)
+	case WM_INITDIALOG:
+		CenterOverOwner(prefDlg);
+		ControlInit(prefDlg);
+		return TRUE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case 0:
-			wasKeyMap = (long)GetKeyMapFromMessage(event->message);
-			if ((wasKeyMap == tempLeftMap) || (wasKeyMap == tempBattMap) ||
-					(wasKeyMap == tempBandMap) || (wasKeyMap == kTabKeyMap) ||
-					(wasKeyMap == kEscKeyMap) || (wasKeyMap == kDeleteKeyMap))
-			{
-				if (wasKeyMap == kEscKeyMap)
-				{
-					FlashDialogButton(dial, kCancelButton);
-					*item = kCancelButton;
-					return(true);
-				}
-				else
-					SysBeep(1);
-			}
-			else
-			{
-				GetKeyName(event->message, tempRightStr);
-				tempRightMap = wasKeyMap;
-			}
+		case IDOK:
+			ControlApply(prefDlg);
+			EndDialog(prefDlg, IDOK);
 			break;
 
-			case 1:
-			wasKeyMap = (long)GetKeyMapFromMessage(event->message);
-			if ((wasKeyMap == tempRightMap) || (wasKeyMap == tempBattMap) ||
-					(wasKeyMap == tempBandMap) || (wasKeyMap == kTabKeyMap) ||
-					(wasKeyMap == kEscKeyMap) || (wasKeyMap == kDeleteKeyMap))
-			{
-				if (wasKeyMap == kEscKeyMap)
-				{
-					FlashDialogButton(dial, kCancelButton);
-					*item = kCancelButton;
-					return(true);
-				}
-				else
-					SysBeep(1);
-			}
-			else
-			{
-				GetKeyName(event->message, tempLeftStr);
-				tempLeftMap = wasKeyMap;
-			}
+		case IDCANCEL:
+			EndDialog(prefDlg, IDCANCEL);
 			break;
 
-			case 2:
-			wasKeyMap = (long)GetKeyMapFromMessage(event->message);
-			if ((wasKeyMap == tempRightMap) || (wasKeyMap == tempLeftMap) ||
-					(wasKeyMap == tempBandMap) || (wasKeyMap == kTabKeyMap) ||
-					(wasKeyMap == kEscKeyMap) || (wasKeyMap == kDeleteKeyMap))
-			{
-				if (wasKeyMap == kEscKeyMap)
-				{
-					FlashDialogButton(dial, kCancelButton);
-					*item = kCancelButton;
-					return(true);
-				}
-				else
-					SysBeep(1);
-			}
-			else
-			{
-				GetKeyName(event->message, tempBattStr);
-				tempBattMap = wasKeyMap;
-			}
+		case kLeftControl:
+		case kRightControl:
+		case kBattControl:
+		case kBandControl:
+			if (HIWORD(wParam) == EN_CHANGE)
+				HandleHotKeyChange(prefDlg, LOWORD(wParam));
 			break;
 
-			case 3:
-			wasKeyMap = (long)GetKeyMapFromMessage(event->message);
-			if ((wasKeyMap == tempRightMap) || (wasKeyMap == tempLeftMap) ||
-					(wasKeyMap == tempBattMap) || (wasKeyMap == kTabKeyMap) ||
-					(wasKeyMap == kEscKeyMap) || (wasKeyMap == kDeleteKeyMap))
-			{
-				if (wasKeyMap == kEscKeyMap)
-				{
-					FlashDialogButton(dial, kCancelButton);
-					*item = kCancelButton;
-					return(true);
-				}
-				else
-					SysBeep(1);
-			}
-			else
-			{
-				GetKeyName(event->message, tempBandStr);
-				tempBandMap = wasKeyMap;
-			}
+		case kControlDefaults:
+			SetControlsToDefaults(prefDlg);
 			break;
 		}
-		UpdateControlKeyName(dial);
-		return(false);
-		break;
-
-		case mouseDown:
-		return(false);
-		break;
-
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateSettingsControl(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  DoControlPrefs
 
 void DoControlPrefs (HWND ownerWindow)
 {
-	MessageBox(ownerWindow, L"DoControlPrefs()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		prefDlg;
-	short			i, itemHit;
-	Boolean			leaving;
-	ModalFilterUPP	controlFilterUPP;
-
-	controlFilterUPP = NewModalFilterUPP(ControlFilter);
-
-//	CenterDialog(kControlPrefsDialID);
-	prefDlg = GetNewDialog(kControlPrefsDialID, nil, kPutInFront);
-	if (prefDlg == nil)
-		RedAlert(kErrDialogDidntLoad);
-	SetPort((GrafPtr)prefDlg);
-	for (i = 0; i < 4; i++)
-	{
-		GetDialogItemRect(prefDlg, i + kRightControl, &controlRects[i]);
-		InsetRect(&controlRects[i], -3, -3);
-	}
-	whichCtrl = 1;
-
-	PasStringCopy(leftName, tempLeftStr);
-	PasStringCopy(rightName, tempRightStr);
-	PasStringCopy(batteryName, tempBattStr);
-	PasStringCopy(bandName, tempBandStr);
-	tempLeftMap = theGlider.leftKey;
-	tempRightMap = theGlider.rightKey;
-	tempBattMap = theGlider.battKey;
-	tempBandMap = theGlider.bandKey;
-	wasEscPauseKey = isEscPauseKey;
-
-	leaving = false;
-
-	ShowWindow(GetDialogWindow(prefDlg));
-	if (isEscPauseKey)
-		SelectFromRadioGroup(prefDlg, kESCPausesRadio,
-				kESCPausesRadio, kTABPausesRadio);
-	else
-		SelectFromRadioGroup(prefDlg, kTABPausesRadio,
-				kESCPausesRadio, kTABPausesRadio);
-
-	while (!leaving)
-	{
-		ModalDialog(controlFilterUPP, &itemHit);
-		switch (itemHit)
-		{
-			case kOkayButton:
-			PasStringCopy(tempLeftStr, leftName);
-			PasStringCopy(tempRightStr, rightName);
-			PasStringCopy(tempBattStr, batteryName);
-			PasStringCopy(tempBandStr, bandName);
-			theGlider.leftKey = tempLeftMap;
-			theGlider.rightKey = tempRightMap;
-			theGlider.battKey = tempBattMap;
-			theGlider.bandKey = tempBandMap;
-			isEscPauseKey = wasEscPauseKey;
-			leaving = true;
-			break;
-
-			case kCancelButton:
-			leaving = true;
-			break;
-
-			case kRightControl:
-			case kLeftControl:
-			case kBattControl:
-			case kBandControl:
-			PenSize(2, 2);
-			ForeColor(whiteColor);
-			FrameRect(&controlRects[whichCtrl]);
-			whichCtrl = itemHit - kRightControl;
-			ForeColor(redColor);
-			FrameRect(&controlRects[whichCtrl]);
-			ForeColor(blackColor);
-			PenNormal();
-			UpdateControlKeyName(prefDlg);
-			break;
-
-			case kESCPausesRadio:
-			case kTABPausesRadio:
-			SelectFromRadioGroup(prefDlg, itemHit, kESCPausesRadio, kTABPausesRadio);
-			wasEscPauseKey = !wasEscPauseKey;
-			break;
-
-			case kControlDefaults:
-			SetControlsToDefaults(prefDlg);
-			UpdateControlKeyName(prefDlg);
-			break;
-		}
-	}
-
-	DisposeDialog(prefDlg);
-	DisposeModalFilterUPP(controlFilterUPP);
-#endif
+	DialogBox(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kControlPrefsDialID),
+			ownerWindow, ControlFilter);
 }
 
 //--------------------------------------------------------------  SoundDefaults

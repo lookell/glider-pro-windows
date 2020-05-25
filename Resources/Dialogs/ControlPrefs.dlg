@@ -1,23 +1,33 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kControlPrefsDialID DIALOGEX 27, 25, 211, 108
+#define kRightControl           1005
+#define kLeftControl            1006
+#define kBattControl            1007
+#define kBandControl            1008
+#define kControlDefaults        1013
+#define kESCPausesRadio         1014
+#define kTABPausesRadio         1015
+
+// TODO: add a feature to configure the key bindings for player 2,
+// instead of hard-coding 'W', 'A', 'S', and 'D' as the key bindings.
+
+kControlPrefsDialID DIALOGEX 0, 0, 206, 106
 CAPTION "Control Preferences"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    PUSHBUTTON "Okay", 1, 167, 91, 39, 12
-    PUSHBUTTON "Cancel", 2, 123, 91, 39, 12
-    CONTROL "", 3, STATIC, SS_OWNERDRAW, 5, 85, 200, 1
-    CONTROL 1012, -1, STATIC, SS_BITMAP, 0, 0, 211, 20
-    ICON 1040, 5, 53, 26, 21, 20
-    ICON 1041, 6, 13, 26, 21, 20
-    ICON 1042, 7, 93, 26, 21, 20
-    ICON 1043, 8, 133, 26, 21, 20
-    CONTROL "", 9, STATIC, SS_OWNERDRAW, 45, 49, 37, 7
-    CONTROL "", 10, STATIC, SS_OWNERDRAW, 5, 49, 37, 7
-    CONTROL "", 11, STATIC, SS_OWNERDRAW, 85, 49, 37, 7
-    CONTROL "", 12, STATIC, SS_OWNERDRAW, 125, 49, 37, 7
-    PUSHBUTTON "Defaults", 13, 5, 91, 43, 12
-    RADIOBUTTON "Esc Pauses Game", 14, 5, 61, 88, 10
-    RADIOBUTTON "Tab Pauses Game", 15, 5, 71, 88, 10
+    ICON 1041, IDC_STATIC, 19, 7, 21, 20, WS_GROUP
+    ICON 1040, IDC_STATIC, 68, 7, 21, 20
+    ICON 1042, IDC_STATIC, 117, 7, 21, 20
+    ICON 1043, IDC_STATIC, 166, 7, 21, 20
+    CONTROL "", kLeftControl, HOTKEY_CLASS, WS_TABSTOP | WS_GROUP, 7, 31, 45, 12
+    CONTROL "", kRightControl, HOTKEY_CLASS, WS_TABSTOP, 56, 31, 45, 12
+    CONTROL "", kBattControl, HOTKEY_CLASS, WS_TABSTOP, 105, 31, 45, 12
+    CONTROL "", kBandControl, HOTKEY_CLASS, WS_TABSTOP, 154, 31, 45, 12
+    AUTORADIOBUTTON "Esc Pauses Game", kESCPausesRadio, 7, 49, 192, 10, WS_GROUP | WS_TABSTOP
+    AUTORADIOBUTTON "Tab Pauses Game", kTABPausesRadio, 7, 61, 192, 10
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ | WS_GROUP, 7, 77, 192, 1
+    PUSHBUTTON "&Defaults", kControlDefaults, 7, 85, 50, 14, WS_GROUP
+    DEFPUSHBUTTON "Okay", IDOK, 95, 85, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 149, 85, 50, 14
 }
