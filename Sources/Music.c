@@ -47,7 +47,20 @@ extern	Boolean		isSoundOn;
 
 OSErr StartMusic (void)
 {
-	return noErr;
+	OSErr		theErr;
+	SInt16		soundVolume;
+
+	theErr = noErr;
+
+	if (dontLoadMusic)
+		return theErr;
+
+	UnivGetSoundVolume(&soundVolume, thisMac.hasSM3);
+	if ((soundVolume != 0) && (!failedMusic))
+	{
+		isMusicOn = true;
+	}
+	return theErr;
 #if 0
 	SndCommand	theCommand;
 	OSErr		theErr;
@@ -104,6 +117,13 @@ OSErr StartMusic (void)
 
 void StopTheMusic (void)
 {
+	if (dontLoadMusic)
+		return;
+
+	if ((isMusicOn) && (!failedMusic))
+	{
+		isMusicOn = false;
+	}
 	return;
 #if 0
 	SndCommand	theCommand;

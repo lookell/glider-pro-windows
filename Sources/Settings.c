@@ -32,6 +32,7 @@
 #define kUseQDItem				1016
 #define kUseScreen2Item			1017
 
+#define kVolumeSliderItem		1003
 #define kSofterItem				1004
 #define kLouderItem				1005
 #define kVolNumberItem			1007
@@ -73,10 +74,11 @@ void ControlApply (HWND);
 INT_PTR CALLBACK ControlFilter (HWND, UINT, WPARAM, LPARAM);
 void DoControlPrefs (HWND);
 
-void SoundDefaults (DialogPtr);
-void UpdateSettingsSound (DialogPtr);
-void HandleSoundMusicChange (SInt16, Boolean);
-Boolean SoundFilter (DialogPtr, EventRecord *, SInt16 *);
+void SoundDefaults (HWND);
+void SoundPrefsInit (HWND);
+void SoundPrefsApply (HWND);
+void HandleSoundMusicChange (HWND, SInt16, Boolean);
+INT_PTR CALLBACK SoundFilter (HWND, UINT, WPARAM, LPARAM);
 void DoSoundPrefs (HWND);
 
 void DisplayDefaults (HWND);
@@ -94,7 +96,6 @@ void BitchAboutChanges (HWND);
 
 //Rect		prefButton[4];
 Str15		leftName, rightName, batteryName, bandName;
-Boolean		wasIdle, wasPlay;
 Boolean		nextRestartChange;
 
 static	BYTE		tempLeftKey, tempRightKey, tempBattKey, tempBandKey;
@@ -422,53 +423,58 @@ void DoControlPrefs (HWND ownerWindow)
 
 //--------------------------------------------------------------  SoundDefaults
 
-void SoundDefaults (DialogPtr theDialog)
+void SoundDefaults (HWND prefDlg)
 {
-	return;
-#if 0
-	wasIdle = true;
-	wasPlay = true;
-	SetDialogItemValue(theDialog, kIdleMusicItem, (short)wasIdle);
-	SetDialogItemValue(theDialog, kPlayMusicItem, (short)wasPlay);
+	CheckDlgButton(prefDlg, kIdleMusicItem, BST_CHECKED);
+	CheckDlgButton(prefDlg, kPlayMusicItem, BST_CHECKED);
+	SendDlgItemMessage(prefDlg, kVolumeSliderItem, TBM_SETPOS, TRUE, 3);
 	UnivSetSoundVolume(3, thisMac.hasSM3);
-	SetDialogNumToStr(theDialog, kVolNumberItem, 3L);
-	HandleSoundMusicChange(3, true);
-#endif
+	SetDlgItemInt(prefDlg, kVolNumberItem, 3, FALSE);
+	HandleSoundMusicChange(prefDlg, 3, true);
 }
 
-//--------------------------------------------------------------  UpdateSettingsSound
+//--------------------------------------------------------------  SoundPrefsInit
 
-void UpdateSettingsSound (DialogPtr theDialog)
+void SoundPrefsInit (HWND prefDlg)
 {
-	return;
-#if 0
-	short		howLoudNow;
+	HWND volumeSlider;
+	SInt16 theVolume;
 
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
+	UnivGetSoundVolume(&theVolume, thisMac.hasSM3);
 
-	UnivGetSoundVolume(&howLoudNow, thisMac.hasSM3);
+	volumeSlider = GetDlgItem(prefDlg, kVolumeSliderItem);
+	SendMessage(volumeSlider, TBM_SETRANGE, FALSE, MAKELPARAM(0, 7));
+	SendMessage(volumeSlider, TBM_SETPOS, TRUE, theVolume);
+	if (theVolume >= 7)
+		theVolume = 11;
+	SetDlgItemInt(prefDlg, kVolNumberItem, theVolume, TRUE);
 
-	if (howLoudNow >= 7)
-		SetDialogNumToStr(theDialog, kVolNumberItem, 11L);
-	else
-		SetDialogNumToStr(theDialog, kVolNumberItem, (long)howLoudNow);
+	CheckDlgButton(prefDlg, kIdleMusicItem, (isPlayMusicIdle != 0));
+	CheckDlgButton(prefDlg, kPlayMusicItem, (isPlayMusicGame != 0));
+}
 
-	FrameDialogItemC(theDialog, 11, kRedOrangeColor8);
-#endif
+//--------------------------------------------------------------  SoundPrefsApply
+
+void SoundPrefsApply (HWND prefDlg)
+{
+	SInt16 tempVolume;
+
+	isPlayMusicIdle = (IsDlgButtonChecked(prefDlg, kIdleMusicItem) != 0);
+	isPlayMusicGame = (IsDlgButtonChecked(prefDlg, kPlayMusicItem) != 0);
+
+	UnivGetSoundVolume(&tempVolume, thisMac.hasSM3);
+	isSoundOn = (tempVolume != 0);
 }
 
 //--------------------------------------------------------------  HandleSoundMusicChange
 
-void HandleSoundMusicChange (SInt16 newVolume, Boolean sayIt)
+void HandleSoundMusicChange (HWND prefDlg, SInt16 newVolume, Boolean sayIt)
 {
-	return;
-#if 0
 	OSErr		theErr;
 
 	isSoundOn = (newVolume != 0);
 
-	if (wasIdle)
+	if (IsDlgButtonChecked(prefDlg, kIdleMusicItem))
 	{
 		if (newVolume == 0)
 			StopTheMusic();
@@ -479,7 +485,7 @@ void HandleSoundMusicChange (SInt16 newVolume, Boolean sayIt)
 				theErr = StartMusic();
 				if (theErr != noErr)
 				{
-					YellowAlert(kYellowNoMusic, theErr);
+					YellowAlert(prefDlg, kYellowNoMusic, theErr);
 					failedMusic = true;
 				}
 			}
@@ -488,162 +494,47 @@ void HandleSoundMusicChange (SInt16 newVolume, Boolean sayIt)
 
 	if ((newVolume != 0) && (sayIt))
 		PlayPrioritySound(kChord2Sound, kChord2Priority);
-#endif
 }
 
 //--------------------------------------------------------------  SoundFilter
 
-Boolean SoundFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK SoundFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	short		newVolume;
+	static SInt16 wasLoudness;
+	SInt16 tempVolume;
+	Boolean wasIdle;
 
-	switch (event->what)
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		CenterOverOwner(prefDlg);
+		UnivGetSoundVolume(&wasLoudness, thisMac.hasSM3);
+		SoundPrefsInit(prefDlg);
+		return TRUE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
+		case IDOK:
+			SoundPrefsApply(prefDlg);
+			EndDialog(prefDlg, IDOK);
 			break;
 
-			case kEscapeKeyASCII:
-			FlashDialogButton(dial, kCancelButton);
-			*item = kCancelButton;
-			return(true);
-			break;
-
-			case kUpArrowKeyASCII:
-			*item = kLouderItem;
-			return(true);
-			break;
-
-			case kDownArrowKeyASCII:
-			*item = kSofterItem;
-			return(true);
-			break;
-
-			case k0KeyASCII:
-			case k1KeyASCII:
-			case k2KeyASCII:
-			case k3KeyASCII:
-			case k4KeyASCII:
-			case k5KeyASCII:
-			case k6KeyASCII:
-			case k7KeyASCII:
-			newVolume = (((event->message) & charCodeMask) - k0KeyASCII);
-			if (newVolume == 7L)
-				SetDialogNumToStr(dial, kVolNumberItem, 11L);
-			else
-				SetDialogNumToStr(dial, kVolNumberItem, (long)newVolume);
-
-			UnivSetSoundVolume(newVolume, thisMac.hasSM3);
-
-			HandleSoundMusicChange(newVolume, true);
-			return(false);
-			break;
-
-			case kCapDKeyASCII:
-			case kDKeyASCII:
-			*item = kSoundDefault;
-			FlashDialogButton(dial, kSoundDefault);
-			return(true);
-			break;
-
-			case kCapGKeyASCII:
-			case kGKeyASCII:
-			*item = kPlayMusicItem;
-			return(true);
-			break;
-
-			case kCapIKeyASCII:
-			case kIKeyASCII:
-			*item = kIdleMusicItem;
-			return(true);
-			break;
-
-			default:
-			return(false);
-		}
-		break;
-
-		case mouseDown:
-		return(false);
-		break;
-
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateSettingsSound(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
-	}
-#endif
-}
-
-//--------------------------------------------------------------  DoSettingsMain
-
-void DoSoundPrefs (HWND ownerWindow)
-{
-	MessageBox(ownerWindow, L"DoSoundPrefs", NULL, MB_ICONHAND);
-	return;
-#if 0
-	Rect			tempRect;
-	DialogPtr		prefDlg;
-	short			wasLoudness, tempVolume;
-	OSErr			theErr;
-	short			itemHit;
-	Boolean			leaving;
-	ModalFilterUPP	soundFilterUPP;
-
-	soundFilterUPP = NewModalFilterUPP(SoundFilter);
-
-	BringUpDialog(&prefDlg, kSoundPrefsDialID);
-
-	UnivGetSoundVolume(&wasLoudness, thisMac.hasSM3);
-
-	wasIdle = isPlayMusicIdle;
-	wasPlay = isPlayMusicGame;
-	SetDialogItemValue(prefDlg, kIdleMusicItem, (short)wasIdle);
-	SetDialogItemValue(prefDlg, kPlayMusicItem, (short)wasPlay);
-	leaving = false;
-
-	while (!leaving)
-	{
-		ModalDialog(soundFilterUPP, &itemHit);
-		switch (itemHit)
-		{
-			case kOkayButton:
-			isPlayMusicIdle = wasIdle;
-			isPlayMusicGame = wasPlay;
-			leaving = true;
-			UnivGetSoundVolume(&tempVolume, thisMac.hasSM3);
-			isSoundOn = (tempVolume != 0);
-			break;
-
-			case kCancelButton:
+		case IDCANCEL:
 			UnivSetSoundVolume(wasLoudness, thisMac.hasSM3);
-			HandleSoundMusicChange(wasLoudness, false);
+			HandleSoundMusicChange(prefDlg, wasLoudness, false);
+			isPlayMusicIdle = (isPlayMusicIdle != 0);
+			wasIdle = (IsDlgButtonChecked(prefDlg, kIdleMusicItem) != 0);
 			if (isPlayMusicIdle != wasIdle)
 			{
 				if (isPlayMusicIdle)
 				{
 					if (wasLoudness != 0)
 					{
-						theErr = StartMusic();
+						OSErr theErr = StartMusic();
 						if (theErr != noErr)
 						{
-							YellowAlert(kYellowNoMusic, theErr);
+							YellowAlert(prefDlg, kYellowNoMusic, theErr);
 							failedMusic = true;
 						}
 					}
@@ -651,54 +542,19 @@ void DoSoundPrefs (HWND ownerWindow)
 				else
 					StopTheMusic();
 			}
-			leaving = true;
+			EndDialog(prefDlg, IDCANCEL);
 			break;
 
-			case kSofterItem:
-			UnivGetSoundVolume(&tempVolume, thisMac.hasSM3);
-			if (tempVolume > 0)
-			{
-				GetDialogItemRect(prefDlg, kSofterItem, &tempRect);
-				DrawCIcon(1034, tempRect.left, tempRect.top);
-				tempVolume--;
-				SetDialogNumToStr(prefDlg, kVolNumberItem, (long)tempVolume);
-				UnivSetSoundVolume(tempVolume, thisMac.hasSM3);
-				HandleSoundMusicChange(tempVolume, true);
-				InvalWindowRect(GetDialogWindow(prefDlg), &tempRect);
-				DelayTicks(8);
-			}
-			break;
-
-			case kLouderItem:
-			UnivGetSoundVolume(&tempVolume, thisMac.hasSM3);
-			if (tempVolume < 7)
-			{
-				GetDialogItemRect(prefDlg, kLouderItem, &tempRect);
-				DrawCIcon(1033, tempRect.left, tempRect.top);
-				tempVolume++;
-				if (tempVolume == 7)
-					SetDialogNumToStr(prefDlg, kVolNumberItem, 11L);
-				else
-					SetDialogNumToStr(prefDlg, kVolNumberItem, tempVolume);
-				UnivSetSoundVolume(tempVolume, thisMac.hasSM3);
-				HandleSoundMusicChange(tempVolume, true);
-				InvalWindowRect(GetDialogWindow(prefDlg), &tempRect);
-				DelayTicks(8);
-			}
-			break;
-
-			case kIdleMusicItem:
-			wasIdle = !wasIdle;
-			SetDialogItemValue(prefDlg, kIdleMusicItem, (short)wasIdle);
-			if (wasIdle)
+		case kIdleMusicItem:
+			if (IsDlgButtonChecked(prefDlg, kIdleMusicItem))
 			{
 				UnivGetSoundVolume(&tempVolume, thisMac.hasSM3);
 				if (tempVolume != 0)
 				{
-					theErr = StartMusic();
+					OSErr theErr = StartMusic();
 					if (theErr != noErr)
 					{
-						YellowAlert(kYellowNoMusic, theErr);
+						YellowAlert(prefDlg, kYellowNoMusic, theErr);
 						failedMusic = true;
 					}
 				}
@@ -707,20 +563,46 @@ void DoSoundPrefs (HWND ownerWindow)
 				StopTheMusic();
 			break;
 
-			case kPlayMusicItem:
-			wasPlay = !wasPlay;
-			SetDialogItemValue(prefDlg, kPlayMusicItem, (short)wasPlay);
-			break;
-
-			case kSoundDefault:
+		case kSoundDefault:
 			SoundDefaults(prefDlg);
 			break;
 		}
-	}
+		return TRUE;
 
-	DisposeDialog(prefDlg);
-	DisposeModalFilterUPP(soundFilterUPP);
-#endif
+	case WM_HSCROLL:
+		if (GetDlgItem(prefDlg, kVolumeSliderItem) != (HWND)lParam)
+			return FALSE;
+		switch (LOWORD(wParam))
+		{
+		case TB_TOP:
+		case TB_BOTTOM:
+		case TB_LINEUP:
+		case TB_LINEDOWN:
+		case TB_PAGEUP:
+		case TB_PAGEDOWN:
+		case TB_THUMBPOSITION:
+			tempVolume = (SInt16)SendMessage((HWND)lParam, TBM_GETPOS, 0, 0);
+			if (tempVolume >= 7)
+				SetDlgItemInt(prefDlg, kVolNumberItem, 11, FALSE);
+			else
+				SetDlgItemInt(prefDlg, kVolNumberItem, tempVolume, FALSE);
+
+			UnivSetSoundVolume(tempVolume, thisMac.hasSM3);
+			HandleSoundMusicChange(prefDlg, tempVolume, true);
+			break;
+		}
+		return TRUE;
+	}
+	return FALSE;
+}
+
+//--------------------------------------------------------------  DoSettingsMain
+
+void DoSoundPrefs (HWND ownerWindow)
+{
+	DialogBox(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kSoundPrefsDialID),
+			ownerWindow, SoundFilter);
 }
 
 //--------------------------------------------------------------  DisplayDefaults
