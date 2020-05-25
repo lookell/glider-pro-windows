@@ -1,23 +1,32 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kBrainsPrefsDialID DIALOGEX 27, 25, 211, 118
+#define kMaxFilesItem           1005
+#define kQuickTransitCheck      1007
+#define kDoZoomsCheck           1008
+#define kBrainsDefault          1009
+#define kDoDemoCheck            1010
+#define kDoBackgroundCheck      1011
+#define kDoErrorCheck           1012
+#define kDoPrettyMapCheck       1013
+#define kDoBitchDlgsCheck       1014
+
+kBrainsPrefsDialID DIALOGEX 0, 0, 213, 110
 CAPTION "Brains Preferences"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    PUSHBUTTON "Okay", 1, 167, 101, 39, 12
-    PUSHBUTTON "Cancel", 2, 123, 101, 39, 12
-    CONTROL "", 3, STATIC, SS_OWNERDRAW, 5, 95, 200, 1
-    CONTROL 1014, -1, STATIC, SS_BITMAP, 0, 0, 211, 20
-    EDITTEXT 5, 179, 29, 24, 10, ES_AUTOHSCROLL
-    LTEXT "Maximum houses displayed (12-500):\r\n(larger = more memory)", -1, 5, 25, 171, 20, SS_NOPREFIX
-    CHECKBOX "Quick Transitions", 7, 5, 46, 93, 11
-    CHECKBOX "Zoom Windows", 8, 5, 57, 93, 11
-    PUSHBUTTON "Defaults", 9, 5, 101, 43, 12
-    CHECKBOX "Automatic Demo", 10, 5, 69, 93, 11
-    CHECKBOX "Background Tasks", 11, 5, 81, 93, 11
-    CHECKBOX "Error-Check House", 12, 104, 57, 101, 11
-    CHECKBOX "Use ""Pretty Map""", 13, 104, 69, 101, 11
-    CHECKBOX "Do Create Dialog", 14, 104, 81, 101, 11
-    LTEXT "Editor Options:", -1, 104, 47, 101, 10, SS_NOPREFIX
+    LTEXT "Maximum houses displayed (12-500):\r\n(larger = more memory)", IDC_STATIC, 7, 7, 171, 16, SS_NOPREFIX
+    EDITTEXT kMaxFilesItem, 185, 9, 21, 12
+    AUTOCHECKBOX "&Quick Transitions", kQuickTransitCheck, 7, 29, 96, 10
+    AUTOCHECKBOX "&Zoom Windows", kDoZoomsCheck, 7, 41, 96, 10
+    AUTOCHECKBOX "&Automatic Demo", kDoDemoCheck, 7, 53, 96, 10
+    AUTOCHECKBOX "&Background Tasks", kDoBackgroundCheck, 7, 65, 96, 10
+    LTEXT "Editor Options:", IDC_STATIC, 110, 30, 96, 8, SS_NOPREFIX
+    AUTOCHECKBOX "&Error-Check House", kDoErrorCheck, 110, 41, 96, 10
+    AUTOCHECKBOX "Use ""Pretty Map""", kDoPrettyMapCheck, 110, 53, 96, 10
+    AUTOCHECKBOX "Do Create Dialog", kDoBitchDlgsCheck, 110, 65, 96, 10
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ, 7, 81, 199, 1
+    PUSHBUTTON "&Defaults", kBrainsDefault, 7, 89, 50, 14
+    DEFPUSHBUTTON "Okay", IDOK, 103, 89, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 157, 89, 50, 14
 }

@@ -6,8 +6,6 @@
 //============================================================================
 
 
-//#include <Sound.h>
-//#include <TextUtils.h>
 #include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
@@ -60,9 +58,10 @@
 #define kDoBitchDlgsCheck		1014
 
 
-void SetBrainsToDefaults (DialogPtr);
-void UpdateSettingsBrains (DialogPtr);
-Boolean BrainsFilter (DialogPtr, EventRecord *, SInt16 *);
+void SetBrainsToDefaults (HWND);
+void BrainsInit (HWND);
+void BrainsApply (HWND);
+INT_PTR CALLBACK BrainsFilter (HWND, UINT, WPARAM, LPARAM);
 void DoBrainsPrefs (HWND);
 void SetControlsToDefaults (DialogPtr);
 void UpdateControlKeyName (DialogPtr);
@@ -92,9 +91,8 @@ Str15		leftName, rightName, batteryName, bandName;
 Str15		tempLeftStr, tempRightStr, tempBattStr, tempBandStr;
 SInt32		tempLeftMap, tempRightMap, tempBattMap, tempBandMap;
 SInt16		whichCtrl;
-Boolean		wasIdle, wasPlay, wasTransit, wasZooms, wasBackground;
-Boolean		wasEscPauseKey, wasDemos, nextRestartChange, wasErrorCheck;
-Boolean		wasPrettyMap, wasBitchDialogs;
+Boolean		wasIdle, wasPlay;
+Boolean		wasEscPauseKey, nextRestartChange;
 
 extern	SInt16		numNeighbors, isDepthPref, maxFiles, willMaxFiles;
 extern	Boolean		isDoColorFade, isPlayMusicIdle, isUseSecondScreen;
@@ -107,242 +105,96 @@ extern	Boolean		changeLockStateOfHouse, saveHouseLocked, doPrettyMap;
 //==============================================================  Functions
 //--------------------------------------------------------------  SetBrainsToDefaults
 
-void SetBrainsToDefaults (DialogPtr theDialog)
+void SetBrainsToDefaults (HWND prefDlg)
 {
-	return;
-#if 0
-	SetDialogNumToStr(theDialog, kMaxFilesItem, 24L);
-#ifdef powerc
-	wasTransit = false;
-#else
-	wasTransit = true;
-#endif
-	wasZooms = true;
-	wasDemos = true;
-	wasBackground = false;
-	wasErrorCheck = true;
-	wasPrettyMap = true;
-	wasBitchDialogs = true;
-	SetDialogItemValue(theDialog, kQuickTransitCheck, (short)wasTransit);
-	SetDialogItemValue(theDialog, kDoZoomsCheck, (short)wasZooms);
-	SetDialogItemValue(theDialog, kDoDemoCheck, (short)wasDemos);
-	SetDialogItemValue(theDialog, kDoBackgroundCheck, (short)wasBackground);
-	SetDialogItemValue(theDialog, kDoErrorCheck, (short)wasErrorCheck);
-	SetDialogItemValue(theDialog, kDoPrettyMapCheck, (short)wasPrettyMap);
-	SetDialogItemValue(theDialog, kDoBitchDlgsCheck, (short)wasBitchDialogs);
-#endif
+	SetDlgItemInt(prefDlg, kMaxFilesItem, 24, FALSE);
+	CheckDlgButton(prefDlg, kQuickTransitCheck, BST_CHECKED);
+	CheckDlgButton(prefDlg, kDoZoomsCheck, BST_CHECKED);
+	CheckDlgButton(prefDlg, kDoDemoCheck, BST_CHECKED);
+	CheckDlgButton(prefDlg, kDoBackgroundCheck, BST_UNCHECKED);
+	CheckDlgButton(prefDlg, kDoErrorCheck, BST_CHECKED);
+	CheckDlgButton(prefDlg, kDoPrettyMapCheck, BST_CHECKED);
+	CheckDlgButton(prefDlg, kDoBitchDlgsCheck, BST_CHECKED);
 }
 
-//--------------------------------------------------------------  UpdateSettingsBrains
+//--------------------------------------------------------------  BrainsInit
 
-void UpdateSettingsBrains (DialogPtr theDialog)
+void BrainsInit (HWND prefDlg)
 {
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
+	SetDlgItemInt(prefDlg, kMaxFilesItem, willMaxFiles, FALSE);
+	CheckDlgButton(prefDlg, kQuickTransitCheck, (quickerTransitions != 0));
+	CheckDlgButton(prefDlg, kDoZoomsCheck, (doZooms != 0));
+	CheckDlgButton(prefDlg, kDoDemoCheck, (doAutoDemo != 0));
+	CheckDlgButton(prefDlg, kDoBackgroundCheck, (doBackground != 0));
+	CheckDlgButton(prefDlg, kDoErrorCheck, (isHouseChecks != 0));
+	CheckDlgButton(prefDlg, kDoPrettyMapCheck, (doPrettyMap != 0));
+	CheckDlgButton(prefDlg, kDoBitchDlgsCheck, (doBitchDialogs != 0));
+}
 
-	SetDialogNumToStr(theDialog, kMaxFilesItem, (long)willMaxFiles);
-	SelectDialogItemText(theDialog, kMaxFilesItem, 0, 1024);
+//--------------------------------------------------------------  BrainsApply
 
-	FrameDialogItemC(theDialog, 3, kRedOrangeColor8);
-#endif
+void BrainsApply (HWND prefDlg)
+{
+	SInt16 wasMaxFiles;
+	UINT tmp;
+
+	wasMaxFiles = willMaxFiles;
+	tmp = GetDlgItemInt(prefDlg, kMaxFilesItem, NULL, FALSE);
+	if (tmp > 500)
+		tmp = 500;
+	else if (tmp < 12)
+		tmp = 12;
+	willMaxFiles = (SInt16)tmp;
+	if (willMaxFiles != wasMaxFiles)
+		nextRestartChange = true;
+	quickerTransitions = (IsDlgButtonChecked(prefDlg, kQuickTransitCheck) != 0);
+	doZooms = (IsDlgButtonChecked(prefDlg, kDoZoomsCheck) != 0);
+	doAutoDemo = (IsDlgButtonChecked(prefDlg, kDoDemoCheck) != 0);
+	doBackground = (IsDlgButtonChecked(prefDlg, kDoBackgroundCheck) != 0);
+	isHouseChecks = (IsDlgButtonChecked(prefDlg, kDoErrorCheck) != 0);
+	doPrettyMap = (IsDlgButtonChecked(prefDlg, kDoPrettyMapCheck) != 0);
+	doBitchDialogs = (IsDlgButtonChecked(prefDlg, kDoBitchDlgsCheck) != 0);
 }
 
 //--------------------------------------------------------------  BrainsFilter
 
-Boolean BrainsFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK BrainsFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		CenterOverOwner(prefDlg);
+		BrainsInit(prefDlg);
+		return TRUE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
+		case IDOK:
+			BrainsApply(prefDlg);
+			EndDialog(prefDlg, IDOK);
 			break;
 
-			case kEscapeKeyASCII:
-			FlashDialogButton(dial, kCancelButton);
-			*item = kCancelButton;
-			return(true);
+		case IDCANCEL:
+			EndDialog(prefDlg, IDCANCEL);
 			break;
 
-			case kCapAKeyASCII:
-			case kAKeyASCII:
-			*item = kDoDemoCheck;
-			return(true);
+		case kBrainsDefault:
+			SetBrainsToDefaults(prefDlg);
 			break;
-
-			case kCapBKeyASCII:
-			case kBKeyASCII:
-			*item = kDoBackgroundCheck;
-			return(true);
-			break;
-
-			case kCapDKeyASCII:
-			case kDKeyASCII:
-			*item = kBrainsDefault;
-			FlashDialogButton(dial, kBrainsDefault);
-			return(true);
-			break;
-
-			case kCapEKeyASCII:
-			case kEKeyASCII:
-			*item = kDoErrorCheck;
-			return(true);
-			break;
-
-			case kCapQKeyASCII:
-			case kQKeyASCII:
-			*item = kQuickTransitCheck;
-			return(true);
-			break;
-
-			case kCapZKeyASCII:
-			case kZKeyASCII:
-			*item = kDoZoomsCheck;
-			return(true);
-			break;
-
-			default:
-			return(false);
 		}
-		break;
-
-		case mouseDown:
-		return(false);
-		break;
-
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateSettingsBrains(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  DoBrainsPrefs
 
 void DoBrainsPrefs (HWND ownerWindow)
 {
-	MessageBox(ownerWindow, L"DoBrainsPrefs()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		prefDlg;
-	long			tempLong;
-	short			itemHit, wasMaxFiles;
-	Boolean			leaving;
-	ModalFilterUPP	brainsFilterUPP;
-
-	brainsFilterUPP = NewModalFilterUPP(BrainsFilter);
-
-	BringUpDialog(&prefDlg, kBrainsPrefsDialID);
-	leaving = false;
-	wasMaxFiles = willMaxFiles;
-
-	wasTransit = quickerTransitions;
-	wasZooms = doZooms;
-	wasDemos = doAutoDemo;
-	wasBackground = doBackground;
-	wasErrorCheck = isHouseChecks;
-	wasPrettyMap = doPrettyMap;
-	wasBitchDialogs = doBitchDialogs;
-
-	SetDialogItemValue(prefDlg, kQuickTransitCheck, (short)wasTransit);
-	SetDialogItemValue(prefDlg, kDoZoomsCheck, (short)wasZooms);
-	SetDialogItemValue(prefDlg, kDoDemoCheck, (short)wasDemos);
-	SetDialogItemValue(prefDlg, kDoBackgroundCheck, (short)wasBackground);
-	SetDialogItemValue(prefDlg, kDoErrorCheck, (short)wasErrorCheck);
-	SetDialogItemValue(prefDlg, kDoPrettyMapCheck, (short)wasPrettyMap);
-	SetDialogItemValue(prefDlg, kDoBitchDlgsCheck, (short)wasBitchDialogs);
-
-	while (!leaving)
-	{
-		ModalDialog(brainsFilterUPP, &itemHit);
-		switch (itemHit)
-		{
-			case kOkayButton:
-			GetDialogNumFromStr(prefDlg, kMaxFilesItem, &tempLong);
-			if (tempLong > 500)
-				tempLong = 500;
-			else if (tempLong < 12)
-				tempLong = 12;
-			willMaxFiles = tempLong;
-			if (willMaxFiles != wasMaxFiles)
-				nextRestartChange = true;
-			quickerTransitions = wasTransit;
-			doZooms = wasZooms;
-			doAutoDemo = wasDemos;
-			doBackground = wasBackground;
-			isHouseChecks = wasErrorCheck;
-			doPrettyMap = wasPrettyMap;
-			doBitchDialogs = wasBitchDialogs;
-			leaving = true;
-			break;
-
-			case kCancelButton:
-			willMaxFiles = wasMaxFiles;
-			leaving = true;
-			break;
-
-			case kQuickTransitCheck:
-			wasTransit = !wasTransit;
-			SetDialogItemValue(prefDlg, kQuickTransitCheck, (short)wasTransit);
-			break;
-
-			case kDoZoomsCheck:
-			wasZooms = !wasZooms;
-			SetDialogItemValue(prefDlg, kDoZoomsCheck, (short)wasZooms);
-			break;
-
-			case kDoDemoCheck:
-			wasDemos = !wasDemos;
-			SetDialogItemValue(prefDlg, kDoDemoCheck, (short)wasDemos);
-			break;
-
-			case kDoBackgroundCheck:
-			wasBackground = !wasBackground;
-			SetDialogItemValue(prefDlg, kDoBackgroundCheck, (short)wasBackground);
-			break;
-
-			case kBrainsDefault:
-			SetBrainsToDefaults(prefDlg);
-			break;
-
-			case kDoErrorCheck:
-			wasErrorCheck = !wasErrorCheck;
-			SetDialogItemValue(prefDlg, kDoErrorCheck, (short)wasErrorCheck);
-			break;
-
-			case kDoPrettyMapCheck:
-			wasPrettyMap = !wasPrettyMap;
-			SetDialogItemValue(prefDlg, kDoPrettyMapCheck, (short)wasPrettyMap);
-			break;
-
-			case kDoBitchDlgsCheck:
-			wasBitchDialogs = !wasBitchDialogs;
-			SetDialogItemValue(prefDlg, kDoBitchDlgsCheck, (short)wasBitchDialogs);
-			break;
-		}
-	}
-
-	DisposeDialog(prefDlg);
-	DisposeModalFilterUPP(brainsFilterUPP);
-#endif
+	DialogBox(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kBrainsPrefsDialID),
+			ownerWindow, BrainsFilter);
 }
 
 //--------------------------------------------------------------  SetControlsToDefaults
@@ -932,12 +784,12 @@ void DoSoundPrefs (HWND ownerWindow)
 
 //--------------------------------------------------------------  DisplayDefaults
 
-void DisplayDefaults (HWND prefsDialog)
+void DisplayDefaults (HWND hDlg)
 {
-	CheckRadioButton(prefsDialog, kDisplay1Item, kDisplay9Item, kDisplay9Item);
-	CheckRadioButton(prefsDialog, kCurrentDepth, k16Depth, kCurrentDepth);
-	CheckDlgButton(prefsDialog, kDoColorFadeItem, BST_CHECKED);
-	CheckDlgButton(prefsDialog, kUseScreen2Item, BST_UNCHECKED);
+	CheckRadioButton(hDlg, kDisplay1Item, kDisplay9Item, kDisplay9Item);
+	CheckRadioButton(hDlg, kCurrentDepth, k16Depth, kCurrentDepth);
+	CheckDlgButton(hDlg, kDoColorFadeItem, BST_CHECKED);
+	CheckDlgButton(hDlg, kUseScreen2Item, BST_UNCHECKED);
 }
 
 //--------------------------------------------------------------  DisplayInit
@@ -1094,16 +946,10 @@ void DisplayApply (HWND hDlg)
 	else
 		isDepthPref = kSwitchIfNeeded;
 
-	if (IsDlgButtonChecked(hDlg, kDoColorFadeItem))
-		isDoColorFade = true;
-	else
-		isDoColorFade = false;
+	isDoColorFade = (IsDlgButtonChecked(hDlg, kDoColorFadeItem) != 0);
 
 	wasScreen2 = (isUseSecondScreen != 0);
-	if (IsDlgButtonChecked(hDlg, kUseScreen2Item))
-		isUseSecondScreen = true;
-	else
-		isUseSecondScreen = false;
+	isUseSecondScreen = (IsDlgButtonChecked(hDlg, kUseScreen2Item) != 0);
 	if (wasScreen2 != isUseSecondScreen)
 		nextRestartChange = true;
 }
