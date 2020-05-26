@@ -793,6 +793,7 @@ void DoNewObjectClick (HWND ownerWindow, Point where)
 
 void AddObjectPairing (void)
 {
+#ifndef COMPILEDEMO
 	roomType	*testRoomPtr;
 	SInt16		roomNum, emptySlot;
 	Str255		message;
@@ -1109,6 +1110,7 @@ void AddObjectPairing (void)
 			}
 		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------  DeleteObject
@@ -1152,6 +1154,7 @@ void Gp_DeleteObject (void)
 
 void DuplicateObject (HWND ownerWindow)
 {
+#ifndef COMPILEDEMO
 	objectType	tempObject;
 	Point		placePt;
 	SInt16		direction, dist;
@@ -1329,6 +1332,7 @@ void DuplicateObject (HWND ownerWindow)
 		else
 			StartMarquee(&roomObjectRects[objActive]);
 	}
+#endif
 }
 
 //--------------------------------------------------------------  MoveObject

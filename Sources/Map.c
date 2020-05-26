@@ -186,11 +186,11 @@ void LoadGraphicPlus (SInt16 resID, Rect *theRect)
 
 //--------------------------------------------------------------  RedrawMapContents
 
-#ifndef COMPILEDEMO
 void RedrawMapContents (void)
 {
 	return;
 #if 0
+#ifndef COMPILEDEMO
 	Rect		newClip, aRoom, src;
 	RgnHandle	wasClip;
 	short		h, i, groundLevel;
@@ -307,8 +307,8 @@ void RedrawMapContents (void)
 		DisposeRgn(wasClip);
 	}
 #endif
-}
 #endif
+}
 
 //--------------------------------------------------------------  UpdateMapWindow
 
