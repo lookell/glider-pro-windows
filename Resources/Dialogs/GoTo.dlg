@@ -1,18 +1,24 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kGoToDialogID DIALOGEX 27, 25, 187, 99
+#define kGoToFirstRadio     1002
+#define kGoToPrevRadio      1003
+#define kGoToFSRadio        1004
+#define kFloorEditText      1005
+#define kSuiteEditText      1006
+
+kGoToDialogID DIALOGEX 0, 0, 149, 91
 CAPTION "Go To Room"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    PUSHBUTTON "Cancel", 1, 143, 82, 39, 12
-    PUSHBUTTON "Go to First Room", 2, 5, 25, 107, 12
-    PUSHBUTTON "Go to Previous Room", 3, 5, 42, 107, 12
-    PUSHBUTTON "Go to Room…", 4, 5, 59, 80, 12
-    EDITTEXT 5, 116, 60, 13, 10, ES_AUTOHSCROLL
-    EDITTEXT 6, 161, 60, 19, 10, ES_AUTOHSCROLL
-    LTEXT "floor:", -1, 88, 60, 26, 10, SS_NOPREFIX
-    LTEXT "suite:", -1, 133, 61, 26, 10, SS_NOPREFIX
-    CONTROL 1023, -1, STATIC, SS_BITMAP, 0, 0, 187, 20
-    CONTROL "", 10, STATIC, SS_OWNERDRAW, 5, 76, 176, 1
+    AUTORADIOBUTTON "Go &to first room", kGoToFirstRadio, 7, 7, 135, 10, BS_NOTIFY | WS_GROUP | WS_TABSTOP
+    AUTORADIOBUTTON "Go to &previous room", kGoToPrevRadio, 7, 19, 135, 10, BS_NOTIFY
+    AUTORADIOBUTTON "Go to &room:", kGoToFSRadio, 7, 31, 135, 10
+    LTEXT "&Floor:", IDC_STATIC, 19, 45, 30, 8, WS_GROUP
+    EDITTEXT kFloorEditText, 51, 43, 25, 12
+    LTEXT "&Suite:", IDC_STATIC, 83, 45, 30, 8, WS_GROUP
+    EDITTEXT kSuiteEditText, 115, 43, 25, 12
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ | WS_GROUP, 7, 62, 135, 1
+    DEFPUSHBUTTON "OK", IDOK, 38, 70, 50, 14, WS_GROUP
+    PUSHBUTTON "Cancel", IDCANCEL, 92, 70, 50, 14
 }

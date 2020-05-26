@@ -604,7 +604,7 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 
 		case iGoToRoom:
 		if (houseUnlocked)
-			DoGoToDialog();
+			DoGoToDialog(hwnd);
 		break;
 
 		case iMapWindow:

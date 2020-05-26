@@ -104,7 +104,7 @@ void SortRoomsObjects (SInt16);
 void SortHouseObjects (void);
 SInt16 CountRoomsVisited (void);
 void GenerateRetroLinks (void);
-void DoGoToDialog (void);
+void DoGoToDialog (HWND);
 void ConvertHouseVer1To2 (void);
 void ShiftWholeHouse (SInt16);
 

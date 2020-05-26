@@ -18,8 +18,14 @@
 #include "ResourceIDs.h"
 
 
-void UpdateGoToDialog (DialogPtr);
-Boolean GoToFilter (DialogPtr, EventRecord *, SInt16 *);
+#define kGoToFirstRadio		1002
+#define kGoToPrevRadio		1003
+#define kGoToFSRadio		1004
+#define kFloorEditText		1005
+#define kSuiteEditText		1006
+
+
+INT_PTR CALLBACK GoToFilter (HWND, UINT, WPARAM, LPARAM);
 
 
 housePtr	thisHouse;
@@ -572,129 +578,101 @@ void GenerateRetroLinks (void)
 	}
 }
 
-//--------------------------------------------------------------  UpdateGoToDialog
-// Redraws the "Go To Room..." dialog.
-
-void UpdateGoToDialog (DialogPtr theDialog)
-{
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-	FrameDialogItemC(theDialog, 10, kRedOrangeColor8);
-#endif
-}
-
 //--------------------------------------------------------------  GoToFilter
 // Dialog filter for the "Go To Room..." dialog.
 
-Boolean GoToFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK GoToFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return (false);
-#if 0
-	switch (event->what)
+	BOOL validNumber;
+	SInt16 *roomToGoTo = (SInt16 *)GetWindowLongPtr(hDlg, DWLP_USER);
+	HWND editCtrl;
+
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		CenterOverOwner(hDlg);
+		SetWindowLongPtr(hDlg, DWLP_USER, lParam);
+
+		if (GetFirstRoomNumber() == thisRoomNumber)
+			EnableWindow(GetDlgItem(hDlg, kGoToFirstRadio), FALSE);
+		if ((!RoomNumExists(previousRoom)) || (previousRoom == thisRoomNumber))
+			EnableWindow(GetDlgItem(hDlg, kGoToPrevRadio), FALSE);
+
+		CheckRadioButton(hDlg, kGoToFirstRadio, kGoToFSRadio, kGoToFSRadio);
+		SetDlgItemInt(hDlg, kFloorEditText, wasFloor, TRUE);
+		SetDlgItemInt(hDlg, kSuiteEditText, wasSuite, TRUE);
+		editCtrl = GetDlgItem(hDlg, kFloorEditText);
+		SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)editCtrl, TRUE);
+		return FALSE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
+		case IDCANCEL:
+			*roomToGoTo = kRoomIsEmpty;
+			EndDialog(hDlg, IDCANCEL);
 			break;
 
-			default:
-			return(false);
+		case IDOK:
+			*roomToGoTo = -1;
+			if (IsDlgButtonChecked(hDlg, kGoToFirstRadio))
+			{
+				*roomToGoTo = GetFirstRoomNumber();
+			}
+			else if (IsDlgButtonChecked(hDlg, kGoToPrevRadio))
+			{
+				*roomToGoTo = previousRoom;
+			}
+			else if (IsDlgButtonChecked(hDlg, kGoToFSRadio))
+			{
+				wasFloor = (SInt16)GetDlgItemInt(hDlg, kFloorEditText, &validNumber, TRUE);
+				if (!validNumber)
+				{
+					editCtrl = GetDlgItem(hDlg, kFloorEditText);
+					SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)editCtrl, TRUE);
+					MessageBeep(MB_ICONWARNING);
+					return TRUE;
+				}
+				wasSuite = (SInt16)GetDlgItemInt(hDlg, kSuiteEditText, &validNumber, TRUE);
+				if (!validNumber)
+				{
+					editCtrl = GetDlgItem(hDlg, kSuiteEditText);
+					SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)editCtrl, TRUE);
+					MessageBeep(MB_ICONWARNING);
+					return TRUE;
+				}
+				*roomToGoTo = GetRoomNumber(wasFloor, wasSuite);
+			}
+			EndDialog(hDlg, IDOK);
+			break;
+
+		case kGoToFirstRadio:
+		case kGoToPrevRadio:
+			if (HIWORD(wParam) == BN_DOUBLECLICKED)
+			{
+				SendMessage(hDlg, WM_COMMAND, MAKEWPARAM(IDOK, 0), 0);
+			}
+			break;
 		}
-		break;
-
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateGoToDialog(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  DoGoToDialog
 
 // "Go To Room..." dialog.
 
-void DoGoToDialog (void)
+void DoGoToDialog (HWND ownerWindow)
 {
-	MessageBox(mainWindow, L"DoGoToDialog()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	#define			kGoToFirstButt		2
-	#define			kGoToPrevButt		3
-	#define			kGoToFSButt			4
-	#define			kFloorEditText		5
-	#define			kSuiteEditText		6
-	DialogPtr		theDialog;
-	long			tempLong;
-	short			item, roomToGoTo;
-	Boolean			leaving, canceled;
-	ModalFilterUPP	goToFilterUPP;
+	SInt16 roomToGoTo;
+	INT_PTR dlgResult;
 
-	goToFilterUPP = NewModalFilterUPP(GoToFilter);
-	BringUpDialog(&theDialog, kGoToDialogID);
+	dlgResult = DialogBoxParam(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kGoToDialogID), ownerWindow,
+			GoToFilter, (LPARAM)&roomToGoTo);
 
-	if (GetFirstRoomNumber() == thisRoomNumber)
-		MyDisableControl(theDialog, kGoToFirstButt);
-	if ((!RoomNumExists(previousRoom)) || (previousRoom == thisRoomNumber))
-		MyDisableControl(theDialog, kGoToPrevButt);
-
-	SetDialogNumToStr(theDialog, kFloorEditText, (long)wasFloor);
-	SetDialogNumToStr(theDialog, kSuiteEditText, (long)wasSuite);
-	SelectDialogItemText(theDialog, kFloorEditText, 0, 1024);
-
-	leaving = false;
-	canceled = false;
-
-	while (!leaving)
-	{
-		ModalDialog(goToFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			roomToGoTo = -1;
-			canceled = true;
-			leaving = true;
-		}
-		else if (item == kGoToFirstButt)
-		{
-			roomToGoTo = GetFirstRoomNumber();
-			leaving = true;
-		}
-		else if (item == kGoToPrevButt)
-		{
-			roomToGoTo = previousRoom;
-			leaving = true;
-		}
-		else if (item == kGoToFSButt)
-		{
-			GetDialogNumFromStr(theDialog, kFloorEditText, &tempLong);
-			wasFloor = (short)tempLong;
-			GetDialogNumFromStr(theDialog, kSuiteEditText, &tempLong);
-			wasSuite = (short)tempLong;
-			roomToGoTo = GetRoomNumber(wasFloor, wasSuite);
-			leaving = true;
-		}
-	}
-
-	DisposeDialog(theDialog);
-	DisposeModalFilterUPP(goToFilterUPP);
-
-	if (!canceled)
+	if (dlgResult == IDOK)
 	{
 		if (RoomNumExists(roomToGoTo))
 		{
@@ -703,9 +681,10 @@ void DoGoToDialog (void)
 			ReflectCurrentRoom(false);
 		}
 		else
-			SysBeep(1);
+		{
+			MessageBeep(MB_ICONWARNING);
+		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  ConvertHouseVer1To2
