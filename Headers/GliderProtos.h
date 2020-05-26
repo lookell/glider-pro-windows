@@ -155,6 +155,8 @@ void HandleMainClick (HWND, Point, Boolean);
 //void WashColorIn (void);
 HDC GetMainWindowDC (void);
 void ReleaseMainWindowDC (HDC);
+HCURSOR GetMainWindowCursor (void);
+void SetMainWindowCursor (HCURSOR);
 LRESULT CALLBACK MainWindowProc (HWND, UINT, WPARAM, LPARAM);
 
 void CenterMapOnRoom (SInt16, SInt16);					// --- Map.c

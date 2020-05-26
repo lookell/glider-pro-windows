@@ -44,6 +44,8 @@ SInt16			splashOriginH, splashOriginV;
 SInt16			theMode;
 Boolean			fadeGraysOut, isDoColorFade, splashDrawn;
 
+static	HCURSOR		mainWindowCursor;
+
 extern	HWND		mapWindow, toolsWindow, linkWindow;
 extern	GDHandle	thisGDevice;
 extern	SInt16		toolSelected;
@@ -700,6 +702,20 @@ void WashColorIn (void)
 		DisposePtr((Ptr)newColors);
 }
 */
+//--------------------------------------------------------------  GetMainWindowCursor
+
+HCURSOR GetMainWindowCursor (void)
+{
+	return mainWindowCursor;
+}
+
+//--------------------------------------------------------------  SetMainWindowCursor
+
+void SetMainWindowCursor (HCURSOR hCursor)
+{
+	mainWindowCursor = hCursor;
+}
+
 //--------------------------------------------------------------  MainWindowProc
 
 LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -712,6 +728,10 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	case WM_COMMAND:
 		DoMenuChoice(hwnd, LOWORD(wParam));
+		return 0;
+
+	case WM_CREATE:
+		SetMainWindowCursor(LoadCursor(NULL, IDC_ARROW));
 		return 0;
 
 	case WM_DESTROY:
@@ -772,6 +792,14 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			isEditV = (SInt16)placement.rcNormalPosition.top;
 		}
 		return 0;
+
+	case WM_SETCURSOR:
+		if (LOWORD(lParam) == HTCLIENT)
+		{
+			SetCursor(GetMainWindowCursor());
+			return TRUE;
+		}
+		break;
 
 	case WM_PAINT:
 	{

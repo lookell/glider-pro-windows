@@ -71,7 +71,7 @@ void ToolBoxInit (void)
 	wcMain.cbWndExtra = 0;
 	wcMain.hInstance = HINST_THISCOMPONENT;
 	wcMain.hIcon = LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(1));
-	wcMain.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wcMain.hCursor = NULL;
 	wcMain.hbrBackground = GetStockObject(BLACK_BRUSH);
 	wcMain.lpszMenuName = NULL;
 	wcMain.lpszClassName = WC_MAINWINDOW;
