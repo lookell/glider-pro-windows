@@ -210,11 +210,14 @@ void UpdateMenuBarWindow (void)
 
 void OpenMainWindow (void)
 {
-//	SInt32		wasSeed;
-	SInt16		whichRoom;
-	RECT		rcClient;
-	DWORD		windowStyle;
-	HDC			mainWindowDC;
+//	SInt32 wasSeed;
+	SInt16 whichRoom;
+	RECT rcClient;
+	LONG width, height;
+	SInt16 workspaceX, workspaceY;
+	WINDOWPLACEMENT placement;
+	DWORD windowStyle;
+	HDC mainWindowDC;
 
 	if (mainWindow != NULL)
 	{
@@ -228,36 +231,44 @@ void OpenMainWindow (void)
 			DestroyWindow(menuWindow);
 		menuWindow = NULL;
 
+		// These assignments must happen before the CreateWindow call, or else the
+		// WM_MOVE message handler overwrites 'isEditH' and 'isEditV' during the
+		// main window's creation.
+		workspaceX = isEditH;
+		workspaceY = isEditV;
+
 		QSetRect(&mainWindowRect, 0, 0, 512, 322);
-		rcClient.left = mainWindowRect.left;
-		rcClient.top = mainWindowRect.top;
-		rcClient.right = mainWindowRect.right;
-		rcClient.bottom = mainWindowRect.bottom;
+		SetRect(&rcClient, 0, 0, 512, 322);
 		windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 		AdjustWindowRect(&rcClient, windowStyle, TRUE);
-		mainWindow = CreateWindow(
-			WC_MAINWINDOW,
-			L"Main Window",
-			windowStyle,
-			CW_USEDEFAULT,
-			CW_USEDEFAULT,
-			rcClient.right - rcClient.left,
-			rcClient.bottom - rcClient.top,
-			NULL,
-			theMenuBar,
-			HINST_THISCOMPONENT,
-			NULL
-		);
+		width = rcClient.right - rcClient.left;
+		height = rcClient.bottom - rcClient.top;
+		mainWindow = CreateWindow(WC_MAINWINDOW, L"Main Window",
+				windowStyle, 0, 0, width, height,
+				NULL, theMenuBar, HINST_THISCOMPONENT, NULL);
+		if (mainWindow == NULL)
+			RedAlert(kErrDialogDidntLoad);
 
 		if (OptionKeyDown())
 		{
 			isEditH = 3;
 			isEditV = 41;
 		}
-#if 0
-		MoveWindow(mainWindow, isEditH, isEditV, true);
-#endif
-		ShowWindow(mainWindow, SW_SHOWDEFAULT);
+		else
+		{
+			isEditH = workspaceX;
+			isEditV = workspaceY;
+		}
+
+		placement.length = sizeof(placement);
+		GetWindowPlacement(mainWindow, &placement);
+		OffsetRect(&placement.rcNormalPosition,
+				-placement.rcNormalPosition.left,
+				-placement.rcNormalPosition.top);
+		OffsetRect(&placement.rcNormalPosition, isEditH, isEditV);
+		placement.showCmd = SW_SHOWNORMAL;
+		SetWindowPlacement(mainWindow, &placement);
+
 #if 0
 		SetPortWindowPort(mainWindow);
 		ClipRect(&mainWindowRect);
@@ -281,28 +292,22 @@ void OpenMainWindow (void)
 			ShowWindow(menuWindow);
 		}
 #endif
+
 		mainWindowRect = thisMac.screen;
 		ZeroRectCorner(&mainWindowRect);
 		mainWindowRect.bottom -= 20;		// thisMac.menuHigh
 		windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 		SetRect(&rcClient, 0, 0, mainWindowRect.right, mainWindowRect.bottom);
 		AdjustWindowRect(&rcClient, windowStyle, TRUE);
-		mainWindow = CreateWindow(
-			WC_MAINWINDOW,
-			L"Main Window",
-			windowStyle,
-			CW_USEDEFAULT,
-			CW_USEDEFAULT,
-			rcClient.right - rcClient.left,
-			rcClient.bottom - rcClient.top,
-			NULL,
-			theMenuBar,
-			HINST_THISCOMPONENT,
-			NULL
-		);
+		width = rcClient.right - rcClient.left;
+		height = rcClient.bottom - rcClient.top;
+		mainWindow = CreateWindow(WC_MAINWINDOW, L"Main Window",
+				windowStyle, CW_USEDEFAULT, CW_USEDEFAULT, width, height,
+				NULL, theMenuBar, HINST_THISCOMPONENT, NULL);
 		if (mainWindow == NULL)
 			RedAlert(kErrDialogDidntLoad);
-		ShowWindow(mainWindow, SW_SHOWDEFAULT);
+		ShowWindow(mainWindow, SW_SHOWNORMAL);
+
 		mainWindowDC = GetMainWindowDC();
 		Mac_PaintRect(mainWindowDC, &mainWindowRect, GetStockObject(BLACK_BRUSH));
 		ReleaseMainWindowDC(mainWindowDC);
@@ -756,6 +761,17 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		HandleMainClick(hwnd, wherePt, true);
 		return 0;
 	}
+
+	case WM_MOVE:
+		if (theMode == kEditMode)
+		{
+			WINDOWPLACEMENT placement;
+			placement.length = sizeof(placement);
+			GetWindowPlacement(hwnd, &placement);
+			isEditH = (SInt16)placement.rcNormalPosition.left;
+			isEditV = (SInt16)placement.rcNormalPosition.top;
+		}
+		return 0;
 
 	case WM_PAINT:
 	{

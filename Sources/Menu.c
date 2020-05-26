@@ -418,7 +418,6 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 				SortHouseObjects();
 			if (!QuerySaveChanges(hwnd))
 				break;
-			theMode = kSplashMode;
 			CloseMapWindow();
 			CloseToolsWindow();
 			CloseCoordWindow();
@@ -435,14 +434,15 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 				}
 			}
 			CloseMainWindow();
+			theMode = kSplashMode;
 			OpenMainWindow();
 			incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
 		}
 		else if (theMode == kSplashMode)	// switching to edit mode
 		{
-			theMode = kEditMode;
 			StopTheMusic();
 			CloseMainWindow();
+			theMode = kEditMode;
 			OpenMainWindow();
 			OpenCloseEditWindows();
 		}
