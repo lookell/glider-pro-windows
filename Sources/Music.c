@@ -6,8 +6,6 @@
 //============================================================================
 
 
-//#include <Resources.h>
-//#include <Sound.h>
 #include "Macintosh.h"
 #include "Audio.h"
 #include "DialogUtils.h"
@@ -22,15 +20,32 @@
 #define kLastGamePiece				6
 
 
-void MusicCallBack (SndChannelPtr, SndCommand *);
+typedef struct MusicBuffer {
+	const unsigned char *dataBytes;     // pointer to sound data
+	DWORD dataLength;                   // number of bytes in sound data
+	DWORD numBytesPlayed;               // number of bytes that have been played so far
+	DWORD numBytesWritten;              // number of bytes that have been written so far
+} MusicBuffer;
+
+
+HRESULT WriteToMusicChannel (DWORD offset, const void *data, DWORD length);
+VOID CALLBACK DoMusicTick (PVOID lpParameter, BOOLEAN TimerOrWaitFired);
+HRESULT DoMusicTickImpl (DWORD offset, DWORD numToWrite, DWORD *numWritten);
+void MusicCallBack (void);
 OSErr LoadMusicSounds (void);
 OSErr DumpMusicSounds (void);
 OSErr OpenMusicChannel (void);
 OSErr CloseMusicChannel (void);
 
 
-SndCallBackUPP	musicCallBackUPP;
-SndChannelPtr	musicChannel;
+static MusicBuffer playingBuffer, waitingBuffer;
+static LPDIRECTSOUNDBUFFER8 musicChannel;
+static unsigned char *musicChannelShadow;
+static DWORD lastWrittenCursor, musicChannelByteSize;
+static HANDLE musicTimerHandle;
+static CRITICAL_SECTION musicCriticalSection;
+
+
 WaveData		theMusicData[kMaxMusic];
 SInt16			musicSoundID, musicCursor;
 SInt16			musicScore[kLastMusicPiece];
@@ -38,6 +53,7 @@ SInt16			gameScore[kLastGamePiece];
 SInt16			musicMode;
 Boolean			isMusicOn, isPlayMusicIdle, isPlayMusicGame;
 Boolean			failedMusic, dontLoadMusic;
+
 
 extern	Boolean		isSoundOn;
 
@@ -47,70 +63,59 @@ extern	Boolean		isSoundOn;
 
 OSErr StartMusic (void)
 {
-	OSErr		theErr;
-	SInt16		soundVolume;
+	OSErr theErr;
+	SInt16 soundVolume;
+	BOOL succeeded;
 
 	theErr = noErr;
 
 	if (dontLoadMusic)
 		return theErr;
 
+	EnterCriticalSection(&musicCriticalSection);
+
 	UnivGetSoundVolume(&soundVolume, thisMac.hasSM3);
 	if ((soundVolume != 0) && (!failedMusic))
 	{
-		isMusicOn = true;
-	}
-	return theErr;
-#if 0
-	SndCommand	theCommand;
-	OSErr		theErr;
-	short		soundVolume;
+		IDirectSoundBuffer8_Stop(musicChannel);
 
-	theErr = noErr;
-
-	if (dontLoadMusic)
-		return(theErr);
-
-	UnivGetSoundVolume(&soundVolume, thisMac.hasSM3);
-
-	if ((soundVolume != 0) && (!failedMusic))
-	{
-		theCommand.cmd = bufferCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = (long)(theMusicData[musicSoundID]);
-		theErr = SndDoCommand(musicChannel, &theCommand, false);
-		if (theErr != noErr)
-			return (theErr);
-
-		theCommand.cmd = 0;
-		theCommand.param1 = 1964;
-		theCommand.param2 = SetCurrentA5();
-		theErr = SndDoCommand(musicChannel, &theCommand, false);
-		if (theErr != noErr)
-			return (theErr);
+		playingBuffer.dataBytes = theMusicData[musicSoundID].dataBytes;
+		playingBuffer.dataLength = (DWORD)theMusicData[musicSoundID].dataLength;
+		playingBuffer.numBytesPlayed = 0;
+		playingBuffer.numBytesWritten = 0;
 
 		musicCursor++;
 		if (musicCursor >= kLastMusicPiece)
 			musicCursor = 0;
 		musicSoundID = musicScore[musicCursor];
 
-		theCommand.cmd = bufferCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = (long)(theMusicData[musicSoundID]);
-		theErr = SndDoCommand(musicChannel, &theCommand, false);
-		if (theErr != noErr)
-			return (theErr);
+		waitingBuffer.dataBytes = theMusicData[musicSoundID].dataBytes;
+		waitingBuffer.dataLength = (DWORD)theMusicData[musicSoundID].dataLength;
+		waitingBuffer.numBytesPlayed = 0;
+		waitingBuffer.numBytesWritten = 0;
 
-		theCommand.cmd = callBackCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = SetCurrentA5();
-		theErr = SndDoCommand(musicChannel, &theCommand, false);
+		DoMusicTickImpl(0, musicChannelByteSize / 2, NULL);
+		lastWrittenCursor = musicChannelByteSize / 2;
 
-		isMusicOn = true;
+		IDirectSoundBuffer8_SetCurrentPosition(musicChannel, 0);
+		succeeded = CreateTimerQueueTimer(&musicTimerHandle, NULL, DoMusicTick,
+				NULL, 500, 100, WT_EXECUTEDEFAULT);
+		if (succeeded)
+		{
+			IDirectSoundBuffer8_Play(musicChannel, 0, 0, DSBPLAY_LOOPING);
+			isMusicOn = true;
+		}
+		else
+		{
+			musicTimerHandle = NULL;
+			failedMusic = true;
+			theErr = -1;
+		}
 	}
 
-	return (theErr);
-#endif
+	LeaveCriticalSection(&musicCriticalSection);
+
+	return theErr;
 }
 
 //--------------------------------------------------------------  StopTheMusic
@@ -120,49 +125,34 @@ void StopTheMusic (void)
 	if (dontLoadMusic)
 		return;
 
+	if (musicTimerHandle != NULL)
+	{
+		DeleteTimerQueueTimer(NULL, musicTimerHandle, INVALID_HANDLE_VALUE);
+		musicTimerHandle = NULL;
+	}
+
+	EnterCriticalSection(&musicCriticalSection);
+
 	if ((isMusicOn) && (!failedMusic))
 	{
+		IDirectSoundBuffer8_Stop(musicChannel);
 		isMusicOn = false;
 	}
-	return;
-#if 0
-	SndCommand	theCommand;
-	OSErr		theErr;
 
-	if (dontLoadMusic)
-		return;
-
-	theErr = noErr;
-	if ((isMusicOn) && (!failedMusic))
-	{
-		theCommand.cmd = flushCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = 0L;
-		theErr = SndDoImmediate(musicChannel, &theCommand);
-
-		theCommand.cmd = quietCmd;
-		theCommand.param1 = 0;
-		theCommand.param2 = 0L;
-		theErr = SndDoImmediate(musicChannel, &theCommand);
-
-		isMusicOn = false;
-	}
-#endif
+	LeaveCriticalSection(&musicCriticalSection);
 }
 
 //--------------------------------------------------------------  ToggleMusicWhilePlaying
 
 void ToggleMusicWhilePlaying (void)
 {
-	OSErr		theErr;
-
 	if (dontLoadMusic)
 		return;
 
 	if (isPlayMusicGame)
 	{
 		if (!isMusicOn)
-			theErr = StartMusic();
+			StartMusic();
 	}
 	else
 	{
@@ -177,6 +167,8 @@ void SetMusicalMode (SInt16 newMode)
 {
 	if (dontLoadMusic)
 		return;
+
+	EnterCriticalSection(&musicCriticalSection);
 
 	switch (newMode)
 	{
@@ -193,20 +185,212 @@ void SetMusicalMode (SInt16 newMode)
 		musicCursor = 0;
 		break;
 	}
+
+	LeaveCriticalSection(&musicCriticalSection);
+}
+
+//--------------------------------------------------------------  WriteToMusicChannel
+
+HRESULT WriteToMusicChannel (DWORD offset, const void *data, DWORD length)
+{
+	LPVOID firstPointer, secondPointer;
+	DWORD firstLength, secondLength;
+	const unsigned char *soundBytes = (const unsigned char *)data;
+	HRESULT hr;
+
+	if (offset >= musicChannelByteSize || data == NULL || length > musicChannelByteSize)
+		return E_INVALIDARG;
+
+	if (length == 0)
+		return S_OK;
+	
+	EnterCriticalSection(&musicCriticalSection);
+
+	hr = IDirectSoundBuffer8_Lock(musicChannel, offset, length,
+			&firstPointer, &firstLength, &secondPointer, &secondLength, 0);
+	if (hr == DSERR_BUFFERLOST)
+	{
+		hr = IDirectSoundBuffer8_Restore(musicChannel);
+		if (FAILED(hr))
+		{
+			LeaveCriticalSection(&musicCriticalSection);
+			return hr;
+		}
+
+		IDirectSoundBuffer8_Stop(musicChannel);
+		hr = IDirectSoundBuffer8_Lock(musicChannel, 0, 0,
+				&firstPointer, &firstLength, NULL, NULL, DSBLOCK_ENTIREBUFFER);
+		if (FAILED(hr))
+		{
+			LeaveCriticalSection(&musicCriticalSection);
+			return hr;
+		}
+
+		memcpy(firstPointer, musicChannelShadow, firstLength);
+		IDirectSoundBuffer8_Unlock(musicChannel, firstPointer, firstLength, NULL, 0);
+		IDirectSoundBuffer8_Play(musicChannel, 0, 0, DSBPLAY_LOOPING);
+
+		hr = IDirectSoundBuffer8_Lock(musicChannel, offset, length,
+			&firstPointer, &firstLength, &secondPointer, &secondLength, 0);
+	}
+	if (SUCCEEDED(hr))
+	{
+		if (firstLength != 0)
+		{
+			memcpy(&musicChannelShadow[offset], &soundBytes[0], firstLength);
+			memcpy(firstPointer, &soundBytes[0], firstLength);
+		}
+		if (secondLength != 0)
+		{
+			memcpy(&musicChannelShadow[0], &soundBytes[firstLength], secondLength);
+			memcpy(secondPointer, &soundBytes[firstLength], secondLength);
+		}
+		IDirectSoundBuffer8_Unlock(musicChannel,
+			firstPointer, firstLength,
+			secondPointer, secondLength);
+	}
+
+	LeaveCriticalSection(&musicCriticalSection);
+	return hr;
+}
+
+//--------------------------------------------------------------  DoMusicTick
+
+VOID CALLBACK DoMusicTick(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
+{
+	DWORD DSPlayCursor;
+	DWORD invalidLength, validLength;
+	DWORD nextBufferPlayed;
+	HRESULT hr;
+
+	UNREFERENCED_PARAMETER(lpParameter);
+	UNREFERENCED_PARAMETER(TimerOrWaitFired);
+
+	EnterCriticalSection(&musicCriticalSection);
+
+	if (dontLoadMusic || !isMusicOn)
+	{
+		LeaveCriticalSection(&musicCriticalSection);
+		return;
+	}
+
+	hr = IDirectSoundBuffer8_GetCurrentPosition(musicChannel, &DSPlayCursor, NULL);
+	if (hr == DSERR_BUFFERLOST)
+	{
+		IDirectSoundBuffer8_Restore(musicChannel);
+		WriteToMusicChannel(0, musicChannelShadow, musicChannelByteSize);
+		hr = IDirectSoundBuffer8_GetCurrentPosition(musicChannel, &DSPlayCursor, NULL);
+	}
+	if (FAILED(hr))
+	{
+		IDirectSoundBuffer8_Stop(musicChannel);
+		isMusicOn = false;
+		failedMusic = true;
+		LeaveCriticalSection(&musicCriticalSection);
+		return;
+	}
+
+	if (lastWrittenCursor == DSPlayCursor)
+	{
+		LeaveCriticalSection(&musicCriticalSection);
+		return;
+	}
+	else if (lastWrittenCursor < DSPlayCursor)
+	{
+		invalidLength = DSPlayCursor - lastWrittenCursor;
+	}
+	else // (lastWrittenCursor > DSPlayCursor)
+	{
+		invalidLength = musicChannelByteSize - lastWrittenCursor + DSPlayCursor;
+	}
+
+	playingBuffer.numBytesPlayed += invalidLength;
+	if (playingBuffer.numBytesPlayed >= playingBuffer.dataLength)
+	{
+		nextBufferPlayed = playingBuffer.numBytesPlayed - playingBuffer.dataLength;
+		MusicCallBack();
+		playingBuffer.numBytesPlayed = nextBufferPlayed;
+	}
+
+	hr = DoMusicTickImpl(lastWrittenCursor, invalidLength, &validLength);
+	if (SUCCEEDED(hr))
+	{
+		lastWrittenCursor += validLength;
+		lastWrittenCursor %= musicChannelByteSize;
+	}
+	else
+	{
+		IDirectSoundBuffer8_Stop(musicChannel);
+		isMusicOn = false;
+		failedMusic = true;
+	}
+
+	LeaveCriticalSection(&musicCriticalSection);
+}
+
+//--------------------------------------------------------------  DoMusicTickImpl
+
+HRESULT DoMusicTickImpl (DWORD offset, DWORD numToWrite, DWORD *pNumWritten)
+{
+	unsigned char *outputBytes;
+	DWORD totalBytesWritten, totalBytesLeft;
+	DWORD dstOffset, srcOffset, copySize;
+	MusicBuffer *buffers[2];
+	HRESULT hr = S_OK;
+	size_t i;
+
+	outputBytes = calloc(numToWrite, sizeof(*outputBytes));
+	if (outputBytes == NULL)
+		return E_OUTOFMEMORY;
+
+	EnterCriticalSection(&musicCriticalSection);
+
+	totalBytesWritten = 0;
+	totalBytesLeft = numToWrite;
+	buffers[0] = &playingBuffer;
+	buffers[1] = &waitingBuffer;
+
+	for (i = 0; i < ARRAYSIZE(buffers); i++)
+	{
+		// Check if this buffer has been exhausted of all of its data
+		if (buffers[i]->numBytesWritten >= buffers[i]->dataLength)
+			continue;
+
+		// Calculate the number of bytes to copy from this buffer
+		copySize = buffers[i]->dataLength - buffers[i]->numBytesWritten;
+		if (copySize > totalBytesLeft)
+			copySize = totalBytesLeft;
+
+		// Copy the bytes to the output buffer, and update the number of bytes
+		// written and number of bytes left
+		dstOffset = totalBytesWritten;
+		srcOffset = buffers[i]->numBytesWritten;
+		memcpy(&outputBytes[dstOffset], &buffers[i]->dataBytes[srcOffset], copySize);
+		buffers[i]->numBytesWritten += copySize;
+		totalBytesWritten += copySize;
+		totalBytesLeft -= copySize;
+
+		// Check to see if we've got enough bytes to write to the music channel
+		if (totalBytesLeft == 0)
+			break;
+	}
+
+	hr = WriteToMusicChannel(offset, outputBytes, totalBytesWritten);
+	free(outputBytes);
+	if (pNumWritten)
+		*pNumWritten = totalBytesWritten;
+
+	LeaveCriticalSection(&musicCriticalSection);
+	return hr;
 }
 
 //--------------------------------------------------------------  MusicCallBack
 
-void MusicCallBack (SndChannelPtr theChannel, SndCommand *theCommand)
+void MusicCallBack (void)
 {
-	return;
-#if 0
-#pragma unused (theChannel)
-	long		thisA5, gameA5;
-	OSErr		theErr;
+	MusicBuffer tmpBuffer;
 
-//	gameA5 = theCommand.param2;
-//	thisA5 = SetA5(gameA5);
+	EnterCriticalSection(&musicCriticalSection);
 
 	switch (musicMode)
 	{
@@ -234,18 +418,16 @@ void MusicCallBack (SndChannelPtr theChannel, SndCommand *theCommand)
 		break;
 	}
 
-	theCommand->cmd = bufferCmd;
-	theCommand->param1 = 0;
-	theCommand->param2 = (long)(theMusicData[musicSoundID]);
-	theErr = SndDoCommand(musicChannel, theCommand, false);
+	tmpBuffer = playingBuffer;
+	playingBuffer = waitingBuffer;
+	waitingBuffer = tmpBuffer;
 
-	theCommand->cmd = callBackCmd;
-	theCommand->param1 = 0;
-	theCommand->param2 = gameA5;
-	theErr = SndDoCommand(musicChannel, theCommand, false);
+	waitingBuffer.dataBytes = theMusicData[musicSoundID].dataBytes;
+	waitingBuffer.dataLength = (DWORD)theMusicData[musicSoundID].dataLength;
+	waitingBuffer.numBytesPlayed = 0;
+	waitingBuffer.numBytesWritten = 0;
 
-	thisA5 = SetA5(thisA5);
-#endif
+	LeaveCriticalSection(&musicCriticalSection);
 }
 
 //--------------------------------------------------------------  LoadMusicSounds
@@ -268,6 +450,18 @@ OSErr LoadMusicSounds (void)
 			return -1;
 		}
 	}
+
+	// Test to make sure that all music resources have the same format
+	for (i = 1; i < kMaxMusic; i++)
+	{
+		if (theMusicData[i].channels != theMusicData[0].channels)
+			return -2;
+		if (theMusicData[i].samplesPerSec != theMusicData[0].samplesPerSec)
+			return -2;
+		if (theMusicData[i].bitsPerSample != theMusicData[0].bitsPerSample)
+			return -2;
+	}
+
 	return noErr;
 }
 
@@ -285,44 +479,57 @@ OSErr DumpMusicSounds (void)
 
 OSErr OpenMusicChannel (void)
 {
-	return (-1);
-#if 0
-	OSErr		theErr;
+	WAVEFORMATEX musicFormat;
+	DSBUFFERDESC bufferDesc;
+	HRESULT hr;
 
-	musicCallBackUPP = NewSndCallBackProc(MusicCallBack);
+	musicFormat.wFormatTag = WAVE_FORMAT_PCM;
+	musicFormat.nChannels = theMusicData[0].channels;
+	musicFormat.nSamplesPerSec = theMusicData[0].samplesPerSec;
+	musicFormat.wBitsPerSample = theMusicData[0].bitsPerSample;
+	musicFormat.cbSize = 0;
+	musicFormat.nBlockAlign = musicFormat.nChannels * musicFormat.wBitsPerSample / 8;
+	musicFormat.nAvgBytesPerSec = musicFormat.nSamplesPerSec * musicFormat.nBlockAlign;
 
-	theErr = noErr;
+	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+	bufferDesc.dwSize = sizeof(bufferDesc);
+	bufferDesc.dwFlags = DSBCAPS_LOCSOFTWARE
+		| DSBCAPS_CTRLVOLUME
+		| DSBCAPS_GLOBALFOCUS
+		| DSBCAPS_GETCURRENTPOSITION2;
+	bufferDesc.dwBufferBytes = 2 * musicFormat.nAvgBytesPerSec;
+	bufferDesc.dwReserved = 0;
+	bufferDesc.lpwfxFormat = &musicFormat;
+	bufferDesc.guid3DAlgorithm = DS3DALG_DEFAULT;
 
-	if (musicChannel != nil)
-		return (theErr);
+	musicTimerHandle = NULL;
 
-	musicChannel = nil;
-	theErr = SndNewChannel(&musicChannel,
-			sampledSynth, initNoInterp + initMono,
-			(SndCallBackUPP)musicCallBackUPP);
+	musicChannelByteSize = bufferDesc.dwBufferBytes;
+	musicChannelShadow = calloc(musicChannelByteSize, sizeof(*musicChannelShadow));
+	if (musicChannelShadow == NULL)
+		return -2;
 
-	return (theErr);
-#endif
+	hr = Audio_CreateSoundBuffer(&bufferDesc, &musicChannel, NULL);
+	if (FAILED(hr))
+	{
+		free(musicChannelShadow);
+		musicChannelShadow = NULL;
+		return -1;
+	}
+
+	return noErr;
 }
 
 //--------------------------------------------------------------  CloseMusicChannel
 
 OSErr CloseMusicChannel (void)
 {
-	return (-1);
-#if 0
-	OSErr		theErr;
-
-	theErr = noErr;
-
-	if (musicChannel != nil)
-		theErr = SndDisposeChannel(musicChannel, true);
-	musicChannel = nil;
-
-	DisposeSndCallBackUPP(musicCallBackUPP);
-
-	return (theErr);
-#endif
+	if (musicChannel != NULL)
+	{
+		Audio_ReleaseSoundBuffer(musicChannel);
+		musicChannel = NULL;
+	}
+	return noErr;
 }
 
 //--------------------------------------------------------------  InitMusic
@@ -334,7 +541,9 @@ void InitMusic (HWND ownerWindow)
 	if (dontLoadMusic)
 		return;
 
-	musicChannel = nil;
+	InitializeCriticalSection(&musicCriticalSection);
+
+	musicChannel = NULL;
 
 	failedMusic = false;
 	isMusicOn = false;
@@ -346,6 +555,12 @@ void InitMusic (HWND ownerWindow)
 		return;
 	}
 	theErr = OpenMusicChannel();
+	if (theErr != noErr)
+	{
+		YellowAlert(ownerWindow, kYellowNoMusic, theErr);
+		failedMusic = true;
+		return;
+	}
 
 	musicScore[0] = 0;
 	musicScore[1] = 1;
@@ -390,13 +605,13 @@ void InitMusic (HWND ownerWindow)
 
 void KillMusic (void)
 {
-	OSErr		theErr;
-
 	if (dontLoadMusic)
 		return;
 
-	theErr = DumpMusicSounds();
-	theErr = CloseMusicChannel();
+	StopTheMusic();
+	DumpMusicSounds();
+	CloseMusicChannel();
+	DeleteCriticalSection(&musicCriticalSection);
 }
 
 //--------------------------------------------------------------  MusicBytesNeeded
