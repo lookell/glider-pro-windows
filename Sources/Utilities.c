@@ -192,7 +192,6 @@ void RedAlert (SInt16 errorNumber)
 
 	if (mainWindow != NULL)
 		DestroyWindow(mainWindow);
-	CoUninitialize();
 	exit(EXIT_FAILURE);
 }
 

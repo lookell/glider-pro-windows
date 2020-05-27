@@ -296,16 +296,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	Boolean		whoCares, copyGood, audioInitialized;
 	HRESULT		hr;
 
-	hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
-	if (FAILED(hr))
-	{
-		WCHAR bodyText[64];
-		StringCchPrintf(bodyText, ARRAYSIZE(bodyText),
-				L"CoInitializeEx failed: hr = 0x%08X", hr);
-		MessageBox(NULL, bodyText, NULL, MB_OK | MB_ICONHAND);
-		return 1;
-	}
-
 	hr = Audio_InitDevice();
 	audioInitialized = SUCCEEDED(hr);
 	if (FAILED(hr))
@@ -433,7 +423,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		audioInitialized = false;
 	}
 
-	CoUninitialize();
 	return 0;
 }
 
