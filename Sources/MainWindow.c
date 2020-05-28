@@ -732,7 +732,8 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			{
 				// activated during gameplay
 				switchedOut = false;
-				ToggleMusicWhilePlaying();
+				if (isPlayMusicGame && !isMusicOn)
+					StartMusic();
 				//HideCursor();
 			}
 			else
@@ -740,7 +741,8 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 				// deactivated during gameplay
 				//InitCursor();
 				switchedOut = true;
-				ToggleMusicWhilePlaying();
+				if (isPlayMusicGame && isMusicOn)
+					StopTheMusic();
 			}
 		}
 		else
