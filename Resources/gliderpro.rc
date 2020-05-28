@@ -400,10 +400,9 @@ IDA_EDIT ACCELERATORS
 
 IDM_ROOT MENUEX
 {
-    POPUP "@", IDM_APPLE
+    POPUP "H&elp", IDM_APPLE
     {
         MENUITEM "&About Glider PRO…", ID_ABOUT
-        MENUITEM "", 0, MFT_SEPARATOR
     }
     POPUP "&Game", IDM_GAME
     {

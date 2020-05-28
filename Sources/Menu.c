@@ -258,7 +258,7 @@ void UpdateClipboardMenus (void)
 
 void UpdateMenus (Boolean newMode)
 {
-	MENUITEMINFO	mii;
+	MENUITEMINFO mii;
 
 	if (!menusUp)
 		return;
@@ -272,7 +272,7 @@ void UpdateMenus (Boolean newMode)
 			mii.wID = kHouseMenuID;
 			mii.hSubMenu = houseMenu;
 			mii.dwTypeData = houseMenuTitle;
-			InsertMenuItem(theMenuBar, GetMenuItemCount(theMenuBar), TRUE, &mii);
+			InsertMenuItem(theMenuBar, kAppleMenuID, FALSE, &mii);
 		}
 		else
 		{

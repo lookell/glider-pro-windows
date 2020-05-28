@@ -101,14 +101,6 @@ void InitializeMenus (void)
 	if (rootMenu == NULL)
 		RedAlert(kErrFailedResourceLoad);
 
-	appleMenu = DetachPopupMenu(rootMenu, kAppleMenuID, &appleMenuTitle);
-	if (appleMenu == NULL)
-		RedAlert(kErrFailedResourceLoad);
-	mii.wID = kAppleMenuID;
-	mii.hSubMenu = appleMenu;
-	mii.dwTypeData = appleMenuTitle;
-	InsertMenuItem(theMenuBar, GetMenuItemCount(theMenuBar), TRUE, &mii);
-
 	gameMenu = DetachPopupMenu(rootMenu, kGameMenuID, &gameMenuTitle);
 	if (gameMenu == NULL)
 		RedAlert(kErrFailedResourceLoad);
@@ -123,6 +115,14 @@ void InitializeMenus (void)
 	mii.wID = kOptionsMenuID;
 	mii.hSubMenu = optionsMenu;
 	mii.dwTypeData = optionsMenuTitle;
+	InsertMenuItem(theMenuBar, GetMenuItemCount(theMenuBar), TRUE, &mii);
+
+	appleMenu = DetachPopupMenu(rootMenu, kAppleMenuID, &appleMenuTitle);
+	if (appleMenu == NULL)
+		RedAlert(kErrFailedResourceLoad);
+	mii.wID = kAppleMenuID;
+	mii.hSubMenu = appleMenu;
+	mii.dwTypeData = appleMenuTitle;
 	InsertMenuItem(theMenuBar, GetMenuItemCount(theMenuBar), TRUE, &mii);
 
 	menusUp = true;
