@@ -131,7 +131,7 @@ void StopTheMusic (void)
 
 	if (musicTimerHandle != NULL)
 	{
-		BOOL succeeded = DeleteTimerQueueTimer(NULL, musicTimerHandle, INVALID_HANDLE_VALUE);
+		DeleteTimerQueueTimer(NULL, musicTimerHandle, INVALID_HANDLE_VALUE);
 		musicTimerHandle = NULL;
 	}
 

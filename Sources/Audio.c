@@ -337,7 +337,8 @@ HRESULT Audio_CreateSoundBuffer(
 	{
 		return hr;
 	}
-	hr = IDirectSoundBuffer_QueryInterface(tempBuffer, &IID_IDirectSoundBuffer8, &newBuffer);
+	hr = IDirectSoundBuffer_QueryInterface(tempBuffer,
+			&IID_IDirectSoundBuffer8, (LPVOID *)&newBuffer);
 	IDirectSoundBuffer_Release(tempBuffer);
 	if (FAILED(hr))
 	{
@@ -382,13 +383,14 @@ HRESULT Audio_DuplicateSoundBuffer(
 	}
 
 	hr = IDirectSoundBuffer8_QueryInterface(pDSBufferOriginal,
-			&IID_IDirectSoundBuffer, &tempOriginal);
+			&IID_IDirectSoundBuffer, (LPVOID *)&tempOriginal);
 	if (FAILED(hr))
 	{
 		return E_UNEXPECTED;
 	}
 
-	hr = IDirectSound8_DuplicateSoundBuffer(g_audioDevice, tempOriginal, &tempDuplicate);
+	hr = IDirectSound8_DuplicateSoundBuffer(g_audioDevice,
+			tempOriginal, &tempDuplicate);
 	IDirectSoundBuffer_Release(tempOriginal);
 	if (FAILED(hr))
 	{
@@ -396,7 +398,7 @@ HRESULT Audio_DuplicateSoundBuffer(
 	}
 
 	hr = IDirectSoundBuffer_QueryInterface(tempDuplicate,
-			&IID_IDirectSoundBuffer8, &newBuffer);
+			&IID_IDirectSoundBuffer8, (LPVOID *)&newBuffer);
 	IDirectSoundBuffer_Release(tempDuplicate);
 	if (FAILED(hr))
 	{
