@@ -22,6 +22,9 @@
 
 #define IDM_ROOT				1
 
+#define IDA_SPLASH				1000
+#define IDA_EDIT				1002
+
 #define IDM_APPLE				128
 #define ID_ABOUT				40101
 

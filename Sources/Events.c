@@ -30,6 +30,7 @@ UInt32			doubleTime;
 Point			lastWhere;
 SInt16			idleMode;
 Boolean			doAutoDemo, switchedOut;
+HACCEL			splashAccelTable, editAccelTable;
 
 extern	HWND		mapWindow, toolsWindow, linkWindow;
 extern	HWND		menuWindow;
@@ -472,6 +473,16 @@ void HandleTheMessage (MSG *message)
 {
 	if (IsWindow(coordWindow) && IsDialogMessage(coordWindow, message))
 		return;
+	if (theMode == kSplashMode)
+	{
+		if (TranslateAccelerator(mainWindow, splashAccelTable, message))
+			return;
+	}
+	else if (theMode == kEditMode)
+	{
+		if (TranslateAccelerator(mainWindow, editAccelTable, message))
+			return;
+	}
 	TranslateMessage(message);
 	DispatchMessage(message);
 }

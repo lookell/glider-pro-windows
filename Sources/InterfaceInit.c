@@ -41,6 +41,7 @@ extern	HMODULE			houseResFork;
 extern	Boolean			quitting, playing, fadeGraysOut;
 extern	Boolean			houseOpen, newRoomNow, evenFrame, menusUp, demoGoing;
 extern	Boolean			twoPlayerGame, paused, hasMirror, splashDrawn;
+extern	HACCEL			splashAccelTable, editAccelTable;
 
 
 //==============================================================  Functions
@@ -240,6 +241,13 @@ void VariableInit (void)
 	theGlider2.battKey = 'S'; // was kOptionKeyMap
 	theGlider2.bandKey = 'W'; // was kShiftKeyMap
 	theGlider2.which = kPlayer2;
+
+	splashAccelTable = LoadAccelerators(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDA_SPLASH));
+	if (splashAccelTable == NULL)
+		RedAlert(kErrFailedResourceLoad);
+	editAccelTable = LoadAccelerators(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDA_EDIT));
+	if (editAccelTable == NULL)
+		RedAlert(kErrFailedResourceLoad);
 
 	theMode = kSplashMode;
 	thisRoomNumber = 0;

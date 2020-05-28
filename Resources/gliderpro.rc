@@ -114,15 +114,15 @@ STRINGTABLE
     kLocalizedStringsBase + 33,     L"Checking Objects…"
     kLocalizedStringsBase + 34,     L" Object Errors"
     kLocalizedStringsBase + 35,     L"You have no stars in the house!"
-    kLocalizedStringsBase + 36,     L"Cut Object\tCtrl+X"
-    kLocalizedStringsBase + 37,     L"Copy Object\tCtrl+C"
-    kLocalizedStringsBase + 38,     L"Clear Object"
-    kLocalizedStringsBase + 39,     L"Cut Room\tCtrl+X"
-    kLocalizedStringsBase + 40,     L"Copy Room\tCtrl+C"
-    kLocalizedStringsBase + 41,     L"Clear Room"
-    kLocalizedStringsBase + 42,     L"Paste Room\tCtrl+V"
-    kLocalizedStringsBase + 43,     L"Paste Object\tCtrl+V"
-    kLocalizedStringsBase + 44,     L"Nothing To Paste\tCtrl+V"
+    kLocalizedStringsBase + 36,     L"Cu&t Object\tCtrl+X"
+    kLocalizedStringsBase + 37,     L"&Copy Object\tCtrl+C"
+    kLocalizedStringsBase + 38,     L"Cl&ear Object"
+    kLocalizedStringsBase + 39,     L"Cu&t Room\tCtrl+X"
+    kLocalizedStringsBase + 40,     L"&Copy Room\tCtrl+C"
+    kLocalizedStringsBase + 41,     L"Cl&ear Room"
+    kLocalizedStringsBase + 42,     L"&Paste Room\tCtrl+V"
+    kLocalizedStringsBase + 43,     L"&Paste Object\tCtrl+V"
+    kLocalizedStringsBase + 44,     L"Nothing To &Paste\tCtrl+V"
     kLocalizedStringsBase + 45,     L"Object Pair Added"
     kLocalizedStringsBase + 46,     L"Exterior Door Added in Next Room"
     kLocalizedStringsBase + 47,     L"Interior Door Added in Next Room"
@@ -363,54 +363,89 @@ STRINGTABLE
     kObjectNameStringsBase + 144,   L"Mermaid"
 }
 
+IDA_SPLASH ACCELERATORS
+{
+    "N", ID_NEW_GAME, VIRTKEY, CONTROL
+    "2", ID_TWO_PLAYER, VIRTKEY, CONTROL
+    "O", ID_OPEN_SAVED_GAME, VIRTKEY, CONTROL
+    "L", ID_LOAD_HOUSE, VIRTKEY, CONTROL
+    "Q", ID_QUIT, VIRTKEY, CONTROL
+    "E", ID_EDITOR, VIRTKEY, CONTROL
+    "H", ID_HIGH_SCORES, VIRTKEY, CONTROL
+    "P", ID_PREFS, VIRTKEY, CONTROL
+    "D", ID_DEMO, VIRTKEY, CONTROL
+}
+
+IDA_EDIT ACCELERATORS
+{
+    "L", ID_LOAD_HOUSE, VIRTKEY, CONTROL
+    "Q", ID_QUIT, VIRTKEY, CONTROL
+    "E", ID_EDITOR, VIRTKEY, CONTROL
+    "P", ID_PREFS, VIRTKEY, CONTROL
+    "N", ID_NEW_HOUSE, VIRTKEY, CONTROL
+    "S", ID_SAVE_HOUSE, VIRTKEY, CONTROL
+    "R", ID_ROOM_INFO, VIRTKEY, CONTROL
+    "I", ID_OBJECT_INFO, VIRTKEY, CONTROL
+    "X", ID_CUT, VIRTKEY, CONTROL
+    "C", ID_COPY, VIRTKEY, CONTROL
+    "V", ID_PASTE, VIRTKEY, CONTROL
+    "D", ID_DUPLICATE, VIRTKEY, CONTROL
+    VK_OEM_PLUS, ID_BRING_FORWARD, VIRTKEY, CONTROL
+    VK_OEM_MINUS, ID_SEND_BACK, VIRTKEY, CONTROL
+    "G", ID_GO_TO_ROOM, VIRTKEY, CONTROL
+    "M", ID_MAP_WINDOW, VIRTKEY, CONTROL
+    "T", ID_OBJECT_WINDOW, VIRTKEY, CONTROL
+    "K", ID_COORDINATE_WINDOW, VIRTKEY, CONTROL
+}
+
 IDM_ROOT MENUEX
 {
     POPUP "@", IDM_APPLE
     {
-        MENUITEM "About Glider PRO…", ID_ABOUT
+        MENUITEM "&About Glider PRO…", ID_ABOUT
         MENUITEM "", 0, MFT_SEPARATOR
     }
-    POPUP "Game", IDM_GAME
+    POPUP "&Game", IDM_GAME
     {
-        MENUITEM "New Game\tCtrl+N", ID_NEW_GAME
-        MENUITEM "Two Player Game\tCtrl+2", ID_TWO_PLAYER
-        MENUITEM "Open Saved Game…\tCtrl+O", ID_OPEN_SAVED_GAME
+        MENUITEM "&New Game\tCtrl+N", ID_NEW_GAME
+        MENUITEM "&Two Player Game\tCtrl+2", ID_TWO_PLAYER
+        MENUITEM "&Open Saved Game…\tCtrl+O", ID_OPEN_SAVED_GAME
         MENUITEM "", 0, MFT_SEPARATOR
-        MENUITEM "Load House…\tCtrl+L", ID_LOAD_HOUSE
+        MENUITEM "&Load House…\tCtrl+L", ID_LOAD_HOUSE
         MENUITEM "", 0, MFT_SEPARATOR
-        MENUITEM "Quit\tCtrl+Q", ID_QUIT
+        MENUITEM "&Quit\tCtrl+Q", ID_QUIT
     }
-    POPUP "Options", IDM_OPTIONS
+    POPUP "&Options", IDM_OPTIONS
     {
-        MENUITEM "Room Editor\tCtrl+E", ID_EDITOR
+        MENUITEM "Room &Editor\tCtrl+E", ID_EDITOR
         MENUITEM "", 0, MFT_SEPARATOR
-        MENUITEM "High Scores…\tCtrl+H", ID_HIGH_SCORES
-        MENUITEM "Preferences…\tCtrl+P", ID_PREFS
-        MENUITEM "Demo…\tCtrl+D", ID_DEMO
+        MENUITEM "&High Scores…\tCtrl+H", ID_HIGH_SCORES
+        MENUITEM "&Preferences…\tCtrl+P", ID_PREFS
+        MENUITEM "&Demo…\tCtrl+D", ID_DEMO
     }
-    POPUP "House", IDM_HOUSE
+    POPUP "&House", IDM_HOUSE
     {
-        MENUITEM "New House…\tCtrl+N", ID_NEW_HOUSE
-        MENUITEM "Save House\tCtrl+S", ID_SAVE_HOUSE
+        MENUITEM "&New House…\tCtrl+N", ID_NEW_HOUSE
+        MENUITEM "&Save House\tCtrl+S", ID_SAVE_HOUSE
         MENUITEM "", 0, MFT_SEPARATOR
-        MENUITEM "House Info…", ID_HOUSE_INFO
-        MENUITEM "Room Info…\tCtrl+R", ID_ROOM_INFO
-        MENUITEM "Object Info…\tCtrl+I", ID_OBJECT_INFO
+        MENUITEM "&House Info…", ID_HOUSE_INFO
+        MENUITEM "&Room Info…\tCtrl+R", ID_ROOM_INFO
+        MENUITEM "&Object Info…\tCtrl+I", ID_OBJECT_INFO
         MENUITEM "", 0, MFT_SEPARATOR
-        MENUITEM "Cut Room\tCtrl+X", ID_CUT
-        MENUITEM "Copy Room\tCtrl+C", ID_COPY
-        MENUITEM "Paste Room\tCtrl+V", ID_PASTE
-        MENUITEM "Delete Room", ID_CLEAR
-        MENUITEM "Duplicate Object\tCtrl+D", ID_DUPLICATE
+        MENUITEM "Cu&t Room\tCtrl+X", ID_CUT
+        MENUITEM "&Copy Room\tCtrl+C", ID_COPY
+        MENUITEM "&Paste Room\tCtrl+V", ID_PASTE
+        MENUITEM "Cl&ear Room", ID_CLEAR
+        MENUITEM "&Duplicate Object\tCtrl+D", ID_DUPLICATE
         MENUITEM "", 0, MFT_SEPARATOR
-        MENUITEM "Bring To Front\tCtrl+=", ID_BRING_FORWARD
-        MENUITEM "Send To Back\tCtrl+-", ID_SEND_BACK
+        MENUITEM "Bring To &Front\tCtrl+=", ID_BRING_FORWARD
+        MENUITEM "Send To &Back\tCtrl+-", ID_SEND_BACK
         MENUITEM "", 0, MFT_SEPARATOR
-        MENUITEM "Go To Room…\tCtrl+G", ID_GO_TO_ROOM
+        MENUITEM "&Go To Room…\tCtrl+G", ID_GO_TO_ROOM
         MENUITEM "", 0, MFT_SEPARATOR
-        MENUITEM "Map Window\tCtrl+M", ID_MAP_WINDOW
-        MENUITEM "Tools Window\tCtrl+T", ID_OBJECT_WINDOW
-        MENUITEM "Coordinate Window\tCtrl+K", ID_COORDINATE_WINDOW
+        MENUITEM "&Map Window\tCtrl+M", ID_MAP_WINDOW
+        MENUITEM "Tools &Window\tCtrl+T", ID_OBJECT_WINDOW
+        MENUITEM "Coordin&ate Window\tCtrl+K", ID_COORDINATE_WINDOW
     }
     POPUP "Rooms", 140
     {
