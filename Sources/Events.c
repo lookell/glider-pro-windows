@@ -464,6 +464,18 @@ void HandleIdleTask (void)
 	}
 }
 
+//--------------------------------------------------------------  HandleTheMessage
+// This handles an individual message and dispatches it to the appropriate
+// destination.
+
+void HandleTheMessage (MSG *message)
+{
+	if (IsWindow(coordWindow) && IsDialogMessage(coordWindow, message))
+		return;
+	TranslateMessage(message);
+	DispatchMessage(message);
+}
+
 //--------------------------------------------------------------  HandleEvent
 // "Master" function that tests for events and calls the above functions to…
 // handle each event type.  Not called during and actual game.
@@ -471,8 +483,8 @@ void HandleIdleTask (void)
 void HandleEvent (void)
 {
 	MSG			theEvent;
-	SInt32		sleep = 2;
-	DWORD		result, startMillis, stopMillis;
+	DWORD		result, startMillis;
+	DWORD		msgWaitTime, msgWaitStart, msgWaitElapsed;
 
 	if (mainWindow != NULL && GetActiveWindow() == mainWindow)
 	{
@@ -492,58 +504,52 @@ void HandleEvent (void)
 		}
 	}
 
-	result = MsgWaitForMultipleObjects(0, NULL, FALSE,
-			TicksToMillis(sleep), QS_ALLINPUT);
-
-	if (result == WAIT_OBJECT_0)
+	if (switchedOut)
 	{
-#if 0
-		switch (theEvent.what)
-		{
-		case mouseDown:
-			HandleMouseEvent(&theEvent);
-			break;
-
-		//case keyDown:
-		//case autoKey:
-		//	HandleKeyEvent(&theEvent);
-		//	break;
-
-		case updateEvt:
-			HandleUpdateEvent(&theEvent);
-			break;
-
-		case osEvt:
-			HandleOSEvent(&theEvent);
-			break;
-
-		case kHighLevelEvent:
-			HandleHighLevelEvent(&theEvent);
-			break;
-		}
-#endif
-		while (PeekMessage(&theEvent, NULL, 0, 0, PM_REMOVE))
+		while (GetMessage(&theEvent, NULL, 0, 0))
 		{
 			if (theEvent.message == WM_QUIT)
 			{
 				quitting = true;
 				return;
 			}
-
-			if (IsWindow(coordWindow) && IsDialogMessage(coordWindow, &theEvent))
-				continue;
-			TranslateMessage(&theEvent);
-			DispatchMessage(&theEvent);
+			HandleTheMessage(&theEvent);
+			if (!switchedOut)
+				break;
 		}
 	}
-	else
-		HandleIdleTask();
+
+	msgWaitTime = TicksToMillis(kTicksPerFrame);
+	msgWaitStart = timeGetTime();
+	while (1)
+	{
+		msgWaitElapsed = timeGetTime() - msgWaitStart;
+		if (msgWaitElapsed >= msgWaitTime)
+			break;
+		result = MsgWaitForMultipleObjects(0, NULL, FALSE,
+			msgWaitTime - msgWaitElapsed, QS_ALLINPUT);
+		if (result == WAIT_OBJECT_0)
+		{
+			while (PeekMessage(&theEvent, NULL, 0, 0, PM_REMOVE))
+			{
+				if (theEvent.message == WM_QUIT)
+				{
+					quitting = true;
+					return;
+				}
+				HandleTheMessage(&theEvent);
+				msgWaitElapsed = timeGetTime() - msgWaitStart;
+				if (msgWaitElapsed >= msgWaitTime)
+					break;
+			}
+		}
+	}
+	HandleIdleTask();
 
 	if ((theMode == kSplashMode) && doAutoDemo && !switchedOut && (demoHouseIndex >= 0))
 	{
 		startMillis = TicksToMillis((UInt32)incrementModeTime - kIdleSplashTicks);
-		stopMillis = GetTickCount();
-		if (stopMillis - startMillis >= TicksToMillis(kIdleSplashTicks))
+		if (GetTickCount() - startMillis >= TicksToMillis(kIdleSplashTicks))
 		{
 			DisableMenuBar();
 			DoDemoGame(mainWindow);
