@@ -13,8 +13,8 @@ STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
     CTEXT "&Display", IDC_STATIC, 13, 34, 37, 8
     PUSHBUTTON "Display", kDisplayButton, 18, 7, 27, 25, BS_ICON
-    CTEXT "&Sound", IDC_STATIC, 56, 34, 37, 8
-    PUSHBUTTON "Sound", kSoundButton, 61, 7, 27, 25, BS_ICON
+    CTEXT "&Sounds", IDC_STATIC, 56, 34, 37, 8
+    PUSHBUTTON "Sounds", kSoundButton, 61, 7, 27, 25, BS_ICON
     CTEXT "&Controls", IDC_STATIC, 99, 34, 37, 8
     PUSHBUTTON "Controls", kControlsButton, 104, 7, 27, 25, BS_ICON
     CTEXT "&Brains", IDC_STATIC, 142, 34, 37, 8
