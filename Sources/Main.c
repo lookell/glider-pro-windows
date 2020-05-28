@@ -341,6 +341,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	CreatePointers();					SpinCursor(2);
 	InitSrcRects();
 	CreateOffscreens();					SpinCursor(2);
+	InitSound(NULL);					SpinCursor(2);
+	InitMusic(NULL);					SpinCursor(2);
 	OpenMainWindow();
 
 #ifdef COMPILEQT
@@ -352,8 +354,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	}
 #endif
 
-	InitSound(mainWindow);				SpinCursor(2);
-	InitMusic(mainWindow);				SpinCursor(2);
 	BuildHouseList(mainWindow);
 	if (OpenHouse(mainWindow))
 		whoCares = ReadHouse(mainWindow);
@@ -386,9 +386,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	ShowMenuBarOld();
 #endif
 */
+	CloseMainWindow();
 	KillMusic();
 	KillSound();
-	CloseMainWindow();
 	if (houseOpen)
 	{
 		if (!CloseHouse(NULL))

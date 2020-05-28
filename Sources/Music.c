@@ -75,7 +75,7 @@ OSErr StartMusic (void)
 	EnterCriticalSection(&musicCriticalSection);
 
 	UnivGetSoundVolume(&soundVolume, thisMac.hasSM3);
-	if ((soundVolume != 0) && (!failedMusic))
+	if ((!isMusicOn) && (soundVolume != 0) && (!failedMusic))
 	{
 		IDirectSoundBuffer8_Stop(musicChannel);
 
@@ -98,8 +98,12 @@ OSErr StartMusic (void)
 		lastWrittenCursor = musicChannelByteSize / 2;
 
 		IDirectSoundBuffer8_SetCurrentPosition(musicChannel, 0);
-		succeeded = CreateTimerQueueTimer(&musicTimerHandle, NULL, DoMusicTick,
-				NULL, 500, 100, WT_EXECUTEDEFAULT);
+		succeeded = TRUE;
+		if (musicTimerHandle == NULL)
+		{
+			succeeded = CreateTimerQueueTimer(&musicTimerHandle, NULL, DoMusicTick,
+					NULL, 500, 100, WT_EXECUTEDEFAULT);
+		}
 		if (succeeded)
 		{
 			IDirectSoundBuffer8_Play(musicChannel, 0, 0, DSBPLAY_LOOPING);
@@ -127,7 +131,7 @@ void StopTheMusic (void)
 
 	if (musicTimerHandle != NULL)
 	{
-		DeleteTimerQueueTimer(NULL, musicTimerHandle, INVALID_HANDLE_VALUE);
+		BOOL succeeded = DeleteTimerQueueTimer(NULL, musicTimerHandle, INVALID_HANDLE_VALUE);
 		musicTimerHandle = NULL;
 	}
 
@@ -589,16 +593,6 @@ void InitMusic (HWND ownerWindow)
 	musicCursor = 0;
 	musicSoundID = musicScore[musicCursor];
 	musicMode = kPlayWholeScoreMode;
-
-	if (isPlayMusicIdle)
-	{
-		theErr = StartMusic();
-		if (theErr != noErr)
-		{
-			YellowAlert(ownerWindow, kYellowNoMusic, theErr);
-			failedMusic = true;
-		}
-	}
 }
 
 //--------------------------------------------------------------  KillMusic

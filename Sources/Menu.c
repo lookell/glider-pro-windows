@@ -402,10 +402,6 @@ void DoGameMenu (HWND hwnd, SInt16 theItem)
 
 void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 {
-#ifndef COMPILEDEMO
-	OSErr		theErr;
-#endif
-
 	switch (theItem)
 	{
 		case iEditor:
@@ -424,15 +420,6 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 			CloseLinkWindow();
 			DeselectObject();
 			StopMarquee();
-			if (isPlayMusicIdle)
-			{
-				theErr = StartMusic();
-				if (theErr != noErr)
-				{
-					YellowAlert(hwnd, kYellowNoMusic, theErr);
-					failedMusic = true;
-				}
-			}
 			CloseMainWindow();
 			theMode = kSplashMode;
 			OpenMainWindow();

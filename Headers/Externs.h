@@ -316,7 +316,8 @@ void DisplayCTSeed (CGrafPtr);
 void FillScreenRed (void);
 void DumpToResEditFile (Ptr, SInt32);
 
-void HandleKeyEvent (HWND, BYTE);						// --- Event.c
+SInt16 BitchAboutColorDepth(HWND);						// --- Event.c
+void HandleKeyEvent (HWND, BYTE);
 void HandleEvent (void);
 void HiliteAllWindows (void);
 void IgnoreThisClick (void);

@@ -17,7 +17,6 @@
 #include "ResourceIDs.h"
 
 
-SInt16 BitchAboutColorDepth (HWND);
 void HandleMouseEvent (EventRecord *);
 void HandleUpdateEvent (EventRecord *);
 void HandleOSEvent (EventRecord *);

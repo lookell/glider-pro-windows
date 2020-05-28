@@ -52,6 +52,9 @@ extern	SInt16		toolSelected;
 extern	Rect		justRoomsRect;
 extern	Boolean		noRoomAtAll, isUseSecondScreen;
 extern	Boolean		quickerTransitions, houseIsReadOnly;
+extern	Boolean		quitting, switchedOut, isPlayMusicIdle;
+extern	Boolean		isMusicOn, failedMusic;
+extern	SInt32		incrementModeTime;
 extern	HMENU		theMenuBar;
 
 
@@ -722,6 +725,79 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 {
 	switch (uMsg)
 	{
+	case WM_ACTIVATEAPP:
+		if (theMode == kPlayMode)
+		{
+			if (wParam)
+			{
+				// activated during gameplay
+				switchedOut = false;
+				ToggleMusicWhilePlaying();
+				//HideCursor();
+			}
+			else
+			{
+				// deactivated during gameplay
+				//InitCursor();
+				switchedOut = true;
+				ToggleMusicWhilePlaying();
+			}
+		}
+		else
+		{
+			if (wParam)
+			{
+				// activated during splash or edit mode
+				if (WhatsOurDepth() != thisMac.isDepth)
+				{
+					SInt16 buttonHit = BitchAboutColorDepth(hwnd);
+					if (buttonHit == 1)
+					{
+#ifndef COMPILEDEMO
+						if (QuerySaveChanges(hwnd))
+						{
+							PostQuitMessage(0);
+							quitting = true;
+						}
+#else
+						PostQuitMessage(0);
+						quitting = true;
+#endif
+					}
+					else
+					{
+						SwitchToDepth(thisMac.isDepth, thisMac.wasColorOrGray);
+					}
+				}
+				switchedOut = false;
+				//InitCursor()
+				if ((isPlayMusicIdle) && (theMode != kEditMode))
+				{
+					OSErr theErr = StartMusic();
+					if (theErr != noErr)
+					{
+						YellowAlert(hwnd, kYellowNoMusic, theErr);
+						failedMusic = true;
+					}
+				}
+				incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
+
+#ifndef COMPILEDEMO
+				//			if (theMode == kEditMode)
+				//				SeeIfValidScrapAvailable(true);
+#endif
+			}
+			else
+			{
+				// deactivated during splash or edit mode
+				switchedOut = true;
+				//InitCursor();
+				if ((isMusicOn) && (theMode != kEditMode))
+					StopTheMusic();
+			}
+		}
+		return 0;
+
 	case WM_CLOSE:
 		SendMessage(hwnd, WM_COMMAND, ID_QUIT, 0);
 		return 0;
