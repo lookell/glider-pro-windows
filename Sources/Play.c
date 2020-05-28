@@ -427,33 +427,26 @@ void HandlePlayEvent (void)
 
 void PlayGame (void)
 {
+	MSG msg;
+
 	while ((playing) && (!quitting))
 	{
 		gameFrame++;
 		evenFrame = !evenFrame;
 
-		{ // TEMP message loop here so that window doesn't freeze
-			MSG msg;
-			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-			{
-				if (msg.message == WM_QUIT)
-				{
-					PostQuitMessage((int)msg.wParam);
-					quitting = true;
-					break;
-				}
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-		}
-
-		if (doBackground)
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			do
+			if (msg.message == WM_QUIT)
 			{
-				HandlePlayEvent();
-			} while (switchedOut);
+				PostQuitMessage((int)msg.wParam);
+				quitting = true;
+				break;
+			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
 		}
+		if (msg.message == WM_QUIT)
+			break;
 
 		HandleTelephone();
 
