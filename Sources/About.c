@@ -5,270 +5,99 @@
 //============================================================================
 
 
-//#include <NumberFormatting.h>
-//#include <Resources.h>
-//#include <Sound.h>
-#include "Macintosh.h"
+#include "WinAPI.h"
 #include "About.h"
 #include "DialogUtils.h"
 #include "Environ.h"
-#include "Externs.h"
 #include "ResourceIDs.h"
 
 
-static void HiLiteOkayButton (void);
-static void UnHiLiteOkayButton (void);
-static void UpdateMainPict (DialogPtr);
-static Boolean AboutFilter (DialogPtr, EventRecord *theEvent, SInt16 *hit);
+#define kTextItemVers		1002
+#define kPictItemMain		1004
+#define kFreeMemoryText		1007
+#define kScreenInfoText		1008
 
 
-static RgnHandle		okayButtRgn;
-static Rect				okayButtonBounds, mainPICTBounds;
-static Boolean			okayButtIsHiLit, clickedDownInOkay;
+static void UpdateMainPict (HWND);
+static INT_PTR CALLBACK AboutFilter (HWND, UINT, WPARAM, LPARAM);
 
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DoAbout
 // Brings up the About dialog box.
 
-void DoAbout (void)
+void DoAbout (HWND ownerWindow)
 {
-	MessageBox(mainWindow, L"DoAbout()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	#define			kTextItemVers			2		// item number of version text
-	#define			kPictItemMain			4		// item number of main PICT
-
-	DialogPtr		aboutDialog;
-	Str255			longVersion;
-	StringPtr		messagePtr;
-	VersRecHndl		version;
-	Handle			itemHandle;
-	short			itemType, hit, wasResFile;
-	ModalFilterUPP	aboutFilterUPP;
-
-	aboutFilterUPP = NewModalFilterUPP(AboutFilter);
-
-	wasResFile = CurResFile();
-	UseResFile(thisMac.thisResFile);
-
-	aboutDialog = GetNewDialog(kAboutDialogID, nil, (WindowRef)-1L);
-//	if (aboutDialog == nil)
-//		RedAlert(kErrDialogDidntLoad);
-
-	version = (VersRecHndl)GetResource('vers', 1);
-	if (version != nil)
-	{
-		messagePtr = (StringPtr)(((UInt32)&(**version).shortVersion[1])
-				+ ((**version).shortVersion[0]));
-		BlockMove((Ptr)messagePtr, &longVersion, ((UInt8)*messagePtr) + 1);
-		SetDialogString(aboutDialog, kTextItemVers, longVersion);
-	}
-
-	GetDialogItem(aboutDialog, kOkayButton, &itemType, &itemHandle, &okayButtonBounds);
-	okayButtRgn = NewRgn();					// Create diagonal button region
-	OpenRgn();
-	MoveTo(okayButtonBounds.left + 1, okayButtonBounds.top + 45);
-	Line(44, -44);							// These lines define the region
-	Line(16, 16);
-	Line(-44, 44);
-	Line(-16, -16);
-	CloseRgn(okayButtRgn);
-	okayButtIsHiLit = false;				// Initially, button is not hilit
-	clickedDownInOkay = false;				// Initially, didn't click in okay button
-	GetDialogItem(aboutDialog, kPictItemMain, &itemType, &itemHandle, &mainPICTBounds);
-
-	do										// Loop until user wants to exit
-	{
-		ModalDialog(aboutFilterUPP, &hit);
-	}
-	while ((hit != kOkayButton) && (okayButtRgn != nil));
-
-	if (okayButtRgn != nil)
-		DisposeRgn(okayButtRgn);			// Clean up!
-	DisposeDialog(aboutDialog);
-	DisposeModalFilterUPP(aboutFilterUPP);
-
-	UseResFile(wasResFile);
-#endif
+	DialogBox(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kAboutDialogID),
+			ownerWindow, AboutFilter);
 }
 
 //==============================================================  Static Functions
-//--------------------------------------------------------------  HiLiteOkayButton
-// Draws my pseudo-button to appear as though it is clicked on.
-
-static void HiLiteOkayButton (void)
-{
-	return;
-#if 0
-	#define		kOkayButtPICTHiLit		151		// res ID of unhilit button PICT
-	PicHandle	thePict;
-
-	if (!okayButtIsHiLit)
-	{
-		thePict = GetPicture(kOkayButtPICTHiLit);
-		if (thePict != nil)
-		{
-			DrawPicture(thePict, &okayButtonBounds);
-			ReleaseResource((Handle)thePict);
-
-			okayButtIsHiLit = true;
-		}
-	}
-#endif
-}
-
-//--------------------------------------------------------------  UnHiLiteOkayButton
-
-// Draws my pseudo-button normal (not clicked on).
-
-static void UnHiLiteOkayButton (void)
-{
-	return;
-#if 0
-	#define		kOkayButtPICTNotHiLit	150		// res ID of hilit button PICT
-	PicHandle	thePict;
-
-	if (okayButtIsHiLit)
-	{
-		thePict = GetPicture(kOkayButtPICTNotHiLit);
-		if (thePict != nil)
-		{
-			DrawPicture(thePict, &okayButtonBounds);
-			ReleaseResource((Handle)thePict);
-
-			okayButtIsHiLit = false;
-		}
-	}
-#endif
-}
-
 //--------------------------------------------------------------  UpdateMainPict
 // Redraws the main graphic in the dialog (in response to an update event).
 
-static void UpdateMainPict (DialogPtr theDial)
+static void UpdateMainPict (HWND hDlg)
 {
-	return;
-#if 0
-	Str255		theStr, theStr2;
-	long		totalSize, contigSize;
+	WCHAR theStr[100];
+	MEMORYSTATUSEX memoryStatus;
+	unsigned long freeKilobytes;
+	long screenWidth, screenHeight, screenDepth;
 
-	DrawDialog(theDial);
+	memoryStatus.dwLength = sizeof(memoryStatus);
+	if (GlobalMemoryStatusEx(&memoryStatus))
+	{
+		freeKilobytes = (unsigned long)(memoryStatus.ullAvailPhys / 1024);
+		StringCchPrintf(theStr, ARRAYSIZE(theStr), L"Memory: %luK\n", freeKilobytes);
+	}
+	else
+	{
+		StringCchCopy(theStr, ARRAYSIZE(theStr), L"Memory: (unknown)");
+	}
+	SetDlgItemText(hDlg, kFreeMemoryText, theStr);
 
-	PasStringCopy("\pMemory:   ", theStr);		// display free memory
-	PurgeSpace(&totalSize, &contigSize);
-	totalSize /= 1024;
-	NumToString(totalSize, theStr2);
-	PasStringConcat(theStr, theStr2);
-	PasStringConcat(theStr, "\pK");
-	DrawDialogUserText2(theDial, 7, theStr);
-
-	PasStringCopy("\pScreen:   ", theStr);		// display screen size/depth
-	NumToString((long)(thisMac.screen.right - thisMac.screen.left), theStr2);
-	PasStringConcat(theStr, theStr2);
-	PasStringConcat(theStr, "\px");
-	NumToString((long)(thisMac.screen.bottom - thisMac.screen.top), theStr2);
-	PasStringConcat(theStr, theStr2);
-	PasStringConcat(theStr, "\px");
-	NumToString((long)thisMac.isDepth, theStr2);
-	PasStringConcat(theStr, theStr2);
-	DrawDialogUserText2(theDial, 8, theStr);
-#endif
+	screenWidth = thisMac.screen.right - thisMac.screen.left;
+	screenHeight = thisMac.screen.bottom - thisMac.screen.top;
+	screenDepth = thisMac.isDepth;
+	StringCchPrintf(theStr, ARRAYSIZE(theStr), L"Screen: %ldx%ldx%ld",
+			screenWidth, screenHeight, screenDepth);
+	SetDlgItemText(hDlg, kScreenInfoText, theStr);
 }
 
 //--------------------------------------------------------------  AboutFilter
 // Dialog filter for the About dialog.
 
-static Boolean AboutFilter (DialogPtr theDial, EventRecord *theEvent, SInt16 *hit)
+static INT_PTR CALLBACK AboutFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return (false);
-#if 0
-	Point		mousePt;
-	UInt32		dummyLong;
-	Boolean		handledIt;
+	const UINT_PTR ABOUT_TIMER_ID = 1;
 
-	if (Button() && clickedDownInOkay)
+	switch (message)
 	{
-		GetMouse(&mousePt);
-		if(PtInRgn(mousePt, okayButtRgn))
-			HiLiteOkayButton();
-		else
-			UnHiLiteOkayButton();
-	}
+	case WM_INITDIALOG:
+		CenterOverOwner(hDlg);
+		UpdateMainPict(hDlg);
+		SetTimer(hDlg, ABOUT_TIMER_ID, 2000, NULL);
+		return TRUE;
 
-	switch (theEvent->what)
-	{
-		case keyDown:
-		switch ((theEvent->message) & charCodeMask)
+	case WM_DESTROY:
+		KillTimer(hDlg, ABOUT_TIMER_ID);
+		break;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			HiLiteOkayButton();
-			Delay(8, &dummyLong);
-			UnHiLiteOkayButton();
-			*hit = kOkayButton;
-			handledIt = true;
+		case IDOK:
+		case IDCANCEL:
+			EndDialog(hDlg, LOWORD(wParam));
 			break;
+		}
+		return TRUE;
 
-			default:
-			handledIt = false;
-		}
-		break;
-
-		case mouseDown:
-		mousePt = theEvent->where;
-		GlobalToLocal(&mousePt);
-		if(PtInRgn(mousePt, okayButtRgn))
-		{
-			clickedDownInOkay = true;
-			handledIt = false;
-		}
-		else
-			handledIt = false;
-		break;
-
-		case mouseUp:
-		mousePt = theEvent->where;
-		GlobalToLocal(&mousePt);
-		if(PtInRgn(mousePt, okayButtRgn) && clickedDownInOkay)
-		{
-			UnHiLiteOkayButton();
-			*hit = kOkayButton;
-			handledIt = true;
-		}
-		else
-		{
-			clickedDownInOkay = false;
-			handledIt = false;
-		}
-		break;
-
-		case updateEvt:
-		if ((WindowPtr)theEvent->message == mainWindow)
-		{
-			SetPort((GrafPtr)mainWindow);
-			BeginUpdate((WindowPtr)theEvent->message);
-			UpdateMainWindow();
-			EndUpdate((WindowPtr)theEvent->message);
-			SetPortDialogPort(theDial);
-			handledIt = true;
-		}
-		else if ((WindowPtr)theEvent->message == (WindowPtr)theDial)
-		{
-			SetPortDialogPort(theDial);
-			BeginUpdate((WindowPtr)theEvent->message);
-			UpdateMainPict(theDial);
-			EndUpdate((WindowPtr)theEvent->message);
-			handledIt = false;
-		}
-		break;
-
-		default:
-		handledIt = false;
-		break;
+	case WM_TIMER:
+		if (wParam == ABOUT_TIMER_ID)
+			UpdateMainPict(hDlg);
+		return TRUE;
 	}
-
-	return (handledIt);
-#endif
+	return FALSE;
 }
 

@@ -302,23 +302,12 @@ void UpdateMenus (Boolean newMode)
 //--------------------------------------------------------------  DoAppleMenu
 // Handle the Apple menu (About box and desk accessories).
 
-void DoAppleMenu (SInt16 theItem)
+void DoAppleMenu (HWND hwnd, SInt16 theItem)
 {
-//	Str255		daName;
-//	GrafPtr		wasPort;
-//	short		daNumber;
-
 	switch (theItem)
 	{
-		case iAbout:
-		DoAbout();
-		break;
-
-		default:
-//		GetMenuItemText(appleMenu, theItem, daName);
-//		GetPort(&wasPort);
-//		daNumber = OpenDeskAccesory(daName);
-//		SetPort((GrafPtr)wasPort);
+	case iAbout:
+		DoAbout(hwnd);
 		break;
 	}
 }
@@ -621,7 +610,7 @@ void DoMenuChoice (HWND hwnd, WORD menuChoice)
 	switch (menuChoice)
 	{
 		case ID_ABOUT:
-		DoAppleMenu(iAbout);
+		DoAppleMenu(hwnd, iAbout);
 		break;
 
 		case ID_NEW_GAME:

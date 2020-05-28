@@ -274,7 +274,7 @@ typedef struct
 
 //--------------------------------------------------------------  Prototypes
 
-void DoAbout (void);									// --- About.c
+void DoAbout (HWND);									// --- About.c
 
 void LoadCursors (void);								// --- AnimCursor.c
 void DisposCursors (void);

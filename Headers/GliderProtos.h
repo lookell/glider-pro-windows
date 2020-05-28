@@ -187,7 +187,7 @@ void SetMarqueeGliderRect (SInt16, SInt16);
 void InitMarquee (void);
 
 void UpdateClipboardMenus (void);						// --- Menu.c
-void DoAppleMenu (SInt16);
+void DoAppleMenu (HWND, SInt16);
 void DoGameMenu (HWND, SInt16);
 void DoOptionsMenu (HWND, SInt16);
 void DoHouseMenu (HWND, SInt16);
