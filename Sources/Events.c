@@ -538,9 +538,6 @@ void HandleEvent (void)
 					return;
 				}
 				HandleTheMessage(&theEvent);
-				msgWaitElapsed = timeGetTime() - msgWaitStart;
-				if (msgWaitElapsed >= msgWaitTime)
-					break;
 			}
 		}
 	}
