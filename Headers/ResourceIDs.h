@@ -143,4 +143,76 @@
 
 #define kMarqueePatListID		128
 
+#define kHitWallWaveID          1000    // kBaseBufferSoundID + kHitWallSound
+#define kFadeInWaveID           1001    // kBaseBufferSoundID + kFadeInSound
+#define kFadeOutWaveID          1002    // kBaseBufferSoundID + kFadeOutSound
+#define kBeepsWaveID            1003    // kBaseBufferSoundID + kBeepsSound
+#define kBuzzerWaveID           1004    // kBaseBufferSoundID + kBuzzerSound
+#define kDingWaveID             1005    // kBaseBufferSoundID + kDingSound
+#define kEnergizeWaveID         1006    // kBaseBufferSoundID + kEnergizeSound
+#define kFollowWaveID           1007    // kBaseBufferSoundID + kFollowSound
+#define kMicrowavedWaveID       1008    // kBaseBufferSoundID + kMicrowavedSound
+#define kSwitchWaveID           1009    // kBaseBufferSoundID + kSwitchSound
+#define kBirdWaveID             1010    // kBaseBufferSoundID + kBirdSound
+#define kCuckooWaveID           1011    // kBaseBufferSoundID + kCuckooSound
+#define kTikWaveID              1012    // kBaseBufferSoundID + kTikSound
+#define kTokWaveID              1013    // kBaseBufferSoundID + kTokSound
+#define kBlowerOnWaveID         1014    // kBaseBufferSoundID + kBlowerOn
+#define kBlowerOffWaveID        1015    // kBaseBufferSoundID + kBlowerOff
+#define kCaughtFireWaveID       1016    // kBaseBufferSoundID + kCaughtFireSound
+#define kScoreTikWaveID         1017    // kBaseBufferSoundID + kScoreTikSound
+#define kThrustWaveID           1018    // kBaseBufferSoundID + kThrustSound
+#define kFizzleWaveID           1019    // kBaseBufferSoundID + kFizzleSound
+#define kFireBandWaveID         1020    // kBaseBufferSoundID + kFireBandSound
+#define kBandReboundWaveID      1021    // kBaseBufferSoundID + kBandReboundSound
+#define kGreaseSpillWaveID      1022    // kBaseBufferSoundID + kGreaseSpillSound
+#define kChordWaveID            1023    // kBaseBufferSoundID + kChordSound
+#define kVCRWaveID              1024    // kBaseBufferSoundID + kVCRSound
+#define kFoilHitWaveID          1025    // kBaseBufferSoundID + kFoilHitSound
+#define kShredWaveID            1026    // kBaseBufferSoundID + kShredSound
+#define kToastLaunchWaveID      1027    // kBaseBufferSoundID + kToastLaunchSound
+#define kToastLandWaveID        1028    // kBaseBufferSoundID + kToastLandSound
+#define kMacOnWaveID            1029    // kBaseBufferSoundID + kMacOnSound
+#define kMacBeepWaveID          1030    // kBaseBufferSoundID + kMacBeepSound
+#define kMacOffWaveID           1031    // kBaseBufferSoundID + kMacOffSound
+#define kTVOnWaveID             1032    // kBaseBufferSoundID + kTVOnSound
+#define kTVOffWaveID            1033    // kBaseBufferSoundID + kTVOffSound
+#define kCoffeeWaveID           1034    // kBaseBufferSoundID + kCoffeeSound
+#define kMysticWaveID           1035    // kBaseBufferSoundID + kMysticSound
+#define kZapWaveID              1036    // kBaseBufferSoundID + kZapSound
+#define kPopWaveID              1037    // kBaseBufferSoundID + kPopSound
+#define kEnemyInWaveID          1038    // kBaseBufferSoundID + kEnemyInSound
+#define kEnemyOutWaveID         1039    // kBaseBufferSoundID + kEnemyOutSound
+#define kPaperCrunchWaveID      1040    // kBaseBufferSoundID + kPaperCrunchSound
+#define kBounceWaveID           1041    // kBaseBufferSoundID + kBounceSound
+#define kDripWaveID             1042    // kBaseBufferSoundID + kDripSound
+#define kDropWaveID             1043    // kBaseBufferSoundID + kDropSound
+#define kFishOutWaveID          1044    // kBaseBufferSoundID + kFishOutSound
+#define kFishInWaveID           1045    // kBaseBufferSoundID + kFishInSound
+#define kDontExitWaveID         1046    // kBaseBufferSoundID + kDontExitSound
+#define kSizzleWaveID           1047    // kBaseBufferSoundID + kSizzleSound
+#define kPaper1WaveID           1048    // kBaseBufferSoundID + kPaper1Sound
+#define kPaper2WaveID           1049    // kBaseBufferSoundID + kPaper2Sound
+#define kPaper3WaveID           1050    // kBaseBufferSoundID + kPaper3Sound
+#define kPaper4WaveID           1051    // kBaseBufferSoundID + kPaper4Sound
+#define kTypingWaveID           1052    // kBaseBufferSoundID + kTypingSound
+#define kCarriageWaveID         1053    // kBaseBufferSoundID + kCarriageSound
+#define kChord2WaveID           1054    // kBaseBufferSoundID + kChord2Sound
+#define kPhoneRingWaveID        1055    // kBaseBufferSoundID + kPhoneRingSound
+#define kChime1WaveID           1056    // kBaseBufferSoundID + kChime1Sound
+#define kChime2WaveID           1057    // kBaseBufferSoundID + kChime2Sound
+#define kWebTwangWaveID         1058    // kBaseBufferSoundID + kWebTwangSound
+#define kTransOutWaveID         1059    // kBaseBufferSoundID + kTransOutSound
+#define kTransInWaveID          1060    // kBaseBufferSoundID + kTransInSound
+#define kBonusWaveID            1061    // kBaseBufferSoundID + kBonusSound
+#define kHissWaveID             1062    // kBaseBufferSoundID + kHissSound
+
+#define kRefrain1WaveID         2000    // kBaseBufferMusicID + 0
+#define kRefrain2WaveID         2001    // kBaseBufferMusicID + 1
+#define kRefrain3WaveID         2002    // kBaseBufferMusicID + 2
+#define kRefrain4WaveID         2003    // kBaseBufferMusicID + 3
+#define kChorusWaveID           2004    // kBaseBufferMusicID + 4
+#define kRefrainSparse1WaveID   2005    // kBaseBufferMusicID + 5
+#define kRefrainSparse2WaveID   2006    // kBaseBufferMusicID + 6
+
 #endif
