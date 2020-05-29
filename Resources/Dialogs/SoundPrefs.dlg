@@ -13,7 +13,7 @@ STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
     LTEXT "Set the game volume and background music options.", IDC_STATIC, 7, 7, 197, 8, SS_NOPREFIX
     LTEXT "&Volume:", IDC_STATIC, 7, 22, 150, 8
-    ICON 1030, IDC_STATIC, 7, 33, 21, 20
+    ICON kSoundSliderIcon, IDC_STATIC, 7, 33, 21, 20
     CONTROL "", kVolumeSliderItem, TRACKBAR_CLASS, WS_TABSTOP | TBS_HORZ | TBS_AUTOTICKS | TBS_DOWNISLEFT, 30, 35, 157, 16
     LTEXT "", kVolNumberItem, 189, 39, 15, 8, SS_NOPREFIX
     AUTOCHECKBOX "Play music when &idle", kIdleMusicItem, 7, 59, 197, 10

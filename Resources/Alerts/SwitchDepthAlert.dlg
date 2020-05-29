@@ -6,7 +6,7 @@ FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION
 {
     LTEXT "Glider PRO™ requires 256 colors (or grays) or 16 grays. Select the option you would like.", IDC_STATIC, 7, 7, 143, 24, SS_NOPREFIX
-    ICON 130, IDC_STATIC, 157, 7, 21, 20
+    ICON kColorDepthIcon, IDC_STATIC, 157, 7, 21, 20
     PUSHBUTTON "Quit", 1003, 17, 38, 50, 14
     PUSHBUTTON "16", 1002, 74, 38, 50, 14
     DEFPUSHBUTTON "256", 1001, 128, 38, 50, 14

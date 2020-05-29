@@ -6,7 +6,7 @@ FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION
 {
     LTEXT "You switched the number of colors! You must either Quit Glider PRO™ or Restore your monitor to its original colors.", IDC_STATIC, 7, 7, 133, 32, SS_NOPREFIX
-    ICON 130, IDC_STATIC, 147, 7, 21, 20
+    ICON kColorDepthIcon, IDC_STATIC, 147, 7, 21, 20
     PUSHBUTTON "Restore", 1002, 64, 46, 50, 14
     DEFPUSHBUTTON "Quit", 1001, 118, 46, 50, 14
 }

@@ -124,24 +124,69 @@
 
 #define kCoordinateWindowID			10001
 
-#define kHandCursorID			128
-#define kVertCursorID			129
-#define kHoriCursorID			130
-#define kDiagCursorID			131
-#define kBeachBallCursor12		149
-#define kBeachBallCursor11		150
-#define kBeachBallCursor10		151
-#define kBeachBallCursor09		152
-#define kBeachBallCursor08		153
-#define kBeachBallCursor07		154
-#define kBeachBallCursor06		155
-#define kBeachBallCursor05		156
-#define kBeachBallCursor04		157
-#define kBeachBallCursor03		158
-#define kBeachBallCursor02		159
-#define kBeachBallCursor01		160
+#define kColorDepthIcon         130
+#define kFloppyDiskIcon         140
+#define kAboutIcon              150
+#define kNewPrefsIcon           160
+#define kDeathIcon              170
+#define kSetMemoryIcon          180
+#define kNoPrintingIcon         900
+#define kZeroScoresIcon         910
+#define kPlainHouseIcon         1000
+#define kResumeGameIcon         1001
+#define kNewRoomIcon            1004
+#define kDeleteRoomIcon         1005
+#define kYellowAlertIcon        1006
+#define kNoMoreObjectsIcon      1008
+#define kNormalDisplayIcon      1010
+#define kNormalSoundsIcon       1011
+#define kNormalControlsIcon     1012
+#define kNormalBrainsIcon       1013
+#define kInvertedDisplayIcon    1014
+#define kInvertedSoundsIcon     1015
+#define kInvertedControlsIcon   1016
+#define kInvertedBrainsIcon     1017
+#define kDisplay1Icon           1020
+#define kDisplay3Icon           1021
+#define kDisplay9Icon           1022
+#define kSoundSliderIcon        1030
+#define kNormalLouderIcon       1031
+#define kNormalSofterIcon       1032
+#define kPressedLouderIcon      1033
+#define kPressedSofterIcon      1034
+#define kRightControlIcon       1040
+#define kLeftControlIcon        1041
+#define kBattControlIcon        1042
+#define kBandControlIcon        1043
+#define kScrollUpArrow          1050
+#define kScrollDownArrow        1051
+#define kGrayedOutUpArrow       1052
+#define kGrayedOutDownArrow     1053
+#define kLockHouseIcon          1060
+#define kNoSoundManager3Icon    1070
+#define kNoPICTFoundIcon        1071
+#define kSaveGameIcon           1072
+#define kNoHighScoreIcon        1073
+#define kSelectionTool          2000
 
-#define kMarqueePatListID		128
+#define kHandCursorID           128
+#define kVertCursorID           129
+#define kHoriCursorID           130
+#define kDiagCursorID           131
+#define kBeachBallCursor12      149
+#define kBeachBallCursor11      150
+#define kBeachBallCursor10      151
+#define kBeachBallCursor09      152
+#define kBeachBallCursor08      153
+#define kBeachBallCursor07      154
+#define kBeachBallCursor06      155
+#define kBeachBallCursor05      156
+#define kBeachBallCursor04      157
+#define kBeachBallCursor03      158
+#define kBeachBallCursor02      159
+#define kBeachBallCursor01      160
+
+#define kMarqueePatListID       128
 
 #define kHitWallWaveID          1000    // kBaseBufferSoundID + kHitWallSound
 #define kFadeInWaveID           1001    // kBaseBufferSoundID + kFadeInSound

@@ -6,7 +6,7 @@ FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
     LTEXT "Do what? You can clear all but the highest score, all the scores, or cancel this operation.", IDC_STATIC, 7, 7, 149, 24, SS_NOPREFIX
-    ICON 910, IDC_STATIC, 163, 7, 21, 20
+    ICON kZeroScoresIcon, IDC_STATIC, 163, 7, 21, 20
     PUSHBUTTON "All But #1", 1003, 26, 38, 50, 14
     PUSHBUTTON "Clear All", 1002, 80, 38, 50, 14
     DEFPUSHBUTTON "Cancel", IDCANCEL, 134, 38, 50, 14

@@ -6,6 +6,6 @@ FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
     LTEXT "There is an absolute maximum number of these objects you can add per room. You cannot add this additional one.", IDC_STATIC, 7, 7, 149, 32, SS_NOPREFIX
-    ICON 1008, IDC_STATIC, 163, 7, 21, 20
+    ICON kNoMoreObjectsIcon, IDC_STATIC, 163, 7, 21, 20
     DEFPUSHBUTTON "Okay", IDOK, 134, 46, 50, 14
 }

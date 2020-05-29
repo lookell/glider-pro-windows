@@ -10,6 +10,7 @@
 #include "Externs.h"
 #include "Environ.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 #include "Utilities.h"
 
 
@@ -164,7 +165,8 @@ void DrawToolTiles (void)
 	Rect		srcRect, destRect;
 	short		i;
 
-	DrawCIcon(2000, toolRects[0].left, toolRects[0].top);	// Selection Tool
+	// Selection Tool
+	DrawCIcon(kSelectionTool, toolRects[0].left, toolRects[0].top);
 
 	for (i = 0; i < 15; i++)								// Other tools
 	{

@@ -32,8 +32,6 @@
 #define kLoadTitlePict8			1002
 #define kDefaultHousePict1		1003
 #define kDefaultHousePict8		1004
-#define kGrayedOutUpArrow		1052
-#define kGrayedOutDownArrow		1053
 #define kMaxExtraHouses			8
 
 

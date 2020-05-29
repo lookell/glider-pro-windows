@@ -6,6 +6,6 @@ FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
     LTEXT "Where is your PICT? I'm going to drop back to the Simple room background and see if that comes up.", IDC_STATIC, 7, 7, 145, 32, SS_NOPREFIX
-    ICON 1071, IDC_STATIC, 159, 7, 21, 20
+    ICON kNoPICTFoundIcon, IDC_STATIC, 159, 7, 21, 20
     DEFPUSHBUTTON "Okay", IDOK, 130, 46, 50, 14
 }

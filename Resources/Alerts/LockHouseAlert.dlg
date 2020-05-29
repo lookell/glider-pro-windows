@@ -6,7 +6,7 @@ FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
     LTEXT "Wait!!! If you lock this house, you will not be able to edit it in the future! You should keep an unlocked copy. This is your only warning!", IDC_STATIC, 7, 7, 151, 40, SS_NOPREFIX
-    ICON 1060, IDC_STATIC, 165, 7, 21, 20
+    ICON kLockHouseIcon, IDC_STATIC, 165, 7, 21, 20
     PUSHBUTTON "Lock It!", IDOK, 82, 54, 50, 14
     DEFPUSHBUTTON "Don't Lock", IDCANCEL, 136, 54, 50, 14
 }

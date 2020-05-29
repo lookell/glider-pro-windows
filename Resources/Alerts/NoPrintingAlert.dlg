@@ -6,6 +6,6 @@ FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
     LTEXT "Glider PRO doesn't know what the word ""Print"" means. Sorry.", IDC_STATIC, 7, 7, 141, 16, SS_NOPREFIX
-    ICON 900, IDC_STATIC, 155, 7, 21, 20
+    ICON kNoPrintingIcon, IDC_STATIC, 155, 7, 21, 20
     DEFPUSHBUTTON "Bye!", IDOK, 126, 34, 50, 14
 }

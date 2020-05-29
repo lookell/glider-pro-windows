@@ -6,6 +6,6 @@ FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
     LTEXT "Where is Sound Manager 3.0? I highly recommend you install it. It's fast, it's unobtrusive, and it's the law!", IDC_STATIC, 7, 7, 145, 32, SS_NOPREFIX
-    ICON 1070, IDC_STATIC, 158, 7, 21, 20
+    ICON kNoSoundManager3Icon, IDC_STATIC, 158, 7, 21, 20
     DEFPUSHBUTTON "Okay", IDOK, 130, 46, 50, 14
 }

@@ -33,8 +33,6 @@
 #define kUseScreen2Item			1017
 
 #define kVolumeSliderItem		1003
-#define kSofterItem				1004
-#define kLouderItem				1005
 #define kVolNumberItem			1007
 #define kIdleMusicItem			1008
 #define kPlayMusicItem			1009
@@ -88,13 +86,10 @@ INT_PTR CALLBACK DisplayFilter (HWND, UINT, WPARAM, LPARAM);
 void DoDisplayPrefs (HWND);
 
 void SetAllDefaults (HWND);
-//void FlashSettingsButton (SInt16);
-//void UpdateSettingsMain (DialogPtr);
 INT_PTR CALLBACK PrefsFilter (HWND, UINT, WPARAM, LPARAM);
 void BitchAboutChanges (HWND);
 
 
-//Rect		prefButton[4];
 Str15		leftName, rightName, batteryName, bandName;
 Boolean		nextRestartChange;
 
@@ -695,7 +690,8 @@ void DisplayInit (HWND hDlg)
 	else
 		loadFlags = disabledLoadFlags;
 	display1Icon = LoadImage(HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(1020), IMAGE_ICON, 0, 0, loadFlags);
+			MAKEINTRESOURCE(kDisplay1Icon),
+			IMAGE_ICON, 0, 0, loadFlags);
 	SendMessage(display1Control, BM_SETIMAGE, IMAGE_ICON, (LPARAM)display1Icon);
 
 	if (IsWindowEnabled(display3Control))
@@ -703,7 +699,8 @@ void DisplayInit (HWND hDlg)
 	else
 		loadFlags = disabledLoadFlags;
 	display3Icon = LoadImage(HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(1021), IMAGE_ICON, 0, 0, loadFlags);
+			MAKEINTRESOURCE(kDisplay3Icon),
+			IMAGE_ICON, 0, 0, loadFlags);
 	SendMessage(display3Control, BM_SETIMAGE, IMAGE_ICON, (LPARAM)display3Icon);
 
 	if (IsWindowEnabled(display9Control))
@@ -711,7 +708,8 @@ void DisplayInit (HWND hDlg)
 	else
 		loadFlags = disabledLoadFlags;
 	display9Icon = LoadImage(HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(1022), IMAGE_ICON, 0, 0, loadFlags);
+			MAKEINTRESOURCE(kDisplay9Icon),
+			IMAGE_ICON, 0, 0, loadFlags);
 	SendMessage(display9Control, BM_SETIMAGE, IMAGE_ICON, (LPARAM)display9Icon);
 
 	if (numNeighbors == 1)
@@ -880,64 +878,29 @@ void SetAllDefaults (HWND ownerWindow)
 	isDoColorFade = true;
 }
 
-//--------------------------------------------------------------  FlashSettingsButton
-/*
-void FlashSettingsButton (SInt16 who)
-{
-	#define		kNormalSettingsIcon		1010
-	#define		kInvertedSettingsIcon	1014
-	short		theID;
-
-	theID = kInvertedSettingsIcon + who;
-	DrawCIcon (theID, prefButton[who].left + 4, prefButton[who].top + 4);
-	DelayTicks(8);
-	theID = kNormalSettingsIcon + who;
-	DrawCIcon (theID, prefButton[who].left + 4, prefButton[who].top + 4);
-}
-*/
-//--------------------------------------------------------------  UpdateSettingsMain
-/*
-void UpdateSettingsMain (DialogPtr theDialog)
-{
-	Str255		theStr;
-
-	DrawDialog(theDialog);
-
-	DrawDefaultButton(theDialog);
-
-	// NOTE: the string table "129" uses string table base index "kPrefMainStringBase"
-	GetIndString(theStr, 129, 1);
-	DrawDialogUserText(theDialog, 7, theStr, false);
-	GetIndString(theStr, 129, 2);
-	DrawDialogUserText(theDialog, 8, theStr, false);
-	GetIndString(theStr, 129, 3);
-	DrawDialogUserText(theDialog, 9, theStr, false);
-	GetIndString(theStr, 129, 4);
-	DrawDialogUserText(theDialog, 10, theStr, false);
-
-	ColorFrameRect(&prefButton[0], kRedOrangeColor8);
-	ColorFrameRect(&prefButton[1], kRedOrangeColor8);
-	ColorFrameRect(&prefButton[2], kRedOrangeColor8);
-	ColorFrameRect(&prefButton[3], kRedOrangeColor8);
-#endif
-}
-*/
 //--------------------------------------------------------------  PrefsFilter
 
 INT_PTR CALLBACK PrefsFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	HICON hIcon;
+
 	switch (message)
 	{
 	case WM_INITDIALOG:
 		CenterOverOwner(hDlg);
-		SendDlgItemMessage(hDlg, kDisplayButton, BM_SETIMAGE, IMAGE_ICON,
-				(LPARAM)LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(1010)));
-		SendDlgItemMessage(hDlg, kSoundButton, BM_SETIMAGE, IMAGE_ICON,
-				(LPARAM)LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(1011)));
-		SendDlgItemMessage(hDlg, kControlsButton, BM_SETIMAGE, IMAGE_ICON,
-				(LPARAM)LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(1012)));
-		SendDlgItemMessage(hDlg, kBrainsButton, BM_SETIMAGE, IMAGE_ICON,
-				(LPARAM)LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(1013)));
+
+		hIcon = LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(kNormalDisplayIcon));
+		SendDlgItemMessage(hDlg, kDisplayButton, BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);
+
+		hIcon = LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(kNormalSoundsIcon));
+		SendDlgItemMessage(hDlg, kSoundButton, BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);
+
+		hIcon = LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(kNormalControlsIcon));
+		SendDlgItemMessage(hDlg, kControlsButton, BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);
+
+		hIcon = LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(kNormalBrainsIcon));
+		SendDlgItemMessage(hDlg, kBrainsButton, BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);
+
 		FocusDefaultButton(hDlg);
 		return FALSE;
 
