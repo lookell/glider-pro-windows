@@ -609,7 +609,7 @@ kBeachBallCursor03  CURSOR  "Cursors\\BeachBall03.cur"
 kBeachBallCursor02  CURSOR  "Cursors\\BeachBall02.cur"
 kBeachBallCursor01  CURSOR  "Cursors\\BeachBall01.cur"
 
-128     BITMAP  "Patterns\\128.bmp"
+kMarqueePatListID   BITMAP  "Patterns\\MarqueeImageList.bmp"
 
 150     BITMAP  "Pictures\\150.bmp"
 151     BITMAP  "Pictures\\151.bmp"

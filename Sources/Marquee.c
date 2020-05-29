@@ -10,9 +10,9 @@
 #include "Objects.h"
 #include "ObjectEdit.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 
 
-#define	kMarqueePatListID		128
 #define kHandleSideLong			9
 
 

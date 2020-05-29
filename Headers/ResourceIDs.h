@@ -141,4 +141,6 @@
 #define kBeachBallCursor02		159
 #define kBeachBallCursor01		160
 
+#define kMarqueePatListID		128
+
 #endif
