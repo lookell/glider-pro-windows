@@ -14,12 +14,6 @@
 #include "Tools.h"
 
 
-#define kHandCursorID		128
-#define kVertCursorID		129
-#define kHoriCursorID		130
-#define kDiagCursorID		131
-
-
 static HMENU DetachPopupMenu(HMENU rootMenu, UINT id, LPWSTR *title);
 
 

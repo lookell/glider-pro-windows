@@ -124,4 +124,21 @@
 
 #define kCoordinateWindowID			10001
 
+#define kHandCursorID			128
+#define kVertCursorID			129
+#define kHoriCursorID			130
+#define kDiagCursorID			131
+#define kBeachBallCursor12		149
+#define kBeachBallCursor11		150
+#define kBeachBallCursor10		151
+#define kBeachBallCursor09		152
+#define kBeachBallCursor08		153
+#define kBeachBallCursor07		154
+#define kBeachBallCursor06		155
+#define kBeachBallCursor05		156
+#define kBeachBallCursor04		157
+#define kBeachBallCursor03		158
+#define kBeachBallCursor02		159
+#define kBeachBallCursor01		160
+
 #endif
