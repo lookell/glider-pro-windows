@@ -28,10 +28,6 @@
 #define kScrollUpItem			29
 #define kScrollDownItem			30
 #define kHouseListItem			1000
-#define kLoadTitlePict1			1001
-#define kLoadTitlePict8			1002
-#define kDefaultHousePict1		1003
-#define kDefaultHousePict8		1004
 #define kMaxExtraHouses			8
 
 

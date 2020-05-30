@@ -16,6 +16,7 @@
 #include "Objects.h"
 #include "Play.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 #include "Room.h"
 
 
@@ -2247,7 +2248,7 @@ void GetThisRoomsObjRects (void)
 				thePict = GetPicture(thisRoom->objects[i].data.g.height);
 				if (thePict == NULL)
 				{
-					thisRoom->objects[i].data.g.height = 10000;
+					thisRoom->objects[i].data.g.height = kCustomPictFallbackID;
 					roomObjectRects[i] = srcRects[thisRoom->objects[i].what];
 				}
 				else

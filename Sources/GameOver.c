@@ -13,15 +13,12 @@
 #include "MainWindow.h"
 #include "Objects.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 #include "Utilities.h"
 
 
 #define kNumCountDownFrames		16
 #define kPageFrames				14
-#define kPagesPictID			1990
-#define kPagesMaskID			1989
-#define kLettersPictID			1988
-#define kMilkywayPictID			1021
 
 
 typedef struct

@@ -13,10 +13,10 @@
 #include "House.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 #include "Scoreboard.h"
 
 
-#define kHouseBannerAlert		1009
 #define kInitialGliders			2
 #define kRingDelay				90
 #define kRingSpread				25000	// 25000

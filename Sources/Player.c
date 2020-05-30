@@ -8,6 +8,7 @@
 #include "Externs.h"
 #include "Play.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 
 
 #define kGravity				3

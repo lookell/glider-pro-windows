@@ -24,8 +24,6 @@
 #include "Utilities.h"
 
 
-#define kHighScoresPictID		1994
-#define kHighScoresMaskID		1998
 #define kHighNameItem			1002
 #define kNameNCharsItem			1005
 #define kHighBannerItem			1002

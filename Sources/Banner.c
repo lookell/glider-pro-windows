@@ -12,15 +12,9 @@
 #include "Environ.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 #include "Room.h"
 #include "Utilities.h"
-
-
-#define kBannerPageTopPICT		1993
-#define kBannerPageBottomPICT	1992
-#define kBannerPageBottomMask	1991
-#define kStarsRemainingPICT		1017
-#define kStarRemainingPICT		1018
 
 
 void DrawBanner (Point *);

@@ -11,10 +11,8 @@
 #include "Environ.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 #include "Room.h"
-
-
-#define kManholeThruFloor		3957
 
 
 void LoadGraphicSpecial (HDC, SInt16);
@@ -141,7 +139,7 @@ void LoadGraphicSpecial (HDC hdc, SInt16 resID)
 		//thePicture = (PicHandle)GetResource('Date', resID);
 		//if (thePicture == nil)
 		{
-			thePicture = GetPicture(2000);
+			thePicture = GetPicture(kSimpleRoom);
 			if (thePicture == NULL)
 				RedAlert(kErrFailedGraphicLoad);
 		}

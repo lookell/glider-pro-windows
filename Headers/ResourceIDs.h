@@ -188,6 +188,179 @@
 
 #define kMarqueePatListID       128
 
+#define kOkayButtPICTNotHiLit   150
+#define kOkayButtPICTHiLit      151
+#define kAboutBanner            153
+#define kSplash8BitPICT         1000
+#define kLoadTitlePict1         1001
+#define kObjectInfoTitle        1002
+#define kDefaultHousePict1      1003
+#define kDefaultHousePict8      1004
+#define kHouseInfoTitle         1005
+#define kDisplayPrefsTitle      1006
+#define kRoomInfoTitle          1007
+#define kSoundPrefsTitle        1008
+#define kRoomInfoInstruct       1009
+#define kThumbnailPictID        1010
+#define kToolsPictID            1011
+#define kControlPrefsTitle      1012
+#define kMainPrefsTitle         1013
+#define kBrainsPrefsTitle       1014
+#define kEscPausePictID         1015
+#define kTabPausePictID         1016
+#define kStarsRemainingPICT     1017
+#define kStarRemainingPICT      1018
+#define kAngelPictID            1019
+#define kAngelMaskID            1020    // kAngelPictID + 1
+#define kMilkywayPictID         1021
+#define kMicrowaveInfoTitle     1022
+#define kGoToTitle              1023
+#define kBasementTileSrc        1202    // kBasement - 800
+#define kDirtTileSrc            1211    // kDirt - 800
+#define kStratosphereTileSrc    1216    // kStratosphere - 800
+#define kStarsTileSrc           1217    // kStars - 800
+#define kLettersPictID          1988
+#define kPagesMaskID            1989
+#define kPagesPictID            1990
+#define kBannerPageBottomMask   1991
+#define kBannerPageBottomPICT   1992
+#define kBannerPageTopPICT      1993
+#define kHighScoresPictID       1994
+#define kStarPictID             1995
+#define kBadgePictID            1996
+#define kScoreboardPictID       1997
+#define kHighScoresMaskID       1998
+#define kSupportPictID          1999
+#define kSimpleRoom             2000
+#define kPaneledRoom            2001
+#define kBasement               2002
+#define kChildsRoom             2003
+#define kAsianRoom              2004
+#define kUnfinishedRoom         2005
+#define kSwingersRoom           2006
+#define kBathroom               2007
+#define kLibrary                2008
+#define kGarden                 2009
+#define kSkywalk                2010
+#define kDirt                   2011
+#define kMeadow                 2012
+#define kField                  2013
+#define kRoof                   2014
+#define kSky                    2015
+#define kStratosphere           2016
+#define kStars                  2017
+//#define kBBQMaskID              3900
+//#define kUpStairsMaskID         3901
+//#define kTrunkMaskID            3902
+#define kMailboxRightMaskID     3903
+#define kMailboxLeftMaskID      3904
+//#define kDoorInLeftMaskID       3905
+//#define kDoorInRightMaskID      3906
+//#define kWindowInLeftMaskID     3907
+//#define kWindowInRightMaskID    3908
+//#define kHipLampMaskID          3909
+//#define kDecoLampMaskID         3910
+//#define kGuitarMaskID           3911
+#define kTVMaskID               3912
+#define kVCRMaskID              3913
+#define kStereoMaskID           3914
+#define kMicrowaveMaskID        3915
+//#define kFireplaceMaskID        3916
+//#define kBearMaskID             3917
+//#define kVase1MaskID            3918
+//#define kVase2MaskID            3919
+//#define kManholeMaskID          3920
+#define kCloudMaskID            3921
+//#define kBooksMaskID            3922
+//#define kRugMaskID              3923
+//#define kChimesMaskID           3924
+//#define kCinderMaskID           3925
+//#define kFlowerBoxMaskID        3926
+#define kCobwebMaskID           3927
+#define kManholeThruFloor       3957
+#define kCobwebPictID           3958
+#define kFlowerBoxPictID        3959
+#define kCinderPictID           3960
+#define kChimesPictID           3961
+#define kRugPictID              3962
+#define kGliderFoil2PictID      3963
+#define kBooksPictID            3964
+#define kCloudPictID            3965
+#define kBulletinPictID         3966
+#define kManholePictID          3967
+#define kVase2PictID            3968
+#define kVase1PictID            3969
+#define kCalendarPictID         3970
+#define kMicrowavePictID        3971
+#define kBearPictID             3972
+#define kFireplacePictID        3973
+#define kGlider2PictID          3974
+#define kOzmaPictID             3975
+#define kGliderFoilPictID       3976
+#define kWindowExRightPictID    3977
+#define kWindowExLeftPictID     3978
+#define kWindowInRightPictID    3979
+#define kWindowInLeftPictID     3980
+#define kDoorExLeftPictID       3981
+#define kDoorExRightPictID      3982
+#define kDoorInRightPictID      3983
+#define kDoorInLeftPictID       3984
+#define kMailboxRightPictID     3985
+#define kMailboxLeftPictID      3986
+#define kTrunkPictID            3987
+#define kBBQPictID              3988
+#define kStereoPictID           3989
+#define kVCRPictID              3990
+#define kGuitarPictID           3991
+#define kTVPictID               3992
+#define kDecoLampPictID         3993
+#define kHipLampPictID          3994
+#define kFilingCabinetPictID    3995
+#define kDownStairsPictID       3996
+#define kUpStairsPictID         3997
+#define kShadowPictID           3998
+#define kGliderPictID           3999
+#define kBlowerPictID           4000
+#define kFurniturePictID        4001
+#define kBonusPictID            4002
+#define kSwitchPictID           4003
+#define kLightPictID            4004
+#define kAppliancePictID        4005
+#define kPointsPictID           4006
+#define kRubberBandsPictID      4007
+#define kTransportPictID        4008
+#define kToastPictID            4009
+#define kShreddedPictID         4010
+#define kBalloonPictID          4011
+#define kCopterPictID           4012
+#define kDartPictID             4013
+#define kBallPictID             4014
+#define kDripPictID             4015
+#define kEnemyPictID            4016
+#define kFishPictID             4017
+#define kClutterPictID          4018
+#define kShadowMaskID           4998    // kShadowPictID + 1000
+#define kGliderMaskID           4999    // kGliderPictID + 1000
+#define kBlowerMaskID           5000    // kBlowerPictID + 1000
+#define kFurnitureMaskID        5001    // kFurniturePictID + 1000
+#define kBonusMaskID            5002    // kBonusPictID + 1000
+#define kLightMaskID            5004    // kLightPictID + 1000
+#define kApplianceMaskID        5005    // kAppliancePictID + 1000
+#define kPointsMaskID           5006    // kPointsPictID + 1000
+#define kRubberBandsMaskID      5007    // kRubberBandsPictID + 1000
+#define kTransportMaskID        5008    // kTransportPictID + 1000
+#define kToastMaskID            5009    // kToastPictID + 1000
+#define kShreddedMaskID         5010    // kShreddedPictID + 1000
+#define kBalloonMaskID          5011    // kBalloonPictID + 1000
+#define kCopterMaskID           5012    // kCopterPictID + 1000
+#define kDartMaskID             5013    // kDartPictID + 1000
+#define kBallMaskID             5014    // kBallPictID + 1000
+#define kDripMaskID             5015    // kDripPictID + 1000
+#define kEnemyMaskID            5016    // kEnemyPictID + 1000
+#define kFishMaskID             5017    // kFishPictID + 1000
+#define kClutterMaskID          5018    // kClutterPictID + 1000
+#define kCustomPictFallbackID   10000
+
 #define kHitWallWaveID          1000    // kBaseBufferSoundID + kHitWallSound
 #define kFadeInWaveID           1001    // kBaseBufferSoundID + kFadeInSound
 #define kFadeOutWaveID          1002    // kBaseBufferSoundID + kFadeOutSound

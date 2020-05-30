@@ -224,25 +224,6 @@
 #define kWestRoom					7
 #define kNorthWestRoom				8
 
-#define kSimpleRoom					2000
-#define kPaneledRoom				2001
-#define kBasement					2002
-#define kChildsRoom					2003
-#define kAsianRoom					2004
-#define kUnfinishedRoom				2005
-#define kSwingersRoom				2006
-#define kBathroom					2007
-#define kLibrary					2008
-#define kGarden						2009
-#define kSkywalk					2010
-#define kDirt						2011
-#define kMeadow						2012
-#define kField						2013
-#define kRoof						2014
-#define kSky						2015
-#define kStratosphere				2016
-#define kStars						2017
-
 #define kMapRoomHeight				20
 #define kMapRoomWidth				32
 
@@ -521,7 +502,6 @@
 #define kNumBackgrounds				18
 #define kUserBackground				3000
 #define kUserStructureRange			3300
-#define kSplash8BitPICT				1000
 #define kRoomIsEmpty				-1
 #define kObjectIsEmpty				-1
 #define kNoObjectSelected			-1
@@ -531,7 +511,6 @@
 #define kWindoidWDEF				2048
 #define kWindoidGrowWDEF			2064
 #define kTicksPerFrame				2
-#define kStarPictID					1995
 #define kNumUndergroundFloors		8
 #define kRoomVisitScore				100
 #define kRedClockPoints				100
@@ -562,10 +541,6 @@
 #define kWasBurning					2
 #define kLeftFadeOffset				7
 #define kLastFadeSequence			16
-#define kGliderFoil2PictID			3963
-#define kGlider2PictID				3974
-#define kGliderFoilPictID			3976
-#define kGliderPictID				3999
 #define kGliderStartsDown			32
 
 #define kGliderNormal				0			//  ••    ••
@@ -619,7 +594,5 @@
 #define kNormalTitleMode			0
 #define kEscapedTitleMode			1
 #define kSavingTitleMode			2
-
-#define kScoreboardPictID			1997
 
 #define kDemoLength					6702

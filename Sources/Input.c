@@ -17,8 +17,6 @@
 #define kNormalThrust		5
 #define kHyperThrust		8
 #define kHeliumLift			4
-#define kEscPausePictID		1015
-#define kTabPausePictID		1016
 #define	kSavingGameDial		1042
 
 

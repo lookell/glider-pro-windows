@@ -23,11 +23,6 @@
 #include "Utilities.h"
 
 
-#define kAngelPictID			1019
-#define kSupportPictID			1999
-#define kClutterPictID			4018
-
-
 void InitClutter (void);
 void InitSupport (void);
 void InitAngel (void);
@@ -67,7 +62,7 @@ void InitClutter (void)
 	LoadGraphic(clutterSrcMap, kClutterPictID);
 
 	theErr = CreateOffScreenGWorld(&clutterMaskMap, &clutterSrcRect, 1);
-	LoadGraphic(clutterMaskMap, kClutterPictID + 1000);
+	LoadGraphic(clutterMaskMap, kClutterMaskID);
 
 	QSetRect(&flowerSrc[0], 0, 0, 10, 28);
 	QOffsetRect(&flowerSrc[0], 0, 23);
@@ -116,7 +111,7 @@ void InitAngel (void)
 	LoadGraphic(angelSrcMap, kAngelPictID);
 
 	theErr = CreateOffScreenGWorld(&angelMaskMap, &angelSrcRect, 1);
-	LoadGraphic(angelMaskMap, kAngelPictID + 1);
+	LoadGraphic(angelMaskMap, kAngelMaskID);
 }
 
 //--------------------------------------------------------------  CreateOffscreens

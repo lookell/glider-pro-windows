@@ -428,11 +428,35 @@ void DoRoomInfo (void)
 		BitchAboutPICTNotFound();
 		tempBack = kSimpleRoom;
 	}
-	if ((tempBack == 2002) || (tempBack == 2011) ||
-			(tempBack == 2016) || (tempBack == 2017))
-		LoadScaledGraphic(tempBack - 800, &tileSrcRect);
-	else
+
+	//if ((tempBack == 2002) || (tempBack == 2011) ||
+	//		(tempBack == 2016) || (tempBack == 2017))
+	//	LoadScaledGraphic(tempBack - 800, &tileSrcRect);
+	//else
+	//	LoadScaledGraphic(tempBack, &tileSrcRect);
+	// REPLACE THIS ^^^^ WITH THAT vvvv
+	switch (tempBack)
+	{
+		case kBasement:
+		LoadScaledGraphic(kBasementTileSrc, &tileSrcRect);
+		break;
+
+		case kDirt:
+		LoadScaledGraphic(kDirtTileSrc, &tileSrcRect);
+		break;
+
+		case kStratosphere:
+		LoadScaledGraphic(kStratosphereTileSrc, &tileSrcRect);
+		break;
+
+		case kStars:
+		LoadScaledGraphic(kStarsTileSrc, &tileSrcRect);
+		break;
+
+		default:
 		LoadScaledGraphic(tempBack, &tileSrcRect);
+		break;
+	}
 
 	SetGWorld(wasCPort, wasWorld);
 
@@ -551,11 +575,36 @@ void DoRoomInfo (void)
 			{
 				tempBack = newBack;
 				SetPort((GrafPtr)tileSrcMap);
-				if ((tempBack == 2002) || (tempBack == 2011) ||
-						(tempBack == 2016) || (tempBack == 2017))
-					LoadScaledGraphic(tempBack - 800, &tileSrcRect);
-				else
+
+				//if ((tempBack == 2002) || (tempBack == 2011) ||
+				//		(tempBack == 2016) || (tempBack == 2017))
+				//	LoadScaledGraphic(tempBack - 800, &tileSrcRect);
+				//else
+				//	LoadScaledGraphic(tempBack, &tileSrcRect);
+				// REPLACE THIS ^^^^ WITH THAT vvvv
+				switch (tempBack)
+				{
+					case kBasement:
+					LoadScaledGraphic(kBasementTileSrc, &tileSrcRect);
+					break;
+
+					case kDirt:
+					LoadScaledGraphic(kDirtTileSrc, &tileSrcRect);
+					break;
+
+					case kStratosphere:
+					LoadScaledGraphic(kStratosphereTileSrc, &tileSrcRect);
+					break;
+
+					case kStars:
+					LoadScaledGraphic(kStarsTileSrc, &tileSrcRect);
+					break;
+
+					default:
 					LoadScaledGraphic(tempBack, &tileSrcRect);
+					break;
+				}
+
 				InvalWindowRect(GetDialogWindow(roomInfoDialog), &tileSrc);
 				InvalWindowRect(GetDialogWindow(roomInfoDialog), &tileDest);
 			}

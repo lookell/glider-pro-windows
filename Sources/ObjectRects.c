@@ -8,6 +8,7 @@
 
 #include "Externs.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 
 
 #define kFloorColumnWide		4
@@ -222,7 +223,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		thePict = GetPicture(who->data.g.height);
 		if (thePict == NULL)
 		{
-			who->data.g.height = 10000;
+			who->data.g.height = kCustomPictFallbackID;
 			*itsRect = srcRects[who->what];
 		}
 		else

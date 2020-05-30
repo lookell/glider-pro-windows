@@ -11,7 +11,7 @@ STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
     LTEXT "Object Kind: ^1", -1, 5, 25, 160, 10, SS_NOPREFIX
     CONTROL "", 5, STATIC, SS_OWNERDRAW, 5, 75, 175, 1
     CHECKBOX "Initially On", 6, 5, 48, 75, 11
-    CONTROL 1022, -1, STATIC, SS_BITMAP, 0, 0, 185, 20
+    CONTROL kMicrowaveInfoTitle, -1, STATIC, SS_BITMAP, 0, 0, 185, 20
     CHECKBOX "Zero Bands", 8, 96, 37, 85, 11
     CHECKBOX "Zero Battery/He", 9, 96, 48, 85, 11
     CHECKBOX "Zero Foil", 10, 96, 59, 85, 11

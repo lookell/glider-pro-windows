@@ -628,7 +628,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		}
 		else if (what == kCustomPict)
 		{
-			thisRoom->objects[objActive].data.g.height = 10000;
+			thisRoom->objects[objActive].data.g.height = kCustomPictFallbackID;
 			thisRoom->objects[objActive].data.g.delay = 0;
 		}
 		else

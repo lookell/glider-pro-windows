@@ -8,6 +8,7 @@
 
 #include "Externs.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 
 
 #define kFloorVentLift			-6

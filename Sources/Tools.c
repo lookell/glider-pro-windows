@@ -45,7 +45,6 @@
 #define kFirstClutter		1
 #define kLastClutter		15
 #define kClutterBase		161
-#define kToolsPictID		1011
 
 
 void CreateToolsOffscreen (void);

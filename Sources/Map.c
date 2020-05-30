@@ -24,7 +24,6 @@
 #define kVScrollRef				27L
 #define kMapGroundValue			56
 #define kYesDoNewRoom			IDOK
-#define kThumbnailPictID		1010
 
 
 void LoadGraphicPlus (SInt16, Rect *);
