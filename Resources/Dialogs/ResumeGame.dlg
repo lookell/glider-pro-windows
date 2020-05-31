@@ -1,13 +1,16 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kResumeGameDial DIALOGEX 27, 25, 208, 76
+#define kSheWantsNewGame        1001
+#define kSheWantsResumeGame     1002
+
+kResumeGameDial DIALOGEX 0, 0, 216, 74
 CAPTION "Resume Game?"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION
 {
-    PUSHBUTTON "New Game", 1, 149, 59, 53, 12
-    PUSHBUTTON "Resume", 2, 91, 59, 53, 12
-    LTEXT "(You had ^0 glider^1 & ^2 points.)", -1, 5, 34, 171, 20, SS_NOPREFIX
-    LTEXT "You have a saved game. Beginning a new game will overwrite your saved game. What to do?", -1, 5, 5, 171, 30, SS_NOPREFIX
-    ICON kResumeGameIcon, -1, 181, 5, 21, 20
+    LTEXT "You have a saved game. Beginning a new game will overwrite your saved game. What to do?", IDC_STATIC, 7, 7, 171, 24, SS_NOPREFIX
+    ICON kResumeGameIcon, IDC_STATIC, 188, 7, 21, 20
+    LTEXT "(You had ^0 glider^1 & ^2 points.)", IDC_STATIC, 7, 38, 202, 8, SS_NOPREFIX
+    DEFPUSHBUTTON "New Game", kSheWantsNewGame, 95, 53, 55, 14
+    PUSHBUTTON "Resume", kSheWantsResumeGame, 154, 53, 55, 14
 }

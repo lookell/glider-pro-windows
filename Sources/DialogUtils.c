@@ -63,7 +63,7 @@ static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
 			case L'2':
 			case L'3':
 				theParam = params->arg[oldText[i + 1] - L'0'];
-				if (theParam != NULL && theParam[0] != L'\0')
+				if (theParam != NULL)
 				{
 					newTextSize += wcslen(theParam);
 				}
@@ -89,7 +89,7 @@ static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
 			case L'2':
 			case L'3':
 				theParam = params->arg[oldText[i + 1] - L'0'];
-				if (theParam != NULL && theParam[0] != L'\0')
+				if (theParam != NULL)
 				{
 					i++;
 					StringCchCatEx(remainingText, remainingSize, theParam,

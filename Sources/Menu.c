@@ -18,17 +18,16 @@
 #include "ResourceIDs.h"
 
 
-#define kSheWantsNewGame		1
-#define kSheWantsResumeGame		2
+#define kSheWantsNewGame		1001
+#define kSheWantsResumeGame		1002
 
 
 void UpdateMenusEditMode (void);
 void UpdateMenusNonEditMode (void);
 void UpdateMenusHouseOpen (void);
 void UpdateMenusHouseClosed (void);
-void UpdateResumeDialog (DialogPtr);
-Boolean ResumeFilter (DialogPtr, EventRecord *, SInt16 *);
-SInt16 QueryResumeGame (void);
+INT_PTR CALLBACK ResumeFilter (HWND, UINT, WPARAM, LPARAM);
+SInt16 QueryResumeGame (HWND);
 void HeyYourPissingAHighScore (HWND);
 
 
@@ -757,59 +756,32 @@ void UpdateCoordinateCheckmark (Boolean checkIt)
 		CheckMenuItem(houseMenu, ID_COORDINATE_WINDOW, MF_UNCHECKED);
 }
 
-//--------------------------------------------------------------  UpdateResumeDialog
-// Update function for Resume dialog (below).
-
-void UpdateResumeDialog (DialogPtr theDialog)
-{
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-#endif
-}
-
 //--------------------------------------------------------------  ResumeFilter
 // Dialog filter for the Resume dialog (below).
 
-Boolean ResumeFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK ResumeFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
+		return TRUE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
+		case kSheWantsNewGame:
+			EndDialog(hDlg, kSheWantsNewGame);
 			break;
 
-			default:
-			return(false);
+		case kSheWantsResumeGame:
+			EndDialog(hDlg, kSheWantsResumeGame);
+			break;
 		}
-		break;
-
-		case updateEvt:
-		if ((WindowPtr)event->message == GetDialogWindow(dial))
-		{
-			SetPort((GrafPtr)dial);
-			BeginUpdate(GetDialogWindow(dial));
-			UpdateResumeDialog(dial);
-			EndUpdate(GetDialogWindow(dial));
-			event->what = nullEvent;
-		}
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  QueryResumeGame
@@ -817,57 +789,27 @@ Boolean ResumeFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 // begin a new one.  It displays a little info on the state of their…
 // saved game (number of glider left, points, etc.).
 
-SInt16 QueryResumeGame (void)
+SInt16 QueryResumeGame (HWND ownerWindow)
 {
-	return kSheWantsNewGame;
-#if 0
-	DialogPtr		theDial;
-	houseType		*thisHousePtr;
-	Str255			scoreStr, glidStr;
-	long			hadPoints;
-	short			hitWhat, hadGliders;
-	char			wasState;
-	Boolean			leaving;
-	ModalFilterUPP	resumeFilterUPP;
+	DialogParams params;
+	Str255 scoreStr, glidStr;
+	SInt32 hadPoints;
+	SInt16 hadGliders;
 
-	resumeFilterUPP = NewModalFilterUPP(ResumeFilter);
-
-	wasState = HGetState((Handle)thisHouse);	// get score & num. gliders
-	HLock((Handle)thisHouse);
-	thisHousePtr = *thisHouse;
-	hadPoints = thisHousePtr->savedGame.score;
-	hadGliders = thisHousePtr->savedGame.numGliders;
-	HSetState((Handle)thisHouse, wasState);
-	NumToString(hadPoints, scoreStr);			// param text strings
-	NumToString((long)hadGliders, glidStr);
+	hadPoints = thisHouse->savedGame.score;
+	hadGliders = thisHouse->savedGame.numGliders;
+	Mac_NumToString(hadPoints, scoreStr);
+	Mac_NumToString(hadGliders, glidStr);
+	WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), glidStr);
 	if (hadGliders == 1)
-		ParamText(glidStr, "\p", scoreStr, "\p");
+		StringCchCopy(params.arg[1], ARRAYSIZE(params.arg[1]), L"");
 	else
-		ParamText(glidStr, "\ps", scoreStr, "\p");
+		StringCchCopy(params.arg[1], ARRAYSIZE(params.arg[1]), L"s");
+	WinFromMacString(params.arg[2], ARRAYSIZE(params.arg[2]), scoreStr);
 
-//	CenterDialog(kResumeGameDial);
-	theDial = GetNewDialog(kResumeGameDial, nil, kPutInFront);
-	if (theDial == nil)
-		RedAlert(kErrDialogDidntLoad);
-	SetPort((GrafPtr)theDial);
-
-	ShowWindow(GetDialogWindow(theDial));
-	DrawDefaultButton(theDial);
-	leaving = false;
-
-	while (!leaving)
-	{
-		ModalDialog(resumeFilterUPP, &hitWhat);
-		if ((hitWhat == kSheWantsNewGame) || (hitWhat == kSheWantsResumeGame))
-		{
-			leaving = true;
-		}
-	}
-	DisposeDialog(theDial);
-	DisposeModalFilterUPP(resumeFilterUPP);
-
-	return (hitWhat);
-#endif
+	return (SInt16)DialogBoxParam(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kResumeGameDial), ownerWindow,
+			ResumeFilter, (LPARAM)&params);
 }
 
 //--------------------------------------------------------------  DoNotInDemo
