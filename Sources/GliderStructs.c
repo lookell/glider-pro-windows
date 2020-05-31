@@ -39,11 +39,83 @@ static int WriteRect(byteio *writer, const Rect *data)
 	return 1;
 }
 
+static int ReadStr15(byteio *reader, Str15 *data)
+{
+	FORWARD_FALSE(byteio_read(reader, data, sizeof(*data)));
+	return ((*data)[0] < sizeof(*data));
+}
+
+static int WriteStr15(byteio *writer, const Str15 *data)
+{
+	FORWARD_FALSE(byteio_write(writer, data, sizeof(*data)));
+	return 1;
+}
+
+static int ReadStr27(byteio *reader, Str27 *data)
+{
+	FORWARD_FALSE(byteio_read(reader, data, sizeof(*data)));
+	return ((*data)[0] < sizeof(*data));
+}
+
+static int WriteStr27(byteio *writer, const Str27 *data)
+{
+	FORWARD_FALSE(byteio_write(writer, data, sizeof(*data)));
+	return 1;
+}
+
+static int ReadStr31(byteio *reader, Str31 *data)
+{
+	FORWARD_FALSE(byteio_read(reader, data, sizeof(*data)));
+	return ((*data)[0] < sizeof(*data));
+}
+
+static int WriteStr31(byteio *writer, const Str31 *data)
+{
+	FORWARD_FALSE(byteio_write(writer, data, sizeof(*data)));
+	return 1;
+}
+
+static int ReadStr32(byteio *reader, Str32 *data)
+{
+	FORWARD_FALSE(byteio_read(reader, data, sizeof(*data)));
+	return ((*data)[0] < sizeof(*data));
+}
+
+static int WriteStr32(byteio *writer, const Str32 *data)
+{
+	FORWARD_FALSE(byteio_write(writer, data, sizeof(*data)));
+	return 1;
+}
+
+static int ReadStr63(byteio *reader, Str63 *data)
+{
+	FORWARD_FALSE(byteio_read(reader, data, sizeof(*data)));
+	return ((*data)[0] < sizeof(*data));
+}
+
+static int WriteStr63(byteio *writer, const Str63 *data)
+{
+	FORWARD_FALSE(byteio_write(writer, data, sizeof(*data)));
+	return 1;
+}
+
+static int ReadStr255(byteio *reader, Str255 *data)
+{
+	FORWARD_FALSE(byteio_read(reader, data, sizeof(*data)));
+	return ((*data)[0] < sizeof(*data));
+}
+
+static int WriteStr255(byteio *writer, const Str255 *data)
+{
+	FORWARD_FALSE(byteio_write(writer, data, sizeof(*data)));
+	return 1;
+}
+
 static int ReadFSSpec(byteio *reader, FSSpec *data)
 {
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->vRefNum));
 	FORWARD_FALSE(byteio_read_be_i32(reader, &data->parID));
-	FORWARD_FALSE(byteio_read(reader, &data->name, sizeof(data->name)));
+	FORWARD_FALSE(ReadStr63(reader, &data->name));
 	return 1;
 }
 
@@ -51,19 +123,19 @@ static int WriteFSSpec(byteio *writer, const FSSpec *data)
 {
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->vRefNum));
 	FORWARD_FALSE(byteio_write_be_i32(writer, data->parID));
-	FORWARD_FALSE(byteio_write(writer, &data->name, sizeof(data->name)));
+	FORWARD_FALSE(WriteStr63(writer, &data->name));
 	return 1;
 }
 
 int ReadPrefsInfo(byteio *reader, prefsInfo *data)
 {
-	FORWARD_FALSE(byteio_read(reader, &data->wasDefaultName, sizeof(data->wasDefaultName)));
-	FORWARD_FALSE(byteio_read(reader, &data->wasLeftName, sizeof(data->wasLeftName)));
-	FORWARD_FALSE(byteio_read(reader, &data->wasRightName, sizeof(data->wasRightName)));
-	FORWARD_FALSE(byteio_read(reader, &data->wasBattName, sizeof(data->wasBattName)));
-	FORWARD_FALSE(byteio_read(reader, &data->wasBandName, sizeof(data->wasBandName)));
-	FORWARD_FALSE(byteio_read(reader, &data->wasHighName, sizeof(data->wasHighName)));
-	FORWARD_FALSE(byteio_read(reader, &data->wasHighBanner, sizeof(data->wasHighBanner)));
+	FORWARD_FALSE(ReadStr32(reader, &data->wasDefaultName));
+	FORWARD_FALSE(ReadStr15(reader, &data->wasLeftName));
+	FORWARD_FALSE(ReadStr15(reader, &data->wasRightName));
+	FORWARD_FALSE(ReadStr15(reader, &data->wasBattName));
+	FORWARD_FALSE(ReadStr15(reader, &data->wasBandName));
+	FORWARD_FALSE(ReadStr15(reader, &data->wasHighName));
+	FORWARD_FALSE(ReadStr31(reader, &data->wasHighBanner));
 	// FORWARD_FALSE(byteio_read_be_i32(reader, &data->encrypted));
 	// FORWARD_FALSE(byteio_read_be_i32(reader, &data->fakeLong));
 	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasLeftMap));
@@ -115,13 +187,13 @@ int ReadPrefsInfo(byteio *reader, prefsInfo *data)
 
 int WritePrefsInfo(byteio *writer, const prefsInfo *data)
 {
-	FORWARD_FALSE(byteio_write(writer, &data->wasDefaultName, sizeof(data->wasDefaultName)));
-	FORWARD_FALSE(byteio_write(writer, &data->wasLeftName, sizeof(data->wasLeftName)));
-	FORWARD_FALSE(byteio_write(writer, &data->wasRightName, sizeof(data->wasRightName)));
-	FORWARD_FALSE(byteio_write(writer, &data->wasBattName, sizeof(data->wasBattName)));
-	FORWARD_FALSE(byteio_write(writer, &data->wasBandName, sizeof(data->wasBandName)));
-	FORWARD_FALSE(byteio_write(writer, &data->wasHighName, sizeof(data->wasHighName)));
-	FORWARD_FALSE(byteio_write(writer, &data->wasHighBanner, sizeof(data->wasHighBanner)));
+	FORWARD_FALSE(WriteStr32(writer, &data->wasDefaultName));
+	FORWARD_FALSE(WriteStr15(writer, &data->wasLeftName));
+	FORWARD_FALSE(WriteStr15(writer, &data->wasRightName));
+	FORWARD_FALSE(WriteStr15(writer, &data->wasBattName));
+	FORWARD_FALSE(WriteStr15(writer, &data->wasBandName));
+	FORWARD_FALSE(WriteStr15(writer, &data->wasHighName));
+	FORWARD_FALSE(WriteStr31(writer, &data->wasHighBanner));
 	// FORWARD_FALSE(byteio_write_be_i32(writer, data->encrypted));
 	// FORWARD_FALSE(byteio_write_be_i32(writer, data->fakeLong));
 	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasLeftMap));
@@ -512,9 +584,9 @@ int WriteObjectType(byteio *writer, const objectType *data)
 int ReadScoresType(byteio *reader, scoresType *data)
 {
 	size_t i;
-	FORWARD_FALSE(byteio_read(reader, &data->banner, sizeof(data->banner)));
+	FORWARD_FALSE(ReadStr31(reader, &data->banner));
 	for (i = 0; i < ARRAYSIZE(data->names); i++)
-		FORWARD_FALSE(byteio_read(reader, &data->names[i], sizeof(data->names[i])));
+		FORWARD_FALSE(ReadStr15(reader, &data->names[i]));
 	for (i = 0; i < ARRAYSIZE(data->scores); i++)
 		FORWARD_FALSE(byteio_read_be_i32(reader, &data->scores[i]));
 	for (i = 0; i < ARRAYSIZE(data->timeStamps); i++)
@@ -527,9 +599,9 @@ int ReadScoresType(byteio *reader, scoresType *data)
 int WriteScoresType(byteio *writer, const scoresType *data)
 {
 	size_t i;
-	FORWARD_FALSE(byteio_write(writer, &data->banner, sizeof(data->banner)));
+	FORWARD_FALSE(WriteStr31(writer, &data->banner));
 	for (i = 0; i < ARRAYSIZE(data->names); i++)
-		FORWARD_FALSE(byteio_write(writer, &data->names[i], sizeof(data->names[i])));
+		FORWARD_FALSE(WriteStr15(writer, &data->names[i]));
 	for (i = 0; i < ARRAYSIZE(data->scores); i++)
 		FORWARD_FALSE(byteio_write_be_i32(writer, data->scores[i]));
 	for (i = 0; i < ARRAYSIZE(data->timeStamps); i++)
@@ -605,7 +677,7 @@ int WriteSavedRoom(byteio *writer, const savedRoom *data)
 
 int ReadGame2Type(byteio *reader, game2Type *data)
 {
-	size_t i, roomCount;
+	SInt16 i;
 	FORWARD_FALSE(ReadFSSpec(reader, &data->house));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->version));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->wasStarsLeft));
@@ -623,22 +695,19 @@ int ReadGame2Type(byteio *reader, game2Type *data)
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->nRooms));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->facing));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->showFoil));
-	roomCount = (data->nRooms >= 0) ? (size_t)data->nRooms : 0;
-	data->savedData = NULL;
-	if (roomCount > 0)
-	{
-		data->savedData = calloc(roomCount, sizeof(*data->savedData));
-		if (data->savedData == NULL)
-			return 0;
-		for (i = 0; i < roomCount; i++)
-			FORWARD_FALSE(ReadSavedRoom(reader, &data->savedData[i]));
-	}
+	if (data->nRooms < 0)
+		return 0;
+	data->savedData = calloc(data->nRooms, sizeof(*data->savedData));
+	if (data->savedData == NULL)
+		return 0;
+	for (i = 0; i < data->nRooms; i++)
+		FORWARD_FALSE(ReadSavedRoom(reader, &data->savedData[i]));
 	return 1;
 }
 
 int WriteGame2Type(byteio *writer, const game2Type *data)
 {
-	size_t i, roomCount;
+	SInt16 i;
 	FORWARD_FALSE(WriteFSSpec(writer, &data->house));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->version));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->wasStarsLeft));
@@ -656,9 +725,8 @@ int WriteGame2Type(byteio *writer, const game2Type *data)
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->nRooms));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->facing));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->showFoil));
-	roomCount = (data->nRooms >= 0) ? (size_t)data->nRooms : 0;
-	if (roomCount > 0 && data->savedData != NULL)
-		for (i = 0; i < roomCount; i++)
+	if (data->savedData != NULL)
+		for (i = 0; i < data->nRooms; i++)
 			FORWARD_FALSE(WriteSavedRoom(writer, &data->savedData[i]));
 	return 1;
 }
@@ -666,7 +734,7 @@ int WriteGame2Type(byteio *writer, const game2Type *data)
 int ReadRoomType(byteio *reader, roomType *data)
 {
 	size_t i;
-	FORWARD_FALSE(byteio_read(reader, &data->name, sizeof(data->name)));
+	FORWARD_FALSE(ReadStr27(reader, &data->name));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->bounds));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->leftStart));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->rightStart));
@@ -687,7 +755,7 @@ int ReadRoomType(byteio *reader, roomType *data)
 int WriteRoomType(byteio *writer, const roomType *data)
 {
 	size_t i;
-	FORWARD_FALSE(byteio_write(writer, &data->name, sizeof(data->name)));
+	FORWARD_FALSE(WriteStr27(writer, &data->name));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->bounds));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->leftStart));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->rightStart));
@@ -707,52 +775,48 @@ int WriteRoomType(byteio *writer, const roomType *data)
 
 int ReadHouseType(byteio *reader, houseType *data)
 {
-	size_t i, roomCount;
+	SInt16 i;
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->version));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->unusedShort));
 	FORWARD_FALSE(byteio_read_be_i32(reader, &data->timeStamp));
 	FORWARD_FALSE(byteio_read_be_i32(reader, &data->flags));
 	FORWARD_FALSE(ReadPoint(reader, &data->initial));
-	FORWARD_FALSE(byteio_read(reader, &data->banner, sizeof(data->banner)));
-	FORWARD_FALSE(byteio_read(reader, &data->trailer, sizeof(data->trailer)));
+	FORWARD_FALSE(ReadStr255(reader, &data->banner));
+	FORWARD_FALSE(ReadStr255(reader, &data->trailer));
 	FORWARD_FALSE(ReadScoresType(reader, &data->highScores));
 	FORWARD_FALSE(ReadGameType(reader, &data->savedGame));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->hasGame));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->unusedBoolean));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->firstRoom));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->nRooms));
-	roomCount = (data->nRooms >= 0) ? (size_t)data->nRooms : 0;
-	data->rooms = NULL;
-	if (roomCount > 0)
-	{
-		data->rooms = calloc(roomCount, sizeof(*data->rooms));
-		if (data->rooms == NULL)
-			return 0;
-		for (i = 0; i < roomCount; i++)
-			FORWARD_FALSE(ReadRoomType(reader, &data->rooms[i]));
-	}
+	if (data->nRooms < 0)
+		return 0;
+	data->rooms = calloc(data->nRooms, sizeof(*data->rooms));
+	if (data->rooms == NULL)
+		return 0;
+	for (i = 0; i < data->nRooms; i++)
+		FORWARD_FALSE(ReadRoomType(reader, &data->rooms[i]));
 	return 1;
 }
 
 int WriteHouseType(byteio *writer, const houseType *data)
 {
-	size_t i, roomCount;
+	SInt16 i;
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->version));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->unusedShort));
 	FORWARD_FALSE(byteio_write_be_i32(writer, data->timeStamp));
 	FORWARD_FALSE(byteio_write_be_i32(writer, data->flags));
 	FORWARD_FALSE(WritePoint(writer, &data->initial));
-	FORWARD_FALSE(byteio_write(writer, &data->banner, sizeof(data->banner)));
-	FORWARD_FALSE(byteio_write(writer, &data->trailer, sizeof(data->trailer)));
+	FORWARD_FALSE(WriteStr255(writer, &data->banner));
+	FORWARD_FALSE(WriteStr255(writer, &data->trailer));
 	FORWARD_FALSE(WriteScoresType(writer, &data->highScores));
 	FORWARD_FALSE(WriteGameType(writer, &data->savedGame));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->hasGame));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->unusedBoolean));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->firstRoom));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->nRooms));
-	roomCount = (data->nRooms >= 0) ? (size_t)data->nRooms : 0;
-	if (roomCount > 0 && data->rooms != NULL)
-		for (i = 0; i < roomCount; i++)
+	if (data->rooms != NULL)
+		for (i = 0; i < data->nRooms; i++)
 			FORWARD_FALSE(WriteRoomType(writer, &data->rooms[i]));
 	return 1;
 }
