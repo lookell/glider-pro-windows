@@ -138,7 +138,23 @@ static INT_PTR CALLBACK AlertProc (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM l
 
 	case WM_COMMAND:
 		if (LOWORD(wParam) != 0 && LOWORD(wParam) != 0xFFFF)
-			EndDialog(hDlg, LOWORD(wParam));
+		{
+			if (LOWORD(wParam) != IDCANCEL)
+			{
+				EndDialog(hDlg, LOWORD(wParam));
+			}
+			else
+			{
+				if (GetDlgItem(hDlg, IDCANCEL) != NULL)
+				{
+					EndDialog(hDlg, IDCANCEL);
+				}
+				else if ((GetWindowLongPtr(hDlg, GWL_STYLE) & WS_SYSMENU) == WS_SYSMENU)
+				{
+					EndDialog(hDlg, IDCANCEL);
+				}
+			}
+		}
 		SetWindowLongPtr(hDlg, DWLP_MSGRESULT, 0);
 		return TRUE;
 	}
