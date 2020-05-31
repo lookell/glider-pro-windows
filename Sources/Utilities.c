@@ -492,22 +492,20 @@ void LargeIconPlot (Rect *theRect, SInt16 theID)
 
 // Draws a standard color icon (32 x 32) - resource is a 'CICN'.
 
-void DrawCIcon (SInt16 theID, SInt16 h, SInt16 v)
+void DrawCIcon (HDC hdc, SInt16 theID, SInt16 h, SInt16 v)
 {
-	return;
-#if 0
-	CIconHandle	theIcon;
-	Rect		theRect;
+	HICON hIcon;
 
-	theIcon = GetCIcon(theID);
-	if (theIcon != nil)
+	if (hdc == NULL)
+		return;
+
+	hIcon = LoadImage(HINST_THISCOMPONENT, MAKEINTRESOURCE(theID),
+			IMAGE_ICON, 32, 32, LR_DEFAULTCOLOR);
+	if (hIcon != NULL)
 	{
-		SetRect(&theRect, 0, 0, 32, 32);
-		OffsetRect(&theRect, h, v);
-		PlotCIcon(&theRect, theIcon);
-		DisposeCIcon(theIcon);
+		DrawIconEx(hdc, h, v, hIcon, 32, 32, 0, NULL, DI_NORMAL);
+		DestroyIcon(hIcon);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  LongSquareRoot
