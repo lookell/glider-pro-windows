@@ -207,8 +207,11 @@ void UpdateClipboardMenus (void)
 			EnableMenuItem(houseMenu, ID_DUPLICATE, MF_GRAYED);
 		}
 
-		EnableMenuItem(houseMenu, ID_CUT, MF_ENABLED);
-		EnableMenuItem(houseMenu, ID_COPY, MF_ENABLED);
+		// TODO: enable these menu items when the clipboard can actually be used
+		// EnableMenuItem(houseMenu, ID_CUT, MF_ENABLED);
+		// EnableMenuItem(houseMenu, ID_COPY, MF_ENABLED);
+		EnableMenuItem(houseMenu, ID_CUT, MF_GRAYED);
+		EnableMenuItem(houseMenu, ID_COPY, MF_GRAYED);
 //		if (hasScrap)
 //		{
 //			EnableMenuItem(houseMenu, iPaste);
