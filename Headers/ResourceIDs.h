@@ -122,7 +122,8 @@
 #define kGoToDialogID				1043
 #define kCustPictInfoDialogID		1045
 
-#define kCoordinateWindowID			10001
+#define kCoordinateWindowID     10001
+#define kMessageWindowID        10002
 
 #define kColorDepthIcon         130
 #define kFloppyDiskIcon         140

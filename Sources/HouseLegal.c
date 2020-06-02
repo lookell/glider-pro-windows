@@ -793,7 +793,6 @@ void ValidateRoomNumbers (void)
 				GetLocalizedString(17, message);
 				SetMessageWindowMessage(message);
 				houseErrors++;
-				//SetMessageTextColor(blackColor); // TODO: remove; not needed any more
 			}
 			if ((thisHouse->rooms[i].suite >= 128) ||
 					(thisHouse->rooms[i].suite < 0))
@@ -803,7 +802,6 @@ void ValidateRoomNumbers (void)
 				GetLocalizedString(18, message);
 				SetMessageWindowMessage(message);
 				houseErrors++;
-				//SetMessageTextColor(blackColor); // TODO: remove; not needed any more
 			}
 		}
 	}
@@ -905,7 +903,6 @@ void KeepAllObjectsLegal (void)
 						GetLocalizedString(19, message);
 						SetMessageWindowMessage(message);
 						houseErrors++;
-						//SetMessageTextColor(blackColor); // TODO: remove; not needed any more
 						DelayTicks(60);
 					}
 				}
@@ -941,7 +938,6 @@ void CheckForStaircasePairs (void)
 						SetMessageTextColor(redColor);
 						GetLocalizedString(20, message);
 						SetMessageWindowMessage(message);
-						//SetMessageTextColor(blackColor); // TODO: remove; not needed
 						DelayTicks(60);
 					}
 					else
@@ -957,7 +953,6 @@ void CheckForStaircasePairs (void)
 							SetMessageTextColor(redColor);
 							GetLocalizedString(21, message);
 							SetMessageWindowMessage(message);
-							//SetMessageTextColor(blackColor); // TODO: remove; not needed
 							DelayTicks(60);
 						}
 					}
@@ -971,7 +966,6 @@ void CheckForStaircasePairs (void)
 						SetMessageTextColor(redColor);
 						GetLocalizedString(22, message);
 						SetMessageWindowMessage(message);
-						//SetMessageTextColor(blackColor); // TODO: remove; not needed
 						DelayTicks(60);
 					}
 					else
@@ -987,7 +981,6 @@ void CheckForStaircasePairs (void)
 							SetMessageTextColor(redColor);
 							GetLocalizedString(23, message);
 							SetMessageWindowMessage(message);
-							//SetMessageTextColor(blackColor); // TODO: remove; not needed
 							DelayTicks(60);
 						}
 					}
@@ -1016,6 +1009,7 @@ void CheckHouseForProblems (void)
 	OpenMessageWindow(message);
 
 	SpinCursor(3);
+	SetMessageTextColor(blackColor);
 	GetLocalizedString(25, message);
 	SetMessageWindowMessage(message);
 	WrapBannerAndTrailer();
@@ -1023,11 +1017,13 @@ void CheckHouseForProblems (void)
 	if (isHouseChecks)
 	{
 		SpinCursor(3);
+		SetMessageTextColor(blackColor);
 		GetLocalizedString(26, message);
 		SetMessageWindowMessage(message);
 		ValidateNumberOfRooms();
 		if (houseErrors != 0)
 		{
+			SetMessageTextColor(blackColor);
 			GetLocalizedString(27, message);
 			SetMessageWindowMessage(message);
 			DelayTicks(60);
@@ -1047,7 +1043,6 @@ void CheckHouseForProblems (void)
 			PasStringConcat(message, message2);
 			SetMessageTextColor(redColor);
 			SetMessageWindowMessage(message);
-			//SetMessageTextColor(blackColor); // TODO: remove; not needed any more
 			DelayTicks(45);
 		}
 	}
@@ -1068,7 +1063,6 @@ void CheckHouseForProblems (void)
 			PasStringConcat(message, message2);
 			SetMessageTextColor(redColor);
 			SetMessageWindowMessage(message);
-			//SetMessageTextColor(blackColor); // TODO: remove; not needed any more
 			DelayTicks(60);
 		}
 	}
@@ -1085,7 +1079,6 @@ void CheckHouseForProblems (void)
 			PasStringConcat(message, message2);
 			SetMessageTextColor(blueColor);
 			SetMessageWindowMessage(message);
-			//SetMessageTextColor(blackColor); // TODO: remove; not needed any more
 			DelayTicks(45);
 		}
 	}
@@ -1102,7 +1095,6 @@ void CheckHouseForProblems (void)
 			PasStringConcat(message, message2);
 			SetMessageTextColor(blueColor);
 			SetMessageWindowMessage(message);
-			//SetMessageTextColor(blackColor); // TODO: remove; not needed
 			DelayTicks(45);
 		}
 	}
@@ -1119,7 +1111,6 @@ void CheckHouseForProblems (void)
 			PasStringConcat(message, message2);
 			SetMessageTextColor(redColor);
 			SetMessageWindowMessage(message);
-			//SetMessageTextColor(blackColor); // TODO: remove; not needed
 			DelayTicks(60);
 		}
 	}
@@ -1128,6 +1119,7 @@ void CheckHouseForProblems (void)
 	{
 		SpinCursor(3);
 		houseErrors = 0;
+		SetMessageTextColor(blackColor);
 		GetLocalizedString(33, message);
 		SetMessageWindowMessage(message);
 		KeepAllObjectsLegal();
@@ -1138,7 +1130,6 @@ void CheckHouseForProblems (void)
 			PasStringConcat(message, message2);
 			SetMessageTextColor(redColor);
 			SetMessageWindowMessage(message);
-			//SetMessageTextColor(blackColor); // TODO: remove; not needed
 			DelayTicks(60);
 		}
 	}
@@ -1158,7 +1149,6 @@ void CheckHouseForProblems (void)
 			SetMessageTextColor(redColor);
 			GetLocalizedString(35, message);
 			SetMessageWindowMessage(message);
-			//SetMessageTextColor(blackColor); // TODO: remove when new implementation is in
 			DelayTicks(60);
 		}
 	}

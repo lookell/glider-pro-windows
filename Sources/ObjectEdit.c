@@ -824,7 +824,6 @@ void AddObjectPairing (void)
 				SetMessageTextColor(blueColor);
 				GetLocalizedString(46, message);
 				SetMessageWindowMessage(message);
-				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -855,7 +854,6 @@ void AddObjectPairing (void)
 				SetMessageTextColor(blueColor);
 				GetLocalizedString(46, message);
 				SetMessageWindowMessage(message);
-				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -887,7 +885,6 @@ void AddObjectPairing (void)
 				SetMessageTextColor(blueColor);
 				GetLocalizedString(47, message);
 				SetMessageWindowMessage(message);
-				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -919,7 +916,6 @@ void AddObjectPairing (void)
 				SetMessageTextColor(blueColor);
 				GetLocalizedString(47, message);
 				SetMessageWindowMessage(message);
-				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -950,7 +946,6 @@ void AddObjectPairing (void)
 				SetMessageTextColor(blueColor);
 				GetLocalizedString(48, message);
 				SetMessageWindowMessage(message);
-				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -981,7 +976,6 @@ void AddObjectPairing (void)
 				SetMessageTextColor(blueColor);
 				GetLocalizedString(48, message);
 				SetMessageWindowMessage(message);
-				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -1012,7 +1006,6 @@ void AddObjectPairing (void)
 				SetMessageTextColor(blueColor);
 				GetLocalizedString(49, message);
 				SetMessageWindowMessage(message);
-				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -1043,7 +1036,6 @@ void AddObjectPairing (void)
 				SetMessageTextColor(blueColor);
 				GetLocalizedString(49, message);
 				SetMessageWindowMessage(message);
-				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -1075,7 +1067,6 @@ void AddObjectPairing (void)
 				SetMessageTextColor(blueColor);
 				GetLocalizedString(50, message);
 				SetMessageWindowMessage(message);
-				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}
@@ -1107,7 +1098,6 @@ void AddObjectPairing (void)
 				SetMessageTextColor(blueColor);
 				GetLocalizedString(51, message);
 				SetMessageWindowMessage(message);
-				//SetMessageTextColor(blackColor); // TODO: make sure this can be removed
 				DelayTicks(60);
 				CloseMessageWindow();
 			}

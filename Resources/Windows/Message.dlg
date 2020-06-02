@@ -1,0 +1,10 @@
+/* this comment enforces υτƒ-8 encoding */
+
+#define kMessageItem    1001
+
+kMessageWindowID DIALOGEX 0, 0, 164, 22
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION
+{
+    LTEXT "", kMessageItem, 7, 7, 150, 8, SS_NOPREFIX
+}

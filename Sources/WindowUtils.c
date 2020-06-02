@@ -6,16 +6,23 @@
 //============================================================================
 
 
+#include "DialogUtils.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 
 
 #define kFloatingKind		2048
-#define kMessageWindowTall	48
+
+#define kMessageItem		1001
 
 
-HWND	mssgWindow;
+static INT_PTR CALLBACK MessageWindowProc (HWND, UINT, WPARAM, LPARAM);
+
+
+static HWND mssgWindow;
+static COLORREF mssgTextColor;
 
 
 //==============================================================  Functions
@@ -112,28 +119,54 @@ Boolean	IsWindowFloating (WindowPtr theWindow)
 
 void OpenMessageWindow (StringPtr title)
 {
-	return;
-	#if 0
-	Rect		mssgWindowRect;
+	MSG msg;
+	WCHAR windowTitle[256];
 
-	SetRect(&mssgWindowRect, 0, 0, 256, kMessageWindowTall);
-	if (thisMac.hasColor)
-		mssgWindow = NewCWindow(nil, &mssgWindowRect,
-				title, false, noGrowDocProc, kPutInFront, false, 0L);
-	else
-		mssgWindow = NewWindow(nil, &mssgWindowRect,
-				title, false, noGrowDocProc, kPutInFront, false, 0L);
+	WinFromMacString(windowTitle, ARRAYSIZE(windowTitle), title);
+	mssgTextColor = blackColor;
+	mssgWindow = CreateDialog(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kMessageWindowID),
+			mainWindow, MessageWindowProc);
+	SetWindowText(mssgWindow, windowTitle);
+	CenterOverOwner(mssgWindow);
+	EnableWindow(mainWindow, FALSE);
+	ShowWindow(mssgWindow, SW_SHOW);
 
-	if (mssgWindow != nil)
+	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 	{
-		ShowWindow(mssgWindow);
-		SetPort((GrafPtr)mssgWindow);
-		ClipRect(&mssgWindowRect);
-		ForeColor(blackColor);
-		BackColor(whiteColor);
-		TextFont(systemFont);
+		if (msg.message == WM_QUIT)
+		{
+			PostQuitMessage((int)msg.wParam);
+			break;
+		}
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
 	}
-	#endif
+}
+
+//--------------------------------------------------------------  MessageWindowProc
+
+static INT_PTR CALLBACK MessageWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return TRUE;
+
+	case WM_CTLCOLORSTATIC:
+	{
+		HDC hdc = (HDC)wParam;
+		HWND hwndStatic = (HWND)lParam;
+		if (GetDlgCtrlID(hwndStatic) == kMessageItem)
+		{
+			SetTextColor(hdc, mssgTextColor);
+			SetBkColor(hdc, GetSysColor(COLOR_BTNFACE));
+			return (INT_PTR)GetSysColorBrush(COLOR_BTNFACE);
+		}
+		return FALSE;
+	}
+	}
+	return FALSE;
 }
 
 //--------------------------------------------------------------  SetMessageWindowMessage
@@ -143,20 +176,22 @@ void OpenMessageWindow (StringPtr title)
 
 void SetMessageWindowMessage (StringPtr message)
 {
-	return;
-	#if 0
-	Rect		mssgWindowRect;
+	WCHAR messageText[256];
+	MSG msg;
 
-	if (mssgWindow != nil)
+	WinFromMacString(messageText, ARRAYSIZE(messageText), message);
+	SetDlgItemText(mssgWindow, kMessageItem, messageText);
+
+	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 	{
-		SetPort((GrafPtr)mssgWindow);
-		SetRect(&mssgWindowRect, 0, 0, 256, kMessageWindowTall);
-		InsetRect(&mssgWindowRect, 16, 16);
-		EraseRect(&mssgWindowRect);
-		MoveTo(mssgWindowRect.left, mssgWindowRect.bottom - 6);
-		DrawString(message);
+		if (msg.message == WM_QUIT)
+		{
+			PostQuitMessage((int)msg.wParam);
+			break;
+		}
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
 	}
-	#endif
 }
 
 //--------------------------------------------------------------  SetMessageWindowColor
@@ -167,7 +202,21 @@ void SetMessageWindowMessage (StringPtr message)
 
 void SetMessageTextColor (COLORREF textColor)
 {
-	// TODO: implement this
+	MSG msg;
+
+	mssgTextColor = textColor;
+	InvalidateRect(GetDlgItem(mssgWindow, kMessageItem), NULL, TRUE);
+
+	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+	{
+		if (msg.message == WM_QUIT)
+		{
+			PostQuitMessage((int)msg.wParam);
+			break;
+		}
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
 }
 
 //--------------------------------------------------------------  CloseMessageWindow
@@ -176,12 +225,12 @@ void SetMessageTextColor (COLORREF textColor)
 
 void CloseMessageWindow (void)
 {
-	return;
-	#if 0
-	if (mssgWindow != nil)
-		DisposeWindow(mssgWindow);
-	mssgWindow = nil;
-	#endif
+	if (mssgWindow != NULL)
+	{
+		EnableWindow(mainWindow, TRUE);
+		DestroyWindow(mssgWindow);
+		mssgWindow = NULL;
+	}
 }
 
 //--------------------------------------------------------------  CloseThisWindow

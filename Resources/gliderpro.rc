@@ -539,6 +539,7 @@ IDM_ROOT MENUEX
 #include "Dialogs\\CustPictInfo.dlg"
 
 #include "Windows\\Coordinate.dlg"
+#include "Windows\\Message.dlg"
 
 IDI_APPL    ICON    "Icons\\FileAppl.ico"
 IDI_PREFS   ICON    "Icons\\FilePrefs.ico"
