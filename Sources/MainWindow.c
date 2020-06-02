@@ -429,7 +429,7 @@ void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick)
 	//GlobalToLocal(&wherePt); // window procedures already get client coordinates
 
 	if (toolSelected == kSelectTool)
-		DoSelectionClick(wherePt, isDoubleClick);
+		DoSelectionClick(hwnd, wherePt, isDoubleClick);
 	else
 		DoNewObjectClick(hwnd, wherePt);
 

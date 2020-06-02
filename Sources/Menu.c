@@ -503,7 +503,7 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 		case iObject:
 		if (houseUnlocked)
 		{
-			DoObjectInfo();
+			DoObjectInfo(hwnd);
 			if (ObjectHasHandle(&direction, &dist))
 			{
 				StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);

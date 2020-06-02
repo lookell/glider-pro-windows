@@ -77,19 +77,19 @@ Boolean InvisBonusFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean TransFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean EnemyFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean FlowerFilter (DialogPtr, EventRecord *, SInt16 *);
-void DoBlowerObjectInfo (SInt16);
-void DoFurnitureObjectInfo (void);
-void DoCustPictObjectInfo (void);
-void DoSwitchObjectInfo (void);
-void DoTriggerObjectInfo (void);
-void DoLightObjectInfo (void);
-void DoApplianceObjectInfo (SInt16);
-void DoMicrowaveObjectInfo (void);
-void DoGreaseObjectInfo (void);
-void DoInvisBonusObjectInfo (void);
-void DoTransObjectInfo (SInt16);
-void DoEnemyObjectInfo (SInt16);
-void DoFlowerObjectInfo (void);
+void DoBlowerObjectInfo (HWND, SInt16);
+void DoFurnitureObjectInfo (HWND);
+void DoCustPictObjectInfo (HWND);
+void DoSwitchObjectInfo (HWND);
+void DoTriggerObjectInfo (HWND);
+void DoLightObjectInfo (HWND);
+void DoApplianceObjectInfo (HWND, SInt16);
+void DoMicrowaveObjectInfo (HWND);
+void DoGreaseObjectInfo (HWND);
+void DoInvisBonusObjectInfo (HWND);
+void DoTransObjectInfo (HWND, SInt16);
+void DoEnemyObjectInfo (HWND, SInt16);
+void DoFlowerObjectInfo (HWND);
 
 
 SInt16		newDirection, newPoint;
@@ -998,9 +998,9 @@ Boolean FlowerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  DoBlowerObjectInfo
 
-void DoBlowerObjectInfo (SInt16 what)
+void DoBlowerObjectInfo (HWND hwndOwner, SInt16 what)
 {
-	MessageBox(mainWindow, L"DoBlowerObjectInfo()", NULL, MB_ICONHAND);
+	MessageBox(hwndOwner, L"DoBlowerObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1175,9 +1175,9 @@ void DoBlowerObjectInfo (SInt16 what)
 
 //--------------------------------------------------------------  DoFurnitureObjectInfo
 
-void DoFurnitureObjectInfo (void)
+void DoFurnitureObjectInfo (HWND hwndOwner)
 {
-	MessageBox(mainWindow, L"DoFurnitureObjectInfo()", NULL, MB_ICONHAND);
+	MessageBox(hwndOwner, L"DoFurnitureObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1244,9 +1244,9 @@ void DoFurnitureObjectInfo (void)
 
 //--------------------------------------------------------------  DoCustPictObjectInfo
 
-void DoCustPictObjectInfo (void)
+void DoCustPictObjectInfo (HWND hwndOwner)
 {
-	MessageBox(mainWindow, L"DoCustPictObjectInfo()", NULL, MB_ICONHAND);
+	MessageBox(hwndOwner, L"DoCustPictObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1345,9 +1345,9 @@ void DoCustPictObjectInfo (void)
 
 //--------------------------------------------------------------  DoSwitchObjectInfo
 
-void DoSwitchObjectInfo (void)
+void DoSwitchObjectInfo (HWND hwndOwner)
 {
-	MessageBox(mainWindow, L"DoSwitchObjectInfo()", NULL, MB_ICONHAND);
+	MessageBox(hwndOwner, L"DoSwitchObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1471,9 +1471,9 @@ void DoSwitchObjectInfo (void)
 
 //--------------------------------------------------------------  DoTriggerObjectInfo
 
-void DoTriggerObjectInfo (void)
+void DoTriggerObjectInfo (HWND hwndOwner)
 {
-	MessageBox(mainWindow, L"DoTriggerObjectInfo()", NULL, MB_ICONHAND);
+	MessageBox(hwndOwner, L"DoTriggerObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1631,9 +1631,9 @@ void DoTriggerObjectInfo (void)
 
 //--------------------------------------------------------------  DoLightObjectInfo
 
-void DoLightObjectInfo (void)
+void DoLightObjectInfo (HWND hwndOwner)
 {
-	MessageBox(mainWindow, L"DoLightObjectInfo()", NULL, MB_ICONHAND);
+	MessageBox(hwndOwner, L"DoLightObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1721,9 +1721,9 @@ void DoLightObjectInfo (void)
 
 //--------------------------------------------------------------  DoApplianceObjectInfo
 
-void DoApplianceObjectInfo (SInt16 what)
+void DoApplianceObjectInfo (HWND hwndOwner, SInt16 what)
 {
-	MessageBox(mainWindow, L"DoApplianceObjectInfo()", NULL, MB_ICONHAND);
+	MessageBox(hwndOwner, L"DoApplianceObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1841,9 +1841,9 @@ void DoApplianceObjectInfo (SInt16 what)
 
 //--------------------------------------------------------------  DoMicrowaveObjectInfo
 
-void DoMicrowaveObjectInfo (void)
+void DoMicrowaveObjectInfo (HWND hwndOwner)
 {
-	MessageBox(mainWindow, L"DoMicrowaveObjectInfo()", NULL, MB_ICONHAND);
+	MessageBox(hwndOwner, L"DoMicrowaveObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -1969,9 +1969,9 @@ void DoMicrowaveObjectInfo (void)
 
 //--------------------------------------------------------------  DoGreaseObjectInfo
 
-void DoGreaseObjectInfo (void)
+void DoGreaseObjectInfo (HWND hwndOwner)
 {
-	MessageBox(mainWindow, L"DoGreaseObjectInfo()", NULL, MB_ICONHAND);
+	MessageBox(hwndOwner, L"DoGreaseObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -2047,9 +2047,9 @@ void DoGreaseObjectInfo (void)
 
 //--------------------------------------------------------------  DoInvisBonusObjectInfo
 
-void DoInvisBonusObjectInfo (void)
+void DoInvisBonusObjectInfo (HWND hwndOwner)
 {
-	MessageBox(mainWindow, L"DoInvisBonusObjectInfo()", NULL, MB_ICONHAND);
+	MessageBox(hwndOwner, L"DoInvisBonusObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -2164,9 +2164,9 @@ void DoInvisBonusObjectInfo (void)
 
 //--------------------------------------------------------------  DoTransObjectInfo
 
-void DoTransObjectInfo (SInt16 what)
+void DoTransObjectInfo (HWND hwndOwner, SInt16 what)
 {
-	MessageBox(mainWindow, L"DoTransObjectInfo()", NULL, MB_ICONHAND);
+	MessageBox(hwndOwner, L"DoTransObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -2291,9 +2291,9 @@ void DoTransObjectInfo (SInt16 what)
 
 //--------------------------------------------------------------  DoEnemyObjectInfo
 
-void DoEnemyObjectInfo (SInt16 what)
+void DoEnemyObjectInfo (HWND hwndOwner, SInt16 what)
 {
-	MessageBox(mainWindow, L"DoEnemyObjectInfo()", NULL, MB_ICONHAND);
+	MessageBox(hwndOwner, L"DoEnemyObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -2405,9 +2405,9 @@ void DoEnemyObjectInfo (SInt16 what)
 
 //--------------------------------------------------------------  DoFlowerObjectInfo
 
-void DoFlowerObjectInfo (void)
+void DoFlowerObjectInfo (HWND hwndOwner)
 {
-	MessageBox(mainWindow, L"DoFlowerObjectInfo()", NULL, MB_ICONHAND);
+	MessageBox(hwndOwner, L"DoFlowerObjectInfo()", NULL, MB_ICONHAND);
 	return;
 #if 0
 	DialogPtr		infoDial;
@@ -2508,13 +2508,13 @@ void DoFlowerObjectInfo (void)
 
 //--------------------------------------------------------------  DoObjectInfo
 
-void DoObjectInfo (void)
+void DoObjectInfo (HWND hwndOwner)
 {
 	if ((objActive == kInitialGliderSelected) ||
 			(objActive == kLeftGliderSelected) ||
 			(objActive == kRightGliderSelected))
 	{
-		DoFurnitureObjectInfo();
+		DoFurnitureObjectInfo(hwndOwner);
 		return;
 	}
 
@@ -2536,7 +2536,7 @@ void DoObjectInfo (void)
 		case kGrecoVent:
 		case kSewerBlower:
 		case kLiftArea:
-		DoBlowerObjectInfo(thisRoom->objects[objActive].what);
+		DoBlowerObjectInfo(hwndOwner, thisRoom->objects[objActive].what);
 		break;
 
 		case kTable:
@@ -2596,16 +2596,16 @@ void DoObjectInfo (void)
 		case kFaucet:
 		case kRug:
 		case kChimes:
-		DoFurnitureObjectInfo();
+		DoFurnitureObjectInfo(hwndOwner);
 		break;
 
 		case kGreaseRt:
 		case kGreaseLf:
-		DoGreaseObjectInfo();
+		DoGreaseObjectInfo(hwndOwner);
 		break;
 
 		case kInvisBonus:
-		DoInvisBonusObjectInfo();
+		DoInvisBonusObjectInfo(hwndOwner);
 		break;
 
 		case kMailboxLf:
@@ -2614,7 +2614,7 @@ void DoObjectInfo (void)
 		case kCeilingTrans:
 		case kInvisTrans:
 		case kDeluxeTrans:
-		DoTransObjectInfo(thisRoom->objects[objActive].what);
+		DoTransObjectInfo(hwndOwner, thisRoom->objects[objActive].what);
 		break;
 
 		case kLightSwitch:
@@ -2623,12 +2623,12 @@ void DoObjectInfo (void)
 		case kPowerSwitch:
 		case kKnifeSwitch:
 		case kInvisSwitch:
-		DoSwitchObjectInfo();
+		DoSwitchObjectInfo(hwndOwner);
 		break;
 
 		case kTrigger:
 		case kLgTrigger:
-		DoTriggerObjectInfo();
+		DoTriggerObjectInfo(hwndOwner);
 		break;
 
 		case kCeilingLight:
@@ -2639,7 +2639,7 @@ void DoObjectInfo (void)
 		case kFlourescent:
 		case kTrackLight:
 		case kInvisLight:
-		DoLightObjectInfo();
+		DoLightObjectInfo(hwndOwner);
 		break;
 
 		case kShredder:
@@ -2649,11 +2649,11 @@ void DoObjectInfo (void)
 		case kCoffee:
 		case kOutlet:
 		case kVCR:
-		DoApplianceObjectInfo(thisRoom->objects[objActive].what);
+		DoApplianceObjectInfo(hwndOwner, thisRoom->objects[objActive].what);
 		break;
 
 		case kMicrowave:
-		DoMicrowaveObjectInfo();
+		DoMicrowaveObjectInfo(hwndOwner);
 		break;
 
 		case kBalloon:
@@ -2664,16 +2664,16 @@ void DoObjectInfo (void)
 		case kBall:
 		case kDrip:
 		case kFish:
-		DoEnemyObjectInfo(thisRoom->objects[objActive].what);
+		DoEnemyObjectInfo(hwndOwner, thisRoom->objects[objActive].what);
 		break;
 
 		case kFlower:
-		DoFlowerObjectInfo();
+		DoFlowerObjectInfo(hwndOwner);
 		break;
 
 		case kSoundTrigger:
 		case kCustomPict:
-		DoCustPictObjectInfo();
+		DoCustPictObjectInfo(hwndOwner);
 		break;
 
 		default:

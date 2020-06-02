@@ -312,7 +312,7 @@ void DrawCustPictSansWhite (SInt16, Rect *);
 
 void DrawARoomsObjects (SInt16, Boolean);				// --- ObjectDrawAll.c
 
-void DoSelectionClick (Point, Boolean);					// --- ObjectEdit.c
+void DoSelectionClick (HWND, Point, Boolean);			// --- ObjectEdit.c
 void DoNewObjectClick (HWND, Point);
 void Gp_DeleteObject (void);
 void DuplicateObject (HWND);
@@ -328,7 +328,7 @@ void HiliteAllObjects (void);
 void GoToObjectInRoom (SInt16, SInt16, SInt16);
 void GoToObjectInRoomNum (SInt16, SInt16);
 
-void DoObjectInfo (void);								// --- ObjectInfo.c
+void DoObjectInfo (HWND);								// --- ObjectInfo.c
 
 void GetObjectRect (objectPtr, Rect *);					// --- ObjectRects.c
 SInt16 CreateActiveRects (SInt16);

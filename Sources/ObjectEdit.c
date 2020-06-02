@@ -72,19 +72,20 @@ SInt16 FindObjectSelected (Point where)
 
 //--------------------------------------------------------------  DoSelectionClick
 
-void DoSelectionClick (Point where, Boolean isDoubleClick)
+void DoSelectionClick (HWND hwnd, Point where, Boolean isDoubleClick)
 {
 #ifndef COMPILEDEMO
 	SInt16		direction, dist;
-	POINT		pt;
+	POINT		dragPt;
 
 	StopMarquee();
 
-	pt.x = where.h;
-	pt.y = where.v;
+	dragPt.x = where.h;
+	dragPt.y = where.v;
+	ClientToScreen(hwnd, &dragPt);
 	if ((PtInMarqueeHandle(where)) && (objActive != kNoObjectSelected))
 	{
-		if (DragDetect(mainWindow, pt))
+		if (DragDetect(hwnd, dragPt))
 			DragHandle(where);
 		if (ObjectHasHandle(&direction, &dist))
 		{
@@ -106,7 +107,7 @@ void DoSelectionClick (Point where, Boolean isDoubleClick)
 		{
 			if (isDoubleClick)
 			{
-				DoObjectInfo();
+				DoObjectInfo(hwnd);
 				if (ObjectHasHandle(&direction, &dist))
 				{
 					StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
@@ -118,7 +119,7 @@ void DoSelectionClick (Point where, Boolean isDoubleClick)
 			else
 			{
 
-				if (DragDetect(mainWindow, pt))
+				if (DragDetect(hwnd, dragPt))
 					Gp_DragObject(where);
 				if (ObjectHasHandle(&direction, &dist))
 				{
