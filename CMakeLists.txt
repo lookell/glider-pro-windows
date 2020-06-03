@@ -37,6 +37,7 @@ target_sources(
   Headers/Audio.h
   Headers/ByteIO.h
   Headers/Macintosh.h
+  Headers/MacTypes.h
   Headers/ResourceIDs.h
   Headers/WinAPI.h
   # added sources

@@ -530,10 +530,10 @@
 #define kGliderBurningHigh			26
 #define kShadowHigh					9
 #define kShadowTop					306
-#define kFaceRight					TRUE
-#define kFaceLeft					FALSE
-#define kPlayer1					TRUE
-#define kPlayer2					FALSE
+#define kFaceRight					true
+#define kFaceLeft					false
+#define kPlayer1					true
+#define kPlayer2					false
 #define kNumGliderSrcRects			31
 #define kNumShadowSrcRects			2
 #define kFirstAboutFaceFrame		18

@@ -19,14 +19,14 @@
 
 #define	kNilPointer					0L
 #define	kPutInFront					(WindowPtr)-1L
-#define	kNormalUpdates				TRUE
+#define	kNormalUpdates				true
 #define kOneKilobyte				1024
 #define kOkayButton					1
 #define kCancelButton				2
 #define kControlActive				0
 #define kControlInactive			255
-#define kAsynch						TRUE
-#define kSynch						FALSE
+#define kAsynch						true
+#define kSynch						false
 
 #define kHomeKeyASCII				0x01
 #define kEnterKeyASCII				0x03
