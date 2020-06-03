@@ -5,11 +5,11 @@
 //============================================================================
 
 
-#include "WinAPI.h"
 #include "About.h"
 #include "DialogUtils.h"
 #include "Environ.h"
 #include "ResourceIDs.h"
+#include "WinAPI.h"
 
 
 #define kTextItemVers		1002

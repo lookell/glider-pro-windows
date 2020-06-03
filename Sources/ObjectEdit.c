@@ -5,11 +5,9 @@
 //============================================================================
 
 
-//#include <Sound.h>
-//#include <ToolUtils.h>
-#include "Macintosh.h"
 #include "Externs.h"
 #include "House.h"
+#include "Macintosh.h"
 #include "MainWindow.h"
 #include "Marquee.h"
 #include "ObjectEdit.h"

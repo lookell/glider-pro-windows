@@ -6,17 +6,12 @@
 //============================================================================
 
 
-//#include <Aliases.h>
-//#include <Movies.h>
-//#include <Resources.h>
-//#include <StringCompare.h>
-//#include <TextUtils.h>
-#include "Macintosh.h"
 #include "ByteIO.h"
 #include "DialogUtils.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
 #include "House.h"
+#include "Macintosh.h"
 #include "ObjectEdit.h"
 #include "ResourceIDs.h"
 

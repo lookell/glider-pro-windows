@@ -6,9 +6,8 @@
 //============================================================================
 
 
-//#include <TextUtils.h>
-#include "Macintosh.h"
 #include "Externs.h"
+#include "Macintosh.h"
 #include "ResourceIDs.h"
 
 

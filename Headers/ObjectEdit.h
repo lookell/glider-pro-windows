@@ -1,3 +1,6 @@
+#ifndef OBJECT_EDIT_H_
+#define OBJECT_EDIT_H_
+
 //============================================================================
 //----------------------------------------------------------------------------
 //								   ObjectEdit.h
@@ -8,9 +11,10 @@
 #pragma once
 
 
-//#include <Quickdraw.h>
-#include "Macintosh.h"
+#include "MacTypes.h"
 
 
 extern Rect			roomObjectRects[];
 extern SInt16		objActive;
+
+#endif

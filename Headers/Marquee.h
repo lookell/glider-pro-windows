@@ -1,3 +1,6 @@
+#ifndef MARQUEE_H_
+#define MARQUEE_H_
+
 //============================================================================
 //----------------------------------------------------------------------------
 //									Marquee.h
@@ -8,8 +11,8 @@
 #pragma once
 
 
-//#include <Quickdraw.h>
-#include "Macintosh.h"
+#include "GliderDefines.h"
+#include "MacTypes.h"
 #include "WinAPI.h"
 
 
@@ -24,3 +27,4 @@ typedef struct
 
 extern marquee		theMarquee;
 
+#endif

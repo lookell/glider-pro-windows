@@ -8,7 +8,6 @@
 
 #include "Environ.h"
 #include "Externs.h"
-//#include <Palettes.h>
 #include "Macintosh.h"
 
 

@@ -1,3 +1,6 @@
+#ifndef UTILITIES_H_
+#define UTILITIES_H_
+
 //============================================================================
 //----------------------------------------------------------------------------
 //								  Utilities.c
@@ -5,9 +8,11 @@
 //============================================================================
 
 
-//#include <QDOffscreen.h>
+#include "MacTypes.h"
 #include "WinAPI.h"
-#include "Macintosh.h"
+
 
 OSErr CreateOffScreenGWorld (HDC *theGWorld, Rect *bounds, SInt16 depth);
 void DisposeGWorld (HDC theGWorld);
+
+#endif

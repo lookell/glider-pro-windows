@@ -6,10 +6,9 @@
 //============================================================================
 
 
-//#include <NumberFormatting.h>
-#include "Macintosh.h"
 #include "Externs.h"
 #include "DialogUtils.h"
+#include "MacTypes.h"
 #include "ResourceIDs.h"
 
 

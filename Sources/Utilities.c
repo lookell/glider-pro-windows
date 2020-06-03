@@ -5,22 +5,14 @@
 //============================================================================
 
 
-//#include <Icons.h>
-//#include <NumberFormatting.h>
-//#include <Resources.h>
-//#include <Sound.h>
-//#include <TextUtils.h>
-//#include <ToolUtils.h>
-#include <stdlib.h>
-#include "Macintosh.h"
-#include "WinAPI.h"
-
 #include "Audio.h"
 #include "DialogUtils.h"
 #include "Externs.h"
+#include "Macintosh.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Utilities.h"
+#include "WinAPI.h"
 
 
 GDHandle	thisGDevice;

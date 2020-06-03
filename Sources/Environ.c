@@ -6,16 +6,11 @@
 //============================================================================
 
 
-#include "Macintosh.h"
-//#include <LowMem.h>
-//#include <Gestalt.h>
-//#include <NumberFormatting.h>
-//#include <Sound.h>
 #include "DialogUtils.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
+#include "MacTypes.h"
 #include "ResourceIDs.h"
-//#include <Palettes.h>
 
 
 #define kWNETrap				0x60

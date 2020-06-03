@@ -1,3 +1,6 @@
+#ifndef ENVIRON_H_
+#define ENVIRON_H_
+
 //============================================================================
 //----------------------------------------------------------------------------
 //								Environ.h
@@ -5,8 +8,7 @@
 //============================================================================
 
 
-//#include <Quickdraw.h>
-#include "Macintosh.h"
+#include "MacTypes.h"
 
 
 typedef struct
@@ -36,3 +38,4 @@ typedef struct
 extern macEnviron	thisMac;
 
 
+#endif

@@ -6,8 +6,9 @@
 //============================================================================
 
 
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
+#include "Macintosh.h"
 #include "Objects.h"
 #include "RectUtils.h"
 #include "Room.h"

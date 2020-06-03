@@ -7,9 +7,8 @@
 /*============================================================*/
 
 
-//#include <NumberFormatting.h>
-#include "Macintosh.h"
 #include "Externs.h"
+#include "Macintosh.h"
 
 
 SInt16			barGraphHori = 0;

@@ -6,14 +6,12 @@
 //============================================================================
 
 
-//#include <Resources.h>
-//#include <Sound.h>
-#include "WinAPI.h"
-#include "Macintosh.h"
 #include "Audio.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
 #include "House.h"
+#include "Macintosh.h"
+#include "WinAPI.h"
 
 
 #define kPrefsVersion			0x0034

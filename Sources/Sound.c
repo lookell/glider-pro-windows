@@ -6,12 +6,10 @@
 //============================================================================
 
 
-//#include <Resources.h>
-//#include <Sound.h>
-#include "Macintosh.h"
 #include "Audio.h"
 #include "DialogUtils.h"
 #include "Externs.h"
+#include "MacTypes.h"
 #include "ResourceIDs.h"
 
 

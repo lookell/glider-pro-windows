@@ -1,3 +1,5 @@
+#ifndef EXTERNS_H_
+#define EXTERNS_H_
 
 //============================================================================
 //----------------------------------------------------------------------------
@@ -9,9 +11,8 @@
 #pragma once
 
 
-//#include <Menus.h>
+#include "MacTypes.h"
 #include "WinAPI.h"
-#include "Macintosh.h"
 
 
 #define kPreferredDepth				8
@@ -449,3 +450,5 @@ int ReadBoundsType(struct byteio *, boundsType *);
 int WriteBoundsType(struct byteio *, const boundsType *);
 int ReadDemoType(struct byteio *, demoType *);
 int WriteDemoType(struct byteio *, const demoType *);
+
+#endif

@@ -5,15 +5,10 @@
 //============================================================================
 
 
-//#include <Navigation.h>
-//#include <NumberFormatting.h>
-//#include <Resources.h>
-//#include <Sound.h>
-#include <stdlib.h>
-#include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "House.h"
+#include "Macintosh.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 

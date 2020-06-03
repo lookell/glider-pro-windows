@@ -6,11 +6,8 @@
 
 
 #define _CRT_SECURE_NO_WARNINGS
-//#include <Resources.h>
-#include <stddef.h>
-#include <wchar.h>
-#include "Macintosh.h"
 #include "Externs.h"
+#include "Macintosh.h"
 #include "Objects.h"
 #include "Play.h"
 #include "Player.h"

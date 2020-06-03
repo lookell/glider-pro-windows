@@ -6,8 +6,8 @@
 //============================================================================
 
 
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
 
 
 extern	dynaPtr		dinahs;

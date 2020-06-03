@@ -6,13 +6,10 @@
 //============================================================================
 
 
-//#include <Balloons.h>
-//#include <NumberFormatting.h>
-//#include <ToolUtils.h>
-#include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "House.h"
+#include "Macintosh.h"
 #include "ObjectEdit.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"

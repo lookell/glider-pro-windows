@@ -6,11 +6,11 @@
 //============================================================================
 
 
-#include "Macintosh.h"
 #include "DialogUtils.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
 #include "House.h"
+#include "MacTypes.h"
 #include "ResourceIDs.h"
 #include <shlwapi.h> // for DLLGETVERSIONPROC and DLLGETVERSIONINFO
 

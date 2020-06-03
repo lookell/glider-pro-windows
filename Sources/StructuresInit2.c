@@ -5,15 +5,11 @@
 //============================================================================
 
 
-//#include <Resources.h>
-#include <stdlib.h>
-#include "Macintosh.h"
-#include "WinAPI.h"
-
 #include "ByteIO.h"
 #include "Externs.h"
 #include "Environ.h"
 #include "GameOver.h"
+#include "MacTypes.h"
 #include "MainWindow.h"
 #include "Objects.h"
 #include "RectUtils.h"
@@ -21,6 +17,7 @@
 #include "Room.h"
 #include "RoomGraphics.h"
 #include "Utilities.h"
+#include "WinAPI.h"
 
 
 void InitClutter (void);

@@ -1,3 +1,6 @@
+#ifndef RUBBER_BANDS_H_
+#define RUBBER_BANDS_H_
+
 //============================================================================
 //----------------------------------------------------------------------------
 //								  RubberBands.h
@@ -5,9 +8,10 @@
 //============================================================================
 
 
-//#include <QDOffscreen.h>
 #include "WinAPI.h"
 
 
 extern HDC		bandsSrcMap;
 extern HDC		bandsMaskMap;
+
+#endif

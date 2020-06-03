@@ -1,3 +1,6 @@
+#ifndef WINAPI_H_
+#define WINAPI_H_
+
 // The following definitions ask for the following:
 //
 // * strict type definitions (this is the default, but just to be sure...)
@@ -23,3 +26,5 @@
 
 EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 #define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
+
+#endif

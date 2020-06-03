@@ -1,8 +1,14 @@
+#ifndef OBJECTS_H_
+#define OBJECTS_H_
+
 //============================================================================
 //----------------------------------------------------------------------------
 //									Objects.h
 //----------------------------------------------------------------------------
 //============================================================================
+
+
+#include "WinAPI.h"
 
 
 extern HDC				blowerSrcMap;
@@ -40,3 +46,5 @@ extern HDC				fishSrcMap;
 extern HDC				fishMaskMap;
 extern HDC				clutterSrcMap;
 extern HDC				clutterMaskMap;
+
+#endif

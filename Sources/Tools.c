@@ -5,10 +5,9 @@
 //============================================================================
 
 
-//#include <TextUtils.h>
-#include "Macintosh.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
+#include "Macintosh.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Utilities.h"

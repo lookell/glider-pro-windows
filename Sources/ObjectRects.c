@@ -7,6 +7,7 @@
 
 
 #include "Externs.h"
+#include "Macintosh.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 

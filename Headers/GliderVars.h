@@ -1,3 +1,6 @@
+#ifndef GLIDER_VARS_H_
+#define GLIDER_VARS_H_
+
 //============================================================================
 //----------------------------------------------------------------------------
 //								GliderVars.h
@@ -5,8 +8,9 @@
 //============================================================================
 
 
-//#include <Movies.h>
-#include "Macintosh.h"
+#include "GliderStructs.h"
+#include "MacTypes.h"
+#include "WinAPI.h"
 
 
 extern	Rect		blowerSrcRect;
@@ -58,3 +62,4 @@ extern	SInt16		thisRoomNumber, theMode, batteryTotal, bandsTotal;
 extern	SInt16		foilTotal, mortals, numMasterObjects, previousRoom;
 extern	Boolean		fileDirty, gameDirty, showFoil, doZooms, isPlayMusicGame;
 
+#endif

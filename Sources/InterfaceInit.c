@@ -6,8 +6,9 @@
 //============================================================================
 
 
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
+#include "Macintosh.h"
 #include "Map.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"

@@ -1,3 +1,6 @@
+#ifndef DIALOG_UTILS_H_
+#define DIALOG_UTILS_H_
+
 //============================================================================
 //----------------------------------------------------------------------------
 //								DialogUtils.h
@@ -5,8 +8,8 @@
 //============================================================================
 
 
-//#include <Dialogs.h>
-#include "Macintosh.h"
+#include "MacTypes.h"
+#include "WinAPI.h"
 
 
 typedef struct DialogParams {
@@ -56,3 +59,5 @@ void FrameOvalDialogItem (DialogPtr, SInt16);
 void BorderDialogItem (DialogPtr, SInt16, SInt16);
 void ShadowDialogItem (DialogPtr, SInt16, SInt16);
 void EraseDialogItem (DialogPtr, SInt16);
+
+#endif

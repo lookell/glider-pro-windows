@@ -6,16 +6,11 @@
 //============================================================================
 
 
-//#include <Folders.h>
-//#include <Gestalt.h>
-//#include <Script.h>
-//#include <TextUtils.h>
-//#include <ToolUtils.h>
-#include "Macintosh.h"
 #include "ByteIO.h"
 #include "DialogUtils.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
+#include "Macintosh.h"
 #include "ResourceIDs.h"
 
 

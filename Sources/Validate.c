@@ -7,9 +7,9 @@
 
 
 #include "Externs.h"
-//#include <Gestalt.h>
 #include "Macintosh.h"
 #include "ResourceIDs.h"
+//#include <Gestalt.h>
 
 
 #ifndef COMPILEDEMO

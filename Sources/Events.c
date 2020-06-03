@@ -6,13 +6,11 @@
 //============================================================================
 
 
-//#include <AppleEvents.h>
-//#include <ToolUtils.h>
-#include "Macintosh.h"
 #include "DialogUtils.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
 #include "House.h"
+#include "Macintosh.h"
 #include "ObjectEdit.h"
 #include "ResourceIDs.h"
 

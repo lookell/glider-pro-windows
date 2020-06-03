@@ -1,3 +1,5 @@
+#ifndef GLIDER_DEFINES_H_
+#define GLIDER_DEFINES_H_
 
 //============================================================================
 //----------------------------------------------------------------------------
@@ -223,6 +225,25 @@
 #define kSouthWestRoom				6
 #define kWestRoom					7
 #define kNorthWestRoom				8
+
+#define kSimpleRoom                 2000
+#define kPaneledRoom                2001
+#define kBasement                   2002
+#define kChildsRoom                 2003
+#define kAsianRoom                  2004
+#define kUnfinishedRoom             2005
+#define kSwingersRoom               2006
+#define kBathroom                   2007
+#define kLibrary                    2008
+#define kGarden                     2009
+#define kSkywalk                    2010
+#define kDirt                       2011
+#define kMeadow                     2012
+#define kField                      2013
+#define kRoof                       2014
+#define kSky                        2015
+#define kStratosphere               2016
+#define kStars                      2017
 
 #define kMapRoomHeight				20
 #define kMapRoomWidth				32
@@ -596,3 +617,5 @@
 #define kSavingTitleMode			2
 
 #define kDemoLength					6702
+
+#endif

@@ -6,13 +6,10 @@
 //============================================================================
 
 
-//#include <Resources.h>
-//#include <TextUtils.h>
 #define _CRT_SECURE_NO_WARNINGS
-#include <wchar.h>
-#include "Macintosh.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
+#include "Macintosh.h"
 #include "Objects.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"

@@ -6,15 +6,11 @@
 //============================================================================
 
 
-//#include <Aliases.h>
-//#include <Resources.h>
-//#include <Sound.h>
-//#include <StringCompare.h>
-#include "Macintosh.h"
 #include "DialogUtils.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
 #include "House.h"
+#include "Macintosh.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 

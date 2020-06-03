@@ -1,3 +1,6 @@
+#ifndef RECT_UTILS_H_
+#define RECT_UTILS_H_
+
 //============================================================================
 //----------------------------------------------------------------------------
 //								   RectUtils.h
@@ -8,8 +11,8 @@
 #pragma once
 
 
-//#include <Quickdraw.h>
-#include "Macintosh.h"
+#include "MacTypes.h"
+#include "WinAPI.h"
 
 
 void FrameWHRect (HDC, SInt16, SInt16, SInt16, SInt16);
@@ -32,3 +35,5 @@ Boolean ForceRectInRect (Rect *, Rect *);
 void QUnionSimilarRect (Rect *, Rect *, Rect *);
 void FrameRectSansCorners (HDC, Rect *);
 void SetEraseRect (SInt16, SInt16, SInt16, SInt16);
+
+#endif

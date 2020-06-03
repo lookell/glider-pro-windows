@@ -6,10 +6,9 @@
 //============================================================================
 
 
-//#include <Resources.h>
-#include "Macintosh.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
+#include "MacTypes.h"
 
 
 #define	rAcurID					128

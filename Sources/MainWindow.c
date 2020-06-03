@@ -6,13 +6,10 @@
 
 
 #define _CRT_SECURE_NO_WARNINGS
-//#include <NumberFormatting.h>
-//#include <ToolUtils.h>
-#include <wchar.h>
-#include "Macintosh.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
 #include "House.h"
+#include "Macintosh.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 

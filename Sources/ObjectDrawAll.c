@@ -8,6 +8,7 @@
 
 #include "Externs.h"
 #include "Environ.h"
+#include "Macintosh.h"
 #include "RectUtils.h"
 
 

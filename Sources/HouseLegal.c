@@ -6,10 +6,8 @@
 //============================================================================
 
 
-//#include <NumberFormatting.h>
-//#include <StringCompare.h>
-#include "Macintosh.h"
 #include "Externs.h"
+#include "Macintosh.h"
 #include "ObjectEdit.h"
 #include "RectUtils.h"
 

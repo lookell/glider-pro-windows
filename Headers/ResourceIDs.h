@@ -1,6 +1,8 @@
 #ifndef RESOURCE_IDS_H_
 #define RESOURCE_IDS_H_
 
+#include "GliderDefines.h"
+
 #ifdef RC_INVOKED
 #define RT_DEMO DEMO
 #else
@@ -232,24 +234,9 @@
 #define kScoreboardPictID       1997
 #define kHighScoresMaskID       1998
 #define kSupportPictID          1999
-#define kSimpleRoom             2000
-#define kPaneledRoom            2001
-#define kBasement               2002
-#define kChildsRoom             2003
-#define kAsianRoom              2004
-#define kUnfinishedRoom         2005
-#define kSwingersRoom           2006
-#define kBathroom               2007
-#define kLibrary                2008
-#define kGarden                 2009
-#define kSkywalk                2010
-#define kDirt                   2011
-#define kMeadow                 2012
-#define kField                  2013
-#define kRoof                   2014
-#define kSky                    2015
-#define kStratosphere           2016
-#define kStars                  2017
+
+// NOTE: Background PICT IDs are in GliderDefines.h
+
 //#define kBBQMaskID              3900
 //#define kUpStairsMaskID         3901
 //#define kTrunkMaskID            3902

@@ -6,10 +6,9 @@
 
 
 #define _CRT_SECURE_NO_WARNINGS
-//#include <ToolUtils.h>
-#include "Macintosh.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
+#include "Macintosh.h"
 #include "MainWindow.h"
 #include "Objects.h"
 #include "RectUtils.h"

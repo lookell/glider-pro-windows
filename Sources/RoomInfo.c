@@ -6,12 +6,9 @@
 //============================================================================
 
 
-//#include <NumberFormatting.h>
-//#include <Resources.h>
-//#include <Sound.h>
-#include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
+#include "Macintosh.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Utilities.h"

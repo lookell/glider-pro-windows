@@ -7,8 +7,9 @@
 
 
 #include "DialogUtils.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
+#include "Macintosh.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 
@@ -123,7 +124,7 @@ void OpenMessageWindow (StringPtr title)
 	WCHAR windowTitle[256];
 
 	WinFromMacString(windowTitle, ARRAYSIZE(windowTitle), title);
-	mssgTextColor = blackColor;
+	mssgTextColor = GetSysColor(COLOR_WINDOWTEXT);
 	mssgWindow = CreateDialog(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kMessageWindowID),
 			mainWindow, MessageWindowProc);

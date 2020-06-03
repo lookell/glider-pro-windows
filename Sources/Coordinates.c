@@ -5,10 +5,9 @@
 //============================================================================
 
 
-//#include <NumberFormatting.h>
-#include "Macintosh.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
+#include "Macintosh.h"
 #include "Marquee.h"
 #include "ObjectEdit.h"
 #include "RectUtils.h"

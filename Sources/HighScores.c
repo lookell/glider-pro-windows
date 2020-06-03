@@ -6,18 +6,13 @@
 //============================================================================
 
 
-//#include <Folders.h>
-//#include <NumberFormatting.h>
-//#include <Script.h>
-//#include <Sound.h>
-//#include <StringCompare.h>
 #define _CRT_SECURE_NO_WARNINGS
-#include "Macintosh.h"
 #include "ByteIO.h"
 #include "DialogUtils.h"
-#include "Externs.h"
 #include "Environ.h"
+#include "Externs.h"
 #include "House.h"
+#include "Macintosh.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"

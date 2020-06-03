@@ -1,5 +1,5 @@
-#ifndef GP_AUDIO_H_
-#define GP_AUDIO_H_
+#ifndef AUDIO_H_
+#define AUDIO_H_
 
 #include <stddef.h>
 #include <stdint.h>

@@ -6,6 +6,7 @@
 
 
 #include "Externs.h"
+#include "Macintosh.h"
 #include "ObjectEdit.h"
 
 

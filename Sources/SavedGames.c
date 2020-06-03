@@ -6,12 +6,11 @@
 //============================================================================
 
 
-//#include <StringCompare.h>
-#include "Macintosh.h"
 #include "ByteIO.h"
 #include "DialogUtils.h"
 #include "Externs.h"
 #include "House.h"
+#include "Macintosh.h"
 #include "ResourceIDs.h"
 
 

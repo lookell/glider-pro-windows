@@ -6,6 +6,7 @@
 
 
 #include "Externs.h"
+#include "Macintosh.h"
 #include "Marquee.h"
 #include "Objects.h"
 #include "ObjectEdit.h"

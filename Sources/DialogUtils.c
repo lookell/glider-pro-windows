@@ -5,12 +5,9 @@
 //============================================================================
 
 
-//#include <ControlDefinitions.h>
-//#include <LowMem.h>
-//#include <NumberFormatting.h>
-#include "Macintosh.h"
 #include "DialogUtils.h"
 #include "Externs.h"
+#include "Macintosh.h"
 
 
 #define kActive						0

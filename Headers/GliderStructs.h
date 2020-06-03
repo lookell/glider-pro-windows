@@ -1,3 +1,6 @@
+#ifndef GLIDER_STRUCTS_H_
+#define GLIDER_STRUCTS_H_
+
 //============================================================================
 //----------------------------------------------------------------------------
 //								GliderStructs.h
@@ -5,8 +8,9 @@
 //============================================================================
 
 
-//#include <QDOffscreen.h>
-#include "Macintosh.h"
+#include "GliderDefines.h"
+#include "MacTypes.h"
+#include "WinAPI.h"
 
 
 typedef struct
@@ -349,9 +353,9 @@ typedef struct
 
 typedef struct
 {
-	WCHAR		path[MAX_PATH];
-	WCHAR		houseName[33];
+	wchar_t		path[MAX_PATH];
+	wchar_t		houseName[33];
 	Str32		name;
 } houseSpec, *houseSpecPtr;
 
-
+#endif
