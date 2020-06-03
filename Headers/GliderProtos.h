@@ -328,7 +328,8 @@ void HiliteAllObjects (void);
 void GoToObjectInRoom (SInt16, SInt16, SInt16);
 void GoToObjectInRoomNum (SInt16, SInt16);
 
-void DoObjectInfo (HWND);								// --- ObjectInfo.c
+void GetObjectName (wchar_t *, int, SInt16);			// --- ObjectInfo.c
+void DoObjectInfo (HWND);
 
 void GetObjectRect (objectPtr, Rect *);					// --- ObjectRects.c
 SInt16 CreateActiveRects (SInt16);

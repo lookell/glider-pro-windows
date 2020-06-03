@@ -104,6 +104,24 @@ extern	Boolean		linkerIsSwitch;
 #ifndef COMPILEDEMO
 
 //==============================================================  Functions
+//--------------------------------------------------------------  GetObjectName
+
+void GetObjectName (wchar_t *buffer, int size, SInt16 objectType)
+{
+	UINT strID;
+	LPWSTR strPtr;
+	int strLen;
+
+	if (buffer == NULL || size < 1)
+		return;
+	buffer[0] = L'\0';
+
+	strID = (UINT)(kObjectNameStringsBase + objectType);
+	strLen = LoadString(HINST_THISCOMPONENT, strID, (LPWSTR)&strPtr, 0);
+	if (strLen == 0 || strPtr == NULL)
+		return;
+	StringCchCopyN(buffer, size, strPtr, strLen);
+}
 //--------------------------------------------------------------  UpdateBlowerInfo
 
 void UpdateBlowerInfo (DialogPtr theDialog)
