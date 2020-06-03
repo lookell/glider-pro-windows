@@ -416,7 +416,7 @@ INT_PTR CALLBACK NameFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 	{
 	case WM_INITDIALOG:
 		CenterOverOwner(hDlg);
-		ParamDialogText(hDlg, (const DialogParams*)lParam);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		SetDialogString(hDlg, kHighNameItem, highName);
 		SendDlgItemMessage(hDlg, kHighNameItem,
 				EM_LIMITTEXT, ARRAYSIZE(highName) - 1, 0);
@@ -452,11 +452,18 @@ INT_PTR CALLBACK NameFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 
 void GetHighScoreName (HWND ownerWindow, SInt16 place)
 {
-	DialogParams	params = { 0 };
+	DialogParams params = { 0 };
+	wchar_t scoreStr[32];
+	wchar_t placeStr[32];
+	wchar_t houseStr[64];
 
-	StringCchPrintf(params.arg[0], ARRAYSIZE(params.arg[0]), L"%ld", (long)theScore);
-	StringCchPrintf(params.arg[1], ARRAYSIZE(params.arg[1]), L"%ld", (long)place);
-	WinFromMacString(params.arg[2], ARRAYSIZE(params.arg[2]), thisHouseName);
+	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)theScore);
+	StringCchPrintf(placeStr, ARRAYSIZE(placeStr), L"%ld", (long)place);
+	WinFromMacString(houseStr, ARRAYSIZE(houseStr), thisHouseName);
+
+	params.arg[0] = scoreStr;
+	params.arg[1] = placeStr;
+	params.arg[2] = houseStr;
 	DialogBoxParam(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kHighNameDialogID),
 			ownerWindow, NameFilter, (LPARAM)&params);

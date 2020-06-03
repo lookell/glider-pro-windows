@@ -159,35 +159,32 @@ static BOOL CALLBACK DisableThreadWndProc(HWND window, LPARAM lParam)
 
 void RedAlert (SInt16 errorNumber)
 {
-	SInt16			dummyInt;
-	INT				loadResult;
-	DialogParams	params = { 0 };
+	DialogParams params = { 0 };
+	SInt16 dummyInt;
+	INT loadResult;
+	wchar_t errTitle[256];
+	wchar_t errMessage[256];
+	wchar_t errNumberString[32];
 
-	if (errorNumber > 1)		// <= 0 is unaccounted for
-	{
-		loadResult = LoadString(HINST_THISCOMPONENT, rErrTitleBase + errorNumber,
-				params.arg[0], ARRAYSIZE(params.arg[0]));
-		if (loadResult <= 0)
-			params.arg[0][0] = L'\0';
-		loadResult = LoadString(HINST_THISCOMPONENT, rErrMssgBase + errorNumber,
-				params.arg[1], ARRAYSIZE(params.arg[1]));
-		if (loadResult <= 0)
-			params.arg[1][0] = L'\0';
-	}
-	else
-	{
-		loadResult = LoadString(HINST_THISCOMPONENT, rErrTitleBase + 1,
-				params.arg[0], ARRAYSIZE(params.arg[0]));
-		if (loadResult <= 0)
-			params.arg[0][0] = L'\0';
-		loadResult = LoadString(HINST_THISCOMPONENT, rErrMssgBase + 1,
-				params.arg[1], ARRAYSIZE(params.arg[1]));
-		if (loadResult <= 0)
-			params.arg[1][0] = L'\0';
-	}
-	StringCchPrintf(params.arg[2], ARRAYSIZE(params.arg[2]), L"%d", (int)errorNumber);
+	if (errorNumber <= 0)       // <= 0 is unaccounted for
+		errorNumber = 1;
+
+	loadResult = LoadString(HINST_THISCOMPONENT, rErrTitleBase + errorNumber,
+			errTitle, ARRAYSIZE(errTitle));
+	if (loadResult <= 0)
+		errTitle[0] = L'\0';
+
+	loadResult = LoadString(HINST_THISCOMPONENT, rErrMssgBase + errorNumber,
+			errMessage, ARRAYSIZE(errMessage));
+	if (loadResult <= 0)
+		errMessage[0] = L'\0';
+
+	StringCchPrintf(errNumberString, ARRAYSIZE(errNumberString), L"%d", (int)errorNumber);
 
 	EnumThreadWindows(GetCurrentThreadId(), DisableThreadWndProc, 0);
+	params.arg[0] = errTitle;
+	params.arg[1] = errMessage;
+	params.arg[2] = errNumberString;
 	dummyInt = Alert(rDeathAlertID, mainWindow, &params);
 
 	if (mainWindow != NULL)

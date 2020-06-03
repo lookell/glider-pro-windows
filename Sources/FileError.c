@@ -45,6 +45,10 @@ Boolean CheckFileError (HWND ownerWindow, DWORD resultCode, StringPtr fileName)
 {
 	SInt16			dummyInt;
 	DialogParams	params = { 0 };
+	LPWSTR			errMessage;
+	wchar_t			errNumString[32];
+	wchar_t			fileNameStr[256];
+	DWORD			formatFlags;
 	DWORD			result;
 
 	if (resultCode == ERROR_SUCCESS)	// No problems?  Then cruise
@@ -112,17 +116,21 @@ Boolean CheckFileError (HWND ownerWindow, DWORD resultCode, StringPtr fileName)
 		params.arg[0][0] = L'\0';
 	*/
 
-	result = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-			NULL, resultCode, 0, params.arg[0], ARRAYSIZE(params.arg[0]), NULL);
+	formatFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER
+		| FORMAT_MESSAGE_IGNORE_INSERTS
+		| FORMAT_MESSAGE_FROM_SYSTEM;
+	result = FormatMessage(formatFlags, NULL, resultCode, 0, (LPWSTR)&errMessage, 0, NULL);
 	if (result == 0)
-		params.arg[0][0] = L'\0';
+		errMessage = NULL;
 
-	StringCchPrintf(params.arg[1], ARRAYSIZE(params.arg[1]), L"%lu", (ULONG)resultCode);
-	WinFromMacString(params.arg[2], ARRAYSIZE(params.arg[2]), fileName);
+	StringCchPrintf(errNumString, ARRAYSIZE(errNumString), L"%lu", (ULONG)resultCode);
+	WinFromMacString(fileNameStr, ARRAYSIZE(fileNameStr), fileName);
 
+	params.arg[0] = errMessage;
+	params.arg[1] = errNumString;
+	params.arg[2] = fileNameStr;
 	dummyInt = Alert(rFileErrorAlert, ownerWindow, &params);
-
+	LocalFree(errMessage);
 	return(false);
 }
-
 

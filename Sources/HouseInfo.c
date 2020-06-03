@@ -183,10 +183,12 @@ INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 
 void DoHouseInfo (HWND ownerWindow)
 {
-	DialogParams	params = { 0 };
-	Str255			versStr, loVers, nRoomsStr;
-	SInt32			h, v;
-	SInt16			numRooms, version;
+	DialogParams params = { 0 };
+	SInt32 h, v;
+	SInt16 numRooms, version;
+	wchar_t versStr[32];
+	wchar_t loVers[32];
+	wchar_t nRoomsStr[32];
 
 	numRooms = RealRoomNumberCount();
 	version = thisHouse->version;
@@ -196,14 +198,15 @@ void DoHouseInfo (HWND ownerWindow)
 		v = (SInt32)thisHouse->rooms[thisHouse->firstRoom].floor;
 	}
 
-	Mac_NumToString((SInt32)version >> 8, versStr);		// Convert version to two strings…
-	Mac_NumToString((SInt32)version % 0x0100, loVers);	// the 1's and 1/10th's part.
-	Mac_NumToString((SInt32)numRooms, nRoomsStr);		// Number of rooms -> string.
+	// Convert version to two strings, the 1's and 1/10th's part.
+	StringCchPrintf(versStr, ARRAYSIZE(versStr), L"%ld", (long)(version >> 8));
+	StringCchPrintf(loVers, ARRAYSIZE(loVers), L"%ld", (long)(version % 0x0100));
+	// Number of rooms -> string.
+	StringCchPrintf(nRoomsStr, ARRAYSIZE(nRoomsStr), L"%ld", (long)numRooms);
 
-	WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), versStr);
-	WinFromMacString(params.arg[1], ARRAYSIZE(params.arg[1]), loVers);
-	WinFromMacString(params.arg[2], ARRAYSIZE(params.arg[2]), nRoomsStr);
-
+	params.arg[0] = versStr;
+	params.arg[1] = loVers;
+	params.arg[2] = nRoomsStr;
 	DialogBoxParam(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kHouseInfoDialogID),
 			ownerWindow, HouseFilter, (LPARAM)&params);

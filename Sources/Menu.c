@@ -775,11 +775,8 @@ INT_PTR CALLBACK ResumeFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 		switch (LOWORD(wParam))
 		{
 		case kSheWantsNewGame:
-			EndDialog(hDlg, kSheWantsNewGame);
-			break;
-
 		case kSheWantsResumeGame:
-			EndDialog(hDlg, kSheWantsResumeGame);
+			EndDialog(hDlg, LOWORD(wParam));
 			break;
 		}
 		return TRUE;
@@ -795,21 +792,19 @@ INT_PTR CALLBACK ResumeFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 SInt16 QueryResumeGame (HWND ownerWindow)
 {
 	DialogParams params;
-	Str255 scoreStr, glidStr;
+	wchar_t scoreStr[32];
+	wchar_t glidStr[32];
 	SInt32 hadPoints;
 	SInt16 hadGliders;
 
 	hadPoints = thisHouse->savedGame.score;
 	hadGliders = thisHouse->savedGame.numGliders;
-	Mac_NumToString(hadPoints, scoreStr);
-	Mac_NumToString(hadGliders, glidStr);
-	WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), glidStr);
-	if (hadGliders == 1)
-		StringCchCopy(params.arg[1], ARRAYSIZE(params.arg[1]), L"");
-	else
-		StringCchCopy(params.arg[1], ARRAYSIZE(params.arg[1]), L"s");
-	WinFromMacString(params.arg[2], ARRAYSIZE(params.arg[2]), scoreStr);
+	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)hadPoints);
+	StringCchPrintf(glidStr, ARRAYSIZE(glidStr), L"%ld", (long)hadGliders);
 
+	params.arg[0] = glidStr;
+	params.arg[1] = (hadGliders == 1) ? L"" : L"s";
+	params.arg[2] = scoreStr;
 	return (SInt16)DialogBoxParam(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kResumeGameDial), ownerWindow,
 			ResumeFilter, (LPARAM)&params);

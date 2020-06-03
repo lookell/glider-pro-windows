@@ -593,7 +593,7 @@ void CheckMemorySize (HWND ownerWindow)
 	SInt32			bytesNeeded, bytesAvail;
 	SInt32			soundBytes, musicBytes;
 	SInt16			hitWhat;
-	Str255			sizeStr;
+	wchar_t			sizeStr[256];
 	MEMORYSTATUSEX	memoryStatus;
 
 	dontLoadMusic = false;
@@ -710,12 +710,14 @@ void CheckMemorySize (HWND ownerWindow)
 		}
 
 #ifdef COMPILEDEMO
-		Mac_NumToString((bytesNeeded + kPaddingBytes) / 1024L, sizeStr);
-		WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), sizeStr);
+		StringCchPrintf(sizeStr, ARRAYSIZE(sizeStr), L"%ld",
+				(long)((bytesNeeded + kPaddingBytes) / 1024L));
+		params.arg[0] = sizeStr;
 		hitWhat = Alert(kLowMemoryAlert, ownerWindow, &params);
 #else
-		Mac_NumToString((bytesNeeded + kPaddingBytes) / 1024L, sizeStr);
-		WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), sizeStr);
+		StringCchPrintf(sizeStr, ARRAYSIZE(sizeStr), L"%ld",
+				(long)((bytesNeeded + kPaddingBytes) / 1024L));
+		params.arg[0] = sizeStr;
 		hitWhat = Alert(kSetMemoryAlert, ownerWindow, &params);
 //		SetAppMemorySize(bytesNeeded + kPaddingBytes);
 #endif

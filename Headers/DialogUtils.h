@@ -10,7 +10,7 @@
 
 
 typedef struct DialogParams {
-	WCHAR arg[4][256];
+	wchar_t *arg[4];
 } DialogParams;
 
 

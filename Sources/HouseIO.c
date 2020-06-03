@@ -626,13 +626,15 @@ void CloseHouseResFork (void)
 Boolean QuerySaveChanges (HWND ownerWindow)
 {
 	DialogParams	params = { 0 };
+	wchar_t			houseStr[64];
 	SInt16			hitWhat;
 	Boolean			whoCares;
 
 	if (!fileDirty)
 		return(true);
 
-	WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), thisHouseName);
+	WinFromMacString(houseStr, ARRAYSIZE(houseStr), thisHouseName);
+	params.arg[0] = houseStr;
 	hitWhat = Alert(kSaveChangesAlert, ownerWindow, &params);
 	if (hitWhat == kSaveChanges)
 	{
@@ -669,17 +671,19 @@ Boolean QuerySaveChanges (HWND ownerWindow)
 void YellowAlert (HWND ownerWindow, SInt16 whichAlert, SInt16 identifier)
 {
 	DialogParams	params = { 0 };
+	wchar_t			errStr[256];
+	wchar_t			errNumStr[16];
 	INT				result;
 	SInt16			whoCares;
 
 	result = LoadString(HINST_THISCOMPONENT, kYellowAlertStringBase + whichAlert,
-			params.arg[0], ARRAYSIZE(params.arg[0]));
+			errStr, ARRAYSIZE(errStr));
 	if (result <= 0)
-	{
-		StringCchCopy(params.arg[0], ARRAYSIZE(params.arg[0]), L"");
-	}
-	StringCchPrintf(params.arg[1], ARRAYSIZE(params.arg[1]), L"%d", (int)identifier);
+		errStr[0] = L'\0';
+	StringCchPrintf(errNumStr, ARRAYSIZE(errNumStr), L"%d", (int)identifier);
 
+	params.arg[0] = errStr;
+	params.arg[1] = errNumStr;
 	whoCares = Alert(kYellowAlert, ownerWindow, &params);
 }
 

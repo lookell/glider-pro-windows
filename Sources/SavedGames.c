@@ -160,9 +160,14 @@ void SaveGame2 (HWND ownerWindow)
 void SavedGameMismatchError (HWND ownerWindow, StringPtr gameName)
 {
 	DialogParams params = { 0 };
+	wchar_t gameStr[256];
+	wchar_t houseStr[64];
 
-	WinFromMacString(params.arg[0], ARRAYSIZE(params.arg[0]), gameName);
-	WinFromMacString(params.arg[1], ARRAYSIZE(params.arg[1]), thisHouseName);
+	WinFromMacString(gameStr, ARRAYSIZE(gameStr), gameName);
+	WinFromMacString(houseStr, ARRAYSIZE(houseStr), thisHouseName);
+
+	params.arg[0] = gameStr;
+	params.arg[1] = houseStr;
 	Alert(kSavedGameErrorAlert, ownerWindow, &params);
 }
 
