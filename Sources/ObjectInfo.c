@@ -14,6 +14,8 @@
 #include "ResourceIDs.h"
 
 
+#define kFurnitureLinkedFrom        1006
+
 #define kCustPictIDItem				7
 #define kInitialStateCheckbox		6
 #define kForceCheckbox				7
@@ -49,7 +51,6 @@
 
 
 void UpdateBlowerInfo (DialogPtr);
-void UpdateFurnitureInfo (DialogPtr);
 void UpdateCustPictInfo (DialogPtr);
 void UpdateSwitchInfo (DialogPtr);
 void UpdateTriggerInfo (DialogPtr);
@@ -62,7 +63,7 @@ void UpdateTransInfo (DialogPtr);
 void UpdateEnemyInfo (DialogPtr);
 void UpdateFlowerInfo (DialogPtr);
 Boolean BlowerFilter (DialogPtr, EventRecord *, SInt16 *);
-Boolean FurnitureFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK FurnitureFilter (HWND, UINT, WPARAM, LPARAM);
 Boolean CustPictFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean SwitchFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean TriggerFilter (DialogPtr, EventRecord *, SInt16 *);
@@ -222,18 +223,6 @@ void UpdateBlowerInfo (DialogPtr theDialog)
 			}
 		}
 	}
-#endif
-}
-
-//--------------------------------------------------------------  UpdateFurnitureInfo
-
-void UpdateFurnitureInfo (DialogPtr theDialog)
-{
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
 #endif
 }
 
@@ -436,41 +425,31 @@ Boolean BlowerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  FurnitureFilter
 
-Boolean FurnitureFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK FurnitureFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		if ((objActive < 0) || (retroLinkList[objActive].room == -1))
+			ShowWindow(GetDlgItem(hDlg, kFurnitureLinkedFrom), SW_HIDE);
+
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
+		FocusDefaultButton(hDlg);
+		return FALSE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
+		case IDOK:
+		case IDCANCEL:
+		case kFurnitureLinkedFrom:
+			EndDialog(hDlg, LOWORD(wParam));
 			break;
-
-			default:
-			return(false);
 		}
-		break;
-
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateFurnitureInfo(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  CustPictFilter
@@ -1192,69 +1171,43 @@ void DoBlowerObjectInfo (HWND hwndOwner, SInt16 what)
 
 void DoFurnitureObjectInfo (HWND hwndOwner)
 {
-	MessageBox(hwndOwner, L"DoFurnitureObjectInfo()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		infoDial;
-	Str255			numberStr, kindStr;
-	short			item;
-	Boolean			leaving, doReturn;
-	ModalFilterUPP	furnitureFilterUPP;
-
-	furnitureFilterUPP = NewModalFilterUPP(FurnitureFilter);
+	DialogParams params = { 0 };
+	INT_PTR result;
+	wchar_t numberStr[32];
+	wchar_t kindStr[256];
 
 	if (objActive == kInitialGliderSelected)
 	{
-		PasStringCopy("\p-", numberStr);
-		PasStringCopy("\pGlider Begins", kindStr);
+		StringCchCopy(numberStr, ARRAYSIZE(numberStr), L"-");
+		StringCchCopy(kindStr, ARRAYSIZE(kindStr), L"Glider Begins");
 	}
 	else if (objActive == kLeftGliderSelected)
 	{
-		PasStringCopy("\p-", numberStr);
-		PasStringCopy("\pNew Glider (left)", kindStr);
+		StringCchCopy(numberStr, ARRAYSIZE(numberStr), L"-");
+		StringCchCopy(kindStr, ARRAYSIZE(kindStr), L"New Glider (left)");
 	}
 	else if (objActive == kRightGliderSelected)
 	{
-		PasStringCopy("\p-", numberStr);
-		PasStringCopy("\pNew Glider (right)", kindStr);
+		StringCchCopy(numberStr, ARRAYSIZE(numberStr), L"-");
+		StringCchCopy(kindStr, ARRAYSIZE(kindStr), L"New Glider (right)");
 	}
 	else
 	{
-		NumToString(objActive + 1, numberStr);
-		GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
-	}
-	ParamText(numberStr, kindStr, "\p", "\p");
-
-	BringUpDialog(&infoDial, kFurnitureInfoDialogID);
-
-	if ((objActive < 0) || (retroLinkList[objActive].room == -1))
-		HideDialogItem(infoDial, 6);
-
-	leaving = false;
-	doReturn = false;
-
-	while (!leaving)
-	{
-		ModalDialog(furnitureFilterUPP, &item);
-
-		if (item == kOkayButton)
-			leaving = true;
-		else if (item == 6)				// Linked From? button.
-		{
-			leaving = true;
-			doReturn = true;
-		}
+		StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%ld", (long)(objActive + 1));
+		GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
 	}
 
-	DisposeDialog(infoDial);
-	DisposeModalFilterUPP(furnitureFilterUPP);
+	params.arg[0] = numberStr;
+	params.arg[1] = kindStr;
+	result = DialogBoxParam(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kFurnitureInfoDialogID),
+			hwndOwner, FurnitureFilter, (LPARAM)&params);
 
-	if (doReturn)
+	if (result == kFurnitureLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoCustPictObjectInfo
