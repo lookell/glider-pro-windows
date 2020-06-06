@@ -1,25 +1,36 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kBlowerInfoDialogID DIALOGEX 0, 0, 171, 103
+#define kBlowerInitialState         1006
+#define kForceCheckbox              1007
+#define kBlowerArrow                1008
+#define kDirectionText              1009
+#define kBlowerUpButton             1011
+#define kBlowerRightButton          1012
+#define kBlowerDownButton           1013
+#define kBlowerLeftButton           1014
+#define kBlowerLinkedFrom           1015
+#define kLeftFacingRadio            1016
+#define kRightFacingRadio           1017
+
+kBlowerInfoDialogID DIALOGEX 0, 0, 193, 90
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    PUSHBUTTON "Okay", 1, 127, 86, 39, 12
-    PUSHBUTTON "Cancel", 2, 83, 86, 39, 12
-    LTEXT "Object Number: ^0", -1, 5, 36, 85, 10, SS_NOPREFIX
-    LTEXT "Object Kind: ^1", -1, 5, 25, 160, 10, SS_NOPREFIX
-    CONTROL "", 5, STATIC, SS_OWNERDRAW, 5, 79, 160, 1
-    CHECKBOX "Initially On", 6, 5, 54, 75, 11
-    CHECKBOX "Extra Forceful", 7, 267, 62, 75, 11
-    CONTROL "", 8, STATIC, SS_OWNERDRAW, 140, 50, 17, 16
-    LTEXT "Direction:", -1, 88, 54, 43, 10, SS_NOPREFIX
-    CONTROL kObjectInfoTitle, -1, STATIC, SS_BITMAP, 0, 0, 171, 20
-    CONTROL "", 11, STATIC, SS_OWNERDRAW, 145, 42, 8, 7
-    CONTROL "", 12, STATIC, SS_OWNERDRAW, 159, 55, 8, 7
-    CONTROL "", 13, STATIC, SS_OWNERDRAW, 145, 68, 8, 7
-    CONTROL "", 14, STATIC, SS_OWNERDRAW, 131, 55, 8, 7
-    PUSHBUTTON "Linked From?", 15, 5, 86, 64, 12
-    RADIOBUTTON "Left Facing", 16, 88, 54, 71, 11
-    RADIOBUTTON "Right Facing", 17, 88, 65, 71, 11
+    LTEXT "Object Kind: ^1", IDC_STATIC, 7, 7, 179, 8, SS_NOPREFIX | WS_GROUP
+    LTEXT "Object Number: ^0", IDC_STATIC, 7, 18, 85, 8, SS_NOPREFIX
+    AUTOCHECKBOX "Initially On", kBlowerInitialState, 7, 33, 82, 10, WS_GROUP
+//  AUTOCHECKBOX "Extra Forceful", kForceCheckbox, 267, 62, 75, 11
+    LTEXT "Direction:", kDirectionText, 96, 34, 45, 8, WS_GROUP
+    AUTORADIOBUTTON "", kBlowerUpButton, 160, 19, 8, 8, BS_NOTIFY | WS_TABSTOP | WS_GROUP
+    AUTORADIOBUTTON "", kBlowerRightButton, 176, 34, 8, 8, BS_NOTIFY
+    AUTORADIOBUTTON "", kBlowerDownButton, 160, 49, 8, 8, BS_NOTIFY
+    AUTORADIOBUTTON "", kBlowerLeftButton, 144, 34, 8, 8, BS_NOTIFY
+    CONTROL "", kBlowerArrow, STATIC, SS_OWNERDRAW | WS_GROUP, 154, 29, 20, 18
+    AUTORADIOBUTTON "Left Facing", kLeftFacingRadio, 96, 33, 90, 10, WS_TABSTOP | WS_GROUP
+    AUTORADIOBUTTON "Right Facing", kRightFacingRadio, 96, 45, 90, 10
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ | WS_GROUP, 7, 61, 179, 1
+    PUSHBUTTON "Linked From?", kBlowerLinkedFrom, 7, 69, 64, 14, WS_GROUP
+    DEFPUSHBUTTON "Okay", IDOK, 82, 69, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 136, 69, 50, 14
 }

@@ -14,14 +14,22 @@
 #include "ResourceIDs.h"
 
 
+#define kBlowerInitialState         1006
+#define kForceCheckbox              1007
+#define kBlowerArrow                1008
+#define kDirectionText              1009
+#define kBlowerUpButton             1011
+#define kBlowerRightButton          1012
+#define kBlowerDownButton           1013
+#define kBlowerLeftButton           1014
+#define kBlowerLinkedFrom           1015
+#define kLeftFacingRadio            1016
+#define kRightFacingRadio           1017
+
 #define kFurnitureLinkedFrom        1006
 
 #define kCustPictIDItem				7
 #define kInitialStateCheckbox		6
-#define kForceCheckbox				7
-#define kDirectionText				9
-#define kLeftFacingRadio			16
-#define kRightFacingRadio			17
 #define	kToggleRadio				6
 #define	kForceOnRadio				7
 #define	kForceOffRadio				8
@@ -50,7 +58,7 @@
 #define kGotoButton2				14
 
 
-void UpdateBlowerInfo (DialogPtr);
+void UpdateBlowerInfo (HWND, HDC);
 void UpdateCustPictInfo (DialogPtr);
 void UpdateSwitchInfo (DialogPtr);
 void UpdateTriggerInfo (DialogPtr);
@@ -62,7 +70,7 @@ void UpdateInvisBonusInfo (DialogPtr);
 void UpdateTransInfo (DialogPtr);
 void UpdateEnemyInfo (DialogPtr);
 void UpdateFlowerInfo (DialogPtr);
-Boolean BlowerFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK BlowerFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK FurnitureFilter (HWND, UINT, WPARAM, LPARAM);
 Boolean CustPictFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean SwitchFilter (DialogPtr, EventRecord *, SInt16 *);
@@ -75,7 +83,7 @@ Boolean InvisBonusFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean TransFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean EnemyFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean FlowerFilter (DialogPtr, EventRecord *, SInt16 *);
-void DoBlowerObjectInfo (HWND, SInt16);
+void DoBlowerObjectInfo (HWND);
 void DoFurnitureObjectInfo (HWND);
 void DoCustPictObjectInfo (HWND);
 void DoSwitchObjectInfo (HWND);
@@ -90,7 +98,7 @@ void DoEnemyObjectInfo (HWND, SInt16);
 void DoFlowerObjectInfo (HWND);
 
 
-SInt16		newDirection, newPoint;
+SInt16		newPoint;
 Byte		newType;
 
 extern	retroLink	retroLinkList[];
@@ -120,110 +128,93 @@ void GetObjectName (wchar_t *buffer, int size, SInt16 objectType)
 		return;
 	StringCchCopyN(buffer, size, strPtr, strLen);
 }
+
 //--------------------------------------------------------------  UpdateBlowerInfo
 
-void UpdateBlowerInfo (DialogPtr theDialog)
-{
-	return;
-#if 0
-	#define		kArrowheadLength	4
-	Rect		bounds;
+#define kArrowheadLength 4
 
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-	FrameDialogItemC(theDialog, 5, kRedOrangeColor8);
+void UpdateBlowerInfo (HWND hDlg, HDC hdc)
+{
+	RECT bounds;
+	LONG centerHori, centerVert;
+	HPEN hPen, oldPen;
+	HWND focusedWindow;
 
 	if ((thisRoom->objects[objActive].what != kLeftFan) &&
-			(thisRoom->objects[objActive].what != kRightFan))
+		(thisRoom->objects[objActive].what != kRightFan))
 	{
-		GetDialogItemRect(theDialog, 8, &bounds);
-		bounds.right += 2;
-		bounds.bottom += 2;
-		EraseRect(&bounds);
-		bounds.right -= 2;
-		bounds.bottom -= 2;
-		PenSize(2, 2);
+		GetWindowRect(GetDlgItem(hDlg, kBlowerArrow), &bounds);
+		MapWindowPoints(HWND_DESKTOP, hDlg, (POINT *)&bounds, 2);
 
-		switch (newDirection)
+		FillRect(hdc, &bounds, GetSysColorBrush(COLOR_BTNFACE));
+
+		// The bounds are deflated here to allow a focus rectangle to be drawn
+		// later, when it is appropriate to do so, without the focus rectangle
+		// overlapping the arrow.
+		InflateRect(&bounds, -1, -1);
+		centerHori = bounds.left + (bounds.right - bounds.left) / 2;
+		centerVert = bounds.top + (bounds.bottom - bounds.top) / 2;
+
+		hPen = CreatePen(PS_SOLID, 2, GetSysColor(COLOR_WINDOWTEXT));
+		oldPen = SelectObject(hdc, hPen);
+
+		// Draw an arrow pointing in the currently selected direction
+		if (IsDlgButtonChecked(hDlg, kBlowerUpButton))
 		{
-			case 1:		// up
-			MoveTo(bounds.left + HalfRectWide(&bounds), bounds.top);
-			Line(0, RectTall(&bounds));
-			MoveTo(bounds.left + HalfRectWide(&bounds), bounds.top);
-			Line(kArrowheadLength, kArrowheadLength);
-			MoveTo(bounds.left + HalfRectWide(&bounds), bounds.top);
-			Line(-kArrowheadLength, kArrowheadLength);
-			break;
-
-			case 2:		// right
-			MoveTo(bounds.right, bounds.top + HalfRectTall(&bounds));
-			Line(-RectWide(&bounds), 0);
-			MoveTo(bounds.right, bounds.top + HalfRectTall(&bounds));
-			Line(-kArrowheadLength, kArrowheadLength);
-			MoveTo(bounds.right, bounds.top + HalfRectTall(&bounds));
-			Line(-kArrowheadLength, -kArrowheadLength);
-			break;
-
-			case 4:		// down
-			MoveTo(bounds.left + HalfRectWide(&bounds), bounds.top);
-			Line(0, RectTall(&bounds));
-			MoveTo(bounds.left + HalfRectWide(&bounds), bounds.bottom);
-			Line(kArrowheadLength, -kArrowheadLength);
-			MoveTo(bounds.left + HalfRectWide(&bounds), bounds.bottom);
-			Line(-kArrowheadLength, -kArrowheadLength);
-			break;
-
-			case 8:		// left
-			MoveTo(bounds.left, bounds.top + HalfRectTall(&bounds));
-			Line(RectWide(&bounds), 0);
-			MoveTo(bounds.left, bounds.top + HalfRectTall(&bounds));
-			Line(kArrowheadLength, -kArrowheadLength);
-			MoveTo(bounds.left, bounds.top + HalfRectTall(&bounds));
-			Line(kArrowheadLength, kArrowheadLength);
-			break;
-
-			default:
-			break;
+			MoveToEx(hdc, centerHori, bounds.top, NULL);
+			LineTo(hdc, centerHori, bounds.bottom - 1);
+			MoveToEx(hdc, centerHori, bounds.top + 1, NULL);
+			LineTo(hdc, centerHori + kArrowheadLength, bounds.top + 1 + kArrowheadLength);
+			MoveToEx(hdc, centerHori - 1, bounds.top + 1, NULL);
+			LineTo(hdc, centerHori - 1 - kArrowheadLength, bounds.top + 1 + kArrowheadLength);
+		}
+		else if (IsDlgButtonChecked(hDlg, kBlowerRightButton))
+		{
+			MoveToEx(hdc, bounds.right - 1, centerVert, NULL);
+			LineTo(hdc, bounds.left, centerVert);
+			MoveToEx(hdc, bounds.right - 2, centerVert, NULL);
+			LineTo(hdc, bounds.right - 2 - kArrowheadLength, centerVert + kArrowheadLength);
+			MoveToEx(hdc, bounds.right - 1, centerVert, NULL);
+			LineTo(hdc, bounds.right - 2 - kArrowheadLength, centerVert - 1 - kArrowheadLength);
+		}
+		else if (IsDlgButtonChecked(hDlg, kBlowerDownButton))
+		{
+			MoveToEx(hdc, centerHori, bounds.top, NULL);
+			LineTo(hdc, centerHori, bounds.bottom - 1);
+			MoveToEx(hdc, centerHori, bounds.bottom - 2, NULL);
+			LineTo(hdc, centerHori + kArrowheadLength, bounds.bottom - 2 - kArrowheadLength);
+			MoveToEx(hdc, centerHori - 1, bounds.bottom - 2, NULL);
+			LineTo(hdc, centerHori - 1 - kArrowheadLength, bounds.bottom - 2 - kArrowheadLength);
+		}
+		else if (IsDlgButtonChecked(hDlg, kBlowerLeftButton))
+		{
+			MoveToEx(hdc, bounds.left, centerVert, NULL);
+			LineTo(hdc, bounds.right - 1, centerVert);
+			MoveToEx(hdc, bounds.left, centerVert, NULL);
+			LineTo(hdc, bounds.left + 1 + kArrowheadLength, centerVert - 1 - kArrowheadLength);
+			MoveToEx(hdc, bounds.left + 1, centerVert, NULL);
+			LineTo(hdc, bounds.left + 1 + kArrowheadLength, centerVert + kArrowheadLength);
 		}
 
-		PenNormal();
+		SelectObject(hdc, oldPen);
+		DeleteObject(hPen);
 
-		if ((thisRoom->objects[objActive].what == kInvisBlower) ||
-				(thisRoom->objects[objActive].what == kLiftArea))
+		// Draw the focus rectangle around the custom-drawn arrow, so that
+		// the direction option buttons look like they are part of a single
+		// control.
+		InflateRect(&bounds, 1, 1);
+		focusedWindow = GetFocus();
+		if ((GetDlgItem(hDlg, kBlowerUpButton) == focusedWindow) ||
+				(GetDlgItem(hDlg, kBlowerRightButton) == focusedWindow) ||
+				(GetDlgItem(hDlg, kBlowerDownButton) == focusedWindow) ||
+				(GetDlgItem(hDlg, kBlowerLeftButton) == focusedWindow))
 		{
-			switch (newDirection)
+			if ((SendMessage(hDlg, WM_QUERYUISTATE, 0, 0) & UISF_HIDEFOCUS) == 0)
 			{
-				case 1:		// up
-				EraseDialogItem(theDialog, 11);
-				FrameOvalDialogItem(theDialog, 12);
-				FrameOvalDialogItem(theDialog, 13);
-				FrameOvalDialogItem(theDialog, 14);
-				break;
-
-				case 2:		// right
-				FrameOvalDialogItem(theDialog, 11);
-				EraseDialogItem(theDialog, 12);
-				FrameOvalDialogItem(theDialog, 13);
-				FrameOvalDialogItem(theDialog, 14);
-				break;
-
-				case 4:		// down
-				FrameOvalDialogItem(theDialog, 11);
-				FrameOvalDialogItem(theDialog, 12);
-				EraseDialogItem(theDialog, 13);
-				FrameOvalDialogItem(theDialog, 14);
-				break;
-
-				case 8:		// left
-				FrameOvalDialogItem(theDialog, 11);
-				FrameOvalDialogItem(theDialog, 12);
-				FrameOvalDialogItem(theDialog, 13);
-				EraseDialogItem(theDialog, 14);
-				break;
+				DrawFocusRect(hdc, &bounds);
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  UpdateCustPictInfo
@@ -367,60 +358,169 @@ void UpdateFlowerInfo (DialogPtr theDialog)
 
 //--------------------------------------------------------------  BlowerFilter
 
-Boolean BlowerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+	{
+		SInt16 what = thisRoom->objects[objActive].what;
+
+		if (thisRoom->objects[objActive].data.a.initial)
+			CheckDlgButton(hDlg, kBlowerInitialState, BST_CHECKED);
+		else
+			CheckDlgButton(hDlg, kBlowerInitialState, BST_UNCHECKED);
+
+		if ((what == kTaper) || (what == kCandle) || (what == kStubby) ||
+				(what == kTiki) || (what == kBBQ))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
-			break;
-
-			case kEscapeKeyASCII:
-			FlashDialogButton(dial, kCancelButton);
-			*item = kCancelButton;
-			return(true);
-			break;
-
-			case kTabKeyASCII:
-//			SelectDialogItemText(dial, kRoomNameItem, 0, 1024);
-			return(true);
-			break;
-
-			default:
-			return(false);
+			ShowWindow(GetDlgItem(hDlg, kBlowerInitialState), SW_HIDE);
 		}
-		break;
 
-		case mouseDown:
-		return(false);
-		break;
+		if ((what == kLeftFan) || (what == kRightFan))
+		{
+			if (what == kLeftFan)
+			{
+				CheckRadioButton(hDlg, kLeftFacingRadio, kRightFacingRadio,
+						kLeftFacingRadio);
+			}
+			else
+			{
+				CheckRadioButton(hDlg, kLeftFacingRadio, kRightFacingRadio,
+						kRightFacingRadio);
+			}
+			ShowWindow(GetDlgItem(hDlg, kDirectionText), SW_HIDE);
+		}
+		else
+		{
+			ShowWindow(GetDlgItem(hDlg, kLeftFacingRadio), SW_HIDE);
+			ShowWindow(GetDlgItem(hDlg, kRightFacingRadio), SW_HIDE);
+		}
 
-		case mouseUp:
-		return(false);
-		break;
+		if ((what == kInvisBlower) || (what == kLiftArea))
+		{
+			if ((thisRoom->objects[objActive].data.a.vector & 0x01) == 0x01)
+			{
+				CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
+						kBlowerUpButton);
+			}
+			else if ((thisRoom->objects[objActive].data.a.vector & 0x02) == 0x02)
+			{
+				CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
+						kBlowerRightButton);
+			}
+			else if ((thisRoom->objects[objActive].data.a.vector & 0x04) == 0x04)
+			{
+				CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
+						kBlowerDownButton);
+			}
+			else if ((thisRoom->objects[objActive].data.a.vector & 0x08) == 0x08)
+			{
+				CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
+						kBlowerLeftButton);
+			}
+		}
+		else
+		{
+			ShowWindow(GetDlgItem(hDlg, kBlowerUpButton), SW_HIDE);
+			ShowWindow(GetDlgItem(hDlg, kBlowerRightButton), SW_HIDE);
+			ShowWindow(GetDlgItem(hDlg, kBlowerDownButton), SW_HIDE);
+			ShowWindow(GetDlgItem(hDlg, kBlowerLeftButton), SW_HIDE);
+		}
 
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateBlowerInfo(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
+		if (retroLinkList[objActive].room == -1)
+			ShowWindow(GetDlgItem(hDlg, kBlowerLinkedFrom), SW_HIDE);
 
-		default:
-		return(false);
-		break;
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
+		return TRUE;
 	}
-#endif
+
+	case WM_COMMAND:
+	{
+		HDC hdc;
+
+		switch (LOWORD(wParam))
+		{
+		case IDOK:
+		case kBlowerLinkedFrom:
+		{
+			SInt16 what = thisRoom->objects[objActive].what;
+
+			if (IsDlgButtonChecked(hDlg, kBlowerInitialState))
+				thisRoom->objects[objActive].data.a.initial = true;
+			else
+				thisRoom->objects[objActive].data.a.initial = false;
+
+			if ((what == kInvisBlower) || (what == kLiftArea))
+			{
+				if (IsDlgButtonChecked(hDlg, kBlowerUpButton))
+					thisRoom->objects[objActive].data.a.vector = 0x01;
+				else if (IsDlgButtonChecked(hDlg, kBlowerRightButton))
+					thisRoom->objects[objActive].data.a.vector = 0x02;
+				else if (IsDlgButtonChecked(hDlg, kBlowerDownButton))
+					thisRoom->objects[objActive].data.a.vector = 0x04;
+				else if (IsDlgButtonChecked(hDlg, kBlowerLeftButton))
+					thisRoom->objects[objActive].data.a.vector = 0x08;
+			}
+
+			if ((what == kLeftFan) || (what == kRightFan))
+			{
+				if (IsDlgButtonChecked(hDlg, kLeftFacingRadio))
+					thisRoom->objects[objActive].what = kLeftFan;
+				else
+					thisRoom->objects[objActive].what = kRightFan;
+				if (KeepObjectLegal())
+				{
+				}
+				Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+				GetThisRoomsObjRects();
+				ReadyBackground(thisRoom->background, thisRoom->tiles);
+				DrawThisRoomsObjects();
+			}
+			fileDirty = true;
+			UpdateMenus(false);
+			EndDialog(hDlg, LOWORD(wParam));
+			break;
+		}
+
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
+			break;
+
+		case kBlowerUpButton:
+		case kBlowerRightButton:
+		case kBlowerDownButton:
+		case kBlowerLeftButton:
+			switch (HIWORD(wParam))
+			{
+			case BN_CLICKED:
+			case BN_SETFOCUS:
+			case BN_KILLFOCUS:
+				hdc = GetDC(hDlg);
+				UpdateBlowerInfo(hDlg, hdc);
+				ReleaseDC(hDlg, hdc);
+				break;
+			}
+			break;
+		}
+		return TRUE;
+	}
+
+	case WM_UPDATEUISTATE:
+		InvalidateRect(hDlg, NULL, TRUE);
+		break;
+
+	case WM_PAINT:
+	{
+		PAINTSTRUCT ps;
+		BeginPaint(hDlg, &ps);
+		UpdateBlowerInfo(hDlg, ps.hdc);
+		EndPaint(hDlg, &ps);
+		return TRUE;
+	}
+	}
+	return FALSE;
 }
 
 //--------------------------------------------------------------  FurnitureFilter
@@ -992,179 +1092,31 @@ Boolean FlowerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
 
 //--------------------------------------------------------------  DoBlowerObjectInfo
 
-void DoBlowerObjectInfo (HWND hwndOwner, SInt16 what)
+void DoBlowerObjectInfo (HWND hwndOwner)
 {
-	MessageBox(hwndOwner, L"DoBlowerObjectInfo()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		infoDial;
-	Str255			numberStr, kindStr, distStr;
-	short			item, initial;
-	Boolean			leaving, doReturn, leftFacing;
-	ModalFilterUPP	blowerFilterUPP;
+	DialogParams params = { 0 };
+	wchar_t numberStr[32];
+	wchar_t kindStr[256];
+	wchar_t distStr[32];
+	INT_PTR result;
 
-	blowerFilterUPP = NewModalFilterUPP(BlowerFilter);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%ld", (long)(objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
+	StringCchPrintf(distStr, ARRAYSIZE(distStr), L"%ld",
+			(long)thisRoom->objects[objActive].data.a.distance);
 
-	NumToString(objActive + 1, numberStr);
-	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
-	NumToString(thisRoom->objects[objActive].data.a.distance, distStr);
-	ParamText(numberStr, kindStr, distStr, "\p");
+	params.arg[0] = numberStr;
+	params.arg[1] = kindStr;
+	params.arg[2] = distStr;
+	result = DialogBoxParam(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kBlowerInfoDialogID),
+			hwndOwner, BlowerFilter, (LPARAM)&params);
 
-//	CenterDialog(kBlowerInfoDialogID);
-	infoDial = GetNewDialog(kBlowerInfoDialogID, nil, kPutInFront);
-	if (infoDial == nil)
-		RedAlert(kErrDialogDidntLoad);
-	SetPort((GrafPtr)infoDial);
-
-	newDirection = thisRoom->objects[objActive].data.a.vector & 0x0F;
-	if (thisRoom->objects[objActive].data.a.initial)
-		SetDialogItemValue(infoDial, kInitialStateCheckbox, 1);
-	else
-		SetDialogItemValue(infoDial, kInitialStateCheckbox, 0);
-
-	if ((what == kTaper) || (what == kCandle) || (what == kStubby) ||
-			(what == kTiki) || (what == kBBQ))
-	{
-		HideDialogItem(infoDial, kInitialStateCheckbox);
-	}
-
-	if ((what == kLeftFan) || (what == kRightFan))
-	{
-		if (what == kLeftFan)
-		{
-			SelectFromRadioGroup(infoDial, kLeftFacingRadio,
-					kLeftFacingRadio, kRightFacingRadio);
-			leftFacing = true;
-		}
-		else
-		{
-			SelectFromRadioGroup(infoDial, kRightFacingRadio,
-					kLeftFacingRadio, kRightFacingRadio);
-			leftFacing = false;
-		}
-		HideDialogItem(infoDial, kDirectionText);
-	}
-	else
-	{
-		HideDialogItem(infoDial, kLeftFacingRadio);
-		HideDialogItem(infoDial, kRightFacingRadio);
-	}
-
-	if (retroLinkList[objActive].room == -1)
-		HideDialogItem(infoDial, 15);
-
-	ShowWindow(GetDialogWindow(infoDial));
-
-	leaving = false;
-	doReturn = false;
-
-	while (!leaving)
-	{
-		ModalDialog(blowerFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			GetDialogItemValue(infoDial, kInitialStateCheckbox, &initial);
-			if (initial == 1)
-				thisRoom->objects[objActive].data.a.initial = true;
-			else
-				thisRoom->objects[objActive].data.a.initial = false;
-			thisRoom->objects[objActive].data.a.vector = (Byte)newDirection;
-			if ((what == kLeftFan) || (what == kRightFan))
-			{
-				if (leftFacing)
-					thisRoom->objects[objActive].what = kLeftFan;
-				else
-					thisRoom->objects[objActive].what = kRightFan;
-				if (KeepObjectLegal())
-				{
-				}
-				InvalWindowRect(mainWindow, &mainWindowRect);
-				GetThisRoomsObjRects();
-				ReadyBackground(thisRoom->background, thisRoom->tiles);
-				DrawThisRoomsObjects();
-			}
-			fileDirty = true;
-			UpdateMenus(false);
-			leaving = true;
-		}
-		else if (item == kCancelButton)
-			leaving = true;
-		else if (item == kInitialStateCheckbox)
-			ToggleDialogItemValue(infoDial, kInitialStateCheckbox);
-		else if (item == 15)			// Linked From? button.
-		{
-			GetDialogItemValue(infoDial, kInitialStateCheckbox, &initial);
-			if (initial == 1)
-				thisRoom->objects[objActive].data.a.initial = true;
-			else
-				thisRoom->objects[objActive].data.a.initial = false;
-			thisRoom->objects[objActive].data.a.vector = (Byte)newDirection;
-			if ((what == kLeftFan) || (what == kRightFan))
-			{
-				if (leftFacing)
-					thisRoom->objects[objActive].what = kLeftFan;
-				else
-					thisRoom->objects[objActive].what = kRightFan;
-				if (KeepObjectLegal())
-				{
-				}
-				InvalWindowRect(mainWindow, &mainWindowRect);
-				GetThisRoomsObjRects();
-				ReadyBackground(thisRoom->background, thisRoom->tiles);
-				DrawThisRoomsObjects();
-			}
-			fileDirty = true;
-			UpdateMenus(false);
-			leaving = true;
-			doReturn = true;
-		}
-		else if (item == kLeftFacingRadio)
-		{
-			leftFacing = true;
-			SelectFromRadioGroup(infoDial, kLeftFacingRadio, kLeftFacingRadio,
-					kRightFacingRadio);
-		}
-		else if (item == kRightFacingRadio)
-		{
-			leftFacing = false;
-			SelectFromRadioGroup(infoDial, kRightFacingRadio, kLeftFacingRadio,
-					kRightFacingRadio);
-		}
-		else if ((thisRoom->objects[objActive].what == kInvisBlower) ||
-				(thisRoom->objects[objActive].what == kLiftArea))
-		{
-			switch (item)
-			{
-				case 11:
-				newDirection = 0x01;
-				break;
-
-				case 12:
-				newDirection = 0x02;
-				break;
-
-				case 13:
-				newDirection = 0x04;
-				break;
-
-				case 14:
-				newDirection = 0x08;
-				break;
-			}
-			UpdateBlowerInfo(infoDial);
-		}
-	}
-
-	DisposeDialog(infoDial);
-	DisposeModalFilterUPP(blowerFilterUPP);
-
-	if (doReturn)
+	if (result == kBlowerLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoFurnitureObjectInfo
@@ -2504,7 +2456,7 @@ void DoObjectInfo (HWND hwndOwner)
 		case kGrecoVent:
 		case kSewerBlower:
 		case kLiftArea:
-		DoBlowerObjectInfo(hwndOwner, thisRoom->objects[objActive].what);
+		DoBlowerObjectInfo(hwndOwner);
 		break;
 
 		case kTable:
