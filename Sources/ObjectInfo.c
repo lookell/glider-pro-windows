@@ -385,30 +385,27 @@ INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 			ShowWindow(GetDlgItem(hDlg, kRightFacingRadio), SW_HIDE);
 		}
 
-		if ((what == kInvisBlower) || (what == kLiftArea))
+		if ((thisRoom->objects[objActive].data.a.vector & 0x01) == 0x01)
 		{
-			if ((thisRoom->objects[objActive].data.a.vector & 0x01) == 0x01)
-			{
-				CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
-						kBlowerUpButton);
-			}
-			else if ((thisRoom->objects[objActive].data.a.vector & 0x02) == 0x02)
-			{
-				CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
-						kBlowerRightButton);
-			}
-			else if ((thisRoom->objects[objActive].data.a.vector & 0x04) == 0x04)
-			{
-				CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
-						kBlowerDownButton);
-			}
-			else if ((thisRoom->objects[objActive].data.a.vector & 0x08) == 0x08)
-			{
-				CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
-						kBlowerLeftButton);
-			}
+			CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
+					kBlowerUpButton);
 		}
-		else
+		else if ((thisRoom->objects[objActive].data.a.vector & 0x02) == 0x02)
+		{
+			CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
+					kBlowerRightButton);
+		}
+		else if ((thisRoom->objects[objActive].data.a.vector & 0x04) == 0x04)
+		{
+			CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
+					kBlowerDownButton);
+		}
+		else if ((thisRoom->objects[objActive].data.a.vector & 0x08) == 0x08)
+		{
+			CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
+					kBlowerLeftButton);
+		}
+		if ((what != kInvisBlower) && (what != kLiftArea))
 		{
 			ShowWindow(GetDlgItem(hDlg, kBlowerUpButton), SW_HIDE);
 			ShowWindow(GetDlgItem(hDlg, kBlowerRightButton), SW_HIDE);
