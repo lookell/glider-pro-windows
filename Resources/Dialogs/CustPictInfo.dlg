@@ -1,17 +1,18 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kCustPictInfoDialogID DIALOGEX 0, 0, 171, 87
+#define kCustPictIDItem             1007
+
+kCustPictInfoDialogID DIALOGEX 0, 0, 174, 81
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    PUSHBUTTON "Okay", 1, 127, 70, 39, 12
-    PUSHBUTTON "Cancel", 2, 83, 70, 39, 12
-    LTEXT "Object Kind: ^1", -1, 5, 25, 160, 10, SS_NOPREFIX
-    LTEXT "Object Number: ^0", -1, 5, 36, 85, 10, SS_NOPREFIX
-    CONTROL "", 5, STATIC, SS_OWNERDRAW, 5, 64, 160, 1
-    CONTROL kObjectInfoTitle, -1, STATIC, SS_BITMAP, 0, 0, 171, 20
-    EDITTEXT 7, 51, 50, 32, 10, ES_AUTOHSCROLL
-    LTEXT "^2 ID:", -1, 5, 50, 42, 10, SS_NOPREFIX
-    LTEXT "(I.D. > ^3)", -1, 87, 50, 77, 10, SS_NOPREFIX
+    LTEXT "Object Kind: ^1", IDC_STATIC, 7, 7, 160, 8, SS_NOPREFIX
+    LTEXT "Object Number: ^0", IDC_STATIC, 7, 18, 160, 8, SS_NOPREFIX
+    LTEXT "^2 &ID:", IDC_STATIC, 7, 35, 42, 8
+    EDITTEXT kCustPictIDItem, 52, 33, 31, 12
+    LTEXT "(I.D. > ^3)", IDC_STATIC, 90, 35, 77, 8, SS_NOPREFIX
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ, 7, 52, 160, 1
+    DEFPUSHBUTTON "Okay", IDOK, 63, 60, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 117, 60, 50, 14
 }

@@ -28,7 +28,8 @@
 
 #define kFurnitureLinkedFrom        1006
 
-#define kCustPictIDItem				7
+#define kCustPictIDItem             1007
+
 #define kInitialStateCheckbox		6
 #define	kToggleRadio				6
 #define	kForceOnRadio				7
@@ -59,7 +60,6 @@
 
 
 void UpdateBlowerInfo (HWND, HDC);
-void UpdateCustPictInfo (DialogPtr);
 void UpdateSwitchInfo (DialogPtr);
 void UpdateTriggerInfo (DialogPtr);
 void UpdateLightInfo (DialogPtr);
@@ -72,7 +72,7 @@ void UpdateEnemyInfo (DialogPtr);
 void UpdateFlowerInfo (DialogPtr);
 INT_PTR CALLBACK BlowerFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK FurnitureFilter (HWND, UINT, WPARAM, LPARAM);
-Boolean CustPictFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK CustPictFilter (HWND, UINT, WPARAM, LPARAM);
 Boolean SwitchFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean TriggerFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean LightFilter (DialogPtr, EventRecord *, SInt16 *);
@@ -215,18 +215,6 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 			}
 		}
 	}
-}
-
-//--------------------------------------------------------------  UpdateCustPictInfo
-
-void UpdateCustPictInfo (DialogPtr theDialog)
-{
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-	FrameDialogItemC(theDialog, 5, kRedOrangeColor8);
-#endif
 }
 
 //--------------------------------------------------------------  UpdateSwitchInfo
@@ -554,41 +542,85 @@ INT_PTR CALLBACK FurnitureFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 
 //--------------------------------------------------------------  CustPictFilter
 
-Boolean CustPictFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK CustPictFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	INT wasPict;
+	HWND hwndPictID;
+
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		if (thisRoom->objects[objActive].what == kCustomPict)
+			wasPict = thisRoom->objects[objActive].data.g.height;
+		else
+			wasPict = thisRoom->objects[objActive].data.e.where;
+		SetDlgItemInt(hDlg, kCustPictIDItem, (UINT)wasPict, TRUE);
+
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
+		return TRUE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
+		case IDOK:
+			wasPict = (INT)GetDlgItemInt(hDlg, kCustPictIDItem, NULL, TRUE);
+			if (thisRoom->objects[objActive].what == kCustomPict)
+			{
+				if ((wasPict < 10000) || (wasPict > 32767))
+				{
+					MessageBeep(MB_ICONWARNING);
+					wasPict = thisRoom->objects[objActive].data.g.height;
+					SetDlgItemInt(hDlg, kCustPictIDItem, (UINT)wasPict, TRUE);
+					hwndPictID = GetDlgItem(hDlg, kCustPictIDItem);
+					SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)hwndPictID, TRUE);
+				}
+				else
+				{
+					thisRoom->objects[objActive].data.g.height = (SInt16)wasPict;
+					if (KeepObjectLegal())
+					{
+					}
+					fileDirty = true;
+					UpdateMenus(false);
+					Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+					GetThisRoomsObjRects();
+					ReadyBackground(thisRoom->background, thisRoom->tiles);
+					DrawThisRoomsObjects();
+					EndDialog(hDlg, IDOK);
+				}
+			}
+			else
+			{
+				if ((wasPict < 3000) || (wasPict > 32767))
+				{
+					MessageBeep(MB_ICONWARNING);
+					wasPict = thisRoom->objects[objActive].data.e.where;
+					SetDlgItemInt(hDlg, kCustPictIDItem, (UINT)wasPict, TRUE);
+					hwndPictID = GetDlgItem(hDlg, kCustPictIDItem);
+					SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)hwndPictID, TRUE);
+				}
+				else
+				{
+					thisRoom->objects[objActive].data.e.where = (SInt16)wasPict;
+					fileDirty = true;
+					UpdateMenus(false);
+					Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+					GetThisRoomsObjRects();
+					ReadyBackground(thisRoom->background, thisRoom->tiles);
+					DrawThisRoomsObjects();
+					EndDialog(hDlg, IDOK);
+				}
+			}
 			break;
 
-			default:
-			return(false);
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
+			break;
 		}
-		break;
-
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateCustPictInfo(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  SwitchFilter
@@ -1166,101 +1198,30 @@ void DoFurnitureObjectInfo (HWND hwndOwner)
 
 void DoCustPictObjectInfo (HWND hwndOwner)
 {
-	MessageBox(hwndOwner, L"DoCustPictObjectInfo()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		infoDial;
-	Str255			numberStr, kindStr;
-	long			wasPict;
-	short			item;
-	Boolean			leaving;
-	ModalFilterUPP	custPictFilterUPP;
+	DialogParams params = { 0 };
+	wchar_t numberStr[32];
+	wchar_t kindStr[256];
 
-	custPictFilterUPP = NewModalFilterUPP(CustPictFilter);
-
-	NumToString(objActive + 1, numberStr);
-	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
-	if (thisRoom->objects[objActive].what == kCustomPict)
-		ParamText(numberStr, kindStr, "\pPICT", "\p10000");
-	else
-		ParamText(numberStr, kindStr, "\pSound", "\p3000");
-
-	BringUpDialog(&infoDial, kCustPictInfoDialogID);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%ld", (long)(objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
 	if (thisRoom->objects[objActive].what == kCustomPict)
 	{
-		wasPict = (long)(thisRoom->objects[objActive].data.g.height);
-		SetDialogNumToStr(infoDial, kCustPictIDItem, wasPict);
+		params.arg[0] = numberStr;
+		params.arg[1] = kindStr;
+		params.arg[2] = L"PICT";
+		params.arg[3] = L"10000";
 	}
 	else
 	{
-		wasPict = (long)(thisRoom->objects[objActive].data.e.where);
-		SetDialogNumToStr(infoDial, kCustPictIDItem, wasPict);
-	}
-	SelectDialogItemText(infoDial, kCustPictIDItem, 0, 1024);
-	leaving = false;
-
-	while (!leaving)
-	{
-		ModalDialog(custPictFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			GetDialogNumFromStr(infoDial, kCustPictIDItem, &wasPict);
-			if (thisRoom->objects[objActive].what == kCustomPict)
-			{
-				if ((wasPict < 10000L) || (wasPict > 32767L))
-				{
-					SysBeep(1);
-					wasPict = (long)(thisRoom->objects[objActive].data.g.height);
-					SetDialogNumToStr(infoDial, kCustPictIDItem, wasPict);
-					SelectDialogItemText(infoDial, kCustPictIDItem, 0, 1024);
-				}
-				else
-				{
-					thisRoom->objects[objActive].data.g.height = (short)wasPict;
-					if (KeepObjectLegal())
-					{
-					}
-					fileDirty = true;
-					UpdateMenus(false);
-					InvalWindowRect(mainWindow, &mainWindowRect);
-					GetThisRoomsObjRects();
-					ReadyBackground(thisRoom->background, thisRoom->tiles);
-					DrawThisRoomsObjects();
-					leaving = true;
-				}
-			}
-			else
-			{
-				if ((wasPict < 3000L) || (wasPict > 32767L))
-				{
-					SysBeep(1);
-					wasPict = (long)(thisRoom->objects[objActive].data.e.where);
-					SetDialogNumToStr(infoDial, kCustPictIDItem, wasPict);
-					SelectDialogItemText(infoDial, kCustPictIDItem, 0, 1024);
-				}
-				else
-				{
-					thisRoom->objects[objActive].data.e.where = (short)wasPict;
-					fileDirty = true;
-					UpdateMenus(false);
-					InvalWindowRect(mainWindow, &mainWindowRect);
-					GetThisRoomsObjRects();
-					ReadyBackground(thisRoom->background, thisRoom->tiles);
-					DrawThisRoomsObjects();
-					leaving = true;
-				}
-			}
-		}
-		else if (item == kCancelButton)
-		{
-			leaving = true;
-		}
+		params.arg[0] = numberStr;
+		params.arg[1] = kindStr;
+		params.arg[2] = L"Sound";
+		params.arg[3] = L"3000";
 	}
 
-	DisposeDialog(infoDial);
-	DisposeModalFilterUPP(custPictFilterUPP);
-#endif
+	DialogBoxParam(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kCustPictInfoDialogID),
+			hwndOwner, CustPictFilter, (LPARAM)&params);
 }
 
 //--------------------------------------------------------------  DoSwitchObjectInfo
