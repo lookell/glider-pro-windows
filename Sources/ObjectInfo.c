@@ -30,10 +30,14 @@
 
 #define kCustPictIDItem             1007
 
+#define kToggleRadio                1006
+#define kForceOnRadio               1007
+#define kForceOffRadio              1008
+#define kLinkSwitchButton           1009
+#define kSwitchGotoButton           1014
+#define kSwitchLinkedFrom           1015
+
 #define kInitialStateCheckbox		6
-#define	kToggleRadio				6
-#define	kForceOnRadio				7
-#define	kForceOffRadio				8
 #define kDelay3Item					6
 #define kDelayItem					8
 #define kDelayLabelItem				9
@@ -60,7 +64,6 @@
 
 
 void UpdateBlowerInfo (HWND, HDC);
-void UpdateSwitchInfo (DialogPtr);
 void UpdateTriggerInfo (DialogPtr);
 void UpdateLightInfo (DialogPtr);
 void UpdateApplianceInfo (DialogPtr);
@@ -73,7 +76,7 @@ void UpdateFlowerInfo (DialogPtr);
 INT_PTR CALLBACK BlowerFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK FurnitureFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK CustPictFilter (HWND, UINT, WPARAM, LPARAM);
-Boolean SwitchFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK SwitchFilter (HWND, UINT, WPARAM, LPARAM);
 Boolean TriggerFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean LightFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean ApplianceFilter (DialogPtr, EventRecord *, SInt16 *);
@@ -99,7 +102,6 @@ void DoFlowerObjectInfo (HWND);
 
 
 SInt16		newPoint;
-Byte		newType;
 
 extern	retroLink	retroLinkList[];
 extern	SInt16		linkRoom, linkType, wasFlower;
@@ -215,21 +217,6 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 			}
 		}
 	}
-}
-
-//--------------------------------------------------------------  UpdateSwitchInfo
-
-void UpdateSwitchInfo (DialogPtr theDialog)
-{
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-	SelectFromRadioGroup(theDialog, newType + kToggleRadio,
-			kToggleRadio, kForceOffRadio);
-	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
-	FrameDialogItemC(theDialog, 13, kRedOrangeColor8);
-#endif
 }
 
 //--------------------------------------------------------------  UpdateTriggerInfo
@@ -622,47 +609,69 @@ INT_PTR CALLBACK CustPictFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 
 //--------------------------------------------------------------  SwitchFilter
 
-Boolean SwitchFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK SwitchFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+	{
+		HWND hwndInitialFocus = NULL;
+
+		if (thisRoom->objects[objActive].data.e.type == kToggle)
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
-			break;
-
-			case kEscapeKeyASCII:
-			FlashDialogButton(dial, kCancelButton);
-			*item = kCancelButton;
-			return(true);
-			break;
-
-			default:
-			return(false);
+			hwndInitialFocus = GetDlgItem(hDlg, kToggleRadio);
+			CheckRadioButton(hDlg, kToggleRadio, kForceOffRadio, kToggleRadio);
 		}
-		break;
+		else if (thisRoom->objects[objActive].data.e.type == kForceOn)
+		{
+			hwndInitialFocus = GetDlgItem(hDlg, kForceOnRadio);
+			CheckRadioButton(hDlg, kToggleRadio, kForceOffRadio, kForceOnRadio);
+		}
+		else if (thisRoom->objects[objActive].data.e.type == kForceOff)
+		{
+			hwndInitialFocus = GetDlgItem(hDlg, kForceOffRadio);
+			CheckRadioButton(hDlg, kToggleRadio, kForceOffRadio, kForceOffRadio);
+		}
+		if (hwndInitialFocus == NULL)
+			hwndInitialFocus = GetDlgItem(hDlg, kToggleRadio);
 
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateSwitchInfo(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
+		if (thisRoom->objects[objActive].data.e.who == 255)
+			EnableWindow(GetDlgItem(hDlg, kSwitchGotoButton), FALSE);
 
-		default:
-		return(false);
-		break;
+		if (retroLinkList[objActive].room == -1)
+			ShowWindow(GetDlgItem(hDlg, kSwitchLinkedFrom), SW_HIDE);
+
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
+		SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)hwndInitialFocus, TRUE);
+		return FALSE;
 	}
-#endif
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDOK:
+		case kLinkSwitchButton:
+		case kSwitchGotoButton:
+		case kSwitchLinkedFrom:
+			if (IsDlgButtonChecked(hDlg, kToggleRadio))
+				thisRoom->objects[objActive].data.e.type = kToggle;
+			else if (IsDlgButtonChecked(hDlg, kForceOnRadio))
+				thisRoom->objects[objActive].data.e.type = kForceOn;
+			else if (IsDlgButtonChecked(hDlg, kForceOffRadio))
+				thisRoom->objects[objActive].data.e.type = kForceOff;
+			fileDirty = true;
+			UpdateMenus(false);
+			EndDialog(hDlg, LOWORD(wParam));
+			break;
+
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
+			break;
+		}
+		return TRUE;
+	}
+	return FALSE;
 }
 
 //--------------------------------------------------------------  TriggerFilter
@@ -1225,108 +1234,45 @@ void DoCustPictObjectInfo (HWND hwndOwner)
 
 void DoSwitchObjectInfo (HWND hwndOwner)
 {
-	MessageBox(hwndOwner, L"DoSwitchObjectInfo()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		infoDial;
-	Str255			numberStr, kindStr, roomStr, tempStr, objStr;
-	short			item, floor, suite;
-	Boolean			leaving, doLink, doGoTo, doReturn;
-	ModalFilterUPP	switchFilterUPP;
+	DialogParams params = { 0 };
+	wchar_t numberStr[16];
+	wchar_t kindStr[256];
+	wchar_t roomStr[32];
+	wchar_t objStr[16];
+	SInt16 floor, suite;
+	INT_PTR result;
 
-	switchFilterUPP = NewModalFilterUPP(SwitchFilter);
-
-	NumToString(objActive + 1, numberStr);
-	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
 	if (thisRoom->objects[objActive].data.e.where == -1)
-		PasStringCopy("\pnone", roomStr);
+	{
+		StringCchCopy(roomStr, ARRAYSIZE(roomStr), L"none");
+	}
 	else
 	{
 		ExtractFloorSuite(thisRoom->objects[objActive].data.e.where, &floor, &suite);
-		NumToString((long)floor, roomStr);
-		PasStringConcat(roomStr, "\p / ");
-		NumToString((long)suite, tempStr);
-		PasStringConcat(roomStr, tempStr);
+		StringCchPrintf(roomStr, ARRAYSIZE(roomStr), L"%d / %d", (int)floor, (int)suite);
 	}
 
 	if (thisRoom->objects[objActive].data.e.who == 255)
-		PasStringCopy("\pnone", objStr);
-	else
-		NumToString((long)thisRoom->objects[objActive].data.e.who + 1, objStr);
-
-	ParamText(numberStr, kindStr, roomStr, objStr);
-	newType = thisRoom->objects[objActive].data.e.type;
-
-	BringUpDialog(&infoDial, kSwitchInfoDialogID);
-	leaving = false;
-	doLink = false;
-	doGoTo = false;
-	doReturn = false;
-
-	if (thisRoom->objects[objActive].data.e.who == 255)
-		MyDisableControl(infoDial, kGotoButton2);
-
-	if (retroLinkList[objActive].room == -1)
-		HideDialogItem(infoDial, 15);
-
-	while (!leaving)
 	{
-		ModalDialog(switchFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			thisRoom->objects[objActive].data.e.type = newType;
-			fileDirty = true;
-			UpdateMenus(false);
-			leaving = true;
-		}
-		else if (item == kCancelButton)
-			leaving = true;
-		else if (item == kToggleRadio)
-		{
-			SelectFromRadioGroup(infoDial, item, kToggleRadio, kForceOffRadio);
-			newType = kToggle;
-		}
-		else if (item == kForceOnRadio)
-		{
-			SelectFromRadioGroup(infoDial, item, kToggleRadio, kForceOffRadio);
-			newType = kForceOn;
-		}
-		else if (item == kForceOffRadio)
-		{
-			SelectFromRadioGroup(infoDial, item, kToggleRadio, kForceOffRadio);
-			newType = kForceOff;
-		}
-		else if (item == 9)
-		{
-			thisRoom->objects[objActive].data.e.type = newType;
-			fileDirty = true;
-			UpdateMenus(false);
-			leaving = true;
-			doLink = true;
-		}
-		else if (item == kGotoButton2)
-		{
-			thisRoom->objects[objActive].data.e.type = newType;
-			fileDirty = true;
-			UpdateMenus(false);
-			leaving = true;
-			doGoTo = true;
-		}
-		else if (item == 15)			// Linked From? button.
-		{
-			thisRoom->objects[objActive].data.e.type = newType;
-			fileDirty = true;
-			UpdateMenus(false);
-			leaving = true;
-			doReturn = true;
-		}
+		StringCchCopy(objStr, ARRAYSIZE(objStr), L"none");
+	}
+	else
+	{
+		StringCchPrintf(objStr, ARRAYSIZE(objStr), L"%d",
+			(int)(thisRoom->objects[objActive].data.e.who + 1));
 	}
 
-	DisposeDialog(infoDial);
-	DisposeModalFilterUPP(switchFilterUPP);
+	params.arg[0] = numberStr;
+	params.arg[1] = kindStr;
+	params.arg[2] = roomStr;
+	params.arg[3] = objStr;
+	result = DialogBoxParam(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kSwitchInfoDialogID),
+			hwndOwner, SwitchFilter, (LPARAM)&params);
 
-	if (doLink)
+	if (result == kLinkSwitchButton)
 	{
 		linkType = kSwitchLinkOnly;
 		linkerIsSwitch = true;
@@ -1335,16 +1281,15 @@ void DoSwitchObjectInfo (HWND hwndOwner)
 		linkObject = (Byte)objActive;
 		DeselectObject();
 	}
-	else if (doGoTo)
+	else if (result == kSwitchGotoButton)
 	{
-		GoToObjectInRoom((short)thisRoom->objects[objActive].data.e.who, floor, suite);
+		GoToObjectInRoom(thisRoom->objects[objActive].data.e.who, floor, suite);
 	}
-	else if (doReturn)
+	else if (result == kSwitchLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
-				retroLinkList[objActive].room);
+			retroLinkList[objActive].room);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoTriggerObjectInfo
@@ -1382,7 +1327,6 @@ void DoTriggerObjectInfo (HWND hwndOwner)
 		NumToString((long)thisRoom->objects[objActive].data.e.who + 1, objStr);
 
 	ParamText(numberStr, kindStr, roomStr, objStr);
-	newType = thisRoom->objects[objActive].data.e.type;
 
 	BringUpDialog(&infoDial, kTriggerInfoDialogID);
 	leaving = false;
