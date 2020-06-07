@@ -10,18 +10,18 @@
 #include "Externs.h"
 #include "ObjectEdit.h"
 #include "RectUtils.h"
+#include "ResourceIDs.h"
 
 
-#define kLinkControlID			130
-#define kUnlinkControlID		131
+#define kLinkButton     1300
+#define kUnlinkButton   1310
 
 
+INT_PTR CALLBACK LinkWindowProc (HWND, UINT, WPARAM, LPARAM);
 void DoLink (void);
 void DoUnlink (void);
 
 
-Rect			linkWindowRect;
-ControlHandle	linkControl, unlinkControl;
 HWND			linkWindow;
 SInt16			isLinkH, isLinkV, linkRoom, linkType;
 Byte			linkObject;
@@ -52,164 +52,203 @@ void ExtractFloorSuite (SInt16 combo, SInt16 *floor, SInt16 *suite)
 	}
 }
 
+//--------------------------------------------------------------  LinkWindowProc
+
+INT_PTR CALLBACK LinkWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return FALSE; // don't change the focused window
+
+	case WM_MOVE:
+	{
+		WINDOWPLACEMENT placement;
+		placement.length = sizeof(placement);
+		GetWindowPlacement(hDlg, &placement);
+		isLinkH = (SInt16)placement.rcNormalPosition.left;
+		isLinkV = (SInt16)placement.rcNormalPosition.top;
+		return TRUE;
+	}
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDCANCEL:
+			CloseLinkWindow();
+			break;
+
+		case kLinkButton:
+		case kUnlinkButton:
+			if (LOWORD(wParam) == kLinkButton)
+				DoLink();
+			else if (LOWORD(wParam) == kUnlinkButton)
+				DoUnlink();
+
+			if (thisRoomNumber == linkRoom)
+				CopyThisRoomToRoom();
+			GenerateRetroLinks();
+			break;
+		}
+		return TRUE;
+	}
+	return FALSE;
+}
+
 //--------------------------------------------------------------  UpdateLinkControl
 
 void UpdateLinkControl (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	if (linkWindow == nil)
+	HWND linkControl;
+
+	if (linkWindow == NULL)
 		return;
+
+	linkControl = GetDlgItem(linkWindow, kLinkButton);
 
 	switch (linkType)
 	{
-		case kSwitchLinkOnly:
+	case kSwitchLinkOnly:
 		if (objActive == kNoObjectSelected)
-			HiliteControl(linkControl, kControlInactive);
+		{
+			EnableWindow(linkControl, FALSE);
+		}
 		else
+		{
 			switch (thisRoom->objects[objActive].what)
 			{
-				case kFloorVent:
-				case kCeilingVent:
-				case kFloorBlower:
-				case kCeilingBlower:
-				case kSewerGrate:
-				case kLeftFan:
-				case kRightFan:
-				case kInvisBlower:
-				case kGrecoVent:
-				case kSewerBlower:
-				case kLiftArea:
-				case kRedClock:
-				case kBlueClock:
-				case kYellowClock:
-				case kCuckoo:
-				case kPaper:
-				case kBattery:
-				case kBands:
-				case kFoil:
-				case kInvisBonus:
-				case kHelium:
-				case kDeluxeTrans:
-				case kCeilingLight:
-				case kLightBulb:
-				case kTableLamp:
-				case kHipLamp:
-				case kDecoLamp:
-				case kFlourescent:
-				case kTrackLight:
-				case kInvisLight:
-				case kShredder:
-				case kToaster:
-				case kMacPlus:
-				case kTV:
-				case kCoffee:
-				case kOutlet:
-				case kVCR:
-				case kStereo:
-				case kMicrowave:
-				case kBalloon:
-				case kCopterLf:
-				case kCopterRt:
-				case kDartLf:
-				case kDartRt:
-				case kBall:
-				case kDrip:
-				case kFish:
-				HiliteControl(linkControl, kControlActive);
+			case kFloorVent:
+			case kCeilingVent:
+			case kFloorBlower:
+			case kCeilingBlower:
+			case kSewerGrate:
+			case kLeftFan:
+			case kRightFan:
+			case kInvisBlower:
+			case kGrecoVent:
+			case kSewerBlower:
+			case kLiftArea:
+			case kRedClock:
+			case kBlueClock:
+			case kYellowClock:
+			case kCuckoo:
+			case kPaper:
+			case kBattery:
+			case kBands:
+			case kFoil:
+			case kInvisBonus:
+			case kHelium:
+			case kDeluxeTrans:
+			case kCeilingLight:
+			case kLightBulb:
+			case kTableLamp:
+			case kHipLamp:
+			case kDecoLamp:
+			case kFlourescent:
+			case kTrackLight:
+			case kInvisLight:
+			case kShredder:
+			case kToaster:
+			case kMacPlus:
+			case kTV:
+			case kCoffee:
+			case kOutlet:
+			case kVCR:
+			case kStereo:
+			case kMicrowave:
+			case kBalloon:
+			case kCopterLf:
+			case kCopterRt:
+			case kDartLf:
+			case kDartRt:
+			case kBall:
+			case kDrip:
+			case kFish:
+				EnableWindow(linkControl, TRUE);
 				break;
 
-				default:
-				HiliteControl(linkControl, kControlInactive);
+			default:
+				EnableWindow(linkControl, FALSE);
 				break;
 			}
+		}
 		break;
 
-		case kTriggerLinkOnly:
+	case kTriggerLinkOnly:
 		if (objActive == kNoObjectSelected)
-			HiliteControl(linkControl, kControlInactive);
+		{
+			EnableWindow(linkControl, FALSE);
+		}
 		else
+		{
 			switch (thisRoom->objects[objActive].what)
 			{
-				case kGreaseRt:
-				case kGreaseLf:
-				case kToaster:
-				case kGuitar:
-				case kCoffee:
-				case kOutlet:
-				case kBalloon:
-				case kCopterLf:
-				case kCopterRt:
-				case kDartLf:
-				case kDartRt:
-				case kDrip:
-				case kFish:
-				HiliteControl(linkControl, kControlActive);
+			case kGreaseRt:
+			case kGreaseLf:
+			case kToaster:
+			case kGuitar:
+			case kCoffee:
+			case kOutlet:
+			case kBalloon:
+			case kCopterLf:
+			case kCopterRt:
+			case kDartLf:
+			case kDartRt:
+			case kDrip:
+			case kFish:
+				EnableWindow(linkControl, TRUE);
 				break;
 
-				case kLightSwitch:
-				case kMachineSwitch:
-				case kThermostat:
-				case kPowerSwitch:
-				case kKnifeSwitch:
-				case kInvisSwitch:
+			case kLightSwitch:
+			case kMachineSwitch:
+			case kThermostat:
+			case kPowerSwitch:
+			case kKnifeSwitch:
+			case kInvisSwitch:
 				if (linkRoom == thisRoomNumber)
-					HiliteControl(linkControl, kControlActive);
+					EnableWindow(linkControl, TRUE);
 				break;
 
-				default:
-				HiliteControl(linkControl, kControlInactive);
+			default:
+				EnableWindow(linkControl, FALSE);
 				break;
 			}
+		}
 		break;
 
-		case kTransportLinkOnly:
+	case kTransportLinkOnly:
 		if (objActive == kNoObjectSelected)
-			HiliteControl(linkControl, kControlInactive);
+		{
+			EnableWindow(linkControl, FALSE);
+		}
 		else
+		{
 			switch (thisRoom->objects[objActive].what)
 			{
-				case kMailboxLf:
-				case kMailboxRt:
-				case kCeilingTrans:
-				case kInvisTrans:
-				case kDeluxeTrans:
-				case kInvisLight:
-				case kOzma:
-				case kMirror:
-				case kFireplace:
-				case kWallWindow:
-				case kCalendar:
-				case kBulletin:
-				case kCloud:
-				HiliteControl(linkControl, kControlActive);
+			case kMailboxLf:
+			case kMailboxRt:
+			case kCeilingTrans:
+			case kInvisTrans:
+			case kDeluxeTrans:
+			case kInvisLight:
+			case kOzma:
+			case kMirror:
+			case kFireplace:
+			case kWallWindow:
+			case kCalendar:
+			case kBulletin:
+			case kCloud:
+				EnableWindow(linkControl, TRUE);
 				break;
 
-				default:
-				HiliteControl(linkControl, kControlInactive);
+			default:
+				EnableWindow(linkControl, FALSE);
 				break;
 			}
+		}
 		break;
 	}
-#endif
-#endif
-}
-
-//--------------------------------------------------------------  UpdateLinkWindow
-
-void UpdateLinkWindow (void)
-{
-	return;
-#if 0
-#ifndef COMPILEDEMO
-	if (linkWindow == nil)
-		return;
-
-	SetPortWindowPort(linkWindow);
-	DrawControls(linkWindow);
-	UpdateLinkControl();
-#endif
 #endif
 }
 
@@ -217,46 +256,32 @@ void UpdateLinkWindow (void)
 
 void OpenLinkWindow (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	Rect		src, dest;
-	Point		globalMouse;
+	WINDOWPLACEMENT placement;
 
-	if (linkWindow == nil)
+	if (linkWindow == NULL)
 	{
-		QSetRect(&linkWindowRect, 0, 0, 129, 30);
-		if (thisMac.hasColor)
-			linkWindow = NewCWindow(nil, &linkWindowRect,
-					"\pLink", false, kWindoidWDEF, kPutInFront, true, 0L);
-		else
-			linkWindow = NewWindow(nil, &linkWindowRect,
-					"\pLink", false, kWindoidWDEF, kPutInFront, true, 0L);
-
-		MoveWindow(linkWindow, isLinkH, isLinkV, true);
-		globalMouse = MyGetGlobalMouse();
-		QSetRect(&src, 0, 0, 1, 1);
-		QOffsetRect(&src, globalMouse.h, globalMouse.v);
-		GetWindowRect(linkWindow, &dest);
-		BringToFront(linkWindow);
-		ShowHide(linkWindow, true);
-//		FlagWindowFloating(linkWindow);	TEMP - use flaoting windows
-		HiliteAllWindows();
-
-		linkControl = GetNewControl(kLinkControlID, linkWindow);
-		if (linkControl == nil)
+		linkWindow = CreateDialog(HINST_THISCOMPONENT,
+				MAKEINTRESOURCE(kLinkWindowID),
+				mainWindow, LinkWindowProc);
+		if (linkWindow == NULL)
 			RedAlert(kErrFailedResourceLoad);
 
-		unlinkControl = GetNewControl(kUnlinkControlID, linkWindow);
-		if (unlinkControl == nil)
-			RedAlert(kErrFailedResourceLoad);
+		placement.length = sizeof(placement);
+		GetWindowPlacement(linkWindow, &placement);
+		OffsetRect(&placement.rcNormalPosition,
+				-placement.rcNormalPosition.left,
+				-placement.rcNormalPosition.top);
+		OffsetRect(&placement.rcNormalPosition, isLinkH, isLinkV);
+		placement.showCmd = SW_SHOWNOACTIVATE;
+		SetWindowPlacement(linkWindow, &placement);
 
 		linkRoom = -1;
 		linkObject = 255;
+		UpdateLinkControl();
 
 		isLinkOpen = true;
 	}
-#endif
 #endif
 }
 
@@ -264,16 +289,11 @@ void OpenLinkWindow (void)
 
 void CloseLinkWindow (void)
 {
-	return;
-#if 0
-#ifndef COMPILEDEMO
-	if (linkWindow != nil)
-		DisposeWindow(linkWindow);
+	if (linkWindow != NULL)
+		DestroyWindow(linkWindow);
 
-	linkWindow = nil;
+	linkWindow = NULL;
 	isLinkOpen = false;
-#endif
-#endif
 }
 
 //--------------------------------------------------------------  DoLink
@@ -281,7 +301,7 @@ void CloseLinkWindow (void)
 #ifndef COMPILEDEMO
 void DoLink (void)
 {
-	SInt16		floor, suite;
+	SInt16 floor, suite;
 
 	if (GetRoomFloorSuite(thisRoomNumber, &floor, &suite))
 	{
@@ -363,40 +383,4 @@ void DoUnlink (void)
 	CloseLinkWindow();
 }
 #endif
-
-//--------------------------------------------------------------  HandleLinkClick
-
-void HandleLinkClick (Point wherePt)
-{
-	return;
-#if 0
-#ifndef COMPILEDEMO
-	ControlHandle	theControl;
-	short			part;
-
-	if (linkWindow == nil)
-		return;
-
-	SetPortWindowPort(linkWindow);
-	GlobalToLocal(&wherePt);
-
-	part = FindControl(wherePt, linkWindow, &theControl);
-	if ((theControl != nil) && (part != 0))
-	{
-		part = TrackControl(theControl, wherePt, nil);
-		if (part != 0)
-		{
-			if (theControl == linkControl)
-				DoLink();
-			else if (theControl == unlinkControl)
-				DoUnlink();
-
-			if (thisRoomNumber == linkRoom)
-				CopyThisRoomToRoom();
-			GenerateRetroLinks();
-		}
-	}
-#endif
-#endif
-}
 

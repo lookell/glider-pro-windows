@@ -146,10 +146,10 @@ void GetInput (gliderPtr);
 SInt16 MergeFloorSuite (SInt16, SInt16);				// --- Link.c
 void ExtractFloorSuite (SInt16, SInt16 *, SInt16 *);
 void UpdateLinkControl (void);
-void UpdateLinkWindow (void);
+//void UpdateLinkWindow (void);
 void OpenLinkWindow (void);
 void CloseLinkWindow (void);
-void HandleLinkClick (Point);
+//void HandleLinkClick (Point);
 
 void RedrawSplashScreen (void);							// --- MainWindow.c
 void UpdateMainWindow (void);

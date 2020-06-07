@@ -540,6 +540,7 @@ IDM_ROOT MENUEX
 
 #include "Windows\\Coordinate.dlg"
 #include "Windows\\Message.dlg"
+#include "Windows\\Link.dlg"
 
 IDI_APPL    ICON    "Icons\\FileAppl.ico"
 IDI_PREFS   ICON    "Icons\\FilePrefs.ico"

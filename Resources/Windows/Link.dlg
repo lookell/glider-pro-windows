@@ -1,0 +1,13 @@
+/* this comment enforces υτƒ-8 encoding */
+
+#define kLinkButton     1300
+#define kUnlinkButton   1310
+
+kLinkWindowID DIALOGEX 0, 0, 64, 46
+CAPTION ""
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    PUSHBUTTON "Link", kLinkButton, 7, 7, 50, 14, WS_DISABLED
+    PUSHBUTTON "Unlink", kUnlinkButton, 7, 25, 50, 14
+}
