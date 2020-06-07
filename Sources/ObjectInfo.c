@@ -14,33 +14,36 @@
 #include "ResourceIDs.h"
 
 
-#define kBlowerInitialState         1006
-#define kForceCheckbox              1007
-#define kBlowerArrow                1008
-#define kDirectionText              1009
-#define kBlowerUpButton             1011
-#define kBlowerRightButton          1012
-#define kBlowerDownButton           1013
-#define kBlowerLeftButton           1014
-#define kBlowerLinkedFrom           1015
-#define kLeftFacingRadio            1016
-#define kRightFacingRadio           1017
+#define kBlowerInitialState     1006
+#define kForceCheckbox          1007
+#define kBlowerArrow            1008
+#define kDirectionText          1009
+#define kBlowerUpButton         1011
+#define kBlowerRightButton      1012
+#define kBlowerDownButton       1013
+#define kBlowerLeftButton       1014
+#define kBlowerLinkedFrom       1015
+#define kLeftFacingRadio        1016
+#define kRightFacingRadio       1017
 
-#define kFurnitureLinkedFrom        1006
+#define kFurnitureLinkedFrom    1006
 
-#define kCustPictIDItem             1007
+#define kCustPictIDItem         1007
 
-#define kToggleRadio                1006
-#define kForceOnRadio               1007
-#define kForceOffRadio              1008
-#define kLinkSwitchButton           1009
-#define kSwitchGotoButton           1014
-#define kSwitchLinkedFrom           1015
+#define kToggleRadio            1006
+#define kForceOnRadio           1007
+#define kForceOffRadio          1008
+#define kLinkSwitchButton       1009
+#define kSwitchGotoButton       1014
+#define kSwitchLinkedFrom       1015
 
-#define kTriggerDelayItem           1006
-#define kLinkTriggerButton          1009
-#define kTriggerGotoButton          1014
-#define kTriggerLinkedFrom          1015
+#define kTriggerDelayItem       1006
+#define kLinkTriggerButton      1009
+#define kTriggerGotoButton      1014
+#define kTriggerLinkedFrom      1015
+
+#define kLightInitialState      1006
+#define kLightLinkedFrom        1008
 
 #define kInitialStateCheckbox		6
 #define kDelay3Item					6
@@ -68,7 +71,6 @@
 
 
 void UpdateBlowerInfo (HWND, HDC);
-void UpdateLightInfo (DialogPtr);
 void UpdateApplianceInfo (DialogPtr);
 void UpdateMicrowaveInfo (DialogPtr);
 void UpdateGreaseInfo (DialogPtr);
@@ -81,7 +83,7 @@ INT_PTR CALLBACK FurnitureFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK CustPictFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK SwitchFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK TriggerFilter (HWND, UINT, WPARAM, LPARAM);
-Boolean LightFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK LightFilter (HWND, UINT, WPARAM, LPARAM);
 Boolean ApplianceFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean MicrowaveFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean GreaseFilter (DialogPtr, EventRecord *, SInt16 *);
@@ -220,18 +222,6 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 			}
 		}
 	}
-}
-
-//--------------------------------------------------------------  UpdateLightInfo
-
-void UpdateLightInfo (DialogPtr theDialog)
-{
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-	FrameDialogItemC(theDialog, 5, kRedOrangeColor8);
-#endif
 }
 
 //--------------------------------------------------------------  UpdateApplianceInfo
@@ -725,55 +715,48 @@ INT_PTR CALLBACK TriggerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 
 //--------------------------------------------------------------  LightFilter
 
-Boolean LightFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK LightFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		if (thisRoom->objects[objActive].data.f.initial)
+			CheckDlgButton(hDlg, kLightInitialState, BST_CHECKED);
+		else
+			CheckDlgButton(hDlg, kLightInitialState, BST_UNCHECKED);
+
+		if (retroLinkList[objActive].room == -1)
+			ShowWindow(GetDlgItem(hDlg, kLightLinkedFrom), SW_HIDE);
+
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
+		return TRUE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
+		case IDOK:
+		case kLightLinkedFrom:
+			if (IsDlgButtonChecked(hDlg, kLightInitialState))
+				thisRoom->objects[objActive].data.f.initial = true;
+			else
+				thisRoom->objects[objActive].data.f.initial = false;
+
+			ReadyBackground(thisRoom->background, thisRoom->tiles);
+			DrawThisRoomsObjects();
+			Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+			fileDirty = true;
+			UpdateMenus(false);
+			EndDialog(hDlg, LOWORD(wParam));
 			break;
 
-			case kEscapeKeyASCII:
-			FlashDialogButton(dial, kCancelButton);
-			*item = kCancelButton;
-			return(true);
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
 			break;
-
-			default:
-			return(false);
 		}
-		break;
-
-		case mouseDown:
-		return(false);
-		break;
-
-		case mouseUp:
-		return(false);
-		break;
-
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateLightInfo(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  ApplianceFilter
@@ -1357,90 +1340,25 @@ void DoTriggerObjectInfo (HWND hwndOwner)
 
 void DoLightObjectInfo (HWND hwndOwner)
 {
-	MessageBox(hwndOwner, L"DoLightObjectInfo()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		infoDial;
-	Str255			numberStr, kindStr;
-	short			item, initial;
-	Boolean			leaving, doReturn;
-	ModalFilterUPP	lightFilterUPP;
+	DialogParams params = { 0 };
+	wchar_t numberStr[16];
+	wchar_t kindStr[256];
+	INT_PTR result;
 
-	lightFilterUPP = NewModalFilterUPP(LightFilter);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
 
-	NumToString(objActive + 1, numberStr);
-	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
-	ParamText(numberStr, kindStr, "\p", "\p");
+	params.arg[0] = numberStr;
+	params.arg[1] = kindStr;
+	result = DialogBoxParam(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kLightInfoDialogID),
+			hwndOwner, LightFilter, (LPARAM)&params);
 
-//	CenterDialog(kLightInfoDialogID);
-	infoDial = GetNewDialog(kLightInfoDialogID, nil, kPutInFront);
-	if (infoDial == nil)
-		RedAlert(kErrDialogDidntLoad);
-	SetPort((GrafPtr)infoDial);
-
-	if (thisRoom->objects[objActive].data.f.initial)
-		SetDialogItemValue(infoDial, kInitialStateCheckbox, 1);
-	else
-		SetDialogItemValue(infoDial, kInitialStateCheckbox, 0);
-
-	if (retroLinkList[objActive].room == -1)
-		HideDialogItem(infoDial, 8);
-
-	ShowWindow(GetDialogWindow(infoDial));
-
-	leaving = false;
-	doReturn = false;
-
-	while (!leaving)
-	{
-		ModalDialog(lightFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			GetDialogItemValue(infoDial, kInitialStateCheckbox, &initial);
-			if (initial == 1)
-				thisRoom->objects[objActive].data.f.initial = true;
-			else
-				thisRoom->objects[objActive].data.f.initial = false;
-
-			ReadyBackground(thisRoom->background, thisRoom->tiles);
-			DrawThisRoomsObjects();
-			InvalWindowRect(mainWindow, &mainWindowRect);
-			fileDirty = true;
-			UpdateMenus(false);
-			leaving = true;
-		}
-		else if (item == kCancelButton)
-			leaving = true;
-		else if (item == kInitialStateCheckbox)
-			ToggleDialogItemValue(infoDial, kInitialStateCheckbox);
-		else if (item == 8)			// Linked From? button.
-		{
-			GetDialogItemValue(infoDial, kInitialStateCheckbox, &initial);
-			if (initial == 1)
-				thisRoom->objects[objActive].data.f.initial = true;
-			else
-				thisRoom->objects[objActive].data.f.initial = false;
-
-			ReadyBackground(thisRoom->background, thisRoom->tiles);
-			DrawThisRoomsObjects();
-			InvalWindowRect(mainWindow, &mainWindowRect);
-			fileDirty = true;
-			UpdateMenus(false);
-			leaving = true;
-			doReturn = true;
-		}
-	}
-
-	DisposeDialog(infoDial);
-	DisposeModalFilterUPP(lightFilterUPP);
-
-	if (doReturn)
+	if (result == kLightLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoApplianceObjectInfo
