@@ -45,10 +45,13 @@
 #define kLightInitialState      1006
 #define kLightLinkedFrom        1008
 
+#define kApplianceInitialState  1006
+#define kApplianceDelay         1008
+#define kApplianceDelayLabel    1009
+#define kApplianceLinkedFrom    1010
+
 #define kInitialStateCheckbox		6
 #define kDelay3Item					6
-#define kDelayItem					8
-#define kDelayLabelItem				9
 #define k100PtRadio					6
 #define k300PtRadio					7
 #define k500PtRadio					8
@@ -71,7 +74,6 @@
 
 
 void UpdateBlowerInfo (HWND, HDC);
-void UpdateApplianceInfo (DialogPtr);
 void UpdateMicrowaveInfo (DialogPtr);
 void UpdateGreaseInfo (DialogPtr);
 void UpdateInvisBonusInfo (DialogPtr);
@@ -84,7 +86,7 @@ INT_PTR CALLBACK CustPictFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK SwitchFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK TriggerFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK LightFilter (HWND, UINT, WPARAM, LPARAM);
-Boolean ApplianceFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK ApplianceFilter (HWND, UINT, WPARAM, LPARAM);
 Boolean MicrowaveFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean GreaseFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean InvisBonusFilter (DialogPtr, EventRecord *, SInt16 *);
@@ -222,18 +224,6 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 			}
 		}
 	}
-}
-
-//--------------------------------------------------------------  UpdateApplianceInfo
-
-void UpdateApplianceInfo (DialogPtr theDialog)
-{
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-	FrameDialogItemC(theDialog, 5, kRedOrangeColor8);
-#endif
 }
 
 //--------------------------------------------------------------  UpdateMicrowaveInfo
@@ -761,60 +751,75 @@ INT_PTR CALLBACK LightFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 
 //--------------------------------------------------------------  ApplianceFilter
 
-Boolean ApplianceFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK ApplianceFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	SInt16 what;
+	INT delay;
+
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		if (retroLinkList[objActive].room == -1)
+			ShowWindow(GetDlgItem(hDlg, kApplianceLinkedFrom), SW_HIDE);
+
+		if (thisRoom->objects[objActive].data.g.initial)
+			CheckDlgButton(hDlg, kApplianceInitialState, BST_CHECKED);
+		else
+			CheckDlgButton(hDlg, kApplianceInitialState, BST_UNCHECKED);
+
+		what = thisRoom->objects[objActive].what;
+		if ((what == kShredder) || (what == kMacPlus) || (what == kTV) ||
+				(what == kCoffee) || (what == kVCR) || (what == kMicrowave))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
-			break;
-
-			case kEscapeKeyASCII:
-			FlashDialogButton(dial, kCancelButton);
-			*item = kCancelButton;
-			return(true);
-			break;
-
-			case kTabKeyASCII:
-			SelectDialogItemText(dial, kDelayItem, 0, 1024);
-			return(true);
-			break;
-
-			default:
-			return(false);
+			ShowWindow(GetDlgItem(hDlg, kApplianceDelay), SW_HIDE);
+			ShowWindow(GetDlgItem(hDlg, kApplianceDelayLabel), SW_HIDE);
 		}
-		break;
 
-		case mouseDown:
-		return(false);
-		break;
+		delay = thisRoom->objects[objActive].data.g.delay;
+		SetDlgItemInt(hDlg, kApplianceDelay, (UINT)delay, TRUE);
 
-		case mouseUp:
-		return(false);
-		break;
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
+		return TRUE;
 
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateApplianceInfo(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDOK:
+		case kApplianceLinkedFrom:
+			delay = (INT)GetDlgItemInt(hDlg, kApplianceDelay, NULL, TRUE);
+			if ((delay < 0) || (delay > 255))
+			{
+				MessageBeep(MB_ICONWARNING);
+				delay = thisRoom->objects[objActive].data.g.delay;
+				SetDlgItemInt(hDlg, kApplianceDelay, (UINT)delay, TRUE);
+				SendMessage(hDlg, WM_NEXTDLGCTL,
+					(WPARAM)GetDlgItem(hDlg, kApplianceDelay), TRUE);
+			}
+			else
+			{
+				thisRoom->objects[objActive].data.g.delay = (Byte)delay;
+				if (IsDlgButtonChecked(hDlg, kApplianceInitialState))
+					thisRoom->objects[objActive].data.g.initial = true;
+				else
+					thisRoom->objects[objActive].data.g.initial = false;
+				fileDirty = true;
+				UpdateMenus(false);
+				Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+				GetThisRoomsObjRects();
+				ReadyBackground(thisRoom->background, thisRoom->tiles);
+				DrawThisRoomsObjects();
+				EndDialog(hDlg, LOWORD(wParam));
+			}
+			break;
 
-		default:
-		return(false);
-		break;
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
+			break;
+		}
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  MicrowaveFilter
@@ -1365,120 +1370,25 @@ void DoLightObjectInfo (HWND hwndOwner)
 
 void DoApplianceObjectInfo (HWND hwndOwner, SInt16 what)
 {
-	MessageBox(hwndOwner, L"DoApplianceObjectInfo()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		infoDial;
-	Str255			numberStr, kindStr;
-	long			delay;
-	short			item, initial;
-	Boolean			leaving, doReturn;
-	ModalFilterUPP	applianceFilterUPP;
+	DialogParams params = { 0 };
+	wchar_t numberStr[16];
+	wchar_t kindStr[256];
+	INT_PTR result;
 
-	applianceFilterUPP = NewModalFilterUPP(ApplianceFilter);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
 
-	NumToString(objActive + 1, numberStr);
-	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
-	ParamText(numberStr, kindStr, "\p", "\p");
+	params.arg[0] = numberStr;
+	params.arg[1] = kindStr;
+	result = DialogBoxParam(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kApplianceInfoDialogID),
+			hwndOwner, ApplianceFilter, (LPARAM)&params);
 
-	BringUpDialog(&infoDial, kApplianceInfoDialogID);
-
-	if (retroLinkList[objActive].room == -1)
-		HideDialogItem(infoDial, 10);
-
-	if (thisRoom->objects[objActive].data.g.initial)
-		SetDialogItemValue(infoDial, kInitialStateCheckbox, 1);
-	else
-		SetDialogItemValue(infoDial, kInitialStateCheckbox, 0);
-
-	if ((what == kShredder) || (what == kMacPlus) || (what == kTV) ||
-			(what == kCoffee) || (what == kVCR) || (what == kMicrowave))
-	{
-		HideDialogItem(infoDial, kDelayItem);
-		HideDialogItem(infoDial, kDelayLabelItem);
-	}
-
-	delay = thisRoom->objects[objActive].data.g.delay;
-	SetDialogNumToStr(infoDial, kDelayItem, (long)delay);
-	SelectDialogItemText(infoDial, kDelayItem, 0, 1024);
-
-	leaving = false;
-	doReturn = false;
-
-	while (!leaving)
-	{
-		ModalDialog(applianceFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			GetDialogNumFromStr(infoDial, kDelayItem, &delay);
-			if ((delay < 0L) || (delay > 255L))
-			{
-				SysBeep(0);
-				delay = thisRoom->objects[objActive].data.g.delay;
-				SetDialogNumToStr(infoDial, kDelayItem, (long)delay);
-				SelectDialogItemText(infoDial, kDelayItem, 0, 1024);
-			}
-			else
-			{
-				thisRoom->objects[objActive].data.g.delay = (Byte)delay;
-				GetDialogItemValue(infoDial, kInitialStateCheckbox, &initial);
-				if (initial == 1)
-					thisRoom->objects[objActive].data.g.initial = true;
-				else
-					thisRoom->objects[objActive].data.g.initial = false;
-				fileDirty = true;
-				UpdateMenus(false);
-				InvalWindowRect(mainWindow, &mainWindowRect);
-				GetThisRoomsObjRects();
-				ReadyBackground(thisRoom->background, thisRoom->tiles);
-				DrawThisRoomsObjects();
-				leaving = true;
-			}
-		}
-		else if (item == kCancelButton)
-			leaving = true;
-		else if (item == kInitialStateCheckbox)
-			ToggleDialogItemValue(infoDial, kInitialStateCheckbox);
-		else if (item == 10)			// Linked From? button.
-		{
-			GetDialogNumFromStr(infoDial, kDelayItem, &delay);
-			if ((delay < 0L) || (delay > 255L))
-			{
-				SysBeep(0);
-				delay = thisRoom->objects[objActive].data.g.delay;
-				SetDialogNumToStr(infoDial, kDelayItem, (long)delay);
-				SelectDialogItemText(infoDial, kDelayItem, 0, 1024);
-			}
-			else
-			{
-				thisRoom->objects[objActive].data.g.delay = (Byte)delay;
-				GetDialogItemValue(infoDial, kInitialStateCheckbox, &initial);
-				if (initial == 1)
-					thisRoom->objects[objActive].data.g.initial = true;
-				else
-					thisRoom->objects[objActive].data.g.initial = false;
-				fileDirty = true;
-				UpdateMenus(false);
-				InvalWindowRect(mainWindow, &mainWindowRect);
-				GetThisRoomsObjRects();
-				ReadyBackground(thisRoom->background, thisRoom->tiles);
-				DrawThisRoomsObjects();
-				leaving = true;
-				doReturn = true;
-			}
-		}
-	}
-
-	DisposeDialog(infoDial);
-	DisposeModalFilterUPP(applianceFilterUPP);
-
-	if (doReturn)
+	if (result == kApplianceLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoMicrowaveObjectInfo
