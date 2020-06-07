@@ -1,19 +1,24 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kMicrowaveInfoDialogID DIALOGEX 0, 0, 185, 98
+#define kMicrowaveInitialState  1006
+#define kKillBandsCheckbox      1008
+#define kKillBatteryCheckbox    1009
+#define kKillFoilCheckbox       1010
+#define kMicrowaveLinkedFrom    1011
+
+kMicrowaveInfoDialogID DIALOGEX 0, 0, 193, 92
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    PUSHBUTTON "Okay", 1, 141, 81, 39, 12
-    PUSHBUTTON "Cancel", 2, 97, 81, 39, 12
-    LTEXT "Object Number: ^0", -1, 5, 36, 85, 10, SS_NOPREFIX
-    LTEXT "Object Kind: ^1", -1, 5, 25, 160, 10, SS_NOPREFIX
-    CONTROL "", 5, STATIC, SS_OWNERDRAW, 5, 75, 175, 1
-    CHECKBOX "Initially On", 6, 5, 48, 75, 11
-    CONTROL kMicrowaveInfoTitle, -1, STATIC, SS_BITMAP, 0, 0, 185, 20
-    CHECKBOX "Zero Bands", 8, 96, 37, 85, 11
-    CHECKBOX "Zero Battery/He", 9, 96, 48, 85, 11
-    CHECKBOX "Zero Foil", 10, 96, 59, 85, 11
-    PUSHBUTTON "Linked From?", 11, 5, 81, 64, 12
+    LTEXT "Object Kind: ^1", IDC_STATIC, 7, 7, 179, 8, SS_NOPREFIX
+    LTEXT "Object Number: ^0", IDC_STATIC, 7, 18, 86, 8, SS_NOPREFIX
+    AUTOCHECKBOX "Initially On", kMicrowaveInitialState, 7, 34, 86, 10
+    AUTOCHECKBOX "Zero Bands", kKillBandsCheckbox, 100, 22, 86, 10
+    AUTOCHECKBOX "Zero Battery/He", kKillBatteryCheckbox, 100, 34, 86, 10
+    AUTOCHECKBOX "Zero Foil", kKillFoilCheckbox, 100, 46, 86, 10
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ, 7, 63, 179, 1
+    PUSHBUTTON "Linked From?", kMicrowaveLinkedFrom, 7, 71, 64, 14
+    DEFPUSHBUTTON "Okay", IDOK, 82, 71, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 136, 71, 50, 14
 }
