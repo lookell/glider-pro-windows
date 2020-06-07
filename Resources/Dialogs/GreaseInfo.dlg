@@ -1,16 +1,18 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kGreaseInfoDialogID DIALOGEX 0, 0, 171, 90
+#define kGreaseSpilled          1006
+#define kGreaseLinkedFrom       1008
+
+kGreaseInfoDialogID DIALOGEX 0, 0, 193, 79
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    PUSHBUTTON "Okay", 1, 127, 73, 39, 12
-    PUSHBUTTON "Cancel", 2, 83, 73, 39, 12
-    LTEXT "Object Number: ^0", -1, 5, 36, 85, 10, SS_NOPREFIX
-    LTEXT "Object Kind: ^1", -1, 5, 25, 160, 10, SS_NOPREFIX
-    CONTROL "", 5, STATIC, SS_OWNERDRAW, 5, 66, 160, 1
-    CHECKBOX "Grease initially tipped", 6, 5, 50, 111, 11
-    CONTROL kObjectInfoTitle, -1, STATIC, SS_BITMAP, 0, 0, 171, 20
-    PUSHBUTTON "Linked From?", 8, 5, 73, 64, 12
+    LTEXT "Object Kind: ^1", IDC_STATIC, 7, 7, 179, 8, SS_NOPREFIX
+    LTEXT "Object Number: ^0", IDC_STATIC, 7, 18, 179, 8, SS_NOPREFIX
+    AUTOCHECKBOX "Grease initially tipped", kGreaseSpilled, 7, 33, 179, 10
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ, 7, 50, 179, 1
+    PUSHBUTTON "Linked From?", kGreaseLinkedFrom, 7, 58, 64, 14
+    DEFPUSHBUTTON "Okay", IDOK, 82, 58, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 136, 58, 50, 14
 }

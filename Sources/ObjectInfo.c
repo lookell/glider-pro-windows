@@ -56,11 +56,13 @@
 #define kKillFoilCheckbox       1010
 #define kMicrowaveLinkedFrom    1011
 
+#define kGreaseSpilled          1006
+#define kGreaseLinkedFrom       1008
+
 #define kDelay3Item					6
 #define k100PtRadio					6
 #define k300PtRadio					7
 #define k500PtRadio					8
-#define kGreaseItem					6
 #define kLinkTransButton			6
 #define kInitialStateCheckbox3		13
 #define kTransRoomText				8
@@ -76,7 +78,6 @@
 
 
 void UpdateBlowerInfo (HWND, HDC);
-void UpdateGreaseInfo (DialogPtr);
 void UpdateInvisBonusInfo (DialogPtr);
 void UpdateTransInfo (DialogPtr);
 void UpdateEnemyInfo (DialogPtr);
@@ -89,7 +90,7 @@ INT_PTR CALLBACK TriggerFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK LightFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK ApplianceFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK MicrowaveFilter (HWND, UINT, WPARAM, LPARAM);
-Boolean GreaseFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK GreaseFilter (HWND, UINT, WPARAM, LPARAM);
 Boolean InvisBonusFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean TransFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean EnemyFilter (DialogPtr, EventRecord *, SInt16 *);
@@ -225,18 +226,6 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 			}
 		}
 	}
-}
-
-//--------------------------------------------------------------  UpdateGreaseInfo
-
-void UpdateGreaseInfo (DialogPtr theDialog)
-{
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-	FrameDialogItemC(theDialog, 5, kRedOrangeColor8);
-#endif
 }
 
 //--------------------------------------------------------------  UpdateInvisBonusInfo
@@ -884,47 +873,48 @@ INT_PTR CALLBACK MicrowaveFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 
 //--------------------------------------------------------------  GreaseFilter
 
-Boolean GreaseFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK GreaseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		if (retroLinkList[objActive].room == -1)
+			ShowWindow(GetDlgItem(hDlg, kGreaseLinkedFrom), SW_HIDE);
+
+		if (thisRoom->objects[objActive].data.c.initial)
+			CheckDlgButton(hDlg, kGreaseSpilled, BST_UNCHECKED);
+		else
+			CheckDlgButton(hDlg, kGreaseSpilled, BST_CHECKED);
+
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
+		return TRUE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
+		case IDOK:
+		case kGreaseLinkedFrom:
+			if (IsDlgButtonChecked(hDlg, kGreaseSpilled))
+				thisRoom->objects[objActive].data.c.initial = false;
+			else
+				thisRoom->objects[objActive].data.c.initial = true;
+			fileDirty = true;
+			UpdateMenus(false);
+			Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+			GetThisRoomsObjRects();
+			ReadyBackground(thisRoom->background, thisRoom->tiles);
+			DrawThisRoomsObjects();
+			EndDialog(hDlg, LOWORD(wParam));
 			break;
 
-			case kEscapeKeyASCII:
-			FlashDialogButton(dial, kCancelButton);
-			*item = kCancelButton;
-			return(true);
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
 			break;
-
-			default:
-			return(false);
 		}
-		break;
-
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateGreaseInfo(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  InvisBonusFilter
@@ -1427,78 +1417,25 @@ void DoMicrowaveObjectInfo (HWND hwndOwner)
 
 void DoGreaseObjectInfo (HWND hwndOwner)
 {
-	MessageBox(hwndOwner, L"DoGreaseObjectInfo()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		infoDial;
-	Str255			numberStr, kindStr;
-	short			item;
-	Boolean			leaving, wasSpilled, doReturn;
-	ModalFilterUPP	greaseFilterUPP;
+	DialogParams params = { 0 };
+	wchar_t numberStr[16];
+	wchar_t kindStr[256];
+	INT_PTR result;
 
-	greaseFilterUPP = NewModalFilterUPP(GreaseFilter);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
 
-	NumToString(objActive + 1, numberStr);
-	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
-	ParamText(numberStr, kindStr, "\p", "\p");
+	params.arg[0] = numberStr;
+	params.arg[1] = kindStr;
+	result = DialogBoxParam(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kGreaseInfoDialogID),
+			hwndOwner, GreaseFilter, (LPARAM)&params);
 
-	BringUpDialog(&infoDial, kGreaseInfoDialogID);
-
-	if (retroLinkList[objActive].room == -1)
-		HideDialogItem(infoDial, 8);
-
-	wasSpilled = !(thisRoom->objects[objActive].data.c.initial);
-	SetDialogItemValue(infoDial, kGreaseItem, (short)wasSpilled);
-	leaving = false;
-	doReturn = false;
-
-	while (!leaving)
-	{
-		ModalDialog(greaseFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			thisRoom->objects[objActive].data.c.initial = !wasSpilled;
-			fileDirty = true;
-			UpdateMenus(false);
-			InvalWindowRect(mainWindow, &mainWindowRect);
-			GetThisRoomsObjRects();
-			ReadyBackground(thisRoom->background, thisRoom->tiles);
-			DrawThisRoomsObjects();
-			leaving = true;
-		}
-		else if (item == kCancelButton)
-		{
-			leaving = true;
-		}
-		else if (item == kGreaseItem)
-		{
-			wasSpilled = !wasSpilled;
-			SetDialogItemValue(infoDial, kGreaseItem, (short)wasSpilled);
-		}
-		else if (item == 8)				// Linked From? button.
-		{
-			thisRoom->objects[objActive].data.c.initial = !wasSpilled;
-			fileDirty = true;
-			UpdateMenus(false);
-			InvalWindowRect(mainWindow, &mainWindowRect);
-			GetThisRoomsObjRects();
-			ReadyBackground(thisRoom->background, thisRoom->tiles);
-			DrawThisRoomsObjects();
-			leaving = true;
-			doReturn = true;
-		}
-	}
-
-	DisposeDialog(infoDial);
-	DisposeModalFilterUPP(greaseFilterUPP);
-
-	if (doReturn)
+	if (result == kGreaseLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
 				retroLinkList[objActive].room);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoInvisBonusObjectInfo
