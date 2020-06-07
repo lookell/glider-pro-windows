@@ -1,23 +1,27 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kTriggerInfoDialogID DIALOGEX 0, 0, 171, 115
+#define kTriggerDelayItem           1006
+#define kLinkTriggerButton          1009
+#define kTriggerGotoButton          1014
+#define kTriggerLinkedFrom          1015
+
+kTriggerInfoDialogID DIALOGEX 0, 0, 193, 117
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    PUSHBUTTON "Okay", 1, 127, 98, 39, 12
-    PUSHBUTTON "Cancel", 2, 83, 98, 39, 12
-    LTEXT "Object Kind: ^1", -1, 5, 25, 160, 10, SS_NOPREFIX
-    CONTROL "", 4, STATIC, SS_OWNERDRAW, 5, 92, 160, 1
-    LTEXT "Object Number: ^0", -1, 5, 36, 85, 10, SS_NOPREFIX
-    EDITTEXT 6, 131, 65, 32, 10, ES_AUTOHSCROLL
-    LTEXT "Delay:", -1, 99, 65, 29, 10, SS_NOPREFIX
-    LTEXT "(1/10 secs)", -1, 99, 77, 56, 10, SS_NOPREFIX
-    PUSHBUTTON "Link", 9, 5, 76, 39, 11
-    CONTROL kObjectInfoTitle, -1, STATIC, SS_BITMAP, 0, 0, 171, 20
-    LTEXT "Room Link: ^2", -1, 5, 55, 93, 10, SS_NOPREFIX
-    LTEXT "Object Link: ^3", -1, 5, 65, 93, 10, SS_NOPREFIX
-    CONTROL "", 13, STATIC, SS_OWNERDRAW, 5, 49, 160, 1
-    PUSHBUTTON "Go To", 14, 49, 76, 39, 11
-    PUSHBUTTON "Linked From?", 15, 5, 98, 64, 12
+    LTEXT "Object Kind: ^1", IDC_STATIC, 7, 7, 179, 8, SS_NOPREFIX
+    LTEXT "Object Number: ^0", IDC_STATIC, 7, 18, 179, 8, SS_NOPREFIX
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ, 7, 33, 179, 1
+    LTEXT "Room Link: ^2", IDC_STATIC, 7, 41, 104, 8, SS_NOPREFIX
+    LTEXT "Object Link: ^3", IDC_STATIC, 7, 52, 104, 8, SS_NOPREFIX
+    PUSHBUTTON "Link", kLinkTriggerButton, 7, 67, 50, 14
+    PUSHBUTTON "Go To", kTriggerGotoButton, 61, 67, 50, 14
+    LTEXT "Delay:", IDC_STATIC, 118, 41, 68, 8, SS_NOPREFIX
+    EDITTEXT kTriggerDelayItem, 118, 52, 31, 12, ES_AUTOHSCROLL
+    LTEXT "(1/10 secs)", IDC_STATIC, 118, 67, 68, 8, SS_NOPREFIX
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ, 7, 88, 179, 1
+    PUSHBUTTON "Linked From?", kTriggerLinkedFrom, 7, 96, 64, 14
+    DEFPUSHBUTTON "Okay", IDOK, 82, 96, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 136, 96, 50, 14
 }

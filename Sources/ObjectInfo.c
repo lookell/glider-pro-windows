@@ -37,6 +37,11 @@
 #define kSwitchGotoButton           1014
 #define kSwitchLinkedFrom           1015
 
+#define kTriggerDelayItem           1006
+#define kLinkTriggerButton          1009
+#define kTriggerGotoButton          1014
+#define kTriggerLinkedFrom          1015
+
 #define kInitialStateCheckbox		6
 #define kDelay3Item					6
 #define kDelayItem					8
@@ -60,11 +65,9 @@
 #define kRadioFlower6				11
 #define kFlowerCancel				12
 #define kGotoButton1				11
-#define kGotoButton2				14
 
 
 void UpdateBlowerInfo (HWND, HDC);
-void UpdateTriggerInfo (DialogPtr);
 void UpdateLightInfo (DialogPtr);
 void UpdateApplianceInfo (DialogPtr);
 void UpdateMicrowaveInfo (DialogPtr);
@@ -77,7 +80,7 @@ INT_PTR CALLBACK BlowerFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK FurnitureFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK CustPictFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK SwitchFilter (HWND, UINT, WPARAM, LPARAM);
-Boolean TriggerFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK TriggerFilter (HWND, UINT, WPARAM, LPARAM);
 Boolean LightFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean ApplianceFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean MicrowaveFilter (DialogPtr, EventRecord *, SInt16 *);
@@ -217,19 +220,6 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 			}
 		}
 	}
-}
-
-//--------------------------------------------------------------  UpdateTriggerInfo
-
-void UpdateTriggerInfo (DialogPtr theDialog)
-{
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
-	FrameDialogItemC(theDialog, 13, kRedOrangeColor8);
-#endif
 }
 
 //--------------------------------------------------------------  UpdateLightInfo
@@ -676,52 +666,61 @@ INT_PTR CALLBACK SwitchFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 
 //--------------------------------------------------------------  TriggerFilter
 
-Boolean TriggerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK TriggerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	INT delayIs;
+	HWND hwndFocus;
+
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		if (retroLinkList[objActive].room == -1)
+			ShowWindow(GetDlgItem(hDlg, kTriggerLinkedFrom), SW_HIDE);
+
+		if (thisRoom->objects[objActive].data.e.who == 255)
+			EnableWindow(GetDlgItem(hDlg, kTriggerGotoButton), FALSE);
+
+		delayIs = thisRoom->objects[objActive].data.e.delay;
+		SetDlgItemInt(hDlg, kTriggerDelayItem, (UINT)delayIs, TRUE);
+
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
+		hwndFocus = GetDlgItem(hDlg, kTriggerDelayItem);
+		SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)hwndFocus, TRUE);
+		return FALSE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
+		case IDOK:
+		case kLinkTriggerButton:
+		case kTriggerGotoButton:
+		case kTriggerLinkedFrom:
+			delayIs = GetDlgItemInt(hDlg, kTriggerDelayItem, NULL, TRUE);
+			if ((delayIs < 0) || (delayIs > 32767))
+			{
+				MessageBeep(MB_ICONWARNING);
+				delayIs = thisRoom->objects[objActive].data.e.delay;
+				SetDlgItemInt(hDlg, kTriggerDelayItem, (UINT)delayIs, TRUE);
+				hwndFocus = GetDlgItem(hDlg, kTriggerDelayItem);
+				SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)hwndFocus, TRUE);
+			}
+			else
+			{
+				thisRoom->objects[objActive].data.e.delay = (SInt16)delayIs;
+				fileDirty = true;
+				UpdateMenus(false);
+				EndDialog(hDlg, LOWORD(wParam));
+			}
 			break;
 
-			case kEscapeKeyASCII:
-			FlashDialogButton(dial, kCancelButton);
-			*item = kCancelButton;
-			return(true);
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
 			break;
-
-			case kTabKeyASCII:
-			SelectDialogItemText(dial, kDelay3Item, 0, 1024);
-			return(true);
-			break;
-
-			default:
-			return(false);
 		}
-		break;
-
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateTriggerInfo(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  LightFilter
@@ -1296,141 +1295,45 @@ void DoSwitchObjectInfo (HWND hwndOwner)
 
 void DoTriggerObjectInfo (HWND hwndOwner)
 {
-	MessageBox(hwndOwner, L"DoTriggerObjectInfo()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		infoDial;
-	Str255			numberStr, kindStr, roomStr, tempStr, objStr;
-	long			delayIs;
-	short			item, floor, suite;
-	Boolean			leaving, doLink, doGoTo, doReturn;
-	ModalFilterUPP	triggerFilterUPP;
+	DialogParams params = { 0 };
+	wchar_t numberStr[16];
+	wchar_t kindStr[256];
+	wchar_t roomStr[32];
+	wchar_t objStr[32];
+	SInt16 floor, suite;
+	INT_PTR result;
 
-	triggerFilterUPP = NewModalFilterUPP(TriggerFilter);
-
-	NumToString(objActive + 1, numberStr);
-	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
 	if (thisRoom->objects[objActive].data.e.where == -1)
-		PasStringCopy("\pnone", roomStr);
+	{
+		StringCchCopy(roomStr, ARRAYSIZE(roomStr), L"none");
+	}
 	else
 	{
 		ExtractFloorSuite(thisRoom->objects[objActive].data.e.where, &floor, &suite);
-		NumToString((long)floor, roomStr);
-		PasStringConcat(roomStr, "\p / ");
-		NumToString((long)suite, tempStr);
-		PasStringConcat(roomStr, tempStr);
+		StringCchPrintf(roomStr, ARRAYSIZE(roomStr), L"%d / %d", (int)floor, (int)suite);
 	}
 
 	if (thisRoom->objects[objActive].data.e.who == 255)
-		PasStringCopy("\pnone", objStr);
-	else
-		NumToString((long)thisRoom->objects[objActive].data.e.who + 1, objStr);
-
-	ParamText(numberStr, kindStr, roomStr, objStr);
-
-	BringUpDialog(&infoDial, kTriggerInfoDialogID);
-	leaving = false;
-	doLink = false;
-	doGoTo = false;
-	doReturn = false;
-
-	if (retroLinkList[objActive].room == -1)
-		HideDialogItem(infoDial, 15);
-
-	if (thisRoom->objects[objActive].data.e.who == 255)
-		MyDisableControl(infoDial, kGotoButton2);
-
-	SetDialogNumToStr(infoDial, kDelay3Item,
-			(long)thisRoom->objects[objActive].data.e.delay);
-	SelectDialogItemText(infoDial, kDelay3Item, 0, 1024);
-
-	while (!leaving)
 	{
-		ModalDialog(triggerFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			GetDialogNumFromStr(infoDial, kDelay3Item, &delayIs);
-			if ((delayIs < 0L) || (delayIs > 32767L))
-			{
-				SysBeep(1);
-				SetDialogNumToStr(infoDial, kDelay3Item,
-						(long)thisRoom->objects[objActive].data.e.delay);
-				SelectDialogItemText(infoDial, kDelay3Item, 0, 1024);
-			}
-			else
-			{
-				thisRoom->objects[objActive].data.e.delay = (short)delayIs;
-				fileDirty = true;
-				UpdateMenus(false);
-				leaving = true;
-			}
-		}
-		else if (item == kCancelButton)
-			leaving = true;
-		else if (item == 9)
-		{
-			GetDialogNumFromStr(infoDial, kDelay3Item, &delayIs);
-			if ((delayIs < 0L) || (delayIs > 32767L))
-			{
-				SysBeep(1);
-				SetDialogNumToStr(infoDial, kDelay3Item,
-						(long)thisRoom->objects[objActive].data.e.delay);
-				SelectDialogItemText(infoDial, kDelay3Item, 0, 1024);
-			}
-			else
-			{
-				thisRoom->objects[objActive].data.e.delay = (short)delayIs;
-				fileDirty = true;
-				UpdateMenus(false);
-				leaving = true;
-				doLink = true;
-			}
-		}
-		else if (item == kGotoButton2)
-		{
-			GetDialogNumFromStr(infoDial, kDelay3Item, &delayIs);
-			if ((delayIs < 0L) || (delayIs > 32767L))
-			{
-				SysBeep(1);
-				SetDialogNumToStr(infoDial, kDelay3Item,
-						(long)thisRoom->objects[objActive].data.e.delay);
-				SelectDialogItemText(infoDial, kDelay3Item, 0, 1024);
-			}
-			else
-			{
-				thisRoom->objects[objActive].data.e.delay = (short)delayIs;
-				fileDirty = true;
-				UpdateMenus(false);
-				leaving = true;
-				doGoTo = true;
-			}
-		}
-		else if (item == 15)			// Linked From? button.
-		{
-			GetDialogNumFromStr(infoDial, kDelay3Item, &delayIs);
-			if ((delayIs < 0L) || (delayIs > 32767L))
-			{
-				SysBeep(1);
-				SetDialogNumToStr(infoDial, kDelay3Item,
-						(long)thisRoom->objects[objActive].data.e.delay);
-				SelectDialogItemText(infoDial, kDelay3Item, 0, 1024);
-			}
-			else
-			{
-				thisRoom->objects[objActive].data.e.delay = (short)delayIs;
-				fileDirty = true;
-				UpdateMenus(false);
-				leaving = true;
-				doReturn = true;
-			}
-		}
+		StringCchCopy(objStr, ARRAYSIZE(objStr), L"none");
+	}
+	else
+	{
+		StringCchPrintf(objStr, ARRAYSIZE(objStr), L"%d",
+			(int)(thisRoom->objects[objActive].data.e.who + 1));
 	}
 
-	DisposeDialog(infoDial);
-	DisposeModalFilterUPP(triggerFilterUPP);
+	params.arg[0] = numberStr;
+	params.arg[1] = kindStr;
+	params.arg[2] = roomStr;
+	params.arg[3] = objStr;
+	result = DialogBoxParam(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kTriggerInfoDialogID),
+			hwndOwner, TriggerFilter, (LPARAM)&params);
 
-	if (doLink)
+	if (result == kLinkTriggerButton)
 	{
 		linkType = kTriggerLinkOnly;
 		linkerIsSwitch = true;
@@ -1439,16 +1342,15 @@ void DoTriggerObjectInfo (HWND hwndOwner)
 		linkObject = (Byte)objActive;
 		DeselectObject();
 	}
-	else if (doGoTo)
+	else if (result == kTriggerGotoButton)
 	{
-		GoToObjectInRoom((short)thisRoom->objects[objActive].data.e.who, floor, suite);
+		GoToObjectInRoom(thisRoom->objects[objActive].data.e.who, floor, suite);
 	}
-	else if (doReturn)
+	else if (result == kTriggerLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
-				retroLinkList[objActive].room);
+			retroLinkList[objActive].room);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoLightObjectInfo
