@@ -74,17 +74,16 @@
 #define kEnemyInitialState      1010
 #define kEnemyLinkedFrom        1011
 
-//#define kDelay2Item                 7
-//#define kDelay2LabelItem            8
-//#define kDelay2LabelItem2           9
-//#define kInitialStateCheckbox2      10
-#define kRadioFlower1				6
-#define kRadioFlower6				11
-#define kFlowerCancel				12
+#define kRadioFlower1           1006
+#define kRadioFlower2           1007
+#define kRadioFlower3           1008
+#define kRadioFlower4           1009
+#define kRadioFlower5           1010
+#define kRadioFlower6           1011
+#define kFlowerLinkedFrom       1013
 
 
 void UpdateBlowerInfo (HWND, HDC);
-void UpdateFlowerInfo (DialogPtr);
 INT_PTR CALLBACK BlowerFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK FurnitureFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK CustPictFilter (HWND, UINT, WPARAM, LPARAM);
@@ -97,7 +96,7 @@ INT_PTR CALLBACK GreaseFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK InvisBonusFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK TransFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK EnemyFilter (HWND, UINT, WPARAM, LPARAM);
-Boolean FlowerFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK FlowerFilter (HWND, UINT, WPARAM, LPARAM);
 void DoBlowerObjectInfo (HWND);
 void DoFurnitureObjectInfo (HWND);
 void DoCustPictObjectInfo (HWND);
@@ -226,18 +225,6 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 			}
 		}
 	}
-}
-
-//--------------------------------------------------------------  UpdateFlowerInfo
-
-void UpdateFlowerInfo (DialogPtr theDialog)
-{
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
-#endif
 }
 
 //--------------------------------------------------------------  BlowerFilter
@@ -1073,55 +1060,63 @@ INT_PTR CALLBACK EnemyFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 
 //--------------------------------------------------------------  EnemyFilter
 
-Boolean FlowerFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK FlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	SInt16 flower;
+
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		if (retroLinkList[objActive].room == -1)
+			ShowWindow(GetDlgItem(hDlg, kFlowerLinkedFrom), SW_HIDE);
+
+		flower = thisRoom->objects[objActive].data.i.pict;
+		if ((flower < 0) || (flower >= kNumFlowers))
+			flower = 0;
+		CheckRadioButton(hDlg, kRadioFlower1, kRadioFlower6, kRadioFlower1 + flower);
+
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
+		return TRUE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
+		case IDOK:
+		case kFlowerLinkedFrom:
+			for (flower = 0; flower < kNumFlowers; flower++)
+				if (IsDlgButtonChecked(hDlg, kRadioFlower1 + flower))
+					break;
+			if (flower >= kNumFlowers)
+				flower = 0;
+			if (flower != thisRoom->objects[objActive].data.i.pict)
+			{
+				Mac_InvalWindowRect(mainWindow, &thisRoom->objects[objActive].data.i.bounds);
+				thisRoom->objects[objActive].data.i.bounds.right =
+					thisRoom->objects[objActive].data.i.bounds.left +
+					RectWide(&flowerSrc[flower]);
+				thisRoom->objects[objActive].data.i.bounds.top =
+					thisRoom->objects[objActive].data.i.bounds.bottom -
+					RectTall(&flowerSrc[flower]);
+				thisRoom->objects[objActive].data.i.pict = flower;
+				Mac_InvalWindowRect(mainWindow, &thisRoom->objects[objActive].data.i.bounds);
+				GetThisRoomsObjRects();
+				ReadyBackground(thisRoom->background, thisRoom->tiles);
+				DrawThisRoomsObjects();
+				fileDirty = true;
+				UpdateMenus(false);
+				wasFlower = flower;
+			}
+			EndDialog(hDlg, LOWORD(wParam));
 			break;
 
-			case kEscapeKeyASCII:
-			FlashDialogButton(dial, kCancelButton);
-			*item = kCancelButton;
-			return(true);
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
 			break;
-
-			default:
-			return(false);
 		}
-		break;
-
-		case mouseDown:
-		return(false);
-		break;
-
-		case mouseUp:
-		return(false);
-		break;
-
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateFlowerInfo(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  DoBlowerObjectInfo
@@ -1566,103 +1561,25 @@ void DoEnemyObjectInfo (HWND hwndOwner, SInt16 what)
 
 void DoFlowerObjectInfo (HWND hwndOwner)
 {
-	MessageBox(hwndOwner, L"DoFlowerObjectInfo()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		infoDial;
-	Str255			numberStr, kindStr;
-	short			item, flower;
-	Boolean			leaving, doReturn;
-	ModalFilterUPP	flowerFilterUPP;
+	DialogParams params = { 0 };
+	wchar_t numberStr[16];
+	wchar_t kindStr[256];
+	INT_PTR result;
 
-	flowerFilterUPP = NewModalFilterUPP(FlowerFilter);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
 
-	NumToString(objActive + 1, numberStr);
-	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
-	ParamText(numberStr, kindStr, "\p", "\p");
+	params.arg[0] = numberStr;
+	params.arg[1] = kindStr;
+	result = DialogBoxParam(HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(kFlowerInfoDialogID),
+		hwndOwner, FlowerFilter, (LPARAM)&params);
 
-	BringUpDialog(&infoDial, kFlowerInfoDialogID);
-
-	if (retroLinkList[objActive].room == -1)
-		HideDialogItem(infoDial, 13);
-
-	flower = thisRoom->objects[objActive].data.i.pict + kRadioFlower1;
-	SelectFromRadioGroup(infoDial, flower, kRadioFlower1, kRadioFlower6);
-
-	leaving = false;
-	doReturn = false;
-
-	while (!leaving)
-	{
-		ModalDialog(flowerFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			flower -= kRadioFlower1;
-			if (flower != thisRoom->objects[objActive].data.i.pict)
-			{
-				InvalWindowRect(mainWindow, &thisRoom->objects[objActive].data.i.bounds);
-				thisRoom->objects[objActive].data.i.bounds.right =
-						thisRoom->objects[objActive].data.i.bounds.left +
-						RectWide(&flowerSrc[flower]);
-				thisRoom->objects[objActive].data.i.bounds.top =
-						thisRoom->objects[objActive].data.i.bounds.bottom -
-						RectTall(&flowerSrc[flower]);
-				thisRoom->objects[objActive].data.i.pict = flower;
-				InvalWindowRect(mainWindow, &thisRoom->objects[objActive].data.i.bounds);
-				GetThisRoomsObjRects();
-				ReadyBackground(thisRoom->background, thisRoom->tiles);
-				DrawThisRoomsObjects();
-				fileDirty = true;
-				UpdateMenus(false);
-				wasFlower = flower;
-			}
-			leaving = true;
-		}
-		else if ((item >= kRadioFlower1) && (item <= kRadioFlower6))
-		{
-			flower = item;
-			SelectFromRadioGroup(infoDial, flower, kRadioFlower1, kRadioFlower6);
-		}
-		else if (item == kFlowerCancel)
-		{
-			leaving = true;
-		}
-		else if (item == 13)			// Linked From? button.
-		{
-			flower -= kRadioFlower1;
-			if (flower != thisRoom->objects[objActive].data.i.pict)
-			{
-				InvalWindowRect(mainWindow, &thisRoom->objects[objActive].data.i.bounds);
-				thisRoom->objects[objActive].data.i.bounds.right =
-						thisRoom->objects[objActive].data.i.bounds.left +
-						RectWide(&flowerSrc[flower]);
-				thisRoom->objects[objActive].data.i.bounds.top =
-						thisRoom->objects[objActive].data.i.bounds.bottom -
-						RectTall(&flowerSrc[flower]);
-				thisRoom->objects[objActive].data.i.pict = flower;
-				InvalWindowRect(mainWindow, &thisRoom->objects[objActive].data.i.bounds);
-				GetThisRoomsObjRects();
-				ReadyBackground(thisRoom->background, thisRoom->tiles);
-				DrawThisRoomsObjects();
-				fileDirty = true;
-				UpdateMenus(false);
-				wasFlower = flower;
-			}
-			leaving = true;
-			doReturn = true;
-		}
-	}
-
-	DisposeDialog(infoDial);
-	DisposeModalFilterUPP(flowerFilterUPP);
-
-	if (doReturn)
+	if (result == kFlowerLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
-				retroLinkList[objActive].room);
+			retroLinkList[objActive].room);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoObjectInfo
