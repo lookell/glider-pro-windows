@@ -103,12 +103,12 @@ void DoCustPictObjectInfo (HWND);
 void DoSwitchObjectInfo (HWND);
 void DoTriggerObjectInfo (HWND);
 void DoLightObjectInfo (HWND);
-void DoApplianceObjectInfo (HWND, SInt16);
+void DoApplianceObjectInfo (HWND);
 void DoMicrowaveObjectInfo (HWND);
 void DoGreaseObjectInfo (HWND);
 void DoInvisBonusObjectInfo (HWND);
-void DoTransObjectInfo (HWND, SInt16);
-void DoEnemyObjectInfo (HWND, SInt16);
+void DoTransObjectInfo (HWND);
+void DoEnemyObjectInfo (HWND);
 void DoFlowerObjectInfo (HWND);
 
 
@@ -123,21 +123,21 @@ extern	Boolean		linkerIsSwitch;
 //==============================================================  Functions
 //--------------------------------------------------------------  GetObjectName
 
-void GetObjectName (wchar_t *buffer, int size, SInt16 objectType)
+void GetObjectName (wchar_t *pszDest, size_t cchDest, SInt16 objectType)
 {
 	UINT strID;
 	LPWSTR strPtr;
 	int strLen;
 
-	if (buffer == NULL || size < 1)
+	if (pszDest == NULL || cchDest < 1)
 		return;
-	buffer[0] = L'\0';
+	pszDest[0] = L'\0';
 
 	strID = (UINT)(kObjectNameStringsBase + objectType);
 	strLen = LoadString(HINST_THISCOMPONENT, strID, (LPWSTR)&strPtr, 0);
-	if (strLen == 0 || strPtr == NULL)
+	if (strLen <= 0 || strPtr == NULL)
 		return;
-	StringCchCopyN(buffer, size, strPtr, strLen);
+	StringCchCopyN(pszDest, cchDest, strPtr, (size_t)strLen);
 }
 
 //--------------------------------------------------------------  UpdateBlowerInfo
@@ -215,9 +215,9 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 		InflateRect(&bounds, 1, 1);
 		focusedWindow = GetFocus();
 		if ((GetDlgItem(hDlg, kBlowerUpButton) == focusedWindow) ||
-				(GetDlgItem(hDlg, kBlowerRightButton) == focusedWindow) ||
-				(GetDlgItem(hDlg, kBlowerDownButton) == focusedWindow) ||
-				(GetDlgItem(hDlg, kBlowerLeftButton) == focusedWindow))
+			(GetDlgItem(hDlg, kBlowerRightButton) == focusedWindow) ||
+			(GetDlgItem(hDlg, kBlowerDownButton) == focusedWindow) ||
+			(GetDlgItem(hDlg, kBlowerLeftButton) == focusedWindow))
 		{
 			if ((SendMessage(hDlg, WM_QUERYUISTATE, 0, 0) & UISF_HIDEFOCUS) == 0)
 			{
@@ -231,11 +231,12 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 
 INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	SInt16 what;
+
 	switch (message)
 	{
 	case WM_INITDIALOG:
-	{
-		SInt16 what = thisRoom->objects[objActive].what;
+		what = thisRoom->objects[objActive].what;
 
 		if (thisRoom->objects[objActive].data.a.initial)
 			CheckDlgButton(hDlg, kBlowerInitialState, BST_CHECKED);
@@ -243,7 +244,7 @@ INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 			CheckDlgButton(hDlg, kBlowerInitialState, BST_UNCHECKED);
 
 		if ((what == kTaper) || (what == kCandle) || (what == kStubby) ||
-				(what == kTiki) || (what == kBBQ))
+			(what == kTiki) || (what == kBBQ))
 		{
 			ShowWindow(GetDlgItem(hDlg, kBlowerInitialState), SW_HIDE);
 		}
@@ -253,12 +254,12 @@ INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 			if (what == kLeftFan)
 			{
 				CheckRadioButton(hDlg, kLeftFacingRadio, kRightFacingRadio,
-						kLeftFacingRadio);
+					kLeftFacingRadio);
 			}
 			else
 			{
 				CheckRadioButton(hDlg, kLeftFacingRadio, kRightFacingRadio,
-						kRightFacingRadio);
+					kRightFacingRadio);
 			}
 			ShowWindow(GetDlgItem(hDlg, kDirectionText), SW_HIDE);
 		}
@@ -271,22 +272,22 @@ INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 		if ((thisRoom->objects[objActive].data.a.vector & 0x01) == 0x01)
 		{
 			CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
-					kBlowerUpButton);
+				kBlowerUpButton);
 		}
 		else if ((thisRoom->objects[objActive].data.a.vector & 0x02) == 0x02)
 		{
 			CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
-					kBlowerRightButton);
+				kBlowerRightButton);
 		}
 		else if ((thisRoom->objects[objActive].data.a.vector & 0x04) == 0x04)
 		{
 			CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
-					kBlowerDownButton);
+				kBlowerDownButton);
 		}
 		else if ((thisRoom->objects[objActive].data.a.vector & 0x08) == 0x08)
 		{
 			CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
-					kBlowerLeftButton);
+				kBlowerLeftButton);
 		}
 		if ((what != kInvisBlower) && (what != kLiftArea))
 		{
@@ -302,18 +303,13 @@ INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 		CenterOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		return TRUE;
-	}
 
 	case WM_COMMAND:
-	{
-		HDC hdc;
-
 		switch (LOWORD(wParam))
 		{
 		case IDOK:
 		case kBlowerLinkedFrom:
-		{
-			SInt16 what = thisRoom->objects[objActive].what;
+			what = thisRoom->objects[objActive].what;
 
 			if (IsDlgButtonChecked(hDlg, kBlowerInitialState))
 				thisRoom->objects[objActive].data.a.initial = true;
@@ -350,7 +346,6 @@ INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 			UpdateMenus(false);
 			EndDialog(hDlg, LOWORD(wParam));
 			break;
-		}
 
 		case IDCANCEL:
 			EndDialog(hDlg, IDCANCEL);
@@ -365,15 +360,16 @@ INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 			case BN_CLICKED:
 			case BN_SETFOCUS:
 			case BN_KILLFOCUS:
-				hdc = GetDC(hDlg);
+			{
+				HDC hdc = GetDC(hDlg);
 				UpdateBlowerInfo(hDlg, hdc);
 				ReleaseDC(hDlg, hdc);
 				break;
 			}
+			}
 			break;
 		}
 		return TRUE;
-	}
 
 	case WM_UPDATEUISTATE:
 		InvalidateRect(hDlg, NULL, TRUE);
@@ -467,7 +463,7 @@ INT_PTR CALLBACK CustPictFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 					GetThisRoomsObjRects();
 					ReadyBackground(thisRoom->background, thisRoom->tiles);
 					DrawThisRoomsObjects();
-					EndDialog(hDlg, IDOK);
+					EndDialog(hDlg, LOWORD(wParam));
 				}
 			}
 			else
@@ -489,7 +485,7 @@ INT_PTR CALLBACK CustPictFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 					GetThisRoomsObjRects();
 					ReadyBackground(thisRoom->background, thisRoom->tiles);
 					DrawThisRoomsObjects();
-					EndDialog(hDlg, IDOK);
+					EndDialog(hDlg, LOWORD(wParam));
 				}
 			}
 			break;
@@ -695,7 +691,7 @@ INT_PTR CALLBACK ApplianceFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 
 		what = thisRoom->objects[objActive].what;
 		if ((what == kShredder) || (what == kMacPlus) || (what == kTV) ||
-				(what == kCoffee) || (what == kVCR) || (what == kMicrowave))
+			(what == kCoffee) || (what == kVCR) || (what == kMicrowave))
 		{
 			ShowWindow(GetDlgItem(hDlg, kApplianceDelay), SW_HIDE);
 			ShowWindow(GetDlgItem(hDlg, kApplianceDelayLabel), SW_HIDE);
@@ -1027,7 +1023,7 @@ INT_PTR CALLBACK EnemyFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		case kEnemyLinkedFrom:
 			delay = GetDlgItemInt(hDlg, kEnemyDelayItem, NULL, TRUE);
 			if (((delay < 0) || (delay > 255)) &&
-					(thisRoom->objects[objActive].what != kBall))
+				(thisRoom->objects[objActive].what != kBall))
 			{
 				MessageBeep(MB_ICONWARNING);
 				delay = thisRoom->objects[objActive].data.h.delay;
@@ -1124,27 +1120,27 @@ INT_PTR CALLBACK FlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 void DoBlowerObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
-	wchar_t numberStr[32];
+	wchar_t numberStr[16];
 	wchar_t kindStr[256];
-	wchar_t distStr[32];
+	wchar_t distStr[16];
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%ld", (long)(objActive + 1));
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
 	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
-	StringCchPrintf(distStr, ARRAYSIZE(distStr), L"%ld",
-			(long)thisRoom->objects[objActive].data.a.distance);
+	StringCchPrintf(distStr, ARRAYSIZE(distStr), L"%d",
+		(int)thisRoom->objects[objActive].data.a.distance);
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
 	params.arg[2] = distStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(kBlowerInfoDialogID),
-			hwndOwner, BlowerFilter, (LPARAM)&params);
+		MAKEINTRESOURCE(kBlowerInfoDialogID),
+		hwndOwner, BlowerFilter, (LPARAM)&params);
 
 	if (result == kBlowerLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
-				retroLinkList[objActive].room);
+			retroLinkList[objActive].room);
 	}
 }
 
@@ -1153,9 +1149,9 @@ void DoBlowerObjectInfo (HWND hwndOwner)
 void DoFurnitureObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
-	INT_PTR result;
-	wchar_t numberStr[32];
+	wchar_t numberStr[16];
 	wchar_t kindStr[256];
+	INT_PTR result;
 
 	if (objActive == kInitialGliderSelected)
 	{
@@ -1174,20 +1170,20 @@ void DoFurnitureObjectInfo (HWND hwndOwner)
 	}
 	else
 	{
-		StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%ld", (long)(objActive + 1));
+		StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
 		GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
 	}
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(kFurnitureInfoDialogID),
-			hwndOwner, FurnitureFilter, (LPARAM)&params);
+		MAKEINTRESOURCE(kFurnitureInfoDialogID),
+		hwndOwner, FurnitureFilter, (LPARAM)&params);
 
 	if (result == kFurnitureLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
-				retroLinkList[objActive].room);
+			retroLinkList[objActive].room);
 	}
 }
 
@@ -1196,11 +1192,12 @@ void DoFurnitureObjectInfo (HWND hwndOwner)
 void DoCustPictObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
-	wchar_t numberStr[32];
+	wchar_t numberStr[16];
 	wchar_t kindStr[256];
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%ld", (long)(objActive + 1));
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
 	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
+
 	if (thisRoom->objects[objActive].what == kCustomPict)
 	{
 		params.arg[0] = numberStr;
@@ -1215,10 +1212,9 @@ void DoCustPictObjectInfo (HWND hwndOwner)
 		params.arg[2] = L"Sound";
 		params.arg[3] = L"3000";
 	}
-
 	DialogBoxParam(HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(kCustPictInfoDialogID),
-			hwndOwner, CustPictFilter, (LPARAM)&params);
+		MAKEINTRESOURCE(kCustPictInfoDialogID),
+		hwndOwner, CustPictFilter, (LPARAM)&params);
 }
 
 //--------------------------------------------------------------  DoSwitchObjectInfo
@@ -1260,8 +1256,8 @@ void DoSwitchObjectInfo (HWND hwndOwner)
 	params.arg[2] = roomStr;
 	params.arg[3] = objStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(kSwitchInfoDialogID),
-			hwndOwner, SwitchFilter, (LPARAM)&params);
+		MAKEINTRESOURCE(kSwitchInfoDialogID),
+		hwndOwner, SwitchFilter, (LPARAM)&params);
 
 	if (result == kLinkSwitchButton)
 	{
@@ -1291,7 +1287,7 @@ void DoTriggerObjectInfo (HWND hwndOwner)
 	wchar_t numberStr[16];
 	wchar_t kindStr[256];
 	wchar_t roomStr[32];
-	wchar_t objStr[32];
+	wchar_t objStr[16];
 	SInt16 floor, suite;
 	INT_PTR result;
 
@@ -1322,8 +1318,8 @@ void DoTriggerObjectInfo (HWND hwndOwner)
 	params.arg[2] = roomStr;
 	params.arg[3] = objStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(kTriggerInfoDialogID),
-			hwndOwner, TriggerFilter, (LPARAM)&params);
+		MAKEINTRESOURCE(kTriggerInfoDialogID),
+		hwndOwner, TriggerFilter, (LPARAM)&params);
 
 	if (result == kLinkTriggerButton)
 	{
@@ -1360,19 +1356,19 @@ void DoLightObjectInfo (HWND hwndOwner)
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(kLightInfoDialogID),
-			hwndOwner, LightFilter, (LPARAM)&params);
+		MAKEINTRESOURCE(kLightInfoDialogID),
+		hwndOwner, LightFilter, (LPARAM)&params);
 
 	if (result == kLightLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
-				retroLinkList[objActive].room);
+			retroLinkList[objActive].room);
 	}
 }
 
 //--------------------------------------------------------------  DoApplianceObjectInfo
 
-void DoApplianceObjectInfo (HWND hwndOwner, SInt16 what)
+void DoApplianceObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
@@ -1385,13 +1381,13 @@ void DoApplianceObjectInfo (HWND hwndOwner, SInt16 what)
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(kApplianceInfoDialogID),
-			hwndOwner, ApplianceFilter, (LPARAM)&params);
+		MAKEINTRESOURCE(kApplianceInfoDialogID),
+		hwndOwner, ApplianceFilter, (LPARAM)&params);
 
 	if (result == kApplianceLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
-				retroLinkList[objActive].room);
+			retroLinkList[objActive].room);
 	}
 }
 
@@ -1410,13 +1406,13 @@ void DoMicrowaveObjectInfo (HWND hwndOwner)
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(kMicrowaveInfoDialogID),
-			hwndOwner, MicrowaveFilter, (LPARAM)&params);
+		MAKEINTRESOURCE(kMicrowaveInfoDialogID),
+		hwndOwner, MicrowaveFilter, (LPARAM)&params);
 
 	if (result == kMicrowaveLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
-				retroLinkList[objActive].room);
+			retroLinkList[objActive].room);
 	}
 }
 
@@ -1435,13 +1431,13 @@ void DoGreaseObjectInfo (HWND hwndOwner)
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(kGreaseInfoDialogID),
-			hwndOwner, GreaseFilter, (LPARAM)&params);
+		MAKEINTRESOURCE(kGreaseInfoDialogID),
+		hwndOwner, GreaseFilter, (LPARAM)&params);
 
 	if (result == kGreaseLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
-				retroLinkList[objActive].room);
+			retroLinkList[objActive].room);
 	}
 }
 
@@ -1472,7 +1468,7 @@ void DoInvisBonusObjectInfo (HWND hwndOwner)
 
 //--------------------------------------------------------------  DoTransObjectInfo
 
-void DoTransObjectInfo (HWND hwndOwner, SInt16 what)
+void DoTransObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
@@ -1534,7 +1530,7 @@ void DoTransObjectInfo (HWND hwndOwner, SInt16 what)
 
 //--------------------------------------------------------------  DoEnemyObjectInfo
 
-void DoEnemyObjectInfo (HWND hwndOwner, SInt16 what)
+void DoEnemyObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
@@ -1587,8 +1583,8 @@ void DoFlowerObjectInfo (HWND hwndOwner)
 void DoObjectInfo (HWND hwndOwner)
 {
 	if ((objActive == kInitialGliderSelected) ||
-			(objActive == kLeftGliderSelected) ||
-			(objActive == kRightGliderSelected))
+		(objActive == kLeftGliderSelected) ||
+		(objActive == kRightGliderSelected))
 	{
 		DoFurnitureObjectInfo(hwndOwner);
 		return;
@@ -1596,163 +1592,163 @@ void DoObjectInfo (HWND hwndOwner)
 
 	switch (thisRoom->objects[objActive].what)
 	{
-		case kFloorVent:
-		case kCeilingVent:
-		case kFloorBlower:
-		case kCeilingBlower:
-		case kSewerGrate:
-		case kLeftFan:
-		case kRightFan:
-		case kTaper:
-		case kCandle:
-		case kStubby:
-		case kTiki:
-		case kBBQ:
-		case kInvisBlower:
-		case kGrecoVent:
-		case kSewerBlower:
-		case kLiftArea:
+	case kFloorVent:
+	case kCeilingVent:
+	case kFloorBlower:
+	case kCeilingBlower:
+	case kSewerGrate:
+	case kLeftFan:
+	case kRightFan:
+	case kTaper:
+	case kCandle:
+	case kStubby:
+	case kTiki:
+	case kBBQ:
+	case kInvisBlower:
+	case kGrecoVent:
+	case kSewerBlower:
+	case kLiftArea:
 		DoBlowerObjectInfo(hwndOwner);
 		break;
 
-		case kTable:
-		case kShelf:
-		case kCabinet:
-		case kFilingCabinet:
-		case kWasteBasket:
-		case kMilkCrate:
-		case kCounter:
-		case kDresser:
-		case kDeckTable:
-		case kStool:
-		case kTrunk:
-		case kInvisObstacle:
-		case kManhole:
-		case kBooks:
-		case kInvisBounce:
-		case kRedClock:
-		case kBlueClock:
-		case kYellowClock:
-		case kCuckoo:
-		case kPaper:
-		case kBattery:
-		case kBands:
-		case kFoil:
-		case kStar:
-		case kSparkle:
-		case kHelium:
-		case kSlider:
-		case kUpStairs:
-		case kDownStairs:
-		case kDoorInLf:
-		case kDoorInRt:
-		case kDoorExRt:
-		case kDoorExLf:
-		case kWindowInLf:
-		case kWindowInRt:
-		case kWindowExRt:
-		case kWindowExLf:
-		case kCinderBlock:
-		case kFlowerBox:
-		case kCDs:
-		case kGuitar:
-		case kStereo:
-		case kCobweb:
-		case kOzma:
-		case kMirror:
-		case kMousehole:
-		case kFireplace:
-		case kWallWindow:
-		case kBear:
-		case kCalendar:
-		case kVase1:
-		case kVase2:
-		case kBulletin:
-		case kCloud:
-		case kFaucet:
-		case kRug:
-		case kChimes:
+	case kTable:
+	case kShelf:
+	case kCabinet:
+	case kFilingCabinet:
+	case kWasteBasket:
+	case kMilkCrate:
+	case kCounter:
+	case kDresser:
+	case kDeckTable:
+	case kStool:
+	case kTrunk:
+	case kInvisObstacle:
+	case kManhole:
+	case kBooks:
+	case kInvisBounce:
+	case kRedClock:
+	case kBlueClock:
+	case kYellowClock:
+	case kCuckoo:
+	case kPaper:
+	case kBattery:
+	case kBands:
+	case kFoil:
+	case kStar:
+	case kSparkle:
+	case kHelium:
+	case kSlider:
+	case kUpStairs:
+	case kDownStairs:
+	case kDoorInLf:
+	case kDoorInRt:
+	case kDoorExRt:
+	case kDoorExLf:
+	case kWindowInLf:
+	case kWindowInRt:
+	case kWindowExRt:
+	case kWindowExLf:
+	case kCinderBlock:
+	case kFlowerBox:
+	case kCDs:
+	case kGuitar:
+	case kStereo:
+	case kCobweb:
+	case kOzma:
+	case kMirror:
+	case kMousehole:
+	case kFireplace:
+	case kWallWindow:
+	case kBear:
+	case kCalendar:
+	case kVase1:
+	case kVase2:
+	case kBulletin:
+	case kCloud:
+	case kFaucet:
+	case kRug:
+	case kChimes:
 		DoFurnitureObjectInfo(hwndOwner);
 		break;
 
-		case kGreaseRt:
-		case kGreaseLf:
+	case kGreaseRt:
+	case kGreaseLf:
 		DoGreaseObjectInfo(hwndOwner);
 		break;
 
-		case kInvisBonus:
+	case kInvisBonus:
 		DoInvisBonusObjectInfo(hwndOwner);
 		break;
 
-		case kMailboxLf:
-		case kMailboxRt:
-		case kFloorTrans:
-		case kCeilingTrans:
-		case kInvisTrans:
-		case kDeluxeTrans:
-		DoTransObjectInfo(hwndOwner, thisRoom->objects[objActive].what);
+	case kMailboxLf:
+	case kMailboxRt:
+	case kFloorTrans:
+	case kCeilingTrans:
+	case kInvisTrans:
+	case kDeluxeTrans:
+		DoTransObjectInfo(hwndOwner);
 		break;
 
-		case kLightSwitch:
-		case kMachineSwitch:
-		case kThermostat:
-		case kPowerSwitch:
-		case kKnifeSwitch:
-		case kInvisSwitch:
+	case kLightSwitch:
+	case kMachineSwitch:
+	case kThermostat:
+	case kPowerSwitch:
+	case kKnifeSwitch:
+	case kInvisSwitch:
 		DoSwitchObjectInfo(hwndOwner);
 		break;
 
-		case kTrigger:
-		case kLgTrigger:
+	case kTrigger:
+	case kLgTrigger:
 		DoTriggerObjectInfo(hwndOwner);
 		break;
 
-		case kCeilingLight:
-		case kLightBulb:
-		case kTableLamp:
-		case kHipLamp:
-		case kDecoLamp:
-		case kFlourescent:
-		case kTrackLight:
-		case kInvisLight:
+	case kCeilingLight:
+	case kLightBulb:
+	case kTableLamp:
+	case kHipLamp:
+	case kDecoLamp:
+	case kFlourescent:
+	case kTrackLight:
+	case kInvisLight:
 		DoLightObjectInfo(hwndOwner);
 		break;
 
-		case kShredder:
-		case kToaster:
-		case kMacPlus:
-		case kTV:
-		case kCoffee:
-		case kOutlet:
-		case kVCR:
-		DoApplianceObjectInfo(hwndOwner, thisRoom->objects[objActive].what);
+	case kShredder:
+	case kToaster:
+	case kMacPlus:
+	case kTV:
+	case kCoffee:
+	case kOutlet:
+	case kVCR:
+		DoApplianceObjectInfo(hwndOwner);
 		break;
 
-		case kMicrowave:
+	case kMicrowave:
 		DoMicrowaveObjectInfo(hwndOwner);
 		break;
 
-		case kBalloon:
-		case kCopterLf:
-		case kCopterRt:
-		case kDartLf:
-		case kDartRt:
-		case kBall:
-		case kDrip:
-		case kFish:
-		DoEnemyObjectInfo(hwndOwner, thisRoom->objects[objActive].what);
+	case kBalloon:
+	case kCopterLf:
+	case kCopterRt:
+	case kDartLf:
+	case kDartRt:
+	case kBall:
+	case kDrip:
+	case kFish:
+		DoEnemyObjectInfo(hwndOwner);
 		break;
 
-		case kFlower:
+	case kFlower:
 		DoFlowerObjectInfo(hwndOwner);
 		break;
 
-		case kSoundTrigger:
-		case kCustomPict:
+	case kSoundTrigger:
+	case kCustomPict:
 		DoCustPictObjectInfo(hwndOwner);
 		break;
 
-		default:
+	default:
 		MessageBeep(MB_ICONWARNING);
 		break;
 	}
