@@ -59,14 +59,13 @@
 #define kGreaseSpilled          1006
 #define kGreaseLinkedFrom       1008
 
-#define kDelay3Item					6
-#define k100PtRadio					6
-#define k300PtRadio					7
-#define k500PtRadio					8
+#define k100PtRadio             1006
+#define k300PtRadio             1007
+#define k500PtRadio             1008
+#define kInvisBonusLinkedFrom   1009
+
 #define kLinkTransButton			6
 #define kInitialStateCheckbox3		13
-#define kTransRoomText				8
-#define kTransObjectText			9
 #define kDelay2Item					7
 #define kDelay2LabelItem			8
 #define kDelay2LabelItem2			9
@@ -78,7 +77,6 @@
 
 
 void UpdateBlowerInfo (HWND, HDC);
-void UpdateInvisBonusInfo (DialogPtr);
 void UpdateTransInfo (DialogPtr);
 void UpdateEnemyInfo (DialogPtr);
 void UpdateFlowerInfo (DialogPtr);
@@ -91,7 +89,7 @@ INT_PTR CALLBACK LightFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK ApplianceFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK MicrowaveFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK GreaseFilter (HWND, UINT, WPARAM, LPARAM);
-Boolean InvisBonusFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK InvisBonusFilter (HWND, UINT, WPARAM, LPARAM);
 Boolean TransFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean EnemyFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean FlowerFilter (DialogPtr, EventRecord *, SInt16 *);
@@ -142,10 +140,9 @@ void GetObjectName (wchar_t *buffer, int size, SInt16 objectType)
 
 //--------------------------------------------------------------  UpdateBlowerInfo
 
-#define kArrowheadLength 4
-
 void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 {
+	const LONG kArrowheadLength = 4;
 	RECT bounds;
 	LONG centerHori, centerVert;
 	HPEN hPen, oldPen;
@@ -226,20 +223,6 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 			}
 		}
 	}
-}
-
-//--------------------------------------------------------------  UpdateInvisBonusInfo
-
-void UpdateInvisBonusInfo (DialogPtr theDialog)
-{
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-	SelectFromRadioGroup(theDialog, newPoint + k100PtRadio,
-			k100PtRadio, k500PtRadio);
-	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
-#endif
 }
 
 //--------------------------------------------------------------  UpdateTransInfo
@@ -919,41 +902,62 @@ INT_PTR CALLBACK GreaseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 
 //--------------------------------------------------------------  InvisBonusFilter
 
-Boolean InvisBonusFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK InvisBonusFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		switch (thisRoom->objects[objActive].data.c.points)
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
+		case 300:
+			CheckRadioButton(hDlg, k100PtRadio, k500PtRadio, k300PtRadio);
 			break;
 
-			default:
-			return(false);
-		}
-		break;
-
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateInvisBonusInfo(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
+		case 500:
+			CheckRadioButton(hDlg, k100PtRadio, k500PtRadio, k500PtRadio);
+			break;
 
 		default:
-		return(false);
-		break;
+			CheckRadioButton(hDlg, k100PtRadio, k500PtRadio, k100PtRadio);
+			break;
+		}
+
+		if (retroLinkList[objActive].room == -1)
+			ShowWindow(GetDlgItem(hDlg, kInvisBonusLinkedFrom), SW_HIDE);
+
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
+		return TRUE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDOK:
+		case kInvisBonusLinkedFrom:
+			if (IsDlgButtonChecked(hDlg, k100PtRadio))
+			{
+				thisRoom->objects[objActive].data.c.points = 100;
+			}
+			else if (IsDlgButtonChecked(hDlg, k300PtRadio))
+			{
+				thisRoom->objects[objActive].data.c.points = 300;
+			}
+			else if (IsDlgButtonChecked(hDlg, k500PtRadio))
+			{
+				thisRoom->objects[objActive].data.c.points = 500;
+			}
+			fileDirty = true;
+			UpdateMenus(false);
+			EndDialog(hDlg, LOWORD(wParam));
+			break;
+
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
+			break;
+		}
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  TransFilter
@@ -1442,117 +1446,25 @@ void DoGreaseObjectInfo (HWND hwndOwner)
 
 void DoInvisBonusObjectInfo (HWND hwndOwner)
 {
-	MessageBox(hwndOwner, L"DoInvisBonusObjectInfo()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		infoDial;
-	Str255			numberStr, kindStr;
-	short			item;
-	Boolean			leaving, doReturn;
-	ModalFilterUPP	invisBonusFilterUPP;
+	DialogParams params = { 0 };
+	wchar_t numberStr[16];
+	wchar_t kindStr[256];
+	INT_PTR result;
 
-	invisBonusFilterUPP = NewModalFilterUPP(InvisBonusFilter);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
 
-	NumToString(objActive + 1, numberStr);
-	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
-	ParamText(numberStr, kindStr, "\p", "\p");
+	params.arg[0] = numberStr;
+	params.arg[1] = kindStr;
+	result = DialogBoxParam(HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(kInvisBonusInfoDialogID),
+		hwndOwner, InvisBonusFilter, (LPARAM)&params);
 
-	switch (thisRoom->objects[objActive].data.c.points)
-	{
-		case 300:
-		newPoint = 1;
-		break;
-
-		case 500:
-		newPoint = 2;
-		break;
-
-		default:
-		newPoint = 0;
-		break;
-	}
-
-	BringUpDialog(&infoDial, kInvisBonusInfoDialogID);
-
-	if (retroLinkList[objActive].room == -1)
-		HideDialogItem(infoDial, 9);
-
-	leaving = false;
-	doReturn = false;
-
-	while (!leaving)
-	{
-		ModalDialog(invisBonusFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			switch (newPoint)
-			{
-				case 0:
-				thisRoom->objects[objActive].data.c.points = 100;
-				break;
-
-				case 1:
-				thisRoom->objects[objActive].data.c.points = 300;
-				break;
-
-				case 2:
-				thisRoom->objects[objActive].data.c.points = 500;
-				break;
-			}
-			fileDirty = true;
-			UpdateMenus(false);
-			leaving = true;
-		}
-		else if (item == kCancelButton)
-			leaving = true;
-		else if (item == k100PtRadio)
-		{
-			SelectFromRadioGroup(infoDial, item, k100PtRadio, k500PtRadio);
-			newPoint = 0;
-		}
-		else if (item == k300PtRadio)
-		{
-			SelectFromRadioGroup(infoDial, item, k100PtRadio, k500PtRadio);
-			newPoint = 1;
-		}
-		else if (item == k500PtRadio)
-		{
-			SelectFromRadioGroup(infoDial, item, k100PtRadio, k500PtRadio);
-			newPoint = 2;
-		}
-		else if (item == 9)				// Linked From? button.
-		{
-			switch (newPoint)
-			{
-				case 0:
-				thisRoom->objects[objActive].data.c.points = 100;
-				break;
-
-				case 1:
-				thisRoom->objects[objActive].data.c.points = 300;
-				break;
-
-				case 2:
-				thisRoom->objects[objActive].data.c.points = 500;
-				break;
-			}
-			fileDirty = true;
-			UpdateMenus(false);
-			leaving = true;
-			doReturn = true;
-		}
-	}
-
-	DisposeDialog(infoDial);
-	DisposeModalFilterUPP(invisBonusFilterUPP);
-
-	if (doReturn)
+	if (result == kInvisBonusLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
-				retroLinkList[objActive].room);
+			retroLinkList[objActive].room);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoTransObjectInfo
