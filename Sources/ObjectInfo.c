@@ -69,17 +69,21 @@
 #define kTransLinkedFrom        1012
 #define kTransInitialState      1013
 
-#define kDelay2Item					7
-#define kDelay2LabelItem			8
-#define kDelay2LabelItem2			9
-#define kInitialStateCheckbox2		10
+#define kEnemyDelayItem         1007
+#define kEnemyDelayLabelItem    1008
+#define kEnemyInitialState      1010
+#define kEnemyLinkedFrom        1011
+
+//#define kDelay2Item                 7
+//#define kDelay2LabelItem            8
+//#define kDelay2LabelItem2           9
+//#define kInitialStateCheckbox2      10
 #define kRadioFlower1				6
 #define kRadioFlower6				11
 #define kFlowerCancel				12
 
 
 void UpdateBlowerInfo (HWND, HDC);
-void UpdateEnemyInfo (DialogPtr);
 void UpdateFlowerInfo (DialogPtr);
 INT_PTR CALLBACK BlowerFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK FurnitureFilter (HWND, UINT, WPARAM, LPARAM);
@@ -92,7 +96,7 @@ INT_PTR CALLBACK MicrowaveFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK GreaseFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK InvisBonusFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK TransFilter (HWND, UINT, WPARAM, LPARAM);
-Boolean EnemyFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK EnemyFilter (HWND, UINT, WPARAM, LPARAM);
 Boolean FlowerFilter (DialogPtr, EventRecord *, SInt16 *);
 void DoBlowerObjectInfo (HWND);
 void DoFurnitureObjectInfo (HWND);
@@ -108,8 +112,6 @@ void DoTransObjectInfo (HWND, SInt16);
 void DoEnemyObjectInfo (HWND, SInt16);
 void DoFlowerObjectInfo (HWND);
 
-
-SInt16		newPoint;
 
 extern	retroLink	retroLinkList[];
 extern	SInt16		linkRoom, linkType, wasFlower;
@@ -224,18 +226,6 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 			}
 		}
 	}
-}
-
-//--------------------------------------------------------------  UpdateEnemyInfo
-
-void UpdateEnemyInfo (DialogPtr theDialog)
-{
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
-#endif
 }
 
 //--------------------------------------------------------------  UpdateFlowerInfo
@@ -1015,60 +1005,70 @@ INT_PTR CALLBACK TransFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 
 //--------------------------------------------------------------  EnemyFilter
 
-Boolean EnemyFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK EnemyFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	INT delay;
+
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		if (retroLinkList[objActive].room == -1)
+			ShowWindow(GetDlgItem(hDlg, kEnemyLinkedFrom), SW_HIDE);
+
+		delay = thisRoom->objects[objActive].data.h.delay;
+		SetDlgItemInt(hDlg, kEnemyDelayItem, (UINT)delay, TRUE);
+
+		if (thisRoom->objects[objActive].data.h.initial)
+			CheckDlgButton(hDlg, kEnemyInitialState, BST_CHECKED);
+		else
+			CheckDlgButton(hDlg, kEnemyInitialState, BST_UNCHECKED);
+
+		if (thisRoom->objects[objActive].what == kBall)
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
-			break;
-
-			case kEscapeKeyASCII:
-			FlashDialogButton(dial, kCancelButton);
-			*item = kCancelButton;
-			return(true);
-			break;
-
-			case kTabKeyASCII:
-			SelectDialogItemText(dial, kDelay2Item, 0, 1024);
-			return(true);
-			break;
-
-			default:
-			return(false);
+			ShowWindow(GetDlgItem(hDlg, kEnemyDelayItem), SW_HIDE);
+			ShowWindow(GetDlgItem(hDlg, kEnemyDelayLabelItem), SW_HIDE);
 		}
-		break;
 
-		case mouseDown:
-		return(false);
-		break;
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
+		return TRUE;
 
-		case mouseUp:
-		return(false);
-		break;
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDOK:
+		case kEnemyLinkedFrom:
+			delay = GetDlgItemInt(hDlg, kEnemyDelayItem, NULL, TRUE);
+			if (((delay < 0) || (delay > 255)) &&
+					(thisRoom->objects[objActive].what != kBall))
+			{
+				MessageBeep(MB_ICONWARNING);
+				delay = thisRoom->objects[objActive].data.h.delay;
+				SetDlgItemInt(hDlg, kEnemyDelayItem, (UINT)delay, TRUE);
+				SendMessage(hDlg, WM_NEXTDLGCTL,
+					(WPARAM)GetDlgItem(hDlg, kEnemyDelayItem), TRUE);
+			}
+			else
+			{
+				if (IsDlgButtonChecked(hDlg, kEnemyInitialState))
+					thisRoom->objects[objActive].data.h.initial = true;
+				else
+					thisRoom->objects[objActive].data.h.initial = false;
+				if (thisRoom->objects[objActive].what != kBall)
+					thisRoom->objects[objActive].data.h.delay = (Byte)delay;
+				fileDirty = true;
+				UpdateMenus(false);
+				EndDialog(hDlg, LOWORD(wParam));
+			}
+			break;
 
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateEnemyInfo(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
-
-		default:
-		return(false);
-		break;
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
+			break;
+		}
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  EnemyFilter
@@ -1541,114 +1541,25 @@ void DoTransObjectInfo (HWND hwndOwner, SInt16 what)
 
 void DoEnemyObjectInfo (HWND hwndOwner, SInt16 what)
 {
-	MessageBox(hwndOwner, L"DoEnemyObjectInfo()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		infoDial;
-	Str255			numberStr, kindStr;
-	long			delay;
-	short			item, initial;
-	Boolean			leaving, doReturn;
-	ModalFilterUPP	enemyFilterUPP;
+	DialogParams params = { 0 };
+	wchar_t numberStr[16];
+	wchar_t kindStr[256];
+	INT_PTR result;
 
-	enemyFilterUPP = NewModalFilterUPP(EnemyFilter);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
 
-	NumToString(objActive + 1, numberStr);
-	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
-	ParamText(numberStr, kindStr, "\p", "\p");
+	params.arg[0] = numberStr;
+	params.arg[1] = kindStr;
+	result = DialogBoxParam(HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(kEnemyInfoDialogID),
+		hwndOwner, EnemyFilter, (LPARAM)&params);
 
-	BringUpDialog(&infoDial, kEnemyInfoDialogID);
-
-	if (retroLinkList[objActive].room == -1)
-		HideDialogItem(infoDial, 11);
-
-	delay = thisRoom->objects[objActive].data.h.delay;
-	SetDialogNumToStr(infoDial, kDelay2Item, (long)delay);
-	SelectDialogItemText(infoDial, kDelay2Item, 0, 1024);
-
-	if (thisRoom->objects[objActive].data.h.initial)
-		SetDialogItemValue(infoDial, kInitialStateCheckbox2, 1);
-	else
-		SetDialogItemValue(infoDial, kInitialStateCheckbox2, 0);
-
-	if (what == kBall)
-	{
-		HideDialogItem(infoDial, kDelay2Item);
-		HideDialogItem(infoDial, 8);
-		HideDialogItem(infoDial, 9);
-	}
-
-	leaving = false;
-	doReturn = false;
-
-	while (!leaving)
-	{
-		ModalDialog(enemyFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			GetDialogNumFromStr(infoDial, kDelay2Item, &delay);
-			if (((delay < 0L) || (delay > 255L)) && (what != kBall))
-			{
-				SysBeep(0);
-				delay = thisRoom->objects[objActive].data.h.delay;
-				SetDialogNumToStr(infoDial, kDelay2Item, (long)delay);
-				SelectDialogItemText(infoDial, kDelay2Item, 0, 1024);
-			}
-			else
-			{
-				GetDialogItemValue(infoDial, kInitialStateCheckbox2, &initial);
-				if (initial == 1)
-					thisRoom->objects[objActive].data.h.initial = true;
-				else
-					thisRoom->objects[objActive].data.h.initial = false;
-				if (what != kBall)
-					thisRoom->objects[objActive].data.h.delay = (Byte)delay;
-				fileDirty = true;
-				UpdateMenus(false);
-				leaving = true;
-			}
-		}
-		else if (item == kCancelButton)
-			leaving = true;
-		else if (item == kInitialStateCheckbox2)
-			ToggleDialogItemValue(infoDial, kInitialStateCheckbox2);
-		else if (item == 11)			// Linked From? button.
-		{
-			GetDialogNumFromStr(infoDial, kDelay2Item, &delay);
-			if (((delay < 0L) || (delay > 255L)) && (what != kBall))
-			{
-				SysBeep(0);
-				delay = thisRoom->objects[objActive].data.h.delay;
-				SetDialogNumToStr(infoDial, kDelay2Item, (long)delay);
-				SelectDialogItemText(infoDial, kDelay2Item, 0, 1024);
-			}
-			else
-			{
-				GetDialogItemValue(infoDial, kInitialStateCheckbox2, &initial);
-				if (initial == 1)
-					thisRoom->objects[objActive].data.h.initial = true;
-				else
-					thisRoom->objects[objActive].data.h.initial = false;
-				if (what != kBall)
-					thisRoom->objects[objActive].data.h.delay = (Byte)delay;
-				fileDirty = true;
-				UpdateMenus(false);
-				leaving = true;
-				doReturn = true;
-			}
-		}
-	}
-
-	DisposeDialog(infoDial);
-	DisposeModalFilterUPP(enemyFilterUPP);
-
-	if (doReturn)
+	if (result == kEnemyLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
-				retroLinkList[objActive].room);
+			retroLinkList[objActive].room);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoFlowerObjectInfo
