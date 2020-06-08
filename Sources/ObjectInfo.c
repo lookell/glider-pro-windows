@@ -64,8 +64,11 @@
 #define k500PtRadio             1008
 #define kInvisBonusLinkedFrom   1009
 
-#define kLinkTransButton			6
-#define kInitialStateCheckbox3		13
+#define kLinkTransButton        1006
+#define kTransGotoButton        1011
+#define kTransLinkedFrom        1012
+#define kTransInitialState      1013
+
 #define kDelay2Item					7
 #define kDelay2LabelItem			8
 #define kDelay2LabelItem2			9
@@ -73,11 +76,9 @@
 #define kRadioFlower1				6
 #define kRadioFlower6				11
 #define kFlowerCancel				12
-#define kGotoButton1				11
 
 
 void UpdateBlowerInfo (HWND, HDC);
-void UpdateTransInfo (DialogPtr);
 void UpdateEnemyInfo (DialogPtr);
 void UpdateFlowerInfo (DialogPtr);
 INT_PTR CALLBACK BlowerFilter (HWND, UINT, WPARAM, LPARAM);
@@ -90,7 +91,7 @@ INT_PTR CALLBACK ApplianceFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK MicrowaveFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK GreaseFilter (HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK InvisBonusFilter (HWND, UINT, WPARAM, LPARAM);
-Boolean TransFilter (DialogPtr, EventRecord *, SInt16 *);
+INT_PTR CALLBACK TransFilter (HWND, UINT, WPARAM, LPARAM);
 Boolean EnemyFilter (DialogPtr, EventRecord *, SInt16 *);
 Boolean FlowerFilter (DialogPtr, EventRecord *, SInt16 *);
 void DoBlowerObjectInfo (HWND);
@@ -223,19 +224,6 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 			}
 		}
 	}
-}
-
-//--------------------------------------------------------------  UpdateTransInfo
-
-void UpdateTransInfo (DialogPtr theDialog)
-{
-	return;
-#if 0
-	DrawDialog(theDialog);
-	DrawDefaultButton(theDialog);
-	FrameDialogItemC(theDialog, 4, kRedOrangeColor8);
-	FrameDialogItemC(theDialog, 10, kRedOrangeColor8);
-#endif
 }
 
 //--------------------------------------------------------------  UpdateEnemyInfo
@@ -962,47 +950,67 @@ INT_PTR CALLBACK InvisBonusFilter (HWND hDlg, UINT message, WPARAM wParam, LPARA
 
 //--------------------------------------------------------------  TransFilter
 
-Boolean TransFilter (DialogPtr dial, EventRecord *event, SInt16 *item)
+INT_PTR CALLBACK TransFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return false;
-#if 0
-	switch (event->what)
+	HWND hwndInitialFocus;
+	Byte initialState;
+
+	switch (message)
 	{
-		case keyDown:
-		switch ((event->message) & charCodeMask)
+	case WM_INITDIALOG:
+		if (retroLinkList[objActive].room == -1)
+			ShowWindow(GetDlgItem(hDlg, kTransLinkedFrom), SW_HIDE);
+
+		if (thisRoom->objects[objActive].what != kDeluxeTrans)
 		{
-			case kReturnKeyASCII:
-			case kEnterKeyASCII:
-			FlashDialogButton(dial, kOkayButton);
-			*item = kOkayButton;
-			return(true);
-			break;
-
-			case kEscapeKeyASCII:
-			FlashDialogButton(dial, kCancelButton);
-			*item = kCancelButton;
-			return(true);
-			break;
-
-			default:
-			return(false);
+			ShowWindow(GetDlgItem(hDlg, kTransInitialState), SW_HIDE);
+			hwndInitialFocus = GetDlgItem(hDlg, IDOK);
 		}
-		break;
+		else
+		{
+			initialState = (thisRoom->objects[objActive].data.d.wide & 0xF0) >> 4;
+			if (initialState)
+				CheckDlgButton(hDlg, kTransInitialState, BST_CHECKED);
+			else
+				CheckDlgButton(hDlg, kTransInitialState, BST_UNCHECKED);
+			hwndInitialFocus = GetDlgItem(hDlg, kTransInitialState);
+		}
 
-		case updateEvt:
-		SetPort((GrafPtr)dial);
-		BeginUpdate(GetDialogWindow(dial));
-		UpdateTransInfo(dial);
-		EndUpdate(GetDialogWindow(dial));
-		event->what = nullEvent;
-		return(false);
-		break;
+		if (thisRoom->objects[objActive].data.d.who == 255)
+			EnableWindow(GetDlgItem(hDlg, kTransGotoButton), FALSE);
 
-		default:
-		return(false);
-		break;
+		CenterOverOwner(hDlg);
+		ParamDialogText(hDlg, (const DialogParams *)lParam);
+		SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)hwndInitialFocus, TRUE);
+		return FALSE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDOK:
+		case kLinkTransButton:
+		case kTransGotoButton:
+		case kTransLinkedFrom:
+			if (thisRoom->objects[objActive].what == kDeluxeTrans)
+			{
+				if (IsDlgButtonChecked(hDlg, kTransInitialState))
+					initialState = 0x1;
+				else
+					initialState = 0x0;
+				thisRoom->objects[objActive].data.d.wide = initialState << 4;
+			}
+			fileDirty = true;
+			UpdateMenus(false);
+			EndDialog(hDlg, LOWORD(wParam));
+			break;
+
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
+			break;
+		}
+		return TRUE;
 	}
-#endif
+	return FALSE;
 }
 
 //--------------------------------------------------------------  EnemyFilter
@@ -1471,109 +1479,45 @@ void DoInvisBonusObjectInfo (HWND hwndOwner)
 
 void DoTransObjectInfo (HWND hwndOwner, SInt16 what)
 {
-	MessageBox(hwndOwner, L"DoTransObjectInfo()", NULL, MB_ICONHAND);
-	return;
-#if 0
-	DialogPtr		infoDial;
-	Str255			numberStr, kindStr, roomStr, tempStr, objStr;
-	short			item, floor, suite;
-	Boolean			leaving, doLink, doGoTo, doReturn, wasState;
-	ModalFilterUPP	transFilterUPP;
+	DialogParams params = { 0 };
+	wchar_t numberStr[16];
+	wchar_t kindStr[256];
+	wchar_t roomStr[32];
+	wchar_t objStr[16];
+	SInt16 floor, suite;
+	INT_PTR result;
 
-	transFilterUPP = NewModalFilterUPP(TransFilter);
-
-	NumToString(objActive + 1, numberStr);
-	GetIndString(kindStr, kObjectNameStrings, thisRoom->objects[objActive].what);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
 	if (thisRoom->objects[objActive].data.d.where == -1)
-		PasStringCopy("\pnone", roomStr);
+	{
+		StringCchCopy(roomStr, ARRAYSIZE(roomStr), L"none");
+	}
 	else
 	{
 		ExtractFloorSuite(thisRoom->objects[objActive].data.d.where, &floor, &suite);
-		NumToString((long)floor, roomStr);
-		PasStringConcat(roomStr, "\p / ");
-		NumToString((long)suite, tempStr);
-		PasStringConcat(roomStr, tempStr);
+		StringCchPrintf(roomStr, ARRAYSIZE(roomStr), L"%d / %d", (int)floor, (int)suite);
 	}
 
 	if (thisRoom->objects[objActive].data.d.who == 255)
-		PasStringCopy("\pnone", objStr);
-	else
-		NumToString((long)thisRoom->objects[objActive].data.d.who + 1, objStr);
-
-	ParamText(numberStr, kindStr, roomStr, objStr);
-
-	BringUpDialog(&infoDial, kTransInfoDialogID);
-
-	if (retroLinkList[objActive].room == -1)
-		HideDialogItem(infoDial, 12);
-	if (what != kDeluxeTrans)
-		HideDialogItem(infoDial, kInitialStateCheckbox3);
+	{
+		StringCchCopy(objStr, ARRAYSIZE(objStr), L"none");
+	}
 	else
 	{
-		wasState = (thisRoom->objects[objActive].data.d.wide & 0xF0) >> 4;
-		SetDialogItemValue(infoDial, kInitialStateCheckbox3, (short)wasState);
+		StringCchPrintf(objStr, ARRAYSIZE(objStr), L"%d",
+			(int)thisRoom->objects[objActive].data.d.who + 1);
 	}
 
-	leaving = false;
-	doLink = false;
-	doGoTo = false;
-	doReturn = false;
+	params.arg[0] = numberStr;
+	params.arg[1] = kindStr;
+	params.arg[2] = roomStr;
+	params.arg[3] = objStr;
+	result = DialogBoxParam(HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(kTransInfoDialogID),
+		hwndOwner, TransFilter, (LPARAM)&params);
 
-	if (thisRoom->objects[objActive].data.d.who == 255)
-		MyDisableControl(infoDial, kGotoButton1);
-
-	while (!leaving)
-	{
-		ModalDialog(transFilterUPP, &item);
-
-		if (item == kOkayButton)
-		{
-			if (what == kDeluxeTrans)
-				thisRoom->objects[objActive].data.d.wide = wasState << 4;
-			fileDirty = true;
-			UpdateMenus(false);
-			leaving = true;
-		}
-		else if (item == kCancelButton)
-			leaving = true;
-		else if (item == kLinkTransButton)
-		{
-			if (what == kDeluxeTrans)
-				thisRoom->objects[objActive].data.d.wide = wasState << 4;
-			fileDirty = true;
-			UpdateMenus(false);
-			leaving = true;
-			doLink = true;
-		}
-		else if (item == kGotoButton1)
-		{
-			if (what == kDeluxeTrans)
-				thisRoom->objects[objActive].data.d.wide = wasState << 4;
-			fileDirty = true;
-			UpdateMenus(false);
-			leaving = true;
-			doGoTo = true;
-		}
-		else if (item == 12)			// Linked From? button.
-		{
-			if (what == kDeluxeTrans)
-				thisRoom->objects[objActive].data.d.wide = wasState << 4;
-			fileDirty = true;
-			UpdateMenus(false);
-			leaving = true;
-			doReturn = true;
-		}
-		else if (item == kInitialStateCheckbox3)
-		{
-			wasState = !wasState;
-			SetDialogItemValue(infoDial, kInitialStateCheckbox3, (short)wasState);
-		}
-	}
-
-	DisposeDialog(infoDial);
-	DisposeModalFilterUPP(transFilterUPP);
-
-	if (doLink)
+	if (result == kLinkTransButton)
 	{
 		linkType = kTransportLinkOnly;
 		linkerIsSwitch = false;
@@ -1582,16 +1526,15 @@ void DoTransObjectInfo (HWND hwndOwner, SInt16 what)
 		linkObject = (Byte)objActive;
 		DeselectObject();
 	}
-	else if (doGoTo)
+	else if (result == kTransGotoButton)
 	{
-		GoToObjectInRoom((short)thisRoom->objects[objActive].data.d.who, floor, suite);
+		GoToObjectInRoom(thisRoom->objects[objActive].data.d.who, floor, suite);
 	}
-	else if (doReturn)
+	else if (result == kTransLinkedFrom)
 	{
 		GoToObjectInRoomNum(retroLinkList[objActive].object,
-				retroLinkList[objActive].room);
+			retroLinkList[objActive].room);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoEnemyObjectInfo
