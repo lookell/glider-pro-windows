@@ -702,6 +702,13 @@ void WashColorIn (void)
 		DisposePtr((Ptr)newColors);
 }
 */
+//--------------------------------------------------------------  InitMainWindowCursor
+
+void InitMainWindowCursor (void)
+{
+	SetMainWindowCursor(LoadCursor(NULL, IDC_ARROW));
+}
+
 //--------------------------------------------------------------  GetMainWindowCursor
 
 HCURSOR GetMainWindowCursor (void)
