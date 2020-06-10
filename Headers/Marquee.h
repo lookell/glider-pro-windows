@@ -18,7 +18,7 @@
 
 typedef struct
 {
-	HBRUSH		pats[kNumMarqueePats];
+	HBITMAP		pats[kNumMarqueePats];
 	Rect		bounds, handle;
 	SInt16		index, direction, dist;
 	Boolean		active, paused, handled;

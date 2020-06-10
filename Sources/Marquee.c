@@ -17,7 +17,8 @@
 #define kHandleSideLong			9
 
 
-HPEN CreateMarqueePen(SInt16);
+HBRUSH CreateMarqueeBrush (void);
+HPEN CreateMarqueePen (void);
 void DrawGliderMarquee (HDC);
 void DrawMarquee (HDC);
 
@@ -32,13 +33,22 @@ extern	Rect		leftStartGliderSrc;
 
 
 //==============================================================  Functions
+//--------------------------------------------------------------  CreateMarqueeBrush
+
+HBRUSH CreateMarqueeBrush (void)
+{
+	return CreatePatternBrush(theMarquee.pats[theMarquee.index]);
+}
+
 //--------------------------------------------------------------  CreateMarqueePen
 
-HPEN CreateMarqueePen(SInt16 index)
+HPEN CreateMarqueePen (void)
 {
 	LOGBRUSH logBrush;
 
-	GetObject(theMarquee.pats[index], sizeof(logBrush), &logBrush);
+	logBrush.lbStyle = BS_PATTERN;
+	logBrush.lbColor = 0;
+	logBrush.lbHatch = (ULONG_PTR)theMarquee.pats[theMarquee.index];
 	return ExtCreatePen(PS_GEOMETRIC | PS_SOLID, 1, &logBrush, 0, NULL);
 }
 
@@ -46,35 +56,21 @@ HPEN CreateMarqueePen(SInt16 index)
 
 void DoMarquee (void)
 {
-	HPEN marqueePen, wasPen;
 	HDC hdc;
 
 	if ((!theMarquee.active) || (theMarquee.paused))
 		return;
 
 	hdc = GetMainWindowDC();
-	SaveDC(hdc);
-	SetROP2(hdc, R2_XORPEN);
 
-	SelectObject(hdc, theMarquee.pats[theMarquee.index]);
-	marqueePen = CreateMarqueePen(theMarquee.index);
-	wasPen = SelectObject(hdc, marqueePen);
 	DrawMarquee(hdc);
-	SelectObject(hdc, wasPen);
-	DeleteObject(marqueePen);
 
 	theMarquee.index++;
 	if (theMarquee.index >= kNumMarqueePats)
 		theMarquee.index = 0;
 
-	SelectObject(hdc, theMarquee.pats[theMarquee.index]);
-	marqueePen = CreateMarqueePen(theMarquee.index);
-	wasPen = SelectObject(hdc, marqueePen);
 	DrawMarquee(hdc);
-	SelectObject(hdc, wasPen);
-	DeleteObject(marqueePen);
-
-	RestoreDC(hdc, -1);
+	
 	ReleaseMainWindowDC(hdc);
 }
 
@@ -82,7 +78,6 @@ void DoMarquee (void)
 
 void StartMarquee (Rect *theRect)
 {
-	HPEN marqueePen;
 	HDC hdc;
 
 	if (theMarquee.active)
@@ -96,16 +91,9 @@ void StartMarquee (Rect *theRect)
 	theMarquee.paused = false;
 	theMarquee.handled = false;
 
-	marqueePen = CreateMarqueePen(theMarquee.index);
 	hdc = GetMainWindowDC();
-	SaveDC(hdc);
-	SetROP2(hdc, R2_XORPEN);
-	SelectObject(hdc, theMarquee.pats[theMarquee.index]);
-	SelectObject(hdc, marqueePen);
 	DrawMarquee(hdc);
-	RestoreDC(hdc, -1);
 	ReleaseMainWindowDC(hdc);
-	DeleteObject(marqueePen);
 
 	SetCoordinateHVD(theMarquee.bounds.left, theMarquee.bounds.top, -1);
 }
@@ -114,7 +102,6 @@ void StartMarquee (Rect *theRect)
 
 void StartMarqueeHandled (Rect *theRect, SInt16 direction, SInt16 dist)
 {
-	HPEN marqueePen;
 	HDC hdc;
 
 	if (theMarquee.active)
@@ -168,16 +155,9 @@ void StartMarqueeHandled (Rect *theRect, SInt16 direction, SInt16 dist)
 	theMarquee.direction = direction;
 	theMarquee.dist = dist;
 
-	marqueePen = CreateMarqueePen(theMarquee.index);
 	hdc = GetMainWindowDC();
-	SaveDC(hdc);
-	SetROP2(hdc, R2_XORPEN);
-	SelectObject(hdc, theMarquee.pats[theMarquee.index]);
-	SelectObject(hdc, marqueePen);
 	DrawMarquee(hdc);
-	RestoreDC(hdc, -1);
 	ReleaseMainWindowDC(hdc);
-	DeleteObject(marqueePen);
 
 	SetCoordinateHVD(theMarquee.bounds.left, theMarquee.bounds.top, dist);
 }
@@ -186,7 +166,6 @@ void StartMarqueeHandled (Rect *theRect, SInt16 direction, SInt16 dist)
 
 void StopMarquee (void)
 {
-	HPEN marqueePen;
 	HDC hdc;
 
 	if (gliderMarqueeUp)
@@ -200,16 +179,9 @@ void StopMarquee (void)
 	if (!theMarquee.active)
 		return;
 
-	marqueePen = CreateMarqueePen(theMarquee.index);
 	hdc = GetMainWindowDC();
-	SaveDC(hdc);
-	SetROP2(hdc, R2_XORPEN);
-	SelectObject(hdc, theMarquee.pats[theMarquee.index]);
-	SelectObject(hdc, marqueePen);
 	DrawMarquee(hdc);
-	RestoreDC(hdc, -1);
 	ReleaseMainWindowDC(hdc);
-	DeleteObject(marqueePen);
 
 	theMarquee.active = false;
 	SetCoordinateHVD(-1, -1, -1);
@@ -507,15 +479,15 @@ void DrawGliderMarquee (HDC hdc)
 
 void SetMarqueeGliderRect (SInt16 h, SInt16 v)
 {
-	HDC mainWindowDC;
+	HDC hdc;
 
 	marqueeGliderRect = leftStartGliderSrc;
 	ZeroRectCorner(&marqueeGliderRect);
 	QOffsetRect(&marqueeGliderRect, h - kHalfGliderWide, v - kGliderHigh);
 
-	mainWindowDC = GetMainWindowDC();
-	DrawGliderMarquee(mainWindowDC);
-	ReleaseMainWindowDC(mainWindowDC);
+	hdc = GetMainWindowDC();
+	DrawGliderMarquee(hdc);
+	ReleaseMainWindowDC(hdc);
 	gliderMarqueeUp = true;
 }
 
@@ -523,10 +495,19 @@ void SetMarqueeGliderRect (SInt16 h, SInt16 v)
 
 void DrawMarquee (HDC hdc)
 {
-	Mac_FrameRect(hdc, &theMarquee.bounds, GetCurrentObject(hdc, OBJ_BRUSH), 1, 1); 
+	HBRUSH marqueeBrush;
+	HPEN marqueePen, wasPen;
+	int wasROP2;
+
+	marqueeBrush = CreateMarqueeBrush();
+	wasROP2 = SetROP2(hdc, R2_XORPEN);
+
+	Mac_FrameRect(hdc, &theMarquee.bounds, marqueeBrush, 1, 1); 
 	if (theMarquee.handled)
 	{
-		Mac_PaintRect(hdc, &theMarquee.handle, GetCurrentObject(hdc, OBJ_BRUSH));
+		Mac_PaintRect(hdc, &theMarquee.handle, marqueeBrush);
+		marqueePen = CreateMarqueePen();
+		wasPen = SelectObject(hdc, marqueePen);
 		switch (theMarquee.direction)
 		{
 			case kAbove:
@@ -557,7 +538,12 @@ void DrawMarquee (HDC hdc)
 					theMarquee.handle.top + (kHandleSideLong / 2));
 			break;
 		}
+		SelectObject(hdc, wasPen);
+		DeleteObject(marqueePen);
 	}
+
+	SetROP2(hdc, wasROP2);
+	DeleteObject(marqueeBrush);
 
 	if (gliderMarqueeUp)
 		DrawGliderMarquee(hdc);
@@ -589,7 +575,7 @@ void InitMarquee(void)
 		hbmPrev = SelectObject(hdc, hBitmap);
 		ImageList_Draw(himlMarquee, i, hdc, 0, 0, ILD_IMAGE);
 		SelectObject(hdc, hbmPrev);
-		theMarquee.pats[i] = CreatePatternBrush(hBitmap);
+		theMarquee.pats[i] = hBitmap;
 	}
 	DeleteDC(hdc);
 	ImageList_Destroy(himlMarquee);
