@@ -1,5 +1,5 @@
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
-  message(FATAL_ERROR "In-tree builds are not recommended.")
+  message(FATAL_ERROR "In-tree builds are not recommended. Create a separate build directory.")
 endif()
 
 cmake_minimum_required(VERSION 3.15)
@@ -31,22 +31,9 @@ target_include_directories(gliderpro PRIVATE Headers)
 target_link_libraries(gliderpro comctl32 dsound dxguid msimg32 winmm)
 target_sources(
   gliderpro PRIVATE
-  # resources
-  Resources/gliderpro.rc
-  # added headers
+  Headers/About.h
   Headers/Audio.h
   Headers/ByteIO.h
-  Headers/Macintosh.h
-  Headers/MacTypes.h
-  Headers/ResourceIDs.h
-  Headers/WinAPI.h
-  # added sources
-  Sources/Audio.c
-  Sources/ByteIO.c
-  Sources/GliderStructs.c
-  Sources/Macintosh.c
-  # original headers
-  Headers/About.h
   Headers/DialogUtils.h
   Headers/DynamicMaps.h
   Headers/Environ.h
@@ -57,6 +44,8 @@ target_sources(
   Headers/GliderStructs.h
   Headers/GliderVars.h
   Headers/House.h
+  Headers/Macintosh.h
+  Headers/MacTypes.h
   Headers/MainWindow.h
   Headers/Map.h
   Headers/Marquee.h
@@ -65,17 +54,21 @@ target_sources(
   Headers/Play.h
   Headers/Player.h
   Headers/RectUtils.h
+  Headers/ResourceIDs.h
   Headers/Room.h
   Headers/RoomGraphics.h
   Headers/RubberBands.h
   Headers/Scoreboard.h
   Headers/Tools.h
   Headers/Utilities.h
-  # original sources
+  Headers/WinAPI.h
+  Resources/gliderpro.rc
   Sources/About.c
   Sources/AnimCursor.c
   Sources/AppleEvents.c
+  Sources/Audio.c
   Sources/Banner.c
+  Sources/ByteIO.c
   Sources/ColorUtils.c
   Sources/Coordinates.c
   Sources/DebugUtilities.c
@@ -88,6 +81,7 @@ target_sources(
   Sources/Events.c
   Sources/FileError.c
   Sources/GameOver.c
+  Sources/GliderStructs.c
   Sources/Grease.c
   Sources/HighScores.c
   Sources/House.c
@@ -98,6 +92,7 @@ target_sources(
   Sources/Interactions.c
   Sources/InterfaceInit.c
   Sources/Link.c
+  Sources/Macintosh.c
   Sources/Main.c
   Sources/MainWindow.c
   Sources/Map.c
