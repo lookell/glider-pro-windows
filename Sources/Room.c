@@ -582,6 +582,10 @@ SInt16 GetNeighborRoomNumber (SInt16 which)
 		hDelta = -1;
 		vDelta = 1;
 		break;
+
+		default:
+		return kRoomIsEmpty;
+		break;
 	}
 
 	roomNum = kRoomIsEmpty;
@@ -897,6 +901,7 @@ SInt16 GetOriginalBounding (SInt16 theID)
 		return 0;
 
 	resPointer = NULL;
+	resByteSize = 0;
 	resBlock = FindResource(houseResFork, MAKEINTRESOURCE(theID), L"BOUNDS");
 	if (resBlock != NULL)
 	{

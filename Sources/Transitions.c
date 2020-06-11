@@ -112,6 +112,9 @@ void WipeScreenOn (SInt16 direction, Rect *theRect)
 		vOffset = 0;
 		count = workSrcRect.right / kWipeRectThick;
 		break;
+
+		default:
+		return;
 	}
 
 	mainWindowDC = GetMainWindowDC();

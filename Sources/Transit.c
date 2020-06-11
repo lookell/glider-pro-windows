@@ -484,6 +484,10 @@ void FollowTheLeader (void)
 		theGlider.whole = theGlider.dest;
 		theGlider.wholeShadow = theGlider.destShadow;
 	}
+	else
+	{
+		return;
+	}
 
 	switch (wasEscaped)
 	{

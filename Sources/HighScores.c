@@ -569,7 +569,7 @@ Boolean WriteScoresToDisk (HWND ownerWindow)
 	WCHAR		pathBuffer[MAX_PATH];
 	HANDLE		scoresFileHandle;
 	byteio		byteWriter;
-	Boolean		writeSucceeded;
+	int			writeSucceeded;
 	DWORD		lastError;
 
 	PasStringCopyC("High Scores File", fileLabel);
@@ -613,7 +613,7 @@ Boolean ReadScoresFromDisk (HWND ownerWindow)
 	WCHAR		pathBuffer[MAX_PATH];
 	HANDLE		scoresFileHandle;
 	byteio		byteReader;
-	Boolean		readSucceeded;
+	int			readSucceeded;
 	DWORD		lastError;
 
 	PasStringCopyC("High Scores File", fileLabel);

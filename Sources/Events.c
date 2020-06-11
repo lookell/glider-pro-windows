@@ -162,7 +162,7 @@ void HandleMouseEvent (EventRecord *theEvent)
 
 void HandleKeyEvent (HWND hwnd, BYTE vKey)
 {
-	BOOL		shiftDown, commandDown, optionDown;
+	Boolean shiftDown, commandDown, optionDown;
 
 	shiftDown = (GetKeyState(VK_SHIFT) < 0);
 	commandDown = (GetKeyState(VK_CONTROL) < 0);

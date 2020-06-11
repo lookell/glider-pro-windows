@@ -1229,6 +1229,9 @@ void DoSwitchObjectInfo (HWND hwndOwner)
 	SInt16 floor, suite;
 	INT_PTR result;
 
+	floor = 0;
+	suite = kRoomIsEmpty;
+
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
 	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
 	if (thisRoom->objects[objActive].data.e.where == -1)
@@ -1290,6 +1293,9 @@ void DoTriggerObjectInfo (HWND hwndOwner)
 	wchar_t objStr[16];
 	SInt16 floor, suite;
 	INT_PTR result;
+
+	floor = 0;
+	suite = kRoomIsEmpty;
 
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
 	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
@@ -1477,6 +1483,9 @@ void DoTransObjectInfo (HWND hwndOwner)
 	wchar_t objStr[16];
 	SInt16 floor, suite;
 	INT_PTR result;
+
+	floor = 0;
+	suite = kRoomIsEmpty;
 
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
 	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);

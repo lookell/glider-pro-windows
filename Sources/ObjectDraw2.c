@@ -970,6 +970,9 @@ void DrawPictObject (SInt16 what, Rect *theRect)
 		case kOzma:
 		pictID = kOzmaPictID;
 		break;
+
+		default:
+		return;
 	}
 
 	thePicture = GetPicture(pictID);
@@ -1003,6 +1006,9 @@ void DrawPictWithMaskObject (SInt16 what, Rect *theRect)
 		pictID = kCloudPictID;
 		maskID = kCloudMaskID;
 		break;
+
+		default:
+		return;
 	}
 
 	bounds = srcRects[what];
@@ -1109,6 +1115,9 @@ void DrawPictSansWhiteObject (SInt16 what, Rect *theRect)
 		case kChimes:
 		pictID = kChimesPictID;
 		break;
+
+		default:
+		return;
 	}
 
 	bounds = srcRects[what];

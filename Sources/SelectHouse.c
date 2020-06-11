@@ -62,7 +62,7 @@ BOOL InitLoadDialog (HWND hDlg)
 	HMODULE		houseResources;
 	HIMAGELIST	himl;
 	HRESULT		hr;
-	SInt16		i;
+	int			i;
 
 	CenterOverOwner(hDlg);
 	houseListView = GetDlgItem(hDlg, kHouseListItem);

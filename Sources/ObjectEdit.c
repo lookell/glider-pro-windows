@@ -175,7 +175,7 @@ void DragHandle (Point where)
 		vDelta = thisRoom->objects[objActive].data.a.tall * 2;
 		DragMarqueeCorner(where, &hDelta, &vDelta, false);
 		thisRoom->objects[objActive].data.a.distance = hDelta;
-		thisRoom->objects[objActive].data.a.tall = vDelta / 2;
+		thisRoom->objects[objActive].data.a.tall = (Byte)(vDelta / 2);
 		whoCares = KeepObjectLegal();
 		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 		GetThisRoomsObjRects();
@@ -1435,6 +1435,11 @@ void MoveObject (SInt16 whichWay, Boolean shiftDown)
 
 		case kBumpLeft:
 		deltaH = -increment;
+		deltaV = 0;
+		break;
+
+		default:
+		deltaH = 0;
 		deltaV = 0;
 		break;
 	}

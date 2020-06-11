@@ -416,6 +416,7 @@ void AdjustScoreboardHeight (void)
 
 	if (wasScoreboardMode != newMode)
 	{
+		offset = 0;
 		switch (newMode)
 		{
 			case kScoreboardHigh:		// 9 neighbors

@@ -86,6 +86,7 @@ Boolean DidBandHitDynamic (SInt16 who)
 
 	dinahRect = dinahs[who].dest;
 
+	collided = false;
 	for (i = 0; i < numBands; i++)
 	{
 		if (bands[i].dest.bottom < dinahRect.top)

@@ -68,11 +68,6 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		QOffsetRect(itsRect, who->data.a.topLeft.h, who->data.a.topLeft.v);
 		break;
 
-		*itsRect = srcRects[who->what];
-		ZeroRectCorner(itsRect);
-		QOffsetRect(itsRect, who->data.a.topLeft.h, who->data.a.topLeft.v);
-		break;
-
 		case kTable:
 		case kShelf:
 		case kCabinet:

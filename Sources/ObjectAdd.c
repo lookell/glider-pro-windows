@@ -618,12 +618,12 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		if (what == kToaster)
 		{
 			thisRoom->objects[objActive].data.g.height = 64;
-			thisRoom->objects[objActive].data.g.delay = 10 + RandomInt(10);
+			thisRoom->objects[objActive].data.g.delay = 10 + (Byte)RandomInt(10);
 		}
 		else if (what == kOutlet)
 		{
 			thisRoom->objects[objActive].data.g.height = 0;
-			thisRoom->objects[objActive].data.g.delay = 10 + RandomInt(10);
+			thisRoom->objects[objActive].data.g.delay = 10 + (Byte)RandomInt(10);
 		}
 		else if (what == kCustomPict)
 		{
@@ -686,7 +686,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		if (what == kCobweb)
 			thisRoom->objects[objActive].data.h.delay = 0;
 		else
-			thisRoom->objects[objActive].data.h.delay = 10 + RandomInt(10);
+			thisRoom->objects[objActive].data.h.delay = 10 + (Byte)RandomInt(10);
 		thisRoom->objects[objActive].data.h.byte0 = 0;
 		thisRoom->objects[objActive].data.h.initial = true;
 		thisRoom->objects[objActive].data.h.state = true;
@@ -712,7 +712,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		if (what == kBall)
 			thisRoom->objects[objActive].data.h.delay = 0;
 		else
-			thisRoom->objects[objActive].data.h.delay = 10 + RandomInt(10);
+			thisRoom->objects[objActive].data.h.delay = 10 + (Byte)RandomInt(10);
 		thisRoom->objects[objActive].data.h.byte0 = 0;
 		thisRoom->objects[objActive].data.h.initial = true;
 		thisRoom->objects[objActive].data.h.state = true;

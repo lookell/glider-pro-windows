@@ -92,7 +92,7 @@ Boolean KeepObjectLegal (void)
 			if (theObject->what == kLiftArea)
 			{
 				theObject->data.a.distance = RectWide(&bounds);
-				theObject->data.a.tall = RectTall(&bounds) / 2;
+				theObject->data.a.tall = (Byte)(RectTall(&bounds) / 2);
 			}
 		}
 		if ((theObject->what == kStubby) && (theObject->data.a.topLeft.h % 2 == 0))
@@ -726,7 +726,7 @@ void CompressHouse (void)
 void LopOffExtraRooms (void)
 {
 	size_t		newSize;
-	SInt32		r, count;
+	SInt16		r, count;
 	Str255		message;
 	roomPtr		newRoomsPtr;
 

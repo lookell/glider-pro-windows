@@ -215,8 +215,10 @@ SInt16 GetFirstRoomNumber (void)
 
 void WhereDoesGliderBegin (Rect *theRect, SInt16 mode)
 {
-	Point		initialPt;
+	Point initialPt;
 
+	initialPt.h = 0;
+	initialPt.v = 0;
 	if (mode == kResumeGameMode)
 		initialPt = smallGame.where;
 	else if (mode == kNewGameMode)

@@ -131,7 +131,7 @@ void PasStringConcat (StringPtr p1, StringPtr p2)
 	if ((wasLength + addedLength) > 255)
 		addedLength = 255 - wasLength;
 
-	*p1 = wasLength + addedLength;
+	*p1 = (Byte)(wasLength + addedLength);
 
 	*p1++;
 	*p2++;
@@ -197,6 +197,7 @@ void GetLineOfText (StringPtr srcStr, SInt16 index, StringPtr textLine)
 	if (start != 0)
 	{
 		i = start;
+		stop = -1;
 
 		foundIt = false;
 		do
@@ -249,6 +250,7 @@ void WrapText (StringPtr theText, SInt16 maxChars)
 
 	lastChar = theText[0];
 	count = 0;
+	spaceIs = -1;
 
 	do
 	{
@@ -269,7 +271,7 @@ void WrapText (StringPtr theText, SInt16 maxChars)
 		}
 		while ((count < lastChar) && (chars < maxChars) && (!foundEdge));
 
-		if ((!foundEdge) && (count < lastChar) && (foundSpace))
+		if ((!foundEdge) && (count < lastChar) && (foundSpace) && (spaceIs >= 0))
 		{
 			theText[spaceIs] = kReturnKeyASCII;
 			count = spaceIs + 1;

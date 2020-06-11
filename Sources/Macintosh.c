@@ -501,7 +501,7 @@ int MacFromWinString(StringPtr macbuf, int maclen, const wchar_t *winbuf)
 	result = WideCharToMultiByte(CP_MACROMAN, 0,
 			winbuf, copySize, (LPSTR)&macbuf[1], maclen - 1,
 			NULL, NULL);
-	macbuf[0] = result;
+	macbuf[0] = (Byte)result;
 	return result;
 }
 
