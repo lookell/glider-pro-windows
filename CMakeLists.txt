@@ -32,37 +32,80 @@ target_link_libraries(gliderpro comctl32 dsound dxguid msimg32 winmm)
 target_sources(
   gliderpro PRIVATE
   Headers/About.h
+  Headers/AnimCursor.h
+  Headers/AppleEvents.h
   Headers/Audio.h
+  Headers/Banner.h
   Headers/ByteIO.h
+  Headers/ColorUtils.h
+  Headers/Coordinates.h
+  Headers/DebugUtilities.h
   Headers/DialogUtils.h
   Headers/DynamicMaps.h
+  Headers/Dynamics.h
   Headers/Environ.h
+  Headers/Events.h
   Headers/Externs.h
+  Headers/FileError.h
   Headers/GameOver.h
   Headers/GliderDefines.h
   Headers/GliderProtos.h
   Headers/GliderStructs.h
   Headers/GliderVars.h
+  Headers/Grease.h
+  Headers/HighScores.h
   Headers/House.h
+  Headers/HouseIO.h
+  Headers/HouseInfo.h
+  Headers/HouseLegal.h
+  Headers/Input.h
+  Headers/Interactions.h
+  Headers/InterfaceInit.h
+  Headers/Link.h
   Headers/Macintosh.h
   Headers/MacTypes.h
+  Headers/Main.h
   Headers/MainWindow.h
   Headers/Map.h
   Headers/Marquee.h
+  Headers/Menu.h
+  Headers/Modes.h
+  Headers/Music.h
+  Headers/ObjectAdd.h
+  Headers/ObjectDraw.h
+  Headers/ObjectDrawAll.h
   Headers/ObjectEdit.h
+  Headers/ObjectInfo.h
+  Headers/ObjectRects.h
   Headers/Objects.h
   Headers/Play.h
   Headers/Player.h
+  Headers/Prefs.h
   Headers/RectUtils.h
+  Headers/Render.h
   Headers/ResourceIDs.h
   Headers/Room.h
   Headers/RoomGraphics.h
+  Headers/RoomInfo.h
   Headers/RubberBands.h
+  Headers/SavedGames.h
   Headers/Scoreboard.h
+  Headers/Scrap.h
+  Headers/SelectHouse.h
+  Headers/Settings.h
+  Headers/Sound.h
+  Headers/StringUtils.h
   Headers/StructIO.h
+  Headers/StructuresInit.h
   Headers/Tools.h
+  Headers/Transit.h
+  Headers/Transitions.h
+  Headers/Triggers.h
+  Headers/Trip.h
   Headers/Utilities.h
+  Headers/Validate.h
   Headers/WinAPI.h
+  Headers/WindowUtils.h
   Resources/gliderpro.rc
   Sources/About.c
   Sources/AnimCursor.c
