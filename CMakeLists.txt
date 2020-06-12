@@ -59,6 +59,7 @@ target_sources(
   Headers/RoomGraphics.h
   Headers/RubberBands.h
   Headers/Scoreboard.h
+  Headers/StructIO.h
   Headers/Tools.h
   Headers/Utilities.h
   Headers/WinAPI.h
@@ -81,7 +82,6 @@ target_sources(
   Sources/Events.c
   Sources/FileError.c
   Sources/GameOver.c
-  Sources/GliderStructs.c
   Sources/Grease.c
   Sources/HighScores.c
   Sources/House.c
@@ -124,6 +124,7 @@ target_sources(
   Sources/Settings.c
   Sources/Sound.c
   Sources/StringUtils.c
+  Sources/StructIO.c
   Sources/StructuresInit.c
   Sources/StructuresInit2.c
   Sources/Tools.c

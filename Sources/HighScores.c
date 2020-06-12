@@ -16,6 +16,7 @@
 #include "MainWindow.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "StructIO.h"
 #include "Utilities.h"
 
 

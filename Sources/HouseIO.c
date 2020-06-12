@@ -14,6 +14,7 @@
 #include "Macintosh.h"
 #include "ObjectEdit.h"
 #include "ResourceIDs.h"
+#include "StructIO.h"
 
 
 #define kSaveChanges			IDYES

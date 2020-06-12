@@ -12,6 +12,7 @@
 #include "House.h"
 #include "Macintosh.h"
 #include "ResourceIDs.h"
+#include "StructIO.h"
 
 
 #define kSavedGameVersion		0x0200

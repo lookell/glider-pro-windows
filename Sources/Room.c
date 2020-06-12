@@ -13,6 +13,7 @@
 #include "MainWindow.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "StructIO.h"
 
 
 #define kYesDoDeleteRoom		IDOK

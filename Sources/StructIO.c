@@ -1,6 +1,4 @@
-#include "ByteIO.h"
-#include "Externs.h"
-#include <stdlib.h>
+#include "StructIO.h"
 
 #ifndef ARRAYSIZE
 #define ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))

@@ -12,6 +12,7 @@
 #include "Externs.h"
 #include "Macintosh.h"
 #include "ResourceIDs.h"
+#include "StructIO.h"
 
 
 #define	kPrefCreatorType	'ozm5'

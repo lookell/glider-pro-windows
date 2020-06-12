@@ -411,44 +411,4 @@ void CloseThisWindow (HWND *);
 #include "GliderVars.h"
 #include "GliderProtos.h"
 
-struct byteio;
-int ReadPrefsInfo(struct byteio *, prefsInfo *);		// --- GliderStructs.c
-int WritePrefsInfo(struct byteio *, const prefsInfo *);
-int ReadBlowerType(struct byteio *, blowerType *);
-int WriteBlowerType(struct byteio *, const blowerType *);
-int ReadFurnitureType(struct byteio *, furnitureType *);
-int WriteFurnitureType(struct byteio *, const furnitureType *);
-int ReadBonusType(struct byteio *, bonusType *);
-int WriteBonusType(struct byteio *, const bonusType *);
-int ReadTransportType(struct byteio *, transportType *);
-int WriteTransportType(struct byteio *, const transportType *);
-int ReadSwitchType(struct byteio *, switchType *);
-int WriteSwitchType(struct byteio *, const switchType *);
-int ReadLightType(struct byteio *, lightType *);
-int WriteLightType(struct byteio *, const lightType *);
-int ReadApplianceType(struct byteio *, applianceType *);
-int WriteApplianceType(struct byteio *, const applianceType *);
-int ReadEnemyType(struct byteio *, enemyType *);
-int WriteEnemyType(struct byteio *, const enemyType *);
-int ReadClutterType(struct byteio *, clutterType *);
-int WriteClutterType(struct byteio *, const clutterType *);
-int ReadObjectType(struct byteio *, objectType *);
-int WriteObjectType(struct byteio *, const objectType *);
-int ReadScoresType(struct byteio *, scoresType *);
-int WriteScoresType(struct byteio *, const scoresType *);
-int ReadGameType(struct byteio *, gameType *);
-int WriteGameType(struct byteio *, const gameType *);
-int ReadSavedRoom(struct byteio *, savedRoom *);
-int WriteSavedRoom(struct byteio *, const savedRoom *);
-int ReadGame2Type(struct byteio *, game2Type *);
-int WriteGame2Type(struct byteio *, const game2Type *);
-int ReadRoomType(struct byteio *, roomType *);
-int WriteRoomType(struct byteio *, const roomType *);
-int ReadHouseType(struct byteio *, houseType *);
-int WriteHouseType(struct byteio *, const houseType *);
-int ReadBoundsType(struct byteio *, boundsType *);
-int WriteBoundsType(struct byteio *, const boundsType *);
-int ReadDemoType(struct byteio *, demoType *);
-int WriteDemoType(struct byteio *, const demoType *);
-
 #endif
