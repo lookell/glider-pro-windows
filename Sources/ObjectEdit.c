@@ -1,3 +1,5 @@
+#include "ObjectEdit.h"
+
 //============================================================================
 //----------------------------------------------------------------------------
 //								   ObjectEdit.c
@@ -10,7 +12,6 @@
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "Marquee.h"
-#include "ObjectEdit.h"
 #include "Objects.h"
 #include "Play.h"
 #include "RectUtils.h"

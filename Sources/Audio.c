@@ -1,6 +1,7 @@
 #define CINTERFACE
 #define COBJMACROS
 #include "Audio.h"
+
 #include "ResourceIDs.h"
 #include <math.h>
 

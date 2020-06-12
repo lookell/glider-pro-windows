@@ -1,3 +1,5 @@
+#include "Utilities.h"
+
 //============================================================================
 //----------------------------------------------------------------------------
 //								  Utilities.c
@@ -11,7 +13,6 @@
 #include "Macintosh.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
-#include "Utilities.h"
 #include "WinAPI.h"
 
 

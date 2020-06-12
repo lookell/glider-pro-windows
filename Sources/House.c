@@ -1,3 +1,5 @@
+#include "House.h"
+
 //============================================================================
 //----------------------------------------------------------------------------
 //									House.c
@@ -7,7 +9,6 @@
 
 #include "DialogUtils.h"
 #include "Externs.h"
-#include "House.h"
 #include "Macintosh.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"

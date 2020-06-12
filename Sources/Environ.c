@@ -1,3 +1,4 @@
+#include "Environ.h"
 
 //============================================================================
 //----------------------------------------------------------------------------
@@ -7,7 +8,6 @@
 
 
 #include "DialogUtils.h"
-#include "Environ.h"
 #include "Externs.h"
 #include "MacTypes.h"
 #include "ResourceIDs.h"

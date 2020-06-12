@@ -1,3 +1,5 @@
+#include "RectUtils.h"
+
 //============================================================================
 //----------------------------------------------------------------------------
 //								   RectUtils.c
@@ -5,10 +7,10 @@
 //============================================================================
 
 
-
 #include "Externs.h"
 #include "Macintosh.h"
-#include "RectUtils.h"
+
+
 #undef small // Remove <windows.h> definition, since it's not wanted here
 
 

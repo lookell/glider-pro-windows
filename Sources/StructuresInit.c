@@ -1,3 +1,6 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include "StructuresInit.h"
+
 //============================================================================
 //----------------------------------------------------------------------------
 //							   StructuresInit.c
@@ -5,7 +8,6 @@
 //============================================================================
 
 
-#define _CRT_SECURE_NO_WARNINGS
 #include "Externs.h"
 #include "Macintosh.h"
 #include "Objects.h"
