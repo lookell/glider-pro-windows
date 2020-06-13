@@ -7,11 +7,13 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "WinAPI.h"
-
 
 extern HDC	angelSrcMap;
 extern HDC	angelMaskMap;
+
+void DoGameOver (void);
+void FlagGameOver (void);
+void DoDiedGameOver (void);
 
 #endif

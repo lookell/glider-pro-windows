@@ -7,4 +7,24 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "MacTypes.h"
+#include "WinAPI.h"
+
+void UpdateClipboardMenus (void);
+void UpdateMenus (Boolean newMode);
+void DoAppleMenu (HWND hwnd, SInt16 theItem);
+void DoGameMenu (HWND hwnd, SInt16 theItem);
+void DoOptionsMenu (HWND hwnd, SInt16 theItem);
+void DoHouseMenu (HWND hwnd, SInt16 theItem);
+void DoMenuChoice (HWND hwnd, WORD menuChoice);
+void UpdateMapCheckmark (Boolean checkIt);
+void UpdateToolsCheckmark (Boolean checkIt);
+void UpdateCoordinateCheckmark (Boolean checkIt);
+#ifdef COMPILEDEMO
+void DoNotInDemo (HWND ownerWindow);
+#endif
+void OpenCloseEditWindows (void);
+void EnableMenuBar (void);
+void DisableMenuBar (void);
+
 #endif

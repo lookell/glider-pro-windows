@@ -7,4 +7,9 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "GliderStructs.h"
+
+void GetDemoInput (gliderPtr thisGlider);
+void GetInput (gliderPtr thisGlider);
+
 #endif

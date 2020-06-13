@@ -7,10 +7,12 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "WinAPI.h"
 
-
 extern HDC	suppSrcMap;
+
+void DrawLocale (void);
+void ReadyLevel (void);
+void RedrawRoomLighting (void);
 
 #endif

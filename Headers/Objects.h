@@ -7,9 +7,9 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
+#include "GliderStructs.h"
+#include "MacTypes.h"
 #include "WinAPI.h"
-
 
 extern HDC				blowerSrcMap;
 extern HDC				blowerMaskMap;
@@ -46,5 +46,15 @@ extern HDC				fishSrcMap;
 extern HDC				fishMaskMap;
 extern HDC				clutterSrcMap;
 extern HDC				clutterMaskMap;
+
+Boolean IsThisValid (SInt16 where, SInt16 who);
+SInt16 GetRoomLinked (objectType *who);
+Boolean ObjectIsLinkTransport (objectType *who);
+Boolean ObjectIsLinkSwitch (objectType *who);
+void ListAllLocalObjects (void);
+void AddTempManholeRect (Rect *manHole);
+Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local);
+Boolean GetObjectState (SInt16 room, SInt16 object);
+void BringSendFrontBack (HWND ownerWindow, Boolean bringFront);
 
 #endif

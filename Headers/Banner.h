@@ -7,4 +7,10 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "MacTypes.h"
+
+SInt16 CountStarsInHouse (void);
+void BringUpBanner (void);
+void DisplayStarsRemaining (void);
+
 #endif

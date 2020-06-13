@@ -335,7 +335,7 @@ pascal OSErr DragTrackingFunc (DragTrackingMessage theMessage, WindowPtr theWind
 
 //--------------------------------------------------------------  DragRoom
 
-Boolean DragRoom (EventRecord *theEvent, Rect *roomSrc, short roomNumber)
+Boolean DragRoom (EventRecord *theEvent, Rect *roomSrc, SInt16 roomNumber)
 {
 	DragReference	theDrag;
 	DragAttributes	attributes;

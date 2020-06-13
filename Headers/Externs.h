@@ -12,7 +12,6 @@
 
 
 #include "MacTypes.h"
-#include "WinAPI.h"
 
 
 #define kPreferredDepth				8
@@ -226,179 +225,20 @@
 
 #define WC_MAINWINDOW			L"GliderMainWindow"
 
-//--------------------------------------------------------------  Structs
-/*
-typedef	SInt16		SICN[16];
-typedef	SICN		*SICNList;
-typedef	SICNList	*SICNHand;
-*/
-
-//#pragma options align=mac68k
-
-typedef struct
-{
-	Str32		wasDefaultName;
-	Str15		wasLeftName, wasRightName;
-	Str15		wasBattName, wasBandName;
-	Str15		wasHighName;
-	Str31		wasHighBanner;
-//	SInt32		encrypted, fakeLong;
-	SInt32		wasLeftMap, wasRightMap;
-	SInt32		wasBattMap, wasBandMap;
-	SInt16		wasVolume;
-	SInt16		prefVersion;
-	SInt16		wasMaxFiles;
-	SInt16		wasEditH, wasEditV;
-	SInt16		wasMapH, wasMapV;
-	SInt16		wasMapWide, wasMapHigh;
-	SInt16		wasToolsH, wasToolsV;
-	SInt16		wasLinkH, wasLinkV;
-	SInt16		wasCoordH, wasCoordV;
-	SInt16		isMapLeft, isMapTop;
-	SInt16		wasNumNeighbors;
-	SInt16		wasDepthPref;
-	SInt16		wasToolGroup;
-	SInt16		smWarnings;
-	SInt16		wasFloor, wasSuite;
-	Boolean		wasZooms, wasMusicOn;
-	Boolean		wasAutoEdit, wasDoColorFade;
-	Boolean		wasMapOpen, wasToolsOpen;
-	Boolean		wasCoordOpen, wasQuickTrans;
-	Boolean		wasIdleMusic, wasGameMusic;
-	Boolean		wasEscPauseKey;
-	Boolean		wasDoAutoDemo, wasScreen2;
-	Boolean		wasDoBackground, wasHouseChecks;
-	Boolean		wasPrettyMap, wasBitchDialogs;
-} prefsInfo;
-
-//#pragma options align=reset
-
 //--------------------------------------------------------------  Prototypes
 
-void DoAbout (HWND);									// --- About.c
-
-void LoadCursors (void);								// --- AnimCursor.c
-void DisposCursors (void);
-void IncrementCursor (void);
-void DecrementCursor (void);
-void SpinCursor (SInt16);
-void BackSpinCursor (SInt16);
-
-COLORREF Index2ColorRef (SInt32);						// --- ColorUtils.c
-void ColorText (HDC, StringPtr, SInt32);
-void ColorRect (HDC, Rect *, SInt32);
-void ColorOval (HDC, Rect *, SInt32);
-void ColorRegion (HDC, HRGN, SInt32);
-void ColorLine (HDC, SInt16, SInt16, SInt16, SInt16, SInt32);
-void HiliteRect (HDC, Rect *, SInt32, SInt32);
-void ColorFrameRect (HDC, Rect *, SInt32);
-void ColorFrameWHRect (HDC, SInt16, SInt16, SInt16, SInt16, SInt32);
-void ColorFrameOval (HDC, Rect *, SInt32);
-COLORREF LtGrayForeColor (void);
-COLORREF GrayForeColor (void);
-COLORREF DkGrayForeColor (void);
-void RestoreColorsSlam (void);
-void ColorShadowRect (HDC, Rect *, SInt32);
-void ColorShadowOval (HDC, Rect *, SInt32);
-void ColorShadowRegion (HDC, HRGN, SInt32);
-
-void MonitorWait (void);								// --- DebugUtils.c
-void DisplayRect (Rect *);
-void FlashRect (Rect *);
-void CheckLegitRect(Rect *, Rect *);
-void DisplayLong (SInt32);
-void DisplayShort (SInt16);
-void FlashLong (SInt32);
-void FlashShort (SInt16);
-void DoBarGraph (SInt16, SInt16, SInt16, SInt16);
-SInt16 BetaOkay (void);
-void DebugNum (SInt32);
-void DisplayCTSeed (CGrafPtr);
-void FillScreenRed (void);
-void DumpToResEditFile (Ptr, SInt32);
-
-SInt16 BitchAboutColorDepth(HWND);						// --- Event.c
-void HandleKeyEvent (HWND, BYTE);
-void HandleEvent (void);
-void HiliteAllWindows (void);
-void IgnoreThisClick (void);
-
-SInt16 WhatsOurDepth (void);							// --- Environs.c
-void SwitchToDepth (SInt16, Boolean);
-void CheckOurEnvirons (void);
-//void ReflectSecondMonitorEnvirons (Boolean, Boolean, Boolean);
-void HandleDepthSwitching (HWND);
-void RestoreColorDepth (void);
-void CheckMemorySize (HWND);
-void SetAppMemorySize (SInt32);
-
-Boolean CheckFileError (HWND, DWORD, StringPtr);		// --- File Error.c
-
-Boolean SavePrefs (HWND, prefsInfo *, SInt16);			// --- Prefs.c
-Boolean LoadPrefs (HWND, prefsInfo *, SInt16);
-
-void PasStringCopy (StringPtr, StringPtr);				// --- StringUtils.c
-void PasStringCopyC (const char *, StringPtr);
-SInt16 WhichStringFirst (StringPtr, StringPtr);
-void PasStringCopyNum (StringPtr, StringPtr, Byte);
-void PasStringConcat (StringPtr, StringPtr);
-void PasStringConcatC (StringPtr, const char *);
-void GetLineOfText (StringPtr, SInt16, StringPtr);
-void WrapText (StringPtr, SInt16);
-void GetFirstWordOfString (StringPtr, StringPtr);
-void CollapseStringToWidth (StringPtr, SInt16);
-void GetChooserName (StringPtr);
-StringPtr GetLocalizedString (SInt16, StringPtr);
-wchar_t *MacToWinLineEndings (const wchar_t *);
-wchar_t *WinToMacLineEndings (const wchar_t *);
-
-Point MyGetGlobalMouse (void);							// --- Utilities.c
-void ToolBoxInit (void);
-void FindOurDevice (void);
-SInt16 RandomInt (SInt16);
-SInt32 RandomLong (SInt32);
-void InitRandomLongQUS (void);
-UInt32 RandomLongQUS (void);
-//void CenterAlert (SInt16);
-void RedAlert (SInt16);
-//void CreateOffScreenBitMap (Rect *, GrafPtr *);
-//void CreateOffScreenPixMap (Rect *, CGrafPtr *);
-//void KillOffScreenPixMap (CGrafPtr);
-//void KillOffScreenBitMap (GrafPtr);
-HBITMAP GetPicture (SInt16);
-void LoadGraphic (HDC, SInt16);
-void LoadScaledGraphic (HDC, SInt16, Rect *);
-//void PlotSICN (Rect *, SICNHand, SInt32);
-void LargeIconPlot (Rect *, SInt16);
-void DrawCIcon (HDC, SInt16, SInt16, SInt16);
-char KeyMapOffsetFromRawKey (char);
-SInt32 LongSquareRoot (SInt32);
-//void HideMenuBarOld (void);
-//void ShowMenuBarOld (void);
-Boolean WaitForInputEvent (UInt16);
-void WaitCommandQReleased (void);
-char GetKeyMapFromMessage (SInt32);
-void GetKeyName (SInt32, StringPtr);
-Boolean OptionKeyDown (void);
-SInt32 ExtractCTSeed (CGrafPtr);
-//void ForceCTSeed (CGrafPtr, SInt32);
-void DelayTicks (SInt32);
-void UnivGetSoundVolume (SInt16 *, Boolean);
-void UnivSetSoundVolume (SInt16, Boolean);
-BOOL GetDataFolderPath (LPWSTR, DWORD);
-
-Boolean ValidInstallation (Boolean);					// --- Validate.c
-
-void GetWindowLeftTop (HWND, SInt16 *, SInt16 *);	// --- WindowUtils.c
-void Gp_GetWindowRect (HWND, Rect *);
-void GetLocalWindowRect (HWND, Rect *);
-//void FlagWindowFloating (WindowPtr);
-//Boolean	IsWindowFloating (WindowPtr);
-void OpenMessageWindow (StringPtr);
-void SetMessageWindowMessage (StringPtr);
-void SetMessageTextColor (COLORREF);
-void CloseMessageWindow (void);
-void CloseThisWindow (HWND *);
+#include "About.h"
+#include "AnimCursor.h"
+#include "ColorUtils.h"
+#include "DebugUtilities.h"
+#include "Environ.h"
+#include "Events.h"
+#include "FileError.h"
+#include "Prefs.h"
+#include "StringUtils.h"
+#include "Utilities.h"
+#include "Validate.h"
+#include "WindowUtils.h"
 
 #ifdef powerc
 //	extern pascal void SetSoundVol(SInt16 level);		// for old Sound Manager

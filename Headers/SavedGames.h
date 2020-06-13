@@ -7,4 +7,11 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "MacTypes.h"
+#include "WinAPI.h"
+
+void SaveGame2 (HWND ownerWindow);
+Boolean OpenSavedGame (HWND ownerWindow);
+void SaveGame (HWND ownerWindow, Boolean doSave);
+
 #endif

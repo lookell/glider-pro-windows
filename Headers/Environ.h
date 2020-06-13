@@ -7,9 +7,8 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "MacTypes.h"
-
+#include "WinAPI.h"
 
 typedef struct
 {
@@ -34,8 +33,15 @@ typedef struct
 	Boolean		hasDrag;
 } macEnviron;
 
-
 extern macEnviron	thisMac;
 
+SInt16 WhatsOurDepth (void);
+void SwitchToDepth (SInt16 newDepth, Boolean doColor);
+void CheckOurEnvirons (void);
+//void ReflectSecondMonitorEnvirons (Boolean use1Bit, Boolean use4Bit, Boolean use8Bit);
+void HandleDepthSwitching (HWND ownerWindow);
+void RestoreColorDepth (void);
+void CheckMemorySize (HWND ownerWindow);
+void SetAppMemorySize (SInt32 newSize);
 
 #endif

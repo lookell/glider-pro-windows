@@ -7,4 +7,11 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "GliderStructs.h"
+#include "WinAPI.h"
+
+void DoLoadHouse (HWND ownerWindow);
+void BuildHouseList (HWND ownerWindow);
+void AddExtraHouse (houseSpec *newHouse);
+
 #endif

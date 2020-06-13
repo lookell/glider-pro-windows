@@ -11,9 +11,6 @@
 #include "Macintosh.h"
 
 
-#undef small // Remove <windows.h> definition, since it's not wanted here
-
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  FrameWHRect

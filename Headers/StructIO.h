@@ -3,10 +3,7 @@
 
 #include "ByteIO.h"
 #include "GliderStructs.h"
-
-// "Externs.h" is only needed for prefsInfo.
-// TODO: move prefsInfo to a separate header
-#include "Externs.h"
+#include "Prefs.h"
 
 // The following functions all return nonzero on success and zero on failure.
 
