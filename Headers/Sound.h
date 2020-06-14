@@ -10,6 +10,9 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
+extern Boolean dontLoadSounds;
+extern Boolean isSoundOn;
+
 void PlayPrioritySound (SInt16 which, SInt16 priority);
 void FlushAnyTriggerPlaying (void);
 OSErr LoadTriggerSound (SInt16 soundID);

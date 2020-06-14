@@ -16,6 +16,8 @@ typedef	SICN		*SICNList;
 typedef	SICNList	*SICNHand;
 */
 
+extern GDHandle thisGDevice;
+
 Point MyGetGlobalMouse (void);
 void ToolBoxInit (void);
 SInt16 RandomInt (SInt16 range);

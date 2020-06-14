@@ -9,6 +9,9 @@
 
 #include "MacTypes.h"
 
+extern Boolean hasScrap;
+extern Boolean scrapIsARoom;
+
 void PutRoomScrap (void);
 void PutObjectScrap (void);
 void GetRoomScrap (void);

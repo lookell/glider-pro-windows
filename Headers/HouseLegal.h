@@ -9,6 +9,8 @@
 
 #include "MacTypes.h"
 
+extern Boolean isHouseChecks;
+
 Boolean KeepObjectLegal (void);
 void CheckHouseForProblems (void);
 

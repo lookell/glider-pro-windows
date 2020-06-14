@@ -7,13 +7,20 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
+#include "GliderDefines.h"
+#include "GliderStructs.h"
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-
-extern Str32		thisHouseName;
-extern Boolean		houseUnlocked;
+extern housePtr thisHouse;
+extern linksPtr linksList;
+extern Str32 thisHouseName;
+extern SInt16 srcLocations[kMaxRoomObs];
+extern SInt16 destLocations[kMaxRoomObs];
+extern SInt16 wasFloor;
+extern SInt16 wasSuite;
+extern retroLink retroLinkList[kMaxRoomObs];
+extern Boolean houseUnlocked;
 
 Boolean CreateNewHouse (void);
 Boolean InitializeEmptyHouse (HWND ownerWindow);

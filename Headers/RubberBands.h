@@ -11,8 +11,12 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern HDC		bandsSrcMap;
-extern HDC		bandsMaskMap;
+extern bandPtr bands;
+extern Rect bandsSrcRect;
+extern Rect bandRects[3];
+extern HDC bandsSrcMap;
+extern HDC bandsMaskMap;
+extern SInt16 numBands;
 
 void HandleBands (void);
 Boolean AddBand (gliderPtr thisGlider, SInt16 h, SInt16 v, Boolean direction);

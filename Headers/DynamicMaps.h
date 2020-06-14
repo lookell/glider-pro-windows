@@ -7,7 +7,29 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "GliderStructs.h"
 #include "MacTypes.h"
+
+extern sparklePtr sparkles;
+extern flyingPtPtr flyingPoints;
+extern flamePtr flames;
+extern flamePtr tikiFlames;
+extern flamePtr bbqCoals;
+extern pendulumPtr pendulums;
+extern starPtr theStars;
+extern shredPtr shreds;
+extern Rect pointsSrc[15];
+extern SInt16 numSparkles;
+extern SInt16 numFlyingPts;
+extern SInt16 numChimes;
+extern SInt16 numFlames;
+extern SInt16 numSavedMaps;
+extern SInt16 numTikiFlames;
+extern SInt16 numCoals;
+extern SInt16 numPendulums;
+extern SInt16 clockFrame;
+extern SInt16 numStars;
+extern SInt16 numShredded;
 
 void NilSavedMaps (void);
 SInt16 BackUpToSavedMap (Rect *theRect, SInt16 where, SInt16 who);

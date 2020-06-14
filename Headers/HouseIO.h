@@ -10,6 +10,20 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
+extern Movie theMovie;
+extern Rect movieRect;
+extern HANDLE houseRefNum;
+extern HMODULE houseResFork;
+extern SInt16 wasHouseVersion;
+extern Boolean houseOpen;
+extern Boolean fileDirty;
+extern Boolean gameDirty;
+extern Boolean changeLockStateOfHouse;
+extern Boolean saveHouseLocked;
+extern Boolean houseIsReadOnly;
+extern Boolean hasMovie;
+extern Boolean tvInRoom;
+
 Boolean OpenHouse (HWND ownerWindow);
 Boolean OpenSpecificHouse (FSSpec *specs);
 Boolean SaveHouseAs (void);

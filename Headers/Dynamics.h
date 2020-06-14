@@ -7,8 +7,13 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "GliderDefines.h"
 #include "GliderStructs.h"
 #include "MacTypes.h"
+
+extern Rect breadSrc[kNumBreadPicts];
+extern dynaPtr dinahs;
+extern SInt16 numDynamics;
 
 void CheckDynamicCollision (SInt16 who, gliderPtr thisGlider, Boolean doOffset);
 Boolean DidBandHitDynamic (SInt16 who);

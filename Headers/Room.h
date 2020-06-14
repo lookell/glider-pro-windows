@@ -7,10 +7,26 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "GliderStructs.h"
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern HDC	backSrcMap;
+extern roomPtr thisRoom;
+extern Rect backSrcRect;
+extern HDC backSrcMap;
+extern SInt16 numberRooms;
+extern SInt16 thisRoomNumber;
+extern SInt16 previousRoom;
+extern SInt16 leftThresh;
+extern SInt16 rightThresh;
+extern SInt16 lastBackground;
+extern Boolean autoRoomEdit;
+extern Boolean newRoomNow;
+extern Boolean noRoomAtAll;
+extern Boolean leftOpen;
+extern Boolean rightOpen;
+extern Boolean topOpen;
+extern Boolean bottomOpen;
 
 void SetInitialTiles (SInt16 background, Boolean doRoom);
 Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v);

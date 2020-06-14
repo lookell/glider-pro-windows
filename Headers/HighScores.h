@@ -10,6 +10,10 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
+extern Str31 highBanner;
+extern Str15 highName;
+extern SInt16 lastHighScore;
+
 void DoHighScores (void);
 void SortHighScores (void);
 void ZeroHighScores (void);

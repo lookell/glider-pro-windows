@@ -21,7 +21,7 @@ typedef struct
 	Boolean		active, paused, handled;
 } marquee;
 
-extern marquee		theMarquee;
+extern marquee theMarquee;
 
 void DoMarquee (void);
 void StartMarquee (Rect *theRect);

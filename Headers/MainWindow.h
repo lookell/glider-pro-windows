@@ -10,7 +10,26 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern HDC		workSrcMap;
+extern HCURSOR handCursor;
+extern HCURSOR beamCursor;
+extern HCURSOR vertCursor;
+extern HCURSOR horiCursor;
+extern HCURSOR diagCursor;
+extern Rect workSrcRect;
+extern HDC workSrcMap;
+extern Rect mainWindowRect;
+extern HWND mainWindow;
+extern HWND menuWindow;
+extern SInt16 isEditH;
+extern SInt16 isEditV;
+extern SInt16 playOriginH;
+extern SInt16 playOriginV;
+extern SInt16 splashOriginH;
+extern SInt16 splashOriginV;
+extern SInt16 theMode;
+extern Boolean fadeGraysOut;
+extern Boolean isDoColorFade;
+extern Boolean splashDrawn;
 
 void RedrawSplashScreen (void);
 void UpdateMainWindow (void);

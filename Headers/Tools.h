@@ -10,8 +10,13 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern HDC		toolSrcMap;
-extern HWND		toolsWindow;
+extern HDC toolSrcMap;
+extern HWND toolsWindow;
+extern SInt16 isToolsH;
+extern SInt16 isToolsV;
+extern SInt16 toolSelected;
+extern SInt16 toolMode;
+extern Boolean isToolsOpen;
 
 void EraseSelectedTool (void);
 void SelectTool (SInt16 which);

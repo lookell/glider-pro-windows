@@ -12,9 +12,6 @@
 #include "ObjectEdit.h"
 
 
-#define kMaxTempManholes			8
-
-
 SInt16 GetObjectLinked (objectType *);
 void ListOneRoomsObjects (SInt16);
 

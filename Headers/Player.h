@@ -7,12 +7,27 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "GliderDefines.h"
 #include "GliderStructs.h"
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern HDC		shadowSrcMap;
-extern HDC		shadowMaskMap;
+extern gliderType theGlider;
+extern gliderType theGlider2;
+extern Rect shadowSrcRect;
+extern HDC shadowSrcMap;
+extern HDC shadowMaskMap;
+extern Rect shadowSrc[kNumShadowSrcRects];
+extern Rect gliderSrc[kNumGliderSrcRects];
+extern Rect transRect;
+extern SInt32 theScore;
+extern SInt16 fadeInSequence[kLastFadeSequence];
+extern SInt16 rightClip;
+extern SInt16 leftClip;
+extern SInt16 transRoom;
+extern Boolean shadowVisible;
+extern Boolean onePlayerLeft;
+extern Boolean playerDead;
 
 void FinishGliderUpStairs (gliderPtr thisGlider);
 void FinishGliderDownStairs (gliderPtr thisGlider);

@@ -10,6 +10,10 @@
 #include "GliderStructs.h"
 #include "MacTypes.h"
 
+extern SInt16 linkedToWhat;
+extern Boolean takingTheStairs;
+extern Boolean firstPlayer;
+
 SInt16 WhatAreWeLinkedTo (SInt16 where, Byte who);
 void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat);
 void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where);

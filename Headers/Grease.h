@@ -7,7 +7,11 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "GliderStructs.h"
 #include "MacTypes.h"
+
+extern greasePtr grease;
+extern SInt16 numGrease;
 
 void HandleGrease (void);
 SInt16 ReBackUpGrease (SInt16 where, SInt16 who);

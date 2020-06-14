@@ -9,11 +9,14 @@
 
 #pragma once
 
+#include "GliderDefines.h"
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern Rect			roomObjectRects[];
-extern SInt16		objActive;
+extern Rect roomObjectRects[kMaxRoomObs];
+extern Rect leftStartGliderSrc;
+extern Rect rightStartGliderSrc;
+extern SInt16 objActive;
 
 void DoSelectionClick (HWND hwnd, Point where, Boolean isDoubleClick);
 void DoNewObjectClick (HWND ownerWindow, Point where);

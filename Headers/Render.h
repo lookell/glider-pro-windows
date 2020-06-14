@@ -9,6 +9,14 @@
 
 #include "GliderStructs.h"
 #include "MacTypes.h"
+#include "WinAPI.h"
+
+extern Rect shieldRect;
+extern HRGN mirrorRgn;
+extern Point shieldPt;
+extern SInt16 numWork2Main;
+extern SInt16 numBack2Work;
+extern Boolean hasMirror;
 
 void AddRectToWorkRects (Rect *theRect);
 void AddRectToBackRects (Rect *theRect);

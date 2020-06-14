@@ -33,7 +33,7 @@ typedef struct
 	Boolean		hasDrag;
 } macEnviron;
 
-extern macEnviron	thisMac;
+extern macEnviron thisMac;
 
 SInt16 WhatsOurDepth (void);
 void SwitchToDepth (SInt16 newDepth, Boolean doColor);

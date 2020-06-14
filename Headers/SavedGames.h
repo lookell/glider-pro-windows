@@ -7,8 +7,11 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "GliderStructs.h"
 #include "MacTypes.h"
 #include "WinAPI.h"
+
+extern gameType smallGame;
 
 void SaveGame2 (HWND ownerWindow);
 Boolean OpenSavedGame (HWND ownerWindow);
