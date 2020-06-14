@@ -10,6 +10,8 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
+#define WC_MAINWINDOW L"GliderMainWindow"
+
 extern HCURSOR handCursor;
 extern HCURSOR beamCursor;
 extern HCURSOR vertCursor;
