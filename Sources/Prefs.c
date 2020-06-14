@@ -10,10 +10,12 @@
 #include "ByteIO.h"
 #include "DialogUtils.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "FileError.h"
 #include "Macintosh.h"
 #include "ResourceIDs.h"
+#include "StringUtils.h"
 #include "StructIO.h"
+#include "Utilities.h"
 
 
 #define	kPrefCreatorType	'ozm5'

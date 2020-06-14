@@ -7,10 +7,16 @@
 //============================================================================
 
 
+#include "AnimCursor.h"
 #include "DialogUtils.h"
-#include "Externs.h"
+#include "GliderStructs.h"
 #include "MacTypes.h"
+#include "Main.h"
+#include "Music.h"
 #include "ResourceIDs.h"
+#include "RoomGraphics.h"
+#include "Sound.h"
+#include "Utilities.h"
 
 
 #define kWNETrap				0x60
@@ -53,10 +59,6 @@ void SwitchDepthOrAbort (HWND);
 
 
 macEnviron	thisMac;
-
-extern	GDHandle	thisGDevice;
-extern	SInt16		isDepthPref;
-extern	Boolean		dontLoadMusic, dontLoadSounds;
 
 
 //==============================================================  Functions

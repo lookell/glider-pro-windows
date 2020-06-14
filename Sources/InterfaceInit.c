@@ -7,37 +7,33 @@
 //============================================================================
 
 
+#include "Coordinates.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "Events.h"
+#include "HighScores.h"
+#include "HouseIO.h"
+#include "Input.h"
+#include "Link.h"
 #include "Macintosh.h"
+#include "Main.h"
+#include "MainWindow.h"
 #include "Map.h"
+#include "Menu.h"
+#include "ObjectAdd.h"
+#include "Play.h"
+#include "Player.h"
 #include "RectUtils.h"
+#include "Render.h"
 #include "ResourceIDs.h"
+#include "Room.h"
+#include "RoomGraphics.h"
+#include "Scoreboard.h"
+#include "SelectHouse.h"
 #include "Tools.h"
+#include "Utilities.h"
 
 
 static HMENU DetachPopupMenu(HMENU rootMenu, UINT id, LPWSTR *title);
-
-
-extern	HRGN			mirrorRgn;
-extern	HWND			mapWindow, toolsWindow, linkWindow;
-extern	HWND			menuWindow;
-extern	Rect			shieldRect, boardSrcRect, localRoomsDest[];
-extern	HCURSOR			handCursor, beamCursor, vertCursor, horiCursor;
-extern	HCURSOR			diagCursor;
-extern	HMENU			theMenuBar, appleMenu, gameMenu, optionsMenu, houseMenu;
-extern	LPWSTR			appleMenuTitle, gameMenuTitle, optionsMenuTitle, houseMenuTitle;
-extern	Point			shieldPt;
-extern	SInt32			incrementModeTime;
-extern	UInt32			doubleTime;
-extern	SInt16			fadeInSequence[], idleMode;
-extern	SInt16			toolSelected, lastBackground, wasFlower, numExtraHouses;
-extern	SInt16			lastHighScore, maxFiles, willMaxFiles;
-extern	HMODULE			houseResFork;
-extern	Boolean			quitting, playing, fadeGraysOut;
-extern	Boolean			houseOpen, newRoomNow, evenFrame, menusUp, demoGoing;
-extern	Boolean			twoPlayerGame, paused, hasMirror, splashDrawn;
-extern	HACCEL			splashAccelTable, editAccelTable;
 
 
 //==============================================================  Functions

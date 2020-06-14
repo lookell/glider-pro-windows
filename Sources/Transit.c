@@ -8,8 +8,18 @@
 
 
 #include "Environ.h"
-#include "Externs.h"
+#include "House.h"
+#include "Interactions.h"
+#include "Modes.h"
+#include "Music.h"
+#include "Play.h"
+#include "Player.h"
 #include "RectUtils.h"
+#include "Room.h"
+#include "RoomGraphics.h"
+#include "Scoreboard.h"
+#include "Sound.h"
+#include "Transitions.h"
 
 
 void HandleRoomVisitation (void);
@@ -17,13 +27,6 @@ void HandleRoomVisitation (void);
 
 SInt16		linkedToWhat;
 Boolean		takingTheStairs, firstPlayer;
-
-
-extern	Rect		justRoomsRect, transRect;
-extern	SInt16		transRoom, otherPlayerEscaped;
-extern	SInt16		localNumbers[9];
-extern	Boolean		topOpen, twoPlayerGame, onePlayerLeft;
-extern	Boolean		playerDead, playerSuicide, tvOn;
 
 
 //==============================================================  Functions

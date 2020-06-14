@@ -8,11 +8,20 @@
 
 
 #include "DialogUtils.h"
-#include "Externs.h"
+#include "GliderStructs.h"
+#include "House.h"
+#include "HouseIO.h"
+#include "HouseLegal.h"
+#include "Link.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
+#include "Menu.h"
+#include "ObjectAdd.h"
 #include "ObjectEdit.h"
+#include "Objects.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "Room.h"
 
 
 #define kBlowerInitialState     1006
@@ -111,12 +120,6 @@ void DoInvisBonusObjectInfo (HWND);
 void DoTransObjectInfo (HWND);
 void DoEnemyObjectInfo (HWND);
 void DoFlowerObjectInfo (HWND);
-
-
-extern	retroLink	retroLinkList[];
-extern	SInt16		linkRoom, linkType, wasFlower;
-extern	Byte		linkObject;
-extern	Boolean		linkerIsSwitch;
 
 
 #ifndef COMPILEDEMO

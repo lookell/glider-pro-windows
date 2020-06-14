@@ -7,12 +7,16 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "Coordinates.h"
+#include "GliderDefines.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
 #include "Objects.h"
 #include "ObjectEdit.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "Utilities.h"
+#include "WinAPI.h"
 
 
 #define kHandleSideLong			9
@@ -27,10 +31,6 @@ void DrawMarquee (HDC);
 marquee		theMarquee;
 Rect		marqueeGliderRect;
 Boolean		gliderMarqueeUp;
-
-
-extern	HCURSOR		handCursor, vertCursor, horiCursor, diagCursor;
-extern	Rect		leftStartGliderSrc;
 
 
 //==============================================================  Functions

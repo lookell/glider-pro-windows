@@ -65,7 +65,7 @@ extern Rect flourescentSrc1;
 extern Rect flourescentSrc2;
 extern Rect trackLightSrc[kNumTrackLights];
 
-extern Rect appliaceSrcRect;
+extern Rect applianceSrcRect;
 extern HDC applianceSrcMap;
 extern HDC applianceMaskMap;
 extern Rect toastSrcRect;

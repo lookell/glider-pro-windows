@@ -7,9 +7,11 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "DialogUtils.h"
+#include "FileError.h"
 #include "Macintosh.h"
 #include "ResourceIDs.h"
+#include "Utilities.h"
 //#include <Gestalt.h>
 
 

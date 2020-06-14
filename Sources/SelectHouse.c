@@ -7,13 +7,17 @@
 //============================================================================
 
 
+#include "AnimCursor.h"
 #include "DialogUtils.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "Events.h"
 #include "House.h"
+#include "HouseIO.h"
 #include "Macintosh.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "StringUtils.h"
+#include "Utilities.h"
 
 
 #define kDispFiles				12
@@ -43,8 +47,6 @@ Point			lastWhereClick;
 SInt16			housesFound, thisHouseIndex, maxFiles, willMaxFiles;
 SInt16			housePage, demoHouseIndex, numExtraHouses;
 Byte			fileFirstChar[12];
-
-extern	UInt32			doubleTime;
 
 
 //==============================================================  Functions

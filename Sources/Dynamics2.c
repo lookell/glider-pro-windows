@@ -7,8 +7,15 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "DynamicMaps.h"
+#include "MainWindow.h"
+#include "Objects.h"
+#include "Play.h"
+#include "Player.h"
 #include "RectUtils.h"
+#include "Render.h"
+#include "RubberBands.h"
+#include "Sound.h"
 
 
 #define kBalloonStop		8
@@ -18,11 +25,6 @@
 #define kDartVelocity		6
 #define kDartStop			310
 #define kEnemyDropSpeed		8
-
-
-extern	dynaPtr		dinahs;
-extern	SInt16		numBands;
-extern	Boolean		evenFrame, twoPlayerGame, onePlayerLeft, playerDead;
 
 
 //==============================================================  Functions

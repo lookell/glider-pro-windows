@@ -7,9 +7,21 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "AnimCursor.h"
+#include "GliderDefines.h"
+#include "GliderStructs.h"
+#include "House.h"
+#include "HouseIO.h"
+#include "Link.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
+#include "Menu.h"
+#include "Music.h"
 #include "ObjectEdit.h"
+#include "ObjectRects.h"
+#include "Room.h"
+#include "RoomGraphics.h"
+#include "Sound.h"
 
 
 SInt16 GetObjectLinked (objectType *);
@@ -76,11 +88,6 @@ hotPtr		hotSpots;
 SInt16		nLocalObj, nHotSpots, numMasterObjects, numLocalMasterObjects;
 SInt16		numTempManholes, tvWithMovieNumber;
 Boolean		newState;
-
-extern	linksPtr	linksList;
-extern	SInt16		srcLocations[], destLocations[];
-extern	SInt16		localNumbers[];
-extern	SInt16		numNeighbors;
 
 
 //==============================================================  Functions

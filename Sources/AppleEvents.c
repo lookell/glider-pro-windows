@@ -8,10 +8,17 @@
 
 
 #include "DialogUtils.h"
-#include "Externs.h"
+#include "Events.h"
+#include "GliderDefines.h"
 #include "House.h"
-#include "MacTypes.h"
+#include "HouseIO.h"
+#include "Macintosh.h"
+#include "Main.h"
+#include "MainWindow.h"
+#include "Menu.h"
 #include "ResourceIDs.h"
+#include "SelectHouse.h"
+#include "StringUtils.h"
 
 
 #define errAEEventNotHandled		(-1708)
@@ -25,12 +32,6 @@ OSErr MyGotRequiredParams (const AppleEvent *);
 
 
 AEEventHandlerUPP	openAppAEUPP, openDocAEUPP, printDocAEUPP, quitAEUPP;
-
-
-extern	houseSpecPtr	theHousesSpecs;
-extern	SInt32			incrementModeTime;
-extern	SInt16			thisHouseIndex, splashOriginH, splashOriginV;
-extern	Boolean			quitting;
 
 
 //==============================================================  Functions

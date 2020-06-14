@@ -8,11 +8,20 @@
 
 
 #include "DialogUtils.h"
-#include "Externs.h"
+#include "GliderDefines.h"
+#include "House.h"
+#include "HouseIO.h"
+#include "HouseLegal.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
+#include "Marquee.h"
+#include "Menu.h"
 #include "ObjectEdit.h"
+#include "Objects.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "Room.h"
+#include "Utilities.h"
 
 
 #define kMaxSoundTriggers		1

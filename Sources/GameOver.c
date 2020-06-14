@@ -8,13 +8,21 @@
 //============================================================================
 
 
+#include "ColorUtils.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "HighScores.h"
+#include "House.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
+#include "Music.h"
 #include "Objects.h"
+#include "Play.h"
+#include "Player.h"
 #include "RectUtils.h"
+#include "Render.h"
 #include "ResourceIDs.h"
+#include "Sound.h"
+#include "StringUtils.h"
 #include "Utilities.h"
 
 
@@ -44,11 +52,6 @@ HDC			pageSrcMap, gameOverSrcMap, angelSrcMap;
 HDC			pageMaskMap, angelMaskMap;
 SInt16		countDown, stopPages, pagesStuck;
 Boolean		gameOver;
-
-extern	Rect		justRoomsRect;
-extern	SInt16		splashOriginH, splashOriginV, numWork2Main;
-extern	SInt16		numBack2Work;
-extern	Boolean		playing, shadowVisible, demoGoing;
 
 
 //==============================================================  Functions

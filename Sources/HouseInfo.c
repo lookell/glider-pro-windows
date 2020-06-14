@@ -7,10 +7,15 @@
 //============================================================================
 
 
-#include "Externs.h"
 #include "DialogUtils.h"
+#include "HighScores.h"
+#include "House.h"
+#include "HouseIO.h"
 #include "MacTypes.h"
+#include "Menu.h"
+#include "Play.h"
 #include "ResourceIDs.h"
+#include "Room.h"
 
 
 #define kBannerTextItem			1004
@@ -28,9 +33,6 @@ INT_PTR CALLBACK HouseFilter (HWND, UINT, WPARAM, LPARAM);
 Boolean WarnLockingHouse (HWND);
 void HowToZeroScores (HWND);
 
-
-extern	Boolean		noRoomAtAll, changeLockStateOfHouse, saveHouseLocked;
-extern	Boolean		phoneBitSet;
 
 #ifndef COMPILEDEMO
 

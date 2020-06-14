@@ -8,16 +8,24 @@
 //============================================================================
 
 
+#include "AnimCursor.h"
 #include "ByteIO.h"
 #include "DialogUtils.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "FileError.h"
 #include "House.h"
+#include "HouseIO.h"
 #include "Macintosh.h"
+#include "Main.h"
 #include "MainWindow.h"
+#include "Menu.h"
+#include "Player.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "Sound.h"
+#include "StringUtils.h"
 #include "StructIO.h"
+#include "Transitions.h"
 #include "Utilities.h"
 
 
@@ -40,9 +48,6 @@ Str31		highBanner;
 Str15		highName;
 SInt16		lastHighScore;
 Boolean		keyStroke;
-
-extern	SInt16		splashOriginH, splashOriginV;
-extern	Boolean		quickerTransitions, resumedSavedGame;
 
 
 //==============================================================  Functions

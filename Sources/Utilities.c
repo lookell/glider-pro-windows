@@ -9,19 +9,18 @@
 
 #include "Audio.h"
 #include "DialogUtils.h"
-#include "Externs.h"
+#include "Events.h"
+#include "HouseIO.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "StringUtils.h"
 #include "WinAPI.h"
 
 
 GDHandle	thisGDevice;
 UInt32		theSeed;
-
-
-extern	Boolean		switchedOut;
-extern	HMODULE		houseResFork;
 
 
 //==============================================================  Functions
@@ -63,7 +62,7 @@ void ToolBoxInit (void)
 	wcMain.cbClsExtra = 0;
 	wcMain.cbWndExtra = 0;
 	wcMain.hInstance = HINST_THISCOMPONENT;
-	wcMain.hIcon = LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(1));
+	wcMain.hIcon = LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDI_APPL));
 	wcMain.hCursor = NULL;
 	wcMain.hbrBackground = GetStockObject(BLACK_BRUSH);
 	wcMain.lpszMenuName = NULL;

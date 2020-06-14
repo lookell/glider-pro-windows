@@ -8,14 +8,21 @@
 //============================================================================
 
 
+#include "ColorUtils.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "House.h"
 #include "Macintosh.h"
+#include "Main.h"
 #include "MainWindow.h"
+#include "Play.h"
 #include "RectUtils.h"
+#include "Render.h"
 #include "ResourceIDs.h"
 #include "Room.h"
+#include "StringUtils.h"
+#include "Transitions.h"
 #include "Utilities.h"
+#include "WinAPI.h"
 
 
 void DrawBanner (Point *);
@@ -24,9 +31,6 @@ void DrawBannerMessage (Point);
 
 SInt16		numStarsRemaining;
 Boolean		bannerStarCountOn;
-
-extern	Rect		justRoomsRect;
-extern	Boolean		quickerTransitions, demoGoing, isUseSecondScreen;
 
 
 //==============================================================  Functions

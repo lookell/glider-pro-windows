@@ -7,7 +7,11 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "Grease.h"
+#include "House.h"
+#include "Objects.h"
+#include "Sound.h"
+#include "Trip.h"
 
 
 #define kMaxTriggers			16

@@ -9,12 +9,18 @@
 
 #include "DialogUtils.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "GliderDefines.h"
 #include "House.h"
+#include "HouseIO.h"
 #include "Macintosh.h"
+#include "Menu.h"
+#include "ObjectEdit.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "Room.h"
 #include "Utilities.h"
+#include "WinAPI.h"
+#include "WindowUtils.h"
 
 
 #define kMapRoomsHigh			9	// was 7
@@ -43,8 +49,6 @@ ControlHandle	mapHScroll, mapVScroll;
 SInt16			isMapH, isMapV, mapRoomsHigh, mapRoomsWide;
 SInt16			mapLeftRoom, mapTopRoom;
 Boolean			isMapOpen, doPrettyMap;
-
-extern	Boolean		doBitchDialogs;
 
 
 //==============================================================  Functions

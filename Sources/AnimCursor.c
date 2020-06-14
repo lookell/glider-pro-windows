@@ -8,7 +8,6 @@
 
 
 #include "Environ.h"
-#include "Externs.h"
 #include "MacTypes.h"
 
 

@@ -27,6 +27,7 @@ extern Boolean leftOpen;
 extern Boolean rightOpen;
 extern Boolean topOpen;
 extern Boolean bottomOpen;
+extern Boolean doBitchDialogs;
 
 void SetInitialTiles (SInt16 background, Boolean doRoom);
 Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v);

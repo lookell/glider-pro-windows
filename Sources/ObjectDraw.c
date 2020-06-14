@@ -7,12 +7,13 @@
 //============================================================================
 
 
+#include "ColorUtils.h"
 #include "Environ.h"
-#include "Externs.h"
 #include "Macintosh.h"
 #include "Objects.h"
 #include "RectUtils.h"
 #include "Room.h"
+#include "Utilities.h"
 
 
 #define k8WhiteColor			0

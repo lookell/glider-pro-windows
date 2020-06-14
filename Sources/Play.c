@@ -7,14 +7,37 @@
 //============================================================================
 
 
+#include "Banner.h"
+#include "DynamicMaps.h"
+#include "Dynamics.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "Events.h"
+#include "GameOver.h"
 #include "House.h"
+#include "HouseIO.h"
+#include "Input.h"
+#include "Interactions.h"
 #include "Macintosh.h"
+#include "Main.h"
 #include "MainWindow.h"
+#include "Menu.h"
+#include "Modes.h"
+#include "Music.h"
+#include "Player.h"
 #include "RectUtils.h"
+#include "Render.h"
 #include "ResourceIDs.h"
+#include "Room.h"
+#include "RoomGraphics.h"
+#include "RubberBands.h"
+#include "SavedGames.h"
 #include "Scoreboard.h"
+#include "SelectHouse.h"
+#include "Sound.h"
+#include "StringUtils.h"
+#include "Transitions.h"
+#include "Triggers.h"
+#include "Utilities.h"
 
 
 #define kInitialGliders			2
@@ -53,21 +76,6 @@ SInt32		gameFrame;
 SInt16		batteryTotal, bandsTotal, foilTotal, mortals;
 Boolean		playing, evenFrame, twoPlayerGame, showFoil, demoGoing;
 Boolean		doBackground, playerSuicide, phoneBitSet, tvOn;
-
-extern	HWND			menuWindow;
-extern	HMENU			theMenuBar;
-extern	houseSpecPtr	theHousesSpecs;
-extern	demoPtr			demoData;
-extern	gameType		smallGame;
-extern	Rect			gliderSrc[kNumGliderSrcRects];
-extern	Rect			boardDestRect, boardSrcRect;
-extern	SInt32			incrementModeTime;
-extern	SInt16			numBands, otherPlayerEscaped, demoIndex, demoHouseIndex;
-extern	SInt16			splashOriginH, splashOriginV, countDown, thisHouseIndex;
-extern	SInt16			numStarsRemaining, numChimes, saidFollow;
-extern	Boolean			quitting, isMusicOn, gameOver, hasMirror, onePlayerLeft;
-extern	Boolean			isPlayMusicIdle, failedMusic, quickerTransitions;
-extern	Boolean			switchedOut;
 
 
 //==============================================================  Functions

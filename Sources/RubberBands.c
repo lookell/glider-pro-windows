@@ -7,8 +7,17 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "Grease.h"
+#include "Interactions.h"
+#include "MainWindow.h"
+#include "Objects.h"
+#include "Play.h"
+#include "Player.h"
 #include "RectUtils.h"
+#include "Render.h"
+#include "Room.h"
+#include "Sound.h"
+#include "Triggers.h"
 
 
 #define kRubberBandVelocity		20
@@ -26,11 +35,6 @@ Rect		bandRects[3];
 HDC			bandsSrcMap;
 HDC			bandsMaskMap;
 SInt16		numBands, bandHitLast;
-
-extern	hotPtr		hotSpots;
-extern	SInt32		gameFrame;
-extern	SInt16		nHotSpots, leftThresh, rightThresh;
-extern	Boolean		twoPlayerGame, onePlayerLeft, playerDead;
 
 
 //==============================================================  Functions

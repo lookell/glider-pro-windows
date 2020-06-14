@@ -7,8 +7,25 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "Banner.h"
+#include "DynamicMaps.h"
+#include "GameOver.h"
+#include "Grease.h"
+#include "MainWindow.h"
+#include "Modes.h"
+#include "ObjectDraw.h"
+#include "Objects.h"
+#include "Play.h"
+#include "Player.h"
 #include "RectUtils.h"
+#include "Render.h"
+#include "Room.h"
+#include "RoomGraphics.h"
+#include "Scoreboard.h"
+#include "Sound.h"
+#include "Transit.h"
+#include "Triggers.h"
+#include "Trip.h"
 
 
 #define kFloorVentLift			-6
@@ -41,12 +58,6 @@ void WebGlider (gliderPtr, Rect *);
 
 
 SInt16		otherPlayerEscaped, activeRectEscaped;
-
-extern	hotPtr		hotSpots;
-extern	SInt16		nHotSpots, leftThresh, rightThresh, thisTiles[];
-extern	SInt16		localNumbers[], thisBackground, numStarsRemaining;
-extern	Boolean		leftOpen, rightOpen, topOpen, bottomOpen, evenFrame;
-extern	Boolean		twoPlayerGame, newState, onePlayerLeft, playerDead;
 
 
 //==============================================================  Functions

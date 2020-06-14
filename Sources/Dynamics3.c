@@ -7,8 +7,12 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "MainWindow.h"
+#include "Objects.h"
+#include "Play.h"
 #include "RectUtils.h"
+#include "RoomGraphics.h"
+#include "Utilities.h"
 
 
 #define kBalloonStart		310
@@ -18,10 +22,6 @@
 
 dynaPtr		dinahs;
 SInt16		numDynamics;
-
-extern	Rect		breadSrc[];
-extern	SInt16		numLights;
-extern	Boolean		evenFrame;
 
 
 //==============================================================  Functions

@@ -7,16 +7,30 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "ColorUtils.h"
+#include "Events.h"
 #include "House.h"
+#include "HouseIO.h"
+#include "HouseLegal.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "Marquee.h"
+#include "Menu.h"
+#include "Music.h"
+#include "ObjectAdd.h"
+#include "ObjectDraw.h"
+#include "ObjectInfo.h"
 #include "Objects.h"
 #include "Play.h"
+#include "Player.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Room.h"
+#include "RoomInfo.h"
+#include "StringUtils.h"
+#include "Tools.h"
+#include "Utilities.h"
+#include "WindowUtils.h"
 
 
 SInt16 FindObjectSelected (Point);
@@ -32,12 +46,6 @@ Rect		leftStartGliderSrc, rightStartGliderSrc;
 Rect		leftStartGliderDest, rightStartGliderDest;
 SInt16		objActive;
 Boolean		isFirstRoom;
-
-
-extern	retroLink	retroLinkList[];
-extern	Rect		gliderSrc[kNumGliderSrcRects];
-extern	SInt16		toolSelected, toolMode;
-extern	Boolean		noRoomAtAll;
 
 
 //==============================================================  Functions

@@ -7,13 +7,17 @@
 //============================================================================
 
 
+#include "Dynamics.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "GliderStructs.h"
+#include "Grease.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "Objects.h"
 #include "RectUtils.h"
+#include "Render.h"
 #include "Room.h"
+#include "Sound.h"
 #include "Utilities.h"
 
 
@@ -34,12 +38,6 @@ Rect		pointsSrc[15];
 SInt16		numSparkles, numFlyingPts, numChimes;
 SInt16		numFlames, numSavedMaps, numTikiFlames, numCoals;
 SInt16		numPendulums, clockFrame, numStars, numShredded;
-
-
-extern	savedType	savedMaps[];
-extern	Rect		flame[], tikiFlame[], coals[], pendulumSrc[];
-extern	Rect		starSrc[];
-extern	SInt16		numGrease, numDynamics;
 
 
 //==============================================================  Functions

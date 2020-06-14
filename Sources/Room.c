@@ -8,14 +8,23 @@
 
 
 #include "ByteIO.h"
+#include "ColorUtils.h"
 #include "DialogUtils.h"
-#include "Externs.h"
 #include "House.h"
+#include "HouseIO.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
+#include "Map.h"
+#include "Menu.h"
+#include "ObjectDrawAll.h"
+#include "ObjectEdit.h"
+#include "ObjectRects.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "RoomInfo.h"
+#include "StringUtils.h"
 #include "StructIO.h"
+#include "Utilities.h"
 
 
 #define kYesDoDeleteRoom		IDOK
@@ -33,9 +42,6 @@ SInt16		leftThresh, rightThresh, lastBackground;
 Boolean		autoRoomEdit, newRoomNow, noRoomAtAll;
 Boolean		leftOpen, rightOpen, topOpen, bottomOpen;
 Boolean		doBitchDialogs;
-
-extern	SInt16		tempTiles[];
-extern	HMODULE		houseResFork;
 
 
 //==============================================================  Functions
@@ -419,7 +425,7 @@ Boolean RoomNumExists (SInt16 roomNum)
 void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 {
 #ifndef COMPILEDEMO
-	SInt16		wasFloor, wasSuite;
+	SInt16		wasFloor_, wasSuite_;
 	Boolean		firstDeleted;
 
 	if ((theMode != kEditMode) || (noRoomAtAll))
@@ -433,8 +439,8 @@ void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 
 	DeselectObject();
 
-	wasFloor = thisHouse->rooms[thisRoomNumber].floor;
-	wasSuite = thisHouse->rooms[thisRoomNumber].suite;
+	wasFloor_ = thisHouse->rooms[thisRoomNumber].floor;
+	wasSuite_ = thisHouse->rooms[thisRoomNumber].suite;
 	firstDeleted = (thisHouse->firstRoom == thisRoomNumber);	// is room "first"
 	thisRoom->suite = kRoomIsEmpty;
 	thisHouse->rooms[thisRoomNumber].suite = kRoomIsEmpty;
@@ -443,7 +449,7 @@ void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 	if (noRoomAtAll)
 		thisRoomNumber = kRoomIsEmpty;
 	else
-		SetToNearestNeighborRoom(wasFloor, wasSuite);
+		SetToNearestNeighborRoom(wasFloor_, wasSuite_);
 
 	if (firstDeleted)
 	{
@@ -610,7 +616,7 @@ SInt16 GetNeighborRoomNumber (SInt16 which)
 
 //--------------------------------------------------------------  SetToNearestNeighborRoom
 
-void SetToNearestNeighborRoom (SInt16 wasFloor, SInt16 wasSuite)
+void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_)
 {
 	// searches in a clockwise spiral pattern (from thisRoom) for a…
 	// legitimate neighboring room - then sets thisRoom to it
@@ -628,8 +634,8 @@ void SetToNearestNeighborRoom (SInt16 wasFloor, SInt16 wasSuite)
 
 	do
 	{
-		testH = wasSuite + h;
-		testV = wasFloor + v;
+		testH = wasSuite_ + h;
+		testV = wasFloor_ + v;
 
 		if (RoomExists(testH, testV, &testRoomNum))		// if a legitimate room
 		{

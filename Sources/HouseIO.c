@@ -7,15 +7,28 @@
 //============================================================================
 
 
+#include "Banner.h"
 #include "ByteIO.h"
 #include "DialogUtils.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "FileError.h"
+#include "HighScores.h"
 #include "House.h"
+#include "HouseLegal.h"
 #include "Macintosh.h"
+#include "Main.h"
+#include "MainWindow.h"
+#include "Menu.h"
 #include "ObjectEdit.h"
+#include "Objects.h"
+#include "Play.h"
 #include "ResourceIDs.h"
+#include "Room.h"
+#include "RoomGraphics.h"
+#include "SelectHouse.h"
+#include "StringUtils.h"
 #include "StructIO.h"
+#include "Utilities.h"
 
 
 #define kSaveChanges			IDYES
@@ -36,12 +49,6 @@ SInt16		wasHouseVersion;
 Boolean		houseOpen, fileDirty, gameDirty;
 Boolean		changeLockStateOfHouse, saveHouseLocked, houseIsReadOnly;
 Boolean		hasMovie, tvInRoom;
-
-extern	houseSpecPtr	theHousesSpecs;
-extern	SInt16			thisHouseIndex, tvWithMovieNumber;
-extern	SInt16			numberRooms, housesFound;
-extern	Boolean			noRoomAtAll, quitting, wardBitSet;
-extern	Boolean			phoneBitSet, bannerStarCountOn;
 
 
 //==============================================================  Functions

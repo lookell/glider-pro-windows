@@ -7,14 +7,12 @@
 //============================================================================
 
 
+#include "Dynamics.h"
 #include "Environ.h"
-#include "Externs.h"
-
-
-extern	dynaPtr		dinahs;
-extern	hotPtr		hotSpots;
-extern	SInt16		numDynamics, tvWithMovieNumber;
-extern	Boolean		tvOn;
+#include "Interactions.h"
+#include "Objects.h"
+#include "Play.h"
+#include "Sound.h"
 
 
 //==============================================================  Functions

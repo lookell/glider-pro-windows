@@ -7,17 +7,26 @@
 //============================================================================
 
 
+#include "AnimCursor.h"
 #include "ByteIO.h"
-#include "Externs.h"
+#include "DynamicMaps.h"
+#include "Dynamics.h"
 #include "Environ.h"
 #include "GameOver.h"
+#include "GliderDefines.h"
+#include "Grease.h"
+#include "Input.h"
 #include "MacTypes.h"
 #include "MainWindow.h"
 #include "Objects.h"
+#include "Play.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Room.h"
 #include "RoomGraphics.h"
+#include "RoomInfo.h"
+#include "RubberBands.h"
+#include "SelectHouse.h"
 #include "StructIO.h"
 #include "Utilities.h"
 #include "WinAPI.h"
@@ -26,26 +35,6 @@
 void InitClutter (void);
 void InitSupport (void);
 void InitAngel (void);
-
-
-extern	Rect			suppSrcRect, justRoomsRect;
-extern	Rect			tileSrcRect, angelSrcRect;
-extern	GDHandle		thisGDevice;
-extern	CGrafPtr		tileSrcMap;
-extern	houseSpecPtr	theHousesSpecs;
-extern	hotPtr			hotSpots;
-extern	sparklePtr		sparkles;
-extern	flyingPtPtr		flyingPoints;
-extern	flamePtr		flames, tikiFlames, bbqCoals;
-extern	pendulumPtr		pendulums;
-extern	savedType		savedMaps[];
-extern	bandPtr			bands;
-extern	greasePtr		grease;
-extern	starPtr			theStars;
-extern	shredPtr		shreds;
-extern	dynaPtr			dinahs;
-extern	demoPtr			demoData;
-extern	SInt16			maxFiles;
 
 
 //==============================================================  Functions

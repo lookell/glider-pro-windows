@@ -8,12 +8,15 @@
 
 
 #include "Environ.h"
-#include "Externs.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
 #include "Marquee.h"
+#include "Menu.h"
 #include "ObjectEdit.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "Utilities.h"
+#include "WindowUtils.h"
 
 
 #define kHoriCoordItem		1001

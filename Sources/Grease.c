@@ -7,13 +7,15 @@
 //============================================================================
 
 
+#include "DynamicMaps.h"
 #include "Environ.h"
-#include "Externs.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "Objects.h"
 #include "RectUtils.h"
+#include "Render.h"
 #include "Room.h"
+#include "Sound.h"
 
 
 #define kGreaseIdle			0
@@ -27,11 +29,6 @@ void BackupGrease (Rect *, SInt16, Boolean);
 
 greasePtr	grease;
 SInt16		numGrease;
-
-extern	hotPtr		hotSpots;
-extern	savedType	savedMaps[];
-extern	Point		shieldPt;
-extern	Rect		greaseSrcRt[], greaseSrcLf[], shieldRect;
 
 
 //==============================================================  Functions

@@ -7,13 +7,34 @@
 //============================================================================
 
 
+#include "About.h"
+#include "Coordinates.h"
 #include "DialogUtils.h"
-#include "Externs.h"
+#include "Events.h"
+#include "HighScores.h"
 #include "House.h"
+#include "HouseInfo.h"
+#include "HouseIO.h"
+#include "Link.h"
 #include "Macintosh.h"
+#include "Main.h"
+#include "MainWindow.h"
+#include "Map.h"
+#include "Marquee.h"
+#include "Music.h"
 #include "ObjectEdit.h"
+#include "ObjectInfo.h"
+#include "Objects.h"
+#include "Play.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "Room.h"
+#include "RoomInfo.h"
+#include "SavedGames.h"
+#include "SelectHouse.h"
+#include "Settings.h"
+#include "StringUtils.h"
+#include "Tools.h"
 
 
 #define kSheWantsNewGame		1001
@@ -32,15 +53,6 @@ void HeyYourPissingAHighScore (HWND);
 HMENU		theMenuBar, appleMenu, gameMenu, optionsMenu, houseMenu;
 LPWSTR		appleMenuTitle, gameMenuTitle, optionsMenuTitle, houseMenuTitle;
 Boolean		menusUp, resumedSavedGame;
-
-
-extern	SInt32		incrementModeTime;
-extern	SInt16		demoHouseIndex, wasHouseVersion;
-extern	SInt16		splashOriginH, splashOriginV, numberRooms;
-extern	Boolean		quitting, noRoomAtAll, twoPlayerGame;
-extern	Boolean		isMapOpen, isToolsOpen, isPlayMusicIdle;
-extern	Boolean		isCoordOpen, failedMusic, splashDrawn;
-extern	Boolean		houseOpen;
 
 
 //==============================================================  Functions

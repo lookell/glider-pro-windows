@@ -7,8 +7,11 @@
 //============================================================================
 
 
+#include "DynamicMaps.h"
+#include "Dynamics.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "Grease.h"
+#include "HouseIO.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "Objects.h"
@@ -17,6 +20,7 @@
 #include "RectUtils.h"
 #include "Room.h"
 #include "RubberBands.h"
+#include "Sound.h"
 
 
 #define kMaxGarbageRects		48
@@ -42,23 +46,6 @@ Point		shieldPt;
 SInt32		nextFrame;
 SInt16		numWork2Main, numBack2Work;
 Boolean		hasMirror;
-
-extern	bandPtr		bands;
-extern	sparklePtr	sparkles;
-extern	flyingPtPtr	flyingPoints;
-extern	flamePtr	flames, tikiFlames, bbqCoals;
-extern	pendulumPtr	pendulums;
-extern	starPtr		theStars;
-extern	shredPtr	shreds;
-extern	Rect		sparkleSrc[];
-extern	Rect		pointsSrc[];
-extern	Rect		bandRects[];
-extern	savedType	savedMaps[];
-extern	Rect		shadowSrc[], justRoomsRect, movieRect;
-extern	SInt16		numBands, numStars, numShredded;
-extern	SInt16		numSparkles, numFlyingPts, numPendulums, clockFrame;
-extern	SInt16		numFlames, numSavedMaps, numTikiFlames, numCoals;
-extern	Boolean		evenFrame, shadowVisible, twoPlayerGame, tvOn;
 
 
 //==============================================================  Functions

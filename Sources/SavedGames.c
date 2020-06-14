@@ -7,13 +7,22 @@
 //============================================================================
 
 
+#include "Banner.h"
 #include "ByteIO.h"
 #include "DialogUtils.h"
-#include "Externs.h"
+#include "FileError.h"
 #include "House.h"
+#include "HouseIO.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
+#include "Play.h"
+#include "Player.h"
 #include "ResourceIDs.h"
+#include "Room.h"
+#include "SelectHouse.h"
 #include "StructIO.h"
+#include "StringUtils.h"
+#include "Utilities.h"
 
 
 #define kSavedGameVersion		0x0200
@@ -24,10 +33,6 @@ void SavedGameMismatchError (HWND, StringPtr);
 
 
 gameType	smallGame;
-
-extern	houseSpecPtr	theHousesSpecs;
-extern	SInt16			numStarsRemaining, thisHouseIndex;
-extern	Boolean			twoPlayerGame;
 
 
 //==============================================================  Functions

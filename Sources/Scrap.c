@@ -7,8 +7,17 @@
 //============================================================================
 
 /*
-#include "Externs.h"
 #include "Environ.h"
+#include "GliderDefines.h"
+#include "HouseIO.h"
+#include "Macintosh.h"
+#include "Map.h"
+#include "Menu.h"
+#include "ObjectEdit.h"
+#include "ObjectInfo.h"
+#include "RectUtils.h"
+#include "Room.h"
+#include "WinAPI.h"
 #include <Drag.h>
 
 
@@ -16,10 +25,6 @@ Boolean DropLocationIsTrash (AEDesc *);
 
 
 Boolean		hasScrap, scrapIsARoom;
-
-extern	HWND		mapWindow;
-extern	Rect		roomObjectRects[];
-extern	short		objActive;
 
 
 //==============================================================  Functions

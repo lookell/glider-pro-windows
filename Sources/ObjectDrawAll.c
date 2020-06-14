@@ -7,16 +7,24 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "DynamicMaps.h"
+#include "Dynamics.h"
 #include "Environ.h"
+#include "Grease.h"
+#include "House.h"
+#include "HouseIO.h"
+#include "Link.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
+#include "Music.h"
+#include "ObjectDraw.h"
+#include "ObjectRects.h"
+#include "Objects.h"
+#include "Play.h"
 #include "RectUtils.h"
-
-
-extern	Rect		localRoomsDest[], movieRect;
-extern	SInt16		localNumbers[];
-extern	SInt16		numLights, tvWithMovieNumber;
-extern	Boolean		tvOn;
+#include "Render.h"
+#include "Room.h"
+#include "RoomGraphics.h"
 
 
 //==============================================================  Functions

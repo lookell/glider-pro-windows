@@ -9,10 +9,26 @@
 
 #include "DialogUtils.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "Events.h"
 #include "House.h"
+#include "HouseIO.h"
+#include "HouseLegal.h"
+#include "Input.h"
 #include "MacTypes.h"
+#include "Main.h"
+#include "MainWindow.h"
+#include "Map.h"
+#include "Music.h"
+#include "Play.h"
+#include "Player.h"
 #include "ResourceIDs.h"
+#include "Room.h"
+#include "RoomGraphics.h"
+#include "SelectHouse.h"
+#include "Sound.h"
+#include "StringUtils.h"
+#include "Utilities.h"
+
 #include <shlwapi.h> // for DLLGETVERSIONPROC and DLLGETVERSIONINFO
 
 
@@ -95,13 +111,6 @@ Str15		leftName, rightName, batteryName, bandName;
 Boolean		nextRestartChange;
 
 static	BYTE		tempLeftKey, tempRightKey, tempBattKey, tempBandKey;
-
-extern	SInt16		numNeighbors, isDepthPref, maxFiles, willMaxFiles;
-extern	Boolean		isDoColorFade, isPlayMusicIdle, isUseSecondScreen;
-extern	Boolean		isHouseChecks, doBitchDialogs;
-extern	Boolean		isEscPauseKey, failedMusic, isSoundOn, doBackground;
-extern	Boolean		isMusicOn, quickerTransitions, doAutoDemo;
-extern	Boolean		changeLockStateOfHouse, saveHouseLocked, doPrettyMap;
 
 
 //==============================================================  Functions

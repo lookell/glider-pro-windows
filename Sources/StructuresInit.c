@@ -8,28 +8,22 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "DynamicMaps.h"
+#include "Dynamics.h"
+#include "GliderDefines.h"
 #include "Macintosh.h"
+#include "Map.h"
+#include "ObjectEdit.h"
 #include "Objects.h"
 #include "Play.h"
 #include "Player.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "RoomGraphics.h"
 #include "RubberBands.h"
 #include "Scoreboard.h"
 #include "Utilities.h"
-
-
-extern	Rect		glidSrcRect, leftStartGliderSrc, rightStartGliderSrc;
-extern	Rect		gliderSrc[], shadowSrcRect, shadowSrc[];
-extern	Rect		bandsSrcRect, bandRects[], boardSrcRect, boardDestRect;
-extern	Rect		boardTSrcRect, boardTDestRect, badgeSrcRect;
-extern	Rect		boardGSrcRect, boardGDestRect, boardPSrcRect, boardPDestRect;
-extern	Rect		boardPQDestRect, boardGQDestRect, badgesBlankRects[];
-extern	Rect		badgesBadgesRects[], badgesDestRects[];
-extern	Rect		nailSrcRect, sparkleSrc[];
-extern	Rect		pointsSrc[], breadSrc[];
-extern	SInt16		wasScoreboardMode;
+#include "WinAPI.h"
 
 
 //==============================================================  Functions

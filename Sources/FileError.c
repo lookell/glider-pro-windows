@@ -8,7 +8,6 @@
 
 
 #include "DialogUtils.h"
-#include "Externs.h"
 #include "Macintosh.h"
 #include "ResourceIDs.h"
 

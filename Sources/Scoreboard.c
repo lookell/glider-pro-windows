@@ -7,10 +7,18 @@
 //============================================================================
 
 
+#include "ColorUtils.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "Interactions.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
+#include "Play.h"
+#include "Player.h"
 #include "RectUtils.h"
+#include "Room.h"
+#include "RoomGraphics.h"
+#include "Sound.h"
+#include "StringUtils.h"
 
 
 #define kGrayBackgroundColor	251

@@ -9,8 +9,8 @@
 
 #include "DialogUtils.h"
 #include "Environ.h"
-#include "Externs.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 

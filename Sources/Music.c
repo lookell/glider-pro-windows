@@ -10,9 +10,12 @@
 #include "Audio.h"
 #include "DialogUtils.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "GliderDefines.h"
+#include "HouseIO.h"
 #include "MacTypes.h"
 #include "ResourceIDs.h"
+#include "Sound.h"
+#include "Utilities.h"
 
 
 #define kBaseBufferMusicID			2000
@@ -46,7 +49,6 @@ static DWORD lastWrittenCursor, musicChannelByteSize;
 static HANDLE musicTimerHandle;
 static CRITICAL_SECTION musicCriticalSection;
 
-
 WaveData		theMusicData[kMaxMusic];
 SInt16			musicSoundID, musicCursor;
 SInt16			musicScore[kLastMusicPiece];
@@ -54,9 +56,6 @@ SInt16			gameScore[kLastGamePiece];
 SInt16			musicMode;
 Boolean			isMusicOn, isPlayMusicIdle, isPlayMusicGame;
 Boolean			failedMusic, dontLoadMusic;
-
-
-extern	Boolean		isSoundOn;
 
 
 //==============================================================  Functions

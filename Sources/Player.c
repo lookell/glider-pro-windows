@@ -7,10 +7,19 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "DynamicMaps.h"
+#include "GameOver.h"
+#include "Interactions.h"
+#include "MainWindow.h"
+#include "Modes.h"
 #include "Play.h"
 #include "RectUtils.h"
+#include "Render.h"
 #include "ResourceIDs.h"
+#include "Scoreboard.h"
+#include "Sound.h"
+#include "Transit.h"
+#include "Utilities.h"
 
 
 #define kGravity				3
@@ -54,11 +63,6 @@ SInt32		theScore;
 SInt16		fadeInSequence[kLastFadeSequence];
 SInt16		rightClip, leftClip, transRoom;
 Boolean		shadowVisible, onePlayerLeft, playerDead;
-
-
-extern	SInt16		numShredded, otherPlayerEscaped;
-extern	Boolean		playing, twoPlayerGame, gameOver, hasMirror;
-extern	Boolean		takingTheStairs, playerSuicide;
 
 
 //==============================================================  Functions

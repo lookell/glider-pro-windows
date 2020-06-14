@@ -7,10 +7,17 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "DynamicMaps.h"
+#include "GliderDefines.h"
+#include "House.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
+#include "Objects.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "Room.h"
+#include "Sound.h"
+#include "Utilities.h"
 
 
 #define kFloorColumnWide		4
@@ -23,10 +30,6 @@
 
 
 SInt16 AddActiveRect (Rect *, SInt16, SInt16, Boolean, Boolean);
-
-
-extern	hotPtr		hotSpots;
-extern	SInt16		nHotSpots, numChimes;
 
 
 //==============================================================  Functions

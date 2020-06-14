@@ -7,18 +7,21 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "House.h"
+#include "MainWindow.h"
+#include "ObjectRects.h"
+#include "Objects.h"
+#include "Play.h"
+#include "Player.h"
 #include "RectUtils.h"
+#include "Render.h"
+#include "Room.h"
+#include "Scoreboard.h"
+#include "Sound.h"
+#include "Transit.h"
 
 
 SInt16		saidFollow;
-
-extern	Rect		gliderSrc[];
-extern	Rect		transRect;
-extern	SInt16		fadeInSequence[], linkedToWhat;
-extern	SInt16		rightClip, leftClip, transRoom;
-extern	Boolean		hasMirror, shadowVisible, firstPlayer, twoPlayerGame;
-extern	Boolean		onePlayerLeft, playerDead;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  StartGliderFadingIn

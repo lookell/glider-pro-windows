@@ -8,8 +8,8 @@
 
 
 #include "Environ.h"
-#include "Externs.h"
 #include "Macintosh.h"
+#include "WinAPI.h"
 
 
 //==============================================================  Functions

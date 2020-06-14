@@ -45,13 +45,10 @@ target_sources(
   Headers/Dynamics.h
   Headers/Environ.h
   Headers/Events.h
-  Headers/Externs.h
   Headers/FileError.h
   Headers/GameOver.h
   Headers/GliderDefines.h
-  Headers/GliderProtos.h
   Headers/GliderStructs.h
-  Headers/GliderVars.h
   Headers/Grease.h
   Headers/HighScores.h
   Headers/House.h

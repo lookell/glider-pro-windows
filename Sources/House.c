@@ -7,11 +7,26 @@
 //============================================================================
 
 
+#include "AnimCursor.h"
+#include "Banner.h"
 #include "DialogUtils.h"
-#include "Externs.h"
+#include "FileError.h"
+#include "HighScores.h"
+#include "HouseIO.h"
+#include "Link.h"
 #include "Macintosh.h"
+#include "Map.h"
+#include "Menu.h"
+#include "ObjectEdit.h"
+#include "Play.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "Room.h"
+#include "RoomGraphics.h"
+#include "SavedGames.h"
+#include "StringUtils.h"
+#include "Utilities.h"
+#include "WindowUtils.h"
 
 
 #define kGoToFirstRadio		1002
@@ -32,13 +47,6 @@ SInt16		destLocations[kMaxRoomObs];
 SInt16		wasFloor, wasSuite;
 retroLink	retroLinkList[kMaxRoomObs];
 Boolean		houseUnlocked;
-
-
-extern	gameType	smallGame;
-extern	SInt16		numberRooms, mapLeftRoom, mapTopRoom, numStarsRemaining;
-extern	Boolean		houseOpen, noRoomAtAll;
-extern	Boolean		twoPlayerGame, wardBitSet, phoneBitSet;
-extern	HMODULE		houseResFork;
 
 
 //==============================================================  Functions

@@ -9,8 +9,8 @@
 /*============================================================*/
 
 
-#include "Externs.h"
 #include "Macintosh.h"
+#include "WinAPI.h"
 
 
 SInt16			barGraphHori = 0;

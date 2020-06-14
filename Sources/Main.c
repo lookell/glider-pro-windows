@@ -8,11 +8,38 @@
 //============================================================================
 
 
+#include "AnimCursor.h"
+#include "AppleEvents.h"
 #include "Audio.h"
+#include "Coordinates.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "Events.h"
+#include "HighScores.h"
 #include "House.h"
+#include "HouseIO.h"
+#include "HouseLegal.h"
+#include "Input.h"
+#include "InterfaceInit.h"
+#include "Link.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
+#include "Map.h"
+#include "Marquee.h"
+#include "Menu.h"
+#include "Music.h"
+#include "Play.h"
+#include "Player.h"
+#include "Prefs.h"
+#include "Room.h"
+#include "RoomGraphics.h"
+#include "SelectHouse.h"
+#include "Settings.h"
+#include "Sound.h"
+#include "StringUtils.h"
+#include "StructuresInit.h"
+#include "Tools.h"
+#include "Utilities.h"
+#include "Validate.h"
 #include "WinAPI.h"
 
 
@@ -28,26 +55,6 @@ SInt16		isVolume, wasVolume;
 SInt16		isDepthPref, dataResFile, numSMWarnings;
 Boolean		quitting, doZooms, quickerTransitions, isUseSecondScreen;
 
-
-extern HMENU		theMenuBar, appleMenu, gameMenu, optionsMenu, houseMenu;
-extern Str31		highBanner;
-extern Str15		leftName, rightName, batteryName, bandName;
-extern Str15		highName;
-//extern SInt32		encryptedNumber;
-extern HANDLE		houseRefNum;
-extern SInt32		incrementModeTime;
-extern SInt16		maxFiles, numNeighbors, willMaxFiles;
-extern SInt16		isEditH, isEditV, isMapH, isMapV;
-extern SInt16		isToolsH, isToolsV, isCoordH, isCoordV;
-extern SInt16		isLinkH, isLinkV, toolMode, mapLeftRoom, mapTopRoom;
-extern SInt16		mapRoomsWide, mapRoomsHigh, wasFloor, wasSuite;
-extern Boolean		isMusicOn, isSoundOn, isPlayMusicIdle, isHouseChecks;
-extern Boolean		houseOpen, isDoColorFade, isEscPauseKey;
-extern Boolean		autoRoomEdit, doAutoDemo, doBackground;
-extern Boolean		isMapOpen, isToolsOpen, isCoordOpen;
-extern Boolean		doPrettyMap, doBitchDialogs;
-extern Boolean		dontLoadMusic, dontLoadSounds;
-//extern Boolean		didValidation;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  ReadInPrefs

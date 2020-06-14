@@ -8,11 +8,22 @@
 
 
 #include "DialogUtils.h"
-#include "Externs.h"
+#include "Interactions.h"
 #include "Macintosh.h"
+#include "Main.h"
 #include "MainWindow.h"
+#include "Modes.h"
+#include "Play.h"
+#include "Player.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "RoomGraphics.h"
+#include "RubberBands.h"
+#include "SavedGames.h"
+#include "Scoreboard.h"
+#include "Sound.h"
+#include "Transit.h"
+#include "Utilities.h"
 
 
 #define kNormalThrust		5
@@ -38,10 +49,6 @@ KeyMap		theKeys;
 DialogPtr	saveDial;
 SInt16		demoIndex, batteryFrame;
 Boolean		isEscPauseKey, paused, batteryWasEngaged;
-
-extern	SInt32		gameFrame;
-extern	SInt16		otherPlayerEscaped;
-extern	Boolean		quitting, playing, onePlayerLeft, twoPlayerGame, demoGoing;
 
 
 //==============================================================  Functions

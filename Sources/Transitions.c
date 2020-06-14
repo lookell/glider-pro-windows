@@ -8,10 +8,11 @@
 
 
 #include "Environ.h"
-#include "Externs.h"
+#include "GliderDefines.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
+#include "Utilities.h"
 
 
 //==============================================================  Functions

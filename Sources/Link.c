@@ -8,10 +8,15 @@
 
 
 #include "Environ.h"
-#include "Externs.h"
+#include "House.h"
+#include "HouseIO.h"
+#include "MainWindow.h"
+#include "Menu.h"
 #include "ObjectEdit.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "Room.h"
+#include "Utilities.h"
 
 
 #define kLinkButton     1300

@@ -7,24 +7,29 @@
 //============================================================================
 
 
+#include "DynamicMaps.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "HouseIO.h"
+#include "Interactions.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
+#include "Modes.h"
+#include "Music.h"
 #include "Objects.h"
+#include "Play.h"
+#include "Player.h"
 #include "RectUtils.h"
+#include "Render.h"
 #include "Room.h"
+#include "RubberBands.h"
+#include "Sound.h"
+#include "Utilities.h"
 
 
 #define kShoveVelocity		8
 
 
 Rect		breadSrc[kNumBreadPicts];
-
-extern	dynaPtr		dinahs;
-extern	bandPtr		bands;
-extern	SInt16		numBands, tvWithMovieNumber;
-extern	Boolean		evenFrame, twoPlayerGame, onePlayerLeft, playerDead;
 
 
 //==============================================================  Functions

@@ -8,9 +8,12 @@
 
 
 #include "DialogUtils.h"
-#include "Externs.h"
+#include "GliderDefines.h"
+#include "HouseIO.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
 #include "RectUtils.h"
+#include "Room.h"
 #include "ResourceIDs.h"
 #include "Utilities.h"
 
@@ -49,10 +52,6 @@ SInt16		tempTiles[kNumTiles];
 SInt16		tileOver, tempBack, cursorIs;
 Boolean		originalLeftOpen, originalTopOpen, originalRightOpen, originalBottomOpen;
 Boolean		originalFloor;
-
-extern	HCURSOR		handCursor, beamCursor;
-extern	HMODULE		houseResFork;
-extern	SInt16		lastBackground;
 
 
 //==============================================================  Functions

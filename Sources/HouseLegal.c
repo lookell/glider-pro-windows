@@ -7,10 +7,18 @@
 //============================================================================
 
 
-#include "Externs.h"
+#include "AnimCursor.h"
+#include "Banner.h"
+#include "House.h"
 #include "Macintosh.h"
 #include "ObjectEdit.h"
+#include "ObjectRects.h"
+#include "Objects.h"
 #include "RectUtils.h"
+#include "Room.h"
+#include "StringUtils.h"
+#include "Utilities.h"
+#include "WindowUtils.h"
 
 
 void WrapBannerAndTrailer (void);
@@ -28,8 +36,6 @@ void CheckForStaircasePairs (void);
 
 SInt16		houseErrors, wasRoom;
 Boolean		isHouseChecks;
-
-extern	SInt16		numberRooms;
 
 
 //==============================================================  Functions

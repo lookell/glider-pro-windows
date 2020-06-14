@@ -9,7 +9,7 @@
 
 #include "Audio.h"
 #include "DialogUtils.h"
-#include "Externs.h"
+#include "HouseIO.h"
 #include "MacTypes.h"
 #include "ResourceIDs.h"
 
@@ -40,9 +40,6 @@ Boolean					dontLoadSounds, isSoundOn, failedSound;
 LPDIRECTSOUNDBUFFER8	channels[kNumSoundChannels];
 SInt16					priorities[kNumSoundChannels];
 SInt16					soundsPlaying[kNumSoundChannels];
-
-
-extern HMODULE		houseResFork;
 
 
 //==============================================================  Functions

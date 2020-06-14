@@ -7,13 +7,25 @@
 //============================================================================
 
 
+#include "Coordinates.h"
 #include "DialogUtils.h"
 #include "Environ.h"
-#include "Externs.h"
 #include "House.h"
+#include "Link.h"
 #include "Macintosh.h"
+#include "Main.h"
+#include "MainWindow.h"
+#include "Map.h"
+#include "Marquee.h"
+#include "Menu.h"
+#include "Music.h"
 #include "ObjectEdit.h"
+#include "Play.h"
 #include "ResourceIDs.h"
+#include "Room.h"
+#include "RoomInfo.h"
+#include "SelectHouse.h"
+#include "Tools.h"
 
 
 void HandleMouseEvent (EventRecord *);
@@ -30,14 +42,6 @@ Point			lastWhere;
 SInt16			idleMode;
 Boolean			doAutoDemo, switchedOut;
 HACCEL			splashAccelTable, editAccelTable;
-
-extern	HWND		mapWindow, toolsWindow, linkWindow;
-extern	HWND		menuWindow;
-extern	SInt16		isEditH, isEditV, isMapH, isMapV, isToolsH, isToolsV;
-extern	SInt16		isLinkH, isLinkV, isCoordH, isCoordV;
-extern	SInt16		demoHouseIndex;
-extern	Boolean		quitting, isMusicOn, failedMusic;
-extern	Boolean		autoRoomEdit, newRoomNow, isPlayMusicIdle;
 
 
 //==============================================================  Functions

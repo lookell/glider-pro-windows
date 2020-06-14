@@ -7,8 +7,9 @@
 //============================================================================
 
 
-#include "Externs.h"
 #include "Macintosh.h"
+#include "StringUtils.h"
+#include "WinAPI.h"
 
 
 #define kActive						0

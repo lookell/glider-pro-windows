@@ -7,13 +7,26 @@
 //============================================================================
 
 
+#include "DynamicMaps.h"
+#include "Dynamics.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "House.h"
+#include "HouseIO.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
+#include "ObjectDrawAll.h"
+#include "Objects.h"
+#include "Player.h"
 #include "RectUtils.h"
+#include "Render.h"
 #include "ResourceIDs.h"
 #include "Room.h"
+#include "RubberBands.h"
+#include "Sound.h"
+#include "Transit.h"
+#include "Triggers.h"
+#include "Trip.h"
+#include "Utilities.h"
 
 
 void LoadGraphicSpecial (HDC, SInt16);
@@ -31,11 +44,6 @@ Rect		houseRect;
 SInt16		numNeighbors, numLights, thisTiles[kNumTiles];
 SInt16		localNumbers[9], thisBackground;
 Boolean		isStructure[9], wardBitSet;
-
-extern	savedType	savedMaps[];
-extern	Rect		tempManholes[];
-extern	SInt16		numTempManholes, tvWithMovieNumber;
-extern	Boolean		shadowVisible, takingTheStairs;
 
 
 //==============================================================  Functions

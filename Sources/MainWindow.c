@@ -8,12 +8,30 @@
 //============================================================================
 
 
+#include "ColorUtils.h"
+#include "Coordinates.h"
 #include "Environ.h"
-#include "Externs.h"
+#include "Events.h"
 #include "House.h"
+#include "HouseIO.h"
+#include "Link.h"
 #include "Macintosh.h"
+#include "Main.h"
+#include "Map.h"
+#include "Marquee.h"
+#include "Menu.h"
+#include "Music.h"
+#include "ObjectEdit.h"
+#include "Play.h"
 #include "RectUtils.h"
+#include "Render.h"
 #include "ResourceIDs.h"
+#include "Room.h"
+#include "Scoreboard.h"
+#include "StringUtils.h"
+#include "Tools.h"
+#include "Transitions.h"
+#include "Utilities.h"
 
 
 #define kMainWindowID			128
@@ -44,17 +62,6 @@ SInt16			theMode;
 Boolean			fadeGraysOut, isDoColorFade, splashDrawn;
 
 static	HCURSOR		mainWindowCursor;
-
-extern	HWND		mapWindow, toolsWindow, linkWindow;
-extern	GDHandle	thisGDevice;
-extern	SInt16		toolSelected;
-extern	Rect		justRoomsRect;
-extern	Boolean		noRoomAtAll, isUseSecondScreen;
-extern	Boolean		quickerTransitions, houseIsReadOnly;
-extern	Boolean		quitting, switchedOut, isPlayMusicIdle;
-extern	Boolean		isMusicOn, failedMusic;
-extern	SInt32		incrementModeTime;
-extern	HMENU		theMenuBar;
 
 
 //==============================================================  Functions

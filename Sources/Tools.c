@@ -8,11 +8,14 @@
 
 
 #include "Environ.h"
-#include "Externs.h"
+#include "GliderDefines.h"
 #include "Macintosh.h"
+#include "Menu.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "StringUtils.h"
 #include "Utilities.h"
+#include "WindowUtils.h"
 
 
 #define kToolsHigh			4
