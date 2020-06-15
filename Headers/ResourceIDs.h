@@ -9,6 +9,12 @@
 #define RT_DEMO L"DEMO"
 #endif
 
+#ifdef RC_INVOKED
+#define RT_ACUR ACUR
+#else
+#define RT_ACUR L"ACUR"
+#endif
+
 #define kJinjurStringBase			1000
 #define kPrefMainStringBase			1100
 #define rFileErrorStringsBase		1200
@@ -189,6 +195,8 @@
 #define kBeachBallCursor03      158
 #define kBeachBallCursor02      159
 #define kBeachBallCursor01      160
+
+#define rAcurID                 128
 
 #define kMarqueePatListID       128
 

@@ -7,6 +7,7 @@
 //============================================================================
 
 
+#include "AnimCursor.h"
 #include "Banner.h"
 #include "DynamicMaps.h"
 #include "Dynamics.h"
@@ -242,7 +243,7 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 
 	twoPlayerGame = false;
 	theMode = kSplashMode;
-	//InitCursor();
+	InitCursor();
 	if (isPlayMusicIdle)
 	{
 		if (!isMusicOn)

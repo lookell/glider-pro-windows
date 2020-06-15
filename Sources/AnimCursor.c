@@ -7,33 +7,34 @@
 //============================================================================
 
 
+#include "ByteIO.h"
 #include "Environ.h"
 #include "MacTypes.h"
+#include "MainWindow.h"
+#include "ResourceIDs.h"
+#include "Utilities.h"
+#include "WinAPI.h"
 
 
-#define	rAcurID					128
-#define rHandCursorID			1000
-
-
-typedef struct
+typedef struct acurRec
 {
-	SInt16			n;
-	SInt16			index;
-	union
+	SInt16 n;
+	SInt16 index;
+	union acurFrame
 	{
-		Handle		cursorHdl;
-		SInt16		resID;
-	} frame[1];
-} acurRec, *acurPtr, **acurHandle;
+		HCURSOR cursorHdl;
+		uint16_t resID;
+	} *frame;
+} acurRec, *acurPtr;
 
 
-Boolean GetMonoCursors (acurHandle);
-Boolean GetColorCursors (acurHandle);
-void InitAnimatedCursor (acurHandle);
+Boolean GetMonoCursors (acurPtr);
+Boolean GetColorCursors (acurPtr);
+Boolean ReadAcurResource (WORD, acurPtr);
+void InitAnimatedCursor (WORD);
 
 
-acurHandle		animCursorH = nil;
-Boolean			useColorCursor = false;
+static acurRec animCursor = { 0 };
 
 
 //==============================================================  Functions
@@ -41,104 +42,145 @@ Boolean			useColorCursor = false;
 
 // Loads b&w cursors (for animated beach ball).
 
-Boolean GetMonoCursors (acurHandle ballCursH)
+Boolean GetMonoCursors (acurPtr ballCurs)
 {
-	return false;
-#if 0
-	short			i, j;
-	CursHandle		cursHdl;
+	SInt16 i, j;
+	HCURSOR cursHdl;
 
-	if (ballCursH)							// Were we passed a legit acur handle?
+	if (ballCurs)
 	{
-		j = (*ballCursH)->n;				// Get number of 'frames' in the acur
-		for (i = 0; i < j; i++)				// Start walking the frames
+		j = ballCurs->n;
+		for (i = 0; i < j; i++)
 		{
-			cursHdl = GetCursor((*ballCursH)->frame[i].resID);
-			if (cursHdl == nil)		// Did the cursor load? It didn't?...
-			{								// Well then, toss what we got.
+			cursHdl = (HCURSOR)LoadImage(HINST_THISCOMPONENT,
+				MAKEINTRESOURCE(ballCurs->frame[i].resID),
+				IMAGE_CURSOR, 0, 0, LR_MONOCHROME);
+			if (cursHdl == NULL)
+			{
 				for (j = 0; j < i; j++)
-					DisposeHandle((*ballCursH)->frame[j].cursorHdl);
-				return(false);				// And report this to mother.
-			}								// However!...
-			else							// If cursor loaded ok...
-			{								// Detach it from the resource map...
-				DetachResource((Handle)cursHdl);	// And assign to our struct
-				(*ballCursH)->frame[i].cursorHdl = (Handle)cursHdl;
+				{
+					DestroyCursor(ballCurs->frame[j].cursorHdl);
+				}
+				return false;
+			}
+			else
+			{
+				ballCurs->frame[i].cursorHdl = cursHdl;
 			}
 		}
 	}
-	return(true);
-#endif
+	return true;
 }
 
 //--------------------------------------------------------------  GetColorCursors
 
 // Loads color cursors (for animated beach ball).
 
-Boolean GetColorCursors (acurHandle ballCursH)
+Boolean GetColorCursors (acurPtr ballCurs)
 {
-	return false;
-#if 0
-	short			i, j;
-	CCrsrHandle		cursHdl;
-	Boolean			result = true;
+	SInt16 i, j;
+	HCURSOR cursHdl;
 
-	if (ballCursH)
+	if (ballCurs)
 	{
-		j = (*ballCursH)->n;				// Get the number of cursors
-		HideCursor();						// Hide the cursor
-		for (i = 0; i < j; i++)				// Walk through the acur resource
+		j = ballCurs->n;
+		for (i = 0; i < j; i++)
 		{
-			cursHdl = GetCCursor((*ballCursH)->frame[i].resID);	// Get the cursor
-			if (cursHdl == nil)		// Make sure a real cursor was returned
-			{								// If not, trash all cursors loaded
+			cursHdl = (HCURSOR)LoadImage(HINST_THISCOMPONENT,
+				MAKEINTRESOURCE(ballCurs->frame[i].resID),
+				IMAGE_CURSOR, 0, 0, LR_DEFAULTCOLOR);
+			if (cursHdl == NULL)
+			{
 				for (j = 0; j < i; j++)
-					DisposeCCursor((CCrsrHandle)(*ballCursH)->frame[j].cursorHdl);
-				result = false;				// Tell calling proc we failed
-				break;						// And break out of the loop
+				{
+					DestroyCursor(ballCurs->frame[j].cursorHdl);
+				}
+				return false;
 			}
-			else							// But, if the cursor loaded ok
-			{								// add it to our list or cursor handles
-				(*ballCursH)->frame[i].cursorHdl = (Handle)cursHdl;
-				SetCCursor((CCrsrHandle)(*ballCursH)->frame[i].cursorHdl);
+			else
+			{
+				ballCurs->frame[i].cursorHdl = cursHdl;
 			}
 		}
-		InitCursor();						// Show the cursor again (as arrow)
 	}
-	return(result);							// Return to calling proc w/ results
-#endif
+	return true;
+}
+
+//--------------------------------------------------------------  ReadAcurResource
+
+Boolean ReadAcurResource (WORD acurID, acurPtr ballCurs)
+{
+	HRSRC resInfo;
+	DWORD resSize;
+	HGLOBAL resHandle;
+	LPVOID resData;
+	byteio resReader;
+	uint16_t i, count, cursID;
+
+	resInfo = FindResource(HINST_THISCOMPONENT, MAKEINTRESOURCE(acurID), RT_ACUR);
+	if (resInfo == NULL)
+		return false;
+	resSize = SizeofResource(HINST_THISCOMPONENT, resInfo);
+	if (resSize == 0)
+		return false;
+	resHandle = LoadResource(HINST_THISCOMPONENT, resInfo);
+	if (resHandle == NULL)
+		return false;
+	resData = LockResource(resHandle);
+	if (resData == NULL)
+		return false;
+
+	ballCurs->n = 0;
+	ballCurs->index = 0;
+	ballCurs->frame = NULL;
+
+	if (!byteio_init_memory_reader(&resReader, resData, resSize))
+		return false;
+	if (!byteio_read_le_u16(&resReader, &count))
+		goto failed;
+	ballCurs->n = count;
+	ballCurs->frame = calloc(count, sizeof(*ballCurs->frame));
+	if (ballCurs->frame == NULL)
+		goto failed;
+	for (i = 0; i < count; i++)
+	{
+		if (!byteio_read_le_u16(&resReader, &cursID))
+			goto failed;
+		ballCurs->frame[i].resID = cursID;
+	}
+
+	byteio_close(&resReader);
+	return true;
+
+failed:
+	ballCurs->n = 0;
+	ballCurs->index = 0;
+	free(ballCurs->frame);
+	ballCurs->frame = NULL;
+	byteio_close(&resReader);
+	return false;
 }
 
 //--------------------------------------------------------------  InitAnimatedCursor
 
 // Loads and sets up animated beach ball cursor structures.
 
-void InitAnimatedCursor (acurHandle ballCursH)
+void InitAnimatedCursor (WORD acurID)
 {
-	return;
-#if 0
-	Boolean			useColor;
+	acurRec ballCurs = { 0 };
+	Boolean useColor;
 
 	useColor = thisMac.hasColor;
-	if (ballCursH == nil)
-		ballCursH = (void *)GetResource('acur', 128);
-	if (ballCursH && ballCursH != animCursorH)
-	{
-		HNoPurge((Handle)ballCursH);
-		MoveHHi((Handle)ballCursH);
-		HLock((Handle)ballCursH);
-		if (useColor)
-			useColor = GetColorCursors(ballCursH);
-		if (!useColor && !GetMonoCursors(ballCursH))
-			RedAlert(kErrFailedResourceLoad);
-		DisposCursors();
-		animCursorH = ballCursH;
-		useColorCursor = useColor;
-		(*ballCursH)->index = 0;
-	}
-	else
+
+	if (!ReadAcurResource(acurID, &ballCurs))
 		RedAlert(kErrFailedResourceLoad);
-#endif
+	if (useColor)
+		useColor = GetColorCursors(&ballCurs);
+	if (!useColor && !GetMonoCursors(&ballCurs))
+		RedAlert(kErrFailedResourceLoad);
+	DisposCursors();
+	animCursor = ballCurs;
+	animCursor.index = 0;
 }
 
 //--------------------------------------------------------------  LoadCursors
@@ -148,10 +190,7 @@ void InitAnimatedCursor (acurHandle ballCursH)
 
 void LoadCursors (void)
 {
-	return;
-#if 0
-	InitAnimatedCursor((acurHandle)GetResource('acur', rAcurID));
-#endif
+	InitAnimatedCursor(rAcurID);
 }
 
 //--------------------------------------------------------------  DisposCursors
@@ -160,33 +199,35 @@ void LoadCursors (void)
 
 void DisposCursors (void)
 {
-	return;
-#if 0
-	register short		i, j;
+	SInt16 i, j;
 
-	if (animCursorH != nil)
+	if (animCursor.frame != NULL)
 	{
-		j = (*animCursorH)->n;
-		if (useColorCursor)
+		j = animCursor.n;
+		for (i = 0; i < j; i++)
 		{
-			for (i = 0; i < j; i++)
+			if (animCursor.frame[i].cursorHdl != NULL)
 			{
-				if ((*animCursorH)->frame[i].cursorHdl != nil)
-					DisposeCCursor((CCrsrHandle)(*animCursorH)->frame[i].cursorHdl);
+				DestroyCursor(animCursor.frame[i].cursorHdl);
+				animCursor.frame[i].cursorHdl = NULL;
 			}
 		}
-		else
-		{
-			for (i = 0; i < j; i++)
-			{
-				if ((*animCursorH)->frame[i].cursorHdl != nil)
-					DisposeHandle((Handle)(*animCursorH)->frame[i].cursorHdl);
-			}
-		}
-		ReleaseResource((Handle)animCursorH);
-		animCursorH = nil;
+		free(animCursor.frame);
+		animCursor.frame = NULL;
 	}
-#endif
+}
+
+//--------------------------------------------------------------  InitCursor
+
+// Set the cursor to the standard arrow cursor.
+
+void InitCursor (void)
+{
+	HCURSOR arrowCursor;
+
+	arrowCursor = LoadCursor(NULL, IDC_ARROW);
+	SetCursor(arrowCursor);
+	SetMainWindowCursor(arrowCursor);
 }
 
 //--------------------------------------------------------------  IncrementCursor
@@ -195,28 +236,25 @@ void DisposCursors (void)
 
 void IncrementCursor (void)
 {
-	return;
-#if 0
-	if (animCursorH == 0)
-		InitAnimatedCursor(nil);
-	if (animCursorH)
+	HCURSOR waitCursor;
+
+	waitCursor = NULL;
+	if (animCursor.frame == NULL)
+		InitAnimatedCursor(rAcurID);
+	if (animCursor.frame)
 	{
-		(*animCursorH)->index++;
-		(*animCursorH)->index %= (*animCursorH)->n;
-		if (useColorCursor)
-		{
-			SetCCursor((CCrsrHandle)(*animCursorH)->
-					frame[(*animCursorH)->index].cursorHdl);
-		}
-		else
-		{
-			SetCursor((CursPtr)*(*animCursorH)->
-					frame[(*animCursorH)->index].cursorHdl);
-		}
+		animCursor.index++;
+		animCursor.index %= animCursor.n;
+		waitCursor = animCursor.frame[animCursor.index].cursorHdl;
 	}
-	else
-		SetCursor((CursPtr)*GetCursor(watchCursor));
-#endif
+
+	if (waitCursor == NULL)
+		waitCursor = LoadCursor(NULL, IDC_WAIT);
+	if (waitCursor)
+	{
+		SetCursor(waitCursor);
+		SetMainWindowCursor(waitCursor);
+	}
 }
 
 //--------------------------------------------------------------  DecrementCursor
@@ -225,29 +263,26 @@ void IncrementCursor (void)
 
 void DecrementCursor (void)
 {
-	return;
-#if 0
-	if (animCursorH == 0)
-		InitAnimatedCursor(nil);
-	if (animCursorH)
+	HCURSOR waitCursor;
+
+	waitCursor = NULL;
+	if (animCursor.frame == NULL)
+		InitAnimatedCursor(rAcurID);
+	if (animCursor.frame)
 	{
-		(*animCursorH)->index--;
-		if (((*animCursorH)->index) < 0)
-			(*animCursorH)->index = ((*animCursorH)->n) - 1;
-		if (useColorCursor)
-		{
-			SetCCursor((CCrsrHandle)(*animCursorH)->
-					frame[(*animCursorH)->index].cursorHdl);
-		}
-		else
-		{
-			SetCursor((CursPtr)*(*animCursorH)->
-					frame[(*animCursorH)->index].cursorHdl);
-		}
+		animCursor.index--;
+		if (animCursor.index < 0)
+			animCursor.index = animCursor.n - 1;
+		waitCursor = animCursor.frame[animCursor.index].cursorHdl;
 	}
-	else
-		SetCursor((CursPtr)*GetCursor(watchCursor));
-#endif
+
+	if (waitCursor == NULL)
+		waitCursor = LoadCursor(NULL, IDC_WAIT);
+	if (waitCursor)
+	{
+		SetCursor(waitCursor);
+		SetMainWindowCursor(waitCursor);
+	}
 }
 
 //--------------------------------------------------------------  SpinCursor
@@ -256,17 +291,13 @@ void DecrementCursor (void)
 
 void SpinCursor (SInt16 incrementIndex)
 {
-	return;
-#if 0
-	UInt32		dummyLong;
-	short		i;
+	SInt16 i;
 
 	for (i = 0; i < incrementIndex; i++)
 	{
 		IncrementCursor();
-		Delay(1, &dummyLong);
+		DelayTicks(1);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  BackSpinCursor
@@ -275,16 +306,12 @@ void SpinCursor (SInt16 incrementIndex)
 
 void BackSpinCursor (SInt16 decrementIndex)
 {
-	return;
-#if 0
-	UInt32		dummyLong;
-	short		i;
+	SInt16 i;
 
 	for (i = 0; i < decrementIndex; i++)
 	{
 		DecrementCursor();
-		Delay(1, &dummyLong);
+		DelayTicks(1);
 	}
-#endif
 }
 

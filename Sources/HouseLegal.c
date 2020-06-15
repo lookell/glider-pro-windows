@@ -1158,7 +1158,7 @@ void CheckHouseForProblems (void)
 		}
 	}
 
-	//InitCursor();
+	InitCursor();
 	CloseMessageWindow();
 	ForceThisRoom(wasRoom);
 	objActive = wasActive;

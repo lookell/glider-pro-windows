@@ -7,6 +7,7 @@
 //============================================================================
 
 
+#include "AnimCursor.h"
 #include "Audio.h"
 #include "DialogUtils.h"
 #include "Events.h"
@@ -71,7 +72,7 @@ void ToolBoxInit (void)
 	RegisterClassEx(&wcMain);
 
 	InitRandomLongQUS();
-	//InitCursor();
+	InitCursor();
 	switchedOut = false;
 }
 

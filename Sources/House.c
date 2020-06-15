@@ -764,7 +764,7 @@ void ConvertHouseVer1To2 (void)
 
 	thisHouse->version = kHouseVersion;
 
-	//InitCursor();
+	InitCursor();
 	CloseMessageWindow();
 	ForceThisRoom(wasRoom);
 }

@@ -8,6 +8,7 @@
 
 
 #include "About.h"
+#include "AnimCursor.h"
 #include "Coordinates.h"
 #include "DialogUtils.h"
 #include "Events.h"
@@ -434,7 +435,7 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 			OpenMainWindow();
 			OpenCloseEditWindows();
 		}
-		//InitCursor();
+		InitCursor();
 		UpdateMenus(true);
 #endif
 		break;

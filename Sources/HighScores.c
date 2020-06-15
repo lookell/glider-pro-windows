@@ -76,7 +76,7 @@ void DoHighScores (void)
 		DissBitsChunky(&workSrcRect);
 	else
 		DissBits(&workSrcRect);
-	//InitCursor();
+	InitCursor();
 	DelayTicks(60);
 	WaitForInputEvent(30);
 

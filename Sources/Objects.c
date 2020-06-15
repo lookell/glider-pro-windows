@@ -983,7 +983,7 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 	DrawThisRoomsObjects();
 	GenerateRetroLinks();
 
-	//InitCursor();
+	InitCursor();
 }
 #endif
 

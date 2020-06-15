@@ -367,7 +367,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	PlayPrioritySound(kBirdSound, kBirdPriority);
 	DelayTicks(6);
-	InitializeMenus();					//InitCursor();
+	InitializeMenus();					InitCursor();
 
 #if BUILD_ARCADE_VERSION
 //	HideMenuBarOld();

@@ -8,6 +8,7 @@
 //============================================================================
 
 
+#include "AnimCursor.h"
 #include "ColorUtils.h"
 #include "Coordinates.h"
 #include "Environ.h"
@@ -752,7 +753,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			else
 			{
 				// deactivated during gameplay
-				//InitCursor();
+				InitCursor();
 				switchedOut = true;
 				if (isPlayMusicGame && isMusicOn)
 					StopTheMusic();
@@ -785,7 +786,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 					}
 				}
 				switchedOut = false;
-				//InitCursor()
+				InitCursor();
 				if ((isPlayMusicIdle) && (theMode != kEditMode))
 				{
 					OSErr theErr = StartMusic();
@@ -806,7 +807,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			{
 				// deactivated during splash or edit mode
 				switchedOut = true;
-				//InitCursor();
+				InitCursor();
 				if ((isMusicOn) && (theMode != kEditMode))
 					StopTheMusic();
 			}

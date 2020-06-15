@@ -11,6 +11,7 @@
 
 void LoadCursors (void);
 void DisposCursors (void);
+void InitCursor (void);
 void IncrementCursor (void);
 void DecrementCursor (void);
 void SpinCursor (SInt16 incrementIndex);
