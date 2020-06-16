@@ -476,6 +476,8 @@ void HandleTheMessage (MSG *message)
 {
 	if (IsWindow(coordWindow) && IsDialogMessage(coordWindow, message))
 		return;
+	if (IsWindow(linkWindow) && IsDialogMessage(linkWindow, message))
+		return;
 	if (theMode == kSplashMode)
 	{
 		if (TranslateAccelerator(mainWindow, splashAccelTable, message))
