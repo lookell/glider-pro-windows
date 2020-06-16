@@ -127,7 +127,7 @@ void CenterMapOnRoom (SInt16 h, SInt16 v)
 	if (mapWindow != NULL)
 	{
 		scrollInfo.cbSize = sizeof(scrollInfo);
-		scrollInfo.fMask = SIF_POS | SIF_DISABLENOSCROLL;
+		scrollInfo.fMask = SIF_POS;
 
 		scrollInfo.nPos = mapLeftRoom;
 		SetScrollInfo(mapWindow, SB_HORZ, &scrollInfo, TRUE);
@@ -385,12 +385,10 @@ void ResizeMapWindow (WINDOWPOS *windowPos)
 
 	scrollInfo.cbSize = sizeof(scrollInfo);
 
-	scrollInfo.fMask = SIF_RANGE | SIF_DISABLENOSCROLL;
-	scrollInfo.nMin = 0;
-	scrollInfo.nMax = kMaxNumRoomsH - mapRoomsWide;
+	scrollInfo.fMask = SIF_PAGE | SIF_DISABLENOSCROLL;
+	scrollInfo.nPage = mapRoomsWide;
 	SetScrollInfo(mapWindow, SB_HORZ, &scrollInfo, TRUE);
-	scrollInfo.nMin = 0;
-	scrollInfo.nMax = kMaxNumRoomsV - mapRoomsHigh;
+	scrollInfo.nPage = mapRoomsHigh;
 	SetScrollInfo(mapWindow, SB_VERT, &scrollInfo, TRUE);
 
 	scrollInfo.fMask = SIF_POS;
@@ -455,16 +453,16 @@ void OpenMapWindow (void)
 		QSetRect(&activeRoomRect, 0, 0, 1, 1);
 
 		scrollInfo.cbSize = sizeof(scrollInfo);
-		scrollInfo.fMask = SIF_POS | SIF_RANGE | SIF_DISABLENOSCROLL;
+		scrollInfo.fMask = SIF_RANGE | SIF_PAGE | SIF_DISABLENOSCROLL;
 
 		scrollInfo.nMin = 0;
-		scrollInfo.nMax = kMaxNumRoomsH - mapRoomsWide;
-		scrollInfo.nPos = mapLeftRoom;
+		scrollInfo.nMax = kMaxNumRoomsH - 1;
+		scrollInfo.nPage = mapRoomsWide;
 		SetScrollInfo(mapWindow, SB_HORZ, &scrollInfo, TRUE);
 
 		scrollInfo.nMin = 0;
-		scrollInfo.nMax = kMaxNumRoomsV - mapRoomsHigh;
-		scrollInfo.nPos = mapTopRoom;
+		scrollInfo.nMax = kMaxNumRoomsV - 1;
+		scrollInfo.nPage = mapRoomsHigh;
 		SetScrollInfo(mapWindow, SB_VERT, &scrollInfo, TRUE);
 
 		CenterMapOnRoom(thisRoom->suite, thisRoom->floor);
