@@ -46,6 +46,7 @@ target_sources(
   Headers/Environ.h
   Headers/Events.h
   Headers/FileError.h
+  Headers/FrameTimer.h
   Headers/GameOver.h
   Headers/GliderDefines.h
   Headers/GliderStructs.h
@@ -121,6 +122,7 @@ target_sources(
   Sources/Environ.c
   Sources/Events.c
   Sources/FileError.c
+  Sources/FrameTimer.c
   Sources/GameOver.c
   Sources/Grease.c
   Sources/HighScores.c

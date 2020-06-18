@@ -10,9 +10,11 @@
 
 #include "ColorUtils.h"
 #include "Environ.h"
+#include "FrameTimer.h"
 #include "HighScores.h"
 #include "House.h"
 #include "Macintosh.h"
+#include "Main.h"
 #include "MainWindow.h"
 #include "Music.h"
 #include "Objects.h"
@@ -159,16 +161,15 @@ void SetUpFinalScreen (void)
 void DoGameOverStarAnimation (void)
 {
 	#define		kStarFalls	8
-	MSG			msg;
+	BOOL		messageReceived;
+	MSG			theMessage;
 	Rect		angelDest;
-	SInt32		nextLoop;
 	SInt16		which, i, count, pass;
 	Boolean		noInteruption;
 
 	angelDest = angelSrcRect;
 	QOffsetRect(&angelDest, -96, 0);
 	noInteruption = true;
-	nextLoop = MillisToTicks(GetTickCount()) + 2;
 	count = 0;
 	pass = 0;
 
@@ -223,19 +224,24 @@ void DoGameOverStarAnimation (void)
 		numWork2Main = 0;
 		numBack2Work = 0;
 
-		do
+		while (!quitting)
 		{
-			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+			WaitUntilNextFrameOrMessage(&messageReceived);
+			if (messageReceived == FALSE)
+				break;
+
+			while (PeekMessage(&theMessage, NULL, 0, 0, PM_REMOVE))
 			{
-				if (msg.message == WM_QUIT)
+				if (theMessage.message == WM_QUIT)
 				{
-					PostQuitMessage((int)msg.wParam);
+					PostQuitMessage((int)theMessage.wParam);
+					quitting = true;
 					noInteruption = false;
 					break;
 				}
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-				switch (msg.message)
+				TranslateMessage(&theMessage);
+				DispatchMessage(&theMessage);
+				switch (theMessage.message)
 				{
 				case WM_KEYDOWN:
 				case WM_LBUTTONDOWN:
@@ -247,8 +253,6 @@ void DoGameOverStarAnimation (void)
 				}
 			}
 		}
-		while ((SInt32)MillisToTicks(GetTickCount()) < nextLoop);
-		nextLoop = MillisToTicks(GetTickCount()) + 2;
 
 		if (pass < 80)
 			pass++;
@@ -463,8 +467,8 @@ void DrawPages (void)
 
 void DoDiedGameOver (void)
 {
-	MSG			msg;
-	SInt32		nextLoop;
+	MSG			theMessage;
+	BOOL		messageReceived;
 	Boolean		userAborted;
 
 	userAborted = false;
@@ -472,39 +476,41 @@ void DoDiedGameOver (void)
 	CopyRectMainToWork(&workSrcRect);
 	CopyRectMainToBack(&workSrcRect);
 
-	nextLoop = MillisToTicks(GetTickCount()) + 2;
 	while (pagesStuck < 8)
 	{
 		HandlePages();
 		DrawPages();
-		do
+		while (!quitting)
 		{
-			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+			WaitUntilNextFrameOrMessage(&messageReceived);
+			if (messageReceived == FALSE)
+				break;
+
+			while (PeekMessage(&theMessage, NULL, 0, 0, PM_REMOVE))
 			{
-				if (msg.message == WM_QUIT)
+				if (theMessage.message == WM_QUIT)
 				{
-					PostQuitMessage((int)msg.wParam);
+					PostQuitMessage((int)theMessage.wParam);
+					quitting = true;
 					pagesStuck = 8;
 					userAborted = true;
 					break;
 				}
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-				switch (msg.message)
+				TranslateMessage(&theMessage);
+				DispatchMessage(&theMessage);
+				switch (theMessage.message)
 				{
-					case WM_KEYDOWN:
-					case WM_LBUTTONDOWN:
-					case WM_MBUTTONDOWN:
-					case WM_RBUTTONDOWN:
-					case WM_XBUTTONDOWN:
+				case WM_KEYDOWN:
+				case WM_LBUTTONDOWN:
+				case WM_MBUTTONDOWN:
+				case WM_RBUTTONDOWN:
+				case WM_XBUTTONDOWN:
 					pagesStuck = 8;
 					userAborted = true;
 					break;
 				}
 			}
 		}
-		while ((SInt32)MillisToTicks(GetTickCount()) < nextLoop);
-		nextLoop = MillisToTicks(GetTickCount()) + 2;
 	}
 
 	if (roomRgn != nil)

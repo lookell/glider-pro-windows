@@ -10,9 +10,11 @@
 #include "DynamicMaps.h"
 #include "Dynamics.h"
 #include "Environ.h"
+#include "FrameTimer.h"
 #include "Grease.h"
 #include "HouseIO.h"
 #include "Macintosh.h"
+#include "Main.h"
 #include "MainWindow.h"
 #include "Objects.h"
 #include "Play.h"
@@ -43,7 +45,6 @@ Rect		back2WorkRects[kMaxGarbageRects];
 Rect		shieldRect;
 HRGN		mirrorRgn;
 Point		shieldPt;
-SInt32		nextFrame;
 SInt16		numWork2Main, numBack2Work;
 Boolean		hasMirror;
 
@@ -568,6 +569,10 @@ void CopyRectsQD (void)
 	HDC			mainWindowDC;
 	SInt16		i;
 
+	// TODO: Turn the main window blit into a single GDI call, to prevent flicker.
+	// Maybe by creating a region from 'work2MainRects', and 'BitBlt'ing
+	// while using that region for clipping.
+
 	mainWindowDC = GetMainWindowDC();
 	for (i = 0; i < numWork2Main; i++)
 	{
@@ -589,6 +594,9 @@ void CopyRectsQD (void)
 
 void RenderFrame (void)
 {
+	BOOL messageReceived;
+	MSG theMessage;
+
 	if (hasMirror)
 	{
 		DrawReflection(&theGlider, true);
@@ -610,12 +618,24 @@ void RenderFrame (void)
 	RenderShreds();
 	RenderBands();
 
-	while ((SInt32)MillisToTicks(GetTickCount()) < nextFrame)
+	while (!quitting)
 	{
-		// TODO: find a less hacky way of frame timing
-		Sleep(3);
+		WaitUntilNextFrameOrMessage(&messageReceived);
+		if (messageReceived == FALSE)
+			break;
+
+		while (PeekMessage(&theMessage, NULL, 0, 0, PM_REMOVE))
+		{
+			if (theMessage.message == WM_QUIT)
+			{
+				PostQuitMessage((int)theMessage.wParam);
+				quitting = true;
+				break;
+			}
+			TranslateMessage(&theMessage);
+			DispatchMessage(&theMessage);
+		}
 	}
-	nextFrame = MillisToTicks(GetTickCount()) + kTicksPerFrame;
 
 	CopyRectsQD();
 
@@ -639,8 +659,6 @@ void InitGarbageRects (void)
 	numFlyingPts = 0;
 	for (i = 0; i < kMaxFlyingPts; i++)
 		flyingPoints[i].mode = -1;
-
-	nextFrame = MillisToTicks(GetTickCount()) + kTicksPerFrame;
 }
 
 //--------------------------------------------------------------  CopyRectBackToWork

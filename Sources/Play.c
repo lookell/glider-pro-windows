@@ -90,6 +90,9 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 	Boolean		wasPlayMusicPref;
 	HDC			mainWindowDC;
 
+	TIMECAPS timeCaps;
+	MMRESULT mmResult;
+
 	AdjustScoreboardHeight();
 	gameOver = false;
 	theMode = kPlayMode;
@@ -222,8 +225,23 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 	}
 #endif
 
+	mmResult = timeGetDevCaps(&timeCaps, sizeof(timeCaps));
+	if (mmResult == MMSYSERR_NOERROR)
+	{
+		if (timeCaps.wPeriodMin < 1)
+		{
+			timeCaps.wPeriodMin = 1;
+		}
+		mmResult = timeBeginPeriod(timeCaps.wPeriodMin);
+	}
+
 	playing = true;		// everything before this line is game set-up
 	PlayGame();			// everything following is after a game has ended
+
+	if (mmResult == MMSYSERR_NOERROR)
+	{
+		timeEndPeriod(timeCaps.wPeriodMin);
+	}
 
 #ifdef CREATEDEMODATA
 	DumpToResEditFile((Ptr)demoData, sizeof(demoType) * (long)demoIndex);
@@ -436,26 +454,10 @@ void HandlePlayEvent (void)
 
 void PlayGame (void)
 {
-	MSG msg;
-
 	while ((playing) && (!quitting))
 	{
 		gameFrame++;
 		evenFrame = !evenFrame;
-
-		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			if (msg.message == WM_QUIT)
-			{
-				PostQuitMessage((int)msg.wParam);
-				quitting = true;
-				break;
-			}
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		if (msg.message == WM_QUIT)
-			break;
 
 		HandleTelephone();
 
