@@ -7,6 +7,7 @@
 //============================================================================
 
 
+#include "AnimCursor.h"
 #include "Coordinates.h"
 #include "GliderDefines.h"
 #include "Macintosh.h"
@@ -24,6 +25,9 @@
 
 HBRUSH CreateMarqueeBrush (void);
 HPEN CreateMarqueePen (void);
+void PaintMarqueeRect (HDC, const Rect *);
+void FrameMarqueeRect (HDC, const Rect *);
+void ClipCursorToClientArea (HWND);
 void DrawGliderMarquee (HDC);
 void DrawMarquee (HDC);
 
@@ -51,6 +55,34 @@ HPEN CreateMarqueePen (void)
 	logBrush.lbColor = 0;
 	logBrush.lbHatch = (ULONG_PTR)theMarquee.pats[theMarquee.index];
 	return ExtCreatePen(PS_GEOMETRIC | PS_SOLID, 1, &logBrush, 0, NULL);
+}
+
+//--------------------------------------------------------------  PaintMarqueeRect
+
+void PaintMarqueeRect (HDC hdc, const Rect *theRect)
+{
+	HBRUSH marqueeBrush;
+	int wasROP2;
+
+	marqueeBrush = CreateMarqueeBrush();
+	wasROP2 = SetROP2(hdc, R2_XORPEN);
+	Mac_PaintRect(hdc, theRect, marqueeBrush);
+	SetROP2(hdc, wasROP2);
+	DeleteObject(marqueeBrush);
+}
+
+//--------------------------------------------------------------  FrameMarqueeRect
+
+void FrameMarqueeRect (HDC hdc, const Rect *theRect)
+{
+	HBRUSH marqueeBrush;
+	int wasROP2;
+
+	marqueeBrush = CreateMarqueeBrush();
+	wasROP2 = SetROP2(hdc, R2_XORPEN);
+	Mac_FrameRect(hdc, theRect, marqueeBrush, 1, 1);
+	SetROP2(hdc, wasROP2);
+	DeleteObject(marqueeBrush);
 }
 
 //--------------------------------------------------------------  DoMarquee
@@ -215,59 +247,110 @@ void ResumeMarquee (void)
 		StartMarquee(&theMarquee.bounds);
 }
 
+//--------------------------------------------------------------  ClipCursorToClientArea
+
+void ClipCursorToClientArea (HWND hwnd)
+{
+	RECT clientRect;
+
+	if (hwnd != NULL && IsWindow(hwnd))
+	{
+		GetClientRect(hwnd, &clientRect);
+		MapWindowPoints(hwnd, HWND_DESKTOP, (POINT *)&clientRect, 2);
+		ClipCursor(&clientRect);
+	}
+}
+
 //--------------------------------------------------------------  DragOutMarqueeRect
 
 void DragOutMarqueeRect (Point start, Rect *theRect)
 {
-#if 0
-	Point		wasPt, newPt;
+	Point wasPt, newPt;
+	HDC hdc;
+	MSG msg;
 
-	SetPortWindowPort(mainWindow);
+	SetCapture(mainWindow);
+	ClipCursorToClientArea(mainWindow);
 	InitCursor();
 	QSetRect(theRect, start.h, start.v, start.h, start.v);
-	PenMode(patXor);
-	PenPat(&theMarquee.pats[theMarquee.index]);
-	FrameRect(theRect);
+	hdc = GetMainWindowDC();
+	FrameMarqueeRect(hdc, theRect);
+	ReleaseMainWindowDC(hdc);
 	wasPt = start;
 
-	while (WaitMouseUp())
+	while (GetMessage(&msg, NULL, 0, 0))
 	{
-		GetMouse(&newPt);
-		if (DeltaPoint(wasPt, newPt))
+		switch (msg.message)
 		{
-			FrameRect(theRect);
+		case WM_MOUSEMOVE:
+			newPt.h = GET_X_LPARAM(msg.lParam);
+			newPt.v = GET_Y_LPARAM(msg.lParam);
+			hdc = GetMainWindowDC();
+			FrameMarqueeRect(hdc, theRect);
 			QSetRect(theRect, start.h, start.v, newPt.h, newPt.v);
 			NormalizeRect(theRect);
-			FrameRect(theRect);
+			FrameMarqueeRect(hdc, theRect);
+			ReleaseMainWindowDC(hdc);
 			wasPt = newPt;
+			break;
+
+		case WM_LBUTTONUP:
+			if (GetCapture() == mainWindow)
+				ReleaseCapture();
+			break;
+
+		case WM_KEYDOWN:
+		case WM_KEYUP:
+		case WM_LBUTTONDOWN:
+		case WM_LBUTTONDBLCLK:
+			// ignore these events so that the current room and object don't change
+			break;
+
+		default:
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
 		}
+		if (GetCapture() != mainWindow)
+			break;
 	}
-	FrameRect(theRect);
-	PenNormal();
-#endif
+	if (msg.message == WM_QUIT)
+	{
+		PostQuitMessage((int)msg.wParam);
+		if (GetCapture() == mainWindow)
+			ReleaseCapture();
+	}
+	ClipCursor(NULL);
+	hdc = GetMainWindowDC();
+	FrameMarqueeRect(hdc, theRect);
+	ReleaseMainWindowDC(hdc);
 }
 
 //--------------------------------------------------------------  DragMarqueeRect
 
 void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 {
-#if 0
-	Point		wasPt, newPt;
-	SInt16		deltaH, deltaV;
+	Point wasPt, newPt;
+	SInt16 deltaH, deltaV;
+	HDC hdc;
+	MSG msg;
 
-	SetCursor(&handCursor);
+	SetCapture(mainWindow);
+	ClipCursorToClientArea(mainWindow);
+	SetCursor(handCursor);
 	StopMarquee();
-	PenMode(patXor);
-	PenPat(&theMarquee.pats[theMarquee.index]);
+	hdc = GetMainWindowDC();
 	theMarquee.bounds = *theRect;
-	FrameRect(&theMarquee.bounds);
+	FrameMarqueeRect(hdc, &theMarquee.bounds);
+	ReleaseMainWindowDC(hdc);
 
 	wasPt = start;
-	while (WaitMouseUp())
+	while (GetMessage(&msg, NULL, 0, 0))
 	{
-		GetMouse(&newPt);
-		if (DeltaPoint(wasPt, newPt))
+		switch (msg.message)
 		{
+		case WM_MOUSEMOVE:
+			newPt.h = GET_X_LPARAM(msg.lParam);
+			newPt.v = GET_Y_LPARAM(msg.lParam);
 			if (lockV)
 				deltaH = 0;
 			else
@@ -276,47 +359,81 @@ void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 				deltaV = 0;
 			else
 				deltaV = newPt.v - wasPt.v;
-			FrameRect(&theMarquee.bounds);
+			hdc = GetMainWindowDC();
+			FrameMarqueeRect(hdc, &theMarquee.bounds);
 			QOffsetRect(&theMarquee.bounds, deltaH, deltaV);
-			FrameRect(&theMarquee.bounds);
+			FrameMarqueeRect(hdc, &theMarquee.bounds);
+			ReleaseMainWindowDC(hdc);
 			wasPt = newPt;
 			SetCoordinateHVD(theMarquee.bounds.left, theMarquee.bounds.top, -2);
+			break;
+
+		case WM_LBUTTONUP:
+			if (GetCapture() == mainWindow)
+				ReleaseCapture();
+			break;
+
+		case WM_KEYDOWN:
+		case WM_KEYUP:
+		case WM_LBUTTONDOWN:
+		case WM_LBUTTONDBLCLK:
+			// ignore these events so that the current room and object don't change
+			break;
+
+		default:
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
 		}
+		if (GetCapture() != mainWindow)
+			break;
 	}
-	FrameRect(&theMarquee.bounds);
+	if (msg.message == WM_QUIT)
+	{
+		PostQuitMessage((int)msg.wParam);
+		if (GetCapture() == mainWindow)
+			ReleaseCapture();
+	}
+	ClipCursor(NULL);
+
+	hdc = GetMainWindowDC();
+	FrameMarqueeRect(hdc, &theMarquee.bounds);
+	ReleaseMainWindowDC(hdc);
 	*theRect = theMarquee.bounds;
-	PenNormal();
 	InitCursor();
-#endif
 }
 
 //--------------------------------------------------------------  DragMarqueeHandle
 
 void DragMarqueeHandle (Point start, SInt16 *dragged)
 {
-#if 0
-	Point		wasPt, newPt;
-	SInt16		deltaH, deltaV;
+	Point wasPt, newPt;
+	SInt16 deltaH, deltaV;
+	HDC hdc;
+	MSG msg;
 
+	SetCapture(mainWindow);
+	ClipCursorToClientArea(mainWindow);
 	if ((theMarquee.direction == kAbove) || (theMarquee.direction == kBelow))
-		SetCursor(&vertCursor);
+		SetCursor(vertCursor);
 	else
-		SetCursor(&horiCursor);
+		SetCursor(horiCursor);
 	StopMarquee();
-	PenMode(patXor);
-	PenPat(&theMarquee.pats[theMarquee.index]);
-	FrameRect(&theMarquee.bounds);
-	PaintRect(&theMarquee.handle);
+	hdc = GetMainWindowDC();
+	FrameMarqueeRect(hdc, &theMarquee.bounds);
+	PaintMarqueeRect(hdc, &theMarquee.handle);
+	ReleaseMainWindowDC(hdc);
 
 	wasPt = start;
-	while (WaitMouseUp())
+	while (GetMessage(&msg, NULL, 0, 0))
 	{
-		GetMouse(&newPt);
-		if (DeltaPoint(wasPt, newPt))
+		switch (msg.message)
 		{
+		case WM_MOUSEMOVE:
+			newPt.h = GET_X_LPARAM(msg.lParam);
+			newPt.v = GET_Y_LPARAM(msg.lParam);
 			switch (theMarquee.direction)
 			{
-				case kAbove:
+			case kAbove:
 				deltaH = 0;
 				deltaV = newPt.v - wasPt.v;
 				*dragged -= deltaV;
@@ -328,7 +445,7 @@ void DragMarqueeHandle (Point start, SInt16 *dragged)
 				DeltaCoordinateD(*dragged);
 				break;
 
-				case kToRight:
+			case kToRight:
 				deltaH = newPt.h - wasPt.h;
 				deltaV = 0;
 				*dragged += deltaH;
@@ -340,7 +457,7 @@ void DragMarqueeHandle (Point start, SInt16 *dragged)
 				DeltaCoordinateD(*dragged);
 				break;
 
-				case kBelow:
+			case kBelow:
 				deltaH = 0;
 				deltaV = newPt.v - wasPt.v;
 				*dragged += deltaV;
@@ -352,7 +469,7 @@ void DragMarqueeHandle (Point start, SInt16 *dragged)
 				DeltaCoordinateD(*dragged);
 				break;
 
-				case kToLeft:
+			case kToLeft:
 				deltaH = newPt.h - wasPt.h;
 				deltaV = 0;
 				*dragged -= deltaH;
@@ -363,42 +480,81 @@ void DragMarqueeHandle (Point start, SInt16 *dragged)
 				}
 				DeltaCoordinateD(*dragged);
 				break;
+
+			default:
+				deltaH = 0;
+				deltaV = 0;
+				break;
 			}
 
-			PaintRect(&theMarquee.handle);
+			hdc = GetMainWindowDC();
+			PaintMarqueeRect(hdc, &theMarquee.handle);
 			QOffsetRect(&theMarquee.handle, deltaH, deltaV);
-			PaintRect(&theMarquee.handle);
+			PaintMarqueeRect(hdc, &theMarquee.handle);
+			ReleaseMainWindowDC(hdc);
 			wasPt = newPt;
+			break;
+
+		case WM_LBUTTONUP:
+			if (GetCapture() == mainWindow)
+				ReleaseCapture();
+			break;
+
+		case WM_KEYDOWN:
+		case WM_KEYUP:
+		case WM_LBUTTONDOWN:
+		case WM_LBUTTONDBLCLK:
+			// ignore these events so that the current room and object don't change
+			break;
+
+		default:
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			break;
 		}
+		if (GetCapture() != mainWindow)
+			break;
 	}
-	FrameRect(&theMarquee.bounds);
-	PaintRect(&theMarquee.handle);
-	PenNormal();
+	if (msg.message == WM_QUIT)
+	{
+		PostQuitMessage((int)msg.wParam);
+		if (GetCapture() == mainWindow)
+			ReleaseCapture();
+	}
+	ClipCursor(NULL);
+
+	hdc = GetMainWindowDC();
+	FrameMarqueeRect(hdc, &theMarquee.bounds);
+	PaintMarqueeRect(hdc, &theMarquee.handle);
+	ReleaseMainWindowDC(hdc);
 	InitCursor();
-#endif
 }
 
 //--------------------------------------------------------------  DragMarqueeCorner
 
 void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean isTop)
 {
-#if 0
-	Point		wasPt, newPt;
-	SInt16		deltaH, deltaV;
+	Point wasPt, newPt;
+	SInt16 deltaH, deltaV;
+	HDC hdc;
+	MSG msg;
 
-	SetCursor(&diagCursor);
+	SetCapture(mainWindow);
+	ClipCursorToClientArea(mainWindow);
+	SetCursor(diagCursor);
 	StopMarquee();
-	PenMode(patXor);
-	PenPat(&theMarquee.pats[theMarquee.index]);
-	FrameRect(&theMarquee.bounds);
-	PaintRect(&theMarquee.handle);
+	hdc = GetMainWindowDC();
+	FrameMarqueeRect(hdc, &theMarquee.bounds);
+	PaintMarqueeRect(hdc, &theMarquee.handle);
 
 	wasPt = start;
-	while (WaitMouseUp())
+	while (GetMessage(&msg, NULL, 0, 0))
 	{
-		GetMouse(&newPt);
-		if (DeltaPoint(wasPt, newPt))
+		switch (msg.message)
 		{
+		case WM_MOUSEMOVE:
+			newPt.h = GET_X_LPARAM(msg.lParam);
+			newPt.v = GET_Y_LPARAM(msg.lParam);
 			deltaH = newPt.h - wasPt.h;
 			if (isTop)
 				deltaV = wasPt.v - newPt.v;
@@ -416,8 +572,9 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 				deltaV -= *vDragged;
 				*vDragged = 0;
 			}
-			FrameRect(&theMarquee.bounds);
-			PaintRect(&theMarquee.handle);
+			hdc = GetMainWindowDC();
+			FrameMarqueeRect(hdc, &theMarquee.bounds);
+			PaintMarqueeRect(hdc, &theMarquee.handle);
 			if (isTop)
 			{
 				QOffsetRect(&theMarquee.handle, deltaH, -deltaV);
@@ -430,16 +587,45 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 				theMarquee.bounds.right += deltaH;
 				theMarquee.bounds.bottom += deltaV;
 			}
-			FrameRect(&theMarquee.bounds);
-			PaintRect(&theMarquee.handle);
+			FrameMarqueeRect(hdc, &theMarquee.bounds);
+			PaintMarqueeRect(hdc, &theMarquee.handle);
+			ReleaseMainWindowDC(hdc);
 			wasPt = newPt;
+			break;
+
+		case WM_LBUTTONUP:
+			if (GetCapture() == mainWindow)
+				ReleaseCapture();
+			break;
+
+		case WM_KEYDOWN:
+		case WM_KEYUP:
+		case WM_LBUTTONDOWN:
+		case WM_LBUTTONDBLCLK:
+			// ignore these events so that the current room and object don't change
+			break;
+
+		default:
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			break;
 		}
+		if (GetCapture() != mainWindow)
+			break;
 	}
-	FrameRect(&theMarquee.bounds);
-	PaintRect(&theMarquee.handle);
-	PenNormal();
+	if (msg.message == WM_QUIT)
+	{
+		PostQuitMessage((int)msg.wParam);
+		if (GetCapture() == mainWindow)
+			ReleaseCapture();
+	}
+	ClipCursor(NULL);
+
+	hdc = GetMainWindowDC();
+	FrameMarqueeRect(hdc, &theMarquee.bounds);
+	PaintMarqueeRect(hdc, &theMarquee.handle);
+	ReleaseMainWindowDC(hdc);
 	InitCursor();
-#endif
 }
 
 //--------------------------------------------------------------  MarqueeHasHandles
