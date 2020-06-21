@@ -24,7 +24,7 @@ SInt16 RandomInt (SInt16 range);
 SInt32 RandomLong (SInt32 range);
 void InitRandomLongQUS (void);
 UInt32 RandomLongQUS (void);
-void RedAlert (SInt16 errorNumber);
+__declspec(noreturn) void RedAlert (SInt16 errorNumber);
 void FindOurDevice (void);
 //void CreateOffScreenBitMap (Rect *theRect, GrafPtr *offScreen);
 //void CreateOffScreenPixMap (Rect *theRect, CGrafPtr *offScreen);

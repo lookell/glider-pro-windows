@@ -150,7 +150,7 @@ static BOOL CALLBACK DisableThreadWndProc(HWND window, LPARAM lParam)
 	return TRUE;
 }
 
-void RedAlert (SInt16 errorNumber)
+__declspec(noreturn) void RedAlert (SInt16 errorNumber)
 {
 	DialogParams params = { 0 };
 	SInt16 dummyInt;
