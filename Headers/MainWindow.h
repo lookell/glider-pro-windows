@@ -21,7 +21,6 @@ extern Rect workSrcRect;
 extern HDC workSrcMap;
 extern Rect mainWindowRect;
 extern HWND mainWindow;
-extern HWND menuWindow;
 extern SInt16 isEditH;
 extern SInt16 isEditV;
 extern SInt16 playOriginH;
@@ -35,7 +34,6 @@ extern Boolean splashDrawn;
 
 void RedrawSplashScreen (void);
 void UpdateMainWindow (void);
-void UpdateMenuBarWindow (void);
 void OpenMainWindow (void);
 void CloseMainWindow (void);
 //void ZoomBetweenWindows (void);

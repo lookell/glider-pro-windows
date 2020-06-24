@@ -59,7 +59,6 @@ typedef struct
 void InitGlider (gliderPtr, SInt16);
 void SetHouseToFirstRoom (void);
 void SetHouseToSavedRoom (void);
-void HandlePlayEvent (void);
 void PlayGame (void);
 void HandleRoomVisitation (void);
 void SetObjectsToDefaults (void);
@@ -282,7 +281,6 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 	}
 	NilSavedMaps();
 	//SetPortWindowPort(mainWindow);
-	//BlackenScoreboard();
 	UpdateMenus(false);
 
 	if (!gameOver)
@@ -402,52 +400,6 @@ void SetHouseToFirstRoom (void)
 void SetHouseToSavedRoom (void)
 {
 	ForceThisRoom(smallGame.roomNumber);
-}
-
-//--------------------------------------------------------------  HandlePlayEvent
-
-void HandlePlayEvent (void)
-{
-	return;
-#if 0
-	EventRecord	theEvent;
-	GrafPtr		wasPort;
-	long		sleep = 2;
-
-	if (WaitNextEvent(everyEvent, &theEvent, sleep, nil))
-	{
-		if ((theEvent.what == updateEvt) &&
-				((WindowPtr)theEvent.message == mainWindow))
-		{
-			GetPort(&wasPort);
-			SetPortWindowPort(mainWindow);
-			BeginUpdate(mainWindow);
-			CopyBits((BitMap *)*GetGWorldPixMap(workSrcMap),
-					GetPortBitMapForCopyBits(GetWindowPort(mainWindow)),
-					&justRoomsRect, &justRoomsRect, srcCopy, nil);
-			RefreshScoreboard(kNormalTitleMode);
-			EndUpdate(mainWindow);
-			SetPort(wasPort);
-		}
-		else if ((theEvent.what == osEvt) && (theEvent.message & 0x01000000))
-		{
-			if (theEvent.message & 0x00000001)	// resume event
-			{
-				switchedOut = false;
-				ToggleMusicWhilePlaying();
-				HideCursor();
-//				HideMenuBarOld();	// TEMP
-			}
-			else								// suspend event
-			{
-				InitCursor();
-				switchedOut = true;
-				ToggleMusicWhilePlaying();
-//				ShowMenuBarOld();		// TEMP replace with Carbon calls
-			}
-		}
-	}
-#endif
 }
 
 //--------------------------------------------------------------  PlayGame

@@ -44,6 +44,7 @@ void DrawOnSplash (HDC);
 void SetPaletteToGrays (void);
 void HardDrawMainWindow (void);
 void RestoreColorsSlam (void);
+void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate);
 
 
 CTabHandle		theCTab;
@@ -55,7 +56,7 @@ HCURSOR			diagCursor;
 Rect			workSrcRect;
 HDC				workSrcMap;
 Rect			mainWindowRect;
-HWND			mainWindow, menuWindow;
+HWND			mainWindow;
 SInt16			isEditH, isEditV;
 SInt16			playOriginH, playOriginV;
 SInt16			splashOriginH, splashOriginV;
@@ -200,23 +201,6 @@ void UpdateMainWindow (void)
 	splashDrawn = true;
 }
 
-//--------------------------------------------------------------  UpdateMenuBarWindow
-// Ugly kludge to cover over the menu bar when playing game on 2nd monitor.
-
-void UpdateMenuBarWindow (void)
-{
-	return;
-#if 0
-	Rect		bounds;
-
-	if (menuWindow == nil)
-		return;
-
-	GetLocalWindowRect(menuWindow, &bounds);
-	PaintRect(&bounds);
-#endif
-}
-
 //--------------------------------------------------------------  OpenMainWindow
 // Opens up the main window (how it does this depends on mode were in).
 
@@ -239,10 +223,6 @@ void OpenMainWindow (void)
 
 	if (theMode == kEditMode)
 	{
-		if (menuWindow != NULL)
-			DestroyWindow(menuWindow);
-		menuWindow = NULL;
-
 		// These assignments must happen before the CreateWindow call, or else the
 		// WM_MOVE message handler overwrites 'isEditH' and 'isEditV' during the
 		// main window's creation.
@@ -294,17 +274,6 @@ void OpenMainWindow (void)
 	}
 	else
 	{
-#if 0
-		if (menuWindow == nil)
-		{
-			menuWindow = GetNewCWindow(kMenuWindowID, nil, kPutInFront);
-			SizeWindow(menuWindow, RectWide(&thisMac.screen), 20, false);
-			MoveWindow(menuWindow, thisMac.screen.left,
-					thisMac.screen.top, true);
-			ShowWindow(menuWindow);
-		}
-#endif
-
 		mainWindowRect = thisMac.screen;
 		ZeroRectCorner(&mainWindowRect);
 		mainWindowRect.bottom -= 20;		// thisMac.menuHigh
@@ -739,78 +708,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	switch (uMsg)
 	{
 	case WM_ACTIVATEAPP:
-		if (theMode == kPlayMode)
-		{
-			if (wParam)
-			{
-				// activated during gameplay
-				switchedOut = false;
-				if (isPlayMusicGame && !isMusicOn)
-					StartMusic();
-				//HideCursor();
-			}
-			else
-			{
-				// deactivated during gameplay
-				InitCursor();
-				switchedOut = true;
-				if (isPlayMusicGame && isMusicOn)
-					StopTheMusic();
-			}
-		}
-		else
-		{
-			if (wParam)
-			{
-				// activated during splash or edit mode
-				if (WhatsOurDepth() != thisMac.isDepth)
-				{
-					SInt16 buttonHit = BitchAboutColorDepth(hwnd);
-					if (buttonHit == 1)
-					{
-#ifndef COMPILEDEMO
-						if (QuerySaveChanges(hwnd))
-						{
-							PostQuitMessage(0);
-							quitting = true;
-						}
-#else
-						PostQuitMessage(0);
-						quitting = true;
-#endif
-					}
-					else
-					{
-						SwitchToDepth(thisMac.isDepth, thisMac.wasColorOrGray);
-					}
-				}
-				switchedOut = false;
-				InitCursor();
-				if ((isPlayMusicIdle) && (theMode != kEditMode))
-				{
-					OSErr theErr = StartMusic();
-					if (theErr != noErr)
-					{
-						YellowAlert(hwnd, kYellowNoMusic, theErr);
-						failedMusic = true;
-					}
-				}
-				incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
-
-#ifndef COMPILEDEMO
-				//			if (theMode == kEditMode)
-				//				SeeIfValidScrapAvailable(true);
-#endif
-			}
-			else
-			{
-				// deactivated during splash or edit mode
-				switchedOut = true;
-				InitCursor();
-				if ((isMusicOn) && (theMode != kEditMode))
-					StopTheMusic();
-			}
-		}
+		MainWindow_OnActivateApp(hwnd, (BOOL)wParam);
 		return 0;
 
 	case WM_CLOSE:
@@ -856,20 +754,20 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		return 0;
 
 	case WM_LBUTTONDOWN:
-	{
-		Point wherePt;
-		wherePt.h = GET_X_LPARAM(lParam);
-		wherePt.v = GET_Y_LPARAM(lParam);
-		HandleMainClick(hwnd, wherePt, false);
-		return 0;
-	}
-
 	case WM_LBUTTONDBLCLK:
 	{
 		Point wherePt;
 		wherePt.h = GET_X_LPARAM(lParam);
 		wherePt.v = GET_Y_LPARAM(lParam);
-		HandleMainClick(hwnd, wherePt, true);
+		if (uMsg == WM_LBUTTONDBLCLK || !ignoreDoubleClick)
+		{
+			HandleMainClick(hwnd, wherePt, true);
+		}
+		else
+		{
+			HandleMainClick(hwnd, wherePt, false);
+		}
+		ignoreDoubleClick = false;
 		return 0;
 	}
 
@@ -902,4 +800,78 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	}
 	}
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
+//--------------------------------------------------------------  MainWindow_OnActivateApp
+
+void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
+{
+	if (theMode == kPlayMode)
+	{
+		if (fActivate)
+		{
+			switchedOut = false;
+			if (isPlayMusicGame && !isMusicOn)
+				StartMusic();
+			//HideCursor();
+		}
+		else
+		{
+			InitCursor();
+			switchedOut = true;
+			if (isPlayMusicGame && isMusicOn)
+				StopTheMusic();
+		}
+	}
+	else
+	{
+		if (fActivate)
+		{
+			if (WhatsOurDepth() != thisMac.isDepth)
+			{
+				SInt16 buttonHit = BitchAboutColorDepth(hwnd);
+				if (buttonHit == 1)
+				{
+#ifndef COMPILEDEMO
+					if (QuerySaveChanges(hwnd))
+					{
+						PostQuitMessage(0);
+						quitting = true;
+					}
+#else
+					PostQuitMessage(0);
+					quitting = true;
+#endif
+				}
+				else
+				{
+					SwitchToDepth(thisMac.isDepth, thisMac.wasColorOrGray);
+				}
+			}
+			switchedOut = false;
+			InitCursor();
+			if ((isPlayMusicIdle) && (theMode != kEditMode))
+			{
+				OSErr theErr = StartMusic();
+				if (theErr != noErr)
+				{
+					YellowAlert(hwnd, kYellowNoMusic, theErr);
+					failedMusic = true;
+				}
+			}
+			incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
+
+#ifndef COMPILEDEMO
+//			if (theMode == kEditMode)
+//				SeeIfValidScrapAvailable(true);
+#endif
+		}
+		else
+		{
+			switchedOut = true;
+			InitCursor();
+			if ((isMusicOn) && (theMode != kEditMode))
+				StopTheMusic();
+		}
+	}
 }

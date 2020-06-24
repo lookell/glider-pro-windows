@@ -454,10 +454,3 @@ void AdjustScoreboardHeight (void)
 	}
 }
 
-//--------------------------------------------------------------  BlackenScoreboard
-
-void BlackenScoreboard (void)
-{
-	UpdateMenuBarWindow();
-}
-

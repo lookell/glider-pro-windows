@@ -28,19 +28,14 @@
 #include "Tools.h"
 
 
-void HandleMouseEvent (EventRecord *);
-void HandleUpdateEvent (EventRecord *);
-void HandleOSEvent (EventRecord *);
 void HandleHighLevelEvent (EventRecord *);
 void HandleIdleTask (void);
 void IncrementMode (void);
 
 
-SInt32			lastUp, incrementModeTime;
-UInt32			doubleTime;
-Point			lastWhere;
+SInt32			incrementModeTime;
 SInt16			idleMode;
-Boolean			doAutoDemo, switchedOut;
+Boolean			doAutoDemo, switchedOut, ignoreDoubleClick;
 HACCEL			splashAccelTable, editAccelTable;
 
 
@@ -55,111 +50,6 @@ SInt16 BitchAboutColorDepth (HWND ownerWindow)
 
 	sheSaid = Alert(kColorSwitchedAlert, ownerWindow, NULL);
 	return (sheSaid - 1000);
-}
-
-//--------------------------------------------------------------  HandleMouseEvent
-// Handle a mouse click event.
-
-void HandleMouseEvent (EventRecord *theEvent)
-{
-	return;
-#if 0
-	WindowPtr	whichWindow;
-	long		menuChoice, newSize;
-	short		thePart, hDelta, vDelta;
-	Boolean		isDoubleClick;
-
-	thePart = FindWindow(theEvent->where, &whichWindow);
-
-	switch (thePart)
-	{
-		case inSysWindow:
-//		SystemClick(theEvent, whichWindow);
-		break;
-
-		case inMenuBar:
-		menuChoice = MenuSelect(theEvent->where);
-		DoMenuChoice(menuChoice);
-		break;
-
-		case inDrag:
-		DragWindow(whichWindow, theEvent->where, &thisMac.screen);
-		if (whichWindow == mainWindow)
-		{
-			SendBehind(mainWindow, (WindowPtr)0L);
-			GetWindowLeftTop(whichWindow, &isEditH, &isEditV);
-		}
-		else if (whichWindow == mapWindow)
-			GetWindowLeftTop(whichWindow, &isMapH, &isMapV);
-		else if (whichWindow == toolsWindow)
-			GetWindowLeftTop(whichWindow, &isToolsH, &isToolsV);
-		else if (whichWindow == linkWindow)
-			GetWindowLeftTop(whichWindow, &isLinkH, &isLinkV);
-		else if (whichWindow == coordWindow)
-			GetWindowLeftTop(whichWindow, &isCoordH, &isCoordV);
-		HiliteAllWindows();
-		break;
-
-		case inGoAway:
-		if (TrackGoAway(whichWindow,theEvent->where))
-		{
-			if (whichWindow == mapWindow)
-				ToggleMapWindow();
-			else if (whichWindow == toolsWindow)
-				ToggleToolsWindow();
-			else if (whichWindow == linkWindow)
-				CloseLinkWindow();
-			else if (whichWindow == coordWindow)
-				ToggleCoordinateWindow();
-		}
-		break;
-
-		case inGrow:
-		if (whichWindow == mapWindow)
-		{
-			newSize = GrowWindow(mapWindow, theEvent->where, &thisMac.gray);
-			ResizeMapWindow(LoWord(newSize), HiWord(newSize));
-		}
-		break;
-
-		case inZoomIn:
-		case inZoomOut:
-		if (TrackBox(whichWindow, theEvent->where, thePart))
-			ZoomWindow(whichWindow, thePart, true);
-		break;
-
-		case inContent:
-		if (whichWindow == mainWindow)
-		{
-			hDelta = theEvent->where.h - lastWhere.h;
-			if (hDelta < 0)
-				hDelta = -hDelta;
-			vDelta = theEvent->where.v - lastWhere.v;
-			if (vDelta < 0)
-				vDelta = -vDelta;
-			if (((theEvent->when - lastUp) < doubleTime) && (hDelta < 5) &&
-					(vDelta < 5))
-				isDoubleClick = true;
-			else
-			{
-				isDoubleClick = false;
-				lastUp = theEvent->when;
-				lastWhere = theEvent->where;
-			}
-			HandleMainClick(theEvent->where, isDoubleClick);
-		}
-		else if (whichWindow == mapWindow)
-			HandleMapClick(theEvent);
-		else if (whichWindow == toolsWindow)
-			HandleToolsClick(theEvent->where);
-		else if (whichWindow == linkWindow)
-			HandleLinkClick(theEvent->where);
-		break;
-
-		default:
-		break;
-	}
-#endif
 }
 
 //--------------------------------------------------------------  HandleKeyEvent
@@ -322,118 +212,6 @@ void HandleKeyEvent (HWND hwnd, BYTE vKey)
 	}
 }
 
-//--------------------------------------------------------------  HandleUpdateEvent
-// Handle an update event.
-
-void HandleUpdateEvent (EventRecord *theEvent)
-{
-	return;
-#if 0
-	if ((WindowPtr)theEvent->message == mainWindow)
-	{
-		SetPort((GrafPtr)mainWindow);
-		BeginUpdate(mainWindow);
-		UpdateMainWindow();
-		EndUpdate(mainWindow);
-	}
-	else if ((WindowPtr)theEvent->message == mapWindow)
-	{
-		SetPort((GrafPtr)mapWindow);
-		BeginUpdate(mapWindow);
-		UpdateMapWindow();
-		EndUpdate(mapWindow);
-	}
-	else if ((WindowPtr)theEvent->message == toolsWindow)
-	{
-		SetPort((GrafPtr)toolsWindow);
-		BeginUpdate(toolsWindow);
-		UpdateToolsWindow();
-		EndUpdate(toolsWindow);
-	}
-	else if ((WindowPtr)theEvent->message == linkWindow)
-	{
-		SetPort((GrafPtr)linkWindow);
-		BeginUpdate(linkWindow);
-		UpdateLinkWindow();
-		EndUpdate(linkWindow);
-	}
-	else if ((WindowPtr)theEvent->message == coordWindow)
-	{
-		SetPort((GrafPtr)coordWindow);
-		BeginUpdate(coordWindow);
-		UpdateCoordWindow();
-		EndUpdate(coordWindow);
-	}
-	else if ((WindowPtr)theEvent->message == menuWindow)
-	{
-		SetPort((GrafPtr)menuWindow);
-		BeginUpdate(menuWindow);
-		UpdateMenuBarWindow();
-		EndUpdate(menuWindow);
-	}
-#endif
-}
-
-//--------------------------------------------------------------  HandleOSEvent
-// Handle an OS Event (MultiFinder - user has switched in or out of app).
-
-void HandleOSEvent (EventRecord *theEvent)
-{
-	return;
-#if 0
-	OSErr		theErr;
-	short		buttonHit;
-
-	if (theEvent->message & 0x01000000)		// suspend or resume event
-	{
-		if (theEvent->message & 0x00000001)	// resume event
-		{
-			if (WhatsOurDepth() != thisMac.isDepth)
-			{
-				buttonHit = BitchAboutColorDepth();
-				if (buttonHit == 1)			// player wants to Quit
-				{
-#ifndef COMPILEDEMO
-					if (QuerySaveChanges())
-						quitting = true;
-#else
-					quitting = true;
-#endif
-				}
-				else
-				{
-					SwitchToDepth(thisMac.isDepth, thisMac.wasColorOrGray);
-				}
-			}
-			switchedOut = false;
-			InitCursor();
-			if ((isPlayMusicIdle) && (theMode != kEditMode))
-			{
-				theErr = StartMusic();
-				if (theErr != noErr)
-				{
-					YellowAlert(kYellowNoMusic, theErr);
-					failedMusic = true;
-				}
-			}
-			incrementModeTime = TickCount() + kIdleSplashTicks;
-
-#ifndef COMPILEDEMO
-//			if (theMode == kEditMode)
-//				SeeIfValidScrapAvailable(true);
-#endif
-		}
-		else								// suspend event
-		{
-			switchedOut = true;
-			InitCursor();
-			if ((isMusicOn) && (theMode != kEditMode))
-				StopTheMusic();
-		}
-	}
-#endif
-}
-
 //--------------------------------------------------------------  HandleHighLevelEvent
 // Handle an AppleEvent (Open Document, Quit Application, etc.).
 
@@ -573,40 +351,13 @@ void HandleEvent (void)
 	}
 }
 
-//--------------------------------------------------------------  HiliteAllWindows
-
-// Ugly kludge in order to keep "floating windows" (palettes) on top of…
-// the main window.
-
-void HiliteAllWindows (void)
-{
-	return;
-#if 0
-	if (mainWindow != nil)
-		HiliteWindow(mainWindow, true);
-	if (mapWindow != nil)
-		HiliteWindow(mapWindow, true);
-	if (toolsWindow != nil)
-		HiliteWindow(toolsWindow, true);
-	if (coordWindow != nil)
-		HiliteWindow(coordWindow, true);
-	if (linkWindow != nil)
-		HiliteWindow(linkWindow, true);
-#endif
-}
-
 //--------------------------------------------------------------  IgnoreThisClick
 
-// Another inelegant kludge designed to temporarily prevent an unwanted…
+// An inelegant kludge designed to temporarily prevent an unwanted…
 // double-click to be registered.
 
 void IgnoreThisClick (void)
 {
-	return;
-#if 0
-	lastUp -= doubleTime;
-	lastWhere.h = -100;
-	lastWhere.v = -100;
-#endif
+	ignoreDoubleClick = true;
 }
 

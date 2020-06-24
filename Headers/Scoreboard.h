@@ -39,7 +39,6 @@ void QuickBatteryRefresh (Boolean flash);
 void QuickBandsRefresh (Boolean flash);
 void QuickFoilRefresh (Boolean flash);
 void AdjustScoreboardHeight (void);
-void BlackenScoreboard (void);
 
 //void HandleScore (void);
 

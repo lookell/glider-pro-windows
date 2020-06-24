@@ -271,9 +271,6 @@ void VariableInit (void)
 	fadeInSequence[14] = 9;
 	fadeInSequence[15] = 10;
 
-	//doubleTime = GetDblTime();
-	doubleTime = MillisToTicks(GetDoubleClickTime());
-
 	mirrorRgn = NULL;
 	mainWindow = NULL;
 	mapWindow = NULL;
@@ -282,7 +279,6 @@ void VariableInit (void)
 	coordWindow = NULL;
 	toolSrcMap = NULL;
 	nailSrcMap = NULL;
-	menuWindow = NULL;
 
 	houseRect = thisMac.screen;
 	houseRect.bottom -= kScoreboardTall;
