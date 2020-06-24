@@ -1,0 +1,35 @@
+/* this comment enforces υτƒ-8 encoding */
+
+#define kToolModeCombo      1000
+#define kToolButtonBaseID   2000
+#define kToolButtonFirstID  2000
+#define kToolButtonLastID   2015
+#define kToolNameText       3000
+
+// COMBOBOX height should be (16 + 8 * NumberOfVisibleItems)
+
+kToolsWindowID DIALOGEX 0, 0, 94, 116
+CAPTION "Tools"
+FONT 8, "MS Shell Dlg"
+STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+{
+    COMBOBOX kToolModeCombo, 3, 3, 88, 16 + 72, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ, 3, 19, 88, 1
+    AUTORADIOBUTTON "", kToolButtonBaseID +  0,  3, 22, 22, 20, BS_BITMAP | BS_PUSHLIKE | WS_GROUP | WS_TABSTOP
+    AUTORADIOBUTTON "", kToolButtonBaseID +  1, 25, 22, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    AUTORADIOBUTTON "", kToolButtonBaseID +  2, 47, 22, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    AUTORADIOBUTTON "", kToolButtonBaseID +  3, 69, 22, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    AUTORADIOBUTTON "", kToolButtonBaseID +  4,  3, 42, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    AUTORADIOBUTTON "", kToolButtonBaseID +  5, 25, 42, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    AUTORADIOBUTTON "", kToolButtonBaseID +  6, 47, 42, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    AUTORADIOBUTTON "", kToolButtonBaseID +  7, 69, 42, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    AUTORADIOBUTTON "", kToolButtonBaseID +  8,  3, 62, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    AUTORADIOBUTTON "", kToolButtonBaseID +  9, 25, 62, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    AUTORADIOBUTTON "", kToolButtonBaseID + 10, 47, 62, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    AUTORADIOBUTTON "", kToolButtonBaseID + 11, 69, 62, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    AUTORADIOBUTTON "", kToolButtonBaseID + 12,  3, 82, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    AUTORADIOBUTTON "", kToolButtonBaseID + 13, 25, 82, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    AUTORADIOBUTTON "", kToolButtonBaseID + 14, 47, 82, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    AUTORADIOBUTTON "", kToolButtonBaseID + 15, 69, 82, 22, 20, BS_BITMAP | BS_PUSHLIKE
+    LTEXT "", kToolNameText, 3, 105, 88, 8, SS_NOPREFIX | WS_GROUP
+}

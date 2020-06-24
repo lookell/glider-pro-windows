@@ -478,6 +478,9 @@ void HandleTheMessage (MSG *message)
 		return;
 	if (IsWindow(linkWindow) && IsDialogMessage(linkWindow, message))
 		return;
+	if (IsWindow(toolsWindow) && IsDialogMessage(toolsWindow, message))
+		return;
+
 	if (theMode == kSplashMode)
 	{
 		if (TranslateAccelerator(mainWindow, splashAccelTable, message))
@@ -515,7 +518,6 @@ void HandleEvent (void)
 		else if ((GetAsyncKeyState(VK_MENU) < 0) && (theMode == kEditMode) &&
 				(houseUnlocked))
 		{
-			EraseSelectedTool();
 			SelectTool(kSelectTool);
 		}
 	}

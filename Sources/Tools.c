@@ -7,10 +7,13 @@
 //============================================================================
 
 
+#include "DialogUtils.h"
 #include "Environ.h"
 #include "GliderDefines.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
 #include "Menu.h"
+#include "ObjectInfo.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "StringUtils.h"
@@ -18,10 +21,15 @@
 #include "WindowUtils.h"
 
 
+#define kToolModeCombo      1000
+#define kToolButtonBaseID   2000
+#define kToolButtonFirstID  2000
+#define kToolButtonLastID   2015
+#define kToolNameText       3000
+
 #define kToolsHigh			4
 #define kToolsWide			4
 #define kTotalTools			16				// kToolsHigh * kToolsWide
-#define kPopUpControl		129
 #define kFirstBlower		1
 #define kLastBlower			15
 #define kBlowerBase			1
@@ -53,15 +61,17 @@
 
 void CreateToolsOffscreen (void);
 void KillToolsOffscreen (void);
-void FrameSelectedTool (void);
-void DrawToolName (void);
-void DrawToolTiles (void);
-void SwitchToolModes (SInt16);
+void UpdateToolName (void);
+void UpdateToolTiles (void);
+INT_PTR CALLBACK ToolsWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR Tools_OnInitDialog (HWND hwnd);
+void Tools_OnDestroy (HWND hwnd);
+void Tools_OnMove (HWND hwnd);
+void Tools_OnToolSelChange (HWND hwnd);
+void Tools_OnButtonClick (HWND hwnd, WORD buttonID);
+void SwitchToolModes (SInt16 newMode);
 
 
-Rect			toolsWindowRect, toolSrcRect, toolTextRect;
-Rect			toolRects[kTotalTools];
-ControlHandle	classPopUp;
 HDC				toolSrcMap;
 HWND			toolsWindow;
 SInt16			isToolsH, isToolsV;
@@ -76,7 +86,8 @@ Boolean			isToolsOpen;
 #ifndef COMPILEDEMO
 void CreateToolsOffscreen (void)
 {
-	OSErr		theErr;
+	Rect toolSrcRect;
+	OSErr theErr;
 
 	if (toolSrcMap == NULL)
 	{
@@ -100,143 +111,95 @@ void KillToolsOffscreen (void)
 }
 #endif
 
-//--------------------------------------------------------------  FrameSelectedTool
+//--------------------------------------------------------------  UpdateToolName
 
 #ifndef COMPILEDEMO
-void FrameSelectedTool (void)
+void UpdateToolName (void)
 {
-	return;
-#if 0
-	Rect		theRect;
-	short		toolIcon;
-
-	toolIcon = toolSelected;
-	if ((toolMode == kBlowerMode) && (toolIcon >= 7))
-	{
-		toolIcon--;
-	}
-	else if ((toolMode == kTransportMode) && (toolIcon >= 7))
-	{
-		if (toolIcon >= 15)
-			toolIcon -= 4;
-		else
-			toolIcon = ((toolIcon - 7) / 2) + 7;
-	}
-
-	theRect = toolRects[toolIcon];
-	PenSize(2, 2);
-	ForeColor(redColor);
-	FrameRect(&theRect);
-	PenNormal();
-	ForeColor(blackColor);
-#endif
-}
-#endif
-
-//--------------------------------------------------------------  DrawToolName
-
-#ifndef COMPILEDEMO
-void DrawToolName (void)
-{
-	return;
-#if 0
-	Str255		theString;
+	wchar_t theString[256];
 
 	if (toolSelected == 0)
-		PasStringCopy("\pSelection Tool", theString);
+	{
+		StringCchCopy(theString, ARRAYSIZE(theString), L"Selection Tool");
+	}
 	else
-		GetIndString(theString, kObjectNameStrings,
-				toolSelected + ((toolMode - 1) * 0x0010));
+	{
+		GetObjectName(theString, ARRAYSIZE(theString),
+			toolSelected + ((toolMode - 1) * 0x0010));
+	}
 
-	EraseRect(&toolTextRect);
-	MoveTo(toolTextRect.left + 3, toolTextRect.bottom - 6);
-	TextFont(applFont);
-	TextSize(9);
-	TextFace(bold);
-	ColorText(theString, 171L);
-#endif
+	SetDlgItemText(toolsWindow, kToolNameText, theString);
 }
 #endif
 
-//--------------------------------------------------------------  DrawToolTiles
+//--------------------------------------------------------------  UpdateToolTiles
 
 #ifndef COMPILEDEMO
-void DrawToolTiles (void)
+void UpdateToolTiles (void)
 {
-	return;
-#if 0
-	Rect		srcRect, destRect;
-	short		i;
+	Rect srcRect, destRect;
+	SInt16 i;
+	HDC hdc, displayDC;
+	HBITMAP buttonBitmap, prevButtonBitmap;
+	HBITMAP prevBitmap;
+
+	displayDC = GetDC(NULL);
+	hdc = CreateCompatibleDC(displayDC);
 
 	// Selection Tool
-	DrawCIcon(kSelectionTool, toolRects[0].left, toolRects[0].top);
-
-	for (i = 0; i < 15; i++)								// Other tools
+	buttonBitmap = CreateCompatibleBitmap(displayDC, 22, 22);
+	if (buttonBitmap != NULL)
 	{
-		QSetRect(&srcRect, 0, 0, 24, 24);
-		QSetRect(&destRect, 0, 0, 24, 24);
+		prevBitmap = SelectObject(hdc, buttonBitmap);
+		DrawCIcon(hdc, kSelectionTool, -3, -3);
+		SelectObject(hdc, prevBitmap);
 
+		prevButtonBitmap = (HBITMAP)SendDlgItemMessage(toolsWindow,
+			kToolButtonBaseID + kSelectTool, BM_SETIMAGE,
+			IMAGE_BITMAP, (LPARAM)buttonBitmap);
+		if (prevButtonBitmap != NULL)
+		{
+			DeleteObject(prevButtonBitmap);
+		}
+	}
+
+	// Other tools
+	for (i = 0; i < 15; i++)
+	{
+		QSetRect(&srcRect, 0, 0, 22, 22);
+		QOffsetRect(&srcRect, 1, 1);
 		QOffsetRect(&srcRect, i * 24, (toolMode - 1) * 24);
-		QOffsetRect(&destRect, toolRects[i + 1].left + 2, toolRects[i + 1].top + 2);
 
-		CopyBits((BitMap *)*GetGWorldPixMap(toolSrcMap),
-				GetPortBitMapForCopyBits(GetWindowPort(toolsWindow)),
-				&srcRect, &destRect, srcCopy, nil);
+		QSetRect(&destRect, 0, 0, 22, 22);
+
+		buttonBitmap = CreateCompatibleBitmap(displayDC, 22, 22);
+		if (buttonBitmap != NULL)
+		{
+			prevBitmap = SelectObject(hdc, buttonBitmap);
+			Mac_CopyBits(toolSrcMap, hdc, &srcRect, &destRect, srcCopy, nil);
+			SelectObject(hdc, prevBitmap);
+
+			prevButtonBitmap = (HBITMAP)SendDlgItemMessage(toolsWindow,
+				kToolButtonBaseID + i + 1, BM_SETIMAGE,
+				IMAGE_BITMAP, (LPARAM)buttonBitmap);
+			if (prevButtonBitmap != NULL)
+			{
+				DeleteObject(prevButtonBitmap);
+			}
+		}
 	}
-#endif
+
+	DeleteDC(hdc);
+	ReleaseDC(NULL, displayDC);
 }
 #endif
-
-//--------------------------------------------------------------  EraseSelectedTool
-
-void EraseSelectedTool (void)
-{
-	return;
-#if 0
-#ifndef COMPILEDEMO
-	Rect		theRect;
-	short		toolIcon;
-
-	if (toolsWindow == nil)
-		return;
-
-	SetPort((GrafPtr)toolsWindow);
-
-	toolIcon = toolSelected;
-	if ((toolMode == kBlowerMode) && (toolIcon >= 7))
-	{
-		toolIcon--;
-	}
-	else if ((toolMode == kTransportMode) && (toolIcon >= 7))
-	{
-		if (toolIcon >= 15)
-			toolIcon -= 4;
-		else
-			toolIcon = ((toolIcon - 7) / 2) + 7;
-	}
-
-	theRect = toolRects[toolIcon];
-	PenSize(2, 2);
-	ForeColor(whiteColor);
-	FrameRect(&theRect);
-#endif
-#endif
-}
 
 //--------------------------------------------------------------  SelectTool
 
 void SelectTool (SInt16 which)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	Rect		theRect;
-	short		toolIcon;
-
-	if (toolsWindow == nil)
-		return;
-
-	SetPort((GrafPtr)toolsWindow);
+	SInt16 toolIcon;
 
 	toolIcon = which;
 	if ((toolMode == kBlowerMode) && (toolIcon >= 7))
@@ -251,68 +214,183 @@ void SelectTool (SInt16 which)
 			toolIcon = ((toolIcon - 7) / 2) + 7;
 	}
 
-	theRect = toolRects[toolIcon];
-	ForeColor(redColor);
-	FrameRect(&theRect);
-	PenNormal();
-	ForeColor(blackColor);
+	CheckRadioButton(toolsWindow, kToolButtonFirstID, kToolButtonLastID,
+		kToolButtonBaseID + toolIcon);
 
 	toolSelected = which;
-	DrawToolName();
-#endif
+	UpdateToolName();
 #endif
 }
 
-//--------------------------------------------------------------  UpdateToolsWindow
+//--------------------------------------------------------------  ToolsWindowProc
 
-void UpdateToolsWindow (void)
+INT_PTR CALLBACK ToolsWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return;
-#if 0
-#ifndef COMPILEDEMO
-	if (toolsWindow == nil)
-		return;
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return Tools_OnInitDialog(hDlg);
 
-	SetPortWindowPort(toolsWindow);
-	DrawControls(toolsWindow);
+	case WM_DESTROY:
+		Tools_OnDestroy(hDlg);
+		return FALSE; // perform default processing
 
-	DkGrayForeColor();
-	MoveTo(4, 25);
-	Line(108, 0);
-	ForeColor(blackColor);
+	case WM_MOVE:
+		Tools_OnMove(hDlg);
+		return TRUE;
 
-	DrawToolTiles();
-	FrameSelectedTool();
-	DrawToolName();
-#endif
-#endif
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDCANCEL:
+			ToggleToolsWindow();
+			break;
+
+		case kToolModeCombo:
+			if (HIWORD(wParam) == CBN_SELCHANGE)
+			{
+				Tools_OnToolSelChange(hDlg);
+			}
+			break;
+
+		case kToolButtonBaseID + 0:
+		case kToolButtonBaseID + 1:
+		case kToolButtonBaseID + 2:
+		case kToolButtonBaseID + 3:
+		case kToolButtonBaseID + 4:
+		case kToolButtonBaseID + 5:
+		case kToolButtonBaseID + 6:
+		case kToolButtonBaseID + 7:
+		case kToolButtonBaseID + 8:
+		case kToolButtonBaseID + 9:
+		case kToolButtonBaseID + 10:
+		case kToolButtonBaseID + 11:
+		case kToolButtonBaseID + 12:
+		case kToolButtonBaseID + 13:
+		case kToolButtonBaseID + 14:
+		case kToolButtonBaseID + 15:
+			if (HIWORD(wParam) == BN_CLICKED)
+			{
+				Tools_OnButtonClick(hDlg, LOWORD(wParam));
+			}
+			break;
+		}
+		return TRUE;
+	}
+	return FALSE;
+}
+
+//--------------------------------------------------------------  Tools_OnInitDialog
+
+INT_PTR Tools_OnInitDialog (HWND hwnd)
+{
+	HMENU rootMenu;
+	MENUITEMINFO menuItemInfo;
+
+	rootMenu = LoadMenu(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDM_ROOT));
+	if (rootMenu == NULL)
+		RedAlert(kErrFailedResourceLoad);
+
+	menuItemInfo.cbSize = sizeof(menuItemInfo);
+	menuItemInfo.fMask = MIIM_SUBMENU;
+	if (!GetMenuItemInfo(rootMenu, IDM_TOOLS, FALSE, &menuItemInfo))
+		RedAlert(kErrFailedResourceLoad);
+
+	AddMenuToComboBox(hwnd, kToolModeCombo, menuItemInfo.hSubMenu);
+	DestroyMenu(rootMenu);
+
+	return FALSE; // don't change the focus
+}
+
+//--------------------------------------------------------------  Tools_OnDestroy
+
+void Tools_OnDestroy (HWND hwnd)
+{
+	HBITMAP buttonBitmap;
+	int buttonID;
+
+	for (buttonID = kToolButtonFirstID; buttonID <= kToolButtonLastID; buttonID++)
+	{
+		buttonBitmap = (HBITMAP)SendDlgItemMessage(hwnd, buttonID,
+			BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)NULL);
+		if (buttonBitmap)
+		{
+			DeleteObject(buttonBitmap);
+		}
+	}
+}
+
+//--------------------------------------------------------------  Tools_OnMove
+
+void Tools_OnMove (HWND hwnd)
+{
+	WINDOWPLACEMENT placement;
+
+	placement.length = sizeof(placement);
+	GetWindowPlacement(hwnd, &placement);
+	isToolsH = (SInt16)placement.rcNormalPosition.left;
+	isToolsV = (SInt16)placement.rcNormalPosition.top;
+}
+
+//--------------------------------------------------------------  Tools_OnToolSelChange
+
+void Tools_OnToolSelChange (HWND hwnd)
+{
+	SInt16 newMode;
+
+	GetComboBoxMenuValue(hwnd, kToolModeCombo, &newMode);
+	SwitchToolModes(newMode);
+}
+
+//--------------------------------------------------------------  Tools_OnButtonClick
+
+void Tools_OnButtonClick (HWND hwnd, WORD clickedID)
+{
+	SInt16 toolIcon;
+	SInt16 buttonID;
+
+	UNREFERENCED_PARAMETER(clickedID);
+
+	// BN_CLICKED is received when a radio button is focused, but
+	// being focused doesn't mean being checked. Find out which
+	// button has actually last been checked.
+	toolIcon = kSelectTool;
+	for (buttonID = kToolButtonFirstID; buttonID <= kToolButtonLastID; buttonID++)
+	{
+		if (IsDlgButtonChecked(hwnd, buttonID))
+		{
+			toolIcon = buttonID - kToolButtonBaseID;
+			break;
+		}
+	}
+
+	if ((toolMode == kBlowerMode) && (toolIcon >= 7))
+	{
+		toolIcon++;
+	}
+	if ((toolMode == kTransportMode) && (toolIcon >= 7))
+	{
+		if (toolIcon >= 11)
+			toolIcon += 4;
+		else
+			toolIcon = ((toolIcon - 7) * 2) + 7;
+	}
+	SelectTool(toolIcon);
 }
 
 //--------------------------------------------------------------  OpenToolsWindow
 
 void OpenToolsWindow (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	Rect		src, dest;
-	Point		globalMouse;
-	short		h, v;
+	WINDOWPLACEMENT placement;
 
-	if (toolsWindow == nil)
+	if (toolsWindow == NULL)
 	{
-		QSetRect(&toolsWindowRect, 0, 0, 116, 152);		// 143
-		QSetRect(&toolTextRect, 0, 0, 116, 12);
-		InsetRect(&toolTextRect, -1, -1);
-		QOffsetRect(&toolTextRect, 0, 157 - 15);
-		if (thisMac.hasColor)
-			toolsWindow = NewCWindow(nil, &toolsWindowRect,
-					"\pTools", false, kWindoidWDEF, kPutInFront, true, 0L);
-		else
-			toolsWindow = NewWindow(nil, &toolsWindowRect,
-					"\pTools", false, kWindoidWDEF, kPutInFront, true, 0L);
-
-		if (toolsWindow == nil)
+		toolsWindow = CreateDialog(HINST_THISCOMPONENT,
+			MAKEINTRESOURCE(kToolsWindowID),
+			mainWindow, ToolsWindowProc);
+		if (toolsWindow == NULL)
 			RedAlert(kErrNoMemory);
 
 //		if (OptionKeyDown())
@@ -320,28 +398,16 @@ void OpenToolsWindow (void)
 //			isToolsH = qd.screenBits.bounds.right - 120;
 //			isToolsV = 35;
 //		}
-		MoveWindow(toolsWindow, isToolsH, isToolsV, true);
-		globalMouse = MyGetGlobalMouse();
-		QSetRect(&src, 0, 0, 1, 1);
-		QOffsetRect(&src, globalMouse.h, globalMouse.v);
-		GetWindowRect(toolsWindow, &dest);
-		BringToFront(toolsWindow);
-		ShowHide(toolsWindow, true);
-//		FlagWindowFloating(toolsWindow);	TEMP - use flaoting windows
-		HiliteAllWindows();
+		placement.length = sizeof(placement);
+		GetWindowPlacement(toolsWindow, &placement);
+		OffsetRect(&placement.rcNormalPosition,
+			-placement.rcNormalPosition.left,
+			-placement.rcNormalPosition.top);
+		OffsetRect(&placement.rcNormalPosition, isToolsH, isToolsV);
+		placement.showCmd = SW_SHOWNOACTIVATE;
+		SetWindowPlacement(toolsWindow, &placement);
 
-		classPopUp = GetNewControl(kPopUpControl, toolsWindow);
-		if (classPopUp == nil)
-			RedAlert(kErrFailedResourceLoad);
-
-		SetControlValue(classPopUp, toolMode);
-
-		for (v = 0; v < kToolsHigh; v++)
-			for (h = 0; h < kToolsWide; h++)
-			{
-				QSetRect(&toolRects[(v * kToolsWide) + h], 2, 29, 30, 57);
-				QOffsetRect(&toolRects[(v * kToolsWide) + h], h * 28, v * 28);
-			}
+		SetComboBoxMenuValue(toolsWindow, kToolModeCombo, toolMode);
 
 		CreateToolsOffscreen();
 
@@ -351,20 +417,16 @@ void OpenToolsWindow (void)
 
 	UpdateToolsCheckmark(true);
 #endif
-#endif
 }
 
 //--------------------------------------------------------------  CloseToolsWindow
 
 void CloseToolsWindow (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
 	CloseThisWindow(&toolsWindow);
 	KillToolsOffscreen();
 	UpdateToolsCheckmark(false);
-#endif
 #endif
 }
 
@@ -372,10 +434,8 @@ void CloseToolsWindow (void)
 
 void ToggleToolsWindow (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	if (toolsWindow == nil)
+	if (toolsWindow == NULL)
 	{
 		OpenToolsWindow();
 		isToolsOpen = true;
@@ -383,9 +443,8 @@ void ToggleToolsWindow (void)
 	else
 	{
 		CloseToolsWindow();
-		isToolsOpen = true;
+		isToolsOpen = false;
 	}
-#endif
 #endif
 }
 
@@ -394,150 +453,103 @@ void ToggleToolsWindow (void)
 #ifndef COMPILEDEMO
 void SwitchToolModes (SInt16 newMode)
 {
-	return;
-#if 0
-	if (toolsWindow == nil)
+	HWND hwndButton;
+	SInt16 index;
+
+	if (toolsWindow == NULL)
 		return;
 
 	SelectTool(kSelectTool);
 	switch (newMode)
 	{
-		case kBlowerMode:
+	case kBlowerMode:
 		firstTool = kFirstBlower;
 		lastTool = kLastBlower;
 		objectBase = kBlowerBase;
 		break;
 
-		case kFurnitureMode:
+	case kFurnitureMode:
 		firstTool = kFirstFurniture;
 		lastTool = kLastFurniture;
 		objectBase = kFurnitureBase;
 		break;
 
-		case kBonusMode:
+	case kBonusMode:
 		firstTool = kFirstBonus;
 		lastTool = kLastBonus;
 		objectBase = kBonusBase;
 		break;
 
-		case kTransportMode:
+	case kTransportMode:
 		firstTool = kFirstTransport;
 		lastTool = kLastTransport;
 		objectBase = kTransportBase;
 		break;
 
-		case kSwitchMode:
+	case kSwitchMode:
 		firstTool = kFirstSwitch;
 		lastTool = kLastSwitch;
 		objectBase = kSwitchBase;
 		break;
 
-		case kLightMode:
+	case kLightMode:
 		firstTool = kFirstLight;
 		lastTool = kLastLight;
 		objectBase = kLightBase;
 		break;
 
-		case kApplianceMode:
+	case kApplianceMode:
 		firstTool = kFirstAppliance;
 		lastTool = kLastAppliance;
 		objectBase = kApplianceBase;
 		break;
 
-		case kEnemyMode:
+	case kEnemyMode:
 		firstTool = kFirstEnemy;
 		lastTool = kLastEnemy;
 		objectBase = kEnemyBase;
 		break;
 
-		case kClutterMode:
+	case kClutterMode:
 		firstTool = kFirstClutter;
 		lastTool = kLastClutter;
 		objectBase = kClutterBase;
 		break;
 	}
 
-	toolMode = newMode;
-	InvalWindowRect(toolsWindow, &toolsWindowRect);
-#endif
-}
-#endif
-
-//--------------------------------------------------------------  HandleToolsClick
-
-void HandleToolsClick (Point wherePt)
-{
-	return;
-#if 0
-#ifndef COMPILEDEMO
-	ControlHandle	theControl;
-	short			i, part, newMode, toolIcon;
-
-	if (toolsWindow == nil)
-		return;
-
-	SetPortWindowPort(toolsWindow);
-	GlobalToLocal(&wherePt);
-
-	part = FindControl(wherePt, toolsWindow, &theControl);
-	if ((theControl != nil) && (part != 0))
+	for (index = 1; index < kTotalTools; index++)
 	{
-		part = TrackControl(theControl, wherePt, (ControlActionUPP)-1L);
-		if (part != 0)
+		hwndButton = GetDlgItem(toolsWindow, kToolButtonBaseID + index);
+		if (index <= lastTool)
 		{
-			newMode = GetControlValue(theControl);
-			if (newMode != toolMode)
-			{
-				EraseSelectedTool();
-				SwitchToolModes(newMode);
-			}
+			ShowWindow(hwndButton, SW_SHOW);
+		}
+		else
+		{
+			ShowWindow(hwndButton, SW_HIDE);
 		}
 	}
-	else
-	{
-		for (i = 0; i < kTotalTools; i++)
-			if ((PtInRect(wherePt, &toolRects[i])) && (i <= lastTool))
-			{
-				EraseSelectedTool();
-				toolIcon = i;
-				if ((toolMode == kBlowerMode) && (toolIcon >= 7))
-				{
-					toolIcon++;
-				}
-				if ((toolMode == kTransportMode) && (toolIcon >= 7))
-				{
-					if (toolIcon >= 11)
-						toolIcon += 4;
-					else
-						toolIcon = ((toolIcon - 7) * 2) + 7;
-				}
-				SelectTool(toolIcon);
-				break;
-			}
-	}
-#endif
-#endif
+
+	toolMode = newMode;
+	UpdateToolTiles();
 }
+#endif
 
 //--------------------------------------------------------------  NextToolMode
 
 void NextToolMode (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	if (toolsWindow == nil)
+	if (toolsWindow == NULL)
 		return;
 
 	if ((theMode == kEditMode) && (toolMode < kClutterMode))
 	{
-		EraseSelectedTool();
 		toolMode++;
-		SetControlValue(classPopUp, toolMode);
+		SetComboBoxMenuValue(toolsWindow, kToolModeCombo, toolMode);
 		SwitchToolModes(toolMode);
 		toolSelected = kSelectTool;
 	}
-#endif
 #endif
 }
 
@@ -545,21 +557,17 @@ void NextToolMode (void)
 
 void PrevToolMode (void)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	if (toolsWindow == nil)
+	if (toolsWindow == NULL)
 		return;
 
 	if ((theMode == kEditMode) && (toolMode > kBlowerMode))
 	{
-		EraseSelectedTool();
 		toolMode--;
-		SetControlValue(classPopUp, toolMode);
+		SetComboBoxMenuValue(toolsWindow, kToolModeCombo, toolMode);
 		SwitchToolModes(toolMode);
 		toolSelected = kSelectTool;
 	}
-#endif
 #endif
 }
 
@@ -567,18 +575,14 @@ void PrevToolMode (void)
 
 void SetSpecificToolMode (SInt16 modeToSet)
 {
-	return;
-#if 0
 #ifndef COMPILEDEMO
-	if ((toolsWindow == nil) || (theMode != kEditMode))
+	if ((toolsWindow == NULL) || (theMode != kEditMode))
 		return;
 
-	EraseSelectedTool();
 	toolMode = modeToSet;
-	SetControlValue(classPopUp, toolMode);
+	SetComboBoxMenuValue(toolsWindow, kToolModeCombo, toolMode);
 	SwitchToolModes(toolMode);
 	toolSelected = kSelectTool;
-#endif
 #endif
 }
 

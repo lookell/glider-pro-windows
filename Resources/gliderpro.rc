@@ -485,17 +485,17 @@ IDM_ROOT MENUEX
         MENUITEM "Stars"
         MENUITEM "Original Artwork"
     }
-    POPUP "Tools", 141
+    POPUP "Tools", IDM_TOOLS
     {
-        MENUITEM "Blowers"
-        MENUITEM "Furniture"
-        MENUITEM "Prizes"
-        MENUITEM "Transport"
-        MENUITEM "Switches"
-        MENUITEM "Lighting"
-        MENUITEM "Appliances Etc."
-        MENUITEM "Enemies"
-        MENUITEM "Clutter"
+        MENUITEM "Blowers", kBlowerMode
+        MENUITEM "Furniture", kFurnitureMode
+        MENUITEM "Prizes", kBonusMode
+        MENUITEM "Transport", kTransportMode
+        MENUITEM "Switches", kSwitchMode
+        MENUITEM "Lighting", kLightMode
+        MENUITEM "Appliances Etc.", kApplianceMode
+        MENUITEM "Enemies", kEnemyMode
+        MENUITEM "Clutter", kClutterMode
     }
 }
 
@@ -558,6 +558,7 @@ IDM_ROOT MENUEX
 #include "Windows\\Coordinate.dlg"
 #include "Windows\\Message.dlg"
 #include "Windows\\Link.dlg"
+#include "Windows\\Tools.dlg"
 
 IDI_APPL    ICON    "Icons\\FileAppl.ico"
 IDI_PREFS   ICON    "Icons\\FilePrefs.ico"

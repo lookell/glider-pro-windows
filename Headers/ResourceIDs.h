@@ -67,6 +67,8 @@
 #define ID_OBJECT_WINDOW		40420
 #define ID_COORDINATE_WINDOW	40421
 
+#define IDM_TOOLS               141
+
 #define IDI_APPL				1
 #define IDI_PREFS				2
 #define IDI_HOUSE				3
@@ -133,6 +135,7 @@
 #define kCoordinateWindowID     10001
 #define kMessageWindowID        10002
 #define kLinkWindowID           10003
+#define kToolsWindowID          10004
 
 #define kColorDepthIcon         130
 #define kFloppyDiskIcon         140

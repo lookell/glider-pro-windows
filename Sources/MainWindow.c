@@ -442,7 +442,6 @@ void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick)
 
 	if (GetKeyState(VK_SHIFT) >= 0) // if shift key up
 	{
-		EraseSelectedTool();
 		SelectTool(kSelectTool);
 	}
 }

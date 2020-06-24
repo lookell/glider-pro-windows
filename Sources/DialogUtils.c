@@ -7,8 +7,10 @@
 //============================================================================
 
 
+#include "GliderDefines.h"
 #include "Macintosh.h"
 #include "StringUtils.h"
+#include "Utilities.h"
 #include "WinAPI.h"
 
 
@@ -818,50 +820,107 @@ void SelectFromRadioGroup (DialogPtr dial, SInt16 which, SInt16 first, SInt16 la
 #endif
 }
 
-//--------------------------------------------------------------  AddMenuToPopUp
-// Assigns a menu handle to a pop-up dialog item - thus, giving that…
-// pop-up item something to pop up.
-/*
-void AddMenuToPopUp (DialogPtr theDialog, SInt16 whichItem, MenuHandle theMenu)
-{
-	Rect		iRect;
-	Handle		iHandle;
-	short		iType;
+//--------------------------------------------------------------  AddMenuToComboBox
+// Replaces the items in a combo box with the items from an HMENU.
+// The strings from the menu are the strings in the combo box, and the
+// item IDs from the menu become the item data values in the combo box.
 
-	GetDialogItem(theDialog, whichItem, &iType, &iHandle, &iRect);
-	(**(ControlHandle)iHandle).contrlRfCon = (long)theMenu;
+void AddMenuToComboBox (HWND theDialog, int whichItem, HMENU theMenu)
+{
+	HWND hwndCombo;
+	int menuIndex, numItems;
+	int comboIndex;
+	wchar_t *itemString;
+	MENUITEMINFO menuItemInfo;
+	BOOL succeeded;
+
+	if (theDialog == NULL || theMenu == NULL)
+		return;
+
+	hwndCombo = GetDlgItem(theDialog, whichItem);
+	if (hwndCombo == NULL)
+		return;
+
+	numItems = GetMenuItemCount(theMenu);
+	if (numItems < 0)
+		return;
+
+	ComboBox_ResetContent(hwndCombo);
+
+	itemString = NULL;
+	menuItemInfo.cbSize = sizeof(menuItemInfo);
+	menuItemInfo.fMask = MIIM_ID | MIIM_STRING;
+	for (menuIndex = 0; menuIndex < numItems; menuIndex++)
+	{
+		menuItemInfo.dwTypeData = NULL;
+		succeeded = GetMenuItemInfo(theMenu, menuIndex, TRUE, &menuItemInfo);
+		if (!succeeded)
+			continue;
+		itemString = calloc((menuItemInfo.cch + 1), sizeof(*itemString));
+		if (itemString == NULL)
+			RedAlert(kErrNoMemory);
+		menuItemInfo.dwTypeData = itemString;
+		menuItemInfo.cch += 1;
+		succeeded = GetMenuItemInfo(theMenu, menuIndex, TRUE, &menuItemInfo);
+		if (!succeeded)
+		{
+			free(itemString);
+			itemString = NULL;
+			continue;
+		}
+		comboIndex = ComboBox_AddString(hwndCombo, itemString);
+		ComboBox_SetItemData(hwndCombo, comboIndex, menuItemInfo.wID);
+	}
 }
-*/
-//--------------------------------------------------------------  GetPopUpMenuValu
-// Returns which item is currently selected in a pop-up menu.
 
-void GetPopUpMenuValue (DialogPtr theDialog, SInt16 whichItem, SInt16 *value)
+//--------------------------------------------------------------  GetComboBoxMenuValue
+// Returns which item is currently selected in a combo box menu.
+// This returns the selected item's data, not the item's index.
+
+void GetComboBoxMenuValue (HWND theDialog, int whichItem, SInt16 *value)
 {
-	return;
-#if 0
-	Rect		iRect;
-	Handle		iHandle;
-	short		iType;
+	HWND hwndCombo;
+	int selectedIndex;
 
-	GetDialogItem(theDialog, whichItem, &iType, &iHandle, &iRect);
-	*value = GetControlValue((ControlHandle)iHandle);
-#endif
+	if (theDialog == NULL || value == NULL)
+		return;
+
+	*value = -1;
+	hwndCombo = GetDlgItem(theDialog, whichItem);
+	if (hwndCombo == NULL)
+		return;
+	selectedIndex = ComboBox_GetCurSel(hwndCombo);
+	if (selectedIndex < 0)
+		return;
+	*value = (SInt16)ComboBox_GetItemData(hwndCombo, selectedIndex);
 }
 
-//--------------------------------------------------------------  SetPopUpMenuValue
-// Forces a specific item to be set (as though selected) in a pop-up menu.
+//--------------------------------------------------------------  SetComboBoxMenuValue
+// Forces a specific item to be selected in a combo box menu.
+// The value is the item's data, not its index.
 
-void SetPopUpMenuValue (DialogPtr theDialog, SInt16 whichItem, SInt16 value)
+void SetComboBoxMenuValue (HWND theDialog, int whichItem, SInt16 value)
 {
-	return;
-#if 0
-	Rect		iRect;
-	Handle		iHandle;
-	short		iType;
+	HWND hwndCombo;
+	int index, numItems;
+	LRESULT itemData;
 
-	GetDialogItem(theDialog, whichItem, &iType, &iHandle, &iRect);
-	SetControlValue((ControlHandle)iHandle, value);
-#endif
+	if (theDialog == NULL)
+		return;
+
+	hwndCombo = GetDlgItem(theDialog, whichItem);
+	if (hwndCombo == NULL)
+		return;
+	numItems = ComboBox_GetCount(hwndCombo);
+	for (index = 0; index < numItems; index++)
+	{
+		itemData = ComboBox_GetItemData(hwndCombo, index);
+		if (itemData == value)
+		{
+			ComboBox_SetCurSel(hwndCombo, index);
+			break;
+		}
+	}
 }
 
 //--------------------------------------------------------------  MyEnableControl
