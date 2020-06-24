@@ -759,7 +759,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		Point wherePt;
 		wherePt.h = GET_X_LPARAM(lParam);
 		wherePt.v = GET_Y_LPARAM(lParam);
-		if (uMsg == WM_LBUTTONDBLCLK || !ignoreDoubleClick)
+		if (uMsg == WM_LBUTTONDBLCLK && !ignoreDoubleClick)
 		{
 			HandleMainClick(hwnd, wherePt, true);
 		}
