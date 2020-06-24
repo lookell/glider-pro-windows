@@ -18,10 +18,11 @@
 #include "Utilities.h"
 
 
-#define kBaseBufferMusicID			2000
-#define kMaxMusic					7
-#define kLastMusicPiece				16
-#define kLastGamePiece				6
+#define kBaseBufferMusicID      2000
+#define kMaxMusic               7
+#define kLastMusicPiece         16
+#define kLastGamePiece          6
+#define kMusicTickMS            50
 
 
 typedef struct MusicBuffer {
@@ -46,6 +47,7 @@ static MusicBuffer playingBuffer, waitingBuffer;
 static LPDIRECTSOUNDBUFFER8 musicChannel;
 static unsigned char *musicChannelShadow;
 static DWORD lastWrittenCursor, musicChannelByteSize;
+static DWORD bytesPerMusicTick;
 static HANDLE musicTimerHandle;
 static CRITICAL_SECTION musicCriticalSection;
 
@@ -102,7 +104,7 @@ OSErr StartMusic (void)
 		if (musicTimerHandle == NULL)
 		{
 			succeeded = CreateTimerQueueTimer(&musicTimerHandle, NULL, DoMusicTick,
-					NULL, 500, 100, WT_EXECUTEDEFAULT);
+				NULL, 2 * kMusicTickMS, kMusicTickMS, WT_EXECUTEDEFAULT);
 		}
 		if (succeeded)
 		{
@@ -264,6 +266,7 @@ VOID CALLBACK DoMusicTick(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 {
 	DWORD DSPlayCursor;
 	DWORD invalidLength, validLength;
+	DWORD numBytesLeftToPlay;
 	DWORD nextBufferPlayed;
 	HRESULT hr;
 
@@ -307,13 +310,32 @@ VOID CALLBACK DoMusicTick(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 	{
 		invalidLength = musicChannelByteSize - lastWrittenCursor + DSPlayCursor;
 	}
-
 	playingBuffer.numBytesPlayed += invalidLength;
+
+	// For the first couple of music ticks, there is already a waiting buffer of
+	// sound data ready to go. For all subsequent ticks, though, the waiting buffer
+	// is only set up if the next music tick would be playing that buffer.
+	// This makes the music react properly to the musical mode changing.
+
+	// Queue up the next buffer if we're getting close to its play time, and
+	// we haven't set the buffer up yet.
+	if (playingBuffer.dataLength > playingBuffer.numBytesPlayed)
+		numBytesLeftToPlay = playingBuffer.dataLength - playingBuffer.numBytesPlayed;
+	else
+		numBytesLeftToPlay = 0;
+	if ((waitingBuffer.dataBytes == NULL) && (numBytesLeftToPlay <= bytesPerMusicTick))
+	{
+		MusicCallBack();
+	}
+
+	// If the waiting buffer has started to play, acknowledge this by
+	// making it the new playing buffer and zeroing out the waiting buffer.
 	if (playingBuffer.numBytesPlayed >= playingBuffer.dataLength)
 	{
 		nextBufferPlayed = playingBuffer.numBytesPlayed - playingBuffer.dataLength;
-		MusicCallBack();
+		playingBuffer = waitingBuffer;
 		playingBuffer.numBytesPlayed = nextBufferPlayed;
+		ZeroMemory(&waitingBuffer, sizeof(waitingBuffer));
 	}
 
 	hr = DoMusicTickImpl(lastWrittenCursor, invalidLength, &validLength);
@@ -392,8 +414,6 @@ HRESULT DoMusicTickImpl (DWORD offset, DWORD numToWrite, DWORD *pNumWritten)
 
 void MusicCallBack (void)
 {
-	MusicBuffer tmpBuffer;
-
 	EnterCriticalSection(&musicCriticalSection);
 
 	switch (musicMode)
@@ -422,9 +442,25 @@ void MusicCallBack (void)
 		break;
 	}
 
-	tmpBuffer = playingBuffer;
-	playingBuffer = waitingBuffer;
-	waitingBuffer = tmpBuffer;
+	{
+		wchar_t buffer[64] = { 0 };
+		switch (musicSoundID)
+		{
+		case 0: StringCchCopy(buffer, 64, L"Refrain1"); break;
+		case 1: StringCchCopy(buffer, 64, L"Refrain2"); break;
+		case 2: StringCchCopy(buffer, 64, L"Refrain3"); break;
+		case 3: StringCchCopy(buffer, 64, L"Refrain4"); break;
+		case 4: StringCchCopy(buffer, 64, L"Chorus"); break;
+		case 5: StringCchCopy(buffer, 64, L"RefrainSparse1"); break;
+		case 6: StringCchCopy(buffer, 64, L"RefrainSparse2"); break;
+		default: DebugBreak(); break;
+		}
+		if (buffer[0])
+		{
+			StringCchCat(buffer, 64, L"\n");
+			OutputDebugString(buffer);
+		}
+	}
 
 	waitingBuffer.dataBytes = theMusicData[musicSoundID].dataBytes;
 	waitingBuffer.dataLength = (DWORD)theMusicData[musicSoundID].dataLength;
@@ -494,6 +530,8 @@ OSErr OpenMusicChannel (void)
 	musicFormat.cbSize = 0;
 	musicFormat.nBlockAlign = musicFormat.nChannels * musicFormat.wBitsPerSample / 8;
 	musicFormat.nAvgBytesPerSec = musicFormat.nSamplesPerSec * musicFormat.nBlockAlign;
+
+	bytesPerMusicTick = musicFormat.nAvgBytesPerSec * kMusicTickMS / 1000;
 
 	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
 	bufferDesc.dwSize = sizeof(bufferDesc);
