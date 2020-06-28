@@ -4,65 +4,74 @@
 // On Windows XP and later (our target platforms), the performance counter
 // functions will not fail, so their return values are not checked.
 
-const LONGLONG FRAMES_PER_SECOND = 30;
-const LONGLONG MS_PER_SECOND = 1000;
-
-static LONGLONG QPC_CountsPerFrame = 0;
-static LONGLONG QPC_CountsPerMS = 0;
-static BOOL FrameTimer_IsInitialized = FALSE;
-
+static DWORD CurrentFrameRate = FRAME_TIMER_DEFAULT_FPS;
 static LONGLONG FrameStart = 0;
 static LONGLONG FrameNext = 0;
-
-static void FrameTimer_Initialize(void)
-{
-	LONGLONG CountsPerSecond;
-
-	CountsPerSecond = GetPerformanceFrequency();
-	QPC_CountsPerFrame = CountsPerSecond / FRAMES_PER_SECOND;
-	QPC_CountsPerMS = CountsPerSecond / MS_PER_SECOND;
-	FrameTimer_IsInitialized = TRUE;
-}
 
 LONGLONG GetPerformanceCounter(void)
 {
 	LARGE_INTEGER li;
-
 	QueryPerformanceCounter(&li);
 	return li.QuadPart;
 }
 
 LONGLONG GetPerformanceFrequency(void)
 {
-	LARGE_INTEGER li;
+	static LONGLONG QPC_Frequency = 0;
 
-	QueryPerformanceFrequency(&li);
-	return li.QuadPart;
+	if (QPC_Frequency == 0)
+	{
+		LARGE_INTEGER li;
+		QueryPerformanceFrequency(&li);
+		QPC_Frequency = li.QuadPart;
+	}
+	return QPC_Frequency;
+}
+
+DWORD GetFrameRate(void)
+{
+	return CurrentFrameRate;
+}
+
+void SetFrameRate(DWORD NewFrameRate)
+{
+	CurrentFrameRate = NewFrameRate;
+}
+
+static LONGLONG GetCountsPerFrame(void)
+{
+	return GetPerformanceFrequency() / GetFrameRate();
+}
+
+static LONGLONG GetCountsPerMS(void)
+{
+	return GetPerformanceFrequency() / 1000;
 }
 
 static DWORD GetWaitTimeUntilNextFrame(void)
 {
+	LONGLONG CountsPerFrame;
+	LONGLONG CountsPerMS;
 	LONGLONG FrameNow;
 	LONGLONG CountsElapsed;
 	LONGLONG CountsToSleep;
 	DWORD SleepMS;
 
-	if (!FrameTimer_IsInitialized)
-	{
-		FrameTimer_Initialize();
-	}
+	CountsPerFrame = GetCountsPerFrame();
+	CountsPerMS = GetCountsPerMS();
 	FrameNow = GetPerformanceCounter();
+
 	CountsElapsed = FrameNow - FrameStart;
-	if (CountsElapsed >= QPC_CountsPerFrame)
+	if (CountsElapsed >= CountsPerFrame)
 	{
 		FrameNext = FrameNow;
 		SleepMS = 0;
 	}
 	else
 	{
-		FrameNext = FrameStart + QPC_CountsPerFrame;
+		FrameNext = FrameStart + CountsPerFrame;
 		CountsToSleep = FrameNext - FrameNow;
-		SleepMS = (DWORD)(CountsToSleep / QPC_CountsPerMS);
+		SleepMS = (DWORD)(CountsToSleep / CountsPerMS);
 	}
 	return SleepMS;
 }

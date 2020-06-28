@@ -3,8 +3,12 @@
 
 #include "WinAPI.h"
 
+#define FRAME_TIMER_DEFAULT_FPS 30
+
 LONGLONG GetPerformanceCounter(void);
 LONGLONG GetPerformanceFrequency(void);
+DWORD GetFrameRate(void);
+void SetFrameRate(DWORD NewFrameRate);
 void WaitUntilNextFrame(void);
 void WaitUntilNextFrameOrMessage(BOOL *MessageReceived);
 
