@@ -750,15 +750,46 @@ void GetDialogNumFromStr (DialogPtr theDialog, SInt16 item, SInt32 *theNumber)
 //--------------------------------------------------------------  GetDialogItemRect
 // Returns the bounding rectangle of the specified dialog item.
 
-void GetDialogItemRect (DialogPtr theDialog, SInt16 item, Rect *theRect)
+void GetDialogItemRect (HWND theDialog, int item, Rect *theRect)
 {
-	return;
-#if 0
-	Handle		itemHandle;
-	short		itemType;
+	HWND hwndChild;
+	RECT windowRect;
 
-	GetDialogItem(theDialog, item, &itemType, &itemHandle, theRect);
-#endif
+	if (theRect == NULL)
+	{
+		return;
+	}
+	theRect->left = 0;
+	theRect->top = 0;
+	theRect->right = 0;
+	theRect->bottom = 0;
+
+	if (theDialog == NULL)
+	{
+		return;
+	}
+	hwndChild = GetDlgItem(theDialog, item);
+	if (hwndChild == NULL)
+	{
+		return;
+	}
+	if (!GetWindowRect(hwndChild, &windowRect))
+	{
+		return;
+	}
+	SetLastError(ERROR_SUCCESS);
+	if (!MapWindowPoints(HWND_DESKTOP, theDialog, (POINT *)&windowRect, 2))
+	{
+		if (GetLastError() != ERROR_SUCCESS)
+		{
+			return;
+		}
+	}
+
+	theRect->left = (SInt16)windowRect.left;
+	theRect->top = (SInt16)windowRect.top;
+	theRect->right = (SInt16)windowRect.right;
+	theRect->bottom = (SInt16)windowRect.bottom;
 }
 
 //--------------------------------------------------------------  SetDialogItemRect

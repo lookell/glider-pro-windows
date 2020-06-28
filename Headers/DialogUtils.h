@@ -38,7 +38,7 @@ void SetDialogItemValue (DialogPtr theDialog, SInt16 item, SInt16 theState);
 void ToggleDialogItemValue (DialogPtr theDialog, SInt16 item);
 void SetDialogNumToStr (DialogPtr theDialog, SInt16 item, SInt32 theNumber);
 void GetDialogNumFromStr (DialogPtr theDialog, SInt16 item, SInt32 *theNumber);
-void GetDialogItemRect (DialogPtr theDialog, SInt16 item, Rect *theRect);
+void GetDialogItemRect (HWND theDialog, int item, Rect *theRect);
 void SetDialogItemRect (DialogPtr theDialog, SInt16 item, Rect *theRect);
 void OffsetDialogItemRect (DialogPtr theDialog, SInt16 item, SInt16 h, SInt16 v);
 void SelectFromRadioGroup (DialogPtr dial, SInt16 which, SInt16 first, SInt16 last);
