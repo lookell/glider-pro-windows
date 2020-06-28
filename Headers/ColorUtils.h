@@ -24,7 +24,6 @@ void ColorFrameOval (HDC hdc, Rect *theRect, SInt32 color);
 COLORREF LtGrayForeColor (void);
 COLORREF GrayForeColor (void);
 COLORREF DkGrayForeColor (void);
-void RestoreColorsSlam (void);
 void ColorShadowRect (HDC hdc, Rect *theRect, SInt32 color);
 void ColorShadowOval (HDC hdc, Rect *theRect, SInt32 color);
 void ColorShadowRegion (HDC hdc, HRGN theRgn, SInt32 color);

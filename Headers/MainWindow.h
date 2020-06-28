@@ -43,7 +43,7 @@ HDC GetMainWindowDC (void);
 void ReleaseMainWindowDC (HDC hdc);
 //void ShowMenuBarOld (void);
 //void HideMenuBarOld (void);
-//void WashColorIn (void);
+void WashColorIn (void);
 void InitMainWindowCursor (void);
 HCURSOR GetMainWindowCursor (void);
 void SetMainWindowCursor (HCURSOR hCursor);

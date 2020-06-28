@@ -248,22 +248,6 @@ COLORREF DkGrayForeColor (void)
 	return RGB(color.red >> 8, color.green >> 8, color.blue >> 8);
 }
 
-//--------------------------------------------------------------  RestoreColorsSlam
-
-// This function forces the Macintosh to rebuild the palette.  It is…
-// called to restore a sense or normality after some serious munging…
-// with the palette.
-
-void RestoreColorsSlam (void)
-{
-	return;
-#if 0
-	RestoreDeviceClut(nil);
-	PaintBehind(nil, GetGrayRgn());
-	DrawMenuBar();
-#endif
-}
-
 //--------------------------------------------------------------  ColorRectShadow
 
 // Similar to ColorRect, but every other pixel is set to the specified color

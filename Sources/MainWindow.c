@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "MainWindow.h"
 
 //============================================================================
@@ -13,6 +12,7 @@
 #include "Coordinates.h"
 #include "Environ.h"
 #include "Events.h"
+#include "FrameTimer.h"
 #include "House.h"
 #include "HouseIO.h"
 #include "Link.h"
@@ -35,35 +35,33 @@
 #include "Utilities.h"
 
 
-#define kMainWindowID			128
-#define kEditWindowID			129
-#define kMenuWindowID			130
-
-
-void DrawOnSplash (HDC);
-void SetPaletteToGrays (void);
-void HardDrawMainWindow (void);
-void RestoreColorsSlam (void);
+void DrawOnSplash (HDC hdc);
+void SetPaletteToGrays (RGBQUAD *colors, UINT numColors, int saturation,
+	int maxSaturation);
 void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate);
 
 
-CTabHandle		theCTab;
-PixMapHandle	thePMap;
-ColorSpec *		wasColors;
-ColorSpec *		newColors;
-HCURSOR			handCursor, beamCursor, vertCursor, horiCursor;
-HCURSOR			diagCursor;
-Rect			workSrcRect;
-HDC				workSrcMap;
-Rect			mainWindowRect;
-HWND			mainWindow;
-SInt16			isEditH, isEditV;
-SInt16			playOriginH, playOriginV;
-SInt16			splashOriginH, splashOriginV;
-SInt16			theMode;
-Boolean			fadeGraysOut, isDoColorFade, splashDrawn;
+HCURSOR handCursor;
+HCURSOR beamCursor;
+HCURSOR vertCursor;
+HCURSOR horiCursor;
+HCURSOR diagCursor;
+Rect workSrcRect;
+HDC workSrcMap;
+Rect mainWindowRect;
+HWND mainWindow;
+SInt16 isEditH;
+SInt16 isEditV;
+SInt16 playOriginH;
+SInt16 playOriginV;
+SInt16 splashOriginH;
+SInt16 splashOriginV;
+SInt16 theMode;
+Boolean fadeGraysOut;
+Boolean isDoColorFade;
+Boolean splashDrawn;
 
-static	HCURSOR		mainWindowCursor;
+static HCURSOR mainWindowCursor;
 
 
 //==============================================================  Functions
@@ -91,11 +89,12 @@ void DrawOnSplash (HDC hdc)
 	lfHouse.lfClipPrecision = CLIP_DEFAULT_PRECIS;
 	lfHouse.lfQuality = DEFAULT_QUALITY;
 	lfHouse.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	wcscpy(lfHouse.lfFaceName, L"Tahoma");
+	StringCchCopy(lfHouse.lfFaceName, ARRAYSIZE(lfHouse.lfFaceName), L"Tahoma");
+
 	lfNative = lfHouse;
 	lfNative.lfHeight = -12;
 	lfNative.lfWeight = FW_BOLD;
-	wcscpy(lfNative.lfFaceName, L"Tahoma");
+	StringCchCopy(lfNative.lfFaceName, ARRAYSIZE(lfNative.lfFaceName), L"Tahoma");
 
 	PasStringCopyC("House: ", houseLoadedStr);
 	PasStringConcat(houseLoadedStr, thisHouseName);
@@ -303,19 +302,12 @@ void OpenMainWindow (void)
 		Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
 		LoadGraphic(workSrcMap, kSplash8BitPICT);
 
-#if 0
-//		if ((fadeGraysOut) && (isDoColorFade))
-//		{
-//			wasSeed = ExtractCTSeed((CGrafPtr)mainWindow);
-//			SetPortWindowPort(mainWindow);
-//			SetPaletteToGrays();
-//			HardDrawMainWindow();
-//			fadeGraysOut = false;
-//			ForceCTSeed((CGrafPtr)mainWindow, wasSeed);
-//		}
+		if ((fadeGraysOut) && (isDoColorFade))
+		{
+			fadeGraysOut = false;
+		}
 
-		SetPortWindowPort(mainWindow);
-#endif
+		//SetPortWindowPort(mainWindow);
 	}
 }
 
@@ -402,7 +394,6 @@ void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick)
 		return;
 
 	//SetPortWindowPort(mainWindow);
-	//GlobalToLocal(&wherePt); // window procedures already get client coordinates
 
 	if (toolSelected == kSelectTool)
 		DoSelectionClick(hwnd, wherePt, isDoubleClick);
@@ -529,157 +520,127 @@ void HideMenuBarOld (void)
 */
 //--------------------------------------------------------------  SetPaletteToGrays
 
-// Sets up a gray palette corresponding in luminance to the standard color…
-// palette.  This is to facilitate the gray->color fade when the game comes up.
-/*
-void SetPaletteToGrays (void)
+// Sets up a gray palette corresponding in luminance to the given color
+// palette. This is to facilitate the gray->color fade when the game comes up.
+// The ratio given by the 'numer' and 'denom' parameters is the satuaration
+// of the resulting palette, ranging from 0 (full gray) to 1 (original color).
+
+void SetPaletteToGrays (RGBQUAD *colors, UINT numColors, int saturation,
+	int maxSaturation)
 {
-	GDHandle	theDevice;
-	long		longGray;
-	short		i;
-	char		wasState;
+	// The magic wand's color is kept the same.
+	const COLORREF magicWandColor = RGB(0xFF, 0xFF, 0x00);
+	int grayscale, maxGrayscale;
+	int red, green, blue, gray;
+	COLORREF thisColor;
+	UINT i;
 
-	wasState = HGetState((Handle)thisGDevice);
-	HLock((Handle)thisGDevice);
-	thePMap = (*thisGDevice)->gdPMap;
-	HSetState((Handle)thisGDevice, wasState);
+	grayscale = maxSaturation - saturation;
+	maxGrayscale = maxSaturation;
 
-	theCTab = (*thePMap)->pmTable;
-	wasColors = nil;
-	wasColors = (ColorSpec*)NewPtr(sizeof(ColorSpec) * 256);
-	if (wasColors == nil)
-		RedAlert(kErrNoMemory);
-
-	newColors = nil;
-	newColors = (ColorSpec*)NewPtr(sizeof(ColorSpec) * 256);
-	if (newColors == nil)
-		RedAlert(kErrNoMemory);
-
-	for (i = 0; i < 256; i++)
+	for (i = 0; i < numColors; i++)
 	{
-		wasColors[i] = (*theCTab)->ctTable[i];
-		newColors[i] = (*theCTab)->ctTable[i];
-
-		if (i != 5)
+		red = colors[i].rgbRed;
+		green = colors[i].rgbGreen;
+		blue = colors[i].rgbBlue;
+		thisColor = RGB(red, green, blue);
+		if (thisColor != magicWandColor)
 		{
-			longGray = ((long)newColors[i].rgb.red * 3L) / 10L +
-				((long)newColors[i].rgb.green * 6L) / 10L +
-				((long)newColors[i].rgb.blue * 1L) / 10L;
-
-			newColors[i].rgb.red = (unsigned short)longGray;
-			newColors[i].rgb.green = (unsigned short)longGray;
-			newColors[i].rgb.blue = (unsigned short)longGray;
+			gray = ((red * 3) + (green * 6) + (blue * 1)) / 10;
+			red -= MulDiv(red - gray, grayscale, maxGrayscale);
+			green -= MulDiv(green - gray, grayscale, maxGrayscale);
+			blue -= MulDiv(blue - gray, grayscale, maxGrayscale);
 		}
+		colors[i].rgbRed = (BYTE)red;
+		colors[i].rgbGreen = (BYTE)green;
+		colors[i].rgbBlue = (BYTE)blue;
 	}
-
-	theDevice = GetGDevice();
-	SetGDevice(thisGDevice);
-	SetEntries(0, 255, newColors);
-	SetGDevice(theDevice);
 }
-*/
-//--------------------------------------------------------------  HardDrawMainWindow
-// Ignores the ToolBox - this function draws direct to screen in order to…
-// circumvent the Toolbox's attempt to color-match to the current palette.
-/*
-void HardDrawMainWindow (void)
-{
-	PixMapHandle	pixMapH;
-	Point			offsetPt;
-	long			srcRowBytes, destRowBytes;
-	long			src;
-	long			dest;
-	short			i, w;
-	SInt8			mode;
-	char			wasState;
 
-	wasState = HGetState((Handle)thisGDevice);
-	HLock((Handle)thisGDevice);
-	pixMapH = (**thisGDevice).gdPMap;
-	HSetState((Handle)thisGDevice, wasState);
-
-	srcRowBytes = (long)((*(workSrcMap->portPixMap))->rowBytes & 0x7FFF);
-	destRowBytes = (**pixMapH).rowBytes & 0x7FFF;
-	src = (long)((*(workSrcMap->portPixMap))->baseAddr);
-	dest = (long)((**pixMapH).baseAddr) + splashOriginH +
-			((splashOriginV + thisMac.menuHigh) * destRowBytes);
-
-	offsetPt.h = 0;
-	offsetPt.v = 0;
-	ShieldCursor(&mainWindowRect, offsetPt);
-	mode = true32b;
-	SwapMMUMode(&mode);
-	for (i = 0; i < 460; i++)
-	{
-		for (w = 0; w < 160; w++)
-		{
-			*(long *)dest = *(long *)src;
-			dest += 4L;
-			src += 4L;
-		}
-		src -= 640;
-		dest -= 640;
-		src += srcRowBytes;
-		dest += destRowBytes;
-	}
-	SwapMMUMode(&mode);
-	ShowCursor();
-}
-*/
 //--------------------------------------------------------------  WashColorIn
 // Slowly walks the palette from its gray luminance state to the full color…
 // palette.  In this way, color appears to slowly wash in.
-/*
+
 void WashColorIn (void)
 {
-	#define		kGray2ColorSteps	180
-	GDHandle	theDevice;
-	long		longDelta;
-	short		i, c;
+	const int kGray2ColorSteps = 180;
+	RGBQUAD wasColors[256];
+	RGBQUAD newColors[256];
+	UINT numColors;
+	HBITMAP splashDIB;
+	HDC splashDC, hdc;
+	RECT clientRect;
+	BOOL messageReceived, fading;
+	MSG msg;
+	DWORD wasFPS;
+	int i, c;
 
-	theDevice = GetGDevice();
-	SetGDevice(thisGDevice);
+	DisableMenuBar();
 
-	for (i = 0; i < kGray2ColorSteps; i++)
+	splashDIB = LoadImage(HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(kSplash8BitPICT),
+		IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+	if (splashDIB == NULL)
+		RedAlert(kErrFailedGraphicLoad);
+
+	GetClientRect(mainWindow, &clientRect);
+
+	splashDC = CreateCompatibleDC(NULL);
+	SaveDC(splashDC);
+	SelectObject(splashDC, splashDIB);
+
+	numColors = GetDIBColorTable(splashDC, 0, ARRAYSIZE(wasColors), wasColors);
+	if (numColors != ARRAYSIZE(wasColors))
+		RedAlert(kErrUnnaccounted);
+
+	wasFPS = GetFrameRate();
+	SetFrameRate(60);
+
+	fading = TRUE;
+	for (i = 0; fading && (i < kGray2ColorSteps); i++)
 	{
-		for (c = 0; c < 256; c++)
+		do
 		{
-			if (c != 5)
+			WaitUntilNextFrameOrMessage(&messageReceived);
+			if (messageReceived)
 			{
-				longDelta = (((long)wasColors[c].rgb.red -
-						(long)newColors[c].rgb.red) /
-						(long)(kGray2ColorSteps - i)) + (long)newColors[c].rgb.red;
-				newColors[c].rgb.red = (unsigned short)longDelta;
-
-				longDelta = (((long)wasColors[c].rgb.green -
-						(long)newColors[c].rgb.green) /
-						(long)(kGray2ColorSteps - i)) +
-						(long)newColors[c].rgb.green;
-				newColors[c].rgb.green = (unsigned short)longDelta;
-
-				longDelta = (((long)wasColors[c].rgb.blue -
-						(long)newColors[c].rgb.blue) /
-						(long)(kGray2ColorSteps - i)) +
-						(long)newColors[c].rgb.blue;
-				newColors[c].rgb.blue = (unsigned short)longDelta;
+				while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+				{
+					switch (msg.message)
+					{
+					case WM_KEYDOWN:
+					case WM_SYSKEYDOWN:
+					case WM_LBUTTONDOWN:
+						fading = FALSE;
+						break;
+					}
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
+				}
 			}
+		} while (messageReceived);
+
+		for (c = 0; c < ARRAYSIZE(newColors); c++)
+		{
+			newColors[c] = wasColors[c];
 		}
-		SetEntries(0, 255, newColors);
-		if (Button())
-			break;
+		SetPaletteToGrays(newColors, ARRAYSIZE(newColors), i, kGray2ColorSteps);
+		SetDIBColorTable(splashDC, 0, ARRAYSIZE(newColors), newColors);
+
+		hdc = GetMainWindowDC();
+		BitBlt(hdc, splashOriginH, splashOriginV, 640, 460, splashDC, 0, 0, SRCCOPY);
+		ReleaseMainWindowDC(hdc);
+		ValidateRect(mainWindow, NULL);
 	}
 
-	SetEntries(0, 255, wasColors);
-	SetGDevice(theDevice);
-
-	RestoreColorsSlam();
-
-	if (wasColors != nil)
-		DisposePtr((Ptr)wasColors);
-	if (newColors != nil)
-		DisposePtr((Ptr)newColors);
+	SetFrameRate(wasFPS);
+	RestoreDC(splashDC, -1);
+	DeleteDC(splashDC);
+	DeleteObject(splashDIB);
+	EnableMenuBar();
+	InvalidateRect(mainWindow, NULL, TRUE);
 }
-*/
+
 //--------------------------------------------------------------  InitMainWindowCursor
 
 void InitMainWindowCursor (void)

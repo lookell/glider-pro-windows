@@ -373,12 +373,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 //	HideMenuBarOld();
 #endif
 
-//	if ((isDoColorFade) && (thisMac.isDepth == 8))
-//	{
-//		wasSeed = ExtractCTSeed((CGrafPtr)mainWindow);
-//		WashColorIn();
-//		ForceCTSeed((CGrafPtr)mainWindow, wasSeed);
-//	}
+	if ((isDoColorFade) && (thisMac.isDepth == 8))
+	{
+		WashColorIn();
+	}
 //	if ((!thisMac.hasSM3) && (numSMWarnings < 3))
 //	{
 //		numSMWarnings++;
