@@ -9,12 +9,13 @@
 
 #include "GliderDefines.h"
 #include "MacTypes.h"
+#include "WinAPI.h"
 
 extern Rect tileSrcRect;
-extern CGrafPtr tileSrcMap;
+extern HDC tileSrcMap;
 extern SInt16 tempTiles[kNumTiles];
 
-void DoRoomInfo (void);
+void DoRoomInfo (HWND hwndOwner);
 Boolean PictIDExists (SInt16 theID);
 
 #endif

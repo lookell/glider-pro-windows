@@ -108,7 +108,7 @@ void DoSelectionClick (HWND hwnd, Point where, Boolean isDoubleClick)
 		if (objActive == kNoObjectSelected)
 		{
 			if (isDoubleClick)
-				DoRoomInfo();
+				DoRoomInfo(hwnd);
 		}
 		else
 		{

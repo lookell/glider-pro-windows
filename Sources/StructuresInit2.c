@@ -139,7 +139,7 @@ void CreateOffscreens (void)
 	InitAngel();			SpinCursor(1);
 
 	QSetRect(&tileSrcRect, 0, 0, 128, 80);
-	tileSrcMap = nil;
+	tileSrcMap = NULL;
 //	????
 }
 

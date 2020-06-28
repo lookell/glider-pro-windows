@@ -1,20 +1,35 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kOriginalArtDialogID DIALOGEX 0, 0, 171, 89
-CAPTION "Select Original Artwork"
+#define kPICTIDItem                 1003
+#define kFloorSupportCheck          1005
+#define kLeftWallCheck              1006
+#define kTopWallCheck               1007
+#define kRightWallCheck             1008
+#define kBottomWallCheck            1009
+#define kLeftWallLine               1010
+#define kTopWallLine                1011
+#define kRightWallLine              1012
+#define kBottomWallLine             1013
+
+kOriginalArtDialogID DIALOGEX 0, 0, 174, 104
+CAPTION "Original Artwork"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    PUSHBUTTON "Okay", 1, 127, 71, 39, 12
-    PUSHBUTTON "Cancel", 2, 83, 71, 39, 12
-    LTEXT "Enter the ID number of the PICT in your house you would like to use.", -1, 5, 5, 160, 20, SS_NOPREFIX
-    LTEXT "PICT ID:", -1, 5, 31, 36, 10, SS_NOPREFIX
-    EDITTEXT 5, 45, 31, 23, 10, ES_AUTOHSCROLL
-    LTEXT "(3000 - 3499)", -1, 7, 43, 61, 10, SS_NOPREFIX
-    CONTROL "", 7, STATIC, SS_OWNERDRAW, 93, 33, 7, 25
-    CONTROL "", 8, STATIC, SS_OWNERDRAW, 99, 27, 43, 6
-    CONTROL "", 9, STATIC, SS_OWNERDRAW, 142, 33, 7, 25
-    CONTROL "", 10, STATIC, SS_OWNERDRAW, 99, 58, 43, 6
-    LTEXT "Bounded", -1, 101, 41, 39, 10, SS_NOPREFIX
-    CHECKBOX "Floor Support", 12, 5, 55, 71, 11
+    LTEXT "Enter the ID number of the PICT in your house you would like to use.", IDC_STATIC, 7, 7, 160, 16, SS_NOPREFIX
+    LTEXT "PICT ID:", IDC_STATIC, 7, 32, 36, 8
+    EDITTEXT kPICTIDItem, 45, 30, 26, 12, ES_AUTOHSCROLL
+    LTEXT "(3000 - 3499)", IDC_STATIC, 7, 45, 61, 8, SS_NOPREFIX
+    AUTOCHECKBOX "Floor Support", kFloorSupportCheck, 7, 60, 71, 10
+    CTEXT "Bounded", IDC_STATIC, 105, 48, 40, 8, SS_NOPREFIX
+    AUTOCHECKBOX "", kLeftWallCheck, 93, 48, 9, 8
+    AUTOCHECKBOX "", kTopWallCheck, 121, 30, 9, 8
+    AUTOCHECKBOX "", kRightWallCheck, 150, 48, 9, 8
+    AUTOCHECKBOX "", kBottomWallCheck, 121, 68, 9, 8
+    CONTROL "", kLeftWallLine, STATIC, SS_BLACKRECT, 104, 40, 1, 25
+    CONTROL "", kTopWallLine, STATIC, SS_BLACKRECT, 104, 40, 43, 1
+    CONTROL "", kRightWallLine, STATIC, SS_BLACKRECT, 146, 40, 1, 25
+    CONTROL "", kBottomWallLine, STATIC, SS_BLACKRECT, 104, 64, 43, 1
+    DEFPUSHBUTTON "Okay", IDOK, 63, 83, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 117, 83, 50, 14
 }

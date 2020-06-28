@@ -1,27 +1,42 @@
 /* this comment enforces υτƒ-8 encoding */
 
-kRoomInfoDialogID DIALOGEX 0, 0, 256, 164
+#define kRoomNameItem               1003
+#define kRoomLocationBox            1006
+#define kRoomTilesBox               1010
+#define kRoomPopupItem              1011
+#define kRoomDividerLine            1012
+#define kRoomTilesBox2              1015
+#define kRoomFirstCheck             1017
+#define kLitUnlitText               1018
+#define kBoundsButton               1019
+
+// COMBOBOX height should be (16 + 8 * NumberOfVisibleItems)
+
+// TODO: investigate and implement alternative methods of choosing tiles
+// for the room background. Dragging and dropping tiles with the mouse
+// shouldn't be the only way.
+
+kRoomInfoDialogID DIALOGEX 0, 0, 256, 167
 CAPTION "Room Info"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    PUSHBUTTON "Okay", 1, 212, 147, 39, 12
-    PUSHBUTTON "Cancel", 2, 167, 147, 39, 12
-    EDITTEXT 3, 7, 36, 123, 10, ES_AUTOHSCROLL
-    LTEXT "Floor: ^0", -1, 152, 36, 43, 10, SS_NOPREFIX
-    LTEXT "Suite: ^1", -1, 195, 36, 53, 10, SS_NOPREFIX
-    CONTROL "", 6, STATIC, SS_OWNERDRAW, 139, 34, 111, 14
-    LTEXT "Location:", -1, 139, 25, 61, 10, SS_NOPREFIX
-    LTEXT "Room Name:", -1, 5, 25, 61, 10, SS_NOPREFIX
-    LTEXT "Number of Objects: ^2", -1, 139, 50, 111, 10, SS_NOPREFIX
-    CONTROL "", 10, STATIC, SS_OWNERDRAW, 16, 87, 85, 49
-    CONTROL "128", 11, STATIC, SS_OWNERDRAW, 5, 71, 107, 12
-    CONTROL "", 12, STATIC, SS_OWNERDRAW, 5, 140, 245, 1
-    CONTROL kRoomInfoTitle, -1, STATIC, SS_BITMAP, 0, 0, 256, 20
-    LTEXT "Tiles:", -1, 5, 61, 61, 10, SS_NOPREFIX
-    CONTROL "", 15, STATIC, SS_OWNERDRAW, 155, 87, 85, 49
-    CONTROL kRoomInfoInstruct, -1, STATIC, SS_BITMAP, 103, 92, 51, 17
-    CHECKBOX "First Room", 17, 139, 72, 111, 11
-    LTEXT "", 18, 139, 61, 111, 10, SS_NOPREFIX
-    PUSHBUTTON "Bounds", 19, 107, 119, 43, 12
+    LTEXT "&Room Name:", IDC_STATIC, 7, 7, 123, 8
+    EDITTEXT kRoomNameItem, 7, 18, 123, 14, ES_AUTOHSCROLL
+    LTEXT "Location:", IDC_STATIC, 138, 7, 111, 8, SS_NOPREFIX
+    CONTROL "", kRoomLocationBox, STATIC, SS_BLACKFRAME, 138, 18, 111, 14
+    LTEXT "Floor: ^0", IDC_STATIC, 149, 20, 44, 8, SS_NOPREFIX
+    LTEXT "Suite: ^1", IDC_STATIC, 194, 20, 44, 8, SS_NOPREFIX
+    LTEXT "Number of Objects: ^2", IDC_STATIC, 138, 35, 111, 8, SS_NOPREFIX
+    LTEXT "", kLitUnlitText, 138, 46, 111, 8, SS_NOPREFIX
+    LTEXT "&Tiles:", IDC_STATIC, 7, 50, 107, 8
+    COMBOBOX kRoomPopupItem, 7, 61, 107, 16 + 152, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    AUTOCHECKBOX "&First Room", kRoomFirstCheck, 138, 62, 111, 10
+    CONTROL "", kRoomTilesBox, STATIC, SS_OWNERDRAW | NOT WS_VISIBLE, 9, 82, 85, 49
+    CONTROL kRoomInfoInstruct, IDC_STATIC, STATIC, SS_BITMAP, 103, 85, 51, 17
+    CONTROL "", kRoomTilesBox2, STATIC, SS_OWNERDRAW | NOT WS_VISIBLE, 162, 82, 85, 49
+    PUSHBUTTON "&Bounds", kBoundsButton, 103, 114, 50, 14
+    CONTROL "", kRoomDividerLine, STATIC, SS_ETCHEDHORZ, 7, 138, 242, 1
+    DEFPUSHBUTTON "Okay", IDOK, 145, 146, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 199, 146, 50, 14
 }

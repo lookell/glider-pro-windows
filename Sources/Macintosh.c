@@ -309,8 +309,11 @@ void Mac_InvalWindowRect(HWND window, const Rect *bounds)
 {
 	RECT rcDirty;
 
-	SetRect(&rcDirty, bounds->left, bounds->top, bounds->right, bounds->bottom);
-	InvalidateRect(window, &rcDirty, FALSE);
+	rcDirty.left = bounds->left;
+	rcDirty.top = bounds->top;
+	rcDirty.right = bounds->right;
+	rcDirty.bottom = bounds->bottom;
+	InvalidateRect(window, &rcDirty, TRUE);
 }
 
 //--------------------------------------------------------------  Line

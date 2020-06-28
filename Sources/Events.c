@@ -240,7 +240,7 @@ void HandleIdleTask (void)
 		if ((autoRoomEdit) && (newRoomNow))
 		{
 			if (theMode == kEditMode)
-				DoRoomInfo();
+				DoRoomInfo(mainWindow);
 			newRoomNow = false;
 		}
 	}

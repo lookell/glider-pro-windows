@@ -463,27 +463,27 @@ IDM_ROOT MENUEX
         MENUITEM "Tools &Window\tCtrl+T", ID_OBJECT_WINDOW
         MENUITEM "Coordin&ate Window\tCtrl+K", ID_COORDINATE_WINDOW
     }
-    POPUP "Rooms", 140
+    POPUP "Rooms", IDM_BACKGROUNDS
     {
-        MENUITEM "Simple Room"
-        MENUITEM "Paneled Room"
-        MENUITEM "Basement"
-        MENUITEM "Child's Room"
-        MENUITEM "Asian Room"
-        MENUITEM "Unfinished Room"
-        MENUITEM "Swinger's Room"
-        MENUITEM "Bathroom"
-        MENUITEM "Library"
-        MENUITEM "Garden"
-        MENUITEM "Skywalk"
-        MENUITEM "Dirt"
-        MENUITEM "Meadow"
-        MENUITEM "Field"
-        MENUITEM "Roof"
-        MENUITEM "Sky"
-        MENUITEM "Stratosphere"
-        MENUITEM "Stars"
-        MENUITEM "Original Artwork"
+        MENUITEM "Simple Room", kSimpleRoom
+        MENUITEM "Paneled Room", kPaneledRoom
+        MENUITEM "Basement", kBasement
+        MENUITEM "Child's Room", kChildsRoom
+        MENUITEM "Asian Room", kAsianRoom
+        MENUITEM "Unfinished Room", kUnfinishedRoom
+        MENUITEM "Swinger's Room", kSwingersRoom
+        MENUITEM "Bathroom", kBathroom
+        MENUITEM "Library", kLibrary
+        MENUITEM "Garden", kGarden
+        MENUITEM "Skywalk", kSkywalk
+        MENUITEM "Dirt", kDirt
+        MENUITEM "Meadow", kMeadow
+        MENUITEM "Field", kField
+        MENUITEM "Roof", kRoof
+        MENUITEM "Sky", kSky
+        MENUITEM "Stratosphere", kStratosphere
+        MENUITEM "Stars", kStars
+        MENUITEM "Original Artwork", kUserBackground
     }
     POPUP "Tools", IDM_TOOLS
     {

@@ -67,6 +67,9 @@
 #define ID_OBJECT_WINDOW		40420
 #define ID_COORDINATE_WINDOW	40421
 
+#define IDM_BACKGROUNDS         140
+#define kBackgroundsMenuID      IDM_BACKGROUNDS
+
 #define IDM_TOOLS               141
 
 #define IDI_APPL				1
