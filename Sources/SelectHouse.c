@@ -13,7 +13,7 @@
 #include "Events.h"
 #include "House.h"
 #include "HouseIO.h"
-#include "Macintosh.h"
+#include "MacTypes.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "StringUtils.h"
@@ -224,7 +224,7 @@ void SortHouseList (void)
 		h = i + 1;
 		while (h < housesFound)
 		{
-			if (Mac_EqualString(theHousesSpecs[i].name, theHousesSpecs[h].name, true))
+			if (PasStringEqual(theHousesSpecs[i].name, theHousesSpecs[h].name, true))
 			{
 				theHousesSpecs[h] = theHousesSpecs[housesFound - 1];
 				housesFound--;
@@ -385,7 +385,7 @@ void DoDirSearch (HWND ownerWindow)
 		thisHouseIndex = 0;
 		for (i = 0; i < housesFound; i++)
 		{
-			if (Mac_EqualString(theHousesSpecs[i].name, thisHouseName, false))
+			if (PasStringEqual(theHousesSpecs[i].name, thisHouseName, false))
 			{
 				thisHouseIndex = i;
 				break;
@@ -399,7 +399,7 @@ void DoDirSearch (HWND ownerWindow)
 			Str32 demoHouseName;
 
 			PasStringCopyC("Demo House", demoHouseName);
-			if (Mac_EqualString(theHousesSpecs[i].name, demoHouseName, false))
+			if (PasStringEqual(theHousesSpecs[i].name, demoHouseName, false))
 			{
 				demoHouseIndex = i;
 				break;

@@ -235,7 +235,7 @@ Boolean OpenSavedGame (HWND ownerWindow)
 		return false;
 	}
 
-	if (!Mac_EqualString(savedGame.house.name, thisHouseName, true))
+	if (!PasStringEqual(savedGame.house.name, thisHouseName, true))
 	{
 		SavedGameMismatchError(ownerWindow, savedGame.house.name);
 		free(savedGame.savedData);

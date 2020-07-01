@@ -827,7 +827,7 @@ void CountUntitledRooms (void)
 	for (i = 0; i < numRooms; i++)
 	{
 		if ((thisHouse->rooms[i].suite != kRoomIsEmpty) &&
-				(Mac_EqualString(thisHouse->rooms[i].name, untitledRoomStr, false)))
+				(PasStringEqual(thisHouse->rooms[i].name, untitledRoomStr, false)))
 			houseErrors++;
 	}
 }
@@ -1043,7 +1043,7 @@ void CheckHouseForProblems (void)
 		CheckDuplicateFloorSuite();
 		if (houseErrors != 0)
 		{
-			Mac_NumToString((SInt32)houseErrors, message);
+			NumToString((SInt32)houseErrors, message);
 			GetLocalizedString(28, message2);
 			PasStringConcat(message, message2);
 			SetMessageTextColor(redColor);
@@ -1063,7 +1063,7 @@ void CheckHouseForProblems (void)
 		ValidateRoomNumbers();
 		if (houseErrors != 0)
 		{
-			Mac_NumToString((SInt32)houseErrors, message);
+			NumToString((SInt32)houseErrors, message);
 			GetLocalizedString(29, message2);
 			PasStringConcat(message, message2);
 			SetMessageTextColor(redColor);
@@ -1079,7 +1079,7 @@ void CheckHouseForProblems (void)
 		CountUntitledRooms();
 		if (houseErrors != 0)
 		{
-			Mac_NumToString((SInt32)houseErrors, message);
+			NumToString((SInt32)houseErrors, message);
 			GetLocalizedString(30, message2);
 			PasStringConcat(message, message2);
 			SetMessageTextColor(blueColor);
@@ -1095,7 +1095,7 @@ void CheckHouseForProblems (void)
 		CheckRoomNameLength();
 		if (houseErrors != 0)
 		{
-			Mac_NumToString((SInt32)houseErrors, message);
+			NumToString((SInt32)houseErrors, message);
 			GetLocalizedString(31, message2);
 			PasStringConcat(message, message2);
 			SetMessageTextColor(blueColor);
@@ -1111,7 +1111,7 @@ void CheckHouseForProblems (void)
 		MakeSureNumObjectsJives();
 		if (houseErrors != 0)
 		{
-			Mac_NumToString((SInt32)houseErrors, message);
+			NumToString((SInt32)houseErrors, message);
 			GetLocalizedString(32, message2);
 			PasStringConcat(message, message2);
 			SetMessageTextColor(redColor);
@@ -1130,7 +1130,7 @@ void CheckHouseForProblems (void)
 		KeepAllObjectsLegal();
 		if (houseErrors != 0)
 		{
-			Mac_NumToString((SInt32)houseErrors, message);
+			NumToString((SInt32)houseErrors, message);
 			GetLocalizedString(34, message2);
 			PasStringConcat(message, message2);
 			SetMessageTextColor(redColor);

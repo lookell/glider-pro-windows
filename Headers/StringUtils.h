@@ -16,6 +16,7 @@ SInt16 WhichStringFirst (StringPtr p1, StringPtr p2);
 void PasStringCopyNum (StringPtr p1, StringPtr p2, Byte charsToCopy);
 void PasStringConcat (StringPtr p1, StringPtr p2);
 void PasStringConcatC (StringPtr p1, const char *s2);
+Boolean PasStringEqual (StringPtr p1, StringPtr p2, Boolean caseSens);
 void GetLineOfText (StringPtr srcStr, SInt16 index, StringPtr textLine);
 void WrapText (StringPtr theText, SInt16 maxChars);
 void GetFirstWordOfString (StringPtr stringIn, StringPtr stringOut);
@@ -24,5 +25,8 @@ void GetChooserName (StringPtr thisName);
 StringPtr GetLocalizedString (SInt16 index, StringPtr theString);
 wchar_t *MacToWinLineEndings (const wchar_t *input);
 wchar_t *WinToMacLineEndings (const wchar_t *input);
+void NumToString(SInt32 theNum, StringPtr theString);
+int WinFromMacString (wchar_t *winbuf, int winlen, ConstStringPtr macbuf);
+int MacFromWinString (StringPtr macbuf, int maclen, const wchar_t *winbuf);
 
 #endif

@@ -7,9 +7,14 @@
 //============================================================================
 
 
-#include "Macintosh.h"
+#include "MacTypes.h"
 #include "ResourceIDs.h"
 #include "WinAPI.h"
+
+#include <limits.h>
+
+
+#define MAC_ROMAN_CODEPAGE 10000
 
 
 //==============================================================  Functions
@@ -154,6 +159,32 @@ void PasStringConcatC (StringPtr p1, const char *s2)
 	while (*s2 != '\0' && stringLength < 255)
 		p1[++stringLength] = *s2++;
 	p1[0] = stringLength;
+}
+
+//--------------------------------------------------------------  PasStringEqual
+// Compare two Pascal strings for equality. If the third parameter is
+// nonzero (true), then the comparison is case-sensitive. If the third
+// parameter is zero (false), then the comparison is case-insensitive.
+
+Boolean PasStringEqual (StringPtr p1, StringPtr p2, Boolean caseSens)
+{
+	wchar_t firstString[256];
+	wchar_t secondString[256];
+
+	if (p1[0] != p2[0])
+	{
+		return false;
+	}
+	WinFromMacString(firstString, ARRAYSIZE(firstString), p1);
+	WinFromMacString(secondString, ARRAYSIZE(secondString), p2);
+	if (caseSens)
+	{
+		return (lstrcmp(firstString, secondString) == 0);
+	}
+	else
+	{
+		return (lstrcmpi(firstString, secondString) == 0);
+	}
 }
 
 //--------------------------------------------------------------  GetLineOfText
@@ -467,3 +498,100 @@ wchar_t *WinToMacLineEndings(const wchar_t *input)
 
 	return output;
 }
+
+//--------------------------------------------------------------  NumToString
+// Convert the given number to a decimal string representation.
+// The string is written to the given output string.
+
+void NumToString (SInt32 theNum, StringPtr theString)
+{
+	char buffer[sizeof("-2147483648")];
+	size_t length;
+	HRESULT hr;
+
+	if (theString == NULL)
+	{
+		return;
+	}
+	// Return an empty string if an error occurs.
+	theString[0] = 0;
+
+	hr = StringCchPrintfA(buffer, ARRAYSIZE(buffer), "%ld", (long)theNum);
+	if (SUCCEEDED(hr))
+	{
+		hr = StringCchLengthA(buffer, ARRAYSIZE(buffer), &length);
+		if (SUCCEEDED(hr))
+		{
+			theString[0] = (Byte)length;
+			memcpy(&theString[1], buffer, theString[0]);
+		}
+	}
+}
+
+//--------------------------------------------------------------  WinFromMacString
+// Convert a MacRoman Pascal-style string to a UTF-16 C-style string.
+// If the length of the converted string exceeds the output buffer's capacity,
+// then the converted string is truncated.
+// This is a wrapper around the Windows API function 'MultiByteToWideChar'.
+// The return value of this function is the return value of 'MultiByteToWideChar'.
+// Return nonzero on success and zero on failure.
+
+int WinFromMacString(wchar_t *winbuf, int winlen, ConstStringPtr macbuf)
+{
+	int copySize, result;
+
+	// Calculate the number of Mac characters to copy
+	copySize = macbuf[0];
+	if (copySize > winlen - 1)
+	{
+		copySize = winlen - 1;
+	}
+
+	// Do the conversion and terminate the output string
+	result = MultiByteToWideChar(
+		MAC_ROMAN_CODEPAGE, 0x00000000,
+		(LPCCH)&macbuf[1], copySize,
+		winbuf, winlen - 1);
+	winbuf[result] = L'\0';
+	return result;
+}
+
+//--------------------------------------------------------------  MacFromWinString
+// Convert a UTF-16 C-style string to a MacRoman Pascal-style string.
+// (This may result in data-loss!)
+// If the length of the converted string exceeds the output buffer's capacity,
+// then the converted string is truncated.
+// This is a wrapper around the Windows API function 'WideCharToMultiByte'.
+// The return value of this function is the return value of 'WideCharToMultiByte'.
+// Return nonzero on success and zero on failure.
+
+int MacFromWinString(StringPtr macbuf, int maclen, const wchar_t *winbuf)
+{
+	size_t inputSize;
+	int copySize, result;
+	HRESULT hr;
+
+	// Calculate the number of wide characters to copy
+	hr = StringCchLength(winbuf, INT_MAX, &inputSize);
+	if (FAILED(hr))
+	{
+		inputSize = 0;
+	}
+	copySize = (int)inputSize;
+	if (copySize > maclen - 1)
+	{
+		copySize = maclen - 1;
+	}
+
+	// Do the conversion and save the length.
+	// If WideCharToMultiByte fails, it returns zero, which is
+	// handy as a length for a failed conversion.
+	result = WideCharToMultiByte(
+		MAC_ROMAN_CODEPAGE, 0x00000000,
+		winbuf, copySize,
+		(LPSTR)&macbuf[1], maclen - 1,
+		NULL, NULL);
+	macbuf[0] = (Byte)result;
+	return result;
+}
+

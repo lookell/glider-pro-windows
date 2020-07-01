@@ -14,7 +14,7 @@
 #include "HighScores.h"
 #include "HouseIO.h"
 #include "Link.h"
-#include "Macintosh.h"
+#include "MacTypes.h"
 #include "Map.h"
 #include "Menu.h"
 #include "ObjectEdit.h"
@@ -716,7 +716,7 @@ void ConvertHouseVer1To2 (void)
 	{
 		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
 		{
-			Mac_NumToString(i, roomStr);
+			NumToString(i, roomStr);
 			GetLocalizedString(14, message);
 			PasStringConcat(message, roomStr);
 			SetMessageWindowMessage(message);

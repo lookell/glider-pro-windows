@@ -145,7 +145,7 @@ void DrawBannerMessage (Point topLeft)
 		else
 			GetLocalizedString(2, bannerStr);
 
-		Mac_NumToString((SInt32)numStarsRemaining, subStr);
+		NumToString((SInt32)numStarsRemaining, subStr);
 		PasStringConcat(bannerStr, subStr);
 
 		if (numStarsRemaining != 1)

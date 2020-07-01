@@ -370,10 +370,10 @@ void UpdateEditWindowTitle (void)
 	{
 		PasStringConcat(newTitle, thisRoom->name);
 		PasStringConcatC(newTitle, " (");
-		Mac_NumToString((SInt32)thisRoom->floor, tempStr);
+		NumToString((SInt32)thisRoom->floor, tempStr);
 		PasStringConcat(newTitle, tempStr);
 		PasStringConcatC(newTitle, ", ");
-		Mac_NumToString((SInt32)thisRoom->suite, tempStr);
+		NumToString((SInt32)thisRoom->suite, tempStr);
 		PasStringConcat(newTitle, tempStr);
 		PasStringConcatC(newTitle, ")");
 	}

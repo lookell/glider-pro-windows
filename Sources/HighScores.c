@@ -188,7 +188,7 @@ void DrawHighScores (void)
 		if (thisHouse->highScores.scores[i] > 0L)
 		{
 			SpinCursor(1);
-			Mac_NumToString(i + 1L, tempStr);		// draw placing number
+			NumToString(i + 1L, tempStr);		// draw placing number
 			SetTextColor(workSrcMap, blackColor);
 			if (i == 0)
 				MoveToEx(workSrcMap, scoreLeft + 1, dropIt - kScoreSpacing - kKimsLifted, NULL);
@@ -222,7 +222,7 @@ void DrawHighScores (void)
 				MoveToEx(workSrcMap, scoreLeft + 30, dropIt - 1 + (i * kScoreSpacing), NULL);
 			Mac_DrawString(workSrcMap, tempStr);
 													// draw level number
-			Mac_NumToString(thisHouse->highScores.levels[i], tempStr);
+			NumToString(thisHouse->highScores.levels[i], tempStr);
 			SetTextColor(workSrcMap, blackColor);
 			if (i == 0)
 				MoveToEx(workSrcMap, scoreLeft + 161, dropIt - kScoreSpacing - kKimsLifted, NULL);
@@ -256,7 +256,7 @@ void DrawHighScores (void)
 				MoveToEx(workSrcMap, scoreLeft + 192, dropIt - 1 + (i * kScoreSpacing), NULL);
 			Mac_DrawString(workSrcMap, tempStr);
 													// draw high score points
-			Mac_NumToString(thisHouse->highScores.scores[i], tempStr);
+			NumToString(thisHouse->highScores.scores[i], tempStr);
 			SetTextColor(workSrcMap, blackColor);
 			if (i == 0)
 				MoveToEx(workSrcMap, scoreLeft + 291, dropIt - kScoreSpacing - kKimsLifted, NULL);

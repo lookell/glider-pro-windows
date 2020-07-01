@@ -210,7 +210,7 @@ void RefreshNumGliders (void)
 	displayMortals = mortals;
 	if (displayMortals < 0)
 		displayMortals = 0;
-	Mac_NumToString(displayMortals, nGlidersStr);
+	NumToString(displayMortals, nGlidersStr);
 
 	MoveToEx(boardGSrcMap, 1, 10, NULL);
 	wasColor = SetTextColor(boardGSrcMap, blackColor);
@@ -243,7 +243,7 @@ void RefreshPoints (void)
 	Mac_PaintRect(boardPSrcMap, &boardPSrcRect, GetStockObject(DC_BRUSH));
 	SetDCBrushColor(boardPSrcMap, wasColor);
 
-	Mac_NumToString(theScore, scoreStr);
+	NumToString(theScore, scoreStr);
 
 	MoveToEx(boardPSrcMap, 1, 10, NULL);
 	wasColor = SetTextColor(boardPSrcMap, blackColor);
@@ -279,7 +279,7 @@ void QuickGlidersRefresh (void)
 	Mac_PaintRect(boardGSrcMap, &boardGSrcRect, GetStockObject(DC_BRUSH));
 	SetDCBrushColor(boardGSrcMap, wasColor);
 
-	Mac_NumToString((SInt32)mortals, nGlidersStr);
+	NumToString((SInt32)mortals, nGlidersStr);
 
 	MoveToEx(boardGSrcMap, 1, 10, NULL);
 	wasColor = SetTextColor(boardGSrcMap, blackColor);
@@ -315,7 +315,7 @@ void QuickScoreRefresh (void)
 	Mac_PaintRect(boardPSrcMap, &boardPSrcRect, GetStockObject(DC_BRUSH));
 	SetDCBrushColor(boardPSrcMap, wasColor);
 
-	Mac_NumToString(displayedScore, scoreStr);
+	NumToString(displayedScore, scoreStr);
 
 	MoveToEx(boardPSrcMap, 1, 10, NULL);
 	wasColor = SetTextColor(boardPSrcMap, blackColor);

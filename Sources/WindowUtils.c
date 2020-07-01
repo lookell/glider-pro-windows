@@ -9,10 +9,11 @@
 
 #include "DialogUtils.h"
 #include "Environ.h"
-#include "Macintosh.h"
+#include "MacTypes.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "StringUtils.h"
 
 
 #define kFloatingKind		2048

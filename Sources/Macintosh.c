@@ -1,12 +1,7 @@
 #include "Macintosh.h"
 
+#include "StringUtils.h"
 #include "WinAPI.h"
-#include <inttypes.h>
-#include <limits.h>
-#include <string.h>
-
-
-#define CP_MACROMAN 10000
 
 
 //--------------------------------------------------------------  CopyBits
@@ -193,27 +188,6 @@ void Mac_DrawString(HDC hdc, StringPtr s)
 	SetBkMode(hdc, prevBkMode);
 }
 
-//--------------------------------------------------------------  EqualString
-// Compare two Pascal strings for equality. If the third parameter is
-// nonzero (true), then the comparison is case-sensitive. If the third
-// parameter is zero (false), then the comparison is case-insensitive.
-
-Boolean Mac_EqualString(StringPtr aStr, StringPtr bStr, Boolean caseSens)
-{
-	WCHAR firstString[256];
-	WCHAR secondString[256];
-
-	if (aStr[0] != bStr[0])
-		return false;
-
-	WinFromMacString(firstString, ARRAYSIZE(firstString), aStr);
-	WinFromMacString(secondString, ARRAYSIZE(secondString), bStr);
-	if (caseSens)
-		return (lstrcmp(firstString, secondString) == 0);
-	else
-		return (lstrcmpi(firstString, secondString) == 0);
-}
-
 //--------------------------------------------------------------  FrameRect
 // Draw a frame within the specified rectangle using the current brush.
 // The vertical strokes use the specified width, and the horizontal
@@ -288,7 +262,6 @@ void Mac_Line(HDC hdc, SInt16 dh, SInt16 dv)
 	POINT curPos;
 
 	GetCurrentPositionEx(hdc, &curPos);
-	//MoveToEx(hdc, curPos.x + dh, curPos.y + dv, NULL);
 	LineTo(hdc, curPos.x + dh, curPos.y + dv);
 	LineTo(hdc, curPos.x, curPos.y);
 	LineTo(hdc, curPos.x + dh, curPos.y + dv);
@@ -304,33 +277,9 @@ void Mac_LineTo(HDC hdc, SInt16 h, SInt16 v)
 	POINT curPos;
 
 	GetCurrentPositionEx(hdc, &curPos);
-	//MoveToEx(hdc, h, v, NULL);
 	LineTo(hdc, h, v);
 	LineTo(hdc, curPos.x, curPos.y);
 	LineTo(hdc, h, v);
-}
-
-//--------------------------------------------------------------  NumToString
-// Convert the given number to a decimal string representation.
-// The string is written to the given output string.
-
-void Mac_NumToString(SInt32 theNum, StringPtr theString)
-{
-	CHAR buffer[sizeof("-2147483648")];
-	size_t length;
-	HRESULT hr;
-
-	if (theString == NULL)
-		return;
-	theString[0] = 0; // return an empty string if an error occurs.
-	hr = StringCchPrintfA(buffer, ARRAYSIZE(buffer), "%" PRId32, theNum);
-	if (FAILED(hr))
-		return;
-	hr = StringCchLengthA(buffer, ARRAYSIZE(buffer), &length);
-	if (FAILED(hr))
-		return;
-	theString[0] = (Byte)length;
-	memcpy(&theString[1], buffer, theString[0]);
 }
 
 //--------------------------------------------------------------  PaintRect
@@ -356,60 +305,6 @@ SInt16 Mac_StringWidth(HDC hdc, StringPtr s)
 	if (!GetTextExtentPoint32(hdc, buffer, (int)wcslen(buffer), &extents))
 		return 0;
 	return (SInt16)extents.cx;
-}
-
-//--------------------------------------------------------------  WinFromMacString
-// Convert a MacRoman Pascal-style string to a UTF-16 C-style string.
-// If the length of the converted string exceeds the output buffer's capacity,
-// then the converted string is truncated.
-// This is a wrapper around the Windows API function 'MultiByteToWideChar'.
-// The return value of this function is the return value of 'MultiByteToWideChar'.
-// Return nonzero on success and zero on failure.
-
-int WinFromMacString(wchar_t *winbuf, int winlen, ConstStringPtr macbuf)
-{
-	int copySize, result;
-
-	// Calculate the number of Mac characters to copy
-	copySize = macbuf[0];
-	if (copySize > winlen - 1)
-		copySize = winlen - 1;
-
-	// Do the conversion and terminate the output string
-	result = MultiByteToWideChar(CP_MACROMAN, 0,
-			(LPCCH)&macbuf[1], copySize, winbuf, winlen - 1);
-	winbuf[result] = L'\0';
-	return result;
-}
-
-//--------------------------------------------------------------  MacFromWinString
-// Convert a UTF-16 C-style string to a MacRoman Pascal-style string.
-// (This may result in data-loss!)
-// If the length of the converted string exceeds the output buffer's capacity,
-// then the converted string is truncated.
-// This is a wrapper around the Windows API function 'WideCharToMultiByte'.
-// The return value of this function is the return value of 'WideCharToMultiByte'.
-// Return nonzero on success and zero on failure.
-
-int MacFromWinString(StringPtr macbuf, int maclen, const wchar_t *winbuf)
-{
-	size_t inputSize;
-	int copySize, result;
-
-	// Calculate the number of wide characters to copy
-	inputSize = wcslen(winbuf);
-	if (inputSize > INT_MAX)
-		inputSize = INT_MAX;
-	copySize = (int)inputSize;
-	if (copySize > maclen - 1)
-		copySize = maclen - 1;
-
-	// Do the conversion and save the length
-	result = WideCharToMultiByte(CP_MACROMAN, 0,
-			winbuf, copySize, (LPSTR)&macbuf[1], maclen - 1,
-			NULL, NULL);
-	macbuf[0] = (Byte)result;
-	return result;
 }
 
 //--------------------------------------------------------------  Global Data

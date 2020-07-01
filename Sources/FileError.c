@@ -8,8 +8,9 @@
 
 
 #include "DialogUtils.h"
-#include "Macintosh.h"
+#include "MacTypes.h"
 #include "ResourceIDs.h"
+#include "StringUtils.h"
 
 
 //==============================================================  Functions

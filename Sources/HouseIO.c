@@ -187,7 +187,7 @@ Boolean OpenHouse (HWND ownerWindow)
 		return(false);
 
 	#ifdef COMPILEDEMO
-	if (!Mac_EqualString(theHousesSpecs[thisHouseIndex].name, demoHouseName, false))
+	if (!PasStringEqual(theHousesSpecs[thisHouseIndex].name, demoHouseName, false))
 		return (false);
 	#endif
 
@@ -240,7 +240,7 @@ Boolean OpenSpecificHouse (FSSpec *specs)
 	{
 		if ((theHousesSpecs[i].vRefNum == specs->vRefNum) &&
 				(theHousesSpecs[i].parID == specs->parID) &&
-				(EqualString(theHousesSpecs[i].name, specs->name, false, true)))
+				(PasStringEqual(theHousesSpecs[i].name, specs->name, false)))
 		{
 			thisHouseIndex = i;
 			PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
