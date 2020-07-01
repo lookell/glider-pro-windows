@@ -58,16 +58,16 @@ SInt16 FindObjectSelected (Point where)
 
 	found = kNoObjectSelected;
 
-	if (Mac_PtInRect(where, &initialGliderRect))
+	if (QPtInRect(where, &initialGliderRect))
 		return (kInitialGliderSelected);
-	else if (Mac_PtInRect(where, &leftStartGliderDest))
+	else if (QPtInRect(where, &leftStartGliderDest))
 		return (kLeftGliderSelected);
-	else if (Mac_PtInRect(where, &rightStartGliderDest))
+	else if (QPtInRect(where, &rightStartGliderDest))
 		return (kRightGliderSelected);
 
 	for (i = kMaxRoomObs - 1; i >= 0; i--)
 	{
-		if (Mac_PtInRect(where, &roomObjectRects[i]))
+		if (QPtInRect(where, &roomObjectRects[i]))
 		{
 			found = i;
 			break;

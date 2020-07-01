@@ -327,3 +327,77 @@ void FrameRectSansCorners (HDC hdc, Rect *theRect)
 	Mac_LineTo(hdc, theRect->left, theRect->bottom - 2);
 }
 
+//--------------------------------------------------------------  QInsetRect
+// Shrink or expand the given rectangle. The rectangle's sides
+// are moved inwards by the given deltas. To expand the rectangle,
+// call this function with negative delta values. If either the width
+// or the height of the resulting rectangle is less than 1, then the
+// rectangle is set to the empty rectangle (0,0,0,0).
+
+void QInsetRect (Rect *r, SInt16 dh, SInt16 dv)
+{
+	if (r == NULL)
+		return;
+	r->left += dh;
+	r->top += dv;
+	r->right -= dh;
+	r->bottom -= dv;
+	if (r->left > r->right || r->top > r->bottom)
+	{
+		r->left = 0;
+		r->top = 0;
+		r->right = 0;
+		r->bottom = 0;
+	}
+}
+
+//--------------------------------------------------------------  QPtInRect
+// Return whether the point is enclosed within the rectangle's bounds.
+
+Boolean QPtInRect (Point pt, const Rect *r)
+{
+	if (r == NULL)
+		return false;
+	return (pt.h >= r->left) && (pt.h < r->right) &&
+		(pt.v >= r->top) && (pt.v < r->bottom);
+}
+
+//--------------------------------------------------------------  QSectRect
+// Calculate the intersection of the two source rectangles, and write
+// that intersection into the destination rectangle. If the source
+// rectangles do not intersect, then the destination rectangle is set
+// to all zeroes. The return value is TRUE if the source rectangles
+// intersect, and FALSE if they do not intersect.
+
+Boolean QSectRect (const Rect *src1, const Rect *src2, Rect *dstRect)
+{
+	Rect sectRect;
+
+	sectRect.left = 0;
+	sectRect.top = 0;
+	sectRect.right = 0;
+	sectRect.bottom = 0;
+	// If either source rectangle is empty, then the intersection is empty.
+	if ((src1->left >= src1->right) || (src1->top >= src1->bottom) ||
+		(src2->left >= src2->right) || (src2->top >= src2->bottom))
+	{
+		*dstRect = sectRect;
+		return false;
+	}
+	// If the first rectangle is above, below, or to the side of the second
+	// rectangle (touching or not), then the intersection is empty.
+	if ((src1->bottom <= src2->top) || (src2->bottom <= src1->top) ||
+		(src1->right <= src2->left) || (src2->right <= src1->left))
+	{
+		*dstRect = sectRect;
+		return false;
+	}
+	// The two rectangles intersect, so calculate the intersection's boundary.
+	sectRect.left = (src1->left > src2->left) ? src1->left : src2->left;
+	sectRect.top = (src1->top > src2->top) ? src1->top : src2->top;
+	sectRect.right = (src1->right <= src2->right) ? src1->right : src2->right;
+	sectRect.bottom = (src1->bottom <= src2->bottom) ? src1->bottom : src2->bottom;
+	*dstRect = sectRect;
+	return true;
+}
+

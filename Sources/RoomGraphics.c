@@ -250,7 +250,7 @@ void DrawFloorSupport (void)
 				&src, &dest, srcCopy, nil);
 
 		for (i = 0; i < numTempManholes; i++)
-			if (Mac_SectRect(&dest, &tempManholes[i], &whoCares))
+			if (QSectRect(&dest, &tempManholes[i], &whoCares))
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
@@ -267,7 +267,7 @@ void DrawFloorSupport (void)
 				&src, &dest, srcCopy, nil);
 
 		for (i = 0; i < numTempManholes; i++)
-			if (Mac_SectRect(&dest, &tempManholes[i], &whoCares))
+			if (QSectRect(&dest, &tempManholes[i], &whoCares))
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
@@ -283,7 +283,7 @@ void DrawFloorSupport (void)
 		Mac_CopyBits(suppSrcMap, backSrcMap,
 				&src, &dest, srcCopy, nil);
 		for (i = 0; i < numTempManholes; i++)
-			if (Mac_SectRect(&dest, &tempManholes[i], &whoCares))
+			if (QSectRect(&dest, &tempManholes[i], &whoCares))
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
@@ -300,7 +300,7 @@ void DrawFloorSupport (void)
 				&src, &dest, srcCopy, nil);
 
 		for (i = 0; i < numTempManholes; i++)
-			if (Mac_SectRect(&dest, &tempManholes[i], &whoCares))
+			if (QSectRect(&dest, &tempManholes[i], &whoCares))
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
@@ -317,7 +317,7 @@ void DrawFloorSupport (void)
 				&src, &dest, srcCopy, nil);
 
 		for (i = 0; i < numTempManholes; i++)
-			if (Mac_SectRect(&dest, &tempManholes[i], &whoCares))
+			if (QSectRect(&dest, &tempManholes[i], &whoCares))
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
@@ -334,7 +334,7 @@ void DrawFloorSupport (void)
 				&src, &dest, srcCopy, nil);
 
 		for (i = 0; i < numTempManholes; i++)
-			if (Mac_SectRect(&dest, &tempManholes[i], &whoCares))
+			if (QSectRect(&dest, &tempManholes[i], &whoCares))
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;

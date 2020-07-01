@@ -135,22 +135,6 @@ void Mac_CopyMask(
 	DeleteDC(newSrcBits);
 }
 
-//--------------------------------------------------------------  DeltaPoint
-// Calculate the difference between two points by subtracting the coordinates
-// of ptB from the coordinates of ptA. The high-order word of the result is
-// the difference in the vertical coordinates, and the low-order word of the
-// result is the difference of the horizontal coordinates.
-
-SInt32 Mac_DeltaPoint(Point ptA, Point ptB)
-{
-	UInt32 vertDiff, horzDiff;
-
-	vertDiff = (UInt32)(UInt16)(SInt16)(ptA.v - ptB.v);
-	horzDiff = (UInt32)(UInt16)(SInt16)(ptA.h - ptB.h);
-
-	return (vertDiff << 16) | (horzDiff);
-}
-
 //--------------------------------------------------------------  DrawPicture
 // Draw the given bitmap into the destination output device. The bitmap
 // is stretched or shrinked as necessary to fit exactly with the given
@@ -281,30 +265,6 @@ void Mac_GetDateTime(UInt32 *secs)
 	*secs = (UInt32)(currentSecs.QuadPart - epochSecs.QuadPart);
 }
 
-//--------------------------------------------------------------  InsetRect
-// Shrink or expand the given rectangle. The rectangle's sides
-// are moved inwards by the given deltas. To expand the rectangle,
-// call this function with negative delta values. If either the width
-// or the height of the resulting rectangle is less than 1, then the
-// rectangle is set to the empty rectangle (0,0,0,0).
-
-void Mac_InsetRect(Rect *r, SInt16 dh, SInt16 dv)
-{
-	if (r == NULL)
-		return;
-	r->left += dh;
-	r->top += dv;
-	r->right -= dh;
-	r->bottom -= dv;
-	if (r->left > r->right || r->top > r->bottom)
-	{
-		r->left = 0;
-		r->top = 0;
-		r->right = 0;
-		r->bottom = 0;
-	}
-}
-
 void Mac_InvalWindowRect(HWND window, const Rect *bounds)
 {
 	RECT rcDirty;
@@ -381,62 +341,6 @@ void Mac_PaintRect(HDC hdc, const Rect *r, HBRUSH hbr)
 	HRGN theRgn = CreateRectRgn(r->left, r->top, r->right, r->bottom);
 	FillRgn(hdc, theRgn, hbr);
 	DeleteObject(theRgn);
-}
-
-//--------------------------------------------------------------  PtInRect
-// Check if the given point is enclosed within the given rectangle.
-// Return nonzero (true) if the point is within the rectangle; otherwise
-// return zero (false). The point is considered within the rectangle
-// if it is within all four sides, or if it lies on the left or top side.
-// The point is not considered within the rectangle if it lies on the
-// right or bottom side (because its corresponding pixel would be
-// outside the rectangle).
-
-Boolean Mac_PtInRect(Point pt, const Rect *r)
-{
-	if (r == NULL)
-		return false;
-	return (pt.h >= r->left) && (pt.h < r->right) &&
-			(pt.v >= r->top) && (pt.v < r->bottom);
-}
-
-//--------------------------------------------------------------  SectRect
-// Calculate the intersection of the two source rectangles, and write
-// that intersection into the destination rectangle. If the source
-// rectangles do not intersect, then the destination rectangle is set
-// to all zeroes. The return value is TRUE if the source rectangles
-// intersect, and FALSE if they do not intersect.
-
-Boolean Mac_SectRect(const Rect *src1, const Rect *src2, Rect *dstRect)
-{
-	Rect sectRect;
-
-	sectRect.left = 0;
-	sectRect.top = 0;
-	sectRect.right = 0;
-	sectRect.bottom = 0;
-	// If either source rectangle is empty, then the intersection is empty.
-	if ((src1->left >= src1->right) || (src1->top >= src1->bottom) ||
-		(src2->left >= src2->right) || (src2->top >= src2->bottom))
-	{
-		*dstRect = sectRect;
-		return false;
-	}
-	// If the first rectangle is above, below, or to the side of the second
-	// rectangle (touching or not), then the intersection is empty.
-	if ((src1->bottom <= src2->top) || (src2->bottom <= src1->top) ||
-		(src1->right <= src2->left) || (src2->right <= src1->left))
-	{
-		*dstRect = sectRect;
-		return false;
-	}
-	// The two rectangles intersect, so calculate the intersection's boundary.
-	sectRect.left = (src1->left > src2->left) ? src1->left : src2->left;
-	sectRect.top = (src1->top > src2->top) ? src1->top : src2->top;
-	sectRect.right = (src1->right <= src2->right) ? src1->right : src2->right;
-	sectRect.bottom = (src1->bottom <= src2->bottom) ? src1->bottom : src2->bottom;
-	*dstRect = sectRect;
-	return true;
 }
 
 //--------------------------------------------------------------  StringWidth

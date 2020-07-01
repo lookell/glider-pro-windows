@@ -10,6 +10,7 @@
 
 
 #include "Macintosh.h"
+#include "RectUtils.h"
 #include "WinAPI.h"
 
 
@@ -94,7 +95,7 @@ void CheckLegitRect(Rect *srcRect, Rect *inRect)
 	if ((srcRect->left > srcRect->right) || (srcRect->top > srcRect->bottom))
 		OutputDebugString(L"Source Rectangle not dimensional\n");
 
-	if (!Mac_SectRect(srcRect, inRect, &dummyRect))
+	if (!QSectRect(srcRect, inRect, &dummyRect))
 		OutputDebugString(L"Source Rectangle not Secting Target Rectangle\n");
 }
 

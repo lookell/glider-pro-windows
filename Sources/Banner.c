@@ -214,7 +214,7 @@ void DisplayStarsRemaining (void)
 	CenterRectInRect(&bounds, &thisMac.screen);
 	QOffsetRect(&bounds, -thisMac.screen.left, -thisMac.screen.top);
 	src = bounds;
-	Mac_InsetRect(&src, 64, 32);
+	QInsetRect(&src, 64, 32);
 
 	lfText.lfHeight = -12;
 	lfText.lfWidth = 0;

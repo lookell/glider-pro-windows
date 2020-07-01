@@ -158,9 +158,9 @@ void DrawTable (Rect *tableTop, SInt16 down)
 	else
 		ColorShadowOval(backSrcMap, &tempRect, k8DkstGrayColor);
 
-	Mac_InsetRect(tableTop, 0, 1);
+	QInsetRect(tableTop, 0, 1);
 	ColorRect(backSrcMap, tableTop, brownC);
-	Mac_InsetRect(tableTop, 0, -1);
+	QInsetRect(tableTop, 0, -1);
 
 	ColorLine(backSrcMap, tableTop->left, tableTop->top + 1,
 			tableTop->left, tableTop->top + 1, k8WhiteColor);
@@ -271,9 +271,9 @@ void DrawShelf (Rect *shelfTop)
 		ColorShadowRegion(backSrcMap, shadowRgn, k8DkstGrayColor);
 	DeleteObject(shadowRgn);
 
-	Mac_InsetRect(shelfTop, 0, 1);
+	QInsetRect(shelfTop, 0, 1);
 	ColorRect(backSrcMap, shelfTop, brownC);
-	Mac_InsetRect(shelfTop, 0, -1);
+	QInsetRect(shelfTop, 0, -1);
 
 	ColorLine(backSrcMap, shelfTop->left + 1, shelfTop->top,
 			shelfTop->left + 1 + kShelfDeep, shelfTop->top, ltTanC);
@@ -351,9 +351,9 @@ void DrawCabinet (Rect *cabinet)
 		ColorShadowRegion(backSrcMap, shadowRgn, dkGrayC);
 	DeleteObject(shadowRgn);
 
-	Mac_InsetRect(cabinet, 1, 1);	// fill bulk of cabinet brown
+	QInsetRect(cabinet, 1, 1);	// fill bulk of cabinet brown
 	ColorRect(backSrcMap, cabinet, brownC);
-	Mac_InsetRect(cabinet, -1, -1);
+	QInsetRect(cabinet, -1, -1);
 
 	tempRect = *cabinet;			// add lighter left side
 	tempRect.right = tempRect.left + kCabinetDeep;
@@ -474,9 +474,9 @@ void DrawCounter (Rect *counter)
 		ColorShadowRegion(backSrcMap, shadowRgn, dkGrayC);
 	DeleteObject(shadowRgn);
 
-	Mac_InsetRect(counter, 2, 2);
+	QInsetRect(counter, 2, 2);
 	ColorRect(backSrcMap, counter, brownC);
-	Mac_InsetRect(counter, -2, -2);
+	QInsetRect(counter, -2, -2);
 
 	tempRect = *counter;
 	tempRect.top = tempRect.bottom - kCounterFooterHigh;
@@ -553,9 +553,9 @@ void DrawCounter (Rect *counter)
 	for (i = 0; i < nRects; i++)
 	{
 		HiliteRect(backSrcMap, &tempRect, tanC, dkstRedC);
-		Mac_InsetRect(&tempRect, 4, 4);
+		QInsetRect(&tempRect, 4, 4);
 		HiliteRect(backSrcMap, &tempRect, dkstRedC, tanC);
-		Mac_InsetRect(&tempRect, -4, -4);
+		QInsetRect(&tempRect, -4, -4);
 		QOffsetRect(&tempRect, kCounterStripWide + width, 0);
 	}
 }
@@ -608,10 +608,10 @@ void DrawDresser (Rect *dresser)
 		ColorShadowRegion(backSrcMap, shadowRgn, k8DkstGrayColor);
 	DeleteObject(shadowRgn);
 
-	Mac_InsetRect(dresser, 2, 2);
+	QInsetRect(dresser, 2, 2);
 	ColorRect(backSrcMap, dresser, k8PumpkinColor);
 	HiliteRect(backSrcMap, dresser, k8OrangeColor, dkstRedC);
-	Mac_InsetRect(dresser, -2, -2);
+	QInsetRect(dresser, -2, -2);
 
 	tempRect = *dresser;
 	tempRect.bottom = tempRect.top + kDresserTopThick;
@@ -639,9 +639,9 @@ void DrawDresser (Rect *dresser)
 				tempRect.right, tempRect.bottom, dkstRedC);
 		ColorRect(backSrcMap, &tempRect, yellowC);
 		HiliteRect(backSrcMap, &tempRect, ltTanC, brownC);
-		Mac_InsetRect(&tempRect, 1, 1);
+		QInsetRect(&tempRect, 1, 1);
 		HiliteRect(backSrcMap, &tempRect, ltTanC, brownC);
-		Mac_InsetRect(&tempRect, -1, -1);
+		QInsetRect(&tempRect, -1, -1);
 
 		QSetRect(&dest, -4, -4, 4, 4);
 		QOffsetRect(&dest, HalfRectTall(&tempRect), HalfRectTall(&tempRect));
@@ -705,9 +705,9 @@ void DrawDeckTable (Rect *tableTop, SInt16 down)
 	QOffsetRect(&tempRect, kTableShadowOffset, -kTableShadowOffset);
 	ColorShadowOval(backSrcMap, &tempRect, dkGrayC);
 
-	Mac_InsetRect(tableTop, 0, 1);
+	QInsetRect(tableTop, 0, 1);
 	ColorRect(backSrcMap, tableTop, kGoldColor);
-	Mac_InsetRect(tableTop, 0, -1);
+	QInsetRect(tableTop, 0, -1);
 
 	ColorLine(backSrcMap, tableTop->left, tableTop->top + 1,
 			tableTop->left, tableTop->top + 1, k8WhiteColor);

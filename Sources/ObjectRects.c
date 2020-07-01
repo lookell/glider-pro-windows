@@ -10,7 +10,7 @@
 #include "DynamicMaps.h"
 #include "GliderDefines.h"
 #include "House.h"
-#include "Macintosh.h"
+#include "MacTypes.h"
 #include "MainWindow.h"
 #include "Objects.h"
 #include "RectUtils.h"
@@ -655,7 +655,7 @@ SInt16 CreateActiveRects (SInt16 who)
 
 		case kStool:
 		bounds = theObject.data.b.bounds;
-		Mac_InsetRect(&bounds, 1, 1);
+		QInsetRect(&bounds, 1, 1);
 		bounds.bottom = bounds.top + kStoolThick;
 		hotSpotNumber = AddActiveRect(&bounds, kDissolveIt, who, true, true);
 		break;
@@ -1030,7 +1030,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		QOffsetRect(&bounds,
 				theObject.data.h.topLeft.h,
 				theObject.data.h.topLeft.v);
-		Mac_InsetRect(&bounds, -24, -10);
+		QInsetRect(&bounds, -24, -10);
 		hotSpotNumber = AddActiveRect(&bounds, kWebIt, who, true, true);
 		break;
 

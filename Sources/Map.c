@@ -190,7 +190,7 @@ void FindNewActiveRoomRect (void)
 	{
 		activeRoomRect.right++;
 		activeRoomRect.bottom++;
-		Mac_InsetRect(&activeRoomRect, -1, -1);
+		QInsetRect(&activeRoomRect, -1, -1);
 	}
 }
 #endif
@@ -313,9 +313,9 @@ void RedrawMapContents (HDC hdc)
 		activeRoomRect.right++;
 		activeRoomRect.bottom++;
 		Mac_FrameRect(hdc, &activeRoomRect, GetStockObject(DC_BRUSH), 1, 1);
-		Mac_InsetRect(&activeRoomRect, 1, 1);
+		QInsetRect(&activeRoomRect, 1, 1);
 		Mac_FrameRect(hdc, &activeRoomRect, GetStockObject(DC_BRUSH), 1, 1);
-		Mac_InsetRect(&activeRoomRect, -1, -1);
+		QInsetRect(&activeRoomRect, -1, -1);
 	}
 
 	RestoreDC(hdc, -1);

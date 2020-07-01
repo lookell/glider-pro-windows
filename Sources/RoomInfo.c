@@ -171,7 +171,7 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 			DrawFocusRect(hdc, &dragRect);
 
 			// is cursor in the drop rect?
-			if (Mac_PtInRect(mouseIs, &tileDest))
+			if (QPtInRect(mouseIs, &tileDest))
 			{
 				*newTileOver = (mouseIs.h - tileDest.left) / kMiniTileWide;
 				if (*newTileOver != wasTileOver)
@@ -295,7 +295,7 @@ void HiliteTileOver (HWND hDlg, Point mouseIs)
 	Rect hiliteRect;
 	COLORREF oldColor;
 
-	if (Mac_PtInRect(mouseIs, &tileSrc))
+	if (QPtInRect(mouseIs, &tileSrc))
 	{
 		newTileOver = (mouseIs.h - tileSrc.left) / kMiniTileWide;
 		if (newTileOver != tileOver)
@@ -573,7 +573,7 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 	case WM_LBUTTONDOWN:
 		mouseIs.h = GET_X_LPARAM(lParam);
 		mouseIs.v = GET_Y_LPARAM(lParam);
-		if (Mac_PtInRect(mouseIs, &tileSrc))
+		if (QPtInRect(mouseIs, &tileSrc))
 		{
 			POINT pt;
 			pt.x = mouseIs.h;
@@ -594,7 +594,7 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 	case WM_MOUSEMOVE:
 		mouseIs.h = GET_X_LPARAM(lParam);
 		mouseIs.v = GET_Y_LPARAM(lParam);
-		showHandCursor = Mac_PtInRect(mouseIs, &tileSrc);
+		showHandCursor = QPtInRect(mouseIs, &tileSrc);
 		HiliteTileOver(hDlg, mouseIs);
 		return FALSE;
 

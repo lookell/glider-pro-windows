@@ -750,11 +750,11 @@ void DrawMirror (Rect *mirror)
 	tempRect = *mirror;
 	ColorRect(backSrcMap, &tempRect, k8WhiteColor);
 	ColorFrameRect(backSrcMap, &tempRect, grayC);
-	Mac_InsetRect(&tempRect, 1, 1);
+	QInsetRect(&tempRect, 1, 1);
 	ColorFrameRect(backSrcMap, &tempRect, k8EarthBlueColor);
-	Mac_InsetRect(&tempRect, 1, 1);
+	QInsetRect(&tempRect, 1, 1);
 	ColorFrameRect(backSrcMap, &tempRect, k8EarthBlueColor);
-	Mac_InsetRect(&tempRect, 1, 1);
+	QInsetRect(&tempRect, 1, 1);
 	ColorFrameRect(backSrcMap, &tempRect, grayC);
 }
 
@@ -797,7 +797,7 @@ void DrawWallWindow (Rect *window)
 	}
 
 	tempRect = *window;
-	Mac_InsetRect(&tempRect, 3, 0);
+	QInsetRect(&tempRect, 3, 0);
 	ColorRect(backSrcMap, &tempRect, brownC);
 	HiliteRect(backSrcMap, &tempRect, tanC, dkstRedC);
 
@@ -839,9 +839,9 @@ void DrawWallWindow (Rect *window)
 
 	tempRect2 = tempRect;		// top pane
 	tempRect2.bottom = halfWay + 2;
-	Mac_InsetRect(&tempRect2, 5, 5);
+	QInsetRect(&tempRect2, 5, 5);
 	HiliteRect(backSrcMap, &tempRect2, dkstRedC, tanC);
-	Mac_InsetRect(&tempRect2, 1, 1);
+	QInsetRect(&tempRect2, 1, 1);
 	if (thisMac.isDepth == 4)
 		ColorRect(backSrcMap, &tempRect2, 5);
 	else
@@ -849,9 +849,9 @@ void DrawWallWindow (Rect *window)
 
 	tempRect2 = tempRect;		// bottom pane
 	tempRect2.top = halfWay - 3;
-	Mac_InsetRect(&tempRect2, 5, 5);
+	QInsetRect(&tempRect2, 5, 5);
 	HiliteRect(backSrcMap, &tempRect2, dkstRedC, tanC);
-	Mac_InsetRect(&tempRect2, 1, 1);
+	QInsetRect(&tempRect2, 1, 1);
 	if (thisMac.isDepth == 4)
 		ColorRect(backSrcMap, &tempRect2, 5);
 	else

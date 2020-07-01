@@ -33,5 +33,8 @@ void QSetRect (Rect *theRect, SInt16 l, SInt16 t, SInt16 r, SInt16 b);
 Boolean ForceRectInRect (Rect *small, Rect *large);
 void QUnionSimilarRect (Rect *rectA, Rect *rectB, Rect *rectC);
 void FrameRectSansCorners (HDC hdc, Rect *theRect);
+void QInsetRect (Rect *r, SInt16 dh, SInt16 dv);
+Boolean QPtInRect (Point pt, const Rect *r);
+Boolean QSectRect (const Rect *src1, const Rect *src2, Rect *dstRect);
 
 #endif
