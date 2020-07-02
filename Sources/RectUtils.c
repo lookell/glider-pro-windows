@@ -7,34 +7,14 @@
 //============================================================================
 
 
-#include "Macintosh.h"
-#include "WinAPI.h"
-
-
-
 //==============================================================  Functions
-//--------------------------------------------------------------  FrameWHRect
-// Given the top left corner and a width and height, this function…
-// simply creates the necessary rectangle and frames it.
-
-void FrameWHRect (HDC hdc, SInt16 left, SInt16 top, SInt16 wide, SInt16 high)
-{
-	Rect		theRect;
-
-	theRect.left = left;
-	theRect.top = top;
-	theRect.right = left + wide;
-	theRect.bottom = top + high;
-	Mac_FrameRect(hdc, &theRect, GetCurrentObject(hdc, OBJ_BRUSH), 1, 1);
-}
-
 //--------------------------------------------------------------  NormalizeRect
 // This function ensures that a rect's top is less than it's bottom…
 // and that left is less than right.
 
 void NormalizeRect (Rect *theRect)
 {
-	SInt16		tempSide;
+	SInt16 tempSide;
 
 	if (theRect->left > theRect->right)
 	{
@@ -106,53 +86,13 @@ SInt16 RectTall (Rect *theRect)
 	return (theRect->bottom - theRect->top);
 }
 
-//--------------------------------------------------------------  GlobalToLocalRect
-
-// This function offsets a rectangle from global to local coordinates.
-// The "local" coordinate system is assumed to be the current port (window).
-
-void GlobalToLocalRect (HWND hwnd, Rect *theRect)
-{
-	RECT	rcWindow;
-
-	rcWindow.left = theRect->left;
-	rcWindow.top = theRect->top;
-	rcWindow.right = theRect->right;
-	rcWindow.bottom = theRect->bottom;
-	MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT)&rcWindow, 2);
-	theRect->left = (SInt16)rcWindow.left;
-	theRect->top = (SInt16)rcWindow.top;
-	theRect->right = (SInt16)rcWindow.right;
-	theRect->bottom = (SInt16)rcWindow.bottom;
-}
-
-//--------------------------------------------------------------  LocalToGlobalRect
-
-// This function offsets a rectangle from local to global coordinates.
-// The "local" coordinate system is assumed to be the current port (window).
-
-void LocalToGlobalRect (HWND hwnd, Rect *theRect)
-{
-	RECT	rcWindow;
-
-	rcWindow.left = theRect->left;
-	rcWindow.top = theRect->top;
-	rcWindow.right = theRect->right;
-	rcWindow.bottom = theRect->bottom;
-	MapWindowPoints(hwnd, HWND_DESKTOP, (LPPOINT)&rcWindow, 2);
-	theRect->left = (SInt16)rcWindow.left;
-	theRect->top = (SInt16)rcWindow.top;
-	theRect->right = (SInt16)rcWindow.right;
-	theRect->bottom = (SInt16)rcWindow.bottom;
-}
-
 //--------------------------------------------------------------  CenterRectInRect
 // Given two rectangles, this function centers the first rectangle…
 // within the second.  The second rect is unchanged.
 
 void CenterRectInRect (Rect *rectA, Rect *rectB)
 {
-	SInt16	widthA, tallA;
+	SInt16 widthA, tallA;
 
 	widthA = RectWide(rectA);
 	tallA = RectTall(rectA);
@@ -191,7 +131,7 @@ void VOffsetRect (Rect *theRect, SInt16 v)
 
 Boolean IsRectLeftOfRect (Rect *rect1, Rect *rect2)
 {
-	SInt16		offset;
+	SInt16 offset;
 
 	offset = (rect1->right - rect1->left) - (rect2->right - rect2->left) / 2;
 	if ((rect1->left) < (rect2->left + offset))
@@ -231,49 +171,49 @@ void QSetRect (Rect *theRect, SInt16 l, SInt16 t, SInt16 r, SInt16 b)
 // will clip the source rect so that it is entirely within the bounding…
 // rect.  It returns true if any clippiung was necessary.
 
-Boolean ForceRectInRect (Rect *small, Rect *large)
+Boolean ForceRectInRect (Rect *small_, Rect *large)
 {
-	SInt16		hOff, vOff;
-	Boolean		changed;
+	SInt16 hOff, vOff;
+	Boolean changed;
 
 	changed = false;
 
-	NormalizeRect(small);
+	NormalizeRect(small_);
 
-	if ((small->bottom - small->top) > (large->bottom - large->top))
+	if ((small_->bottom - small_->top) > (large->bottom - large->top))
 	{
-		small->bottom = small->top + (large->bottom - large->top);
+		small_->bottom = small_->top + (large->bottom - large->top);
 		changed = true;
 	}
 
-	if ((small->right - small->left) > (large->right - large->left))
+	if ((small_->right - small_->left) > (large->right - large->left))
 	{
-		small->right = small->left + (large->right - large->left);
+		small_->right = small_->left + (large->right - large->left);
 		changed = true;
 	}
 
-	hOff = large->left - small->left;
+	hOff = large->left - small_->left;
 	if (hOff > 0)
 	{
-		QOffsetRect(small, hOff, 0);
+		QOffsetRect(small_, hOff, 0);
 		changed = true;
 	}
-	hOff = large->right - small->right;
+	hOff = large->right - small_->right;
 	if (hOff < 0)
 	{
-		QOffsetRect(small, hOff, 0);
+		QOffsetRect(small_, hOff, 0);
 		changed = true;
 	}
-	vOff = large->top - small->top;
+	vOff = large->top - small_->top;
 	if (vOff > 0)
 	{
-		QOffsetRect(small, 0, vOff);
+		QOffsetRect(small_, 0, vOff);
 		changed = true;
 	}
-	vOff = large->bottom - small->bottom;
+	vOff = large->bottom - small_->bottom;
 	if (vOff < 0)
 	{
-		QOffsetRect(small, 0, vOff);
+		QOffsetRect(small_, 0, vOff);
 		changed = true;
 	}
 
@@ -306,25 +246,6 @@ void QUnionSimilarRect (Rect *rectA, Rect *rectB, Rect *rectC)
 		rectC->bottom = rectA->bottom;
 	else
 		rectC->bottom = rectB->bottom;
-}
-
-//--------------------------------------------------------------  FrameRectSansCorners
-// This is similar to the ToolBox FrameRect() call.  However, it doesn't…
-// draw the pixels in the 4 corners of the Rect.
-
-void FrameRectSansCorners (HDC hdc, Rect *theRect)
-{
-	MoveToEx(hdc, theRect->left + 1, theRect->top, NULL);
-	Mac_LineTo(hdc, theRect->right - 2, theRect->top);
-
-	MoveToEx(hdc, theRect->right - 1, theRect->top + 1, NULL);
-	Mac_LineTo(hdc, theRect->right - 1, theRect->bottom - 2);
-
-	MoveToEx(hdc, theRect->left + 1, theRect->bottom - 1, NULL);
-	Mac_LineTo(hdc, theRect->right - 2, theRect->bottom - 1);
-
-	MoveToEx(hdc, theRect->left, theRect->top + 1, NULL);
-	Mac_LineTo(hdc, theRect->left, theRect->bottom - 2);
 }
 
 //--------------------------------------------------------------  QInsetRect
