@@ -790,7 +790,7 @@ int ReadHouseType(byteio *reader, houseType *data)
 	if (data->nRooms < 0)
 		return 0;
 	data->rooms = calloc(data->nRooms, sizeof(*data->rooms));
-	if (data->rooms == NULL)
+	if ((data->rooms == NULL) && (data->nRooms != 0))
 		return 0;
 	for (i = 0; i < data->nRooms; i++)
 		FORWARD_FALSE(ReadRoomType(reader, &data->rooms[i]));
