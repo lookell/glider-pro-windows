@@ -10,6 +10,7 @@
 #include "AnimCursor.h"
 #include "ColorUtils.h"
 #include "Coordinates.h"
+#include "DialogUtils.h"
 #include "Environ.h"
 #include "Events.h"
 #include "FrameTimer.h"
@@ -286,6 +287,7 @@ void OpenMainWindow (void)
 				NULL, theMenuBar, HINST_THISCOMPONENT, NULL);
 		if (mainWindow == NULL)
 			RedAlert(kErrDialogDidntLoad);
+		CenterOverOwner(mainWindow);
 		ShowWindow(mainWindow, SW_SHOWNORMAL);
 
 		mainWindowDC = GetMainWindowDC();
