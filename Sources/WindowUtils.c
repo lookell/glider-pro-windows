@@ -16,8 +16,6 @@
 #include "StringUtils.h"
 
 
-#define kFloatingKind		2048
-
 #define kMessageItem		1001
 
 
@@ -30,7 +28,6 @@ static COLORREF mssgTextColor;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  GetWindowTopLeft
-
 // Returns the top left coordinate of the specified window.  Corrdinates…
 // are (of course) global (local coordinates would always be (0, 0)).
 
@@ -50,72 +47,6 @@ void GetWindowLeftTop (HWND theWindow, SInt16 *left, SInt16 *top)
 	}
 }
 
-//--------------------------------------------------------------  GetWindowRect
-
-// Returns bounding rectangle of the specified window in global coords.
-
-void Gp_GetWindowRect (HWND theWindow, Rect *bounds)
-{
-	RECT		theRect;
-
-	if (theWindow != NULL)
-	{
-		GetClientRect(theWindow, &theRect);
-		MapWindowPoints(theWindow, HWND_DESKTOP, (LPPOINT)&theRect, 2);
-		bounds->left = (SInt16)theRect.left;
-		bounds->top = (SInt16)theRect.top;
-		bounds->right = (SInt16)theRect.right;
-		bounds->bottom = (SInt16)theRect.bottom;
-	}
-}
-
-//--------------------------------------------------------------  GetLocalWindowRect
-// Returns bounding rectangle of the specified window in local coords.
-// (When you just need its width and height.)
-
-void GetLocalWindowRect (HWND theWindow, Rect *bounds)
-{
-	RECT		theRect;
-
-	if (theWindow != NULL)
-	{
-		GetClientRect(theWindow, &theRect);
-		bounds->left = (SInt16)theRect.left;
-		bounds->top = (SInt16)theRect.top;
-		bounds->right = (SInt16)theRect.right;
-		bounds->bottom = (SInt16)theRect.bottom;
-	}
-}
-
-//--------------------------------------------------------------  FlagWindowFloating
-// Sets the specified window's windowKind field to my own kFloatingKind…
-// variable.  This way I can examine a window later and determine if…
-// it's supposed to "float" above all other windows.
-/*
-void FlagWindowFloating (WindowPtr theWindow)
-{
-	if (theWindow != nil)
-	{
-		((WindowPeek)theWindow)->windowKind = kFloatingKind;
-		BringToFront(theWindow);
-	}
-}
-
-//--------------------------------------------------------------  IsWindowFloating
-
-// Tests a specific window to see if it is supposed to "float" above all…
-// other windows.
-
-Boolean	IsWindowFloating (WindowPtr theWindow)
-{
-	if (theWindow != nil)
-	{
-		return (((WindowPeek)theWindow)->windowKind == kFloatingKind);
-	}
-	else
-		return (false);
-}
-*/
 //--------------------------------------------------------------  OpenMessageWindow
 // Brings up a simple message window.  Nice sort of utility function.
 // Anytime you want a small, quick message to come up, call this.
@@ -173,7 +104,6 @@ static INT_PTR CALLBACK MessageWindowProc (HWND hDlg, UINT message, WPARAM wPara
 }
 
 //--------------------------------------------------------------  SetMessageWindowMessage
-
 // For the above message window, this function displays a string of text…
 // in the center of the window.
 
@@ -198,7 +128,6 @@ void SetMessageWindowMessage (StringPtr message)
 }
 
 //--------------------------------------------------------------  SetMessageWindowColor
-
 // For the above message window, this function sets the color of the message
 // text displayed within the window. (This was originally done by calling the
 // QuickDraw function ForeColor before calling SetMessageWindowMessage.)
@@ -223,7 +152,6 @@ void SetMessageTextColor (COLORREF textColor)
 }
 
 //--------------------------------------------------------------  CloseMessageWindow
-
 // Closes the previously referred to "message window".
 
 void CloseMessageWindow (void)
@@ -237,7 +165,6 @@ void CloseMessageWindow (void)
 }
 
 //--------------------------------------------------------------  CloseThisWindow
-
 // Given a specific window, this function will close it and set the window…
 // pointer to null.
 
