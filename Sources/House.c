@@ -9,6 +9,7 @@
 
 #include "AnimCursor.h"
 #include "Banner.h"
+#include "ByteIO.h"
 #include "DialogUtils.h"
 #include "FileError.h"
 #include "HighScores.h"
@@ -24,6 +25,8 @@
 #include "Room.h"
 #include "RoomGraphics.h"
 #include "SavedGames.h"
+#include "SelectHouse.h"
+#include "StructIO.h"
 #include "StringUtils.h"
 #include "Utilities.h"
 #include "WindowUtils.h"
@@ -56,62 +59,138 @@ Boolean		houseUnlocked;
 #ifndef COMPILEDEMO
 Boolean CreateNewHouse (HWND hwndOwner)
 {
-	MessageBox(hwndOwner, L"CreateNewHouse unimplemented", 0, MB_ICONERROR);
-	return false;
-#if 0
-	AEKeyword			theKeyword;
-	DescType			actualType;
-	Size				actualSize;
-	NavReplyRecord		theReply;
-	NavDialogOptions	dialogOptions;
-	FSSpec				tempSpec;
-	FSSpec				theSpec;
-	OSErr				theErr;
+	OPENFILENAME ofn;
+	wchar_t houseDirPath[MAX_PATH];
+	wchar_t houseFilePath[MAX_PATH] = { 0 };
+	houseSpec theSpec;
+	Str31 errorLabel;
+	HANDLE outputFile;
+	byteio byteWriter;
+	houseType blankHouse;
+	LPVOID blankDllBytes;
+	DWORD blankDllSize;
+	DWORD numWritten;
+	DWORD lastError;
+	BOOL succeeded;
+	HRESULT hr;
 
-	theErr = NavGetDefaultDialogOptions(&dialogOptions);
-	theErr = NavPutFile(nil, &theReply, &dialogOptions, nil, 'gliH', 'ozm5', nil);
-	if (theErr == userCanceledErr)
-		return false;
-	if (!theReply.validRecord)
-		return (false);
+	// Get the new house's file name from the user
 
-	theErr = AEGetNthPtr(&(theReply.selection), 1, typeFSS, &theKeyword,
-			&actualType, &theSpec, sizeof(FSSpec), &actualSize);
-
-	if (theReply.replacing)
+	if (!GetHouseFolderPath(houseDirPath, ARRAYSIZE(houseDirPath)))
 	{
-		theErr = FSMakeFSSpec(theSpec.vRefNum, theSpec.parID,
-				theSpec.name, &tempSpec);
-		if (!CheckFileError(theErr, theSpec.name))
-			return (false);
-
-		theErr = FSpDelete(&tempSpec);
-		if (!CheckFileError(theErr, theSpec.name))
-			return (false);
+		houseDirPath[0] = L'\0';
 	}
+
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = hwndOwner;
+	ofn.hInstance = NULL;
+	ofn.lpstrFilter = L"Glider PRO House (*.glh)\0*.glh\0\0";
+	ofn.lpstrCustomFilter = NULL;
+	ofn.nMaxCustFilter = 0;
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFile = houseFilePath;
+	ofn.nMaxFile = ARRAYSIZE(houseFilePath);
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = (houseDirPath[0] != L'\0') ? houseDirPath : NULL;
+	ofn.lpstrTitle = NULL;
+	ofn.Flags = OFN_NOCHANGEDIR | OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST;
+	ofn.nFileOffset = 0;
+	ofn.nFileExtension = 0;
+	ofn.lpstrDefExt = L"glh";
+	ofn.lCustData = 0;
+	ofn.lpfnHook = NULL;
+	ofn.lpTemplateName = NULL;
+	if (!GetSaveFileName(&ofn))
+	{
+		return false;
+	}
+
+	// Fill out the house spec with its path and name
+
+	StringCchCopy(theSpec.path, ARRAYSIZE(theSpec.path), ofn.lpstrFile);
+	// chop off extension
+	ofn.lpstrFile[ofn.nFileExtension - 1] = L'\0';
+	StringCchCopy(theSpec.houseName, ARRAYSIZE(theSpec.houseName),
+		&ofn.lpstrFile[ofn.nFileOffset]);
+	MacFromWinString(theSpec.name, ARRAYSIZE(theSpec.name), theSpec.houseName);
+
+	// Write a minimal zeroed-out house file
+
+	PasStringCopyC("New House", errorLabel);
+
+	outputFile = CreateFile(theSpec.path, GENERIC_READ | GENERIC_WRITE,
+		FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (outputFile == INVALID_HANDLE_VALUE)
+	{
+		CheckFileError(hwndOwner, GetLastError(), errorLabel);
+		return false;
+	}
+	if (!byteio_init_handle_writer(&byteWriter, outputFile))
+	{
+		RedAlert(kErrNoMemory);
+	}
+	ZeroMemory(&blankHouse, sizeof(blankHouse));
+	succeeded = WriteHouseType(&byteWriter, &blankHouse);
+	lastError = GetLastError();
+	byteio_close(&byteWriter);
+	CloseHandle(outputFile);
+	if (!succeeded)
+	{
+		CheckFileError(hwndOwner, lastError, errorLabel);
+		return false;
+	}
+
+	// Write an empty resource DLL
+
+	ofn.lpstrFile[ofn.nFileExtension - 1] = L'\0';
+	StringCchCat(ofn.lpstrFile, ofn.nMaxFile, L".glr");
+
+	hr = LoadModuleResource(HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(IDR_BLANK_DLL), RT_BLANKDLL,
+		&blankDllBytes, &blankDllSize);
+	if (FAILED(hr))
+	{
+		RedAlert(kErrFailedResourceLoad);
+	}
+
+	outputFile = CreateFile(ofn.lpstrFile, GENERIC_READ | GENERIC_WRITE,
+		FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (outputFile == INVALID_HANDLE_VALUE)
+	{
+		CheckFileError(hwndOwner, GetLastError(), errorLabel);
+		return false;
+	}
+	succeeded = WriteFile(outputFile, blankDllBytes, blankDllSize, &numWritten, NULL);
+	lastError = GetLastError();
+	CloseHandle(outputFile);
+	if (!succeeded)
+	{
+		CheckFileError(hwndOwner, lastError, errorLabel);
+		return false;
+	}
+
+	// Add the new house to the house list and open it for business
 
 	if (houseOpen)
 	{
-		if (!CloseHouse())
-			return (false);
+		if (!CloseHouse(hwndOwner))
+		{
+			return false;
+		}
 	}
-
-	theErr = FSpCreate(&theSpec, 'ozm5', 'gliH', theReply.keyScript);
-	if (!CheckFileError(theErr, "\pNew House"))
-		return (false);
-	HCreateResFile(theSpec.vRefNum, theSpec.parID, theSpec.name);
-	if (ResError() != noErr)
-		YellowAlert(kYellowFailedResCreate, ResError());
 
 	PasStringCopy(theSpec.name, thisHouseName);
 	AddExtraHouse(&theSpec);
-	BuildHouseList();
+	BuildHouseList(hwndOwner);
 	InitCursor();
-	if (!OpenHouse())
-		return (false);
+	if (!OpenHouse(hwndOwner))
+	{
+		return false;
+	}
 
-	return (true);
-#endif
+	return true;
 }
 #endif
 
