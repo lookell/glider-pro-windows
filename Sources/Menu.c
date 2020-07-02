@@ -472,7 +472,7 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 	switch (theItem)
 	{
 		case iNewHouse:
-		if (CreateNewHouse())
+		if (CreateNewHouse(hwnd))
 		{
 			whoCares = InitializeEmptyHouse(hwnd);
 			OpenCloseEditWindows();

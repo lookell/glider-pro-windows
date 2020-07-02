@@ -15,6 +15,12 @@
 #define RT_ACUR L"ACUR"
 #endif
 
+#ifdef RC_INVOKED
+#define RT_BLANKDLL BLANKDLL
+#else
+#define RT_BLANKDLL L"BLANKDLL"
+#endif
+
 #define kJinjurStringBase			1000
 #define kPrefMainStringBase			1100
 #define rFileErrorStringsBase		1200
@@ -27,6 +33,8 @@
 #define kObjectNameStringsBase		1900
 
 #define IDR_DEMO				128
+
+#define IDR_BLANK_DLL           1000
 
 #define IDM_ROOT				1
 

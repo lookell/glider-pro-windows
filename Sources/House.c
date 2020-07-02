@@ -54,8 +54,9 @@ Boolean		houseUnlocked;
 // Called to create a new house file.
 
 #ifndef COMPILEDEMO
-Boolean CreateNewHouse (void)
+Boolean CreateNewHouse (HWND hwndOwner)
 {
+	MessageBox(hwndOwner, L"CreateNewHouse unimplemented", 0, MB_ICONERROR);
 	return false;
 #if 0
 	AEKeyword			theKeyword;

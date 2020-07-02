@@ -22,7 +22,7 @@ extern SInt16 wasSuite;
 extern retroLink retroLinkList[kMaxRoomObs];
 extern Boolean houseUnlocked;
 
-Boolean CreateNewHouse (void);
+Boolean CreateNewHouse (HWND hwndOwner);
 Boolean InitializeEmptyHouse (HWND ownerWindow);
 SInt16 RealRoomNumberCount (void);
 SInt16 GetFirstRoomNumber (void);
