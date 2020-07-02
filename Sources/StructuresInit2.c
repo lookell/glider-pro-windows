@@ -149,12 +149,11 @@ void CreateOffscreens (void)
 
 void CreatePointers (void)
 {
-	HRSRC		resBlock;
-	HGLOBAL		resHandle;
-	DWORD		resByteSize;
-	LPVOID		resPointer;
-	byteio		demoReader;
-	size_t		i;
+	DWORD demoResourceSize;
+	LPVOID demoResourceData;
+	byteio demoReader;
+	HRESULT hr;
+	size_t i;
 
 	thisRoom = NULL;
 	thisRoom = (roomPtr)malloc(sizeof(roomType));
@@ -249,19 +248,14 @@ void CreatePointers (void)
 	demoData = (demoPtr)malloc(sizeof(demoType) * (kDemoLength / demoTypeByteSize));
 	if (demoData == NULL)
 		RedAlert(kErrNoMemory);
-	resBlock = FindResource(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDR_DEMO), RT_DEMO);
-	if (resBlock == NULL)
+
+	hr = LoadModuleResource(HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(IDR_DEMO), RT_DEMO,
+		&demoResourceData, &demoResourceSize);
+	if (FAILED(hr) || demoResourceSize != kDemoLength)
 		RedAlert(kErrFailedResourceLoad);
-	resByteSize = SizeofResource(HINST_THISCOMPONENT, resBlock);
-	if (resByteSize < kDemoLength)
-		RedAlert(kErrFailedResourceLoad);
-	resHandle = LoadResource(HINST_THISCOMPONENT, resBlock);
-	if (resHandle == NULL)
-		RedAlert(kErrFailedResourceLoad);
-	resPointer = LockResource(resHandle);
-	if (resPointer == NULL)
-		RedAlert(kErrFailedResourceLoad);
-	if (!byteio_init_memory_reader(&demoReader, resPointer, resByteSize))
+
+	if (!byteio_init_memory_reader(&demoReader, demoResourceData, demoResourceSize))
 		RedAlert(kErrNoMemory);
 	for (i = 0; i < (kDemoLength / demoTypeByteSize); i++)
 	{
