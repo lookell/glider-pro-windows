@@ -163,24 +163,6 @@ void ColorFrameRect (HDC hdc, Rect *theRect, SInt32 color)
 	SetDCBrushColor(hdc, wasColor);
 }
 
-//--------------------------------------------------------------  ColorFrameWHRect
-
-// Given a the top-left corner of a rectangle, its width and height,…
-// and a color index, this function frames a rectangle in that color.
-// Current port, pen mode, etc. assumed.
-
-void ColorFrameWHRect (HDC hdc, SInt16 left, SInt16 top, SInt16 wide, SInt16 high,
-		SInt32 color)
-{
-	Rect		theRect;
-
-	theRect.left = left;
-	theRect.top = top;
-	theRect.right = left + wide;
-	theRect.bottom = top + high;
-	ColorFrameRect(hdc, &theRect, color);
-}
-
 //--------------------------------------------------------------  ColorFrameOval
 
 // Given a rectangle and color index, this function frames an…
