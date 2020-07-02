@@ -935,3 +935,69 @@ BOOL GetDataFolderPath (LPWSTR lpDataPath, DWORD cchDataPath)
 	return TRUE;
 }
 
+//--------------------------------------------------------------  LoadModuleResource
+
+HRESULT LoadModuleResource (HMODULE hModule, LPCWSTR pResName, LPCWSTR pResType,
+	LPVOID *ppResData, DWORD *pResByteSize)
+{
+	HRSRC infoHandle;
+	DWORD dataSize;
+	HGLOBAL dataHandle;
+	LPVOID dataPointer;
+	DWORD lastError;
+
+	if (ppResData != NULL)
+	{
+		*ppResData = NULL;
+	}
+	if (pResByteSize != NULL)
+	{
+		*pResByteSize = 0;
+	}
+
+	if (pResName == NULL)
+	{
+		return E_INVALIDARG;
+	}
+	if (pResType == NULL)
+	{
+		return E_INVALIDARG;
+	}
+	if (ppResData == NULL)
+	{
+		return E_INVALIDARG;
+	}
+	if (pResByteSize == NULL)
+	{
+		return E_INVALIDARG;
+	}
+
+	infoHandle = FindResource(hModule, pResName, pResType);
+	if (infoHandle == NULL)
+	{
+		lastError = GetLastError();
+		return HRESULT_FROM_WIN32(lastError);
+	}
+	dataSize = SizeofResource(hModule, infoHandle);
+	if (dataSize == 0)
+	{
+		lastError = GetLastError();
+		return HRESULT_FROM_WIN32(lastError);
+	}
+	dataHandle = LoadResource(hModule, infoHandle);
+	if (dataHandle == NULL)
+	{
+		lastError = GetLastError();
+		return HRESULT_FROM_WIN32(lastError);
+	}
+	dataPointer = LockResource(dataHandle);
+	if (dataPointer == NULL)
+	{
+		return E_FAIL;
+	}
+
+	*ppResData = dataPointer;
+	*pResByteSize = dataSize;
+	return S_OK;
+}
+

@@ -51,5 +51,7 @@ void DelayTicks (SInt32 howLong);
 void UnivGetSoundVolume (SInt16 *volume, Boolean hasSM3);
 void UnivSetSoundVolume (SInt16 volume, Boolean hasSM3);
 BOOL GetDataFolderPath (LPWSTR lpDataPath, DWORD cchDataPath);
+HRESULT LoadModuleResource (HMODULE hModule, LPCWSTR pResName, LPCWSTR pResType,
+	LPVOID *ppResData, DWORD *pResByteSize);
 
 #endif
