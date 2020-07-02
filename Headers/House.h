@@ -23,7 +23,7 @@ extern retroLink retroLinkList[kMaxRoomObs];
 extern Boolean houseUnlocked;
 
 Boolean CreateNewHouse (HWND hwndOwner);
-Boolean InitializeEmptyHouse (HWND ownerWindow); // TODO: remove ownerWindow parameter
+void InitializeEmptyHouse (void);
 SInt16 RealRoomNumberCount (void);
 SInt16 GetFirstRoomNumber (void);
 void WhereDoesGliderBegin (Rect *theRect, SInt16 mode);

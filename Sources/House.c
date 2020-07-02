@@ -120,9 +120,9 @@ Boolean CreateNewHouse (HWND hwndOwner)
 // Initializes all the structures for an empty (new) house.
 
 #ifndef COMPILEDEMO
-Boolean InitializeEmptyHouse (HWND ownerWindow)
+void InitializeEmptyHouse (void)
 {
-	Str255			tempStr;
+	Str255 tempStr;
 
 	free(thisHouse.rooms);
 
@@ -140,6 +140,7 @@ Boolean InitializeEmptyHouse (HWND ownerWindow)
 	thisHouse.hasGame = false;
 	thisHouse.firstRoom = -1;
 	thisHouse.nRooms = 0;
+	thisHouse.rooms = NULL;
 
 	wardBitSet = false;
 	phoneBitSet = false;
@@ -156,8 +157,6 @@ Boolean InitializeEmptyHouse (HWND ownerWindow)
 	fileDirty = true;
 	UpdateMenus(false);
 	ReflectCurrentRoom(true);
-
-	return (true);
 }
 #endif
 
