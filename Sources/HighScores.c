@@ -162,7 +162,7 @@ void DrawHighScores (void)
 	SaveDC(workSrcMap);
 	SelectObject(workSrcMap, theFont);
 													// message for score #1
-	PasStringCopy(thisHouse->highScores.banner, tempStr);
+	PasStringCopy(thisHouse.highScores.banner, tempStr);
 	bannerWidth = Mac_StringWidth(workSrcMap, tempStr);
 	hOffset = scoreLeft + (kScoreWide - bannerWidth) / 2;
 	vOffset = dropIt - kKimsLifted;
@@ -185,7 +185,7 @@ void DrawHighScores (void)
 
 	for (i = 0; i < kMaxScores; i++)
 	{
-		if (thisHouse->highScores.scores[i] > 0L)
+		if (thisHouse.highScores.scores[i] > 0L)
 		{
 			SpinCursor(1);
 			NumToString(i + 1L, tempStr);		// draw placing number
@@ -205,7 +205,7 @@ void DrawHighScores (void)
 				MoveToEx(workSrcMap, scoreLeft + 0, dropIt - 1 + (i * kScoreSpacing), NULL);
 			Mac_DrawString(workSrcMap, tempStr);
 													// draw high score name
-			PasStringCopy(thisHouse->highScores.names[i], tempStr);
+			PasStringCopy(thisHouse.highScores.names[i], tempStr);
 			SetTextColor(workSrcMap, blackColor);
 			if (i == 0)
 				MoveToEx(workSrcMap, scoreLeft + 31, dropIt - kScoreSpacing - kKimsLifted, NULL);
@@ -222,7 +222,7 @@ void DrawHighScores (void)
 				MoveToEx(workSrcMap, scoreLeft + 30, dropIt - 1 + (i * kScoreSpacing), NULL);
 			Mac_DrawString(workSrcMap, tempStr);
 													// draw level number
-			NumToString(thisHouse->highScores.levels[i], tempStr);
+			NumToString(thisHouse.highScores.levels[i], tempStr);
 			SetTextColor(workSrcMap, blackColor);
 			if (i == 0)
 				MoveToEx(workSrcMap, scoreLeft + 161, dropIt - kScoreSpacing - kKimsLifted, NULL);
@@ -239,7 +239,7 @@ void DrawHighScores (void)
 				MoveToEx(workSrcMap, scoreLeft + 160, dropIt - 1 + (i * kScoreSpacing), NULL);
 			Mac_DrawString(workSrcMap, tempStr);
 													// draw word "rooms"
-			if (thisHouse->highScores.levels[i] == 1)
+			if (thisHouse.highScores.levels[i] == 1)
 				GetLocalizedString(6, tempStr);
 			else
 				GetLocalizedString(7, tempStr);
@@ -256,7 +256,7 @@ void DrawHighScores (void)
 				MoveToEx(workSrcMap, scoreLeft + 192, dropIt - 1 + (i * kScoreSpacing), NULL);
 			Mac_DrawString(workSrcMap, tempStr);
 													// draw high score points
-			NumToString(thisHouse->highScores.scores[i], tempStr);
+			NumToString(thisHouse.highScores.scores[i], tempStr);
 			SetTextColor(workSrcMap, blackColor);
 			if (i == 0)
 				MoveToEx(workSrcMap, scoreLeft + 291, dropIt - kScoreSpacing - kKimsLifted, NULL);
@@ -306,23 +306,23 @@ void SortHighScores (void)
 		which = -1;
 		for (i = 0; i < kMaxScores; i++)
 		{
-			if (thisHouse->highScores.scores[i] > greatest)
+			if (thisHouse.highScores.scores[i] > greatest)
 			{
-				greatest = thisHouse->highScores.scores[i];
+				greatest = thisHouse.highScores.scores[i];
 				which = i;
 			}
 		}
 		if (which != -1)
 		{
-			PasStringCopy(thisHouse->highScores.names[which], tempScores.names[h]);
-			tempScores.scores[h] = thisHouse->highScores.scores[which];
-			tempScores.timeStamps[h] = thisHouse->highScores.timeStamps[which];
-			tempScores.levels[h] = thisHouse->highScores.levels[which];
-			thisHouse->highScores.scores[which] = -1L;
+			PasStringCopy(thisHouse.highScores.names[which], tempScores.names[h]);
+			tempScores.scores[h] = thisHouse.highScores.scores[which];
+			tempScores.timeStamps[h] = thisHouse.highScores.timeStamps[which];
+			tempScores.levels[h] = thisHouse.highScores.levels[which];
+			thisHouse.highScores.scores[which] = -1L;
 		}
 	}
-	PasStringCopy(thisHouse->highScores.banner, tempScores.banner);
-	thisHouse->highScores = tempScores;
+	PasStringCopy(thisHouse.highScores.banner, tempScores.banner);
+	thisHouse.highScores = tempScores;
 }
 
 //--------------------------------------------------------------  ZeroHighScores
@@ -375,7 +375,7 @@ Boolean TestHighScore (HWND ownerWindow)
 
 	for (i = 0; i < kMaxScores; i++)
 	{
-		if (theScore > thisHouse->highScores.scores[i])
+		if (theScore > thisHouse.highScores.scores[i])
 		{
 			placing = i;
 			lastHighScore = i;
@@ -387,15 +387,15 @@ Boolean TestHighScore (HWND ownerWindow)
 	{
 		//FlushEvents(everyEvent, 0);
 		GetHighScoreName(ownerWindow, placing + 1);
-		PasStringCopy(highName, thisHouse->highScores.names[kMaxScores - 1]);
+		PasStringCopy(highName, thisHouse.highScores.names[kMaxScores - 1]);
 		if (placing == 0)
 		{
 			GetHighScoreBanner(ownerWindow);
-			PasStringCopy(highBanner, thisHouse->highScores.banner);
+			PasStringCopy(highBanner, thisHouse.highScores.banner);
 		}
-		thisHouse->highScores.scores[kMaxScores - 1] = theScore;
-		Mac_GetDateTime(&thisHouse->highScores.timeStamps[kMaxScores - 1]);
-		thisHouse->highScores.levels[kMaxScores - 1] = CountRoomsVisited();
+		thisHouse.highScores.scores[kMaxScores - 1] = theScore;
+		Mac_GetDateTime(&thisHouse.highScores.timeStamps[kMaxScores - 1]);
+		thisHouse.highScores.levels[kMaxScores - 1] = CountRoomsVisited();
 		SortHighScores();
 		gameDirty = true;
 	}
@@ -597,7 +597,7 @@ Boolean WriteScoresToDisk (HWND ownerWindow)
 		CloseHandle(scoresFileHandle);
 		return false;
 	}
-	writeSucceeded = WriteScoresType(&byteWriter, &thisHouse->highScores);
+	writeSucceeded = WriteScoresType(&byteWriter, &thisHouse.highScores);
 	lastError = GetLastError();
 	byteio_close(&byteWriter);
 	CloseHandle(scoresFileHandle);
@@ -653,7 +653,7 @@ Boolean ReadScoresFromDisk (HWND ownerWindow)
 		return false;
 	}
 
-	thisHouse->highScores = tempScores;
+	thisHouse.highScores = tempScores;
 	return true;
 }
 

@@ -66,7 +66,7 @@ void DrawLocale (void)
 	tvInRoom = false;
 	tvWithMovieNumber = -1;
 
-	roomV = thisHouse->rooms[thisRoomNumber].floor;
+	roomV = thisHouse.rooms[thisRoomNumber].floor;
 
 	for (i = 0; i < 9; i++)
 	{
@@ -171,9 +171,9 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 
 	if (where == kCentralRoom)
 	{
-		thisBackground = thisHouse->rooms[who].background;
+		thisBackground = thisHouse.rooms[who].background;
 		for (i = 0; i < kNumTiles; i++)
-			thisTiles[i] = thisHouse->rooms[who].tiles[i];
+			thisTiles[i] = thisHouse.rooms[who].tiles[i];
 	}
 
 	if ((numLights == 0) && (who != kRoomIsEmpty))
@@ -211,9 +211,9 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 	}
 	else
 	{
-		pictID = thisHouse->rooms[who].background;
+		pictID = thisHouse.rooms[who].background;
 		for (i = 0; i < kNumTiles; i++)
-			tiles[i] = thisHouse->rooms[who].tiles[i];
+			tiles[i] = thisHouse.rooms[who].tiles[i];
 	}
 
 	//SetPort((GrafPtr)workSrcMap);
@@ -398,7 +398,7 @@ void RedrawRoomLighting (void)
 	SInt16		roomV;
 	Boolean		wasLit, isLit;
 
-	roomV = thisHouse->rooms[thisRoomNumber].floor;
+	roomV = thisHouse.rooms[thisRoomNumber].floor;
 
 	wasLit = numLights > 0;
 	numLights = GetNumberOfLights(localNumbers[kCentralRoom]);

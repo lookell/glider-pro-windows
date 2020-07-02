@@ -243,7 +243,7 @@ void RedrawMapContents (HDC hdc)
 			floor = kMapGroundValue - (i + mapTopRoom);
 			if ((RoomExists(suite, floor, &roomNum)) && (houseUnlocked))
 			{
-				type = thisHouse->rooms[roomNum].background - kBaseBackgroundID;
+				type = thisHouse.rooms[roomNum].background - kBaseBackgroundID;
 				if (type > kNumBackgrounds)
 				{
 					if (!doPrettyMap)

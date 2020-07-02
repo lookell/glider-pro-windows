@@ -48,14 +48,14 @@ SInt32 CountTotalHousePoints (void)
 
 	pointTotal = (SInt32)RealRoomNumberCount() * (SInt32)kRoomVisitScore;
 
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				switch (thisHouse->rooms[i].objects[h].what)
+				switch (thisHouse.rooms[i].objects[h].what)
 				{
 					case kRedClock:
 					pointTotal += kRedClockPoints;
@@ -78,7 +78,7 @@ SInt32 CountTotalHousePoints (void)
 					break;
 
 					case kInvisBonus:
-					pointTotal += thisHouse->rooms[i].objects[h].data.c.points;
+					pointTotal += thisHouse.rooms[i].objects[h].data.c.points;
 					break;
 
 					default:
@@ -110,9 +110,9 @@ INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		// NOTE: Multiline edit controls don't send EN_CHANGE notifications
 		// to their parent when the text is set via WM_SETTEXT, so we'll send
 		// these notifications manually.
-		SetDialogString(hDlg, kBannerTextItem, thisHouse->banner);
+		SetDialogString(hDlg, kBannerTextItem, thisHouse.banner);
 		SendEditChangeNotification(hDlg, kBannerTextItem);
-		SetDialogString(hDlg, kTrailerTextItem, thisHouse->trailer);
+		SetDialogString(hDlg, kTrailerTextItem, thisHouse.trailer);
 		SendEditChangeNotification(hDlg, kTrailerTextItem);
 
 		SetDlgItemInt(hDlg, kHouseSizeItem, CountTotalHousePoints(), TRUE);
@@ -127,15 +127,15 @@ INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		{
 		case IDOK:
 			GetDialogString(hDlg, kBannerTextItem,
-					thisHouse->banner, ARRAYSIZE(thisHouse->banner));
+					thisHouse.banner, ARRAYSIZE(thisHouse.banner));
 			GetDialogString(hDlg, kTrailerTextItem,
-					thisHouse->trailer, ARRAYSIZE(thisHouse->trailer));
+					thisHouse.trailer, ARRAYSIZE(thisHouse.trailer));
 
 			phoneBitSet = (IsDlgButtonChecked(hDlg, kNoPhoneCheck) != BST_UNCHECKED);
 			if (phoneBitSet)
-				thisHouse->flags = thisHouse->flags | 0x00000002;
+				thisHouse.flags = thisHouse.flags | 0x00000002;
 			else
-				thisHouse->flags = thisHouse->flags & 0xFFFFFFFD;
+				thisHouse.flags = thisHouse.flags & 0xFFFFFFFD;
 
 			fileDirty = true;
 			UpdateMenus(false);
@@ -193,11 +193,11 @@ void DoHouseInfo (HWND ownerWindow)
 	wchar_t nRoomsStr[32];
 
 	numRooms = RealRoomNumberCount();
-	version = thisHouse->version;
+	version = thisHouse.version;
 	if (!noRoomAtAll)
 	{
-		h = (SInt32)thisHouse->rooms[thisHouse->firstRoom].suite;
-		v = (SInt32)thisHouse->rooms[thisHouse->firstRoom].floor;
+		h = (SInt32)thisHouse.rooms[thisHouse.firstRoom].suite;
+		v = (SInt32)thisHouse.rooms[thisHouse.firstRoom].floor;
 	}
 
 	// Convert version to two strings, the 1's and 1/10th's part.
@@ -234,13 +234,13 @@ void HowToZeroScores (HWND ownerWindow)
 	switch (hitWhat)
 	{
 		case 1002:	// zero all
-		ZeroHighScores(thisHouse);
+		ZeroHighScores(&thisHouse);
 		fileDirty = true;
 		UpdateMenus(false);
 		break;
 
 		case 1003:	// zero all but highest
-		ZeroAllButHighestScore(thisHouse);
+		ZeroAllButHighestScore(&thisHouse);
 		fileDirty = true;
 		UpdateMenus(false);
 		break;

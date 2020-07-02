@@ -835,7 +835,7 @@ SInt16 FindObjectSlotInRoom (SInt16 roomNumber)
 	SInt16		i, emptySlot;
 
 	emptySlot = -1;
-	testRoomPtr = &(thisHouse->rooms[roomNumber]);
+	testRoomPtr = &(thisHouse.rooms[roomNumber]);
 
 	for (i = 0; i < kMaxRoomObs; i++)
 	{
@@ -857,7 +857,7 @@ Boolean DoesRoomNumHaveObject (SInt16 room, SInt16 what)
 	SInt16		i;
 	Boolean		hasIt;
 
-	testRoomPtr = &(thisHouse->rooms[room]);
+	testRoomPtr = &(thisHouse.rooms[room]);
 	hasIt = false;
 
 	for (i = 0; i < kMaxRoomObs; i++)

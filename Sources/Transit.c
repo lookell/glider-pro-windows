@@ -36,7 +36,7 @@ SInt16 WhatAreWeLinkedTo (SInt16 where, Byte who)
 {
 	SInt16		what, whatType;
 
-	what = thisHouse->rooms[where].objects[who].what;
+	what = thisHouse.rooms[where].objects[who].what;
 
 	switch (what)
 	{
@@ -431,7 +431,7 @@ void HandleRoomVisitation (void)
 {
 	if (!thisRoom->visited)
 	{
-		thisHouse->rooms[localNumbers[kCentralRoom]].visited = true;
+		thisHouse.rooms[localNumbers[kCentralRoom]].visited = true;
 		theScore += kRoomVisitScore;
 		thisRoom->visited = true;
 	}

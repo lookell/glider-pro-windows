@@ -168,7 +168,7 @@ void StartGliderMailingIn (gliderPtr thisGlider, Rect *bounds, hotPtr who)
 	objLinked = (Byte)masterObjects[whoLinked].objectLink;
 	linkedToWhat = WhatAreWeLinkedTo(transRoom, objLinked);
 
-	GetObjectRect(&thisHouse->rooms[transRoom].objects[objLinked], &transRect);
+	GetObjectRect(&thisHouse.rooms[transRoom].objects[objLinked], &transRect);
 
 	thisGlider->frame = 0;
 	thisGlider->clip = *bounds;
@@ -227,7 +227,7 @@ void StartGliderDuctingDown (gliderPtr thisGlider, Rect *bounds, hotPtr who)
 	objLinked = (Byte)masterObjects[whoLinked].objectLink;
 	linkedToWhat = WhatAreWeLinkedTo(transRoom, objLinked);
 
-	GetObjectRect(&thisHouse->rooms[transRoom].objects[objLinked], &transRect);
+	GetObjectRect(&thisHouse.rooms[transRoom].objects[objLinked], &transRect);
 
 	thisGlider->frame = 0;
 	thisGlider->clip = *bounds;
@@ -256,7 +256,7 @@ void StartGliderDuctingUp (gliderPtr thisGlider, Rect *bounds, hotPtr who)
 	objLinked = (Byte)masterObjects[whoLinked].objectLink;
 	linkedToWhat = WhatAreWeLinkedTo(transRoom, objLinked);
 
-	GetObjectRect(&thisHouse->rooms[transRoom].objects[objLinked], &transRect);
+	GetObjectRect(&thisHouse.rooms[transRoom].objects[objLinked], &transRect);
 
 	thisGlider->frame = 0;
 	thisGlider->clip = *bounds;
@@ -294,7 +294,7 @@ void StartGliderTransporting (gliderPtr thisGlider, hotPtr who)
 	objLinked = (Byte)masterObjects[whoLinked].objectLink;
 	linkedToWhat = WhatAreWeLinkedTo(transRoom, objLinked);
 
-	GetObjectRect(&thisHouse->rooms[transRoom].objects[objLinked], &transRect);
+	GetObjectRect(&thisHouse.rooms[transRoom].objects[objLinked], &transRect);
 
 	thisGlider->dest.right = thisGlider->dest.left + kGliderWide;
 	thisGlider->dest.bottom = thisGlider->dest.top + kGliderHigh;

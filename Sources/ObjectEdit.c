@@ -542,8 +542,8 @@ void Gp_DragObject (Point where)
 
 	if (objActive == kInitialGliderSelected)
 	{
-		thisHouse->initial.h += deltaH;
-		thisHouse->initial.v += deltaV;
+		thisHouse.initial.h += deltaH;
+		thisHouse.initial.v += deltaV;
 	}
 	else if (objActive == kLeftGliderSelected)
 	{
@@ -815,7 +815,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorExLf)))
 			{
-				testRoomPtr = &(thisHouse->rooms[roomNum]);
+				testRoomPtr = &(thisHouse.rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kDoorExLf;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kDoorExLfLeft;
@@ -845,7 +845,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorExRt)))
 			{
-				testRoomPtr = &(thisHouse->rooms[roomNum]);
+				testRoomPtr = &(thisHouse.rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kDoorExRt;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kDoorExRtLeft;
@@ -876,7 +876,7 @@ void AddObjectPairing (void)
 			// TODO: investigate if 'kDoorInLfLeft' is a mistake (shouldn't it be 'kDoorInLf'?)
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorInLfLeft)))
 			{
-				testRoomPtr = &(thisHouse->rooms[roomNum]);
+				testRoomPtr = &(thisHouse.rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kDoorInLf;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kDoorInLfLeft;
@@ -907,7 +907,7 @@ void AddObjectPairing (void)
 			// TODO: investigate if 'kDoorInRtLeft' is a mistake (shouldn't it be 'kDoorInRt'?)
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorInRtLeft)))
 			{
-				testRoomPtr = &(thisHouse->rooms[roomNum]);
+				testRoomPtr = &(thisHouse.rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kDoorInRt;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kDoorInRtLeft;
@@ -937,7 +937,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowExRt)))
 			{
-				testRoomPtr = &(thisHouse->rooms[roomNum]);
+				testRoomPtr = &(thisHouse.rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kWindowExRt;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kWindowExRtLeft;
@@ -967,7 +967,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowExLf)))
 			{
-				testRoomPtr = &(thisHouse->rooms[roomNum]);
+				testRoomPtr = &(thisHouse.rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kWindowExLf;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kWindowExLfLeft;
@@ -997,7 +997,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowInLf)))
 			{
-				testRoomPtr = &(thisHouse->rooms[roomNum]);
+				testRoomPtr = &(thisHouse.rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kWindowInLf;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kWindowInLfLeft;
@@ -1027,7 +1027,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowInRt)))
 			{
-				testRoomPtr = &(thisHouse->rooms[roomNum]);
+				testRoomPtr = &(thisHouse.rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kWindowInRt;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h = kWindowInRtLeft;
@@ -1057,7 +1057,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDownStairs)))
 			{
-				testRoomPtr = &(thisHouse->rooms[roomNum]);
+				testRoomPtr = &(thisHouse.rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kDownStairs;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h =
@@ -1088,7 +1088,7 @@ void AddObjectPairing (void)
 			emptySlot = FindObjectSlotInRoom(roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kUpStairs)))
 			{
-				testRoomPtr = &(thisHouse->rooms[roomNum]);
+				testRoomPtr = &(thisHouse.rooms[roomNum]);
 
 				testRoomPtr->objects[emptySlot].what = kUpStairs;
 				testRoomPtr->objects[emptySlot].data.d.topLeft.h =
@@ -1456,8 +1456,8 @@ void MoveObject (SInt16 whichWay, Boolean shiftDown)
 	if (objActive == kInitialGliderSelected)
 	{
 		wasRect = initialGliderRect;
-		thisHouse->initial.h += deltaH;
-		thisHouse->initial.v += deltaV;
+		thisHouse.initial.h += deltaH;
+		thisHouse.initial.v += deltaV;
 	}
 	else if (objActive == kLeftGliderSelected)
 	{

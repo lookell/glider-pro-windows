@@ -115,7 +115,7 @@ void SetUpFinalScreen (void)
 	if (textDown < 0)
 		textDown = 0;
 
-	PasStringCopy(thisHouse->trailer, tempStr);
+	PasStringCopy(thisHouse.trailer, tempStr);
 
 	SaveDC(workSrcMap);
 	gameOverFont = CreateFontIndirect(&lfGameOver);

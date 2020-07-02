@@ -1143,7 +1143,7 @@ SInt16 GetUpStairsRightEdge (void)
 
 	for (i = 0; i < kMaxRoomObs; i++)
 	{
-		thisObject = thisHouse->rooms[thisRoomNumber].objects[i];
+		thisObject = thisHouse.rooms[thisRoomNumber].objects[i];
 		if (thisObject.what == kDownStairs)
 		{
 			rightEdge = thisObject.data.d.topLeft.h + srcRects[kDownStairs].right - 1;
@@ -1165,7 +1165,7 @@ SInt16 GetDownStairsLeftEdge (void)
 
 	for (i = 0; i < kMaxRoomObs; i++)
 	{
-		thisObject = thisHouse->rooms[thisRoomNumber].objects[i];
+		thisObject = thisHouse.rooms[thisRoomNumber].objects[i];
 		if (thisObject.what == kUpStairs)
 		{
 			leftEdge = thisObject.data.d.topLeft.h + 1;

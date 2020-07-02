@@ -371,18 +371,8 @@ Boolean ReadHouse (HWND ownerWindow)
 		return (false);
 	#endif
 
-	if (thisHouse != NULL)
-	{
-		free(thisHouse->rooms);
-		free(thisHouse);
-	}
-
-	thisHouse = malloc(sizeof(*thisHouse));
-	if (thisHouse == NULL)
-	{
-		YellowAlert(ownerWindow, kYellowNoMemory, 10);
-		return(false);
-	}
+	free(thisHouse.rooms);
+	ZeroMemory(&thisHouse, sizeof(thisHouse));
 
 	distance.QuadPart = 0;
 	if (!SetFilePointerEx(houseRefNum, distance, NULL, FILE_BEGIN))
@@ -393,7 +383,7 @@ Boolean ReadHouse (HWND ownerWindow)
 
 	if (!byteio_init_handle_reader(&byteReader, houseRefNum))
 		RedAlert(kErrNoMemory);
-	if (!ReadHouseType(&byteReader, thisHouse))
+	if (!ReadHouseType(&byteReader, &thisHouse))
 	{
 		numberRooms = 0;
 		noRoomAtAll = true;
@@ -404,7 +394,7 @@ Boolean ReadHouse (HWND ownerWindow)
 	}
 	byteio_close(&byteReader);
 
-	numberRooms = thisHouse->nRooms;
+	numberRooms = thisHouse.nRooms;
 	#ifdef COMPILEDEMO
 	if (numberRooms != 45)
 		return (false);
@@ -417,14 +407,14 @@ Boolean ReadHouse (HWND ownerWindow)
 		return(false);
 	}
 
-	wasHouseVersion = thisHouse->version;
+	wasHouseVersion = thisHouse.version;
 	if (wasHouseVersion >= kNewHouseVersion)
 	{
 		YellowAlert(ownerWindow, kYellowNewerVersion, 0);
 		return(false);
 	}
 
-	houseUnlocked = ((thisHouse->timeStamp & 0x00000001) == 0);
+	houseUnlocked = ((thisHouse.timeStamp & 0x00000001) == 0);
 	#ifdef COMPILEDEMO
 	if (houseUnlocked)
 		return (false);
@@ -432,15 +422,15 @@ Boolean ReadHouse (HWND ownerWindow)
 	changeLockStateOfHouse = false;
 	saveHouseLocked = false;
 
-	whichRoom = thisHouse->firstRoom;
+	whichRoom = thisHouse.firstRoom;
 	#ifdef COMPILEDEMO
 	if (whichRoom != 0)
 		return (false);
 	#endif
 
-	wardBitSet = ((thisHouse->flags & 0x00000001) == 0x00000001);
-	phoneBitSet = ((thisHouse->flags & 0x00000002) == 0x00000002);
-	bannerStarCountOn = ((thisHouse->flags & 0x00000004) == 0x00000000);
+	wardBitSet = ((thisHouse.flags & 0x00000001) == 0x00000001);
+	phoneBitSet = ((thisHouse.flags & 0x00000002) == 0x00000002);
+	bannerStarCountOn = ((thisHouse.flags & 0x00000004) == 0x00000000);
 
 	noRoomAtAll = (RealRoomNumberCount() == 0);
 	thisRoomNumber = -1;
@@ -504,13 +494,13 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 			timeStamp &= 0x7FFFFFFE;
 		else
 			timeStamp |= 0x00000001;
-		thisHouse->timeStamp = (SInt32)timeStamp;
-		thisHouse->version = wasHouseVersion;
+		thisHouse.timeStamp = (SInt32)timeStamp;
+		thisHouse.version = wasHouseVersion;
 	}
 
 	if (!byteio_init_handle_writer(&byteWriter, houseRefNum))
 		RedAlert(kErrNoMemory);
-	if (!WriteHouseType(&byteWriter, thisHouse))
+	if (!WriteHouseType(&byteWriter, &thisHouse))
 	{
 		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
 		byteio_close(&byteWriter);

@@ -46,7 +46,7 @@ SInt16 MergeFloorSuite (SInt16 floor, SInt16 suite)
 
 void ExtractFloorSuite (SInt16 combo, SInt16 *floor, SInt16 *suite)
 {
-	if (thisHouse->version < 0x0200)		// old floor/suite combo
+	if (thisHouse.version < 0x0200)		// old floor/suite combo
 	{
 		*floor = (combo / 100) - kNumUndergroundFloors;
 		*suite = combo % 100;
@@ -333,16 +333,16 @@ void DoLink (void)
 		{
 			if (linkerIsSwitch)
 			{
-				thisHouse->rooms[linkRoom].objects[linkObject].data.e.where =
+				thisHouse.rooms[linkRoom].objects[linkObject].data.e.where =
 						MergeFloorSuite(floor, suite);
-				thisHouse->rooms[linkRoom].objects[linkObject].data.e.who =
+				thisHouse.rooms[linkRoom].objects[linkObject].data.e.who =
 						(Byte)objActive;
 			}
 			else	// linker is transport
 			{
-				thisHouse->rooms[linkRoom].objects[linkObject].data.d.where =
+				thisHouse.rooms[linkRoom].objects[linkObject].data.d.where =
 						MergeFloorSuite(floor, suite);
-				thisHouse->rooms[linkRoom].objects[linkObject].data.d.who =
+				thisHouse.rooms[linkRoom].objects[linkObject].data.d.who =
 						(Byte)objActive;
 			}
 		}
@@ -375,13 +375,13 @@ void DoUnlink (void)
 	{
 		if (linkerIsSwitch)
 		{
-			thisHouse->rooms[linkRoom].objects[linkObject].data.e.where = -1;
-			thisHouse->rooms[linkRoom].objects[linkObject].data.e.who = 255;
+			thisHouse.rooms[linkRoom].objects[linkObject].data.e.where = -1;
+			thisHouse.rooms[linkRoom].objects[linkObject].data.e.who = 255;
 		}
 		else
 		{
-			thisHouse->rooms[linkRoom].objects[linkObject].data.d.where = -1;
-			thisHouse->rooms[linkRoom].objects[linkObject].data.d.who = 255;
+			thisHouse.rooms[linkRoom].objects[linkObject].data.d.where = -1;
+			thisHouse.rooms[linkRoom].objects[linkObject].data.d.who = 255;
 		}
 	}
 	fileDirty = true;

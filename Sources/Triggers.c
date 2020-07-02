@@ -178,7 +178,7 @@ void FireTrigger (SInt16 index)
 	else
 	{
 		triggeredIs = masterObjects[triggerIs].localLink;
-		switch (thisHouse->rooms[triggers[index].room].
+		switch (thisHouse.rooms[triggers[index].room].
 				objects[triggers[index].object].what)
 		{
 			case kGreaseRt:

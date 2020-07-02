@@ -59,14 +59,14 @@ Boolean KeepObjectLegal (void)
 
 	if (objActive == kInitialGliderSelected)
 	{
-		if (thisHouse->initial.h < 0)
-			thisHouse->initial.h = 0;
-		if (thisHouse->initial.v < 0)
-			thisHouse->initial.v = 0;
-		if (thisHouse->initial.h > (kRoomWide - kGliderWide))
-			thisHouse->initial.h = kRoomWide - kGliderWide;
-		if (thisHouse->initial.v > (kTileHigh - kGliderHigh))
-			thisHouse->initial.v = kTileHigh - kGliderHigh;
+		if (thisHouse.initial.h < 0)
+			thisHouse.initial.h = 0;
+		if (thisHouse.initial.v < 0)
+			thisHouse.initial.v = 0;
+		if (thisHouse.initial.h > (kRoomWide - kGliderWide))
+			thisHouse.initial.h = kRoomWide - kGliderWide;
+		if (thisHouse.initial.v > (kTileHigh - kGliderHigh))
+			thisHouse.initial.v = kTileHigh - kGliderHigh;
 		return (true);
 	}
 
@@ -605,8 +605,8 @@ Boolean KeepObjectLegal (void)
 #ifndef COMPILEDEMO
 void WrapBannerAndTrailer (void)
 {
-	WrapText(thisHouse->banner, 40);
-	WrapText(thisHouse->trailer, 64);
+	WrapText(thisHouse.banner, 40);
+	WrapText(thisHouse.trailer, 64);
 }
 
 //--------------------------------------------------------------  ValidateNumberOfRooms
@@ -658,19 +658,19 @@ void CheckDuplicateFloorSuite (void)
 	if (pidgeonHoles == NULL)
 		return;
 
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
-			bitPlace = ((thisHouse->rooms[i].floor + 7) * 128) +
-					thisHouse->rooms[i].suite;
+			bitPlace = ((thisHouse.rooms[i].floor + 7) * 128) +
+					thisHouse.rooms[i].suite;
 			if ((bitPlace < 0) || (bitPlace >= 8192))
 				OutputDebugString(L"Blew array\n");
 			if (pidgeonHoles[bitPlace] != 0)
 			{
 				houseErrors++;
-				thisHouse->rooms[i].suite = kRoomIsEmpty;
+				thisHouse.rooms[i].suite = kRoomIsEmpty;
 			}
 			else
 				pidgeonHoles[bitPlace]++;
@@ -689,23 +689,23 @@ void CompressHouse (void)
 	SInt16		wasFirstRoom, roomNumber, probe;
 	Boolean		compressing, probing;
 
-	wasFirstRoom = thisHouse->firstRoom;
+	wasFirstRoom = thisHouse.firstRoom;
 	compressing = true;
-	roomNumber = thisHouse->nRooms - 1;		// start with last room
+	roomNumber = thisHouse.nRooms - 1;		// start with last room
 	do
 	{
-		if (thisHouse->rooms[roomNumber].suite != kRoomIsEmpty)
+		if (thisHouse.rooms[roomNumber].suite != kRoomIsEmpty)
 		{									// if not an empty room…
 			probe = 0;						// start looking for empty slot
 			probing = true;
 			do
 			{								// test room at probe to see if empty
-				if (thisHouse->rooms[probe].suite == kRoomIsEmpty)
+				if (thisHouse.rooms[probe].suite == kRoomIsEmpty)
 				{							// if it is, copy room there
-					thisHouse->rooms[probe] = thisHouse->rooms[roomNumber];
-					thisHouse->rooms[roomNumber].suite = kRoomIsEmpty;
+					thisHouse.rooms[probe] = thisHouse.rooms[roomNumber];
+					thisHouse.rooms[roomNumber].suite = kRoomIsEmpty;
 					if (roomNumber == wasFirstRoom)
-						thisHouse->firstRoom = probe;
+						thisHouse.firstRoom = probe;
 					if (roomNumber == wasRoom)
 						wasRoom = probe;
 					probing = false;
@@ -738,11 +738,11 @@ void LopOffExtraRooms (void)
 	roomPtr		newRoomsPtr;
 
 	count = 0;
-	r = thisHouse->nRooms;			// begin at last room
+	r = thisHouse.nRooms;			// begin at last room
 	do
 	{
 		r--;						// look for trailing empties
-		if (thisHouse->rooms[r].suite == kRoomIsEmpty)
+		if (thisHouse.rooms[r].suite == kRoomIsEmpty)
 			count++;
 		else
 			r = 0;
@@ -751,10 +751,10 @@ void LopOffExtraRooms (void)
 
 	if (count > 0)					// if there were trailing empties…
 	{
-		r = thisHouse->nRooms - count;
+		r = thisHouse.nRooms - count;
 		newSize = sizeof(roomType) * (size_t)r;
 									// resize room array (shrink)
-		newRoomsPtr = realloc(thisHouse->rooms, newSize);
+		newRoomsPtr = realloc(thisHouse.rooms, newSize);
 		if (newRoomsPtr == NULL)	// problem?
 		{
 			SetMessageTextColor(redColor);
@@ -763,11 +763,11 @@ void LopOffExtraRooms (void)
 		}
 		else
 		{
-			thisHouse->rooms = newRoomsPtr;
+			thisHouse.rooms = newRoomsPtr;
 		}
 									// reflect new room count
-		thisHouse->nRooms -= count;
-		numberRooms = thisHouse->nRooms;
+		thisHouse.nRooms -= count;
+		numberRooms = thisHouse.nRooms;
 	}
 }
 
@@ -780,29 +780,29 @@ void ValidateRoomNumbers (void)
 	SInt16		i, numRooms;
 	Str255		message;
 
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 	if (numRooms < 0)
 	{
-		thisHouse->nRooms = 0;
+		thisHouse.nRooms = 0;
 		numRooms = 0;
 	}
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
-			if ((thisHouse->rooms[i].floor > 56) ||
-					(thisHouse->rooms[i].floor < -7))
+			if ((thisHouse.rooms[i].floor > 56) ||
+					(thisHouse.rooms[i].floor < -7))
 			{
-				thisHouse->rooms[i].suite = kRoomIsEmpty;
+				thisHouse.rooms[i].suite = kRoomIsEmpty;
 				SetMessageTextColor(redColor);
 				GetLocalizedString(17, message);
 				SetMessageWindowMessage(message);
 				houseErrors++;
 			}
-			if ((thisHouse->rooms[i].suite >= 128) ||
-					(thisHouse->rooms[i].suite < 0))
+			if ((thisHouse.rooms[i].suite >= 128) ||
+					(thisHouse.rooms[i].suite < 0))
 			{
-				thisHouse->rooms[i].suite = kRoomIsEmpty;
+				thisHouse.rooms[i].suite = kRoomIsEmpty;
 				SetMessageTextColor(redColor);
 				GetLocalizedString(18, message);
 				SetMessageWindowMessage(message);
@@ -823,11 +823,11 @@ void CountUntitledRooms (void)
 
 	PasStringCopyC("Untitled Room", untitledRoomStr);
 
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if ((thisHouse->rooms[i].suite != kRoomIsEmpty) &&
-				(PasStringEqual(thisHouse->rooms[i].name, untitledRoomStr, false)))
+		if ((thisHouse.rooms[i].suite != kRoomIsEmpty) &&
+				(PasStringEqual(thisHouse.rooms[i].name, untitledRoomStr, false)))
 			houseErrors++;
 	}
 }
@@ -840,15 +840,15 @@ void CheckRoomNameLength (void)
 {
 	SInt16		i, numRooms;
 
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		thisHouse->rooms[i].unusedByte = 0;
+		thisHouse.rooms[i].unusedByte = 0;
 
-		if ((thisHouse->rooms[i].suite != kRoomIsEmpty) &&
-				(thisHouse->rooms[i].name[0] > 27))
+		if ((thisHouse.rooms[i].suite != kRoomIsEmpty) &&
+				(thisHouse.rooms[i].name[0] > 27))
 		{
-			thisHouse->rooms[i].name[0] = 27;
+			thisHouse.rooms[i].name[0] = 27;
 			houseErrors++;
 		}
 	}
@@ -862,21 +862,21 @@ void MakeSureNumObjectsJives (void)
 {
 	SInt16		i, h, numRooms, count;
 
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
 			count = 0;
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				if (thisHouse->rooms[i].objects[h].what != kObjectIsEmpty)
+				if (thisHouse.rooms[i].objects[h].what != kObjectIsEmpty)
 					count++;
 			}
-			if (count != thisHouse->rooms[i].numObjects)
+			if (count != thisHouse.rooms[i].numObjects)
 			{
 				houseErrors++;
-				thisHouse->rooms[i].numObjects = count;
+				thisHouse.rooms[i].numObjects = count;
 			}
 		}
 	}
@@ -891,10 +891,10 @@ void KeepAllObjectsLegal (void)
 	SInt16		i, h, numRooms;
 	Str255		message;
 
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
 			ForceThisRoom(i);
 			for (h = 0; h < kMaxRoomObs; h++)
@@ -927,14 +927,14 @@ void CheckForStaircasePairs (void)
 	Boolean		hasStairs;
 	Str255		message;
 
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				if (thisHouse->rooms[i].objects[h].what == kUpStairs)
+				if (thisHouse.rooms[i].objects[h].what == kUpStairs)
 				{
 					thisRoomNumber = i;
 					neighbor = GetNeighborRoomNumber(kNorthRoom);
@@ -950,7 +950,7 @@ void CheckForStaircasePairs (void)
 						hasStairs = false;
 						for (g = 0; g < kMaxRoomObs; g++)
 						{
-							if (thisHouse->rooms[neighbor].objects[g].what == kDownStairs)
+							if (thisHouse.rooms[neighbor].objects[g].what == kDownStairs)
 								hasStairs = true;
 						}
 						if (!hasStairs)
@@ -962,7 +962,7 @@ void CheckForStaircasePairs (void)
 						}
 					}
 				}
-				else if (thisHouse->rooms[i].objects[h].what == kDownStairs)
+				else if (thisHouse.rooms[i].objects[h].what == kDownStairs)
 				{
 					thisRoomNumber = i;
 					neighbor = GetNeighborRoomNumber(kSouthRoom);
@@ -978,7 +978,7 @@ void CheckForStaircasePairs (void)
 						hasStairs = false;
 						for (g = 0; g < kMaxRoomObs; g++)
 						{
-							if (thisHouse->rooms[neighbor].objects[g].what == kUpStairs)
+							if (thisHouse.rooms[neighbor].objects[g].what == kUpStairs)
 								hasStairs = true;
 						}
 						if (!hasStairs)

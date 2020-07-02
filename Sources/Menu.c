@@ -808,8 +808,8 @@ SInt16 QueryResumeGame (HWND ownerWindow)
 	SInt32 hadPoints;
 	SInt16 hadGliders;
 
-	hadPoints = thisHouse->savedGame.score;
-	hadGliders = thisHouse->savedGame.numGliders;
+	hadPoints = thisHouse.savedGame.score;
+	hadGliders = thisHouse.savedGame.numGliders;
 	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)hadPoints);
 	StringCchPrintf(glidStr, ARRAYSIZE(glidStr), L"%ld", (long)hadGliders);
 

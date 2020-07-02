@@ -55,7 +55,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 
 		if (IsThisValid(localNumbers[neighbor], i))
 		{
-			thisObject = thisHouse->rooms[localNumbers[neighbor]].objects[i];
+			thisObject = thisHouse.rooms[localNumbers[neighbor]].objects[i];
 			switch (thisObject.what)
 			{
 				case kObjectIsEmpty:

@@ -12,7 +12,7 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern housePtr thisHouse;
+extern houseType thisHouse;
 extern linksPtr linksList;
 extern Str32 thisHouseName;
 extern SInt16 srcLocations[kMaxRoomObs];
@@ -23,7 +23,7 @@ extern retroLink retroLinkList[kMaxRoomObs];
 extern Boolean houseUnlocked;
 
 Boolean CreateNewHouse (HWND hwndOwner);
-Boolean InitializeEmptyHouse (HWND ownerWindow);
+Boolean InitializeEmptyHouse (HWND ownerWindow); // TODO: remove ownerWindow parameter
 SInt16 RealRoomNumberCount (void);
 SInt16 GetFirstRoomNumber (void);
 void WhereDoesGliderBegin (Rect *theRect, SInt16 mode);

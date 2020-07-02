@@ -39,7 +39,7 @@
 INT_PTR CALLBACK GoToFilter (HWND, UINT, WPARAM, LPARAM);
 
 
-housePtr	thisHouse;
+houseType	thisHouse;
 linksPtr	linksList;
 Str32		thisHouseName;
 SInt16		srcLocations[kMaxRoomObs];
@@ -124,32 +124,22 @@ Boolean InitializeEmptyHouse (HWND ownerWindow)
 {
 	Str255			tempStr;
 
-	if (thisHouse != NULL)
-		free(thisHouse->rooms);
-	free(thisHouse);
+	free(thisHouse.rooms);
 
-	thisHouse = malloc(sizeof(*thisHouse));
-
-	if (thisHouse == NULL)
-	{
-		YellowAlert(ownerWindow, kYellowUnaccounted, 1);
-		return (false);
-	}
-
-	thisHouse->version = kHouseVersion;
-	thisHouse->firstRoom = -1;
-	thisHouse->timeStamp = 0L;
-	thisHouse->flags = 0L;
-	thisHouse->initial.h = 32;
-	thisHouse->initial.v = 32;
-	ZeroHighScores(thisHouse);
-
+	ZeroMemory(&thisHouse, sizeof(thisHouse));
+	thisHouse.version = kHouseVersion;
+	thisHouse.timeStamp = 0L;
+	thisHouse.flags = 0L;
+	thisHouse.initial.h = 32;
+	thisHouse.initial.v = 32;
 	GetLocalizedString(11, tempStr);
-	PasStringCopy(tempStr, thisHouse->banner);
+	PasStringCopy(tempStr, thisHouse.banner);
 	GetLocalizedString(12, tempStr);
-	PasStringCopy(tempStr, thisHouse->trailer);
-	thisHouse->hasGame = false;
-	thisHouse->nRooms = 0;
+	PasStringCopy(tempStr, thisHouse.trailer);
+	ZeroHighScores(&thisHouse);
+	thisHouse.hasGame = false;
+	thisHouse.firstRoom = -1;
+	thisHouse.nRooms = 0;
 
 	wardBitSet = false;
 	phoneBitSet = false;
@@ -181,12 +171,12 @@ SInt16 RealRoomNumberCount (void)
 {
 	SInt16		realRoomCount, i;
 
-	realRoomCount = thisHouse->nRooms;
+	realRoomCount = thisHouse.nRooms;
 	if (realRoomCount != 0)
 	{
-		for (i = 0; i < thisHouse->nRooms; i++)
+		for (i = 0; i < thisHouse.nRooms; i++)
 		{
-			if (thisHouse->rooms[i].suite == kRoomIsEmpty)
+			if (thisHouse.rooms[i].suite == kRoomIsEmpty)
 				realRoomCount--;
 		}
 	}
@@ -203,15 +193,15 @@ SInt16 GetFirstRoomNumber (void)
 {
 	SInt16		firstRoom;
 
-	if (thisHouse->nRooms <= 0)
+	if (thisHouse.nRooms <= 0)
 	{
 		firstRoom = -1;
 		noRoomAtAll = true;
 	}
 	else
 	{
-		firstRoom = thisHouse->firstRoom;
-		if ((firstRoom >= thisHouse->nRooms) || (firstRoom < 0))
+		firstRoom = thisHouse.firstRoom;
+		if ((firstRoom >= thisHouse.nRooms) || (firstRoom < 0))
 			firstRoom = 0;
 	}
 
@@ -232,7 +222,7 @@ void WhereDoesGliderBegin (Rect *theRect, SInt16 mode)
 	if (mode == kResumeGameMode)
 		initialPt = smallGame.where;
 	else if (mode == kNewGameMode)
-		initialPt = thisHouse->initial;
+		initialPt = thisHouse.initial;
 
 	QSetRect(theRect, 0, 0, kGliderWide, kGliderHigh);
 	QOffsetRect(theRect, initialPt.h, initialPt.v);
@@ -270,13 +260,13 @@ SInt16 CountHouseLinks (void)
 	SInt16		r, i, what;
 
 	numLinks = 0;
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 
 	for (r = 0; r < numRooms; r++)
 	{
 		for (i = 0; i < kMaxRoomObs; i++)
 		{
-			what = thisHouse->rooms[r].objects[i].what;
+			what = thisHouse.rooms[r].objects[i].what;
 			switch (what)
 			{
 				case kLightSwitch:
@@ -287,7 +277,7 @@ SInt16 CountHouseLinks (void)
 				case kInvisSwitch:
 				case kTrigger:
 				case kLgTrigger:
-				if (thisHouse->rooms[r].objects[i].data.e.where != -1)
+				if (thisHouse.rooms[r].objects[i].data.e.where != -1)
 					numLinks++;
 				break;
 
@@ -297,7 +287,7 @@ SInt16 CountHouseLinks (void)
 				case kCeilingTrans:
 				case kInvisTrans:
 				case kDeluxeTrans:
-				if (thisHouse->rooms[r].objects[i].data.d.where != -1)
+				if (thisHouse.rooms[r].objects[i].data.d.where != -1)
 					numLinks++;
 				break;
 			}
@@ -321,14 +311,14 @@ void GenerateLinksList (void)
 	SInt16		numLinks, numRooms, r, i, what;
 	SInt16		floor, suite, roomLinked, objectLinked;
 
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 	numLinks = 0;
 
 	for (r = 0; r < numRooms; r++)
 	{
 		for (i = 0; i < kMaxRoomObs; i++)
 		{
-			what = thisHouse->rooms[r].objects[i].what;
+			what = thisHouse.rooms[r].objects[i].what;
 			switch (what)
 			{
 				case kLightSwitch:
@@ -339,7 +329,7 @@ void GenerateLinksList (void)
 				case kInvisSwitch:
 				case kTrigger:
 				case kLgTrigger:
-				thisObject = thisHouse->rooms[r].objects[i];
+				thisObject = thisHouse.rooms[r].objects[i];
 				if (thisObject.data.e.where != -1)
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
@@ -359,7 +349,7 @@ void GenerateLinksList (void)
 				case kCeilingTrans:
 				case kInvisTrans:
 				case kDeluxeTrans:
-				thisObject = thisHouse->rooms[r].objects[i];
+				thisObject = thisHouse.rooms[r].objects[i];
 				if (thisObject.data.d.where != -1)
 				{
 					ExtractFloorSuite(thisObject.data.d.where, &floor, &suite);
@@ -393,17 +383,17 @@ void SortRoomsObjects (SInt16 which)
 
 	do
 	{
-		if (thisHouse->rooms[which].objects[probe].what == kObjectIsEmpty)
+		if (thisHouse.rooms[which].objects[probe].what == kObjectIsEmpty)
 		{
 			looking = true;
 			probe2 = probe + 1;			// begin by looking at the next object
 			do
 			{
-				if (thisHouse->rooms[which].objects[probe2].what != kObjectIsEmpty)
+				if (thisHouse.rooms[which].objects[probe2].what != kObjectIsEmpty)
 				{
-					thisHouse->rooms[which].objects[probe] =
-							thisHouse->rooms[which].objects[probe2];
-					thisHouse->rooms[which].objects[probe2].what = kObjectIsEmpty;
+					thisHouse.rooms[which].objects[probe] =
+							thisHouse.rooms[which].objects[probe2];
+					thisHouse.rooms[which].objects[probe2].what = kObjectIsEmpty;
 					if (srcLocations[probe2] != -1)
 						linksList[srcLocations[probe2]].srcObj = probe;
 					if (destLocations[probe2] != -1)
@@ -411,7 +401,7 @@ void SortRoomsObjects (SInt16 which)
 						linksList[destLocations[probe2]].destObj = probe;
 						room = linksList[destLocations[probe2]].srcRoom;
 						obj = linksList[destLocations[probe2]].srcObj;
-						thisHouse->rooms[room].objects[obj].data.e.who = (Byte)probe;
+						thisHouse.rooms[room].objects[obj].data.e.who = (Byte)probe;
 					}
 					fileDirty = true;
 					looking = false;
@@ -457,7 +447,7 @@ void SortHouseObjects (void)
 
 	GenerateLinksList();
 
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 
 	for (r = 0; r < numRooms; r++)
 	{
@@ -498,12 +488,12 @@ SInt16 CountRoomsVisited (void)
 {
 	SInt16		numRooms, r, count;
 
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 	count = 0;
 
 	for (r = 0; r < numRooms; r++)
 	{
-		if (thisHouse->rooms[r].visited)
+		if (thisHouse.rooms[r].visited)
 			count++;
 	}
 
@@ -524,13 +514,13 @@ void GenerateRetroLinks (void)
 	for (i = 0; i < kMaxRoomObs; i++)		// Initialize array.
 		retroLinkList[i].room = -1;
 
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 
 	for (r = 0; r < numRooms; r++)
 	{
 		for (i = 0; i < kMaxRoomObs; i++)
 		{
-			what = thisHouse->rooms[r].objects[i].what;
+			what = thisHouse.rooms[r].objects[i].what;
 			switch (what)
 			{
 				case kLightSwitch:
@@ -541,7 +531,7 @@ void GenerateRetroLinks (void)
 				case kInvisSwitch:
 				case kTrigger:
 				case kLgTrigger:
-				thisObject = thisHouse->rooms[r].objects[i];
+				thisObject = thisHouse.rooms[r].objects[i];
 				if (thisObject.data.e.where != -1)
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
@@ -564,7 +554,7 @@ void GenerateRetroLinks (void)
 				case kCeilingTrans:
 				case kInvisTrans:
 				case kDeluxeTrans:
-				thisObject = thisHouse->rooms[r].objects[i];
+				thisObject = thisHouse.rooms[r].objects[i];
 				if (thisObject.data.d.where != -1)
 				{
 					ExtractFloorSuite(thisObject.data.d.where, &floor, &suite);
@@ -712,10 +702,10 @@ void ConvertHouseVer1To2 (void)
 
 	SpinCursor(3);
 
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
 			NumToString(i, roomStr);
 			GetLocalizedString(14, message);
@@ -763,7 +753,7 @@ void ConvertHouseVer1To2 (void)
 		}
 	}
 
-	thisHouse->version = kHouseVersion;
+	thisHouse.version = kHouseVersion;
 
 	InitCursor();
 	CloseMessageWindow();

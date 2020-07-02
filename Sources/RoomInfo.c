@@ -434,7 +434,7 @@ void RoomInfo_InitDialog (HWND hDlg)
 	GetDialogItemRect(hDlg, kRoomTilesBox2, &tileBoxRect);
 	CenterRectInRect(&tileDest, &tileBoxRect);
 
-	if (thisHouse->firstRoom == thisRoomNumber)
+	if (thisHouse.firstRoom == thisRoomNumber)
 		CheckDlgButton(hDlg, kRoomFirstCheck, BST_CHECKED);
 	else
 		CheckDlgButton(hDlg, kRoomFirstCheck, BST_UNCHECKED);
@@ -475,7 +475,7 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 			GetDialogString(hDlg, kRoomNameItem,
 				thisRoom->name, ARRAYSIZE(thisRoom->name));
 			if (IsDlgButtonChecked(hDlg, kRoomFirstCheck))
-				thisHouse->firstRoom = thisRoomNumber;
+				thisHouse.firstRoom = thisRoomNumber;
 
 			thisRoom->background = tempBack;
 			if (tempBack < kUserBackground)

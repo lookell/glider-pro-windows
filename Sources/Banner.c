@@ -82,13 +82,13 @@ SInt16 CountStarsInHouse (void)
 
 	numStars = 0;
 
-	numRooms = thisHouse->nRooms;
+	numRooms = thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse->rooms[i].suite != kRoomIsEmpty)
+		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				if (thisHouse->rooms[i].objects[h].what == kStar)
+				if (thisHouse.rooms[i].objects[h].what == kStar)
 					numStars++;
 			}
 	}
@@ -122,7 +122,7 @@ void DrawBannerMessage (Point topLeft)
 	lfBanner.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
 	wcscpy(lfBanner.lfFaceName, L"Tahoma");
 
-	PasStringCopy(thisHouse->banner, bannerStr);
+	PasStringCopy(thisHouse.banner, bannerStr);
 
 	bannerFont = CreateFontIndirect(&lfBanner);
 	SaveDC(workSrcMap);

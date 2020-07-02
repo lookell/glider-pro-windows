@@ -190,9 +190,9 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 		thisRoom->objects[i].what = kObjectIsEmpty;
 
 	availableRoom = -1;						// assume no available rooms
-	if (thisHouse->nRooms > 0)				// look for an empty room
-		for (i = 0; i < thisHouse->nRooms; i++)
-			if (thisHouse->rooms[i].suite == kRoomIsEmpty)
+	if (thisHouse.nRooms > 0)				// look for an empty room
+		for (i = 0; i < thisHouse.nRooms; i++)
+			if (thisHouse.rooms[i].suite == kRoomIsEmpty)
 			{
 				availableRoom = i;
 				break;
@@ -200,20 +200,20 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 
 	if (availableRoom == -1)				// found no available rooms
 	{
-		if (thisHouse->nRooms < 0)
-			thisHouse->nRooms = 0;
+		if (thisHouse.nRooms < 0)
+			thisHouse.nRooms = 0;
 		newRoomsPtr = realloc(
-			thisHouse->rooms,
-			(thisHouse->nRooms + 1) * sizeof(*thisHouse->rooms)
+			thisHouse.rooms,
+			(thisHouse.nRooms + 1) * sizeof(*thisHouse.rooms)
 		);
 		if (newRoomsPtr == NULL)
 		{
 			YellowAlert(ownerWindow, kYellowUnaccounted, -1);
 			return (false);
 		}
-		thisHouse->rooms = newRoomsPtr;
-		thisHouse->nRooms++;				// increment nRooms
-		numberRooms = thisHouse->nRooms;
+		thisHouse.rooms = newRoomsPtr;
+		thisHouse.nRooms++;					// increment nRooms
+		numberRooms = thisHouse.nRooms;
 		previousRoom = thisRoomNumber;
 		thisRoomNumber = numberRooms - 1;
 	}
@@ -224,7 +224,7 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 	}
 
 	if (noRoomAtAll)
-		thisHouse->firstRoom = thisRoomNumber;
+		thisHouse.firstRoom = thisRoomNumber;
 
 	CopyThisRoomToRoom();
 	UpdateEditWindowTitle();
@@ -360,7 +360,7 @@ void CopyThisRoomToRoom (void)
 	if ((noRoomAtAll) || (thisRoomNumber == -1))
 		return;
 
-	thisHouse->rooms[thisRoomNumber] = *thisRoom;	// copy back to house
+	thisHouse.rooms[thisRoomNumber] = *thisRoom;	// copy back to house
 }
 
 //--------------------------------------------------------------  ForceThisRoom
@@ -370,8 +370,8 @@ void ForceThisRoom (SInt16 roomNumber)
 	if (roomNumber == -1)
 		return;
 
-	if (roomNumber < thisHouse->nRooms)
-		*thisRoom = thisHouse->rooms[roomNumber];
+	if (roomNumber < thisHouse.nRooms)
+		*thisRoom = thisHouse.rooms[roomNumber];
 	else
 		YellowAlert(mainWindow, kYellowIllegalRoomNum, 0);
 
@@ -394,8 +394,8 @@ Boolean RoomExists (SInt16 suite, SInt16 floor, SInt16 *roomNum)
 
 	for (i = 0; i < numberRooms; i++)
 	{
-		if ((thisHouse->rooms[i].floor == floor) &&
-				(thisHouse->rooms[i].suite == suite))
+		if ((thisHouse.rooms[i].floor == floor) &&
+				(thisHouse.rooms[i].suite == suite))
 		{
 			foundIt = true;
 			*roomNum = i;
@@ -439,11 +439,11 @@ void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 
 	DeselectObject();
 
-	wasFloor_ = thisHouse->rooms[thisRoomNumber].floor;
-	wasSuite_ = thisHouse->rooms[thisRoomNumber].suite;
-	firstDeleted = (thisHouse->firstRoom == thisRoomNumber);	// is room "first"
+	wasFloor_ = thisHouse.rooms[thisRoomNumber].floor;
+	wasSuite_ = thisHouse.rooms[thisRoomNumber].suite;
+	firstDeleted = (thisHouse.firstRoom == thisRoomNumber);		// is room "first"
 	thisRoom->suite = kRoomIsEmpty;
-	thisHouse->rooms[thisRoomNumber].suite = kRoomIsEmpty;
+	thisHouse.rooms[thisRoomNumber].suite = kRoomIsEmpty;
 
 	noRoomAtAll = (RealRoomNumberCount() == 0);					// see if now no rooms
 	if (noRoomAtAll)
@@ -453,7 +453,7 @@ void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 
 	if (firstDeleted)
 	{
-		thisHouse->firstRoom = thisRoomNumber;
+		thisHouse.firstRoom = thisRoomNumber;
 	}
 
 	newRoomNow = false;
@@ -598,13 +598,13 @@ SInt16 GetNeighborRoomNumber (SInt16 which)
 	}
 
 	roomNum = kRoomIsEmpty;
-	roomH = thisHouse->rooms[thisRoomNumber].suite + hDelta;
-	roomV = thisHouse->rooms[thisRoomNumber].floor + vDelta;
+	roomH = thisHouse.rooms[thisRoomNumber].suite + hDelta;
+	roomV = thisHouse.rooms[thisRoomNumber].floor + vDelta;
 
 	for (i = 0; i < numberRooms; i++)
 	{
-		if ((thisHouse->rooms[i].suite == roomH) &&
-				(thisHouse->rooms[i].floor == roomV))
+		if ((thisHouse.rooms[i].suite == roomH) &&
+				(thisHouse.rooms[i].floor == roomV))
 		{
 			roomNum = i;
 			break;
@@ -686,7 +686,7 @@ Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite)
 {
 	Boolean		isRoom;
 
-	if (thisHouse->rooms[room].suite == kRoomIsEmpty)
+	if (thisHouse.rooms[room].suite == kRoomIsEmpty)
 	{
 		*floor = 0;
 		*suite = kRoomIsEmpty;
@@ -694,8 +694,8 @@ Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite)
 	}
 	else
 	{
-		*suite = thisHouse->rooms[room].suite;
-		*floor = thisHouse->rooms[room].floor;
+		*suite = thisHouse.rooms[room].suite;
+		*floor = thisHouse.rooms[room].floor;
 		isRoom = true;
 	}
 
@@ -713,8 +713,8 @@ SInt16 GetRoomNumber (SInt16 floor, SInt16 suite)
 
 	for (i = 0; i < numberRooms; i++)
 	{
-		if ((thisHouse->rooms[i].suite == suite) &&
-				(thisHouse->rooms[i].floor == floor))
+		if ((thisHouse.rooms[i].suite == suite) &&
+				(thisHouse.rooms[i].floor == floor))
 		{
 			roomNum = i;
 			break;
@@ -733,15 +733,15 @@ Boolean	IsRoomAStructure (SInt16 roomNum)
 	if (roomNum == kRoomIsEmpty)
 		return (false);
 
-	if (thisHouse->rooms[roomNum].background >= kUserBackground)
+	if (thisHouse.rooms[roomNum].background >= kUserBackground)
 	{
-		if (thisHouse->rooms[roomNum].bounds != 0)
+		if (thisHouse.rooms[roomNum].bounds != 0)
 		{
-			isStructure = ((thisHouse->rooms[roomNum].bounds & 32) == 32);
+			isStructure = ((thisHouse.rooms[roomNum].bounds & 32) == 32);
 		}
 		else
 		{
-			if (thisHouse->rooms[roomNum].background < kUserStructureRange)
+			if (thisHouse.rooms[roomNum].background < kUserStructureRange)
 				isStructure = true;
 			else
 				isStructure = false;
@@ -749,7 +749,7 @@ Boolean	IsRoomAStructure (SInt16 roomNum)
 	}
 	else
 	{
-		switch (thisHouse->rooms[roomNum].background)
+		switch (thisHouse.rooms[roomNum].background)
 		{
 			case kPaneledRoom:
 			case kSimpleRoom:
@@ -1017,9 +1017,9 @@ SInt16 GetNumberOfLights (SInt16 where)
 	}
 	else
 	{
-		if (where < 0 || where >= thisHouse->nRooms)
+		if (where < 0 || where >= thisHouse.nRooms)
 			return 0;
-		switch (thisHouse->rooms[where].background)
+		switch (thisHouse.rooms[where].background)
 		{
 			case kGarden:
 			case kSkywalk:
@@ -1034,14 +1034,14 @@ SInt16 GetNumberOfLights (SInt16 where)
 
 			case kDirt:
 			count = 0;
-			if ((thisHouse->rooms[where].tiles[0] == 0) &&
-					(thisHouse->rooms[where].tiles[1] == 0) &&
-					(thisHouse->rooms[where].tiles[2] == 0) &&
-					(thisHouse->rooms[where].tiles[3] == 0) &&
-					(thisHouse->rooms[where].tiles[4] == 0) &&
-					(thisHouse->rooms[where].tiles[5] == 0) &&
-					(thisHouse->rooms[where].tiles[6] == 0) &&
-					(thisHouse->rooms[where].tiles[7] == 0))
+			if ((thisHouse.rooms[where].tiles[0] == 0) &&
+					(thisHouse.rooms[where].tiles[1] == 0) &&
+					(thisHouse.rooms[where].tiles[2] == 0) &&
+					(thisHouse.rooms[where].tiles[3] == 0) &&
+					(thisHouse.rooms[where].tiles[4] == 0) &&
+					(thisHouse.rooms[where].tiles[5] == 0) &&
+					(thisHouse.rooms[where].tiles[6] == 0) &&
+					(thisHouse.rooms[where].tiles[7] == 0))
 				count = 1;
 			break;
 
@@ -1053,7 +1053,7 @@ SInt16 GetNumberOfLights (SInt16 where)
 		{
 			for (i = 0; i < kMaxRoomObs; i++)
 			{
-				switch (thisHouse->rooms[where].objects[i].what)
+				switch (thisHouse.rooms[where].objects[i].what)
 				{
 					case kDoorInLf:
 					case kDoorInRt:
@@ -1071,7 +1071,7 @@ SInt16 GetNumberOfLights (SInt16 where)
 					case kFlourescent:
 					case kTrackLight:
 					case kInvisLight:
-					if (thisHouse->rooms[where].objects[i].data.f.state)
+					if (thisHouse.rooms[where].objects[i].data.f.state)
 						count++;
 					break;
 				}
