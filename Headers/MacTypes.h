@@ -101,7 +101,6 @@ typedef struct FSSpec
 typedef struct AEEventHandlerUPP__* AEEventHandlerUPP;
 typedef struct AppleEvent__* AppleEvent;
 typedef struct CGrafPtr__* CGrafPtr;
-typedef struct ControlHandle__* ControlHandle;
 typedef struct CTabHandle__* CTabHandle;
 typedef struct DialogPtr__* DialogPtr;
 typedef struct EventRecord__* EventRecord;
