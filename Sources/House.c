@@ -142,7 +142,7 @@ Boolean InitializeEmptyHouse (HWND ownerWindow)
 	thisHouse->flags = 0L;
 	thisHouse->initial.h = 32;
 	thisHouse->initial.v = 32;
-	ZeroHighScores();
+	ZeroHighScores(thisHouse);
 
 	GetLocalizedString(11, tempStr);
 	PasStringCopy(tempStr, thisHouse->banner);

@@ -328,33 +328,33 @@ void SortHighScores (void)
 //--------------------------------------------------------------  ZeroHighScores
 // This funciton goes through and resets or "zeros" all high scores.
 
-void ZeroHighScores (void)
+void ZeroHighScores (housePtr house)
 {
-	SInt16		i;
+	SInt16 i;
 
-	PasStringCopy(thisHouseName, thisHouse->highScores.banner);
+	PasStringCopy(thisHouseName, house->highScores.banner);
 	for (i = 0; i < kMaxScores; i++)
 	{
-		PasStringCopyC("--------------", thisHouse->highScores.names[i]);
-		thisHouse->highScores.scores[i] = 0L;
-		thisHouse->highScores.timeStamps[i] = 0L;
-		thisHouse->highScores.levels[i] = 0;
+		PasStringCopyC("--------------", house->highScores.names[i]);
+		house->highScores.scores[i] = 0L;
+		house->highScores.timeStamps[i] = 0L;
+		house->highScores.levels[i] = 0;
 	}
 }
 
 //--------------------------------------------------------------  ZeroAllButHighestScore
 // Like the above, but this function preserves the highest score.
 
-void ZeroAllButHighestScore (void)
+void ZeroAllButHighestScore (housePtr house)
 {
-	SInt16		i;
+	SInt16 i;
 
 	for (i = 1; i < kMaxScores; i++)
 	{
-		PasStringCopyC("--------------", thisHouse->highScores.names[i]);
-		thisHouse->highScores.scores[i] = 0L;
-		thisHouse->highScores.timeStamps[i] = 0L;
-		thisHouse->highScores.levels[i] = 0;
+		PasStringCopyC("--------------", house->highScores.names[i]);
+		house->highScores.scores[i] = 0L;
+		house->highScores.timeStamps[i] = 0L;
+		house->highScores.levels[i] = 0;
 	}
 }
 

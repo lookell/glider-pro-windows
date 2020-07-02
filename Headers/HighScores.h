@@ -7,6 +7,7 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "GliderStructs.h"
 #include "MacTypes.h"
 #include "WinAPI.h"
 
@@ -16,8 +17,8 @@ extern SInt16 lastHighScore;
 
 void DoHighScores (void);
 void SortHighScores (void);
-void ZeroHighScores (void);
-void ZeroAllButHighestScore (void);
+void ZeroHighScores (housePtr house);
+void ZeroAllButHighestScore (housePtr house);
 Boolean TestHighScore (HWND ownerWindow);
 Boolean WriteScoresToDisk (HWND ownerWindow);
 Boolean ReadScoresFromDisk (HWND ownerWindow);

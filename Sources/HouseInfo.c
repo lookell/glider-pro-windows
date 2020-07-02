@@ -234,13 +234,13 @@ void HowToZeroScores (HWND ownerWindow)
 	switch (hitWhat)
 	{
 		case 1002:	// zero all
-		ZeroHighScores();
+		ZeroHighScores(thisHouse);
 		fileDirty = true;
 		UpdateMenus(false);
 		break;
 
 		case 1003:	// zero all but highest
-		ZeroAllButHighestScore();
+		ZeroAllButHighestScore(thisHouse);
 		fileDirty = true;
 		UpdateMenus(false);
 		break;
