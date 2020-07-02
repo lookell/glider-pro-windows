@@ -296,7 +296,6 @@ void SpinCursor (SInt16 incrementIndex)
 	for (i = 0; i < incrementIndex; i++)
 	{
 		IncrementCursor();
-		DelayTicks(1);
 	}
 }
 
@@ -311,7 +310,6 @@ void BackSpinCursor (SInt16 decrementIndex)
 	for (i = 0; i < decrementIndex; i++)
 	{
 		DecrementCursor();
-		DelayTicks(1);
 	}
 }
 
