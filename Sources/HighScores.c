@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "HighScores.h"
 
 //============================================================================
@@ -115,7 +114,7 @@ void DrawHighScores (void)
 	theLogFont.lfClipPrecision = CLIP_DEFAULT_PRECIS;
 	theLogFont.lfQuality = DEFAULT_QUALITY;
 	theLogFont.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	wcscpy(theLogFont.lfFaceName, L"Tahoma");
+	StringCchCopy(theLogFont.lfFaceName, ARRAYSIZE(theLogFont.lfFaceName), L"Tahoma");
 
 	scoreLeft = ((thisMac.screen.right - thisMac.screen.left) - kScoreWide) / 2;
 	dropIt = 129 + splashOriginV;

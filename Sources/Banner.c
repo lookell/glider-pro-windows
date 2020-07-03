@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "Banner.h"
 
 //============================================================================
@@ -120,7 +119,7 @@ void DrawBannerMessage (Point topLeft)
 	lfBanner.lfClipPrecision = CLIP_DEFAULT_PRECIS;
 	lfBanner.lfQuality = DEFAULT_QUALITY;
 	lfBanner.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	wcscpy(lfBanner.lfFaceName, L"Tahoma");
+	StringCchCopy(lfBanner.lfFaceName, ARRAYSIZE(lfBanner.lfFaceName), L"Tahoma");
 
 	PasStringCopy(thisHouse.banner, bannerStr);
 
@@ -229,7 +228,7 @@ void DisplayStarsRemaining (void)
 	lfText.lfClipPrecision = CLIP_DEFAULT_PRECIS;
 	lfText.lfQuality = DEFAULT_QUALITY;
 	lfText.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	wcscpy(lfText.lfFaceName, L"Tahoma");
+	StringCchCopy(lfText.lfFaceName, ARRAYSIZE(lfText.lfFaceName), L"Tahoma");
 	StringCchPrintf(theStr, ARRAYSIZE(theStr), L"%d", (int)numStarsRemaining);
 
 	mainWindowDC = GetMainWindowDC();

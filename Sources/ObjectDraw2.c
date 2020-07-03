@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "ObjectDraw.h"
 
 //============================================================================
@@ -897,7 +896,7 @@ void DrawCalendar (Rect *theRect)
 	lfCalendar.lfClipPrecision = CLIP_DEFAULT_PRECIS;
 	lfCalendar.lfQuality = DEFAULT_QUALITY;
 	lfCalendar.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	wcscpy(lfCalendar.lfFaceName, L"Tahoma");
+	StringCchCopy(lfCalendar.lfFaceName, ARRAYSIZE(lfCalendar.lfFaceName), L"Tahoma");
 
 	GetLocalTime(&localTime);
 	monthLen = LoadString(HINST_THISCOMPONENT,

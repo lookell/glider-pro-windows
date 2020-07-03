@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "GameOver.h"
 
 //============================================================================
@@ -104,7 +103,7 @@ void SetUpFinalScreen (void)
 	lfGameOver.lfClipPrecision = CLIP_DEFAULT_PRECIS;
 	lfGameOver.lfQuality = DEFAULT_QUALITY;
 	lfGameOver.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	wcscpy(lfGameOver.lfFaceName, L"Tahoma");
+	StringCchCopy(lfGameOver.lfFaceName, ARRAYSIZE(lfGameOver.lfFaceName), L"Tahoma");
 
 	//SetPort((GrafPtr)workSrcMap);
 	ColorRect(workSrcMap, &workSrcRect, 244);
