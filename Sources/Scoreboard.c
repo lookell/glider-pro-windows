@@ -50,11 +50,6 @@ SInt32		displayedScore;
 SInt16		wasScoreboardMode;
 Boolean		doRollScore;
 
-extern	Rect		localRoomsDest[], justRoomsRect;
-extern	SInt32		gameFrame;
-extern	SInt16		numNeighbors, otherPlayerEscaped;
-extern	Boolean		evenFrame, onePlayerLeft;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  RefreshScoreboard
