@@ -136,60 +136,54 @@ void InitializeMenus (void)
 
 void GetExtraCursors (void)
 {
-	handCursor = LoadImage(
-		HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(kHandCursorID), // TODO: replace with OCR_HAND
-		IMAGE_CURSOR,
-		0,
-		0,
-		LR_DEFAULTCOLOR
-	);
+	// TODO: should OCR_SIZEALL be used for the moving cursor instead?
+	handCursor = (HCURSOR)LoadImage(HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(kHandCursorID), IMAGE_CURSOR,
+		0, 0, LR_DEFAULTCOLOR);
 	if (handCursor == NULL)
+	{
 		RedAlert(kErrFailedResourceLoad);
+	}
 
-	beamCursor = LoadImage(
-		NULL,
-		MAKEINTRESOURCE(OCR_IBEAM),
-		IMAGE_CURSOR,
-		0,
-		0,
-		LR_DEFAULTCOLOR | LR_SHARED
-	);
+	beamCursor = (HCURSOR)LoadImage(NULL,
+		MAKEINTRESOURCE(OCR_IBEAM), IMAGE_CURSOR,
+		0, 0, LR_DEFAULTCOLOR | LR_SHARED);
 	if (beamCursor == NULL)
+	{
 		RedAlert(kErrFailedResourceLoad);
+	}
 
-	vertCursor = LoadImage(
-		HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(kVertCursorID), // TODO: replace with OCR_SIZENS
-		IMAGE_CURSOR,
-		0,
-		0,
-		LR_DEFAULTCOLOR
-	);
+	vertCursor = (HCURSOR)LoadImage(NULL,
+		MAKEINTRESOURCE(OCR_SIZENS), IMAGE_CURSOR,
+		0, 0, LR_DEFAULTCOLOR | LR_SHARED);
 	if (vertCursor == NULL)
+	{
 		RedAlert(kErrFailedResourceLoad);
+	}
 
-	horiCursor = LoadImage(
-		HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(kHoriCursorID), // TODO: replace with OCR_SIZEWE
-		IMAGE_CURSOR,
-		0,
-		0,
-		LR_DEFAULTCOLOR
-	);
+	horiCursor = (HCURSOR)LoadImage(NULL,
+		MAKEINTRESOURCE(OCR_SIZEWE), IMAGE_CURSOR,
+		0, 0, LR_DEFAULTCOLOR | LR_SHARED);
 	if (horiCursor == NULL)
+	{
 		RedAlert(kErrFailedResourceLoad);
+	}
 
-	diagCursor = LoadImage(
-		HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(kDiagCursorID), // TODO: replace with OCR_SIZENWSE
-		IMAGE_CURSOR,
-		0,
-		0,
-		LR_DEFAULTCOLOR
-	);
-	if (diagCursor == NULL)
+	diagBotCursor = (HCURSOR)LoadImage(NULL,
+		MAKEINTRESOURCE(OCR_SIZENWSE), IMAGE_CURSOR,
+		0, 0, LR_DEFAULTCOLOR | LR_SHARED);
+	if (diagBotCursor == NULL)
+	{
 		RedAlert(kErrFailedResourceLoad);
+	}
+
+	diagTopCursor = (HCURSOR)LoadImage(NULL,
+		MAKEINTRESOURCE(OCR_SIZENESW), IMAGE_CURSOR,
+		0, 0, LR_DEFAULTCOLOR | LR_SHARED);
+	if (diagTopCursor == NULL)
+	{
+		RedAlert(kErrFailedResourceLoad);
+	}
 }
 
 //--------------------------------------------------------------  VariableInit

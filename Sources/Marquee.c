@@ -541,7 +541,10 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 
 	SetCapture(mainWindow);
 	ClipCursorToClientArea(mainWindow);
-	SetCursor(diagCursor);
+	if (isTop)
+		SetCursor(diagTopCursor);
+	else
+		SetCursor(diagBotCursor);
 	StopMarquee();
 	hdc = GetMainWindowDC();
 	FrameMarqueeRect(hdc, &theMarquee.bounds);
