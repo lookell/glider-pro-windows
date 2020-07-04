@@ -442,26 +442,6 @@ void MusicCallBack (void)
 		break;
 	}
 
-	{
-		wchar_t buffer[64] = { 0 };
-		switch (musicSoundID)
-		{
-		case 0: StringCchCopy(buffer, 64, L"Refrain1"); break;
-		case 1: StringCchCopy(buffer, 64, L"Refrain2"); break;
-		case 2: StringCchCopy(buffer, 64, L"Refrain3"); break;
-		case 3: StringCchCopy(buffer, 64, L"Refrain4"); break;
-		case 4: StringCchCopy(buffer, 64, L"Chorus"); break;
-		case 5: StringCchCopy(buffer, 64, L"RefrainSparse1"); break;
-		case 6: StringCchCopy(buffer, 64, L"RefrainSparse2"); break;
-		default: DebugBreak(); break;
-		}
-		if (buffer[0])
-		{
-			StringCchCat(buffer, 64, L"\n");
-			OutputDebugString(buffer);
-		}
-	}
-
 	waitingBuffer.dataBytes = theMusicData[musicSoundID].dataBytes;
 	waitingBuffer.dataLength = (DWORD)theMusicData[musicSoundID].dataLength;
 	waitingBuffer.numBytesPlayed = 0;
