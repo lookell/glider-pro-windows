@@ -894,32 +894,20 @@ void DetermineRoomOpenings (void)
 SInt16 GetOriginalBounding (SInt16 theID)
 {
 	boundsType	boundsRes;
-	HRSRC		resBlock;
-	DWORD		resByteSize;
-	HGLOBAL		resHandle;
 	LPVOID		resPointer;
+	DWORD		resByteSize;
 	byteio		byteReader;
 	SInt16		boundCode;
+	HRESULT		hr;
 
 	if (houseResFork == NULL)
 		return 0;
 
 	resPointer = NULL;
 	resByteSize = 0;
-	resBlock = FindResource(houseResFork, MAKEINTRESOURCE(theID), L"BOUNDS");
-	if (resBlock != NULL)
-	{
-		resByteSize = SizeofResource(houseResFork, resBlock);
-		if (resByteSize != 0)
-		{
-			resHandle = LoadResource(houseResFork, resBlock);
-			if (resHandle != NULL)
-			{
-				resPointer = LockResource(resHandle);
-			}
-		}
-	}
-	if (resPointer == NULL)
+	hr = LoadModuleResource(houseResFork, MAKEINTRESOURCE(theID),
+		L"BOUNDS", &resPointer, &resByteSize);
+	if (FAILED(hr))
 	{
 		if (PictIDExists(theID))
 			YellowAlert(mainWindow, kYellowNoBoundsRes, 0);

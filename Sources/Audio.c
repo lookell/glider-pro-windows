@@ -3,6 +3,7 @@
 #include "Audio.h"
 
 #include "ResourceIDs.h"
+#include "Utilities.h"
 #include <math.h>
 
 static FOURCC read_fourcc(const unsigned char *buf)
@@ -140,26 +141,19 @@ int ReadWAVFromMemory(const void *buffer, size_t length, WaveData *waveData)
 
 int ReadWAVFromResource(HMODULE hModule, uint16_t wavID, WaveData *waveData)
 {
-	HRSRC hRsrc;
-	HGLOBAL hGlobal;
-	DWORD resLength;
 	LPVOID resPointer;
+	DWORD resLength;
+	HRESULT hr;
 
 	if (waveData == NULL)
 		return 0;
 
-	hRsrc = FindResource(hModule, MAKEINTRESOURCEW(wavID), L"WAVE");
-	if (hRsrc == NULL)
+	hr = LoadModuleResource(hModule, MAKEINTRESOURCE(wavID),
+		L"WAVE", &resPointer, &resLength);
+	if (FAILED(hr))
+	{
 		return 0;
-	hGlobal = LoadResource(hModule, hRsrc);
-	if (hGlobal == NULL)
-		return 0;
-	resLength = SizeofResource(hModule, hRsrc);
-	if (resLength == 0)
-		return 0;
-	resPointer = LockResource(hGlobal);
-	if (resPointer == NULL)
-		return 0;
+	}
 
 	return ReadWAVFromMemory(resPointer, resLength, waveData);
 }

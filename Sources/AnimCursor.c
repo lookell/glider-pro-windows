@@ -110,24 +110,15 @@ Boolean GetColorCursors (acurPtr ballCurs)
 
 Boolean ReadAcurResource (WORD acurID, acurPtr ballCurs)
 {
-	HRSRC resInfo;
-	DWORD resSize;
-	HGLOBAL resHandle;
 	LPVOID resData;
+	DWORD resSize;
 	byteio resReader;
+	HRESULT hr;
 	uint16_t i, count, cursID;
 
-	resInfo = FindResource(HINST_THISCOMPONENT, MAKEINTRESOURCE(acurID), RT_ACUR);
-	if (resInfo == NULL)
-		return false;
-	resSize = SizeofResource(HINST_THISCOMPONENT, resInfo);
-	if (resSize == 0)
-		return false;
-	resHandle = LoadResource(HINST_THISCOMPONENT, resInfo);
-	if (resHandle == NULL)
-		return false;
-	resData = LockResource(resHandle);
-	if (resData == NULL)
+	hr = LoadModuleResource(HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(acurID), RT_ACUR, &resData, &resSize);
+	if (FAILED(hr))
 		return false;
 
 	ballCurs->n = 0;
