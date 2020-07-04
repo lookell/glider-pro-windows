@@ -873,8 +873,7 @@ void AddObjectPairing (void)
 		if (roomNum != -1)
 		{
 			emptySlot = FindObjectSlotInRoom(roomNum);
-			// TODO: investigate if 'kDoorInLfLeft' is a mistake (shouldn't it be 'kDoorInLf'?)
-			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorInLfLeft)))
+			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorInLf)))
 			{
 				testRoomPtr = &(thisHouse.rooms[roomNum]);
 
@@ -904,8 +903,7 @@ void AddObjectPairing (void)
 		if (roomNum != -1)
 		{
 			emptySlot = FindObjectSlotInRoom(roomNum);
-			// TODO: investigate if 'kDoorInRtLeft' is a mistake (shouldn't it be 'kDoorInRt'?)
-			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorInRtLeft)))
+			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorInRt)))
 			{
 				testRoomPtr = &(thisHouse.rooms[roomNum]);
 
