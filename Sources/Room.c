@@ -276,13 +276,8 @@ void ReadyBackground (SInt16 theID, SInt16 *theTiles)
 	thePicture = GetPicture(theID);
 	if (thePicture == NULL)
 	{
-		// TODO: Find out what the 'Date' resource type is
-		//thePicture = (PicHandle)GetResource('Date', theID);
-		//if (thePicture == NULL)
-		{
-			YellowAlert(mainWindow, kYellowNoBackground, 0);
-			return;
-		}
+		YellowAlert(mainWindow, kYellowNoBackground, 0);
+		return;
 	}
 
 	GetObject(thePicture, sizeof(bmInfo), &bmInfo);

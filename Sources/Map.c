@@ -204,11 +204,7 @@ void LoadGraphicPlus (HDC hdc, SInt16 resID, Rect *theRect)
 	thePicture = GetPicture(resID);
 	if (thePicture == NULL)
 	{
-		//thePicture = (PicHandle)GetResource('Date', resID);
-		//if (thePicture == nil)
-		//{
-			return;
-		//}
+		return;
 	}
 	Mac_DrawPicture(hdc, thePicture, theRect);
 	DeleteObject(thePicture);

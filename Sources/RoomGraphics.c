@@ -144,13 +144,10 @@ void LoadGraphicSpecial (HDC hdc, SInt16 resID)
 	thePicture = GetPicture(resID);
 	if (thePicture == NULL)
 	{
-		// TODO: Find out what the 'Date' resource type is.
-		//thePicture = (PicHandle)GetResource('Date', resID);
-		//if (thePicture == nil)
+		thePicture = GetPicture(kSimpleRoom);
+		if (thePicture == NULL)
 		{
-			thePicture = GetPicture(kSimpleRoom);
-			if (thePicture == NULL)
-				RedAlert(kErrFailedGraphicLoad);
+			RedAlert(kErrFailedGraphicLoad);
 		}
 	}
 
