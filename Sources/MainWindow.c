@@ -325,33 +325,6 @@ void CloseMainWindow (void)
 	mainWindow = NULL;
 }
 
-//--------------------------------------------------------------  ZoomBetweenWindows
-// Zooms from one window size to another.  Just for effect.
-
-/*
-#ifndef COMPILEDEMO
-void ZoomBetweenWindows (void)
-{
-	Rect		aRect;
-	short		h, v;
-
-	if (theMode == kEditMode)
-	{
-		QSetRect(&aRect, 0, 0, 512, 342);
-		QOffsetRect(&aRect, isEditH, isEditV);
-		ZoomRectToRect(&(thisMac.screen), &aRect);
-	}
-	else
-	{
-		aRect = mainWindow->portRect;
-		GetWindowLeftTop(mainWindow, &h, &v);
-		QOffsetRect(&aRect, h, v);
-		ZoomRectToRect(&aRect, &(thisMac.screen));
-	}
-}
-#endif
-*/
-
 //--------------------------------------------------------------  UpdateEditWindowTitle
 // Handles changing the title across the top of the main window.  Only…
 // relevant when editing a house (room title displayed in window title).

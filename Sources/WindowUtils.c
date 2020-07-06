@@ -27,26 +27,6 @@ static COLORREF mssgTextColor;
 
 
 //==============================================================  Functions
-//--------------------------------------------------------------  GetWindowTopLeft
-// Returns the top left coordinate of the specified window.  Corrdinates…
-// are (of course) global (local coordinates would always be (0, 0)).
-
-void GetWindowLeftTop (HWND theWindow, SInt16 *left, SInt16 *top)
-{
-	RECT		bounds;
-
-	*left = 0;
-	*top = 0;
-
-	if (theWindow != NULL)
-	{
-		GetClientRect(theWindow, &bounds);
-		MapWindowPoints(theWindow, HWND_DESKTOP, (LPPOINT)&bounds, 2);
-		*left = (SInt16)bounds.left;
-		*top = (SInt16)bounds.top;
-	}
-}
-
 //--------------------------------------------------------------  OpenMessageWindow
 // Brings up a simple message window.  Nice sort of utility function.
 // Anytime you want a small, quick message to come up, call this.

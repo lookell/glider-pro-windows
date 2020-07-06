@@ -37,7 +37,6 @@ void RedrawSplashScreen (void);
 void UpdateMainWindow (void);
 void OpenMainWindow (void);
 void CloseMainWindow (void);
-//void ZoomBetweenWindows (void);
 void UpdateEditWindowTitle (void);
 void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick);
 HDC GetMainWindowDC (void);
