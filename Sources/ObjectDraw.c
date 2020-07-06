@@ -51,9 +51,9 @@
 #define k8BlackColor			255
 
 
-void DrawClockDigit (SInt16, Rect *);
-void DrawClockHands (Point, SInt16, SInt16);
-void DrawLargeClockHands (Point, SInt16, SInt16);
+void DrawClockDigit (SInt16 number, Rect *dest);
+void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand);
+void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand);
 
 
 //==============================================================  Functions

@@ -32,11 +32,11 @@
 #define kMaxExtraHouses			8
 
 
-BOOL InitLoadDialog (HWND);
-INT_PTR CALLBACK LoadFilter (HWND, UINT, WPARAM, LPARAM);
+BOOL InitLoadDialog (HWND hDlg);
+INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void SortHouseList (void);
-BOOL GetHouseFolderPath (LPWSTR, DWORD);
-void DoDirSearch (HWND);
+BOOL GetHouseFolderPath (LPWSTR buffer, DWORD cch);
+void DoDirSearch (HWND ownerWindow);
 
 
 Rect			loadHouseRects[12];

@@ -21,7 +21,7 @@
 #include <Drag.h>
 
 
-Boolean DropLocationIsTrash (AEDesc *);
+Boolean DropLocationIsTrash (AEDesc *dropLocation);
 
 
 Boolean		hasScrap, scrapIsARoom;

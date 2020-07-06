@@ -29,9 +29,9 @@
 
 
 SInt32 CountTotalHousePoints (void);
-INT_PTR CALLBACK HouseFilter (HWND, UINT, WPARAM, LPARAM);
-Boolean WarnLockingHouse (HWND);
-void HowToZeroScores (HWND);
+INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+Boolean WarnLockingHouse (HWND ownerWindow);
+void HowToZeroScores (HWND ownerWindow);
 
 
 #ifndef COMPILEDEMO

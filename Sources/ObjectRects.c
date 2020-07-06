@@ -29,7 +29,8 @@
 #define kShredderActiveHigh		40
 
 
-SInt16 AddActiveRect (Rect *, SInt16, SInt16, Boolean, Boolean);
+SInt16 AddActiveRect (Rect *bounds, SInt16 action, SInt16 who, Boolean isOn,
+	Boolean doScrutinize);
 
 
 //==============================================================  Functions
@@ -277,7 +278,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 //--------------------------------------------------------------  AddActiveRect
 
 SInt16 AddActiveRect (Rect *bounds, SInt16 action, SInt16 who, Boolean isOn,
-		Boolean doScrutinize)
+	Boolean doScrutinize)
 {
 	if (nHotSpots >= kMaxHotSpots)
 		return (-1);

@@ -24,11 +24,11 @@
 #define errAEEventNotHandled		(-1708)
 
 
-OSErr DoOpenAppAE (const AppleEvent *, AppleEvent *, UInt32);
-OSErr DoOpenDocAE (const AppleEvent *, AppleEvent *, UInt32);
-OSErr DoPrintDocAE (const AppleEvent *, AppleEvent *, UInt32);
-OSErr DoQuitAE (const AppleEvent *, AppleEvent *, UInt32);
-OSErr MyGotRequiredParams (const AppleEvent *);
+OSErr DoOpenAppAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref);
+OSErr DoOpenDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref);
+OSErr DoPrintDocAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref);
+OSErr DoQuitAE (const AppleEvent *theAE, AppleEvent *reply, UInt32 ref);
+OSErr MyGotRequiredParams (const AppleEvent *theAE);
 
 
 AEEventHandlerUPP	openAppAEUPP, openDocAEUPP, printDocAEUPP, quitAEUPP;

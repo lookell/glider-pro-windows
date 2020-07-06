@@ -39,7 +39,7 @@
 #define kSuiteEditText		1006
 
 
-INT_PTR CALLBACK GoToFilter (HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK GoToFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 
 houseType	thisHouse;

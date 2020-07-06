@@ -19,8 +19,8 @@
 #define kScreenInfoText		1008
 
 
-static void UpdateMainPict (HWND);
-static INT_PTR CALLBACK AboutFilter (HWND, UINT, WPARAM, LPARAM);
+static void UpdateMainPict (HWND hDlg);
+static INT_PTR CALLBACK AboutFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 
 //==============================================================  Functions

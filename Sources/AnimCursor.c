@@ -28,10 +28,10 @@ typedef struct acurRec
 } acurRec, *acurPtr;
 
 
-Boolean GetMonoCursors (acurPtr);
-Boolean GetColorCursors (acurPtr);
-Boolean ReadAcurResource (WORD, acurPtr);
-void InitAnimatedCursor (WORD);
+Boolean GetMonoCursors (acurPtr ballCurs);
+Boolean GetColorCursors (acurPtr ballCurs);
+Boolean ReadAcurResource (WORD acurID, acurPtr ballCurs);
+void InitAnimatedCursor (WORD acurID);
 
 
 static acurRec animCursor = { 0 };

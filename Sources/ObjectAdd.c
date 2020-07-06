@@ -46,7 +46,7 @@ SInt16 HowManyUpStairsObjects (void);
 SInt16 HowManyDownStairsObjects (void);
 SInt16 HowManyShredderObjects (void);
 SInt16 HowManyDynamicObjects (void);
-void ShoutNoMoreSpecialObjects (HWND);
+void ShoutNoMoreSpecialObjects (HWND ownerWindow);
 
 
 SInt16		wasFlower;

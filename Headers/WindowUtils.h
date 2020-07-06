@@ -10,11 +10,11 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-void GetWindowLeftTop (HWND, SInt16 *, SInt16 *);
-void OpenMessageWindow (StringPtr);
-void SetMessageWindowMessage (StringPtr);
-void SetMessageTextColor (COLORREF);
+void GetWindowLeftTop (HWND theWindow, SInt16 *left, SInt16 *top);
+void OpenMessageWindow (StringPtr title);
+void SetMessageWindowMessage (StringPtr message);
+void SetMessageTextColor (COLORREF textColor);
 void CloseMessageWindow (void);
-void CloseThisWindow (HWND *);
+void CloseThisWindow (HWND *theWindow);
 
 #endif

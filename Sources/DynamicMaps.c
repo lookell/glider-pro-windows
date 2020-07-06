@@ -21,11 +21,11 @@
 #include "Utilities.h"
 
 
-void BackUpFlames (Rect *, SInt16);
-void BackUpTikiFlames (Rect *, SInt16);
-void BackUpBBQCoals (Rect *, SInt16);
-void BackUpPendulum (Rect *, SInt16);
-void BackUpStar (Rect *, SInt16);
+void BackUpFlames (Rect *src, SInt16 index);
+void BackUpTikiFlames (Rect *src, SInt16 index);
+void BackUpBBQCoals (Rect *src, SInt16 index);
+void BackUpPendulum (Rect *src, SInt16 index);
+void BackUpStar (Rect *src, SInt16 index);
 
 
 sparklePtr	sparkles;

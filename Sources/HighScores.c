@@ -35,12 +35,12 @@
 
 
 void DrawHighScores (void);
-INT_PTR CALLBACK NameFilter (HWND, UINT, WPARAM, LPARAM);
-void GetHighScoreName (HWND, SInt16);
-INT_PTR CALLBACK BannerFilter (HWND, UINT, WPARAM, LPARAM);
-void GetHighScoreBanner (HWND);
-Boolean FindHighScoresFolder (LPWSTR, DWORD);
-Boolean GetHighScoresFilePath (LPWSTR, DWORD, StringPtr);
+INT_PTR CALLBACK NameFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+void GetHighScoreName (HWND ownerWindow, SInt16 place);
+INT_PTR CALLBACK BannerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+void GetHighScoreBanner (HWND ownerWindow);
+Boolean FindHighScoresFolder (LPWSTR scoresDirPath, DWORD cchDirPath);
+Boolean GetHighScoresFilePath (LPWSTR lpPath, DWORD cchPath, StringPtr baseName);
 
 
 Str31		highBanner;

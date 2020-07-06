@@ -36,12 +36,12 @@
 #define IsKeyUp(vkey) (GetActiveWindow() != mainWindow || GetAsyncKeyState(vkey) >= 0)
 
 
-void LogDemoKey (Byte);
+void LogDemoKey (Byte keyIs);
 void DoCommandKey (void);
 void DoPause (void);
-void DoBatteryEngaged (gliderPtr);
-void DoHeliumEngaged (gliderPtr);
-Boolean QuerySaveGame (HWND);
+void DoBatteryEngaged (gliderPtr thisGlider);
+void DoHeliumEngaged (gliderPtr thisGlider);
+Boolean QuerySaveGame (HWND ownerWindow);
 
 
 demoPtr		demoData;

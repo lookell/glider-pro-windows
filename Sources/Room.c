@@ -30,8 +30,8 @@
 #define kYesDoDeleteRoom		IDOK
 
 
-Boolean QueryDeleteRoom (HWND);
-void SetToNearestNeighborRoom (SInt16, SInt16);
+Boolean QueryDeleteRoom (HWND ownerWindow);
+void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_);
 
 
 roomPtr		thisRoom;

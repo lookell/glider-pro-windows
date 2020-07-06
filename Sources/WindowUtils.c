@@ -19,7 +19,7 @@
 #define kMessageItem		1001
 
 
-static INT_PTR CALLBACK MessageWindowProc (HWND, UINT, WPARAM, LPARAM);
+static INT_PTR CALLBACK MessageWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 
 static HWND mssgWindow;

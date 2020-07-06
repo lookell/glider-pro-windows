@@ -23,7 +23,7 @@
 #define kUnlinkButton   1310
 
 
-INT_PTR CALLBACK LinkWindowProc (HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK LinkWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 void DoLink (void);
 void DoUnlink (void);
 

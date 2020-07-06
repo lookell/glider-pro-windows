@@ -24,7 +24,7 @@
 #define kGreaseSpiltIdle	3
 
 
-void BackupGrease (Rect *, SInt16, Boolean);
+void BackupGrease (Rect *src, SInt16 index, Boolean isRight);
 
 
 greasePtr	grease;

@@ -24,8 +24,8 @@
 #include "WinAPI.h"
 
 
-void DrawBanner (Point *);
-void DrawBannerMessage (Point);
+void DrawBanner (Point *topLeft);
+void DrawBannerMessage (Point topLeft);
 
 
 SInt16		numStarsRemaining;

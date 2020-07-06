@@ -24,8 +24,8 @@
 #include "Sound.h"
 
 
-SInt16 GetObjectLinked (objectType *);
-void ListOneRoomsObjects (SInt16);
+SInt16 GetObjectLinked (objectType *who);
+void ListOneRoomsObjects (SInt16 where);
 
 
 Rect		blowerSrcRect;									// Blowers

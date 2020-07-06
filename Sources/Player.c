@@ -29,27 +29,27 @@
 #define kShredderCountdown		-68
 
 
-void MoveGlider (gliderPtr);
-void MoveGliderNormal (gliderPtr);
-void MoveGliderBurning (gliderPtr);
-void FadeGliderIn (gliderPtr);
-void TransportGliderIn (gliderPtr);
-void FadeGliderOut (gliderPtr);
-void MoveGliderUpStairs (gliderPtr);
-void MoveGliderDownStairs (gliderPtr);
-void MoveGliderFaceLeft (gliderPtr);
-void MoveGliderFaceRight (gliderPtr);
-void TransportGliderOut (gliderPtr);
-void MoveGliderDownDuct (gliderPtr);
-void MoveGliderUpDuct (gliderPtr);
-void MoveGliderInMailLeft (gliderPtr);
-void MoveGliderInMailRight (gliderPtr);
-void FinishGliderMailingLeft (gliderPtr);
-void FinishGliderMailingRight (gliderPtr);
-void MoveGliderFoilGoing (gliderPtr);
-void MoveGliderFoilLosing (gliderPtr);
-void MoveGliderShredding (gliderPtr);
-void HandleIdleGlider (gliderPtr);
+void MoveGlider (gliderPtr thisGlider);
+void MoveGliderNormal (gliderPtr thisGlider);
+void MoveGliderBurning (gliderPtr thisGlider);
+void FadeGliderIn (gliderPtr thisGlider);
+void TransportGliderIn (gliderPtr thisGlider);
+void FadeGliderOut (gliderPtr thisGlider);
+void MoveGliderUpStairs (gliderPtr thisGlider);
+void MoveGliderDownStairs (gliderPtr thisGlider);
+void MoveGliderFaceLeft (gliderPtr thisGlider);
+void MoveGliderFaceRight (gliderPtr thisGlider);
+void TransportGliderOut (gliderPtr thisGlider);
+void MoveGliderDownDuct (gliderPtr thisGlider);
+void MoveGliderUpDuct (gliderPtr thisGlider);
+void MoveGliderInMailLeft (gliderPtr thisGlider);
+void MoveGliderInMailRight (gliderPtr thisGlider);
+void FinishGliderMailingLeft (gliderPtr thisGlider);
+void FinishGliderMailingRight (gliderPtr thisGlider);
+void MoveGliderFoilGoing (gliderPtr thisGlider);
+void MoveGliderFoilLosing (gliderPtr thisGlider);
+void MoveGliderShredding (gliderPtr thisGlider);
+void HandleIdleGlider (gliderPtr thisGlider);
 
 
 gliderType	theGlider, theGlider2;

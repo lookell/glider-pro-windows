@@ -33,11 +33,11 @@
 #include "WindowUtils.h"
 
 
-SInt16 FindObjectSelected (Point);
-void DragHandle (Point);
-void Gp_DragObject (Point);
+SInt16 FindObjectSelected (Point where);
+void DragHandle (Point where);
+void Gp_DragObject (Point where);
 void AddObjectPairing (void);
-Boolean ObjectIsUpBlower (objectType *);
+Boolean ObjectIsUpBlower (objectType *who);
 
 
 Rect		roomObjectRects[kMaxRoomObs];

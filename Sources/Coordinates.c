@@ -24,7 +24,7 @@
 #define kDistCoordItem		1003
 
 
-INT_PTR CALLBACK CoordWindowProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK CoordWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 
 HWND			coordWindow;
@@ -71,7 +71,7 @@ void DeltaCoordinateD (SInt16 d)
 
 // Handles messages for the Coordinate window with a dialog procedure.
 
-INT_PTR CALLBACK CoordWindowProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK CoordWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	WINDOWPLACEMENT placement;
 

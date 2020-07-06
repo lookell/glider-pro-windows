@@ -46,9 +46,8 @@
 #define kPrefsVersion			0x0034
 
 
-void ReadInPrefs (HWND);
-void WriteOutPrefs (HWND);
-int WINAPI wWinMain (HINSTANCE, HINSTANCE, LPWSTR, int);
+void ReadInPrefs (HWND ownerWindow);
+void WriteOutPrefs (HWND ownerWindow);
 
 
 SInt16		isVolume, wasVolume;

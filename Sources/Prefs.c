@@ -25,11 +25,11 @@
 #define	kPrefsFNameIndex	1
 
 
-Boolean GetPrefsFilePath (LPWSTR, size_t);
-Boolean WritePrefs (HWND, LPCWSTR, prefsInfo *);
-HRESULT ReadPrefs (HWND, LPCWSTR, prefsInfo *);
-Boolean DeletePrefs (LPCWSTR);
-void BringUpDeletePrefsAlert (HWND);
+Boolean GetPrefsFilePath (LPWSTR lpFilePath, size_t cchFilePath);
+Boolean WritePrefs (HWND ownerWindow, LPCWSTR prefsFilePath, prefsInfo *thePrefs);
+HRESULT ReadPrefs (HWND ownerWindow, LPCWSTR prefsFilePath, prefsInfo *thePrefs);
+Boolean DeletePrefs (LPCWSTR prefsFilePath);
+void BringUpDeletePrefsAlert (HWND ownerWindow);
 
 
 //==============================================================  Functions

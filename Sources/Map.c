@@ -36,13 +36,13 @@
 
 
 void RegisterMapWindowClass (void);
-void LoadGraphicPlus (HDC, SInt16, Rect *);
-void RedrawMapContents (HDC);
-void ResizeMapWindow (WINDOWPOS *);
-LRESULT CALLBACK MapWindowProc (HWND, UINT, WPARAM, LPARAM);
-void LiveHScrollAction (HWND, WORD);
-void LiveVScrollAction (HWND, WORD);
-Boolean QueryNewRoom (HWND);
+void LoadGraphicPlus (HDC hdc, SInt16 resID, Rect *theRect);
+void RedrawMapContents (HDC hdc);
+void ResizeMapWindow (WINDOWPOS *windowPos);
+LRESULT CALLBACK MapWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+void LiveHScrollAction (HWND hwnd, WORD scrollRequest);
+void LiveVScrollAction (HWND hwnd, WORD scrollRequest);
+Boolean QueryNewRoom (HWND ownerWindow);
 void CreateNailOffscreen (void);
 void KillNailOffscreen (void);
 

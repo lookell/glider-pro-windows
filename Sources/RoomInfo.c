@@ -44,18 +44,18 @@
 #define kMiniTileWide               16
 
 
-void LoadTileSrcGraphic (HDC, SInt16, Rect *);
-void UpdateRoomInfoDialog (HWND, HDC);
-void DragMiniTile (HWND, Point, SInt16 *);
-void HiliteTileOver (HWND, Point);
-void RoomInfo_InitDialog (HWND);
-INT_PTR CALLBACK RoomFilter (HWND, UINT, WPARAM, LPARAM);
-SInt16 ChooseOriginalArt (HWND, SInt16);
-LRESULT SendButtonClickedCommand (HWND, int);
-INT_PTR CALLBACK OriginalArtFilter (HWND, UINT, WPARAM, LPARAM);
-Boolean PictIDExists (SInt16);
+void LoadTileSrcGraphic (HDC hdc, SInt16 backID, Rect *theRect);
+void UpdateRoomInfoDialog (HWND hDlg, HDC hdc);
+void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver);
+void HiliteTileOver (HWND hDlg, Point mouseIs);
+void RoomInfo_InitDialog (HWND hDlg);
+INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+SInt16 ChooseOriginalArt (HWND hwndOwner, SInt16 wasPictID);
+LRESULT SendButtonClickedCommand (HWND hDlg, int ctrlID);
+INT_PTR CALLBACK OriginalArtFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+Boolean PictIDExists (SInt16 theID);
 SInt16 GetFirstPICT (void);
-void BitchAboutPICTNotFound (HWND);
+void BitchAboutPICTNotFound (HWND ownerWindow);
 
 
 Rect tileSrcRect;

@@ -93,33 +93,33 @@
 #define kFlowerLinkedFrom       1013
 
 
-void UpdateBlowerInfo (HWND, HDC);
-INT_PTR CALLBACK BlowerFilter (HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK FurnitureFilter (HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK CustPictFilter (HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK SwitchFilter (HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK TriggerFilter (HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK LightFilter (HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK ApplianceFilter (HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK MicrowaveFilter (HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK GreaseFilter (HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK InvisBonusFilter (HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK TransFilter (HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK EnemyFilter (HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK FlowerFilter (HWND, UINT, WPARAM, LPARAM);
-void DoBlowerObjectInfo (HWND);
-void DoFurnitureObjectInfo (HWND);
-void DoCustPictObjectInfo (HWND);
-void DoSwitchObjectInfo (HWND);
-void DoTriggerObjectInfo (HWND);
-void DoLightObjectInfo (HWND);
-void DoApplianceObjectInfo (HWND);
-void DoMicrowaveObjectInfo (HWND);
-void DoGreaseObjectInfo (HWND);
-void DoInvisBonusObjectInfo (HWND);
-void DoTransObjectInfo (HWND);
-void DoEnemyObjectInfo (HWND);
-void DoFlowerObjectInfo (HWND);
+void UpdateBlowerInfo (HWND hDlg, HDC hdc);
+INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK FurnitureFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK CustPictFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK SwitchFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK TriggerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK LightFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK ApplianceFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK MicrowaveFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK GreaseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK InvisBonusFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK TransFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK EnemyFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK FlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+void DoBlowerObjectInfo (HWND hwndOwner);
+void DoFurnitureObjectInfo (HWND hwndOwner);
+void DoCustPictObjectInfo (HWND hwndOwner);
+void DoSwitchObjectInfo (HWND hwndOwner);
+void DoTriggerObjectInfo (HWND hwndOwner);
+void DoLightObjectInfo (HWND hwndOwner);
+void DoApplianceObjectInfo (HWND hwndOwner);
+void DoMicrowaveObjectInfo (HWND hwndOwner);
+void DoGreaseObjectInfo (HWND hwndOwner);
+void DoInvisBonusObjectInfo (HWND hwndOwner);
+void DoTransObjectInfo (HWND hwndOwner);
+void DoEnemyObjectInfo (HWND hwndOwner);
+void DoFlowerObjectInfo (HWND hwndOwner);
 
 
 #ifndef COMPILEDEMO

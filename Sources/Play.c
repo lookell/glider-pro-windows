@@ -56,7 +56,7 @@ typedef struct
 } phoneType, *phonePtr;
 
 
-void InitGlider (gliderPtr, SInt16);
+void InitGlider (gliderPtr thisGlider, SInt16 mode);
 void SetHouseToFirstRoom (void);
 void SetHouseToSavedRoom (void);
 void PlayGame (void);
@@ -64,8 +64,8 @@ void HandleRoomVisitation (void);
 void SetObjectsToDefaults (void);
 void InitTelephone (void);
 void HandleTelephone (void);
-Boolean DoesStarCodeExist (SInt16);
-SInt16 GetNumStarsRemaining (SInt16, SInt16);
+//Boolean DoesStarCodeExist (SInt16);
+//SInt16 GetNumStarsRemaining (SInt16, SInt16);
 
 
 phoneType	thePhone, theChimes;

@@ -29,8 +29,8 @@
 #include "Utilities.h"
 
 
-void LoadGraphicSpecial (HDC, SInt16);
-void DrawRoomBackground (SInt16, SInt16, SInt16);
+void LoadGraphicSpecial (HDC hdc, SInt16 resID);
+void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation);
 void DrawFloorSupport (void);
 void ReadyBackMap (void);
 void RestoreWorkMap (void);

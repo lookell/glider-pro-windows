@@ -28,7 +28,7 @@
 #define kMaxGarbageRects		48
 
 
-void DrawReflection (gliderPtr, Boolean);
+void DrawReflection (gliderPtr thisGlider, Boolean oneOrTwo);
 void RenderFlames (void);
 void RenderPendulums (void);
 void RenderFlyingPoints (void);

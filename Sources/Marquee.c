@@ -25,11 +25,11 @@
 
 HBRUSH CreateMarqueeBrush (void);
 HPEN CreateMarqueePen (void);
-void PaintMarqueeRect (HDC, const Rect *);
-void FrameMarqueeRect (HDC, const Rect *);
-void ClipCursorToClientArea (HWND);
-void DrawGliderMarquee (HDC);
-void DrawMarquee (HDC);
+void PaintMarqueeRect (HDC hdc, const Rect *theRect);
+void FrameMarqueeRect (HDC hdc, const Rect *theRect);
+void ClipCursorToClientArea (HWND hwnd);
+void DrawGliderMarquee (HDC hdc);
+void DrawMarquee (HDC hdc);
 
 
 marquee		theMarquee;

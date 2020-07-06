@@ -27,7 +27,7 @@ typedef struct
 
 
 SInt16 FindEmptyTriggerSlot (void);
-void FireTrigger (SInt16);
+void FireTrigger (SInt16 index);
 
 
 trigType	triggers[kMaxTriggers];

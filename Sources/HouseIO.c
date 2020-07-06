@@ -38,7 +38,7 @@
 void LoopMovie (void);
 void OpenHouseMovie (void);
 void CloseHouseMovie (void);
-Boolean IsFileReadOnly (houseSpec *);
+Boolean IsFileReadOnly (houseSpec *theSpec);
 
 
 Movie		theMovie;

@@ -74,37 +74,37 @@
 #define kDoBitchDlgsCheck		1014
 
 
-void SetBrainsToDefaults (HWND);
-void BrainsInit (HWND);
-void BrainsApply (HWND);
-INT_PTR CALLBACK BrainsFilter (HWND, UINT, WPARAM, LPARAM);
-void DoBrainsPrefs (HWND);
+void SetBrainsToDefaults (HWND prefDlg);
+void BrainsInit (HWND prefDlg);
+void BrainsApply (HWND prefDlg);
+INT_PTR CALLBACK BrainsFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM lParam);
+void DoBrainsPrefs (HWND ownerWindow);
 
-BYTE GetHotKeyValue (HWND, int);
-void SetHotKeyValue (HWND, int, BYTE);
-void HandleHotKeyChange (HWND, int);
-void SetControlsToDefaults (HWND);
-void ControlInit (HWND);
-void ControlApply (HWND);
-INT_PTR CALLBACK ControlFilter (HWND, UINT, WPARAM, LPARAM);
-void DoControlPrefs (HWND);
+BYTE GetHotKeyValue (HWND prefDlg, int itemID);
+void SetHotKeyValue (HWND prefDlg, int itemID, BYTE virtualKey);
+void HandleHotKeyChange (HWND prefDlg, int itemID);
+void SetControlsToDefaults (HWND prefDlg);
+void ControlInit (HWND prefDlg);
+void ControlApply (HWND prefDlg);
+INT_PTR CALLBACK ControlFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM lParam);
+void DoControlPrefs (HWND ownerWindow);
 
-void SoundDefaults (HWND);
-void SoundPrefsInit (HWND);
-void SoundPrefsApply (HWND);
-void HandleSoundMusicChange (HWND, SInt16, Boolean);
-INT_PTR CALLBACK SoundFilter (HWND, UINT, WPARAM, LPARAM);
-void DoSoundPrefs (HWND);
+void SoundDefaults (HWND prefDlg);
+void SoundPrefsInit (HWND prefDlg);
+void SoundPrefsApply (HWND prefDlg);
+void HandleSoundMusicChange (HWND prefDlg, SInt16 newVolume, Boolean sayIt);
+INT_PTR CALLBACK SoundFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM lParam);
+void DoSoundPrefs (HWND ownerWindow);
 
-void DisplayDefaults (HWND);
-void DisplayInit (HWND);
-void DisplayApply (HWND);
-INT_PTR CALLBACK DisplayFilter (HWND, UINT, WPARAM, LPARAM);
-void DoDisplayPrefs (HWND);
+void DisplayDefaults (HWND hDlg);
+void DisplayInit (HWND hDlg);
+void DisplayApply (HWND hDlg);
+INT_PTR CALLBACK DisplayFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+void DoDisplayPrefs (HWND ownerWindow);
 
-void SetAllDefaults (HWND);
-INT_PTR CALLBACK PrefsFilter (HWND, UINT, WPARAM, LPARAM);
-void BitchAboutChanges (HWND);
+void SetAllDefaults (HWND ownerWindow);
+INT_PTR CALLBACK PrefsFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+void BitchAboutChanges (HWND ownerWindow);
 
 
 Str15		leftName, rightName, batteryName, bandName;

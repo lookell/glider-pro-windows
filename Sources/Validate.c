@@ -29,12 +29,12 @@
 
 SInt16 GetSystemVolume (void);
 SInt32 VolumeCreated (void);
-Boolean VolumeMatchesPrefs (SInt32, SInt32 *);
+Boolean VolumeMatchesPrefs (SInt32 prefsSay, SInt32 *thisEncrypt);
 Boolean NoFloppyException (void);
-OSErr GetIndVolumeDate (SInt16, SInt32 *);
+OSErr GetIndVolumeDate (SInt16 volIndex, SInt32 *theDate);
 Boolean LoopThruMountedVolumes (void);
 Boolean SpecificVolumeCreated (void);
-Boolean MasterFilter (DialogPtr, EventRecord *, SInt16 *);
+Boolean MasterFilter (DialogPtr theDialog, EventRecord *theEvent, SInt16 *itemHit);
 Boolean GetMasterDisk (void);
 
 

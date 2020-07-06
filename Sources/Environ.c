@@ -49,13 +49,13 @@ typedef struct
 //Boolean DoWeHaveSoundManager3 (void);
 Boolean DoWeHaveQuickTime (void);
 Boolean DoWeHaveDragManager (void);
-Boolean CanWeDisplay8Bit (GDHandle);
-//Boolean CanWeDisplay4Bit (GDHandle);
-//Boolean CanWeDisplay1Bit (GDHandle);
-SInt16 HowManyUsableScreens (Boolean, Boolean, Boolean);
-void GetDeviceRect (Rect *);
+Boolean CanWeDisplay8Bit (GDHandle theDevice);
+//Boolean CanWeDisplay4Bit (GDHandle theDevice);
+//Boolean CanWeDisplay1Bit (GDHandle theDevice);
+SInt16 HowManyUsableScreens (Boolean use1Bit, Boolean use4Bit, Boolean use8Bit);
+void GetDeviceRect (Rect *theRect);
 Boolean AreWeColorOrGrayscale (void);
-void SwitchDepthOrAbort (HWND);
+void SwitchDepthOrAbort (HWND ownerWindow);
 
 
 macEnviron	thisMac;

@@ -25,8 +25,8 @@
 #define kKillBandMode			-1
 
 
-void CheckBandCollision (SInt16);
-void KillBand (SInt16);
+void CheckBandCollision (SInt16 who);
+void KillBand (SInt16 which);
 
 
 bandPtr		bands;

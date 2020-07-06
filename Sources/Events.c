@@ -28,7 +28,7 @@
 #include "Tools.h"
 
 
-void HandleHighLevelEvent (EventRecord *);
+void HandleHighLevelEvent (EventRecord *theEvent);
 void HandleIdleTask (void);
 void IncrementMode (void);
 

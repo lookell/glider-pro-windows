@@ -30,7 +30,7 @@
 #define kScoreRollAmount		13
 
 
-void RefreshRoomTitle (SInt16);
+void RefreshRoomTitle (SInt16 mode);
 void RefreshNumGliders (void);
 void RefreshPoints (void);
 

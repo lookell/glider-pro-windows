@@ -46,9 +46,9 @@ void UpdateMenusEditMode (void);
 void UpdateMenusNonEditMode (void);
 void UpdateMenusHouseOpen (void);
 void UpdateMenusHouseClosed (void);
-INT_PTR CALLBACK ResumeFilter (HWND, UINT, WPARAM, LPARAM);
-SInt16 QueryResumeGame (HWND);
-void HeyYourPissingAHighScore (HWND);
+INT_PTR CALLBACK ResumeFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+SInt16 QueryResumeGame (HWND ownerWindow);
+void HeyYourPissingAHighScore (HWND ownerWindow);
 
 
 HMENU		theMenuBar, appleMenu, gameMenu, optionsMenu, houseMenu;

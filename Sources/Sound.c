@@ -20,19 +20,20 @@
 #define kNoSoundPlaying				-1
 
 
-typedef struct StaticSound {
+typedef struct StaticSound
+{
 	LPDIRECTSOUNDBUFFER8 dsBuffer;
 	WaveData wave;
 } StaticSound;
 
 
-void Gp_PlaySound(SInt16, SInt16, SInt16);
-void UpdateSoundState (SInt16);
-void FlushCurrentSound (SInt16);
+void Gp_PlaySound (SInt16 channelID, SInt16 soundID, SInt16 priority);
+void UpdateSoundState (SInt16 channelID);
+void FlushCurrentSound (SInt16 channelID);
 OSErr LoadBufferSounds (void);
 void DumpBufferSounds (void);
-LPDIRECTSOUNDBUFFER8 LoadStaticBuffer (SInt16);
-void RestoreStaticBuffer (SInt16, LPDIRECTSOUNDBUFFER8);
+LPDIRECTSOUNDBUFFER8 LoadStaticBuffer (SInt16 which);
+void RestoreStaticBuffer (SInt16 which, LPDIRECTSOUNDBUFFER8 soundBuffer);
 
 
 StaticSound				theSoundData[kMaxSounds];

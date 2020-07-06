@@ -28,8 +28,8 @@
 #define kSavedGameVersion		0x0200
 
 
-BOOL GetSaveFolderPath (LPWSTR, DWORD);
-void SavedGameMismatchError (HWND, StringPtr);
+BOOL GetSaveFolderPath (LPWSTR lpSavePath, DWORD cchSavePath);
+void SavedGameMismatchError (HWND ownerWindow, StringPtr gameName);
 
 
 gameType	smallGame;

@@ -33,7 +33,7 @@
 #include "Utilities.h"
 
 
-static HMENU DetachPopupMenu(HMENU rootMenu, UINT id, LPWSTR *title);
+static HMENU DetachPopupMenu (HMENU rootMenu, UINT id, LPWSTR *title);
 
 
 //==============================================================  Functions
@@ -45,7 +45,7 @@ static HMENU DetachPopupMenu(HMENU rootMenu, UINT id, LPWSTR *title);
 // handle. If the function fails, the return value is NULL and the title
 // output paramter is set to NULL.
 
-static HMENU DetachPopupMenu(HMENU rootMenu, UINT id, LPWSTR *title)
+static HMENU DetachPopupMenu (HMENU rootMenu, UINT id, LPWSTR *title)
 {
 	MENUITEMINFO mii;
 

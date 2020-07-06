@@ -9,6 +9,6 @@
 
 #include "MacTypes.h"
 
-Boolean ValidInstallation (Boolean);
+Boolean ValidInstallation (Boolean returnToFinder);
 
 #endif

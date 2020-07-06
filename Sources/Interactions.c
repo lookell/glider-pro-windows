@@ -37,24 +37,24 @@
 #define kFoilSupply				8
 
 
-Boolean GliderHitTop (gliderPtr, Rect *);
-Boolean GliderInRect (gliderPtr, Rect *);
-void BounceGlider (gliderPtr, Rect *);
-void CheckEscapeUpTwo (gliderPtr);
-void CheckEscapeUp (gliderPtr);
-void CheckEscapeDownTwo (gliderPtr);
-void CheckEscapeDown (gliderPtr);
-void CheckRoofCollision (gliderPtr);
-void CheckEscapeLeftTwo (gliderPtr);
-void CheckEscapeLeft (gliderPtr);
-void CheckEscapeRightTwo (gliderPtr);
-void CheckEscapeRight (gliderPtr);
-void CheckGliderInRoom (gliderPtr);
-void HandleRewards (gliderPtr, hotPtr);
-void HandleMicrowaveAction (hotPtr, gliderPtr);
-void HandleHotSpotCollision (gliderPtr, hotPtr, SInt16);
+Boolean GliderHitTop (gliderPtr thisGlider, Rect *theRect);
+Boolean GliderInRect (gliderPtr thisGlider, Rect *theRect);
+void BounceGlider (gliderPtr thisGlider, Rect *theRect);
+void CheckEscapeUpTwo (gliderPtr thisGlider);
+void CheckEscapeUp (gliderPtr thisGlider);
+void CheckEscapeDownTwo (gliderPtr thisGlider);
+void CheckEscapeDown (gliderPtr thisGlider);
+void CheckRoofCollision (gliderPtr thisGlider);
+void CheckEscapeLeftTwo (gliderPtr thisGlider);
+void CheckEscapeLeft (gliderPtr thisGlider);
+void CheckEscapeRightTwo (gliderPtr thisGlider);
+void CheckEscapeRight (gliderPtr thisGlider);
+void CheckGliderInRoom (gliderPtr thisGlider);
+void HandleRewards (gliderPtr thisGlider, hotPtr who);
+void HandleMicrowaveAction (hotPtr who, gliderPtr thisGlider);
+void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, SInt16 index);
 void CheckForHotSpots (void);
-void WebGlider (gliderPtr, Rect *);
+void WebGlider (gliderPtr thisGlider, Rect *webBounds);
 
 
 SInt16		otherPlayerEscaped, activeRectEscaped;
