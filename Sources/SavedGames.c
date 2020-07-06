@@ -61,7 +61,6 @@ void SaveGame2 (HWND ownerWindow)
 {
 	OPENFILENAME		ofn = { 0 };
 	Str255				gameNameStr;
-	Str15				errorLabel;
 	WCHAR				startPath[MAX_PATH];
 	WCHAR				gamePath[MAX_PATH];
 	roomType			*srcRoom;
@@ -70,8 +69,6 @@ void SaveGame2 (HWND ownerWindow)
 	SInt16				r, i, numRooms;
 	HANDLE				gameFileHandle;
 	byteio				byteWriter;
-
-	PasStringCopyC("Saved Game", errorLabel);
 
 	if (!GetSaveFolderPath(startPath, ARRAYSIZE(startPath)))
 		startPath[0] = L'\0';
@@ -148,15 +145,15 @@ void SaveGame2 (HWND ownerWindow)
 		if (byteio_init_handle_writer(&byteWriter, gameFileHandle))
 		{
 			if (!WriteGame2Type(&byteWriter, &savedGame))
-				CheckFileError(ownerWindow, GetLastError(), errorLabel);
+				CheckFileError(ownerWindow, GetLastError(), L"Saved Game");
 			if (!byteio_close(&byteWriter))
-				CheckFileError(ownerWindow, GetLastError(), errorLabel);
+				CheckFileError(ownerWindow, GetLastError(), L"Saved Game");
 		}
 		CloseHandle(gameFileHandle);
 	}
 	else
 	{
-		CheckFileError(ownerWindow, GetLastError(), errorLabel);
+		CheckFileError(ownerWindow, GetLastError(), L"Saved Game");
 	}
 	free(savedGame.savedData);
 }
@@ -182,7 +179,6 @@ void SavedGameMismatchError (HWND ownerWindow, StringPtr gameName)
 Boolean OpenSavedGame (HWND ownerWindow)
 {
 	OPENFILENAME		ofn = { 0 };
-	Str15				errorLabel;
 	WCHAR				startPath[MAX_PATH];
 	WCHAR				gamePath[MAX_PATH];
 	roomType			*destRoom;
@@ -193,8 +189,6 @@ Boolean OpenSavedGame (HWND ownerWindow)
 	byteio				byteReader;
 	int					result;
 	DWORD				lastError;
-
-	PasStringCopyC("Saved Game", errorLabel);
 
 	if (!GetSaveFolderPath(startPath, ARRAYSIZE(startPath)))
 		startPath[0] = L'\0';
@@ -218,7 +212,7 @@ Boolean OpenSavedGame (HWND ownerWindow)
 			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (gameFileHandle == INVALID_HANDLE_VALUE)
 	{
-		CheckFileError(ownerWindow, GetLastError(), errorLabel);
+		CheckFileError(ownerWindow, GetLastError(), L"Saved Game");
 		return false;
 	}
 	if (!byteio_init_handle_reader(&byteReader, gameFileHandle))
@@ -230,7 +224,7 @@ Boolean OpenSavedGame (HWND ownerWindow)
 	CloseHandle(gameFileHandle);
 	if (result == 0)
 	{
-		CheckFileError(ownerWindow, lastError, errorLabel);
+		CheckFileError(ownerWindow, lastError, L"Saved Game");
 		free(savedGame.savedData);
 		return false;
 	}

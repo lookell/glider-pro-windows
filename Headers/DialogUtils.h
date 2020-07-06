@@ -12,7 +12,7 @@
 
 typedef struct DialogParams
 {
-	wchar_t *arg[4];
+	PCWSTR arg[4];
 } DialogParams;
 
 void ParamDialogText (HWND hDlg, const DialogParams *params);

@@ -571,14 +571,11 @@ Boolean GetHighScoresFilePath (LPWSTR lpPath, DWORD cchPath, StringPtr baseName)
 
 Boolean WriteScoresToDisk (HWND ownerWindow)
 {
-	Str255		fileLabel;
 	WCHAR		pathBuffer[MAX_PATH];
 	HANDLE		scoresFileHandle;
 	byteio		byteWriter;
 	int			writeSucceeded;
 	DWORD		lastError;
-
-	PasStringCopyC("High Scores File", fileLabel);
 
 	if (!GetHighScoresFilePath(pathBuffer, ARRAYSIZE(pathBuffer), thisHouseName))
 		return false;
@@ -587,7 +584,7 @@ Boolean WriteScoresToDisk (HWND ownerWindow)
 			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (scoresFileHandle == INVALID_HANDLE_VALUE)
 	{
-		CheckFileError(ownerWindow, GetLastError(), fileLabel);
+		CheckFileError(ownerWindow, GetLastError(), L"High Scores File");
 		return false;
 	}
 
@@ -602,7 +599,7 @@ Boolean WriteScoresToDisk (HWND ownerWindow)
 	CloseHandle(scoresFileHandle);
 	if (!writeSucceeded)
 	{
-		CheckFileError(ownerWindow, lastError, fileLabel);
+		CheckFileError(ownerWindow, lastError, L"High Scores File");
 		return false;
 	}
 
@@ -615,14 +612,11 @@ Boolean WriteScoresToDisk (HWND ownerWindow)
 Boolean ReadScoresFromDisk (HWND ownerWindow)
 {
 	scoresType	tempScores;
-	Str255		fileLabel;
 	WCHAR		pathBuffer[MAX_PATH];
 	HANDLE		scoresFileHandle;
 	byteio		byteReader;
 	int			readSucceeded;
 	DWORD		lastError;
-
-	PasStringCopyC("High Scores File", fileLabel);
 
 	if (!GetHighScoresFilePath(pathBuffer, ARRAYSIZE(pathBuffer), thisHouseName))
 		return false;
@@ -633,7 +627,7 @@ Boolean ReadScoresFromDisk (HWND ownerWindow)
 	if (scoresFileHandle == INVALID_HANDLE_VALUE)
 	{
 		if (lastError != ERROR_FILE_NOT_FOUND)
-			CheckFileError(ownerWindow, lastError, fileLabel);
+			CheckFileError(ownerWindow, lastError, L"High Scores File");
 		return false;
 	}
 
@@ -648,7 +642,7 @@ Boolean ReadScoresFromDisk (HWND ownerWindow)
 	CloseHandle(scoresFileHandle);
 	if (!readSucceeded)
 	{
-		CheckFileError(ownerWindow, lastError, fileLabel);
+		CheckFileError(ownerWindow, lastError, L"High Scores File");
 		return false;
 	}
 

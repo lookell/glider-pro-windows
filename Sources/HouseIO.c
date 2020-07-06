@@ -175,9 +175,6 @@ void CloseHouseMovie (void)
 
 Boolean OpenHouse (HWND ownerWindow)
 {
-	Str32		demoHouseName;
-
-	PasStringCopyC("Demo House", demoHouseName);
 	if (houseOpen)
 	{
 		if (!CloseHouse(ownerWindow))
@@ -187,7 +184,7 @@ Boolean OpenHouse (HWND ownerWindow)
 		return(false);
 
 	#ifdef COMPILEDEMO
-	if (!PasStringEqual(theHousesSpecs[thisHouseIndex].name, demoHouseName, false))
+	if (lstrcmpi(theHousesSpecs[thisHouseIndex].houseName, L"Demo House") != 0)
 		return (false);
 	#endif
 
@@ -205,7 +202,8 @@ Boolean OpenHouse (HWND ownerWindow)
 	if (houseRefNum == INVALID_HANDLE_VALUE)
 	{
 		houseIsReadOnly = false;
-		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
+		CheckFileError(ownerWindow, GetLastError(),
+			theHousesSpecs[thisHouseIndex].houseName);
 		return (false);
 	}
 
@@ -362,7 +360,8 @@ Boolean ReadHouse (HWND ownerWindow)
 
 	if (!GetFileSizeEx(houseRefNum, &byteCount))
 	{
-		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
+		CheckFileError(ownerWindow, GetLastError(),
+			theHousesSpecs[thisHouseIndex].houseName);
 		return(false);
 	}
 
@@ -377,7 +376,8 @@ Boolean ReadHouse (HWND ownerWindow)
 	distance.QuadPart = 0;
 	if (!SetFilePointerEx(houseRefNum, distance, NULL, FILE_BEGIN))
 	{
-		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
+		CheckFileError(ownerWindow, GetLastError(),
+			theHousesSpecs[thisHouseIndex].houseName);
 		return(false);
 	}
 
@@ -388,7 +388,8 @@ Boolean ReadHouse (HWND ownerWindow)
 		numberRooms = 0;
 		noRoomAtAll = true;
 		YellowAlert(ownerWindow, kYellowNoRooms, 0);
-		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
+		CheckFileError(ownerWindow, GetLastError(),
+			theHousesSpecs[thisHouseIndex].houseName);
 		byteio_close(&byteReader);
 		return(false);
 	}
@@ -473,7 +474,8 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 	distance.QuadPart = 0;
 	if (!SetFilePointerEx(houseRefNum, distance, NULL, FILE_BEGIN))
 	{
-		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
+		CheckFileError(ownerWindow, GetLastError(),
+			theHousesSpecs[thisHouseIndex].houseName);
 		return(false);
 	}
 
@@ -502,7 +504,8 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 		RedAlert(kErrNoMemory);
 	if (!WriteHouseType(&byteWriter, &thisHouse))
 	{
-		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
+		CheckFileError(ownerWindow, GetLastError(),
+			theHousesSpecs[thisHouseIndex].houseName);
 		byteio_close(&byteWriter);
 		return(false);
 	}
@@ -510,7 +513,8 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 
 	if (!SetEndOfFile(houseRefNum))
 	{
-		CheckFileError(ownerWindow, GetLastError(), thisHouseName);
+		CheckFileError(ownerWindow, GetLastError(),
+			theHousesSpecs[thisHouseIndex].houseName);
 		return(false);
 	}
 

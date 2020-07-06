@@ -10,7 +10,6 @@
 #include "DialogUtils.h"
 #include "MacTypes.h"
 #include "ResourceIDs.h"
-#include "StringUtils.h"
 
 
 //==============================================================  Functions
@@ -40,13 +39,12 @@
 #define permErr			(-54)	// permissions error (on file open)
 #define wrPermErr		(-61)	// write permissions error
 
-Boolean CheckFileError (HWND ownerWindow, DWORD resultCode, StringPtr fileName)
+Boolean CheckFileError (HWND ownerWindow, DWORD resultCode, PCWSTR fileName)
 {
 	SInt16			dummyInt;
 	DialogParams	params = { 0 };
 	LPWSTR			errMessage;
 	wchar_t			errNumString[32];
-	wchar_t			fileNameStr[256];
 	DWORD			formatFlags;
 	DWORD			result;
 
@@ -123,11 +121,10 @@ Boolean CheckFileError (HWND ownerWindow, DWORD resultCode, StringPtr fileName)
 		errMessage = NULL;
 
 	StringCchPrintf(errNumString, ARRAYSIZE(errNumString), L"%lu", (ULONG)resultCode);
-	WinFromMacString(fileNameStr, ARRAYSIZE(fileNameStr), fileName);
 
 	params.arg[0] = errMessage;
 	params.arg[1] = errNumString;
-	params.arg[2] = fileNameStr;
+	params.arg[2] = fileName;
 	dummyInt = Alert(rFileErrorAlert, ownerWindow, &params);
 	LocalFree(errMessage);
 	return(false);

@@ -63,7 +63,6 @@ Boolean CreateNewHouse (HWND hwndOwner)
 	wchar_t houseDirPath[MAX_PATH];
 	wchar_t houseFilePath[MAX_PATH] = { 0 };
 	houseSpec theSpec;
-	Str31 errorLabel;
 	HANDLE outputFile;
 	byteio byteWriter;
 	houseType blankHouse;
@@ -118,13 +117,11 @@ Boolean CreateNewHouse (HWND hwndOwner)
 
 	// Write a minimal zeroed-out house file
 
-	PasStringCopyC("New House", errorLabel);
-
 	outputFile = CreateFile(theSpec.path, GENERIC_READ | GENERIC_WRITE,
 		FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (outputFile == INVALID_HANDLE_VALUE)
 	{
-		CheckFileError(hwndOwner, GetLastError(), errorLabel);
+		CheckFileError(hwndOwner, GetLastError(), L"New House");
 		return false;
 	}
 	if (!byteio_init_handle_writer(&byteWriter, outputFile))
@@ -138,7 +135,7 @@ Boolean CreateNewHouse (HWND hwndOwner)
 	CloseHandle(outputFile);
 	if (!succeeded)
 	{
-		CheckFileError(hwndOwner, lastError, errorLabel);
+		CheckFileError(hwndOwner, lastError, L"New House");
 		return false;
 	}
 
@@ -159,7 +156,7 @@ Boolean CreateNewHouse (HWND hwndOwner)
 		FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (outputFile == INVALID_HANDLE_VALUE)
 	{
-		CheckFileError(hwndOwner, GetLastError(), errorLabel);
+		CheckFileError(hwndOwner, GetLastError(), L"New House");
 		return false;
 	}
 	succeeded = WriteFile(outputFile, blankDllBytes, blankDllSize, &numWritten, NULL);
@@ -167,7 +164,7 @@ Boolean CreateNewHouse (HWND hwndOwner)
 	CloseHandle(outputFile);
 	if (!succeeded)
 	{
-		CheckFileError(hwndOwner, lastError, errorLabel);
+		CheckFileError(hwndOwner, lastError, L"New House");
 		return false;
 	}
 
