@@ -25,26 +25,7 @@ UInt32		theSeed;
 
 
 //==============================================================  Functions
-//--------------------------------------------------------------  MyGetGlobalMouse
-// Returns the position of the mouse in global coordinates.
-
-Point MyGetGlobalMouse (void)
-{
-	Point	globalWhere;
-	POINT	cursorPos;
-
-	globalWhere.h = 0;
-	globalWhere.v = 0;
-	if (GetCursorPos(&cursorPos))
-	{
-		globalWhere.h = (SInt16)cursorPos.x;
-		globalWhere.v = (SInt16)cursorPos.y;
-	}
-	return globalWhere;
-}
-
 //--------------------------------------------------------------  ToolBoxInit
-
 // The standard ToolBox intialization that must happen when any Mac…
 // program first launches.
 
@@ -90,7 +71,6 @@ SInt16 RandomInt (SInt16 range)
 }
 
 //--------------------------------------------------------------  RandomLong
-
 // Returns a random long interger within "range".
 
 SInt32 RandomLong (SInt32 range)
@@ -120,7 +100,6 @@ SInt32 RandomLong (SInt32 range)
 }
 
 //--------------------------------------------------------------  InitRandomLongQUS
-
 // Initializes random seed for quick & dirty long random number function (below).
 
 void InitRandomLongQUS (void)
@@ -129,7 +108,6 @@ void InitRandomLongQUS (void)
 }
 
 //--------------------------------------------------------------  RandomLongQUS
-
 // Very simple (but fast) pseudo-random number generator.
 
 UInt32 RandomLongQUS (void)
@@ -186,7 +164,6 @@ __declspec(noreturn) void RedAlert (SInt16 errorNumber)
 }
 
 //--------------------------------------------------------------  FindOurDevice
-
 // Finds the main device (monitor with the menu bar on it).
 
 void FindOurDevice (void)
@@ -199,95 +176,6 @@ void FindOurDevice (void)
 #endif
 }
 
-//--------------------------------------------------------------  CreateOffScreenBitMap
-// Creates an offscreen bit map (b&w - 1 bit depth).
-
-/*
-void CreateOffScreenBitMap (Rect *theRect, GrafPtr *offScreen)
-{
-	GrafPtr		theBWPort;
-	BitMap		theBitMap;
-	long		theRowBytes;
-
-	theBWPort = (GrafPtr)(NewPtr(sizeof(GrafPort)));
-	OpenPort(theBWPort);
-	theRowBytes = (long)((theRect->right - theRect->left + 15L) / 16L) * 2L;
-	theBitMap.rowBytes = (short)theRowBytes;
-	theBitMap.baseAddr = NewPtr((long)theBitMap.rowBytes *
-		(theRect->bottom - theRect->top));
-	if (theBitMap.baseAddr == nil)
-		RedAlert(kErrNoMemory);
-	theBitMap.bounds = *theRect;
-	if (MemError() != noErr)
-		RedAlert(kErrNoMemory);
-	SetPortBits(&theBitMap);
-	ClipRect(theRect);
-	RectRgn(theBWPort->visRgn, theRect);
-	EraseRect(theRect);
-	*offScreen = theBWPort;
-}
-*/
-//--------------------------------------------------------------  CreateOffScreenPixMap
-// Creates an offscreen pix map using the depth of the current device.
-/*
-void CreateOffScreenPixMap (Rect *theRect, CGrafPtr *offScreen)
-{
-	CTabHandle	thisColorTable;
-	GDHandle	oldDevice;
-	CGrafPtr	newCGrafPtr;
-	Ptr			theseBits;
-	long		sizeOfOff, offRowBytes;
-	OSErr		theErr;
-	short		thisDepth;
-	char		wasState;
-
-	oldDevice = GetGDevice();
-	SetGDevice(thisGDevice);
-	newCGrafPtr = nil;
-	newCGrafPtr = (CGrafPtr)NewPtr(sizeof(CGrafPort));
-	if (newCGrafPtr != nil)
-	{
-		OpenCPort(newCGrafPtr);
-		thisDepth = (**(*newCGrafPtr).portPixMap).pixelSize;
-		offRowBytes = ((((long)thisDepth *
-				(long)(theRect->right - theRect->left)) + 15L) >> 4L) << 1L;
-		sizeOfOff = (long)(theRect->bottom - theRect->top + 1) * offRowBytes;
-	//	sizeOfOff = (long)(theRect->bottom - theRect->top) * offRowBytes;
-		OffsetRect(theRect, -theRect->left, -theRect->top);
-		theseBits = NewPtr(sizeOfOff);
-		if (theseBits != nil)
-		{								// workaround
-			(**(*newCGrafPtr).portPixMap).baseAddr = theseBits + offRowBytes;
-		//	(**(*newCGrafPtr).portPixMap).baseAddr = theseBits;
-			(**(*newCGrafPtr).portPixMap).rowBytes = (short)offRowBytes + 0x8000;
-			(**(*newCGrafPtr).portPixMap).bounds = *theRect;
-			wasState = HGetState((Handle)thisGDevice);
-			HLock((Handle)thisGDevice);
-			thisColorTable = (**(**thisGDevice).gdPMap).pmTable;
-			HSetState((Handle)thisGDevice, wasState);
-			theErr = HandToHand((Handle *)&thisColorTable);
-			(**(*newCGrafPtr).portPixMap).pmTable = thisColorTable;
-			ClipRect(theRect);
-			RectRgn(newCGrafPtr->visRgn, theRect);
-			ForeColor(blackColor);
-			BackColor(whiteColor);
-			EraseRect(theRect);
-		}
-		else
-		{
-			CloseCPort(newCGrafPtr);
-			DisposePtr((Ptr)newCGrafPtr);
-			newCGrafPtr = nil;
-			RedAlert(kErrNoMemory);
-		}
-	}
-	else
-		RedAlert(kErrNoMemory);
-
-	*offScreen = newCGrafPtr;
-	SetGDevice(oldDevice);
-}
-*/
 //--------------------------------------------------------------------  CreateOffScreenGWorld
 // Creates an offscreen GWorld using the depth passed in.
 
@@ -331,38 +219,6 @@ OSErr CreateOffScreenGWorld (HDC *theGWorld, Rect *bounds, SInt16 depth)
 	return noErr;
 }
 
-
-//--------------------------------------------------------------  KillOffScreenPixMap
-// Destroys memory allocated by an offscreen pix map.
-/*
-void KillOffScreenPixMap (CGrafPtr offScreen)
-{
-	Ptr		theseBits;
-
-	if (offScreen != nil)
-	{
-		theseBits = (**(*offScreen).portPixMap).baseAddr;
-		theseBits -= (**(*offScreen).portPixMap).rowBytes & 0x7FFF;	// workaround
-		DisposePtr(theseBits);
-		DisposeHandle((Handle)(**(*offScreen).portPixMap).pmTable);
-		CloseCPort(offScreen);
-		DisposePtr((Ptr)offScreen);
-	}
-}
-*/
-//--------------------------------------------------------------  KillOffScreenBitMap
-// Destroys memory allocated by an offscreen bit map.
-/*
-void KillOffScreenBitMap (GrafPtr offScreen)
-{
-	if (offScreen != nil)
-	{
-		DisposePtr((Ptr)(offScreen->portBits.baseAddr));
-		ClosePort(offScreen);
-		DisposePtr((Ptr)offScreen);
-	}
-}
-*/
 //--------------------------------------------------------------  DisposeGWorld
 // Destroys memory allocated by an offscreen GWorld.
 
@@ -437,49 +293,7 @@ void LoadScaledGraphic (HDC hdc, SInt16 resID, Rect *theRect)
 	DeleteObject(thePicture);
 }
 
-//--------------------------------------------------------------  PlotSICN
-// Draws a small icon (16 x 16 pixels).
-/*
-void PlotSICN (Rect *theRect, SICNHand theSICN, SInt32 theIndex)
-{
-	char		state;
-	BitMap		srcBits;
-
-	if ((theSICN != nil) &&
-			((GetHandleSize((Handle)theSICN) / sizeof(SICN)) > theIndex))
-	{
-		state = HGetState((Handle)theSICN);
-		HLock((Handle)theSICN);
-
-		srcBits.baseAddr = (Ptr)(*theSICN)[theIndex];
-		srcBits.rowBytes = 2;
-		SetRect(&srcBits.bounds, 0, 0, 16, 16);
-
-		CopyBits(&srcBits,&(*qd.thePort).portBits,
-				&srcBits.bounds, theRect, srcCopy, nil);
-
-		HSetState((Handle) theSICN, state);
-	}
-}
-*/
-//--------------------------------------------------------------  LargeIconPlot
-// Draws a standard b&w icon (32 x 32) - resource is an 'ICON'.
-
-void LargeIconPlot (Rect *theRect, SInt16 theID)
-{
-	return;
-#if 0
-	OSErr		theErr;
-	Handle		theSuite;
-
-	theErr = GetIconSuite(&theSuite, theID, svAllLargeData);
-	if (theErr == noErr)
-		theErr = PlotIconSuite(theRect, atNone, ttNone, theSuite);
-#endif
-}
-
 //--------------------------------------------------------------  DrawCIcon
-
 // Draws a standard color icon (32 x 32) - resource is a 'CICN'.
 
 void DrawCIcon (HDC hdc, SInt16 theID, SInt16 h, SInt16 v)
@@ -499,7 +313,6 @@ void DrawCIcon (HDC hdc, SInt16 theID, SInt16 h, SInt16 v)
 }
 
 //--------------------------------------------------------------  LongSquareRoot
-
 // This is a quick and dirty square root function that returns pretty…
 // accurate long integer results.  It uses no transcendental functions or…
 // floating point.
@@ -525,7 +338,6 @@ SInt32 LongSquareRoot (SInt32 theNumber)
 }
 
 //--------------------------------------------------------------  WaitForInputEvent
-
 // Wait for either a key to be hit or the mouse button to be clicked.
 // Also has a "timeout" parameter ("seconds").
 
@@ -587,7 +399,6 @@ Boolean WaitForInputEvent (UInt16 seconds)
 }
 
 //--------------------------------------------------------------  WaitCommandQReleased
-
 // Waits until the Command-Q key combination is released.
 
 void WaitCommandQReleased (void)
@@ -819,26 +630,6 @@ Boolean OptionKeyDown (void)
 	return (GetKeyState(VK_MENU) < 0);
 }
 
-//--------------------------------------------------------------  ExtractCTSeed
-// Very esoteric - gets the "color table seed" from a specified graf port.
-/*
-SInt32 ExtractCTSeed (CGrafPtr porter)
-{
-	long		theSeed;
-
-	theSeed = (**((**(porter->portPixMap)).pmTable)).ctSeed;
-	return(theSeed);
-}
-*/
-//--------------------------------------------------------------  ForceCTSeed
-// Forces  the "color table seed" from a specified graf port to a…
-// specified value.
-/*
-void ForceCTSeed (CGrafPtr porter, SInt32 newSeed)
-{
-	(**((**(porter->portPixMap)).pmTable)).ctSeed = newSeed;
-}
-*/
 //--------------------------------------------------------------  DelayTicks
 // Lil' function that just sits and waits a specified number of…
 // Ticks (1/60 of a second).
