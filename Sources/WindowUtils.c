@@ -164,14 +164,3 @@ void CloseMessageWindow (void)
 	}
 }
 
-//--------------------------------------------------------------  CloseThisWindow
-// Given a specific window, this function will close it and set the window…
-// pointer to null.
-
-void CloseThisWindow (HWND *theWindow)
-{
-	if (*theWindow != NULL)
-		DestroyWindow(*theWindow);
-	*theWindow = NULL;
-}
-

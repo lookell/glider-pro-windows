@@ -15,6 +15,5 @@ void OpenMessageWindow (StringPtr title);
 void SetMessageWindowMessage (StringPtr message);
 void SetMessageTextColor (COLORREF textColor);
 void CloseMessageWindow (void);
-void CloseThisWindow (HWND *theWindow);
 
 #endif

@@ -16,7 +16,6 @@
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Utilities.h"
-#include "WindowUtils.h"
 
 
 #define kHoriCoordItem		1001
@@ -188,7 +187,11 @@ void OpenCoordWindow (void)
 
 void CloseCoordWindow (void)
 {
-	CloseThisWindow(&coordWindow);
+	if (coordWindow != NULL)
+	{
+		DestroyWindow(coordWindow);
+		coordWindow = NULL;
+	}
 	UpdateCoordinateCheckmark(false);
 }
 

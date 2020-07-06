@@ -22,7 +22,6 @@
 #include "Room.h"
 #include "Utilities.h"
 #include "WinAPI.h"
-#include "WindowUtils.h"
 
 
 #define kMapRoomsHigh			9	// was 7
@@ -473,7 +472,11 @@ void OpenMapWindow (void)
 void CloseMapWindow (void)
 {
 #ifndef COMPILEDEMO
-	CloseThisWindow(&mapWindow);
+	if (mapWindow != NULL)
+	{
+		DestroyWindow(mapWindow);
+		mapWindow = NULL;
+	}
 	UpdateMapCheckmark(false);
 #endif
 }

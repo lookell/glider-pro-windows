@@ -18,7 +18,6 @@
 #include "ResourceIDs.h"
 #include "StringUtils.h"
 #include "Utilities.h"
-#include "WindowUtils.h"
 
 
 #define kToolModeCombo      1000
@@ -424,7 +423,11 @@ void OpenToolsWindow (void)
 void CloseToolsWindow (void)
 {
 #ifndef COMPILEDEMO
-	CloseThisWindow(&toolsWindow);
+	if (toolsWindow != NULL)
+	{
+		DestroyWindow(toolsWindow);
+		toolsWindow = NULL;
+	}
 	KillToolsOffscreen();
 	UpdateToolsCheckmark(false);
 #endif
