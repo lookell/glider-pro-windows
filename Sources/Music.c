@@ -46,7 +46,7 @@ OSErr CloseMusicChannel (void);
 static MusicBuffer playingBuffer, waitingBuffer;
 static LPDIRECTSOUNDBUFFER8 musicChannel;
 static unsigned char *musicChannelShadow;
-static DWORD lastWrittenCursor, musicChannelByteSize;
+static DWORD lastPlayedCursor, lastWrittenCursor, musicChannelByteSize;
 static DWORD bytesPerMusicTick;
 static HANDLE musicTimerHandle;
 static CRITICAL_SECTION musicCriticalSection;
@@ -97,6 +97,7 @@ OSErr StartMusic (void)
 		waitingBuffer.numBytesWritten = 0;
 
 		DoMusicTickImpl(0, musicChannelByteSize / 2, NULL);
+		lastPlayedCursor = 0;
 		lastWrittenCursor = musicChannelByteSize / 2;
 
 		IDirectSoundBuffer8_SetCurrentPosition(musicChannel, 0);
@@ -266,6 +267,7 @@ VOID CALLBACK DoMusicTick(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 {
 	DWORD DSPlayCursor;
 	DWORD invalidLength, validLength;
+	DWORD numBytesPlayed;
 	DWORD numBytesLeftToPlay;
 	DWORD nextBufferPlayed;
 	HRESULT hr;
@@ -297,20 +299,22 @@ VOID CALLBACK DoMusicTick(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 		return;
 	}
 
-	if (lastWrittenCursor == DSPlayCursor)
+	// Work out number of bytes between last played cursor and play cursor.
+	// (That is, the number of bytes that have been played since last tick.)
+	if (lastPlayedCursor == DSPlayCursor)
 	{
-		LeaveCriticalSection(&musicCriticalSection);
-		return;
+		numBytesPlayed = 0;
 	}
-	else if (lastWrittenCursor < DSPlayCursor)
+	else if (lastPlayedCursor < DSPlayCursor)
 	{
-		invalidLength = DSPlayCursor - lastWrittenCursor;
+		numBytesPlayed = DSPlayCursor - lastPlayedCursor;
 	}
-	else // (lastWrittenCursor > DSPlayCursor)
+	else // (lastPlayedCursor > DSPlayCursor)
 	{
-		invalidLength = musicChannelByteSize - lastWrittenCursor + DSPlayCursor;
+		numBytesPlayed = musicChannelByteSize - lastPlayedCursor + DSPlayCursor;
 	}
-	playingBuffer.numBytesPlayed += invalidLength;
+	playingBuffer.numBytesPlayed += numBytesPlayed;
+	lastPlayedCursor = DSPlayCursor;
 
 	// For the first couple of music ticks, there is already a waiting buffer of
 	// sound data ready to go. For all subsequent ticks, though, the waiting buffer
@@ -320,10 +324,14 @@ VOID CALLBACK DoMusicTick(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 	// Queue up the next buffer if we're getting close to its play time, and
 	// we haven't set the buffer up yet.
 	if (playingBuffer.dataLength > playingBuffer.numBytesPlayed)
+	{
 		numBytesLeftToPlay = playingBuffer.dataLength - playingBuffer.numBytesPlayed;
+	}
 	else
+	{
 		numBytesLeftToPlay = 0;
-	if ((waitingBuffer.dataBytes == NULL) && (numBytesLeftToPlay <= bytesPerMusicTick))
+	}
+	if ((waitingBuffer.dataBytes == NULL) && (numBytesLeftToPlay <= 2 * bytesPerMusicTick))
 	{
 		MusicCallBack();
 	}
@@ -336,6 +344,22 @@ VOID CALLBACK DoMusicTick(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 		playingBuffer = waitingBuffer;
 		playingBuffer.numBytesPlayed = nextBufferPlayed;
 		ZeroMemory(&waitingBuffer, sizeof(waitingBuffer));
+	}
+
+	// Work out number of bytes between last written cursor and play cursor.
+	// (That is, the number of bytes to be written with new data.)
+	if (lastWrittenCursor == DSPlayCursor)
+	{
+		LeaveCriticalSection(&musicCriticalSection);
+		return;
+	}
+	else if (lastWrittenCursor < DSPlayCursor)
+	{
+		invalidLength = DSPlayCursor - lastWrittenCursor;
+	}
+	else // (lastWrittenCursor > DSPlayCursor)
+	{
+		invalidLength = musicChannelByteSize - lastWrittenCursor + DSPlayCursor;
 	}
 
 	hr = DoMusicTickImpl(lastWrittenCursor, invalidLength, &validLength);
