@@ -60,8 +60,8 @@ void BitchAboutPICTNotFound (HWND ownerWindow);
 
 Rect tileSrcRect;
 HDC tileSrcMap;
-SInt16 tempTiles[kNumTiles];
 
+static SInt16 tempTiles[kNumTiles];
 static Rect tileSrc;
 static Rect tileDest;
 static SInt16 tileOver;
@@ -523,7 +523,7 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 				{
 					// if background has changed
 					if (newBack != tempBack)
-						SetInitialTiles(newBack, false);
+						SetInitialTiles(newBack, tempTiles);
 				}
 
 				if (newBack >= kUserBackground)
@@ -531,7 +531,7 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 					EnableWindow(GetDlgItem(hDlg, kBoundsButton), TRUE);
 					// if background has changed
 					if (newBack != tempBack)
-						SetInitialTiles(newBack, false);
+						SetInitialTiles(newBack, tempTiles);
 				}
 				else
 				{
@@ -688,7 +688,7 @@ INT_PTR CALLBACK OriginalArtFilter (HWND hDlg, UINT message, WPARAM wParam, LPAR
 			if ((tempID >= 3000) && (tempID < 3800) && (PictIDExists(tempID)))
 			{
 				if (tempID != *pPictID)
-					SetInitialTiles(tempBack, false);
+					SetInitialTiles(tempBack, tempTiles);
 				*pPictID = tempID;
 				tempShort = 0;
 				if (IsDlgButtonChecked(hDlg, kLeftWallCheck) == BST_UNCHECKED)

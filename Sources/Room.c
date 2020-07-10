@@ -48,118 +48,80 @@ Boolean		doBitchDialogs;
 //--------------------------------------------------------------  SetInitialTiles
 
 #ifndef COMPILEDEMO
-void SetInitialTiles (SInt16 background, Boolean doRoom)
+void SetInitialTiles (SInt16 background, SInt16 *theTiles)
 {
-	SInt16		i;
+	SInt16 i;
 
-	if (background >= kUserBackground)
+	switch (background)
 	{
+		case kSimpleRoom:
+		case kPaneledRoom:
+		case kBasement:
+		case kChildsRoom:
+		case kAsianRoom:
+		case kUnfinishedRoom:
+		case kSwingersRoom:
+		case kBathroom:
+		case kLibrary:
 		for (i = 0; i < kNumTiles; i++)
 		{
-			if (doRoom)
-				thisRoom->tiles[i] = i;
-			else
-				tempTiles[i] = i;
+			theTiles[i] = 1;
 		}
-	}
-	else
-	{
-		switch (background)
+		theTiles[0] = 0;
+		theTiles[kNumTiles - 1] = kNumTiles - 1;
+		break;
+
+		case kSkywalk:
+		for (i = 0; i < kNumTiles; i++)
 		{
-			case kSimpleRoom:
-			case kPaneledRoom:
-			case kBasement:
-			case kChildsRoom:
-			case kAsianRoom:
-			case kUnfinishedRoom:
-			case kSwingersRoom:
-			case kBathroom:
-			case kLibrary:
-			for (i = 0; i < kNumTiles; i++)
-			{
-				if (doRoom)
-					thisRoom->tiles[i] = 1;
-				else
-					tempTiles[i] = 1;
-			}
-			if (doRoom)
-			{
-				thisRoom->tiles[0] = 0;
-				thisRoom->tiles[kNumTiles - 1] = kNumTiles - 1;
-			}
-			else
-			{
-				tempTiles[0] = 0;
-				tempTiles[kNumTiles - 1] = kNumTiles - 1;
-			}
-			break;
-
-			case kSkywalk:
-			for (i = 0; i < kNumTiles; i++)
-			{
-				if (doRoom)
-					thisRoom->tiles[i] = i;
-				else
-					tempTiles[i] = i;
-			}
-			break;
-
-			case kField:
-			case kGarden:
-			case kDirt:
-			for (i = 0; i < kNumTiles; i++)
-			{
-				if (doRoom)
-					thisRoom->tiles[i] = 0;
-				else
-					tempTiles[i] = 0;
-			}
-			break;
-
-			case kMeadow:
-			for (i = 0; i < kNumTiles; i++)
-			{
-				if (doRoom)
-					thisRoom->tiles[i] = 1;
-				else
-					tempTiles[i] = 1;
-			}
-			break;
-
-			case kRoof:
-			for (i = 0; i < kNumTiles; i++)
-			{
-				if (doRoom)
-					thisRoom->tiles[i] = 3;
-				else
-					tempTiles[i] = 3;
-			}
-			break;
-
-			case kSky:
-			for (i = 0; i < kNumTiles; i++)
-			{
-				if (doRoom)
-					thisRoom->tiles[i] = 2;
-				else
-					tempTiles[i] = 2;
-			}
-			break;
-
-			case kStratosphere:
-			case kStars:
-			for (i = 0; i < kNumTiles; i++)
-			{
-				if (doRoom)
-					thisRoom->tiles[i] = i;
-				else
-					tempTiles[i] = i;
-			}
-			break;
-
-			default:
-			break;
+			theTiles[i] = i;
 		}
+		break;
+
+		case kField:
+		case kGarden:
+		case kDirt:
+		for (i = 0; i < kNumTiles; i++)
+		{
+			theTiles[i] = 0;
+		}
+		break;
+
+		case kMeadow:
+		for (i = 0; i < kNumTiles; i++)
+		{
+			theTiles[i] = 1;
+		}
+		break;
+
+		case kRoof:
+		for (i = 0; i < kNumTiles; i++)
+		{
+			theTiles[i] = 3;
+		}
+		break;
+
+		case kSky:
+		for (i = 0; i < kNumTiles; i++)
+		{
+			theTiles[i] = 2;
+		}
+		break;
+
+		case kStratosphere:
+		case kStars:
+		for (i = 0; i < kNumTiles; i++)
+		{
+			theTiles[i] = i;
+		}
+		break;
+
+		default: // user backgrounds
+		for (i = 0; i < kNumTiles; i++)
+		{
+			theTiles[i] = i;
+		}
+		break;
 	}
 }
 #endif
@@ -181,7 +143,7 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 	thisRoom->unusedByte = 0;
 	thisRoom->visited = false;
 	thisRoom->background = lastBackground;
-	SetInitialTiles(thisRoom->background, true);
+	SetInitialTiles(thisRoom->background, thisRoom->tiles);
 	thisRoom->floor = v;
 	thisRoom->suite = h;
 	thisRoom->openings = 0;

@@ -29,7 +29,7 @@ extern Boolean topOpen;
 extern Boolean bottomOpen;
 extern Boolean doBitchDialogs;
 
-void SetInitialTiles (SInt16 background, Boolean doRoom);
+void SetInitialTiles (SInt16 background, SInt16 *theTiles);
 Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v);
 void ReadyBackground (SInt16 theID, SInt16 *theTiles);
 void ReflectCurrentRoom (Boolean forceMapRedraw);
