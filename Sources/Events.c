@@ -30,11 +30,9 @@
 
 void HandleHighLevelEvent (EventRecord *theEvent);
 void HandleIdleTask (void);
-void IncrementMode (void);
 
 
 SInt32			incrementModeTime;
-SInt16			idleMode;
 Boolean			doAutoDemo, switchedOut, ignoreDoubleClick;
 HACCEL			splashAccelTable, editAccelTable;
 

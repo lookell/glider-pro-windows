@@ -45,8 +45,6 @@ Boolean QuerySaveGame (HWND ownerWindow);
 
 
 demoPtr		demoData;
-KeyMap		theKeys;
-DialogPtr	saveDial;
 SInt16		demoIndex, batteryFrame;
 Boolean		isEscPauseKey, paused, batteryWasEngaged;
 

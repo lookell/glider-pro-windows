@@ -20,14 +20,6 @@
 #include "Utilities.h"
 
 
-#define kDispFiles				12
-#define kLoadTitlePictItem		3
-#define kLoadNameFirstItem		5
-#define kLoadNameLastItem		16
-#define kLoadIconFirstItem		17
-#define kLoadIconLastItem		28
-#define kScrollUpItem			29
-#define kScrollDownItem			30
 #define kHouseListItem			1000
 #define kMaxExtraHouses			8
 
@@ -39,14 +31,10 @@ BOOL GetHouseFolderPath (LPWSTR buffer, DWORD cch);
 void DoDirSearch (HWND ownerWindow);
 
 
-Rect			loadHouseRects[12];
 houseSpecPtr	theHousesSpecs;
 houseSpec		extraHouseSpecs[kMaxExtraHouses];
-SInt32			lastWhenClick;
-Point			lastWhereClick;
 SInt16			housesFound, thisHouseIndex, maxFiles, willMaxFiles;
-SInt16			housePage, demoHouseIndex, numExtraHouses;
-Byte			fileFirstChar[12];
+SInt16			demoHouseIndex, numExtraHouses;
 
 
 //==============================================================  Functions

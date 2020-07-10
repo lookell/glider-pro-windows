@@ -11,7 +11,6 @@
 #include "WinAPI.h"
 
 extern SInt32 incrementModeTime;
-extern SInt16 idleMode;
 extern Boolean doAutoDemo;
 extern Boolean switchedOut;
 extern Boolean ignoreDoubleClick;

@@ -195,10 +195,6 @@ void VariableInit (void)
 {
 	size_t		i;
 
-	shieldPt.h = 0;
-	shieldPt.v = 0;
-	shieldRect = thisMac.screen;
-
 	theMenuBar = NULL;
 	menusUp = false;
 	quitting = false;
@@ -243,7 +239,6 @@ void VariableInit (void)
 	lastBackground = kBaseBackgroundID;
 	wasFlower = RandomInt(kNumFlowers);
 	lastHighScore = -1;
-	idleMode = kIdleSplashMode;
 	incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
 	willMaxFiles = maxFiles;
 	numExtraHouses = 0;

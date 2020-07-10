@@ -46,7 +46,6 @@ Boolean GetHighScoresFilePath (LPWSTR lpPath, DWORD cchPath, StringPtr baseName)
 Str31		highBanner;
 Str15		highName;
 SInt16		lastHighScore;
-Boolean		keyStroke;
 
 
 //==============================================================  Functions

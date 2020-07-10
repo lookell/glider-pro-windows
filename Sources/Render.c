@@ -37,14 +37,11 @@ void RenderStars (void);
 void RenderBands (void);
 void RenderShreds (void);
 void CopyRectsQD (void);
-void CopyRectsAssm (void);
 
 
 Rect		work2MainRects[kMaxGarbageRects];
 Rect		back2WorkRects[kMaxGarbageRects];
-Rect		shieldRect;
 HRGN		mirrorRgn;
-Point		shieldPt;
 SInt16		numWork2Main, numBack2Work;
 Boolean		hasMirror;
 

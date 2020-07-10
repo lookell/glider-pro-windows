@@ -105,7 +105,6 @@ typedef struct CTabHandle__* CTabHandle;
 typedef struct DialogPtr__* DialogPtr;
 typedef struct EventRecord__* EventRecord;
 typedef struct GDHandle__* GDHandle;
-typedef struct KeyMap__* KeyMap;
 typedef struct Movie__* Movie;
 typedef struct RgnHandle__* RgnHandle;
 typedef struct WindowPtr__* WindowPtr;
