@@ -39,6 +39,20 @@ Boolean			isLinkOpen, linkerIsSwitch;
 
 SInt16 MergeFloorSuite (SInt16 floor, SInt16 suite)
 {
+	if (thisHouse.version < 0x0200)     // old floor/suite combo
+	{
+		return ((floor * 100) + suite);
+	}
+	else
+	{
+		return MergeFloorSuiteVer2(floor, suite);
+	}
+}
+
+//--------------------------------------------------------------  MergeFloorSuiteVer2
+
+SInt16 MergeFloorSuiteVer2 (SInt16 floor, SInt16 suite)
+{
 	return ((suite * 100) + floor);
 }
 
@@ -46,7 +60,7 @@ SInt16 MergeFloorSuite (SInt16 floor, SInt16 suite)
 
 void ExtractFloorSuite (SInt16 combo, SInt16 *floor, SInt16 *suite)
 {
-	if (thisHouse.version < 0x0200)		// old floor/suite combo
+	if (thisHouse.version < 0x0200)     // old floor/suite combo
 	{
 		*floor = (combo / 100) - kNumUndergroundFloors;
 		*suite = combo % 100;

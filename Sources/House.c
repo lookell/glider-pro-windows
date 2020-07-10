@@ -803,7 +803,7 @@ void ConvertHouseVer1To2 (void)
 					{
 						ExtractFloorSuite(thisRoom->objects[h].data.d.where, &floor, &suite);
 						floor += kNumUndergroundFloors;
-						thisRoom->objects[h].data.d.where = MergeFloorSuite(floor, suite);
+						thisRoom->objects[h].data.d.where = MergeFloorSuiteVer2(floor, suite);
 					}
 					break;
 
@@ -819,7 +819,7 @@ void ConvertHouseVer1To2 (void)
 					{
 						ExtractFloorSuite(thisRoom->objects[h].data.e.where, &floor, &suite);
 						floor += kNumUndergroundFloors;
-						thisRoom->objects[h].data.e.where = MergeFloorSuite(floor, suite);
+						thisRoom->objects[h].data.e.where = MergeFloorSuiteVer2(floor, suite);
 					}
 					break;
 				}
