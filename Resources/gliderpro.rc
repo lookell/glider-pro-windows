@@ -436,11 +436,11 @@ IDA_EDIT ACCELERATORS
 
 IDM_ROOT MENUEX
 {
-    POPUP "H&elp", IDM_APPLE
+    POPUP "H&elp", kAppleMenuID
     {
         MENUITEM "&About Glider PRO…", ID_ABOUT
     }
-    POPUP "&Game", IDM_GAME
+    POPUP "&Game", kGameMenuID
     {
         MENUITEM "&New Game\tCtrl+N", ID_NEW_GAME
         MENUITEM "&Two Player Game\tCtrl+2", ID_TWO_PLAYER
@@ -450,7 +450,7 @@ IDM_ROOT MENUEX
         MENUITEM "", 0, MFT_SEPARATOR
         MENUITEM "&Quit\tCtrl+Q", ID_QUIT
     }
-    POPUP "&Options", IDM_OPTIONS
+    POPUP "&Options", kOptionsMenuID
     {
         MENUITEM "Room &Editor\tCtrl+E", ID_EDITOR
         MENUITEM "", 0, MFT_SEPARATOR
@@ -458,7 +458,7 @@ IDM_ROOT MENUEX
         MENUITEM "&Preferences…\tCtrl+P", ID_PREFS
         MENUITEM "&Demo…\tCtrl+D", ID_DEMO
     }
-    POPUP "&House", IDM_HOUSE
+    POPUP "&House", kHouseMenuID
     {
         MENUITEM "&New House…\tCtrl+N", ID_NEW_HOUSE
         MENUITEM "&Save House\tCtrl+S", ID_SAVE_HOUSE
@@ -482,7 +482,7 @@ IDM_ROOT MENUEX
         MENUITEM "Tools &Window\tCtrl+T", ID_OBJECT_WINDOW
         MENUITEM "Coordin&ate Window\tCtrl+K", ID_COORDINATE_WINDOW
     }
-    POPUP "Rooms", IDM_BACKGROUNDS
+    POPUP "Rooms", kBackgroundsMenuID
     {
         MENUITEM "Simple Room", kSimpleRoom
         MENUITEM "Paneled Room", kPaneledRoom
@@ -504,7 +504,7 @@ IDM_ROOT MENUEX
         MENUITEM "Stars", kStars
         MENUITEM "Original Artwork", kUserBackground
     }
-    POPUP "Tools", IDM_TOOLS
+    POPUP "Tools", kToolsMenuID
     {
         MENUITEM "Blowers", kBlowerMode
         MENUITEM "Furniture", kFurnitureMode

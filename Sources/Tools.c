@@ -292,7 +292,7 @@ INT_PTR Tools_OnInitDialog (HWND hwnd)
 
 	menuItemInfo.cbSize = sizeof(menuItemInfo);
 	menuItemInfo.fMask = MIIM_SUBMENU;
-	if (!GetMenuItemInfo(rootMenu, IDM_TOOLS, FALSE, &menuItemInfo))
+	if (!GetMenuItemInfo(rootMenu, kToolsMenuID, FALSE, &menuItemInfo))
 		RedAlert(kErrFailedResourceLoad);
 
 	AddMenuToComboBox(hwnd, kToolModeCombo, menuItemInfo.hSubMenu);

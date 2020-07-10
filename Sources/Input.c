@@ -29,7 +29,6 @@
 #define kNormalThrust		5
 #define kHyperThrust		8
 #define kHeliumLift			4
-#define	kSavingGameDial		1042
 
 
 #define IsKeyDown(vkey) (GetActiveWindow() == mainWindow && GetAsyncKeyState(vkey) < 0)

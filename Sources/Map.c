@@ -26,9 +26,6 @@
 
 #define kMapRoomsHigh			9	// was 7
 #define kMapRoomsWide			9	// was 7
-#define kMapScrollBarWidth		16
-#define kHScrollRef				5L
-#define kVScrollRef				27L
 #define kMapGroundValue			56
 #define kYesDoNewRoom			IDOK
 #define WC_MAPWINDOW            L"GliderMapWindow"

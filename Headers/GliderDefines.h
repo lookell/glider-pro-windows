@@ -181,23 +181,11 @@
 #define kTransOutPriority			906
 #define kTriggerPriority			999
 
-#define kArrowCursor				0
-#define kBeamCursor					1
-#define kHandCursor					2
-
-#define kAppleMenuID				128
-#define kGameMenuID					129
-#define kOptionsMenuID				130
-#define kHouseMenuID				131
-
 #define kSplashMode					0
 #define kEditMode					1
 #define kPlayMode					2
 
-#define kIdleSplashMode				0
-#define kIdleDemoMode				1
 #define kIdleSplashTicks			7200L		// 2 minutes
-#define kIdleLastMode				1
 
 #define kRoomAbove					1
 #define kRoomBelow					2
@@ -460,7 +448,6 @@
 #define kNumFlowers					6
 
 #define	kNumMarqueePats				7
-#define kObjectNameStrings			1007	// replaced by kObjectNameStringsBase
 
 #define kSwitchLinkOnly				3
 #define kTriggerLinkOnly			4
@@ -529,8 +516,6 @@
 #define kInitialGliderSelected		-2
 #define kLeftGliderSelected			-3
 #define kRightGliderSelected		-4
-#define kWindoidWDEF				2048
-#define kWindoidGrowWDEF			2064
 #define kTicksPerFrame				2
 #define kNumUndergroundFloors		8
 #define kRoomVisitScore				100
@@ -619,17 +604,6 @@
 #define kDemoLength					6702
 
 #define kPreferredDepth				8
-
-#define	kNilPointer					0L
-#define	kPutInFront					(WindowPtr)-1L
-#define	kNormalUpdates				true
-#define kOneKilobyte				1024
-#define kOkayButton					1
-#define kCancelButton				2
-#define kControlActive				0
-#define kControlInactive			255
-#define kAsynch						true
-#define kSynch						false
 
 #define kHomeKeyASCII				0x01
 #define kEnterKeyASCII				0x03

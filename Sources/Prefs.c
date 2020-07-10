@@ -17,11 +17,7 @@
 #include "Utilities.h"
 
 
-#define	kPrefCreatorType	'ozm5'
-#define	kPrefFileType		'gliP'
 #define	kPrefFileName		L"Glider Prefs"
-#define	kDefaultPrefFName	"\pPreferences"
-#define	kPrefsFNameIndex	1
 
 
 Boolean GetPrefsFilePath (LPWSTR lpFilePath, size_t cchFilePath);

@@ -387,7 +387,7 @@ void RoomInfo_InitDialog (HWND hDlg)
 	}
 	menuItem.cbSize = sizeof(menuItem);
 	menuItem.fMask = MIIM_SUBMENU;
-	if (!GetMenuItemInfo(rootMenu, IDM_BACKGROUNDS, FALSE, &menuItem))
+	if (!GetMenuItemInfo(rootMenu, kBackgroundsMenuID, FALSE, &menuItem))
 	{
 		RedAlert(kErrFailedResourceLoad);
 	}

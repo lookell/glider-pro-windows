@@ -30,6 +30,7 @@
 #include "Play.h"
 #include "Player.h"
 #include "Prefs.h"
+#include "ResourceIDs.h"
 #include "Room.h"
 #include "RoomGraphics.h"
 #include "SelectHouse.h"
