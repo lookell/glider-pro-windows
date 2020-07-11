@@ -560,7 +560,6 @@ void HandleOutlet (SInt16 who)
 		}
 		else
 		{
-//			SetPort((GrafPtr)workSrcMap);
 			Mac_PaintRect(workSrcMap, &dinahs[who].dest, GetStockObject(BLACK_BRUSH));
 		}
 		AddRectToWorkRects(&dinahs[who].dest);

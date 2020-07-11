@@ -52,8 +52,6 @@ Boolean		isStructure[9], wardBitSet;
 void DrawLocale (void)
 {
 	SInt16		i, roomV;
-	//CGrafPtr	wasCPort;
-	//GDHandle	wasWorld;
 
 	ZeroFlamesAndTheLike();
 	ZeroDinahs();
@@ -75,8 +73,6 @@ void DrawLocale (void)
 	}
 	ListAllLocalObjects();
 
-	//GetGWorld(&wasCPort, &wasWorld);
-	//SetGWorld(backSrcMap, nil);
 	Mac_PaintRect(backSrcMap, &backSrcRect, GetStockObject(BLACK_BRUSH));
 
 	if (numNeighbors > 3)
@@ -129,8 +125,6 @@ void DrawLocale (void)
 	RestoreWorkMap();
 	shadowVisible = IsShadowVisible();
 	takingTheStairs = false;
-
-	//SetGWorld(wasCPort, wasWorld);
 }
 
 //--------------------------------------------------------------  LoadGraphicSpecial
@@ -213,7 +207,6 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 			tiles[i] = thisHouse.rooms[who].tiles[i];
 	}
 
-	//SetPort((GrafPtr)workSrcMap);
 	LoadGraphicSpecial(workSrcMap, pictID);
 
 	QSetRect(&src, 0, 0, kTileWide, kTileHigh);

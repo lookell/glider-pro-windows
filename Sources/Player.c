@@ -1152,9 +1152,7 @@ void DeckGliderInFoil (gliderPtr thisGlider)
 
 	if (twoPlayerGame)
 	{
-		//SetPort((GrafPtr)glidSrcMap);
 		LoadGraphic(glidSrcMap, kGliderFoilPictID);
-		//SetPort((GrafPtr)glid2SrcMap);
 		LoadGraphic(glid2SrcMap, kGliderFoil2PictID);
 	}
 
@@ -1212,9 +1210,7 @@ void RemoveFoilFromGlider (gliderPtr thisGlider)
 
 	if (twoPlayerGame)
 	{
-		//SetPort((GrafPtr)glidSrcMap);
 		LoadGraphic(glidSrcMap, kGliderPictID);
-		//SetPort((GrafPtr)glid2SrcMap);
 		LoadGraphic(glid2SrcMap, kGlider2PictID);
 	}
 

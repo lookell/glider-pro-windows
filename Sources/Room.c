@@ -214,8 +214,6 @@ void ReadyBackground (SInt16 theID, SInt16 *theTiles)
 	Str255		theString;
 	SInt16		i;
 
-//	SetPort((GrafPtr)workSrcMap);
-
 	if ((noRoomAtAll) || (!houseUnlocked))
 	{
 		wasColor = SetDCBrushColor(workSrcMap, LtGrayForeColor());

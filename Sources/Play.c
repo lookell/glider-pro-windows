@@ -84,7 +84,6 @@ Boolean		doBackground, playerSuicide, phoneBitSet, tvOn;
 void NewGame (HWND ownerWindow, SInt16 mode)
 {
 	Rect		tempRect;
-	//Size		freeBytes, growBytes;
 	OSErr		theErr;
 	Boolean		wasPlayMusicPref;
 	HDC			mainWindowDC;
@@ -149,8 +148,7 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 //	HideMenuBarOld();		// TEMP
 #endif
 
-	//SetPort((GrafPtr)mainWindow);		// paint strip on screen black
-	tempRect = thisMac.screen;
+	tempRect = thisMac.screen;          // paint strip on screen black
 	tempRect.top = tempRect.bottom - 20;	// thisMac.menuHigh
 	mainWindowDC = GetMainWindowDC();
 	Mac_PaintRect(mainWindowDC, &tempRect, GetStockObject(BLACK_BRUSH));
@@ -163,7 +161,6 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 	}
 #endif
 
-	//SetPort((GrafPtr)workSrcMap);
 	Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
 	if (quickerTransitions)
 		DissBitsChunky(&workSrcRect);
@@ -205,8 +202,6 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 	}
 	InitTelephone();
 	wasPlayMusicPref = isPlayMusicGame;
-
-	//freeBytes = MaxMem(&growBytes);
 
 #ifdef CREATEDEMODATA
 	SysBeep(1);
@@ -280,7 +275,6 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 			StopTheMusic();
 	}
 	NilSavedMaps();
-	//SetPortWindowPort(mainWindow);
 	UpdateMenus(false);
 
 	if (!gameOver)
@@ -470,13 +464,9 @@ void PlayGame (void)
 			countDown--;
 			if (countDown <= 0)
 			{
-				//CGrafPtr	wasCPort;
-				//GDHandle	wasWorld;
 #if BUILD_ARCADE_VERSION
 				HDC			mainWindowDC;
 #endif
-
-				//GetGWorld(&wasCPort, &wasWorld);
 
 				HideGlider(&theGlider);
 				RefreshScoreboard(kNormalTitleMode);
@@ -484,7 +474,6 @@ void PlayGame (void)
 #if BUILD_ARCADE_VERSION
 			// Need to paint over the scoreboard black.
 
-				//SetGWorld(boardSrcMap, nil);
 				Mac_PaintRect(boardSrcMap, &boardSrcRect, GetStockObject(BLACK_BRUSH));
 
 				mainWindowDC = GetMainWindowDC();
@@ -521,8 +510,6 @@ void PlayGame (void)
 					DoDiedGameOver();
 				else
 					DoGameOver();
-
-				//SetGWorld(wasCPort, wasWorld);
 			}
 		}
 	}
@@ -771,7 +758,6 @@ void RestoreEntireGameScreen (void)
 //	HideMenuBarOld();		// TEMP
 #endif
 
-	//SetPort((GrafPtr)mainWindow);
 	tempRect = thisMac.screen;
 	mainWindowDC = GetMainWindowDC();
 	Mac_PaintRect(mainWindowDC, &tempRect, GetStockObject(BLACK_BRUSH));

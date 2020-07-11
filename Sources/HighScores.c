@@ -57,7 +57,6 @@ void DoHighScores (void)
 	Rect		tempRect;
 
 	SpinCursor(3);
-	//SetPort((GrafPtr)workSrcMap);
 	Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
 	QSetRect(&tempRect, 0, 0, 640, 480);
 	QOffsetRect(&tempRect, splashOriginH, splashOriginV);
@@ -67,7 +66,6 @@ void DoHighScores (void)
 	else
 		DissBits(&workSrcRect);
 	SpinCursor(3);
-	//SetPort((GrafPtr)workSrcMap);
 	DrawHighScores();
 	SpinCursor(3);
 	if (quickerTransitions)
@@ -383,7 +381,6 @@ Boolean TestHighScore (HWND ownerWindow)
 
 	if (placing != -1)
 	{
-		//FlushEvents(everyEvent, 0);
 		GetHighScoreName(ownerWindow, placing + 1);
 		PasStringCopy(highName, thisHouse.highScores.names[kMaxScores - 1]);
 		if (placing == 0)

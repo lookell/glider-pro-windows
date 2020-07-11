@@ -136,7 +136,6 @@ void DrawReflection (gliderPtr thisGlider, Boolean oneOrTwo)
 	dest = thisGlider->dest;
 	QOffsetRect(&dest, playOriginH - 20, playOriginV - 16);
 
-	//SetPort((GrafPtr)workSrcMap);
 	SaveDC(workSrcMap);
 	ExtSelectClipRgn(workSrcMap, mirrorRgn, RGN_AND);
 

@@ -16,6 +16,7 @@
 #include "Play.h"
 #include "Player.h"
 #include "RectUtils.h"
+#include "Render.h"
 #include "ResourceIDs.h"
 #include "RoomGraphics.h"
 #include "RubberBands.h"
@@ -77,8 +78,7 @@ void DoCommandKey (void)
 		RefreshScoreboard(kSavingTitleMode);
 		SaveGame2(mainWindow); // New save game.
 		//HideCursor();
-		// TODO: is this bitblt necessary? game works better without it
-		//CopyRectWorkToMain(&workSrcRect);
+		CopyRectWorkToMain(&workSrcRect);
 		RefreshScoreboard(kNormalTitleMode);
 	}
 }
@@ -91,7 +91,6 @@ void DoPause (void)
 	MSG			msg;
 	HDC			mainWindowDC;
 
-	//SetPort((GrafPtr)mainWindow);
 	QSetRect(&bounds, 0, 0, 214, 54);
 	CenterRectInRect(&bounds, &houseRect);
 	mainWindowDC = GetMainWindowDC();

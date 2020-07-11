@@ -67,7 +67,6 @@ void DoGameOver (void)
 
 	playing = false;
 	SetUpFinalScreen();
-	//SetPort((GrafPtr)mainWindow);
 	mainWindowDC = GetMainWindowDC();
 	ColorRect(mainWindowDC, &mainWindowRect, 244);
 	ReleaseMainWindowDC(mainWindowDC);
@@ -105,7 +104,6 @@ void SetUpFinalScreen (void)
 	lfGameOver.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
 	StringCchCopy(lfGameOver.lfFaceName, ARRAYSIZE(lfGameOver.lfFaceName), L"Tahoma");
 
-	//SetPort((GrafPtr)workSrcMap);
 	ColorRect(workSrcMap, &workSrcRect, 244);
 	QSetRect(&tempRect, 0, 0, 640, 460);
 	CenterRectInRect(&tempRect, &workSrcRect);

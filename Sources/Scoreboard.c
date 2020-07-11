@@ -145,8 +145,6 @@ void RefreshRoomTitle (SInt16 mode)
 	COLORREF	theRGBColor, wasColor;
 	Str255		titleString;
 
-	//SetPort((GrafPtr)boardTSrcMap);
-
 	if (thisMac.isDepth == 4)
 		theRGBColor = Index2ColorRef(kGrayBackgroundColor4);
 	else
@@ -192,8 +190,6 @@ void RefreshNumGliders (void)
 	Str255		nGlidersStr;
 	SInt32		displayMortals;
 
-	//SetPort((GrafPtr)boardGSrcMap);
-
 	if (thisMac.isDepth == 4)
 		theRGBColor = Index2ColorRef(kGrayBackgroundColor4);
 	else
@@ -227,8 +223,6 @@ void RefreshPoints (void)
 {
 	COLORREF	theRGBColor, wasColor;
 	Str255		scoreStr;
-
-	//SetPort((GrafPtr)boardPSrcMap);
 
 	if (thisMac.isDepth == 4)
 		theRGBColor = Index2ColorRef(kGrayBackgroundColor4);
@@ -264,8 +258,6 @@ void QuickGlidersRefresh (void)
 	Str255		nGlidersStr;
 	HDC			mainWindowDC;
 
-	//SetPort((GrafPtr)boardGSrcMap);
-
 	if (thisMac.isDepth == 4)
 		theRGBColor = Index2ColorRef(kGrayBackgroundColor4);
 	else
@@ -299,8 +291,6 @@ void QuickScoreRefresh (void)
 	COLORREF	theRGBColor, wasColor;
 	Str255		scoreStr;
 	HDC			mainWindowDC;
-
-	//SetPort((GrafPtr)boardPSrcMap);
 
 	if (thisMac.isDepth == 4)
 		theRGBColor = Index2ColorRef(kGrayBackgroundColor4);

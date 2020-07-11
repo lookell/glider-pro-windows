@@ -145,13 +145,11 @@ void RedrawSplashScreen (void)
 {
 	Rect		tempRect;
 
-//	SetPort((GrafPtr)workSrcMap);
 	Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
 	QSetRect(&tempRect, 0, 0, 640, 460);
 	QOffsetRect(&tempRect, splashOriginH, splashOriginV);
 	LoadScaledGraphic(workSrcMap, kSplash8BitPICT, &tempRect);
 	DrawOnSplash(workSrcMap);
-//	SetPortWindowPort(mainWindow);
 	if (quickerTransitions)
 		DissBitsChunky(&workSrcRect);
 	else
@@ -168,7 +166,6 @@ void UpdateMainWindow (void)
 	Rect		tempRect;
 	HDC			mainWindowDC;
 
-//	SetPortWindowPort(mainWindow);
 	mainWindowDC = GetMainWindowDC();
 
 	if (theMode == kEditMode)
@@ -186,14 +183,12 @@ void UpdateMainWindow (void)
 	}
 	else if (theMode == kSplashMode)
 	{
-//		SetPort((GrafPtr)workSrcMap);
 		Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
 		QSetRect(&tempRect, 0, 0, 640, 460);
 		QOffsetRect(&tempRect, splashOriginH, splashOriginV);
 		LoadScaledGraphic(workSrcMap, kSplash8BitPICT, &tempRect);
 		Mac_CopyBits(workSrcMap, mainWindowDC,
 				&workSrcRect, &mainWindowRect, srcCopy, nil);
-//		SetPortWindowPort(mainWindow);
 
 		DrawOnSplash(mainWindowDC);
 	}
@@ -207,7 +202,6 @@ void UpdateMainWindow (void)
 
 void OpenMainWindow (void)
 {
-//	SInt32 wasSeed;
 	SInt16 whichRoom;
 	RECT rcClient;
 	LONG width, height;
@@ -262,13 +256,6 @@ void OpenMainWindow (void)
 		placement.showCmd = SW_SHOWNORMAL;
 		SetWindowPlacement(mainWindow, &placement);
 
-#if 0
-		SetPortWindowPort(mainWindow);
-		ClipRect(&mainWindowRect);
-		ForeColor(blackColor);
-		BackColor(whiteColor);
-#endif
-
 		whichRoom = GetFirstRoomNumber();
 		CopyRoomToThisRoom(whichRoom);
 		ReflectCurrentRoom(false);
@@ -309,8 +296,6 @@ void OpenMainWindow (void)
 		{
 			fadeGraysOut = false;
 		}
-
-		//SetPortWindowPort(mainWindow);
 	}
 }
 
@@ -368,8 +353,6 @@ void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick)
 {
 	if ((theMode != kEditMode) || (mainWindow == NULL) || (!houseUnlocked))
 		return;
-
-	//SetPortWindowPort(mainWindow);
 
 	if (toolSelected == kSelectTool)
 		DoSelectionClick(hwnd, wherePt, isDoubleClick);

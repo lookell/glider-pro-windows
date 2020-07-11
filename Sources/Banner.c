@@ -208,7 +208,6 @@ void DisplayStarsRemaining (void)
 	LOGFONT		lfText;
 	HFONT		textFont;
 
-	//SetPortWindowPort(mainWindow);
 	QSetRect(&bounds, 0, 0, 256, 64);
 	CenterRectInRect(&bounds, &thisMac.screen);
 	QOffsetRect(&bounds, -thisMac.screen.left, -thisMac.screen.top);
