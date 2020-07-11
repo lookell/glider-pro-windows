@@ -362,6 +362,7 @@ void HiliteTileOver (HWND hDlg, Point mouseIs)
 
 //--------------------------------------------------------------  RoomInfo_InitDialog
 
+#ifndef COMPILEDEMO
 void RoomInfo_InitDialog (HWND hDlg)
 {
 	HMENU rootMenu, backgroundsMenu;
@@ -444,6 +445,7 @@ void RoomInfo_InitDialog (HWND hDlg)
 	else
 		EnableWindow(GetDlgItem(hDlg, kBoundsButton), FALSE);
 }
+#endif
 
 //--------------------------------------------------------------  RoomFilter
 

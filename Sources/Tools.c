@@ -223,6 +223,7 @@ void SelectTool (SInt16 which)
 
 //--------------------------------------------------------------  ToolsWindowProc
 
+#ifndef COMPILEDEMO
 INT_PTR CALLBACK ToolsWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
@@ -278,9 +279,11 @@ INT_PTR CALLBACK ToolsWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 	}
 	return FALSE;
 }
+#endif
 
 //--------------------------------------------------------------  Tools_OnInitDialog
 
+#ifndef COMPILEDEMO
 INT_PTR Tools_OnInitDialog (HWND hwnd)
 {
 	HMENU rootMenu;
@@ -300,9 +303,11 @@ INT_PTR Tools_OnInitDialog (HWND hwnd)
 
 	return FALSE; // don't change the focus
 }
+#endif
 
 //--------------------------------------------------------------  Tools_OnDestroy
 
+#ifndef COMPILEDEMO
 void Tools_OnDestroy (HWND hwnd)
 {
 	HBITMAP buttonBitmap;
@@ -318,9 +323,11 @@ void Tools_OnDestroy (HWND hwnd)
 		}
 	}
 }
+#endif
 
 //--------------------------------------------------------------  Tools_OnMove
 
+#ifndef COMPILEDEMO
 void Tools_OnMove (HWND hwnd)
 {
 	WINDOWPLACEMENT placement;
@@ -330,9 +337,11 @@ void Tools_OnMove (HWND hwnd)
 	isToolsH = (SInt16)placement.rcNormalPosition.left;
 	isToolsV = (SInt16)placement.rcNormalPosition.top;
 }
+#endif
 
 //--------------------------------------------------------------  Tools_OnToolSelChange
 
+#ifndef COMPILEDEMO
 void Tools_OnToolSelChange (HWND hwnd)
 {
 	SInt16 newMode;
@@ -340,9 +349,11 @@ void Tools_OnToolSelChange (HWND hwnd)
 	GetComboBoxMenuValue(hwnd, kToolModeCombo, &newMode);
 	SwitchToolModes(newMode);
 }
+#endif
 
 //--------------------------------------------------------------  Tools_OnButtonClick
 
+#ifndef COMPiLEDEMO
 void Tools_OnButtonClick (HWND hwnd, WORD clickedID)
 {
 	SInt16 toolIcon;
@@ -376,6 +387,7 @@ void Tools_OnButtonClick (HWND hwnd, WORD clickedID)
 	}
 	SelectTool(toolIcon);
 }
+#endif
 
 //--------------------------------------------------------------  OpenToolsWindow
 

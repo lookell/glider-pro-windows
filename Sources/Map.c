@@ -54,6 +54,7 @@ Boolean			isMapOpen, doPrettyMap;
 //==============================================================  Functions
 //--------------------------------------------------------------  RegisterMapWindowClass
 
+#ifndef COMPILEDEMO
 void RegisterMapWindowClass (void)
 {
 	WNDCLASSEX wcx;
@@ -77,6 +78,7 @@ void RegisterMapWindowClass (void)
 			RedAlert(kErrUnnaccounted);
 	}
 }
+#endif
 
 //--------------------------------------------------------------  ThisRoomVisibleOnMap
 
@@ -498,6 +500,7 @@ void ToggleMapWindow (void)
 
 //--------------------------------------------------------------  MapWindowProc
 
+#ifndef COMPILEDEMO
 LRESULT CALLBACK MapWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
@@ -551,6 +554,7 @@ LRESULT CALLBACK MapWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 	}
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
+#endif
 
 //--------------------------------------------------------------  LiveHScrollAction
 #ifndef COMPILEDEMO

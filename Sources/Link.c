@@ -74,6 +74,7 @@ void ExtractFloorSuite (SInt16 combo, SInt16 *floor, SInt16 *suite)
 
 //--------------------------------------------------------------  LinkWindowProc
 
+#ifndef COMPILEDEMO
 INT_PTR CALLBACK LinkWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
@@ -114,6 +115,7 @@ INT_PTR CALLBACK LinkWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 	}
 	return FALSE;
 }
+#endif
 
 //--------------------------------------------------------------  UpdateLinkControl
 
