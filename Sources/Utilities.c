@@ -643,11 +643,9 @@ void DelayTicks (SInt32 howLong)
 // Returns the speaker volume (as set by the user) in the range of…
 // zero to seven (handles Sound Manager 3 case as well).
 
-void UnivGetSoundVolume (SInt16 *volume, Boolean hasSM3)
+void UnivGetSoundVolume (SInt16 *volume)
 {
 	float deviceVolume;
-
-	UNREFERENCED_PARAMETER(hasSM3);
 
 	Audio_GetMasterVolume(&deviceVolume);
 	*volume = (SInt16)(7.0f * deviceVolume);
@@ -662,11 +660,9 @@ void UnivGetSoundVolume (SInt16 *volume, Boolean hasSM3)
 // Sets the speaker volume to a specified value (in the range of…
 // zero to seven (handles Sound Manager 3 case as well).
 
-void UnivSetSoundVolume (SInt16 volume, Boolean hasSM3)
+void UnivSetSoundVolume (SInt16 volume)
 {
 	float deviceVolume;
-
-	UNREFERENCED_PARAMETER(hasSM3);
 
 	if (volume > 7)
 		volume = 7;

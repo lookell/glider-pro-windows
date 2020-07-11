@@ -151,7 +151,7 @@ void ReadInPrefs (HWND ownerWindow)
 		theGlider.battKey = VK_DOWN;
 		theGlider.bandKey = VK_UP;
 
-		UnivGetSoundVolume(&isVolume, thisMac.hasSM3);
+		UnivGetSoundVolume(&isVolume);
 		if (isVolume < 1)
 			isVolume = 1;
 		else if (isVolume > 3)
@@ -205,8 +205,8 @@ void ReadInPrefs (HWND ownerWindow)
 	if ((numNeighbors > 1) && (thisMac.screen.right <= 512))
 		numNeighbors = 1;
 
-	UnivGetSoundVolume(&wasVolume, thisMac.hasSM3);
-	UnivSetSoundVolume(isVolume, thisMac.hasSM3);
+	UnivGetSoundVolume(&wasVolume);
+	UnivSetSoundVolume(isVolume);
 
 	if (isVolume == 0)
 		isSoundOn = false;
@@ -223,7 +223,7 @@ void WriteOutPrefs (HWND ownerWindow)
 {
 	prefsInfo	thePrefs;
 
-	UnivGetSoundVolume(&isVolume, thisMac.hasSM3);
+	UnivGetSoundVolume(&isVolume);
 
 #ifdef COMPILEDEMO
 	PasStringCopyC("Demo House", thePrefs.wasDefaultName);
@@ -289,7 +289,7 @@ void WriteOutPrefs (HWND ownerWindow)
 	if (!SavePrefs(ownerWindow, &thePrefs, kPrefsVersion))
 		MessageBeep(MB_ICONWARNING);
 
-	UnivSetSoundVolume(wasVolume, thisMac.hasSM3);
+	UnivSetSoundVolume(wasVolume);
 }
 
 //--------------------------------------------------------------  main

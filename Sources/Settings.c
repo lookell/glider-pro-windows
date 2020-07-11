@@ -433,7 +433,7 @@ void SoundDefaults (HWND prefDlg)
 	CheckDlgButton(prefDlg, kIdleMusicItem, BST_CHECKED);
 	CheckDlgButton(prefDlg, kPlayMusicItem, BST_CHECKED);
 	SendDlgItemMessage(prefDlg, kVolumeSliderItem, TBM_SETPOS, TRUE, 3);
-	UnivSetSoundVolume(3, thisMac.hasSM3);
+	UnivSetSoundVolume(3);
 	SetDlgItemInt(prefDlg, kVolNumberItem, 3, FALSE);
 	HandleSoundMusicChange(prefDlg, 3, true);
 }
@@ -445,7 +445,7 @@ void SoundPrefsInit (HWND prefDlg)
 	HWND volumeSlider;
 	SInt16 theVolume;
 
-	UnivGetSoundVolume(&theVolume, thisMac.hasSM3);
+	UnivGetSoundVolume(&theVolume);
 
 	volumeSlider = GetDlgItem(prefDlg, kVolumeSliderItem);
 	SendMessage(volumeSlider, TBM_SETRANGE, FALSE, MAKELPARAM(0, 7));
@@ -467,7 +467,7 @@ void SoundPrefsApply (HWND prefDlg)
 	isPlayMusicIdle = (IsDlgButtonChecked(prefDlg, kIdleMusicItem) != 0);
 	isPlayMusicGame = (IsDlgButtonChecked(prefDlg, kPlayMusicItem) != 0);
 
-	UnivGetSoundVolume(&tempVolume, thisMac.hasSM3);
+	UnivGetSoundVolume(&tempVolume);
 	isSoundOn = (tempVolume != 0);
 }
 
@@ -513,7 +513,7 @@ INT_PTR CALLBACK SoundFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM 
 	{
 	case WM_INITDIALOG:
 		CenterOverOwner(prefDlg);
-		UnivGetSoundVolume(&wasLoudness, thisMac.hasSM3);
+		UnivGetSoundVolume(&wasLoudness);
 		SoundPrefsInit(prefDlg);
 		return TRUE;
 
@@ -526,7 +526,7 @@ INT_PTR CALLBACK SoundFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM 
 			break;
 
 		case IDCANCEL:
-			UnivSetSoundVolume(wasLoudness, thisMac.hasSM3);
+			UnivSetSoundVolume(wasLoudness);
 			HandleSoundMusicChange(prefDlg, wasLoudness, false);
 			isPlayMusicIdle = (isPlayMusicIdle != 0);
 			wasIdle = (IsDlgButtonChecked(prefDlg, kIdleMusicItem) != 0);
@@ -553,7 +553,7 @@ INT_PTR CALLBACK SoundFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM 
 		case kIdleMusicItem:
 			if (IsDlgButtonChecked(prefDlg, kIdleMusicItem))
 			{
-				UnivGetSoundVolume(&tempVolume, thisMac.hasSM3);
+				UnivGetSoundVolume(&tempVolume);
 				if (tempVolume != 0)
 				{
 					OSErr theErr = StartMusic();
@@ -592,7 +592,7 @@ INT_PTR CALLBACK SoundFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM 
 			else
 				SetDlgItemInt(prefDlg, kVolNumberItem, tempVolume, FALSE);
 
-			UnivSetSoundVolume(tempVolume, thisMac.hasSM3);
+			UnivSetSoundVolume(tempVolume);
 			HandleSoundMusicChange(prefDlg, tempVolume, true);
 			break;
 		}
@@ -870,7 +870,7 @@ void SetAllDefaults (HWND ownerWindow)
 								// Default sound settings
 	isPlayMusicIdle = true;
 	isPlayMusicGame = true;
-	UnivSetSoundVolume(3, thisMac.hasSM3);
+	UnivSetSoundVolume(3);
 	isSoundOn = true;
 	if (!isMusicOn)
 	{

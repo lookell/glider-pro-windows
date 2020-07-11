@@ -76,7 +76,7 @@ OSErr StartMusic (void)
 
 	EnterCriticalSection(&musicCriticalSection);
 
-	UnivGetSoundVolume(&soundVolume, thisMac.hasSM3);
+	UnivGetSoundVolume(&soundVolume);
 	if ((!isMusicOn) && (soundVolume != 0) && (!failedMusic))
 	{
 		IDirectSoundBuffer8_Stop(musicChannel);

@@ -33,8 +33,8 @@ char GetKeyMapFromMessage (SInt32 message);
 void GetKeyName (SInt32 message, StringPtr theName);
 Boolean OptionKeyDown (void);
 void DelayTicks (SInt32 howLong);
-void UnivGetSoundVolume (SInt16 *volume, Boolean hasSM3);
-void UnivSetSoundVolume (SInt16 volume, Boolean hasSM3);
+void UnivGetSoundVolume (SInt16 *volume);
+void UnivSetSoundVolume (SInt16 volume);
 BOOL GetDataFolderPath (LPWSTR lpDataPath, DWORD cchDataPath);
 HRESULT LoadModuleResource (HMODULE hModule, LPCWSTR pResName, LPCWSTR pResType,
 	LPVOID *ppResData, DWORD *pResByteSize);
