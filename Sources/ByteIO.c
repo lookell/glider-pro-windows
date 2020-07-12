@@ -85,20 +85,28 @@ int byteio_close(byteio *stream)
 
 int byteio_read_be_u8(byteio *stream, uint8_t *num)
 {
-	unsigned char buf[sizeof(*num)];
-	if (num == NULL || byteio_read(stream, buf, sizeof(buf)) == 0)
-		return 0;
-	*num = (uint8_t)buf[0];
-	return 1;
+	unsigned char buffer[sizeof(uint8_t)];
+	int succeeded;
+
+	succeeded = byteio_read(stream, buffer, sizeof(buffer));
+	if (succeeded && num != NULL)
+	{
+		*num = ((uint8_t)buffer[0]);
+	}
+	return succeeded;
 }
 
 int byteio_read_le_u8(byteio *stream, uint8_t *num)
 {
-	unsigned char buf[sizeof(*num)];
-	if (num == NULL || byteio_read(stream, buf, sizeof(buf)) == 0)
-		return 0;
-	*num = (uint8_t)buf[0];
-	return 1;
+	unsigned char buffer[sizeof(uint8_t)];
+	int succeeded;
+
+	succeeded = byteio_read(stream, buffer, sizeof(buffer));
+	if (succeeded && num != NULL)
+	{
+		*num = ((uint8_t)buffer[0]);
+	}
+	return succeeded;
 }
 
 int byteio_read_be_i8(byteio *stream, int8_t *num)
@@ -113,20 +121,30 @@ int byteio_read_le_i8(byteio *stream, int8_t *num)
 
 int byteio_read_be_u16(byteio *stream, uint16_t *num)
 {
-	unsigned char buf[sizeof(*num)];
-	if (num == NULL || byteio_read(stream, buf, sizeof(buf)) == 0)
-		return 0;
-	*num = ((uint16_t)buf[0] << 8) | (uint16_t)buf[1];
-	return 1;
+	unsigned char buffer[sizeof(uint16_t)];
+	int succeeded;
+
+	succeeded = byteio_read(stream, buffer, sizeof(buffer));
+	if (succeeded && num != NULL)
+	{
+		*num = ((uint16_t)buffer[0] << 8)
+			| ((uint16_t)buffer[1]);
+	}
+	return succeeded;
 }
 
 int byteio_read_le_u16(byteio *stream, uint16_t *num)
 {
-	unsigned char buf[sizeof(*num)];
-	if (num == NULL || byteio_read(stream, buf, sizeof(buf)) == 0)
-		return 0;
-	*num = (uint16_t)buf[0] | ((uint16_t)buf[1] << 8);
-	return 1;
+	unsigned char buffer[sizeof(uint16_t)];
+	int succeeded;
+
+	succeeded = byteio_read(stream, buffer, sizeof(buffer));
+	if (succeeded && num != NULL)
+	{
+		*num = ((uint16_t)buffer[0])
+			| ((uint16_t)buffer[1] << 8);
+	}
+	return succeeded;
 }
 
 int byteio_read_be_i16(byteio *stream, int16_t *num)
@@ -141,22 +159,34 @@ int byteio_read_le_i16(byteio *stream, int16_t *num)
 
 int byteio_read_be_u32(byteio *stream, uint32_t *num)
 {
-	unsigned char buf[sizeof(*num)];
-	if (num == NULL || byteio_read(stream, buf, sizeof(buf)) == 0)
-		return 0;
-	*num = ((uint32_t)buf[0] << 24) | ((uint32_t)buf[1] << 16) |
-			((uint32_t)buf[2] << 8) | (uint32_t)buf[3];
-	return 1;
+	unsigned char buffer[sizeof(uint32_t)];
+	int succeeded;
+
+	succeeded = byteio_read(stream, buffer, sizeof(buffer));
+	if (succeeded && num != NULL)
+	{
+		*num = ((uint32_t)buffer[0] << 24)
+			| ((uint32_t)buffer[1] << 16)
+			| ((uint32_t)buffer[2] << 8)
+			| ((uint32_t)buffer[3]);
+	}
+	return succeeded;
 }
 
 int byteio_read_le_u32(byteio *stream, uint32_t *num)
 {
-	unsigned char buf[sizeof(*num)];
-	if (num == NULL || byteio_read(stream, buf, sizeof(buf)) == 0)
-		return 0;
-	*num = (uint32_t)buf[0] | ((uint32_t)buf[1] << 8) |
-			((uint32_t)buf[2] << 16) | ((uint32_t)buf[3] << 24);
-	return 1;
+	unsigned char buffer[sizeof(uint32_t)];
+	int succeeded;
+
+	succeeded = byteio_read(stream, buffer, sizeof(buffer));
+	if (succeeded && num != NULL)
+	{
+		*num = ((uint32_t)buffer[0])
+			| ((uint32_t)buffer[1] << 8)
+			| ((uint32_t)buffer[2] << 16)
+			| ((uint32_t)buffer[3] << 24);
+	}
+	return succeeded;
 }
 
 int byteio_read_be_i32(byteio *stream, int32_t *num)
@@ -173,16 +203,18 @@ int byteio_read_le_i32(byteio *stream, int32_t *num)
 
 int byteio_write_be_u8(byteio *stream, uint8_t num)
 {
-	unsigned char buf[sizeof(num)];
-	buf[0] = (unsigned char)(num & 0xff);
-	return byteio_write(stream, buf, sizeof(buf));
+	unsigned char buffer[sizeof(uint8_t)];
+
+	buffer[0] = (unsigned char)(num & 0xff);
+	return byteio_write(stream, buffer, sizeof(buffer));
 }
 
 int byteio_write_le_u8(byteio *stream, uint8_t num)
 {
-	unsigned char buf[sizeof(num)];
-	buf[0] = (unsigned char)(num & 0xff);
-	return byteio_write(stream, buf, sizeof(buf));
+	unsigned char buffer[sizeof(uint8_t)];
+
+	buffer[0] = (unsigned char)(num & 0xff);
+	return byteio_write(stream, buffer, sizeof(buffer));
 }
 
 int byteio_write_be_i8(byteio *stream, int8_t num)
@@ -197,18 +229,20 @@ int byteio_write_le_i8(byteio *stream, int8_t num)
 
 int byteio_write_be_u16(byteio *stream, uint16_t num)
 {
-	unsigned char buf[sizeof(num)];
-	buf[0] = (unsigned char)((num >> 8) & 0xff);
-	buf[1] = (unsigned char)(num & 0xff);
-	return byteio_write(stream, buf, sizeof(buf));
+	unsigned char buffer[sizeof(uint16_t)];
+
+	buffer[0] = (unsigned char)((num >> 8) & 0xff);
+	buffer[1] = (unsigned char)(num & 0xff);
+	return byteio_write(stream, buffer, sizeof(buffer));
 }
 
 int byteio_write_le_u16(byteio *stream, uint16_t num)
 {
-	unsigned char buf[sizeof(num)];
-	buf[0] = (unsigned char)(num & 0xff);
-	buf[1] = (unsigned char)((num >> 8) & 0xff);
-	return byteio_write(stream, buf, sizeof(buf));
+	unsigned char buffer[sizeof(uint16_t)];
+
+	buffer[0] = (unsigned char)(num & 0xff);
+	buffer[1] = (unsigned char)((num >> 8) & 0xff);
+	return byteio_write(stream, buffer, sizeof(buffer));
 }
 
 int byteio_write_be_i16(byteio *stream, int16_t num)
@@ -223,22 +257,24 @@ int byteio_write_le_i16(byteio *stream, int16_t num)
 
 int byteio_write_be_u32(byteio *stream, uint32_t num)
 {
-	unsigned char buf[sizeof(num)];
-	buf[0] = (unsigned char)((num >> 24) & 0xff);
-	buf[1] = (unsigned char)((num >> 16) & 0xff);
-	buf[2] = (unsigned char)((num >> 8) & 0xff);
-	buf[3] = (unsigned char)(num & 0xff);
-	return byteio_write(stream, buf, sizeof(buf));
+	unsigned char buffer[sizeof(uint32_t)];
+
+	buffer[0] = (unsigned char)((num >> 24) & 0xff);
+	buffer[1] = (unsigned char)((num >> 16) & 0xff);
+	buffer[2] = (unsigned char)((num >> 8) & 0xff);
+	buffer[3] = (unsigned char)(num & 0xff);
+	return byteio_write(stream, buffer, sizeof(buffer));
 }
 
 int byteio_write_le_u32(byteio *stream, uint32_t num)
 {
-	unsigned char buf[sizeof(num)];
-	buf[0] = (unsigned char)(num & 0xff);
-	buf[1] = (unsigned char)((num >> 8) & 0xff);
-	buf[2] = (unsigned char)((num >> 16) & 0xff);
-	buf[3] = (unsigned char)((num >> 24) & 0xff);
-	return byteio_write(stream, buf, sizeof(buf));
+	unsigned char buffer[sizeof(uint32_t)];
+
+	buffer[0] = (unsigned char)(num & 0xff);
+	buffer[1] = (unsigned char)((num >> 8) & 0xff);
+	buffer[2] = (unsigned char)((num >> 16) & 0xff);
+	buffer[3] = (unsigned char)((num >> 24) & 0xff);
+	return byteio_write(stream, buffer, sizeof(buffer));
 }
 
 int byteio_write_be_i32(byteio *stream, int32_t num)
