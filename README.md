@@ -10,7 +10,9 @@ Glider PRO's source code (the original code plus my modifications) are
 licensed under the GNU General Public License. This license is in
 `GPLv2-LICENSE.md`, in the main project folder. The `resfork-extract`
 tool is licensed under the MIT License.  This license is in the
-`Tools/resfork-extract` folder.
+`Tools/resfork-extract` folder. The `miniz` library used in Glider PRO
+for house files is licensed under the MIT License. `miniz`'s project
+page is at <https://github.com/richgel999/miniz>.
 
 The original `README.md` file is reproduced below.
 

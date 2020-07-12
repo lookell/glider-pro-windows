@@ -22,6 +22,8 @@ if(MSVC)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
 endif()
 
+# TODO: build Mermaid.dat zip file to store game assets
+
 add_executable(gliderpro)
 set_target_properties(
   gliderpro PROPERTIES
@@ -31,6 +33,10 @@ target_include_directories(gliderpro PRIVATE Headers)
 target_link_libraries(gliderpro comctl32 dsound dxguid msimg32 winmm)
 target_sources(
   gliderpro PRIVATE
+  # miniz source files
+  miniz/miniz.h
+  miniz/miniz.c
+  # Glider PRO source files
   Headers/About.h
   Headers/AnimCursor.h
   Headers/AppleEvents.h
