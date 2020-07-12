@@ -1,6 +1,16 @@
-This repository contains the source code of Glider PRO, ported to run on the Windows operating system.
+# Glider PRO for Windows
 
-The original source code repository, where this code originates from, is located at <https://github.com/softdorothy/glider_pro>.
+This repository contains the source code of Glider PRO, ported to run
+on the Windows operating system. It requires Windows XP or later.
+
+The original source code repository, where this code originates from,
+can be found at <https://github.com/softdorothy/glider_pro>.
+
+Glider PRO's source code (the original code plus my modifications) are
+licensed under the GNU General Public License. This license is in
+`GPLv2-LICENSE.md`, in the main project folder. The `resfork-extract`
+tool is licensed under the MIT License.  This license is in the
+`Tools/resfork-extract` folder.
 
 The original `README.md` file is reproduced below.
 
