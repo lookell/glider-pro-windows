@@ -13,7 +13,6 @@
 //#define CREATEDEMODATA
 //#define COMPILEDEMO
 //#define CAREFULDEBUG
-#define COMPILENOCP
 //#define COMPILEQT
 #define BUILD_ARCADE_VERSION		0
 

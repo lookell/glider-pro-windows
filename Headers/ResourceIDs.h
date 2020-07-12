@@ -133,7 +133,6 @@
 #define kControlPrefsDialID			1023
 #define kBrainsPrefsDialID			1024
 #define kResumeGameDial				1025
-#define kMasterDialogID				1026
 #define kEnemyInfoDialogID			1027
 #define kFlowerInfoDialogID			1033
 #define kTriggerInfoDialogID		1034

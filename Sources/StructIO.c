@@ -134,8 +134,6 @@ int ReadPrefsInfo(byteio *reader, prefsInfo *data)
 	FORWARD_FALSE(ReadStr15(reader, &data->wasBandName));
 	FORWARD_FALSE(ReadStr15(reader, &data->wasHighName));
 	FORWARD_FALSE(ReadStr31(reader, &data->wasHighBanner));
-	// FORWARD_FALSE(byteio_read_be_i32(reader, &data->encrypted));
-	// FORWARD_FALSE(byteio_read_be_i32(reader, &data->fakeLong));
 	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasLeftMap));
 	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasRightMap));
 	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasBattMap));
@@ -192,8 +190,6 @@ int WritePrefsInfo(byteio *writer, const prefsInfo *data)
 	FORWARD_FALSE(WriteStr15(writer, &data->wasBandName));
 	FORWARD_FALSE(WriteStr15(writer, &data->wasHighName));
 	FORWARD_FALSE(WriteStr31(writer, &data->wasHighBanner));
-	// FORWARD_FALSE(byteio_write_be_i32(writer, data->encrypted));
-	// FORWARD_FALSE(byteio_write_be_i32(writer, data->fakeLong));
 	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasLeftMap));
 	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasRightMap));
 	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasBattMap));

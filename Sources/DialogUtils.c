@@ -236,70 +236,6 @@ void CenterOverOwner (HWND hwnd)
 			SWP_NOSIZE | SWP_NOZORDER);
 }
 
-//--------------------------------------------------------------  BringUpDialog
-// Given a dialog pointer and a resource ID, this function brings it up…
-// centered, visible, and with the default button outlined.
-/*
-void BringUpDialog (DialogPtr *theDialog, SInt16 dialogID)
-{
-//	CenterDialog(dialogID);
-	*theDialog = GetNewDialog(dialogID, nil, kPutInFront);
-	if (*theDialog == nil)
-		RedAlert(kErrDialogDidntLoad);
-	SetPort((GrafPtr)*theDialog);
-	ShowWindow(GetDialogWindow(*theDialog));
-	DrawDefaultButton(*theDialog);
-}
-*/
-//--------------------------------------------------------------  CenterDialog
-// Given a resource ID for a dialog, this function properly centers it.
-/*
-void CenterDialog (SInt16 dialogID)
-{
-	DialogTHndl	dlogHandle;
-	Rect		theScreen, dlogBounds;
-	SInt16		hPos, vPos;
-	Byte		wasState;
-
-	theScreen = qd.screenBits.bounds;
-	theScreen.top += LMGetMBarHeight();
-
-	dlogHandle = (DialogTHndl)GetResource('DLOG', dialogID);
-	if (dlogHandle != nil)
-	{
-		wasState = HGetState((Handle)dlogHandle);
-		HLock((Handle)dlogHandle);
-
-		dlogBounds = (**dlogHandle).boundsRect;
-		OffsetRect(&dlogBounds, -dlogBounds.left, -dlogBounds.top);
-
-		hPos = ((theScreen.right - theScreen.left) - dlogBounds.right) / 2;
-		vPos = ((theScreen.bottom - theScreen.top) - dlogBounds.bottom) / 3;
-
-		OffsetRect(&dlogBounds, hPos, vPos + LMGetMBarHeight());
-
-		(**dlogHandle).boundsRect = dlogBounds;
-		HSetState((Handle)dlogHandle, wasState);
-	}
-}
-*/
-//--------------------------------------------------------------  DrawDefaultButton
-// Draws a fat outline around the default item (item = 1).  This is the…
-// item that is selected if the user hits the Return key.
-/*
-void DrawDefaultButton (DialogPtr theDialog)
-{
-	Rect		itemRect;
-	Handle		itemHandle;
-	short		itemType;
-
-	GetDialogItem(theDialog, 1, &itemType, &itemHandle, &itemRect);
-	InsetRect(&itemRect, -4, -4);
-	PenSize(3, 3);
-	FrameRoundRect(&itemRect, 16, 16);
-	PenNormal();
-}
-*/
 //--------------------------------------------------------------  GetDialogString
 // Returns a string from a specific dialog item.
 
@@ -400,21 +336,6 @@ void GetDialogItemRect (HWND theDialog, int item, Rect *theRect)
 	theRect->bottom = (SInt16)windowRect.bottom;
 }
 
-//--------------------------------------------------------------  SetDialogItemRect
-// Sets the bounding rectangle of the specified dialog item.  Used to…
-// resize or move a control.
-/*
-void SetDialogItemRect (DialogPtr theDialog, SInt16 item, Rect *theRect)
-{
-	Rect		oldRect;
-	Handle		itemHandle;
-	short		itemType;
-
-	GetDialogItem(theDialog, item, &itemType, &itemHandle, &oldRect);
-	OffsetRect(&oldRect, theRect->left - oldRect.left, theRect->top - oldRect.top);
-	SetDialogItem(theDialog, item, itemType, itemHandle, &oldRect);
-}
-*/
 //--------------------------------------------------------------  AddMenuToComboBox
 // Replaces the items in a combo box with the items from an HMENU.
 // The strings from the menu are the strings in the combo box, and the

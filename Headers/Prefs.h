@@ -17,7 +17,6 @@ typedef struct
 	Str15		wasBattName, wasBandName;
 	Str15		wasHighName;
 	Str31		wasHighBanner;
-//	SInt32		encrypted, fakeLong;
 	SInt32		wasLeftMap, wasRightMap;
 	SInt32		wasBattMap, wasBandMap;
 	SInt16		wasVolume;

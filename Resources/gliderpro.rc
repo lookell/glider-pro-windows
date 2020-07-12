@@ -566,7 +566,6 @@ IDM_ROOT MENUEX
 #include "Dialogs\\ControlPrefs.dlg"
 #include "Dialogs\\BrainsPrefs.dlg"
 #include "Dialogs\\ResumeGame.dlg"
-#include "Dialogs\\Master.dlg"
 #include "Dialogs\\EnemyInfo.dlg"
 #include "Dialogs\\FlowerInfo.dlg"
 #include "Dialogs\\TriggerInfo.dlg"

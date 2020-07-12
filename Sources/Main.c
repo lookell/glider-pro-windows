@@ -40,7 +40,6 @@
 #include "StructuresInit.h"
 #include "Tools.h"
 #include "Utilities.h"
-#include "Validate.h"
 #include "WinAPI.h"
 
 
@@ -84,11 +83,6 @@ void ReadInPrefs (HWND ownerWindow)
 		theGlider.rightKey = thePrefs.wasRightMap;
 		theGlider.battKey = thePrefs.wasBattMap;
 		theGlider.bandKey = thePrefs.wasBandMap;
-#ifndef COMPILEDEMO
-#ifndef COMPILENOCP
-		encryptedNumber = thePrefs.encrypted;
-#endif			// COMPILENOCP
-#endif			// COMPILEDEMO
 		isVolume = thePrefs.wasVolume;
 		isDepthPref = thePrefs.wasDepthPref;
 		isMusicOn = thePrefs.wasMusicOn;
@@ -240,12 +234,6 @@ void WriteOutPrefs (HWND ownerWindow)
 	thePrefs.wasRightMap = theGlider.rightKey;
 	thePrefs.wasBattMap = theGlider.battKey;
 	thePrefs.wasBandMap = theGlider.bandKey;
-#ifndef COMPILEDEMO
-#ifndef COMPILENOCP
-	thePrefs.encrypted = encryptedNumber;
-	thePrefs.fakeLong = Random();
-#endif			// COMPILENOCP
-#endif			// COMPILEDEMO
 	thePrefs.wasVolume = isVolume;
 	thePrefs.wasDepthPref = isDepthPref;
 	thePrefs.wasMusicOn = isMusicOn;
@@ -298,9 +286,8 @@ void WriteOutPrefs (HWND ownerWindow)
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		LPWSTR lpCmdLine, int nShowCmd)
 {
-//	SInt32		wasSeed;
 //	SInt32		theErr;
-	Boolean		whoCares, copyGood, audioInitialized;
+	Boolean		whoCares, audioInitialized;
 	HRESULT		hr;
 
 	hr = Audio_InitDevice();
@@ -323,20 +310,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	SetUpAppleEvents();
 	LoadCursors();
 	ReadInPrefs(NULL);
-
-#if defined COMPILEDEMO
-	copyGood = true;
-#elif defined COMPILENOCP
-//	didValidation = false;
-	copyGood = true;
-#else
-	didValidation = false;
-	copyGood = ValidInstallation(true);
-	if (!copyGood)
-		encryptedNumber = 0L;
-	else if (didValidation)
-		WriteOutPrefs();				SpinCursor(3);
-#endif
 
 //	if ((thisMac.numScreens > 1) && (isUseSecondScreen))
 //		ReflectSecondMonitorEnvirons(false, true, true);
@@ -419,7 +392,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	WriteOutPrefs(NULL);
 	RestoreColorDepth();
-//	FlushEvents(everyEvent, 0);
 //	theErr = LoadScrap();
 
 	if (audioInitialized)

@@ -101,7 +101,6 @@ target_sources(
   Headers/Triggers.h
   Headers/Trip.h
   Headers/Utilities.h
-  Headers/Validate.h
   Headers/WinAPI.h
   Headers/WindowUtils.h
   Resources/gliderpro.rc
@@ -175,6 +174,5 @@ target_sources(
   Sources/Triggers.c
   Sources/Trip.c
   Sources/Utilities.c
-  Sources/Validate.c
   Sources/WindowUtils.c
 )
