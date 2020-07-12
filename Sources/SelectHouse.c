@@ -178,9 +178,19 @@ INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 		case NM_DBLCLK:
 			if (((LPNMHDR)lParam)->idFrom == kHouseListItem)
-				SendMessage(hDlg, WM_COMMAND, IDOK, 0);
-			SetWindowLongPtr(hDlg, DWLP_MSGRESULT, 0);
-			return TRUE;
+			{
+				LVHITTESTINFO hitTestInfo;
+
+				hitTestInfo.pt = ((LPNMITEMACTIVATE)lParam)->ptAction;
+				ListView_HitTest(((LPNMHDR)lParam)->hwndFrom, &hitTestInfo);
+				if ((hitTestInfo.flags & LVHT_ONITEM) != 0)
+				{
+					SendMessage(hDlg, WM_COMMAND, IDOK, 0);
+				}
+				SetWindowLongPtr(hDlg, DWLP_MSGRESULT, 0);
+				return TRUE;
+			}
+			break;
 		}
 		break;
 	}
