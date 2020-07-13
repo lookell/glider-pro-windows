@@ -37,8 +37,8 @@ static int handle_writer_seek(byteio *stream, int64_t offset, int origin, int64_
 static int handle_writer_close(byteio *stream);
 
 typedef struct memory_reader {
-	size_t size;
-	size_t pos;
+	ptrdiff_t size;
+	ptrdiff_t pos;
 	const unsigned char *buffer;
 } memory_reader;
 
@@ -48,8 +48,8 @@ static int memory_reader_seek(byteio *stream, int64_t offset, int origin, int64_
 static int memory_reader_close(byteio *stream);
 
 typedef struct memory_writer {
-	size_t size;
-	size_t pos;
+	ptrdiff_t size;
+	ptrdiff_t pos;
 	unsigned char *buffer;
 } memory_writer;
 
@@ -384,8 +384,52 @@ static int handle_reader_read(byteio *stream, void *buffer, size_t size)
 
 static int handle_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
 {
-	// TODO: implement this
-	return minimal_seek(stream, offset, origin, newPos);
+	handle_reader *self = (handle_reader *)stream->priv;
+	LARGE_INTEGER fileOffset, newFilePointer;
+	BOOL succeeded;
+
+	if (self == NULL)
+	{
+		SetLastError(ERROR_INVALID_PARAMETER);
+		return 0;
+	}
+	// "Unread" any buffered data, and seek backwards to the correct position
+	fileOffset.QuadPart = -((LONGLONG)self->size);
+	succeeded = SetFilePointerEx(self->hFile, fileOffset, NULL, FILE_CURRENT);
+	self->bufptr = &self->buffer[0];
+	self->size = 0;
+	if (!succeeded)
+	{
+		return succeeded;
+	}
+	// Perform the actual seek operation
+	fileOffset.QuadPart = offset;
+	switch (origin)
+	{
+	case SEEK_SET:
+		succeeded = SetFilePointerEx(self->hFile, fileOffset, &newFilePointer, FILE_BEGIN);
+		break;
+
+	case SEEK_CUR:
+		succeeded = SetFilePointerEx(self->hFile, fileOffset, &newFilePointer, FILE_CURRENT);
+		break;
+
+	case SEEK_END:
+		succeeded = SetFilePointerEx(self->hFile, fileOffset, &newFilePointer, FILE_END);
+		break;
+
+	default:
+		SetLastError(ERROR_INVALID_PARAMETER);
+		newFilePointer.QuadPart = -1;
+		succeeded = 0;
+		break;
+	}
+	// Return the new position to the caller
+	if (succeeded && newPos != NULL)
+	{
+		*newPos = newFilePointer.QuadPart;
+	}
+	return succeeded;
 }
 
 static int handle_reader_close(byteio *stream)
@@ -465,8 +509,57 @@ static int handle_writer_write(byteio *stream, const void *buffer, size_t size)
 
 static int handle_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
 {
-	// TODO: implement this
-	return minimal_seek(stream, offset, origin, newPos);
+	handle_writer *self = (handle_writer *)stream->priv;
+	DWORD numToWrite, numWritten;
+	LARGE_INTEGER fileOffset, newFilePointer;
+	BOOL succeeded;
+
+	if (self == NULL)
+	{
+		SetLastError(ERROR_INVALID_PARAMETER);
+		return 0;
+	}
+	// Write out any buffered data, so that we start in the correct position
+	numToWrite = (DWORD)(sizeof(self->buffer) - self->size);
+	succeeded = WriteFile(self->hFile, self->buffer, numToWrite, &numWritten, NULL);
+	if (succeeded)
+	{
+		succeeded = (numWritten == numToWrite);
+	}
+	self->bufptr = &self->buffer[0];
+	self->size = sizeof(self->buffer);
+	if (!succeeded)
+	{
+		return succeeded;
+	}
+	// Perform the actual seek operation
+	fileOffset.QuadPart = offset;
+	switch (origin)
+	{
+	case SEEK_SET:
+		succeeded = SetFilePointerEx(self->hFile, fileOffset, &newFilePointer, FILE_BEGIN);
+		break;
+	
+	case SEEK_CUR:
+		succeeded = SetFilePointerEx(self->hFile, fileOffset, &newFilePointer, FILE_CURRENT);
+		break;
+	
+	case SEEK_END:
+		succeeded = SetFilePointerEx(self->hFile, fileOffset, &newFilePointer, FILE_END);
+		break;
+	
+	default:
+		SetLastError(ERROR_INVALID_PARAMETER);
+		newFilePointer.QuadPart = -1;
+		succeeded = 0;
+		break;
+	}
+	// Return the new position to the caller
+	if (succeeded && newPos != NULL)
+	{
+		*newPos = newFilePointer.QuadPart;
+	}
+	return succeeded;
 }
 
 static int handle_writer_close(byteio *stream)
@@ -505,9 +598,9 @@ int byteio_init_handle_writer(byteio *stream, void *hFile)
 static memory_reader *memory_reader_init(const void *buffer, size_t size)
 {
 	memory_reader *self = malloc(sizeof(*self));
-	if (self == NULL)
+	if (self == NULL || size > (size_t)PTRDIFF_MAX)
 		return NULL;
-	self->size = size;
+	self->size = (ptrdiff_t)size;
 	self->pos = 0;
 	self->buffer = buffer;
 	return self;
@@ -520,7 +613,9 @@ static int memory_reader_read(byteio *stream, void *buffer, size_t size)
 		return 0;
 	if (self->pos >= self->size)
 		return 0;
-	if (self->size - self->pos < size)
+	if (size > (size_t)PTRDIFF_MAX)
+		return 0;
+	if (self->size - self->pos < (ptrdiff_t)size)
 	{
 		self->pos = self->size;
 		return 0;
@@ -533,8 +628,42 @@ static int memory_reader_read(byteio *stream, void *buffer, size_t size)
 
 static int memory_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
 {
-	// TODO: implement this
-	return minimal_seek(stream, offset, origin, newPos);
+	memory_reader *self = (memory_reader *)stream->priv;
+	ptrdiff_t memoryPos;
+	ptrdiff_t memoryOffset;
+
+	if (self == NULL || offset < PTRDIFF_MIN || offset > PTRDIFF_MAX)
+	{
+		return 0;
+	}
+	memoryOffset = (ptrdiff_t)offset;
+	switch (origin)
+	{
+	case SEEK_SET:
+		memoryPos = memoryOffset;
+		break;
+
+	case SEEK_CUR:
+		memoryPos = self->pos + memoryOffset;
+		break;
+
+	case SEEK_END:
+		memoryPos = self->size + memoryOffset;
+		break;
+
+	default:
+		return 0; // invalid parameter
+	}
+	if (memoryPos < 0)
+	{
+		return 0; // negative seek
+	}
+	self->pos = memoryPos;
+	if (newPos)
+	{
+		*newPos = (int64_t)self->pos;
+	}
+	return 1;
 }
 
 static int memory_reader_close(byteio *stream)
@@ -563,9 +692,9 @@ int byteio_init_memory_reader(byteio *stream, const void *buffer, size_t size)
 static memory_writer *memory_writer_init(void *buffer, size_t size)
 {
 	memory_writer *self = malloc(sizeof(*self));
-	if (self == NULL)
+	if (self == NULL || size > (size_t)PTRDIFF_MAX)
 		return NULL;
-	self->size = size;
+	self->size = (ptrdiff_t)size;
 	self->pos = 0;
 	self->buffer = buffer;
 	return self;
@@ -577,9 +706,11 @@ static int memory_writer_write(byteio *stream, const void *buffer, size_t size)
 	unsigned char *inptr;
 	if (self == NULL || self->buffer == NULL || buffer == NULL)
 		return 0;
+	if (size > (size_t)PTRDIFF_MAX)
+		return 0;
 	if (self->pos >= self->size)
 		return 0;
-	if (self->size - self->pos < size)
+	if (self->size - self->pos < (ptrdiff_t)size)
 	{
 		self->pos = self->size;
 		return 0;
@@ -592,8 +723,42 @@ static int memory_writer_write(byteio *stream, const void *buffer, size_t size)
 
 static int memory_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
 {
-	// TODO: implement this
-	return minimal_seek(stream, offset, origin, newPos);
+	memory_writer *self = (memory_writer *)stream->priv;
+	ptrdiff_t memoryPos;
+	ptrdiff_t memoryOffset;
+
+	if (self == NULL || offset < PTRDIFF_MIN || offset > PTRDIFF_MAX)
+	{
+		return 0;
+	}
+	memoryOffset = (ptrdiff_t)offset;
+	switch (origin)
+	{
+	case SEEK_SET:
+		memoryPos = memoryOffset;
+		break;
+
+	case SEEK_CUR:
+		memoryPos = self->pos + memoryOffset;
+		break;
+
+	case SEEK_END:
+		memoryPos = self->size + memoryOffset;
+		break;
+
+	default:
+		return 0; // invalid parameter
+	}
+	if (memoryPos < 0)
+	{
+		return 0; // negative seek
+	}
+	self->pos = memoryPos;
+	if (newPos)
+	{
+		*newPos = (int64_t)self->pos;
+	}
+	return 1;
 }
 
 static int memory_writer_close(byteio *stream)
