@@ -3,12 +3,14 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 
 // The `byteio` structure is used to perform sequential input or output,
 // using a Windows HANDLE or an in-memory buffer.
 typedef struct byteio {
 	int (*fn_read)(struct byteio *stream, void *buffer, size_t size);
 	int (*fn_write)(struct byteio *stream, const void *buffer, size_t size);
+	int (*fn_seek)(struct byteio *stream, int64_t offset, int origin, int64_t *newPos);
 	int (*fn_close)(struct byteio *stream);
 	void *priv;
 } byteio;
@@ -37,11 +39,18 @@ int byteio_close(byteio *stream);
 // is NULL, then the bytes are simply skipped over in the stream.
 int byteio_read(byteio *stream, void *buffer, size_t size);
 
-// Skip past `size` bytes in a `byteio` reader.
-int byteio_skip(byteio *stream, size_t size);
-
 // Write exactly `size` bytes from the array `buffer`.
 int byteio_write(byteio *stream, const void *buffer, size_t size);
+
+// Seek by `offset` bytes from the specified `origin` position.
+// If `newPos` is not NULL, then the new position is returned to the caller.
+// The `origin` parameter values are the same as for the standard `fseek`
+// function (i.e., SEEK_SET, SEEK_CUR, and SEEK_END).
+int byteio_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
+
+// Retrieve the current position in the stream. This is equivalent to
+// calling `byteio_seek(stream, 0, SEEK_CUR, curPos)`.
+int byteio_tell(byteio *stream, int64_t *curPos);
 
 // Read a big-endian, 8-bit unsigned integer.
 int byteio_read_be_u8(byteio *stream, uint8_t *num);

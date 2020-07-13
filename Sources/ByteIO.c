@@ -10,6 +10,7 @@ typedef int ASSERT_CHAR_BIT_IS_EIGHT[(CHAR_BIT == 8) ? 1 : -1];
 
 static int minimal_read(byteio *stream, void *buffer, size_t size);
 static int minimal_write(byteio *stream, const void *buffer, size_t size);
+static int minimal_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
 
 typedef struct handle_reader {
 	HANDLE hFile;
@@ -20,6 +21,7 @@ typedef struct handle_reader {
 
 static handle_reader *handle_reader_init(HANDLE hFile);
 static int handle_reader_read(byteio *stream, void *buffer, size_t size);
+static int handle_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
 static int handle_reader_close(byteio *stream);
 
 typedef struct handle_writer {
@@ -31,6 +33,7 @@ typedef struct handle_writer {
 
 static handle_writer *handle_writer_init(HANDLE hFile);
 static int handle_writer_write(byteio *stream, const void *buffer, size_t size);
+static int handle_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
 static int handle_writer_close(byteio *stream);
 
 typedef struct memory_reader {
@@ -41,6 +44,7 @@ typedef struct memory_reader {
 
 static memory_reader *memory_reader_init(const void *buffer, size_t size);
 static int memory_reader_read(byteio *stream, void *buffer, size_t size);
+static int memory_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
 static int memory_reader_close(byteio *stream);
 
 typedef struct memory_writer {
@@ -51,6 +55,7 @@ typedef struct memory_writer {
 
 static memory_writer *memory_writer_init(void *buffer, size_t size);
 static int memory_writer_write(byteio *stream, const void *buffer, size_t size);
+static int memory_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
 static int memory_writer_close(byteio *stream);
 
 //--------------------------------------------------------------
@@ -62,16 +67,25 @@ int byteio_read(byteio *stream, void *buffer, size_t size)
 	return stream->fn_read(stream, buffer, size);
 }
 
-int byteio_skip(byteio *stream, size_t size)
-{
-	return byteio_read(stream, NULL, size);
-}
-
 int byteio_write(byteio *stream, const void *buffer, size_t size)
 {
 	if (stream == NULL || buffer == NULL)
 		return 0;
 	return stream->fn_write(stream, buffer, size);
+}
+
+int byteio_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
+{
+	if (stream == NULL)
+		return 0;
+	if (origin != SEEK_SET && origin != SEEK_CUR && origin != SEEK_END)
+		return 0;
+	return stream->fn_seek(stream, offset, origin, newPos);
+}
+
+int byteio_tell(byteio *stream, int64_t *curPos)
+{
+	return byteio_seek(stream, 0, SEEK_CUR, curPos);
 }
 
 int byteio_close(byteio *stream)
@@ -305,6 +319,15 @@ static int minimal_write(byteio *stream, const void *buffer, size_t num)
 	return 0;
 }
 
+static int minimal_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
+{
+	UNREFERENCED_PARAMETER(stream);
+	UNREFERENCED_PARAMETER(offset);
+	UNREFERENCED_PARAMETER(origin);
+	UNREFERENCED_PARAMETER(newPos);
+	return 0;
+}
+
 //--------------------------------------------------------------
 
 static handle_reader *handle_reader_init(HANDLE hFile)
@@ -359,6 +382,12 @@ static int handle_reader_read(byteio *stream, void *buffer, size_t size)
 	return 1;
 }
 
+static int handle_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
+{
+	// TODO: implement this
+	return minimal_seek(stream, offset, origin, newPos);
+}
+
 static int handle_reader_close(byteio *stream)
 {
 	LARGE_INTEGER li;
@@ -381,6 +410,7 @@ int byteio_init_handle_reader(byteio *stream, void *hFile)
 		return 0;
 	stream->fn_read = handle_reader_read;
 	stream->fn_write = minimal_write;
+	stream->fn_seek = handle_reader_seek;
 	stream->fn_close = handle_reader_close;
 	stream->priv = handle_reader_init(hFile);
 	if (stream->priv == NULL)
@@ -433,6 +463,12 @@ static int handle_writer_write(byteio *stream, const void *buffer, size_t size)
 	return 1;
 }
 
+static int handle_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
+{
+	// TODO: implement this
+	return minimal_seek(stream, offset, origin, newPos);
+}
+
 static int handle_writer_close(byteio *stream)
 {
 	BOOL result;
@@ -456,6 +492,7 @@ int byteio_init_handle_writer(byteio *stream, void *hFile)
 		return 0;
 	stream->fn_read = minimal_read;
 	stream->fn_write = handle_writer_write;
+	stream->fn_seek = handle_writer_seek;
 	stream->fn_close = handle_writer_close;
 	stream->priv = handle_writer_init(hFile);
 	if (stream->priv == NULL)
@@ -494,6 +531,12 @@ static int memory_reader_read(byteio *stream, void *buffer, size_t size)
 	return 1;
 }
 
+static int memory_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
+{
+	// TODO: implement this
+	return minimal_seek(stream, offset, origin, newPos);
+}
+
 static int memory_reader_close(byteio *stream)
 {
 	free(stream->priv);
@@ -507,6 +550,7 @@ int byteio_init_memory_reader(byteio *stream, const void *buffer, size_t size)
 		return 0;
 	stream->fn_read = memory_reader_read;
 	stream->fn_write = minimal_write;
+	stream->fn_seek = memory_reader_seek;
 	stream->fn_close = memory_reader_close;
 	stream->priv = memory_reader_init(buffer, size);
 	if (stream->priv == NULL)
@@ -546,6 +590,12 @@ static int memory_writer_write(byteio *stream, const void *buffer, size_t size)
 	return 1;
 }
 
+static int memory_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
+{
+	// TODO: implement this
+	return minimal_seek(stream, offset, origin, newPos);
+}
+
 static int memory_writer_close(byteio *stream)
 {
 	free(stream->priv);
@@ -559,6 +609,7 @@ int byteio_init_memory_writer(byteio *stream, void *buffer, size_t size)
 		return 0;
 	stream->fn_read = minimal_read;
 	stream->fn_write = memory_writer_write;
+	stream->fn_seek = memory_writer_seek;
 	stream->fn_close = memory_writer_close;
 	stream->priv = memory_writer_init(buffer, size);
 	if (stream->priv == NULL)
