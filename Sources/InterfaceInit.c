@@ -34,6 +34,7 @@
 
 
 static HMENU DetachPopupMenu (HMENU rootMenu, UINT id, LPWSTR *title);
+static HCURSOR LoadSystemCursor (DWORD id);
 
 
 //==============================================================  Functions
@@ -129,6 +130,15 @@ void InitializeMenus (void)
 	DestroyMenu(rootMenu);
 }
 
+//--------------------------------------------------------------  LoadSystemCursor
+// Load up a system cursor and return a handle to it. Exits the program
+// if the cursor fails to load (this should never happen).
+
+static HCURSOR LoadSystemCursor (DWORD id)
+{
+	return (HCURSOR)LoadImage(NULL, MAKEINTRESOURCE(id), IMAGE_CURSOR, 0, 0, LR_SHARED);
+}
+
 //--------------------------------------------------------------  GetExtraCursors
 
 // Extra cursors (custom cursors) like the "hand" and various room…
@@ -136,42 +146,27 @@ void InitializeMenus (void)
 
 void GetExtraCursors (void)
 {
-	// TODO: should OCR_SIZEALL be used for the moving cursor instead?
-	handCursor = (HCURSOR)LoadImage(HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(kHandCursorID), IMAGE_CURSOR,
-		0, 0, LR_DEFAULTCOLOR);
+	handCursor = LoadSystemCursor(OCR_SIZEALL);
 	if (handCursor == NULL)
 	{
 		RedAlert(kErrFailedResourceLoad);
 	}
-
-	vertCursor = (HCURSOR)LoadImage(NULL,
-		MAKEINTRESOURCE(OCR_SIZENS), IMAGE_CURSOR,
-		0, 0, LR_DEFAULTCOLOR | LR_SHARED);
+	vertCursor = LoadSystemCursor(OCR_SIZENS);
 	if (vertCursor == NULL)
 	{
 		RedAlert(kErrFailedResourceLoad);
 	}
-
-	horiCursor = (HCURSOR)LoadImage(NULL,
-		MAKEINTRESOURCE(OCR_SIZEWE), IMAGE_CURSOR,
-		0, 0, LR_DEFAULTCOLOR | LR_SHARED);
+	horiCursor = LoadSystemCursor(OCR_SIZEWE);
 	if (horiCursor == NULL)
 	{
 		RedAlert(kErrFailedResourceLoad);
 	}
-
-	diagBotCursor = (HCURSOR)LoadImage(NULL,
-		MAKEINTRESOURCE(OCR_SIZENWSE), IMAGE_CURSOR,
-		0, 0, LR_DEFAULTCOLOR | LR_SHARED);
+	diagBotCursor = LoadSystemCursor(OCR_SIZENWSE);
 	if (diagBotCursor == NULL)
 	{
 		RedAlert(kErrFailedResourceLoad);
 	}
-
-	diagTopCursor = (HCURSOR)LoadImage(NULL,
-		MAKEINTRESOURCE(OCR_SIZENESW), IMAGE_CURSOR,
-		0, 0, LR_DEFAULTCOLOR | LR_SHARED);
+	diagTopCursor = LoadSystemCursor(OCR_SIZENESW);
 	if (diagTopCursor == NULL)
 	{
 		RedAlert(kErrFailedResourceLoad);
