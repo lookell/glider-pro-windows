@@ -4,6 +4,8 @@
 #include <limits.h>
 #include <stdlib.h>
 
+#define BYTEIO_DEFAULT_BUFFER_SIZE (8 * 1024)
+
 typedef int ASSERT_CHAR_BIT_IS_EIGHT[(CHAR_BIT == 8) ? 1 : -1];
 
 //--------------------------------------------------------------
@@ -16,7 +18,7 @@ typedef struct handle_reader {
 	HANDLE hFile;
 	size_t size;
 	const unsigned char *bufptr;
-	unsigned char buffer[8 * 1024];
+	unsigned char buffer[BYTEIO_DEFAULT_BUFFER_SIZE];
 } handle_reader;
 
 static handle_reader *handle_reader_init(HANDLE hFile);
@@ -28,7 +30,7 @@ typedef struct handle_writer {
 	HANDLE hFile;
 	size_t size;
 	unsigned char *bufptr;
-	unsigned char buffer[8 * 1024];
+	unsigned char buffer[BYTEIO_DEFAULT_BUFFER_SIZE];
 } handle_writer;
 
 static handle_writer *handle_writer_init(HANDLE hFile);
@@ -50,10 +52,11 @@ static int memory_reader_close(byteio *stream);
 typedef struct memory_writer {
 	ptrdiff_t size;
 	ptrdiff_t pos;
+	ptrdiff_t capacity;
 	unsigned char *buffer;
 } memory_writer;
 
-static memory_writer *memory_writer_init(void *buffer, size_t size);
+static memory_writer *memory_writer_init(size_t initial_capacity);
 static int memory_writer_write(byteio *stream, const void *buffer, size_t size);
 static int memory_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
 static int memory_writer_close(byteio *stream);
@@ -689,35 +692,69 @@ int byteio_init_memory_reader(byteio *stream, const void *buffer, size_t size)
 
 //--------------------------------------------------------------
 
-static memory_writer *memory_writer_init(void *buffer, size_t size)
+static memory_writer *memory_writer_init(size_t initial_capacity)
 {
 	memory_writer *self = malloc(sizeof(*self));
-	if (self == NULL || size > (size_t)PTRDIFF_MAX)
+	if (self == NULL || initial_capacity > (size_t)PTRDIFF_MAX)
 		return NULL;
-	self->size = (ptrdiff_t)size;
+	self->size = 0;
 	self->pos = 0;
-	self->buffer = buffer;
+	self->capacity = (ptrdiff_t)initial_capacity;
+	if (self->capacity == 0)
+		self->capacity = BYTEIO_DEFAULT_BUFFER_SIZE;
+	self->buffer = malloc(self->capacity);
+	if (self->buffer == NULL)
+	{
+		free(self);
+		return NULL;
+	}
 	return self;
 }
 
 static int memory_writer_write(byteio *stream, const void *buffer, size_t size)
 {
 	memory_writer *self = stream->priv;
-	unsigned char *inptr;
+	unsigned char *new_buffer;
+	ptrdiff_t write_size;
+	ptrdiff_t new_position;
+	ptrdiff_t new_capacity;
+
 	if (self == NULL || self->buffer == NULL || buffer == NULL)
 		return 0;
 	if (size > (size_t)PTRDIFF_MAX)
 		return 0;
-	if (self->pos >= self->size)
-		return 0;
-	if (self->size - self->pos < (ptrdiff_t)size)
+	write_size = (ptrdiff_t)size;
+	new_position = self->pos + write_size;
+	// Does the buffer size need to grow?
+	if (self->capacity < new_position)
 	{
-		self->pos = self->size;
-		return 0;
+		new_capacity = self->capacity;
+		while (new_capacity < new_position)
+		{
+			new_capacity *= 2;
+		}
+		new_buffer = realloc(self->buffer, new_capacity);
+		if (new_buffer == NULL)
+		{
+			// Try again with just enough memory to complete this write
+			new_capacity = new_position;
+			new_buffer = realloc(self->buffer, new_capacity);
+			if (new_buffer == NULL)
+			{
+				return 0; // out of memory
+			}
+		}
+		self->buffer = new_buffer;
+		self->capacity = new_capacity;
 	}
-	inptr = self->buffer;
-	memcpy(&inptr[self->pos], buffer, size);
-	self->pos += size;
+	// Write the incoming buffer at the current position
+	memcpy(&self->buffer[self->pos], buffer, write_size);
+	self->pos = new_position;
+	// Increase the buffer's total size appropriately
+	if (self->size < new_position)
+	{
+		self->size = new_position;
+	}
 	return 1;
 }
 
@@ -768,16 +805,37 @@ static int memory_writer_close(byteio *stream)
 	return 1;
 }
 
-int byteio_init_memory_writer(byteio *stream, void *buffer, size_t size)
+int byteio_init_memory_writer(byteio *stream, size_t initial_capacity)
 {
-	if (stream == NULL || buffer == NULL)
+	if (stream == NULL || initial_capacity > (size_t)PTRDIFF_MAX)
 		return 0;
 	stream->fn_read = minimal_read;
 	stream->fn_write = memory_writer_write;
 	stream->fn_seek = memory_writer_seek;
 	stream->fn_close = memory_writer_close;
-	stream->priv = memory_writer_init(buffer, size);
+	stream->priv = memory_writer_init(initial_capacity);
 	if (stream->priv == NULL)
 		return 0;
 	return 1;
+}
+
+int byteio_close_and_get_buffer(byteio *stream, void **bufferPtr, size_t *bufferLen)
+{
+	if (stream == NULL || stream->priv == NULL)
+		return 0;
+	if (bufferPtr == NULL || bufferLen == NULL)
+		return 0;
+	// Check the function pointers to see if it's a memory writer
+	if (stream->fn_read != minimal_read)
+		return 0;
+	if (stream->fn_write != memory_writer_write)
+		return 0;
+	if (stream->fn_seek != memory_writer_seek)
+		return 0;
+	if (stream->fn_close != memory_writer_close)
+		return 0;
+	// Write out the buffer pointer and length, and then close up
+	*bufferPtr = ((memory_writer *)stream->priv)->buffer;
+	*bufferLen = ((memory_writer *)stream->priv)->size;
+	return stream->fn_close(stream);
 }

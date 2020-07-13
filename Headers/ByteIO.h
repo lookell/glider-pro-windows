@@ -28,12 +28,22 @@ int byteio_init_handle_writer(byteio *stream, void *hFile);
 int byteio_init_memory_reader(byteio *stream, const void *buffer, size_t size);
 
 // Initialize a `byteio` structure to write bytes into a memory buffer.
-int byteio_init_memory_writer(byteio *stream, void *buffer, size_t size);
+int byteio_init_memory_writer(byteio *stream, size_t initial_capacity);
 
 // Close an initialized `byteio` structure. The `byteio` structure must have
 // been previously initialized by one of the `byteio_init_XXX` functions, and
 // must not have been closed before this call.
+//
+// If this is called on a memory writer, the buffer will be lost. Call the
+// `byteio_close_and_get_buffer` function instead to close the memory writer
+// and retrieve the buffer that holds your data.
 int byteio_close(byteio *stream);
+
+// Close a memory writer and retrieve its resulting buffer. This buffer should
+// be freed with the standard `free` function when you are finished with it.
+// If this function is called on a `byteio` structure that isn't a memory
+// writer, then the function will fail without doing anything.
+int byteio_close_and_get_buffer(byteio *stream, void **bufferPtr, size_t *bufferLen);
 
 // Read exactly `size` bytes into the array `buffer`. If the `buffer` parameter
 // is NULL, then the bytes are simply skipped over in the stream.
