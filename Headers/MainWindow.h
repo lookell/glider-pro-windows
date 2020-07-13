@@ -13,7 +13,6 @@
 #define WC_MAINWINDOW L"GliderMainWindow"
 
 extern HCURSOR handCursor;
-extern HCURSOR beamCursor;
 extern HCURSOR vertCursor;
 extern HCURSOR horiCursor;
 extern HCURSOR diagBotCursor;

@@ -43,7 +43,6 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate);
 
 
 HCURSOR handCursor;
-HCURSOR beamCursor;
 HCURSOR vertCursor;
 HCURSOR horiCursor;
 HCURSOR diagBotCursor;

@@ -145,14 +145,6 @@ void GetExtraCursors (void)
 		RedAlert(kErrFailedResourceLoad);
 	}
 
-	beamCursor = (HCURSOR)LoadImage(NULL,
-		MAKEINTRESOURCE(OCR_IBEAM), IMAGE_CURSOR,
-		0, 0, LR_DEFAULTCOLOR | LR_SHARED);
-	if (beamCursor == NULL)
-	{
-		RedAlert(kErrFailedResourceLoad);
-	}
-
 	vertCursor = (HCURSOR)LoadImage(NULL,
 		MAKEINTRESOURCE(OCR_SIZENS), IMAGE_CURSOR,
 		0, 0, LR_DEFAULTCOLOR | LR_SHARED);
