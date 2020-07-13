@@ -39,7 +39,6 @@ target_sources(
   # Glider PRO source files
   Headers/About.h
   Headers/AnimCursor.h
-  Headers/AppleEvents.h
   Headers/Audio.h
   Headers/Banner.h
   Headers/ByteIO.h
@@ -112,7 +111,6 @@ target_sources(
   Resources/gliderpro.rc
   Sources/About.c
   Sources/AnimCursor.c
-  Sources/AppleEvents.c
   Sources/Audio.c
   Sources/Banner.c
   Sources/ByteIO.c

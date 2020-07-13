@@ -98,13 +98,9 @@ typedef struct FSSpec
 // Unknown types (this list should be kept as short as possible)
 //
 
-typedef struct AEEventHandlerUPP__* AEEventHandlerUPP;
-typedef struct AppleEvent__* AppleEvent;
 typedef struct CGrafPtr__* CGrafPtr;
-typedef struct EventRecord__* EventRecord;
 typedef struct GDHandle__* GDHandle;
 typedef struct Movie__* Movie;
 typedef struct RgnHandle__* RgnHandle;
-typedef struct WindowPtr__* WindowPtr;
 
 #endif

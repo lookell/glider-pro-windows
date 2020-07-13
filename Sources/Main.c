@@ -9,7 +9,6 @@
 
 
 #include "AnimCursor.h"
-#include "AppleEvents.h"
 #include "Audio.h"
 #include "Coordinates.h"
 #include "Environ.h"
@@ -307,7 +306,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	if (thisMac.numScreens == 0)
 		RedAlert(kErrNeed16Or256Colors);
 //	dataResFile = OpenResFile("\pMermaid");
-	SetUpAppleEvents();
 	LoadCursors();
 	ReadInPrefs(NULL);
 

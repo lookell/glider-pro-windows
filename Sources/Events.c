@@ -28,7 +28,6 @@
 #include "Tools.h"
 
 
-void HandleHighLevelEvent (EventRecord *theEvent);
 void HandleIdleTask (void);
 
 
@@ -208,21 +207,6 @@ void HandleKeyEvent (HWND hwnd, BYTE vKey)
 		default:
 		break;
 	}
-}
-
-//--------------------------------------------------------------  HandleHighLevelEvent
-// Handle an AppleEvent (Open Document, Quit Application, etc.).
-
-void HandleHighLevelEvent (EventRecord *theEvent)
-{
-	return;
-#if 0
-	OSErr		theErr;
-
-	theErr = AEProcessAppleEvent(theEvent);
-	if ((theErr != noErr) && (theErr != errAEEventNotHandled))
-		YellowAlert(kYellowAppleEventErr, theErr);
-#endif
 }
 
 //--------------------------------------------------------------  HandleIdleTask
