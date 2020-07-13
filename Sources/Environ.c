@@ -347,8 +347,8 @@ void GetDeviceRect (Rect *theRect)
 {
 	theRect->left = 0;
 	theRect->top = 0;
-	theRect->right = 720;
-	theRect->bottom = 480;
+	theRect->right = 960;
+	theRect->bottom = 540;
 	return;
 #if 0
 	char		wasState;
