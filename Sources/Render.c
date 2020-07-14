@@ -28,7 +28,7 @@
 #define kMaxGarbageRects		48
 
 
-void DrawReflection (gliderPtr thisGlider, Boolean oneOrTwo);
+void DrawReflection (const gliderType *thisGlider, Boolean oneOrTwo);
 void RenderFlames (void);
 void RenderPendulums (void);
 void RenderFlyingPoints (void);
@@ -49,7 +49,7 @@ Boolean		hasMirror;
 //==============================================================  Functions
 //--------------------------------------------------------------  AddRectToWorkRects
 
-void AddRectToWorkRects (Rect *theRect)
+void AddRectToWorkRects (const Rect *theRect)
 {
 	if (numWork2Main < (kMaxGarbageRects - 1))
 	{
@@ -68,7 +68,7 @@ void AddRectToWorkRects (Rect *theRect)
 
 //--------------------------------------------------------------  AddRectToBackRects
 
-void AddRectToBackRects (Rect *theRect)
+void AddRectToBackRects (const Rect *theRect)
 {
 	if (numBack2Work < (kMaxGarbageRects - 1))
 	{
@@ -87,7 +87,7 @@ void AddRectToBackRects (Rect *theRect)
 
 //--------------------------------------------------------------  AddRectToWorkRectsWhole
 
-void AddRectToWorkRectsWhole (Rect *theRect)
+void AddRectToWorkRectsWhole (const Rect *theRect)
 {
 	if (numWork2Main < (kMaxGarbageRects - 1))
 	{
@@ -120,7 +120,7 @@ void AddRectToWorkRectsWhole (Rect *theRect)
 
 //--------------------------------------------------------------  DrawReflection
 
-void DrawReflection (gliderPtr thisGlider, Boolean oneOrTwo)
+void DrawReflection (const gliderType *thisGlider, Boolean oneOrTwo)
 {
 	Rect		src, dest;
 	SInt16		which;
@@ -414,7 +414,7 @@ void RenderStars (void)
 
 //--------------------------------------------------------------  RenderGlider
 
-void RenderGlider (gliderPtr thisGlider, Boolean oneOrTwo)
+void RenderGlider (const gliderType *thisGlider, Boolean oneOrTwo)
 {
 	Rect		src, dest;
 	SInt16		which;
@@ -659,7 +659,7 @@ void InitGarbageRects (void)
 
 //--------------------------------------------------------------  CopyRectBackToWork
 
-void CopyRectBackToWork (Rect *theRect)
+void CopyRectBackToWork (const Rect *theRect)
 {
 	Mac_CopyBits(backSrcMap, workSrcMap,
 			theRect, theRect, srcCopy, nil);
@@ -667,7 +667,7 @@ void CopyRectBackToWork (Rect *theRect)
 
 //--------------------------------------------------------------  CopyRectWorkToBack
 
-void CopyRectWorkToBack (Rect *theRect)
+void CopyRectWorkToBack (const Rect *theRect)
 {
 	Mac_CopyBits(workSrcMap, backSrcMap,
 			theRect, theRect, srcCopy, nil);
@@ -675,7 +675,7 @@ void CopyRectWorkToBack (Rect *theRect)
 
 //--------------------------------------------------------------  CopyRectWorkToMain
 
-void CopyRectWorkToMain (Rect *theRect)
+void CopyRectWorkToMain (const Rect *theRect)
 {
 	HDC			mainWindowDC;
 
@@ -687,7 +687,7 @@ void CopyRectWorkToMain (Rect *theRect)
 
 //--------------------------------------------------------------  CopyRectMainToWork
 
-void CopyRectMainToWork (Rect *theRect)
+void CopyRectMainToWork (const Rect *theRect)
 {
 	HDC			mainWindowDC;
 
@@ -699,7 +699,7 @@ void CopyRectMainToWork (Rect *theRect)
 
 //--------------------------------------------------------------  CopyRectMainToBack
 
-void CopyRectMainToBack (Rect *theRect)
+void CopyRectMainToBack (const Rect *theRect)
 {
 	HDC			mainWindowDC;
 
@@ -711,7 +711,7 @@ void CopyRectMainToBack (Rect *theRect)
 
 //--------------------------------------------------------------  AddToMirrorRegion
 
-void AddToMirrorRegion (Rect *theRect)
+void AddToMirrorRegion (const Rect *theRect)
 {
 	HRGN		tempRgn;
 

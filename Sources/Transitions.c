@@ -18,7 +18,7 @@
 //==============================================================  Functions
 //--------------------------------------------------------------  PourScreenOn
 
-void PourScreenOn (Rect *theRect)
+void PourScreenOn (const Rect *theRect)
 {
 	#define		kMaxColumnsWide	96
 	#define		kChipHigh		20
@@ -76,7 +76,7 @@ void PourScreenOn (Rect *theRect)
 
 //--------------------------------------------------------------  WipeScreenOn
 
-void WipeScreenOn (SInt16 direction, Rect *theRect)
+void WipeScreenOn (SInt16 direction, const Rect *theRect)
 {
 	#define		kWipeRectThick	4
 	Rect		wipeRect;
@@ -141,7 +141,7 @@ void WipeScreenOn (SInt16 direction, Rect *theRect)
 
 //--------------------------------------------------------------  DumpScreenOn
 
-void DumpScreenOn (Rect *theRect)
+void DumpScreenOn (const Rect *theRect)
 {
 	HDC			mainWindowDC;
 
@@ -191,7 +191,7 @@ void DumpScreenOn (Rect *theRect)
 
 //--------------------------------------------------------------  DissBits
 
-void DissBits (Rect *theRect)
+void DissBits (const Rect *theRect)
 {
 	UInt32		lfsrMask = 0x20013;		// 1 to 262143 (2^18 - 1)
 	HDC			mainWindowDC;
@@ -235,7 +235,7 @@ void DissBits (Rect *theRect)
 
 //--------------------------------------------------------------  DissBitsChunky
 
-void DissBitsChunky(Rect* theRect)
+void DissBitsChunky (const Rect *theRect)
 {
 	UInt32		lfsrMask = 0x8016;		// 1 to 65535 (2^16 - 1)
 	HDC			mainWindowDC;

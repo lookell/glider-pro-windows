@@ -44,7 +44,7 @@
 #define kMiniTileWide               16
 
 
-void LoadTileSrcGraphic (HDC hdc, SInt16 backID, Rect *theRect);
+void LoadTileSrcGraphic (HDC hdc, SInt16 backID, const Rect *theRect);
 void UpdateRoomInfoDialog (HWND hDlg, HDC hdc);
 void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver);
 void HiliteTileOver (HWND hDlg, Point mouseIs);
@@ -72,7 +72,7 @@ static Boolean showHandCursor = false;
 //==============================================================  Functions
 //--------------------------------------------------------------  LoadTileSrcGraphic
 
-void LoadTileSrcGraphic (HDC hdc, SInt16 backID, Rect *theRect)
+void LoadTileSrcGraphic (HDC hdc, SInt16 backID, const Rect *theRect)
 {
 	switch (backID)
 	{

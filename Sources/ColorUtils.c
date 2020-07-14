@@ -51,7 +51,7 @@ COLORREF Index2ColorRef (SInt32 color)
 // this function draws text in that color.  It assumes the current port,…
 // the current font, the current pen location, etc.
 
-void ColorText (HDC hdc, StringPtr theStr, SInt32 color)
+void ColorText (HDC hdc, ConstStringPtr theStr, SInt32 color)
 {
 	COLORREF	theRGBColor, wasColor;
 
@@ -66,7 +66,7 @@ void ColorText (HDC hdc, StringPtr theStr, SInt32 color)
 // Given a rectangle and color index, this function draws a solid…
 // rectangle in that color.  Current port, pen mode, etc. assumed.
 
-void ColorRect (HDC hdc, Rect *theRect, SInt32 color)
+void ColorRect (HDC hdc, const Rect *theRect, SInt32 color)
 {
 	COLORREF	theRGBColor, wasColor;
 
@@ -81,7 +81,7 @@ void ColorRect (HDC hdc, Rect *theRect, SInt32 color)
 // Given a rectangle and color index, this function draws a solid…
 // oval in that color.  Current port, pen mode, etc. assumed.
 
-void ColorOval (HDC hdc, Rect *theRect, SInt32 color)
+void ColorOval (HDC hdc, const Rect *theRect, SInt32 color)
 {
 	COLORREF	theRGBColor, wasColor;
 	HRGN		theRegion;
@@ -136,7 +136,7 @@ void ColorLine (HDC hdc, SInt16 h0, SInt16 v0, SInt16 h1, SInt16 v1, SInt32 colo
 // sides with color 2.  A rect can be made to appear "hi-lit" or "3D"…
 // in this way.
 
-void HiliteRect (HDC hdc, Rect *theRect, SInt32 color1, SInt32 color2)
+void HiliteRect (HDC hdc, const Rect *theRect, SInt32 color1, SInt32 color2)
 {
 	ColorLine(hdc, theRect->left, theRect->top, theRect->right - 2,
 			theRect->top, color1);
@@ -153,7 +153,7 @@ void HiliteRect (HDC hdc, Rect *theRect, SInt32 color1, SInt32 color2)
 // Given a rectangle and color index, this function frames a…
 // rectangle in that color.  Current port, pen mode, etc. assumed.
 
-void ColorFrameRect (HDC hdc, Rect *theRect, SInt32 color)
+void ColorFrameRect (HDC hdc, const Rect *theRect, SInt32 color)
 {
 	COLORREF	theRGBColor, wasColor;
 
@@ -168,7 +168,7 @@ void ColorFrameRect (HDC hdc, Rect *theRect, SInt32 color)
 // Given a rectangle and color index, this function frames an…
 // oval in that color.  Current port, pen mode, etc. assumed.
 
-void ColorFrameOval (HDC hdc, Rect *theRect, SInt32 color)
+void ColorFrameOval (HDC hdc, const Rect *theRect, SInt32 color)
 {
 	COLORREF	theRGBColor, wasColor;
 	HRGN		theRegion;
@@ -235,7 +235,7 @@ COLORREF DkGrayForeColor (void)
 // Similar to ColorRect, but every other pixel is set to the specified color
 // to create a dithered shadow.
 
-void ColorShadowRect (HDC hdc, Rect *theRect, SInt32 color)
+void ColorShadowRect (HDC hdc, const Rect *theRect, SInt32 color)
 {
 	HRGN theRgn = CreateRectRgn(theRect->left, theRect->top,
 			theRect->right, theRect->bottom);
@@ -248,7 +248,7 @@ void ColorShadowRect (HDC hdc, Rect *theRect, SInt32 color)
 // Similar to ColorOval, but every other pixel is set to the specified color
 // to create a dithered shadow.
 
-void ColorShadowOval (HDC hdc, Rect *theRect, SInt32 color)
+void ColorShadowOval (HDC hdc, const Rect *theRect, SInt32 color)
 {
 	HRGN theRgn = CreateEllipticRgn(theRect->left, theRect->top,
 			theRect->right + 1, theRect->bottom + 1);

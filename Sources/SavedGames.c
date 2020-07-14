@@ -29,7 +29,7 @@
 
 
 BOOL GetSaveFolderPath (LPWSTR lpSavePath, DWORD cchSavePath);
-void SavedGameMismatchError (HWND ownerWindow, StringPtr gameName);
+void SavedGameMismatchError (HWND ownerWindow, ConstStringPtr gameName);
 
 
 gameType	smallGame;
@@ -160,7 +160,7 @@ void SaveGame2 (HWND ownerWindow)
 
 //--------------------------------------------------------------  SavedGameMismatchError
 
-void SavedGameMismatchError (HWND ownerWindow, StringPtr gameName)
+void SavedGameMismatchError (HWND ownerWindow, ConstStringPtr gameName)
 {
 	DialogParams params = { 0 };
 	wchar_t gameStr[256];

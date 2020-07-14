@@ -42,7 +42,7 @@ void HandleFish (SInt16 who);
 void HandleDynamics (void);
 void RenderDynamics (void);
 void ZeroDinahs (void);
-SInt16 AddDynamicObject (SInt16 what, Rect *where, objectType *who,
+SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 	SInt16 room, SInt16 index, Boolean isOn);
 
 #endif

@@ -10,8 +10,8 @@
 void Mac_CopyBits(
 	HDC srcBits,
 	HDC dstBits,
-	const Rect* srcRect,
-	const Rect* dstRect,
+	const Rect *srcRect,
+	const Rect *dstRect,
 	SInt16 mode,
 	HRGN maskRgn)
 {
@@ -72,9 +72,9 @@ void Mac_CopyMask(
 	HDC srcBits,
 	HDC maskBits,
 	HDC dstBits,
-	const Rect* srcRect,
-	const Rect* maskRect,
-	const Rect* dstRect)
+	const Rect *srcRect,
+	const Rect *maskRect,
+	const Rect *dstRect)
 {
 	// TODO: add support for masks where pixels are between black and white
 	HDC newSrcBits;
@@ -172,7 +172,7 @@ void Mac_DrawPicture(HDC hdcDst, HBITMAP myPicture, const Rect *dstRect)
 // The current position is updated by this function to the right edge
 // of the text, at the baseline (TA_UPDATECP in GDI).
 
-void Mac_DrawString(HDC hdc, StringPtr s)
+void Mac_DrawString(HDC hdc, ConstStringPtr s)
 {
 	WCHAR buffer[256];
 	INT prevBkMode;
@@ -296,7 +296,7 @@ void Mac_PaintRect(HDC hdc, const Rect *r, HBRUSH hbr)
 // Calculate the width, in logical units, of the given Pascal string,
 // using the currently selected font.
 
-SInt16 Mac_StringWidth(HDC hdc, StringPtr s)
+SInt16 Mac_StringWidth(HDC hdc, ConstStringPtr s)
 {
 	WCHAR buffer[256];
 	SIZE extents;

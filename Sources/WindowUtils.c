@@ -31,7 +31,7 @@ static COLORREF mssgTextColor;
 // Brings up a simple message window.  Nice sort of utility function.
 // Anytime you want a small, quick message to come up, call this.
 
-void OpenMessageWindow (StringPtr title)
+void OpenMessageWindow (ConstStringPtr title)
 {
 	MSG msg;
 	WCHAR windowTitle[256];
@@ -87,7 +87,7 @@ static INT_PTR CALLBACK MessageWindowProc (HWND hDlg, UINT message, WPARAM wPara
 // For the above message window, this function displays a string of text…
 // in the center of the window.
 
-void SetMessageWindowMessage (StringPtr message)
+void SetMessageWindowMessage (ConstStringPtr message)
 {
 	WCHAR messageText[256];
 	MSG msg;

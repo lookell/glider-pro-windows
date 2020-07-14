@@ -22,7 +22,7 @@
 // Given a source string and storage for a second, this function…
 // copies from one to the other.  It assumes Pascal style strings.
 
-void PasStringCopy (StringPtr p1, StringPtr p2)
+void PasStringCopy (ConstStringPtr p1, StringPtr p2)
 {
 	register SInt16		stringLength;
 
@@ -50,7 +50,7 @@ void PasStringCopyC (const char *s1, StringPtr p2)
 // indicate the 2nd was greater and a 0 to indicate that the strings…
 // are equal.
 
-SInt16 WhichStringFirst (StringPtr p1, StringPtr p2)
+SInt16 WhichStringFirst (ConstStringPtr p1, ConstStringPtr p2)
 {
 	SInt16		smallestLength, seek, greater;
 	Byte		char1, char2;
@@ -105,7 +105,7 @@ SInt16 WhichStringFirst (StringPtr p1, StringPtr p2)
 // This function copies a specified number of characters from one…
 // Pascal string to another.
 
-void PasStringCopyNum (StringPtr p1, StringPtr p2, Byte charsToCopy)
+void PasStringCopyNum (ConstStringPtr p1, StringPtr p2, Byte charsToCopy)
 {
 	SInt16		i;
 
@@ -125,7 +125,7 @@ void PasStringCopyNum (StringPtr p1, StringPtr p2, Byte charsToCopy)
 // This function concatenates the second Pascal string to the end of…
 // the first Pascal string.
 
-void PasStringConcat (StringPtr p1, StringPtr p2)
+void PasStringConcat (StringPtr p1, ConstStringPtr p2)
 {
 	SInt16		wasLength, addedLength, i;
 
@@ -166,7 +166,7 @@ void PasStringConcatC (StringPtr p1, const char *s2)
 // nonzero (true), then the comparison is case-sensitive. If the third
 // parameter is zero (false), then the comparison is case-insensitive.
 
-Boolean PasStringEqual (StringPtr p1, StringPtr p2, Boolean caseSens)
+Boolean PasStringEqual (ConstStringPtr p1, ConstStringPtr p2, Boolean caseSens)
 {
 	wchar_t firstString[256];
 	wchar_t secondString[256];
@@ -194,7 +194,7 @@ Boolean PasStringEqual (StringPtr p1, StringPtr p2, Boolean caseSens)
 // by carriage returns.  The index variable indicates which line…
 // is sought.
 
-void GetLineOfText (StringPtr srcStr, SInt16 index, StringPtr textLine)
+void GetLineOfText (ConstStringPtr srcStr, SInt16 index, StringPtr textLine)
 {
 	SInt16		i, srcLength, count, start, stop;
 	Boolean		foundIt;
@@ -316,7 +316,7 @@ void WrapText (StringPtr theText, SInt16 maxChars)
 
 // Walks a string looking for a space (denoting first word of string).
 
-void GetFirstWordOfString (StringPtr stringIn, StringPtr stringOut)
+void GetFirstWordOfString (ConstStringPtr stringIn, StringPtr stringOut)
 {
 	SInt16		isLong, spaceAt, i;
 

@@ -426,7 +426,7 @@ void BuildHouseList (HWND ownerWindow)
 
 //--------------------------------------------------------------  AddExtraHouse
 
-void AddExtraHouse (houseSpec *newHouse)
+void AddExtraHouse (const houseSpec *newHouse)
 {
 	if (numExtraHouses >= kMaxExtraHouses)
 		return;

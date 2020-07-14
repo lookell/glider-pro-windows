@@ -51,7 +51,7 @@
 #define k8BlackColor			255
 
 
-void DrawClockDigit (SInt16 number, Rect *dest);
+void DrawClockDigit (SInt16 number, const Rect *dest);
 void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand);
 void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand);
 
@@ -59,7 +59,7 @@ void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand);
 //==============================================================  Functions
 //--------------------------------------------------------------  DrawSimpleBlowers
 
-void DrawSimpleBlowers (SInt16 what, Rect *theRect)
+void DrawSimpleBlowers (SInt16 what, const Rect *theRect)
 {
 	Mac_CopyMask(blowerSrcMap, blowerMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
@@ -67,7 +67,7 @@ void DrawSimpleBlowers (SInt16 what, Rect *theRect)
 
 //--------------------------------------------------------------  DrawTiki
 
-void DrawTiki (Rect *theRect, SInt16 down)
+void DrawTiki (const Rect *theRect, SInt16 down)
 {
 #define kTikiPoleBase	300
 	SInt32		darkGrayC, lightWoodC, darkWoodC;
@@ -105,7 +105,7 @@ void DrawTiki (Rect *theRect, SInt16 down)
 
 //--------------------------------------------------------------  DrawInvisibleBlower
 
-void DrawInvisibleBlower (Rect *theRect)
+void DrawInvisibleBlower (const Rect *theRect)
 {
 	Rect		tempRect;
 
@@ -117,14 +117,14 @@ void DrawInvisibleBlower (Rect *theRect)
 
 //--------------------------------------------------------------  DrawLiftArea
 
-void DrawLiftArea (Rect *theRect)
+void DrawLiftArea (const Rect *theRect)
 {
 	ColorFrameRect(backSrcMap, theRect, 192);
 }
 
 //--------------------------------------------------------------  DrawTable
 
-void DrawTable (Rect *tableTop, SInt16 down)
+void DrawTable (const Rect *tableTop, SInt16 down)
 {
 	#define		kTableBaseTop		296
 	#define		kTableShadowTop		312
@@ -158,9 +158,9 @@ void DrawTable (Rect *tableTop, SInt16 down)
 	else
 		ColorShadowOval(backSrcMap, &tempRect, k8DkstGrayColor);
 
-	QInsetRect(tableTop, 0, 1);
-	ColorRect(backSrcMap, tableTop, brownC);
-	QInsetRect(tableTop, 0, -1);
+	tempRect = *tableTop;
+	QInsetRect(&tempRect, 0, 1);
+	ColorRect(backSrcMap, &tempRect, brownC);
 
 	ColorLine(backSrcMap, tableTop->left, tableTop->top + 1,
 			tableTop->left, tableTop->top + 1, k8WhiteColor);
@@ -227,7 +227,7 @@ void DrawTable (Rect *tableTop, SInt16 down)
 
 //--------------------------------------------------------------  DrawShelf
 
-void DrawShelf (Rect *shelfTop)
+void DrawShelf (const Rect *shelfTop)
 {
 	#define		kBracketInset		18
 	#define		kShelfDeep			4
@@ -271,9 +271,9 @@ void DrawShelf (Rect *shelfTop)
 		ColorShadowRegion(backSrcMap, shadowRgn, k8DkstGrayColor);
 	DeleteObject(shadowRgn);
 
-	QInsetRect(shelfTop, 0, 1);
-	ColorRect(backSrcMap, shelfTop, brownC);
-	QInsetRect(shelfTop, 0, -1);
+	tempRect = *shelfTop;
+	QInsetRect(&tempRect, 0, 1);
+	ColorRect(backSrcMap, &tempRect, brownC);
 
 	ColorLine(backSrcMap, shelfTop->left + 1, shelfTop->top,
 			shelfTop->left + 1 + kShelfDeep, shelfTop->top, ltTanC);
@@ -307,7 +307,7 @@ void DrawShelf (Rect *shelfTop)
 
 //--------------------------------------------------------------  DrawCabinet
 
-void DrawCabinet (Rect *cabinet)
+void DrawCabinet (const Rect *cabinet)
 {
 	#define		kCabinetDeep		4
 	#define		kCabinetShadowOff	6
@@ -351,9 +351,9 @@ void DrawCabinet (Rect *cabinet)
 		ColorShadowRegion(backSrcMap, shadowRgn, dkGrayC);
 	DeleteObject(shadowRgn);
 
-	QInsetRect(cabinet, 1, 1);	// fill bulk of cabinet brown
-	ColorRect(backSrcMap, cabinet, brownC);
-	QInsetRect(cabinet, -1, -1);
+	tempRect = *cabinet;			// fill bulk of cabinet brown
+	QInsetRect(&tempRect, 1, 1);
+	ColorRect(backSrcMap, &tempRect, brownC);
 
 	tempRect = *cabinet;			// add lighter left side
 	tempRect.right = tempRect.left + kCabinetDeep;
@@ -420,7 +420,7 @@ void DrawCabinet (Rect *cabinet)
 
 //--------------------------------------------------------------  DrawSimpleFurniture
 
-void DrawSimpleFurniture (SInt16 what, Rect *theRect)
+void DrawSimpleFurniture (SInt16 what, const Rect *theRect)
 {
 	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
@@ -428,7 +428,7 @@ void DrawSimpleFurniture (SInt16 what, Rect *theRect)
 
 //--------------------------------------------------------------  DrawCounter
 
-void DrawCounter (Rect *counter)
+void DrawCounter (const Rect *counter)
 {
 	#define		kCounterFooterHigh	12
 	#define		kCounterStripWide	6
@@ -474,9 +474,9 @@ void DrawCounter (Rect *counter)
 		ColorShadowRegion(backSrcMap, shadowRgn, dkGrayC);
 	DeleteObject(shadowRgn);
 
-	QInsetRect(counter, 2, 2);
-	ColorRect(backSrcMap, counter, brownC);
-	QInsetRect(counter, -2, -2);
+	tempRect = *counter;
+	QInsetRect(&tempRect, 2, 2);
+	ColorRect(backSrcMap, &tempRect, brownC);
 
 	tempRect = *counter;
 	tempRect.top = tempRect.bottom - kCounterFooterHigh;
@@ -562,7 +562,7 @@ void DrawCounter (Rect *counter)
 
 //--------------------------------------------------------------  DrawDresser
 
-void DrawDresser (Rect *dresser)
+void DrawDresser (const Rect *dresser)
 {
 	#define		kDresserTopThick	4
 	#define		kDresserCrease		9
@@ -608,10 +608,10 @@ void DrawDresser (Rect *dresser)
 		ColorShadowRegion(backSrcMap, shadowRgn, k8DkstGrayColor);
 	DeleteObject(shadowRgn);
 
-	QInsetRect(dresser, 2, 2);
-	ColorRect(backSrcMap, dresser, k8PumpkinColor);
-	HiliteRect(backSrcMap, dresser, k8OrangeColor, dkstRedC);
-	QInsetRect(dresser, -2, -2);
+	tempRect = *dresser;
+	QInsetRect(&tempRect, 2, 2);
+	ColorRect(backSrcMap, &tempRect, k8PumpkinColor);
+	HiliteRect(backSrcMap, &tempRect, k8OrangeColor, dkstRedC);
 
 	tempRect = *dresser;
 	tempRect.bottom = tempRect.top + kDresserTopThick;
@@ -675,7 +675,7 @@ void DrawDresser (Rect *dresser)
 
 //--------------------------------------------------------------  DrawDeckTable
 
-void DrawDeckTable (Rect *tableTop, SInt16 down)
+void DrawDeckTable (const Rect *tableTop, SInt16 down)
 {
 	#define		kTableBaseTop		296
 	#define		kTableShadowTop		312
@@ -705,9 +705,9 @@ void DrawDeckTable (Rect *tableTop, SInt16 down)
 	QOffsetRect(&tempRect, kTableShadowOffset, -kTableShadowOffset);
 	ColorShadowOval(backSrcMap, &tempRect, dkGrayC);
 
-	QInsetRect(tableTop, 0, 1);
-	ColorRect(backSrcMap, tableTop, kGoldColor);
-	QInsetRect(tableTop, 0, -1);
+	tempRect = *tableTop;
+	QInsetRect(&tempRect, 0, 1);
+	ColorRect(backSrcMap, &tempRect, kGoldColor);
 
 	ColorLine(backSrcMap, tableTop->left, tableTop->top + 1,
 			tableTop->left, tableTop->top + 1, k8WhiteColor);
@@ -775,7 +775,7 @@ void DrawDeckTable (Rect *tableTop, SInt16 down)
 
 //--------------------------------------------------------------  DrawStool
 
-void DrawStool (Rect *theRect, SInt16 down)
+void DrawStool (const Rect *theRect, SInt16 down)
 {
 	#define		kStoolBase	304
 	SInt32		grayC, dkGrayC;
@@ -813,21 +813,21 @@ void DrawStool (Rect *theRect, SInt16 down)
 
 //--------------------------------------------------------------  DrawInvisObstacle
 
-void DrawInvisObstacle (Rect *theRect)
+void DrawInvisObstacle (const Rect *theRect)
 {
 	ColorFrameRect(backSrcMap, theRect, k8BrownColor);
 }
 
 //--------------------------------------------------------------  DrawInvisBounce
 
-void DrawInvisBounce (Rect *theRect)
+void DrawInvisBounce (const Rect *theRect)
 {
 	ColorFrameRect(backSrcMap, theRect, k8RedColor);
 }
 
 //--------------------------------------------------------------  DrawRedClock
 
-void DrawRedClock (Rect *theRect)
+void DrawRedClock (const Rect *theRect)
 {
 	SYSTEMTIME	localTime;
 	Rect		dest;
@@ -856,7 +856,7 @@ void DrawRedClock (Rect *theRect)
 
 //--------------------------------------------------------------  DrawClockDigit
 
-void DrawClockDigit (SInt16 number, Rect *dest)
+void DrawClockDigit (SInt16 number, const Rect *dest)
 {
 	Mac_CopyBits(bonusSrcMap, backSrcMap,
 			&digits[number], dest, srcCopy, nil);
@@ -864,7 +864,7 @@ void DrawClockDigit (SInt16 number, Rect *dest)
 
 //--------------------------------------------------------------  DrawBlueClock
 
-void DrawBlueClock (Rect *theRect)
+void DrawBlueClock (const Rect *theRect)
 {
 	SYSTEMTIME	localTime;
 	Point		dest;
@@ -883,7 +883,7 @@ void DrawBlueClock (Rect *theRect)
 
 //--------------------------------------------------------------  DrawYellowClock
 
-void DrawYellowClock (Rect *theRect)
+void DrawYellowClock (const Rect *theRect)
 {
 	SYSTEMTIME	localTime;
 	Point		dest;
@@ -902,7 +902,7 @@ void DrawYellowClock (Rect *theRect)
 
 //--------------------------------------------------------------  DrawCuckoo
 
-void DrawCuckoo (Rect *theRect)
+void DrawCuckoo (const Rect *theRect)
 {
 	SYSTEMTIME	localTime;
 	Point		dest;
@@ -1151,7 +1151,7 @@ void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 
 //--------------------------------------------------------------  DrawSimplePrizes
 
-void DrawSimplePrizes (SInt16 what, Rect *theRect)
+void DrawSimplePrizes (SInt16 what, const Rect *theRect)
 {
 	Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
@@ -1159,7 +1159,7 @@ void DrawSimplePrizes (SInt16 what, Rect *theRect)
 
 //--------------------------------------------------------------  DrawGreaseRt
 
-void DrawGreaseRt (Rect *theRect, SInt16 distance, Boolean state)
+void DrawGreaseRt (const Rect *theRect, SInt16 distance, Boolean state)
 {
 	Rect		spill, dest;
 
@@ -1183,7 +1183,7 @@ void DrawGreaseRt (Rect *theRect, SInt16 distance, Boolean state)
 
 //--------------------------------------------------------------  DrawGreaseLf
 
-void DrawGreaseLf (Rect *theRect, SInt16 distance, Boolean state)
+void DrawGreaseLf (const Rect *theRect, SInt16 distance, Boolean state)
 {
 	Rect		spill, dest;
 
@@ -1207,7 +1207,7 @@ void DrawGreaseLf (Rect *theRect, SInt16 distance, Boolean state)
 
 //--------------------------------------------------------------  DrawBands
 
-void DrawFoil (Rect *theRect)
+void DrawFoil (const Rect *theRect)
 {
 	Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
 			&srcRects[kFoil], &srcRects[kFoil], theRect);
@@ -1215,14 +1215,14 @@ void DrawFoil (Rect *theRect)
 
 //--------------------------------------------------------------  DrawInvisBonus
 
-void DrawInvisBonus (Rect *theRect)
+void DrawInvisBonus (const Rect *theRect)
 {
 	ColorFrameOval(backSrcMap, theRect, 227);
 }
 
 //--------------------------------------------------------------  DrawSlider
 
-void DrawSlider (Rect *theRect)
+void DrawSlider (const Rect *theRect)
 {
 	Mac_FrameRect(backSrcMap, theRect, GetStockObject(BLACK_BRUSH), 1, 1);
 }

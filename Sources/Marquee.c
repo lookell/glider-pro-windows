@@ -109,7 +109,7 @@ void DoMarquee (void)
 
 //--------------------------------------------------------------  StartMarquee
 
-void StartMarquee (Rect *theRect)
+void StartMarquee (const Rect *theRect)
 {
 	HDC hdc;
 
@@ -133,7 +133,7 @@ void StartMarquee (Rect *theRect)
 
 //--------------------------------------------------------------  StartMarqueeHandled
 
-void StartMarqueeHandled (Rect *theRect, SInt16 direction, SInt16 dist)
+void StartMarqueeHandled (const Rect *theRect, SInt16 direction, SInt16 dist)
 {
 	HDC hdc;
 
@@ -741,7 +741,7 @@ void DrawMarquee (HDC hdc)
 
 //--------------------------------------------------------------  InitMarquee
 
-void InitMarquee(void)
+void InitMarquee (void)
 {
 	HIMAGELIST	himlMarquee;
 	HDC			hdc;

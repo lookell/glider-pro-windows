@@ -132,11 +132,11 @@ extern SInt16 tvWithMovieNumber;
 extern Boolean newState;
 
 Boolean IsThisValid (SInt16 where, SInt16 who);
-SInt16 GetRoomLinked (objectType *who);
-Boolean ObjectIsLinkTransport (objectType *who);
-Boolean ObjectIsLinkSwitch (objectType *who);
+SInt16 GetRoomLinked (const objectType *who);
+Boolean ObjectIsLinkTransport (const objectType *who);
+Boolean ObjectIsLinkSwitch (const objectType *who);
 void ListAllLocalObjects (void);
-void AddTempManholeRect (Rect *manHole);
+void AddTempManholeRect (const Rect *manHole);
 Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local);
 Boolean GetObjectState (SInt16 room, SInt16 object);
 void BringSendFrontBack (HWND ownerWindow, Boolean bringFront);

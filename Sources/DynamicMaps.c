@@ -21,11 +21,11 @@
 #include "Utilities.h"
 
 
-void BackUpFlames (Rect *src, SInt16 index);
-void BackUpTikiFlames (Rect *src, SInt16 index);
-void BackUpBBQCoals (Rect *src, SInt16 index);
-void BackUpPendulum (Rect *src, SInt16 index);
-void BackUpStar (Rect *src, SInt16 index);
+void BackUpFlames (const Rect *src, SInt16 index);
+void BackUpTikiFlames (const Rect *src, SInt16 index);
+void BackUpBBQCoals (const Rect *src, SInt16 index);
+void BackUpPendulum (const Rect *src, SInt16 index);
+void BackUpStar (const Rect *src, SInt16 index);
 
 
 sparklePtr	sparkles;
@@ -67,7 +67,7 @@ void NilSavedMaps (void)
 // room that it obscured so that, should the player get the object,…
 // it can be made to "disappear".
 
-SInt16 BackUpToSavedMap (Rect *theRect, SInt16 where, SInt16 who)
+SInt16 BackUpToSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 {
 	Rect		mapRect;
 	OSErr		theErr;
@@ -95,7 +95,7 @@ SInt16 BackUpToSavedMap (Rect *theRect, SInt16 where, SInt16 who)
 // a slot in the pixmap array for the object.  It re-copies the background…
 // and is needed when the lights in the room go on or off.
 
-SInt16 ReBackUpSavedMap (Rect *theRect, SInt16 where, SInt16 who)
+SInt16 ReBackUpSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 {
 	Rect		mapRect;
 	SInt16		i, foundIndex;
@@ -255,7 +255,7 @@ void AddFlyingPoint (Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVel)
 // CopyBits() calls will properly draw the flame on screen with the…
 // proper background.
 
-void BackUpFlames (Rect *src, SInt16 index)
+void BackUpFlames (const Rect *src, SInt16 index)
 {
 	Rect		dest;
 	SInt16		i;
@@ -338,7 +338,7 @@ void AddCandleFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 //--------------------------------------------------------------  BackUpTikiFlames
 // This is like the function BackUpFlames() but customized for Tiki torches.
 
-void BackUpTikiFlames (Rect *src, SInt16 index)
+void BackUpTikiFlames (const Rect *src, SInt16 index)
 {
 	Rect		dest;
 	SInt16		i;
@@ -421,7 +421,7 @@ void AddTikiFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 
 // Another one - but for BBQ coals.
 
-void BackUpBBQCoals (Rect *src, SInt16 index)
+void BackUpBBQCoals (const Rect *src, SInt16 index)
 {
 	Rect		dest;
 	SInt16		i;
@@ -504,7 +504,7 @@ void AddBBQCoals (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 // Just like many of the previous functions, but for the pendulum on the…
 // cuckoo clock.
 
-void BackUpPendulum (Rect *src, SInt16 index)
+void BackUpPendulum (const Rect *src, SInt16 index)
 {
 	Rect		dest;
 	SInt16		i;
@@ -592,7 +592,7 @@ void AddPendulum (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 
 // Makes a copy of background beneath a star.
 
-void BackUpStar (Rect *src, SInt16 index)
+void BackUpStar (const Rect *src, SInt16 index)
 {
 	Rect		dest;
 	SInt16		i;
@@ -707,7 +707,7 @@ void StopStar (SInt16 where, SInt16 who)
 
 // Adds a shredded glider.
 
-void AddAShreddedGlider (Rect *bounds)
+void AddAShreddedGlider (const Rect *bounds)
 {
 	if (numShredded > kMaxShredded)
 		return;

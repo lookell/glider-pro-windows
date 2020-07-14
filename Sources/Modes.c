@@ -156,7 +156,7 @@ void StartGliderGoingDownStairs (gliderPtr thisGlider)
 
 //--------------------------------------------------------------  StartGliderMailingIn
 
-void StartGliderMailingIn (gliderPtr thisGlider, Rect *bounds, hotPtr who)
+void StartGliderMailingIn (gliderPtr thisGlider, const Rect *bounds, const hotObject *who)
 {
 	SInt16		topSought, whoLinked;
 	Byte		objLinked;
@@ -210,7 +210,7 @@ void StartGliderMailingOut (gliderPtr thisGlider)
 
 //--------------------------------------------------------------  StartGliderDuctingDown
 
-void StartGliderDuctingDown (gliderPtr thisGlider, Rect *bounds, hotPtr who)
+void StartGliderDuctingDown (gliderPtr thisGlider, const Rect *bounds, const hotObject *who)
 {
 	SInt16		leftSought, whoLinked;
 	Byte		objLinked;
@@ -239,7 +239,7 @@ void StartGliderDuctingDown (gliderPtr thisGlider, Rect *bounds, hotPtr who)
 
 //--------------------------------------------------------------  StartGliderDuctingUp
 
-void StartGliderDuctingUp (gliderPtr thisGlider, Rect *bounds, hotPtr who)
+void StartGliderDuctingUp (gliderPtr thisGlider, const Rect *bounds, const hotObject *who)
 {
 	SInt16		leftSought, whoLinked;
 	Byte		objLinked;
@@ -277,7 +277,7 @@ void StartGliderDuctingIn (gliderPtr thisGlider)
 
 //--------------------------------------------------------------  StartGliderTransporting
 
-void StartGliderTransporting (gliderPtr thisGlider, hotPtr who)
+void StartGliderTransporting (gliderPtr thisGlider, const hotObject *who)
 {
 	SInt16		whoLinked;
 	Byte		objLinked;
@@ -351,7 +351,7 @@ void FlagGliderNormal (gliderPtr thisGlider)
 
 //--------------------------------------------------------------  FlagGliderShredding
 
-void FlagGliderShredding (gliderPtr thisGlider, Rect *bounds)
+void FlagGliderShredding (gliderPtr thisGlider, const Rect *bounds)
 {
 	PlayPrioritySound(kCaughtFireSound, kCaughtFirePriority);
 	thisGlider->dest.left = bounds->left + 36;

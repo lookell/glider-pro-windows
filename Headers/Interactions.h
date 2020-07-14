@@ -12,9 +12,9 @@
 
 extern SInt16 otherPlayerEscaped;
 
-Boolean SectGlider (gliderPtr thisGlider, Rect *theRect, Boolean scrutinize);
+Boolean SectGlider (const gliderType *thisGlider, const Rect *theRect, Boolean scrutinize);
 void HandleSwitches (hotPtr who);
 void HandleInteraction (void);
-void FlagStillOvers (gliderPtr thisGlider);
+void FlagStillOvers (const gliderType *thisGlider);
 
 #endif

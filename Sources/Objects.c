@@ -24,7 +24,7 @@
 #include "Sound.h"
 
 
-SInt16 GetObjectLinked (objectType *who);
+SInt16 GetObjectLinked (const objectType *who);
 void ListOneRoomsObjects (SInt16 where);
 
 
@@ -126,7 +126,7 @@ Boolean IsThisValid (SInt16 where, SInt16 who)
 
 //--------------------------------------------------------------  GetRoomLinked
 
-SInt16 GetRoomLinked (objectType *who)
+SInt16 GetRoomLinked (const objectType *who)
 {
 	SInt16		compoundRoomNumber, whereLinked;
 	SInt16		floor, suite;
@@ -177,7 +177,7 @@ SInt16 GetRoomLinked (objectType *who)
 
 //--------------------------------------------------------------  GetObjectLinked
 
-SInt16 GetObjectLinked (objectType *who)
+SInt16 GetObjectLinked (const objectType *who)
 {
 	SInt16		whoLinked;
 
@@ -219,7 +219,7 @@ SInt16 GetObjectLinked (objectType *who)
 
 //--------------------------------------------------------------  ObjectIsLinkTransport
 
-Boolean ObjectIsLinkTransport (objectType *who)
+Boolean ObjectIsLinkTransport (const objectType *who)
 {
 	Boolean		itIs;
 
@@ -236,7 +236,7 @@ Boolean ObjectIsLinkTransport (objectType *who)
 
 //--------------------------------------------------------------  ObjectIsLinkSwitch
 
-Boolean ObjectIsLinkSwitch (objectType *who)
+Boolean ObjectIsLinkSwitch (const objectType *who)
 {
 	Boolean		itIs;
 
@@ -341,7 +341,7 @@ void ListAllLocalObjects (void)
 
 //--------------------------------------------------------------  AddTempManholeRect
 
-void AddTempManholeRect (Rect *manHole)
+void AddTempManholeRect (const Rect *manHole)
 {
 	Rect		tempRect;
 

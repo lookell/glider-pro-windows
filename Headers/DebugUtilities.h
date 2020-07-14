@@ -10,9 +10,9 @@
 #include "MacTypes.h"
 
 void MonitorWait (void);
-void DisplayRect (Rect *theRect);
-void FlashRect (Rect *theRect);
-void CheckLegitRect(Rect *srcRect, Rect *inRect);
+void DisplayRect (const Rect *theRect);
+void FlashRect (const Rect *theRect);
+void CheckLegitRect (const Rect *srcRect, const Rect *inRect);
 void DisplayLong (SInt32 theValue);
 void DisplayShort (SInt16 theValue);
 void FlashLong (SInt32 theValue);

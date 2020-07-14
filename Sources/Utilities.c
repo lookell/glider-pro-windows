@@ -179,7 +179,7 @@ void FindOurDevice (void)
 //--------------------------------------------------------------------  CreateOffScreenGWorld
 // Creates an offscreen GWorld using the depth passed in.
 
-OSErr CreateOffScreenGWorld (HDC *theGWorld, Rect *bounds, SInt16 depth)
+OSErr CreateOffScreenGWorld (HDC *theGWorld, const Rect *bounds, SInt16 depth)
 {
 	HDC			hdcDisplay, hdcSurface;
 	HBITMAP		hbmSurface;
@@ -282,7 +282,7 @@ void LoadGraphic (HDC hdc, SInt16 resID)
 // specified.  If this rect isn't the same size of the 'PICT', scaling…
 // will occur.
 
-void LoadScaledGraphic (HDC hdc, SInt16 resID, Rect *theRect)
+void LoadScaledGraphic (HDC hdc, SInt16 resID, const Rect *theRect)
 {
 	HBITMAP		thePicture;
 

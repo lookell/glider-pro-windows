@@ -32,7 +32,7 @@
 
 
 void RegisterMapWindowClass (void);
-void LoadGraphicPlus (HDC hdc, SInt16 resID, Rect *theRect);
+void LoadGraphicPlus (HDC hdc, SInt16 resID, const Rect *theRect);
 void RedrawMapContents (HDC hdc);
 void ResizeMapWindow (WINDOWPOS *windowPos);
 LRESULT CALLBACK MapWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -195,7 +195,7 @@ void FindNewActiveRoomRect (void)
 
 //--------------------------------------------------------------  LoadGraphicPlus
 
-void LoadGraphicPlus (HDC hdc, SInt16 resID, Rect *theRect)
+void LoadGraphicPlus (HDC hdc, SInt16 resID, const Rect *theRect)
 {
 	HBITMAP thePicture;
 

@@ -21,7 +21,7 @@
 
 
 Boolean GetPrefsFilePath (LPWSTR lpFilePath, size_t cchFilePath);
-Boolean WritePrefs (HWND ownerWindow, LPCWSTR prefsFilePath, prefsInfo *thePrefs);
+Boolean WritePrefs (HWND ownerWindow, LPCWSTR prefsFilePath, const prefsInfo *thePrefs);
 HRESULT ReadPrefs (HWND ownerWindow, LPCWSTR prefsFilePath, prefsInfo *thePrefs);
 Boolean DeletePrefs (LPCWSTR prefsFilePath);
 void BringUpDeletePrefsAlert (HWND ownerWindow);
@@ -49,7 +49,7 @@ Boolean GetPrefsFilePath (LPWSTR lpFilePath, size_t cchFilePath)
 
 //--------------------------------------------------------------  WritePrefs
 
-Boolean WritePrefs (HWND ownerWindow, LPCWSTR prefsFilePath, prefsInfo *thePrefs)
+Boolean WritePrefs (HWND ownerWindow, LPCWSTR prefsFilePath, const prefsInfo *thePrefs)
 {
 	HANDLE		fileHandle;
 	byteio		byteWriter;

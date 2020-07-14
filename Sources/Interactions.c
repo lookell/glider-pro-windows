@@ -37,9 +37,9 @@
 #define kFoilSupply				8
 
 
-Boolean GliderHitTop (gliderPtr thisGlider, Rect *theRect);
-Boolean GliderInRect (gliderPtr thisGlider, Rect *theRect);
-void BounceGlider (gliderPtr thisGlider, Rect *theRect);
+Boolean GliderHitTop (gliderPtr thisGlider, const Rect *theRect);
+Boolean GliderInRect (const gliderType *thisGlider, const Rect *theRect);
+void BounceGlider (gliderPtr thisGlider, const Rect *theRect);
 void CheckEscapeUpTwo (gliderPtr thisGlider);
 void CheckEscapeUp (gliderPtr thisGlider);
 void CheckEscapeDownTwo (gliderPtr thisGlider);
@@ -54,7 +54,7 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who);
 void HandleMicrowaveAction (hotPtr who, gliderPtr thisGlider);
 void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, SInt16 index);
 void CheckForHotSpots (void);
-void WebGlider (gliderPtr thisGlider, Rect *webBounds);
+void WebGlider (gliderPtr thisGlider, const Rect *webBounds);
 
 
 SInt16		otherPlayerEscaped, activeRectEscaped;
@@ -63,7 +63,7 @@ SInt16		otherPlayerEscaped, activeRectEscaped;
 //==============================================================  Functions
 //--------------------------------------------------------------  GliderHitSides
 
-Boolean GliderHitTop (gliderPtr thisGlider, Rect *theRect)
+Boolean GliderHitTop (gliderPtr thisGlider, const Rect *theRect)
 {
 	Rect		glideBounds;
 	SInt16		offset;
@@ -110,7 +110,7 @@ Boolean GliderHitTop (gliderPtr thisGlider, Rect *theRect)
 
 //--------------------------------------------------------------  SectGlider
 
-Boolean SectGlider (gliderPtr thisGlider, Rect *theRect, Boolean scrutinize)
+Boolean SectGlider (const gliderType *thisGlider, const Rect *theRect, Boolean scrutinize)
 {
 	Rect		glideBounds;
 	Boolean		itHit;
@@ -143,7 +143,7 @@ Boolean SectGlider (gliderPtr thisGlider, Rect *theRect, Boolean scrutinize)
 
 //--------------------------------------------------------------  GliderInRect
 
-Boolean GliderInRect (gliderPtr thisGlider, Rect *theRect)
+Boolean GliderInRect (const gliderType *thisGlider, const Rect *theRect)
 {
 	Rect		glideBounds;
 
@@ -163,7 +163,7 @@ Boolean GliderInRect (gliderPtr thisGlider, Rect *theRect)
 
 //--------------------------------------------------------------  BounceGlider
 
-void BounceGlider (gliderPtr thisGlider, Rect *theRect)
+void BounceGlider (gliderPtr thisGlider, const Rect *theRect)
 {
 	Rect		glideBounds;
 
@@ -1724,7 +1724,7 @@ void HandleInteraction (void)
 
 //--------------------------------------------------------------  FlagStillOvers
 
-void FlagStillOvers (gliderPtr thisGlider)
+void FlagStillOvers (const gliderType *thisGlider)
 {
 	SInt16		i;
 
@@ -1745,7 +1745,7 @@ void FlagStillOvers (gliderPtr thisGlider)
 
 //--------------------------------------------------------------  WebGlider
 
-void WebGlider (gliderPtr thisGlider, Rect *webBounds)
+void WebGlider (gliderPtr thisGlider, const Rect *webBounds)
 {
 	#define		kKillWebbedGlider	150
 	SInt16		hDist, vDist;

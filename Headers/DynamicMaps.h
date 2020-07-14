@@ -32,8 +32,8 @@ extern SInt16 numStars;
 extern SInt16 numShredded;
 
 void NilSavedMaps (void);
-SInt16 BackUpToSavedMap (Rect *theRect, SInt16 where, SInt16 who);
-SInt16 ReBackUpSavedMap (Rect *theRect, SInt16 where, SInt16 who);
+SInt16 BackUpToSavedMap (const Rect *theRect, SInt16 where, SInt16 who);
+SInt16 ReBackUpSavedMap (const Rect *theRect, SInt16 where, SInt16 who);
 void RestoreFromSavedMap (SInt16 where, SInt16 who, Boolean doSparkle);
 void AddSparkle (Rect *theRect);
 void AddFlyingPoint (Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVel);
@@ -49,7 +49,7 @@ void ReBackUpStar (SInt16 where, SInt16 who);
 void AddStar (SInt16 where, SInt16 who, SInt16 h, SInt16 v);
 void StopPendulum (SInt16 where, SInt16 who);
 void StopStar (SInt16 where, SInt16 who);
-void AddAShreddedGlider (Rect *bounds);
+void AddAShreddedGlider (const Rect *bounds);
 void RemoveShreds (void);
 void ZeroFlamesAndTheLike (void);
 

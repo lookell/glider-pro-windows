@@ -185,7 +185,7 @@ void ZeroDinahs (void)
 // When a room is being drawn, various dynamic objects are pointed here.
 // This function sets up the structures to handle them.
 
-SInt16 AddDynamicObject (SInt16 what, Rect *where, objectType *who,
+SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		SInt16 room, SInt16 index, Boolean isOn)
 {
 	SInt16		position, velocity;

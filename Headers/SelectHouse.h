@@ -22,6 +22,6 @@ extern SInt16 numExtraHouses;
 void DoLoadHouse (HWND ownerWindow);
 BOOL GetHouseFolderPath (LPWSTR buffer, DWORD cch);
 void BuildHouseList (HWND ownerWindow);
-void AddExtraHouse (houseSpec *newHouse);
+void AddExtraHouse (const houseSpec *newHouse);
 
 #endif

@@ -16,19 +16,19 @@ extern SInt16 numWork2Main;
 extern SInt16 numBack2Work;
 extern Boolean hasMirror;
 
-void AddRectToWorkRects (Rect *theRect);
-void AddRectToBackRects (Rect *theRect);
-void AddRectToWorkRectsWhole (Rect *theRect);
-void RenderGlider (gliderPtr thisGlider, Boolean oneOrTwo);
+void AddRectToWorkRects (const Rect *theRect);
+void AddRectToBackRects (const Rect *theRect);
+void AddRectToWorkRectsWhole (const Rect *theRect);
+void RenderGlider (const gliderType *thisGlider, Boolean oneOrTwo);
 void CopyRectsQD (void);
 void RenderFrame (void);
 void InitGarbageRects (void);
-void CopyRectBackToWork (Rect *theRect);
-void CopyRectWorkToBack (Rect *theRect);
-void CopyRectWorkToMain (Rect *theRect);
-void CopyRectMainToWork (Rect *theRect);
-void CopyRectMainToBack (Rect *theRect);
-void AddToMirrorRegion (Rect *theRect);
+void CopyRectBackToWork (const Rect *theRect);
+void CopyRectWorkToBack (const Rect *theRect);
+void CopyRectWorkToMain (const Rect *theRect);
+void CopyRectMainToWork (const Rect *theRect);
+void CopyRectMainToBack (const Rect *theRect);
+void AddToMirrorRegion (const Rect *theRect);
 void ZeroMirrorRegion (void);
 
 #endif

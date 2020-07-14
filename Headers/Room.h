@@ -31,7 +31,7 @@ extern Boolean doBitchDialogs;
 
 void SetInitialTiles (SInt16 background, SInt16 *theTiles);
 Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v);
-void ReadyBackground (SInt16 theID, SInt16 *theTiles);
+void ReadyBackground (SInt16 theID, const SInt16 *theTiles);
 void ReflectCurrentRoom (Boolean forceMapRedraw);
 void CopyRoomToThisRoom (SInt16 roomNumber);
 void CopyThisRoomToRoom (void);

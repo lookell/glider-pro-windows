@@ -64,8 +64,6 @@ void HandleRoomVisitation (void);
 void SetObjectsToDefaults (void);
 void InitTelephone (void);
 void HandleTelephone (void);
-//Boolean DoesStarCodeExist (SInt16);
-//SInt16 GetNumStarsRemaining (SInt16, SInt16);
 
 
 phoneType	thePhone, theChimes;
@@ -659,7 +657,7 @@ void SetObjectsToDefaults (void)
 
 //--------------------------------------------------------------  HideGlider
 
-void HideGlider (gliderPtr thisGlider)
+void HideGlider (const gliderType *thisGlider)
 {
 	Rect		tempRect;
 

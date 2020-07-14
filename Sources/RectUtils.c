@@ -57,7 +57,7 @@ void CenterRectOnPoint (Rect *theRect, Point where)
 //--------------------------------------------------------------  HalfRectWide
 // Given a rectangle, this function returns the rect's width divided by 2.
 
-SInt16 HalfRectWide (Rect *theRect)
+SInt16 HalfRectWide (const Rect *theRect)
 {
 	return ((theRect->right - theRect->left) / 2);
 }
@@ -65,7 +65,7 @@ SInt16 HalfRectWide (Rect *theRect)
 //--------------------------------------------------------------  HalfRectTall
 // Given a rectangle, this function returns the rect's height divided by 2.
 
-SInt16 HalfRectTall (Rect *theRect)
+SInt16 HalfRectTall (const Rect *theRect)
 {
 	return ((theRect->bottom - theRect->top) / 2);
 }
@@ -73,7 +73,7 @@ SInt16 HalfRectTall (Rect *theRect)
 //--------------------------------------------------------------  RectWide
 // Given a rectangle, this simple function returns the rect's width.
 
-SInt16 RectWide (Rect *theRect)
+SInt16 RectWide (const Rect *theRect)
 {
 	return (theRect->right - theRect->left);
 }
@@ -81,7 +81,7 @@ SInt16 RectWide (Rect *theRect)
 //--------------------------------------------------------------  RectTall
 // Given a rectangle, this simple function returns the rect's height.
 
-SInt16 RectTall (Rect *theRect)
+SInt16 RectTall (const Rect *theRect)
 {
 	return (theRect->bottom - theRect->top);
 }
@@ -90,7 +90,7 @@ SInt16 RectTall (Rect *theRect)
 // Given two rectangles, this function centers the first rectangle…
 // within the second.  The second rect is unchanged.
 
-void CenterRectInRect (Rect *rectA, Rect *rectB)
+void CenterRectInRect (Rect *rectA, const Rect *rectB)
 {
 	SInt16 widthA, tallA;
 
@@ -129,7 +129,7 @@ void VOffsetRect (Rect *theRect, SInt16 v)
 // Given two rects, this function returns true if the first rectangle…
 // is to the left of the second.
 
-Boolean IsRectLeftOfRect (Rect *rect1, Rect *rect2)
+Boolean IsRectLeftOfRect (const Rect *rect1, const Rect *rect2)
 {
 	SInt16 offset;
 
@@ -171,7 +171,7 @@ void QSetRect (Rect *theRect, SInt16 l, SInt16 t, SInt16 r, SInt16 b)
 // will clip the source rect so that it is entirely within the bounding…
 // rect.  It returns true if any clippiung was necessary.
 
-Boolean ForceRectInRect (Rect *small_, Rect *large)
+Boolean ForceRectInRect (Rect *small_, const Rect *large)
 {
 	SInt16 hOff, vOff;
 	Boolean changed;
@@ -225,7 +225,7 @@ Boolean ForceRectInRect (Rect *small_, Rect *large)
 // Given 2 rects that are assumed to have the same width and height,…
 // this function returns a 3rd rect that is the union of those two.
 
-void QUnionSimilarRect (Rect *rectA, Rect *rectB, Rect *rectC)
+void QUnionSimilarRect (const Rect *rectA, const Rect *rectB, Rect *rectC)
 {
 	if (rectA->left < rectB->left)
 		rectC->left = rectA->left;

@@ -33,7 +33,7 @@ extern Boolean tvOn;
 
 void NewGame (HWND ownerWindow, SInt16 mode);
 void DoDemoGame (HWND ownerWindow);
-void HideGlider (gliderPtr thisGlider);
+void HideGlider (const gliderType *thisGlider);
 void StrikeChime (void);
 void RestoreEntireGameScreen (void);
 

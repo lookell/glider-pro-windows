@@ -24,8 +24,8 @@ typedef struct
 extern marquee theMarquee;
 
 void DoMarquee (void);
-void StartMarquee (Rect *theRect);
-void StartMarqueeHandled (Rect *theRect, SInt16 direction, SInt16 dist);
+void StartMarquee (const Rect *theRect);
+void StartMarqueeHandled (const Rect *theRect, SInt16 direction, SInt16 dist);
 void StopMarquee (void);
 void PauseMarquee (void);
 void ResumeMarquee (void);

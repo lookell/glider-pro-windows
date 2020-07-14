@@ -43,7 +43,7 @@ void MonitorWait (void)
 
 //--------------------------------------------------------------  DisplayRect
 
-void DisplayRect (Rect *theRect)
+void DisplayRect (const Rect *theRect)
 {
 	return;
 #if 0
@@ -64,7 +64,7 @@ void DisplayRect (Rect *theRect)
 
 //--------------------------------------------------------------  FlashRect
 
-void FlashRect (Rect *theRect)
+void FlashRect (const Rect *theRect)
 
 {
 	return;
@@ -88,7 +88,7 @@ void FlashRect (Rect *theRect)
 
 //--------------------------------------------------------------  CheckLegitRect
 
-void CheckLegitRect(Rect *srcRect, Rect *inRect)
+void CheckLegitRect (const Rect *srcRect, const Rect *inRect)
 {
 	Rect			dummyRect;
 

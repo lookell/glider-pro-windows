@@ -37,7 +37,7 @@ SInt16 FindObjectSelected (Point where);
 void DragHandle (Point where);
 void Gp_DragObject (Point where);
 void AddObjectPairing (void);
-Boolean ObjectIsUpBlower (objectType *who);
+Boolean ObjectIsUpBlower (const objectType *who);
 
 
 Rect		roomObjectRects[kMaxRoomObs];
@@ -1905,7 +1905,7 @@ Boolean ObjectHasHandle (SInt16 *direction, SInt16 *dist)
 
 //--------------------------------------------------------------  ObjectIsUpBlower
 
-Boolean ObjectIsUpBlower (objectType *who)
+Boolean ObjectIsUpBlower (const objectType *who)
 {
 	if ((who->what == kFloorVent) || (who->what == kFloorBlower) ||
 			(who->what == kSewerGrate) || (who->what == kTaper) ||

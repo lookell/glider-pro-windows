@@ -10,8 +10,8 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-void OpenMessageWindow (StringPtr title);
-void SetMessageWindowMessage (StringPtr message);
+void OpenMessageWindow (ConstStringPtr title);
+void SetMessageWindowMessage (ConstStringPtr message);
 void SetMessageTextColor (COLORREF textColor);
 void CloseMessageWindow (void);
 

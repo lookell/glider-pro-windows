@@ -205,7 +205,7 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 
 //--------------------------------------------------------------  ReadyBackground
 
-void ReadyBackground (SInt16 theID, SInt16 *theTiles)
+void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 {
 	Rect		src, dest;
 	HBITMAP		thePicture;
