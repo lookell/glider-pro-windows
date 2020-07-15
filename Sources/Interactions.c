@@ -996,7 +996,7 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 
 void HandleSwitches (hotPtr who)
 {
-	Rect		newRect, bounds;
+	Rect		newRect;
 	SInt16		whoLinked, roomLinked, objectLinked, linkIndex;
 
 	if (who->stillOver)
@@ -1059,7 +1059,6 @@ void HandleSwitches (hotPtr who)
 				case kStar:
 				case kHelium:
 				RestoreFromSavedMap(roomLinked, objectLinked, true);
-				AddSparkle(&bounds);
 				break;
 
 				case kCuckoo:
