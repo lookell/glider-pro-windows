@@ -44,10 +44,6 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 
 	switch (who->what)
 	{
-		case kObjectIsEmpty:
-		QSetRect(itsRect, 0, 0, 0, 0);
-		break;
-
 		case kFloorVent:
 		case kCeilingVent:
 		case kFloorBlower:
@@ -271,6 +267,11 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		case kRug:
 		case kChimes:
 		*itsRect = who->data.i.bounds;
+		break;
+
+		case kObjectIsEmpty:
+		default:
+		QSetRect(itsRect, 0, 0, 0, 0);
 		break;
 	}
 }
