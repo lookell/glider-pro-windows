@@ -147,7 +147,6 @@ target_sources(
   Sources/Music.c
   Sources/ObjectAdd.c
   Sources/ObjectDraw.c
-  Sources/ObjectDraw2.c
   Sources/ObjectDrawAll.c
   Sources/ObjectEdit.c
   Sources/ObjectInfo.c
