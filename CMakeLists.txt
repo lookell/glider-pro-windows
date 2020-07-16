@@ -120,8 +120,6 @@ target_sources(
   Sources/DialogUtils.c
   Sources/DynamicMaps.c
   Sources/Dynamics.c
-  Sources/Dynamics2.c
-  Sources/Dynamics3.c
   Sources/Environ.c
   Sources/Events.c
   Sources/FileError.c
