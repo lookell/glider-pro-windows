@@ -211,22 +211,46 @@ void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 	HBITMAP		thePicture;
 	BITMAP		bmInfo;
 	COLORREF	wasColor;
-	Str255		theString;
 	SInt16		i;
+
+	NONCLIENTMETRICS ncm;
+	HFONT hFont;
+	wchar_t theString[256];
 
 	if ((noRoomAtAll) || (!houseUnlocked))
 	{
 		wasColor = SetDCBrushColor(workSrcMap, LtGrayForeColor());
 		Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(DC_BRUSH));
 		SetDCBrushColor(workSrcMap, wasColor);
-		MoveToEx(workSrcMap, 10, 20, NULL);
+
+		ncm.cbSize = sizeof(ncm);
+		hFont = NULL;
+		if (SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0))
+		{
+			hFont = CreateFontIndirect(&ncm.lfMessageFont);
+		}
+		if (hFont == NULL)
+		{
+			hFont = (HFONT)GetStockObject(SYSTEM_FONT);
+		}
+
 		if (houseUnlocked)
-			PasStringCopyC("No Rooms", theString);
+		{
+			StringCchCopy(theString, ARRAYSIZE(theString), L"No Rooms");
+		}
 		else
-			PasStringCopyC("Nothing to show", theString);
-		wasColor = SetTextColor(workSrcMap, blackColor);
-		Mac_DrawString(workSrcMap, theString);
-		SetTextColor(workSrcMap, wasColor);
+		{
+			StringCchCopy(theString, ARRAYSIZE(theString), L"Nothing to show");
+		}
+
+		SaveDC(workSrcMap);
+		SetTextColor(workSrcMap, blackColor);
+		SetTextAlign(workSrcMap, TA_TOP | TA_LEFT | TA_NOUPDATECP);
+		SetBkMode(workSrcMap, TRANSPARENT);
+		SelectObject(workSrcMap, hFont);
+		TextOut(workSrcMap, 10, 10, theString, (int)wcslen(theString));
+		RestoreDC(workSrcMap, -1);
+		DeleteObject(hFont);
 
 		Mac_CopyBits(workSrcMap, backSrcMap,
 				&workSrcRect, &workSrcRect, srcCopy, nil);
