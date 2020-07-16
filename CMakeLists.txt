@@ -171,7 +171,6 @@ target_sources(
   Sources/StringUtils.c
   Sources/StructIO.c
   Sources/StructuresInit.c
-  Sources/StructuresInit2.c
   Sources/Tools.c
   Sources/Transit.c
   Sources/Transitions.c
