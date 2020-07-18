@@ -29,7 +29,7 @@ set_target_properties(
   gliderpro PROPERTIES
   WIN32_EXECUTABLE TRUE
 )
-target_include_directories(gliderpro PRIVATE Headers)
+target_include_directories(gliderpro PRIVATE Headers miniz)
 target_link_libraries(gliderpro comctl32 dsound dxguid msimg32 winmm)
 target_sources(
   gliderpro PRIVATE
@@ -61,6 +61,7 @@ target_sources(
   Headers/HouseIO.h
   Headers/HouseInfo.h
   Headers/HouseLegal.h
+  Headers/ImageIO.h
   Headers/Input.h
   Headers/Interactions.h
   Headers/InterfaceInit.h
@@ -131,6 +132,7 @@ target_sources(
   Sources/HouseInfo.c
   Sources/HouseIO.c
   Sources/HouseLegal.c
+  Sources/ImageIO.c
   Sources/Input.c
   Sources/Interactions.c
   Sources/InterfaceInit.c
