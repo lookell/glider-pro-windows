@@ -4,6 +4,7 @@ mod icocur;
 mod mac_clut;
 mod mac_roman;
 mod macbinary;
+mod mace;
 mod res;
 mod rsrcfork;
 mod utils;
@@ -166,7 +167,7 @@ fn get_entry_name(res: &Resource) -> String {
         b"mctb" => format!("MenuColorTable/{}.txt", res.id),
         b"MENU" => format!("Menu/{}.txt", res.id),
         b"PICT" => format!("Picture/{}.bmp", res.id),
-        b"snd " => format!("Sound/{}.aif", res.id),
+        b"snd " => format!("Sound/{}.wav", res.id),
         b"STR#" => format!("StringList/{}.txt", res.id),
         b"vers" => format!("Version/{}.txt", res.id),
         b"wctb" => format!("WindowColorTable/{}.txt", res.id),
@@ -212,9 +213,8 @@ fn convert_resource(resource: &Resource, mut writer: impl Write) -> io::Result<(
             let mask = BitmapOne::new(32, 32);
             IconFile::new().add_entry(image, mask).write_to(writer)
         }),
-        b"ICN#" => icon_list::convert(&resource.data).and_then(|(image, mask)| {
-            IconFile::new().add_entry(image, mask).write_to(writer)
-        }),
+        b"ICN#" => icon_list::convert(&resource.data)
+            .and_then(|(image, mask)| IconFile::new().add_entry(image, mask).write_to(writer)),
         b"ics8" => small_8bit_icon::convert(&resource.data).and_then(|image| {
             let mask = BitmapOne::new(16, 16);
             IconFile::new().add_entry(image, mask).write_to(writer)
@@ -223,9 +223,8 @@ fn convert_resource(resource: &Resource, mut writer: impl Write) -> io::Result<(
             let mask = BitmapOne::new(16, 16);
             IconFile::new().add_entry(image, mask).write_to(writer)
         }),
-        b"ics#" => small_icon_list::convert(&resource.data).and_then(|(image, mask)| {
-            IconFile::new().add_entry(image, mask).write_to(writer)
-        }),
+        b"ics#" => small_icon_list::convert(&resource.data)
+            .and_then(|(image, mask)| IconFile::new().add_entry(image, mask).write_to(writer)),
         b"mctb" => menu_color_table::convert(&resource.data, writer),
         b"MENU" => menu::convert(&resource.data, writer),
         b"PICT" => picture::convert(&resource.data, writer),
@@ -292,7 +291,7 @@ fn write_build_script<W: Write>(resfork: &ResourceFork, mut writer: W) -> io::Re
     writeln!(&mut writer, "@echo off")?;
     writeln!(
         &mut writer,
-        "rem This build script uses ImageMagick and FFmpeg for conversion"
+        "rem This build script uses ImageMagick for conversion"
     )?;
     writeln!(
         &mut writer,
@@ -320,12 +319,11 @@ fn write_build_script<W: Write>(resfork: &ResourceFork, mut writer: W) -> io::Re
             res.id
         )?;
     }
-    writeln!(&mut writer, "echo Processing audio files...")?;
-    for res in resfork.iter_type(b"snd ") {
+    for resource in resfork.iter_type(b"snd ") {
         writeln!(
             &mut writer,
-            r#"ffmpeg -v quiet -y -i "%~dp0Sound\{0}.aif" -acodec pcm_u8 "%~dp0build\snd_{0}.wav""#,
-            res.id
+            r#"copy "%~dp0Sound\{0}.wav" "%~dp0build\snd_{0}.wav" >nul"#,
+            resource.id
         )?;
     }
     writeln!(&mut writer, "echo Compiling resource script...")?;

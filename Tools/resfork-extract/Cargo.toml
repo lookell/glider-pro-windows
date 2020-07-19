@@ -2,7 +2,7 @@
 name = "resfork-extract"
 version = "0.1.0"
 edition = "2018"
-license = "MIT"
+license = "MIT AND LGPL-2.1-or-later"
 publish = false
 
 [dependencies]
