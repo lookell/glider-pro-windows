@@ -199,9 +199,13 @@ fn write_wave_file(wave: &WaveData, mut writer: impl Write) -> io::Result<()> {
     const WAVE_FORMAT_PCM: u16 = 1;
     let block_align = wave.channels * wave.bits_per_sample / 8;
     let avg_bytes_per_sec = wave.sample_rate * u32::from(block_align);
+    let mut padded_wave_length = wave.data_bytes.len() as u32;
+    if (padded_wave_length % 2) != 0 {
+        padded_wave_length += 1; // pad to WORD boundary
+    }
     // 'RIFF' container chunk
     writer.write_all(b"RIFF")?;
-    writer.write_le_u32(4 + 24 + 8 + wave.data_bytes.len() as u32)?;
+    writer.write_le_u32(4 + 24 + 8 + padded_wave_length)?;
     writer.write_all(b"WAVE")?;
     // 'fmt ' chunk
     writer.write_all(b"fmt ")?;
@@ -214,7 +218,7 @@ fn write_wave_file(wave: &WaveData, mut writer: impl Write) -> io::Result<()> {
     writer.write_le_u16(wave.bits_per_sample)?;
     // 'data' chunk
     writer.write_all(b"data")?;
-    writer.write_le_u32(wave.data_bytes.len() as _)?;
+    writer.write_le_u32(padded_wave_length)?;
     writer.write_all(&wave.data_bytes)?;
     if (wave.data_bytes.len() % 2) != 0 {
         writer.write_all(&[0])?; // pad to WORD boundary
