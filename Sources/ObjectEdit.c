@@ -33,6 +33,9 @@
 #include "WindowUtils.h"
 
 
+#define k8BlackColor            255
+
+
 SInt16 FindObjectSelected (Point where);
 void DragHandle (Point where);
 void Gp_DragObject (Point where);
@@ -2323,9 +2326,7 @@ void DrawThisRoomsObjects (void)
 	{
 		if (GetNumberOfLights(thisRoomNumber) <= 0)
 		{
-			// Shadow the background to represent darkness.
-			// Color 255 == black.
-			ColorShadowRect(backSrcMap, &backSrcRect, 255);
+			ColorShadowRect(backSrcMap, &backSrcRect, k8BlackColor);
 		}
 
 		for (i = 0; i < kMaxRoomObs; i++)
