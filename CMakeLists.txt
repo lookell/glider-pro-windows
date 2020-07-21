@@ -22,8 +22,6 @@ if(MSVC)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
 endif()
 
-# TODO: build Mermaid.dat zip file to store game assets
-
 add_executable(gliderpro)
 set_target_properties(
   gliderpro PROPERTIES
@@ -177,4 +175,9 @@ target_sources(
   Sources/Trip.c
   Sources/Utilities.c
   Sources/WindowUtils.c
+  # Generated zipped game resources
+  Mermaid.dat
 )
+
+# Script that sets up the generation of the Mermaid.dat file
+include("${CMAKE_SOURCE_DIR}/Resources/Mermaid.cmake")
