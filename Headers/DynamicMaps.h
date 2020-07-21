@@ -35,7 +35,7 @@ void NilSavedMaps (void);
 SInt16 BackUpToSavedMap (const Rect *theRect, SInt16 where, SInt16 who);
 SInt16 ReBackUpSavedMap (const Rect *theRect, SInt16 where, SInt16 who);
 void RestoreFromSavedMap (SInt16 where, SInt16 who, Boolean doSparkle);
-void AddSparkle (Rect *theRect);
+void AddSparkle (const Rect *theRect);
 void AddFlyingPoint (const Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVel);
 void ReBackUpFlames (SInt16 where, SInt16 who);
 void AddCandleFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v);

@@ -161,20 +161,16 @@ void RestoreFromSavedMap (SInt16 where, SInt16 who, Boolean doSparkle)
 
 // This adds a "sparkle" object to the fixed array of sparkles.
 
-void AddSparkle (Rect *theRect)
+void AddSparkle (const Rect *theRect)
 {
 	Rect		centeredRect;
 	SInt16		i;
 
 	if (numSparkles < kMaxSparkles)
 	{
-		theRect->left += playOriginH;
-		theRect->right += playOriginH;
-		theRect->top += playOriginV;
-		theRect->bottom += playOriginV;
-
 		centeredRect = sparkleSrc[0];
 		CenterRectInRect(&centeredRect, theRect);
+		QOffsetRect(&centeredRect, playOriginH, playOriginV);
 
 		for (i = 0; i < kMaxSparkles; i++)
 			if (sparkles[i].mode == -1)
