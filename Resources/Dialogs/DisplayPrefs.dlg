@@ -21,13 +21,13 @@ STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
     AUTORADIOBUTTON "&3", kDisplay3Item, 162, 7, 35, 20, BS_ICON
     AUTORADIOBUTTON "&9", kDisplay9Item, 201, 7, 35, 20, BS_ICON
     CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ | WS_GROUP, 7, 34, 229, 1
-    AUTORADIOBUTTON "U&se current depth when possible", kCurrentDepth, 7, 41, 229, 10, WS_GROUP | WS_TABSTOP
-    AUTORADIOBUTTON "Always play in 256 &colors", k256Depth, 7, 53, 229, 10
-    AUTORADIOBUTTON "Always play in 16 &grays", k16Depth, 7, 65, 229, 10
+    AUTORADIOBUTTON "U&se current depth when possible", kCurrentDepth, 7, 41, 229, 10, WS_GROUP | WS_TABSTOP | WS_DISABLED
+    AUTORADIOBUTTON "Always play in 256 &colors", k256Depth, 7, 53, 229, 10, WS_DISABLED
+    AUTORADIOBUTTON "Always play in 16 &grays", k16Depth, 7, 65, 229, 10, WS_DISABLED
     CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ | WS_GROUP, 7, 81, 229, 1
     AUTOCHECKBOX "&Beautiful opening color fade", kDoColorFadeItem, 7, 88, 229, 10, WS_GROUP
-    AUTOCHECKBOX "&Use Quickdraw™ (slower)", kUseQDItem, 7, 100, 229, 10
-    AUTOCHECKBOX "&Run on second monitor", kUseScreen2Item, 7, 112, 229, 10
+    AUTOCHECKBOX "&Use Quickdraw™ (slower)", kUseQDItem, 7, 100, 229, 10, WS_DISABLED
+    AUTOCHECKBOX "&Run on second monitor", kUseScreen2Item, 7, 112, 229, 10, WS_DISABLED
     CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ | WS_GROUP, 7, 128, 229, 1
     PUSHBUTTON "&Defaults", kDispDefault, 7, 136, 50, 14, WS_GROUP
     DEFPUSHBUTTON "OK", IDOK, 132, 136, 50, 14

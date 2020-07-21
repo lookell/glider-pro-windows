@@ -18,9 +18,9 @@ STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
     LTEXT "Maximum houses displayed (12-500):\r\n(larger = more memory)", IDC_STATIC, 7, 7, 171, 16, SS_NOPREFIX
     EDITTEXT kMaxFilesItem, 185, 9, 21, 12
     AUTOCHECKBOX "&Quick Transitions", kQuickTransitCheck, 7, 29, 96, 10
-    AUTOCHECKBOX "&Zoom Windows", kDoZoomsCheck, 7, 41, 96, 10
+    AUTOCHECKBOX "&Zoom Windows", kDoZoomsCheck, 7, 41, 96, 10, WS_DISABLED
     AUTOCHECKBOX "&Automatic Demo", kDoDemoCheck, 7, 53, 96, 10
-    AUTOCHECKBOX "&Background Tasks", kDoBackgroundCheck, 7, 65, 96, 10
+    AUTOCHECKBOX "&Background Tasks", kDoBackgroundCheck, 7, 65, 96, 10, WS_DISABLED
     LTEXT "Editor Options:", IDC_STATIC, 110, 30, 96, 8, SS_NOPREFIX
     AUTOCHECKBOX "&Error-Check House", kDoErrorCheck, 110, 41, 96, 10
     AUTOCHECKBOX "Use ""Pretty Map""", kDoPrettyMapCheck, 110, 53, 96, 10
