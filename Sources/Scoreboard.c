@@ -8,7 +8,6 @@
 
 
 #include "ColorUtils.h"
-#include "Environ.h"
 #include "Interactions.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
@@ -22,7 +21,6 @@
 
 
 #define kGrayBackgroundColor	251
-#define kGrayBackgroundColor4	10
 #define kFoilBadge				0
 #define kBandsBadge				1
 #define kBatteryBadge			2
@@ -142,16 +140,10 @@ void HandleDynamicScoreboard (void)
 
 void RefreshRoomTitle (SInt16 mode)
 {
-	COLORREF	theRGBColor, wasColor;
+	COLORREF	wasColor;
 	Str255		titleString;
 
-	if (thisMac.isDepth == 4)
-		theRGBColor = Index2ColorRef(kGrayBackgroundColor4);
-	else
-		theRGBColor = Index2ColorRef(kGrayBackgroundColor);
-	wasColor = SetDCBrushColor(boardTSrcMap, theRGBColor);
-	Mac_PaintRect(boardTSrcMap, &boardTSrcRect, GetStockObject(DC_BRUSH));
-	SetDCBrushColor(boardTSrcMap, wasColor);
+	ColorRect(boardTSrcMap, &boardTSrcRect, kGrayBackgroundColor);
 
 	switch (mode)
 	{
@@ -186,17 +178,11 @@ void RefreshRoomTitle (SInt16 mode)
 
 void RefreshNumGliders (void)
 {
-	COLORREF	theRGBColor, wasColor;
+	COLORREF	wasColor;
 	Str255		nGlidersStr;
 	SInt32		displayMortals;
 
-	if (thisMac.isDepth == 4)
-		theRGBColor = Index2ColorRef(kGrayBackgroundColor4);
-	else
-		theRGBColor = Index2ColorRef(kGrayBackgroundColor);
-	wasColor = SetDCBrushColor(boardGSrcMap, theRGBColor);
-	Mac_PaintRect(boardGSrcMap, &boardGSrcRect, GetStockObject(DC_BRUSH));
-	SetDCBrushColor(boardGSrcMap, wasColor);
+	ColorRect(boardGSrcMap, &boardGSrcRect, kGrayBackgroundColor);
 
 	displayMortals = mortals;
 	if (displayMortals < 0)
@@ -221,16 +207,10 @@ void RefreshNumGliders (void)
 
 void RefreshPoints (void)
 {
-	COLORREF	theRGBColor, wasColor;
+	COLORREF	wasColor;
 	Str255		scoreStr;
 
-	if (thisMac.isDepth == 4)
-		theRGBColor = Index2ColorRef(kGrayBackgroundColor4);
-	else
-		theRGBColor = Index2ColorRef(kGrayBackgroundColor);
-	wasColor = SetDCBrushColor(boardPSrcMap, theRGBColor);
-	Mac_PaintRect(boardPSrcMap, &boardPSrcRect, GetStockObject(DC_BRUSH));
-	SetDCBrushColor(boardPSrcMap, wasColor);
+	ColorRect(boardPSrcMap, &boardPSrcRect, kGrayBackgroundColor);
 
 	NumToString(theScore, scoreStr);
 
@@ -254,17 +234,11 @@ void RefreshPoints (void)
 
 void QuickGlidersRefresh (void)
 {
-	COLORREF	theRGBColor, wasColor;
+	COLORREF	wasColor;
 	Str255		nGlidersStr;
 	HDC			mainWindowDC;
 
-	if (thisMac.isDepth == 4)
-		theRGBColor = Index2ColorRef(kGrayBackgroundColor4);
-	else
-		theRGBColor = Index2ColorRef(kGrayBackgroundColor);
-	wasColor = SetDCBrushColor(boardGSrcMap, theRGBColor);
-	Mac_PaintRect(boardGSrcMap, &boardGSrcRect, GetStockObject(DC_BRUSH));
-	SetDCBrushColor(boardGSrcMap, wasColor);
+	ColorRect(boardGSrcMap, &boardGSrcRect, kGrayBackgroundColor);
 
 	NumToString((SInt32)mortals, nGlidersStr);
 
@@ -288,17 +262,11 @@ void QuickGlidersRefresh (void)
 
 void QuickScoreRefresh (void)
 {
-	COLORREF	theRGBColor, wasColor;
+	COLORREF	wasColor;
 	Str255		scoreStr;
 	HDC			mainWindowDC;
 
-	if (thisMac.isDepth == 4)
-		theRGBColor = Index2ColorRef(kGrayBackgroundColor4);
-	else
-		theRGBColor = Index2ColorRef(kGrayBackgroundColor);
-	wasColor = SetDCBrushColor(boardPSrcMap, theRGBColor);
-	Mac_PaintRect(boardPSrcMap, &boardPSrcRect, GetStockObject(DC_BRUSH));
-	SetDCBrushColor(boardPSrcMap, wasColor);
+	ColorRect(boardPSrcMap, &boardPSrcRect, kGrayBackgroundColor);
 
 	NumToString(displayedScore, scoreStr);
 

@@ -104,19 +104,10 @@ void DrawOnSplash (HDC hdc)
 	MoveToEx(hdc, splashOriginH + 436, splashOriginV + 314, NULL);
 	theFont = CreateFontIndirect(&lfHouse);
 	wasFont = SelectObject(hdc, theFont);
-	if (thisMac.isDepth == 4)
-	{
-		wasTextColor = SetTextColor(hdc, whiteColor);
-		Mac_DrawString(hdc, houseLoadedStr);
-		SetTextColor(hdc, wasTextColor);
-	}
+	if (houseIsReadOnly)
+		ColorText(hdc, houseLoadedStr, 5L);
 	else
-	{
-		if (houseIsReadOnly)
-			ColorText(hdc, houseLoadedStr, 5L);
-		else
-			ColorText(hdc, houseLoadedStr, 28L);
-	}
+		ColorText(hdc, houseLoadedStr, 28L);
 	SelectObject(hdc, wasFont);
 	DeleteObject(theFont);
 
@@ -746,27 +737,6 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
 	{
 		if (fActivate)
 		{
-			if (WhatsOurDepth() != thisMac.isDepth)
-			{
-				SInt16 buttonHit = BitchAboutColorDepth(hwnd);
-				if (buttonHit == 1)
-				{
-#ifndef COMPILEDEMO
-					if (QuerySaveChanges(hwnd))
-					{
-						PostQuitMessage(0);
-						quitting = true;
-					}
-#else
-					PostQuitMessage(0);
-					quitting = true;
-#endif
-				}
-				else
-				{
-					SwitchToDepth(thisMac.isDepth, thisMac.wasColorOrGray);
-				}
-			}
 			switchedOut = false;
 			InitCursor();
 			if ((isPlayMusicIdle) && (theMode != kEditMode))

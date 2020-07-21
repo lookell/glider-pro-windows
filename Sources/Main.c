@@ -344,7 +344,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 //	HideMenuBarOld();
 #endif
 
-	if ((isDoColorFade) && (thisMac.isDepth == 8))
+	if (isDoColorFade)
 	{
 		WashColorIn();
 	}

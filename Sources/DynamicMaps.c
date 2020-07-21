@@ -8,7 +8,6 @@
 
 
 #include "Dynamics.h"
-#include "Environ.h"
 #include "GliderStructs.h"
 #include "Grease.h"
 #include "Macintosh.h"
@@ -307,12 +306,6 @@ void AddCandleFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 
 	QSetRect(&src, 0, 0, 16, 15);
 	QOffsetRect(&src, h - 8, v - 15);
-	if ((thisMac.isDepth == 4) && ((src.left % 2) == 1))
-	{
-		QOffsetRect(&src, -1, 0);
-		if (src.left < 0)
-			QOffsetRect(&src, 2, 0);
-	}
 	QSetRect(&bounds, 0, 0, 16, 15 * kNumCandleFlames);
 	savedNum = BackUpToSavedMap(&bounds, where, who);
 	if (savedNum != -1)
@@ -387,12 +380,6 @@ void AddTikiFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 		return;
 
 	QSetRect(&src, 0, 0, 8, 10);
-	if ((thisMac.isDepth == 4) && ((h % 2) == 1))
-	{
-		h--;
-		if (h < 0)
-			h += 2;
-	}
 	QOffsetRect(&src, h, v);
 	QSetRect(&bounds, 0, 0, 8, 10 * kNumTikiFlames);
 	savedNum = BackUpToSavedMap(&bounds, where, who);
@@ -470,12 +457,6 @@ void AddBBQCoals (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 		return;
 
 	QSetRect(&src, 0, 0, 32, 9);
-	if ((thisMac.isDepth == 4) && ((h % 2) == 1))
-	{
-		h--;
-		if (h < 0)
-			h += 2;
-	}
 	QOffsetRect(&src, h, v);
 	QSetRect(&bounds, 0, 0, 32, 9 * kNumBBQCoals);
 	savedNum = BackUpToSavedMap(&bounds, where, who);
@@ -556,12 +537,6 @@ void AddPendulum (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 	if (savedNum != -1)
 	{
 		QSetRect(&src, 0, 0, 32, 28);
-		if ((thisMac.isDepth == 4) && ((h % 2) == 1))
-		{
-			h--;
-			if (h < 0)
-				h += 2;
-		}
 		QOffsetRect(&src, h, v);
 		BackUpPendulum(&src, savedNum);
 		pendulums[numPendulums].dest = src;
@@ -640,12 +615,6 @@ void AddStar (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 		return;
 
 	QSetRect(&src, 0, 0, 32, 31);
-	if ((thisMac.isDepth == 4) && ((h % 2) == 1))
-	{
-		h--;
-		if (h < 0)
-			h += 2;
-	}
 	QOffsetRect(&src, h, v);
 
 	QSetRect(&bounds, 0, 0, 32, 31 * 6);

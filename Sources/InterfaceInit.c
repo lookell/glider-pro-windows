@@ -189,10 +189,7 @@ void VariableInit (void)
 	newRoomNow = false;
 	playing = false;
 	evenFrame = false;
-	if (thisMac.isDepth == 8)
-		fadeGraysOut = true;
-	else
-		fadeGraysOut = false;
+	fadeGraysOut = true;
 	twoPlayerGame = false;
 	paused = false;
 	hasMirror = false;

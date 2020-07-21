@@ -395,7 +395,6 @@ Boolean AreWeColorOrGrayscale (void)
 
 void SwitchToDepth (SInt16 newDepth, Boolean doColor)
 {
-	thisMac.isDepth = newDepth;
 	return;
 #if 0
 	OSErr			theErr;

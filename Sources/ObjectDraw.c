@@ -8,7 +8,6 @@
 
 
 #include "ColorUtils.h"
-#include "Environ.h"
 #include "Macintosh.h"
 #include "Objects.h"
 #include "RectUtils.h"
@@ -76,18 +75,9 @@ void DrawTiki (const Rect *theRect, SInt16 down)
 {
 	SInt32		darkGrayC, lightWoodC, darkWoodC;
 
-	if (thisMac.isDepth == 4)
-	{
-		darkGrayC = 14;
-		lightWoodC = 6;
-		darkWoodC = 9;
-	}
-	else
-	{
-		darkGrayC = k8DkstGrayColor;
-		lightWoodC = k8BambooColor;
-		darkWoodC = k8PissYellowColor;
-	}
+	darkGrayC = k8DkstGrayColor;
+	lightWoodC = k8BambooColor;
+	darkWoodC = k8PissYellowColor;
 
 	if (theRect->bottom < kTikiPoleBase + down)
 	{
@@ -137,30 +127,17 @@ void DrawTable (const Rect *tableTop, SInt16 down)
 	SInt32		brownC, tanC, dkRedC, blackC;
 	SInt16		hCenter, vShadow;
 
-	if (thisMac.isDepth == 4)
-	{
-		brownC = 11;
-		tanC = 9;
-		dkRedC = 14;
-		blackC = 15;
-	}
-	else
-	{
-		brownC = k8BrownColor;
-		tanC = k8TanColor;
-		dkRedC = k8DkRed2Color;
-		blackC = k8BlackColor;
-	}
+	brownC = k8BrownColor;
+	tanC = k8TanColor;
+	dkRedC = k8DkRed2Color;
+	blackC = k8BlackColor;
 
 	QSetRect(&tempRect, tableTop->left, 0, tableTop->right,
 			RectWide(tableTop) / 10);
 	QOffsetRect(&tempRect, 0,
 			-HalfRectTall(&tempRect) + kTableShadowTop + down);
 	QOffsetRect(&tempRect, kTableShadowOffset, -kTableShadowOffset);
-	if (thisMac.isDepth == 4)
-		ColorShadowOval(backSrcMap, &tempRect, 15);
-	else
-		ColorShadowOval(backSrcMap, &tempRect, k8DkstGrayColor);
+	ColorShadowOval(backSrcMap, &tempRect, k8DkstGrayColor);
 
 	tempRect = *tableTop;
 	QInsetRect(&tempRect, 0, 1);
@@ -241,22 +218,11 @@ void DrawShelf (const Rect *shelfTop)
 	SInt32		brownC, ltTanC, tanC, dkRedC, blackC;
 	HRGN		shadowRgn;
 
-	if (thisMac.isDepth == 4)
-	{
-		brownC = 11;
-		ltTanC = 7;
-		tanC = 9;
-		dkRedC = 14;
-		blackC = 15;
-	}
-	else
-	{
-		brownC = k8BrownColor;
-		ltTanC = k8LtTanColor;
-		tanC = k8TanColor;
-		dkRedC = k8DkRed2Color;
-		blackC = k8BlackColor;
-	}
+	brownC = k8BrownColor;
+	ltTanC = k8LtTanColor;
+	tanC = k8TanColor;
+	dkRedC = k8DkRed2Color;
+	blackC = k8BlackColor;
 
 	BeginPath(backSrcMap);
 	MoveToEx(backSrcMap, shelfTop->left, shelfTop->bottom, NULL);
@@ -269,10 +235,7 @@ void DrawShelf (const Rect *shelfTop)
 	shadowRgn = PathToRegion(backSrcMap);
 	if (shadowRgn == NULL)
 		RedAlert(kErrUnnaccounted);
-	if (thisMac.isDepth == 4)
-		ColorShadowRegion(backSrcMap, shadowRgn, 15);
-	else
-		ColorShadowRegion(backSrcMap, shadowRgn, k8DkstGrayColor);
+	ColorShadowRegion(backSrcMap, shadowRgn, k8DkstGrayColor);
 	DeleteObject(shadowRgn);
 
 	tempRect = *shelfTop;
@@ -319,24 +282,12 @@ void DrawCabinet (const Rect *cabinet)
 	SInt32		brownC, dkGrayC, ltTanC, tanC, dkRedC, blackC;
 	HRGN		shadowRgn;
 
-	if (thisMac.isDepth == 4)
-	{
-		brownC = 11;
-		dkGrayC = 14;
-		ltTanC = 7;
-		tanC = 9;
-		dkRedC = 14;
-		blackC = 15;
-	}
-	else
-	{
-		brownC = k8BrownColor;
-		dkGrayC = k8DkstGrayColor;
-		ltTanC = k8LtTanColor;
-		tanC = k8TanColor;
-		dkRedC = k8DkRed2Color;
-		blackC = k8BlackColor;
-	}
+	brownC = k8BrownColor;
+	dkGrayC = k8DkstGrayColor;
+	ltTanC = k8LtTanColor;
+	tanC = k8TanColor;
+	dkRedC = k8DkRed2Color;
+	blackC = k8BlackColor;
 
 	BeginPath(backSrcMap);
 	MoveToEx(backSrcMap, cabinet->left, cabinet->bottom, NULL);
@@ -349,10 +300,7 @@ void DrawCabinet (const Rect *cabinet)
 	shadowRgn = PathToRegion(backSrcMap);
 	if (shadowRgn == NULL)
 		RedAlert(kErrUnnaccounted);
-	if (thisMac.isDepth == 4)
-		ColorShadowRegion(backSrcMap, shadowRgn, 15);
-	else
-		ColorShadowRegion(backSrcMap, shadowRgn, dkGrayC);
+	ColorShadowRegion(backSrcMap, shadowRgn, dkGrayC);
 	DeleteObject(shadowRgn);
 
 	tempRect = *cabinet;			// fill bulk of cabinet brown
@@ -442,23 +390,12 @@ void DrawCounter (const Rect *counter)
 	HRGN		shadowRgn;
 	SInt32		brownC, dkGrayC, tanC, blackC, dkstRedC;
 	SInt16		nRects, width, i;
-	
-	if (thisMac.isDepth == 4)
-	{
-		brownC = 11;
-		dkGrayC = 14;
-		tanC = 9;
-		blackC = 15;
-		dkstRedC = 15;
-	}
-	else
-	{
-		brownC = k8BrownColor;
-		dkGrayC = k8DkstGrayColor;
-		tanC = k8TanColor;
-		blackC = k8BlackColor;
-		dkstRedC = k8DkRed2Color;
-	}
+
+	brownC = k8BrownColor;
+	dkGrayC = k8DkstGrayColor;
+	tanC = k8TanColor;
+	blackC = k8BlackColor;
+	dkstRedC = k8DkRed2Color;
 
 	BeginPath(backSrcMap);
 	MoveToEx(backSrcMap, counter->right - 2, counter->bottom, NULL);
@@ -472,10 +409,7 @@ void DrawCounter (const Rect *counter)
 	shadowRgn = PathToRegion(backSrcMap);
 	if (shadowRgn == NULL)
 		RedAlert(kErrUnnaccounted);
-	if (thisMac.isDepth == 4)
-		ColorShadowRegion(backSrcMap, shadowRgn, 15);
-	else
-		ColorShadowRegion(backSrcMap, shadowRgn, dkGrayC);
+	ColorShadowRegion(backSrcMap, shadowRgn, dkGrayC);
 	DeleteObject(shadowRgn);
 
 	tempRect = *counter;
@@ -501,44 +435,22 @@ void DrawCounter (const Rect *counter)
 	ColorLine(backSrcMap, counter->left + 1, counter->top + 8,
 			counter->left + 1, counter->bottom - kCounterFooterHigh - 1, tanC);
 
-	if (thisMac.isDepth == 4)
-	{
-		ColorLine(backSrcMap, counter->left - 1, counter->top,
-				counter->right, counter->top, 1);
-		ColorLine(backSrcMap, counter->left - 1, counter->top + 1,
-				counter->right, counter->top + 1, 2);
-		ColorLine(backSrcMap, counter->left - 1, counter->top + 2,
-				counter->right, counter->top + 2, 3);
-		ColorLine(backSrcMap, counter->left - 1, counter->top + 3,
-				counter->right, counter->top + 3, 4);
-		ColorLine(backSrcMap, counter->left - 1, counter->top + 4,
-				counter->right, counter->top + 4, 5);
-		ColorLine(backSrcMap, counter->left - 1, counter->top + 5,
-				counter->right, counter->top + 5, 5);
-		ColorLine(backSrcMap, counter->left - 1, counter->top + 6,
-				counter->right, counter->top + 6, 5);
-		ColorLine(backSrcMap, counter->left - 1, counter->top,
-				counter->left - 1, counter->top + 6, 1);
-	}
-	else
-	{
-		ColorLine(backSrcMap, counter->left - 1, counter->top,
-				counter->right, counter->top, k8LtstGrayColor);
-		ColorLine(backSrcMap, counter->left - 1, counter->top + 1,
-				counter->right, counter->top + 1, k8LtstGray2Color);
-		ColorLine(backSrcMap, counter->left - 1, counter->top + 2,
-				counter->right, counter->top + 2, k8LtstGray3Color);
-		ColorLine(backSrcMap, counter->left - 1, counter->top + 3,
-				counter->right, counter->top + 3, k8LtstGray4Color);
-		ColorLine(backSrcMap, counter->left - 1, counter->top + 4,
-				counter->right, counter->top + 4, k8LtstGray5Color);
-		ColorLine(backSrcMap, counter->left - 1, counter->top + 5,
-				counter->right, counter->top + 5, k8LtstGray5Color);
-		ColorLine(backSrcMap, counter->left - 1, counter->top + 6,
-				counter->right, counter->top + 6, k8LtstGray5Color);
-		ColorLine(backSrcMap, counter->left - 1, counter->top,
-				counter->left - 1, counter->top + 6, k8LtstGrayColor);
-	}
+	ColorLine(backSrcMap, counter->left - 1, counter->top,
+			counter->right, counter->top, k8LtstGrayColor);
+	ColorLine(backSrcMap, counter->left - 1, counter->top + 1,
+			counter->right, counter->top + 1, k8LtstGray2Color);
+	ColorLine(backSrcMap, counter->left - 1, counter->top + 2,
+			counter->right, counter->top + 2, k8LtstGray3Color);
+	ColorLine(backSrcMap, counter->left - 1, counter->top + 3,
+			counter->right, counter->top + 3, k8LtstGray4Color);
+	ColorLine(backSrcMap, counter->left - 1, counter->top + 4,
+			counter->right, counter->top + 4, k8LtstGray5Color);
+	ColorLine(backSrcMap, counter->left - 1, counter->top + 5,
+			counter->right, counter->top + 5, k8LtstGray5Color);
+	ColorLine(backSrcMap, counter->left - 1, counter->top + 6,
+			counter->right, counter->top + 6, k8LtstGray5Color);
+	ColorLine(backSrcMap, counter->left - 1, counter->top,
+			counter->left - 1, counter->top + 6, k8LtstGrayColor);
 
 	ColorLine(backSrcMap, counter->right, counter->top,
 			counter->right, counter->top + 6, k8LtGrayColor);
@@ -577,22 +489,11 @@ void DrawDresser (const Rect *dresser)
 	HRGN		shadowRgn;
 	SInt16		nRects, height, i;
 
-	if (thisMac.isDepth == 4)
-	{
-		yellowC = 9;
-		brownC = 11;
-		dkGrayC = 14;
-		ltTanC = 7;
-		dkstRedC = 15;
-	}
-	else
-	{
-		yellowC = k8PissYellowColor;
-		brownC = k8BrownColor;
-		dkGrayC = k8DkstGrayColor;
-		ltTanC = k8LtTanColor;
-		dkstRedC = k8DkRed2Color;
-	}
+	yellowC = k8PissYellowColor;
+	brownC = k8BrownColor;
+	dkGrayC = k8DkstGrayColor;
+	ltTanC = k8LtTanColor;
+	dkstRedC = k8DkRed2Color;
 
 	BeginPath(backSrcMap);
 	MoveToEx(backSrcMap, dresser->left + 10, dresser->bottom + 9, NULL);
@@ -606,10 +507,7 @@ void DrawDresser (const Rect *dresser)
 	shadowRgn = PathToRegion(backSrcMap);
 	if (shadowRgn == NULL)
 		RedAlert(kErrUnnaccounted);
-	if (thisMac.isDepth == 4)
-		ColorShadowRegion(backSrcMap, shadowRgn, 15);
-	else
-		ColorShadowRegion(backSrcMap, shadowRgn, k8DkstGrayColor);
+	ColorShadowRegion(backSrcMap, shadowRgn, k8DkstGrayColor);
 	DeleteObject(shadowRgn);
 
 	tempRect = *dresser;
@@ -689,18 +587,9 @@ void DrawDeckTable (const Rect *tableTop, SInt16 down)
 	SInt32		bambooC, brownC, dkGrayC;
 	SInt16		hCenter, vShadow;
 
-	if (thisMac.isDepth == 4)
-	{
-		bambooC = 6;
-		brownC = 11;
-		dkGrayC = 14;
-	}
-	else
-	{
-		bambooC = k8BambooColor;
-		brownC = k8BrownColor;
-		dkGrayC = k8DkstGrayColor;
-	}
+	bambooC = k8BambooColor;
+	brownC = k8BrownColor;
+	dkGrayC = k8DkstGrayColor;
 
 	QSetRect(&tempRect, tableTop->left, 0, tableTop->right,
 			RectWide(tableTop) / 10);
@@ -784,16 +673,8 @@ void DrawStool (const Rect *theRect, SInt16 down)
 	#define		kStoolBase	304
 	SInt32		grayC, dkGrayC;
 
-	if (thisMac.isDepth == 4)
-	{
-		grayC = 13;
-		dkGrayC = 14;
-	}
-	else
-	{
-		grayC = k8DkGray2Color;
-		dkGrayC = k8DkstGrayColor;
-	}
+	grayC = k8DkGray2Color;
+	dkGrayC = k8DkstGrayColor;
 
 	if (theRect->bottom < kStoolBase + down)
 	{
@@ -1241,18 +1122,9 @@ void DrawMailboxLeft (const Rect *theRect, SInt16 down)
 	SInt32		darkGrayC, lightWoodC, darkWoodC;
 	OSErr		theErr;
 
-	if (thisMac.isDepth == 4)
-	{
-		darkGrayC = 13;
-		lightWoodC = 9;
-		darkWoodC = 11;
-	}
-	else
-	{
-		darkGrayC = k8DkGray2Color;
-		lightWoodC = k8PissYellowColor;
-		darkWoodC = k8BrownColor;
-	}
+	darkGrayC = k8DkGray2Color;
+	lightWoodC = k8PissYellowColor;
+	darkWoodC = k8BrownColor;
 
 	if (theRect->bottom < down + kMailboxBase)
 	{
@@ -1310,18 +1182,9 @@ void DrawMailboxRight (const Rect *theRect, SInt16 down)
 	SInt32		darkGrayC, lightWoodC, darkWoodC;
 	OSErr		theErr;
 
-	if (thisMac.isDepth == 4)
-	{
-		darkGrayC = 13;
-		lightWoodC = 9;
-		darkWoodC = 11;
-	}
-	else
-	{
-		darkGrayC = k8DkGray2Color;
-		lightWoodC = k8PissYellowColor;
-		darkWoodC = k8BrownColor;
-	}
+	darkGrayC = k8DkGray2Color;
+	lightWoodC = k8PissYellowColor;
+	darkWoodC = k8BrownColor;
 
 	if (theRect->bottom < down + kMailboxBase)
 	{
@@ -1484,22 +1347,11 @@ void DrawFlourescent (const Rect *theRect)
 	Rect		partRect;
 	SInt32		grayC, gray2C, gray3C, gray4C, violetC;
 
-	if (thisMac.isDepth == 4)
-	{
-		grayC = 7L;
-		gray2C = 5L;
-		gray3C = 4L;
-		gray4C = 1L;
-		violetC = 3L;
-	}
-	else
-	{
-		grayC = k8LtGrayColor;
-		gray2C = k8LtstGray5Color;
-		gray3C = k8LtstGray4Color;
-		gray4C = k8LtstGrayColor;
-		violetC = kPaleVioletColor;
-	}
+	grayC = k8LtGrayColor;
+	gray2C = k8LtstGray5Color;
+	gray3C = k8LtstGray4Color;
+	gray4C = k8LtstGrayColor;
+	violetC = kPaleVioletColor;
 
 	ColorLine(backSrcMap, theRect->left + 16, theRect->top,
 			theRect->right - 17, theRect->top, grayC);
@@ -1551,20 +1403,10 @@ void DrawTrackLight (const Rect *theRect)
 	SInt32		grayC, gray2C, gray3C, gray4C;
 	SInt16		which, howMany, i, spread;
 
-	if (thisMac.isDepth == 4)
-	{
-		grayC = 7L;
-		gray2C = 8L;
-		gray3C = 4L;
-		gray4C = 11L;
-	}
-	else
-	{
-		grayC = k8LtGrayColor;
-		gray2C = k8Gray2Color;
-		gray3C = k8LtstGray4Color;
-		gray4C = k8DkGrayColor;
-	}
+	grayC = k8LtGrayColor;
+	gray2C = k8Gray2Color;
+	gray3C = k8LtstGray4Color;
+	gray4C = k8DkGrayColor;
 
 	ColorLine(backSrcMap, theRect->left, theRect->top - 3,
 			theRect->right - 1, theRect->top - 3, gray2C);
@@ -1927,14 +1769,7 @@ void DrawMirror (const Rect *mirror)
 	Rect		tempRect;
 	SInt32		grayC;
 
-	if (thisMac.isDepth == 4)
-	{
-		grayC = 13;
-	}
-	else
-	{
-		grayC = k8DkGray2Color;
-	}
+	grayC = k8DkGray2Color;
 
 	tempRect = *mirror;
 	ColorRect(backSrcMap, &tempRect, k8WhiteColor);
@@ -1972,18 +1807,9 @@ void DrawWallWindow (const Rect *window)
 	SInt32		brownC, tanC, dkstRedC;
 	SInt16		halfWay;
 
-	if (thisMac.isDepth == 4)
-	{
-		brownC = 11;
-		tanC = 9;
-		dkstRedC = 15;
-	}
-	else
-	{
-		brownC = k8BrownColor;
-		tanC = k8TanColor;
-		dkstRedC = k8DkRed2Color;
-	}
+	brownC = k8BrownColor;
+	tanC = k8TanColor;
+	dkstRedC = k8DkRed2Color;
 
 	tempRect = *window;
 	QInsetRect(&tempRect, 3, 0);
@@ -2031,20 +1857,14 @@ void DrawWallWindow (const Rect *window)
 	QInsetRect(&tempRect2, 5, 5);
 	HiliteRect(backSrcMap, &tempRect2, dkstRedC, tanC);
 	QInsetRect(&tempRect2, 1, 1);
-	if (thisMac.isDepth == 4)
-		ColorRect(backSrcMap, &tempRect2, 5);
-	else
-		ColorRect(backSrcMap, &tempRect2, k8SkyColor);
+	ColorRect(backSrcMap, &tempRect2, k8SkyColor);
 
 	tempRect2 = tempRect;		// bottom pane
 	tempRect2.top = halfWay - 3;
 	QInsetRect(&tempRect2, 5, 5);
 	HiliteRect(backSrcMap, &tempRect2, dkstRedC, tanC);
 	QInsetRect(&tempRect2, 1, 1);
-	if (thisMac.isDepth == 4)
-		ColorRect(backSrcMap, &tempRect2, 5);
-	else
-		ColorRect(backSrcMap, &tempRect2, k8SkyColor);
+	ColorRect(backSrcMap, &tempRect2, k8SkyColor);
 
 	ColorLine(backSrcMap, tempRect2.left - 5, tempRect2.top - 7,
 			tempRect2.right + 5, tempRect2.top - 7, tanC);

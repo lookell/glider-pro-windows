@@ -21,27 +21,13 @@
 
 COLORREF Index2ColorRef (SInt32 color)
 {
-	const COLORREF defaultClr = RGB(0x00, 0x00, 0x00);
 	RGBColor rgb;
-	size_t index;
 
-	if (color < 0)
-		return defaultClr;
-	index = (size_t)color;
-
-	if (thisMac.isDepth == 4)
+	if (color < 0 || color >= ARRAYSIZE(MacColor8))
 	{
-		if (index >= ARRAYSIZE(MacColor4))
-			return defaultClr;
-		rgb = MacColor4[index];
+		return RGB(0x00, 0x00, 0x00);
 	}
-	else
-	{
-		if (index >= ARRAYSIZE(MacColor8))
-			return defaultClr;
-		rgb = MacColor8[index];
-	}
-
+	rgb = MacColor8[color];
 	return RGB(rgb.red >> 8, rgb.green >> 8, rgb.blue >> 8);
 }
 
