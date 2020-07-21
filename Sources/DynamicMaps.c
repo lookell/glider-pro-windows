@@ -191,20 +191,16 @@ void AddSparkle (Rect *theRect)
 
 // This adds a "flying point" object to the array of flying points.
 
-void AddFlyingPoint (Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVel)
+void AddFlyingPoint (const Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVel)
 {
 	Rect		centeredRect;
 	SInt16		i;
 
 	if (numFlyingPts < kMaxFlyingPts)
 	{
-		theRect->left += playOriginH;
-		theRect->right += playOriginH;
-		theRect->top += playOriginV;
-		theRect->bottom += playOriginV;
-
 		centeredRect = pointsSrc[0];
 		CenterRectInRect(&centeredRect, theRect);
+		QOffsetRect(&centeredRect, playOriginH, playOriginV);
 
 		for (i = 0; i < kMaxFlyingPts; i++)
 			if (flyingPoints[i].mode == -1)
