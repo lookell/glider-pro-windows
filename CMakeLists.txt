@@ -86,6 +86,7 @@ target_sources(
   Headers/RectUtils.h
   Headers/Render.h
   Headers/ResourceIDs.h
+  Headers/ResourceLoader.h
   Headers/Room.h
   Headers/RoomGraphics.h
   Headers/RoomInfo.h
@@ -155,6 +156,7 @@ target_sources(
   Sources/Prefs.c
   Sources/RectUtils.c
   Sources/Render.c
+  Sources/ResourceLoader.c
   Sources/Room.c
   Sources/RoomGraphics.c
   Sources/RoomInfo.c

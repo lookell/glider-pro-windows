@@ -30,6 +30,7 @@
 #include "Player.h"
 #include "Prefs.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "Room.h"
 #include "RoomGraphics.h"
 #include "SelectHouse.h"
@@ -50,7 +51,7 @@ void WriteOutPrefs (HWND ownerWindow);
 
 
 SInt16		isVolume, wasVolume;
-SInt16		isDepthPref, dataResFile, numSMWarnings;
+SInt16		isDepthPref, numSMWarnings;
 Boolean		quitting, doZooms, quickerTransitions, isUseSecondScreen;
 
 
@@ -305,7 +306,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		RedAlert(kErrNeedSystem7);
 	if (thisMac.numScreens == 0)
 		RedAlert(kErrNeed16Or256Colors);
-//	dataResFile = OpenResFile("\pMermaid");
+	if (FAILED(Gp_LoadBuiltInAssets()))
+		RedAlert(kErrFailedResourceLoad);
 	LoadCursors();
 	ReadInPrefs(NULL);
 
@@ -389,6 +391,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	DestroyMenu(theMenuBar);
 
 	WriteOutPrefs(NULL);
+	Gp_UnloadBuiltInAssets();
 	RestoreColorDepth();
 //	theErr = LoadScrap();
 

@@ -16,6 +16,7 @@
 #include "MainWindow.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "StringUtils.h"
 #include "WinAPI.h"
 
@@ -248,8 +249,10 @@ HBITMAP GetPicture (SInt16 resID)
 	}
 	if (hbm == NULL)
 	{
-		hbm = LoadImage(HINST_THISCOMPONENT, MAKEINTRESOURCE(resID),
-				IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+		if (FAILED(Gp_LoadBuiltInImage(resID, &hbm)))
+		{
+			hbm = NULL;
+		}
 	}
 
 	return hbm;
