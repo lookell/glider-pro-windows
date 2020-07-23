@@ -410,6 +410,7 @@ static HRESULT LoadMemoryBMPImpl(HBITMAP *phBitmap, const ByteSlice *slice, BOOL
 		FAIL_IF_TRUE(hdc == NULL);
 		hbm = CreateDIBitmap(hdc, &lpbmi->bmiHeader, CBM_INIT,
 			bitsSlice.buffer, lpbmi, DIB_RGB_COLORS);
+		ReleaseDC(NULL, hdc);
 		FAIL_IF_TRUE(hbm == NULL);
 		*phBitmap = hbm;
 	}
