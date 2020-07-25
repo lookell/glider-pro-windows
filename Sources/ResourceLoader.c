@@ -1,5 +1,6 @@
 #include "ResourceLoader.h"
 
+#include "ByteIO.h"
 #include "ImageIO.h"
 #include "miniz.h"
 #include "StructIO.h"
@@ -251,7 +252,7 @@ HRESULT Gp_LoadBuiltInAssets (void)
 	wchar_t *lastSlash;
 	HRESULT hr;
 
-	if (g_mermaidFilePtr != NULL)
+	if (Gp_BuiltInAssetsLoaded())
 	{
 		return S_OK;
 	}
@@ -300,7 +301,7 @@ void Gp_UnloadBuiltInAssets (void)
 {
 	if (Gp_BuiltInAssetsLoaded())
 	{
-		mz_zip_reader_end(&g_mermaidArchive);
+		mz_zip_end(&g_mermaidArchive);
 		fclose(g_mermaidFilePtr);
 		g_mermaidFilePtr = NULL;
 	}
@@ -313,13 +314,61 @@ BOOLEAN Gp_BuiltInAssetsLoaded (void)
 	return (g_mermaidFilePtr != NULL);
 }
 
+//--------------------------------------------------------------  Gp_CreateHouseFile
+
+HRESULT Gp_CreateHouseFile (PCWSTR fileName)
+{
+	FILE *newHouseFilePtr;
+	mz_zip_archive newHouseArchive;
+
+	if (_wfopen_s(&newHouseFilePtr, fileName, L"wb") != 0)
+	{
+		return E_FAIL;
+	}
+	mz_zip_zero_struct(&newHouseArchive);
+	if (!mz_zip_writer_init_cfile(&newHouseArchive, newHouseFilePtr, 0))
+	{
+		fclose(newHouseFilePtr);
+		_wremove(fileName);
+		return E_FAIL;
+	}
+	if (!mz_zip_writer_finalize_archive(&newHouseArchive))
+	{
+		mz_zip_end(&newHouseArchive);
+		fclose(newHouseFilePtr);
+		_wremove(fileName);
+		return E_FAIL;
+	}
+	mz_zip_end(&newHouseArchive);
+	fclose(newHouseFilePtr);
+	return S_OK;
+}
+
 //--------------------------------------------------------------  Gp_LoadHouseFile
 
 HRESULT Gp_LoadHouseFile (PCWSTR fileName)
 {
-	UNREFERENCED_PARAMETER(fileName);
+	HRESULT hr;
 
-	return E_NOTIMPL;
+	Gp_UnloadHouseFile();
+	hr = StringCchCopyW(g_houseFileName, ARRAYSIZE(g_houseFileName), fileName);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
+	if (_wfopen_s(&g_houseFilePtr, fileName, L"rb") != 0)
+	{
+		g_houseFilePtr = NULL;
+		return E_FAIL;
+	}
+	mz_zip_zero_struct(&g_houseArchive);
+	if (!mz_zip_reader_init_cfile(&g_houseArchive, g_houseFilePtr, 0, 0))
+	{
+		fclose(g_houseFilePtr);
+		g_houseFilePtr = NULL;
+		return E_FAIL;
+	}
+	return S_OK;
 }
 
 //--------------------------------------------------------------  Gp_UnloadHouseFile
@@ -328,7 +377,7 @@ void Gp_UnloadHouseFile (void)
 {
 	if (g_houseFilePtr != NULL)
 	{
-		mz_zip_reader_end(&g_houseArchive);
+		mz_zip_end(&g_houseArchive);
 		fclose(g_houseFilePtr);
 		g_houseFilePtr = NULL;
 	}
@@ -359,17 +408,6 @@ BOOLEAN Gp_HouseFileReadOnly (void)
 	return (fileAttributes & FILE_ATTRIBUTE_READONLY) != 0;
 }
 
-//--------------------------------------------------------------  Gp_HouseHasIcon
-
-BOOLEAN Gp_HouseHasIcon (void)
-{
-	if (!Gp_HouseFileLoaded())
-	{
-		return FALSE;
-	}
-	return (mz_zip_reader_locate_file(&g_houseArchive, "house.ico", NULL, 0) >= 0);
-}
-
 //--------------------------------------------------------------  Gp_LoadHouseIcon
 
 HRESULT Gp_LoadHouseIcon (HICON *houseIcon, UINT width, UINT height)
@@ -394,6 +432,17 @@ HRESULT Gp_LoadHouseIcon (HICON *houseIcon, UINT width, UINT height)
 	hr = LoadMemoryICO(houseIcon, buffer, length, width, height);
 	free(buffer);
 	return hr;
+}
+
+//--------------------------------------------------------------  Gp_HouseFileDataSize
+
+uint64_t Gp_HouseFileDataSize (void)
+{
+	if (!Gp_HouseFileLoaded())
+	{
+		return 0;
+	}
+	return Gp_FileSizeInZip(&g_houseArchive, "house.dat");
 }
 
 //--------------------------------------------------------------  Gp_ReadHouseData
@@ -430,13 +479,162 @@ HRESULT Gp_ReadHouseData (houseType *house)
 	return succeeded ? S_OK : E_FAIL;
 }
 
+//--------------------------------------------------------------  concat_strings
+
+static HRESULT
+concat_strings (PWSTR lpOutput, size_t cchOutput, PCWSTR stringA, PCWSTR stringB)
+{
+	HRESULT hr;
+
+	hr = StringCchCopyW(lpOutput, cchOutput, stringA);
+	if (SUCCEEDED(hr))
+	{
+		hr = StringCchCatW(lpOutput, cchOutput, stringB);
+	}
+	return hr;
+}
+
+//--------------------------------------------------------------  write_house_to_zip
+
+static HRESULT
+write_house_to_zip (mz_zip_archive *archive, const houseType *house)
+{
+	byteio dataWriter;
+	void *dataBuffer;
+	size_t dataLength;
+	mz_bool succeeded;
+	HRESULT hr;
+
+	hr = S_OK;
+	if (!byteio_init_memory_writer(&dataWriter, 0))
+	{
+		return E_OUTOFMEMORY;
+	}
+	if (!WriteHouseType(&dataWriter, house))
+	{
+		byteio_close(&dataWriter);
+		return E_OUTOFMEMORY;
+	}
+	if (!byteio_close_and_get_buffer(&dataWriter, &dataBuffer, &dataLength))
+	{
+		return E_FAIL;
+	}
+	succeeded = mz_zip_writer_add_mem(archive, "house.dat", dataBuffer,
+		dataLength, (mz_uint)MZ_DEFAULT_COMPRESSION);
+	free(dataBuffer);
+	if (!succeeded)
+	{
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
 //--------------------------------------------------------------  Gp_WriteHouseData
 
 HRESULT Gp_WriteHouseData (const houseType *house)
 {
-	UNREFERENCED_PARAMETER(house);
+	wchar_t backUpFileName[MAX_PATH];
+	wchar_t outputFileName[MAX_PATH];
+	wchar_t originalFileName[MAX_PATH];
+	FILE *outputFilePtr;
+	mz_zip_archive outputArchive;
+	mz_uint fileIndex;
+	mz_uint houseDataIndex;
+	mz_uint numFiles;
+	DWORD lastError;
+	HRESULT hr;
 
-	return E_NOTIMPL;
+	if (house == NULL)
+	{
+		return E_INVALIDARG;
+	}
+	if (!Gp_HouseFileLoaded())
+	{
+		return E_ILLEGAL_METHOD_CALL;
+	}
+
+	hr = StringCchCopyW(originalFileName, ARRAYSIZE(originalFileName), g_houseFileName);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
+	hr = concat_strings(backUpFileName, ARRAYSIZE(backUpFileName), originalFileName, L".bak");
+	if (FAILED(hr))
+	{
+		return hr;
+	}
+	hr = concat_strings(outputFileName, ARRAYSIZE(outputFileName), originalFileName, L".tmp");
+	if (FAILED(hr))
+	{
+		return hr;
+	}
+
+	if (_wfopen_s(&outputFilePtr, outputFileName, L"wb") != 0)
+	{
+		return E_FAIL;
+	}
+	mz_zip_zero_struct(&outputArchive);
+	if (!mz_zip_writer_init_cfile(&outputArchive, outputFilePtr, 0))
+	{
+		fclose(outputFilePtr);
+		_wremove(outputFileName);
+		return E_FAIL;
+	}
+
+	numFiles = mz_zip_reader_get_num_files(&g_houseArchive);
+	if (!mz_zip_reader_locate_file_v2(&g_houseArchive, "house.dat", NULL, 0, &houseDataIndex))
+	{
+		houseDataIndex = numFiles;
+	}
+	hr = S_OK;
+	for (fileIndex = 0; fileIndex < numFiles; fileIndex++)
+	{
+		if (fileIndex != houseDataIndex)
+		{
+			if (!mz_zip_writer_add_from_zip_reader(&outputArchive, &g_houseArchive, fileIndex))
+			{
+				hr = E_FAIL;
+				break;
+			}
+		}
+	}
+	if (SUCCEEDED(hr))
+	{
+		hr = write_house_to_zip(&outputArchive, house);
+	}
+	if (SUCCEEDED(hr))
+	{
+		hr = mz_zip_writer_finalize_archive(&outputArchive) ? S_OK : E_FAIL;
+	}
+	mz_zip_end(&outputArchive);
+	fclose(outputFilePtr);
+	if (FAILED(hr))
+	{
+		_wremove(outputFileName);
+		return hr;
+	}
+
+	Gp_UnloadHouseFile();
+	lastError = ERROR_SUCCESS;
+	if (!ReplaceFileW(originalFileName, outputFileName, backUpFileName, 0, NULL, NULL))
+	{
+		_wremove(outputFileName);
+		lastError = GetLastError();
+		if (lastError == ERROR_UNABLE_TO_MOVE_REPLACEMENT_2)
+		{
+			if (!MoveFileExW(backUpFileName, originalFileName, MOVEFILE_REPLACE_EXISTING))
+			{
+				lastError = GetLastError();
+			}
+		}
+	}
+	hr = Gp_LoadHouseFile(originalFileName);
+	_wremove(backUpFileName);
+	if (SUCCEEDED(hr) && lastError != ERROR_SUCCESS)
+	{
+		hr = HRESULT_FROM_WIN32(lastError);
+	}
+	return hr;
 }
 
 //--------------------------------------------------------------  Gp_ImageExists
@@ -743,5 +941,50 @@ HRESULT Gp_LoadHouseSound (SInt16 soundID, WaveData *sound)
 		return FALSE;
 	}
 	return Gp_LoadSoundFromZip(&g_houseArchive, soundID, sound);
+}
+
+//--------------------------------------------------------------  Gp_LoadHouseBounding
+
+HRESULT Gp_LoadHouseBounding (SInt16 imageID, boundsType *bounds)
+{
+	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
+	void *buffer;
+	size_t length;
+	byteio byteReader;
+	int succeeded;
+	HRESULT hr;
+
+	if (bounds == NULL)
+	{
+		return E_INVALIDARG;
+	}
+	if (!Gp_HouseFileLoaded())
+	{
+		return FALSE;
+	}
+	hr = StringCchPrintfA(filename, ARRAYSIZE(filename), "bounds/%d.bin", (int)imageID);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
+	buffer = mz_zip_reader_extract_file_to_heap(&g_houseArchive, filename, &length, 0);
+	if (buffer == NULL)
+	{
+		return E_FAIL;
+	}
+	if (!byteio_init_memory_reader(&byteReader, buffer, length))
+	{
+		free(buffer);
+		return E_OUTOFMEMORY;
+	}
+	hr = S_OK;
+	succeeded = ReadBoundsType(&byteReader, bounds);
+	byteio_close(&byteReader);
+	free(buffer);
+	if (!succeeded)
+	{
+		hr = E_FAIL;
+	}
+	return hr;
 }
 

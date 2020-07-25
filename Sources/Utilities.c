@@ -11,7 +11,6 @@
 #include "Audio.h"
 #include "DialogUtils.h"
 #include "Events.h"
-#include "HouseIO.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
@@ -241,20 +240,10 @@ HBITMAP GetPicture (SInt16 resID)
 {
 	HBITMAP hbm;
 
-	hbm = NULL;
-	if (houseResFork != NULL)
+	if (FAILED(Gp_LoadImage(resID, &hbm)))
 	{
-		hbm = LoadImage(houseResFork, MAKEINTRESOURCE(resID),
-				IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+		hbm = NULL;
 	}
-	if (hbm == NULL)
-	{
-		if (FAILED(Gp_LoadBuiltInImage(resID, &hbm)))
-		{
-			hbm = NULL;
-		}
-	}
-
 	return hbm;
 }
 

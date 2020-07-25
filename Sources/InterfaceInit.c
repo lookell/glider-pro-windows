@@ -219,7 +219,6 @@ void VariableInit (void)
 	thisRoomNumber = 0;
 	previousRoom = -1;
 	toolSelected = kSelectTool;
-	houseResFork = NULL;
 	lastBackground = kBaseBackgroundID;
 	wasFlower = RandomInt(kNumFlowers);
 	lastHighScore = -1;

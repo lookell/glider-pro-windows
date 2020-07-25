@@ -12,8 +12,6 @@
 
 extern Movie theMovie;
 extern Rect movieRect;
-extern HANDLE houseRefNum;
-extern HMODULE houseResFork;
 extern SInt16 wasHouseVersion;
 extern Boolean houseOpen;
 extern Boolean fileDirty;
@@ -30,8 +28,6 @@ Boolean SaveHouseAs (void);
 Boolean ReadHouse (HWND ownerWindow);
 Boolean WriteHouse (HWND ownerWindow, Boolean checkIt);
 Boolean CloseHouse (HWND ownerWindow);
-void OpenHouseResFork (HWND ownerWindow);
-void CloseHouseResFork (void);
 Boolean QuerySaveChanges (HWND ownerWindow);
 void YellowAlert (HWND ownerWindow, SInt16 whichAlert, SInt16 identifier);
 

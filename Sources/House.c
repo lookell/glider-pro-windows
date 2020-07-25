@@ -22,6 +22,7 @@
 #include "Play.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "Room.h"
 #include "RoomGraphics.h"
 #include "SavedGames.h"
@@ -114,57 +115,13 @@ Boolean CreateNewHouse (HWND hwndOwner)
 	StringCchCopy(theSpec.houseName, ARRAYSIZE(theSpec.houseName),
 		&ofn.lpstrFile[ofn.nFileOffset]);
 	MacFromWinString(theSpec.name, ARRAYSIZE(theSpec.name), theSpec.houseName);
+	theSpec.hIcon = NULL;
 
-	// Write a minimal zeroed-out house file
+	// Create the empty house file
 
-	outputFile = CreateFile(theSpec.path, GENERIC_READ | GENERIC_WRITE,
-		FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (outputFile == INVALID_HANDLE_VALUE)
+	if (FAILED(Gp_CreateHouseFile(theSpec.path)))
 	{
-		CheckFileError(hwndOwner, GetLastError(), L"New House");
-		return false;
-	}
-	if (!byteio_init_handle_writer(&byteWriter, outputFile))
-	{
-		RedAlert(kErrNoMemory);
-	}
-	ZeroMemory(&blankHouse, sizeof(blankHouse));
-	succeeded = WriteHouseType(&byteWriter, &blankHouse);
-	lastError = GetLastError();
-	byteio_close(&byteWriter);
-	CloseHandle(outputFile);
-	if (!succeeded)
-	{
-		CheckFileError(hwndOwner, lastError, L"New House");
-		return false;
-	}
-
-	// Write an empty resource DLL
-
-	ofn.lpstrFile[ofn.nFileExtension - 1] = L'\0';
-	StringCchCat(ofn.lpstrFile, ofn.nMaxFile, L".glr");
-
-	hr = LoadModuleResource(HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(IDR_BLANK_DLL), RT_BLANKDLL,
-		&blankDllBytes, &blankDllSize);
-	if (FAILED(hr))
-	{
-		RedAlert(kErrFailedResourceLoad);
-	}
-
-	outputFile = CreateFile(ofn.lpstrFile, GENERIC_READ | GENERIC_WRITE,
-		FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (outputFile == INVALID_HANDLE_VALUE)
-	{
-		CheckFileError(hwndOwner, GetLastError(), L"New House");
-		return false;
-	}
-	succeeded = WriteFile(outputFile, blankDllBytes, blankDllSize, &numWritten, NULL);
-	lastError = GetLastError();
-	CloseHandle(outputFile);
-	if (!succeeded)
-	{
-		CheckFileError(hwndOwner, lastError, L"New House");
+		YellowAlert(hwndOwner, kYellowFailedWrite, 0);
 		return false;
 	}
 
@@ -307,21 +264,19 @@ void WhereDoesGliderBegin (Rect *theRect, SInt16 mode)
 
 // Returns true is the current house has custom artwork imbedded.
 
-static BOOL CALLBACK EnumResTypeProc(HMODULE hModule, LPWSTR lpszType, LONG_PTR lParam)
+static BOOLEAN EnumHousePicts (SInt16 resID, void *userData)
 {
-	if (lpszType == RT_BITMAP)
-		*((Boolean *)lParam) = true;
-	return TRUE;
+	// If this function is called, then there is at least one custom image.
+	*((Boolean *)userData) = true;
+	return FALSE;
 }
 
 Boolean HouseHasOriginalPicts (void)
 {
-	Boolean		hasPicts;
+	Boolean hasPicts;
 
 	hasPicts = false;
-	if (houseResFork == NULL)
-		return hasPicts;
-	EnumResourceTypes(houseResFork, EnumResTypeProc, (LONG_PTR)&hasPicts);
+	Gp_EnumHouseImages(EnumHousePicts, &hasPicts);
 	return hasPicts;
 }
 

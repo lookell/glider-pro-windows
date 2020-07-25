@@ -17,7 +17,13 @@ void Gp_UnloadBuiltInAssets (void);
 // Return whether the built-in assets are loaded up.
 BOOLEAN Gp_BuiltInAssetsLoaded (void);
 
-// Load the house file at the given file name. If there is already a
+// Create a new house file with the given file name. If there
+// is already a file with the same file name, this function will
+// overwrite that file's data. This function will not affect the
+// currently loaded house; it only creates a new file.
+HRESULT Gp_CreateHouseFile (PCWSTR fileName);
+
+// Load the house file with the given file name. If there is already a
 // house file loaded, it is unloaded before attempting to load the new
 // house file.
 HRESULT Gp_LoadHouseFile (PCWSTR fileName);
@@ -31,9 +37,6 @@ BOOLEAN Gp_HouseFileLoaded (void);
 // Return whether a loaded house file is read-only.
 BOOLEAN Gp_HouseFileReadOnly (void);
 
-// Return whether the loaded house file contains its own icon.
-BOOLEAN Gp_HouseHasIcon (void);
-
 // Create an HICON for the house, if the house contains an icon. If the
 // width parameter is zero, the SM_CXICON system metric is used instead.
 // If the height parameter is zero, the SM_CYICON system metric is used
@@ -44,12 +47,21 @@ BOOLEAN Gp_HouseHasIcon (void);
 // The returned HICON should be cleaned up by calling DestroyIcon().
 HRESULT Gp_LoadHouseIcon (HICON *houseIcon, UINT width, UINT height);
 
+// Return the uncompressed size of the house data, in bytes.
+uint64_t Gp_HouseFileDataSize (void);
+
 // Read in the house's data from the loaded house file.
+// This function will fail if house data hasn't been written to the
+// house file yet.
 //
 // The field house->rooms should be cleaned up by calling free().
 HRESULT Gp_ReadHouseData (houseType *house);
 
 // Write out the house's data to the loaded house file.
+// NOTE: this function temporarily unloads the house file, and then
+// reloads it. If, somehow, the house file goes missing, there will
+// be no house file loaded. Therefore, if the function fails, you
+// should check whether the house file is still loaded.
 HRESULT Gp_WriteHouseData (const houseType *house);
 
 // Return whether the house file or built-in assets contain an image
@@ -171,5 +183,8 @@ uint64_t Gp_HouseSoundSize (SInt16 soundID);
 //
 // The field sound->dataBytes should be cleaned up by calling free().
 HRESULT Gp_LoadHouseSound (SInt16 soundID, WaveData *sound);
+
+// Load boundary information from the house file for the given image ID.
+HRESULT Gp_LoadHouseBounding (SInt16 imageID, boundsType *bounds);
 
 #endif

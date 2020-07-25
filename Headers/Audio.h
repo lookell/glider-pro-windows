@@ -22,14 +22,6 @@ typedef struct WaveData {
 // given buffer, and does not need to be freed separately.
 int ReadWAVFromMemory(const void *buffer, size_t length, WaveData *waveData);
 
-// Parse a WAV file from the specified "WAVE" resource (module and ID), and
-// write the data into the waveData output parameter. Return nonzero on success
-// and zero on failure.
-//
-// The pointer written into waveData->dataBytes is a pointer into the module's
-// resources, so the pointer is valid as long as the module handle is valid.
-int ReadWAVFromResource(HMODULE hModule, uint16_t wavID, WaveData *waveData);
-
 // Initialize the internal IDirectSound8 interface. To retrieve a pointer to
 // this interface, call the Audio_GetDevice function. This function only needs
 // to be called once; any further calls will return S_FALSE and do nothing.

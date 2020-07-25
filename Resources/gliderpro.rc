@@ -43,8 +43,6 @@ FILESUBTYPE 0x00000000
 
 IDR_DEMO RT_DEMO "demo.bin"
 
-IDR_BLANK_DLL RT_BLANKDLL "blank.dll"
-
 rAcurID RT_ACUR
 {
     12,

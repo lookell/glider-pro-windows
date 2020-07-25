@@ -356,6 +356,7 @@ typedef struct
 	wchar_t		path[MAX_PATH];
 	wchar_t		houseName[33];
 	Str32		name;
+	HICON		hIcon;
 } houseSpec, *houseSpecPtr;
 
 #endif

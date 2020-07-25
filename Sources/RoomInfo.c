@@ -17,6 +17,7 @@
 #include "RectUtils.h"
 #include "Room.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "Utilities.h"
 
 
@@ -805,27 +806,22 @@ SInt16 ChooseOriginalArt (HWND hwndOwner, SInt16 wasPictID)
 
 Boolean PictIDExists (SInt16 theID)
 {
-	if (houseResFork != NULL)
-	{
-		return (FindResource(houseResFork, MAKEINTRESOURCE(theID), RT_BITMAP) != NULL);
-	}
-	else
-	{
-		return false;
-	}
+	return (Boolean)Gp_HouseImageExists(theID);
 }
 
 //--------------------------------------------------------------  GetFirstPICT
 
-BOOL CALLBACK GetFirstPICT_EnumProc (HMODULE hModule, LPCWSTR lpszType,
-	LPWSTR lpszName, LONG_PTR lParam)
+static BOOLEAN GetFirstPict_EnumProc (SInt16 resID, void *userData)
 {
 	SInt16 *pID;
 
-	pID = (SInt16 *)lParam;
-	if (*pID == -1 && IS_INTRESOURCE(lpszName))
+	pID = (SInt16 *)userData;
+	if (resID >= kUserBackground)
 	{
-		*pID = (SInt16)LOWORD(lpszName);
+		if (*pID == -1 || *pID > resID)
+		{
+			*pID = resID;
+		}
 	}
 	return TRUE;
 }
@@ -835,10 +831,9 @@ SInt16 GetFirstPICT (void)
 	SInt16 resID;
 
 	resID = -1;
-	if (houseResFork != NULL)
+	if (FAILED(Gp_EnumHouseImages(GetFirstPict_EnumProc, &resID)))
 	{
-		EnumResourceNames(houseResFork, RT_BITMAP,
-			GetFirstPICT_EnumProc, (LONG_PTR)&resID);
+		resID = -1;
 	}
 	return resID;
 }

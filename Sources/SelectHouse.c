@@ -16,6 +16,7 @@
 #include "MacTypes.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "StringUtils.h"
 #include "Utilities.h"
 
@@ -44,15 +45,11 @@ SInt16			demoHouseIndex, numExtraHouses;
 BOOL InitLoadDialog (HWND hDlg)
 {
 	HWND		houseListView;
-	WCHAR		glrPath[MAX_PATH];
-	PWCH		extPtr;
 	HICON		defaultIcon, loadedIcon;
 	INT			cxIcon, cyIcon;
 	LVITEM		lvItem;
 	LVFINDINFO	lvFindInfo;
-	HMODULE		houseResources;
 	HIMAGELIST	himl;
-	HRESULT		hr;
 	int			i;
 
 	CenterOverOwner(hDlg);
@@ -68,35 +65,20 @@ BOOL InitLoadDialog (HWND hDlg)
 			MAKEINTRESOURCE(IDI_HOUSE), IMAGE_ICON,
 			cxIcon, cyIcon, LR_DEFAULTCOLOR | LR_SHARED);
 	if (defaultIcon == NULL)
+	{
 		RedAlert(kErrFailedResourceLoad);
+	}
 	himl = ImageList_Create(cxIcon, cyIcon, ILC_MASK | ILC_COLOR32, housesFound, 0);
 
 	SendMessage(houseListView, WM_SETREDRAW, FALSE, 0);
 	ListView_SetImageList(houseListView, himl, LVSIL_NORMAL);
 	for (i = 0; i < housesFound; i++)
 	{
-		hr = StringCchCopy(glrPath, ARRAYSIZE(glrPath), theHousesSpecs[i].path);
-		if (SUCCEEDED(hr))
-		{
-			extPtr = wcsrchr(glrPath, L'.');
-			if (extPtr != NULL)
-				*extPtr = L'\0';
-			hr = StringCchCat(glrPath, ARRAYSIZE(glrPath), L".glr");
-		}
-		houseResources = NULL;
-		if (SUCCEEDED(hr))
-			houseResources = LoadLibraryEx(glrPath, NULL, LOAD_LIBRARY_AS_DATAFILE);
-		loadedIcon = NULL;
-		if (houseResources != NULL)
-		{
-			loadedIcon = LoadImage(houseResources,
-					MAKEINTRESOURCE(-16455), IMAGE_ICON,
-					cxIcon, cyIcon, LR_DEFAULTCOLOR);
-			FreeLibrary(houseResources);
-		}
+		loadedIcon = theHousesSpecs[i].hIcon;
 		if (loadedIcon == NULL)
+		{
 			loadedIcon = defaultIcon;
-
+		}
 		lvItem.mask = LVIF_IMAGE | LVIF_PARAM | LVIF_TEXT;
 		lvItem.iItem = housesFound; // insert at the end
 		lvItem.iSubItem = 0;
@@ -104,9 +86,6 @@ BOOL InitLoadDialog (HWND hDlg)
 		lvItem.iImage = ImageList_AddIcon(himl, loadedIcon);
 		lvItem.lParam = i;
 		ListView_InsertItem(houseListView, &lvItem);
-
-		if (loadedIcon != defaultIcon)
-			DestroyIcon(loadedIcon);
 	}
 	SendMessage(houseListView, WM_SETREDRAW, TRUE, 0);
 
@@ -351,7 +330,21 @@ void DoDirSearch (HWND ownerWindow)
 						MacFromWinString(theHousesSpecs[housesFound].name,
 								ARRAYSIZE(theHousesSpecs[housesFound].name),
 								theHousesSpecs[housesFound].houseName);
-						housesFound++;
+
+						// Extract the house's icon.
+						// TODO: Upgrade the ResourceLoader interface to handle multiple
+						// houses. (Perhaps return the mz_zip_archive* as a void*.)
+						hr = Gp_LoadHouseFile(theHousesSpecs[housesFound].path);
+						if (SUCCEEDED(hr))
+						{
+							hr = Gp_LoadHouseIcon(&theHousesSpecs[housesFound].hIcon, 0, 0);
+							if (FAILED(hr))
+							{
+								theHousesSpecs[housesFound].hIcon = NULL;
+							}
+							Gp_UnloadHouseFile();
+							housesFound++;
+						}
 					}
 				}
 			}
@@ -414,6 +407,14 @@ void BuildHouseList (HWND ownerWindow)
 
 	if (thisMac.hasSystem7)
 	{
+		for (i = 0; i < housesFound; i++)		// destroy icons from previous search
+		{
+			if (theHousesSpecs[i].hIcon != NULL)
+			{
+				DestroyIcon(theHousesSpecs[i].hIcon);
+				theHousesSpecs[i].hIcon = NULL;
+			}
+		}
 		housesFound = 0;						// zero the number of houses found
 		for (i = 0; i < numExtraHouses; i++)	// 1st, insert extra houses into list
 		{

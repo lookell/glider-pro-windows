@@ -7,7 +7,6 @@
 //============================================================================
 
 
-#include "ByteIO.h"
 #include "ColorUtils.h"
 #include "DialogUtils.h"
 #include "House.h"
@@ -21,9 +20,9 @@
 #include "ObjectRects.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "RoomInfo.h"
 #include "StringUtils.h"
-#include "StructIO.h"
 #include "Utilities.h"
 
 
@@ -878,45 +877,37 @@ void DetermineRoomOpenings (void)
 SInt16 GetOriginalBounding (SInt16 theID)
 {
 	boundsType	boundsRes;
-	LPVOID		resPointer;
-	DWORD		resByteSize;
-	byteio		byteReader;
 	SInt16		boundCode;
-	HRESULT		hr;
 
-	if (houseResFork == NULL)
-		return 0;
-
-	resPointer = NULL;
-	resByteSize = 0;
-	hr = LoadModuleResource(houseResFork, MAKEINTRESOURCE(theID),
-		L"BOUNDS", &resPointer, &resByteSize);
-	if (FAILED(hr))
+	boundCode = 0;
+	if (FAILED(Gp_LoadHouseBounding(theID, &boundsRes)))
 	{
-		if (PictIDExists(theID))
+		if (Gp_HouseImageExists(theID))
+		{
 			YellowAlert(mainWindow, kYellowNoBoundsRes, 0);
-		boundCode = 0;
+		}
 	}
 	else
 	{
-		boundCode = 0;
-		if (!byteio_init_memory_reader(&byteReader, resPointer, resByteSize))
-			RedAlert(kErrNoMemory);
-		if (ReadBoundsType(&byteReader, &boundsRes))
+		if (boundsRes.left)
 		{
-			if (boundsRes.left)
-				boundCode += 1;
-			if (boundsRes.top)
-				boundCode += 2;
-			if (boundsRes.right)
-				boundCode += 4;
-			if (boundsRes.bottom)
-				boundCode += 8;
+			boundCode += 1;
 		}
-		byteio_close(&byteReader);
+		if (boundsRes.top)
+		{
+			boundCode += 2;
+		}
+		if (boundsRes.right)
+		{
+			boundCode += 4;
+		}
+		if (boundsRes.bottom)
+		{
+			boundCode += 8;
+		}
 	}
 
-	return (boundCode);
+	return boundCode;
 }
 
 //--------------------------------------------------------------  GetNumberOfLights

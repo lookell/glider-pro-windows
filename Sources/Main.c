@@ -371,10 +371,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	{
 		if (!CloseHouse(NULL))
 		{
-			CloseHouseResFork();
-			if (houseRefNum != INVALID_HANDLE_VALUE && houseRefNum != NULL)
-				CloseHandle(houseRefNum);
-			houseRefNum = INVALID_HANDLE_VALUE;
+			Gp_UnloadHouseFile();
 			houseOpen = false;
 		}
 	}

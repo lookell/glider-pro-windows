@@ -182,17 +182,17 @@ void FlushCurrentSound (SInt16 channelID)
 
 OSErr LoadTriggerSound (SInt16 soundID)
 {
-	if ((houseResFork == NULL) || (dontLoadSounds) ||
-			(theSoundData[kMaxSounds - 1].wave.dataBytes != NULL))
+	if ((dontLoadSounds) || (theSoundData[kMaxSounds - 1].wave.dataBytes != NULL))
 	{
 		return -1;
 	}
 
 //	FlushAnyTriggerPlaying();
 
-	if (!ReadWAVFromResource(houseResFork, (WORD)soundID,
-			&theSoundData[kMaxSounds - 1].wave))
+	if (FAILED(Gp_LoadHouseSound(soundID, &theSoundData[kMaxSounds - 1].wave)))
 	{
+		ZeroMemory(&theSoundData[kMaxSounds - 1].wave,
+			sizeof(theSoundData[kMaxSounds - 1].wave));
 		return -1;
 	}
 	theSoundData[kMaxSounds - 1].dsBuffer = LoadStaticBuffer(kMaxSounds - 1);

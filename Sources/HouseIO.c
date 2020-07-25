@@ -8,7 +8,6 @@
 
 
 #include "Banner.h"
-#include "ByteIO.h"
 #include "DialogUtils.h"
 #include "Environ.h"
 #include "FileError.h"
@@ -23,11 +22,11 @@
 #include "Objects.h"
 #include "Play.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "Room.h"
 #include "RoomGraphics.h"
 #include "SelectHouse.h"
 #include "StringUtils.h"
-#include "StructIO.h"
 #include "Utilities.h"
 
 
@@ -38,13 +37,10 @@
 void LoopMovie (void);
 void OpenHouseMovie (void);
 void CloseHouseMovie (void);
-Boolean IsFileReadOnly (houseSpec *theSpec);
 
 
 Movie		theMovie;
 Rect		movieRect;
-HANDLE		houseRefNum;
-HMODULE		houseResFork;
 SInt16		wasHouseVersion;
 Boolean		houseOpen, fileDirty, gameDirty;
 Boolean		changeLockStateOfHouse, saveHouseLocked, houseIsReadOnly;
@@ -175,47 +171,45 @@ void CloseHouseMovie (void)
 
 Boolean OpenHouse (HWND ownerWindow)
 {
+	HRESULT hr;
+
 	if (houseOpen)
 	{
 		if (!CloseHouse(ownerWindow))
-			return(false);
+		{
+			return false;
+		}
 	}
 	if ((housesFound < 1) || (thisHouseIndex == -1))
-		return(false);
+	{
+		return false;
+	}
 
 	#ifdef COMPILEDEMO
 	if (lstrcmpi(theHousesSpecs[thisHouseIndex].houseName, L"Demo House") != 0)
-		return (false);
+	{
+		return false;
+	}
 	#endif
 
-	houseIsReadOnly = false;
-	houseRefNum = CreateFile(theHousesSpecs[thisHouseIndex].path,
-			GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL,
-			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (houseRefNum == INVALID_HANDLE_VALUE)
-	{
-		houseIsReadOnly = true;
-		houseRefNum = CreateFile(theHousesSpecs[thisHouseIndex].path,
-				GENERIC_READ, FILE_SHARE_READ, NULL,
-				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	}
-	if (houseRefNum == INVALID_HANDLE_VALUE)
+	hr = Gp_LoadHouseFile(theHousesSpecs[thisHouseIndex].path);
+	if (FAILED(hr))
 	{
 		houseIsReadOnly = false;
-		CheckFileError(ownerWindow, GetLastError(),
+		CheckFileError(ownerWindow, ERROR_OPEN_FAILED,
 			theHousesSpecs[thisHouseIndex].houseName);
-		return (false);
+		return false;
 	}
+	houseIsReadOnly = Gp_HouseFileReadOnly();
 
 	houseOpen = true;
-	OpenHouseResFork(ownerWindow);
 
 	hasMovie = false;
 	tvInRoom = false;
 	tvWithMovieNumber = -1;
 	OpenHouseMovie();
 
-	return (true);
+	return true;
 }
 
 //--------------------------------------------------------------  OpenSpecificHouse
@@ -334,14 +328,14 @@ Boolean SaveHouseAs (void)
 
 Boolean ReadHouse (HWND ownerWindow)
 {
-	LARGE_INTEGER	byteCount, distance;
-	SInt16			whichRoom;
-	byteio			byteReader;
+	uint64_t byteCount;
+	SInt16 whichRoom;
+	HRESULT hr;
 
 	if (!houseOpen)
 	{
 		YellowAlert(ownerWindow, kYellowUnaccounted, 2);
-		return (false);
+		return false;
 	}
 
 	if (gameDirty || fileDirty)
@@ -351,74 +345,65 @@ Boolean ReadHouse (HWND ownerWindow)
 			if (!WriteScoresToDisk(ownerWindow))
 			{
 				YellowAlert(ownerWindow, kYellowFailedWrite, 0);
-				return(false);
+				return false;
 			}
 		}
 		else if (!WriteHouse(ownerWindow, false))
-			return(false);
+		{
+			return false;
+		}
 	}
 
-	if (!GetFileSizeEx(houseRefNum, &byteCount))
-	{
-		CheckFileError(ownerWindow, GetLastError(),
-			theHousesSpecs[thisHouseIndex].houseName);
-		return(false);
-	}
+	byteCount = Gp_HouseFileDataSize();
 
 	#ifdef COMPILEDEMO
-	if (byteCount.QuadPart != 16526LL)
-		return (false);
+	if (byteCount != 16526)
+	{
+		return false;
+	}
 	#endif
 
 	free(thisHouse.rooms);
 	ZeroMemory(&thisHouse, sizeof(thisHouse));
 
-	distance.QuadPart = 0;
-	if (!SetFilePointerEx(houseRefNum, distance, NULL, FILE_BEGIN))
+	hr = Gp_ReadHouseData(&thisHouse);
+	if (FAILED(hr))
 	{
-		CheckFileError(ownerWindow, GetLastError(),
-			theHousesSpecs[thisHouseIndex].houseName);
-		return(false);
-	}
-
-	if (!byteio_init_handle_reader(&byteReader, houseRefNum))
-		RedAlert(kErrNoMemory);
-	if (!ReadHouseType(&byteReader, &thisHouse))
-	{
+		ZeroMemory(&thisHouse, sizeof(thisHouse));
 		numberRooms = 0;
 		noRoomAtAll = true;
 		YellowAlert(ownerWindow, kYellowNoRooms, 0);
-		CheckFileError(ownerWindow, GetLastError(),
-			theHousesSpecs[thisHouseIndex].houseName);
-		byteio_close(&byteReader);
-		return(false);
+		return false;
 	}
-	byteio_close(&byteReader);
 
 	numberRooms = thisHouse.nRooms;
 	#ifdef COMPILEDEMO
 	if (numberRooms != 45)
-		return (false);
+	{
+		return false;
+	}
 	#endif
-	if ((numberRooms < 1) || (byteCount.QuadPart == 0LL))
+	if ((numberRooms < 1) || (byteCount == 0))
 	{
 		numberRooms = 0;
 		noRoomAtAll = true;
 		YellowAlert(ownerWindow, kYellowNoRooms, 0);
-		return(false);
+		return false;
 	}
 
 	wasHouseVersion = thisHouse.version;
 	if (wasHouseVersion >= kNewHouseVersion)
 	{
 		YellowAlert(ownerWindow, kYellowNewerVersion, 0);
-		return(false);
+		return false;
 	}
 
 	houseUnlocked = ((thisHouse.timeStamp & 0x00000001) == 0);
 	#ifdef COMPILEDEMO
 	if (houseUnlocked)
-		return (false);
+	{
+		return false;
+	}
 	#endif
 	changeLockStateOfHouse = false;
 	saveHouseLocked = false;
@@ -426,7 +411,9 @@ Boolean ReadHouse (HWND ownerWindow)
 	whichRoom = thisHouse.firstRoom;
 	#ifdef COMPILEDEMO
 	if (whichRoom != 0)
-		return (false);
+	{
+		return false;
+	}
 	#endif
 
 	wardBitSet = ((thisHouse.flags & 0x00000001) == 0x00000001);
@@ -437,7 +424,9 @@ Boolean ReadHouse (HWND ownerWindow)
 	thisRoomNumber = -1;
 	previousRoom = -1;
 	if (!noRoomAtAll)
+	{
 		CopyRoomToThisRoom(whichRoom);
+	}
 
 	if (houseIsReadOnly)
 	{
@@ -453,7 +442,7 @@ Boolean ReadHouse (HWND ownerWindow)
 	fileDirty = false;
 	UpdateMenus(false);
 
-	return (true);
+	return true;
 }
 
 //--------------------------------------------------------------  WriteHouse
@@ -461,28 +450,21 @@ Boolean ReadHouse (HWND ownerWindow)
 
 Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 {
-	UInt32			timeStamp;
-	byteio			byteWriter;
-	LARGE_INTEGER	distance;
+	UInt32 timeStamp;
+	HRESULT hr;
 
 	if (!houseOpen)
 	{
 		YellowAlert(ownerWindow, kYellowUnaccounted, 4);
-		return (false);
-	}
-
-	distance.QuadPart = 0;
-	if (!SetFilePointerEx(houseRefNum, distance, NULL, FILE_BEGIN))
-	{
-		CheckFileError(ownerWindow, GetLastError(),
-			theHousesSpecs[thisHouseIndex].houseName);
-		return(false);
+		return false;
 	}
 
 	CopyThisRoomToRoom();
 
 	if (checkIt)
+	{
 		CheckHouseForProblems();
+	}
 
 	if (fileDirty)
 	{
@@ -490,32 +472,31 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 		timeStamp &= 0x7FFFFFFF;
 
 		if (changeLockStateOfHouse)
+		{
 			houseUnlocked = !saveHouseLocked;
+		}
 
-		if (houseUnlocked)								// house unlocked
+		if (houseUnlocked)
+		{
 			timeStamp &= 0x7FFFFFFE;
+		}
 		else
+		{
 			timeStamp |= 0x00000001;
+		}
 		thisHouse.timeStamp = (SInt32)timeStamp;
 		thisHouse.version = wasHouseVersion;
 	}
 
-	if (!byteio_init_handle_writer(&byteWriter, houseRefNum))
-		RedAlert(kErrNoMemory);
-	if (!WriteHouseType(&byteWriter, &thisHouse))
+	hr = Gp_WriteHouseData(&thisHouse);
+	if (FAILED(hr))
 	{
-		CheckFileError(ownerWindow, GetLastError(),
-			theHousesSpecs[thisHouseIndex].houseName);
-		byteio_close(&byteWriter);
-		return(false);
-	}
-	byteio_close(&byteWriter);
-
-	if (!SetEndOfFile(houseRefNum))
-	{
-		CheckFileError(ownerWindow, GetLastError(),
-			theHousesSpecs[thisHouseIndex].houseName);
-		return(false);
+		if (HRESULT_FACILITY(hr) == FACILITY_WIN32)
+		{
+			CheckFileError(ownerWindow, (DWORD)HRESULT_CODE(hr),
+				theHousesSpecs[thisHouseIndex].houseName);
+		}
+		return false;
 	}
 
 	if (changeLockStateOfHouse)
@@ -527,7 +508,7 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 	gameDirty = false;
 	fileDirty = false;
 	UpdateMenus(false);
-	return (true);
+	return true;
 }
 
 //--------------------------------------------------------------  CloseHouse
@@ -536,84 +517,42 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 Boolean CloseHouse (HWND ownerWindow)
 {
 	if (!houseOpen)
+	{
 		return (true);
+	}
 
 	if (gameDirty)
 	{
 		if (houseIsReadOnly)
 		{
 			if (!WriteScoresToDisk(ownerWindow))
+			{
 				YellowAlert(ownerWindow, kYellowFailedWrite, 0);
+			}
 		}
 		else if (!WriteHouse(ownerWindow, theMode == kEditMode))
+		{
 			YellowAlert(ownerWindow, kYellowFailedWrite, 0);
+		}
 	}
 	else if (fileDirty)
 	{
 #ifndef COMPILEDEMO
 		if (!QuerySaveChanges(ownerWindow)) // false signifies user canceled
+		{
 			return(false);
+		}
 #endif
 	}
 
-	CloseHouseResFork();
 	CloseHouseMovie();
-	CloseHandle(houseRefNum);
+	Gp_UnloadHouseFile();
 
 	houseOpen = false;
 
 	gameDirty = false;
 	fileDirty = false;
 	return (true);
-}
-
-//--------------------------------------------------------------  OpenHouseResFork
-// Opens the resource fork of the current house that is open.
-
-void OpenHouseResFork (HWND ownerWindow)
-{
-	WCHAR		fileName[MAX_PATH];
-	PWCH		extPtr;
-	HRESULT		hr;
-
-	if (houseResFork == NULL)
-	{
-		hr = StringCchCopy(fileName, ARRAYSIZE(fileName),
-				theHousesSpecs[thisHouseIndex].path);
-		if (FAILED(hr))
-		{
-			YellowAlert(ownerWindow, kYellowFailedResOpen, -1);
-			return;
-		}
-		extPtr = wcsrchr(fileName, L'.');
-		if (extPtr == NULL)
-		{
-			YellowAlert(ownerWindow, kYellowFailedResOpen, -1);
-			return;
-		}
-		*extPtr = L'\0';
-		hr = StringCchCat(fileName, ARRAYSIZE(fileName), L".glr");
-		if (FAILED(hr))
-		{
-			YellowAlert(ownerWindow, kYellowFailedResOpen, -1);
-			return;
-		}
-		houseResFork = LoadLibraryEx(fileName, NULL, LOAD_LIBRARY_AS_DATAFILE);
-		if (houseResFork == NULL)
-			YellowAlert(ownerWindow, kYellowFailedResOpen, (SInt16)GetLastError());
-	}
-}
-
-//--------------------------------------------------------------  CloseHouseResFork
-// Closes the resource fork of the current house that is open.
-
-void CloseHouseResFork (void)
-{
-	if (houseResFork != NULL)
-	{
-		FreeLibrary(houseResFork);
-		houseResFork = NULL;
-	}
 }
 
 //--------------------------------------------------------------  QuerySaveChanges
@@ -683,60 +622,5 @@ void YellowAlert (HWND ownerWindow, SInt16 whichAlert, SInt16 identifier)
 	params.arg[0] = errStr;
 	params.arg[1] = errNumStr;
 	whoCares = Alert(kYellowAlert, ownerWindow, &params);
-}
-
-//--------------------------------------------------------------  IsFileReadOnly
-
-Boolean IsFileReadOnly (houseSpec *theSpec)
-{
-	return false;
-#if 0
-#pragma unused (theSpec)
-
-	return false;
-	/*
-	Str255			tempStr;
-	ParamBlockRec	theBlock;
-	HParamBlockRec	hBlock;
-	VolumeParam		*volPtr;
-	OSErr			theErr;
-
-	volPtr = (VolumeParam *)&theBlock;
-	volPtr->ioCompletion = nil;
-	volPtr->ioVolIndex = 0;
-	volPtr->ioNamePtr = tempStr;
-	volPtr->ioVRefNum = theSpec->vRefNum;
-
-	theErr = PBGetVInfo(&theBlock, false);
-	if (CheckFileError(theErr, "\pRead/Write"))
-	{
-		if (((volPtr->ioVAtrb & 0x0080) == 0x0080) ||
-				((volPtr->ioVAtrb & 0x8000) == 0x8000))
-			return (true);		// soft/hard locked bits
-		else
-		{
-			hBlock.fileParam.ioCompletion = nil;
-			hBlock.fileParam.ioVRefNum = theSpec->vRefNum;
-			hBlock.fileParam.ioFVersNum = 0;
-			hBlock.fileParam.ioFDirIndex = 0;
-			hBlock.fileParam.ioNamePtr = theSpec->name;
-			hBlock.fileParam.ioDirID = theSpec->parID;
-
-			theErr = PBHGetFInfo(&hBlock, false);
-			if (CheckFileError(theErr, "\pRead/Write"))
-			{
-				if ((hBlock.fileParam.ioFlAttrib & 0x0001) == 0x0001)
-					return (true);
-				else
-					return (false);
-			}
-			else
-				return (false);
-		}
-	}
-	else
-		return (false);
-	*/
-#endif
 }
 
