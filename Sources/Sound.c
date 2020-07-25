@@ -12,6 +12,7 @@
 #include "HouseIO.h"
 #include "MacTypes.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 
 
 #define kBaseBufferSoundID			1000
@@ -220,12 +221,13 @@ void DumpTriggerSound (void)
 
 OSErr LoadBufferSounds (void)
 {
-	WORD i;
+	SInt16 i;
+	HRESULT hr;
 
 	for (i = 0; i < kMaxSounds - 1; i++)
 	{
-		if (!ReadWAVFromResource(HINST_THISCOMPONENT,
-				i + kBaseBufferSoundID, &theSoundData[i].wave))
+		hr = Gp_LoadBuiltInSound(i + kBaseBufferSoundID, &theSoundData[i].wave);
+		if (FAILED(hr))
 		{
 			return -1;
 		}
@@ -256,6 +258,9 @@ void DumpBufferSounds (void)
 			Audio_ReleaseSoundBuffer(theSoundData[i].dsBuffer);
 			theSoundData[i].dsBuffer = NULL;
 		}
+		free((void *)theSoundData[i].wave.dataBytes);
+		theSoundData[i].wave.dataBytes = NULL;
+		theSoundData[i].wave.dataLength = 0;
 	}
 }
 
@@ -300,20 +305,19 @@ void KillSound (void)
 
 SInt32 SoundBytesNeeded (void)
 {
-	HRSRC		hRsrc;
-	DWORD		totalBytes;
-	WORD		i;
+	SInt32 totalBytes;
+	SInt16 i;
 
-	totalBytes = 0L;
+	totalBytes = 0;
 	for (i = 0; i < kMaxSounds - 1; i++)
 	{
-		hRsrc = FindResource(HINST_THISCOMPONENT,
-				MAKEINTRESOURCE(i + kBaseBufferSoundID), L"WAVE");
-		if (hRsrc == NULL)
+		if (!Gp_BuiltInSoundExists(i + kBaseBufferSoundID))
+		{
 			return -1;
-		totalBytes += SizeofResource(HINST_THISCOMPONENT, hRsrc);
+		}
+		totalBytes += (SInt32)Gp_BuiltInSoundSize(i + kBaseBufferSoundID);
 	}
-	return (SInt32)totalBytes;
+	return totalBytes;
 }
 
 //--------------------------------------------------------------  TellHerNoSounds

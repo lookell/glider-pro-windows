@@ -14,6 +14,7 @@
 #include "HouseIO.h"
 #include "MacTypes.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "Sound.h"
 #include "Utilities.h"
 
@@ -478,7 +479,8 @@ void MusicCallBack (void)
 
 OSErr LoadMusicSounds (void)
 {
-	WORD i;
+	SInt16 i;
+	HRESULT hr;
 
 	for (i = 0; i < kMaxMusic; i++)
 	{
@@ -488,8 +490,8 @@ OSErr LoadMusicSounds (void)
 
 	for (i = 0; i < kMaxMusic; i++)
 	{
-		if (!ReadWAVFromResource(HINST_THISCOMPONENT,
-				i + kBaseBufferMusicID, &theMusicData[i]))
+		hr = Gp_LoadBuiltInSound(i + kBaseBufferMusicID, &theMusicData[i]);
+		if (FAILED(hr))
 		{
 			return -1;
 		}
@@ -513,9 +515,14 @@ OSErr LoadMusicSounds (void)
 
 OSErr DumpMusicSounds (void)
 {
-	// The pointers to the built-in music data are actually pointers into
-	// the resources of this program. These resources don't go away until
-	// the program is unloaded, so the pointers don't need to be freed.
+	SInt16 i;
+
+	for (i = 0; i < kMaxMusic; i++)
+	{
+		free((void *)theMusicData[i].dataBytes);
+		theMusicData[i].dataBytes = NULL;
+		theMusicData[i].dataLength = 0;
+	}
 	return noErr;
 }
 
@@ -654,20 +661,19 @@ void KillMusic (void)
 
 SInt32 MusicBytesNeeded (void)
 {
-	HRSRC		hRsrc;
-	DWORD		totalBytes;
-	WORD		i;
+	SInt32 totalBytes;
+	SInt16 i;
 
-	totalBytes = 0L;
+	totalBytes = 0;
 	for (i = 0; i < kMaxMusic; i++)
 	{
-		hRsrc = FindResource(HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(i + kBaseBufferMusicID), L"WAVE");
-		if (hRsrc == NULL)
+		if (!Gp_BuiltInSoundExists(i + kBaseBufferMusicID))
+		{
 			return -1;
-		totalBytes += SizeofResource(HINST_THISCOMPONENT, hRsrc);
+		}
+		totalBytes += (SInt32)Gp_BuiltInSoundSize(i + kBaseBufferMusicID);
 	}
-	return (SInt32)totalBytes;
+	return totalBytes;
 }
 
 //--------------------------------------------------------------  TellHerNoMusic

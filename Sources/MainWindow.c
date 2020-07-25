@@ -28,6 +28,7 @@
 #include "RectUtils.h"
 #include "Render.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "Room.h"
 #include "Scoreboard.h"
 #include "StringUtils.h"
@@ -526,10 +527,7 @@ void WashColorIn (void)
 
 	DisableMenuBar();
 
-	splashDIB = LoadImage(HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(kSplash8BitPICT),
-		IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-	if (splashDIB == NULL)
+	if (FAILED(Gp_LoadBuiltInImageAsDIB(kSplash8BitPICT, &splashDIB)))
 		RedAlert(kErrFailedGraphicLoad);
 
 	GetClientRect(mainWindow, &clientRect);
