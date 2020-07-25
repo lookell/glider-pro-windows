@@ -666,7 +666,10 @@ void CheckDuplicateFloorSuite (void)
 			bitPlace = ((thisHouse.rooms[i].floor + 7) * 128) +
 					thisHouse.rooms[i].suite;
 			if ((bitPlace < 0) || (bitPlace >= 8192))
-				OutputDebugString(L"Blew array\n");
+			{
+				//OutputDebugString(L"Blew array\n");
+				continue;
+			}
 			if (pidgeonHoles[bitPlace] != 0)
 			{
 				houseErrors++;
@@ -689,6 +692,10 @@ void CompressHouse (void)
 	SInt16		wasFirstRoom, roomNumber, probe;
 	Boolean		compressing, probing;
 
+	if (thisHouse.nRooms <= 0)
+	{
+		return;
+	}
 	wasFirstRoom = thisHouse.firstRoom;
 	compressing = true;
 	roomNumber = thisHouse.nRooms - 1;		// start with last room
@@ -736,6 +743,11 @@ void LopOffExtraRooms (void)
 	SInt16		r, count;
 	Str255		message;
 	roomPtr		newRoomsPtr;
+
+	if (thisHouse.nRooms <= 0)
+	{
+		return;
+	}
 
 	count = 0;
 	r = thisHouse.nRooms;			// begin at last room
