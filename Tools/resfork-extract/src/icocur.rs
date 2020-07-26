@@ -36,6 +36,10 @@ impl IconFile {
         next_offset
     }
 
+    pub fn num_entries(&self) -> usize {
+        self.entries.len()
+    }
+
     pub fn add_entry(&mut self, mut image: impl Bitmap, mask: BitmapOne) -> &mut Self {
         assert_ne!(image.bit_count(), 24, "24-bit images are not supported");
         assert_ne!(self.entries.len(), usize::from(u16::max_value()));

@@ -15,7 +15,7 @@ use crate::icocur::IconFile;
 use crate::macbinary::MacBinary;
 use crate::res::*;
 use crate::rsrcfork::{Resource, ResourceFork};
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::env;
 use std::error::Error;
 use std::ffi::OsString;
@@ -24,7 +24,7 @@ use std::io::prelude::*;
 use std::io::{self, BufWriter, Cursor, ErrorKind};
 use std::path::Path;
 use std::process;
-use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::atomic::{AtomicI32, Ordering};
 use zip::ZipWriter;
 
 pub type AnyResult<T> = Result<T, Box<dyn Error>>;
@@ -177,7 +177,7 @@ fn get_entry_name(res: &Resource) -> String {
     }
 }
 
-static EXIT_CODE: AtomicUsize = AtomicUsize::new(0);
+static EXIT_CODE: AtomicI32 = AtomicI32::new(0);
 
 fn report_invalid_resource(resource: &Resource) {
     EXIT_CODE.store(1, Ordering::SeqCst);
@@ -241,102 +241,6 @@ fn convert_resource(resource: &Resource, mut writer: impl Write) -> io::Result<(
         report_invalid_resource(resource);
     }
     result
-}
-
-fn get_finder_icon_ids(resfork: &ResourceFork) -> Vec<i16> {
-    let mut ids = HashSet::new();
-    for resource in resfork.iter() {
-        match resource.restype.as_bstr() {
-            b"icl8" | b"icl4" | b"ICN#" | b"ics8" | b"ics4" | b"ics#" => {
-                ids.insert(resource.id);
-            }
-            _ => {}
-        }
-    }
-    ids.into_iter().collect()
-}
-
-fn write_rc_script<W: Write>(resfork: &ResourceFork, mut writer: W) -> io::Result<()> {
-    let icon_ids = get_finder_icon_ids(resfork);
-    writeln!(&mut writer, "#pragma code_page(65001)")?;
-    writeln!(&mut writer, "#include <windows.h>")?;
-    writeln!(&mut writer, "LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US")?;
-    for id in icon_ids.iter().copied() {
-        let uid = id as u16;
-        writeln!(&mut writer, r#"{0} ICON "build\\icon_{1}.ico""#, uid, id)?;
-    }
-    for id in resfork.iter_type(b"bnds").map(|r| r.id) {
-        let uid = id as u16;
-        writeln!(&mut writer, r#"{0} BOUNDS "build\\bnds_{1}.bin""#, uid, id)?;
-    }
-    for id in resfork.iter_type(b"PICT").map(|r| r.id) {
-        let uid = id as u16;
-        writeln!(&mut writer, r#"{0} BITMAP "build\\pict_{1}.bmp""#, uid, id)?;
-    }
-    for id in resfork.iter_type(b"snd ").map(|r| r.id) {
-        let uid = id as u16;
-        writeln!(&mut writer, r#"{0} WAVE "build\\snd_{1}.wav""#, uid, id)?;
-    }
-    Ok(())
-}
-
-fn write_do_rle_script<W: Write>(mut writer: W) -> io::Result<()> {
-    writeln!(&mut writer, "magick convert %1 \"bmp3:%~2\"")?;
-    writeln!(&mut writer, "if %~z1 leq %~z2 copy %1 %2 >nul")?;
-    Ok(())
-}
-
-fn write_build_script<W: Write>(resfork: &ResourceFork, mut writer: W) -> io::Result<()> {
-    let icon_ids = get_finder_icon_ids(resfork);
-    writeln!(&mut writer, "@echo off")?;
-    writeln!(
-        &mut writer,
-        "rem This build script uses ImageMagick for conversion"
-    )?;
-    writeln!(
-        &mut writer,
-        r#"if not exist "%~dp0build" mkdir "%~dp0build""#
-    )?;
-    for id in &icon_ids {
-        writeln!(
-            &mut writer,
-            r#"copy "%~dp0FinderIcon\{0}.ico" "%~dp0build\icon_{0}.ico" >nul"#,
-            id
-        )?;
-    }
-    for resource in resfork.iter_type(b"bnds") {
-        writeln!(
-            &mut writer,
-            r#"copy "%~dp0(bnds)\{0}.bin" "%~dp0build\bnds_{0}.bin" >nul"#,
-            resource.id
-        )?;
-    }
-    writeln!(&mut writer, "echo Processing bitmap images...")?;
-    for res in resfork.iter_type(b"PICT") {
-        writeln!(
-            &mut writer,
-            r#"call "%~dp0do_rle.cmd" "%~dp0Picture\{0}.bmp" "%~dp0build\pict_{0}.bmp""#,
-            res.id
-        )?;
-    }
-    for resource in resfork.iter_type(b"snd ") {
-        writeln!(
-            &mut writer,
-            r#"copy "%~dp0Sound\{0}.wav" "%~dp0build\snd_{0}.wav" >nul"#,
-            resource.id
-        )?;
-    }
-    writeln!(&mut writer, "echo Compiling resource script...")?;
-    writeln!(
-        &mut writer,
-        r#"rc /nologo /fo "%~dp0resource.res" "%~dp0resource.rc""#
-    )?;
-    writeln!(&mut writer, "echo Linking resource DLL...")?;
-    writeln!(
-        &mut writer,
-        r#"link /nologo /dll /noentry /machine:x86 "/out:%~dp0house.glr" "%~dp0resource.res""#
-    )?;
-    Ok(())
 }
 
 struct FinderIconBitmaps {
@@ -443,15 +347,6 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
         write_names_txt(resfork, &mut zipfile)?;
     }
 
-    zipfile.start_file("resource.rc", Default::default())?;
-    write_rc_script(resfork, &mut zipfile)?;
-
-    zipfile.start_file("do_rle.cmd", Default::default())?;
-    write_do_rle_script(&mut zipfile)?;
-
-    zipfile.start_file("build.cmd", Default::default())?;
-    write_build_script(resfork, &mut zipfile)?;
-
     for resource in resfork.iter() {
         let mut buffer = Vec::new();
         let (entry_name, output) = match convert_resource(resource, &mut buffer) {
@@ -482,6 +377,126 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
     Ok(())
 }
 
+fn make_gliderpro_house(
+    data_bytes: &[u8],
+    resfork: &ResourceFork,
+    output_file: impl Seek + Write,
+) -> AnyResult<()> {
+    let mut zipfile = ZipWriter::new(output_file);
+    zipfile.set_comment("");
+
+    zipfile.start_file("house.dat", Default::default())?;
+    zipfile.write_all(data_bytes)?;
+
+    let mut added_bounds_directory = false;
+    for resource in resfork.iter_type(b"bnds") {
+        if !added_bounds_directory {
+            zipfile.add_directory("bounds/", Default::default())?;
+            added_bounds_directory = true;
+        }
+        if resource.data.len() == 4 {
+            let entry_name = format!("bounds/{}.bin", resource.id);
+            zipfile.start_file(entry_name, Default::default())?;
+            zipfile.write_all(&resource.data)?;
+        } else {
+            eprintln!("warning: bounds resource #{} invalid", resource.id);
+        }
+    }
+
+    let mut added_images_directory = false;
+    for resource in resfork.iter_type(b"PICT") {
+        if !added_images_directory {
+            zipfile.add_directory("images/", Default::default())?;
+            added_images_directory = true;
+        }
+        let mut data_bytes = Vec::new();
+        if picture::convert(&resource.data, &mut data_bytes).is_ok() {
+            let entry_name = format!("images/{}.bmp", resource.id);
+            zipfile.start_file(entry_name, Default::default())?;
+            zipfile.write_all(&data_bytes)?;
+        } else {
+            eprintln!("warning: failed to convert PICT #{}", resource.id);
+        }
+    }
+
+    let mut added_sounds_directory = false;
+    for resource in resfork.iter_type(b"snd ") {
+        if !added_sounds_directory {
+            zipfile.add_directory("sounds/", Default::default())?;
+            added_sounds_directory = true;
+        }
+        let mut data_bytes = Vec::new();
+        if sound::convert(&resource.data, &mut data_bytes).is_ok() {
+            let entry_name = format!("sounds/{}.wav", resource.id);
+            zipfile.start_file(entry_name, Default::default())?;
+            zipfile.write_all(&data_bytes)?;
+        } else {
+            eprintln!("warning: failed to convert sound #{}", resource.id);
+        }
+    }
+
+    const HOUSE_ICON_ID: i16 = -16455;
+    let mut icon_images = FinderIconBitmaps::default();
+    if let Some(resource) = resfork.load(b"icl8", HOUSE_ICON_ID) {
+        if let Ok(image) = large_8bit_icon::convert(&resource.data) {
+            icon_images.large_8bit = Some(image);
+        }
+    }
+    if let Some(resource) = resfork.load(b"icl4", HOUSE_ICON_ID) {
+        if let Ok(image) = large_4bit_icon::convert(&resource.data) {
+            icon_images.large_4bit = Some(image);
+        }
+    }
+    if let Some(resource) = resfork.load(b"ICN#", HOUSE_ICON_ID) {
+        if let Ok((image, mask)) = icon_list::convert(&resource.data) {
+            icon_images.large_1bit = Some(image);
+            icon_images.large_mask = mask;
+        }
+    }
+    if let Some(resource) = resfork.load(b"ics8", HOUSE_ICON_ID) {
+        if let Ok(image) = small_8bit_icon::convert(&resource.data) {
+            icon_images.small_8bit = Some(image);
+        }
+    }
+    if let Some(resource) = resfork.load(b"ics4", HOUSE_ICON_ID) {
+        if let Ok(image) = small_4bit_icon::convert(&resource.data) {
+            icon_images.small_4bit = Some(image);
+        }
+    }
+    if let Some(resource) = resfork.load(b"ics#", HOUSE_ICON_ID) {
+        if let Ok((image, mask)) = small_icon_list::convert(&resource.data) {
+            icon_images.small_1bit = Some(image);
+            icon_images.small_mask = mask;
+        }
+    }
+
+    let mut house_icon = IconFile::new();
+    if let Some(image) = icon_images.large_8bit.take() {
+        house_icon.add_entry(image, icon_images.large_mask.clone());
+    }
+    if let Some(image) = icon_images.large_4bit.take() {
+        house_icon.add_entry(image, icon_images.large_mask.clone());
+    }
+    if let Some(image) = icon_images.large_1bit.take() {
+        house_icon.add_entry(image, icon_images.large_mask.clone());
+    }
+    if let Some(image) = icon_images.small_8bit.take() {
+        house_icon.add_entry(image, icon_images.small_mask.clone());
+    }
+    if let Some(image) = icon_images.small_4bit.take() {
+        house_icon.add_entry(image, icon_images.small_mask.clone());
+    }
+    if let Some(image) = icon_images.small_1bit.take() {
+        house_icon.add_entry(image, icon_images.small_mask.clone());
+    }
+    if house_icon.num_entries() != 0 {
+        zipfile.start_file("house.ico", Default::default())?;
+        house_icon.write_to(&mut zipfile)?;
+    }
+
+    Ok(())
+}
+
 fn parse_resfork<P: AsRef<Path>>(filename: P) -> io::Result<ResourceFork> {
     let file_bytes = fs::read(filename.as_ref())?;
     if let Ok(Some(data)) = AppleDouble::read_from(Cursor::new(&file_bytes)) {
@@ -500,10 +515,7 @@ fn parse_resfork<P: AsRef<Path>>(filename: P) -> io::Result<ResourceFork> {
     Err(ErrorKind::InvalidData.into())
 }
 
-fn do_derez_command<I>(args: I) -> Result<(), Box<dyn Error>>
-where
-    I: IntoIterator<Item = OsString>,
-{
+fn do_derez_command<I: IntoIterator<Item = OsString>>(args: I) -> AnyResult<()> {
     let mut args = args.into_iter();
     let input_name = match args.next() {
         Some(s) => s,
@@ -524,10 +536,7 @@ where
     }
 }
 
-fn do_dump_command<I>(args: I) -> Result<(), Box<dyn Error>>
-where
-    I: IntoIterator<Item = OsString>,
-{
+fn do_dump_command<I: IntoIterator<Item = OsString>>(args: I) -> AnyResult<()> {
     let mut args = args.into_iter();
     let input_name = match args.next() {
         Some(s) => s,
@@ -549,10 +558,7 @@ where
     dump_resfork(&resfork, output_file)
 }
 
-fn do_convert_command<I>(args: I) -> Result<(), Box<dyn Error>>
-where
-    I: IntoIterator<Item = OsString>,
-{
+fn do_convert_command<I: IntoIterator<Item = OsString>>(args: I) -> AnyResult<()> {
     let mut args = args.into_iter();
     let input_name = match args.next() {
         Some(s) => s,
@@ -574,13 +580,43 @@ where
     convert_resfork(&resfork, output_file)
 }
 
-fn run() -> Result<(), Box<dyn Error>> {
+fn do_gliderpro_command<I: IntoIterator<Item = OsString>>(args: I) -> AnyResult<()> {
+    let mut args = args.into_iter();
+    let data_name = match args.next() {
+        Some(s) => s,
+        None => {
+            invalid_cmdline();
+            return Ok(());
+        }
+    };
+    let rsrc_name = match args.next() {
+        Some(s) => s,
+        None => {
+            invalid_cmdline();
+            return Ok(());
+        }
+    };
+    let output_name = match args.next() {
+        Some(s) => s,
+        None => {
+            invalid_cmdline();
+            return Ok(());
+        }
+    };
+    let data_bytes = fs::read(data_name)?;
+    let resfork = parse_resfork(rsrc_name)?;
+    let output_file = BufWriter::new(File::create(output_name)?);
+    make_gliderpro_house(&data_bytes, &resfork, output_file)
+}
+
+fn run() -> AnyResult<()> {
     let mut args = env::args_os().skip(1);
     let command = args.next();
     match command.as_ref().and_then(|s| s.to_str()) {
         Some("derez") => do_derez_command(args)?,
         Some("dump") => do_dump_command(args)?,
         Some("convert") => do_convert_command(args)?,
+        Some("gliderpro") => do_gliderpro_command(args)?,
         Some("--help") => print_long_help(),
         None => print_short_help(),
         _ => invalid_cmdline(),
@@ -590,7 +626,7 @@ fn run() -> Result<(), Box<dyn Error>> {
 
 fn main() -> Result<(), Box<dyn Error>> {
     run()?;
-    process::exit(EXIT_CODE.load(Ordering::SeqCst) as i32)
+    process::exit(EXIT_CODE.load(Ordering::SeqCst))
 }
 
 fn invalid_cmdline() {
@@ -640,11 +676,18 @@ SUBCOMMANDS:
         knows about into a more modern or human-readable format, if
         possible. If a conversion fails or the format is unknown, then
         the raw bytes are dumped. For example 'PICT' resources are
-        converted into BMP image files, and 'snd ' resources are
-        converted into AIFF audio files.
+        converted into .bmp image files, and 'snd ' resources are
+        converted into .wav audio files.
+
+    gliderpro <data-fork> <resource-fork> <output-zip>
+
+        Extracts and converts images, sounds, and room boundings from
+        the resource fork and packages those resources with the house
+        data into the output zip file. This zip file is suitable for
+        use as a Glider PRO house file, so long as it has the .glh
+        file extension.
 
 REMARKS:
-
     The resource fork input file can be in either an AppleDouble
     container file, a MacBinary container file, or the raw resource
     fork's bytes on its own. resfork-extract attempts to decode the

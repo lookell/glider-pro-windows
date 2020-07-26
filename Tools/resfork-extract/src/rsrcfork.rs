@@ -213,6 +213,12 @@ impl ResourceFork {
         self.resources.iter()
     }
 
+    pub fn load(&self, restype: impl Into<ResType>, resid: i16) -> Option<&Resource> {
+        let restype = restype.into();
+        self.iter()
+            .find(|res| res.restype == restype && res.id == resid)
+    }
+
     pub fn iter_type<T>(&self, restype: T) -> impl Iterator<Item = &'_ Resource>
     where
         T: Into<ResType>,

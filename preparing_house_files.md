@@ -2,10 +2,6 @@
 
 (The commands shown below are written for the CMD shell.)
 
-You will need to be able to access ImageMagick (`magick`), FFmpeg (`ffmpeg`),
-and Microsoft's resource compiler (`rc`) and linker (`link`) to convert a
-house's resource fork into a file that can be used by the game.
-
 First, compile the `resfork-extract` tool in this repository. It is written
 in the Rust language:
 
@@ -13,21 +9,17 @@ in the Rust language:
     cargo build --release
 
 Next, run the `resfork-extract` tool on an AppleDouble, MacBinary, or raw
-resource fork containing a house's resources:
+resource fork containing a house's resources. The first file name must be
+the raw house data, the second must be the resource fork, and the third must
+be the desired output file:
 
-    cargo run --release convert Slumberland.rsrc Slumberland.zip
+    cargo run --release gliderpro Slumberland Slumberland.rsrc Slumberland.glh
 
-Extract the output zip file to a convenient directory and then, from that
-directory, run the generated batch script:
-
-    .\build.bat
-
-If all goes well, the final output file will be generated (`house.glr`).
-Make a copy of the house's data fork and rename it to something like
-`Slumberland.glh`, with extension `.glh`. Rename `house.glr` to a matching
-base name; in this case it would be `Slumberland.glr`. These two files
-together can now be placed into the game's Houses directory, and the game
-should load them together without any problems.
+If this succeeds, then Slumberland.glh is ready to be used by Glider PRO.
+Now, simply place it into the `Houses` directory for Glider PRO to find.
+If there is a `portable.dat` next to the Glider PRO executable, the Houses
+directory is also next to that executable. If `portable.dat` does not exist,
+then the directory is at `%APPDATA%\glider-pro-windows\Houses`.
 
 
 ## Explanation
@@ -44,28 +36,14 @@ house: a list of rooms, where objects are within the rooms, the backgrounds to
 use within the rooms, etc. The resource fork of a house file contains custom
 pictures, custom sounds, and room boundary information (for older houses).
 
-In this port of Glider PRO for Windows, I have chosen to - at least to begin
-with - use resource-only DLLs to store the resources of a house. Pictures that
-were stored in the `'PICT'` format on Macintosh have been converted to the
-BMP format for Windows. Sounds that were stored in the `'snd '` format on a
-Macintosh have been converted to the WAV format for Windows.
+In this port of Glider PRO for Windows, I have chosen to package the house data
+and its custom resources together into a single zip file. The PICT resources are
+converted into BMP files and placed in the `images` directory inside the zip
+file. The sound resources are converted into WAV files and placed in the
+`sounds` directory inside the zip file.
 
 To perform this resource conversion, the tool `resfork-extract` was developed
 alongside this source port. It can take the resources from an AppleSingle,
 AppleDouble, MacBinary, or raw resource fork format, and output translated
-versions into a zip file.
-
-To package up the pictures and sounds into a DLL file, `resfork-extract` also
-outputs a batch script into the zip file it generates. This batch script uses
-the tools ImageMagick (via the `magick` command) and FFmpeg (via the `ffmpeg`
-command) to compress the BMP files and convert the generated AIFF files into
-WAV files, respectively. It then calls upon Microsoft's resource compiler (`rc`)
-to compile the generated resource script. Finally, it calls Microsoft's linker
-(`link`) to bundle the `.res` file into the final resource DLL, which will be
-named `house.glr`.
-
-When loading houses, the game looks for a pair of corresponding files. If the
-base house name is `Slumberland`, then the game looks for `Slumberland.glh`
-(the data fork) and `Slumberland.glr` (the converted resources). If the `.glr`
-file is missing, the game will complain but still load the house.
-
+versions into a zip file. It can also take a house's data and resource fork
+together to merge into a single zip file that Glider PRO can read and use.
