@@ -2,7 +2,7 @@ use super::{ColorTable, Point, Rect};
 use crate::bitmap::{Bitmap, BitmapFour, BitmapOne, RgbQuad};
 use crate::icocur::CursorFile;
 use crate::utils::ReadExt;
-use std::io::{self, Read, Seek, SeekFrom, Write};
+use std::io::{self, ErrorKind, Read, Seek, SeekFrom, Write};
 
 struct CCrsr {
     // CCrsr
@@ -153,7 +153,12 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
             super::read_4bit_bitmap_data(&mut bitmap, &cursor.pixelData, 0);
             cur_file.add_entry(bitmap, cursor_mask.clone(), cursor.crsrHotSpot);
         }
-        _ => panic!("'crsr': unsupported color depth ({})", cursor.pixelSize),
+        _ => {
+            return Err(io::Error::new(
+                ErrorKind::InvalidData,
+                format!("'crsr': unsupported color depth ({})", cursor.pixelSize),
+            ))
+        }
     }
 
     let mut mono_bits = BitmapOne::new(16, 16);

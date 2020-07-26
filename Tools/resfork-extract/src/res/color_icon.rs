@@ -2,7 +2,7 @@ use super::{ColorTable, Rect};
 use crate::bitmap::{Bitmap, BitmapEight, BitmapFour, BitmapOne, RgbQuad};
 use crate::icocur::IconFile;
 use crate::utils::ReadExt;
-use std::io::{self, Read, Write};
+use std::io::{self, ErrorKind, Read, Write};
 
 struct PixMap {
     baseAddr: u32,
@@ -220,7 +220,12 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
             image.set_palette(palette.into_iter());
             ico_file.add_entry(image, mask.clone());
         }
-        _ => unimplemented!("unsupported 'cicn' depth: {}", icon.iconPMap.pixelSize),
+        _ => {
+            return Err(io::Error::new(
+                ErrorKind::InvalidData,
+                format!("unsupported 'cicn' depth: {}", icon.iconPMap.pixelSize),
+            ));
+        }
     };
     if !icon.iconBMapData.is_empty() {
         let image = make_1bit_bitmap(&icon.iconBMap, &icon.iconBMapData);

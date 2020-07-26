@@ -282,12 +282,18 @@ fn cmp_sound_header_to_wave_data(header: &CmpSoundHeader) -> io::Result<WaveData
 
 pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
     let resource = SndListResource::read_from(data)?;
-    assert_eq!(resource.modifiers.len(), 1);
-    assert_eq!(resource.modifiers[0].modNumber, sampledSynth);
-    assert_eq!(resource.commands.len(), 1);
-    assert_eq!(resource.commands[0].cmd, dataOffsetFlag | bufferCmd);
-    assert_eq!(resource.commands[0].param1, 0);
-    assert_eq!(resource.commands[0].param2, 20);
+    if (resource.modifiers.len() != 1)
+        || (resource.modifiers[0].modNumber != sampledSynth)
+        || (resource.commands.len() != 1)
+        || (resource.commands[0].cmd != dataOffsetFlag | bufferCmd)
+        || (resource.commands[0].param1 != 0)
+        || (resource.commands[0].param2 != 20)
+    {
+        return Err(io::Error::new(
+            ErrorKind::InvalidData,
+            "unsupported sound header",
+        ));
+    }
     match resource.data[20] {
         stdSH => {
             let header = SoundHeader::read_from(resource.data.as_slice())?;
@@ -299,6 +305,11 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
             let wave_data = cmp_sound_header_to_wave_data(&header)?;
             write_wave_file(&wave_data, writer)
         }
-        _ => unimplemented!("unknown sound header type"),
+        _ => {
+            return Err(io::Error::new(
+                ErrorKind::InvalidData,
+                "unknown sound header type",
+            ));
+        }
     }
 }

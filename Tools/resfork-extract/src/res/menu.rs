@@ -1,6 +1,6 @@
 use crate::mac_roman;
 use crate::utils::ReadExt;
-use std::io::{self, Read, Write};
+use std::io::{self, ErrorKind, Read, Write};
 
 struct Menu {
     menuID: i16,
@@ -18,7 +18,12 @@ impl Menu {
         let menuWidth = reader.read_be_i16()?;
         let menuHeight = reader.read_be_i16()?;
         let menuProc = reader.read_be_u32()?;
-        assert_eq!(menuProc, 0, "cannot interpret non-standard menu data");
+        if menuProc != 0 {
+            return Err(io::Error::new(
+                ErrorKind::InvalidData,
+                "cannot interpret non-standard menu data",
+            ));
+        }
         let enableFlags = reader.read_be_u32()?;
         let menuTitle = super::read_pstring(&mut reader)?;
         let mut menuItems = Vec::new();

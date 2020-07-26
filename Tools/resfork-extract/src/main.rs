@@ -179,12 +179,13 @@ fn get_entry_name(res: &Resource) -> String {
 
 static EXIT_CODE: AtomicI32 = AtomicI32::new(0);
 
-fn report_invalid_resource(resource: &Resource) {
+fn report_invalid_resource(resource: &Resource, err: &io::Error) {
     EXIT_CODE.store(1, Ordering::SeqCst);
     eprintln!(
         "error: resource '{}' ({}) is invalid",
         resource.restype, resource.id
     );
+    eprintln!("note: {}", err);
 }
 
 fn convert_resource(resource: &Resource, mut writer: impl Write) -> io::Result<()> {
@@ -237,8 +238,8 @@ fn convert_resource(resource: &Resource, mut writer: impl Write) -> io::Result<(
         // do not report the failure to convert unknown resources
         _ => return Err(ErrorKind::InvalidData.into()),
     };
-    if result.is_err() {
-        report_invalid_resource(resource);
+    if let Err(err) = &result {
+        report_invalid_resource(resource, err);
     }
     result
 }
@@ -279,11 +280,11 @@ where
         match resource.restype.as_bstr() {
             b"icl8" => match large_8bit_icon::convert(&resource.data) {
                 Ok(image) => entry.or_default().large_8bit = Some(image),
-                Err(_) => report_invalid_resource(resource),
+                Err(err) => report_invalid_resource(resource, &err),
             },
             b"icl4" => match large_4bit_icon::convert(&resource.data) {
                 Ok(image) => entry.or_default().large_4bit = Some(image),
-                Err(_) => report_invalid_resource(resource),
+                Err(err) => report_invalid_resource(resource, &err),
             },
             b"ICN#" => match icon_list::convert(&resource.data) {
                 Ok((image, mask)) => {
@@ -291,15 +292,15 @@ where
                     entry.large_1bit = Some(image);
                     entry.large_mask = mask;
                 }
-                Err(_) => report_invalid_resource(resource),
+                Err(err) => report_invalid_resource(resource, &err),
             },
             b"ics8" => match small_8bit_icon::convert(&resource.data) {
                 Ok(image) => entry.or_default().small_8bit = Some(image),
-                Err(_) => report_invalid_resource(resource),
+                Err(err) => report_invalid_resource(resource, &err),
             },
             b"ics4" => match small_4bit_icon::convert(&resource.data) {
                 Ok(image) => entry.or_default().small_4bit = Some(image),
-                Err(_) => report_invalid_resource(resource),
+                Err(err) => report_invalid_resource(resource, &err),
             },
             b"ics#" => match small_icon_list::convert(&resource.data) {
                 Ok((image, mask)) => {
@@ -307,7 +308,7 @@ where
                     entry.small_1bit = Some(image);
                     entry.small_mask = mask;
                 }
-                Err(_) => report_invalid_resource(resource),
+                Err(err) => report_invalid_resource(resource, &err),
             },
             _ => {}
         }
@@ -360,8 +361,8 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
     for resource in resfork.iter_type(b"PAT#") {
         let patterns = match pattern_list::convert(&resource.data) {
             Ok(patterns) => patterns,
-            Err(_) => {
-                report_invalid_resource(resource);
+            Err(err) => {
+                report_invalid_resource(resource, &err);
                 continue;
             }
         };

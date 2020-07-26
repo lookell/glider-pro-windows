@@ -3,7 +3,7 @@ use crate::bitmap::{
     Bitmap, BitmapEight, BitmapFour, BitmapOne, BitmapSixteen, BitmapTwentyFour, RgbQuad,
 };
 use crate::utils::{ReadExt, SeekExt};
-use std::io::{self, Read, Seek, SeekFrom, Write};
+use std::io::{self, ErrorKind, Read, Seek, SeekFrom, Write};
 use std::iter;
 
 struct Region {
@@ -253,7 +253,8 @@ impl PixData {
                     u16::from(reader.read_be_u8()?)
                 };
                 let packed_data = read_bytes(&mut reader, byteCount.into())?;
-                let scanline = unpack_bits(&packed_data).expect("UnpackBits failed");
+                let scanline = unpack_bits(&packed_data)
+                    .ok_or_else(|| io::Error::new(ErrorKind::InvalidData, "UnpackBits failed"))?;
                 data.extend_from_slice(&scanline);
             }
             Ok(Self { data })
@@ -270,10 +271,15 @@ impl PixData {
             (2, 32) => pixMap.packType,
             (3, 16) => pixMap.packType,
             (4, 32) => pixMap.packType,
-            _ => panic!(
-                "unknown (packType, pixelSize) combo: ({}, {})",
-                pixMap.packType, pixMap.pixelSize
-            ),
+            _ => {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    format!(
+                        "unknown (packType, pixelSize) combo: ({}, {})",
+                        pixMap.packType, pixMap.pixelSize
+                    ),
+                ))
+            }
         };
         if packType == 1 || pixMap.row_bytes() < 8 {
             let size = usize::from(pixMap.row_bytes()) * num_scanlines;
@@ -283,7 +289,7 @@ impl PixData {
             let size = usize::from(pixMap.row_bytes()) * num_scanlines * 3 / 4;
             let packed_data = read_bytes(&mut reader, size)?;
             let mut data = Vec::with_capacity(size * 4 / 3);
-            for chunk in packed_data.chunks(3) {
+            for chunk in packed_data.chunks_exact(3) {
                 data.extend_from_slice(&[0x00, chunk[0], chunk[1], chunk[2]]);
             }
             Ok(Self { data })
@@ -296,7 +302,8 @@ impl PixData {
                     u16::from(reader.read_be_u8()?)
                 };
                 let packed_data = read_bytes(&mut reader, byteCount.into())?;
-                let scanline = unpack_words(&packed_data).expect("UnpackBits failed");
+                let scanline = unpack_words(&packed_data)
+                    .ok_or_else(|| io::Error::new(ErrorKind::InvalidData, "UnpackWords failed"))?;
                 data.extend_from_slice(&scanline);
             }
             Ok(Self { data })
@@ -309,13 +316,17 @@ impl PixData {
                     u16::from(reader.read_be_u8()?)
                 };
                 let packed_data = read_bytes(&mut reader, byteCount.into())?;
-                let scanline = unpack_bits(&packed_data).expect("UnpackBits failed");
-                assert!(scanline.len() % 3 == 0);
+                let scanline = unpack_bits(&packed_data)
+                    .ok_or_else(|| io::Error::new(ErrorKind::InvalidData, "UnpackBits failed"))?;
+                if scanline.len() % 3 != 0 {
+                    eprintln!("warning: scanline.len() % 3 != 0");
+                }
+                let third_of_len = scanline.len() / 3;
                 let rest = &scanline;
-                let (red_scanline, rest) = rest.split_at(scanline.len() / 3);
-                let (green_scanline, rest) = rest.split_at(scanline.len() / 3);
-                let (blue_scanline, _) = rest.split_at(scanline.len() / 3);
-                for idx in 0..(scanline.len() / 3) {
+                let (red_scanline, rest) = rest.split_at(third_of_len);
+                let (green_scanline, rest) = rest.split_at(third_of_len);
+                let (blue_scanline, _) = rest.split_at(third_of_len);
+                for idx in 0..third_of_len {
                     data.extend_from_slice(&[
                         0x00,
                         red_scanline[idx],
@@ -326,7 +337,10 @@ impl PixData {
             }
             Ok(Self { data })
         } else {
-            unimplemented!("PixData::direct_read_from")
+            return Err(io::Error::new(
+                ErrorKind::InvalidData,
+                "PixData::direct_read_from",
+            ));
         }
     }
 
@@ -586,7 +600,12 @@ impl PicV1Op {
                 Some(PicV1Op::DontCare)
             }
             0xFF => None,
-            _ => unimplemented!("PICT V1 opcode: ${:02X}", opcode),
+            _ => {
+                return Err(io::Error::new(
+                    ErrorKind::InvalidData,
+                    format!("unimplemented PICT V1 opcode ${:02X}", opcode),
+                ))
+            }
         })
     }
 }
@@ -746,7 +765,12 @@ impl PicV2Op {
                 skip_bytes(reader, length.into())?;
                 Some(PicV2Op::DontCare)
             }
-            _ => unimplemented!("PICT V2 opcode ${:04X}", opcode),
+            _ => {
+                return Err(io::Error::new(
+                    ErrorKind::InvalidData,
+                    format!("unimplemented PICT V2 opcode ${:04X}", opcode),
+                ))
+            }
         })
     }
 }
