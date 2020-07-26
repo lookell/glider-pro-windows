@@ -10,15 +10,12 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern GDHandle thisGDevice;
-
 void ToolBoxInit (void);
 SInt16 RandomInt (SInt16 range);
 SInt32 RandomLong (SInt32 range);
 void InitRandomLongQUS (void);
 UInt32 RandomLongQUS (void);
 __declspec(noreturn) void RedAlert (SInt16 errorNumber);
-void FindOurDevice (void);
 OSErr CreateOffScreenGWorld (HDC *theGWorld, const Rect *bounds, SInt16 depth);
 void DisposeGWorld (HDC theGWorld);
 HBITMAP GetPicture (SInt16 resID);

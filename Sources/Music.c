@@ -9,7 +9,6 @@
 
 #include "Audio.h"
 #include "DialogUtils.h"
-#include "Environ.h"
 #include "GliderDefines.h"
 #include "HouseIO.h"
 #include "MacTypes.h"

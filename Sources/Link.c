@@ -7,7 +7,6 @@
 //============================================================================
 
 
-#include "Environ.h"
 #include "House.h"
 #include "HouseIO.h"
 #include "MainWindow.h"

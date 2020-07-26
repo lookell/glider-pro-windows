@@ -120,9 +120,8 @@ void ReadInPrefs (HWND ownerWindow)
 		toolMode = thePrefs.wasToolGroup;
 		doAutoDemo = thePrefs.wasDoAutoDemo;
 		isEscPauseKey = thePrefs.wasEscPauseKey;
-		isUseSecondScreen = thePrefs.wasScreen2;
-		if (thisMac.numScreens < 2)
-			isUseSecondScreen = false;
+		// TODO: implement support for fullscreen display and monitor selection
+		isUseSecondScreen = false;
 		doBackground = thePrefs.wasDoBackground;
 		doPrettyMap = thePrefs.wasPrettyMap;
 		doBitchDialogs = thePrefs.wasBitchDialogs;
@@ -300,20 +299,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	ToolBoxInit();
 	CheckOurEnvirons();
-	if (!thisMac.hasColor)
-		RedAlert(kErrNeedColorQD);
-	if (!thisMac.hasSystem7)
-		RedAlert(kErrNeedSystem7);
-	if (thisMac.numScreens == 0)
-		RedAlert(kErrNeed16Or256Colors);
 	if (FAILED(Gp_LoadBuiltInAssets()))
 		RedAlert(kErrFailedResourceLoad);
 	LoadCursors();
 	ReadInPrefs(NULL);
 
-//	if ((thisMac.numScreens > 1) && (isUseSecondScreen))
-//		ReflectSecondMonitorEnvirons(false, true, true);
-	HandleDepthSwitching(NULL);
 	VariableInit();						SpinCursor(2);
 	CheckMemorySize(NULL);
 	GetExtraCursors();					SpinCursor(2);
@@ -350,11 +340,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	{
 		WashColorIn();
 	}
-//	if ((!thisMac.hasSM3) && (numSMWarnings < 3))
-//	{
-//		numSMWarnings++;
-//		BitchAboutSM3();
-//	}
 
 	incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
 	while (!quitting)		// this is the main loop
@@ -389,7 +374,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	WriteOutPrefs(NULL);
 	Gp_UnloadBuiltInAssets();
-	RestoreColorDepth();
 //	theErr = LoadScrap();
 
 	if (audioInitialized)

@@ -8,7 +8,6 @@
 
 
 #include "DynamicMaps.h"
-#include "Environ.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "Objects.h"

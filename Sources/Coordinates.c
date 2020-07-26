@@ -7,7 +7,6 @@
 //============================================================================
 
 
-#include "Environ.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "Marquee.h"

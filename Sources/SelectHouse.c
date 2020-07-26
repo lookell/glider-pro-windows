@@ -9,7 +9,6 @@
 
 #include "AnimCursor.h"
 #include "DialogUtils.h"
-#include "Environ.h"
 #include "Events.h"
 #include "House.h"
 #include "HouseIO.h"
@@ -403,26 +402,23 @@ void DoDirSearch (HWND ownerWindow)
 
 void BuildHouseList (HWND ownerWindow)
 {
-	SInt16		i;
+	SInt16 i;
 
-	if (thisMac.hasSystem7)
+	for (i = 0; i < housesFound; i++)		// destroy icons from previous search
 	{
-		for (i = 0; i < housesFound; i++)		// destroy icons from previous search
+		if (theHousesSpecs[i].hIcon != NULL)
 		{
-			if (theHousesSpecs[i].hIcon != NULL)
-			{
-				DestroyIcon(theHousesSpecs[i].hIcon);
-				theHousesSpecs[i].hIcon = NULL;
-			}
+			DestroyIcon(theHousesSpecs[i].hIcon);
+			theHousesSpecs[i].hIcon = NULL;
 		}
-		housesFound = 0;						// zero the number of houses found
-		for (i = 0; i < numExtraHouses; i++)	// 1st, insert extra houses into list
-		{
-			theHousesSpecs[housesFound] = extraHouseSpecs[i];
-			housesFound++;
-		}
-		DoDirSearch(ownerWindow);				// now, search folders for the rest
 	}
+	housesFound = 0;						// zero the number of houses found
+	for (i = 0; i < numExtraHouses; i++)	// 1st, insert extra houses into list
+	{
+		theHousesSpecs[housesFound] = extraHouseSpecs[i];
+		housesFound++;
+	}
+	DoDirSearch(ownerWindow);				// now, search folders for the rest
 }
 
 //--------------------------------------------------------------  AddExtraHouse

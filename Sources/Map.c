@@ -698,6 +698,7 @@ void HandleMapClick (SInt16 clickX, SInt16 clickY)
 
 		if (thisMac.hasDrag)
 		{
+			// TODO: implement room dragging in map window
 //			Rect aRoom;
 //			SetPortWindowPort(mainWindow);
 //			QSetRect(&aRoom, 0, 0, kMapRoomWidth, kMapRoomHeight);

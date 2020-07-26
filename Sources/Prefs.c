@@ -9,7 +9,6 @@
 
 #include "ByteIO.h"
 #include "DialogUtils.h"
-#include "Environ.h"
 #include "FileError.h"
 #include "Macintosh.h"
 #include "ResourceIDs.h"

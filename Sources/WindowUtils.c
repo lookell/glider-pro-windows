@@ -8,7 +8,6 @@
 
 
 #include "DialogUtils.h"
-#include "Environ.h"
 #include "MacTypes.h"
 #include "MainWindow.h"
 #include "RectUtils.h"

@@ -99,7 +99,6 @@ typedef struct FSSpec
 //
 
 typedef struct CGrafPtr__* CGrafPtr;
-typedef struct GDHandle__* GDHandle;
 typedef struct Movie__* Movie;
 typedef struct RgnHandle__* RgnHandle;
 

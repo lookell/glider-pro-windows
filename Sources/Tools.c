@@ -8,7 +8,6 @@
 
 
 #include "DialogUtils.h"
-#include "Environ.h"
 #include "GliderDefines.h"
 #include "Macintosh.h"
 #include "MainWindow.h"

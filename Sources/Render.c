@@ -9,7 +9,6 @@
 
 #include "DynamicMaps.h"
 #include "Dynamics.h"
-#include "Environ.h"
 #include "FrameTimer.h"
 #include "Grease.h"
 #include "HouseIO.h"

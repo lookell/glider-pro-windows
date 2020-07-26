@@ -680,15 +680,6 @@ void DisplayInit (HWND hDlg)
 		disabledLoadFlags = LR_DEFAULTSIZE | LR_MONOCHROME;
 	}
 
-	if (!thisMac.can8Bit)
-	{
-		EnableWindow(GetDlgItem(hDlg, kDoColorFadeItem), FALSE);
-		EnableWindow(GetDlgItem(hDlg, k256Depth), FALSE);
-	}
-	if (!thisMac.can4Bit)
-		EnableWindow(GetDlgItem(hDlg, k16Depth), FALSE);
-	if (thisMac.numScreens < 2)
-		EnableWindow(GetDlgItem(hDlg, kUseScreen2Item), FALSE);
 	if (thisMac.screen.right <= 512)
 	{
 		EnableWindow(display3Control, FALSE);

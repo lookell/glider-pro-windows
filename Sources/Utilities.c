@@ -20,7 +20,6 @@
 #include "WinAPI.h"
 
 
-GDHandle	thisGDevice;
 UInt32		theSeed;
 
 
@@ -161,19 +160,6 @@ __declspec(noreturn) void RedAlert (SInt16 errorNumber)
 	if (mainWindow != NULL)
 		DestroyWindow(mainWindow);
 	exit(EXIT_FAILURE);
-}
-
-//--------------------------------------------------------------  FindOurDevice
-// Finds the main device (monitor with the menu bar on it).
-
-void FindOurDevice (void)
-{
-	return;
-#if 0
-	thisGDevice = GetMainDevice();
-	if (thisGDevice == nil)
-		RedAlert(kErrFailedGetDevice);
-#endif
 }
 
 //--------------------------------------------------------------------  CreateOffScreenGWorld

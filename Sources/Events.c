@@ -9,7 +9,6 @@
 
 #include "Coordinates.h"
 #include "DialogUtils.h"
-#include "Environ.h"
 #include "House.h"
 #include "Link.h"
 #include "Macintosh.h"

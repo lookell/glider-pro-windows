@@ -8,7 +8,6 @@
 
 
 #include "ByteIO.h"
-#include "Environ.h"
 #include "MacTypes.h"
 #include "MainWindow.h"
 #include "ResourceIDs.h"
@@ -161,7 +160,7 @@ void InitAnimatedCursor (WORD acurID)
 	acurRec ballCurs = { 0 };
 	Boolean useColor;
 
-	useColor = thisMac.hasColor;
+	useColor = true;
 
 	if (!ReadAcurResource(acurID, &ballCurs))
 		RedAlert(kErrFailedResourceLoad);
