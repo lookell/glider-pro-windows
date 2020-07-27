@@ -58,7 +58,7 @@ void DoHighScores (void)
 
 	SpinCursor(3);
 	Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
-	QSetRect(&tempRect, 0, 0, 640, 480);
+	QSetRect(&tempRect, 0, 0, 640, 460);
 	QOffsetRect(&tempRect, splashOriginH, splashOriginV);
 	LoadScaledGraphic(workSrcMap, kStarPictID, &tempRect);
 	if (quickerTransitions)
