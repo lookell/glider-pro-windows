@@ -130,32 +130,32 @@ void InitScoreboardMap (void)
 	QOffsetRect(&boardGQDestRect, 0, -kScoreboardTall);
 	SelectObject(boardPSrcMap, CreateFontIndirect(&lfScoreboard));
 
-	QSetRect(&badgesBlankRects[0], 0, 0, 16, 16);		// foil
-	QOffsetRect(&badgesBlankRects[0], 0, 0);
-	QSetRect(&badgesBlankRects[1], 0, 0, 16, 16);		// rubber bands
-	QOffsetRect(&badgesBlankRects[1], 0, 16);
-	QSetRect(&badgesBlankRects[2], 0, 0, 16, 17);		// battery
-	QOffsetRect(&badgesBlankRects[2], 0, 32);
-	QSetRect(&badgesBlankRects[3], 0, 0, 16, 17);		// helium
-	QOffsetRect(&badgesBlankRects[3], 0, 49);
+	QSetRect(&badgesBlankRects[kFoilBadge], 0, 0, 16, 16);
+	QOffsetRect(&badgesBlankRects[kFoilBadge], 0, 0);
+	QSetRect(&badgesBlankRects[kBandsBadge], 0, 0, 16, 16);
+	QOffsetRect(&badgesBlankRects[kBandsBadge], 0, 16);
+	QSetRect(&badgesBlankRects[kBatteryBadge], 0, 0, 16, 17);
+	QOffsetRect(&badgesBlankRects[kBatteryBadge], 0, 32);
+	QSetRect(&badgesBlankRects[kHeliumBadge], 0, 0, 16, 17);
+	QOffsetRect(&badgesBlankRects[kHeliumBadge], 0, 49);
 
-	QSetRect(&badgesBadgesRects[0], 0, 0, 16, 16);		// foil
-	QOffsetRect(&badgesBadgesRects[0], 16, 0);
-	QSetRect(&badgesBadgesRects[1], 0, 0, 16, 16);		// rubber bands
-	QOffsetRect(&badgesBadgesRects[1], 16, 16);
-	QSetRect(&badgesBadgesRects[2], 0, 0, 16, 17);		// battery
-	QOffsetRect(&badgesBadgesRects[2], 16, 32);
-	QSetRect(&badgesBadgesRects[3], 0, 0, 16, 17);		// helium
-	QOffsetRect(&badgesBadgesRects[3], 16, 49);
+	QSetRect(&badgesBadgesRects[kFoilBadge], 0, 0, 16, 16);
+	QOffsetRect(&badgesBadgesRects[kFoilBadge], 16, 0);
+	QSetRect(&badgesBadgesRects[kBandsBadge], 0, 0, 16, 16);
+	QOffsetRect(&badgesBadgesRects[kBandsBadge], 16, 16);
+	QSetRect(&badgesBadgesRects[kBatteryBadge], 0, 0, 16, 17);
+	QOffsetRect(&badgesBadgesRects[kBatteryBadge], 16, 32);
+	QSetRect(&badgesBadgesRects[kHeliumBadge], 0, 0, 16, 17);
+	QOffsetRect(&badgesBadgesRects[kHeliumBadge], 16, 49);
 
-	QSetRect(&badgesDestRects[0], 0, 0, 16, 16);		// foil
-	QOffsetRect(&badgesDestRects[0], 432 + hOffset, 2 - kScoreboardTall);
-	QSetRect(&badgesDestRects[1], 0, 0, 16, 16);		// rubber bands
-	QOffsetRect(&badgesDestRects[1], 449 + hOffset, 2 - kScoreboardTall);
-	QSetRect(&badgesDestRects[2], 0, 0, 16, 17);		// battery
-	QOffsetRect(&badgesDestRects[2], 467 + hOffset, 1 - kScoreboardTall);
-	QSetRect(&badgesDestRects[3], 0, 0, 16, 17);		// helium
-	QOffsetRect(&badgesDestRects[3], 467 + hOffset, 1 - kScoreboardTall);
+	QSetRect(&badgesDestRects[kFoilBadge], 0, 0, 16, 16);
+	QOffsetRect(&badgesDestRects[kFoilBadge], 432 + hOffset, 2 - kScoreboardTall);
+	QSetRect(&badgesDestRects[kBandsBadge], 0, 0, 16, 16);
+	QOffsetRect(&badgesDestRects[kBandsBadge], 449 + hOffset, 2 - kScoreboardTall);
+	QSetRect(&badgesDestRects[kBatteryBadge], 0, 0, 16, 17);
+	QOffsetRect(&badgesDestRects[kBatteryBadge], 467 + hOffset, 1 - kScoreboardTall);
+	QSetRect(&badgesDestRects[kHeliumBadge], 0, 0, 16, 17);
+	QOffsetRect(&badgesDestRects[kHeliumBadge], 467 + hOffset, 1 - kScoreboardTall);
 }
 
 //--------------------------------------------------------------  InitGliderMap

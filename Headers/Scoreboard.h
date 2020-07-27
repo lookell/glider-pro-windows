@@ -10,6 +10,12 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
+#define kFoilBadge              0
+#define kBandsBadge             1
+#define kBatteryBadge           2
+#define kHeliumBadge            3
+#define kNumBadges              4
+
 extern Rect boardSrcRect;
 extern Rect badgeSrcRect;
 extern Rect boardDestRect;
@@ -25,9 +31,9 @@ extern Rect boardPSrcRect;
 extern Rect boardPDestRect;
 extern Rect boardPQDestRect;
 extern Rect boardGQDestRect;
-extern Rect badgesBlankRects[4];
-extern Rect badgesBadgesRects[4];
-extern Rect badgesDestRects[4];
+extern Rect badgesBlankRects[kNumBadges];
+extern Rect badgesBadgesRects[kNumBadges];
+extern Rect badgesDestRects[kNumBadges];
 extern HDC boardPSrcMap;
 extern SInt16 wasScoreboardMode;
 
@@ -39,7 +45,5 @@ void QuickBatteryRefresh (Boolean flash);
 void QuickBandsRefresh (Boolean flash);
 void QuickFoilRefresh (Boolean flash);
 void AdjustScoreboardHeight (void);
-
-//void HandleScore (void);
 
 #endif

@@ -20,12 +20,8 @@
 #include "StringUtils.h"
 
 
-#define kGrayBackgroundColor	251
-#define kFoilBadge				0
-#define kBandsBadge				1
-#define kBatteryBadge			2
-#define kHeliumBadge			3
-#define kScoreRollAmount		13
+#define kGrayBackgroundColor    251
+#define kScoreRollAmount        13
 
 
 void RefreshRoomTitle (SInt16 mode);
@@ -41,8 +37,8 @@ Rect		boardGSrcRect, boardGDestRect;
 HDC			boardGSrcMap;
 Rect		boardPSrcRect, boardPDestRect;
 Rect		boardPQDestRect, boardGQDestRect;
-Rect		badgesBlankRects[4], badgesBadgesRects[4];
-Rect		badgesDestRects[4];
+Rect		badgesBlankRects[kNumBadges], badgesBadgesRects[kNumBadges];
+Rect		badgesDestRects[kNumBadges];
 HDC			boardPSrcMap;
 SInt32		displayedScore;
 SInt16		wasScoreboardMode;
