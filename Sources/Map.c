@@ -34,7 +34,8 @@
 void RegisterMapWindowClass (void);
 void LoadGraphicPlus (HDC hdc, SInt16 resID, const Rect *theRect);
 void RedrawMapContents (HDC hdc);
-void ResizeMapWindow (WINDOWPOS *windowPos);
+void HandleMapSizingMessage (HWND hwnd, WPARAM sizedEdge, RECT *windowRect);
+void HandleMapSizeMessage (HWND hwnd);
 LRESULT CALLBACK MapWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 void LiveHScrollAction (HWND hwnd, WORD scrollRequest);
 void LiveVScrollAction (HWND hwnd, WORD scrollRequest);
@@ -43,7 +44,6 @@ void CreateNailOffscreen (void);
 void KillNailOffscreen (void);
 
 Rect			nailSrcRect, activeRoomRect, wasActiveRoomRect;
-Rect			mapWindowRect;
 HDC				nailSrcMap;
 HWND			mapWindow;
 SInt16			isMapH, isMapV, mapRoomsHigh, mapRoomsWide;
@@ -330,64 +330,112 @@ void UpdateMapWindow (void)
 #endif
 }
 
-//--------------------------------------------------------------  ResizeMapWindow
+//--------------------------------------------------------------  HandleMapSizingMessage
 
-void ResizeMapWindow (WINDOWPOS *windowPos)
+void HandleMapSizingMessage (HWND hwnd, WPARAM sizedEdge, RECT *windowRect)
 {
-#ifndef COMPILEDEMO
 	DWORD windowStyle, extendedStyle;
 	RECT rectAdjust;
 	LONG horzAdjust, vertAdjust;
-	LONG newWidth, newHeight;
+	LONG wasClientWidth, wasClientHeight;
+	LONG newMapRoomsWide, newMapRoomsHigh;
+	LONG newWindowWidth, newWindowHeight;
+
+	windowStyle = (DWORD)GetWindowLongPtr(hwnd, GWL_STYLE);
+	extendedStyle = (DWORD)GetWindowLongPtr(hwnd, GWL_EXSTYLE);
+	SetRectEmpty(&rectAdjust);
+	AdjustWindowRectEx(&rectAdjust, windowStyle, FALSE, extendedStyle);
+	horzAdjust = (rectAdjust.right - rectAdjust.left) + GetSystemMetrics(SM_CXVSCROLL);
+	vertAdjust = (rectAdjust.bottom - rectAdjust.top) + GetSystemMetrics(SM_CYHSCROLL);
+
+	wasClientWidth = (windowRect->right - windowRect->left) - horzAdjust;
+	wasClientHeight = (windowRect->bottom - windowRect->top) - vertAdjust;
+
+	newMapRoomsWide = (wasClientWidth + kMapRoomWidth / 2) / kMapRoomWidth;
+	if (newMapRoomsWide < 3)
+	{
+		newMapRoomsWide = 3;
+	}
+	newMapRoomsHigh = (wasClientHeight + kMapRoomHeight / 2) / kMapRoomHeight;
+	if (newMapRoomsHigh < 3)
+	{
+		newMapRoomsHigh = 3;
+	}
+
+	newWindowWidth = (newMapRoomsWide * kMapRoomWidth) + horzAdjust;
+	newWindowHeight = (newMapRoomsHigh * kMapRoomHeight) + vertAdjust;
+
+	switch (sizedEdge)
+	{
+	case WMSZ_LEFT:
+		windowRect->left = windowRect->right - newWindowWidth;
+		break;
+	case WMSZ_RIGHT:
+		windowRect->right = windowRect->left + newWindowWidth;
+		break;
+	case WMSZ_TOP:
+		windowRect->top = windowRect->bottom - newWindowHeight;
+		break;
+	case WMSZ_TOPLEFT:
+		windowRect->top = windowRect->bottom - newWindowHeight;
+		windowRect->left = windowRect->right - newWindowWidth;
+		break;
+	case WMSZ_TOPRIGHT:
+		windowRect->top = windowRect->bottom - newWindowHeight;
+		windowRect->right = windowRect->left + newWindowWidth;
+		break;
+	case WMSZ_BOTTOM:
+		windowRect->bottom = windowRect->top + newWindowHeight;
+		break;
+	case WMSZ_BOTTOMLEFT:
+		windowRect->bottom = windowRect->top + newWindowHeight;
+		windowRect->left = windowRect->right - newWindowWidth;
+		break;
+	case WMSZ_BOTTOMRIGHT:
+		windowRect->bottom = windowRect->top + newWindowHeight;
+		windowRect->right = windowRect->left + newWindowWidth;
+		break;
+	default:
+		break; // this case shouldn't happen, so do nothing here
+	}
+}
+
+//--------------------------------------------------------------  HandleMapSizeMessage
+
+void HandleMapSizeMessage (HWND hwnd)
+{
+	RECT clientRect;
+	LONG clientWidth, clientHeight;
 	SInt16 wasMapRoomsWide, wasMapRoomsHigh;
 	SCROLLINFO scrollInfo;
 
-	windowStyle = (DWORD)GetWindowLongPtr(mapWindow, GWL_STYLE);
-	extendedStyle = (DWORD)GetWindowLongPtr(mapWindow, GWL_EXSTYLE);
-	SetRectEmpty(&rectAdjust);
-	AdjustWindowRectEx(&rectAdjust, windowStyle, FALSE, extendedStyle);
-	horzAdjust = rectAdjust.right - rectAdjust.left + GetSystemMetrics(SM_CXVSCROLL);
-	vertAdjust = rectAdjust.bottom - rectAdjust.top + GetSystemMetrics(SM_CYHSCROLL);
-
-	newWidth = windowPos->cx - horzAdjust;
-	newHeight = windowPos->cy - vertAdjust;
-	if (newWidth <= 0 || newHeight <= 0)
-		return;
+	GetClientRect(hwnd, &clientRect);
+	clientWidth = clientRect.right;
+	clientHeight = clientRect.bottom;
 
 	wasMapRoomsWide = mapRoomsWide;
 	wasMapRoomsHigh = mapRoomsHigh;
-
-	mapRoomsWide = (SInt16)(newWidth / kMapRoomWidth);
-	if (mapRoomsWide < 3)
-		mapRoomsWide = 3;
-	mapRoomsHigh = (SInt16)(newHeight / kMapRoomHeight);
-	if (mapRoomsHigh < 3)
-		mapRoomsHigh = 3;
-	QSetRect(&mapWindowRect, 0, 0,
-		mapRoomsWide * kMapRoomWidth,
-		mapRoomsHigh * kMapRoomHeight);
-	windowPos->cx = mapWindowRect.right + horzAdjust;
-	windowPos->cy = mapWindowRect.bottom + vertAdjust;
+	mapRoomsWide = (SInt16)(clientWidth / kMapRoomWidth);
+	mapRoomsHigh = (SInt16)(clientHeight / kMapRoomHeight);
 
 	scrollInfo.cbSize = sizeof(scrollInfo);
 
 	scrollInfo.fMask = SIF_PAGE | SIF_DISABLENOSCROLL;
 	scrollInfo.nPage = mapRoomsWide;
-	SetScrollInfo(mapWindow, SB_HORZ, &scrollInfo, TRUE);
+	SetScrollInfo(hwnd, SB_HORZ, &scrollInfo, TRUE);
 	scrollInfo.nPage = mapRoomsHigh;
-	SetScrollInfo(mapWindow, SB_VERT, &scrollInfo, TRUE);
+	SetScrollInfo(hwnd, SB_VERT, &scrollInfo, TRUE);
 
 	scrollInfo.fMask = SIF_POS;
-	GetScrollInfo(mapWindow, SB_HORZ, &scrollInfo);
+	GetScrollInfo(hwnd, SB_HORZ, &scrollInfo);
 	mapLeftRoom = (SInt16)scrollInfo.nPos;
-	GetScrollInfo(mapWindow, SB_VERT, &scrollInfo);
+	GetScrollInfo(hwnd, SB_VERT, &scrollInfo);
 	mapTopRoom = (SInt16)scrollInfo.nPos;
 
 	if (mapRoomsWide != wasMapRoomsWide || mapRoomsHigh != wasMapRoomsHigh)
 	{
-		Mac_InvalWindowRect(mapWindow, &mapWindowRect);
+		InvalidateRect(hwnd, NULL, TRUE);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  OpenMapWindow
@@ -408,9 +456,6 @@ void OpenMapWindow (void)
 		windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME |
 			WS_HSCROLL | WS_VSCROLL;
 		extendedStyle = WS_EX_DLGMODALFRAME;
-		QSetRect(&mapWindowRect, 0, 0,
-			mapRoomsWide * kMapRoomWidth,
-			mapRoomsHigh * kMapRoomHeight);
 		SetRect(&windowRect, 0, 0,
 			mapRoomsWide * kMapRoomWidth + GetSystemMetrics(SM_CXVSCROLL),
 			mapRoomsHigh * kMapRoomHeight + GetSystemMetrics(SM_CYHSCROLL));
@@ -507,15 +552,13 @@ LRESULT CALLBACK MapWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 		return 0;
 	}
 
-	case WM_WINDOWPOSCHANGING:
-	{
-		WINDOWPOS *windowPos = (WINDOWPOS *)lParam;
-		if ((windowPos->flags & SWP_NOSIZE) == 0)
-		{
-			ResizeMapWindow((WINDOWPOS *)lParam);
-		}
-		return DefWindowProc(hwnd, message, wParam, lParam);
-	}
+	case WM_SIZING:
+		HandleMapSizingMessage(hwnd, wParam, (RECT *)lParam);
+		return TRUE;
+
+	case WM_SIZE:
+		HandleMapSizeMessage(hwnd);
+		return 0;
 
 	case WM_PAINT:
 	{
@@ -567,27 +610,21 @@ void LiveHScrollAction (HWND hwnd, WORD scrollRequest)
 	case SB_LINELEFT:
 		newValue = wasValue - 1;
 		break;
-
 	case SB_LINERIGHT:
 		newValue = wasValue + 1;
 		break;
-
 	case SB_PAGELEFT:
 		newValue = wasValue - (mapRoomsWide / 2);
 		break;
-
 	case SB_PAGERIGHT:
 		newValue = wasValue + (mapRoomsWide / 2);
 		break;
-
 	case SB_THUMBTRACK:
 		newValue = scrollInfo.nTrackPos;
 		break;
-
 	case SB_LEFT:
 		newValue = scrollInfo.nMin;
 		break;
-
 	case SB_RIGHT:
 		newValue = scrollInfo.nMax;
 		break;
@@ -624,27 +661,21 @@ void LiveVScrollAction (HWND hwnd, WORD scrollRequest)
 	case SB_LINEUP:
 		newValue = wasValue - 1;
 		break;
-
 	case SB_LINEDOWN:
 		newValue = wasValue + 1;
 		break;
-
 	case SB_PAGEUP:
 		newValue = wasValue - (mapRoomsHigh / 2);
 		break;
-
 	case SB_PAGEDOWN:
 		newValue = wasValue + (mapRoomsHigh / 2);
 		break;
-
 	case SB_THUMBTRACK:
 		newValue = scrollInfo.nTrackPos;
 		break;
-
 	case SB_TOP:
 		newValue = scrollInfo.nMin;
 		break;
-
 	case SB_BOTTOM:
 		newValue = scrollInfo.nMax;
 		break;
