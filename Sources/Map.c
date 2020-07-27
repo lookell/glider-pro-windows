@@ -217,11 +217,13 @@ void RedrawMapContents (HDC hdc)
 	SInt16 h, i, groundLevel;
 	SInt16 floor, suite, roomNum, type;
 	Boolean activeRoomVisible;
+	HBRUSH ditherBrush;
 
 	if (mapWindow == NULL || hdc == NULL)
 		return;
 
 	SaveDC(hdc);
+	ditherBrush = CreateShadowBrush();
 
 	activeRoomVisible = false;
 	groundLevel = kMapGroundValue - mapTopRoom;
@@ -262,16 +264,7 @@ void RedrawMapContents (HDC hdc)
 			}
 			else
 			{
-				const WORD grayBits[8] = {
-					0x5555, 0xAAAA, 0x5555, 0xAAAA, 0x5555, 0xAAAA, 0x5555, 0xAAAA,
-				};
-				HBITMAP ditherPattern;
-				HBRUSH ditherBrush;
-
-				ditherPattern = CreateBitmap(8, 8, 1, 1, grayBits);
-				ditherBrush = CreatePatternBrush(ditherPattern);
 				SaveDC(hdc);
-				SelectObject(hdc, ditherBrush);
 
 				SetBkColor(hdc, whiteColor);
 				if (i >= groundLevel)
@@ -281,12 +274,11 @@ void RedrawMapContents (HDC hdc)
 				Mac_PaintRect(hdc, &aRoom, ditherBrush);
 
 				RestoreDC(hdc, -1);
-				DeleteObject(ditherBrush);
-				DeleteObject(ditherPattern);
 			}
 		}
 	}
 
+	DeleteObject(ditherBrush);
 	SelectObject(hdc, GetStockObject(BLACK_PEN));
 
 	for (i = 1; i < mapRoomsWide; i++)
