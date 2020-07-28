@@ -136,35 +136,37 @@ void HandleDynamicScoreboard (void)
 
 void RefreshRoomTitle (SInt16 mode)
 {
-	COLORREF	wasColor;
-	Str255		titleString;
+	wchar_t titleString[256];
+	int numChars;
 
 	ColorRect(boardTSrcMap, &boardTSrcRect, kGrayBackgroundColor);
 
 	switch (mode)
 	{
-		case kEscapedTitleMode:
-		PasStringCopyC("Hit Delete key if unable to Follow", titleString);
+	case kEscapedTitleMode:
+		StringCchCopy(titleString, ARRAYSIZE(titleString),
+			L"Hit Delete key if unable to Follow");
 		break;
-
-		case kSavingTitleMode:
-		PasStringCopyC("Saving Game\xC9", titleString); // "Saving Game…"
+	case kSavingTitleMode:
+		StringCchCopy(titleString, ARRAYSIZE(titleString), L"Saving Game…");
 		break;
-
-		default:
-		PasStringCopy(thisRoom->name, titleString);
+	default:
+		WinFromMacString(titleString, ARRAYSIZE(titleString), thisRoom->name);
 		break;
 	}
+	numChars = (int)wcslen(titleString);
 
-	MoveToEx(boardTSrcMap, 1, 10, NULL);
-	wasColor = SetTextColor(boardTSrcMap, blackColor);
-	Mac_DrawString(boardTSrcMap, titleString);
+	SaveDC(boardTSrcMap);
+	SetBkMode(boardTSrcMap, TRANSPARENT);
+	SetTextAlign(boardTSrcMap, TA_TOP | TA_LEFT);
 
-	MoveToEx(boardTSrcMap, 0, 9, NULL);
+	SetTextColor(boardTSrcMap, blackColor);
+	TextOut(boardTSrcMap, 1, 1, titleString, numChars);
+
 	SetTextColor(boardTSrcMap, whiteColor);
-	Mac_DrawString(boardTSrcMap, titleString);
+	TextOut(boardTSrcMap, 0, 0, titleString, numChars);
 
-	SetTextColor(boardTSrcMap, wasColor);
+	RestoreDC(boardTSrcMap, -1);
 
 	Mac_CopyBits(boardTSrcMap, boardSrcMap,
 			&boardTSrcRect, &boardTDestRect, srcCopy, nil);
@@ -174,26 +176,31 @@ void RefreshRoomTitle (SInt16 mode)
 
 void RefreshNumGliders (void)
 {
-	COLORREF	wasColor;
-	Str255		nGlidersStr;
-	SInt32		displayMortals;
+	wchar_t nGlidersStr[256];
+	SInt32 displayMortals;
+	int numChars;
 
 	ColorRect(boardGSrcMap, &boardGSrcRect, kGrayBackgroundColor);
 
 	displayMortals = mortals;
 	if (displayMortals < 0)
+	{
 		displayMortals = 0;
-	NumToString(displayMortals, nGlidersStr);
+	}
+	StringCchPrintf(nGlidersStr, ARRAYSIZE(nGlidersStr), L"%ld", (long)displayMortals);
+	numChars = (int)wcslen(nGlidersStr);
 
-	MoveToEx(boardGSrcMap, 1, 10, NULL);
-	wasColor = SetTextColor(boardGSrcMap, blackColor);
-	Mac_DrawString(boardGSrcMap, nGlidersStr);
+	SaveDC(boardGSrcMap);
+	SetBkMode(boardGSrcMap, TRANSPARENT);
+	SetTextAlign(boardGSrcMap, TA_TOP | TA_LEFT);
 
-	MoveToEx(boardGSrcMap, 0, 9, NULL);
+	SetTextColor(boardGSrcMap, blackColor);
+	TextOut(boardGSrcMap, 1, 1, nGlidersStr, numChars);
+
 	SetTextColor(boardGSrcMap, whiteColor);
-	Mac_DrawString(boardGSrcMap, nGlidersStr);
+	TextOut(boardGSrcMap, 0, 0, nGlidersStr, numChars);
 
-	SetTextColor(boardGSrcMap, wasColor);
+	RestoreDC(boardGSrcMap, -1);
 
 	Mac_CopyBits(boardGSrcMap, boardSrcMap,
 			&boardGSrcRect, &boardGDestRect, srcCopy, nil);
@@ -203,22 +210,25 @@ void RefreshNumGliders (void)
 
 void RefreshPoints (void)
 {
-	COLORREF	wasColor;
-	Str255		scoreStr;
+	wchar_t scoreStr[256];
+	int numChars;
 
 	ColorRect(boardPSrcMap, &boardPSrcRect, kGrayBackgroundColor);
 
-	NumToString(theScore, scoreStr);
+	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)theScore);
+	numChars = (int)wcslen(scoreStr);
 
-	MoveToEx(boardPSrcMap, 1, 10, NULL);
-	wasColor = SetTextColor(boardPSrcMap, blackColor);
-	Mac_DrawString(boardPSrcMap, scoreStr);
+	SaveDC(boardPSrcMap);
+	SetBkMode(boardPSrcMap, TRANSPARENT);
+	SetTextAlign(boardPSrcMap, TA_TOP | TA_LEFT);
 
-	MoveToEx(boardPSrcMap, 0, 9, NULL);
+	SetTextColor(boardPSrcMap, blackColor);
+	TextOut(boardPSrcMap, 1, 1, scoreStr, numChars);
+
 	SetTextColor(boardPSrcMap, whiteColor);
-	Mac_DrawString(boardPSrcMap, scoreStr);
+	TextOut(boardPSrcMap, 0, 0, scoreStr, numChars);
 
-	SetTextColor(boardPSrcMap, wasColor);
+	RestoreDC(boardPSrcMap, -1);
 
 	Mac_CopyBits(boardPSrcMap, boardSrcMap,
 			&boardPSrcRect, &boardPDestRect, srcCopy, nil);
@@ -230,23 +240,26 @@ void RefreshPoints (void)
 
 void QuickGlidersRefresh (void)
 {
-	COLORREF	wasColor;
-	Str255		nGlidersStr;
-	HDC			mainWindowDC;
+	wchar_t nGlidersStr[256];
+	int numChars;
+	HDC mainWindowDC;
 
 	ColorRect(boardGSrcMap, &boardGSrcRect, kGrayBackgroundColor);
 
-	NumToString((SInt32)mortals, nGlidersStr);
+	StringCchPrintf(nGlidersStr, ARRAYSIZE(nGlidersStr), L"%ld", (long)mortals);
+	numChars = (int)wcslen(nGlidersStr);
 
-	MoveToEx(boardGSrcMap, 1, 10, NULL);
-	wasColor = SetTextColor(boardGSrcMap, blackColor);
-	Mac_DrawString(boardGSrcMap, nGlidersStr);
+	SaveDC(boardGSrcMap);
+	SetBkMode(boardGSrcMap, TRANSPARENT);
+	SetTextAlign(boardGSrcMap, TA_TOP | TA_LEFT);
 
-	MoveToEx(boardGSrcMap, 0, 9, NULL);
+	SetTextColor(boardGSrcMap, blackColor);
+	TextOut(boardGSrcMap, 1, 1, nGlidersStr, numChars);
+
 	SetTextColor(boardGSrcMap, whiteColor);
-	Mac_DrawString(boardGSrcMap, nGlidersStr);
+	TextOut(boardGSrcMap, 0, 0, nGlidersStr, numChars);
 
-	SetTextColor(boardGSrcMap, wasColor);
+	RestoreDC(boardGSrcMap, -1);
 
 	mainWindowDC = GetMainWindowDC();
 	Mac_CopyBits(boardGSrcMap, mainWindowDC,
@@ -258,23 +271,26 @@ void QuickGlidersRefresh (void)
 
 void QuickScoreRefresh (void)
 {
-	COLORREF	wasColor;
-	Str255		scoreStr;
-	HDC			mainWindowDC;
+	wchar_t scoreStr[256];
+	int numChars;
+	HDC mainWindowDC;
 
 	ColorRect(boardPSrcMap, &boardPSrcRect, kGrayBackgroundColor);
 
-	NumToString(displayedScore, scoreStr);
+	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)displayedScore);
+	numChars = (int)wcslen(scoreStr);
 
-	MoveToEx(boardPSrcMap, 1, 10, NULL);
-	wasColor = SetTextColor(boardPSrcMap, blackColor);
-	Mac_DrawString(boardPSrcMap, scoreStr);
+	SaveDC(boardPSrcMap);
+	SetBkMode(boardPSrcMap, TRANSPARENT);
+	SetTextAlign(boardPSrcMap, TA_TOP | TA_LEFT);
 
-	MoveToEx(boardPSrcMap, 0, 9, NULL);
+	SetTextColor(boardPSrcMap, blackColor);
+	TextOut(boardPSrcMap, 1, 1, scoreStr, numChars);
+
 	SetTextColor(boardPSrcMap, whiteColor);
-	Mac_DrawString(boardPSrcMap, scoreStr);
+	TextOut(boardPSrcMap, 0, 0, scoreStr, numChars);
 
-	SetTextColor(boardPSrcMap, wasColor);
+	RestoreDC(boardPSrcMap, -1);
 
 	mainWindowDC = GetMainWindowDC();
 	Mac_CopyBits(boardPSrcMap, mainWindowDC,

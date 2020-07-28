@@ -63,7 +63,7 @@ void InitScoreboardMap (void)
 	OSErr		theErr;
 	SInt16		hOffset;
 
-	lfScoreboard.lfHeight = -12;
+	lfScoreboard.lfHeight = 14;
 	lfScoreboard.lfWidth = 0;
 	lfScoreboard.lfEscapement = 0;
 	lfScoreboard.lfOrientation = 0;
@@ -108,26 +108,26 @@ void InitScoreboardMap (void)
 	if (hOffset < 0)
 		hOffset = -128;
 
-	QSetRect(&boardTSrcRect, 0, 0, 256, 12);			// room title
+	QSetRect(&boardTSrcRect, 0, 0, 256, 15);			// room title
 	theErr = CreateOffScreenGWorld(&boardTSrcMap, &boardTSrcRect, kPreferredDepth);
 	boardTDestRect = boardTSrcRect;
-	QOffsetRect(&boardTDestRect, 137 + hOffset, 5);
+	QOffsetRect(&boardTDestRect, 137 + hOffset, 2);
 	SelectObject(boardTSrcMap, CreateFontIndirect(&lfScoreboard));
 
-	QSetRect(&boardGSrcRect, 0, 0, 20, 10);				// # gliders
+	QSetRect(&boardGSrcRect, 0, 0, 20, 15);				// # gliders
 	theErr = CreateOffScreenGWorld(&boardGSrcMap, &boardGSrcRect, kPreferredDepth);
 	boardGDestRect = boardGSrcRect;
-	QOffsetRect(&boardGDestRect, 526 + hOffset, 5);
-	SelectObject(boardGSrcMap, CreateFontIndirect(&lfScoreboard));
-
-	QSetRect(&boardPSrcRect, 0, 0, 64, 10);				// points
-	theErr = CreateOffScreenGWorld(&boardPSrcMap, &boardPSrcRect, kPreferredDepth);
-	boardPDestRect = boardPSrcRect;
-	QOffsetRect(&boardPDestRect, 570 + hOffset, 5);		// total = 6396 pixels
-	boardPQDestRect = boardPDestRect;
-	QOffsetRect(&boardPQDestRect, 0, -kScoreboardTall);
+	QOffsetRect(&boardGDestRect, 526 + hOffset, 2);
 	boardGQDestRect = boardGDestRect;
 	QOffsetRect(&boardGQDestRect, 0, -kScoreboardTall);
+	SelectObject(boardGSrcMap, CreateFontIndirect(&lfScoreboard));
+
+	QSetRect(&boardPSrcRect, 0, 0, 64, 15);				// points
+	theErr = CreateOffScreenGWorld(&boardPSrcMap, &boardPSrcRect, kPreferredDepth);
+	boardPDestRect = boardPSrcRect;
+	QOffsetRect(&boardPDestRect, 570 + hOffset, 2);		// total = 6396 pixels
+	boardPQDestRect = boardPDestRect;
+	QOffsetRect(&boardPQDestRect, 0, -kScoreboardTall);
 	SelectObject(boardPSrcMap, CreateFontIndirect(&lfScoreboard));
 
 	QSetRect(&badgesBlankRects[kFoilBadge], 0, 0, 16, 16);
