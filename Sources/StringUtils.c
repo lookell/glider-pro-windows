@@ -14,7 +14,10 @@
 #include <limits.h>
 
 
-#define MAC_ROMAN_CODEPAGE 10000
+#define MAC_ROMAN_CODEPAGE          10000
+#define kReturnKeyASCII             0x0D
+#define kSpaceBarASCII              0x20
+
 
 
 //==============================================================  Functions
