@@ -338,57 +338,6 @@ void GetFirstWordOfString (ConstStringPtr stringIn, StringPtr stringOut)
 		PasStringCopyNum(stringIn, stringOut, (Byte)spaceAt);
 }
 
-//--------------------------------------------------------------  CollapseStringToWidth
-
-// Given a string and a maximum width (in pixels), this function…
-// calculates how wide the text would be drawn with the current…
-// font.  If the text would exceed our width limit, characters…
-// are dropped off the end of the string and "…" appended.
-
-void CollapseStringToWidth (StringPtr theStr, SInt16 wide)
-{
-	return;
-#if 0
-	short		dotsWide;
-	Boolean 	tooWide;
-
-	dotsWide = StringWidth("\p…");
-	tooWide = StringWidth(theStr) > wide;
-	while (tooWide)
-	{
-		theStr[0]--;
-		tooWide = ((StringWidth(theStr) + dotsWide) > wide);
-		if (!tooWide)
-			PasStringConcat(theStr, "\p…");
-	}
-#endif
-}
-
-//--------------------------------------------------------------  GetChooserName
-
-// This function extracts the user name stored away by the Chooser.
-
-void GetChooserName (StringPtr thisName)
-{
-	PasStringCopyC("", thisName);
-	return;
-#if 0
-	#define		kChooserStringID	-16096
-	Handle		theNameHandle;
-	Byte		oldState;
-
-	theNameHandle = (Handle)GetString(kChooserStringID);
-	if (theNameHandle != nil) {
-		oldState = HGetState(theNameHandle);
-		HLock(theNameHandle);
-		PasStringCopy((StringPtr)*theNameHandle, thisName);
-		HSetState(theNameHandle, oldState);
-		}
-	else
-		thisName[0] = 0;
-#endif
-}
-
 //--------------------------------------------------------------  GetLocalizedString
 
 StringPtr GetLocalizedString (SInt16 index, StringPtr theString)

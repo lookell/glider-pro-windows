@@ -20,8 +20,6 @@ Boolean PasStringEqual (ConstStringPtr p1, ConstStringPtr p2, Boolean caseSens);
 void GetLineOfText (ConstStringPtr srcStr, SInt16 index, StringPtr textLine);
 void WrapText (StringPtr theText, SInt16 maxChars);
 void GetFirstWordOfString (ConstStringPtr stringIn, StringPtr stringOut);
-void CollapseStringToWidth (StringPtr theStr, SInt16 wide);
-void GetChooserName (StringPtr thisName);
 StringPtr GetLocalizedString (SInt16 index, StringPtr theString);
 wchar_t *MacToWinLineEndings (const wchar_t *input);
 wchar_t *WinToMacLineEndings (const wchar_t *input);
