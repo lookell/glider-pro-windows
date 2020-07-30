@@ -64,15 +64,6 @@ Boolean CreateNewHouse (HWND hwndOwner)
 	wchar_t houseDirPath[MAX_PATH];
 	wchar_t houseFilePath[MAX_PATH] = { 0 };
 	houseSpec theSpec;
-	HANDLE outputFile;
-	byteio byteWriter;
-	houseType blankHouse;
-	LPVOID blankDllBytes;
-	DWORD blankDllSize;
-	DWORD numWritten;
-	DWORD lastError;
-	BOOL succeeded;
-	HRESULT hr;
 
 	// Get the new house's file name from the user
 
@@ -267,6 +258,7 @@ void WhereDoesGliderBegin (Rect *theRect, SInt16 mode)
 static BOOLEAN EnumHousePicts (SInt16 resID, void *userData)
 {
 	// If this function is called, then there is at least one custom image.
+	UNREFERENCED_PARAMETER(resID);
 	*((Boolean *)userData) = true;
 	return FALSE;
 }
@@ -794,6 +786,7 @@ void ConvertHouseVer1To2 (void)
 
 void ShiftWholeHouse (SInt16 howFar)
 {
+	DBG_UNREFERENCED_PARAMETER(howFar);
 	return;
 #if 0
 #pragma unused (howFar)

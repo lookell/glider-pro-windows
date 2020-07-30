@@ -453,7 +453,6 @@ HRESULT Gp_ReadHouseData (houseType *house)
 	size_t length;
 	byteio reader;
 	int succeeded;
-	HRESULT hr;
 
 	if (house == NULL)
 	{

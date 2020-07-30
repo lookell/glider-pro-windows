@@ -45,6 +45,7 @@ void MonitorWait (void)
 
 void DisplayRect (const Rect *theRect)
 {
+	DBG_UNREFERENCED_PARAMETER(theRect);
 	return;
 #if 0
 	GrafPtr			wasPort, tempPort;
@@ -67,6 +68,7 @@ void DisplayRect (const Rect *theRect)
 void FlashRect (const Rect *theRect)
 
 {
+	DBG_UNREFERENCED_PARAMETER(theRect);
 	return;
 #if 0
 	GrafPtr			wasPort, tempPort;
@@ -105,6 +107,7 @@ void CheckLegitRect (const Rect *srcRect, const Rect *inRect)
 void DisplayLong (SInt32 theValue)
 
 {
+	DBG_UNREFERENCED_PARAMETER(theValue);
 	return;
 #if 0
 	GrafPtr			wasPort, tempPort;
@@ -140,6 +143,7 @@ void DisplayLong (SInt32 theValue)
 void DisplayShort(SInt16 theValue)
 
 {
+	DBG_UNREFERENCED_PARAMETER(theValue);
 	return;
 #if 0
 	GrafPtr			wasPort, tempPort;
@@ -174,6 +178,7 @@ void DisplayShort(SInt16 theValue)
 
 void FlashLong(SInt32 theValue)
 {
+	DBG_UNREFERENCED_PARAMETER(theValue);
 	return;
 #if 0
 	GrafPtr			wasPort, tempPort;
@@ -201,6 +206,7 @@ void FlashLong(SInt32 theValue)
 
 void FlashShort (SInt16 theValue)
 {
+	DBG_UNREFERENCED_PARAMETER(theValue);
 	return;
 #if 0
 	GrafPtr			wasPort, tempPort;
@@ -229,6 +235,10 @@ void FlashShort (SInt16 theValue)
 void DoBarGraph (SInt16 theValue, SInt16 downScreen, SInt16 maxDown, SInt16 scaleIt)
 
 {
+	DBG_UNREFERENCED_PARAMETER(theValue);
+	DBG_UNREFERENCED_PARAMETER(downScreen);
+	DBG_UNREFERENCED_PARAMETER(maxDown);
+	DBG_UNREFERENCED_PARAMETER(scaleIt);
 	return;
 #if 0
 	GrafPtr			wasPort, tempPort;
@@ -313,6 +323,7 @@ void DebugNum (SInt32 theNum)
 
 void DisplayCTSeed (CGrafPtr who)
 {
+	DBG_UNREFERENCED_PARAMETER(who);
 	return;
 #if 0
 	long		theSeed;
@@ -345,6 +356,8 @@ void FillScreenRed (void)
 
 void DumpToResEditFile (Ptr data, SInt32 dataSize)
 {
+	DBG_UNREFERENCED_PARAMETER(data);
+	DBG_UNREFERENCED_PARAMETER(dataSize);
 	return;
 #if 0
 	DateTimeRec		timeRec;

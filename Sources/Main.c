@@ -289,6 +289,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	Boolean		whoCares, audioInitialized;
 	HRESULT		hr;
 
+	UNREFERENCED_PARAMETER(hInstance);
+	UNREFERENCED_PARAMETER(hPrevInstance);
+	UNREFERENCED_PARAMETER(lpCmdLine);
+	UNREFERENCED_PARAMETER(nShowCmd);
+
 	hr = Audio_InitDevice();
 	audioInitialized = SUCCEEDED(hr);
 	if (FAILED(hr))

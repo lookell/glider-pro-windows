@@ -76,7 +76,6 @@ void DrawOnSplash (HDC hdc)
 	Str255		houseLoadedStr, tempStr;
 	LOGFONT		lfHouse, lfNative;
 	HGDIOBJ		theFont, wasFont;
-	COLORREF	wasTextColor;
 
 	lfHouse.lfHeight = -9;
 	lfHouse.lfWidth = 0;

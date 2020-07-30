@@ -74,6 +74,7 @@ SInt16 RandomInt (SInt16 range)
 
 SInt32 RandomLong (SInt32 range)
 {
+	DBG_UNREFERENCED_PARAMETER(range);
 	return 0;
 #if 0
 	register long	highWord, lowWord;

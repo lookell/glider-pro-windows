@@ -76,6 +76,8 @@ void ExtractFloorSuite (SInt16 combo, SInt16 *floor, SInt16 *suite)
 #ifndef COMPILEDEMO
 INT_PTR CALLBACK LinkWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	switch (message)
 	{
 	case WM_INITDIALOG:

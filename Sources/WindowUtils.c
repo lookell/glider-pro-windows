@@ -61,6 +61,8 @@ void OpenMessageWindow (ConstStringPtr title)
 
 static INT_PTR CALLBACK MessageWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(hDlg);
+
 	switch (message)
 	{
 	case WM_INITDIALOG:

@@ -171,6 +171,8 @@ void BrainsApply (HWND prefDlg)
 
 INT_PTR CALLBACK BrainsFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	switch (message)
 	{
 	case WM_INITDIALOG:
@@ -381,6 +383,8 @@ void ControlApply (HWND prefDlg)
 
 INT_PTR CALLBACK ControlFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	switch (message)
 	{
 	case WM_INITDIALOG:
@@ -780,6 +784,8 @@ void DisplayApply (HWND hDlg)
 
 INT_PTR CALLBACK DisplayFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	switch (message)
 	{
 	case WM_INITDIALOG:
@@ -884,6 +890,8 @@ void SetAllDefaults (HWND ownerWindow)
 INT_PTR CALLBACK PrefsFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	HICON hIcon;
+
+	UNREFERENCED_PARAMETER(lParam);
 
 	switch (message)
 	{

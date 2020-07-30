@@ -72,6 +72,8 @@ static INT_PTR CALLBACK AboutFilter (HWND hDlg, UINT message, WPARAM wParam, LPA
 {
 	const UINT_PTR ABOUT_TIMER_ID = 1;
 
+	UNREFERENCED_PARAMETER(lParam);
+
 	switch (message)
 	{
 	case WM_INITDIALOG:

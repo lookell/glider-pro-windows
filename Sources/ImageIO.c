@@ -22,7 +22,7 @@ typedef struct ByteSlice
 static HRESULT GetDIBImageSize(const BITMAPINFOHEADER *bmiHeader, DWORD *pImageSize)
 {
 	DWORD width, height, bitCount;
-	DWORD widthBits, scanlineSize, imageSize;
+	DWORD widthBits, scanlineSize;
 
 	width = (DWORD)bmiHeader->biWidth;
 	height = (DWORD)labs(bmiHeader->biHeight);
