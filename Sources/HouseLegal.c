@@ -652,11 +652,9 @@ void CheckDuplicateFloorSuite (void)
 {
 	#define		kRoomsTimesSuites	8192
 	SInt16		i, numRooms, bitPlace;
-	char		*pidgeonHoles;
+	char		pidgeonHoles[kRoomsTimesSuites];
 
-	pidgeonHoles = calloc(kRoomsTimesSuites, sizeof(*pidgeonHoles));
-	if (pidgeonHoles == NULL)
-		return;
+	ZeroMemory(&pidgeonHoles, sizeof(pidgeonHoles));
 
 	numRooms = thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
@@ -665,7 +663,7 @@ void CheckDuplicateFloorSuite (void)
 		{
 			bitPlace = ((thisHouse.rooms[i].floor + 7) * 128) +
 					thisHouse.rooms[i].suite;
-			if ((bitPlace < 0) || (bitPlace >= 8192))
+			if ((bitPlace < 0) || (bitPlace >= kRoomsTimesSuites))
 			{
 				//OutputDebugString(L"Blew array\n");
 				continue;
@@ -676,11 +674,11 @@ void CheckDuplicateFloorSuite (void)
 				thisHouse.rooms[i].suite = kRoomIsEmpty;
 			}
 			else
+			{
 				pidgeonHoles[bitPlace]++;
+			}
 		}
 	}
-
-	free(pidgeonHoles);
 }
 
 //--------------------------------------------------------------  CompressHouse

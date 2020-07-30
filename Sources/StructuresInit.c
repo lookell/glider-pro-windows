@@ -13,7 +13,6 @@
 #include "Dynamics.h"
 #include "GameOver.h"
 #include "GliderDefines.h"
-#include "Grease.h"
 #include "Input.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
@@ -748,94 +747,17 @@ void CreatePointers (void)
 	if (thisRoom == NULL)
 		RedAlert(kErrNoMemory);
 
-	hotSpots = NULL;
-	hotSpots = (hotPtr)malloc(sizeof(hotObject) * kMaxHotSpots);
-	if (hotSpots == NULL)
-		RedAlert(kErrNoMemory);
-
-	sparkles = NULL;
-	sparkles = (sparklePtr)malloc(sizeof(sparkleType) * kMaxSparkles);
-	if (sparkles == NULL)
-		RedAlert(kErrNoMemory);
-
-	flyingPoints = NULL;
-	flyingPoints = (flyingPtPtr)malloc(sizeof(flyingPtType) * kMaxFlyingPts);
-	if (flyingPoints == NULL)
-		RedAlert(kErrNoMemory);
-
-	flames = NULL;
-	flames = (flamePtr)malloc(sizeof(flameType) * kMaxCandles);
-	if (flames == NULL)
-		RedAlert(kErrNoMemory);
-
-	tikiFlames = NULL;
-	tikiFlames = (flamePtr)malloc(sizeof(flameType) * kMaxTikis);
-	if (tikiFlames == NULL)
-		RedAlert(kErrNoMemory);
-
-	bbqCoals = NULL;
-	bbqCoals = (flamePtr)malloc(sizeof(flameType) * kMaxCoals);
-	if (bbqCoals == NULL)
-		RedAlert(kErrNoMemory);
-
-	pendulums = NULL;
-	pendulums = (pendulumPtr)malloc(sizeof(pendulumType) * kMaxPendulums);
-	if (pendulums == NULL)
-		RedAlert(kErrNoMemory);
-
 	for (i = 0; i < kMaxSavedMaps; i++)
 		savedMaps[i].map = NULL;
-
-	bands = NULL;
-	bands = (bandPtr)malloc(sizeof(bandType) * kMaxRubberBands);
-	if (bands == NULL)
-		RedAlert(kErrNoMemory);
-
-	grease = NULL;
-	grease = (greasePtr)malloc(sizeof(greaseType) * kMaxGrease);
-	if (grease == NULL)
-		RedAlert(kErrNoMemory);
-
-	theStars = NULL;
-	theStars = (starPtr)malloc(sizeof(starType) * kMaxStars);
-	if (theStars == NULL)
-		RedAlert(kErrNoMemory);
-
-	shreds = NULL;
-	shreds = (shredPtr)malloc(sizeof(shredType) * kMaxShredded);
-	if (shreds == NULL)
-		RedAlert(kErrNoMemory);
-
-	dinahs = NULL;
-	dinahs = (dynaPtr)malloc(sizeof(dynaType) * kMaxDynamicObs);
-	if (dinahs == NULL)
-		RedAlert(kErrNoMemory);
-
-	masterObjects = NULL;
-	masterObjects = (objDataPtr)malloc(sizeof(objDataType) * kMaxMasterObjects);
-	if (masterObjects == NULL)
-		RedAlert(kErrNoMemory);
-
-	srcRects = NULL;
-	srcRects = (Rect *)malloc(sizeof(Rect) * kNumSrcRects);
-	if (srcRects == NULL)
-		RedAlert(kErrNoMemory);
 
 	theHousesSpecs = NULL;
 	theHousesSpecs = (houseSpecPtr)malloc(sizeof(houseSpec) * maxFiles);
 	if (theHousesSpecs == NULL)
 		RedAlert(kErrNoMemory);
 
-#ifdef CREATEDEMODATA
-	demoData = NULL;
-	demoData = (demoPtr)malloc(sizeof(demoType) * 2000);
-	if (demoData == NULL)
-		RedAlert(kErrNoMemory);
-#else
-	demoData = NULL;
-	demoData = (demoPtr)malloc(sizeof(demoType) * (kDemoLength / demoTypeByteSize));
-	if (demoData == NULL)
-		RedAlert(kErrNoMemory);
+#ifndef CREATEDEMODATA
+	// Make sure that demoData can hold the demo resource data.
+	C_ASSERT((kDemoLength / demoTypeByteSize) <= ARRAYSIZE(demoData));
 
 	hr = LoadModuleResource(HINST_THISCOMPONENT,
 		MAKEINTRESOURCE(IDR_DEMO), RT_DEMO,

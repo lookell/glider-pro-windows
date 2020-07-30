@@ -12,7 +12,7 @@
 #include "MacTypes.h"
 
 extern Rect breadSrc[kNumBreadPicts];
-extern dynaPtr dinahs;
+extern dynaType dinahs[kMaxDynamicObs];
 extern SInt16 numDynamics;
 
 void CheckDynamicCollision (SInt16 who, gliderPtr thisGlider, Boolean doOffset);

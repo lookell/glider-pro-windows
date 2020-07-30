@@ -29,7 +29,7 @@ void CheckBandCollision (SInt16 who);
 void KillBand (SInt16 which);
 
 
-bandPtr		bands;
+bandType	bands[kMaxRubberBands];
 Rect		bandsSrcRect;
 Rect		bandRects[3];
 HDC			bandsSrcMap;

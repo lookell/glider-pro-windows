@@ -7,11 +7,12 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "GliderDefines.h"
 #include "GliderStructs.h"
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern bandPtr bands;
+extern bandType bands[kMaxRubberBands];
 extern Rect bandsSrcRect;
 extern Rect bandRects[3];
 extern HDC bandsSrcMap;

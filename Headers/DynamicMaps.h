@@ -7,17 +7,18 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "GliderDefines.h"
 #include "GliderStructs.h"
 #include "MacTypes.h"
 
-extern sparklePtr sparkles;
-extern flyingPtPtr flyingPoints;
-extern flamePtr flames;
-extern flamePtr tikiFlames;
-extern flamePtr bbqCoals;
-extern pendulumPtr pendulums;
-extern starPtr theStars;
-extern shredPtr shreds;
+extern sparkleType sparkles[kMaxSparkles];
+extern flyingPtType flyingPoints[kMaxFlyingPts];
+extern flameType flames[kMaxCandles];
+extern flameType tikiFlames[kMaxTikis];
+extern flameType bbqCoals[kMaxCoals];
+extern pendulumType pendulums[kMaxPendulums];
+extern starType theStars[kMaxStars];
+extern shredType shreds[kMaxShredded];
 extern Rect pointsSrc[15];
 extern SInt16 numSparkles;
 extern SInt16 numFlyingPts;

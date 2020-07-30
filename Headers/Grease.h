@@ -7,10 +7,11 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#include "GliderDefines.h"
 #include "GliderStructs.h"
 #include "MacTypes.h"
 
-extern greasePtr grease;
+extern greaseType grease[kMaxGrease];
 extern SInt16 numGrease;
 
 void HandleGrease (void);

@@ -38,7 +38,7 @@
 
 
 Rect		breadSrc[kNumBreadPicts];
-dynaPtr		dinahs;
+dynaType	dinahs[kMaxDynamicObs];
 SInt16		numDynamics;
 
 

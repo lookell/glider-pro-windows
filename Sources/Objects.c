@@ -80,11 +80,11 @@ HDC			clutterSrcMap;									// Clutter
 HDC			clutterMaskMap;
 Rect		clutterSrcRect;
 Rect		flowerSrc[kNumFlowers];
-Rect		*srcRects;
+Rect		srcRects[kNumSrcRects];
 Rect		tempManholes[kMaxTempManholes];
 savedType	savedMaps[kMaxSavedMaps];
-objDataPtr	masterObjects;
-hotPtr		hotSpots;
+objDataType	masterObjects[kMaxMasterObjects];
+hotObject	hotSpots[kMaxHotSpots];
 SInt16		nLocalObj, nHotSpots, numMasterObjects, numLocalMasterObjects;
 SInt16		numTempManholes, tvWithMovieNumber;
 Boolean		newState;
