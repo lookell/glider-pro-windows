@@ -5,6 +5,7 @@
 set(RESOURCE_DIRECTORY "${CMAKE_SOURCE_DIR}/Resources")
 set(MERMAID_DIRECTORY "${CMAKE_BINARY_DIR}/Mermaid-build")
 set(MERMAID_OUTPUT "${CMAKE_BINARY_DIR}/Mermaid.dat")
+set(MERMAID_FILELIST "${MERMAID_DIRECTORY}/filelist.txt")
 
 function(copy_res_to_mermaid src_path dst_path)
   list(APPEND MERMAID_DEPENDENCIES "${RESOURCE_DIRECTORY}/${src_path}")
@@ -14,6 +15,7 @@ function(copy_res_to_mermaid src_path dst_path)
     "${MERMAID_DIRECTORY}/${dst_path}"
     COPYONLY
   )
+  file(APPEND "${MERMAID_FILELIST}" "${MERMAID_DIRECTORY}/${dst_path}\n")
 endfunction()
 
 set(IMAGES_DIRECTORY "${MERMAID_DIRECTORY}/images")
@@ -23,6 +25,8 @@ set(MERMAID_DEPENDENCIES "")
 file(MAKE_DIRECTORY "${MERMAID_DIRECTORY}")
 file(MAKE_DIRECTORY "${IMAGES_DIRECTORY}")
 file(MAKE_DIRECTORY "${SOUNDS_DIRECTORY}")
+
+file(WRITE "${MERMAID_FILELIST}" "")
 
 #
 # Image files
@@ -267,9 +271,8 @@ copy_res_to_mermaid("Music/RefrainSparse2.wav" "sounds/2006.wav")
 
 add_custom_command(
   OUTPUT Mermaid.dat
-  COMMAND
-    "${CMAKE_COMMAND}" -E
-      tar c "${MERMAID_OUTPUT}" --format=zip -- "${IMAGES_DIRECTORY}" "${SOUNDS_DIRECTORY}"
+  COMMAND "${CMAKE_COMMAND}" -E
+    tar c "${MERMAID_OUTPUT}" --format=zip "--files-from=${MERMAID_FILELIST}"
   WORKING_DIRECTORY "${MERMAID_DIRECTORY}"
   DEPENDS "${MERMAID_DEPENDENCIES}"
 )
