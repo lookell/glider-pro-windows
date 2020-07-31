@@ -48,11 +48,10 @@ void Mac_CopyBits(
 		case srcXor:
 		// invert the destination where the source is black
 		// and keep the destination where the source is white
-		BitBlt(dstBits, xDst, yDst, wDst, hDst, NULL, 0, 0, DSTINVERT);
 		SetBkColor(dstBits, RGB(0xFF, 0xFF, 0xFF));
 		SetTextColor(dstBits, RGB(0x00, 0x00, 0x00));
 		StretchBlt(dstBits, xDst, yDst, wDst, hDst,
-				srcBits, xSrc, ySrc, wSrc, hSrc, SRCINVERT);
+				srcBits, xSrc, ySrc, wSrc, hSrc, 0x00990066); // DSxn
 		break;
 
 		case transparent:
