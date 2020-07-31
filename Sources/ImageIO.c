@@ -373,6 +373,10 @@ static HRESULT LoadMemoryBMPImpl(HBITMAP *phBitmap, const ByteSlice *slice, BOOL
 	ByteSlice readerSlice;
 	ByteSlice bitsSlice;
 	const BITMAPINFO *lpbmi;
+	int bmWidth;
+	int bmHeight;
+	HDC referenceDC;
+	void *sectionBits;
 	HBITMAP hbm;
 
 	fileSlice = *slice;
@@ -398,7 +402,6 @@ static HRESULT LoadMemoryBMPImpl(HBITMAP *phBitmap, const ByteSlice *slice, BOOL
 	lpbmi = (const BITMAPINFO *)&bitmapInfo;
 	if (loadAsDIB)
 	{
-		void *sectionBits;
 		hbm = CreateDIBSection(NULL, lpbmi, DIB_RGB_COLORS, &sectionBits, NULL, 0);
 		FAIL_IF_TRUE(hbm == NULL);
 		memcpy(sectionBits, bitsSlice.buffer, bitsSlice.length);
@@ -406,12 +409,28 @@ static HRESULT LoadMemoryBMPImpl(HBITMAP *phBitmap, const ByteSlice *slice, BOOL
 	}
 	else
 	{
-		HDC hdc = GetDC(NULL);
-		FAIL_IF_TRUE(hdc == NULL);
-		hbm = CreateDIBitmap(hdc, &lpbmi->bmiHeader, CBM_INIT,
-			bitsSlice.buffer, lpbmi, DIB_RGB_COLORS);
-		ReleaseDC(NULL, hdc);
+		hbm = NULL;
+		bmWidth = (int)lpbmi->bmiHeader.biWidth;
+		bmHeight = abs((int)lpbmi->bmiHeader.biHeight);
+		if (lpbmi->bmiHeader.biBitCount != 1)
+		{
+			referenceDC = GetDC(NULL);
+			if (referenceDC != NULL)
+			{
+				hbm = CreateCompatibleBitmap(referenceDC, bmWidth, bmHeight);
+				ReleaseDC(NULL, referenceDC);
+			}
+		}
+		else
+		{
+			hbm = CreateBitmap(bmWidth, bmHeight, 1, 1, NULL);
+		}
 		FAIL_IF_TRUE(hbm == NULL);
+		if (!SetDIBits(NULL, hbm, 0, bmHeight, bitsSlice.buffer, lpbmi, DIB_RGB_COLORS))
+		{
+			DeleteObject(hbm);
+			return E_FAIL;
+		}
 		*phBitmap = hbm;
 	}
 	return S_OK;
