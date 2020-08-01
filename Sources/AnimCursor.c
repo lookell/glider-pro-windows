@@ -15,15 +15,17 @@
 #include "WinAPI.h"
 
 
+typedef union acurFrame
+{
+	HCURSOR cursorHdl;
+	uint16_t resID;
+} acurFrame;
+
 typedef struct acurRec
 {
 	SInt16 n;
 	SInt16 index;
-	union acurFrame
-	{
-		HCURSOR cursorHdl;
-		uint16_t resID;
-	} *frame;
+	acurFrame *frame;
 } acurRec, *acurPtr;
 
 

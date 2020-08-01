@@ -25,7 +25,8 @@
 #define kMusicTickMS            50
 
 
-typedef struct MusicBuffer {
+typedef struct MusicBuffer
+{
 	const unsigned char *dataBytes;     // pointer to sound data
 	DWORD dataLength;                   // number of bytes in sound data
 	DWORD numBytesPlayed;               // number of bytes that have been played so far

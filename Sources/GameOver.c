@@ -31,11 +31,13 @@
 #define kPageFrames				14
 
 
-typedef struct
+typedef struct pageType
 {
-	Rect		dest, was;
-	SInt16		frame, counter;
-	Boolean		stuck;
+	Rect dest;
+	Rect was;
+	SInt16 frame;
+	SInt16 counter;
+	Boolean stuck;
 } pageType, *pagePtr;
 
 

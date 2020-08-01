@@ -10,7 +10,7 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-typedef struct
+typedef struct macEnviron
 {
 	Rect screen;
 	SInt16 isDepth;

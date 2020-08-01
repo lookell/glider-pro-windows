@@ -48,11 +48,11 @@
 #define kChimeDelay				180
 
 
-typedef struct
+typedef struct phoneType
 {
-	SInt16		nextRing;
-	SInt16		rings;
-	SInt16		delay;
+	SInt16 nextRing;
+	SInt16 rings;
+	SInt16 delay;
 } phoneType, *phonePtr;
 
 

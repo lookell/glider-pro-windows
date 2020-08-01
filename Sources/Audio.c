@@ -21,7 +21,8 @@ static DWORD read_dword(const unsigned char *buf)
 			((DWORD)buf[2] << 16) | ((DWORD)buf[3] << 24);
 }
 
-typedef struct RiffChunk {
+typedef struct RiffChunk
+{
 	FOURCC ckID;
 	DWORD ckSize;
 	const unsigned char* ckData;

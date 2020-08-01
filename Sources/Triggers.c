@@ -17,12 +17,14 @@
 #define kMaxTriggers			16
 
 
-typedef struct
+typedef struct trigType
 {
-	SInt16		object, room;
-	SInt16		index, timer;
-	SInt16		what;
-	Boolean		armed;
+	SInt16 object;
+	SInt16 room;
+	SInt16 index;
+	SInt16 timer;
+	SInt16 what;
+	Boolean armed;
 } trigType, *trigPtr;
 
 

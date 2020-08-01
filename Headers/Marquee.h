@@ -13,12 +13,17 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-typedef struct
+typedef struct marquee
 {
-	HBITMAP		pats[kNumMarqueePats];
-	Rect		bounds, handle;
-	SInt16		index, direction, dist;
-	Boolean		active, paused, handled;
+	HBITMAP pats[kNumMarqueePats];
+	Rect bounds;
+	Rect handle;
+	SInt16 index;
+	SInt16 direction;
+	SInt16 dist;
+	Boolean active;
+	Boolean paused;
+	Boolean handled;
 } marquee;
 
 extern marquee theMarquee;
