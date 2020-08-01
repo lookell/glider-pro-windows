@@ -43,9 +43,6 @@
 #include "WinAPI.h"
 
 
-#define kPrefsVersion			0x0034
-
-
 void ReadInPrefs (HWND ownerWindow);
 void WriteOutPrefs (HWND ownerWindow);
 

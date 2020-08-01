@@ -10,6 +10,8 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
+#define kPrefsVersion           0x0034
+
 typedef struct
 {
 	Str32		wasDefaultName;
