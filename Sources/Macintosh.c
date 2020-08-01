@@ -63,9 +63,40 @@ void Mac_CopyBits(
 	RestoreDC(dstBits, -1);
 }
 
-//--------------------------------------------------------------  CopyBits
+//--------------------------------------------------------------  CopyMask
 // Copy some portion of a bitmap from one graphics port to another,
 // with a mask to specify how much of each pixel is copied over.
+//
+// Black pixels in the mask indicate where the source is copied to the
+// destination, and white pixels indicate where the destination is left
+// alone.
+//
+// If the mask is not monochrome, then each output pixel's color component
+// is a combination of the matching components from the source, mask, and
+// destination. If each RGB component ranges from 0.0 to 1.0, then the
+// expression to calculate the output component value is
+//
+//     (1.0 - mask) * source + (mask) * destination
+//
+// This is similar to alpha blending onto an opaque background, where the
+// colors are represented with straight alpha (not premultiplied). That
+// blending is calculated with this expression:
+//
+//     (alpha) * source + (1.0 - alpha) * destination
+//
+// The difference is that the alpha is just equal to (1.0 - mask).
+//
+// This implementation does NOT support utilizing any existing alpha channel
+// in the source or destination; the mask represents the source's alpha
+// channel, and the destination is treated as an opaque image.
+
+static BYTE BlendMask(BYTE src, BYTE mask, BYTE dst)
+{
+	WORD alpha = 255 - ((WORD)mask);
+	WORD weightedSrc = (alpha) * ((WORD)src);
+	WORD weightedDst = (255 - alpha) * ((WORD)dst);
+	return (BYTE)((weightedSrc + weightedDst) / 255);
+}
 
 void Mac_CopyMask(
 	HDC srcBits,
@@ -75,58 +106,122 @@ void Mac_CopyMask(
 	const Rect *maskRect,
 	const Rect *dstRect)
 {
-	// TODO: add support for masks where pixels are between black and white
-	HDC newSrcBits;
-	HBITMAP newSrcBitmap, hbmPrev;
-	INT xSrc, ySrc, wSrc, hSrc;
-	INT xMask, yMask, wMask, hMask;
-	INT xDst, yDst, wDst, hDst;
+	BITMAPINFO bmInfo;
+	HBITMAP srcDIB;
+	HBITMAP maskDIB;
+	HBITMAP dstDIB;
+	HBITMAP hbmPrev;
+	RGBQUAD *srcPtr;
+	RGBQUAD *maskPtr;
+	RGBQUAD *dstPtr;
+	HDC tmpDC;
+	DWORD pixelIndex;
+	DWORD pixelCount;
 
-	if (srcRect->left >= srcRect->right || srcRect->top >= srcRect->bottom)
-		return;
-	if (maskRect->left >= maskRect->right || maskRect->top >= maskRect->bottom)
-		return;
-	if (dstRect->left >= dstRect->right || dstRect->top >= dstRect->bottom)
-		return;
+	int xSrc = srcRect->left;
+	int ySrc = srcRect->top;
+	int wSrc = srcRect->right - srcRect->left;
+	int hSrc = srcRect->bottom - srcRect->top;
+	int xMask = maskRect->left;
+	int yMask = maskRect->top;
+	int wMask = maskRect->right - maskRect->left;
+	int hMask = maskRect->bottom - maskRect->top;
+	int xDst = dstRect->left;
+	int yDst = dstRect->top;
+	int wDst = dstRect->right - dstRect->left;
+	int hDst = dstRect->bottom - dstRect->top;
+	int wOut = wDst;
+	int hOut = hDst;
 
-	xSrc = srcRect->left;
-	ySrc = srcRect->top;
-	wSrc = srcRect->right - srcRect->left;
-	hSrc = srcRect->bottom - srcRect->top;
-	xMask = maskRect->left;
-	yMask = maskRect->top;
-	wMask = maskRect->right - maskRect->left;
-	hMask = maskRect->bottom - maskRect->top;
-	xDst = dstRect->left;
-	yDst = dstRect->top;
-	wDst = dstRect->right - dstRect->left;
-	hDst = dstRect->bottom - dstRect->top;
+	if ((wSrc <= 0 || hSrc <= 0) ||
+		(wMask <= 0 || hMask <= 0) ||
+		(wDst <= 0 || hDst <= 0))
+	{
+		return;
+	}
 
-	SaveDC(dstBits);
-	// make sure that monochrome masks are colorized correctly
-	SetTextColor(dstBits, RGB(0x00, 0x00, 0x00));
-	SetBkColor(dstBits, RGB(0xFF, 0xFF, 0xFF));
-	// apply the mask to the destination
-	StretchBlt(dstBits, xDst, yDst, wDst, hDst,
-		maskBits, xMask, yMask, wMask, hMask, SRCAND); // DSa
-	// create temporary drawing surface to adjust the source bits
-	newSrcBits = CreateCompatibleDC(srcBits);
-	SetTextColor(newSrcBits, RGB(0x00, 0x00, 0x00));
-	SetBkColor(newSrcBits, RGB(0xFF, 0xFF, 0xFF));
-	newSrcBitmap = CreateCompatibleBitmap(srcBits, wSrc, hSrc);
-	hbmPrev = SelectObject(newSrcBits, newSrcBitmap);
-	BitBlt(newSrcBits, 0, 0, wSrc, hSrc, srcBits, xSrc, ySrc, SRCCOPY);
-	// black out unwanted source bits with the inverted mask
-	StretchBlt(newSrcBits, 0, 0, wSrc, hSrc,
-		maskBits, xMask, yMask, wMask, hMask, 0x00220326); // DSna
-	// apply adjusted source bits to the destination
-	StretchBlt(dstBits, xDst, yDst, wDst, hDst,
-		newSrcBits, 0, 0, wSrc, hSrc, SRCPAINT); // DSo
-	// clean up
-	RestoreDC(dstBits, -1);
-	SelectObject(newSrcBits, hbmPrev);
-	DeleteObject(newSrcBitmap);
-	DeleteDC(newSrcBits);
+	// Create 32-bit DIB sections to hold RGBQUAD versions of the
+	// source, mask, and destination images
+
+	ZeroMemory(&bmInfo, sizeof(bmInfo));
+	bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bmInfo.bmiHeader.biWidth = wOut;
+	bmInfo.bmiHeader.biHeight = hOut;
+	bmInfo.bmiHeader.biPlanes = 1;
+	bmInfo.bmiHeader.biBitCount = 32;
+	bmInfo.bmiHeader.biCompression = BI_RGB;
+	bmInfo.bmiHeader.biSizeImage = 0;
+	bmInfo.bmiHeader.biXPelsPerMeter = 0;
+	bmInfo.bmiHeader.biYPelsPerMeter = 0;
+	bmInfo.bmiHeader.biClrUsed = 0;
+	bmInfo.bmiHeader.biClrImportant = 0;
+
+	srcDIB = CreateDIBSection(NULL, &bmInfo, DIB_RGB_COLORS, (void **)&srcPtr, NULL, 0);
+	if (srcDIB == NULL)
+	{
+		return;
+	}
+	maskDIB = CreateDIBSection(NULL, &bmInfo, DIB_RGB_COLORS, (void **)&maskPtr, NULL, 0);
+	if (maskDIB == NULL)
+	{
+		DeleteObject(srcDIB);
+		return;
+	}
+	dstDIB = CreateDIBSection(NULL, &bmInfo, DIB_RGB_COLORS, (void **)&dstPtr, NULL, 0);
+	if (dstDIB == NULL)
+	{
+		DeleteObject(maskDIB);
+		DeleteObject(srcDIB);
+		return;
+	}
+	tmpDC = CreateCompatibleDC(NULL);
+	if (tmpDC == NULL)
+	{
+		DeleteObject(dstDIB);
+		DeleteObject(maskDIB);
+		DeleteObject(srcDIB);
+		return;
+	}
+
+	hbmPrev = SelectObject(tmpDC, srcDIB);
+	StretchBlt(tmpDC, 0, 0, wOut, hOut, srcBits, xSrc, ySrc, wSrc, hSrc, SRCCOPY);
+	SelectObject(tmpDC, hbmPrev);
+
+	hbmPrev = SelectObject(tmpDC, maskDIB);
+	StretchBlt(tmpDC, 0, 0, wOut, hOut, maskBits, xMask, yMask, wMask, hMask, SRCCOPY);
+	SelectObject(tmpDC, hbmPrev);
+
+	hbmPrev = SelectObject(tmpDC, dstDIB);
+	StretchBlt(tmpDC, 0, 0, wOut, hOut, dstBits, xDst, yDst, wDst, hDst, SRCCOPY);
+	SelectObject(tmpDC, hbmPrev);
+
+	// Perform the actual mask blending operation
+
+	GdiFlush();
+	pixelCount = (DWORD)wOut * (DWORD)hOut;
+	for (pixelIndex = 0; pixelIndex < pixelCount; pixelIndex++)
+	{
+		RGBQUAD srcRGB = srcPtr[pixelIndex];
+		RGBQUAD maskRGB = maskPtr[pixelIndex];
+		RGBQUAD dstRGB = dstPtr[pixelIndex];
+		RGBQUAD outRGB = dstRGB;
+		outRGB.rgbBlue = BlendMask(srcRGB.rgbBlue, maskRGB.rgbBlue, dstRGB.rgbBlue);
+		outRGB.rgbGreen = BlendMask(srcRGB.rgbGreen, maskRGB.rgbGreen, dstRGB.rgbGreen);
+		outRGB.rgbRed = BlendMask(srcRGB.rgbRed, maskRGB.rgbRed, dstRGB.rgbRed);
+		dstPtr[pixelIndex] = outRGB;
+	}
+	GdiFlush();
+
+	// Blit the output image to its final destination, and clean up
+
+	hbmPrev = SelectObject(tmpDC, dstDIB);
+	StretchBlt(dstBits, xDst, yDst, wDst, hDst, tmpDC, 0, 0, wOut, hOut, SRCCOPY);
+	SelectObject(tmpDC, hbmPrev);
+
+	DeleteDC(tmpDC);
+	DeleteObject(dstDIB);
+	DeleteObject(maskDIB);
+	DeleteObject(srcDIB);
 }
 
 //--------------------------------------------------------------  DrawPicture
