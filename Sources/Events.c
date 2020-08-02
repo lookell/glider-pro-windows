@@ -9,6 +9,7 @@
 
 #include "Coordinates.h"
 #include "DialogUtils.h"
+#include "FrameTimer.h"
 #include "House.h"
 #include "Link.h"
 #include "Macintosh.h"
@@ -259,9 +260,9 @@ void HandleTheMessage (MSG *message)
 
 void HandleEvent (void)
 {
-	MSG			theEvent;
-	DWORD		result, startMillis;
-	DWORD		msgWaitTime, msgWaitStart, msgWaitElapsed;
+	MSG theEvent;
+	DWORD startMillis;
+	BOOL messageReceived;
 
 	if (mainWindow != NULL && GetActiveWindow() == mainWindow)
 	{
@@ -295,26 +296,21 @@ void HandleEvent (void)
 		}
 	}
 
-	msgWaitTime = TicksToMillis(kTicksPerFrame);
-	msgWaitStart = timeGetTime();
 	while (1)
 	{
-		msgWaitElapsed = timeGetTime() - msgWaitStart;
-		if (msgWaitElapsed >= msgWaitTime)
-			break;
-		result = MsgWaitForMultipleObjects(0, NULL, FALSE,
-			msgWaitTime - msgWaitElapsed, QS_ALLINPUT);
-		if (result == WAIT_OBJECT_0)
+		WaitUntilNextFrameOrMessage(&messageReceived);
+		if (messageReceived == FALSE)
 		{
-			while (PeekMessage(&theEvent, NULL, 0, 0, PM_REMOVE))
+			break;
+		}
+		while (PeekMessage(&theEvent, NULL, 0, 0, PM_REMOVE))
+		{
+			if (theEvent.message == WM_QUIT)
 			{
-				if (theEvent.message == WM_QUIT)
-				{
-					quitting = true;
-					return;
-				}
-				HandleTheMessage(&theEvent);
+				quitting = true;
+				return;
 			}
+			HandleTheMessage(&theEvent);
 		}
 	}
 	HandleIdleTask();
