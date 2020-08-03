@@ -256,6 +256,11 @@ void DoHeliumEngaged (gliderPtr thisGlider)
 
 //--------------------------------------------------------------  GetDemoInput
 
+//
+// NOTE: This function does not perfectly reproduce the input that can be
+// received in normal gameplay. It only allows for one keystroke per frame.
+//
+
 void GetDemoInput (gliderPtr thisGlider)
 {
 	if (thisGlider->which == kPlayer1)
@@ -296,21 +301,21 @@ void GetDemoInput (gliderPtr thisGlider)
 		{
 			switch (demoData[demoIndex].key)
 			{
-				case 0:		// left key
+				case 0: // right key
 				thisGlider->hDesiredVel += kNormalThrust;
 				thisGlider->tipped = (thisGlider->facing == kFaceLeft);
 				thisGlider->heldRight = true;
 				thisGlider->fireHeld = false;
 				break;
 
-				case 1:		// right key
+				case 1: // left key
 				thisGlider->hDesiredVel -= kNormalThrust;
 				thisGlider->tipped = (thisGlider->facing == kFaceRight);
 				thisGlider->heldLeft = true;
 				thisGlider->fireHeld = false;
 				break;
 
-				case 2:		// battery key
+				case 2: // battery key
 				if (batteryTotal > 0)
 					DoBatteryEngaged(thisGlider);
 				else
@@ -318,7 +323,7 @@ void GetDemoInput (gliderPtr thisGlider)
 				thisGlider->fireHeld = false;
 				break;
 
-				case 3:		// rubber band key
+				case 3: // rubber band key
 				if (!thisGlider->fireHeld)
 				{
 					if (AddBand(thisGlider, thisGlider->dest.left + 24,
