@@ -42,7 +42,6 @@ target_sources(
   Headers/ByteIO.h
   Headers/ColorUtils.h
   Headers/Coordinates.h
-  Headers/DebugUtilities.h
   Headers/DialogUtils.h
   Headers/DynamicMaps.h
   Headers/Dynamics.h
@@ -116,7 +115,6 @@ target_sources(
   Sources/ByteIO.c
   Sources/ColorUtils.c
   Sources/Coordinates.c
-  Sources/DebugUtilities.c
   Sources/DialogUtils.c
   Sources/DynamicMaps.c
   Sources/Dynamics.c

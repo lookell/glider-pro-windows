@@ -98,7 +98,6 @@ typedef struct FSSpec
 // Unknown types (this list should be kept as short as possible)
 //
 
-typedef struct CGrafPtr__* CGrafPtr;
 typedef struct Movie__* Movie;
 typedef struct RgnHandle__* RgnHandle;
 
