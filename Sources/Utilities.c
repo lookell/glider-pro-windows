@@ -353,6 +353,11 @@ void WaitCommandQReleased (void)
 {
 	MSG msg;
 
+	// if control key is up or Q key is up
+	if ((GetAsyncKeyState(VK_CONTROL) >= 0) || (GetAsyncKeyState('Q') >= 0))
+	{
+		return;
+	}
 	while (GetMessage(&msg, NULL, WM_KEYFIRST, WM_KEYLAST))
 	{
 		TranslateMessage(&msg);
