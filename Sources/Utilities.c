@@ -382,21 +382,20 @@ Boolean WaitForInputEvent (UInt16 seconds)
 
 void WaitCommandQReleased (void)
 {
-	return;
-#if 0
-	KeyMap		theKeys;
-	Boolean		waiting;
+	MSG msg;
 
-	waiting = true;
-
-	while (waiting)
+	while (GetMessage(&msg, NULL, WM_KEYFIRST, WM_KEYLAST))
 	{
-		GetKeys(theKeys);
-		if ((!BitTst(&theKeys, kCommandKeyMap)) || (!BitTst(&theKeys, kQKeyMap)))
-			waiting = false;
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		if (msg.message == WM_KEYUP)
+		{
+			if (msg.wParam == VK_CONTROL || msg.wParam == 'Q')
+			{
+				break;
+			}
+		}
 	}
-	FlushEvents(everyEvent, 0);
-#endif
 }
 
 //--------------------------------------------------------------  OptionKeyDown
