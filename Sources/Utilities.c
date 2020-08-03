@@ -61,42 +61,12 @@ void ToolBoxInit (void)
 
 SInt16 RandomInt (SInt16 range)
 {
-	register SInt32	rawResult;
+	SInt32 rawResult;
 
-	rawResult = (RandomLongQUS() & 0x7FFF);
+	rawResult = RandomLongQUS() & 0x7FFF;
 	rawResult = (rawResult * (SInt32)range) / 32768L;
 
 	return ((SInt16)rawResult);
-}
-
-//--------------------------------------------------------------  RandomLong
-// Returns a random long interger within "range".
-
-SInt32 RandomLong (SInt32 range)
-{
-	DBG_UNREFERENCED_PARAMETER(range);
-	return 0;
-#if 0
-	register long	highWord, lowWord;
-	register long	rawResultHi, rawResultLo;
-
-	highWord = (range & 0xFFFF0000) >> 16;
-	lowWord = range & 0x0000FFFF;
-
-	rawResultHi = Random();
-	if (rawResultHi < 0L)
-		rawResultHi *= -1L;
-	rawResultHi = (rawResultHi * highWord) / 32768L;
-
-	rawResultLo = Random();
-	if (rawResultLo < 0L)
-		rawResultLo *= -1L;
-	rawResultLo = (rawResultLo * lowWord) / 32768L;
-
-	rawResultHi = (rawResultHi << 16) + rawResultLo;
-
-	return (rawResultHi);
-#endif
 }
 
 //--------------------------------------------------------------  InitRandomLongQUS
@@ -117,7 +87,6 @@ UInt32 RandomLongQUS (void)
 }
 
 //--------------------------------------------------------------  RedAlert
-
 // Called when we must quit app.  Brings up a dialog informing user…
 // of the problem and the exits to shell.
 
