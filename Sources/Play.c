@@ -202,7 +202,7 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 	wasPlayMusicPref = isPlayMusicGame;
 
 #ifdef CREATEDEMODATA
-	SysBeep(1);
+	MessageBeep(MB_ICONINFORMATION);
 #endif
 
 #ifdef COMPILEQT
@@ -236,7 +236,7 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 	}
 
 #ifdef CREATEDEMODATA
-	DumpToResEditFile((Ptr)demoData, sizeof(demoType) * (long)demoIndex);
+	DumpDemoData();
 #endif
 
 	isPlayMusicGame = wasPlayMusicPref;

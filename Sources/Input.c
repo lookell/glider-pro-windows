@@ -23,6 +23,7 @@
 #include "SavedGames.h"
 #include "Scoreboard.h"
 #include "Sound.h"
+#include "StructIO.h"
 #include "Transit.h"
 #include "Utilities.h"
 
@@ -54,9 +55,39 @@ Boolean		isEscPauseKey, paused, batteryWasEngaged;
 
 void LogDemoKey (Byte keyIs)
 {
+	if (demoIndex >= ARRAYSIZE(demoData))
+	{
+		return;
+	}
 	demoData[demoIndex].frame = gameFrame;
 	demoData[demoIndex].key = keyIs;
 	demoIndex++;
+}
+
+//--------------------------------------------------------------  DumpDemoData
+
+void DumpDemoData (void)
+{
+	HANDLE demoFileHandle;
+	byteio demoWriter;
+	SInt16 i;
+
+	demoFileHandle = CreateFile(L"demo.bin", GENERIC_WRITE, 0, NULL,
+		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (demoFileHandle == INVALID_HANDLE_VALUE)
+	{
+		return;
+	}
+	if (!byteio_init_handle_writer(&demoWriter, demoFileHandle))
+	{
+		RedAlert(kErrNoMemory);
+	}
+	for (i = 0; i < demoIndex; i++)
+	{
+		WriteDemoType(&demoWriter, &demoData[i]);
+	}
+	byteio_close(&demoWriter);
+	CloseHandle(demoFileHandle);
 }
 
 //--------------------------------------------------------------  DoCommandKey

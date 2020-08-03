@@ -15,6 +15,7 @@ extern SInt16 demoIndex;
 extern Boolean isEscPauseKey;
 extern Boolean paused;
 
+void DumpDemoData (void);
 void GetDemoInput (gliderPtr thisGlider);
 void GetInput (gliderPtr thisGlider);
 
