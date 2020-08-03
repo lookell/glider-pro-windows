@@ -10,7 +10,7 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern SInt32 incrementModeTime;
+extern DWORD incrementModeTime;
 extern Boolean doAutoDemo;
 extern Boolean switchedOut;
 extern Boolean ignoreDoubleClick;

@@ -7,9 +7,6 @@
 // Convert Macintosh ticks (1/60 second units) to milliseconds
 #define TicksToMillis(ticks) (UInt32)((unsigned long long)(ticks) * 50 / 3)
 
-// Convert milliseconds to Macintosh ticks (1/60 second units)
-#define MillisToTicks(millis) (UInt32)((unsigned long long)(millis) * 3 / 50)
-
 #define QDBlack		QDColors[0]
 #define QDYellow	QDColors[1]
 #define QDMagenta	QDColors[2]

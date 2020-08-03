@@ -222,7 +222,7 @@ void VariableInit (void)
 	lastBackground = kBaseBackgroundID;
 	wasFlower = RandomInt(kNumFlowers);
 	lastHighScore = -1;
-	incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
+	incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
 	willMaxFiles = maxFiles;
 	numExtraHouses = 0;
 

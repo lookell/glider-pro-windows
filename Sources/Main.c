@@ -343,7 +343,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		WashColorIn();
 	}
 
-	incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
+	incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
 	while (!quitting)		// this is the main loop
 		HandleEvent();
 /*

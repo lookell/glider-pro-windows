@@ -369,7 +369,7 @@ void DoGameMenu (HWND hwnd, SInt16 theItem)
 			DoLoadHouse(hwnd);
 			OpenCloseEditWindows();
 			UpdateMenus(false);
-			incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
+			incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
 			if ((theMode == kSplashMode) || (theMode == kPlayMode))
 			{
 				Rect		updateRect;
@@ -425,7 +425,7 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 			CloseMainWindow();
 			theMode = kSplashMode;
 			OpenMainWindow();
-			incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
+			incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
 		}
 		else if (theMode == kSplashMode)	// switching to edit mode
 		{
@@ -444,12 +444,12 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 		DisableMenuBar();
 		DoHighScores();
 		EnableMenuBar();
-		incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
+		incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
 		break;
 
 		case iPrefs:
 		DoSettingsMain(hwnd);
-		incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
+		incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
 		break;
 
 		case iHelp:

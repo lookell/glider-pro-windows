@@ -745,7 +745,7 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
 					failedMusic = true;
 				}
 			}
-			incrementModeTime = MillisToTicks(GetTickCount()) + kIdleSplashTicks;
+			incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
 
 #ifndef COMPILEDEMO
 //			if (theMode == kEditMode)

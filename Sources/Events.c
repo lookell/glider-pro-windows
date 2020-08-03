@@ -31,7 +31,7 @@
 void HandleIdleTask (void);
 
 
-SInt32			incrementModeTime;
+DWORD			incrementModeTime;
 Boolean			doAutoDemo, switchedOut, ignoreDoubleClick;
 HACCEL			splashAccelTable, editAccelTable;
 
@@ -261,7 +261,7 @@ void HandleTheMessage (MSG *message)
 void HandleEvent (void)
 {
 	MSG theEvent;
-	DWORD startMillis;
+	DWORD startMillis, nowMillis;
 	BOOL messageReceived;
 
 	if (mainWindow != NULL && GetActiveWindow() == mainWindow)
@@ -317,8 +317,9 @@ void HandleEvent (void)
 
 	if ((theMode == kSplashMode) && doAutoDemo && !switchedOut && (demoHouseIndex >= 0))
 	{
-		startMillis = TicksToMillis((UInt32)incrementModeTime - kIdleSplashTicks);
-		if (GetTickCount() - startMillis >= TicksToMillis(kIdleSplashTicks))
+		startMillis = incrementModeTime - TicksToMillis(kIdleSplashTicks);
+		nowMillis = GetTickCount();
+		if (nowMillis - startMillis >= TicksToMillis(kIdleSplashTicks))
 		{
 			DisableMenuBar();
 			DoDemoGame(mainWindow);
