@@ -6,11 +6,16 @@
 #include "WinAPI.h"
 #include <dsound.h>
 
-typedef struct WaveData
+typedef struct WaveFormat
 {
 	uint16_t channels;
-	uint32_t samplesPerSec;
 	uint16_t bitsPerSample;
+	uint32_t samplesPerSec;
+} WaveFormat;
+
+typedef struct WaveData
+{
+	WaveFormat format;
 	size_t dataLength;
 	const unsigned char *dataBytes;
 } WaveData;

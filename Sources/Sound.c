@@ -346,9 +346,9 @@ LPDIRECTSOUNDBUFFER8 LoadStaticBuffer (SInt16 which)
 	HRESULT hr;
 
 	waveFormat.wFormatTag = WAVE_FORMAT_PCM;
-	waveFormat.nChannels = theSoundData[which].wave.channels;
-	waveFormat.nSamplesPerSec = theSoundData[which].wave.samplesPerSec;
-	waveFormat.wBitsPerSample = theSoundData[which].wave.bitsPerSample;
+	waveFormat.nChannels = theSoundData[which].wave.format.channels;
+	waveFormat.nSamplesPerSec = theSoundData[which].wave.format.samplesPerSec;
+	waveFormat.wBitsPerSample = theSoundData[which].wave.format.bitsPerSample;
 	waveFormat.nBlockAlign = waveFormat.nChannels * waveFormat.wBitsPerSample / 8;
 	waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
 	waveFormat.cbSize = 0;

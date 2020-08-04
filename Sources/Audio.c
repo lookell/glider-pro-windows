@@ -131,9 +131,9 @@ int ReadWAVFromMemory(const void *buffer, size_t length, WaveData *waveData)
 	} while (chunk.ckID != CKID_data);
 
 	// give the wave data to the caller
-	waveData->channels = format.nChannels;
-	waveData->samplesPerSec = format.nSamplesPerSec;
-	waveData->bitsPerSample = format.wBitsPerSample;
+	waveData->format.channels = format.nChannels;
+	waveData->format.bitsPerSample = format.wBitsPerSample;
+	waveData->format.samplesPerSec = format.nSamplesPerSec;
 	waveData->dataLength = chunk.ckSize;
 	waveData->dataBytes = chunk.ckData;
 	return 1;

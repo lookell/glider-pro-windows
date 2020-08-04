@@ -500,11 +500,11 @@ OSErr LoadMusicSounds (void)
 	// Test to make sure that all music resources have the same format
 	for (i = 1; i < kMaxMusic; i++)
 	{
-		if (theMusicData[i].channels != theMusicData[0].channels)
+		if (theMusicData[i].format.channels != theMusicData[0].format.channels)
 			return -2;
-		if (theMusicData[i].samplesPerSec != theMusicData[0].samplesPerSec)
+		if (theMusicData[i].format.bitsPerSample != theMusicData[0].format.bitsPerSample)
 			return -2;
-		if (theMusicData[i].bitsPerSample != theMusicData[0].bitsPerSample)
+		if (theMusicData[i].format.samplesPerSec != theMusicData[0].format.samplesPerSec)
 			return -2;
 	}
 
@@ -535,9 +535,9 @@ OSErr OpenMusicChannel (void)
 	HRESULT hr;
 
 	musicFormat.wFormatTag = WAVE_FORMAT_PCM;
-	musicFormat.nChannels = theMusicData[0].channels;
-	musicFormat.nSamplesPerSec = theMusicData[0].samplesPerSec;
-	musicFormat.wBitsPerSample = theMusicData[0].bitsPerSample;
+	musicFormat.nChannels = theMusicData[0].format.channels;
+	musicFormat.nSamplesPerSec = theMusicData[0].format.samplesPerSec;
+	musicFormat.wBitsPerSample = theMusicData[0].format.bitsPerSample;
 	musicFormat.cbSize = 0;
 	musicFormat.nBlockAlign = musicFormat.nChannels * musicFormat.wBitsPerSample / 8;
 	musicFormat.nAvgBytesPerSec = musicFormat.nSamplesPerSec * musicFormat.nBlockAlign;
