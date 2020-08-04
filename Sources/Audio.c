@@ -417,6 +417,12 @@ ULONG Audio_ReleaseSoundBuffer(LPDIRECTSOUNDBUFFER8 pBuffer)
 	return IDirectSoundBuffer8_Release(pBuffer);
 }
 
+//
+// This factor makes it so when the amplitude is halved, then the
+// attenuation goes down by 6 dB.
+//
+static const float VOLUME_FACTOR = 20.0f;
+
 static LONG ClampAttenuation(LONG attenuation)
 {
 	if (attenuation <= DSBVOLUME_MIN)
@@ -435,13 +441,16 @@ static LONG ClampAttenuation(LONG attenuation)
 
 static float ClampVolume(float volume)
 {
-	if (volume <= 0.00001f)
+	const float MIN_VOLUME = powf(10.0f, DSBVOLUME_MIN / 100.0f / VOLUME_FACTOR);
+	const float MAX_VOLUME = 1.0;
+
+	if (volume <= MIN_VOLUME)
 	{
-		return 0.00001f; // this corresponds to DSBVOLUME_MIN (-10000)
+		return 0.0;
 	}
-	else if (volume >= 1.0f)
+	else if (volume >= MAX_VOLUME)
 	{
-		return 1.0f; // this corresponds to DSBVOLUME_MAX (0)
+		return MAX_VOLUME;
 	}
 	else
 	{
@@ -451,16 +460,21 @@ static float ClampVolume(float volume)
 
 static LONG VolumeToAttenuation(float volume)
 {
-	return ClampAttenuation((LONG)(2000.0f * log10f(ClampVolume(volume))));
+	LONG attenuation;
+
+	volume = ClampVolume(volume);
+	attenuation = (LONG)(log10f(volume) * VOLUME_FACTOR * 100.0f);
+	attenuation = ClampAttenuation(attenuation);
+	return attenuation;
 }
 
 static float AttenuationToVolume(LONG attenuation)
 {
 	float volume;
 
-	volume = ClampVolume(powf(10.0f, (float)ClampAttenuation(attenuation) / 2000.0f));
-	if (volume <= 0.00001f)
-		volume = 0.0f;
+	attenuation = ClampAttenuation(attenuation);
+	volume = powf(10.0f, (float)attenuation / 100.0f / VOLUME_FACTOR);
+	volume = ClampVolume(volume);
 	return volume;
 }
 
