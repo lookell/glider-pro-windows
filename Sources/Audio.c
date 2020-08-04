@@ -418,8 +418,8 @@ ULONG Audio_ReleaseSoundBuffer(LPDIRECTSOUNDBUFFER8 pBuffer)
 }
 
 //
-// This factor makes it so when the amplitude is halved, then the
-// attenuation goes down by 6 dB.
+// This factor makes it so when the desired volume is halved, then the
+// attenuation goes down by 10 dB.
 //
 static const float VOLUME_FACTOR = 20.0f;
 
