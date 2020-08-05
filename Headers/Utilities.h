@@ -22,7 +22,6 @@ HBITMAP GetPicture (SInt16 resID);
 void LoadGraphic (HDC hdc, SInt16 resID);
 void LoadScaledGraphic (HDC hdc, SInt16 resID, const Rect *theRect);
 void DrawCIcon (HDC hdc, SInt16 theID, SInt16 h, SInt16 v);
-SInt32 LongSquareRoot (SInt32 theNumber);
 Boolean WaitForInputEvent (UInt16 seconds);
 void WaitCommandQReleased (void);
 Boolean OptionKeyDown (void);

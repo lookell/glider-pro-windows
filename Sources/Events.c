@@ -8,7 +8,6 @@
 
 
 #include "Coordinates.h"
-#include "DialogUtils.h"
 #include "FrameTimer.h"
 #include "House.h"
 #include "Link.h"
@@ -21,7 +20,6 @@
 #include "Music.h"
 #include "ObjectEdit.h"
 #include "Play.h"
-#include "ResourceIDs.h"
 #include "Room.h"
 #include "RoomInfo.h"
 #include "SelectHouse.h"
@@ -37,18 +35,6 @@ HACCEL			splashAccelTable, editAccelTable;
 
 
 //==============================================================  Functions
-//--------------------------------------------------------------  BitchAboutColorDepth
-// Display a dialog that alerts the user that they have switched the bit…
-// depth of the monitor under our noses.  They must return it to previous.
-
-SInt16 BitchAboutColorDepth (HWND ownerWindow)
-{
-	SInt16 sheSaid;
-
-	sheSaid = Alert(kColorSwitchedAlert, ownerWindow, NULL);
-	return (sheSaid - 1000);
-}
-
 //--------------------------------------------------------------  HandleKeyEvent
 // Handle a key-down event.
 

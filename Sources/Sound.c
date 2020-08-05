@@ -327,13 +327,6 @@ void TellHerNoSounds (HWND ownerWindow)
 	Alert(kNoMemForSoundsAlert, ownerWindow, NULL);
 }
 
-//--------------------------------------------------------------  BitchAboutSM3
-
-void BitchAboutSM3 (HWND ownerWindow)
-{
-	Alert(kNoSoundManager3Alert, ownerWindow, NULL);
-}
-
 //--------------------------------------------------------------  LoadStaticBuffer
 
 LPDIRECTSOUNDBUFFER8 LoadStaticBuffer (SInt16 which)

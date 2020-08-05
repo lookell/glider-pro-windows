@@ -260,31 +260,6 @@ void DrawCIcon (HDC hdc, SInt16 theID, SInt16 h, SInt16 v)
 	}
 }
 
-//--------------------------------------------------------------  LongSquareRoot
-// This is a quick and dirty square root function that returns pretty…
-// accurate long integer results.  It uses no transcendental functions or…
-// floating point.
-
-SInt32 LongSquareRoot (SInt32 theNumber)
-{
-	SInt32		currentAnswer;
-	SInt32		nextTrial;
-
-	if (theNumber <= 1L)
-		return (theNumber);
-
-	nextTrial = theNumber / 2;
-
-	do
-	{
-		currentAnswer = nextTrial;
-		nextTrial = (nextTrial + theNumber / nextTrial) / 2;
-	}
-	while (nextTrial < currentAnswer);
-
-	return(currentAnswer);
-}
-
 //--------------------------------------------------------------  WaitForInputEvent
 // Wait for either a key to be hit or the mouse button to be clicked.
 // Also has a "timeout" parameter ("seconds").

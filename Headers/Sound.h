@@ -21,6 +21,5 @@ void InitSound (HWND ownerWindow);
 void KillSound (void);
 SInt32 SoundBytesNeeded (void);
 void TellHerNoSounds (HWND ownerWindow);
-void BitchAboutSM3 (HWND ownerWindow);
 
 #endif

@@ -17,7 +17,6 @@ extern Boolean ignoreDoubleClick;
 extern HACCEL splashAccelTable;
 extern HACCEL editAccelTable;
 
-SInt16 BitchAboutColorDepth (HWND ownerWindow);
 void HandleKeyEvent (HWND hwnd, BYTE vkey);
 void HandleEvent (void);
 void IgnoreThisClick (void);
