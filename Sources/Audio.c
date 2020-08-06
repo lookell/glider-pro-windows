@@ -141,11 +141,14 @@ int ReadWAVFromMemory(const void *buffer, size_t length, WaveData *waveData)
 
 //==============================================================
 
+#define WC_AUDIOOWNER L"GliderAudioOwner"
+
 static LPDIRECTSOUND8 g_audioDevice;
 static HWND g_audioWindow;
 static LPDIRECTSOUNDBUFFER8 *g_audioBuffers;
 static DWORD g_audioBuffersCapacity;
 static LONG g_masterAttenuation;
+static CRITICAL_SECTION g_csAudioLock;
 
 HRESULT Audio_InitDevice(void)
 {
@@ -156,10 +159,10 @@ HRESULT Audio_InitDevice(void)
 
 	if (g_audioDevice != NULL)
 	{
-		return S_FALSE;
+		return DSERR_ALREADYINITIALIZED;
 	}
 	wcx.cbSize = sizeof(wcx);
-	if (!GetClassInfoEx(HINST_THISCOMPONENT, L"GliderAudioOwner", &wcx))
+	if (!GetClassInfoEx(HINST_THISCOMPONENT, WC_AUDIOOWNER, &wcx))
 	{
 		wcx.cbSize = sizeof(wcx);
 		wcx.style = 0;
@@ -171,17 +174,15 @@ HRESULT Audio_InitDevice(void)
 		wcx.hCursor = NULL;
 		wcx.hbrBackground = NULL;
 		wcx.lpszMenuName = NULL;
-		wcx.lpszClassName = L"GliderAudioOwner";
+		wcx.lpszClassName = WC_AUDIOOWNER;
 		wcx.hIconSm = NULL;
 		if (!RegisterClassEx(&wcx))
 		{
 			return HRESULT_FROM_WIN32(GetLastError());
 		}
 	}
-	newWindow = CreateWindow(
-		wcx.lpszClassName, L"", 0, 0, 0, 0, 0,
-		HWND_MESSAGE, NULL, wcx.hInstance, NULL
-	);
+	newWindow = CreateWindow(WC_AUDIOOWNER, L"", 0x00000000,
+		0, 0, 0, 0, HWND_MESSAGE, NULL, HINST_THISCOMPONENT, NULL);
 	if (newWindow == NULL)
 	{
 		return HRESULT_FROM_WIN32(GetLastError());
@@ -205,6 +206,7 @@ HRESULT Audio_InitDevice(void)
 	g_audioBuffers = NULL;
 	g_audioBuffersCapacity = 0;
 	g_masterAttenuation = DSBVOLUME_MAX;
+	InitializeCriticalSection(&g_csAudioLock);
 	return S_OK;
 }
 
@@ -212,32 +214,17 @@ void Audio_KillDevice(void)
 {
 	free(g_audioBuffers);
 	g_audioBuffersCapacity = 0;
-	if (g_audioWindow != NULL)
-	{
-		DestroyWindow(g_audioWindow);
-		g_audioWindow = NULL;
-	}
 	if (g_audioDevice != NULL)
 	{
 		IDirectSound8_Release(g_audioDevice);
 		g_audioDevice = NULL;
 	}
-}
-
-HRESULT Audio_GetDevice(LPDIRECTSOUND8 *ppDS8)
-{
-	if (ppDS8 == NULL)
+	if (g_audioWindow != NULL)
 	{
-		return E_POINTER;
+		DestroyWindow(g_audioWindow);
+		g_audioWindow = NULL;
 	}
-	*ppDS8 = NULL;
-	if (g_audioDevice == NULL)
-	{
-		return DSERR_UNINITIALIZED;
-	}
-	IDirectSound8_AddRef(g_audioDevice);
-	*ppDS8 = g_audioDevice;
-	return S_OK;
+	DeleteCriticalSection(&g_csAudioLock);
 }
 
 static HRESULT Audio_AllocBufferSlot(DWORD *pBufferSlot)
@@ -250,11 +237,15 @@ static HRESULT Audio_AllocBufferSlot(DWORD *pBufferSlot)
 	{
 		return E_POINTER;
 	}
+
+	EnterCriticalSection(&g_csAudioLock);
+
 	for (i = 0; i < g_audioBuffersCapacity; i++)
 	{
 		if (g_audioBuffers[i] == NULL)
 		{
 			*pBufferSlot = i;
+			LeaveCriticalSection(&g_csAudioLock);
 			return S_OK;
 		}
 	}
@@ -270,6 +261,7 @@ static HRESULT Audio_AllocBufferSlot(DWORD *pBufferSlot)
 	newBuffersPtr = realloc(g_audioBuffers, newCapacity * sizeof(*newBuffersPtr));
 	if (newBuffersPtr == NULL)
 	{
+		LeaveCriticalSection(&g_csAudioLock);
 		return E_OUTOFMEMORY;
 	}
 	g_audioBuffers = newBuffersPtr;
@@ -279,6 +271,8 @@ static HRESULT Audio_AllocBufferSlot(DWORD *pBufferSlot)
 	}
 	*pBufferSlot = g_audioBuffersCapacity;
 	g_audioBuffersCapacity = newCapacity;
+
+	LeaveCriticalSection(&g_csAudioLock);
 	return S_OK;
 }
 
@@ -302,15 +296,19 @@ HRESULT Audio_CreateSoundBuffer(
 		return DSERR_UNINITIALIZED;
 	}
 
+	EnterCriticalSection(&g_csAudioLock);
+
 	hr = Audio_AllocBufferSlot(&bufferSlot);
 	if (FAILED(hr))
 	{
+		LeaveCriticalSection(&g_csAudioLock);
 		return hr;
 	}
 	hr = IDirectSound8_CreateSoundBuffer(g_audioDevice,
 			pcDSBufferDesc, &tempBuffer, pUnkOuter);
 	if (FAILED(hr))
 	{
+		LeaveCriticalSection(&g_csAudioLock);
 		return hr;
 	}
 	hr = IDirectSoundBuffer_QueryInterface(tempBuffer,
@@ -318,6 +316,7 @@ HRESULT Audio_CreateSoundBuffer(
 	IDirectSoundBuffer_Release(tempBuffer);
 	if (FAILED(hr))
 	{
+		LeaveCriticalSection(&g_csAudioLock);
 		return hr;
 	}
 	IDirectSoundBuffer8_SetVolume(newBuffer, g_masterAttenuation);
@@ -325,6 +324,8 @@ HRESULT Audio_CreateSoundBuffer(
 	IDirectSoundBuffer_AddRef(newBuffer);
 	g_audioBuffers[bufferSlot] = newBuffer;
 	*ppDSBuffer = newBuffer;
+
+	LeaveCriticalSection(&g_csAudioLock);
 	return S_OK;
 }
 
@@ -352,9 +353,12 @@ HRESULT Audio_DuplicateSoundBuffer(
 		return E_INVALIDARG;
 	}
 
+	EnterCriticalSection(&g_csAudioLock);
+
 	hr = Audio_AllocBufferSlot(&bufferSlot);
 	if (FAILED(hr))
 	{
+		LeaveCriticalSection(&g_csAudioLock);
 		return hr;
 	}
 
@@ -362,6 +366,7 @@ HRESULT Audio_DuplicateSoundBuffer(
 			&IID_IDirectSoundBuffer, (LPVOID *)&tempOriginal);
 	if (FAILED(hr))
 	{
+		LeaveCriticalSection(&g_csAudioLock);
 		return E_UNEXPECTED;
 	}
 
@@ -370,6 +375,7 @@ HRESULT Audio_DuplicateSoundBuffer(
 	IDirectSoundBuffer_Release(tempOriginal);
 	if (FAILED(hr))
 	{
+		LeaveCriticalSection(&g_csAudioLock);
 		return hr;
 	}
 
@@ -378,6 +384,7 @@ HRESULT Audio_DuplicateSoundBuffer(
 	IDirectSoundBuffer_Release(tempDuplicate);
 	if (FAILED(hr))
 	{
+		LeaveCriticalSection(&g_csAudioLock);
 		return E_UNEXPECTED;
 	}
 
@@ -398,12 +405,22 @@ HRESULT Audio_DuplicateSoundBuffer(
 	IDirectSoundBuffer8_AddRef(newBuffer);
 	g_audioBuffers[bufferSlot] = newBuffer;
 	*ppDSBufferDuplicate = newBuffer;
+
+	LeaveCriticalSection(&g_csAudioLock);
 	return S_OK;
 }
 
-ULONG Audio_ReleaseSoundBuffer(LPDIRECTSOUNDBUFFER8 pBuffer)
+void Audio_ReleaseSoundBuffer(LPDIRECTSOUNDBUFFER8 pBuffer)
 {
 	DWORD bufferSlot;
+
+	IDirectSoundBuffer8_Release(pBuffer);
+	if (g_audioDevice == NULL)
+	{
+		return;
+	}
+
+	EnterCriticalSection(&g_csAudioLock);
 
 	for (bufferSlot = 0; bufferSlot < g_audioBuffersCapacity; bufferSlot++)
 	{
@@ -414,7 +431,8 @@ ULONG Audio_ReleaseSoundBuffer(LPDIRECTSOUNDBUFFER8 pBuffer)
 			break;
 		}
 	}
-	return IDirectSoundBuffer8_Release(pBuffer);
+
+	LeaveCriticalSection(&g_csAudioLock);
 }
 
 //
@@ -489,7 +507,9 @@ HRESULT Audio_GetMasterVolume(float *pVolume)
 	{
 		return DSERR_UNINITIALIZED;
 	}
+	EnterCriticalSection(&g_csAudioLock);
 	*pVolume = AttenuationToVolume(g_masterAttenuation);
+	LeaveCriticalSection(&g_csAudioLock);
 	return S_OK;
 }
 
@@ -501,6 +521,7 @@ HRESULT Audio_SetMasterVolume(float newVolume)
 	{
 		return DSERR_UNINITIALIZED;
 	}
+	EnterCriticalSection(&g_csAudioLock);
 	g_masterAttenuation = VolumeToAttenuation(newVolume);
 	for (bufferSlot = 0; bufferSlot < g_audioBuffersCapacity; bufferSlot++)
 	{
@@ -509,5 +530,6 @@ HRESULT Audio_SetMasterVolume(float newVolume)
 			IDirectSoundBuffer8_SetVolume(g_audioBuffers[bufferSlot], g_masterAttenuation);
 		}
 	}
+	LeaveCriticalSection(&g_csAudioLock);
 	return S_OK;
 }

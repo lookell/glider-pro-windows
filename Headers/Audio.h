@@ -28,22 +28,21 @@ typedef struct WaveData
 // given buffer, and does not need to be freed separately.
 int ReadWAVFromMemory(const void *buffer, size_t length, WaveData *waveData);
 
-// Initialize the internal IDirectSound8 interface. To retrieve a pointer to
-// this interface, call the Audio_GetDevice function. This function only needs
-// to be called once; any further calls will return S_FALSE and do nothing.
-// Regardless of how many calls are made to this function, there must only be
-// one call to Audio_KillDevice.
+// Initialize the internal audio-management structures.
+//
+// This function must be called only once (at the beginning of the program),
+// and before calling any other Audio_Xxx functions. The behavior is undefined
+// if this rule is not followed. Call Audio_KillDevice when you are finished
+// with the audio interface.
 HRESULT Audio_InitDevice(void);
 
-// Release the internal IDirectSound8 interface. After this function is called,
-// any attempts to use most other audio output functions will fail.
+// Release the internal audio-management structures.
+//
+// This function must be called only once (at the end of the program), and only
+// after a successful call to Audio_InitDevice. No other Audio_Xxx functions
+// should be running while Audio_KillDevice releases structures, or else the
+// behavior is undefined.
 void Audio_KillDevice(void);
-
-// Retrieve a pointer to the IDirectSound8 interface for the audio device.
-// The Release method must be called when you are done using the interface.
-// You must first successfully call Audio_InitDevice before calling this
-// function, or this function will fail.
-HRESULT Audio_GetDevice(LPDIRECTSOUND8 *ppDS8);
 
 // Create a secondary sound buffer that is attached to the audio output device.
 // The parameters are similar to those of IDirectSound8::CreateSoundBuffer,
@@ -87,7 +86,7 @@ HRESULT Audio_DuplicateSoundBuffer(
 
 // Release an IDirectSoundBuffer8 interface pointer previously allocated
 // with Audio_CreateSoundBuffer or Audio_DuplicateSoundBuffer.
-ULONG Audio_ReleaseSoundBuffer(LPDIRECTSOUNDBUFFER8 pBuffer);
+void Audio_ReleaseSoundBuffer(LPDIRECTSOUNDBUFFER8 pBuffer);
 
 // Get the master volume used for buffers created by Audio_CreateSoundBuffer or
 // Audio_DuplicateSoundBuffer. The value ranges between 0.0 (for complete silence)
