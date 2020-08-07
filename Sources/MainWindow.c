@@ -41,6 +41,8 @@ void DrawOnSplash (HDC hdc);
 void SetPaletteToGrays (RGBQUAD *colors, UINT numColors, int saturation,
 	int maxSaturation);
 void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate);
+void MapViewportRectToMain (Rect *theRect);
+void MapMainRectToViewport (Rect *theRect);
 
 
 HCURSOR handCursor;
@@ -378,6 +380,55 @@ void ReleaseMainWindowDC (HDC hdc)
 {
 	if (hdc != NULL)
 		ReleaseDC(mainWindow, hdc);
+}
+
+//--------------------------------------------------------------  MapViewportRectToMain
+
+void MapViewportRectToMain (Rect *theRect)
+{
+	if (theMode == kPlayMode)
+	{
+		VOffsetRect(theRect, kScoreboardTall);
+	}
+	else
+	{
+		; // do nothing
+	}
+}	
+
+//--------------------------------------------------------------  MapMainRectToViewport
+
+void MapMainRectToViewport (Rect *theRect)
+{
+	if (theMode == kPlayMode)
+	{
+		VOffsetRect(theRect, -kScoreboardTall);
+	}
+	else
+	{
+		; // do nothing
+	}
+}
+
+//--------------------------------------------------------------  InvalViewportRect
+
+void InvalViewportRect (const Rect *theRect)
+{
+	Rect dirtyRect;
+	RECT tempRect;
+
+	if (mainWindow == NULL)
+	{
+		return;
+	}
+
+	dirtyRect = *theRect;
+	MapViewportRectToMain(&dirtyRect);
+	tempRect.left = dirtyRect.left;
+	tempRect.top = dirtyRect.top;
+	tempRect.right = dirtyRect.right;
+	tempRect.bottom = dirtyRect.bottom;
+	InvalidateRect(mainWindow, &tempRect, FALSE);
 }
 
 //--------------------------------------------------------------  ShowMenuBarOld

@@ -40,6 +40,7 @@ void UpdateEditWindowTitle (void);
 void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick);
 HDC GetMainWindowDC (void);
 void ReleaseMainWindowDC (HDC hdc);
+void InvalViewportRect (const Rect *theRect);
 //void ShowMenuBarOld (void);
 //void HideMenuBarOld (void);
 void WashColorIn (void);
