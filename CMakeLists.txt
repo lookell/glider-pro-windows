@@ -2,7 +2,7 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
   message(FATAL_ERROR "In-tree builds are not recommended. Create a separate build directory.")
 endif()
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16)
 project(gliderpro)
 
 if(NOT WIN32)
