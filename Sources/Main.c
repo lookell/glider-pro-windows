@@ -282,18 +282,16 @@ void WriteOutPrefs (HWND ownerWindow)
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		LPWSTR lpCmdLine, int nShowCmd)
 {
-//	SInt32		theErr;
-	Boolean		whoCares, audioInitialized;
-	HRESULT		hr;
+	Boolean whoCares;
+	int audioInitialized;
 
 	UNREFERENCED_PARAMETER(hInstance);
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 	UNREFERENCED_PARAMETER(nShowCmd);
 
-	hr = Audio_InitDevice();
-	audioInitialized = SUCCEEDED(hr);
-	if (FAILED(hr))
+	audioInitialized = Audio_InitDevice();
+	if (!audioInitialized)
 	{
 		dontLoadSounds = true;
 		dontLoadMusic = true;
@@ -376,7 +374,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	WriteOutPrefs(NULL);
 	Gp_UnloadBuiltInAssets();
-//	theErr = LoadScrap();
 
 	if (audioInitialized)
 	{

@@ -372,7 +372,7 @@ void UnivGetSoundVolume (SInt16 *volume)
 {
 	float deviceVolume;
 
-	Audio_GetMasterVolume(&deviceVolume);
+	deviceVolume = Audio_GetMasterVolume();
 	*volume = (SInt16)(7.0f * deviceVolume);
 
 	if (*volume > 7)
