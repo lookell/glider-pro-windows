@@ -29,9 +29,12 @@
 void HandleIdleTask (void);
 
 
-DWORD			incrementModeTime;
-Boolean			doAutoDemo, switchedOut, ignoreDoubleClick;
-HACCEL			splashAccelTable, editAccelTable;
+DWORD incrementModeTime;
+Boolean doAutoDemo;
+Boolean switchedOut;
+Boolean ignoreDoubleClick;
+HACCEL splashAccelTable;
+HACCEL editAccelTable;
 
 
 //==============================================================  Functions

@@ -31,16 +31,20 @@ OSErr OpenMusicChannel (void);
 OSErr CloseMusicChannel (void);
 
 
+Boolean isMusicOn;
+Boolean isPlayMusicIdle;
+Boolean isPlayMusicGame;
+Boolean failedMusic;
+Boolean dontLoadMusic;
+
 static AudioChannel *musicChannel;
 static CRITICAL_SECTION musicCriticalSection;
-
-WaveData		theMusicData[kMaxMusic];
-SInt16			musicSoundID, musicCursor;
-SInt16			musicScore[kLastMusicPiece];
-SInt16			gameScore[kLastGamePiece];
-SInt16			musicMode;
-Boolean			isMusicOn, isPlayMusicIdle, isPlayMusicGame;
-Boolean			failedMusic, dontLoadMusic;
+static WaveData theMusicData[kMaxMusic];
+static SInt16 musicSoundID;
+static SInt16 musicCursor;
+static SInt16 musicScore[kLastMusicPiece];
+static SInt16 gameScore[kLastGamePiece];
+static SInt16 musicMode;
 
 
 //==============================================================  Functions

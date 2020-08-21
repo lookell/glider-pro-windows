@@ -57,7 +57,9 @@ void CheckForHotSpots (void);
 void WebGlider (gliderPtr thisGlider, const Rect *webBounds);
 
 
-SInt16		otherPlayerEscaped, activeRectEscaped;
+SInt16 otherPlayerEscaped;
+
+static SInt16 activeRectEscaped;
 
 
 //==============================================================  Functions

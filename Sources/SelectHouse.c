@@ -31,10 +31,15 @@ BOOL GetHouseFolderPath (LPWSTR buffer, DWORD cch);
 void DoDirSearch (HWND ownerWindow);
 
 
-houseSpecPtr	theHousesSpecs;
-houseSpec		extraHouseSpecs[kMaxExtraHouses];
-SInt16			housesFound, thisHouseIndex, maxFiles, willMaxFiles;
-SInt16			demoHouseIndex, numExtraHouses;
+houseSpecPtr theHousesSpecs;
+SInt16 housesFound;
+SInt16 thisHouseIndex;
+SInt16 maxFiles;
+SInt16 willMaxFiles;
+SInt16 demoHouseIndex;
+
+static houseSpec extraHouseSpecs[kMaxExtraHouses];
+static SInt16 numExtraHouses = 0;
 
 
 //==============================================================  Functions

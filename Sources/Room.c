@@ -33,14 +33,23 @@ Boolean QueryDeleteRoom (HWND ownerWindow);
 void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_);
 
 
-roomPtr		thisRoom;
-Rect		backSrcRect;
-HDC			backSrcMap;
-SInt16		numberRooms, thisRoomNumber, previousRoom;
-SInt16		leftThresh, rightThresh, lastBackground;
-Boolean		autoRoomEdit, newRoomNow, noRoomAtAll;
-Boolean		leftOpen, rightOpen, topOpen, bottomOpen;
-Boolean		doBitchDialogs;
+roomPtr thisRoom;
+Rect backSrcRect;
+HDC backSrcMap;
+SInt16 numberRooms;
+SInt16 thisRoomNumber;
+SInt16 previousRoom;
+SInt16 leftThresh;
+SInt16 rightThresh;
+SInt16 lastBackground;
+Boolean autoRoomEdit;
+Boolean newRoomNow;
+Boolean noRoomAtAll;
+Boolean leftOpen;
+Boolean rightOpen;
+Boolean topOpen;
+Boolean bottomOpen;
+Boolean doBitchDialogs;
 
 
 //==============================================================  Functions

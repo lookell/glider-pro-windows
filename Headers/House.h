@@ -15,8 +15,6 @@
 extern houseType thisHouse;
 extern linksPtr linksList;
 extern Str32 thisHouseName;
-extern SInt16 srcLocations[kMaxRoomObs];
-extern SInt16 destLocations[kMaxRoomObs];
 extern SInt16 wasFloor;
 extern SInt16 wasSuite;
 extern retroLink retroLinkList[kMaxRoomObs];

@@ -43,12 +43,15 @@ void AddObjectPairing (void);
 Boolean ObjectIsUpBlower (const objectType *who);
 
 
-Rect		roomObjectRects[kMaxRoomObs];
-Rect		initialGliderRect;
-Rect		leftStartGliderSrc, rightStartGliderSrc;
-Rect		leftStartGliderDest, rightStartGliderDest;
-SInt16		objActive;
-Boolean		isFirstRoom;
+Rect roomObjectRects[kMaxRoomObs];
+Rect leftStartGliderSrc;
+Rect rightStartGliderSrc;
+SInt16 objActive;
+
+static Rect initialGliderRect;
+static Rect leftStartGliderDest;
+static Rect rightStartGliderDest;
+static Boolean isFirstRoom;
 
 
 //==============================================================  Functions

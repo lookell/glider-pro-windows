@@ -34,8 +34,10 @@ void KeepAllObjectsLegal (void);
 void CheckForStaircasePairs (void);
 
 
-SInt16		houseErrors, wasRoom;
-Boolean		isHouseChecks;
+Boolean isHouseChecks;
+
+static SInt16 houseErrors;
+static SInt16 wasRoom;
 
 
 //==============================================================  Functions

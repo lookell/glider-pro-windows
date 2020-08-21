@@ -47,8 +47,9 @@ void ReadInPrefs (HWND ownerWindow);
 void WriteOutPrefs (HWND ownerWindow);
 
 
-SInt16		isVolume, wasVolume;
-Boolean		quitting, quickerTransitions, isUseSecondScreen;
+Boolean quitting;
+Boolean quickerTransitions;
+Boolean isUseSecondScreen;
 
 
 //==============================================================  Functions
@@ -61,6 +62,7 @@ Boolean		quitting, quickerTransitions, isUseSecondScreen;
 void ReadInPrefs (HWND ownerWindow)
 {
 	prefsInfo thePrefs;
+	SInt16 theVolume;
 
 	if (LoadPrefs(ownerWindow, &thePrefs, kPrefsVersion))
 	{
@@ -75,7 +77,7 @@ void ReadInPrefs (HWND ownerWindow)
 		theGlider.rightKey = thePrefs.wasRightMap;
 		theGlider.battKey = thePrefs.wasBattMap;
 		theGlider.bandKey = thePrefs.wasBandMap;
-		isVolume = thePrefs.wasVolume;
+		theVolume = thePrefs.wasVolume;
 		isMusicOn = thePrefs.wasMusicOn;
 		quickerTransitions = thePrefs.wasQuickTrans;
 		isDoColorFade = thePrefs.wasDoColorFade;
@@ -128,12 +130,7 @@ void ReadInPrefs (HWND ownerWindow)
 		theGlider.battKey = VK_DOWN;
 		theGlider.bandKey = VK_UP;
 
-		UnivGetSoundVolume(&isVolume);
-		if (isVolume < 1)
-			isVolume = 1;
-		else if (isVolume > 3)
-			isVolume = 3;
-
+		theVolume = 3;
 		isSoundOn = true;
 		isMusicOn = true;
 		isPlayMusicIdle = true;
@@ -178,10 +175,9 @@ void ReadInPrefs (HWND ownerWindow)
 	if ((numNeighbors > 1) && (thisMac.screen.right <= 512))
 		numNeighbors = 1;
 
-	UnivGetSoundVolume(&wasVolume);
-	UnivSetSoundVolume(isVolume);
+	UnivSetSoundVolume(theVolume);
 
-	if (isVolume == 0)
+	if (theVolume == 0)
 		isSoundOn = false;
 	else
 		isSoundOn = true;
@@ -195,8 +191,9 @@ void ReadInPrefs (HWND ownerWindow)
 void WriteOutPrefs (HWND ownerWindow)
 {
 	prefsInfo thePrefs = { 0 };
+	SInt16 theVolume;
 
-	UnivGetSoundVolume(&isVolume);
+	UnivGetSoundVolume(&theVolume);
 
 #ifdef COMPILEDEMO
 	PasStringCopyC("Demo House", thePrefs.wasDefaultName);
@@ -209,7 +206,7 @@ void WriteOutPrefs (HWND ownerWindow)
 	thePrefs.wasRightMap = theGlider.rightKey;
 	thePrefs.wasBattMap = theGlider.battKey;
 	thePrefs.wasBandMap = theGlider.bandKey;
-	thePrefs.wasVolume = isVolume;
+	thePrefs.wasVolume = theVolume;
 	thePrefs.wasMusicOn = isMusicOn;
 	thePrefs.wasQuickTrans = quickerTransitions;
 	thePrefs.wasDoColorFade = isDoColorFade;
@@ -247,8 +244,6 @@ void WriteOutPrefs (HWND ownerWindow)
 
 	if (!SavePrefs(ownerWindow, &thePrefs, kPrefsVersion))
 		MessageBeep(MB_ICONWARNING);
-
-	UnivSetSoundVolume(wasVolume);
 }
 
 //--------------------------------------------------------------  main

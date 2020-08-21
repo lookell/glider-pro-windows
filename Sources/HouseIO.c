@@ -39,12 +39,17 @@ void OpenHouseMovie (void);
 void CloseHouseMovie (void);
 
 
-Movie		theMovie;
-Rect		movieRect;
-SInt16		wasHouseVersion;
-Boolean		houseOpen, fileDirty, gameDirty;
-Boolean		changeLockStateOfHouse, saveHouseLocked, houseIsReadOnly;
-Boolean		hasMovie, tvInRoom;
+Movie theMovie;
+Rect movieRect;
+SInt16 wasHouseVersion;
+Boolean houseOpen;
+Boolean fileDirty;
+Boolean gameDirty;
+Boolean changeLockStateOfHouse;
+Boolean saveHouseLocked;
+Boolean houseIsReadOnly;
+Boolean hasMovie;
+Boolean tvInRoom;
 
 
 //==============================================================  Functions

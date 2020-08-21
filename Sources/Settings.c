@@ -106,8 +106,7 @@ INT_PTR CALLBACK PrefsFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 void BitchAboutChanges (HWND ownerWindow);
 
 
-Boolean nextRestartChange;
-
+static Boolean nextRestartChange;
 static BYTE tempLeftKey;
 static BYTE tempRightKey;
 static BYTE tempBattKey;

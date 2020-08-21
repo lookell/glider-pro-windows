@@ -32,9 +32,10 @@ void DrawGliderMarquee (HDC hdc);
 void DrawMarquee (HDC hdc);
 
 
-marquee		theMarquee;
-Rect		marqueeGliderRect;
-Boolean		gliderMarqueeUp;
+marquee theMarquee;
+
+static Rect marqueeGliderRect;
+static Boolean gliderMarqueeUp;
 
 
 //==============================================================  Functions

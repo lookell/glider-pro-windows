@@ -28,66 +28,132 @@ SInt16 GetObjectLinked (const objectType *who);
 void ListOneRoomsObjects (SInt16 where);
 
 
-Rect		blowerSrcRect;									// Blowers
-HDC			blowerSrcMap;
-HDC			blowerMaskMap;
-Rect		flame[kNumCandleFlames], tikiFlame[kNumTikiFlames];
-Rect		coals[kNumBBQCoals];
-Rect		furnitureSrcRect;								// Furniture
-HDC			furnitureSrcMap;
-HDC			furnitureMaskMap;
-Rect		tableSrc, shelfSrc, hingeSrc, handleSrc, knobSrc;
-Rect		leftFootSrc, rightFootSrc, deckSrc;
-Rect		bonusSrcRect;									// Bonuses
-HDC			bonusSrcMap;
-HDC			bonusMaskMap;
-Rect		pointsSrcRect;
-HDC			pointsSrcMap;
-HDC			pointsMaskMap;
-Rect		starSrc[6], sparkleSrc[kNumSparkleModes];
-Rect		digits[11], pendulumSrc[3], greaseSrcRt[4], greaseSrcLf[4];
-Rect		transSrcRect;									// Transport
-HDC			transSrcMap;
-HDC			transMaskMap;
-Rect		switchSrcRect;									// Switches
-HDC			switchSrcMap;
-Rect		lightSwitchSrc[2], machineSwitchSrc[2], thermostatSrc[2];
-Rect		powerSrc[2], knifeSwitchSrc[2];
-Rect		lightSrcRect;									// Lights
-HDC			lightSrcMap;
-HDC			lightMaskMap;
-Rect		flourescentSrc1, flourescentSrc2, trackLightSrc[kNumTrackLights];
-Rect		applianceSrcRect, toastSrcRect, shredSrcRect;	// Appliances
-HDC			applianceSrcMap, toastSrcMap, shredSrcMap;
-HDC			applianceMaskMap, toastMaskMap, shredMaskMap;
-Rect		plusScreen1, plusScreen2, tvScreen1, tvScreen2;
-Rect		coffeeLight1, coffeeLight2, vcrTime1, vcrTime2;
-Rect		stereoLight1, stereoLight2, microOn, microOff;
-Rect		outletSrc[kNumOutletPicts];
-Rect		balloonSrcRect, copterSrcRect, dartSrcRect;		// Enemies
-Rect		ballSrcRect, dripSrcRect, enemySrcRect;
-Rect		fishSrcRect;
-HDC			balloonSrcMap, copterSrcMap, dartSrcMap;
-HDC			ballSrcMap, dripSrcMap, enemySrcMap;
-HDC			fishSrcMap;
-HDC			balloonMaskMap, copterMaskMap, dartMaskMap;
-HDC			ballMaskMap, dripMaskMap, enemyMaskMap;
-HDC			fishMaskMap;
-Rect		balloonSrc[kNumBalloonFrames], copterSrc[kNumCopterFrames];
-Rect		dartSrc[kNumDartFrames], ballSrc[kNumBallFrames];
-Rect		dripSrc[kNumDripFrames], fishSrc[kNumFishFrames];
-HDC			clutterSrcMap;									// Clutter
-HDC			clutterMaskMap;
-Rect		clutterSrcRect;
-Rect		flowerSrc[kNumFlowers];
-Rect		srcRects[kNumSrcRects];
-Rect		tempManholes[kMaxTempManholes];
-savedType	savedMaps[kMaxSavedMaps];
-objDataType	masterObjects[kMaxMasterObjects];
-hotObject	hotSpots[kMaxHotSpots];
-SInt16		nLocalObj, nHotSpots, numMasterObjects, numLocalMasterObjects;
-SInt16		numTempManholes, tvWithMovieNumber;
-Boolean		newState;
+// Blowers
+Rect blowerSrcRect;
+HDC blowerSrcMap;
+HDC blowerMaskMap;
+Rect flame[kNumCandleFlames];
+Rect tikiFlame[kNumTikiFlames];
+Rect coals[kNumBBQCoals];
+
+// Furniture
+Rect furnitureSrcRect;
+HDC furnitureSrcMap;
+HDC furnitureMaskMap;
+Rect tableSrc;
+Rect shelfSrc;
+Rect hingeSrc;
+Rect handleSrc;
+Rect knobSrc;
+Rect leftFootSrc;
+Rect rightFootSrc;
+Rect deckSrc;
+
+// Bonuses
+Rect bonusSrcRect;
+HDC bonusSrcMap;
+HDC bonusMaskMap;
+Rect pointsSrcRect;
+HDC pointsSrcMap;
+HDC pointsMaskMap;
+Rect starSrc[6];
+Rect sparkleSrc[kNumSparkleModes];
+Rect digits[11];
+Rect pendulumSrc[3];
+Rect greaseSrcRt[4];
+Rect greaseSrcLf[4];
+
+// Transport
+Rect transSrcRect;
+HDC transSrcMap;
+HDC transMaskMap;
+
+// Switches
+Rect switchSrcRect;
+HDC switchSrcMap;
+Rect lightSwitchSrc[2];
+Rect machineSwitchSrc[2];
+Rect thermostatSrc[2];
+Rect powerSrc[2];
+Rect knifeSwitchSrc[2];
+
+// Lights
+Rect lightSrcRect;
+HDC lightSrcMap;
+HDC lightMaskMap;
+Rect flourescentSrc1;
+Rect flourescentSrc2;
+Rect trackLightSrc[kNumTrackLights];
+
+// Appliances
+Rect applianceSrcRect;
+HDC applianceSrcMap;
+HDC applianceMaskMap;
+Rect toastSrcRect;
+HDC toastSrcMap;
+HDC toastMaskMap;
+Rect shredSrcRect;
+HDC shredSrcMap;
+HDC shredMaskMap;
+Rect plusScreen1;
+Rect plusScreen2;
+Rect tvScreen1;
+Rect tvScreen2;
+Rect coffeeLight1;
+Rect coffeeLight2;
+Rect vcrTime1;
+Rect vcrTime2;
+Rect stereoLight1;
+Rect stereoLight2;
+Rect microOn;
+Rect microOff;
+Rect outletSrc[kNumOutletPicts];
+
+// Enemies
+Rect balloonSrcRect;
+HDC balloonSrcMap;
+HDC balloonMaskMap;
+Rect balloonSrc[kNumBalloonFrames];
+Rect copterSrcRect;
+HDC copterSrcMap;
+HDC copterMaskMap;
+Rect copterSrc[kNumCopterFrames];
+Rect dartSrcRect;
+HDC dartSrcMap;
+HDC dartMaskMap;
+Rect dartSrc[kNumDartFrames];
+Rect ballSrcRect;
+HDC ballSrcMap;
+HDC ballMaskMap;
+Rect ballSrc[kNumBallFrames];
+Rect dripSrcRect;
+HDC dripSrcMap;
+HDC dripMaskMap;
+Rect dripSrc[kNumDripFrames];
+Rect fishSrcRect;
+HDC fishSrcMap;
+HDC fishMaskMap;
+Rect fishSrc[kNumFishFrames];
+Rect enemySrcRect;
+HDC enemySrcMap;
+HDC enemyMaskMap;
+
+// Clutter
+HDC clutterSrcMap;
+HDC clutterMaskMap;
+Rect clutterSrcRect;
+Rect flowerSrc[kNumFlowers];
+
+Rect srcRects[kNumSrcRects];
+Rect tempManholes[kMaxTempManholes];
+savedType savedMaps[kMaxSavedMaps];
+objDataType masterObjects[kMaxMasterObjects];
+hotObject hotSpots[kMaxHotSpots];
+SInt16 nHotSpots;
+SInt16 numMasterObjects;
+SInt16 numTempManholes;
+SInt16 tvWithMovieNumber;
+Boolean newState;
 
 
 //==============================================================  Functions
@@ -287,9 +353,6 @@ void ListOneRoomsObjects (SInt16 where)
 			masterObjects[numMasterObjects].dynaNum = -1;
 
 			numMasterObjects++;
-
-			if (where == kCentralRoom)
-				numLocalMasterObjects++;
 		}
 	}
 }
@@ -301,7 +364,6 @@ void ListAllLocalObjects (void)
 	SInt16		i, n;
 
 	numMasterObjects = 0;
-	numLocalMasterObjects = 0;
 	nHotSpots = 0;
 
 	ListOneRoomsObjects(kCentralRoom);

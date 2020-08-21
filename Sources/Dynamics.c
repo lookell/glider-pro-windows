@@ -37,9 +37,9 @@
 #define kEnemyDropSpeed		8
 
 
-Rect		breadSrc[kNumBreadPicts];
-dynaType	dinahs[kMaxDynamicObs];
-SInt16		numDynamics;
+Rect breadSrc[kNumBreadPicts];
+dynaType dinahs[kMaxDynamicObs];
+SInt16 numDynamics;
 
 
 //==============================================================  Functions

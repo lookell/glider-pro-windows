@@ -27,18 +27,26 @@ void BackUpPendulum (const Rect *src, SInt16 index);
 void BackUpStar (const Rect *src, SInt16 index);
 
 
-sparkleType		sparkles[kMaxSparkles];
-flyingPtType	flyingPoints[kMaxFlyingPts];
-flameType		flames[kMaxCandles];
-flameType		tikiFlames[kMaxTikis];
-flameType		bbqCoals[kMaxCoals];
-pendulumType	pendulums[kMaxPendulums];
-starType		theStars[kMaxStars];
-shredType		shreds[kMaxShredded];
-Rect		pointsSrc[15];
-SInt16		numSparkles, numFlyingPts, numChimes;
-SInt16		numFlames, numSavedMaps, numTikiFlames, numCoals;
-SInt16		numPendulums, clockFrame, numStars, numShredded;
+sparkleType sparkles[kMaxSparkles];
+flyingPtType flyingPoints[kMaxFlyingPts];
+flameType flames[kMaxCandles];
+flameType tikiFlames[kMaxTikis];
+flameType bbqCoals[kMaxCoals];
+pendulumType pendulums[kMaxPendulums];
+starType theStars[kMaxStars];
+shredType shreds[kMaxShredded];
+Rect pointsSrc[15];
+SInt16 numSparkles;
+SInt16 numFlyingPts;
+SInt16 numChimes;
+SInt16 numFlames;
+SInt16 numSavedMaps;
+SInt16 numTikiFlames;
+SInt16 numCoals;
+SInt16 numPendulums;
+SInt16 clockFrame;
+SInt16 numStars;
+SInt16 numShredded;
 
 
 //==============================================================  Functions

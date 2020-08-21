@@ -37,13 +37,18 @@ void RestoreWorkMap (void);
 void DrawLighting (void);
 
 
-Rect		suppSrcRect;
-HDC			suppSrcMap;
-Rect		localRoomsDest[9];
-Rect		houseRect;
-SInt16		numNeighbors, numLights, thisTiles[kNumTiles];
-SInt16		localNumbers[9], thisBackground;
-Boolean		isStructure[9], wardBitSet;
+Rect suppSrcRect;
+HDC suppSrcMap;
+Rect localRoomsDest[9];
+Rect houseRect;
+SInt16 numNeighbors;
+SInt16 numLights;
+SInt16 thisTiles[kNumTiles];
+SInt16 localNumbers[9];
+SInt16 thisBackground;
+Boolean wardBitSet;
+
+static Boolean isStructure[9];
 
 
 //==============================================================  Functions

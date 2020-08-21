@@ -25,10 +25,14 @@
 INT_PTR CALLBACK CoordWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 
-HWND			coordWindow;
-SInt16			isCoordH, isCoordV;
-SInt16			coordH, coordV, coordD;
-Boolean			isCoordOpen;
+HWND coordWindow;
+SInt16 isCoordH;
+SInt16 isCoordV;
+Boolean isCoordOpen;
+
+static SInt16 coordH;
+static SInt16 coordV;
+static SInt16 coordD;
 
 
 //==============================================================  Functions

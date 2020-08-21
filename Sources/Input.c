@@ -45,9 +45,13 @@ void DoHeliumEngaged (gliderPtr thisGlider);
 Boolean QuerySaveGame (HWND ownerWindow);
 
 
-demoType	demoData[2000];
-SInt16		demoIndex, batteryFrame;
-Boolean		isEscPauseKey, paused, batteryWasEngaged;
+demoType demoData[2000];
+SInt16 demoIndex;
+Boolean isEscPauseKey;
+Boolean paused;
+
+static SInt16 batteryFrame;
+static Boolean batteryWasEngaged;
 
 
 //==============================================================  Functions

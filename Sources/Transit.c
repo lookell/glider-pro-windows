@@ -25,8 +25,9 @@
 void HandleRoomVisitation (void);
 
 
-SInt16		linkedToWhat;
-Boolean		takingTheStairs, firstPlayer;
+SInt16 linkedToWhat;
+Boolean takingTheStairs;
+Boolean firstPlayer;
 
 
 //==============================================================  Functions

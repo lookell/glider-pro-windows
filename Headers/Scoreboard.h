@@ -29,12 +29,12 @@ extern Rect boardGDestRect;
 extern HDC boardGSrcMap;
 extern Rect boardPSrcRect;
 extern Rect boardPDestRect;
+extern HDC boardPSrcMap;
 extern Rect boardPQDestRect;
 extern Rect boardGQDestRect;
 extern Rect badgesBlankRects[kNumBadges];
 extern Rect badgesBadgesRects[kNumBadges];
 extern Rect badgesDestRects[kNumBadges];
-extern HDC boardPSrcMap;
 extern SInt16 wasScoreboardMode;
 
 void RefreshScoreboard (SInt16 mode);

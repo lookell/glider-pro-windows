@@ -28,8 +28,8 @@ void DrawBanner (Point *topLeft);
 void DrawBannerMessage (Point topLeft);
 
 
-SInt16		numStarsRemaining;
-Boolean		bannerStarCountOn;
+SInt16 numStarsRemaining;
+Boolean bannerStarCountOn;
 
 
 //==============================================================  Functions

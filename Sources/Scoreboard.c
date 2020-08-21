@@ -29,20 +29,29 @@ void RefreshNumGliders (void);
 void RefreshPoints (void);
 
 
-Rect		boardSrcRect, badgeSrcRect, boardDestRect;
-HDC			boardSrcMap, badgeSrcMap;
-Rect		boardTSrcRect, boardTDestRect;
-HDC			boardTSrcMap;
-Rect		boardGSrcRect, boardGDestRect;
-HDC			boardGSrcMap;
-Rect		boardPSrcRect, boardPDestRect;
-Rect		boardPQDestRect, boardGQDestRect;
-Rect		badgesBlankRects[kNumBadges], badgesBadgesRects[kNumBadges];
-Rect		badgesDestRects[kNumBadges];
-HDC			boardPSrcMap;
-SInt32		displayedScore;
-SInt16		wasScoreboardMode;
-Boolean		doRollScore;
+Rect boardSrcRect;
+Rect badgeSrcRect;
+Rect boardDestRect;
+HDC boardSrcMap;
+HDC badgeSrcMap;
+Rect boardTSrcRect;
+Rect boardTDestRect;
+HDC boardTSrcMap;
+Rect boardGSrcRect;
+Rect boardGDestRect;
+HDC boardGSrcMap;
+Rect boardPSrcRect;
+Rect boardPDestRect;
+HDC boardPSrcMap;
+Rect boardPQDestRect;
+Rect boardGQDestRect;
+Rect badgesBlankRects[kNumBadges];
+Rect badgesBadgesRects[kNumBadges];
+Rect badgesDestRects[kNumBadges];
+SInt16 wasScoreboardMode;
+
+static SInt32 displayedScore;
+static Boolean doRollScore;
 
 
 //==============================================================  Functions

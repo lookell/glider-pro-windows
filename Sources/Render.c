@@ -38,11 +38,13 @@ void RenderShreds (void);
 void CopyRectsQD (void);
 
 
-Rect		work2MainRects[kMaxGarbageRects];
-Rect		back2WorkRects[kMaxGarbageRects];
-HRGN		mirrorRgn;
-SInt16		numWork2Main, numBack2Work;
-Boolean		hasMirror;
+SInt16 numWork2Main;
+SInt16 numBack2Work;
+Boolean hasMirror;
+
+static Rect work2MainRects[kMaxGarbageRects];
+static Rect back2WorkRects[kMaxGarbageRects];
+static HRGN mirrorRgn;
 
 
 //==============================================================  Functions

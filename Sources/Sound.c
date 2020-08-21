@@ -39,12 +39,13 @@ OSErr OpenSoundChannels (void);
 OSErr CloseSoundChannels (void);
 
 
-SoundOutput soundOutputs[kNumSoundChannels];
-SoundOutput triggerSoundOutput;
-WaveData theSoundData[kMaxSounds];
 Boolean dontLoadSounds;
 Boolean isSoundOn;
-Boolean failedSound;
+
+static SoundOutput soundOutputs[kNumSoundChannels];
+static SoundOutput triggerSoundOutput;
+static WaveData theSoundData[kMaxSounds];
+static Boolean failedSound;
 
 
 //==============================================================  Functions

@@ -21,7 +21,7 @@
 #include "Transit.h"
 
 
-SInt16		saidFollow;
+SInt16 saidFollow;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  StartGliderFadingIn

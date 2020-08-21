@@ -49,7 +49,7 @@ SInt16 HowManyDynamicObjects (void);
 void ShoutNoMoreSpecialObjects (HWND ownerWindow);
 
 
-SInt16		wasFlower;
+SInt16 wasFlower;
 
 
 //==============================================================  Functions

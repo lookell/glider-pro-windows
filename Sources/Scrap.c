@@ -24,7 +24,8 @@
 Boolean DropLocationIsTrash (AEDesc *dropLocation);
 
 
-Boolean		hasScrap, scrapIsARoom;
+Boolean hasScrap;
+Boolean scrapIsARoom;
 
 
 //==============================================================  Functions

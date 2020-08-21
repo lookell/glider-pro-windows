@@ -224,7 +224,6 @@ void VariableInit (void)
 	lastHighScore = -1;
 	incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
 	willMaxFiles = maxFiles;
-	numExtraHouses = 0;
 
 	fadeInSequence[0] = 4;	// 4
 	fadeInSequence[1] = 5;
@@ -243,7 +242,6 @@ void VariableInit (void)
 	fadeInSequence[14] = 9;
 	fadeInSequence[15] = 10;
 
-	mirrorRgn = NULL;
 	mainWindow = NULL;
 	mapWindow = NULL;
 	toolsWindow = NULL;

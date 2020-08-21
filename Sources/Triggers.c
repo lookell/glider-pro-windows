@@ -32,7 +32,7 @@ SInt16 FindEmptyTriggerSlot (void);
 void FireTrigger (SInt16 index);
 
 
-trigType	triggers[kMaxTriggers];
+static trigType triggers[kMaxTriggers];
 
 
 //==============================================================  Functions

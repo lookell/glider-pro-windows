@@ -27,10 +27,13 @@ void DoLink (void);
 void DoUnlink (void);
 
 
-HWND			linkWindow;
-SInt16			isLinkH, isLinkV, linkRoom, linkType;
-Byte			linkObject;
-Boolean			isLinkOpen, linkerIsSwitch;
+HWND linkWindow;
+SInt16 isLinkH;
+SInt16 isLinkV;
+SInt16 linkRoom;
+SInt16 linkType;
+Byte linkObject;
+Boolean linkerIsSwitch;
 
 
 //==============================================================  Functions
@@ -302,8 +305,6 @@ void OpenLinkWindow (void)
 		linkRoom = -1;
 		linkObject = 255;
 		UpdateLinkControl();
-
-		isLinkOpen = true;
 	}
 #endif
 }
@@ -316,7 +317,6 @@ void CloseLinkWindow (void)
 		DestroyWindow(linkWindow);
 
 	linkWindow = NULL;
-	isLinkOpen = false;
 }
 
 //--------------------------------------------------------------  DoLink

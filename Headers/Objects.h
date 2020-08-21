@@ -14,6 +14,7 @@
 
 #define kMaxTempManholes        8
 
+// Blowers
 extern Rect blowerSrcRect;
 extern HDC blowerSrcMap;
 extern HDC blowerMaskMap;
@@ -21,6 +22,7 @@ extern Rect flame[kNumCandleFlames];
 extern Rect tikiFlame[kNumTikiFlames];
 extern Rect coals[kNumBBQCoals];
 
+// Furniture
 extern Rect furnitureSrcRect;
 extern HDC furnitureSrcMap;
 extern HDC furnitureMaskMap;
@@ -33,6 +35,7 @@ extern Rect leftFootSrc;
 extern Rect rightFootSrc;
 extern Rect deckSrc;
 
+// Bonuses
 extern Rect bonusSrcRect;
 extern HDC bonusSrcMap;
 extern HDC bonusMaskMap;
@@ -46,10 +49,12 @@ extern Rect pendulumSrc[3];
 extern Rect greaseSrcRt[4];
 extern Rect greaseSrcLf[4];
 
+// Transport
 extern Rect transSrcRect;
 extern HDC transSrcMap;
 extern HDC transMaskMap;
 
+// Switches
 extern Rect switchSrcRect;
 extern HDC switchSrcMap;
 extern Rect lightSwitchSrc[2];
@@ -58,6 +63,7 @@ extern Rect thermostatSrc[2];
 extern Rect powerSrc[2];
 extern Rect knifeSwitchSrc[2];
 
+// Lights
 extern Rect lightSrcRect;
 extern HDC lightSrcMap;
 extern HDC lightMaskMap;
@@ -65,6 +71,7 @@ extern Rect flourescentSrc1;
 extern Rect flourescentSrc2;
 extern Rect trackLightSrc[kNumTrackLights];
 
+// Appliances
 extern Rect applianceSrcRect;
 extern HDC applianceSrcMap;
 extern HDC applianceMaskMap;
@@ -88,6 +95,7 @@ extern Rect microOn;
 extern Rect microOff;
 extern Rect outletSrc[kNumOutletPicts];
 
+// Enemies
 extern Rect balloonSrcRect;
 extern HDC balloonSrcMap;
 extern HDC balloonMaskMap;
@@ -108,18 +116,20 @@ extern Rect dripSrcRect;
 extern HDC dripSrcMap;
 extern HDC dripMaskMap;
 extern Rect dripSrc[kNumDripFrames];
-extern Rect enemySrcRect;
-extern HDC enemySrcMap;
-extern HDC enemyMaskMap;
 extern Rect fishSrcRect;
 extern HDC fishSrcMap;
 extern HDC fishMaskMap;
 extern Rect fishSrc[kNumFishFrames];
+extern Rect enemySrcRect;
+extern HDC enemySrcMap;
+extern HDC enemyMaskMap;
 
+// Clutter
 extern Rect clutterSrcRect;
 extern HDC clutterSrcMap;
 extern HDC clutterMaskMap;
 extern Rect flowerSrc[kNumFlowers];
+
 extern Rect srcRects[kNumSrcRects];
 extern Rect tempManholes[kMaxTempManholes];
 extern savedType savedMaps[kMaxSavedMaps];

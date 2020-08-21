@@ -52,17 +52,22 @@ void MoveGliderShredding (gliderPtr thisGlider);
 void HandleIdleGlider (gliderPtr thisGlider);
 
 
-gliderType	theGlider, theGlider2;
-Rect		shadowSrcRect;
-HDC			shadowSrcMap;
-HDC			shadowMaskMap;
-Rect		shadowSrc[kNumShadowSrcRects];
-Rect		gliderSrc[kNumGliderSrcRects];
-Rect		transRect;
-SInt32		theScore;
-SInt16		fadeInSequence[kLastFadeSequence];
-SInt16		rightClip, leftClip, transRoom;
-Boolean		shadowVisible, onePlayerLeft, playerDead;
+gliderType theGlider;
+gliderType theGlider2;
+Rect shadowSrcRect;
+HDC shadowSrcMap;
+HDC shadowMaskMap;
+Rect shadowSrc[kNumShadowSrcRects];
+Rect gliderSrc[kNumGliderSrcRects];
+Rect transRect;
+SInt32 theScore;
+SInt16 fadeInSequence[kLastFadeSequence];
+SInt16 rightClip;
+SInt16 leftClip;
+SInt16 transRoom;
+Boolean shadowVisible;
+Boolean onePlayerLeft;
+Boolean playerDead;
 
 
 //==============================================================  Functions

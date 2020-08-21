@@ -51,9 +51,17 @@ SInt16 QueryResumeGame (HWND ownerWindow);
 void HeyYourPissingAHighScore (HWND ownerWindow);
 
 
-HMENU		theMenuBar, appleMenu, gameMenu, optionsMenu, houseMenu;
-LPWSTR		appleMenuTitle, gameMenuTitle, optionsMenuTitle, houseMenuTitle;
-Boolean		menusUp, resumedSavedGame;
+HMENU theMenuBar;
+HMENU appleMenu;
+HMENU gameMenu;
+HMENU optionsMenu;
+HMENU houseMenu;
+LPWSTR appleMenuTitle;
+LPWSTR gameMenuTitle;
+LPWSTR optionsMenuTitle;
+LPWSTR houseMenuTitle;
+Boolean menusUp;
+Boolean resumedSavedGame;
 
 
 //==============================================================  Functions

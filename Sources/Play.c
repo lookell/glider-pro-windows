@@ -66,14 +66,27 @@ void InitTelephone (void);
 void HandleTelephone (void);
 
 
-phoneType	thePhone, theChimes;
-Rect		glidSrcRect, justRoomsRect;
-HDC			glidSrcMap, glid2SrcMap;
-HDC			glidMaskMap;
-SInt32		gameFrame;
-SInt16		batteryTotal, bandsTotal, foilTotal, mortals;
-Boolean		playing, evenFrame, twoPlayerGame, showFoil, demoGoing;
-Boolean		playerSuicide, phoneBitSet, tvOn;
+Rect glidSrcRect;
+Rect justRoomsRect;
+HDC glidSrcMap;
+HDC glid2SrcMap;
+HDC glidMaskMap;
+SInt32 gameFrame;
+SInt16 batteryTotal;
+SInt16 bandsTotal;
+SInt16 foilTotal;
+SInt16 mortals;
+Boolean playing;
+Boolean evenFrame;
+Boolean twoPlayerGame;
+Boolean showFoil;
+Boolean demoGoing;
+Boolean playerSuicide;
+Boolean phoneBitSet;
+Boolean tvOn;
+
+static phoneType thePhone;
+static phoneType theChimes;
 
 
 //==============================================================  Functions

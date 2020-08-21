@@ -48,13 +48,22 @@ void HandlePages (void);
 void DrawPages (void);
 
 
-pageType	pages[8];
-Rect		pageSrcRect, pageSrc[kPageFrames], lettersSrc[8], angelSrcRect;
-HRGN		roomRgn;
-HDC			pageSrcMap, gameOverSrcMap, angelSrcMap;
-HDC			pageMaskMap, angelMaskMap;
-SInt16		countDown, stopPages, pagesStuck;
-Boolean		gameOver;
+Rect angelSrcRect;
+HDC angelSrcMap;
+HDC angelMaskMap;
+SInt16 countDown;
+Boolean gameOver;
+
+static pageType pages[8];
+static Rect pageSrcRect;
+static Rect pageSrc[kPageFrames];
+static Rect lettersSrc[8];
+static HRGN roomRgn;
+static HDC pageSrcMap;
+static HDC gameOverSrcMap;
+static HDC pageMaskMap;
+static SInt16 stopPages;
+static SInt16 pagesStuck;
 
 
 //==============================================================  Functions

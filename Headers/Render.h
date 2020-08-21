@@ -11,7 +11,6 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern HRGN mirrorRgn;
 extern SInt16 numWork2Main;
 extern SInt16 numBack2Work;
 extern Boolean hasMirror;

@@ -43,14 +43,15 @@
 INT_PTR CALLBACK GoToFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 
-houseType	thisHouse;
-linksPtr	linksList;
-Str32		thisHouseName;
-SInt16		srcLocations[kMaxRoomObs];
-SInt16		destLocations[kMaxRoomObs];
-SInt16		wasFloor, wasSuite;
-retroLink	retroLinkList[kMaxRoomObs];
-Boolean		houseUnlocked;
+houseType thisHouse;
+linksPtr linksList;
+SInt16 wasFloor, wasSuite;
+retroLink retroLinkList[kMaxRoomObs];
+Boolean houseUnlocked;
+Str32 thisHouseName;
+
+static SInt16 srcLocations[kMaxRoomObs];
+static SInt16 destLocations[kMaxRoomObs];
 
 
 //==============================================================  Functions

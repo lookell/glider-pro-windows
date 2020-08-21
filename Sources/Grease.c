@@ -26,8 +26,8 @@
 void BackupGrease (Rect *src, SInt16 index, Boolean isRight);
 
 
-greaseType	grease[kMaxGrease];
-SInt16		numGrease;
+greaseType grease[kMaxGrease];
+SInt16 numGrease;
 
 
 //==============================================================  Functions

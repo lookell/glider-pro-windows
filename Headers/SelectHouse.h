@@ -17,7 +17,6 @@ extern SInt16 thisHouseIndex;
 extern SInt16 maxFiles;
 extern SInt16 willMaxFiles;
 extern SInt16 demoHouseIndex;
-extern SInt16 numExtraHouses;
 
 void DoLoadHouse (HWND ownerWindow);
 BOOL GetHouseFolderPath (LPWSTR buffer, DWORD cch);

@@ -29,12 +29,14 @@ void CheckBandCollision (SInt16 who);
 void KillBand (SInt16 which);
 
 
-bandType	bands[kMaxRubberBands];
-Rect		bandsSrcRect;
-Rect		bandRects[3];
-HDC			bandsSrcMap;
-HDC			bandsMaskMap;
-SInt16		numBands, bandHitLast;
+bandType bands[kMaxRubberBands];
+Rect bandsSrcRect;
+Rect bandRects[3];
+HDC bandsSrcMap;
+HDC bandsMaskMap;
+SInt16 numBands;
+
+static SInt16 bandHitLast;
 
 
 //==============================================================  Functions

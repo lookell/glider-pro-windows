@@ -32,7 +32,7 @@ BOOL GetSaveFolderPath (LPWSTR lpSavePath, DWORD cchSavePath);
 void SavedGameMismatchError (HWND ownerWindow, ConstStringPtr gameName);
 
 
-gameType	smallGame;
+gameType smallGame;
 
 
 //==============================================================  Functions

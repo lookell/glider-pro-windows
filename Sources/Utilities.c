@@ -20,7 +20,7 @@
 #include "WinAPI.h"
 
 
-UInt32		theSeed;
+static UInt32 theSeed;
 
 
 //==============================================================  Functions
