@@ -12,13 +12,13 @@
 
 #define kPrefsVersion           0x0034
 
-typedef struct
+typedef struct prefsInfo
 {
 	Str32 wasDefaultName;
-	Str15 wasLeftName;
-	Str15 wasRightName;
-	Str15 wasBattName;
-	Str15 wasBandName;
+	Str15 wasLeftName; // TODO: remove on next prefs format change
+	Str15 wasRightName; // TODO: remove on next prefs format change
+	Str15 wasBattName; // TODO: remove on next prefs format change
+	Str15 wasBandName; // TODO: remove on next prefs format change
 	Str15 wasHighName;
 	Str31 wasHighBanner;
 	SInt32 wasLeftMap;
@@ -43,12 +43,12 @@ typedef struct
 	SInt16 isMapLeft;
 	SInt16 isMapTop;
 	SInt16 wasNumNeighbors;
-	SInt16 wasDepthPref;
+	SInt16 wasDepthPref; // TODO: remove on next prefs format change
 	SInt16 wasToolGroup;
-	SInt16 smWarnings;
+	SInt16 smWarnings; // TODO: remove on next prefs format change
 	SInt16 wasFloor;
 	SInt16 wasSuite;
-	Boolean wasZooms;
+	Boolean wasZooms; // TODO: remove on next prefs format change
 	Boolean wasMusicOn;
 	Boolean wasAutoEdit;
 	Boolean wasDoColorFade;
@@ -61,7 +61,7 @@ typedef struct
 	Boolean wasEscPauseKey;
 	Boolean wasDoAutoDemo;
 	Boolean wasScreen2;
-	Boolean wasDoBackground;
+	Boolean wasDoBackground; // TODO: remove on next prefs format change
 	Boolean wasHouseChecks;
 	Boolean wasPrettyMap;
 	Boolean wasBitchDialogs;

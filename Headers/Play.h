@@ -26,7 +26,6 @@ extern Boolean evenFrame;
 extern Boolean twoPlayerGame;
 extern Boolean showFoil;
 extern Boolean demoGoing;
-extern Boolean doBackground;
 extern Boolean playerSuicide;
 extern Boolean phoneBitSet;
 extern Boolean tvOn;

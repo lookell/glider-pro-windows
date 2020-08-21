@@ -48,8 +48,7 @@ void WriteOutPrefs (HWND ownerWindow);
 
 
 SInt16		isVolume, wasVolume;
-SInt16		isDepthPref, numSMWarnings;
-Boolean		quitting, doZooms, quickerTransitions, isUseSecondScreen;
+Boolean		quitting, quickerTransitions, isUseSecondScreen;
 
 
 //==============================================================  Functions
@@ -61,7 +60,7 @@ Boolean		quitting, doZooms, quickerTransitions, isUseSecondScreen;
 
 void ReadInPrefs (HWND ownerWindow)
 {
-	prefsInfo	thePrefs;
+	prefsInfo thePrefs;
 
 	if (LoadPrefs(ownerWindow, &thePrefs, kPrefsVersion))
 	{
@@ -70,10 +69,6 @@ void ReadInPrefs (HWND ownerWindow)
 #else
 		PasStringCopy(thePrefs.wasDefaultName, thisHouseName);
 #endif
-		PasStringCopy(thePrefs.wasLeftName, leftName);
-		PasStringCopy(thePrefs.wasRightName, rightName);
-		PasStringCopy(thePrefs.wasBattName, batteryName);
-		PasStringCopy(thePrefs.wasBandName, bandName);
 		PasStringCopy(thePrefs.wasHighName, highName);
 		PasStringCopy(thePrefs.wasHighBanner, highBanner);
 		theGlider.leftKey = thePrefs.wasLeftMap;
@@ -81,9 +76,7 @@ void ReadInPrefs (HWND ownerWindow)
 		theGlider.battKey = thePrefs.wasBattMap;
 		theGlider.bandKey = thePrefs.wasBandMap;
 		isVolume = thePrefs.wasVolume;
-		isDepthPref = thePrefs.wasDepthPref;
 		isMusicOn = thePrefs.wasMusicOn;
-		doZooms = thePrefs.wasZooms;
 		quickerTransitions = thePrefs.wasQuickTrans;
 		isDoColorFade = thePrefs.wasDoColorFade;
 		isPlayMusicIdle = thePrefs.wasIdleMusic;
@@ -108,7 +101,6 @@ void ReadInPrefs (HWND ownerWindow)
 		mapTopRoom = thePrefs.isMapTop;
 		wasFloor = thePrefs.wasFloor;
 		wasSuite = thePrefs.wasSuite;
-		numSMWarnings = thePrefs.smWarnings;
 		autoRoomEdit = thePrefs.wasAutoEdit;
 		isMapOpen = thePrefs.wasMapOpen;
 		isToolsOpen = thePrefs.wasToolsOpen;
@@ -119,7 +111,6 @@ void ReadInPrefs (HWND ownerWindow)
 		isEscPauseKey = thePrefs.wasEscPauseKey;
 		// TODO: implement support for fullscreen display and monitor selection
 		isUseSecondScreen = false;
-		doBackground = thePrefs.wasDoBackground;
 		doPrettyMap = thePrefs.wasPrettyMap;
 		doBitchDialogs = thePrefs.wasBitchDialogs;
 	}
@@ -130,10 +121,6 @@ void ReadInPrefs (HWND ownerWindow)
 #else
 		PasStringCopyC("Slumberland", thisHouseName);
 #endif
-		PasStringCopyC("lf arrow", leftName);
-		PasStringCopyC("rt arrow", rightName);
-		PasStringCopyC("dn arrow", batteryName);
-		PasStringCopyC("up arrow", bandName);
 		PasStringCopyC("Your Name", highName);
 		PasStringCopyC("Your Message Here", highBanner);
 		theGlider.leftKey = VK_LEFT;
@@ -147,13 +134,11 @@ void ReadInPrefs (HWND ownerWindow)
 		else if (isVolume > 3)
 			isVolume = 3;
 
-		isDepthPref = kSwitchIfNeeded;
 		isSoundOn = true;
 		isMusicOn = true;
 		isPlayMusicIdle = true;
 		isPlayMusicGame = true;
 		isHouseChecks = true;
-		doZooms = true;
 		quickerTransitions = false;
 		numNeighbors = 9;
 		isDoColorFade = true;
@@ -178,7 +163,6 @@ void ReadInPrefs (HWND ownerWindow)
 		mapTopRoom = 50;
 		wasFloor = 0;
 		wasSuite = 0;
-		numSMWarnings = 0;
 		autoRoomEdit = true;
 		isMapOpen = true;
 		isToolsOpen = true;
@@ -187,7 +171,6 @@ void ReadInPrefs (HWND ownerWindow)
 		doAutoDemo = true;
 		isEscPauseKey = false;
 		isUseSecondScreen = false;
-		doBackground = false;
 		doPrettyMap = false;
 		doBitchDialogs = true;
 	}
@@ -211,7 +194,7 @@ void ReadInPrefs (HWND ownerWindow)
 
 void WriteOutPrefs (HWND ownerWindow)
 {
-	prefsInfo	thePrefs;
+	prefsInfo thePrefs = { 0 };
 
 	UnivGetSoundVolume(&isVolume);
 
@@ -220,10 +203,6 @@ void WriteOutPrefs (HWND ownerWindow)
 #else
 	PasStringCopy(thisHouseName, thePrefs.wasDefaultName);
 #endif
-	PasStringCopy(leftName, thePrefs.wasLeftName);
-	PasStringCopy(rightName, thePrefs.wasRightName);
-	PasStringCopy(batteryName, thePrefs.wasBattName);
-	PasStringCopy(bandName, thePrefs.wasBandName);
 	PasStringCopy(highName, thePrefs.wasHighName);
 	PasStringCopy(highBanner, thePrefs.wasHighBanner);
 	thePrefs.wasLeftMap = theGlider.leftKey;
@@ -231,9 +210,7 @@ void WriteOutPrefs (HWND ownerWindow)
 	thePrefs.wasBattMap = theGlider.battKey;
 	thePrefs.wasBandMap = theGlider.bandKey;
 	thePrefs.wasVolume = isVolume;
-	thePrefs.wasDepthPref = isDepthPref;
 	thePrefs.wasMusicOn = isMusicOn;
-	thePrefs.wasZooms = doZooms;
 	thePrefs.wasQuickTrans = quickerTransitions;
 	thePrefs.wasDoColorFade = isDoColorFade;
 	thePrefs.wasIdleMusic = isPlayMusicIdle;
@@ -256,7 +233,6 @@ void WriteOutPrefs (HWND ownerWindow)
 	thePrefs.wasLinkV = isLinkV;
 	thePrefs.wasCoordH = isCoordH;
 	thePrefs.wasCoordV = isCoordV;
-	thePrefs.smWarnings = numSMWarnings;
 	thePrefs.wasAutoEdit = autoRoomEdit;
 	thePrefs.wasMapOpen = isMapOpen;
 	thePrefs.wasToolsOpen = isToolsOpen;
@@ -266,7 +242,6 @@ void WriteOutPrefs (HWND ownerWindow)
 	thePrefs.wasDoAutoDemo = doAutoDemo;
 	thePrefs.wasEscPauseKey = isEscPauseKey;
 	thePrefs.wasScreen2 = isUseSecondScreen;
-	thePrefs.wasDoBackground = doBackground;
 	thePrefs.wasPrettyMap = doPrettyMap;
 	thePrefs.wasBitchDialogs = doBitchDialogs;
 

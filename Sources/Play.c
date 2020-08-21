@@ -73,7 +73,7 @@ HDC			glidMaskMap;
 SInt32		gameFrame;
 SInt16		batteryTotal, bandsTotal, foilTotal, mortals;
 Boolean		playing, evenFrame, twoPlayerGame, showFoil, demoGoing;
-Boolean		doBackground, playerSuicide, phoneBitSet, tvOn;
+Boolean		playerSuicide, phoneBitSet, tvOn;
 
 
 //==============================================================  Functions

@@ -9,9 +9,7 @@
 
 #include "MacTypes.h"
 
-extern SInt16 isDepthPref;
 extern Boolean quitting;
-extern Boolean doZooms;
 extern Boolean quickerTransitions;
 extern Boolean isUseSecondScreen;
 

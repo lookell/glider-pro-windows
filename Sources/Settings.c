@@ -19,7 +19,6 @@
 #include "MainWindow.h"
 #include "Map.h"
 #include "Music.h"
-#include "Play.h"
 #include "Player.h"
 #include "ResourceIDs.h"
 #include "Room.h"
@@ -107,10 +106,12 @@ INT_PTR CALLBACK PrefsFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 void BitchAboutChanges (HWND ownerWindow);
 
 
-Str15		leftName, rightName, batteryName, bandName;
-Boolean		nextRestartChange;
+Boolean nextRestartChange;
 
-static	BYTE		tempLeftKey, tempRightKey, tempBattKey, tempBandKey;
+static BYTE tempLeftKey;
+static BYTE tempRightKey;
+static BYTE tempBattKey;
+static BYTE tempBandKey;
 
 
 //==============================================================  Functions
@@ -122,7 +123,7 @@ void SetBrainsToDefaults (HWND prefDlg)
 	CheckDlgButton(prefDlg, kQuickTransitCheck, BST_CHECKED);
 	CheckDlgButton(prefDlg, kDoZoomsCheck, BST_CHECKED);
 	CheckDlgButton(prefDlg, kDoDemoCheck, BST_CHECKED);
-	CheckDlgButton(prefDlg, kDoBackgroundCheck, BST_UNCHECKED);
+	CheckDlgButton(prefDlg, kDoBackgroundCheck, BST_CHECKED);
 	CheckDlgButton(prefDlg, kDoErrorCheck, BST_CHECKED);
 	CheckDlgButton(prefDlg, kDoPrettyMapCheck, BST_CHECKED);
 	CheckDlgButton(prefDlg, kDoBitchDlgsCheck, BST_CHECKED);
@@ -134,9 +135,9 @@ void BrainsInit (HWND prefDlg)
 {
 	SetDlgItemInt(prefDlg, kMaxFilesItem, willMaxFiles, FALSE);
 	CheckDlgButton(prefDlg, kQuickTransitCheck, (quickerTransitions != 0));
-	CheckDlgButton(prefDlg, kDoZoomsCheck, (doZooms != 0));
+	CheckDlgButton(prefDlg, kDoZoomsCheck, BST_CHECKED);
 	CheckDlgButton(prefDlg, kDoDemoCheck, (doAutoDemo != 0));
-	CheckDlgButton(prefDlg, kDoBackgroundCheck, (doBackground != 0));
+	CheckDlgButton(prefDlg, kDoBackgroundCheck, BST_CHECKED);
 	CheckDlgButton(prefDlg, kDoErrorCheck, (isHouseChecks != 0));
 	CheckDlgButton(prefDlg, kDoPrettyMapCheck, (doPrettyMap != 0));
 	CheckDlgButton(prefDlg, kDoBitchDlgsCheck, (doBitchDialogs != 0));
@@ -159,9 +160,7 @@ void BrainsApply (HWND prefDlg)
 	if (willMaxFiles != wasMaxFiles)
 		nextRestartChange = true;
 	quickerTransitions = (IsDlgButtonChecked(prefDlg, kQuickTransitCheck) != 0);
-	doZooms = (IsDlgButtonChecked(prefDlg, kDoZoomsCheck) != 0);
 	doAutoDemo = (IsDlgButtonChecked(prefDlg, kDoDemoCheck) != 0);
-	doBackground = (IsDlgButtonChecked(prefDlg, kDoBackgroundCheck) != 0);
 	isHouseChecks = (IsDlgButtonChecked(prefDlg, kDoErrorCheck) != 0);
 	doPrettyMap = (IsDlgButtonChecked(prefDlg, kDoPrettyMapCheck) != 0);
 	doBitchDialogs = (IsDlgButtonChecked(prefDlg, kDoBitchDlgsCheck) != 0);
@@ -726,14 +725,7 @@ void DisplayInit (HWND hDlg)
 	else
 		CheckRadioButton(hDlg, kDisplay1Item, kDisplay9Item, kDisplay9Item);
 
-	if (isDepthPref == kSwitchIfNeeded)
-		CheckRadioButton(hDlg, kCurrentDepth, k16Depth, kCurrentDepth);
-	else if (isDepthPref == kSwitchTo256Colors)
-		CheckRadioButton(hDlg, kCurrentDepth, k16Depth, k256Depth);
-	else if (isDepthPref == kSwitchTo16Grays)
-		CheckRadioButton(hDlg, kCurrentDepth, k16Depth, k16Depth);
-	else
-		CheckRadioButton(hDlg, kCurrentDepth, k16Depth, kCurrentDepth);
+	CheckRadioButton(hDlg, kCurrentDepth, k16Depth, kCurrentDepth);
 
 	if (isDoColorFade)
 		CheckDlgButton(hDlg, kDoColorFadeItem, BST_CHECKED);
@@ -762,15 +754,6 @@ void DisplayApply (HWND hDlg)
 		numNeighbors = 9;
 	else
 		numNeighbors = 9;
-
-	if (IsDlgButtonChecked(hDlg, kCurrentDepth))
-		isDepthPref = kSwitchIfNeeded;
-	else if (IsDlgButtonChecked(hDlg, k256Depth))
-		isDepthPref = kSwitchTo256Colors;
-	else if (IsDlgButtonChecked(hDlg, k16Depth))
-		isDepthPref = kSwitchTo16Grays;
-	else
-		isDepthPref = kSwitchIfNeeded;
 
 	isDoColorFade = (IsDlgButtonChecked(hDlg, kDoColorFadeItem) != 0);
 
@@ -848,17 +831,11 @@ void SetAllDefaults (HWND ownerWindow)
 	OSErr		theErr;
 								// Default brain settings
 	willMaxFiles = 48;
-	doZooms = true;
 	doAutoDemo = true;
-	doBackground = false;
 	isHouseChecks = true;
 	doPrettyMap = true;
 	doBitchDialogs = true;
 								// Default control settings
-	PasStringCopyC("lf arrow", leftName);
-	PasStringCopyC("rt arrow", rightName);
-	PasStringCopyC("dn arrow", batteryName);
-	PasStringCopyC("up arrow", bandName);
 	theGlider.leftKey = VK_LEFT;
 	theGlider.rightKey = VK_RIGHT;
 	theGlider.battKey = VK_DOWN;
@@ -881,7 +858,6 @@ void SetAllDefaults (HWND ownerWindow)
 								// Default display settings
 	numNeighbors = 9;
 	quickerTransitions = false;
-	isDepthPref = kSwitchIfNeeded;
 	isDoColorFade = true;
 }
 
