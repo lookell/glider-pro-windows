@@ -19,7 +19,5 @@ OSErr LoadTriggerSound (SInt16 soundID);
 void DumpTriggerSound (void);
 void InitSound (HWND ownerWindow);
 void KillSound (void);
-SInt32 SoundBytesNeeded (void);
-void TellHerNoSounds (HWND ownerWindow);
 
 #endif

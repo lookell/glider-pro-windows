@@ -83,20 +83,6 @@ Gp_ImageExistsInZip (mz_zip_archive *archive, SInt16 imageID)
 	return (mz_zip_reader_locate_file(archive, filename, NULL, 0) >= 0);
 }
 
-//--------------------------------------------------------------  Gp_ImageSizeInZip
-
-static uint64_t
-Gp_ImageSizeInZip (mz_zip_archive *archive, SInt16 imageID)
-{
-	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
-
-	if (FAILED(Gp_GetImageFilename(filename, ARRAYSIZE(filename), imageID)))
-	{
-		return 0;
-	}
-	return Gp_FileSizeInZip(archive, filename);
-}
-
 //--------------------------------------------------------------  Gp_LoadImageFromZip
 
 static HRESULT
@@ -195,20 +181,6 @@ Gp_SoundExistsInZip (mz_zip_archive *archive, SInt16 soundID)
 		return FALSE;
 	}
 	return (mz_zip_reader_locate_file(archive, filename, NULL, 0) >= 0);
-}
-
-//--------------------------------------------------------------  Gp_ImageSizeInZip
-
-static uint64_t
-Gp_SoundSizeInZip (mz_zip_archive *archive, SInt16 soundID)
-{
-	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
-
-	if (FAILED(Gp_GetSoundFilename(filename, ARRAYSIZE(filename), soundID)))
-	{
-		return 0;
-	}
-	return Gp_FileSizeInZip(archive, filename);
 }
 
 //--------------------------------------------------------------  Gp_LoadSoundFromZip
@@ -730,17 +702,6 @@ BOOLEAN Gp_BuiltInImageExists (SInt16 imageID)
 	return Gp_ImageExistsInZip(&g_mermaidArchive, imageID);
 }
 
-//--------------------------------------------------------------  Gp_BuiltInImageSize
-
-uint64_t Gp_BuiltInImageSize (SInt16 imageID)
-{
-	if (!Gp_BuiltInAssetsLoaded())
-	{
-		return 0;
-	}
-	return Gp_ImageSizeInZip(&g_mermaidArchive, imageID);
-}
-
 //--------------------------------------------------------------  Gp_LoadBuiltInImage
 
 HRESULT Gp_LoadBuiltInImage (SInt16 imageID, HBITMAP *image)
@@ -797,17 +758,6 @@ BOOLEAN Gp_BuiltInSoundExists (SInt16 soundID)
 	return Gp_SoundExistsInZip(&g_mermaidArchive, soundID);
 }
 
-//--------------------------------------------------------------  Gp_BuiltInSoundSize
-
-uint64_t Gp_BuiltInSoundSize (SInt16 soundID)
-{
-	if (!Gp_BuiltInAssetsLoaded())
-	{
-		return 0;
-	}
-	return Gp_SoundSizeInZip(&g_mermaidArchive, soundID);
-}
-
 //--------------------------------------------------------------  Gp_LoadBuiltInSound
 
 HRESULT Gp_LoadBuiltInSound (SInt16 soundID, WaveData *sound)
@@ -847,17 +797,6 @@ BOOLEAN Gp_HouseImageExists (SInt16 imageID)
 		return FALSE;
 	}
 	return Gp_ImageExistsInZip(&g_houseArchive, imageID);
-}
-
-//--------------------------------------------------------------  Gp_HouseImageSize
-
-uint64_t Gp_HouseImageSize (SInt16 imageID)
-{
-	if (!Gp_HouseFileLoaded())
-	{
-		return 0;
-	}
-	return Gp_ImageSizeInZip(&g_houseArchive, imageID);
 }
 
 //--------------------------------------------------------------  Gp_LoadHouseImage
@@ -914,17 +853,6 @@ BOOLEAN Gp_HouseSoundExists (SInt16 soundID)
 		return FALSE;
 	}
 	return Gp_SoundExistsInZip(&g_houseArchive, soundID);
-}
-
-//--------------------------------------------------------------  Gp_HouseSoundSize
-
-uint64_t Gp_HouseSoundSize (SInt16 soundID)
-{
-	if (!Gp_HouseFileLoaded())
-	{
-		return 0;
-	}
-	return Gp_SoundSizeInZip(&g_houseArchive, soundID);
 }
 
 //--------------------------------------------------------------  Gp_LoadHouseSound

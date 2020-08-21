@@ -8,9 +8,7 @@
 
 
 #include "Audio.h"
-#include "DialogUtils.h"
 #include "HouseIO.h"
-#include "MacTypes.h"
 #include "ResourceIDs.h"
 #include "ResourceLoader.h"
 
@@ -341,31 +339,5 @@ void KillSound (void)
 
 	DumpBufferSounds();
 	CloseSoundChannels();
-}
-
-//--------------------------------------------------------------  SoundBytesNeeded
-
-SInt32 SoundBytesNeeded (void)
-{
-	SInt32 totalBytes;
-	SInt16 i;
-
-	totalBytes = 0;
-	for (i = 0; i < kMaxSounds - 1; i++)
-	{
-		if (!Gp_BuiltInSoundExists(i + kBaseBufferSoundID))
-		{
-			return -1;
-		}
-		totalBytes += (SInt32)Gp_BuiltInSoundSize(i + kBaseBufferSoundID);
-	}
-	return totalBytes;
-}
-
-//--------------------------------------------------------------  TellHerNoSounds
-
-void TellHerNoSounds (HWND ownerWindow)
-{
-	Alert(kNoMemForSoundsAlert, ownerWindow, NULL);
 }
 

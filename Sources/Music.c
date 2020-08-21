@@ -8,14 +8,13 @@
 
 
 #include "Audio.h"
-#include "DialogUtils.h"
 #include "GliderDefines.h"
 #include "HouseIO.h"
-#include "MacTypes.h"
 #include "ResourceIDs.h"
 #include "ResourceLoader.h"
 #include "Sound.h"
 #include "Utilities.h"
+#include "WinAPI.h"
 
 
 #define kBaseBufferMusicID      2000
@@ -379,31 +378,5 @@ void KillMusic (void)
 	DumpMusicSounds();
 	CloseMusicChannel();
 	DeleteCriticalSection(&musicCriticalSection);
-}
-
-//--------------------------------------------------------------  MusicBytesNeeded
-
-SInt32 MusicBytesNeeded (void)
-{
-	SInt32 totalBytes;
-	SInt16 i;
-
-	totalBytes = 0;
-	for (i = 0; i < kMaxMusic; i++)
-	{
-		if (!Gp_BuiltInSoundExists(i + kBaseBufferMusicID))
-		{
-			return -1;
-		}
-		totalBytes += (SInt32)Gp_BuiltInSoundSize(i + kBaseBufferMusicID);
-	}
-	return totalBytes;
-}
-
-//--------------------------------------------------------------  TellHerNoMusic
-
-void TellHerNoMusic (HWND ownerWindow)
-{
-	Alert(kNoMemForMusicAlert, ownerWindow, NULL);
 }
 

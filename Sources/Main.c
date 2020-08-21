@@ -275,7 +275,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	ReadInPrefs(NULL);
 
 	VariableInit();						SpinCursor(2);
-	CheckMemorySize(NULL);
 	GetExtraCursors();					SpinCursor(2);
 	InitMarquee();
 	CreatePointers();					SpinCursor(2);

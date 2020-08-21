@@ -107,9 +107,6 @@ HRESULT Gp_EnumBuiltInImages (Gp_EnumResProc enumProc, void *userData);
 // Return whether the built-in assets contain an image with the given ID.
 BOOLEAN Gp_BuiltInImageExists (SInt16 imageID);
 
-// Return the uncompressed size of the built-in image file, in bytes.
-uint64_t Gp_BuiltInImageSize (SInt16 imageID);
-
 // Load an image from the built-in assets. If the image does not
 // exist in the built-in assets or the built-in assets have not been
 // loaded yet, the function will fail.
@@ -132,9 +129,6 @@ HRESULT Gp_EnumBuiltInSounds (Gp_EnumResProc enumProc, void *userData);
 // Return whether the built-in assets contain a sound with the given ID.
 BOOLEAN Gp_BuiltInSoundExists (SInt16 soundID);
 
-// Return the uncompressed size of the built-in sound file, in bytes.
-uint64_t Gp_BuiltInSoundSize (SInt16 soundID);
-
 // Load a sound from the built-in assets. If the sound does not
 // exist in the built-in assets or the built-in assets have not been
 // loaded yet, the function will fail.
@@ -149,9 +143,6 @@ HRESULT Gp_EnumHouseImages (Gp_EnumResProc enumProc, void *userData);
 
 // Return whether the house file contains an image with the given ID.
 BOOLEAN Gp_HouseImageExists (SInt16 imageID);
-
-// Return the uncompressed size of the house's image file, in bytes.
-uint64_t Gp_HouseImageSize (SInt16 imageID);
 
 // Load an image from the house file. If the image does not exist in the
 // house file or there is no house file loaded, the function will fail.
@@ -173,9 +164,6 @@ HRESULT Gp_EnumHouseSounds (Gp_EnumResProc enumProc, void *userData);
 
 // Return whether the house file contains a sound with the given ID.
 BOOLEAN Gp_HouseSoundExists (SInt16 soundID);
-
-// Return the uncompressed size of the house's sound file, in bytes.
-uint64_t Gp_HouseSoundSize (SInt16 soundID);
 
 // Load a sound from the house file. If the sound does not exist in
 // the built-in assets or the built-in assets have not been loaded yet,

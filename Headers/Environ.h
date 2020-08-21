@@ -8,7 +8,6 @@
 //============================================================================
 
 #include "MacTypes.h"
-#include "WinAPI.h"
 
 typedef struct macEnviron
 {
@@ -21,6 +20,5 @@ typedef struct macEnviron
 extern macEnviron thisMac;
 
 void CheckOurEnvirons (void);
-void CheckMemorySize (HWND ownerWindow);
 
 #endif
