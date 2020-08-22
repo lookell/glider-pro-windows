@@ -73,10 +73,14 @@ void ReadInPrefs (HWND ownerWindow)
 #endif
 		PasStringCopy(thePrefs.wasHighName, highName);
 		PasStringCopy(thePrefs.wasHighBanner, highBanner);
-		theGlider.leftKey = thePrefs.wasLeftMap;
-		theGlider.rightKey = thePrefs.wasRightMap;
-		theGlider.battKey = thePrefs.wasBattMap;
-		theGlider.bandKey = thePrefs.wasBandMap;
+		theGlider.leftKey = thePrefs.wasLeftKeyOne;
+		theGlider.rightKey = thePrefs.wasRightKeyOne;
+		theGlider.battKey = thePrefs.wasBattKeyOne;
+		theGlider.bandKey = thePrefs.wasBandKeyOne;
+		theGlider2.leftKey = thePrefs.wasLeftKeyTwo;
+		theGlider2.rightKey = thePrefs.wasRightKeyTwo;
+		theGlider2.battKey = thePrefs.wasBattKeyTwo;
+		theGlider2.bandKey = thePrefs.wasBandKeyTwo;
 		theVolume = thePrefs.wasVolume;
 		isMusicOn = thePrefs.wasMusicOn;
 		quickerTransitions = thePrefs.wasQuickTrans;
@@ -129,7 +133,10 @@ void ReadInPrefs (HWND ownerWindow)
 		theGlider.rightKey = VK_RIGHT;
 		theGlider.battKey = VK_DOWN;
 		theGlider.bandKey = VK_UP;
-
+		theGlider2.leftKey = 'A';
+		theGlider2.rightKey = 'D';
+		theGlider2.battKey = 'S';
+		theGlider2.bandKey = 'W';
 		theVolume = 3;
 		isSoundOn = true;
 		isMusicOn = true;
@@ -177,10 +184,7 @@ void ReadInPrefs (HWND ownerWindow)
 
 	UnivSetSoundVolume(theVolume);
 
-	if (theVolume == 0)
-		isSoundOn = false;
-	else
-		isSoundOn = true;
+	isSoundOn = (theVolume != 0);
 }
 
 //--------------------------------------------------------------  WriteOutPrefs
@@ -202,10 +206,14 @@ void WriteOutPrefs (HWND ownerWindow)
 #endif
 	PasStringCopy(highName, thePrefs.wasHighName);
 	PasStringCopy(highBanner, thePrefs.wasHighBanner);
-	thePrefs.wasLeftMap = theGlider.leftKey;
-	thePrefs.wasRightMap = theGlider.rightKey;
-	thePrefs.wasBattMap = theGlider.battKey;
-	thePrefs.wasBandMap = theGlider.bandKey;
+	thePrefs.wasLeftKeyOne = theGlider.leftKey;
+	thePrefs.wasRightKeyOne = theGlider.rightKey;
+	thePrefs.wasBattKeyOne = theGlider.battKey;
+	thePrefs.wasBandKeyOne = theGlider.bandKey;
+	thePrefs.wasLeftKeyTwo = theGlider2.leftKey;
+	thePrefs.wasRightKeyTwo = theGlider2.rightKey;
+	thePrefs.wasBattKeyTwo = theGlider2.battKey;
+	thePrefs.wasBandKeyTwo = theGlider2.bandKey;
 	thePrefs.wasVolume = theVolume;
 	thePrefs.wasMusicOn = isMusicOn;
 	thePrefs.wasQuickTrans = quickerTransitions;

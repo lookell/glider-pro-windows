@@ -10,21 +10,22 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-#define kPrefsVersion           0x0034
+#define kPrefsVersion           0x0035
 
 typedef struct prefsInfo
 {
 	Str32 wasDefaultName;
-	Str15 wasLeftName; // TODO: remove on next prefs format change
-	Str15 wasRightName; // TODO: remove on next prefs format change
-	Str15 wasBattName; // TODO: remove on next prefs format change
-	Str15 wasBandName; // TODO: remove on next prefs format change
+	Byte unusedBytes[48];
 	Str15 wasHighName;
 	Str31 wasHighBanner;
-	SInt32 wasLeftMap;
-	SInt32 wasRightMap;
-	SInt32 wasBattMap;
-	SInt32 wasBandMap;
+	SInt32 wasLeftKeyOne;
+	SInt32 wasRightKeyOne;
+	SInt32 wasBattKeyOne;
+	SInt32 wasBandKeyOne;
+	SInt32 wasLeftKeyTwo;
+	SInt32 wasRightKeyTwo;
+	SInt32 wasBattKeyTwo;
+	SInt32 wasBandKeyTwo;
 	SInt16 wasVolume;
 	SInt16 prefVersion;
 	SInt16 wasMaxFiles;
@@ -43,12 +44,9 @@ typedef struct prefsInfo
 	SInt16 isMapLeft;
 	SInt16 isMapTop;
 	SInt16 wasNumNeighbors;
-	SInt16 wasDepthPref; // TODO: remove on next prefs format change
 	SInt16 wasToolGroup;
-	SInt16 smWarnings; // TODO: remove on next prefs format change
 	SInt16 wasFloor;
 	SInt16 wasSuite;
-	Boolean wasZooms; // TODO: remove on next prefs format change
 	Boolean wasMusicOn;
 	Boolean wasAutoEdit;
 	Boolean wasDoColorFade;
@@ -61,7 +59,6 @@ typedef struct prefsInfo
 	Boolean wasEscPauseKey;
 	Boolean wasDoAutoDemo;
 	Boolean wasScreen2;
-	Boolean wasDoBackground; // TODO: remove on next prefs format change
 	Boolean wasHouseChecks;
 	Boolean wasPrettyMap;
 	Boolean wasBitchDialogs;

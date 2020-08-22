@@ -1,33 +1,40 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kRightControl           1005
-#define kLeftControl            1006
-#define kBattControl            1007
-#define kBandControl            1008
-#define kControlDefaults        1013
-#define kESCPausesRadio         1014
-#define kTABPausesRadio         1015
+#define kLeftControlOne         1001
+#define kRightControlOne        1002
+#define kBattControlOne         1003
+#define kBandControlOne         1004
+#define kLeftControlTwo         1005
+#define kRightControlTwo        1006
+#define kBattControlTwo         1007
+#define kBandControlTwo         1008
+#define kControlDefaults        1009
+#define kESCPausesRadio         1010
+#define kTABPausesRadio         1011
 
-// TODO: add a feature to configure the key bindings for player 2,
-// instead of hard-coding 'W', 'A', 'S', and 'D' as the key bindings.
-
-kControlPrefsDialID DIALOGEX 0, 0, 206, 106
+kControlPrefsDialID DIALOGEX 0, 0, 225, 112
 CAPTION "Control Preferences"
 FONT 8, "MS Shell Dlg"
 STYLE DS_MODALFRAME | DS_SHELLFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
 {
-    ICON kLeftControlIcon, IDC_STATIC, 19, 7, 21, 20, WS_GROUP
-    ICON kRightControlIcon, IDC_STATIC, 68, 7, 21, 20
-    ICON kBattControlIcon, IDC_STATIC, 117, 7, 21, 20
-    ICON kBandControlIcon, IDC_STATIC, 166, 7, 21, 20
-    CONTROL "", kLeftControl, HOTKEY_CLASS, WS_TABSTOP | WS_GROUP, 7, 31, 45, 12
-    CONTROL "", kRightControl, HOTKEY_CLASS, WS_TABSTOP, 56, 31, 45, 12
-    CONTROL "", kBattControl, HOTKEY_CLASS, WS_TABSTOP, 105, 31, 45, 12
-    CONTROL "", kBandControl, HOTKEY_CLASS, WS_TABSTOP, 154, 31, 45, 12
-    AUTORADIOBUTTON "Esc Pauses Game", kESCPausesRadio, 7, 49, 192, 10, WS_GROUP | WS_TABSTOP
-    AUTORADIOBUTTON "Tab Pauses Game", kTABPausesRadio, 7, 61, 192, 10
-    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ | WS_GROUP, 7, 77, 192, 1
-    PUSHBUTTON "&Defaults", kControlDefaults, 7, 85, 50, 14, WS_GROUP
-    DEFPUSHBUTTON "OK", IDOK, 95, 85, 50, 14
-    PUSHBUTTON "Cancel", IDCANCEL, 149, 85, 50, 14
+    ICON kLeftControlIcon, IDC_STATIC, 38, 7, 21, 20, WS_GROUP
+    ICON kRightControlIcon, IDC_STATIC, 87, 7, 21, 20
+    ICON kBattControlIcon, IDC_STATIC, 136, 7, 21, 20
+    ICON kBandControlIcon, IDC_STATIC, 185, 7, 21, 20
+    LTEXT "#1", IDC_STATIC, 7, 33, 12, 8, WS_GROUP | SS_NOPREFIX
+    CONTROL "", kLeftControlOne, HOTKEY_CLASS, WS_TABSTOP | WS_GROUP, 26, 31, 45, 12
+    CONTROL "", kRightControlOne, HOTKEY_CLASS, WS_TABSTOP, 75, 31, 45, 12
+    CONTROL "", kBattControlOne, HOTKEY_CLASS, WS_TABSTOP, 124, 31, 45, 12
+    CONTROL "", kBandControlOne, HOTKEY_CLASS, WS_TABSTOP, 173, 31, 45, 12
+    LTEXT "#2", IDC_STATIC, 7, 49, 12, 8, WS_GROUP | SS_NOPREFIX
+    CONTROL "", kLeftControlTwo, HOTKEY_CLASS, WS_TABSTOP | WS_GROUP, 26, 47, 45, 12
+    CONTROL "", kRightControlTwo, HOTKEY_CLASS, WS_TABSTOP, 75, 47, 45, 12
+    CONTROL "", kBattControlTwo, HOTKEY_CLASS, WS_TABSTOP, 124, 47, 45, 12
+    CONTROL "", kBandControlTwo, HOTKEY_CLASS, WS_TABSTOP, 173, 47, 45, 12
+    AUTORADIOBUTTON "Esc Pauses Game", kESCPausesRadio, 7, 66, 102, 10, WS_GROUP | WS_TABSTOP
+    AUTORADIOBUTTON "Tab Pauses Game", kTABPausesRadio, 116, 66, 102, 10
+    CONTROL "", IDC_STATIC, STATIC, SS_ETCHEDHORZ | WS_GROUP, 7, 83, 211, 1
+    PUSHBUTTON "&Defaults", kControlDefaults, 7, 91, 50, 14, WS_GROUP
+    DEFPUSHBUTTON "OK", IDOK, 114, 91, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 168, 91, 50, 14
 }

@@ -128,16 +128,17 @@ static int WriteFSSpec(byteio *writer, const FSSpec *data)
 int ReadPrefsInfo(byteio *reader, prefsInfo *data)
 {
 	FORWARD_FALSE(ReadStr32(reader, &data->wasDefaultName));
-	FORWARD_FALSE(ReadStr15(reader, &data->wasLeftName));
-	FORWARD_FALSE(ReadStr15(reader, &data->wasRightName));
-	FORWARD_FALSE(ReadStr15(reader, &data->wasBattName));
-	FORWARD_FALSE(ReadStr15(reader, &data->wasBandName));
+	FORWARD_FALSE(byteio_read(reader, &data->unusedBytes, sizeof(data->unusedBytes)));
 	FORWARD_FALSE(ReadStr15(reader, &data->wasHighName));
 	FORWARD_FALSE(ReadStr31(reader, &data->wasHighBanner));
-	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasLeftMap));
-	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasRightMap));
-	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasBattMap));
-	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasBandMap));
+	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasLeftKeyOne));
+	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasRightKeyOne));
+	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasBattKeyOne));
+	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasBandKeyOne));
+	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasLeftKeyTwo));
+	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasRightKeyTwo));
+	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasBattKeyTwo));
+	FORWARD_FALSE(byteio_read_be_i32(reader, &data->wasBandKeyTwo));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->wasVolume));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->prefVersion));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->wasMaxFiles));
@@ -156,12 +157,9 @@ int ReadPrefsInfo(byteio *reader, prefsInfo *data)
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->isMapLeft));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->isMapTop));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->wasNumNeighbors));
-	FORWARD_FALSE(byteio_read_be_i16(reader, &data->wasDepthPref));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->wasToolGroup));
-	FORWARD_FALSE(byteio_read_be_i16(reader, &data->smWarnings));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->wasFloor));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->wasSuite));
-	FORWARD_FALSE(byteio_read_be_u8(reader, &data->wasZooms));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->wasMusicOn));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->wasAutoEdit));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->wasDoColorFade));
@@ -174,7 +172,6 @@ int ReadPrefsInfo(byteio *reader, prefsInfo *data)
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->wasEscPauseKey));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->wasDoAutoDemo));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->wasScreen2));
-	FORWARD_FALSE(byteio_read_be_u8(reader, &data->wasDoBackground));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->wasHouseChecks));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->wasPrettyMap));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->wasBitchDialogs));
@@ -184,16 +181,17 @@ int ReadPrefsInfo(byteio *reader, prefsInfo *data)
 int WritePrefsInfo(byteio *writer, const prefsInfo *data)
 {
 	FORWARD_FALSE(WriteStr32(writer, &data->wasDefaultName));
-	FORWARD_FALSE(WriteStr15(writer, &data->wasLeftName));
-	FORWARD_FALSE(WriteStr15(writer, &data->wasRightName));
-	FORWARD_FALSE(WriteStr15(writer, &data->wasBattName));
-	FORWARD_FALSE(WriteStr15(writer, &data->wasBandName));
+	FORWARD_FALSE(byteio_write(writer, &data->unusedBytes, sizeof(data->unusedBytes)));
 	FORWARD_FALSE(WriteStr15(writer, &data->wasHighName));
 	FORWARD_FALSE(WriteStr31(writer, &data->wasHighBanner));
-	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasLeftMap));
-	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasRightMap));
-	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasBattMap));
-	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasBandMap));
+	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasLeftKeyOne));
+	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasRightKeyOne));
+	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasBattKeyOne));
+	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasBandKeyOne));
+	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasLeftKeyTwo));
+	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasRightKeyTwo));
+	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasBattKeyTwo));
+	FORWARD_FALSE(byteio_write_be_i32(writer, data->wasBandKeyTwo));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->wasVolume));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->prefVersion));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->wasMaxFiles));
@@ -212,12 +210,9 @@ int WritePrefsInfo(byteio *writer, const prefsInfo *data)
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->isMapLeft));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->isMapTop));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->wasNumNeighbors));
-	FORWARD_FALSE(byteio_write_be_i16(writer, data->wasDepthPref));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->wasToolGroup));
-	FORWARD_FALSE(byteio_write_be_i16(writer, data->smWarnings));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->wasFloor));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->wasSuite));
-	FORWARD_FALSE(byteio_write_be_u8(writer, data->wasZooms));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->wasMusicOn));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->wasAutoEdit));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->wasDoColorFade));
@@ -230,7 +225,6 @@ int WritePrefsInfo(byteio *writer, const prefsInfo *data)
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->wasEscPauseKey));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->wasDoAutoDemo));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->wasScreen2));
-	FORWARD_FALSE(byteio_write_be_u8(writer, data->wasDoBackground));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->wasHouseChecks));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->wasPrettyMap));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->wasBitchDialogs));

@@ -54,13 +54,17 @@
 #define kPlayMusicItem			1009
 #define kSoundDefault			1013
 
-#define kRightControl			1005
-#define kLeftControl			1006
-#define kBattControl			1007
-#define kBandControl			1008
-#define kControlDefaults		1013
-#define kESCPausesRadio			1014
-#define kTABPausesRadio			1015
+#define kLeftControlOne         1001
+#define kRightControlOne        1002
+#define kBattControlOne         1003
+#define kBandControlOne         1004
+#define kLeftControlTwo         1005
+#define kRightControlTwo        1006
+#define kBattControlTwo         1007
+#define kBandControlTwo         1008
+#define kControlDefaults        1009
+#define kESCPausesRadio         1010
+#define kTABPausesRadio         1011
 
 #define kMaxFilesItem			1005
 #define kQuickTransitCheck		1007
@@ -79,9 +83,12 @@ void BrainsApply (HWND prefDlg);
 INT_PTR CALLBACK BrainsFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM lParam);
 void DoBrainsPrefs (HWND ownerWindow);
 
+BYTE GetLastHotKeyValue (HWND prefDlg, int itemID);
+void SetLastHotKeyValue (HWND prefDlg, int itemID, BYTE virtualKey);
 BYTE GetHotKeyValue (HWND prefDlg, int itemID);
+void SendSetHotKeyMessage (HWND prefDlg, int itemID, BYTE virtualKey);
 void SetHotKeyValue (HWND prefDlg, int itemID, BYTE virtualKey);
-void HandleHotKeyChange (HWND prefDlg, int itemID);
+void HandleHotKeyUserChange (HWND prefDlg, int itemID);
 void SetControlsToDefaults (HWND prefDlg);
 void ControlInit (HWND prefDlg);
 void ControlApply (HWND prefDlg);
@@ -107,10 +114,14 @@ void BitchAboutChanges (HWND ownerWindow);
 
 
 static Boolean nextRestartChange;
-static BYTE tempLeftKey;
-static BYTE tempRightKey;
-static BYTE tempBattKey;
-static BYTE tempBandKey;
+static BYTE tempLeftKeyOne;
+static BYTE tempRightKeyOne;
+static BYTE tempBattKeyOne;
+static BYTE tempBandKeyOne;
+static BYTE tempLeftKeyTwo;
+static BYTE tempRightKeyTwo;
+static BYTE tempBattKeyTwo;
+static BYTE tempBandKeyTwo;
 
 
 //==============================================================  Functions
@@ -208,98 +219,99 @@ void DoBrainsPrefs (HWND ownerWindow)
 			ownerWindow, BrainsFilter);
 }
 
+//--------------------------------------------------------------  GetLastHotKeyValue
+
+BYTE GetLastHotKeyValue (HWND prefDlg, int itemID)
+{
+	BYTE virtualKey;
+
+	UNREFERENCED_PARAMETER(prefDlg);
+
+	virtualKey = 0x00;
+	switch (itemID)
+	{
+	case kLeftControlOne:
+		virtualKey = tempLeftKeyOne;
+		break;
+	case kRightControlOne:
+		virtualKey = tempRightKeyOne;
+		break;
+	case kBattControlOne:
+		virtualKey = tempBattKeyOne;
+		break;
+	case kBandControlOne:
+		virtualKey = tempBandKeyOne;
+		break;
+	case kLeftControlTwo:
+		virtualKey = tempLeftKeyTwo;
+		break;
+	case kRightControlTwo:
+		virtualKey = tempRightKeyTwo;
+		break;
+	case kBattControlTwo:
+		virtualKey = tempBattKeyTwo;
+		break;
+	case kBandControlTwo:
+		virtualKey = tempBandKeyTwo;
+		break;
+	}
+	return virtualKey;
+}
+
+//--------------------------------------------------------------  SetLastHotKeyValue
+
+void SetLastHotKeyValue (HWND prefDlg, int itemID, BYTE virtualKey)
+{
+	UNREFERENCED_PARAMETER(prefDlg);
+
+	switch (itemID)
+	{
+	case kLeftControlOne:
+		tempLeftKeyOne = virtualKey;
+		break;
+	case kRightControlOne:
+		tempRightKeyOne = virtualKey;
+		break;
+	case kBattControlOne:
+		tempBattKeyOne = virtualKey;
+		break;
+	case kBandControlOne:
+		tempBandKeyOne = virtualKey;
+		break;
+	case kLeftControlTwo:
+		tempLeftKeyTwo = virtualKey;
+		break;
+	case kRightControlTwo:
+		tempRightKeyTwo = virtualKey;
+		break;
+	case kBattControlTwo:
+		tempBattKeyTwo = virtualKey;
+		break;
+	case kBandControlTwo:
+		tempBandKeyTwo = virtualKey;
+		break;
+	}
+}
+
 //--------------------------------------------------------------  GetHotKeyValue
 
 BYTE GetHotKeyValue (HWND prefDlg, int itemID)
 {
-	return LOBYTE(SendDlgItemMessage(prefDlg, itemID, HKM_GETHOTKEY, 0, 0));
-}
-
-//--------------------------------------------------------------  SetHotKeyValue
-
-void SetHotKeyValue (HWND prefDlg, int itemID, BYTE virtualKey)
-{
-	SendDlgItemMessage(prefDlg, itemID, HKM_SETHOTKEY, MAKEWORD(virtualKey, 0), 0);
-	HandleHotKeyChange(prefDlg, itemID);
-}
-
-//--------------------------------------------------------------  HandleHotKeyChange
-
-void HandleHotKeyChange (HWND prefDlg, int itemID)
-{
-	WORD oldHotKey, newHotKey;
+	LRESULT result;
+	WORD hotKeyCode;
 	BYTE virtualKey;
 
-	oldHotKey = LOWORD(SendDlgItemMessage(prefDlg, itemID, HKM_GETHOTKEY, 0, 0));
-	virtualKey = LOBYTE(oldHotKey);
+	result = SendDlgItemMessage(prefDlg, itemID, HKM_GETHOTKEY, 0, 0);
+	hotKeyCode = LOWORD(result);
+	virtualKey = LOBYTE(hotKeyCode);
+	return virtualKey;
+}
 
-	if (virtualKey == 0x00)
-	{
-		// Don't let the hotkey control be cleared
-		switch (itemID)
-		{
-		case kLeftControl:
-			virtualKey = tempLeftKey;
-			break;
-		case kRightControl:
-			virtualKey = tempRightKey;
-			break;
-		case kBattControl:
-			virtualKey = tempBattKey;
-			break;
-		case kBandControl:
-			virtualKey = tempBandKey;
-			break;
-		}
-	}
+//--------------------------------------------------------------  SendSetHotKeyMessage
 
-	// Block attempts to have one key bound to more than one action
-	switch (itemID)
-	{
-	case kLeftControl:
-		if (virtualKey == tempRightKey ||
-			virtualKey == tempBattKey ||
-			virtualKey == tempBandKey)
-		{
-			virtualKey = tempLeftKey;
-			MessageBeep(MB_ICONWARNING);
-		}
-		tempLeftKey = virtualKey;
-		break;
-
-	case kRightControl:
-		if (virtualKey == tempLeftKey ||
-			virtualKey == tempBattKey ||
-			virtualKey == tempBandKey)
-		{
-			virtualKey = tempRightKey;
-			MessageBeep(MB_ICONWARNING);
-		}
-		tempRightKey = virtualKey;
-		break;
-
-	case kBattControl:
-		if (virtualKey == tempLeftKey ||
-			virtualKey == tempRightKey ||
-			virtualKey == tempBandKey)
-		{
-			virtualKey = tempBattKey;
-			MessageBeep(MB_ICONWARNING);
-		}
-		tempBattKey = virtualKey;
-		break;
-
-	case kBandControl:
-		if (virtualKey == tempLeftKey ||
-			virtualKey == tempRightKey ||
-			virtualKey == tempBattKey)
-		{
-			virtualKey = tempBandKey;
-			MessageBeep(MB_ICONWARNING);
-		}
-		tempBandKey = virtualKey;
-		break;
-	}
+void SendSetHotKeyMessage (HWND prefDlg, int itemID, BYTE virtualKey)
+{
+	WORD hotKeyCode;
 
 	switch (virtualKey)
 	{
@@ -319,27 +331,80 @@ void HandleHotKeyChange (HWND prefDlg, int itemID)
 	case VK_CANCEL:
 	case VK_SNAPSHOT:
 	case VK_DIVIDE:
-		// extended keys need their flag re-set
-		newHotKey = MAKEWORD(virtualKey, HOTKEYF_EXT);
+		// extended keys need the HOTKEYF_EXT flag set
+		hotKeyCode = MAKEWORD(virtualKey, HOTKEYF_EXT);
 		break;
-
 	default:
-		newHotKey = MAKEWORD(virtualKey, 0);
+		hotKeyCode = MAKEWORD(virtualKey, 0);
 		break;
 	}
 
-	if (newHotKey != oldHotKey)
-		SendDlgItemMessage(prefDlg, itemID, HKM_SETHOTKEY, newHotKey, 0);
+	SendDlgItemMessage(prefDlg, itemID, HKM_SETHOTKEY, hotKeyCode, 0);
+}
+
+//--------------------------------------------------------------  SetHotKeyValue
+
+void SetHotKeyValue (HWND prefDlg, int itemID, BYTE virtualKey)
+{
+	SetLastHotKeyValue(prefDlg, itemID, virtualKey);
+	SendSetHotKeyMessage(prefDlg, itemID, virtualKey);
+}
+
+//--------------------------------------------------------------  HandleHotKeyUserChange
+
+void HandleHotKeyUserChange (HWND prefDlg, int itemID)
+{
+	const int items[] = {
+		kLeftControlOne, kRightControlOne, kBattControlOne, kBandControlOne,
+		kLeftControlTwo, kRightControlTwo, kBattControlTwo, kBandControlTwo,
+	};
+
+	BYTE oldVirtualKey;
+	BYTE newVirtualKey;
+	BYTE otherVirtualKey;
+	size_t i;
+
+	oldVirtualKey = GetLastHotKeyValue(prefDlg, itemID);
+	newVirtualKey = GetHotKeyValue(prefDlg, itemID);
+
+	// Don't let the hot key control be cleared.
+	if (newVirtualKey == 0x00)
+	{
+		newVirtualKey = oldVirtualKey;
+	}
+
+	// If the new hot key matches another control, set the other
+	// control to the old value of this hot key.
+	for (i = 0; i < ARRAYSIZE(items); i++)
+	{
+		if (items[i] == itemID)
+		{
+			continue;
+		}
+		otherVirtualKey = GetHotKeyValue(prefDlg, items[i]);
+		if (newVirtualKey == otherVirtualKey)
+		{
+			SetHotKeyValue(prefDlg, items[i], oldVirtualKey);
+			break;
+		}
+	}
+
+	// Set the new hot key's value
+	SetHotKeyValue(prefDlg, itemID, newVirtualKey);
 }
 
 //--------------------------------------------------------------  SetControlsToDefaults
 
 void SetControlsToDefaults (HWND prefDlg)
 {
-	SetHotKeyValue(prefDlg, kLeftControl, VK_LEFT);
-	SetHotKeyValue(prefDlg, kRightControl, VK_RIGHT);
-	SetHotKeyValue(prefDlg, kBattControl, VK_DOWN);
-	SetHotKeyValue(prefDlg, kBandControl, VK_UP);
+	SetHotKeyValue(prefDlg, kLeftControlOne, VK_LEFT);
+	SetHotKeyValue(prefDlg, kRightControlOne, VK_RIGHT);
+	SetHotKeyValue(prefDlg, kBattControlOne, VK_DOWN);
+	SetHotKeyValue(prefDlg, kBandControlOne, VK_UP);
+	SetHotKeyValue(prefDlg, kLeftControlTwo, 'A');
+	SetHotKeyValue(prefDlg, kRightControlTwo, 'D');
+	SetHotKeyValue(prefDlg, kBattControlTwo, 'S');
+	SetHotKeyValue(prefDlg, kBandControlTwo, 'W');
 	CheckRadioButton(prefDlg, kESCPausesRadio, kTABPausesRadio, kTABPausesRadio);
 }
 
@@ -347,34 +412,48 @@ void SetControlsToDefaults (HWND prefDlg)
 
 void ControlInit (HWND prefDlg)
 {
-	tempLeftKey = 0;
-	tempRightKey = 0;
-	tempBattKey = 0;
-	tempBandKey = 0;
-	SetHotKeyValue(prefDlg, kLeftControl, (BYTE)theGlider.leftKey);
-	SetHotKeyValue(prefDlg, kRightControl, (BYTE)theGlider.rightKey);
-	SetHotKeyValue(prefDlg, kBattControl, (BYTE)theGlider.battKey);
-	SetHotKeyValue(prefDlg, kBandControl, (BYTE)theGlider.bandKey);
+	SetHotKeyValue(prefDlg, kLeftControlOne, (BYTE)theGlider.leftKey);
+	SetHotKeyValue(prefDlg, kRightControlOne, (BYTE)theGlider.rightKey);
+	SetHotKeyValue(prefDlg, kBattControlOne, (BYTE)theGlider.battKey);
+	SetHotKeyValue(prefDlg, kBandControlOne, (BYTE)theGlider.bandKey);
+	SetHotKeyValue(prefDlg, kLeftControlTwo, (BYTE)theGlider2.leftKey);
+	SetHotKeyValue(prefDlg, kRightControlTwo, (BYTE)theGlider2.rightKey);
+	SetHotKeyValue(prefDlg, kBattControlTwo, (BYTE)theGlider2.battKey);
+	SetHotKeyValue(prefDlg, kBandControlTwo, (BYTE)theGlider2.bandKey);
 	if (isEscPauseKey)
+	{
 		CheckRadioButton(prefDlg, kESCPausesRadio, kTABPausesRadio, kESCPausesRadio);
+	}
 	else
+	{
 		CheckRadioButton(prefDlg, kESCPausesRadio, kTABPausesRadio, kTABPausesRadio);
+	}
 }
 
 //--------------------------------------------------------------  ControlApply
 
 void ControlApply (HWND prefDlg)
 {
-	theGlider.leftKey = tempLeftKey;
-	theGlider.rightKey = tempRightKey;
-	theGlider.battKey = tempBattKey;
-	theGlider.bandKey = tempBandKey;
+	theGlider.leftKey = tempLeftKeyOne;
+	theGlider.rightKey = tempRightKeyOne;
+	theGlider.battKey = tempBattKeyOne;
+	theGlider.bandKey = tempBandKeyOne;
+	theGlider2.leftKey = tempLeftKeyTwo;
+	theGlider2.rightKey = tempRightKeyTwo;
+	theGlider2.battKey = tempBattKeyTwo;
+	theGlider2.bandKey = tempBandKeyTwo;
 	if (IsDlgButtonChecked(prefDlg, kESCPausesRadio))
+	{
 		isEscPauseKey = true;
+	}
 	else if (IsDlgButtonChecked(prefDlg, kTABPausesRadio))
+	{
 		isEscPauseKey = false;
+	}
 	else
+	{
 		isEscPauseKey = false;
+	}
 }
 
 //--------------------------------------------------------------  ControlFilter
@@ -402,12 +481,18 @@ INT_PTR CALLBACK ControlFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARA
 			EndDialog(prefDlg, IDCANCEL);
 			break;
 
-		case kLeftControl:
-		case kRightControl:
-		case kBattControl:
-		case kBandControl:
+		case kLeftControlOne:
+		case kRightControlOne:
+		case kBattControlOne:
+		case kBandControlOne:
+		case kLeftControlTwo:
+		case kRightControlTwo:
+		case kBattControlTwo:
+		case kBandControlTwo:
 			if (HIWORD(wParam) == EN_CHANGE)
-				HandleHotKeyChange(prefDlg, LOWORD(wParam));
+			{
+				HandleHotKeyUserChange(prefDlg, LOWORD(wParam));
+			}
 			break;
 
 		case kControlDefaults:
@@ -839,6 +924,10 @@ void SetAllDefaults (HWND ownerWindow)
 	theGlider.rightKey = VK_RIGHT;
 	theGlider.battKey = VK_DOWN;
 	theGlider.bandKey = VK_UP;
+	theGlider2.leftKey = 'A';
+	theGlider2.rightKey = 'D';
+	theGlider2.battKey = 'S';
+	theGlider2.bandKey = 'W';
 	isEscPauseKey = false;
 								// Default sound settings
 	isPlayMusicIdle = true;

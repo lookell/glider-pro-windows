@@ -202,10 +202,6 @@ void VariableInit (void)
 #endif
 
 	theGlider.which = kPlayer1;
-	theGlider2.leftKey = 'A'; // was kControlKeyMap
-	theGlider2.rightKey = 'D'; // was kCommandKeyMap
-	theGlider2.battKey = 'S'; // was kOptionKeyMap
-	theGlider2.bandKey = 'W'; // was kShiftKeyMap
 	theGlider2.which = kPlayer2;
 
 	splashAccelTable = LoadAccelerators(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDA_SPLASH));
