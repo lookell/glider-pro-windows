@@ -443,6 +443,12 @@ fn make_1bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapOne {
     output
 }
 
+fn make_2bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapFour {
+    let mut output = BitmapFour::new(pixmap.width(), pixmap.height());
+    super::read_2bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
+    output
+}
+
 fn make_4bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapFour {
     let mut output = BitmapFour::new(pixmap.width(), pixmap.height());
     super::read_4bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
@@ -876,6 +882,23 @@ fn convert_1bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapOne {
     image
 }
 
+fn convert_2bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapFour {
+    let mut image = BitmapFour::new(picFrame.width() as _, picFrame.height() as _);
+    for bits_rect in bits_data {
+        let part = make_2bit_pixmap(&bits_rect.pixMap, &bits_rect.data.data);
+        let mut src_rect = bits_rect.srcRect;
+        src_rect.left -= bits_rect.pixMap.bounds.left;
+        src_rect.top -= bits_rect.pixMap.bounds.top;
+        src_rect.right -= bits_rect.pixMap.bounds.left;
+        src_rect.bottom -= bits_rect.pixMap.bounds.top;
+        let mut dst_origin = Point::new(bits_rect.dstRect.left, bits_rect.dstRect.top);
+        dst_origin.h -= picFrame.left;
+        dst_origin.v -= picFrame.top;
+        image.bitblt(&part, dst_origin, src_rect);
+    }
+    image
+}
+
 fn convert_4bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapFour {
     let mut image = BitmapFour::new(picFrame.width() as _, picFrame.height() as _);
     for bits_rect in bits_data {
@@ -958,7 +981,7 @@ fn convert_pict(
     let depth = bits_data[0].pixMap.pixelSize;
     let mut palette = match depth {
         1 => vec![RgbQuad::BLACK; 2],
-        4 => vec![RgbQuad::BLACK; 16],
+        2 | 4 => vec![RgbQuad::BLACK; 16],
         8 => vec![RgbQuad::BLACK; 256],
         _ => Vec::new(),
     };
@@ -973,6 +996,11 @@ fn convert_pict(
     match depth {
         1 => {
             let mut image = convert_1bit_pict(picFrame, &bits_data);
+            image.set_palette(palette.into_iter());
+            image.write_bmp_file(&mut writer)?;
+        }
+        2 => {
+            let mut image = convert_2bit_pict(picFrame, &bits_data);
             image.set_palette(palette.into_iter());
             image.write_bmp_file(&mut writer)?;
         }
