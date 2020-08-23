@@ -318,11 +318,23 @@ impl PixData {
                 let packed_data = read_bytes(&mut reader, byteCount.into())?;
                 let scanline = unpack_bits(&packed_data)
                     .ok_or_else(|| io::Error::new(ErrorKind::InvalidData, "UnpackBits failed"))?;
-                if scanline.len() % 3 != 0 {
-                    eprintln!("warning: scanline.len() % 3 != 0");
-                }
-                let third_of_len = scanline.len() / 3;
-                let rest = &scanline;
+                let scanline_slice = match pixMap.cmpCount {
+                    3 => &scanline[..],
+                    4 => {
+                        // The pad bytes in the 32-bit pixels was included in the
+                        // data, so ignore the first quarter of the data. This is
+                        // where the pad bytes are located.
+                        &scanline[(scanline.len() / 4)..]
+                    }
+                    _ => {
+                        return Err(io::Error::new(
+                            ErrorKind::InvalidData,
+                            "invalid component count for 32-bit packed image",
+                        ));
+                    }
+                };
+                let third_of_len = scanline_slice.len() / 3;
+                let rest = scanline_slice;
                 let (red_scanline, rest) = rest.split_at(third_of_len);
                 let (green_scanline, rest) = rest.split_at(third_of_len);
                 let (blue_scanline, _) = rest.split_at(third_of_len);
