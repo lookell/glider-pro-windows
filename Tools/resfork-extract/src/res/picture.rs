@@ -436,39 +436,69 @@ fn unpack_words(packed: &[u8]) -> Option<Vec<u8>> {
     Some(unpacked)
 }
 
-fn make_1bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapOne {
+fn get_pict_palette(bits_rect: &BitsRect) -> Vec<RgbQuad> {
+    let depth = bits_rect.pixMap.pixelSize;
+    let mut palette = match depth {
+        1 => vec![RgbQuad::BLACK; 2],
+        2 | 4 => vec![RgbQuad::BLACK; 16],
+        8 => vec![RgbQuad::BLACK; 256],
+        _ => vec![],
+    };
+    let clut = &bits_rect.ctTable.ctTable;
+    for (dst, src) in palette.iter_mut().rev().zip(clut) {
+        *dst = src.rgb.into();
+    }
+    if clut.is_empty() && depth == 1 {
+        palette = vec![RgbQuad::BLACK, RgbQuad::WHITE];
+    }
+    palette
+}
+
+fn make_1bit_pixmap(bits_rect: &BitsRect) -> BitmapOne {
+    let pixmap = &bits_rect.pixMap;
     let mut output = BitmapOne::new(pixmap.width(), pixmap.height());
-    super::read_1bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
+    output.set_palette(get_pict_palette(bits_rect));
+    super::read_1bit_bitmap_data(&mut output, &bits_rect.data.data, pixmap.row_bytes());
     output
 }
 
-fn make_2bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapFour {
+fn make_2bit_pixmap(bits_rect: &BitsRect) -> BitmapFour {
+    let pixmap = &bits_rect.pixMap;
     let mut output = BitmapFour::new(pixmap.width(), pixmap.height());
-    super::read_2bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
+    output.set_palette(get_pict_palette(bits_rect));
+    super::read_2bit_bitmap_data(&mut output, &bits_rect.data.data, pixmap.row_bytes());
     output
 }
 
-fn make_4bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapFour {
+fn make_4bit_pixmap(bits_rect: &BitsRect) -> BitmapFour {
+    let pixmap = &bits_rect.pixMap;
     let mut output = BitmapFour::new(pixmap.width(), pixmap.height());
-    super::read_4bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
+    output.set_palette(get_pict_palette(bits_rect));
+    super::read_4bit_bitmap_data(&mut output, &bits_rect.data.data, pixmap.row_bytes());
     output
 }
 
-fn make_8bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapEight {
+fn make_8bit_pixmap(bits_rect: &BitsRect) -> BitmapEight {
+    let pixmap = &bits_rect.pixMap;
     let mut output = BitmapEight::new(pixmap.width(), pixmap.height());
-    super::read_8bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
+    output.set_palette(get_pict_palette(bits_rect));
+    super::read_8bit_bitmap_data(&mut output, &bits_rect.data.data, pixmap.row_bytes());
     output
 }
 
-fn make_16bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapSixteen {
+fn make_16bit_pixmap(bits_rect: &BitsRect) -> BitmapSixteen {
+    let pixmap = &bits_rect.pixMap;
     let mut output = BitmapSixteen::new(pixmap.width(), pixmap.height());
-    super::read_16bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
+    // 16-bit pixmaps do not have color palettes
+    super::read_16bit_bitmap_data(&mut output, &bits_rect.data.data, pixmap.row_bytes());
     output
 }
 
-fn make_32bit_pixmap(pixmap: &PixMap, bits: &[u8]) -> BitmapTwentyFour {
+fn make_32bit_pixmap(bits_rect: &BitsRect) -> BitmapTwentyFour {
+    let pixmap = &bits_rect.pixMap;
     let mut output = BitmapTwentyFour::new(pixmap.width(), pixmap.height());
-    super::read_32bit_bitmap_data(&mut output, bits, pixmap.row_bytes());
+    // 32-bit pixmaps do not have color palettes
+    super::read_32bit_bitmap_data(&mut output, &bits_rect.data.data, pixmap.row_bytes());
     output
 }
 
@@ -857,18 +887,25 @@ fn extract_bits_data_v2(pic_data: &[PicV2Op]) -> Vec<BitsRect> {
     list
 }
 
+fn get_bitblt_params(picFrame: Rect, bits_rect: &BitsRect) -> (Point, Rect) {
+    let dst_origin = Point {
+        h: bits_rect.dstRect.left - picFrame.left,
+        v: bits_rect.dstRect.top - picFrame.top,
+    };
+    let mut src_rect = bits_rect.srcRect;
+    src_rect.left -= bits_rect.pixMap.bounds.left;
+    src_rect.top -= bits_rect.pixMap.bounds.top;
+    src_rect.right -= bits_rect.pixMap.bounds.left;
+    src_rect.bottom -= bits_rect.pixMap.bounds.top;
+    (dst_origin, src_rect)
+}
+
 fn convert_1bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapOne {
     let mut image = BitmapOne::new(picFrame.width() as _, picFrame.height() as _);
+    image.set_palette(get_pict_palette(&bits_data[0]));
     for bits_rect in bits_data {
-        let part = make_1bit_pixmap(&bits_rect.pixMap, &bits_rect.data.data);
-        let mut src_rect = bits_rect.srcRect;
-        src_rect.left -= bits_rect.pixMap.bounds.left;
-        src_rect.top -= bits_rect.pixMap.bounds.top;
-        src_rect.right -= bits_rect.pixMap.bounds.left;
-        src_rect.bottom -= bits_rect.pixMap.bounds.top;
-        let mut dst_origin = Point::new(bits_rect.dstRect.left, bits_rect.dstRect.top);
-        dst_origin.h -= picFrame.left;
-        dst_origin.v -= picFrame.top;
+        let part = make_1bit_pixmap(bits_rect);
+        let (dst_origin, src_rect) = get_bitblt_params(picFrame, bits_rect);
         image.bitblt(&part, dst_origin, src_rect);
     }
     image
@@ -876,16 +913,10 @@ fn convert_1bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapOne {
 
 fn convert_2bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapFour {
     let mut image = BitmapFour::new(picFrame.width() as _, picFrame.height() as _);
+    image.set_palette(get_pict_palette(&bits_data[0]));
     for bits_rect in bits_data {
-        let part = make_2bit_pixmap(&bits_rect.pixMap, &bits_rect.data.data);
-        let mut src_rect = bits_rect.srcRect;
-        src_rect.left -= bits_rect.pixMap.bounds.left;
-        src_rect.top -= bits_rect.pixMap.bounds.top;
-        src_rect.right -= bits_rect.pixMap.bounds.left;
-        src_rect.bottom -= bits_rect.pixMap.bounds.top;
-        let mut dst_origin = Point::new(bits_rect.dstRect.left, bits_rect.dstRect.top);
-        dst_origin.h -= picFrame.left;
-        dst_origin.v -= picFrame.top;
+        let part = make_2bit_pixmap(bits_rect);
+        let (dst_origin, src_rect) = get_bitblt_params(picFrame, bits_rect);
         image.bitblt(&part, dst_origin, src_rect);
     }
     image
@@ -893,16 +924,10 @@ fn convert_2bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapFour {
 
 fn convert_4bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapFour {
     let mut image = BitmapFour::new(picFrame.width() as _, picFrame.height() as _);
+    image.set_palette(get_pict_palette(&bits_data[0]));
     for bits_rect in bits_data {
-        let part = make_4bit_pixmap(&bits_rect.pixMap, &bits_rect.data.data);
-        let mut src_rect = bits_rect.srcRect;
-        src_rect.left -= bits_rect.pixMap.bounds.left;
-        src_rect.top -= bits_rect.pixMap.bounds.top;
-        src_rect.right -= bits_rect.pixMap.bounds.left;
-        src_rect.bottom -= bits_rect.pixMap.bounds.top;
-        let mut dst_origin = Point::new(bits_rect.dstRect.left, bits_rect.dstRect.top);
-        dst_origin.h -= picFrame.left;
-        dst_origin.v -= picFrame.top;
+        let part = make_4bit_pixmap(bits_rect);
+        let (dst_origin, src_rect) = get_bitblt_params(picFrame, bits_rect);
         image.bitblt(&part, dst_origin, src_rect);
     }
     image
@@ -910,16 +935,10 @@ fn convert_4bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapFour {
 
 fn convert_8bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapEight {
     let mut image = BitmapEight::new(picFrame.width() as _, picFrame.height() as _);
+    image.set_palette(get_pict_palette(&bits_data[0]));
     for bits_rect in bits_data {
-        let part = make_8bit_pixmap(&bits_rect.pixMap, &bits_rect.data.data);
-        let mut src_rect = bits_rect.srcRect;
-        src_rect.left -= bits_rect.pixMap.bounds.left;
-        src_rect.top -= bits_rect.pixMap.bounds.top;
-        src_rect.right -= bits_rect.pixMap.bounds.left;
-        src_rect.bottom -= bits_rect.pixMap.bounds.top;
-        let mut dst_origin = Point::new(bits_rect.dstRect.left, bits_rect.dstRect.top);
-        dst_origin.h -= picFrame.left;
-        dst_origin.v -= picFrame.top;
+        let part = make_8bit_pixmap(bits_rect);
+        let (dst_origin, src_rect) = get_bitblt_params(picFrame, bits_rect);
         image.bitblt(&part, dst_origin, src_rect);
     }
     image
@@ -927,16 +946,10 @@ fn convert_8bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapEight {
 
 fn convert_16bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapSixteen {
     let mut image = BitmapSixteen::new(picFrame.width() as _, picFrame.height() as _);
+    // 16-bit PICTs do not have a color palette
     for bits_rect in bits_data {
-        let part = make_16bit_pixmap(&bits_rect.pixMap, &bits_rect.data.data);
-        let mut src_rect = bits_rect.srcRect;
-        src_rect.left -= bits_rect.pixMap.bounds.left;
-        src_rect.top -= bits_rect.pixMap.bounds.top;
-        src_rect.right -= bits_rect.pixMap.bounds.left;
-        src_rect.bottom -= bits_rect.pixMap.bounds.top;
-        let mut dst_origin = Point::new(bits_rect.dstRect.left, bits_rect.dstRect.top);
-        dst_origin.h -= picFrame.left;
-        dst_origin.v -= picFrame.top;
+        let part = make_16bit_pixmap(bits_rect);
+        let (dst_origin, src_rect) = get_bitblt_params(picFrame, bits_rect);
         image.bitblt(&part, dst_origin, src_rect);
     }
     image
@@ -944,16 +957,30 @@ fn convert_16bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapSixteen {
 
 fn convert_32bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapTwentyFour {
     let mut image = BitmapTwentyFour::new(picFrame.width() as _, picFrame.height() as _);
+    // 32-bit PICTs do not have a color palette
     for bits_rect in bits_data {
-        let part = make_32bit_pixmap(&bits_rect.pixMap, &bits_rect.data.data);
-        let mut src_rect = bits_rect.srcRect;
-        src_rect.left -= bits_rect.pixMap.bounds.left;
-        src_rect.top -= bits_rect.pixMap.bounds.top;
-        src_rect.right -= bits_rect.pixMap.bounds.left;
-        src_rect.bottom -= bits_rect.pixMap.bounds.top;
-        let mut dst_origin = Point::new(bits_rect.dstRect.left, bits_rect.dstRect.top);
-        dst_origin.h -= picFrame.left;
-        dst_origin.v -= picFrame.top;
+        let part = make_32bit_pixmap(bits_rect);
+        let (dst_origin, src_rect) = get_bitblt_params(picFrame, bits_rect);
+        image.bitblt(&part, dst_origin, src_rect);
+    }
+    image
+}
+
+fn convert_mixed_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapTwentyFour {
+    let mut image = BitmapTwentyFour::new(picFrame.width() as _, picFrame.height() as _);
+    // The mixed PICT will be a 32-bit PICT (or really, a 24-bit BMP),
+    // so no color palette is needed for `image`.
+    for bits_rect in bits_data {
+        let part = match bits_rect.pixMap.pixelSize {
+            1 => BitmapTwentyFour::from(make_1bit_pixmap(&bits_rect)),
+            2 => BitmapTwentyFour::from(make_2bit_pixmap(&bits_rect)),
+            4 => BitmapTwentyFour::from(make_4bit_pixmap(&bits_rect)),
+            8 => BitmapTwentyFour::from(make_8bit_pixmap(&bits_rect)),
+            16 => BitmapTwentyFour::from(make_16bit_pixmap(&bits_rect)),
+            32 => BitmapTwentyFour::from(make_32bit_pixmap(&bits_rect)),
+            _ => continue,
+        };
+        let (dst_origin, src_rect) = get_bitblt_params(picFrame, bits_rect);
         image.bitblt(&part, dst_origin, src_rect);
     }
     image
@@ -962,81 +989,44 @@ fn convert_32bit_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapTwentyFou
 fn convert_pict(
     picFrame: Rect,
     bits_data: Vec<BitsRect>,
-    mut writer: impl Write,
+    writer: impl Write,
 ) -> io::Result<()> {
     if bits_data.is_empty() {
-        let mut image = BitmapOne::new(picFrame.width() as _, picFrame.height() as _);
-        image.set_palette([RgbQuad::BLACK, RgbQuad::WHITE].iter().copied());
-        image.write_bmp_file(&mut writer)?;
-        return Ok(());
+        return Err(io::Error::new(
+            ErrorKind::InvalidData,
+            "PICT does not contain any pixel data",
+        ));
     }
     let depth = bits_data[0].pixMap.pixelSize;
-    let mut palette = match depth {
-        1 => vec![RgbQuad::BLACK; 2],
-        2 | 4 => vec![RgbQuad::BLACK; 16],
-        8 => vec![RgbQuad::BLACK; 256],
-        _ => Vec::new(),
-    };
-    palette
-        .iter_mut()
-        .rev()
-        .zip(&bits_data[0].ctTable.ctTable)
-        .for_each(|(dst, src)| *dst = src.rgb.into());
-    if bits_data[0].ctTable.ctTable.is_empty() && depth == 1 {
-        palette = vec![RgbQuad::BLACK, RgbQuad::WHITE];
+    if bits_data.iter().any(|data| data.pixMap.pixelSize != depth) {
+        convert_mixed_pict(picFrame, &bits_data).write_bmp_file(writer)?;
+        return Ok(());
     }
     match depth {
-        1 => {
-            let mut image = convert_1bit_pict(picFrame, &bits_data);
-            image.set_palette(palette.into_iter());
-            image.write_bmp_file(&mut writer)?;
-        }
-        2 => {
-            let mut image = convert_2bit_pict(picFrame, &bits_data);
-            image.set_palette(palette.into_iter());
-            image.write_bmp_file(&mut writer)?;
-        }
-        4 => {
-            let mut image = convert_4bit_pict(picFrame, &bits_data);
-            image.set_palette(palette.into_iter());
-            image.write_bmp_file(&mut writer)?;
-        }
-        8 => {
-            let mut image = convert_8bit_pict(picFrame, &bits_data);
-            image.set_palette(palette.into_iter());
-            image.write_bmp_file(&mut writer)?;
-        }
-        16 => {
-            let image = convert_16bit_pict(picFrame, &bits_data);
-            image.write_bmp_file(&mut writer)?;
-        }
-        32 => {
-            let image = convert_32bit_pict(picFrame, &bits_data);
-            image.write_bmp_file(&mut writer)?;
-        }
+        1 => convert_1bit_pict(picFrame, &bits_data).write_bmp_file(writer)?,
+        2 => convert_2bit_pict(picFrame, &bits_data).write_bmp_file(writer)?,
+        4 => convert_4bit_pict(picFrame, &bits_data).write_bmp_file(writer)?,
+        8 => convert_8bit_pict(picFrame, &bits_data).write_bmp_file(writer)?,
+        16 => convert_16bit_pict(picFrame, &bits_data).write_bmp_file(writer)?,
+        32 => convert_32bit_pict(picFrame, &bits_data).write_bmp_file(writer)?,
         _ => {
-            let mut image = BitmapOne::new(picFrame.width() as _, picFrame.height() as _);
-            image.set_palette([RgbQuad::BLACK, RgbQuad::WHITE].iter().copied());
-            image.write_bmp_file(&mut writer)?;
+            return Err(io::Error::new(
+                ErrorKind::InvalidData,
+                format!("PICT uses unsupported color depth {}", depth),
+            ));
         }
     }
     Ok(())
 }
 
 fn convert_v1(picture: PictureV1, writer: impl Write) -> io::Result<()> {
-    convert_pict(
-        picture.picFrame,
-        extract_bits_data_v1(&picture.picOps),
-        writer,
-    )
+    let bits_data = extract_bits_data_v1(&picture.picOps);
+    convert_pict(picture.picFrame, bits_data, writer)
 }
 
 fn convert_v2(picture: PictureV2, writer: impl Write) -> io::Result<()> {
-    convert_pict(
-        picture.picFrame,
-        extract_bits_data_v2(&picture.picOps),
-        writer,
-    )
+    let bits_data = extract_bits_data_v2(&picture.picOps);
+    convert_pict(picture.picFrame, bits_data, writer)
 }
 
 pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
