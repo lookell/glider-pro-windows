@@ -986,11 +986,7 @@ fn convert_mixed_pict(picFrame: Rect, bits_data: &[BitsRect]) -> BitmapTwentyFou
     image
 }
 
-fn convert_pict(
-    picFrame: Rect,
-    bits_data: Vec<BitsRect>,
-    writer: impl Write,
-) -> io::Result<()> {
+fn convert_pict(picFrame: Rect, bits_data: Vec<BitsRect>, writer: impl Write) -> io::Result<()> {
     if bits_data.is_empty() {
         return Err(io::Error::new(
             ErrorKind::InvalidData,

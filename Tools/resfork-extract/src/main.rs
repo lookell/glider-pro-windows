@@ -166,7 +166,7 @@ fn get_entry_name(res: &Resource) -> String {
         b"ics#" => format!("FinderIcon/{}-small-mono.ico", res.id),
         b"mctb" => format!("MenuColorTable/{}.txt", res.id),
         b"MENU" => format!("Menu/{}.txt", res.id),
-        b"PICT" => format!("Picture/{}.bmp", res.id),
+        b"Date" | b"PICT" => format!("Picture/{}.bmp", res.id),
         b"snd " => format!("Sound/{}.wav", res.id),
         b"STR#" => format!("StringList/{}.txt", res.id),
         b"vers" => format!("Version/{}.txt", res.id),
@@ -228,7 +228,7 @@ fn convert_resource(resource: &Resource, mut writer: impl Write) -> io::Result<(
             .and_then(|(image, mask)| IconFile::new().add_entry(image, mask).write_to(writer)),
         b"mctb" => menu_color_table::convert(&resource.data, writer),
         b"MENU" => menu::convert(&resource.data, writer),
-        b"PICT" => picture::convert(&resource.data, writer),
+        b"Date" | b"PICT" => picture::convert(&resource.data, writer),
         b"snd " => sound::convert(&resource.data, writer),
         b"STR#" => string_list::convert(&resource.data, writer),
         b"vers" => version::convert(&resource.data, writer),
@@ -404,12 +404,10 @@ fn make_gliderpro_house(
         }
     }
 
-    let mut added_images_directory = false;
-    for resource in resfork.iter_type(b"PICT") {
-        if !added_images_directory {
-            zipfile.add_directory("images/", Default::default())?;
-            added_images_directory = true;
-        }
+    fn handle_image_resource(
+        zipfile: &mut ZipWriter<impl Seek + Write>,
+        resource: &Resource,
+    ) -> AnyResult<()> {
         let mut data_bytes = Vec::new();
         if picture::convert(&resource.data, &mut data_bytes).is_ok() {
             let entry_name = format!("images/{}.bmp", resource.id);
@@ -418,6 +416,23 @@ fn make_gliderpro_house(
         } else {
             eprintln!("warning: failed to convert PICT #{}", resource.id);
         }
+        Ok(())
+    }
+
+    let mut added_images_directory = false;
+    for resource in resfork.iter_type(b"PICT") {
+        if !added_images_directory {
+            zipfile.add_directory("images/", Default::default())?;
+            added_images_directory = true;
+        }
+        handle_image_resource(&mut zipfile, resource)?;
+    }
+    for resource in resfork.iter_type(b"Date") {
+        if !added_images_directory {
+            zipfile.add_directory("images/", Default::default())?;
+            added_images_directory = true;
+        }
+        handle_image_resource(&mut zipfile, resource)?;
     }
 
     let mut added_sounds_directory = false;
