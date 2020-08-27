@@ -9,11 +9,15 @@ use std::io::{self, Error, ErrorKind, Read, Write};
 // extractor, really.)
 
 const stdSH: u8 = 0x00;
+const extSH: u8 = 0xFF;
 const cmpSH: u8 = 0xFE;
 
 const notCompressed: i16 = 0;
 const threeToOne: i16 = 3;
 const sixToOne: i16 = 4;
+
+const sixToOnePacketSize: u16 = 8;
+const threeToOnePacketSize: u16 = 16;
 
 const sampledSynth: u16 = 5;
 
@@ -49,6 +53,71 @@ impl SoundHeader {
     }
 }
 
+struct ExtSoundHeader {
+    samplePtr: u32,
+    numChannels: u32,
+    sampleRate: u32,
+    loopStart: u32,
+    loopEnd: u32,
+    encode: u8,
+    baseFrequency: u8,
+    numFrames: u32,
+    AIFFSampleRate: [u8; 10],
+    markerChunk: u32,
+    instrumentChunks: u32,
+    AESRecording: u32,
+    sampleSize: u16,
+    futureUse1: u16,
+    futureUse2: u32,
+    futureUse3: u32,
+    futureUse4: u32,
+    sampleArea: Vec<u8>,
+}
+
+fn read_ten_bytes(mut reader: impl Read) -> io::Result<[u8; 10]> {
+    let mut buffer = [0; 10];
+    reader.read_exact(&mut buffer).map(|_| buffer)
+}
+
+impl ExtSoundHeader {
+    fn read_from(mut reader: impl Read) -> io::Result<Self> {
+        let mut this = Self {
+            samplePtr: reader.read_be_u32()?,
+            numChannels: reader.read_be_u32()?,
+            sampleRate: reader.read_be_u32()?,
+            loopStart: reader.read_be_u32()?,
+            loopEnd: reader.read_be_u32()?,
+            encode: reader.read_be_u8()?,
+            baseFrequency: reader.read_be_u8()?,
+            numFrames: reader.read_be_u32()?,
+            AIFFSampleRate: read_ten_bytes(&mut reader)?,
+            markerChunk: reader.read_be_u32()?,
+            instrumentChunks: reader.read_be_u32()?,
+            AESRecording: reader.read_be_u32()?,
+            sampleSize: reader.read_be_u16()?,
+            futureUse1: reader.read_be_u16()?,
+            futureUse2: reader.read_be_u32()?,
+            futureUse3: reader.read_be_u32()?,
+            futureUse4: reader.read_be_u32()?,
+            sampleArea: Vec::new(),
+        };
+        match this.sampleSize {
+            8 | 16 => {}
+            _ => {
+                return Err(Error::new(
+                    ErrorKind::InvalidData,
+                    "unimplemented sample size",
+                ));
+            }
+        }
+        let frameSize = this.numChannels * u32::from(this.sampleSize) / 8;
+        let sampleAreaSize = this.numFrames * frameSize;
+        this.sampleArea = vec![0x00; sampleAreaSize as usize];
+        reader.read_exact(&mut this.sampleArea)?;
+        Ok(this)
+    }
+}
+
 struct CmpSoundHeader {
     samplePtr: u32,
     numChannels: u32,
@@ -73,11 +142,6 @@ struct CmpSoundHeader {
 
 fn read_four_bytes(mut reader: impl Read) -> io::Result<[u8; 4]> {
     let mut buffer = [0; 4];
-    reader.read_exact(&mut buffer).map(|_| buffer)
-}
-
-fn read_ten_bytes(mut reader: impl Read) -> io::Result<[u8; 10]> {
-    let mut buffer = [0; 10];
     reader.read_exact(&mut buffer).map(|_| buffer)
 }
 
@@ -107,16 +171,67 @@ impl CmpSoundHeader {
         if this.numChannels != 1 {
             return Err(Error::new(
                 ErrorKind::InvalidData,
-                "unimplement channel count",
+                "unimplemented channel count",
             ));
         }
-        if this.sampleSize != 8 {
-            return Err(Error::new(
-                ErrorKind::InvalidData,
-                "unimplemented sample size",
-            ));
+        match this.compressionID {
+            notCompressed | threeToOne | sixToOne => {}
+            _ => {
+                return Err(Error::new(
+                    ErrorKind::InvalidData,
+                    format!("unimplemented compression type {}", this.compressionID),
+                ));
+            }
         }
-        reader.read_to_end(&mut this.sampleArea)?;
+        match this.packetSize {
+            0 => {
+                this.packetSize = match this.compressionID {
+                    notCompressed => 0,
+                    threeToOne => threeToOnePacketSize,
+                    sixToOne => sixToOnePacketSize,
+                    _ => unreachable!(),
+                };
+            }
+            threeToOnePacketSize => {
+                if this.compressionID != threeToOne {
+                    return Err(Error::new(
+                        ErrorKind::InvalidData,
+                        "invalid compression packet size",
+                    ));
+                }
+            }
+            sixToOnePacketSize => {
+                if this.compressionID != sixToOne {
+                    return Err(Error::new(
+                        ErrorKind::InvalidData,
+                        "invalid compression packet size",
+                    ));
+                }
+            }
+            _ => {
+                return Err(Error::new(
+                    ErrorKind::InvalidData,
+                    "invalid compression packet size",
+                ));
+            }
+        }
+        match this.sampleSize {
+            8 | 16 => {}
+            _ => {
+                return Err(Error::new(
+                    ErrorKind::InvalidData,
+                    "unimplemented sample size",
+                ));
+            }
+        }
+        let frameSize = match this.compressionID {
+            notCompressed => this.numChannels * u32::from(this.sampleSize) / 8,
+            threeToOne | sixToOne => this.numChannels * u32::from(this.packetSize) / 8,
+            _ => unreachable!(),
+        };
+        let sampleAreaSize = this.numFrames * frameSize;
+        this.sampleArea = vec![0x00; sampleAreaSize as usize];
+        reader.read_exact(&mut this.sampleArea)?;
         Ok(this)
     }
 }
@@ -226,6 +341,25 @@ fn write_wave_file(wave: &WaveData, mut writer: impl Write) -> io::Result<()> {
     Ok(())
 }
 
+// Get the sound data bytes in a format compatible with WAVE files.
+//
+// Right now, the only change that needs to happen is to byte-swap
+// 16-bit samples from big-endian to little-endian.
+fn get_wave_data_bytes(sample_size: u16, sample_bytes: &[u8]) -> Vec<u8> {
+    if sample_size == 16 {
+        let mut new_bytes = Vec::with_capacity(sample_bytes.len());
+        for word in sample_bytes.chunks_exact(2) {
+            let hi_byte = word[0];
+            let lo_byte = word[1];
+            new_bytes.push(lo_byte);
+            new_bytes.push(hi_byte);
+        }
+        new_bytes
+    } else {
+        sample_bytes.to_vec()
+    }
+}
+
 fn sound_header_to_wave_data(header: &SoundHeader) -> WaveData {
     WaveData {
         channels: 1,
@@ -235,17 +369,27 @@ fn sound_header_to_wave_data(header: &SoundHeader) -> WaveData {
     }
 }
 
+fn ext_sound_header_to_wave_data(header: &ExtSoundHeader) -> WaveData {
+    WaveData {
+        channels: header.numChannels as _,
+        sample_rate: header.sampleRate / 65536,
+        bits_per_sample: header.sampleSize,
+        data_bytes: get_wave_data_bytes(header.sampleSize, &header.sampleArea),
+    }
+}
+
 fn cmp_sound_header_to_wave_data(header: &CmpSoundHeader) -> io::Result<WaveData> {
     // FFmpeg's MACE decoder expands the sounds out to 16-bit samples,
     // with the high and low bytes equal. This is reduced back down to
-    // 8-bit samples, to save some space.
+    // 8-bit samples (even if the original sound used 16-bit samples),
+    // in order to save some space.
 
     match header.compressionID {
         notCompressed => Ok(WaveData {
             channels: 1,
             sample_rate: header.sampleRate / 65536,
-            bits_per_sample: 8,
-            data_bytes: header.sampleArea.clone(),
+            bits_per_sample: header.sampleSize,
+            data_bytes: get_wave_data_bytes(header.sampleSize, &header.sampleArea),
         }),
         threeToOne => {
             let data_bytes = mace::mace3_decode_mono(&header.sampleArea)?
@@ -298,6 +442,11 @@ pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
         stdSH => {
             let header = SoundHeader::read_from(resource.data.as_slice())?;
             let wave_data = sound_header_to_wave_data(&header);
+            write_wave_file(&wave_data, writer)
+        }
+        extSH => {
+            let header = ExtSoundHeader::read_from(resource.data.as_slice())?;
+            let wave_data = ext_sound_header_to_wave_data(&header);
             write_wave_file(&wave_data, writer)
         }
         cmpSH => {

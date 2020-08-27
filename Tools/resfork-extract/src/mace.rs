@@ -255,12 +255,9 @@ fn chomp6(chd: &mut ChannelData, val: u8, tab_idx: usize) -> [i16; 2] {
     output
 }
 
-pub fn mace3_decode_mono(buf: &[u8]) -> io::Result<Vec<i16>> {
+pub fn mace3_decode_mono(mut buf: &[u8]) -> io::Result<Vec<i16>> {
     if (buf.len() % 2) != 0 {
-        return Err(Error::new(
-            ErrorKind::InvalidData,
-            "MACE3 buffer size is odd",
-        ));
+        buf = &buf[..(buf.len() - 1)];
     }
     let mut chd = ChannelData::default();
     let mut samples = Vec::with_capacity(3 * buf.len());
