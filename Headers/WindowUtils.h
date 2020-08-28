@@ -7,11 +7,10 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-#include "MacTypes.h"
 #include "WinAPI.h"
 
-void OpenMessageWindow (ConstStringPtr title);
-void SetMessageWindowMessage (ConstStringPtr message);
+void OpenMessageWindow (PCWSTR title);
+void SetMessageWindowMessage (PCWSTR message);
 void SetMessageTextColor (COLORREF textColor);
 void CloseMessageWindow (void);
 

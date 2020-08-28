@@ -270,7 +270,7 @@ Boolean SaveHouseAs (void)
 
 	noProblems = true;
 
-	GetLocalizedString(15, tempStr);
+	GetLocalizedString_Pascal(15, tempStr);
 	StandardPutFile(tempStr, thisHouseName, &theReply);
 	if (theReply.sfGood)
 	{

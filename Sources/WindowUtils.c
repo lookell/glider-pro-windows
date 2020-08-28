@@ -30,17 +30,15 @@ static COLORREF mssgTextColor;
 // Brings up a simple message window.  Nice sort of utility function.
 // Anytime you want a small, quick message to come up, call this.
 
-void OpenMessageWindow (ConstStringPtr title)
+void OpenMessageWindow (PCWSTR title)
 {
 	MSG msg;
-	WCHAR windowTitle[256];
 
-	WinFromMacString(windowTitle, ARRAYSIZE(windowTitle), title);
 	mssgTextColor = GetSysColor(COLOR_WINDOWTEXT);
 	mssgWindow = CreateDialog(HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(kMessageWindowID),
-			mainWindow, MessageWindowProc);
-	SetWindowText(mssgWindow, windowTitle);
+		MAKEINTRESOURCE(kMessageWindowID),
+		mainWindow, MessageWindowProc);
+	SetWindowText(mssgWindow, title);
 	CenterOverOwner(mssgWindow);
 	EnableWindow(mainWindow, FALSE);
 	ShowWindow(mssgWindow, SW_SHOW);
@@ -88,13 +86,11 @@ static INT_PTR CALLBACK MessageWindowProc (HWND hDlg, UINT message, WPARAM wPara
 // For the above message window, this function displays a string of text…
 // in the center of the window.
 
-void SetMessageWindowMessage (ConstStringPtr message)
+void SetMessageWindowMessage (PCWSTR message)
 {
-	WCHAR messageText[256];
 	MSG msg;
 
-	WinFromMacString(messageText, ARRAYSIZE(messageText), message);
-	SetDlgItemText(mssgWindow, kMessageItem, messageText);
+	SetDlgItemText(mssgWindow, kMessageItem, message);
 
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 	{

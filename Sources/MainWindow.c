@@ -309,31 +309,31 @@ void CloseMainWindow (void)
 #ifndef COMPILEDEMO
 void UpdateEditWindowTitle (void)
 {
-	Str255		newTitle, tempStr;
-	WCHAR		windowText[256];
+	wchar_t houseName[64];
+	wchar_t roomName[32];
+	wchar_t newTitle[256];
 
 	if (mainWindow == NULL)
+	{
 		return;
+	}
 
-	PasStringCopy(thisHouseName, newTitle);
-	PasStringConcatC(newTitle, " - ");
+	WinFromMacString(houseName, ARRAYSIZE(houseName), thisHouseName);
 	if (noRoomAtAll)
-		PasStringConcatC(newTitle, "No rooms");
+	{
+		StringCchPrintf(newTitle, ARRAYSIZE(newTitle), L"%s - No rooms", houseName);
+	}
 	else if (houseUnlocked)
 	{
-		PasStringConcat(newTitle, thisRoom->name);
-		PasStringConcatC(newTitle, " (");
-		NumToString((SInt32)thisRoom->floor, tempStr);
-		PasStringConcat(newTitle, tempStr);
-		PasStringConcatC(newTitle, ", ");
-		NumToString((SInt32)thisRoom->suite, tempStr);
-		PasStringConcat(newTitle, tempStr);
-		PasStringConcatC(newTitle, ")");
+		WinFromMacString(roomName, ARRAYSIZE(roomName), thisRoom->name);
+		StringCchPrintf(newTitle, ARRAYSIZE(newTitle), L"%s - %s (%d, %d)",
+			houseName, roomName, (int)thisRoom->floor, (int)thisRoom->suite);
 	}
 	else
-		PasStringConcatC(newTitle, "House Locked");
-	WinFromMacString(windowText, ARRAYSIZE(windowText), newTitle);
-	SetWindowText(mainWindow, windowText);
+	{
+		StringCchPrintf(newTitle, ARRAYSIZE(newTitle), L"%s - House Locked", houseName);
+	}
+	SetWindowText(mainWindow, newTitle);
 }
 #endif
 

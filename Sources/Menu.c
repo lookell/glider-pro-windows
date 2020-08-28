@@ -184,21 +184,21 @@ void UpdateMenusHouseClosed (void)
 // Set the Cut/Copy/Paste menus to reflect if we have data in the…
 // Mac's "clipboard" or not.
 
-static BOOL SetMenuItemText(HMENU hMenu, UINT uID, StringPtr newTitle)
+static BOOL SetMenuItemText(HMENU hMenu, UINT uID, PCWSTR newTitle)
 {
-	MENUITEMINFO mii;
-	WCHAR theString[256];
+	MENUITEMINFO itemInfo;
+	wchar_t theString[256];
 
-	WinFromMacString(theString, ARRAYSIZE(theString), newTitle);
-	mii.cbSize = sizeof(mii);
-	mii.fMask = MIIM_STRING;
-	mii.dwTypeData = theString;
-	return SetMenuItemInfo(hMenu, uID, FALSE, &mii);
+	StringCchCopy(theString, ARRAYSIZE(theString), newTitle);
+	itemInfo.cbSize = sizeof(itemInfo);
+	itemInfo.fMask = MIIM_STRING;
+	itemInfo.dwTypeData = theString;
+	return SetMenuItemInfo(hMenu, uID, FALSE, &itemInfo);
 }
 
 void UpdateClipboardMenus (void)
 {
-	Str255		title;
+	wchar_t title[256];
 
 	if (!houseOpen)
 		return;
@@ -207,21 +207,21 @@ void UpdateClipboardMenus (void)
 	{
 		if (objActive > kNoObjectSelected)
 		{
-			GetLocalizedString(36, title);
+			GetLocalizedString(36, title, ARRAYSIZE(title));
 			SetMenuItemText(houseMenu, ID_CUT, title);
-			GetLocalizedString(37, title);
+			GetLocalizedString(37, title, ARRAYSIZE(title));
 			SetMenuItemText(houseMenu, ID_COPY, title);
-			GetLocalizedString(38, title);
+			GetLocalizedString(38, title, ARRAYSIZE(title));
 			SetMenuItemText(houseMenu, ID_CLEAR, title);
 			EnableMenuItem(houseMenu, ID_DUPLICATE, MF_ENABLED);
 		}
 		else
 		{
-			GetLocalizedString(39, title);
+			GetLocalizedString(39, title, ARRAYSIZE(title));
 			SetMenuItemText(houseMenu, ID_CUT, title);
-			GetLocalizedString(40, title);
+			GetLocalizedString(40, title, ARRAYSIZE(title));
 			SetMenuItemText(houseMenu, ID_COPY, title);
-			GetLocalizedString(41, title);
+			GetLocalizedString(41, title, ARRAYSIZE(title));
 			SetMenuItemText(houseMenu, ID_CLEAR, title);
 			EnableMenuItem(houseMenu, ID_DUPLICATE, MF_GRAYED);
 		}
@@ -236,19 +236,19 @@ void UpdateClipboardMenus (void)
 //			EnableMenuItem(houseMenu, iPaste);
 //			if (scrapIsARoom)
 //			{
-//				GetLocalizedString(42, title);
+//				GetLocalizedString(42, title, ARRAYSIZE(title));
 //				SetMenuItemText(houseMenu, iPaste, title);
 //			}
 //			else
 //			{
-//				GetLocalizedString(43, title);
+//				GetLocalizedString(43, title, ARRAYSIZE(title));
 //				SetMenuItemText(houseMenu, iPaste, title);
 //			}
 //		}
 //		else
 		{
 			EnableMenuItem(houseMenu, ID_PASTE, MF_GRAYED);
-			GetLocalizedString(44, title);
+			GetLocalizedString(44, title, ARRAYSIZE(title));
 			SetMenuItemText(houseMenu, ID_PASTE, title);
 		}
 		EnableMenuItem(houseMenu, ID_CLEAR, MF_ENABLED);

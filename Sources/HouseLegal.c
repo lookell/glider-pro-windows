@@ -739,10 +739,10 @@ void CompressHouse (void)
 
 void LopOffExtraRooms (void)
 {
-	size_t		newSize;
-	SInt16		r, count;
-	Str255		message;
-	roomPtr		newRoomsPtr;
+	size_t newSize;
+	SInt16 r, count;
+	wchar_t message[256];
+	roomPtr newRoomsPtr;
 
 	if (thisHouse.nRooms <= 0)
 	{
@@ -770,7 +770,7 @@ void LopOffExtraRooms (void)
 		if (newRoomsPtr == NULL)	// problem?
 		{
 			SetMessageTextColor(redColor);
-			GetLocalizedString(16, message);
+			GetLocalizedString(16, message, ARRAYSIZE(message));
 			SetMessageWindowMessage(message);
 		}
 		else
@@ -789,8 +789,8 @@ void LopOffExtraRooms (void)
 
 void ValidateRoomNumbers (void)
 {
-	SInt16		i, numRooms;
-	Str255		message;
+	SInt16 i, numRooms;
+	wchar_t message[256];
 
 	numRooms = thisHouse.nRooms;
 	if (numRooms < 0)
@@ -807,7 +807,7 @@ void ValidateRoomNumbers (void)
 			{
 				thisHouse.rooms[i].suite = kRoomIsEmpty;
 				SetMessageTextColor(redColor);
-				GetLocalizedString(17, message);
+				GetLocalizedString(17, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(message);
 				houseErrors++;
 			}
@@ -816,7 +816,7 @@ void ValidateRoomNumbers (void)
 			{
 				thisHouse.rooms[i].suite = kRoomIsEmpty;
 				SetMessageTextColor(redColor);
-				GetLocalizedString(18, message);
+				GetLocalizedString(18, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(message);
 				houseErrors++;
 			}
@@ -900,8 +900,8 @@ void MakeSureNumObjectsJives (void)
 
 void KeepAllObjectsLegal (void)
 {
-	SInt16		i, h, numRooms;
-	Str255		message;
+	SInt16 i, h, numRooms;
+	wchar_t message[256];
 
 	numRooms = thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
@@ -917,7 +917,7 @@ void KeepAllObjectsLegal (void)
 					if (!KeepObjectLegal())
 					{
 						SetMessageTextColor(redColor);
-						GetLocalizedString(19, message);
+						GetLocalizedString(19, message, ARRAYSIZE(message));
 						SetMessageWindowMessage(message);
 						houseErrors++;
 						DelayTicks(60);
@@ -935,9 +935,9 @@ void KeepAllObjectsLegal (void)
 
 void CheckForStaircasePairs (void)
 {
-	SInt16		i, h, g, numRooms, neighbor;
-	Boolean		hasStairs;
-	Str255		message;
+	SInt16 i, h, g, numRooms, neighbor;
+	Boolean hasStairs;
+	wchar_t message[256];
 
 	numRooms = thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
@@ -953,7 +953,7 @@ void CheckForStaircasePairs (void)
 					if (neighbor == kRoomIsEmpty)
 					{
 						SetMessageTextColor(redColor);
-						GetLocalizedString(20, message);
+						GetLocalizedString(20, message, ARRAYSIZE(message));
 						SetMessageWindowMessage(message);
 						DelayTicks(60);
 					}
@@ -968,7 +968,7 @@ void CheckForStaircasePairs (void)
 						if (!hasStairs)
 						{
 							SetMessageTextColor(redColor);
-							GetLocalizedString(21, message);
+							GetLocalizedString(21, message, ARRAYSIZE(message));
 							SetMessageWindowMessage(message);
 							DelayTicks(60);
 						}
@@ -981,7 +981,7 @@ void CheckForStaircasePairs (void)
 					if (neighbor == kRoomIsEmpty)
 					{
 						SetMessageTextColor(redColor);
-						GetLocalizedString(22, message);
+						GetLocalizedString(22, message, ARRAYSIZE(message));
 						SetMessageWindowMessage(message);
 						DelayTicks(60);
 					}
@@ -996,7 +996,7 @@ void CheckForStaircasePairs (void)
 						if (!hasStairs)
 						{
 							SetMessageTextColor(redColor);
-							GetLocalizedString(23, message);
+							GetLocalizedString(23, message, ARRAYSIZE(message));
 							SetMessageWindowMessage(message);
 							DelayTicks(60);
 						}
@@ -1015,19 +1015,20 @@ void CheckForStaircasePairs (void)
 void CheckHouseForProblems (void)
 {
 #ifndef COMPILEDEMO
-	Str255		message, message2;
-	SInt16		wasActive;
+	wchar_t message[256];
+	wchar_t message2[256];
+	SInt16 wasActive;
 
 	houseErrors = 0;
 	CopyThisRoomToRoom();
 	wasRoom = thisRoomNumber;
 	wasActive = objActive;
-	GetLocalizedString(24, message);
+	GetLocalizedString(24, message, ARRAYSIZE(message));
 	OpenMessageWindow(message);
 
 	SpinCursor(3);
 	SetMessageTextColor(blackColor);
-	GetLocalizedString(25, message);
+	GetLocalizedString(25, message, ARRAYSIZE(message));
 	SetMessageWindowMessage(message);
 	WrapBannerAndTrailer();
 
@@ -1035,13 +1036,13 @@ void CheckHouseForProblems (void)
 	{
 		SpinCursor(3);
 		SetMessageTextColor(blackColor);
-		GetLocalizedString(26, message);
+		GetLocalizedString(26, message, ARRAYSIZE(message));
 		SetMessageWindowMessage(message);
 		ValidateNumberOfRooms();
 		if (houseErrors != 0)
 		{
 			SetMessageTextColor(blackColor);
-			GetLocalizedString(27, message);
+			GetLocalizedString(27, message, ARRAYSIZE(message));
 			SetMessageWindowMessage(message);
 			DelayTicks(60);
 			houseErrors = 0;
@@ -1055,9 +1056,9 @@ void CheckHouseForProblems (void)
 		CheckDuplicateFloorSuite();
 		if (houseErrors != 0)
 		{
-			NumToString((SInt32)houseErrors, message);
-			GetLocalizedString(28, message2);
-			PasStringConcat(message, message2);
+			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
+			GetLocalizedString(28, message2, ARRAYSIZE(message2));
+			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(redColor);
 			SetMessageWindowMessage(message);
 			DelayTicks(45);
@@ -1075,9 +1076,9 @@ void CheckHouseForProblems (void)
 		ValidateRoomNumbers();
 		if (houseErrors != 0)
 		{
-			NumToString((SInt32)houseErrors, message);
-			GetLocalizedString(29, message2);
-			PasStringConcat(message, message2);
+			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
+			GetLocalizedString(29, message2, ARRAYSIZE(message2));
+			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(redColor);
 			SetMessageWindowMessage(message);
 			DelayTicks(60);
@@ -1091,9 +1092,9 @@ void CheckHouseForProblems (void)
 		CountUntitledRooms();
 		if (houseErrors != 0)
 		{
-			NumToString((SInt32)houseErrors, message);
-			GetLocalizedString(30, message2);
-			PasStringConcat(message, message2);
+			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
+			GetLocalizedString(30, message2, ARRAYSIZE(message2));
+			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(blueColor);
 			SetMessageWindowMessage(message);
 			DelayTicks(45);
@@ -1107,9 +1108,9 @@ void CheckHouseForProblems (void)
 		CheckRoomNameLength();
 		if (houseErrors != 0)
 		{
-			NumToString((SInt32)houseErrors, message);
-			GetLocalizedString(31, message2);
-			PasStringConcat(message, message2);
+			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
+			GetLocalizedString(31, message2, ARRAYSIZE(message2));
+			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(blueColor);
 			SetMessageWindowMessage(message);
 			DelayTicks(45);
@@ -1123,9 +1124,9 @@ void CheckHouseForProblems (void)
 		MakeSureNumObjectsJives();
 		if (houseErrors != 0)
 		{
-			NumToString((SInt32)houseErrors, message);
-			GetLocalizedString(32, message2);
-			PasStringConcat(message, message2);
+			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
+			GetLocalizedString(32, message2, ARRAYSIZE(message2));
+			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(redColor);
 			SetMessageWindowMessage(message);
 			DelayTicks(60);
@@ -1137,14 +1138,14 @@ void CheckHouseForProblems (void)
 		SpinCursor(3);
 		houseErrors = 0;
 		SetMessageTextColor(blackColor);
-		GetLocalizedString(33, message);
+		GetLocalizedString(33, message, ARRAYSIZE(message));
 		SetMessageWindowMessage(message);
 		KeepAllObjectsLegal();
 		if (houseErrors != 0)
 		{
-			NumToString((SInt32)houseErrors, message);
-			GetLocalizedString(34, message2);
-			PasStringConcat(message, message2);
+			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
+			GetLocalizedString(34, message2, ARRAYSIZE(message2));
+			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(redColor);
 			SetMessageWindowMessage(message);
 			DelayTicks(60);
@@ -1164,7 +1165,7 @@ void CheckHouseForProblems (void)
 		if (CountStarsInHouse() < 1)
 		{
 			SetMessageTextColor(redColor);
-			GetLocalizedString(35, message);
+			GetLocalizedString(35, message, ARRAYSIZE(message));
 			SetMessageWindowMessage(message);
 			DelayTicks(60);
 		}

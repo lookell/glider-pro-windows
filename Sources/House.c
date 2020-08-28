@@ -147,7 +147,7 @@ Boolean CreateNewHouse (HWND hwndOwner)
 #ifndef COMPILEDEMO
 void InitializeEmptyHouse (void)
 {
-	Str255 tempStr;
+	wchar_t tempStr[256];
 
 	free(thisHouse.rooms);
 
@@ -157,10 +157,10 @@ void InitializeEmptyHouse (void)
 	thisHouse.flags = 0L;
 	thisHouse.initial.h = 32;
 	thisHouse.initial.v = 32;
-	GetLocalizedString(11, tempStr);
-	PasStringCopy(tempStr, thisHouse.banner);
-	GetLocalizedString(12, tempStr);
-	PasStringCopy(tempStr, thisHouse.trailer);
+	GetLocalizedString(11, tempStr, ARRAYSIZE(tempStr));
+	MacFromWinString(thisHouse.banner, ARRAYSIZE(thisHouse.banner), tempStr);
+	GetLocalizedString(12, tempStr, ARRAYSIZE(tempStr));
+	MacFromWinString(thisHouse.trailer, ARRAYSIZE(thisHouse.trailer), tempStr);
 	ZeroHighScores(&thisHouse);
 	thisHouse.hasGame = false;
 	thisHouse.firstRoom = -1;
@@ -714,13 +714,14 @@ void DoGoToDialog (HWND ownerWindow)
 
 void ConvertHouseVer1To2 (void)
 {
-	Str255		roomStr, message;
-	SInt16		wasRoom, floor, suite;
-	SInt16		i, h, numRooms;
+	wchar_t roomStr[32];
+	wchar_t message[256];
+	SInt16 wasRoom, floor, suite;
+	SInt16 i, h, numRooms;
 
 	CopyThisRoomToRoom();
 	wasRoom = thisRoomNumber;
-	GetLocalizedString(13, message);
+	GetLocalizedString(13, message, ARRAYSIZE(message));
 	OpenMessageWindow(message);
 
 	SpinCursor(3);
@@ -730,9 +731,9 @@ void ConvertHouseVer1To2 (void)
 	{
 		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
-			NumToString(i, roomStr);
-			GetLocalizedString(14, message);
-			PasStringConcat(message, roomStr);
+			StringCchPrintf(roomStr, ARRAYSIZE(roomStr), L"%d", (int)i);
+			GetLocalizedString(14, message, ARRAYSIZE(message));
+			StringCchCat(message, ARRAYSIZE(message), roomStr);
 			SetMessageWindowMessage(message);
 			SpinCursor(1);
 
@@ -795,7 +796,7 @@ void ShiftWholeHouse (SInt16 howFar)
 	short		i, h, numRooms;
 	char		wasState;
 
-	OpenMessageWindow("\pShifting Whole House…");
+	OpenMessageWindow_Pascal("\pShifting Whole House…");
 	SpinCursor(3);
 
 	CopyThisRoomToRoom();

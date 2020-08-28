@@ -338,19 +338,37 @@ void GetFirstWordOfString (ConstStringPtr stringIn, StringPtr stringOut)
 		PasStringCopyNum(stringIn, stringOut, (Byte)spaceAt);
 }
 
+//--------------------------------------------------------------  GetLocalizedString_Pascal
+
+void GetLocalizedString_Pascal (UInt16 index, StringPtr theString)
+{
+	wchar_t buffer[256];
+
+	GetLocalizedString(index, buffer, ARRAYSIZE(buffer));
+	MacFromWinString(theString, sizeof(Str255), buffer);
+}
+
 //--------------------------------------------------------------  GetLocalizedString
 
-StringPtr GetLocalizedString (SInt16 index, StringPtr theString)
+void GetLocalizedString (UInt16 index, wchar_t *pszDest, size_t cchDest)
 {
-	WCHAR buffer[256];
-	int length;
+	UINT strIndex;
+	const wchar_t *strPtr;
+	int strLen;
 
-	length = LoadString(HINST_THISCOMPONENT, kLocalizedStringsBase + index,
-			buffer, ARRAYSIZE(buffer));
-	if (length <= 0)
-		buffer[0] = L'\0';
-	MacFromWinString(theString, sizeof(Str255), buffer);
-	return (theString);
+	if (pszDest == NULL || cchDest < 1)
+	{
+		return;
+	}
+	pszDest[0] = L'\0';
+
+	strIndex = kLocalizedStringsBase + index;
+	strLen = LoadString(HINST_THISCOMPONENT, strIndex, (LPWSTR)&strPtr, 0);
+	if (strLen <= 0 || strPtr == NULL)
+	{
+		return;
+	}
+	StringCchCopyN(pszDest, cchDest, strPtr, (size_t)strLen);
 }
 
 //--------------------------------------------------------------  MacToWinLineEndings

@@ -130,7 +130,7 @@ void DoFlowerObjectInfo (HWND hwndOwner);
 void GetObjectName (wchar_t *pszDest, size_t cchDest, SInt16 objectType)
 {
 	UINT strID;
-	LPWSTR strPtr;
+	LPCWSTR strPtr;
 	int strLen;
 
 	if (pszDest == NULL || cchDest < 1)
