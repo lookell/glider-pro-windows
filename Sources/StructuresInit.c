@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "StructuresInit.h"
 
 //============================================================================
@@ -31,6 +33,10 @@
 #include "StructIO.h"
 #include "Utilities.h"
 #include "WinAPI.h"
+
+#include <strsafe.h>
+
+#include <stdlib.h>
 
 
 void InitScoreboardMap (void);

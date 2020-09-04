@@ -29,7 +29,6 @@ set_target_properties(
 )
 target_include_directories(gliderpro PRIVATE Headers miniz)
 target_link_libraries(gliderpro comctl32 dsound dxguid msimg32 winmm)
-target_precompile_headers(gliderpro PRIVATE Headers/WinAPI.h)
 target_sources(
   gliderpro PRIVATE
   # miniz source files

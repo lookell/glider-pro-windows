@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "MainWindow.h"
 
 //============================================================================
@@ -35,6 +37,8 @@
 #include "Tools.h"
 #include "Transitions.h"
 #include "Utilities.h"
+
+#include <strsafe.h>
 
 
 void DrawOnSplash (HDC hdc);

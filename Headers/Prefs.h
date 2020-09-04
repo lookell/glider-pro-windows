@@ -8,7 +8,9 @@
 //============================================================================
 
 #include "MacTypes.h"
+#ifdef GP_USE_WINAPI_H
 #include "WinAPI.h"
+#endif
 
 #define kPrefsVersion           0x0035
 
@@ -64,7 +66,9 @@ typedef struct prefsInfo
 	Boolean wasBitchDialogs;
 } prefsInfo;
 
+#ifdef GP_USE_WINAPI_H
 Boolean SavePrefs (HWND ownerWindow, prefsInfo *thePrefs, SInt16 versionNow);
 Boolean LoadPrefs (HWND ownerWindow, prefsInfo *thePrefs, SInt16 versionNeed);
+#endif
 
 #endif

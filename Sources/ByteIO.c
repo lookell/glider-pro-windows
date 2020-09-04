@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "ByteIO.h"
 
 #include "WinAPI.h"
@@ -451,7 +453,7 @@ static int handle_reader_close(byteio *stream)
 	return 1;
 }
 
-int byteio_init_handle_reader(byteio *stream, void *hFile)
+int byteio_init_handle_reader(byteio *stream, HANDLE hFile)
 {
 	if (stream == NULL)
 		return 0;
@@ -582,7 +584,7 @@ static int handle_writer_close(byteio *stream)
 	return 1;
 }
 
-int byteio_init_handle_writer(byteio *stream, void *hFile)
+int byteio_init_handle_writer(byteio *stream, HANDLE hFile)
 {
 	if (stream == NULL)
 		return 0;

@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "House.h"
 
 //============================================================================
@@ -31,6 +33,11 @@
 #include "StringUtils.h"
 #include "Utilities.h"
 #include "WindowUtils.h"
+
+#include <commdlg.h>
+#include <strsafe.h>
+
+#include <stdlib.h>
 
 
 #define kGoToFirstRadio		1002

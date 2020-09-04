@@ -10,13 +10,17 @@
 #include "GliderDefines.h"
 #include "GliderStructs.h"
 #include "MacTypes.h"
+#ifdef GP_USE_WINAPI_H
 #include "WinAPI.h"
+#endif
 
 extern gliderType theGlider;
 extern gliderType theGlider2;
 extern Rect shadowSrcRect;
+#ifdef GP_USE_WINAPI_H
 extern HDC shadowSrcMap;
 extern HDC shadowMaskMap;
+#endif
 extern Rect shadowSrc[kNumShadowSrcRects];
 extern Rect gliderSrc[kNumGliderSrcRects];
 extern Rect transRect;

@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "SelectHouse.h"
 
 //============================================================================
@@ -18,6 +20,9 @@
 #include "ResourceLoader.h"
 #include "StringUtils.h"
 #include "Utilities.h"
+
+#include <commctrl.h>
+#include <strsafe.h>
 
 
 #define kHouseListItem			1000

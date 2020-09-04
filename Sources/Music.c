@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Music.h"
 
 //============================================================================
@@ -15,6 +17,8 @@
 #include "Sound.h"
 #include "Utilities.h"
 #include "WinAPI.h"
+
+#include <stdlib.h>
 
 
 #define kBaseBufferMusicID      2000

@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Coordinates.h"
 
 //============================================================================
@@ -15,6 +17,8 @@
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Utilities.h"
+
+#include <strsafe.h>
 
 
 #define kHoriCoordItem		1001

@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "HouseInfo.h"
 
 //============================================================================
@@ -16,6 +18,8 @@
 #include "Play.h"
 #include "ResourceIDs.h"
 #include "Room.h"
+
+#include <strsafe.h>
 
 
 #define kBannerTextItem			1004

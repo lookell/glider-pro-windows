@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Utilities.h"
 
 //============================================================================
@@ -18,6 +20,11 @@
 #include "ResourceLoader.h"
 #include "StringUtils.h"
 #include "WinAPI.h"
+
+#include <shlobj.h>
+#include <strsafe.h>
+
+#include <stdlib.h>
 
 
 static UInt32 theSeed;

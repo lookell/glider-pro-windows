@@ -9,7 +9,6 @@
 
 #include "GliderStructs.h"
 #include "MacTypes.h"
-#include "WinAPI.h"
 
 extern SInt16 numWork2Main;
 extern SInt16 numBack2Work;

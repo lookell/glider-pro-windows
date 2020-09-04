@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "RoomInfo.h"
 
 //============================================================================
@@ -19,6 +21,8 @@
 #include "ResourceIDs.h"
 #include "ResourceLoader.h"
 #include "Utilities.h"
+
+#include <strsafe.h>
 
 
 #define kRoomNameItem               1003

@@ -1,5 +1,7 @@
 #include "StructIO.h"
 
+#include <stdlib.h>
+
 #ifndef ARRAYSIZE
 #define ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))
 #endif

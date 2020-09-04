@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Prefs.h"
 
 //============================================================================
@@ -14,6 +16,8 @@
 #include "ResourceIDs.h"
 #include "StructIO.h"
 #include "Utilities.h"
+
+#include <strsafe.h>
 
 
 #define	kPrefFileName		L"Glider Prefs"

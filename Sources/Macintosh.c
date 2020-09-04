@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Macintosh.h"
 
 #include "StringUtils.h"

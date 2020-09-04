@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Sound.h"
 
 //============================================================================
@@ -11,6 +13,8 @@
 #include "HouseIO.h"
 #include "ResourceIDs.h"
 #include "ResourceLoader.h"
+
+#include <stdlib.h>
 
 
 #define kBaseBufferSoundID			1000

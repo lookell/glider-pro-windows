@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "SavedGames.h"
 
 //============================================================================
@@ -23,6 +25,11 @@
 #include "StructIO.h"
 #include "StringUtils.h"
 #include "Utilities.h"
+
+#include <commdlg.h>
+#include <strsafe.h>
+
+#include <stdlib.h>
 
 
 #define kSavedGameVersion		0x0200

@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "FileError.h"
 
 //============================================================================
@@ -10,6 +12,8 @@
 #include "DialogUtils.h"
 #include "MacTypes.h"
 #include "ResourceIDs.h"
+
+#include <strsafe.h>
 
 
 //==============================================================  Functions

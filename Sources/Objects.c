@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Objects.h"
 
 //============================================================================
@@ -22,6 +24,8 @@
 #include "Room.h"
 #include "RoomGraphics.h"
 #include "Sound.h"
+
+#include <stdlib.h>
 
 
 SInt16 GetObjectLinked (const objectType *who);

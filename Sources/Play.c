@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Play.h"
 
 //============================================================================
@@ -39,6 +41,8 @@
 #include "Transitions.h"
 #include "Triggers.h"
 #include "Utilities.h"
+
+#include <mmsystem.h>
 
 
 #define kInitialGliders			2

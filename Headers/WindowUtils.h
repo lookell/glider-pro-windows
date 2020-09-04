@@ -7,11 +7,15 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#ifdef GP_USE_WINAPI_H
+
 #include "WinAPI.h"
 
 void OpenMessageWindow (PCWSTR title);
 void SetMessageWindowMessage (PCWSTR message);
 void SetMessageTextColor (COLORREF textColor);
 void CloseMessageWindow (void);
+
+#endif
 
 #endif

@@ -9,8 +9,11 @@
 
 #include "GliderDefines.h"
 #include "MacTypes.h"
+#ifdef GP_USE_WINAPI_H
 #include "WinAPI.h"
+#endif
 
+#ifdef GP_USE_WINAPI_H
 extern HMENU theMenuBar;
 extern HMENU appleMenu;
 extern HMENU gameMenu;
@@ -20,21 +23,26 @@ extern LPWSTR appleMenuTitle;
 extern LPWSTR gameMenuTitle;
 extern LPWSTR optionsMenuTitle;
 extern LPWSTR houseMenuTitle;
+#endif
 extern Boolean menusUp;
 extern Boolean resumedSavedGame;
 
 void UpdateClipboardMenus (void);
 void UpdateMenus (Boolean newMode);
+#ifdef GP_USE_WINAPI_H
 void DoAppleMenu (HWND hwnd, SInt16 theItem);
 void DoGameMenu (HWND hwnd, SInt16 theItem);
 void DoOptionsMenu (HWND hwnd, SInt16 theItem);
 void DoHouseMenu (HWND hwnd, SInt16 theItem);
 void DoMenuChoice (HWND hwnd, WORD menuChoice);
+#endif
 void UpdateMapCheckmark (Boolean checkIt);
 void UpdateToolsCheckmark (Boolean checkIt);
 void UpdateCoordinateCheckmark (Boolean checkIt);
+#ifdef GP_USE_WINAPI_H
 #ifdef COMPILEDEMO
 void DoNotInDemo (HWND ownerWindow);
+#endif
 #endif
 void OpenCloseEditWindows (void);
 void EnableMenuBar (void);

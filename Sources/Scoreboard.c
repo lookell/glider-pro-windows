@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Scoreboard.h"
 
 //============================================================================
@@ -18,6 +20,8 @@
 #include "RoomGraphics.h"
 #include "Sound.h"
 #include "StringUtils.h"
+
+#include <strsafe.h>
 
 
 #define kGrayBackgroundColor    251

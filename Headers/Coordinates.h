@@ -8,9 +8,13 @@
 //============================================================================
 
 #include "MacTypes.h"
+#ifdef GP_USE_WINAPI_H
 #include "WinAPI.h"
+#endif
 
+#ifdef GP_USE_WINAPI_H
 extern HWND coordWindow;
+#endif
 extern SInt16 isCoordH;
 extern SInt16 isCoordV;
 extern Boolean isCoordOpen;

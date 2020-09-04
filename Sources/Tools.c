@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Tools.h"
 
 //============================================================================
@@ -17,6 +19,8 @@
 #include "ResourceIDs.h"
 #include "StringUtils.h"
 #include "Utilities.h"
+
+#include <strsafe.h>
 
 
 #define kToolModeCombo      1000

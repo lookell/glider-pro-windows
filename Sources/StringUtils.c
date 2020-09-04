@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "StringUtils.h"
 
 //============================================================================
@@ -11,7 +13,10 @@
 #include "ResourceIDs.h"
 #include "WinAPI.h"
 
+#include <strsafe.h>
+
 #include <limits.h>
+#include <stdlib.h>
 
 
 #define MAC_ROMAN_CODEPAGE          10000

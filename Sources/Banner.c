@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Banner.h"
 
 //============================================================================
@@ -22,6 +24,8 @@
 #include "Transitions.h"
 #include "Utilities.h"
 #include "WinAPI.h"
+
+#include <strsafe.h>
 
 
 void DrawBanner (Point *topLeft);

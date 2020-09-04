@@ -1,10 +1,16 @@
+#define GP_USE_WINAPI_H
+
 #define CINTERFACE
 #define COBJMACROS
 
 #include "Audio.h"
-
 #include "WinAPI.h"
+
+// NOTE: <mmsystem.h> MUST come before <dsound.h>
+#include <mmsystem.h>
+
 #include <dsound.h>
+
 #include <math.h>
 #include <stdlib.h>
 

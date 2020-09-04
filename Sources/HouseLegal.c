@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "HouseLegal.h"
 
 //============================================================================
@@ -19,6 +21,10 @@
 #include "StringUtils.h"
 #include "Utilities.h"
 #include "WindowUtils.h"
+
+#include <strsafe.h>
+
+#include <stdlib.h>
 
 
 void WrapBannerAndTrailer (void);

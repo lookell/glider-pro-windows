@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "HighScores.h"
 
 //============================================================================
@@ -26,6 +28,8 @@
 #include "StructIO.h"
 #include "Transitions.h"
 #include "Utilities.h"
+
+#include <strsafe.h>
 
 
 #define kHighNameItem			1002

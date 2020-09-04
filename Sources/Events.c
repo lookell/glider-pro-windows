@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Events.h"
 
 //============================================================================
@@ -29,7 +31,7 @@
 void HandleIdleTask (void);
 
 
-DWORD incrementModeTime;
+UInt32 incrementModeTime;
 Boolean doAutoDemo;
 Boolean switchedOut;
 Boolean ignoreDoubleClick;

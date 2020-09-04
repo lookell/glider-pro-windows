@@ -1,9 +1,13 @@
+#define GP_USE_WINAPI_H
+
 #include "ResourceLoader.h"
 
 #include "ByteIO.h"
 #include "ImageIO.h"
 #include "miniz.h"
 #include "StructIO.h"
+
+#include <strsafe.h>
 
 #include <stdio.h>
 

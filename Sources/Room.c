@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Room.h"
 
 //============================================================================
@@ -24,6 +26,10 @@
 #include "RoomInfo.h"
 #include "StringUtils.h"
 #include "Utilities.h"
+
+#include <strsafe.h>
+
+#include <stdlib.h>
 
 
 #define kYesDoDeleteRoom		IDOK

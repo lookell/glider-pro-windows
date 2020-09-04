@@ -5,6 +5,10 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#ifdef GP_USE_WINAPI_H
+#include "WinAPI.h"
+#endif
+
 // The `byteio` structure is used to perform sequential input or output,
 // using a Windows HANDLE or an in-memory buffer.
 typedef struct byteio {
@@ -18,11 +22,15 @@ typedef struct byteio {
 // All functions in this interface that return an `int` return a nonzero
 // value on success, and zero on failure.
 
+#ifdef GP_USE_WINAPI_H
+
 // Initialize a `byteio` structure to read bytes from a Windows file HANDLE.
-int byteio_init_handle_reader(byteio *stream, void *hFile);
+int byteio_init_handle_reader(byteio *stream, HANDLE hFile);
 
 // Initialize a `byteio` structure to write bytes into a Windows file HANDLE.
-int byteio_init_handle_writer(byteio *stream, void *hFile);
+int byteio_init_handle_writer(byteio *stream, HANDLE hFile);
+
+#endif
 
 // Initialize a `byteio` structure to read bytes from a memory buffer.
 int byteio_init_memory_reader(byteio *stream, const void *buffer, size_t size);

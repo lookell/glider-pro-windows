@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "AnimCursor.h"
 
 //============================================================================
@@ -13,6 +15,8 @@
 #include "ResourceIDs.h"
 #include "Utilities.h"
 #include "WinAPI.h"
+
+#include <stdlib.h>
 
 
 typedef union acurFrame

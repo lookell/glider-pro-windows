@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Settings.h"
 
 //============================================================================
@@ -28,6 +30,7 @@
 #include "StringUtils.h"
 #include "Utilities.h"
 
+#include <commctrl.h>
 #include <shlwapi.h> // for DLLGETVERSIONPROC and DLLGETVERSIONINFO
 
 

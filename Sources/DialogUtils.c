@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "DialogUtils.h"
 
 //============================================================================
@@ -10,6 +12,10 @@
 #include "GliderDefines.h"
 #include "StringUtils.h"
 #include "Utilities.h"
+
+#include <strsafe.h>
+
+#include <stdlib.h>
 
 
 static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam);

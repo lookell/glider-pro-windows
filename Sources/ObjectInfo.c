@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "ObjectInfo.h"
 
 //============================================================================
@@ -22,6 +24,8 @@
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Room.h"
+
+#include <strsafe.h>
 
 
 #define kBlowerInitialState     1006

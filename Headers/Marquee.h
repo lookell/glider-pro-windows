@@ -7,12 +7,13 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-#pragma once
-
 #include "GliderDefines.h"
 #include "MacTypes.h"
+#ifdef GP_USE_WINAPI_H
 #include "WinAPI.h"
+#endif
 
+#ifdef GP_USE_WINAPI_H
 typedef struct marquee
 {
 	HBITMAP pats[kNumMarqueePats];
@@ -25,8 +26,11 @@ typedef struct marquee
 	Boolean paused;
 	Boolean handled;
 } marquee;
+#endif
 
+#ifdef GP_USE_WINAPI_H
 extern marquee theMarquee;
+#endif
 
 void DoMarquee (void);
 void StartMarquee (const Rect *theRect);

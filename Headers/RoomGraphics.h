@@ -9,10 +9,14 @@
 
 #include "GliderDefines.h"
 #include "MacTypes.h"
+#ifdef GP_USE_WINAPI_H
 #include "WinAPI.h"
+#endif
 
 extern Rect suppSrcRect;
+#ifdef GP_USE_WINAPI_H
 extern HDC suppSrcMap;
+#endif
 extern Rect localRoomsDest[9];
 extern Rect houseRect;
 extern SInt16 numNeighbors;

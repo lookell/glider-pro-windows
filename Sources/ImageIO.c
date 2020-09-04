@@ -1,5 +1,11 @@
+#define GP_USE_WINAPI_H
+
 #include "ImageIO.h"
+
 #include <intsafe.h>
+
+#include <stddef.h>
+#include <stdlib.h>
 
 #define LOAD_BMP_AS_COMPATIBLE FALSE
 #define LOAD_BMP_AS_DIBSECTION TRUE

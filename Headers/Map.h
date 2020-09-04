@@ -8,11 +8,15 @@
 //============================================================================
 
 #include "MacTypes.h"
+#ifdef GP_USE_WINAPI_H
 #include "WinAPI.h"
+#endif
 
 extern Rect nailSrcRect;
+#ifdef GP_USE_WINAPI_H
 extern HDC nailSrcMap;
 extern HWND mapWindow;
+#endif
 extern SInt16 isMapH;
 extern SInt16 isMapV;
 extern SInt16 mapRoomsWide;

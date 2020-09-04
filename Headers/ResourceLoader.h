@@ -1,6 +1,8 @@
 #ifndef RESOURCE_LOADER_H_
 #define RESOURCE_LOADER_H_
 
+#ifdef GP_USE_WINAPI_H
+
 #include "Audio.h"
 #include "GliderStructs.h"
 #include "WinAPI.h"
@@ -174,5 +176,7 @@ HRESULT Gp_LoadHouseSound (SInt16 soundID, WaveData *sound);
 
 // Load boundary information from the house file for the given image ID.
 HRESULT Gp_LoadHouseBounding (SInt16 imageID, boundsType *bounds);
+
+#endif
 
 #endif

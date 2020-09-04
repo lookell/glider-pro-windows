@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "ObjectDraw.h"
 
 //============================================================================
@@ -14,6 +16,8 @@
 #include "ResourceIDs.h"
 #include "Room.h"
 #include "Utilities.h"
+
+#include <strsafe.h>
 
 
 #define k8WhiteColor			0

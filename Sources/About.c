@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "About.h"
 
 //============================================================================
@@ -11,6 +13,8 @@
 #include "Environ.h"
 #include "ResourceIDs.h"
 #include "WinAPI.h"
+
+#include <strsafe.h>
 
 
 #define kTextItemVers		1002

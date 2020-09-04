@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "HouseIO.h"
 
 //============================================================================
@@ -28,6 +30,10 @@
 #include "SelectHouse.h"
 #include "StringUtils.h"
 #include "Utilities.h"
+
+#include <strsafe.h>
+
+#include <stdlib.h>
 
 
 #define kSaveChanges			IDYES

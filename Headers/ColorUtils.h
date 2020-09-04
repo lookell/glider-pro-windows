@@ -7,6 +7,8 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
+#ifdef GP_USE_WINAPI_H
+
 #include "MacTypes.h"
 #include "WinAPI.h"
 
@@ -26,5 +28,7 @@ void ColorShadowRect (HDC hdc, const Rect *theRect, SInt32 color);
 void ColorShadowOval (HDC hdc, const Rect *theRect, SInt32 color);
 void ColorShadowRegion (HDC hdc, HRGN theRgn, SInt32 color);
 HBRUSH CreateShadowBrush (void);
+
+#endif
 
 #endif

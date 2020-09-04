@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Menu.h"
 
 //============================================================================
@@ -36,6 +38,8 @@
 #include "Settings.h"
 #include "StringUtils.h"
 #include "Tools.h"
+
+#include <strsafe.h>
 
 
 #define kSheWantsNewGame		1001

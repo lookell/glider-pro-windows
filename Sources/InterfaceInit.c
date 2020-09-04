@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "InterfaceInit.h"
 
 //============================================================================
@@ -31,6 +33,8 @@
 #include "SelectHouse.h"
 #include "Tools.h"
 #include "Utilities.h"
+
+#include <stdlib.h>
 
 
 static HMENU DetachPopupMenu (HMENU rootMenu, UINT id, LPWSTR *title);

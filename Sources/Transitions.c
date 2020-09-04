@@ -1,3 +1,5 @@
+#define GP_USE_WINAPI_H
+
 #include "Transitions.h"
 
 //============================================================================
@@ -12,6 +14,7 @@
 #include "MainWindow.h"
 #include "RectUtils.h"
 #include "Utilities.h"
+#include "WinAPI.h"
 
 
 //==============================================================  Functions
