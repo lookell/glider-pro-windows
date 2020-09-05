@@ -554,6 +554,7 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 	hdc = GetMainWindowDC();
 	FrameMarqueeRect(hdc, &theMarquee.bounds);
 	PaintMarqueeRect(hdc, &theMarquee.handle);
+	ReleaseMainWindowDC(hdc);
 
 	wasPt = start;
 	while (GetMessage(&msg, NULL, 0, 0))
