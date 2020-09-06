@@ -42,11 +42,13 @@
 
 
 void DrawOnSplash (HDC hdc);
+void PaintMainWindow (HDC hdc);
+void AdjustMainWindowDC (HDC hdc);
 void SetPaletteToGrays (RGBQUAD *colors, UINT numColors, int saturation,
 	int maxSaturation);
-void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate);
 void MapViewportRectToMain (Rect *theRect);
 void MapMainRectToViewport (Rect *theRect);
+void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate);
 
 
 HCURSOR handCursor;
@@ -153,44 +155,53 @@ void RedrawSplashScreen (void)
 	CopyRectMainToWork(&workSrcRect);
 }
 
+//--------------------------------------------------------------  PaintMainWindow
+
+void PaintMainWindow (HDC hdc)
+{
+	Rect tempRect;
+
+	if (theMode == kEditMode)
+	{
+		PauseMarquee();
+		Mac_CopyBits(workSrcMap, hdc, &mainWindowRect, &mainWindowRect, srcCopy, nil);
+		ResumeMarquee();
+	}
+	else if (theMode == kPlayMode)
+	{
+		Mac_CopyBits(workSrcMap, hdc, &justRoomsRect, &justRoomsRect, srcCopy, nil);
+		RefreshScoreboard(kNormalTitleMode);
+	}
+	else if (theMode == kSplashMode)
+	{
+		Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+		QSetRect(&tempRect, 0, 0, 640, 460);
+		QOffsetRect(&tempRect, splashOriginH, splashOriginV);
+		LoadScaledGraphic(workSrcMap, kSplash8BitPICT, &tempRect);
+		Mac_CopyBits(workSrcMap, hdc, &workSrcRect, &mainWindowRect, srcCopy, nil);
+		DrawOnSplash(hdc);
+	}
+
+	splashDrawn = true;
+}
+
+//--------------------------------------------------------------  AdjustMainWindowDC
+
+void AdjustMainWindowDC (HDC hdc)
+{
+	if (GetMenu(mainWindow) == NULL)
+	{
+		SetWindowOrgEx(hdc, 0, -kScoreboardTall, NULL);
+	}
+}
+
 //--------------------------------------------------------------  UpdateMainWindow
 
 // Redraws the main window (depends on mode were in - splash, editing, playing).
 
 void UpdateMainWindow (void)
 {
-	Rect		tempRect;
-	HDC			mainWindowDC;
-
-	mainWindowDC = GetMainWindowDC();
-
-	if (theMode == kEditMode)
-	{
-		PauseMarquee();
-		Mac_CopyBits(workSrcMap, mainWindowDC,
-				&mainWindowRect, &mainWindowRect, srcCopy, nil);
-		ResumeMarquee();
-	}
-	else if (theMode == kPlayMode)
-	{
-		Mac_CopyBits(workSrcMap, mainWindowDC,
-				&justRoomsRect, &justRoomsRect, srcCopy, nil);
-		RefreshScoreboard(kNormalTitleMode);
-	}
-	else if (theMode == kSplashMode)
-	{
-		Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
-		QSetRect(&tempRect, 0, 0, 640, 460);
-		QOffsetRect(&tempRect, splashOriginH, splashOriginV);
-		LoadScaledGraphic(workSrcMap, kSplash8BitPICT, &tempRect);
-		Mac_CopyBits(workSrcMap, mainWindowDC,
-				&workSrcRect, &mainWindowRect, srcCopy, nil);
-
-		DrawOnSplash(mainWindowDC);
-	}
-
-	ReleaseMainWindowDC(mainWindowDC);
-	splashDrawn = true;
+	UpdateWindow(mainWindow);
 }
 
 //--------------------------------------------------------------  OpenMainWindow
@@ -368,14 +379,15 @@ HDC GetMainWindowDC (void)
 	HDC hdc;
 
 	if (mainWindow != NULL)
+	{
 		hdc = GetDC(mainWindow);
+		AdjustMainWindowDC(hdc);
+		return hdc;
+	}
 	else
+	{
 		return NULL;
-
-	if (GetMenu(mainWindow) == NULL)
-		SetWindowOrgEx(hdc, 0, -kScoreboardTall, NULL);
-
-	return hdc;
+	}
 }
 
 //--------------------------------------------------------------  ReleaseMainWindowDC
@@ -383,7 +395,9 @@ HDC GetMainWindowDC (void)
 void ReleaseMainWindowDC (HDC hdc)
 {
 	if (hdc != NULL)
+	{
 		ReleaseDC(mainWindow, hdc);
+	}
 }
 
 //--------------------------------------------------------------  MapViewportRectToMain
@@ -755,9 +769,12 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	case WM_PAINT:
 	{
 		PAINTSTRUCT ps;
-		BeginPaint(hwnd, &ps);
-		EndPaint(hwnd, &ps);
-		UpdateMainWindow();
+		if (BeginPaint(hwnd, &ps))
+		{
+			AdjustMainWindowDC(ps.hdc);
+			PaintMainWindow(ps.hdc);
+			EndPaint(hwnd, &ps);
+		}
 		return 0;
 	}
 	}
