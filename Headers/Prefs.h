@@ -12,12 +12,14 @@
 #include "WinAPI.h"
 #endif
 
-#define kPrefsVersion           0x0035
+#define kPrefsVersion           0x0036
 
 typedef struct prefsInfo
 {
 	Str32 wasDefaultName;
-	Byte unusedBytes[48];
+	UInt16 wasViewportWidth;
+	UInt16 wasViewportHeight;
+	Byte unusedBytes[44];
 	Str15 wasHighName;
 	Str31 wasHighBanner;
 	SInt32 wasLeftKeyOne;

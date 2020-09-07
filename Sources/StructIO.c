@@ -130,6 +130,8 @@ static int WriteFSSpec(byteio *writer, const FSSpec *data)
 int ReadPrefsInfo(byteio *reader, prefsInfo *data)
 {
 	FORWARD_FALSE(ReadStr32(reader, &data->wasDefaultName));
+	FORWARD_FALSE(byteio_read_be_u16(reader, &data->wasViewportWidth));
+	FORWARD_FALSE(byteio_read_be_u16(reader, &data->wasViewportHeight));
 	FORWARD_FALSE(byteio_read(reader, &data->unusedBytes, sizeof(data->unusedBytes)));
 	FORWARD_FALSE(ReadStr15(reader, &data->wasHighName));
 	FORWARD_FALSE(ReadStr31(reader, &data->wasHighBanner));
@@ -183,6 +185,8 @@ int ReadPrefsInfo(byteio *reader, prefsInfo *data)
 int WritePrefsInfo(byteio *writer, const prefsInfo *data)
 {
 	FORWARD_FALSE(WriteStr32(writer, &data->wasDefaultName));
+	FORWARD_FALSE(byteio_write_be_u16(writer, data->wasViewportWidth));
+	FORWARD_FALSE(byteio_write_be_u16(writer, data->wasViewportHeight));
 	FORWARD_FALSE(byteio_write(writer, &data->unusedBytes, sizeof(data->unusedBytes)));
 	FORWARD_FALSE(WriteStr15(writer, &data->wasHighName));
 	FORWARD_FALSE(WriteStr31(writer, &data->wasHighBanner));

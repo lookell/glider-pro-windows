@@ -52,6 +52,8 @@ void WriteOutPrefs (HWND ownerWindow);
 Boolean quitting;
 Boolean quickerTransitions;
 Boolean isUseSecondScreen;
+UInt16 isViewportWidth;
+UInt16 isViewportHeight;
 
 
 //==============================================================  Functions
@@ -73,6 +75,16 @@ void ReadInPrefs (HWND ownerWindow)
 #else
 		PasStringCopy(thePrefs.wasDefaultName, thisHouseName);
 #endif
+		isViewportWidth = thePrefs.wasViewportWidth;
+		if (isViewportWidth < 512)
+		{
+			isViewportWidth = 512;
+		}
+		isViewportHeight = thePrefs.wasViewportHeight;
+		if (isViewportHeight < 342)
+		{
+			isViewportHeight = 342;
+		}
 		PasStringCopy(thePrefs.wasHighName, highName);
 		PasStringCopy(thePrefs.wasHighBanner, highBanner);
 		theGlider.leftKey = thePrefs.wasLeftKeyOne;
@@ -129,6 +141,8 @@ void ReadInPrefs (HWND ownerWindow)
 #else
 		PasStringCopyC("Slumberland", thisHouseName);
 #endif
+		isViewportWidth = 640;
+		isViewportHeight = 480;
 		PasStringCopyC("Your Name", highName);
 		PasStringCopyC("Your Message Here", highBanner);
 		theGlider.leftKey = VK_LEFT;
@@ -181,7 +195,7 @@ void ReadInPrefs (HWND ownerWindow)
 		doBitchDialogs = true;
 	}
 
-	if ((numNeighbors > 1) && (thisMac.screen.right <= 512))
+	if ((numNeighbors > 1) && (isViewportWidth <= 512))
 		numNeighbors = 1;
 
 	UnivSetSoundVolume(theVolume);
@@ -206,6 +220,8 @@ void WriteOutPrefs (HWND ownerWindow)
 #else
 	PasStringCopy(thisHouseName, thePrefs.wasDefaultName);
 #endif
+	thePrefs.wasViewportWidth = isViewportWidth;
+	thePrefs.wasViewportHeight = isViewportHeight;
 	PasStringCopy(highName, thePrefs.wasHighName);
 	PasStringCopy(highBanner, thePrefs.wasHighBanner);
 	thePrefs.wasLeftKeyOne = theGlider.leftKey;
@@ -278,11 +294,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	}
 
 	ToolBoxInit();
+	// NOTE: ReadInPrefs() must come before CheckOurEnvirons()
+	ReadInPrefs(NULL);
 	CheckOurEnvirons();
 	if (FAILED(Gp_LoadBuiltInAssets()))
 		RedAlert(kErrFailedResourceLoad);
 	LoadCursors();
-	ReadInPrefs(NULL);
 
 	VariableInit();						SpinCursor(2);
 	GetExtraCursors();					SpinCursor(2);

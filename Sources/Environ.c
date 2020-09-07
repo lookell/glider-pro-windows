@@ -7,6 +7,9 @@
 //============================================================================
 
 
+#include "Main.h"
+
+
 Boolean DoWeHaveQuickTime (void);
 Boolean DoWeHaveDragManager (void);
 SInt16 WhatsOurDepth (void);
@@ -49,11 +52,10 @@ SInt16 WhatsOurDepth (void)
 
 void GetDeviceRect (Rect *theRect)
 {
-	// TODO: Load/save the viewport rectangle in the prefs file.
 	theRect->left = 0;
 	theRect->top = 0;
-	theRect->right = 960;
-	theRect->bottom = 540;
+	theRect->right = (SInt16)isViewportWidth;
+	theRect->bottom = (SInt16)isViewportHeight;
 }
 
 //--------------------------------------------------------------  CheckOurEnvirons

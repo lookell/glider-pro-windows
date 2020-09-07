@@ -12,5 +12,7 @@
 extern Boolean quitting;
 extern Boolean quickerTransitions;
 extern Boolean isUseSecondScreen;
+extern UInt16 isViewportWidth;
+extern UInt16 isViewportHeight;
 
 #endif
