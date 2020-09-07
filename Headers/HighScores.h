@@ -18,7 +18,6 @@ extern Str15 highName;
 extern SInt16 lastHighScore;
 
 void DoHighScores (void);
-void SortHighScores (void);
 void ZeroHighScores (housePtr house);
 void ZeroAllButHighestScore (housePtr house);
 #ifdef GP_USE_WINAPI_H

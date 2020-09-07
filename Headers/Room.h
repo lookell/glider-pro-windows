@@ -54,10 +54,7 @@ Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite);
 SInt16 GetRoomNumber (SInt16 floor, SInt16 suite);
 Boolean IsRoomAStructure (SInt16 roomNum);
 void DetermineRoomOpenings (void);
-SInt16 GetOriginalBounding (SInt16 theID);
 SInt16 GetNumberOfLights (SInt16 where);
 Boolean IsShadowVisible (void);
-Boolean DoesRoomHaveFloor (void);
-Boolean DoesRoomHaveCeiling (void);
 
 #endif

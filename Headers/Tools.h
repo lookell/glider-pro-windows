@@ -23,11 +23,9 @@ extern SInt16 toolMode;
 extern Boolean isToolsOpen;
 
 void SelectTool (SInt16 which);
-//void UpdateToolsWindow (void);
 void OpenToolsWindow (void);
 void CloseToolsWindow (void);
 void ToggleToolsWindow (void);
-//void HandleToolsClick (Point wherePt);
 void NextToolMode (void);
 void PrevToolMode (void);
 void SetSpecificToolMode (SInt16 modeToSet);

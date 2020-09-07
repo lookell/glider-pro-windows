@@ -233,7 +233,7 @@ int WritePrefsInfo(byteio *writer, const prefsInfo *data)
 	return 1;
 }
 
-int ReadBlowerType(byteio *reader, blowerType *data)
+static int ReadBlowerType(byteio *reader, blowerType *data)
 {
 	FORWARD_FALSE(ReadPoint(reader, &data->topLeft));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->distance));
@@ -244,7 +244,7 @@ int ReadBlowerType(byteio *reader, blowerType *data)
 	return 1;
 }
 
-int WriteBlowerType(byteio *writer, const blowerType *data)
+static int WriteBlowerType(byteio *writer, const blowerType *data)
 {
 	FORWARD_FALSE(WritePoint(writer, &data->topLeft));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->distance));
@@ -255,21 +255,21 @@ int WriteBlowerType(byteio *writer, const blowerType *data)
 	return 1;
 }
 
-int ReadFurnitureType(byteio *reader, furnitureType *data)
+static int ReadFurnitureType(byteio *reader, furnitureType *data)
 {
 	FORWARD_FALSE(ReadRect(reader, &data->bounds));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->pict));
 	return 1;
 }
 
-int WriteFurnitureType(byteio *writer, const furnitureType *data)
+static int WriteFurnitureType(byteio *writer, const furnitureType *data)
 {
 	FORWARD_FALSE(WriteRect(writer, &data->bounds));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->pict));
 	return 1;
 }
 
-int ReadBonusType(byteio *reader, bonusType *data)
+static int ReadBonusType(byteio *reader, bonusType *data)
 {
 	FORWARD_FALSE(ReadPoint(reader, &data->topLeft));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->length));
@@ -279,7 +279,7 @@ int ReadBonusType(byteio *reader, bonusType *data)
 	return 1;
 }
 
-int WriteBonusType(byteio *writer, const bonusType *data)
+static int WriteBonusType(byteio *writer, const bonusType *data)
 {
 	FORWARD_FALSE(WritePoint(writer, &data->topLeft));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->length));
@@ -289,7 +289,7 @@ int WriteBonusType(byteio *writer, const bonusType *data)
 	return 1;
 }
 
-int ReadTransportType(byteio *reader, transportType *data)
+static int ReadTransportType(byteio *reader, transportType *data)
 {
 	FORWARD_FALSE(ReadPoint(reader, &data->topLeft));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->tall));
@@ -299,7 +299,7 @@ int ReadTransportType(byteio *reader, transportType *data)
 	return 1;
 }
 
-int WriteTransportType(byteio *writer, const transportType *data)
+static int WriteTransportType(byteio *writer, const transportType *data)
 {
 	FORWARD_FALSE(WritePoint(writer, &data->topLeft));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->tall));
@@ -309,7 +309,7 @@ int WriteTransportType(byteio *writer, const transportType *data)
 	return 1;
 }
 
-int ReadSwitchType(byteio *reader, switchType *data)
+static int ReadSwitchType(byteio *reader, switchType *data)
 {
 	FORWARD_FALSE(ReadPoint(reader, &data->topLeft));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->delay));
@@ -319,7 +319,7 @@ int ReadSwitchType(byteio *reader, switchType *data)
 	return 1;
 }
 
-int WriteSwitchType(byteio *writer, const switchType *data)
+static int WriteSwitchType(byteio *writer, const switchType *data)
 {
 	FORWARD_FALSE(WritePoint(writer, &data->topLeft));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->delay));
@@ -329,7 +329,7 @@ int WriteSwitchType(byteio *writer, const switchType *data)
 	return 1;
 }
 
-int ReadLightType(byteio *reader, lightType *data)
+static int ReadLightType(byteio *reader, lightType *data)
 {
 	FORWARD_FALSE(ReadPoint(reader, &data->topLeft));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->length));
@@ -340,7 +340,7 @@ int ReadLightType(byteio *reader, lightType *data)
 	return 1;
 }
 
-int WriteLightType(byteio *writer, const lightType *data)
+static int WriteLightType(byteio *writer, const lightType *data)
 {
 	FORWARD_FALSE(WritePoint(writer, &data->topLeft));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->length));
@@ -351,7 +351,7 @@ int WriteLightType(byteio *writer, const lightType *data)
 	return 1;
 }
 
-int ReadApplianceType(byteio *reader, applianceType *data)
+static int ReadApplianceType(byteio *reader, applianceType *data)
 {
 	FORWARD_FALSE(ReadPoint(reader, &data->topLeft));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->height));
@@ -362,7 +362,7 @@ int ReadApplianceType(byteio *reader, applianceType *data)
 	return 1;
 }
 
-int WriteApplianceType(byteio *writer, const applianceType *data)
+static int WriteApplianceType(byteio *writer, const applianceType *data)
 {
 	FORWARD_FALSE(WritePoint(writer, &data->topLeft));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->height));
@@ -373,7 +373,7 @@ int WriteApplianceType(byteio *writer, const applianceType *data)
 	return 1;
 }
 
-int ReadEnemyType(byteio *reader, enemyType *data)
+static int ReadEnemyType(byteio *reader, enemyType *data)
 {
 	FORWARD_FALSE(ReadPoint(reader, &data->topLeft));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->length));
@@ -384,7 +384,7 @@ int ReadEnemyType(byteio *reader, enemyType *data)
 	return 1;
 }
 
-int WriteEnemyType(byteio *writer, const enemyType *data)
+static int WriteEnemyType(byteio *writer, const enemyType *data)
 {
 	FORWARD_FALSE(WritePoint(writer, &data->topLeft));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->length));
@@ -395,21 +395,21 @@ int WriteEnemyType(byteio *writer, const enemyType *data)
 	return 1;
 }
 
-int ReadClutterType(byteio *reader, clutterType *data)
+static int ReadClutterType(byteio *reader, clutterType *data)
 {
 	FORWARD_FALSE(ReadRect(reader, &data->bounds));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->pict));
 	return 1;
 }
 
-int WriteClutterType(byteio *writer, const clutterType *data)
+static int WriteClutterType(byteio *writer, const clutterType *data)
 {
 	FORWARD_FALSE(WriteRect(writer, &data->bounds));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->pict));
 	return 1;
 }
 
-int ReadObjectType(byteio *reader, objectType *data)
+static int ReadObjectType(byteio *reader, objectType *data)
 {
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->what));
 	switch (data->what)
@@ -490,7 +490,7 @@ int ReadObjectType(byteio *reader, objectType *data)
 	return 1;
 }
 
-int WriteObjectType(byteio *writer, const objectType *data)
+static int WriteObjectType(byteio *writer, const objectType *data)
 {
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->what));
 	switch (data->what)
@@ -601,7 +601,7 @@ int WriteScoresType(byteio *writer, const scoresType *data)
 	return 1;
 }
 
-int ReadGameType(byteio *reader, gameType *data)
+static int ReadGameType(byteio *reader, gameType *data)
 {
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->version));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->wasStarsLeft));
@@ -622,7 +622,7 @@ int ReadGameType(byteio *reader, gameType *data)
 	return 1;
 }
 
-int WriteGameType(byteio *writer, const gameType *data)
+static int WriteGameType(byteio *writer, const gameType *data)
 {
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->version));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->wasStarsLeft));
@@ -643,7 +643,7 @@ int WriteGameType(byteio *writer, const gameType *data)
 	return 1;
 }
 
-int ReadSavedRoom(byteio *reader, savedRoom *data)
+static int ReadSavedRoom(byteio *reader, savedRoom *data)
 {
 	size_t i;
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->unusedShort));
@@ -654,7 +654,7 @@ int ReadSavedRoom(byteio *reader, savedRoom *data)
 	return 1;
 }
 
-int WriteSavedRoom(byteio *writer, const savedRoom *data)
+static int WriteSavedRoom(byteio *writer, const savedRoom *data)
 {
 	size_t i;
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->unusedShort));
@@ -729,7 +729,7 @@ int WriteGame2Type(byteio *writer, const game2Type *data)
 	return 1;
 }
 
-int ReadRoomType(byteio *reader, roomType *data)
+static int ReadRoomType(byteio *reader, roomType *data)
 {
 	size_t i;
 	FORWARD_FALSE(ReadStr27(reader, &data->name));
@@ -750,7 +750,7 @@ int ReadRoomType(byteio *reader, roomType *data)
 	return 1;
 }
 
-int WriteRoomType(byteio *writer, const roomType *data)
+static int WriteRoomType(byteio *writer, const roomType *data)
 {
 	size_t i;
 	FORWARD_FALSE(WriteStr27(writer, &data->name));

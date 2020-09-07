@@ -21,7 +21,6 @@ extern Boolean isCoordOpen;
 
 void SetCoordinateHVD (SInt16 h, SInt16 v, SInt16 d);
 void DeltaCoordinateD (SInt16 d);
-void UpdateCoordWindow (void);
 void OpenCoordWindow (void);
 void CloseCoordWindow (void);
 void ToggleCoordinateWindow (void);

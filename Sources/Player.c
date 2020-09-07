@@ -48,10 +48,12 @@ void MoveGliderInMailLeft (gliderPtr thisGlider);
 void MoveGliderInMailRight (gliderPtr thisGlider);
 void FinishGliderMailingLeft (gliderPtr thisGlider);
 void FinishGliderMailingRight (gliderPtr thisGlider);
+void FinishGliderDuctingIn (gliderPtr thisGlider);
 void MoveGliderFoilGoing (gliderPtr thisGlider);
 void MoveGliderFoilLosing (gliderPtr thisGlider);
 void MoveGliderShredding (gliderPtr thisGlider);
 void HandleIdleGlider (gliderPtr thisGlider);
+void OffAMortal (gliderPtr thisGlider);
 
 
 gliderType theGlider;

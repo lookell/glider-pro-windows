@@ -34,7 +34,6 @@ void UpdateMapWindow (void);
 void OpenMapWindow (void);
 void CloseMapWindow (void);
 void ToggleMapWindow (void);
-void HandleMapClick (SInt16 clickX, SInt16 clickY);
 void MoveRoom (Point wherePt);
 
 #endif

@@ -41,6 +41,7 @@ void HandleMapSizeMessage (HWND hwnd);
 LRESULT CALLBACK MapWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 void LiveHScrollAction (HWND hwnd, WORD scrollRequest);
 void LiveVScrollAction (HWND hwnd, WORD scrollRequest);
+void HandleMapClick (SInt16 clickX, SInt16 clickY);
 Boolean QueryNewRoom (HWND ownerWindow);
 void CreateNailOffscreen (void);
 void KillNailOffscreen (void);

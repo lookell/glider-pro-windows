@@ -47,6 +47,7 @@
 #define kSuiteEditText		1006
 
 
+void SortRoomsObjects (SInt16 which);
 INT_PTR CALLBACK GoToFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 

@@ -22,6 +22,7 @@
 #include "Transitions.h"
 
 
+void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat);
 void HandleRoomVisitation (void);
 
 

@@ -36,6 +36,7 @@
 
 
 SInt16 FindEmptyObjectSlot (void);
+void ShoutNoMoreObjects (HWND ownerWindow);
 SInt16 HowManyCandleObjects (void);
 SInt16 HowManyTikiObjects (void);
 SInt16 HowManyBBQObjects (void);

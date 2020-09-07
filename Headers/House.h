@@ -32,7 +32,6 @@ void WhereDoesGliderBegin (Rect *theRect, SInt16 mode);
 Boolean HouseHasOriginalPicts (void);
 SInt16 CountHouseLinks (void);
 void GenerateLinksList (void);
-void SortRoomsObjects (SInt16 which);
 void SortHouseObjects (void);
 SInt16 CountRoomsVisited (void);
 void GenerateRetroLinks (void);

@@ -7,7 +7,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-#include "GliderStructs.h"
 #include "MacTypes.h"
 
 extern SInt16 numWork2Main;
@@ -17,7 +16,6 @@ extern Boolean hasMirror;
 void AddRectToWorkRects (const Rect *theRect);
 void AddRectToBackRects (const Rect *theRect);
 void AddRectToWorkRectsWhole (const Rect *theRect);
-void RenderGlider (const gliderType *thisGlider, Boolean oneOrTwo);
 void CopyRectsQD (void);
 void RenderFrame (void);
 void InitGarbageRects (void);

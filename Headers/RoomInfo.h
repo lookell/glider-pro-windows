@@ -20,6 +20,5 @@ extern HDC tileSrcMap;
 #ifdef GP_USE_WINAPI_H
 void DoRoomInfo (HWND hwndOwner);
 #endif
-Boolean PictIDExists (SInt16 theID);
 
 #endif

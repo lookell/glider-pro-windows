@@ -35,11 +35,9 @@ extern Boolean playerDead;
 
 void FinishGliderUpStairs (gliderPtr thisGlider);
 void FinishGliderDownStairs (gliderPtr thisGlider);
-void FinishGliderDuctingIn (gliderPtr thisGlider);
 void DeckGliderInFoil (gliderPtr thisGlider);
 void RemoveFoilFromGlider (gliderPtr thisGlider);
 void HandleGlider (gliderPtr thisGlider);
 void OffsetGlider (gliderPtr thisGlider, SInt16 where);
-void OffAMortal (gliderPtr thisGlider);
 
 #endif

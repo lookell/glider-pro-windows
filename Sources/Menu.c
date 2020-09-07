@@ -52,7 +52,11 @@ void UpdateMenusHouseOpen (void);
 void UpdateMenusHouseClosed (void);
 INT_PTR CALLBACK ResumeFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 SInt16 QueryResumeGame (HWND ownerWindow);
+#ifdef COMPILEDEMO
+void DoNotInDemo (HWND ownerWindow);
+#endif
 void HeyYourPissingAHighScore (HWND ownerWindow);
+void OpenCloseEditWindows (void);
 
 
 HMENU theMenuBar;

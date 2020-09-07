@@ -27,6 +27,7 @@
 
 
 INT_PTR CALLBACK CoordWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+void UpdateCoordWindow (void);
 
 
 HWND coordWindow;

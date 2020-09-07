@@ -39,6 +39,7 @@
 
 
 void DrawHighScores (void);
+void SortHighScores (void);
 INT_PTR CALLBACK NameFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 void GetHighScoreName (HWND ownerWindow, SInt16 place);
 INT_PTR CALLBACK BannerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);

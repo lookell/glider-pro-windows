@@ -44,6 +44,7 @@
 void DrawOnSplash (HDC hdc);
 void PaintMainWindow (HDC hdc);
 void AdjustMainWindowDC (HDC hdc);
+void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick);
 void SetPaletteToGrays (RGBQUAD *colors, UINT numColors, int saturation,
 	int maxSaturation);
 void MapViewportRectToMain (Rect *theRect);

@@ -19,8 +19,5 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 #endif
 SInt16 FindObjectSlotInRoom (SInt16 roomNumber);
 Boolean DoesRoomNumHaveObject (SInt16 room, SInt16 what);
-#ifdef GP_USE_WINAPI_H
-void ShoutNoMoreObjects (HWND ownerWindow);
-#endif
 
 #endif

@@ -46,7 +46,6 @@ void OpenMainWindow (void);
 void CloseMainWindow (void);
 void UpdateEditWindowTitle (void);
 #ifdef GP_USE_WINAPI_H
-void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick);
 HDC GetMainWindowDC (void);
 void ReleaseMainWindowDC (HDC hdc);
 #endif

@@ -39,12 +39,6 @@ void DoMenuChoice (HWND hwnd, WORD menuChoice);
 void UpdateMapCheckmark (Boolean checkIt);
 void UpdateToolsCheckmark (Boolean checkIt);
 void UpdateCoordinateCheckmark (Boolean checkIt);
-#ifdef GP_USE_WINAPI_H
-#ifdef COMPILEDEMO
-void DoNotInDemo (HWND ownerWindow);
-#endif
-#endif
-void OpenCloseEditWindows (void);
 void EnableMenuBar (void);
 void DisableMenuBar (void);
 

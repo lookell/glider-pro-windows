@@ -354,24 +354,6 @@ typedef struct shredType
 	SInt16 frame;
 } shredType;
 
-typedef struct dynaType
-{
-	Rect dest;
-	Rect whole;
-	SInt16 hVel;
-	SInt16 vVel;
-	SInt16 type;
-	SInt16 count;
-	SInt16 frame;
-	SInt16 timer;
-	SInt16 position;
-	SInt16 room;
-	Byte byte0;
-	Byte byte1;
-	Boolean moving;
-	Boolean active;
-} dynaType;
-
 typedef struct objDataType
 {
 	SInt16 roomNum;         // room # object in (real number)

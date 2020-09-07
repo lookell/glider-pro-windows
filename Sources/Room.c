@@ -37,6 +37,9 @@
 
 Boolean QueryDeleteRoom (HWND ownerWindow);
 void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_);
+SInt16 GetOriginalBounding (SInt16 theID);
+Boolean DoesRoomHaveFloor (void);
+Boolean DoesRoomHaveCeiling (void);
 
 
 roomPtr thisRoom;
@@ -719,7 +722,7 @@ SInt16 GetRoomNumber (SInt16 floor, SInt16 suite)
 
 //--------------------------------------------------------------  IsRoomAStructure
 
-Boolean	IsRoomAStructure (SInt16 roomNum)
+Boolean IsRoomAStructure (SInt16 roomNum)
 {
 	Boolean		isStructure;
 

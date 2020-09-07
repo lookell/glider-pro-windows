@@ -691,7 +691,7 @@ INT_PTR CALLBACK SoundFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM 
 	return FALSE;
 }
 
-//--------------------------------------------------------------  DoSettingsMain
+//--------------------------------------------------------------  DoSoundPrefs
 
 void DoSoundPrefs (HWND ownerWindow)
 {

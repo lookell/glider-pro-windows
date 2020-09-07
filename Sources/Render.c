@@ -12,6 +12,7 @@
 #include "DynamicMaps.h"
 #include "Dynamics.h"
 #include "FrameTimer.h"
+#include "GliderStructs.h"
 #include "Grease.h"
 #include "HouseIO.h"
 #include "Macintosh.h"
@@ -35,6 +36,7 @@ void RenderPendulums (void);
 void RenderFlyingPoints (void);
 void RenderSparkles (void);
 void RenderStars (void);
+void RenderGlider (const gliderType *thisGlider, Boolean oneOrTwo);
 void RenderBands (void);
 void RenderShreds (void);
 void CopyRectsQD (void);

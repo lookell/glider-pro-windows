@@ -216,7 +216,7 @@ COLORREF DkGrayForeColor (void)
 	return RGB(color.red >> 8, color.green >> 8, color.blue >> 8);
 }
 
-//--------------------------------------------------------------  ColorRectShadow
+//--------------------------------------------------------------  ColorShadowRect
 
 // Similar to ColorRect, but every other pixel is set to the specified color
 // to create a dithered shadow.
@@ -229,7 +229,7 @@ void ColorShadowRect (HDC hdc, const Rect *theRect, SInt32 color)
 	DeleteObject(theRgn);
 }
 
-//--------------------------------------------------------------  ColorOvalShadow
+//--------------------------------------------------------------  ColorShadowOval
 
 // Similar to ColorOval, but every other pixel is set to the specified color
 // to create a dithered shadow.
@@ -242,7 +242,7 @@ void ColorShadowOval (HDC hdc, const Rect *theRect, SInt32 color)
 	DeleteObject(theRgn);
 }
 
-//--------------------------------------------------------------  ColorRegionShadow
+//--------------------------------------------------------------  ColorShadowRegion
 
 // Similar to ColorRegion, but every other pixel is set to the specified color
 // to create a dithered shadow.
