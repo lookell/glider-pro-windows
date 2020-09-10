@@ -192,7 +192,6 @@ void OpenMainWindow (void)
 	SInt16 whichRoom;
 	RECT rcClient;
 	LONG width, height;
-	SInt16 workspaceX, workspaceY;
 	WINDOWPLACEMENT placement;
 	DWORD windowStyle;
 	HDC mainWindowDC;
@@ -205,12 +204,6 @@ void OpenMainWindow (void)
 
 	if (theMode == kEditMode)
 	{
-		// These assignments must happen before the CreateWindow call, or else the
-		// WM_MOVE message handler overwrites 'isEditH' and 'isEditV' during the
-		// main window's creation.
-		workspaceX = isEditH;
-		workspaceY = isEditV;
-
 		QSetRect(&mainWindowRect, 0, 0, 512, 322);
 		SetRect(&rcClient, 0, 0, 512, 322);
 		windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
@@ -227,11 +220,6 @@ void OpenMainWindow (void)
 		{
 			isEditH = 3;
 			isEditV = 41;
-		}
-		else
-		{
-			isEditH = workspaceX;
-			isEditV = workspaceY;
 		}
 
 		placement.length = sizeof(placement);
