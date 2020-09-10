@@ -107,27 +107,11 @@ void DrawBannerMessage (Point topLeft)
 {
 	Str255		bannerStr, subStr;
 	SInt16		count;
-	LOGFONT		lfBanner;
 	HFONT		bannerFont;
-
-	lfBanner.lfHeight = -12;
-	lfBanner.lfWidth = 0;
-	lfBanner.lfEscapement = 0;
-	lfBanner.lfOrientation = 0;
-	lfBanner.lfWeight = FW_BOLD;
-	lfBanner.lfItalic = FALSE;
-	lfBanner.lfUnderline = FALSE;
-	lfBanner.lfStrikeOut = FALSE;
-	lfBanner.lfCharSet = DEFAULT_CHARSET;
-	lfBanner.lfOutPrecision = OUT_DEFAULT_PRECIS;
-	lfBanner.lfClipPrecision = CLIP_DEFAULT_PRECIS;
-	lfBanner.lfQuality = DEFAULT_QUALITY;
-	lfBanner.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	StringCchCopy(lfBanner.lfFaceName, ARRAYSIZE(lfBanner.lfFaceName), L"Tahoma");
 
 	PasStringCopy(thisHouse.banner, bannerStr);
 
-	bannerFont = CreateFontIndirect(&lfBanner);
+	bannerFont = CreateTahomaFont(-12, FW_BOLD);
 	SaveDC(workSrcMap);
 	SelectObject(workSrcMap, bannerFont);
 	SetTextColor(workSrcMap, blackColor);
@@ -209,7 +193,6 @@ void DisplayStarsRemaining (void)
 	Rect		src, bounds;
 	WCHAR		theStr[256];
 	HDC			mainWindowDC;
-	LOGFONT		lfText;
 	HFONT		textFont;
 
 	QSetRect(&bounds, 0, 0, 256, 64);
@@ -218,20 +201,6 @@ void DisplayStarsRemaining (void)
 	src = bounds;
 	QInsetRect(&src, 64, 32);
 
-	lfText.lfHeight = -12;
-	lfText.lfWidth = 0;
-	lfText.lfEscapement = 0;
-	lfText.lfOrientation = 0;
-	lfText.lfWeight = FW_BOLD;
-	lfText.lfItalic = FALSE;
-	lfText.lfUnderline = FALSE;
-	lfText.lfStrikeOut = FALSE;
-	lfText.lfCharSet = DEFAULT_CHARSET;
-	lfText.lfOutPrecision = OUT_DEFAULT_PRECIS;
-	lfText.lfClipPrecision = CLIP_DEFAULT_PRECIS;
-	lfText.lfQuality = DEFAULT_QUALITY;
-	lfText.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	StringCchCopy(lfText.lfFaceName, ARRAYSIZE(lfText.lfFaceName), L"Tahoma");
 	StringCchPrintf(theStr, ARRAYSIZE(theStr), L"%d", (int)numStarsRemaining);
 
 	mainWindowDC = GetMainWindowDC();
@@ -242,7 +211,7 @@ void DisplayStarsRemaining (void)
 	{
 		SaveDC(mainWindowDC);
 		LoadScaledGraphic(mainWindowDC, kStarsRemainingPICT, &bounds);
-		textFont = CreateFontIndirect(&lfText);
+		textFont = CreateTahomaFont(-12, FW_BOLD);
 		SelectObject(mainWindowDC, textFont);
 		SetTextAlign(mainWindowDC, TA_BASELINE | TA_CENTER);
 		SetTextColor(mainWindowDC, Index2ColorRef(4L));

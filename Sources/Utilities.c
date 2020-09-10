@@ -267,6 +267,33 @@ void DrawCIcon (HDC hdc, SInt16 theID, SInt16 h, SInt16 v)
 	}
 }
 
+//--------------------------------------------------------------  CreateTahomaFont
+// Create an HFONT with the specified height and weight in typeface Tahoma.
+// This is a shorthand for creating a LOGFONT with mostly default values,
+// and then calling CreateFontIndirect. The `height` and `weight` parameters
+// are assigned to LOGFONT::lfHeight and LOGFONT::lfWeight with no modification.
+
+HFONT CreateTahomaFont (LONG height, LONG weight)
+{
+	LOGFONT lf;
+
+	lf.lfHeight = height;
+	lf.lfWidth = 0;
+	lf.lfEscapement = 0;
+	lf.lfOrientation = 0;
+	lf.lfWeight = weight;
+	lf.lfItalic = FALSE;
+	lf.lfUnderline = FALSE;
+	lf.lfStrikeOut = FALSE;
+	lf.lfCharSet = DEFAULT_CHARSET;
+	lf.lfOutPrecision = OUT_DEFAULT_PRECIS;
+	lf.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+	lf.lfQuality = DEFAULT_QUALITY;
+	lf.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
+	StringCchCopy(lf.lfFaceName, ARRAYSIZE(lf.lfFaceName), TEXT("Tahoma"));
+	return CreateFontIndirect(&lf);
+}
+
 //--------------------------------------------------------------  WaitForInputEvent
 // Wait for either a key to be hit or the mouse button to be clicked.
 // Also has a "timeout" parameter ("seconds").

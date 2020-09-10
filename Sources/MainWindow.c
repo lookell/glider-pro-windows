@@ -83,35 +83,14 @@ static HCURSOR mainWindowCursor;
 void DrawOnSplash (HDC hdc)
 {
 	Str255		houseLoadedStr, tempStr;
-	LOGFONT		lfHouse, lfNative;
 	HGDIOBJ		theFont, wasFont;
-
-	lfHouse.lfHeight = -9;
-	lfHouse.lfWidth = 0;
-	lfHouse.lfEscapement = 0;
-	lfHouse.lfOrientation = 0;
-	lfHouse.lfWeight = FW_BOLD;
-	lfHouse.lfItalic = FALSE;
-	lfHouse.lfUnderline = FALSE;
-	lfHouse.lfStrikeOut = FALSE;
-	lfHouse.lfCharSet = DEFAULT_CHARSET;
-	lfHouse.lfOutPrecision = OUT_DEFAULT_PRECIS;
-	lfHouse.lfClipPrecision = CLIP_DEFAULT_PRECIS;
-	lfHouse.lfQuality = DEFAULT_QUALITY;
-	lfHouse.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	StringCchCopy(lfHouse.lfFaceName, ARRAYSIZE(lfHouse.lfFaceName), L"Tahoma");
-
-	lfNative = lfHouse;
-	lfNative.lfHeight = -12;
-	lfNative.lfWeight = FW_BOLD;
-	StringCchCopy(lfNative.lfFaceName, ARRAYSIZE(lfNative.lfFaceName), L"Tahoma");
 
 	PasStringCopyC("House: ", houseLoadedStr);
 	PasStringConcat(houseLoadedStr, thisHouseName);
 	if ((thisMac.hasQT) && (hasMovie))
 		PasStringConcatC(houseLoadedStr, " (QT)");
 	MoveToEx(hdc, splashOriginH + 436, splashOriginV + 314, NULL);
-	theFont = CreateFontIndirect(&lfHouse);
+	theFont = CreateTahomaFont(-9, FW_BOLD);
 	wasFont = SelectObject(hdc, theFont);
 	if (houseIsReadOnly)
 		ColorText(hdc, houseLoadedStr, 5L);
@@ -121,7 +100,7 @@ void DrawOnSplash (HDC hdc)
 	DeleteObject(theFont);
 
 	#if defined(powerc) || defined(__powerc) // TODO: Change message to "Windows Native!"?
-	theFont = CreateFontIndirect(&lfNative);
+	theFont = CreateTahomaFont(-12, FW_BOLD);
 	wasFont = SelectObject(hdc, theFont);
 	PasStringCopyC("PowerPC Native!", tempStr);
 	wasTextColor = SetTextColor(hdc, blackColor);

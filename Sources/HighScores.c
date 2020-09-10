@@ -99,24 +99,8 @@ void DrawHighScores (void)
 	Str255		tempStr;
 	SInt16		scoreLeft, bannerWidth, i, dropIt;
 	INT			hOffset, vOffset;
-	LOGFONT		theLogFont;
 	HFONT		theFont;
 	COLORREF	wasColor;
-
-	theLogFont.lfHeight = 0;
-	theLogFont.lfWidth = 0;
-	theLogFont.lfEscapement = 0;
-	theLogFont.lfOrientation = 0;
-	theLogFont.lfWeight = FW_NORMAL;
-	theLogFont.lfItalic = FALSE;
-	theLogFont.lfUnderline = FALSE;
-	theLogFont.lfStrikeOut = FALSE;
-	theLogFont.lfCharSet = DEFAULT_CHARSET;
-	theLogFont.lfOutPrecision = OUT_DEFAULT_PRECIS;
-	theLogFont.lfClipPrecision = CLIP_DEFAULT_PRECIS;
-	theLogFont.lfQuality = DEFAULT_QUALITY;
-	theLogFont.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	StringCchCopy(theLogFont.lfFaceName, ARRAYSIZE(theLogFont.lfFaceName), L"Tahoma");
 
 	scoreLeft = ((thisMac.screen.right - thisMac.screen.left) - kScoreWide) / 2;
 	dropIt = 129 + splashOriginV;
@@ -137,9 +121,7 @@ void DrawHighScores (void)
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
 
-	theLogFont.lfHeight = -14;
-	theLogFont.lfWeight = FW_BOLD;
-	theFont = CreateFontIndirect(&theLogFont);
+	theFont = CreateTahomaFont(-14, FW_BOLD);
 
 	SaveDC(workSrcMap);
 	SelectObject(workSrcMap, theFont);
@@ -157,9 +139,7 @@ void DrawHighScores (void)
 	RestoreDC(workSrcMap, -1);
 	DeleteObject(theFont);
 
-	theLogFont.lfHeight = -12;
-	theLogFont.lfWeight = FW_BOLD;
-	theFont = CreateFontIndirect(&theLogFont);
+	theFont = CreateTahomaFont(-12, FW_BOLD);
 	SaveDC(workSrcMap);
 	SelectObject(workSrcMap, theFont);
 													// message for score #1
@@ -279,9 +259,7 @@ void DrawHighScores (void)
 	RestoreDC(workSrcMap, -1);
 	DeleteObject(theFont);
 
-	theLogFont.lfHeight = -9;
-	theLogFont.lfWeight = FW_BOLD;
-	theFont = CreateFontIndirect(&theLogFont);
+	theFont = CreateTahomaFont(-9, FW_BOLD);
 	SaveDC(workSrcMap);
 	SelectObject(workSrcMap, theFont);
 	SetTextColor(workSrcMap, blueColor);

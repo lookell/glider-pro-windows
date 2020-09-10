@@ -34,8 +34,6 @@
 #include "Utilities.h"
 #include "WinAPI.h"
 
-#include <strsafe.h>
-
 #include <stdlib.h>
 
 
@@ -64,24 +62,9 @@ void InitScoreboardMap (void)
 	Rect		bounds;
 	HBITMAP		thePicture;
 	BITMAP		bmInfo;
-	LOGFONT		lfScoreboard;
+	HFONT		scoreboardFont;
 	OSErr		theErr;
 	SInt16		hOffset;
-
-	lfScoreboard.lfHeight = 14;
-	lfScoreboard.lfWidth = 0;
-	lfScoreboard.lfEscapement = 0;
-	lfScoreboard.lfOrientation = 0;
-	lfScoreboard.lfWeight = FW_BOLD;
-	lfScoreboard.lfItalic = FALSE;
-	lfScoreboard.lfUnderline = FALSE;
-	lfScoreboard.lfStrikeOut = FALSE;
-	lfScoreboard.lfCharSet = DEFAULT_CHARSET;
-	lfScoreboard.lfOutPrecision = OUT_DEFAULT_PRECIS;
-	lfScoreboard.lfClipPrecision = CLIP_DEFAULT_PRECIS;
-	lfScoreboard.lfQuality = DEFAULT_QUALITY;
-	lfScoreboard.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	StringCchCopy(lfScoreboard.lfFaceName, ARRAYSIZE(lfScoreboard.lfFaceName), L"Tahoma");
 
 	wasScoreboardMode = kScoreboardHigh;
 	boardSrcRect = houseRect;
@@ -117,7 +100,8 @@ void InitScoreboardMap (void)
 	theErr = CreateOffScreenGWorld(&boardTSrcMap, &boardTSrcRect, kPreferredDepth);
 	boardTDestRect = boardTSrcRect;
 	QOffsetRect(&boardTDestRect, 137 + hOffset, 2);
-	SelectObject(boardTSrcMap, CreateFontIndirect(&lfScoreboard));
+	scoreboardFont = CreateTahomaFont(14, FW_BOLD);
+	SelectObject(boardTSrcMap, scoreboardFont);
 
 	QSetRect(&boardGSrcRect, 0, 0, 20, 15);				// # gliders
 	theErr = CreateOffScreenGWorld(&boardGSrcMap, &boardGSrcRect, kPreferredDepth);
@@ -125,7 +109,8 @@ void InitScoreboardMap (void)
 	QOffsetRect(&boardGDestRect, 526 + hOffset, 2);
 	boardGQDestRect = boardGDestRect;
 	QOffsetRect(&boardGQDestRect, 0, -kScoreboardTall);
-	SelectObject(boardGSrcMap, CreateFontIndirect(&lfScoreboard));
+	scoreboardFont = CreateTahomaFont(14, FW_BOLD);
+	SelectObject(boardGSrcMap, scoreboardFont);
 
 	QSetRect(&boardPSrcRect, 0, 0, 64, 15);				// points
 	theErr = CreateOffScreenGWorld(&boardPSrcMap, &boardPSrcRect, kPreferredDepth);
@@ -133,7 +118,8 @@ void InitScoreboardMap (void)
 	QOffsetRect(&boardPDestRect, 570 + hOffset, 2);		// total = 6396 pixels
 	boardPQDestRect = boardPDestRect;
 	QOffsetRect(&boardPQDestRect, 0, -kScoreboardTall);
-	SelectObject(boardPSrcMap, CreateFontIndirect(&lfScoreboard));
+	scoreboardFont = CreateTahomaFont(14, FW_BOLD);
+	SelectObject(boardPSrcMap, scoreboardFont);
 
 	QSetRect(&badgesBlankRects[kFoilBadge], 0, 0, 16, 16);
 	QOffsetRect(&badgesBlankRects[kFoilBadge], 0, 0);

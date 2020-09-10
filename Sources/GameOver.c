@@ -28,8 +28,6 @@
 #include "StringUtils.h"
 #include "Utilities.h"
 
-#include <strsafe.h>
-
 
 #define kNumCountDownFrames		16
 #define kPageFrames				14
@@ -101,23 +99,7 @@ void SetUpFinalScreen (void)
 	Str255		tempStr, subStr;
 	WCHAR		outStr[256];
 	SInt16		count, hOffset, vOffset, i, textDown;
-	LOGFONT		lfGameOver;
 	HFONT		gameOverFont;
-
-	lfGameOver.lfHeight = -12;
-	lfGameOver.lfWidth = 0;
-	lfGameOver.lfEscapement = 0;
-	lfGameOver.lfOrientation = 0;
-	lfGameOver.lfWeight = FW_BOLD;
-	lfGameOver.lfItalic = FALSE;
-	lfGameOver.lfUnderline = FALSE;
-	lfGameOver.lfStrikeOut = FALSE;
-	lfGameOver.lfCharSet = DEFAULT_CHARSET;
-	lfGameOver.lfOutPrecision = OUT_DEFAULT_PRECIS;
-	lfGameOver.lfClipPrecision = CLIP_DEFAULT_PRECIS;
-	lfGameOver.lfQuality = DEFAULT_QUALITY;
-	lfGameOver.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	StringCchCopy(lfGameOver.lfFaceName, ARRAYSIZE(lfGameOver.lfFaceName), L"Tahoma");
 
 	ColorRect(workSrcMap, &workSrcRect, 244);
 	QSetRect(&tempRect, 0, 0, 640, 460);
@@ -130,7 +112,7 @@ void SetUpFinalScreen (void)
 	PasStringCopy(thisHouse.trailer, tempStr);
 
 	SaveDC(workSrcMap);
-	gameOverFont = CreateFontIndirect(&lfGameOver);
+	gameOverFont = CreateTahomaFont(-12, FW_BOLD);
 	SelectObject(workSrcMap, gameOverFont);
 	SetBkMode(workSrcMap, TRANSPARENT);
 	SetTextAlign(workSrcMap, TA_BASELINE | TA_CENTER);

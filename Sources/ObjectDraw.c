@@ -17,8 +17,6 @@
 #include "Room.h"
 #include "Utilities.h"
 
-#include <strsafe.h>
-
 
 #define k8WhiteColor			0
 #define kYellowColor			5
@@ -1884,7 +1882,6 @@ void DrawCalendar (const Rect *theRect)
 	BITMAP		bmInfo;
 	WCHAR		monthStr[256];
 	INT			monthLen;
-	LOGFONT		lfCalendar;
 	HFONT		theFont;
 
 	thePicture = GetPicture(kCalendarPictID);
@@ -1897,21 +1894,6 @@ void DrawCalendar (const Rect *theRect)
 	Mac_DrawPicture(backSrcMap, thePicture, &bounds);
 	DeleteObject(thePicture);
 
-	lfCalendar.lfHeight = -9;
-	lfCalendar.lfWidth = 0;
-	lfCalendar.lfEscapement = 0;
-	lfCalendar.lfOrientation = 0;
-	lfCalendar.lfWeight = FW_BOLD;
-	lfCalendar.lfItalic = FALSE;
-	lfCalendar.lfUnderline = FALSE;
-	lfCalendar.lfStrikeOut = FALSE;
-	lfCalendar.lfCharSet = DEFAULT_CHARSET;
-	lfCalendar.lfOutPrecision = OUT_DEFAULT_PRECIS;
-	lfCalendar.lfClipPrecision = CLIP_DEFAULT_PRECIS;
-	lfCalendar.lfQuality = DEFAULT_QUALITY;
-	lfCalendar.lfPitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-	StringCchCopy(lfCalendar.lfFaceName, ARRAYSIZE(lfCalendar.lfFaceName), L"Tahoma");
-
 	GetLocalTime(&localTime);
 	monthLen = LoadString(HINST_THISCOMPONENT,
 			kMonthStringBase + localTime.wMonth,
@@ -1921,7 +1903,7 @@ void DrawCalendar (const Rect *theRect)
 	SetBkMode(backSrcMap, TRANSPARENT);
 	SetTextAlign(backSrcMap, TA_CENTER | TA_BASELINE);
 	SetTextColor(backSrcMap, Index2ColorRef(kDarkFleshColor));
-	theFont = CreateFontIndirect(&lfCalendar);
+	theFont = CreateTahomaFont(-9, FW_BOLD);
 	SelectObject(backSrcMap, theFont);
 	TextOut(backSrcMap, theRect->left + 32, theRect->top + 55, monthStr, monthLen);
 	RestoreDC(backSrcMap, -1);
