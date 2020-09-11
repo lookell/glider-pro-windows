@@ -546,6 +546,7 @@ static DWORD Audio_WriteData(AudioChannel *channel, unsigned char *buffer, DWORD
 static DWORD Audio_UpdateBuffer(AudioChannel *channel, DWORD start, DWORD stop)
 {
 	DWORD totalSoundBytes;
+	DWORD lockSize;
 	HRESULT hr;
 	void *ptr1;
 	DWORD size1;
@@ -553,9 +554,13 @@ static DWORD Audio_UpdateBuffer(AudioChannel *channel, DWORD start, DWORD stop)
 	DWORD size2;
 
 	totalSoundBytes = 0;
+	lockSize = BytesInRange(channel, start, stop);
+	if (lockSize == 0)
+	{
+		return totalSoundBytes;
+	}
 	hr = IDirectSoundBuffer8_Lock(channel->audioBuffer,
-		start, BytesInRange(channel, start, stop),
-		&ptr1, &size1, &ptr2, &size2, 0);
+		start, lockSize, &ptr1, &size1, &ptr2, &size2, 0);
 	if (SUCCEEDED(hr))
 	{
 		totalSoundBytes += Audio_WriteData(channel, (unsigned char *)ptr1, size1);
@@ -699,8 +704,8 @@ static void Audio_FillBufferWithSilence(AudioChannel *channel)
 	DWORD outputBytes;
 	HRESULT hr;
 
-	hr = IDirectSoundBuffer8_Lock(channel->audioBuffer, 0, 0, &outputPtr, &outputBytes,
-		NULL, NULL, DSBLOCK_ENTIREBUFFER);
+	hr = IDirectSoundBuffer8_Lock(channel->audioBuffer,
+		0, 0, &outputPtr, &outputBytes, NULL, NULL, DSBLOCK_ENTIREBUFFER);
 	if (SUCCEEDED(hr))
 	{
 		Audio_WriteSilence(channel, (unsigned char *)outputPtr, outputBytes);
