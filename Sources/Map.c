@@ -15,13 +15,16 @@
 #include "GliderDefines.h"
 #include "House.h"
 #include "HouseIO.h"
+#include "Link.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "Menu.h"
 #include "ObjectEdit.h"
+#include "Objects.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Room.h"
+#include "Scrap.h"
 #include "Utilities.h"
 #include "WinAPI.h"
 
@@ -34,7 +37,6 @@
 
 
 void RegisterMapWindowClass (void);
-void LoadGraphicPlus (HDC hdc, SInt16 resID, const Rect *theRect);
 void RedrawMapContents (HDC hdc);
 void HandleMapSizingMessage (HWND hwnd, WPARAM sizedEdge, RECT *windowRect);
 void HandleMapSizeMessage (HWND hwnd);
@@ -234,6 +236,9 @@ void RedrawMapContents (HDC hdc)
 		return;
 
 	SaveDC(hdc);
+	SetStretchBltMode(hdc, HALFTONE);
+	SetBrushOrgEx(hdc, 0, 0, NULL);
+
 	ditherBrush = CreateShadowBrush();
 
 	activeRoomVisible = false;
@@ -712,6 +717,8 @@ void HandleMapClick (SInt16 clickX, SInt16 clickY)
 #ifndef COMPILEDEMO
 	SInt16 localH, localV;
 	SInt16 roomH, roomV, itsNumber;
+	Point clickPoint;
+	Rect aRoom;
 
 	localH = clickX / kMapRoomWidth;
 	localV = clickY / kMapRoomHeight;
@@ -730,18 +737,11 @@ void HandleMapClick (SInt16 clickX, SInt16 clickY)
 		DeselectObject();
 		ReflectCurrentRoom(false);
 
-		if (thisMac.hasDrag)
-		{
-			// TODO: implement room dragging in map window
-//			Rect aRoom;
-//			SetPortWindowPort(mainWindow);
-//			QSetRect(&aRoom, 0, 0, kMapRoomWidth, kMapRoomHeight);
-//          // convert room rect to screen coordinates
-//			CenterRectOnPoint(&aRoom, globalWhere);
-//			if (DragRoom(theEvent, &aRoom, itsNumber))
-//			{		// TEMP disabled.
-//			}
-		}
+		clickPoint.h = clickX;
+		clickPoint.v = clickY;
+		QSetRect(&aRoom, 0, 0, kMapRoomWidth, kMapRoomHeight);
+		CenterRectOnPoint(&aRoom, clickPoint);
+		DragRoom(clickX, clickY, &aRoom, itsNumber);
 	}
 	else
 	{
@@ -828,8 +828,20 @@ void KillNailOffscreen (void)
 
 void MoveRoom (Point wherePt)
 {
-	SInt16		localH, localV;
-	SInt16		roomH, roomV, itsNumber;
+	SInt16 localH;
+	SInt16 localV;
+	SInt16 roomH;
+	SInt16 roomV;
+	SInt16 itsNumber;
+	SInt16 srcFloor;
+	SInt16 srcSuite;
+	SInt16 packedSrcCombo;
+	SInt16 destFloor;
+	SInt16 destSuite;
+	SInt16 packedDestCombo;
+	objectType *theObject;
+	SInt16 r;
+	SInt16 i;
 
 	localH = wherePt.h / kMapRoomWidth;
 	localV = wherePt.v / kMapRoomHeight;
@@ -840,14 +852,63 @@ void MoveRoom (Point wherePt)
 	roomH = localH + mapLeftRoom;
 	roomV = kMapGroundValue - (localV + mapTopRoom);
 
-	if (RoomExists(roomH, roomV, &itsNumber))
+	if (RoomExists(roomH, roomV, &itsNumber) == false)
 	{
+		srcFloor = thisRoom->floor;
+		srcSuite = thisRoom->suite;
+		packedSrcCombo = MergeFloorSuite(srcFloor + kNumUndergroundFloors, srcSuite);
+		destFloor = roomV;
+		destSuite = roomH;
+		packedDestCombo = MergeFloorSuite(destFloor + kNumUndergroundFloors, destSuite);
 
-	}
-	else
-	{
-		thisRoom->floor = roomV;
-		thisRoom->suite = roomH;
+		thisRoom->floor = destFloor;
+		thisRoom->suite = destSuite;
+
+		// fix up links within this room
+		for (i = 0; i < kMaxRoomObs; i++)
+		{
+			theObject = &thisRoom->objects[i];
+			if (ObjectIsLinkSwitch(theObject))
+			{
+				if (theObject->data.e.where == packedSrcCombo)
+				{
+					theObject->data.e.where = packedDestCombo;
+				}
+			}
+			else if (ObjectIsLinkTransport(theObject))
+			{
+				if (theObject->data.d.where == packedSrcCombo)
+				{
+					theObject->data.d.where = packedDestCombo;
+				}
+			}
+		}
+
+		// fix up links from other rooms to this room
+		for (r = 0; r < thisHouse.nRooms; r++)
+		{
+			for (i = 0; i < kMaxRoomObs; i++)
+			{
+				theObject = &thisHouse.rooms[r].objects[i];
+				if (ObjectIsLinkSwitch(theObject))
+				{
+					if (theObject->data.e.where == packedSrcCombo)
+					{
+						theObject->data.e.where = packedDestCombo;
+					}
+				}
+				else if (ObjectIsLinkTransport(theObject))
+				{
+					if (theObject->data.d.where == packedSrcCombo)
+					{
+						theObject->data.d.where = packedDestCombo;
+					}
+				}
+			}
+		}
+
+		CopyThisRoomToRoom();
+		ReflectCurrentRoom(false);
 		fileDirty = true;
 		UpdateMenus(false);
 		UpdateMapWindow();

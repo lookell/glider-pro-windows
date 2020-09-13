@@ -11,7 +11,6 @@
 
 
 Boolean DoWeHaveQuickTime (void);
-Boolean DoWeHaveDragManager (void);
 SInt16 WhatsOurDepth (void);
 void GetDeviceRect (Rect *theRect);
 
@@ -25,13 +24,6 @@ macEnviron thisMac;
 Boolean DoWeHaveQuickTime (void)
 {
 	// QuickTime movies are not currently supported in this port.
-	return false;
-}
-
-//--------------------------------------------------------------  DoWeHaveDragManager
-
-Boolean DoWeHaveDragManager (void)
-{
 	return false;
 }
 
@@ -68,6 +60,5 @@ void CheckOurEnvirons (void)
 	GetDeviceRect(&thisMac.screen);
 	thisMac.isDepth = WhatsOurDepth();
 	thisMac.hasQT = DoWeHaveQuickTime();
-	thisMac.hasDrag = DoWeHaveDragManager();
 }
 

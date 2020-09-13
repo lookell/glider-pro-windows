@@ -30,6 +30,9 @@ Boolean ThisRoomVisibleOnMap (void);
 void CenterMapOnRoom (SInt16 h, SInt16 v);
 void FlagMapRoomsForUpdate (void);
 void FindNewActiveRoomRect (void);
+#ifdef GP_USE_WINAPI_H
+void LoadGraphicPlus (HDC hdc, SInt16 resID, const Rect *theRect);
+#endif
 void UpdateMapWindow (void);
 void OpenMapWindow (void);
 void CloseMapWindow (void);

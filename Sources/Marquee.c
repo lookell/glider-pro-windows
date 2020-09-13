@@ -314,6 +314,7 @@ void DragOutMarqueeRect (Point start, Rect *theRect)
 		default:
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+			break;
 		}
 		if (GetCapture() != mainWindow)
 			break;
@@ -388,6 +389,7 @@ void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 		default:
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+			break;
 		}
 		if (GetCapture() != mainWindow)
 			break;

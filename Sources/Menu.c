@@ -36,6 +36,7 @@
 #include "SavedGames.h"
 #include "SelectHouse.h"
 #include "Settings.h"
+#include "Scrap.h"
 #include "StringUtils.h"
 #include "Tools.h"
 
@@ -234,26 +235,23 @@ void UpdateClipboardMenus (void)
 			EnableMenuItem(houseMenu, ID_DUPLICATE, MF_GRAYED);
 		}
 
-		// TODO: enable these menu items when the clipboard can actually be used
-		// EnableMenuItem(houseMenu, ID_CUT, MF_ENABLED);
-		// EnableMenuItem(houseMenu, ID_COPY, MF_ENABLED);
-		EnableMenuItem(houseMenu, ID_CUT, MF_GRAYED);
-		EnableMenuItem(houseMenu, ID_COPY, MF_GRAYED);
-//		if (hasScrap)
-//		{
-//			EnableMenuItem(houseMenu, iPaste);
-//			if (scrapIsARoom)
-//			{
-//				GetLocalizedString(42, title, ARRAYSIZE(title));
-//				SetMenuItemText(houseMenu, iPaste, title);
-//			}
-//			else
-//			{
-//				GetLocalizedString(43, title, ARRAYSIZE(title));
-//				SetMenuItemText(houseMenu, iPaste, title);
-//			}
-//		}
-//		else
+		EnableMenuItem(houseMenu, ID_CUT, MF_ENABLED);
+		EnableMenuItem(houseMenu, ID_COPY, MF_ENABLED);
+		if (hasScrap)
+		{
+			EnableMenuItem(houseMenu, ID_PASTE, MF_ENABLED);
+			if (scrapIsARoom)
+			{
+				GetLocalizedString(42, title, ARRAYSIZE(title));
+				SetMenuItemText(houseMenu, ID_PASTE, title);
+			}
+			else
+			{
+				GetLocalizedString(43, title, ARRAYSIZE(title));
+				SetMenuItemText(houseMenu, ID_PASTE, title);
+			}
+		}
+		else
 		{
 			EnableMenuItem(houseMenu, ID_PASTE, MF_GRAYED);
 			GetLocalizedString(44, title, ARRAYSIZE(title));
@@ -546,12 +544,12 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 		{
 			if (objActive > kNoObjectSelected)
 			{
-//				PutObjectScrap();
+				PutObjectScrap();
 				Gp_DeleteObject();
 			}
 			else
 			{
-//				PutRoomScrap();
+				PutRoomScrap();
 				DeleteRoom(hwnd, false);
 			}
 			UpdateClipboardMenus();
@@ -561,10 +559,10 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 		case iCopy:
 		if (houseUnlocked)
 		{
-//			if (objActive > kNoObjectSelected)
-//				PutObjectScrap();
-//			else
-//				PutRoomScrap();
+			if (objActive > kNoObjectSelected)
+				PutObjectScrap();
+			else
+				PutRoomScrap();
 			UpdateClipboardMenus();
 		}
 		break;
@@ -572,12 +570,11 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 		case iPaste:
 		if (houseUnlocked)
 		{
-/*			if (scrapIsARoom)
+			if (scrapIsARoom)
 				GetRoomScrap();
 			else
 				GetObjectScrap();
 			UpdateClipboardMenus();
-*/
 		}
 		break;
 

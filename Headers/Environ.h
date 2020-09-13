@@ -14,7 +14,6 @@ typedef struct macEnviron
 	Rect screen;
 	SInt16 isDepth;
 	Boolean hasQT;
-	Boolean hasDrag;
 } macEnviron;
 
 extern macEnviron thisMac;
