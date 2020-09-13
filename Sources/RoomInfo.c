@@ -79,6 +79,12 @@ static Boolean showHandCursor = false;
 
 void LoadTileSrcGraphic (HDC hdc, SInt16 backID, const Rect *theRect)
 {
+	int hdcState;
+
+	hdcState = SaveDC(hdc);
+	SetStretchBltMode(hdc, HALFTONE);
+	SetBrushOrgEx(hdc, 0, 0, NULL);
+
 	switch (backID)
 	{
 	case kBasement:
@@ -101,6 +107,8 @@ void LoadTileSrcGraphic (HDC hdc, SInt16 backID, const Rect *theRect)
 		LoadScaledGraphic(hdc, backID, theRect);
 		break;
 	}
+
+	RestoreDC(hdc, hdcState);
 }
 
 //--------------------------------------------------------------  UpdateRoomInfoDialog
