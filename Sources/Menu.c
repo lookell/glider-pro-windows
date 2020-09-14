@@ -386,10 +386,10 @@ void DoGameMenu (HWND hwnd, SInt16 theItem)
 			incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
 			if ((theMode == kSplashMode) || (theMode == kPlayMode))
 			{
-				Rect		updateRect;
+				Rect updateRect;
 
-				QSetRect(&updateRect, splashOriginH + 474, splashOriginV + 304,
-						splashOriginH + 474 + 166, splashOriginV + 304 + 12);
+				QSetRect(&updateRect, 0, 0, 210, 20);
+				QOffsetRect(&updateRect, splashOriginH + 430, splashOriginV + 300);
 				Mac_InvalWindowRect(mainWindow, &updateRect);
 			}
 		}
