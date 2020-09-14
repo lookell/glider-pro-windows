@@ -83,7 +83,7 @@ void RegisterMapWindowClass (void)
 		wcx.hInstance = HINST_THISCOMPONENT;
 		wcx.hIcon = NULL;
 		wcx.hCursor = LoadCursor(NULL, IDC_ARROW);
-		wcx.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+		wcx.hbrBackground = NULL;
 		wcx.lpszMenuName = NULL;
 		wcx.lpszClassName = WC_MAPWINDOW;
 		wcx.hIconSm = NULL;

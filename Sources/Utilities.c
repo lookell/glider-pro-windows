@@ -52,7 +52,7 @@ void ToolBoxInit (void)
 	wcMain.hInstance = HINST_THISCOMPONENT;
 	wcMain.hIcon = LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDI_APPL));
 	wcMain.hCursor = NULL;
-	wcMain.hbrBackground = GetStockObject(BLACK_BRUSH);
+	wcMain.hbrBackground = NULL;
 	wcMain.lpszMenuName = NULL;
 	wcMain.lpszClassName = WC_MAINWINDOW;
 	wcMain.hIconSm = NULL;
