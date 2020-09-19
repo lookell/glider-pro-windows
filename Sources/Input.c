@@ -269,6 +269,9 @@ void DoHeliumEngaged (gliderPtr thisGlider)
 
 void GetDemoInput (gliderPtr thisGlider)
 {
+	SInt32 demoFrame;
+	Byte demoKey;
+
 	if (thisGlider->which == kPlayer1)
 	{
 #if BUILD_ARCADE_VERSION
@@ -303,9 +306,16 @@ void GetDemoInput (gliderPtr thisGlider)
 		thisGlider->heldRight = false;
 		thisGlider->tipped = false;
 
-		if (gameFrame == demoData[demoIndex].frame)
+		demoFrame = -1;
+		demoKey = 255;
+		if (demoIndex < ARRAYSIZE(demoData))
 		{
-			switch (demoData[demoIndex].key)
+			demoFrame = demoData[demoIndex].frame;
+			demoKey = demoData[demoIndex].key;
+		}
+		if (gameFrame == demoFrame)
+		{
+			switch (demoKey)
 			{
 				case 0: // right key
 				thisGlider->hDesiredVel += kNormalThrust;

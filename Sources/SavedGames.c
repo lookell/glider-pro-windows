@@ -90,8 +90,6 @@ void SaveGame2 (HWND ownerWindow)
 	}
 
 	GetFirstWordOfString(thisHouseName, gameNameStr);
-	if (gameNameStr[0] > 23)
-		gameNameStr[0] = 23;
 	PasStringConcatC(gameNameStr, " Game");
 
 	WinFromMacString(gamePath, ARRAYSIZE(gamePath), gameNameStr);

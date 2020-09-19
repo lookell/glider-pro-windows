@@ -659,6 +659,7 @@ HRESULT LoadMemoryICO(HICON *phIcon, const void *buffer, size_t length, int widt
 	WORD iconIndex;
 	DWORD imageOffset, imageLength, imageEnd;
 	PBYTE resBits;
+	DWORD lastError;
 
 	INVALIDARG_IF_TRUE(phIcon == NULL);
 	INVALIDARG_IF_TRUE(buffer == NULL);
@@ -679,6 +680,13 @@ HRESULT LoadMemoryICO(HICON *phIcon, const void *buffer, size_t length, int widt
 		free(iconFileDir);
 		return HRESULT_FROM_WIN32(GetLastError());
 	}
+	else if (iconID > iconFileDir->Count)
+	{
+		// LookupIconIdFromDirectoryEx should never return an invalid value,
+		// given valid data.
+		free(iconFileDir);
+		return E_FAIL;
+	}
 
 	iconIndex = (WORD)iconID - 1;
 	imageOffset = iconFileDir->Entries[iconIndex].ImageOffset;
@@ -698,11 +706,12 @@ HRESULT LoadMemoryICO(HICON *phIcon, const void *buffer, size_t length, int widt
 	memcpy(resBits, &fileSlice.buffer[imageOffset], imageLength);
 	*phIcon = CreateIconFromResourceEx(resBits, imageLength, TRUE,
 		0x00030000, width, height, LR_DEFAULTCOLOR);
+	lastError = GetLastError();
 	free(resBits);
 	resBits = NULL;
 	if (*phIcon == NULL)
 	{
-		return HRESULT_FROM_WIN32(GetLastError());
+		return HRESULT_FROM_WIN32(lastError);
 	}
 	return S_OK;
 }

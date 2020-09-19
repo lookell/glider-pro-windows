@@ -227,7 +227,14 @@ HIMAGELIST GetRoomDragImageList (const Rect *roomSrc, SInt16 roomNumber)
 			SelectObject(tempDC, roomImage);
 			SetStretchBltMode(tempDC, HALFTONE);
 			SetBrushOrgEx(tempDC, 0, 0, NULL);
-			backgroundID = thisHouse.rooms[roomNumber].background;
+			if (roomNumber >= 0 && roomNumber < thisHouse.nRooms)
+			{
+				backgroundID = thisHouse.rooms[roomNumber].background;
+			}
+			else
+			{
+				backgroundID = kSimpleRoom;
+			}
 			QSetRect(&roomImageRect, 0, 0, smallWidth, smallHeight);
 			LoadGraphicPlus(tempDC, backgroundID, &roomImageRect);
 			RestoreDC(tempDC, -1);

@@ -425,8 +425,11 @@ void BuildHouseList (HWND ownerWindow)
 	housesFound = 0;						// zero the number of houses found
 	for (i = 0; i < numExtraHouses; i++)	// 1st, insert extra houses into list
 	{
-		theHousesSpecs[housesFound] = extraHouseSpecs[i];
-		housesFound++;
+		if (housesFound < maxFiles)
+		{
+			theHousesSpecs[housesFound] = extraHouseSpecs[i];
+			housesFound++;
+		}
 	}
 	DoDirSearch(ownerWindow);				// now, search folders for the rest
 }

@@ -113,6 +113,10 @@ void Gp_PlaySound (SoundOutput *output, SInt16 soundID, SInt16 priority)
 	{
 		return;
 	}
+	if (soundID < 0 || soundID >= kMaxSounds)
+	{
+		return;
+	}
 
 	if (isSoundOn)
 	{
