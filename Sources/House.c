@@ -800,8 +800,8 @@ void ShiftWholeHouse (SInt16 howFar)
 	return;
 #if 0
 #pragma unused (howFar)
-	short		wasRoom;
-	short		i, h, numRooms;
+	SInt16		wasRoom;
+	SInt16		i, h, numRooms;
 	char		wasState;
 
 	OpenMessageWindow_Pascal("\pShifting Whole House…");

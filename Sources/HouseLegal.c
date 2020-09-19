@@ -631,25 +631,6 @@ void ValidateNumberOfRooms (void)
 	// As a result, the stated room count and actual number of rooms
 	// will always match.
 	return;
-	/*
-	long		countedRooms, reportsRooms;
-	char		wasState;
-
-	wasState = HGetState((Handle)thisHouse);
-	HLock((Handle)thisHouse);
-
-	reportsRooms = (long)(*thisHouse)->nRooms;
-	countedRooms = (GetHandleSize((Handle)thisHouse) -
-			sizeof(houseType)) / sizeof(roomType);
-	if (reportsRooms != countedRooms)
-	{
-		(*thisHouse)->nRooms = (short)countedRooms;
-		numberRooms = (*thisHouse)->nRooms;
-		houseErrors++;
-	}
-
-	HSetState((Handle)thisHouse, wasState);
-	*/
 }
 
 //--------------------------------------------------------------  CheckDuplicateFloorSuite

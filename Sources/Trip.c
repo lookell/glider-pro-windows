@@ -157,7 +157,7 @@ void TriggerToast (SInt16 who)
 	{
 		if (dinahs[who].active)
 		{
-			dinahs[who].vVel = (short)-dinahs[who].count;
+			dinahs[who].vVel = -dinahs[who].count;
 			dinahs[who].frame = 0;
 			dinahs[who].moving = true;
 			PlayPrioritySound(kToastLaunchSound, kToastLaunchPriority);

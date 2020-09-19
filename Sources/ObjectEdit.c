@@ -2183,7 +2183,7 @@ void GetThisRoomsObjRects (void)
 						thisRoom->objects[i].data.d.topLeft.v);
 				roomObjectRects[i].bottom = roomObjectRects[i].top +
 						thisRoom->objects[i].data.d.tall;
-				roomObjectRects[i].right += (short)thisRoom->objects[i].data.d.wide;
+				roomObjectRects[i].right += (SInt16)thisRoom->objects[i].data.d.wide;
 				break;
 
 				case kDeluxeTrans:		// Uses a kludge to get width & height (x4)

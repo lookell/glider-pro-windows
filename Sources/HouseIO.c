@@ -67,10 +67,10 @@ void LoopMovie (void)
 #if 0
 	Handle		theLoop;
 	UserData	theUserData;
-	short		theCount;
+	SInt16		theCount;
 
-	theLoop = NewHandle(sizeof(long));
-	(** (long **) theLoop) = 0;
+	theLoop = NewHandle(sizeof(SInt32));
+	(** (SInt32 **) theLoop) = 0;
 	theUserData = GetMovieUserData(theMovie);
 	theCount = CountUserDataType(theUserData, 'LOOP');
 	while (theCount--)
@@ -91,7 +91,7 @@ void OpenHouseMovie (void)
 	FInfo		finderInfo;
 	Handle		spaceSaver;
 	OSErr		theErr;
-	short		movieRefNum;
+	SInt16		movieRefNum;
 	Boolean		dataRefWasChanged;
 
 	if (thisMac.hasQT)
@@ -232,7 +232,7 @@ Boolean OpenSpecificHouse (FSSpec *specs)
 	DBG_UNREFERENCED_PARAMETER(specs);
 	return false;
 #if 0
-	short		i;
+	SInt16		i;
 	Boolean		itOpened;
 
 	if ((housesFound < 1) || (thisHouseIndex == -1))
