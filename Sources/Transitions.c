@@ -18,64 +18,6 @@
 
 
 //==============================================================  Functions
-//--------------------------------------------------------------  PourScreenOn
-
-void PourScreenOn (const Rect *theRect)
-{
-	#define		kMaxColumnsWide	96
-	#define		kChipHigh		20
-	#define		kChipWide		16
-	Rect		columnRects[kMaxColumnsWide];
-	SInt16		columnProgress[kMaxColumnsWide];
-	SInt16		i, colsComplete, colWide, rowTall;
-	Boolean		working;
-	HDC			mainWindowDC;
-
-	colWide = theRect->right / kChipWide;			// determine # of cols
-	rowTall = (theRect->bottom / kChipHigh) + 1;	// determine # of rows
-
-	working = true;
-	colsComplete = 0;
-	for (i = 0; i < colWide; i++)
-	{
-		columnProgress[i] = 0;
-		QSetRect(&columnRects[i], 0, 0, kChipWide, kChipHigh);
-		QOffsetRect(&columnRects[i], (i * kChipWide) + theRect->left, theRect->top);
-	}
-
-	mainWindowDC = GetMainWindowDC();
-	while (working)
-	{
-		do
-		{
-			i = RandomInt(colWide);
-		}
-		while (columnProgress[i] >= rowTall);
-
-		if (columnRects[i].left < theRect->left)
-			columnRects[i].left = theRect->left;
-		if (columnRects[i].top < theRect->top)
-			columnRects[i].top = theRect->top;
-		if (columnRects[i].right > theRect->right)
-			columnRects[i].right = theRect->right;
-		if (columnRects[i].bottom > theRect->bottom)
-			columnRects[i].bottom = theRect->bottom;
-
-		Mac_CopyBits(workSrcMap, mainWindowDC,
-				&columnRects[i], &columnRects[i], srcCopy, nil);
-
-		QOffsetRect(&columnRects[i], 0, kChipHigh);
-		columnProgress[i]++;
-		if (columnProgress[i] >= rowTall)
-		{
-			colsComplete++;
-			if (colsComplete >= colWide)
-				working = false;
-		}
-	}
-	ReleaseMainWindowDC(mainWindowDC);
-}
-
 //--------------------------------------------------------------  WipeScreenOn
 
 void WipeScreenOn (SInt16 direction, const Rect *theRect)

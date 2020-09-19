@@ -9,7 +9,6 @@
 
 #include "MacTypes.h"
 
-void PourScreenOn (const Rect *theRect);
 void WipeScreenOn (SInt16 direction, const Rect *theRect);
 void DumpScreenOn (const Rect *theRect);
 void DissBits (const Rect *theRect);
