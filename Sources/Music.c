@@ -76,6 +76,7 @@ OSErr StartMusic (void)
 		entry.userdata = NULL;
 		if (!AudioChannel_QueueAudio(musicChannel, &entry))
 		{
+			LeaveCriticalSection(&musicCriticalSection);
 			return -1;
 		}
 
@@ -92,6 +93,7 @@ OSErr StartMusic (void)
 		entry.userdata = NULL;
 		if (!AudioChannel_QueueAudio(musicChannel, &entry))
 		{
+			LeaveCriticalSection(&musicCriticalSection);
 			return -1;
 		}
 
