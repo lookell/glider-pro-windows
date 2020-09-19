@@ -110,11 +110,6 @@ Boolean CheckFileError (HWND ownerWindow, DWORD resultCode, PCWSTR fileName)
 			stringIndex = 1;
 			break;
 	}
-
-	loadResult = LoadString(HINST_THISCOMPONENT, rFileErrorStringsBase + stringIndex,
-			params.arg[0], ARRAYSIZE(params.arg[0]));
-	if (loadResult <= 0)
-		params.arg[0][0] = L'\0';
 	*/
 
 	formatFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER
