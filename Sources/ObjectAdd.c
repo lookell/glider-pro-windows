@@ -750,6 +750,8 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		break;
 
 		case kFlower:
+		if (wasFlower < 0 || wasFlower >= kNumFlowers) // sanity check
+			wasFlower = 0;
 		if (GetKeyState(VK_SHIFT) >= 0) // shift key up?
 			wasFlower = RandomInt(kNumFlowers);
 		newRect = flowerSrc[wasFlower];
@@ -837,6 +839,11 @@ SInt16 FindObjectSlotInRoom (SInt16 roomNumber)
 	roomPtr		testRoomPtr;
 	SInt16		i, emptySlot;
 
+	if (roomNumber < 0 || roomNumber >= thisHouse.nRooms)
+	{
+		return false;
+	}
+
 	emptySlot = -1;
 	testRoomPtr = &(thisHouse.rooms[roomNumber]);
 
@@ -859,6 +866,11 @@ Boolean DoesRoomNumHaveObject (SInt16 room, SInt16 what)
 	roomPtr		testRoomPtr;
 	SInt16		i;
 	Boolean		hasIt;
+
+	if (room < 0 || room >= thisHouse.nRooms)
+	{
+		return false;
+	}
 
 	testRoomPtr = &(thisHouse.rooms[room]);
 	hasIt = false;
