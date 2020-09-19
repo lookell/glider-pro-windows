@@ -682,7 +682,7 @@ void StopStar (SInt16 where, SInt16 who)
 
 void AddAShreddedGlider (const Rect *bounds)
 {
-	if (numShredded > kMaxShredded)
+	if (numShredded >= kMaxShredded)
 		return;
 
 	shreds[numShredded].bounds.left = bounds->left + 4;

@@ -642,7 +642,7 @@ INT_PTR CALLBACK GoToFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 			break;
 
 		case IDOK:
-			*roomToGoTo = -1;
+			*roomToGoTo = kRoomIsEmpty;
 			if (IsDlgButtonChecked(hDlg, kGoToFirstRadio))
 			{
 				*roomToGoTo = GetFirstRoomNumber();
@@ -696,6 +696,7 @@ void DoGoToDialog (HWND ownerWindow)
 	SInt16 roomToGoTo;
 	INT_PTR dlgResult;
 
+	roomToGoTo = kRoomIsEmpty;
 	dlgResult = DialogBoxParam(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kGoToDialogID), ownerWindow,
 			GoToFilter, (LPARAM)&roomToGoTo);
