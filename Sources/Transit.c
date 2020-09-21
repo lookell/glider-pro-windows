@@ -36,7 +36,17 @@ Boolean firstPlayer;
 
 SInt16 WhatAreWeLinkedTo (SInt16 where, Byte who)
 {
-	SInt16		what, whatType;
+	SInt16 what;
+	SInt16 whatType;
+
+	if (where < 0 || where >= thisHouse.nRooms)
+	{
+		return kLinkedToOther;
+	}
+	if (who < 0 || who >= kMaxRoomObs)
+	{
+		return kLinkedToOther;
+	}
 
 	what = thisHouse.rooms[where].objects[who].what;
 
