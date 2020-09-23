@@ -194,7 +194,6 @@ void OpenMainWindow (void)
 	LONG width, height;
 	WINDOWPLACEMENT placement;
 	DWORD windowStyle;
-	HDC mainWindowDC;
 
 	if (mainWindow != NULL)
 	{
@@ -253,9 +252,15 @@ void OpenMainWindow (void)
 		CenterOverOwner(mainWindow);
 		ShowWindow(mainWindow, SW_SHOWNORMAL);
 
-		mainWindowDC = GetMainWindowDC();
-		Mac_PaintRect(mainWindowDC, &mainWindowRect, GetStockObject(BLACK_BRUSH));
-		ReleaseMainWindowDC(mainWindowDC);
+		{
+			RECT clientRect;
+			HDC clientHDC;
+
+			GetClientRect(mainWindow, &clientRect);
+			clientHDC = GetDC(mainWindow);
+			PatBlt(clientHDC, 0, 0, clientRect.right, clientRect.bottom, BLACKNESS);
+			ReleaseDC(mainWindow, clientHDC);
+		}
 
 		splashOriginH = ((thisMac.screen.right - thisMac.screen.left) - 640) / 2;
 		if (splashOriginH < 0)
