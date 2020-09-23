@@ -20,6 +20,9 @@
 
 void ToggleToaster (SInt16 index)
 {
+	if (index < 0 || index >= numDynamics)
+		return;
+
 	dinahs[index].active = !dinahs[index].active;
 }
 
@@ -27,6 +30,9 @@ void ToggleToaster (SInt16 index)
 
 void ToggleMacPlus (SInt16 index)
 {
+	if (index < 0 || index >= numDynamics)
+		return;
+
 	dinahs[index].active = !dinahs[index].active;
 	if (dinahs[index].active)
 		dinahs[index].timer = 40;
@@ -38,6 +44,9 @@ void ToggleMacPlus (SInt16 index)
 
 void ToggleTV (SInt16 index)
 {
+	if (index < 0 || index >= numDynamics)
+		return;
+
 	dinahs[index].active = !dinahs[index].active;
 #ifdef COMPILEQT
 	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) && (tvWithMovieNumber == index))
@@ -62,6 +71,9 @@ void ToggleTV (SInt16 index)
 
 void ToggleCoffee (SInt16 index)
 {
+	if (index < 0 || index >= numDynamics)
+		return;
+
 	dinahs[index].active = !dinahs[index].active;
 	dinahs[index].timer = 4;
 }
@@ -70,6 +82,9 @@ void ToggleCoffee (SInt16 index)
 
 void ToggleOutlet (SInt16 index)
 {
+	if (index < 0 || index >= numDynamics)
+		return;
+
 	dinahs[index].active = !dinahs[index].active;
 }
 
@@ -77,6 +92,9 @@ void ToggleOutlet (SInt16 index)
 
 void ToggleVCR (SInt16 index)
 {
+	if (index < 0 || index >= numDynamics)
+		return;
+
 	dinahs[index].active = !dinahs[index].active;
 	dinahs[index].timer = 4;
 }
@@ -85,6 +103,9 @@ void ToggleVCR (SInt16 index)
 
 void ToggleStereos (SInt16 index)
 {
+	if (index < 0 || index >= numDynamics)
+		return;
+
 	if (dinahs[index].timer == 0)
 	{
 		dinahs[index].active = !dinahs[index].active;
@@ -96,6 +117,9 @@ void ToggleStereos (SInt16 index)
 
 void ToggleMicrowave (SInt16 index)
 {
+	if (index < 0 || index >= numDynamics)
+		return;
+
 	dinahs[index].active = !dinahs[index].active;
 	dinahs[index].timer = 4;
 }
@@ -104,6 +128,9 @@ void ToggleMicrowave (SInt16 index)
 
 void ToggleBalloon (SInt16 index)
 {
+	if (index < 0 || index >= numDynamics)
+		return;
+
 	dinahs[index].active = !dinahs[index].active;
 }
 
@@ -111,6 +138,9 @@ void ToggleBalloon (SInt16 index)
 
 void ToggleCopter (SInt16 index)
 {
+	if (index < 0 || index >= numDynamics)
+		return;
+
 	dinahs[index].active = !dinahs[index].active;
 }
 
@@ -118,6 +148,9 @@ void ToggleCopter (SInt16 index)
 
 void ToggleDart (SInt16 index)
 {
+	if (index < 0 || index >= numDynamics)
+		return;
+
 	dinahs[index].active = !dinahs[index].active;
 }
 
@@ -125,6 +158,9 @@ void ToggleDart (SInt16 index)
 
 void ToggleBall (SInt16 index)
 {
+	if (index < 0 || index >= numDynamics)
+		return;
+
 	dinahs[index].active = !dinahs[index].active;
 }
 
@@ -132,6 +168,9 @@ void ToggleBall (SInt16 index)
 
 void ToggleDrip (SInt16 index)
 {
+	if (index < 0 || index >= numDynamics)
+		return;
+
 	dinahs[index].active = !dinahs[index].active;
 }
 
@@ -139,6 +178,9 @@ void ToggleDrip (SInt16 index)
 
 void ToggleFish (SInt16 index)
 {
+	if (index < 0 || index >= numDynamics)
+		return;
+
 	dinahs[index].active = !dinahs[index].active;
 }
 
@@ -146,6 +188,9 @@ void ToggleFish (SInt16 index)
 
 void TriggerSwitch (SInt16 who)
 {
+	if (who < 0 || who >= nHotSpots)
+		return;
+
 	HandleSwitches(&hotSpots[who]);
 }
 
@@ -153,6 +198,9 @@ void TriggerSwitch (SInt16 who)
 
 void TriggerToast (SInt16 who)
 {
+	if (who < 0 || who >= numDynamics)
+		return;
+
 	if (!dinahs[who].moving)
 	{
 		if (dinahs[who].active)
@@ -163,7 +211,9 @@ void TriggerToast (SInt16 who)
 			PlayPrioritySound(kToastLaunchSound, kToastLaunchPriority);
 		}
 		else
+		{
 			dinahs[who].frame = dinahs[who].timer;
+		}
 	}
 }
 
@@ -171,6 +221,9 @@ void TriggerToast (SInt16 who)
 
 void TriggerOutlet (SInt16 who)
 {
+	if (who < 0 || who >= numDynamics)
+		return;
+
 	if (dinahs[who].position == 0)
 	{
 		if (dinahs[who].active)
@@ -180,7 +233,9 @@ void TriggerOutlet (SInt16 who)
 			PlayPrioritySound(kZapSound, kZapPriority);
 		}
 		else
+		{
 			dinahs[who].timer = dinahs[who].count;
+		}
 	}
 }
 
@@ -188,6 +243,9 @@ void TriggerOutlet (SInt16 who)
 
 void TriggerDrip (SInt16 who)
 {
+	if (who < 0 || who >= numDynamics)
+		return;
+
 	if ((!dinahs[who].moving) && (dinahs[who].timer > 7))
 		dinahs[who].timer = 7;		// kick off drip
 }
@@ -196,6 +254,9 @@ void TriggerDrip (SInt16 who)
 
 void TriggerFish (SInt16 who)
 {
+	if (who < 0 || who >= numDynamics)
+		return;
+
 	if ((dinahs[who].active) && (!dinahs[who].moving))
 	{
 		dinahs[who].whole = dinahs[who].dest;
@@ -209,24 +270,31 @@ void TriggerFish (SInt16 who)
 
 void TriggerBalloon (SInt16 who)
 {
+	if (who < 0 || who >= numDynamics)
+		return;
+
 	if (!dinahs[who].moving)
 		dinahs[who].timer = kStartSparkle + 1;
 }
-
 
 //--------------------------------------------------------------  TriggerCopter
 
 void TriggerCopter (SInt16 who)
 {
+	if (who < 0 || who >= numDynamics)
+		return;
+
 	if (!dinahs[who].moving)
 		dinahs[who].timer = kStartSparkle + 1;
 }
-
 
 //--------------------------------------------------------------  TriggerDart
 
 void TriggerDart (SInt16 who)
 {
+	if (who < 0 || who >= numDynamics)
+		return;
+
 	if (!dinahs[who].moving)
 		dinahs[who].timer = kStartSparkle + 1;
 }
@@ -235,7 +303,7 @@ void TriggerDart (SInt16 who)
 
 void UpdateOutletsLighting (SInt16 room, SInt16 nLights)
 {
-	SInt16		i;
+	SInt16 i;
 
 	for (i = 0; i < numDynamics; i++)
 	{
