@@ -306,6 +306,12 @@ SInt16 CreateActiveRects (SInt16 who)
 	SInt16		hotSpotNumber, wide, tall;
 	Boolean		isOn;
 
+	// NOTE: `who` is called in the process of adding an entry to the `masterObjects`
+	// table, so checking `who >= numMasterObjects` is incorrect. Just make sure
+	// that the index isn't completely crazy.
+	if (who < 0 || who >= kMaxMasterObjects)
+		return (-1);
+
 	hotSpotNumber = -1;
 	theObject = masterObjects[who].theObject;
 
@@ -1145,6 +1151,9 @@ SInt16 GetUpStairsRightEdge (void)
 
 	rightEdge = kRoomWide;
 
+	if (thisRoomNumber < 0 || thisRoomNumber >= thisHouse.nRooms)
+		return (rightEdge);
+
 	for (i = 0; i < kMaxRoomObs; i++)
 	{
 		thisObject = thisHouse.rooms[thisRoomNumber].objects[i];
@@ -1166,6 +1175,9 @@ SInt16 GetDownStairsLeftEdge (void)
 	SInt16		i, leftEdge;
 
 	leftEdge = 0;
+
+	if (thisRoomNumber < 0 || thisRoomNumber >= thisHouse.nRooms)
+		return (leftEdge);
 
 	for (i = 0; i < kMaxRoomObs; i++)
 	{

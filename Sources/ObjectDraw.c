@@ -67,6 +67,9 @@ void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand);
 
 void DrawSimpleBlowers (SInt16 what, const Rect *theRect)
 {
+	if (what < 0 || what >= ARRAYSIZE(srcRects))
+		return;
+
 	Mac_CopyMask(blowerSrcMap, blowerMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
 }
@@ -376,6 +379,9 @@ void DrawCabinet (const Rect *cabinet)
 
 void DrawSimpleFurniture (SInt16 what, const Rect *theRect)
 {
+	if (what < 0 || what >= ARRAYSIZE(srcRects))
+		return;
+
 	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
 }
@@ -745,6 +751,9 @@ void DrawRedClock (const Rect *theRect)
 
 void DrawClockDigit (SInt16 number, const Rect *dest)
 {
+	if (number < 0 || number >= ARRAYSIZE(digits))
+		return;
+
 	Mac_CopyBits(bonusSrcMap, backSrcMap,
 			&digits[number], dest, srcCopy, nil);
 }
@@ -1040,6 +1049,9 @@ void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 
 void DrawSimplePrizes (SInt16 what, const Rect *theRect)
 {
+	if (what < 0 || what >= ARRAYSIZE(srcRects))
+		return;
+
 	Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
 }
@@ -1238,6 +1250,9 @@ void DrawMailboxRight (const Rect *theRect, SInt16 down)
 
 void DrawSimpleTransport (SInt16 what, const Rect *theRect)
 {
+	if (what < 0 || what >= ARRAYSIZE(srcRects))
+		return;
+
 	Mac_CopyMask(transSrcMap, transMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
 }
@@ -1338,6 +1353,9 @@ void DrawSoundTrigger (const Rect *theRect)
 
 void DrawSimpleLight (SInt16 what, const Rect *theRect)
 {
+	if (what < 0 || what >= ARRAYSIZE(srcRects))
+		return;
+
 	Mac_CopyMask(lightSrcMap, lightMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
 }
@@ -1470,6 +1488,9 @@ void DrawInvisLight (const Rect *theRect)
 
 void DrawSimpleAppliance (SInt16 what, const Rect *theRect)
 {
+	if (what < 0 || what >= ARRAYSIZE(srcRects))
+		return;
+
 	Mac_CopyMask(applianceSrcMap, applianceMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
 }
@@ -1744,6 +1765,9 @@ void DrawDart (const Rect *theRect, SInt16 which)
 
 void DrawBall (SInt16 what, const Rect *theRect)
 {
+	if (what < 0 || what >= ARRAYSIZE(srcRects))
+		return;
+
 	Mac_CopyMask(ballSrcMap, ballMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
 }
@@ -1752,6 +1776,9 @@ void DrawBall (SInt16 what, const Rect *theRect)
 
 void DrawFish (SInt16 what, const Rect *theRect)
 {
+	if (what < 0 || what >= ARRAYSIZE(srcRects))
+		return;
+
 	Mac_CopyMask(enemySrcMap, enemyMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
 }
@@ -1788,6 +1815,9 @@ void DrawMirror (const Rect *mirror)
 
 void DrawSimpleClutter (SInt16 what, const Rect *theRect)
 {
+	if (what < 0 || what >= ARRAYSIZE(srcRects))
+		return;
+
 	Mac_CopyMask(clutterSrcMap, clutterMaskMap, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
 }
@@ -1796,6 +1826,9 @@ void DrawSimpleClutter (SInt16 what, const Rect *theRect)
 
 void DrawFlower (const Rect *theRect, SInt16 which)
 {
+	if (which < 0 || which >= ARRAYSIZE(flowerSrc))
+		return;
+
 	Mac_CopyMask(clutterSrcMap, clutterMaskMap, backSrcMap,
 			&flowerSrc[which], &flowerSrc[which], theRect);
 }

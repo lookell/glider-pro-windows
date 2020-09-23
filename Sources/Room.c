@@ -353,7 +353,9 @@ void CopyRoomToThisRoom (SInt16 roomNumber)
 
 void CopyThisRoomToRoom (void)
 {
-	if ((noRoomAtAll) || (thisRoomNumber == -1))
+	if (noRoomAtAll)
+		return;
+	if (thisRoomNumber < 0 || thisRoomNumber >= thisHouse.nRooms)
 		return;
 
 	thisHouse.rooms[thisRoomNumber] = *thisRoom;	// copy back to house
@@ -363,7 +365,7 @@ void CopyThisRoomToRoom (void)
 
 void ForceThisRoom (SInt16 roomNumber)
 {
-	if (roomNumber == -1)
+	if (roomNumber < 0 || roomNumber >= thisHouse.nRooms)
 		return;
 
 	if (roomNumber < thisHouse.nRooms)
@@ -425,6 +427,8 @@ void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 	Boolean		firstDeleted;
 
 	if ((theMode != kEditMode) || (noRoomAtAll))
+		return;
+	if (thisRoomNumber < 0 || thisRoomNumber >= thisHouse.nRooms)
 		return;
 
 	if (doWarn)
@@ -593,6 +597,9 @@ SInt16 GetNeighborRoomNumber (SInt16 which)
 		break;
 	}
 
+	if (thisRoomNumber < 0 || thisRoomNumber >= thisHouse.nRooms)
+		return kRoomIsEmpty;
+
 	roomNum = kRoomIsEmpty;
 	roomH = thisHouse.rooms[thisRoomNumber].suite + hDelta;
 	roomV = thisHouse.rooms[thisRoomNumber].floor + vDelta;
@@ -682,7 +689,13 @@ Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite)
 {
 	Boolean		isRoom;
 
-	if (thisHouse.rooms[room].suite == kRoomIsEmpty)
+	if (room < 0 || room >= thisHouse.nRooms)
+	{
+		*floor = 0;
+		*suite = kRoomIsEmpty;
+		isRoom = false;
+	}
+	else if (thisHouse.rooms[room].suite == kRoomIsEmpty)
 	{
 		*floor = 0;
 		*suite = kRoomIsEmpty;
@@ -726,7 +739,7 @@ Boolean IsRoomAStructure (SInt16 roomNum)
 {
 	Boolean		isStructure;
 
-	if (roomNum == kRoomIsEmpty)
+	if (roomNum < 0 || roomNum >= thisHouse.nRooms)
 		return (false);
 
 	if (thisHouse.rooms[roomNum].background >= kUserBackground)

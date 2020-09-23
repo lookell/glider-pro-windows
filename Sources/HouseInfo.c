@@ -198,7 +198,7 @@ void DoHouseInfo (HWND ownerWindow)
 
 	numRooms = RealRoomNumberCount();
 	version = thisHouse.version;
-	if (!noRoomAtAll)
+	if (thisHouse.firstRoom >= 0 && thisHouse.firstRoom < thisHouse.nRooms)
 	{
 		h = (SInt32)thisHouse.rooms[thisHouse.firstRoom].suite;
 		v = (SInt32)thisHouse.rooms[thisHouse.firstRoom].floor;

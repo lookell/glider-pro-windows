@@ -129,6 +129,9 @@ void BackupGrease (Rect *src, SInt16 index, Boolean isRight)
 	Rect		dest;
 	SInt16		i;
 
+	if (index < 0 || index >= numSavedMaps)
+		return;
+
 	QSetRect(&dest, 0, 0, 32, 27);
 	for (i = 0; i < 4; i++)
 	{
@@ -238,6 +241,11 @@ SInt16 AddGrease (SInt16 where, SInt16 who, SInt16 h, SInt16 v,
 
 void SpillGrease (SInt16 who, SInt16 index)
 {
+	if (who < 0 || who >= numGrease)
+		return;
+	if (index < 0 || index >= nHotSpots)
+		return;
+
 	if (grease[who].mode == kGreaseIdle)
 	{
 		grease[who].mode = kGreaseFalling;
@@ -259,8 +267,9 @@ void RedrawAllGrease (void)
 
 	for (i = 0; i < numGrease; i++)
 	{
-		if (grease[i].hotNum < 0 || grease[i].hotNum >= kMaxHotSpots)
+		if (grease[i].hotNum < 0 || grease[i].hotNum >= nHotSpots)
 			continue;
+
 		src = hotSpots[grease[i].hotNum].bounds;
 		if ((grease[i].where == thisRoomNumber) &&
 				((src.bottom - src.top) == 2) &&

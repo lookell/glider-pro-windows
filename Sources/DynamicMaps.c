@@ -263,6 +263,9 @@ void BackUpFlames (const Rect *src, SInt16 index)
 	Rect		dest;
 	SInt16		i;
 
+	if (index < 0 || index >= numSavedMaps)
+		return;
+
 	QSetRect(&dest, 0, 0, 16, 15);
 	for (i = 0; i < kNumCandleFlames; i++)
 	{
@@ -339,6 +342,9 @@ void BackUpTikiFlames (const Rect *src, SInt16 index)
 {
 	Rect		dest;
 	SInt16		i;
+
+	if (index < 0 || index >= numSavedMaps)
+		return;
 
 	QSetRect(&dest, 0, 0, 8, 10);
 	for (i = 0; i < kNumTikiFlames; i++)
@@ -417,6 +423,9 @@ void BackUpBBQCoals (const Rect *src, SInt16 index)
 	Rect		dest;
 	SInt16		i;
 
+	if (index < 0 || index >= numSavedMaps)
+		return;
+
 	QSetRect(&dest, 0, 0, 32, 9);
 	for (i = 0; i < kNumBBQCoals; i++)
 	{
@@ -493,6 +502,9 @@ void BackUpPendulum (const Rect *src, SInt16 index)
 {
 	Rect		dest;
 	SInt16		i;
+
+	if (index < 0 || index >= numSavedMaps)
+		return;
 
 	QSetRect(&dest, 0, 0, 32, 28);
 	for (i = 0; i < kNumPendulums; i++)
@@ -575,6 +587,9 @@ void BackUpStar (const Rect *src, SInt16 index)
 {
 	Rect		dest;
 	SInt16		i;
+
+	if (index < 0 || index >= numSavedMaps)
+		return;
 
 	QSetRect(&dest, 0, 0, 32, 31);
 	for (i = 0; i < 6; i++)

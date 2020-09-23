@@ -167,6 +167,11 @@ Boolean IsThisValid (SInt16 where, SInt16 who)
 {
 	Boolean		itsGood;
 
+	if (where < 0 || where >= thisHouse.nRooms)
+		return (false);
+	if (who < 0 || who >= kMaxRoomObs)
+		return (false);
+
 	itsGood = true;
 
 	switch (thisHouse.rooms[where].objects[who].what)
@@ -329,8 +334,11 @@ void ListOneRoomsObjects (SInt16 where)
 	objectType	thisObject;
 	SInt16		roomNum, n;
 
+	if (where < 0 || where >= ARRAYSIZE(localNumbers))
+		return;
+
 	roomNum = localNumbers[where];
-	if (roomNum == kRoomIsEmpty)
+	if (roomNum < 0 || roomNum >= thisHouse.nRooms)
 		return;
 
 	for (n = 0; n < kMaxRoomObs; n++)
@@ -341,14 +349,10 @@ void ListOneRoomsObjects (SInt16 where)
 
 			masterObjects[numMasterObjects].roomNum = roomNum;
 			masterObjects[numMasterObjects].objectNum = n;
-			masterObjects[numMasterObjects].roomLink =
-					GetRoomLinked(&thisObject);
-			masterObjects[numMasterObjects].objectLink =
-					GetObjectLinked(&thisObject);
+			masterObjects[numMasterObjects].roomLink = GetRoomLinked(&thisObject);
+			masterObjects[numMasterObjects].objectLink = GetObjectLinked(&thisObject);
 			masterObjects[numMasterObjects].localLink = -1;
-
-			masterObjects[numMasterObjects].theObject =
-					thisHouse.rooms[roomNum].objects[n];
+			masterObjects[numMasterObjects].theObject = thisHouse.rooms[roomNum].objects[n];
 
 			if ((where == kCentralRoom) && (IsThisValid(roomNum, n)))
 				masterObjects[numMasterObjects].hotNum = CreateActiveRects(n);

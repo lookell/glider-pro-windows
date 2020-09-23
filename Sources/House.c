@@ -409,6 +409,9 @@ void SortRoomsObjects (SInt16 which)
 	SInt16		probe, probe2, room, obj;
 	Boolean		busy, looking;
 
+	if (which < 0 || which >= thisHouse.nRooms)
+		return;
+
 	busy = true;
 	probe = 0;
 
@@ -570,7 +573,8 @@ void GenerateRetroLinks (void)
 					if (roomLinked == thisRoomNumber)
 					{
 						objectLinked = (SInt16)thisObject.data.e.who;
-						if (retroLinkList[objectLinked].room == -1)
+						if ((objectLinked >= 0 && objectLinked < kMaxRoomObs) &&
+							(retroLinkList[objectLinked].room == -1))
 						{
 							retroLinkList[objectLinked].room = r;
 							retroLinkList[objectLinked].object = i;
@@ -593,7 +597,8 @@ void GenerateRetroLinks (void)
 					if (roomLinked == thisRoomNumber)
 					{
 						objectLinked = (SInt16)thisObject.data.d.who;
-						if (retroLinkList[objectLinked].room == -1)
+						if ((objectLinked >= 0 && objectLinked < kMaxRoomObs) &&
+							(retroLinkList[objectLinked].room == -1))
 						{
 							retroLinkList[objectLinked].room = r;
 							retroLinkList[objectLinked].object = i;

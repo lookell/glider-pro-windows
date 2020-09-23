@@ -41,7 +41,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 	SInt16		floor, suite, room, obj;
 	Boolean		isLit;
 
-	if (localNumbers[neighbor] == kRoomIsEmpty)
+	if (neighbor < 0 || neighbor >= 9)
+		return;
+	if ((localNumbers[neighbor] < 0) || (localNumbers[neighbor] >= thisHouse.nRooms))
 		return;
 
 	testRect = houseRect;
