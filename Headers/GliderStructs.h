@@ -324,20 +324,6 @@ typedef struct linksType
 	SInt16 destObj;
 } linksType, *linksPtr;
 
-typedef struct greaseType
-{
-	Rect dest;
-	SInt16 mapNum;
-	SInt16 mode;
-	SInt16 who;
-	SInt16 where;
-	SInt16 start;
-	SInt16 stop;
-	SInt16 frame;
-	SInt16 hotNum;
-	Boolean isRight;
-} greaseType;
-
 typedef struct starType
 {
 	Rect dest;

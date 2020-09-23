@@ -48,8 +48,6 @@ Boolean QueryNewRoom (HWND ownerWindow);
 void CreateNailOffscreen (void);
 void KillNailOffscreen (void);
 
-Rect nailSrcRect;
-HDC nailSrcMap;
 HWND mapWindow;
 SInt16 isMapH;
 SInt16 isMapV;
@@ -60,6 +58,8 @@ SInt16 mapTopRoom;
 Boolean isMapOpen;
 Boolean doPrettyMap;
 
+static Rect nailSrcRect;
+static HDC nailSrcMap = NULL;
 static Rect activeRoomRect;
 static Rect wasActiveRoomRect;
 

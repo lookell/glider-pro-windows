@@ -12,9 +12,7 @@
 #include "WinAPI.h"
 #endif
 
-extern Rect nailSrcRect;
 #ifdef GP_USE_WINAPI_H
-extern HDC nailSrcMap;
 extern HWND mapWindow;
 #endif
 extern SInt16 isMapH;

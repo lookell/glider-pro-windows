@@ -13,7 +13,6 @@
 #endif
 
 #ifdef GP_USE_WINAPI_H
-extern HDC toolSrcMap;
 extern HWND toolsWindow;
 #endif
 extern SInt16 isToolsH;

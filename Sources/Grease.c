@@ -25,11 +25,26 @@
 #define kGreaseSpiltIdle	3
 
 
+typedef struct greaseType
+{
+	Rect dest;
+	SInt16 mapNum;
+	SInt16 mode;
+	SInt16 who;
+	SInt16 where;
+	SInt16 start;
+	SInt16 stop;
+	SInt16 frame;
+	SInt16 hotNum;
+	Boolean isRight;
+} greaseType;
+
+
 void BackupGrease (Rect *src, SInt16 index, Boolean isRight);
 
 
-greaseType grease[kMaxGrease];
-SInt16 numGrease;
+static greaseType grease[kMaxGrease];
+static SInt16 numGrease;
 
 
 //==============================================================  Functions
@@ -281,5 +296,13 @@ void RedrawAllGrease (void)
 			AddRectToWorkRects(&src);
 		}
 	}
+}
+
+//--------------------------------------------------------------  ZeroGrease
+// Reset the number of grease jars to zero.
+
+void ZeroGrease (void)
+{
+	numGrease = 0;
 }
 

@@ -54,8 +54,6 @@ typedef Byte Str255[256];
 // Macintosh pointer and handle types
 //
 
-typedef void *Ptr;
-typedef Ptr *Handle;
 #define nil NULL
 
 //
@@ -92,13 +90,12 @@ typedef struct FSSpec
 	SInt16 vRefNum;
 	SInt32 parID;
 	Str63 name;
-} FSSpec, *FSSpecPtr;
+} FSSpec;
 
 //
 // Unknown types (this list should be kept as short as possible)
 //
 
 typedef struct Movie__* Movie;
-typedef struct RgnHandle__* RgnHandle;
 
 #endif

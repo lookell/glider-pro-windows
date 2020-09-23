@@ -247,8 +247,6 @@ void VariableInit (void)
 	toolsWindow = NULL;
 	linkWindow = NULL;
 	coordWindow = NULL;
-	toolSrcMap = NULL;
-	nailSrcMap = NULL;
 
 	houseRect = thisMac.screen;
 	houseRect.bottom -= kScoreboardTall;

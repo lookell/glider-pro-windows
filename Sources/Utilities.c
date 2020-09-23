@@ -27,6 +27,10 @@
 #include <stdlib.h>
 
 
+void InitRandomLongQUS (void);
+UInt32 RandomLongQUS (void);
+
+
 static UInt32 theSeed;
 
 

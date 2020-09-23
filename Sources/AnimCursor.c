@@ -253,34 +253,6 @@ void IncrementCursor (void)
 	}
 }
 
-//--------------------------------------------------------------  DecrementCursor
-
-// Reverses the beach ball cursor one frame.
-
-void DecrementCursor (void)
-{
-	HCURSOR waitCursor;
-
-	waitCursor = NULL;
-	if (animCursor.frame == NULL)
-		InitAnimatedCursor(rAcurID);
-	if (animCursor.frame)
-	{
-		animCursor.index--;
-		if (animCursor.index < 0)
-			animCursor.index = animCursor.n - 1;
-		waitCursor = animCursor.frame[animCursor.index].cursorHdl;
-	}
-
-	if (waitCursor == NULL)
-		waitCursor = LoadCursor(NULL, IDC_WAIT);
-	if (waitCursor)
-	{
-		SetCursor(waitCursor);
-		SetMainWindowCursor(waitCursor);
-	}
-}
-
 //--------------------------------------------------------------  SpinCursor
 
 // Advances the beach ball cursor the number of frames specified.
@@ -292,20 +264,6 @@ void SpinCursor (SInt16 incrementIndex)
 	for (i = 0; i < incrementIndex; i++)
 	{
 		IncrementCursor();
-	}
-}
-
-//--------------------------------------------------------------  BackSpinCursor
-
-// Reverses the beach ball cursor the number of frames specified.
-
-void BackSpinCursor (SInt16 decrementIndex)
-{
-	SInt16 i;
-
-	for (i = 0; i < decrementIndex; i++)
-	{
-		DecrementCursor();
 	}
 }
 

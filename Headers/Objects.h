@@ -182,7 +182,6 @@ extern SInt16 tvWithMovieNumber;
 extern Boolean newState;
 
 Boolean IsThisValid (SInt16 where, SInt16 who);
-SInt16 GetRoomLinked (const objectType *who);
 Boolean ObjectIsLinkTransport (const objectType *who);
 Boolean ObjectIsLinkSwitch (const objectType *who);
 void ListAllLocalObjects (void);

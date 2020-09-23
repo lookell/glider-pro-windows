@@ -14,8 +14,6 @@
 
 void ToolBoxInit (void);
 SInt16 RandomInt (SInt16 range);
-void InitRandomLongQUS (void);
-UInt32 RandomLongQUS (void);
 __declspec(noreturn) void RedAlert (SInt16 errorNumber);
 #ifdef GP_USE_WINAPI_H
 OSErr CreateOffScreenGWorld (HDC *theGWorld, const Rect *bounds, SInt16 depth);

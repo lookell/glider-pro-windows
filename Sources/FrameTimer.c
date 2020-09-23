@@ -11,14 +11,14 @@ static DWORD CurrentFrameRate = FRAME_TIMER_DEFAULT_FPS;
 static LONGLONG FrameStart = 0;
 static LONGLONG FrameNext = 0;
 
-LONGLONG GetPerformanceCounter(void)
+static LONGLONG GetPerformanceCounter(void)
 {
 	LARGE_INTEGER li;
 	QueryPerformanceCounter(&li);
 	return li.QuadPart;
 }
 
-LONGLONG GetPerformanceFrequency(void)
+static LONGLONG GetPerformanceFrequency(void)
 {
 	static LONGLONG QPC_Frequency = 0;
 

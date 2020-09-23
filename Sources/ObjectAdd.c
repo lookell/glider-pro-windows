@@ -841,7 +841,7 @@ SInt16 FindObjectSlotInRoom (SInt16 roomNumber)
 
 	if (roomNumber < 0 || roomNumber >= thisHouse.nRooms)
 	{
-		return false;
+		return -1;
 	}
 
 	emptySlot = -1;

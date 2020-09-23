@@ -24,6 +24,8 @@
 #define kSpaceBarASCII              0x20
 
 
+void PasStringCopyNum (ConstStringPtr p1, StringPtr p2, Byte charsToCopy);
+
 
 //==============================================================  Functions
 //--------------------------------------------------------------  PasStringCopy

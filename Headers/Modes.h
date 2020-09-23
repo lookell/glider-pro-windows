@@ -26,8 +26,6 @@ void StartGliderTransporting (gliderPtr thisGlider, const hotObject *who);
 void FlagGliderNormal (gliderPtr thisGlider);
 void FlagGliderShredding (gliderPtr thisGlider, const Rect *bounds);
 void FlagGliderBurning (gliderPtr thisGlider);
-void FlagGliderFaceLeft (gliderPtr thisGlider);
-void FlagGliderFaceRight (gliderPtr thisGlider);
 void FlagGliderInLimbo (gliderPtr thisGlider, Boolean sayIt);
 void UndoGliderLimbo (gliderPtr thisGlider);
 void ToggleGliderFacing (gliderPtr thisGlider);

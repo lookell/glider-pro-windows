@@ -25,7 +25,7 @@ typedef struct trigType
 	SInt16 timer;
 	SInt16 what;
 	Boolean armed;
-} trigType, *trigPtr;
+} trigType;
 
 
 SInt16 FindEmptyTriggerSlot (void);

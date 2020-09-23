@@ -13,7 +13,6 @@
 void PasStringCopy (ConstStringPtr p1, StringPtr p2);
 void PasStringCopyC (const char *s1, StringPtr p2);
 SInt16 WhichStringFirst (ConstStringPtr p1, ConstStringPtr p2);
-void PasStringCopyNum (ConstStringPtr p1, StringPtr p2, Byte charsToCopy);
 void PasStringConcat (StringPtr p1, ConstStringPtr p2);
 void PasStringConcatC (StringPtr p1, const char *s2);
 Boolean PasStringEqual (ConstStringPtr p1, ConstStringPtr p2, Boolean caseSens);

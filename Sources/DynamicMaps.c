@@ -758,7 +758,7 @@ void ZeroFlamesAndTheLike (void)
 	numTikiFlames = 0;
 	numCoals = 0;
 	numPendulums = 0;
-	numGrease = 0;
+	ZeroGrease();
 	numStars = 0;
 	numShredded = 0;
 	numChimes = 0;

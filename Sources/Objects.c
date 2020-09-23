@@ -28,6 +28,7 @@
 #include <stdlib.h>
 
 
+SInt16 GetRoomLinked (const objectType *who);
 SInt16 GetObjectLinked (const objectType *who);
 void ListOneRoomsObjects (SInt16 where);
 

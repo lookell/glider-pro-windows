@@ -74,7 +74,6 @@ void Tools_OnButtonClick (HWND hwnd, WORD buttonID);
 void SwitchToolModes (SInt16 newMode);
 
 
-HDC toolSrcMap;
 HWND toolsWindow;
 SInt16 isToolsH;
 SInt16 isToolsV;
@@ -82,6 +81,7 @@ SInt16 toolSelected;
 SInt16 toolMode;
 Boolean isToolsOpen;
 
+static HDC toolSrcMap = NULL;
 static SInt16 firstTool;
 static SInt16 lastTool;
 static SInt16 objectBase;
