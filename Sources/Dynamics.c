@@ -8,7 +8,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DynamicMaps.h"
 #include "Environ.h"
 #include "HouseIO.h"
@@ -28,16 +27,14 @@
 #include "Sound.h"
 #include "Utilities.h"
 
-
-#define kShoveVelocity		8
-#define kBalloonStop		8
-#define kBalloonStart		310
-#define kCopterStart		8
-#define kCopterStop			310
-#define kDartVelocity		6
-#define kDartStop			310
-#define kEnemyDropSpeed		8
-
+#define kShoveVelocity      8
+#define kBalloonStop        8
+#define kBalloonStart       310
+#define kCopterStart        8
+#define kCopterStop         310
+#define kDartVelocity       6
+#define kDartStop           310
+#define kEnemyDropSpeed     8
 
 void CheckDynamicCollision (SInt16 who, gliderPtr thisGlider, Boolean doOffset);
 Boolean DidBandHitDynamic (SInt16 who);
@@ -64,11 +61,9 @@ void HandleBall (SInt16 who);
 void HandleDrip (SInt16 who);
 void HandleFish (SInt16 who);
 
-
 Rect breadSrc[kNumBreadPicts];
 dynaType dinahs[kMaxDynamicObs];
 SInt16 numDynamics;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  CheckDynamicCollision
@@ -78,7 +73,7 @@ SInt16 numDynamics;
 
 void CheckDynamicCollision (SInt16 who, gliderPtr thisGlider, Boolean doOffset)
 {
-	Rect		dinahRect;
+	Rect dinahRect;
 
 	dinahRect = dinahs[who].dest;
 	if (doOffset)
@@ -119,14 +114,13 @@ void CheckDynamicCollision (SInt16 who, gliderPtr thisGlider, Boolean doOffset)
 }
 
 //--------------------------------------------------------------  DidBandHitDynamic
-
 // Checks to see if a rubber band struck a dynamic.
 
 Boolean DidBandHitDynamic (SInt16 who)
 {
-	Rect		dinahRect;
-	SInt16		i;
-	Boolean		collided;
+	Rect dinahRect;
+	SInt16 i;
+	Boolean collided;
 
 	dinahRect = dinahs[who].dest;
 
@@ -157,8 +151,9 @@ Boolean DidBandHitDynamic (SInt16 who)
 
 void RenderToast (SInt16 who)
 {
-	Rect		src, dest;
-	SInt16		vClip;
+	Rect src;
+	Rect dest;
+	SInt16 vClip;
 
 	if (dinahs[who].moving)
 	{
@@ -186,7 +181,8 @@ void RenderToast (SInt16 who)
 
 void RenderBalloon (SInt16 who)
 {
-	Rect		src, dest;
+	Rect src;
+	Rect dest;
 
 	if (dinahs[who].moving)
 	{
@@ -208,7 +204,8 @@ void RenderBalloon (SInt16 who)
 
 void RenderCopter (SInt16 who)
 {
-	Rect		src, dest;
+	Rect src;
+	Rect dest;
 
 	if (dinahs[who].moving)
 	{
@@ -230,7 +227,8 @@ void RenderCopter (SInt16 who)
 
 void RenderDart (SInt16 who)
 {
-	Rect		src, dest;
+	Rect src;
+	Rect dest;
 
 	if (dinahs[who].moving)
 	{
@@ -252,7 +250,8 @@ void RenderDart (SInt16 who)
 
 void RenderBall (SInt16 who)
 {
-	Rect		src, dest;
+	Rect src;
+	Rect dest;
 
 	dest = dinahs[who].dest;
 	QOffsetRect(&dest, playOriginH, playOriginV);
@@ -271,7 +270,8 @@ void RenderBall (SInt16 who)
 
 void RenderDrip (SInt16 who)
 {
-	Rect		src, dest;
+	Rect src;
+	Rect dest;
 
 	dest = dinahs[who].dest;
 	QOffsetRect(&dest, playOriginH, playOriginV);
@@ -290,7 +290,8 @@ void RenderDrip (SInt16 who)
 
 void RenderFish (SInt16 who)
 {
-	Rect		src, dest;
+	Rect src;
+	Rect dest;
 
 	dest = dinahs[who].dest;
 	QOffsetRect(&dest, playOriginH, playOriginV);
@@ -323,24 +324,26 @@ void RenderFish (SInt16 who)
 
 void HandleSparkleObject (SInt16 who)
 {
-	Rect		tempRect;
+	Rect tempRect;
 
-	if (dinahs[who].active)								// is it on?
+	if (dinahs[who].active)  // is it on?
 	{
-		if (dinahs[who].frame <= 0)						// is it idle?
-		{												// it is idle
+		if (dinahs[who].frame <= 0)  // is it idle?
+		{  // it is idle
 			dinahs[who].timer--;
 			if (dinahs[who].timer <= 0)
 			{
-				dinahs[who].timer = RandomInt(240) + 60;// reset timer
-				dinahs[who].frame = kNumSparkleModes;	// time to sparkle
+				dinahs[who].timer = RandomInt(240) + 60;  // reset timer
+				dinahs[who].frame = kNumSparkleModes;  // time to sparkle
 				tempRect = dinahs[who].dest;
 				AddSparkle(&tempRect);
 				PlayPrioritySound(kMysticSound, kMysticPriority);
 			}
 		}
-		else											// it's sparkling
+		else  // it's sparkling
+		{
 			dinahs[who].frame--;
+		}
 	}
 	else
 	{
@@ -351,7 +354,7 @@ void HandleSparkleObject (SInt16 who)
 
 void HandleToast (SInt16 who)
 {
-	Rect		dest;
+	Rect dest;
 
 	if (dinahs[who].moving)
 	{
@@ -377,14 +380,16 @@ void HandleToast (SInt16 who)
 			}
 		}
 		else
+		{
 			CheckDynamicCollision(who, &theGlider, false);
+		}
 		VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
 		dinahs[who].whole = dinahs[who].dest;
 		if (dinahs[who].vVel > 0)
 			dinahs[who].whole.top -= dinahs[who].vVel;
 		else
 			dinahs[who].whole.bottom -= dinahs[who].vVel;
-		dinahs[who].vVel++;									// falls
+		dinahs[who].vVel++;  // falls
 		if (dinahs[who].vVel > dinahs[who].count)
 		{
 			dest = dinahs[who].whole;
@@ -409,7 +414,9 @@ void HandleToast (SInt16 who)
 				PlayPrioritySound(kToastLaunchSound, kToastLaunchPriority);
 			}
 			else
+			{
 				dinahs[who].frame = dinahs[who].timer;
+			}
 		}
 	}
 }
@@ -424,7 +431,9 @@ void HandleMacPlus (SInt16 who)
 		if (dinahs[who].active)
 		{
 			if (dinahs[who].timer == 0)
+			{
 				AddRectToWorkRects(&dinahs[who].dest);
+			}
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacBeepSound, kMacBeepPriority);
@@ -434,12 +443,16 @@ void HandleMacPlus (SInt16 who)
 				AddRectToBackRects(&dinahs[who].dest);
 			}
 			else if (dinahs[who].timer == 30)
+			{
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
+			}
 		}
 		else
 		{
 			if (dinahs[who].timer == 0)
+			{
 				AddRectToWorkRects(&dinahs[who].dest);
+			}
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
@@ -491,7 +504,9 @@ void HandleTV (SInt16 who)
 		else
 		{
 			if (dinahs[who].timer == 0)
+			{
 				AddRectToWorkRects(&dinahs[who].dest);
+			}
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kTVOffSound, kTVOffPriority);
@@ -535,7 +550,9 @@ void HandleCoffee (SInt16 who)
 		else
 		{
 			if (dinahs[who].timer == 0)
+			{
 				AddRectToWorkRects(&dinahs[who].dest);
+			}
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
@@ -572,7 +589,9 @@ void HandleOutlet (SInt16 who)
 			}
 		}
 		else
+		{
 			CheckDynamicCollision(who, &theGlider, true);
+		}
 
 		if (dinahs[who].timer <= 0)
 		{
@@ -616,7 +635,9 @@ void HandleOutlet (SInt16 who)
 				PlayPrioritySound(kZapSound, kZapPriority);
 			}
 			else
+			{
 				dinahs[who].timer = dinahs[who].count;
+			}
 		}
 	}
 }
@@ -636,7 +657,9 @@ void HandleVCR (SInt16 who)
 				dinahs[who].timer = 115;
 			}
 			else if (dinahs[who].timer == 5)
+			{
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
+			}
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kVCRSound, kVCRPriority);
@@ -672,7 +695,9 @@ void HandleVCR (SInt16 who)
 		else
 		{
 			if (dinahs[who].timer == 0)
+			{
 				AddRectToWorkRects(&dinahs[who].dest);
+			}
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
@@ -731,7 +756,7 @@ void HandleStereo (SInt16 who)
 
 void HandleMicrowave (SInt16 who)
 {
-	Rect		dest;
+	Rect dest;
 
 	if (dinahs[who].timer > 0)
 	{
@@ -739,7 +764,9 @@ void HandleMicrowave (SInt16 who)
 		if (dinahs[who].active)
 		{
 			if (dinahs[who].timer == 0)
+			{
 				AddRectToWorkRects(&dinahs[who].dest);
+			}
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
@@ -762,7 +789,9 @@ void HandleMicrowave (SInt16 who)
 		else
 		{
 			if (dinahs[who].timer == 0)
+			{
 				AddRectToWorkRects(&dinahs[who].dest);
+			}
 			else if (dinahs[who].timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
@@ -789,7 +818,7 @@ void HandleMicrowave (SInt16 who)
 
 void HandleBalloon (SInt16 who)
 {
-	Rect		dest;
+	Rect dest;
 
 	if (dinahs[who].moving)
 	{
@@ -817,7 +846,9 @@ void HandleBalloon (SInt16 who)
 				}
 			}
 			else
+			{
 				CheckDynamicCollision(who, &theGlider, false);
+			}
 
 			if ((numBands > 0) && (DidBandHitDynamic(who)))
 			{
@@ -864,7 +895,7 @@ void HandleBalloon (SInt16 who)
 			dinahs[who].whole = dinahs[who].dest;
 		}
 	}
-	else		// balloon is idle, waiting to appear
+	else  // balloon is idle, waiting to appear
 	{
 		if (dinahs[who].active)
 		{
@@ -893,11 +924,11 @@ void HandleBalloon (SInt16 who)
 
 void HandleCopter (SInt16 who)
 {
-	Rect		dest;
+	Rect dest;
 
-	if (dinahs[who].moving)					// is 'copter about?
+	if (dinahs[who].moving)  // is 'copter about?
 	{
-		if (dinahs[who].hVel != 0)			// 'copter was not shot
+		if (dinahs[who].hVel != 0)  // 'copter was not shot
 		{
 			dinahs[who].frame++;
 			if (dinahs[who].frame >= 8)
@@ -918,7 +949,9 @@ void HandleCopter (SInt16 who)
 				}
 			}
 			else
+			{
 				CheckDynamicCollision(who, &theGlider, false);
+			}
 			if ((numBands > 0) && (DidBandHitDynamic(who)))
 			{
 				dinahs[who].frame = 8;
@@ -938,7 +971,7 @@ void HandleCopter (SInt16 who)
 					dinahs[who].whole.left -= dinahs[who].hVel;
 			}
 		}
-		else								// 'copter was shot
+		else  // 'copter was shot
 		{
 			dinahs[who].frame++;
 			if (dinahs[who].frame >= 10)
@@ -1001,11 +1034,11 @@ void HandleCopter (SInt16 who)
 
 void HandleDart (SInt16 who)
 {
-	Rect		dest;
+	Rect dest;
 
-	if (dinahs[who].moving)					// Dart has appeared
+	if (dinahs[who].moving)  // Dart has appeared
 	{
-		if (dinahs[who].hVel != 0)			// meaning it isn't falling
+		if (dinahs[who].hVel != 0)  // meaning it isn't falling
 		{
 			if (twoPlayerGame)
 			{
@@ -1023,7 +1056,9 @@ void HandleDart (SInt16 who)
 				}
 			}
 			else
+			{
 				CheckDynamicCollision(who, &theGlider, false);
+			}
 			if ((numBands > 0) && (DidBandHitDynamic(who)))
 			{
 				if (dinahs[who].type == kDartLf)
@@ -1046,7 +1081,7 @@ void HandleDart (SInt16 who)
 					dinahs[who].whole.left -= dinahs[who].hVel;
 			}
 		}
-		else							// dart is falling straight down
+		else  // dart is falling straight down
 		{
 			VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
 			dinahs[who].whole = dinahs[who].dest;
@@ -1133,12 +1168,14 @@ void HandleBall (SInt16 who)
 		}
 	}
 	else
+	{
 		CheckDynamicCollision(who, &theGlider, false);
+	}
 
-	if (dinahs[who].moving)										// is ball bouncing?
+	if (dinahs[who].moving)  // is ball bouncing?
 	{
 		VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
-		if (dinahs[who].dest.bottom >= dinahs[who].position)	// bounce!
+		if (dinahs[who].dest.bottom >= dinahs[who].position)  // bounce!
 		{
 			dinahs[who].whole = dinahs[who].dest;
 			dinahs[who].whole.top -= dinahs[who].vVel;
@@ -1146,12 +1183,14 @@ void HandleBall (SInt16 who)
 			dinahs[who].dest.bottom = dinahs[who].position;
 			dinahs[who].dest.top = dinahs[who].dest.bottom - 32;
 			if (dinahs[who].active)
+			{
 				dinahs[who].vVel = dinahs[who].count;
+			}
 			else
 			{
 				dinahs[who].vVel = -((dinahs[who].vVel * 3) / 4);
 				if (dinahs[who].vVel == 0)
-					dinahs[who].moving = false;					// stop bounce
+					dinahs[who].moving = false;  // stop bounce
 			}
 			if (dinahs[who].whole.bottom < dinahs[who].dest.bottom)
 				dinahs[who].whole.bottom = dinahs[who].dest.bottom;
@@ -1186,7 +1225,7 @@ void HandleBall (SInt16 who)
 
 void HandleDrip (SInt16 who)
 {
-	Rect		dest;
+	Rect dest;
 
 	if (dinahs[who].moving)
 	{
@@ -1208,7 +1247,9 @@ void HandleDrip (SInt16 who)
 			}
 		}
 		else
+		{
 			CheckDynamicCollision(who, &theGlider, false);
+		}
 
 		VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
 		if (dinahs[who].dest.bottom >= dinahs[who].position)
@@ -1239,11 +1280,17 @@ void HandleDrip (SInt16 who)
 			dinahs[who].timer--;
 
 			if (dinahs[who].timer == 6)
+			{
 				dinahs[who].frame = 0;
+			}
 			else if (dinahs[who].timer == 4)
+			{
 				dinahs[who].frame = 1;
+			}
 			else if (dinahs[who].timer == 2)
+			{
 				dinahs[who].frame = 2;
+			}
 			else if (dinahs[who].timer <= 0)
 			{
 				VOffsetRect(&dinahs[who].dest, 3);
@@ -1260,9 +1307,9 @@ void HandleDrip (SInt16 who)
 
 void HandleFish (SInt16 who)
 {
-	Rect		dest;
+	Rect dest;
 
-	if (dinahs[who].moving)										// fish leaping
+	if (dinahs[who].moving)  // fish leaping
 	{
 		if ((dinahs[who].vVel >= 0) && (dinahs[who].frame < 7))
 			dinahs[who].frame++;
@@ -1282,10 +1329,12 @@ void HandleFish (SInt16 who)
 			}
 		}
 		else
+		{
 			CheckDynamicCollision(who, &theGlider, false);
+		}
 
 		VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
-		if (dinahs[who].dest.bottom >= dinahs[who].position)	// splash down
+		if (dinahs[who].dest.bottom >= dinahs[who].position)  // splash down
 		{
 			dest = dinahs[who].whole;
 			QOffsetRect(&dest, playOriginH, playOriginV);
@@ -1312,7 +1361,7 @@ void HandleFish (SInt16 who)
 				dinahs[who].vVel++;
 		}
 	}
-	else														// fish idle
+	else  // fish idle
 	{
 		dinahs[who].whole = dinahs[who].dest;
 		if ((dinahs[who].timer & 0x0003) == 0x0003)
@@ -1336,7 +1385,7 @@ void HandleFish (SInt16 who)
 		if (dinahs[who].active)
 		{
 			dinahs[who].timer--;
-			if (dinahs[who].timer <= 0)								// fish leaps
+			if (dinahs[who].timer <= 0)  // fish leaps
 			{
 				dinahs[who].whole = dinahs[who].dest;
 				dinahs[who].moving = true;
@@ -1348,12 +1397,11 @@ void HandleFish (SInt16 who)
 }
 
 //--------------------------------------------------------------  HandleDynamics
-
 // This is the master function that calls all the specific handlers above.
 
 void HandleDynamics (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	for (i = 0; i < numDynamics; i++)
 	{
@@ -1428,13 +1476,12 @@ void HandleDynamics (void)
 }
 
 //--------------------------------------------------------------  HandleDynamics
-
 // This is the master function that calls all the various rendering handlers…
 // above.
 
 void RenderDynamics (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	for (i = 0; i < numDynamics; i++)
 	{
@@ -1477,12 +1524,11 @@ void RenderDynamics (void)
 }
 
 //--------------------------------------------------------------  ZeroDinahs
-
 // This clears all dynamics - zeros them all out.  Used to initialize them.
 
 void ZeroDinahs (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	for (i = 0; i < kMaxDynamicObs; i++)
 	{
@@ -1503,15 +1549,15 @@ void ZeroDinahs (void)
 }
 
 //--------------------------------------------------------------  AddDynamicObject
-
 // When a room is being drawn, various dynamic objects are pointed here.
 // This function sets up the structures to handle them.
 
 SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		SInt16 room, SInt16 index, Boolean isOn)
 {
-	SInt16		position, velocity;
-	Boolean		lilFrame;
+	SInt16 position;
+	SInt16 velocity;
+	Boolean lilFrame;
 
 	if (numDynamics >= kMaxDynamicObs)
 		return (-1);
@@ -1543,8 +1589,8 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		VOffsetRect(&dinahs[numDynamics].dest,
 				where->top - dinahs[numDynamics].dest.top);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = where->top + 2;	// hVel used as clip
-		position = who->data.g.height;				// reverse engineer init. vel.
+		dinahs[numDynamics].hVel = where->top + 2;  // hVel used as clip
+		position = who->data.g.height;  // reverse engineer init. vel.
 		velocity = 0;
 		do
 		{
@@ -1553,10 +1599,10 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		}
 		while (position > 0);
 		dinahs[numDynamics].vVel = -velocity;
-		dinahs[numDynamics].count = velocity;		// count = initial velocity
+		dinahs[numDynamics].count = velocity;  // count = initial velocity
 		dinahs[numDynamics].frame = (SInt16)who->data.g.delay * 3;
 		dinahs[numDynamics].timer = dinahs[numDynamics].frame;
-		dinahs[numDynamics].position = 0;			// launch/idle state
+		dinahs[numDynamics].position = 0;  // launch/idle state
 		dinahs[numDynamics].room = room;
 		dinahs[numDynamics].byte0 = (Byte)index;
 		dinahs[numDynamics].byte1 = 0;
@@ -1639,7 +1685,7 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		dinahs[numDynamics].count = ((SInt16)who->data.g.delay * 6) / kTicksPerFrame;
 		dinahs[numDynamics].frame = 0;
 		dinahs[numDynamics].timer = dinahs[numDynamics].count;
-		dinahs[numDynamics].position = 0;			// launch/idle state
+		dinahs[numDynamics].position = 0;  // launch/idle state
 		dinahs[numDynamics].room = room;
 		dinahs[numDynamics].byte0 = (Byte)index;
 		dinahs[numDynamics].byte1 = 0;
@@ -1729,7 +1775,7 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		dinahs[numDynamics].byte0 = (Byte)index;
 		dinahs[numDynamics].byte1 = 0;
 		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;			// initially idle
+		dinahs[numDynamics].active = isOn;  // initially idle
 		break;
 
 		case kCopterLf:
@@ -1754,7 +1800,7 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		dinahs[numDynamics].byte0 = (Byte)index;
 		dinahs[numDynamics].byte1 = 0;
 		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;			// initially idle
+		dinahs[numDynamics].active = isOn;  // initially idle
 		break;
 
 		case kDartLf:
@@ -1782,7 +1828,7 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		dinahs[numDynamics].byte0 = (Byte)index;
 		dinahs[numDynamics].byte1 = 0;
 		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;			// initially idle
+		dinahs[numDynamics].active = isOn;  // initially idle
 		break;
 
 		case kBall:
@@ -1792,7 +1838,7 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 				where->left, where->top);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = 0;
-		position = who->data.h.length;			// reverse engineer init. vel.
+		position = who->data.h.length;  // reverse engineer init. vel.
 		velocity = 0;
 		evenFrame = true;
 		lilFrame = true;
@@ -1806,7 +1852,7 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		while (position > 0);
 		dinahs[numDynamics].vVel = -velocity;
 		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].count = -velocity;	// count = initial velocity
+		dinahs[numDynamics].count = -velocity;  // count = initial velocity
 		dinahs[numDynamics].frame = 0;
 		dinahs[numDynamics].timer = 0;
 		dinahs[numDynamics].position = dinahs[numDynamics].dest.bottom;
@@ -1822,7 +1868,7 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		VOffsetRect(&dinahs[numDynamics].dest,
 				where->top - dinahs[numDynamics].dest.top);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = dinahs[numDynamics].dest.top;	// remember
+		dinahs[numDynamics].hVel = dinahs[numDynamics].dest.top;  // remember
 		dinahs[numDynamics].vVel = 0;
 		dinahs[numDynamics].count = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
 		dinahs[numDynamics].frame = 3;
@@ -1842,7 +1888,7 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 				where->left + 10, where->top + 8);
 		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
 		dinahs[numDynamics].hVel = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
-		position = who->data.g.height;			// reverse engineer init. vel.
+		position = who->data.g.height;  // reverse engineer init. vel.
 		velocity = 0;
 		evenFrame = true;
 		lilFrame = true;
@@ -1855,7 +1901,7 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		}
 		while (position > 0);
 		dinahs[numDynamics].vVel = -velocity;
-		dinahs[numDynamics].count = -velocity;	// count = initial velocity
+		dinahs[numDynamics].count = -velocity;  // count = initial velocity
 		dinahs[numDynamics].frame = 0;
 		dinahs[numDynamics].timer = dinahs[numDynamics].hVel;
 		dinahs[numDynamics].position = dinahs[numDynamics].dest.bottom;
