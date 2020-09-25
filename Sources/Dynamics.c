@@ -36,30 +36,30 @@
 #define kDartStop           310
 #define kEnemyDropSpeed     8
 
-void CheckDynamicCollision (SInt16 who, gliderPtr thisGlider, Boolean doOffset);
-Boolean DidBandHitDynamic (SInt16 who);
-void RenderToast (SInt16 who);
-void RenderBalloon (SInt16 who);
-void RenderCopter (SInt16 who);
-void RenderDart (SInt16 who);
-void RenderBall (SInt16 who);
-void RenderDrip (SInt16 who);
-void RenderFish (SInt16 who);
-void HandleSparkleObject (SInt16 who);
-void HandleToast (SInt16 who);
-void HandleMacPlus (SInt16 who);
-void HandleTV (SInt16 who);
-void HandleCoffee (SInt16 who);
-void HandleOutlet (SInt16 who);
-void HandleVCR (SInt16 who);
-void HandleStereo (SInt16 who);
-void HandleMicrowave (SInt16 who);
-void HandleBalloon (SInt16 who);
-void HandleCopter (SInt16 who);
-void HandleDart (SInt16 who);
-void HandleBall (SInt16 who);
-void HandleDrip (SInt16 who);
-void HandleFish (SInt16 who);
+void CheckDynamicCollision (const dynaType *theDinah, gliderPtr thisGlider, Boolean doOffset);
+Boolean DidBandHitDynamic (const dynaType *theDinah);
+void RenderToast (const dynaType *theDinah);
+void RenderBalloon (const dynaType *theDinah);
+void RenderCopter (const dynaType *theDinah);
+void RenderDart (const dynaType *theDinah);
+void RenderBall (const dynaType *theDinah);
+void RenderDrip (const dynaType *theDinah);
+void RenderFish (const dynaType *theDinah);
+void HandleSparkleObject (dynaType *theDinah);
+void HandleToast (dynaType *theDinah);
+void HandleMacPlus (dynaType *theDinah);
+void HandleTV (dynaType *theDinah, SInt16 who);
+void HandleCoffee (dynaType *theDinah);
+void HandleOutlet (dynaType *theDinah);
+void HandleVCR (dynaType *theDinah);
+void HandleStereo (dynaType *theDinah);
+void HandleMicrowave (dynaType *theDinah);
+void HandleBalloon (dynaType *theDinah);
+void HandleCopter (dynaType *theDinah);
+void HandleDart (dynaType *theDinah);
+void HandleBall (dynaType *theDinah);
+void HandleDrip (dynaType *theDinah);
+void HandleFish (dynaType *theDinah);
 
 Rect breadSrc[kNumBreadPicts];
 dynaType dinahs[kMaxDynamicObs];
@@ -67,15 +67,14 @@ SInt16 numDynamics;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  CheckDynamicCollision
-
 // Checks for a collision betwen the glider and one of the dynamic objects.
 // For example, did the glider hit a flying piece of toast?
 
-void CheckDynamicCollision (SInt16 who, gliderPtr thisGlider, Boolean doOffset)
+void CheckDynamicCollision (const dynaType *theDinah, gliderPtr thisGlider, Boolean doOffset)
 {
 	Rect dinahRect;
 
-	dinahRect = dinahs[who].dest;
+	dinahRect = theDinah->dest;
 	if (doOffset)
 		QOffsetRect(&dinahRect, -playOriginH, -playOriginV);
 
@@ -94,8 +93,8 @@ void CheckDynamicCollision (SInt16 who, gliderPtr thisGlider, Boolean doOffset)
 					thisGlider->hDesiredVel = kShoveVelocity;
 				else
 					thisGlider->hDesiredVel = -kShoveVelocity;
-				if (dinahs[who].vVel < 0)
-					thisGlider->vDesiredVel = dinahs[who].vVel;
+				if (theDinah->vVel < 0)
+					thisGlider->vDesiredVel = theDinah->vVel;
 				PlayPrioritySound(kFoilHitSound, kFoilHitPriority);
 				if ((evenFrame) && (foilTotal > 0))
 				{
@@ -116,13 +115,13 @@ void CheckDynamicCollision (SInt16 who, gliderPtr thisGlider, Boolean doOffset)
 //--------------------------------------------------------------  DidBandHitDynamic
 // Checks to see if a rubber band struck a dynamic.
 
-Boolean DidBandHitDynamic (SInt16 who)
+Boolean DidBandHitDynamic (const dynaType *theDinah)
 {
 	Rect dinahRect;
 	SInt16 i;
 	Boolean collided;
 
-	dinahRect = dinahs[who].dest;
+	dinahRect = theDinah->dest;
 
 	collided = false;
 	for (i = 0; i < numBands; i++)
@@ -149,18 +148,18 @@ Boolean DidBandHitDynamic (SInt16 who)
 
 // The following handful of functions handle drawing specific "dynamic" objecsts.
 
-void RenderToast (SInt16 who)
+void RenderToast (const dynaType *theDinah)
 {
 	Rect src;
 	Rect dest;
 	SInt16 vClip;
 
-	if (dinahs[who].moving)
+	if (theDinah->moving)
 	{
-		dest = dinahs[who].dest;
+		dest = theDinah->dest;
 		QOffsetRect(&dest, playOriginH, playOriginV);
-		src = breadSrc[dinahs[who].frame];
-		vClip = dinahs[who].dest.bottom - dinahs[who].hVel;
+		src = breadSrc[theDinah->frame];
+		vClip = theDinah->dest.bottom - theDinah->hVel;
 		if (vClip > 0)
 		{
 			src.bottom -= vClip;
@@ -171,7 +170,7 @@ void RenderToast (SInt16 who)
 				&src, &src, &dest);
 
 		AddRectToBackRects(&dest);
-		dest = dinahs[who].whole;
+		dest = theDinah->whole;
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
@@ -179,22 +178,22 @@ void RenderToast (SInt16 who)
 
 //--------------------------------------------------------------  RenderBalloon
 
-void RenderBalloon (SInt16 who)
+void RenderBalloon (const dynaType *theDinah)
 {
 	Rect src;
 	Rect dest;
 
-	if (dinahs[who].moving)
+	if (theDinah->moving)
 	{
-		dest = dinahs[who].dest;
+		dest = theDinah->dest;
 		QOffsetRect(&dest, playOriginH, playOriginV);
-		src = balloonSrc[dinahs[who].frame];
+		src = balloonSrc[theDinah->frame];
 
 		Mac_CopyMask(balloonSrcMap, balloonMaskMap, workSrcMap,
 				&src, &src, &dest);
 
 		AddRectToBackRects(&dest);
-		dest = dinahs[who].whole;
+		dest = theDinah->whole;
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
@@ -202,22 +201,22 @@ void RenderBalloon (SInt16 who)
 
 //--------------------------------------------------------------  RenderCopter
 
-void RenderCopter (SInt16 who)
+void RenderCopter (const dynaType *theDinah)
 {
 	Rect src;
 	Rect dest;
 
-	if (dinahs[who].moving)
+	if (theDinah->moving)
 	{
-		dest = dinahs[who].dest;
+		dest = theDinah->dest;
 		QOffsetRect(&dest, playOriginH, playOriginV);
-		src = copterSrc[dinahs[who].frame];
+		src = copterSrc[theDinah->frame];
 
 		Mac_CopyMask(copterSrcMap, copterMaskMap, workSrcMap,
 				&src, &src, &dest);
 
 		AddRectToBackRects(&dest);
-		dest = dinahs[who].whole;
+		dest = theDinah->whole;
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
@@ -225,22 +224,22 @@ void RenderCopter (SInt16 who)
 
 //--------------------------------------------------------------  RenderDart
 
-void RenderDart (SInt16 who)
+void RenderDart (const dynaType *theDinah)
 {
 	Rect src;
 	Rect dest;
 
-	if (dinahs[who].moving)
+	if (theDinah->moving)
 	{
-		dest = dinahs[who].dest;
+		dest = theDinah->dest;
 		QOffsetRect(&dest, playOriginH, playOriginV);
-		src = dartSrc[dinahs[who].frame];
+		src = dartSrc[theDinah->frame];
 
 		Mac_CopyMask(dartSrcMap, dartMaskMap, workSrcMap,
 				&src, &src, &dest);
 
 		AddRectToBackRects(&dest);
-		dest = dinahs[who].whole;
+		dest = theDinah->whole;
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
@@ -248,61 +247,61 @@ void RenderDart (SInt16 who)
 
 //--------------------------------------------------------------  RenderBall
 
-void RenderBall (SInt16 who)
+void RenderBall (const dynaType *theDinah)
 {
 	Rect src;
 	Rect dest;
 
-	dest = dinahs[who].dest;
+	dest = theDinah->dest;
 	QOffsetRect(&dest, playOriginH, playOriginV);
-	src = ballSrc[dinahs[who].frame];
+	src = ballSrc[theDinah->frame];
 
 	Mac_CopyMask(ballSrcMap, ballMaskMap, workSrcMap,
 			&src, &src, &dest);
 
 	AddRectToBackRects(&dest);
-	dest = dinahs[who].whole;
+	dest = theDinah->whole;
 	QOffsetRect(&dest, playOriginH, playOriginV);
 	AddRectToWorkRects(&dest);
 }
 
 //--------------------------------------------------------------  RenderDrip
 
-void RenderDrip (SInt16 who)
+void RenderDrip (const dynaType *theDinah)
 {
 	Rect src;
 	Rect dest;
 
-	dest = dinahs[who].dest;
+	dest = theDinah->dest;
 	QOffsetRect(&dest, playOriginH, playOriginV);
-	src = dripSrc[dinahs[who].frame];
+	src = dripSrc[theDinah->frame];
 
 	Mac_CopyMask(dripSrcMap, dripMaskMap, workSrcMap,
 			&src, &src, &dest);
 
 	AddRectToBackRects(&dest);
-	dest = dinahs[who].whole;
+	dest = theDinah->whole;
 	QOffsetRect(&dest, playOriginH, playOriginV);
 	AddRectToWorkRects(&dest);
 }
 
 //--------------------------------------------------------------  RenderFish
 
-void RenderFish (SInt16 who)
+void RenderFish (const dynaType *theDinah)
 {
 	Rect src;
 	Rect dest;
 
-	dest = dinahs[who].dest;
+	dest = theDinah->dest;
 	QOffsetRect(&dest, playOriginH, playOriginV);
-	src = fishSrc[dinahs[who].frame];
+	src = fishSrc[theDinah->frame];
 
-	if (dinahs[who].moving)
+	if (theDinah->moving)
 	{
 		Mac_CopyMask(fishSrcMap, fishMaskMap, workSrcMap,
 				&src, &src, &dest);
 		AddRectToBackRects(&dest);
-		dest = dinahs[who].whole;
+		dest = theDinah->whole;
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
@@ -311,7 +310,7 @@ void RenderFish (SInt16 who)
 		Mac_CopyBits(fishSrcMap, workSrcMap,
 				&src, &dest, srcCopy, NULL);
 		AddRectToBackRects(&dest);
-		dest = dinahs[who].whole;
+		dest = theDinah->whole;
 		QOffsetRect(&dest, playOriginH, playOriginV);
 		AddRectToWorkRects(&dest);
 	}
@@ -322,27 +321,27 @@ void RenderFish (SInt16 who)
 // The following handful of functions are called each game frame and handle…
 // the movement and state of the various types of dynamic objects.
 
-void HandleSparkleObject (SInt16 who)
+void HandleSparkleObject (dynaType *theDinah)
 {
 	Rect tempRect;
 
-	if (dinahs[who].active)  // is it on?
+	if (theDinah->active)  // is it on?
 	{
-		if (dinahs[who].frame <= 0)  // is it idle?
+		if (theDinah->frame <= 0)  // is it idle?
 		{  // it is idle
-			dinahs[who].timer--;
-			if (dinahs[who].timer <= 0)
+			theDinah->timer--;
+			if (theDinah->timer <= 0)
 			{
-				dinahs[who].timer = RandomInt(240) + 60;  // reset timer
-				dinahs[who].frame = kNumSparkleModes;  // time to sparkle
-				tempRect = dinahs[who].dest;
+				theDinah->timer = RandomInt(240) + 60;  // reset timer
+				theDinah->frame = kNumSparkleModes;  // time to sparkle
+				tempRect = theDinah->dest;
 				AddSparkle(&tempRect);
 				PlayPrioritySound(kMysticSound, kMysticPriority);
 			}
 		}
 		else  // it's sparkling
 		{
-			dinahs[who].frame--;
+			theDinah->frame--;
 		}
 	}
 	else
@@ -352,70 +351,70 @@ void HandleSparkleObject (SInt16 who)
 
 //--------------------------------------------------------------  HandleToast
 
-void HandleToast (SInt16 who)
+void HandleToast (dynaType *theDinah)
 {
 	Rect dest;
 
-	if (dinahs[who].moving)
+	if (theDinah->moving)
 	{
 		if (evenFrame)
 		{
-			dinahs[who].frame++;
-			if (dinahs[who].frame >= kNumBreadPicts)
-				dinahs[who].frame = 0;
+			theDinah->frame++;
+			if (theDinah->frame >= kNumBreadPicts)
+				theDinah->frame = 0;
 		}
 		if (twoPlayerGame)
 		{
 			if (onePlayerLeft)
 			{
 				if (playerDead == theGlider.which)
-					CheckDynamicCollision(who, &theGlider2, false);
+					CheckDynamicCollision(theDinah, &theGlider2, false);
 				else
-					CheckDynamicCollision(who, &theGlider, false);
+					CheckDynamicCollision(theDinah, &theGlider, false);
 			}
 			else
 			{
-				CheckDynamicCollision(who, &theGlider, false);
-				CheckDynamicCollision(who, &theGlider2, false);
+				CheckDynamicCollision(theDinah, &theGlider, false);
+				CheckDynamicCollision(theDinah, &theGlider2, false);
 			}
 		}
 		else
 		{
-			CheckDynamicCollision(who, &theGlider, false);
+			CheckDynamicCollision(theDinah, &theGlider, false);
 		}
-		VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
-		dinahs[who].whole = dinahs[who].dest;
-		if (dinahs[who].vVel > 0)
-			dinahs[who].whole.top -= dinahs[who].vVel;
+		VOffsetRect(&theDinah->dest, theDinah->vVel);
+		theDinah->whole = theDinah->dest;
+		if (theDinah->vVel > 0)
+			theDinah->whole.top -= theDinah->vVel;
 		else
-			dinahs[who].whole.bottom -= dinahs[who].vVel;
-		dinahs[who].vVel++;  // falls
-		if (dinahs[who].vVel > dinahs[who].count)
+			theDinah->whole.bottom -= theDinah->vVel;
+		theDinah->vVel++;  // falls
+		if (theDinah->vVel > theDinah->count)
 		{
-			dest = dinahs[who].whole;
+			dest = theDinah->whole;
 			QOffsetRect(&dest, playOriginH, playOriginV);
 			AddRectToWorkRects(&dest);
-			dinahs[who].moving = false;
-			dinahs[who].frame = dinahs[who].timer;
+			theDinah->moving = false;
+			theDinah->frame = theDinah->timer;
 			PlayPrioritySound(kToastLandSound, kToastLandPriority);
 		}
 	}
 	else
 	{
-		if (dinahs[who].active)
-			dinahs[who].frame--;
-		if (dinahs[who].frame <= 0)
+		if (theDinah->active)
+			theDinah->frame--;
+		if (theDinah->frame <= 0)
 		{
-			if (dinahs[who].active)
+			if (theDinah->active)
 			{
-				dinahs[who].vVel = (SInt16)-dinahs[who].count;
-				dinahs[who].frame = 0;
-				dinahs[who].moving = true;
+				theDinah->vVel = (SInt16)-theDinah->count;
+				theDinah->frame = 0;
+				theDinah->moving = true;
 				PlayPrioritySound(kToastLaunchSound, kToastLaunchPriority);
 			}
 			else
 			{
-				dinahs[who].frame = dinahs[who].timer;
+				theDinah->frame = theDinah->timer;
 			}
 		}
 	}
@@ -423,43 +422,43 @@ void HandleToast (SInt16 who)
 
 //--------------------------------------------------------------  HandleMacPlus
 
-void HandleMacPlus (SInt16 who)
+void HandleMacPlus (dynaType *theDinah)
 {
-	if (dinahs[who].timer > 0)
+	if (theDinah->timer > 0)
 	{
-		dinahs[who].timer--;
-		if (dinahs[who].active)
+		theDinah->timer--;
+		if (theDinah->active)
 		{
-			if (dinahs[who].timer == 0)
+			if (theDinah->timer == 0)
 			{
-				AddRectToWorkRects(&dinahs[who].dest);
+				AddRectToWorkRects(&theDinah->dest);
 			}
-			else if (dinahs[who].timer == 1)
+			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacBeepSound, kMacBeepPriority);
 				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&plusScreen2, &dinahs[who].dest,
+						&plusScreen2, &theDinah->dest,
 						srcCopy, nil);
-				AddRectToBackRects(&dinahs[who].dest);
+				AddRectToBackRects(&theDinah->dest);
 			}
-			else if (dinahs[who].timer == 30)
+			else if (theDinah->timer == 30)
 			{
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
 			}
 		}
 		else
 		{
-			if (dinahs[who].timer == 0)
+			if (theDinah->timer == 0)
 			{
-				AddRectToWorkRects(&dinahs[who].dest);
+				AddRectToWorkRects(&theDinah->dest);
 			}
-			else if (dinahs[who].timer == 1)
+			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
 				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&plusScreen1, &dinahs[who].dest,
+						&plusScreen1, &theDinah->dest,
 						srcCopy, nil);
-				AddRectToBackRects(&dinahs[who].dest);
+				AddRectToBackRects(&theDinah->dest);
 			}
 		}
 	}
@@ -467,14 +466,14 @@ void HandleMacPlus (SInt16 who)
 
 //--------------------------------------------------------------  HandleTV
 
-void HandleTV (SInt16 who)
+void HandleTV (dynaType *theDinah, SInt16 who)
 {
-	if (dinahs[who].timer > 0)
+	if (theDinah->timer > 0)
 	{
-		dinahs[who].timer--;
-		if (dinahs[who].active)
+		theDinah->timer--;
+		if (theDinah->active)
 		{
-			if (dinahs[who].timer == 0)
+			if (theDinah->timer == 0)
 			{
 				if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) &&
 						(who == tvWithMovieNumber))
@@ -482,10 +481,10 @@ void HandleTV (SInt16 who)
 				}
 				else
 				{
-					AddRectToWorkRects(&dinahs[who].dest);
+					AddRectToWorkRects(&theDinah->dest);
 				}
 			}
-			else if (dinahs[who].timer == 1)
+			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kTVOnSound, kTVOnPriority);
 				if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) &&
@@ -495,25 +494,25 @@ void HandleTV (SInt16 who)
 				else
 				{
 					Mac_CopyBits(applianceSrcMap, backSrcMap,
-							&tvScreen2, &dinahs[who].dest,
+							&tvScreen2, &theDinah->dest,
 							srcCopy, nil);
-					AddRectToBackRects(&dinahs[who].dest);
+					AddRectToBackRects(&theDinah->dest);
 				}
 			}
 		}
 		else
 		{
-			if (dinahs[who].timer == 0)
+			if (theDinah->timer == 0)
 			{
-				AddRectToWorkRects(&dinahs[who].dest);
+				AddRectToWorkRects(&theDinah->dest);
 			}
-			else if (dinahs[who].timer == 1)
+			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kTVOffSound, kTVOffPriority);
 				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&tvScreen1, &dinahs[who].dest,
+						&tvScreen1, &theDinah->dest,
 						srcCopy, nil);
-				AddRectToBackRects(&dinahs[who].dest);
+				AddRectToBackRects(&theDinah->dest);
 			}
 		}
 	}
@@ -521,45 +520,45 @@ void HandleTV (SInt16 who)
 
 //--------------------------------------------------------------  HandleCoffee
 
-void HandleCoffee (SInt16 who)
+void HandleCoffee (dynaType *theDinah)
 {
-	if (dinahs[who].timer > 0)
+	if (theDinah->timer > 0)
 	{
-		dinahs[who].timer--;
-		if (dinahs[who].active)
+		theDinah->timer--;
+		if (theDinah->active)
 		{
-			if (dinahs[who].timer == 0)
+			if (theDinah->timer == 0)
 			{
-				AddRectToWorkRects(&dinahs[who].dest);
-				dinahs[who].timer = 200 + RandomInt(200);
+				AddRectToWorkRects(&theDinah->dest);
+				theDinah->timer = 200 + RandomInt(200);
 			}
-			else if (dinahs[who].timer == 1)
+			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
 				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&coffeeLight2, &dinahs[who].dest,
+						&coffeeLight2, &theDinah->dest,
 						srcCopy, nil);
-				AddRectToBackRects(&dinahs[who].dest);
+				AddRectToBackRects(&theDinah->dest);
 			}
-			else if (dinahs[who].timer == 100)
+			else if (theDinah->timer == 100)
 			{
 				PlayPrioritySound(kCoffeeSound, kCoffeePriority);
-				dinahs[who].timer = 200 + RandomInt(200);
+				theDinah->timer = 200 + RandomInt(200);
 			}
 		}
 		else
 		{
-			if (dinahs[who].timer == 0)
+			if (theDinah->timer == 0)
 			{
-				AddRectToWorkRects(&dinahs[who].dest);
+				AddRectToWorkRects(&theDinah->dest);
 			}
-			else if (dinahs[who].timer == 1)
+			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
 				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&coffeeLight1, &dinahs[who].dest,
+						&coffeeLight1, &theDinah->dest,
 						srcCopy, nil);
-				AddRectToBackRects(&dinahs[who].dest);
+				AddRectToBackRects(&theDinah->dest);
 			}
 		}
 	}
@@ -567,76 +566,76 @@ void HandleCoffee (SInt16 who)
 
 //--------------------------------------------------------------  HandleOutlet
 
-void HandleOutlet (SInt16 who)
+void HandleOutlet (dynaType *theDinah)
 {
-	if (dinahs[who].position != 0)
+	if (theDinah->position != 0)
 	{
-		dinahs[who].timer--;
+		theDinah->timer--;
 
 		if (twoPlayerGame)
 		{
 			if (onePlayerLeft)
 			{
 				if (playerDead == theGlider.which)
-					CheckDynamicCollision(who, &theGlider2, false);
+					CheckDynamicCollision(theDinah, &theGlider2, false);
 				else
-					CheckDynamicCollision(who, &theGlider, false);
+					CheckDynamicCollision(theDinah, &theGlider, false);
 			}
 			else
 			{
-				CheckDynamicCollision(who, &theGlider, true);
-				CheckDynamicCollision(who, &theGlider2, true);
+				CheckDynamicCollision(theDinah, &theGlider, true);
+				CheckDynamicCollision(theDinah, &theGlider2, true);
 			}
 		}
 		else
 		{
-			CheckDynamicCollision(who, &theGlider, true);
+			CheckDynamicCollision(theDinah, &theGlider, true);
 		}
 
-		if (dinahs[who].timer <= 0)
+		if (theDinah->timer <= 0)
 		{
-			dinahs[who].frame = 0;
-			dinahs[who].position = 0;
-			dinahs[who].timer = dinahs[who].count;
+			theDinah->frame = 0;
+			theDinah->position = 0;
+			theDinah->timer = theDinah->count;
 		}
 		else
 		{
-			if ((dinahs[who].timer % 5) == 0)
+			if ((theDinah->timer % 5) == 0)
 				PlayPrioritySound(kZapSound, kZapPriority);
-			dinahs[who].frame++;
-			if (dinahs[who].frame >= kNumOutletPicts)
-				dinahs[who].frame = 1;
+			theDinah->frame++;
+			if (theDinah->frame >= kNumOutletPicts)
+				theDinah->frame = 1;
 		}
 
-		if ((dinahs[who].position != 0) || (dinahs[who].hVel > 0))
+		if ((theDinah->position != 0) || (theDinah->hVel > 0))
 		{
 			Mac_CopyBits(applianceSrcMap, workSrcMap,
-					&outletSrc[dinahs[who].frame],
-					&dinahs[who].dest,
+					&outletSrc[theDinah->frame],
+					&theDinah->dest,
 					srcCopy, nil);
 		}
 		else
 		{
-			Mac_PaintRect(workSrcMap, &dinahs[who].dest, GetStockObject(BLACK_BRUSH));
+			Mac_PaintRect(workSrcMap, &theDinah->dest, GetStockObject(BLACK_BRUSH));
 		}
-		AddRectToWorkRects(&dinahs[who].dest);
+		AddRectToWorkRects(&theDinah->dest);
 	}
 	else
 	{
-		if (dinahs[who].active)
-			dinahs[who].timer--;
+		if (theDinah->active)
+			theDinah->timer--;
 
-		if (dinahs[who].timer <= 0)
+		if (theDinah->timer <= 0)
 		{
-			if (dinahs[who].active)
+			if (theDinah->active)
 			{
-				dinahs[who].position = 1;
-				dinahs[who].timer = kLengthOfZap;
+				theDinah->position = 1;
+				theDinah->timer = kLengthOfZap;
 				PlayPrioritySound(kZapSound, kZapPriority);
 			}
 			else
 			{
-				dinahs[who].timer = dinahs[who].count;
+				theDinah->timer = theDinah->count;
 			}
 		}
 	}
@@ -644,67 +643,67 @@ void HandleOutlet (SInt16 who)
 
 //--------------------------------------------------------------  HandleVCR
 
-void HandleVCR (SInt16 who)
+void HandleVCR (dynaType *theDinah)
 {
-	if (dinahs[who].timer > 0)
+	if (theDinah->timer > 0)
 	{
-		dinahs[who].timer--;
-		if (dinahs[who].active)
+		theDinah->timer--;
+		if (theDinah->active)
 		{
-			if (dinahs[who].timer == 0)
+			if (theDinah->timer == 0)
 			{
-				AddRectToWorkRects(&dinahs[who].dest);
-				dinahs[who].timer = 115;
+				AddRectToWorkRects(&theDinah->dest);
+				theDinah->timer = 115;
 			}
-			else if (dinahs[who].timer == 5)
+			else if (theDinah->timer == 5)
 			{
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
 			}
-			else if (dinahs[who].timer == 1)
+			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kVCRSound, kVCRPriority);
 				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&vcrTime2, &dinahs[who].dest,
+						&vcrTime2, &theDinah->dest,
 						srcCopy, nil);
-				AddRectToBackRects(&dinahs[who].dest);
+				AddRectToBackRects(&theDinah->dest);
 			}
-			else if (dinahs[who].timer == 100)
+			else if (theDinah->timer == 100)
 			{
-				AddRectToWorkRects(&dinahs[who].dest);
-				dinahs[who].timer = 115;
-				dinahs[who].frame = 1 - dinahs[who].frame;
+				AddRectToWorkRects(&theDinah->dest);
+				theDinah->timer = 115;
+				theDinah->frame = 1 - theDinah->frame;
 			}
-			else if (dinahs[who].timer == 101)
+			else if (theDinah->timer == 101)
 			{
-				if (dinahs[who].frame == 0)
+				if (theDinah->frame == 0)
 				{
 					Mac_CopyBits(applianceSrcMap, backSrcMap,
-							&vcrTime2, &dinahs[who].dest,
+							&vcrTime2, &theDinah->dest,
 							srcCopy, nil);
-					AddRectToBackRects(&dinahs[who].dest);
+					AddRectToBackRects(&theDinah->dest);
 				}
 				else
 				{
 					Mac_CopyBits(applianceSrcMap, backSrcMap,
-							&vcrTime1, &dinahs[who].dest,
+							&vcrTime1, &theDinah->dest,
 							srcCopy, nil);
-					AddRectToBackRects(&dinahs[who].dest);
+					AddRectToBackRects(&theDinah->dest);
 				}
 			}
 		}
 		else
 		{
-			if (dinahs[who].timer == 0)
+			if (theDinah->timer == 0)
 			{
-				AddRectToWorkRects(&dinahs[who].dest);
+				AddRectToWorkRects(&theDinah->dest);
 			}
-			else if (dinahs[who].timer == 1)
+			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
 				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&vcrTime1, &dinahs[who].dest,
+						&vcrTime1, &theDinah->dest,
 						srcCopy, nil);
-				AddRectToBackRects(&dinahs[who].dest);
+				AddRectToBackRects(&theDinah->dest);
 			}
 		}
 	}
@@ -712,41 +711,41 @@ void HandleVCR (SInt16 who)
 
 //--------------------------------------------------------------  HandleStereo
 
-void HandleStereo (SInt16 who)
+void HandleStereo (dynaType *theDinah)
 {
-	if (dinahs[who].timer > 0)
+	if (theDinah->timer > 0)
 	{
-		dinahs[who].timer--;
-		if (dinahs[who].active)
+		theDinah->timer--;
+		if (theDinah->active)
 		{
-			if (dinahs[who].timer == 0)
+			if (theDinah->timer == 0)
 			{
-				AddRectToWorkRects(&dinahs[who].dest);
+				AddRectToWorkRects(&theDinah->dest);
 				ToggleMusicWhilePlaying();
 			}
-			else if (dinahs[who].timer == 1)
+			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
 				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&stereoLight2, &dinahs[who].dest,
+						&stereoLight2, &theDinah->dest,
 						srcCopy, nil);
-				AddRectToBackRects(&dinahs[who].dest);
+				AddRectToBackRects(&theDinah->dest);
 			}
 		}
 		else
 		{
-			if (dinahs[who].timer == 0)
+			if (theDinah->timer == 0)
 			{
-				AddRectToWorkRects(&dinahs[who].dest);
+				AddRectToWorkRects(&theDinah->dest);
 				ToggleMusicWhilePlaying();
 			}
-			else if (dinahs[who].timer == 1)
+			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
 				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&stereoLight1, &dinahs[who].dest,
+						&stereoLight1, &theDinah->dest,
 						srcCopy, nil);
-				AddRectToBackRects(&dinahs[who].dest);
+				AddRectToBackRects(&theDinah->dest);
 			}
 		}
 	}
@@ -754,23 +753,23 @@ void HandleStereo (SInt16 who)
 
 //--------------------------------------------------------------  HandleMicrowave
 
-void HandleMicrowave (SInt16 who)
+void HandleMicrowave (dynaType *theDinah)
 {
 	Rect dest;
 
-	if (dinahs[who].timer > 0)
+	if (theDinah->timer > 0)
 	{
-		dinahs[who].timer--;
-		if (dinahs[who].active)
+		theDinah->timer--;
+		if (theDinah->active)
 		{
-			if (dinahs[who].timer == 0)
+			if (theDinah->timer == 0)
 			{
-				AddRectToWorkRects(&dinahs[who].dest);
+				AddRectToWorkRects(&theDinah->dest);
 			}
-			else if (dinahs[who].timer == 1)
+			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
-				dest = dinahs[who].dest;
+				dest = theDinah->dest;
 				dest.right = dest.left + 16;
 				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&microOn, &dest,
@@ -783,19 +782,19 @@ void HandleMicrowave (SInt16 who)
 				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&microOn, &dest,
 						srcCopy, nil);
-				AddRectToBackRects(&dinahs[who].dest);
+				AddRectToBackRects(&theDinah->dest);
 			}
 		}
 		else
 		{
-			if (dinahs[who].timer == 0)
+			if (theDinah->timer == 0)
 			{
-				AddRectToWorkRects(&dinahs[who].dest);
+				AddRectToWorkRects(&theDinah->dest);
 			}
-			else if (dinahs[who].timer == 1)
+			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
-				dest = dinahs[who].dest;
+				dest = theDinah->dest;
 				dest.right = dest.left + 16;
 				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&microOff, &dest,
@@ -808,7 +807,7 @@ void HandleMicrowave (SInt16 who)
 				Mac_CopyBits(applianceSrcMap, backSrcMap,
 						&microOff, &dest,
 						srcCopy, nil);
-				AddRectToBackRects(&dinahs[who].dest);
+				AddRectToBackRects(&theDinah->dest);
 			}
 		}
 	}
@@ -816,103 +815,102 @@ void HandleMicrowave (SInt16 who)
 
 //--------------------------------------------------------------  HandleBalloon
 
-void HandleBalloon (SInt16 who)
+void HandleBalloon (dynaType *theDinah)
 {
 	Rect dest;
 
-	if (dinahs[who].moving)
+	if (theDinah->moving)
 	{
-		if (dinahs[who].vVel < 0)
+		if (theDinah->vVel < 0)
 		{
 			if (evenFrame)
 			{
-				dinahs[who].frame++;
-				if (dinahs[who].frame >= 6)
-					dinahs[who].frame = 0;
+				theDinah->frame++;
+				if (theDinah->frame >= 6)
+					theDinah->frame = 0;
 			}
 			if (twoPlayerGame)
 			{
 				if (onePlayerLeft)
 				{
 					if (playerDead == theGlider.which)
-						CheckDynamicCollision(who, &theGlider2, false);
+						CheckDynamicCollision(theDinah, &theGlider2, false);
 					else
-						CheckDynamicCollision(who, &theGlider, false);
+						CheckDynamicCollision(theDinah, &theGlider, false);
 				}
 				else
 				{
-					CheckDynamicCollision(who, &theGlider, false);
-					CheckDynamicCollision(who, &theGlider2, false);
+					CheckDynamicCollision(theDinah, &theGlider, false);
+					CheckDynamicCollision(theDinah, &theGlider2, false);
 				}
 			}
 			else
 			{
-				CheckDynamicCollision(who, &theGlider, false);
+				CheckDynamicCollision(theDinah, &theGlider, false);
 			}
 
-			if ((numBands > 0) && (DidBandHitDynamic(who)))
+			if ((numBands > 0) && (DidBandHitDynamic(theDinah)))
 			{
-				dinahs[who].frame = 6;
-				dinahs[who].vVel = kEnemyDropSpeed;
+				theDinah->frame = 6;
+				theDinah->vVel = kEnemyDropSpeed;
 				PlayPrioritySound(kPopSound, kPopPriority);
 			}
 			else
 			{
-				VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
-				dinahs[who].whole = dinahs[who].dest;
-				dinahs[who].whole.bottom -= dinahs[who].vVel;
+				VOffsetRect(&theDinah->dest, theDinah->vVel);
+				theDinah->whole = theDinah->dest;
+				theDinah->whole.bottom -= theDinah->vVel;
 			}
 		}
 		else
 		{
 			if (evenFrame)
 			{
-				dinahs[who].frame++;
-				if (dinahs[who].frame >= 8)
-					dinahs[who].frame = 6;
+				theDinah->frame++;
+				if (theDinah->frame >= 8)
+					theDinah->frame = 6;
 			}
 
-			VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
-			dinahs[who].whole = dinahs[who].dest;
-			dinahs[who].whole.top -= dinahs[who].vVel;
+			VOffsetRect(&theDinah->dest, theDinah->vVel);
+			theDinah->whole = theDinah->dest;
+			theDinah->whole.top -= theDinah->vVel;
 		}
 
-		if ((dinahs[who].dest.top <= kBalloonStop) ||
-				(dinahs[who].dest.bottom >= kBalloonStart))
+		if ((theDinah->dest.top <= kBalloonStop) ||
+				(theDinah->dest.bottom >= kBalloonStart))
 		{
-			dest = dinahs[who].whole;
+			dest = theDinah->whole;
 			QOffsetRect(&dest, playOriginH, playOriginV);
 			AddRectToWorkRects(&dest);
-			dest = dinahs[who].dest;
+			dest = theDinah->dest;
 			AddSparkle(&dest);
 			PlayPrioritySound(kEnemyOutSound, kEnemyOutPriority);
-			dinahs[who].moving = false;
-			dinahs[who].vVel = -2;
-			dinahs[who].timer = dinahs[who].count;
-			dinahs[who].dest.bottom = kBalloonStart;
-			dinahs[who].dest.top = dinahs[who].dest.bottom -
-					RectTall(&balloonSrc[0]);
-			dinahs[who].whole = dinahs[who].dest;
+			theDinah->moving = false;
+			theDinah->vVel = -2;
+			theDinah->timer = theDinah->count;
+			theDinah->dest.bottom = kBalloonStart;
+			theDinah->dest.top = theDinah->dest.bottom - RectTall(&balloonSrc[0]);
+			theDinah->whole = theDinah->dest;
 		}
 	}
 	else  // balloon is idle, waiting to appear
 	{
-		if (dinahs[who].active)
+		if (theDinah->active)
 		{
-			dinahs[who].timer--;
-			if (dinahs[who].timer <= 0)
+			theDinah->timer--;
+			if (theDinah->timer <= 0)
 			{
-				dinahs[who].moving = true;
-				if (dinahs[who].count < kStartSparkle)
+				theDinah->moving = true;
+				if (theDinah->count < kStartSparkle)
 				{
-					dest = dinahs[who].dest;
+					dest = theDinah->dest;
 					AddSparkle(&dest);
 					PlayPrioritySound(kEnemyInSound, kEnemyInPriority);
 				}
 			}
-			else if (dinahs[who].timer == kStartSparkle)
+			else if (theDinah->timer == kStartSparkle)
 			{
-				dest = dinahs[who].dest;
+				dest = theDinah->dest;
 				AddSparkle(&dest);
 				PlayPrioritySound(kEnemyInSound, kEnemyInPriority);
 			}
@@ -922,107 +920,106 @@ void HandleBalloon (SInt16 who)
 
 //--------------------------------------------------------------  HandleCopter
 
-void HandleCopter (SInt16 who)
+void HandleCopter (dynaType *theDinah)
 {
 	Rect dest;
 
-	if (dinahs[who].moving)  // is 'copter about?
+	if (theDinah->moving)  // is 'copter about?
 	{
-		if (dinahs[who].hVel != 0)  // 'copter was not shot
+		if (theDinah->hVel != 0)  // 'copter was not shot
 		{
-			dinahs[who].frame++;
-			if (dinahs[who].frame >= 8)
-				dinahs[who].frame = 0;
+			theDinah->frame++;
+			if (theDinah->frame >= 8)
+				theDinah->frame = 0;
 			if (twoPlayerGame)
 			{
 				if (onePlayerLeft)
 				{
 					if (playerDead == theGlider.which)
-						CheckDynamicCollision(who, &theGlider2, false);
+						CheckDynamicCollision(theDinah, &theGlider2, false);
 					else
-						CheckDynamicCollision(who, &theGlider, false);
+						CheckDynamicCollision(theDinah, &theGlider, false);
 				}
 				else
 				{
-					CheckDynamicCollision(who, &theGlider, false);
-					CheckDynamicCollision(who, &theGlider2, false);
+					CheckDynamicCollision(theDinah, &theGlider, false);
+					CheckDynamicCollision(theDinah, &theGlider2, false);
 				}
 			}
 			else
 			{
-				CheckDynamicCollision(who, &theGlider, false);
+				CheckDynamicCollision(theDinah, &theGlider, false);
 			}
-			if ((numBands > 0) && (DidBandHitDynamic(who)))
+			if ((numBands > 0) && (DidBandHitDynamic(theDinah)))
 			{
-				dinahs[who].frame = 8;
-				dinahs[who].hVel = 0;
-				dinahs[who].vVel = kEnemyDropSpeed;
+				theDinah->frame = 8;
+				theDinah->hVel = 0;
+				theDinah->vVel = kEnemyDropSpeed;
 				PlayPrioritySound(kPaperCrunchSound, kPaperCrunchPriority);
 			}
 			else
 			{
-				HOffsetRect(&dinahs[who].dest, dinahs[who].hVel);
-				VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
-				dinahs[who].whole = dinahs[who].dest;
-				dinahs[who].whole.top -= dinahs[who].vVel;
-				if (dinahs[who].hVel < 0)
-					dinahs[who].whole.right -= dinahs[who].hVel;
+				HOffsetRect(&theDinah->dest, theDinah->hVel);
+				VOffsetRect(&theDinah->dest, theDinah->vVel);
+				theDinah->whole = theDinah->dest;
+				theDinah->whole.top -= theDinah->vVel;
+				if (theDinah->hVel < 0)
+					theDinah->whole.right -= theDinah->hVel;
 				else
-					dinahs[who].whole.left -= dinahs[who].hVel;
+					theDinah->whole.left -= theDinah->hVel;
 			}
 		}
 		else  // 'copter was shot
 		{
-			dinahs[who].frame++;
-			if (dinahs[who].frame >= 10)
-				dinahs[who].frame = 8;
-			VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
-			dinahs[who].whole = dinahs[who].dest;
-			dinahs[who].whole.top -= dinahs[who].vVel;
+			theDinah->frame++;
+			if (theDinah->frame >= 10)
+				theDinah->frame = 8;
+			VOffsetRect(&theDinah->dest, theDinah->vVel);
+			theDinah->whole = theDinah->dest;
+			theDinah->whole.top -= theDinah->vVel;
 		}
 
-		if ((dinahs[who].dest.top <= kCopterStart) ||
-				(dinahs[who].dest.bottom >= kCopterStop))
+		if ((theDinah->dest.top <= kCopterStart) ||
+				(theDinah->dest.bottom >= kCopterStop))
 		{
-			dest = dinahs[who].whole;
+			dest = theDinah->whole;
 			QOffsetRect(&dest, playOriginH, playOriginV);
 			AddRectToWorkRects(&dest);
-			dest = dinahs[who].dest;
+			dest = theDinah->dest;
 			AddSparkle(&dest);
 			PlayPrioritySound(kEnemyOutSound, kEnemyOutPriority);
-			dinahs[who].moving = false;
-			dinahs[who].vVel = 2;
-			if (dinahs[who].type == kCopterLf)
-				dinahs[who].hVel = -1;
+			theDinah->moving = false;
+			theDinah->vVel = 2;
+			if (theDinah->type == kCopterLf)
+				theDinah->hVel = -1;
 			else
-				dinahs[who].hVel = 1;
-			dinahs[who].timer = dinahs[who].count;
-			dinahs[who].dest.top = kCopterStart;
-			dinahs[who].dest.bottom = dinahs[who].dest.top +
-					RectTall(&copterSrc[0]);
-			dinahs[who].dest.left = dinahs[who].position;
-			dinahs[who].dest.right = dinahs[who].dest.left + 32;
-			dinahs[who].whole = dinahs[who].dest;
+				theDinah->hVel = 1;
+			theDinah->timer = theDinah->count;
+			theDinah->dest.top = kCopterStart;
+			theDinah->dest.bottom = theDinah->dest.top + RectTall(&copterSrc[0]);
+			theDinah->dest.left = theDinah->position;
+			theDinah->dest.right = theDinah->dest.left + 32;
+			theDinah->whole = theDinah->dest;
 		}
 	}
 	else
 	{
-		if (dinahs[who].active)
+		if (theDinah->active)
 		{
-			dinahs[who].timer--;
-			if (dinahs[who].timer <= 0)
+			theDinah->timer--;
+			if (theDinah->timer <= 0)
 			{
-				dinahs[who].moving = true;
-				if (dinahs[who].count < kStartSparkle)
+				theDinah->moving = true;
+				if (theDinah->count < kStartSparkle)
 				{
-					dest = dinahs[who].dest;
+					dest = theDinah->dest;
 					AddSparkle(&dest);
 					PlayPrioritySound(kEnemyInSound, kEnemyInPriority);
 				}
 			}
-			else if (dinahs[who].timer == kStartSparkle)
+			else if (theDinah->timer == kStartSparkle)
 			{
-				dest = dinahs[who].dest;
+				dest = theDinah->dest;
 				AddSparkle(&dest);
 				PlayPrioritySound(kEnemyInSound, kEnemyInPriority);
 			}
@@ -1032,115 +1029,112 @@ void HandleCopter (SInt16 who)
 
 //--------------------------------------------------------------  HandleDart
 
-void HandleDart (SInt16 who)
+void HandleDart (dynaType *theDinah)
 {
 	Rect dest;
 
-	if (dinahs[who].moving)  // Dart has appeared
+	if (theDinah->moving)  // Dart has appeared
 	{
-		if (dinahs[who].hVel != 0)  // meaning it isn't falling
+		if (theDinah->hVel != 0)  // meaning it isn't falling
 		{
 			if (twoPlayerGame)
 			{
 				if (onePlayerLeft)
 				{
 					if (playerDead == theGlider.which)
-						CheckDynamicCollision(who, &theGlider2, false);
+						CheckDynamicCollision(theDinah, &theGlider2, false);
 					else
-						CheckDynamicCollision(who, &theGlider, false);
+						CheckDynamicCollision(theDinah, &theGlider, false);
 				}
 				else
 				{
-					CheckDynamicCollision(who, &theGlider, false);
-					CheckDynamicCollision(who, &theGlider2, false);
+					CheckDynamicCollision(theDinah, &theGlider, false);
+					CheckDynamicCollision(theDinah, &theGlider2, false);
 				}
 			}
 			else
 			{
-				CheckDynamicCollision(who, &theGlider, false);
+				CheckDynamicCollision(theDinah, &theGlider, false);
 			}
-			if ((numBands > 0) && (DidBandHitDynamic(who)))
+			if ((numBands > 0) && (DidBandHitDynamic(theDinah)))
 			{
-				if (dinahs[who].type == kDartLf)
-					dinahs[who].frame = 1;
+				if (theDinah->type == kDartLf)
+					theDinah->frame = 1;
 				else
-					dinahs[who].frame = 3;
-				dinahs[who].hVel = 0;
-				dinahs[who].vVel = kEnemyDropSpeed;
+					theDinah->frame = 3;
+				theDinah->hVel = 0;
+				theDinah->vVel = kEnemyDropSpeed;
 				PlayPrioritySound(kPaperCrunchSound, kPaperCrunchPriority);
 			}
 			else
 			{
-				HOffsetRect(&dinahs[who].dest, dinahs[who].hVel);
-				VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
-				dinahs[who].whole = dinahs[who].dest;
-				dinahs[who].whole.top -= dinahs[who].vVel;
-				if (dinahs[who].hVel < 0)
-					dinahs[who].whole.right -= dinahs[who].hVel;
+				HOffsetRect(&theDinah->dest, theDinah->hVel);
+				VOffsetRect(&theDinah->dest, theDinah->vVel);
+				theDinah->whole = theDinah->dest;
+				theDinah->whole.top -= theDinah->vVel;
+				if (theDinah->hVel < 0)
+					theDinah->whole.right -= theDinah->hVel;
 				else
-					dinahs[who].whole.left -= dinahs[who].hVel;
+					theDinah->whole.left -= theDinah->hVel;
 			}
 		}
 		else  // dart is falling straight down
 		{
-			VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
-			dinahs[who].whole = dinahs[who].dest;
-			dinahs[who].whole.top -= dinahs[who].vVel;
+			VOffsetRect(&theDinah->dest, theDinah->vVel);
+			theDinah->whole = theDinah->dest;
+			theDinah->whole.top -= theDinah->vVel;
 		}
 
-		if ((dinahs[who].dest.left <= 0) ||
-				(dinahs[who].dest.right >= kRoomWide) ||
-				(dinahs[who].dest.bottom >= kDartStop))
+		if ((theDinah->dest.left <= 0) ||
+				(theDinah->dest.right >= kRoomWide) ||
+				(theDinah->dest.bottom >= kDartStop))
 		{
-			dest = dinahs[who].whole;
+			dest = theDinah->whole;
 			QOffsetRect(&dest, playOriginH, playOriginV);
 			AddRectToWorkRects(&dest);
-			dest = dinahs[who].dest;
+			dest = theDinah->dest;
 			AddSparkle(&dest);
 			PlayPrioritySound(kEnemyOutSound, kEnemyOutPriority);
-			dinahs[who].moving = false;
-			dinahs[who].vVel = 2;
-			if (dinahs[who].type == kDartLf)
+			theDinah->moving = false;
+			theDinah->vVel = 2;
+			if (theDinah->type == kDartLf)
 			{
-				dinahs[who].frame = 0;
-				dinahs[who].hVel = -kDartVelocity;
-				dinahs[who].dest.right = kRoomWide;
-				dinahs[who].dest.left = dinahs[who].dest.right -
-						RectWide(&dartSrc[0]);
+				theDinah->frame = 0;
+				theDinah->hVel = -kDartVelocity;
+				theDinah->dest.right = kRoomWide;
+				theDinah->dest.left = theDinah->dest.right - RectWide(&dartSrc[0]);
 			}
 			else
 			{
-				dinahs[who].frame = 2;
-				dinahs[who].hVel = kDartVelocity;
-				dinahs[who].dest.left = 0;
-				dinahs[who].dest.right = dinahs[who].dest.left +
-						RectWide(&dartSrc[0]);
+				theDinah->frame = 2;
+				theDinah->hVel = kDartVelocity;
+				theDinah->dest.left = 0;
+				theDinah->dest.right = theDinah->dest.left + RectWide(&dartSrc[0]);
 			}
-			dinahs[who].timer = dinahs[who].count;
-			dinahs[who].dest.top = dinahs[who].position;
-			dinahs[who].dest.bottom = dinahs[who].dest.top +
-					RectTall(&dartSrc[0]);
-			dinahs[who].whole = dinahs[who].dest;
+			theDinah->timer = theDinah->count;
+			theDinah->dest.top = theDinah->position;
+			theDinah->dest.bottom = theDinah->dest.top + RectTall(&dartSrc[0]);
+			theDinah->whole = theDinah->dest;
 		}
 	}
 	else
 	{
-		if (dinahs[who].active)
+		if (theDinah->active)
 		{
-			dinahs[who].timer--;
-			if (dinahs[who].timer <= 0)
+			theDinah->timer--;
+			if (theDinah->timer <= 0)
 			{
-				dinahs[who].moving = true;
-				if (dinahs[who].count < kStartSparkle)
+				theDinah->moving = true;
+				if (theDinah->count < kStartSparkle)
 				{
-					dest = dinahs[who].dest;
+					dest = theDinah->dest;
 					AddSparkle(&dest);
 					PlayPrioritySound(kEnemyInSound, kEnemyInPriority);
 				}
 			}
-			else if (dinahs[who].timer == kStartSparkle)
+			else if (theDinah->timer == kStartSparkle)
 			{
-				dest = dinahs[who].dest;
+				dest = theDinah->dest;
 				AddSparkle(&dest);
 				PlayPrioritySound(kEnemyInSound, kEnemyInPriority);
 			}
@@ -1150,72 +1144,72 @@ void HandleDart (SInt16 who)
 
 //--------------------------------------------------------------  HandleBall
 
-void HandleBall (SInt16 who)
+void HandleBall (dynaType *theDinah)
 {
 	if (twoPlayerGame)
 	{
 		if (onePlayerLeft)
 		{
 			if (playerDead == theGlider.which)
-				CheckDynamicCollision(who, &theGlider2, false);
+				CheckDynamicCollision(theDinah, &theGlider2, false);
 			else
-				CheckDynamicCollision(who, &theGlider, false);
+				CheckDynamicCollision(theDinah, &theGlider, false);
 		}
 		else
 		{
-			CheckDynamicCollision(who, &theGlider, false);
-			CheckDynamicCollision(who, &theGlider2, false);
+			CheckDynamicCollision(theDinah, &theGlider, false);
+			CheckDynamicCollision(theDinah, &theGlider2, false);
 		}
 	}
 	else
 	{
-		CheckDynamicCollision(who, &theGlider, false);
+		CheckDynamicCollision(theDinah, &theGlider, false);
 	}
 
-	if (dinahs[who].moving)  // is ball bouncing?
+	if (theDinah->moving)  // is ball bouncing?
 	{
-		VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
-		if (dinahs[who].dest.bottom >= dinahs[who].position)  // bounce!
+		VOffsetRect(&theDinah->dest, theDinah->vVel);
+		if (theDinah->dest.bottom >= theDinah->position)  // bounce!
 		{
-			dinahs[who].whole = dinahs[who].dest;
-			dinahs[who].whole.top -= dinahs[who].vVel;
-			dinahs[who].whole.bottom = dinahs[who].position;
-			dinahs[who].dest.bottom = dinahs[who].position;
-			dinahs[who].dest.top = dinahs[who].dest.bottom - 32;
-			if (dinahs[who].active)
+			theDinah->whole = theDinah->dest;
+			theDinah->whole.top -= theDinah->vVel;
+			theDinah->whole.bottom = theDinah->position;
+			theDinah->dest.bottom = theDinah->position;
+			theDinah->dest.top = theDinah->dest.bottom - 32;
+			if (theDinah->active)
 			{
-				dinahs[who].vVel = dinahs[who].count;
+				theDinah->vVel = theDinah->count;
 			}
 			else
 			{
-				dinahs[who].vVel = -((dinahs[who].vVel * 3) / 4);
-				if (dinahs[who].vVel == 0)
-					dinahs[who].moving = false;  // stop bounce
+				theDinah->vVel = -((theDinah->vVel * 3) / 4);
+				if (theDinah->vVel == 0)
+					theDinah->moving = false;  // stop bounce
 			}
-			if (dinahs[who].whole.bottom < dinahs[who].dest.bottom)
-				dinahs[who].whole.bottom = dinahs[who].dest.bottom;
+			if (theDinah->whole.bottom < theDinah->dest.bottom)
+				theDinah->whole.bottom = theDinah->dest.bottom;
 			PlayPrioritySound(kBounceSound, kBouncePriority);
-			if (dinahs[who].moving)
-				dinahs[who].frame = 1;
+			if (theDinah->moving)
+				theDinah->frame = 1;
 		}
 		else
 		{
-			dinahs[who].whole = dinahs[who].dest;
-			if (dinahs[who].vVel > 0)
-				dinahs[who].whole.top -= dinahs[who].vVel;
+			theDinah->whole = theDinah->dest;
+			if (theDinah->vVel > 0)
+				theDinah->whole.top -= theDinah->vVel;
 			else
-				dinahs[who].whole.bottom -= dinahs[who].vVel;
+				theDinah->whole.bottom -= theDinah->vVel;
 			if (evenFrame)
-				dinahs[who].vVel++;
-			dinahs[who].frame = 0;
+				theDinah->vVel++;
+			theDinah->frame = 0;
 		}
 	}
 	else
 	{
-		if (dinahs[who].active)
+		if (theDinah->active)
 		{
-			dinahs[who].vVel = dinahs[who].count;
-			dinahs[who].moving = true;
+			theDinah->vVel = theDinah->count;
+			theDinah->moving = true;
 			evenFrame = true;
 		}
 	}
@@ -1223,80 +1217,80 @@ void HandleBall (SInt16 who)
 
 //--------------------------------------------------------------  HandleDrip
 
-void HandleDrip (SInt16 who)
+void HandleDrip (dynaType *theDinah)
 {
 	Rect dest;
 
-	if (dinahs[who].moving)
+	if (theDinah->moving)
 	{
 		if (evenFrame)
-			dinahs[who].frame = 9 - dinahs[who].frame;
+			theDinah->frame = 9 - theDinah->frame;
 		if (twoPlayerGame)
 		{
 			if (onePlayerLeft)
 			{
 				if (playerDead == theGlider.which)
-					CheckDynamicCollision(who, &theGlider2, false);
+					CheckDynamicCollision(theDinah, &theGlider2, false);
 				else
-					CheckDynamicCollision(who, &theGlider, false);
+					CheckDynamicCollision(theDinah, &theGlider, false);
 			}
 			else
 			{
-				CheckDynamicCollision(who, &theGlider, false);
-				CheckDynamicCollision(who, &theGlider2, false);
+				CheckDynamicCollision(theDinah, &theGlider, false);
+				CheckDynamicCollision(theDinah, &theGlider2, false);
 			}
 		}
 		else
 		{
-			CheckDynamicCollision(who, &theGlider, false);
+			CheckDynamicCollision(theDinah, &theGlider, false);
 		}
 
-		VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
-		if (dinahs[who].dest.bottom >= dinahs[who].position)
+		VOffsetRect(&theDinah->dest, theDinah->vVel);
+		if (theDinah->dest.bottom >= theDinah->position)
 		{
-			dest = dinahs[who].whole;
+			dest = theDinah->whole;
 			QOffsetRect(&dest, playOriginH, playOriginV);
 			AddRectToWorkRects(&dest);
-			dinahs[who].dest.top = dinahs[who].hVel;
-			dinahs[who].dest.bottom = dinahs[who].dest.top + 12;
+			theDinah->dest.top = theDinah->hVel;
+			theDinah->dest.bottom = theDinah->dest.top + 12;
 			PlayPrioritySound(kDropSound, kDropPriority);
-			dinahs[who].vVel = 0;
-			dinahs[who].timer = dinahs[who].count;
-			dinahs[who].frame = 3;
-			dinahs[who].moving = false;
+			theDinah->vVel = 0;
+			theDinah->timer = theDinah->count;
+			theDinah->frame = 3;
+			theDinah->moving = false;
 		}
 		else
 		{
-			dinahs[who].whole = dinahs[who].dest;
-			dinahs[who].whole.top -= dinahs[who].vVel;
+			theDinah->whole = theDinah->dest;
+			theDinah->whole.top -= theDinah->vVel;
 			if (evenFrame)
-				dinahs[who].vVel++;
+				theDinah->vVel++;
 		}
 	}
 	else
 	{
-		if (dinahs[who].active)
+		if (theDinah->active)
 		{
-			dinahs[who].timer--;
+			theDinah->timer--;
 
-			if (dinahs[who].timer == 6)
+			if (theDinah->timer == 6)
 			{
-				dinahs[who].frame = 0;
+				theDinah->frame = 0;
 			}
-			else if (dinahs[who].timer == 4)
+			else if (theDinah->timer == 4)
 			{
-				dinahs[who].frame = 1;
+				theDinah->frame = 1;
 			}
-			else if (dinahs[who].timer == 2)
+			else if (theDinah->timer == 2)
 			{
-				dinahs[who].frame = 2;
+				theDinah->frame = 2;
 			}
-			else if (dinahs[who].timer <= 0)
+			else if (theDinah->timer <= 0)
 			{
-				VOffsetRect(&dinahs[who].dest, 3);
-				dinahs[who].whole = dinahs[who].dest;
-				dinahs[who].moving = true;
-				dinahs[who].frame = 4;
+				VOffsetRect(&theDinah->dest, 3);
+				theDinah->whole = theDinah->dest;
+				theDinah->moving = true;
+				theDinah->frame = 4;
 				PlayPrioritySound(kDripSound, kDripPriority);
 			}
 		}
@@ -1305,91 +1299,91 @@ void HandleDrip (SInt16 who)
 
 //--------------------------------------------------------------  HandleFish
 
-void HandleFish (SInt16 who)
+void HandleFish (dynaType *theDinah)
 {
 	Rect dest;
 
-	if (dinahs[who].moving)  // fish leaping
+	if (theDinah->moving)  // fish leaping
 	{
-		if ((dinahs[who].vVel >= 0) && (dinahs[who].frame < 7))
-			dinahs[who].frame++;
+		if ((theDinah->vVel >= 0) && (theDinah->frame < 7))
+			theDinah->frame++;
 		if (twoPlayerGame)
 		{
 			if (onePlayerLeft)
 			{
 				if (playerDead == theGlider.which)
-					CheckDynamicCollision(who, &theGlider2, false);
+					CheckDynamicCollision(theDinah, &theGlider2, false);
 				else
-					CheckDynamicCollision(who, &theGlider, false);
+					CheckDynamicCollision(theDinah, &theGlider, false);
 			}
 			else
 			{
-				CheckDynamicCollision(who, &theGlider, false);
-				CheckDynamicCollision(who, &theGlider2, false);
+				CheckDynamicCollision(theDinah, &theGlider, false);
+				CheckDynamicCollision(theDinah, &theGlider2, false);
 			}
 		}
 		else
 		{
-			CheckDynamicCollision(who, &theGlider, false);
+			CheckDynamicCollision(theDinah, &theGlider, false);
 		}
 
-		VOffsetRect(&dinahs[who].dest, dinahs[who].vVel);
-		if (dinahs[who].dest.bottom >= dinahs[who].position)  // splash down
+		VOffsetRect(&theDinah->dest, theDinah->vVel);
+		if (theDinah->dest.bottom >= theDinah->position)  // splash down
 		{
-			dest = dinahs[who].whole;
+			dest = theDinah->whole;
 			QOffsetRect(&dest, playOriginH, playOriginV);
 			AddRectToWorkRects(&dest);
-			dinahs[who].dest.bottom = dinahs[who].position;
-			dinahs[who].dest.top = dinahs[who].dest.bottom - 16;
-			dinahs[who].whole = dinahs[who].dest;
-			dinahs[who].whole.top -= 2;
+			theDinah->dest.bottom = theDinah->position;
+			theDinah->dest.top = theDinah->dest.bottom - 16;
+			theDinah->whole = theDinah->dest;
+			theDinah->whole.top -= 2;
 			PlayPrioritySound(kDropSound, kDropPriority);
-			dinahs[who].vVel = dinahs[who].count;
-			dinahs[who].timer = dinahs[who].hVel;
-			dinahs[who].frame = 0;
-			dinahs[who].moving = false;
+			theDinah->vVel = theDinah->count;
+			theDinah->timer = theDinah->hVel;
+			theDinah->frame = 0;
+			theDinah->moving = false;
 			PlayPrioritySound(kFishInSound, kFishInPriority);
 		}
 		else
 		{
-			dinahs[who].whole = dinahs[who].dest;
-			if (dinahs[who].vVel > 0)
-				dinahs[who].whole.top -= dinahs[who].vVel;
+			theDinah->whole = theDinah->dest;
+			if (theDinah->vVel > 0)
+				theDinah->whole.top -= theDinah->vVel;
 			else
-				dinahs[who].whole.bottom -= dinahs[who].vVel;
+				theDinah->whole.bottom -= theDinah->vVel;
 			if (evenFrame)
-				dinahs[who].vVel++;
+				theDinah->vVel++;
 		}
 	}
 	else  // fish idle
 	{
-		dinahs[who].whole = dinahs[who].dest;
-		if ((dinahs[who].timer & 0x0003) == 0x0003)
+		theDinah->whole = theDinah->dest;
+		if ((theDinah->timer & 0x0003) == 0x0003)
 		{
-			dinahs[who].frame++;
-			if (dinahs[who].frame > 3)
-				dinahs[who].frame = 0;
-			if ((dinahs[who].frame == 1) || (dinahs[who].frame == 2))
+			theDinah->frame++;
+			if (theDinah->frame > 3)
+				theDinah->frame = 0;
+			if ((theDinah->frame == 1) || (theDinah->frame == 2))
 			{
-				dinahs[who].dest.top++;
-				dinahs[who].dest.bottom++;
-				dinahs[who].whole.bottom++;
+				theDinah->dest.top++;
+				theDinah->dest.bottom++;
+				theDinah->whole.bottom++;
 			}
 			else
 			{
-				dinahs[who].dest.top--;
-				dinahs[who].dest.bottom--;
-				dinahs[who].whole.top--;
+				theDinah->dest.top--;
+				theDinah->dest.bottom--;
+				theDinah->whole.top--;
 			}
 		}
-		if (dinahs[who].active)
+		if (theDinah->active)
 		{
-			dinahs[who].timer--;
-			if (dinahs[who].timer <= 0)  // fish leaps
+			theDinah->timer--;
+			if (theDinah->timer <= 0)  // fish leaps
 			{
-				dinahs[who].whole = dinahs[who].dest;
-				dinahs[who].moving = true;
-				dinahs[who].frame = 4;
+				theDinah->whole = theDinah->dest;
+				theDinah->moving = true;
+				theDinah->frame = 4;
 				PlayPrioritySound(kFishOutSound, kFishOutPriority);
 			}
 		}
@@ -1401,72 +1395,74 @@ void HandleFish (SInt16 who)
 
 void HandleDynamics (void)
 {
+	dynaType *theDinah;
 	SInt16 i;
 
 	for (i = 0; i < numDynamics; i++)
 	{
-		switch (dinahs[i].type)
+		theDinah = &dinahs[i];
+		switch (theDinah->type)
 		{
 			case kSparkle:
-			HandleSparkleObject(i);
+			HandleSparkleObject(theDinah);
 			break;
 
 			case kToaster:
-			HandleToast(i);
+			HandleToast(theDinah);
 			break;
 
 			case kMacPlus:
-			HandleMacPlus(i);
+			HandleMacPlus(theDinah);
 			break;
 
 			case kTV:
-			HandleTV(i);
+			HandleTV(theDinah, i);
 			break;
 
 			case kCoffee:
-			HandleCoffee(i);
+			HandleCoffee(theDinah);
 			break;
 
 			case kOutlet:
-			HandleOutlet(i);
+			HandleOutlet(theDinah);
 			break;
 
 			case kVCR:
-			HandleVCR(i);
+			HandleVCR(theDinah);
 			break;
 
 			case kStereo:
-			HandleStereo(i);
+			HandleStereo(theDinah);
 			break;
 
 			case kMicrowave:
-			HandleMicrowave(i);
+			HandleMicrowave(theDinah);
 			break;
 
 			case kBalloon:
-			HandleBalloon(i);
+			HandleBalloon(theDinah);
 			break;
 
 			case kCopterLf:
 			case kCopterRt:
-			HandleCopter(i);
+			HandleCopter(theDinah);
 			break;
 
 			case kDartLf:
 			case kDartRt:
-			HandleDart(i);
+			HandleDart(theDinah);
 			break;
 
 			case kBall:
-			HandleBall(i);
+			HandleBall(theDinah);
 			break;
 
 			case kDrip:
-			HandleDrip(i);
+			HandleDrip(theDinah);
 			break;
 
 			case kFish:
-			HandleFish(i);
+			HandleFish(theDinah);
 			break;
 
 			default:
@@ -1481,40 +1477,42 @@ void HandleDynamics (void)
 
 void RenderDynamics (void)
 {
+	const dynaType *theDinah;
 	SInt16 i;
 
 	for (i = 0; i < numDynamics; i++)
 	{
-		switch (dinahs[i].type)
+		theDinah = &dinahs[i];
+		switch (theDinah->type)
 		{
 			case kToaster:
-			RenderToast(i);
+			RenderToast(theDinah);
 			break;
 
 			case kBalloon:
-			RenderBalloon(i);
+			RenderBalloon(theDinah);
 			break;
 
 			case kCopterLf:
 			case kCopterRt:
-			RenderCopter(i);
+			RenderCopter(theDinah);
 			break;
 
 			case kDartLf:
 			case kDartRt:
-			RenderDart(i);
+			RenderDart(theDinah);
 			break;
 
 			case kBall:
-			RenderBall(i);
+			RenderBall(theDinah);
 			break;
 
 			case kDrip:
-			RenderDrip(i);
+			RenderDrip(theDinah);
 			break;
 
 			case kFish:
-			RenderFish(i);
+			RenderFish(theDinah);
 			break;
 
 			default:
@@ -1528,22 +1526,24 @@ void RenderDynamics (void)
 
 void ZeroDinahs (void)
 {
+	dynaType *theDinah;
 	SInt16 i;
 
 	for (i = 0; i < kMaxDynamicObs; i++)
 	{
-		dinahs[i].type = kObjectIsEmpty;
-		QSetRect(&dinahs[i].dest, 0, 0, 0, 0);
-		QSetRect(&dinahs[i].whole, 0, 0, 0, 0);
-		dinahs[i].hVel = 0;
-		dinahs[i].vVel = 0;
-		dinahs[i].count = 0;
-		dinahs[i].frame = 0;
-		dinahs[i].timer = 0;
-		dinahs[i].position = 0;
-		dinahs[i].room = 0;
-		dinahs[i].byte0 = 0;
-		dinahs[i].active = false;
+		theDinah = &dinahs[i];
+		theDinah->type = kObjectIsEmpty;
+		QSetRect(&theDinah->dest, 0, 0, 0, 0);
+		QSetRect(&theDinah->whole, 0, 0, 0, 0);
+		theDinah->hVel = 0;
+		theDinah->vVel = 0;
+		theDinah->count = 0;
+		theDinah->frame = 0;
+		theDinah->timer = 0;
+		theDinah->position = 0;
+		theDinah->room = 0;
+		theDinah->byte0 = 0;
+		theDinah->active = false;
 	}
 	numDynamics = 0;
 }
@@ -1558,38 +1558,40 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 	SInt16 position;
 	SInt16 velocity;
 	Boolean lilFrame;
+	dynaType *theDinah;
 
 	if (numDynamics >= kMaxDynamicObs)
 		return (-1);
 
-	dinahs[numDynamics].type = what;
+	theDinah = &dinahs[numDynamics];
+
+	theDinah->type = what;
 	switch (what)
 	{
 		case kSparkle:
-		dinahs[numDynamics].dest = sparkleSrc[0];
-		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest, where->left, where->top);
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = 0;
-		dinahs[numDynamics].vVel = 0;
-		dinahs[numDynamics].count = 0;
-		dinahs[numDynamics].frame = 0;
-		dinahs[numDynamics].timer = RandomInt(60) + 15;
-		dinahs[numDynamics].position = 0;
-		dinahs[numDynamics].room = room;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;
+		theDinah->dest = sparkleSrc[0];
+		ZeroRectCorner(&theDinah->dest);
+		QOffsetRect(&theDinah->dest, where->left, where->top);
+		theDinah->whole = theDinah->dest;
+		theDinah->hVel = 0;
+		theDinah->vVel = 0;
+		theDinah->count = 0;
+		theDinah->frame = 0;
+		theDinah->timer = RandomInt(60) + 15;
+		theDinah->position = 0;
+		theDinah->room = room;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->moving = false;
+		theDinah->active = isOn;
 		break;
 
 		case kToaster:
-		dinahs[numDynamics].dest = breadSrc[0];
-		CenterRectInRect(&dinahs[numDynamics].dest, where);
-		VOffsetRect(&dinahs[numDynamics].dest,
-				where->top - dinahs[numDynamics].dest.top);
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = where->top + 2;  // hVel used as clip
+		theDinah->dest = breadSrc[0];
+		CenterRectInRect(&theDinah->dest, where);
+		VOffsetRect(&theDinah->dest, where->top - theDinah->dest.top);
+		theDinah->whole = theDinah->dest;
+		theDinah->hVel = where->top + 2;  // hVel used as clip
 		position = who->data.g.height;  // reverse engineer init. vel.
 		velocity = 0;
 		do
@@ -1598,246 +1600,242 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 			position -= velocity;
 		}
 		while (position > 0);
-		dinahs[numDynamics].vVel = -velocity;
-		dinahs[numDynamics].count = velocity;  // count = initial velocity
-		dinahs[numDynamics].frame = (SInt16)who->data.g.delay * 3;
-		dinahs[numDynamics].timer = dinahs[numDynamics].frame;
-		dinahs[numDynamics].position = 0;  // launch/idle state
-		dinahs[numDynamics].room = room;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;
+		theDinah->vVel = -velocity;
+		theDinah->count = velocity;  // count = initial velocity
+		theDinah->frame = (SInt16)who->data.g.delay * 3;
+		theDinah->timer = theDinah->frame;
+		theDinah->position = 0;  // launch/idle state
+		theDinah->room = room;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->moving = false;
+		theDinah->active = isOn;
 		break;
 
 		case kMacPlus:
-		dinahs[numDynamics].dest = plusScreen1;
-		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest,
+		theDinah->dest = plusScreen1;
+		ZeroRectCorner(&theDinah->dest);
+		QOffsetRect(&theDinah->dest,
 				where->left + playOriginH + 10,
 				where->top + playOriginV + 7);
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = 0;
-		dinahs[numDynamics].vVel = 0;
-		dinahs[numDynamics].count = 0;
-		dinahs[numDynamics].frame = 0;
-		dinahs[numDynamics].timer = 0;
-		dinahs[numDynamics].position = 0;
-		dinahs[numDynamics].room = room;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;
+		theDinah->whole = theDinah->dest;
+		theDinah->hVel = 0;
+		theDinah->vVel = 0;
+		theDinah->count = 0;
+		theDinah->frame = 0;
+		theDinah->timer = 0;
+		theDinah->position = 0;
+		theDinah->room = room;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->moving = false;
+		theDinah->active = isOn;
 		break;
 
 		case kTV:
-		dinahs[numDynamics].dest = tvScreen1;
-		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest,
+		theDinah->dest = tvScreen1;
+		ZeroRectCorner(&theDinah->dest);
+		QOffsetRect(&theDinah->dest,
 				where->left + playOriginH + 17,
 				where->top + playOriginV + 10);
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = 0;
-		dinahs[numDynamics].vVel = 0;
-		dinahs[numDynamics].count = 0;
-		dinahs[numDynamics].frame = 0;
-		dinahs[numDynamics].timer = 0;
-		dinahs[numDynamics].position = 0;
-		dinahs[numDynamics].room = room;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;
+		theDinah->whole = theDinah->dest;
+		theDinah->hVel = 0;
+		theDinah->vVel = 0;
+		theDinah->count = 0;
+		theDinah->frame = 0;
+		theDinah->timer = 0;
+		theDinah->position = 0;
+		theDinah->room = room;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->moving = false;
+		theDinah->active = isOn;
 		break;
 
 		case kCoffee:
-		dinahs[numDynamics].dest = coffeeLight1;
-		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest,
+		theDinah->dest = coffeeLight1;
+		ZeroRectCorner(&theDinah->dest);
+		QOffsetRect(&theDinah->dest,
 				where->left + playOriginH + 32,
 				where->top + playOriginV + 57);
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = 0;
-		dinahs[numDynamics].vVel = 0;
-		dinahs[numDynamics].count = 0;
-		dinahs[numDynamics].frame = 0;
+		theDinah->whole = theDinah->dest;
+		theDinah->hVel = 0;
+		theDinah->vVel = 0;
+		theDinah->count = 0;
+		theDinah->frame = 0;
 		if (isOn)
-			dinahs[numDynamics].timer = 200;
+			theDinah->timer = 200;
 		else
-			dinahs[numDynamics].timer = 0;
-		dinahs[numDynamics].position = 0;
-		dinahs[numDynamics].room = room;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;
+			theDinah->timer = 0;
+		theDinah->position = 0;
+		theDinah->room = room;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->moving = false;
+		theDinah->active = isOn;
 		break;
 
 		case kOutlet:
-		dinahs[numDynamics].dest = outletSrc[0];
-		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest,
+		theDinah->dest = outletSrc[0];
+		ZeroRectCorner(&theDinah->dest);
+		QOffsetRect(&theDinah->dest,
 				where->left + playOriginH,
 				where->top + playOriginV);
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = numLights;
-		dinahs[numDynamics].vVel = 0;
-		dinahs[numDynamics].count = ((SInt16)who->data.g.delay * 6) / kTicksPerFrame;
-		dinahs[numDynamics].frame = 0;
-		dinahs[numDynamics].timer = dinahs[numDynamics].count;
-		dinahs[numDynamics].position = 0;  // launch/idle state
-		dinahs[numDynamics].room = room;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;
+		theDinah->whole = theDinah->dest;
+		theDinah->hVel = numLights;
+		theDinah->vVel = 0;
+		theDinah->count = ((SInt16)who->data.g.delay * 6) / kTicksPerFrame;
+		theDinah->frame = 0;
+		theDinah->timer = theDinah->count;
+		theDinah->position = 0;  // launch/idle state
+		theDinah->room = room;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->moving = false;
+		theDinah->active = isOn;
 		break;
 
 		case kVCR:
-		dinahs[numDynamics].dest = vcrTime1;
-		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest,
+		theDinah->dest = vcrTime1;
+		ZeroRectCorner(&theDinah->dest);
+		QOffsetRect(&theDinah->dest,
 				where->left + playOriginH + 64,
 				where->top + playOriginV + 6);
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = 0;
-		dinahs[numDynamics].vVel = 0;
-		dinahs[numDynamics].count = 0;
-		dinahs[numDynamics].frame = 0;
+		theDinah->whole = theDinah->dest;
+		theDinah->hVel = 0;
+		theDinah->vVel = 0;
+		theDinah->count = 0;
+		theDinah->frame = 0;
 		if (isOn)
-			dinahs[numDynamics].timer = 115;
+			theDinah->timer = 115;
 		else
-			dinahs[numDynamics].timer = 0;
-		dinahs[numDynamics].position = 0;
-		dinahs[numDynamics].room = room;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;
+			theDinah->timer = 0;
+		theDinah->position = 0;
+		theDinah->room = room;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->moving = false;
+		theDinah->active = isOn;
 		break;
 
 		case kStereo:
-		dinahs[numDynamics].dest = stereoLight1;
-		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest,
+		theDinah->dest = stereoLight1;
+		ZeroRectCorner(&theDinah->dest);
+		QOffsetRect(&theDinah->dest,
 				where->left + playOriginH + 56,
 				where->top + playOriginV + 20);
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = 0;
-		dinahs[numDynamics].vVel = 0;
-		dinahs[numDynamics].count = 0;
-		dinahs[numDynamics].frame = 0;
-		dinahs[numDynamics].timer = 0;
-		dinahs[numDynamics].position = 0;
-		dinahs[numDynamics].room = room;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;
+		theDinah->whole = theDinah->dest;
+		theDinah->hVel = 0;
+		theDinah->vVel = 0;
+		theDinah->count = 0;
+		theDinah->frame = 0;
+		theDinah->timer = 0;
+		theDinah->position = 0;
+		theDinah->room = room;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->moving = false;
+		theDinah->active = isOn;
 		break;
 
 		case kMicrowave:
-		dinahs[numDynamics].dest = microOn;
-		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest,
+		theDinah->dest = microOn;
+		ZeroRectCorner(&theDinah->dest);
+		QOffsetRect(&theDinah->dest,
 				where->left + playOriginH + 14,
 				where->top + playOriginV + 13);
-		dinahs[numDynamics].dest.right = dinahs[numDynamics].dest.left + 48;
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = 0;
-		dinahs[numDynamics].vVel = 0;
-		dinahs[numDynamics].count = 0;
-		dinahs[numDynamics].frame = 0;
-		dinahs[numDynamics].timer = 0;
-		dinahs[numDynamics].position = 0;
-		dinahs[numDynamics].room = room;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;
+		theDinah->dest.right = theDinah->dest.left + 48;
+		theDinah->whole = theDinah->dest;
+		theDinah->hVel = 0;
+		theDinah->vVel = 0;
+		theDinah->count = 0;
+		theDinah->frame = 0;
+		theDinah->timer = 0;
+		theDinah->position = 0;
+		theDinah->room = room;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->moving = false;
+		theDinah->active = isOn;
 		break;
 
 		case kBalloon:
-		dinahs[numDynamics].dest = balloonSrc[0];
-		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest, where->left, 0);
-		dinahs[numDynamics].dest.bottom = kBalloonStart;
-		dinahs[numDynamics].dest.top = dinahs[numDynamics].dest.bottom -
-				RectTall(&balloonSrc[0]);
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = 0;
-		dinahs[numDynamics].vVel = -2;
-		dinahs[numDynamics].count = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
-		dinahs[numDynamics].frame = 0;
-		dinahs[numDynamics].timer = dinahs[numDynamics].count;
-		dinahs[numDynamics].position = 0;
-		dinahs[numDynamics].room = room;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;  // initially idle
+		theDinah->dest = balloonSrc[0];
+		ZeroRectCorner(&theDinah->dest);
+		QOffsetRect(&theDinah->dest, where->left, 0);
+		theDinah->dest.bottom = kBalloonStart;
+		theDinah->dest.top = theDinah->dest.bottom - RectTall(&balloonSrc[0]);
+		theDinah->whole = theDinah->dest;
+		theDinah->hVel = 0;
+		theDinah->vVel = -2;
+		theDinah->count = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
+		theDinah->frame = 0;
+		theDinah->timer = theDinah->count;
+		theDinah->position = 0;
+		theDinah->room = room;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->moving = false;
+		theDinah->active = isOn;  // initially idle
 		break;
 
 		case kCopterLf:
 		case kCopterRt:
-		dinahs[numDynamics].dest = copterSrc[0];
-		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest, where->left, 0);
-		dinahs[numDynamics].dest.top = kCopterStart;
-		dinahs[numDynamics].dest.bottom = dinahs[numDynamics].dest.top +
-				RectTall(&copterSrc[0]);
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
+		theDinah->dest = copterSrc[0];
+		ZeroRectCorner(&theDinah->dest);
+		QOffsetRect(&theDinah->dest, where->left, 0);
+		theDinah->dest.top = kCopterStart;
+		theDinah->dest.bottom = theDinah->dest.top + RectTall(&copterSrc[0]);
+		theDinah->whole = theDinah->dest;
 		if (what == kCopterLf)
-			dinahs[numDynamics].hVel = -1;
+			theDinah->hVel = -1;
 		else
-			dinahs[numDynamics].hVel = 1;
-		dinahs[numDynamics].vVel = 2;
-		dinahs[numDynamics].count = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
-		dinahs[numDynamics].frame = 0;
-		dinahs[numDynamics].timer = dinahs[numDynamics].count;
-		dinahs[numDynamics].position = dinahs[numDynamics].dest.left;
-		dinahs[numDynamics].room = room;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;  // initially idle
+			theDinah->hVel = 1;
+		theDinah->vVel = 2;
+		theDinah->count = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
+		theDinah->frame = 0;
+		theDinah->timer = theDinah->count;
+		theDinah->position = theDinah->dest.left;
+		theDinah->room = room;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->moving = false;
+		theDinah->active = isOn;  // initially idle
 		break;
 
 		case kDartLf:
 		case kDartRt:
-		dinahs[numDynamics].dest = dartSrc[0];
-		ZeroRectCorner(&dinahs[numDynamics].dest);
+		theDinah->dest = dartSrc[0];
+		ZeroRectCorner(&theDinah->dest);
 		if (what == kDartLf)
 		{
-			QOffsetRect(&dinahs[numDynamics].dest,
-					kRoomWide - RectWide(&dartSrc[0]), where->top);
-			dinahs[numDynamics].hVel = -kDartVelocity;
-			dinahs[numDynamics].frame = 0;
+			QOffsetRect(&theDinah->dest, kRoomWide - RectWide(&dartSrc[0]), where->top);
+			theDinah->hVel = -kDartVelocity;
+			theDinah->frame = 0;
 		}
 		else
 		{
-			QOffsetRect(&dinahs[numDynamics].dest, 0, where->top);
-			dinahs[numDynamics].hVel = kDartVelocity;
-			dinahs[numDynamics].frame = 2;
+			QOffsetRect(&theDinah->dest, 0, where->top);
+			theDinah->hVel = kDartVelocity;
+			theDinah->frame = 2;
 		}
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].vVel = 2;
-		dinahs[numDynamics].count = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
-		dinahs[numDynamics].timer = dinahs[numDynamics].count;
-		dinahs[numDynamics].position = dinahs[numDynamics].dest.top;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;  // initially idle
+		theDinah->whole = theDinah->dest;
+		theDinah->vVel = 2;
+		theDinah->count = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
+		theDinah->timer = theDinah->count;
+		theDinah->position = theDinah->dest.top;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->moving = false;
+		theDinah->active = isOn;  // initially idle
 		break;
 
 		case kBall:
-		dinahs[numDynamics].dest = ballSrc[0];
-		ZeroRectCorner(&dinahs[numDynamics].dest);
-		QOffsetRect(&dinahs[numDynamics].dest,
-				where->left, where->top);
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = 0;
+		theDinah->dest = ballSrc[0];
+		ZeroRectCorner(&theDinah->dest);
+		QOffsetRect(&theDinah->dest, where->left, where->top);
+		theDinah->whole = theDinah->dest;
+		theDinah->hVel = 0;
 		position = who->data.h.length;  // reverse engineer init. vel.
 		velocity = 0;
 		evenFrame = true;
@@ -1850,44 +1848,41 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 			position -= velocity;
 		}
 		while (position > 0);
-		dinahs[numDynamics].vVel = -velocity;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].count = -velocity;  // count = initial velocity
-		dinahs[numDynamics].frame = 0;
-		dinahs[numDynamics].timer = 0;
-		dinahs[numDynamics].position = dinahs[numDynamics].dest.bottom;
-		dinahs[numDynamics].room = room;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].active = isOn;
+		theDinah->vVel = -velocity;
+		theDinah->moving = false;
+		theDinah->count = -velocity;  // count = initial velocity
+		theDinah->frame = 0;
+		theDinah->timer = 0;
+		theDinah->position = theDinah->dest.bottom;
+		theDinah->room = room;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->active = isOn;
 		break;
 
 		case kDrip:
-		dinahs[numDynamics].dest = dripSrc[0];
-		CenterRectInRect(&dinahs[numDynamics].dest, where);
-		VOffsetRect(&dinahs[numDynamics].dest,
-				where->top - dinahs[numDynamics].dest.top);
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = dinahs[numDynamics].dest.top;  // remember
-		dinahs[numDynamics].vVel = 0;
-		dinahs[numDynamics].count = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
-		dinahs[numDynamics].frame = 3;
-		dinahs[numDynamics].timer = dinahs[numDynamics].count;
-		dinahs[numDynamics].position = dinahs[numDynamics].dest.top +
-				who->data.h.length;
-		dinahs[numDynamics].room = room;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;
+		theDinah->dest = dripSrc[0];
+		CenterRectInRect(&theDinah->dest, where);
+		VOffsetRect(&theDinah->dest, where->top - theDinah->dest.top);
+		theDinah->whole = theDinah->dest;
+		theDinah->hVel = theDinah->dest.top;  // remember
+		theDinah->vVel = 0;
+		theDinah->count = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
+		theDinah->frame = 3;
+		theDinah->timer = theDinah->count;
+		theDinah->position = theDinah->dest.top + who->data.h.length;
+		theDinah->room = room;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->moving = false;
+		theDinah->active = isOn;
 		break;
 
 		case kFish:
-		dinahs[numDynamics].dest = fishSrc[0];
-		QOffsetRect(&dinahs[numDynamics].dest,
-				where->left + 10, where->top + 8);
-		dinahs[numDynamics].whole = dinahs[numDynamics].dest;
-		dinahs[numDynamics].hVel = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
+		theDinah->dest = fishSrc[0];
+		QOffsetRect(&theDinah->dest, where->left + 10, where->top + 8);
+		theDinah->whole = theDinah->dest;
+		theDinah->hVel = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
 		position = who->data.g.height;  // reverse engineer init. vel.
 		velocity = 0;
 		evenFrame = true;
@@ -1900,16 +1895,16 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 			position -= velocity;
 		}
 		while (position > 0);
-		dinahs[numDynamics].vVel = -velocity;
-		dinahs[numDynamics].count = -velocity;  // count = initial velocity
-		dinahs[numDynamics].frame = 0;
-		dinahs[numDynamics].timer = dinahs[numDynamics].hVel;
-		dinahs[numDynamics].position = dinahs[numDynamics].dest.bottom;
-		dinahs[numDynamics].room = room;
-		dinahs[numDynamics].byte0 = (Byte)index;
-		dinahs[numDynamics].byte1 = 0;
-		dinahs[numDynamics].moving = false;
-		dinahs[numDynamics].active = isOn;
+		theDinah->vVel = -velocity;
+		theDinah->count = -velocity;  // count = initial velocity
+		theDinah->frame = 0;
+		theDinah->timer = theDinah->hVel;
+		theDinah->position = theDinah->dest.bottom;
+		theDinah->room = room;
+		theDinah->byte0 = (Byte)index;
+		theDinah->byte1 = 0;
+		theDinah->moving = false;
+		theDinah->active = isOn;
 		break;
 
 		default:
