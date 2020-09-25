@@ -103,7 +103,8 @@ UInt32 RandomLongQUS (void)
 
 static BOOL CALLBACK DisableThreadWndProc(HWND window, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
+	(void)lParam;
+
 	EnableWindow(window, FALSE);
 	return TRUE;
 }

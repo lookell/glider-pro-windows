@@ -682,8 +682,8 @@ static VOID CALLBACK RunAudioChannelTicks(PVOID Parameter, BOOLEAN TimerOrWaitFi
 {
 	size_t i;
 
-	UNREFERENCED_PARAMETER(Parameter);
-	UNREFERENCED_PARAMETER(TimerOrWaitFired);
+	(void)Parameter;
+	(void)TimerOrWaitFired;
 
 	EnterCriticalSection(&g_csAudioLock);
 

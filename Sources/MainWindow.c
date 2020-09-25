@@ -100,20 +100,22 @@ void DrawOnSplash (HDC hdc)
 	DeleteObject(theFont);
 
 	#if defined(powerc) || defined(__powerc) // TODO: Change message to "Windows Native!"?
-	theFont = CreateTahomaFont(-12, FW_BOLD);
-	wasFont = SelectObject(hdc, theFont);
-	PasStringCopyC("PowerPC Native!", tempStr);
-	wasTextColor = SetTextColor(hdc, blackColor);
-	MoveToEx(hdc, splashOriginH + 5, splashOriginV + 457, NULL);
-	Mac_DrawString(hdc, tempStr);
-	SetTextColor(hdc, whiteColor);
-	MoveToEx(hdc, splashOriginH + 4, splashOriginV + 456, NULL);
-	Mac_DrawString(hdc, tempStr);
-	SetTextColor(hdc, wasTextColor);
-	SelectObject(hdc, wasFont);
-	DeleteObject(theFont);
+	{
+		theFont = CreateTahomaFont(-12, FW_BOLD);
+		wasFont = SelectObject(hdc, theFont);
+		PasStringCopyC("PowerPC Native!", tempStr);
+		wasTextColor = SetTextColor(hdc, blackColor);
+		MoveToEx(hdc, splashOriginH + 5, splashOriginV + 457, NULL);
+		Mac_DrawString(hdc, tempStr);
+		SetTextColor(hdc, whiteColor);
+		MoveToEx(hdc, splashOriginH + 4, splashOriginV + 456, NULL);
+		Mac_DrawString(hdc, tempStr);
+		SetTextColor(hdc, wasTextColor);
+		SelectObject(hdc, wasFont);
+		DeleteObject(theFont);
+	}
 	#else
-	UNREFERENCED_PARAMETER(tempStr);
+	(void)tempStr;
 	#endif
 }
 

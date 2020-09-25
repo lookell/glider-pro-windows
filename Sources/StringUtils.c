@@ -124,8 +124,8 @@ void PasStringCopyNum (ConstStringPtr p1, StringPtr p2, Byte charsToCopy)
 
 	*p2 = charsToCopy;
 
-	*p2++;
-	*p1++;
+	p2++;
+	p1++;
 
 	for (i = 0; i < charsToCopy; i++)
 		*p2++ = *p1++;
@@ -149,11 +149,11 @@ void PasStringConcat (StringPtr p1, ConstStringPtr p2)
 
 	*p1 = (Byte)(wasLength + addedLength);
 
-	*p1++;
-	*p2++;
+	p1++;
+	p2++;
 
 	for (i = 0; i < wasLength; i++)
-		*p1++;
+		p1++;
 
 	for (i = 0; i < addedLength; i++)
 		*p1++ = *p2++;

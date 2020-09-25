@@ -454,7 +454,7 @@ void GetHighScoreName (HWND ownerWindow, SInt16 place)
 
 INT_PTR CALLBACK BannerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
+	(void)lParam;
 
 	switch (message)
 	{

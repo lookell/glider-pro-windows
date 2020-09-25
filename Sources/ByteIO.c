@@ -310,26 +310,29 @@ int byteio_write_le_i32(byteio *stream, int32_t num)
 
 static int minimal_read(byteio *stream, void *buffer, size_t num)
 {
-	UNREFERENCED_PARAMETER(stream);
-	UNREFERENCED_PARAMETER(buffer);
-	UNREFERENCED_PARAMETER(num);
+	(void)stream;
+	(void)buffer;
+	(void)num;
+
 	return 0;
 }
 
 static int minimal_write(byteio *stream, const void *buffer, size_t num)
 {
-	UNREFERENCED_PARAMETER(stream);
-	UNREFERENCED_PARAMETER(buffer);
-	UNREFERENCED_PARAMETER(num);
+	(void)stream;
+	(void)buffer;
+	(void)num;
+
 	return 0;
 }
 
 static int minimal_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
 {
-	UNREFERENCED_PARAMETER(stream);
-	UNREFERENCED_PARAMETER(offset);
-	UNREFERENCED_PARAMETER(origin);
-	UNREFERENCED_PARAMETER(newPos);
+	(void)stream;
+	(void)offset;
+	(void)origin;
+	(void)newPos;
+
 	return 0;
 }
 

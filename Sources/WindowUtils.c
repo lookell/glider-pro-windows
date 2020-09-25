@@ -61,7 +61,7 @@ void OpenMessageWindow (PCWSTR title)
 
 static INT_PTR CALLBACK MessageWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(hDlg);
+	(void)hDlg;
 
 	switch (message)
 	{

@@ -234,7 +234,7 @@ void SelectTool (SInt16 which)
 #ifndef COMPILEDEMO
 INT_PTR CALLBACK ToolsWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
+	(void)lParam;
 
 	switch (message)
 	{

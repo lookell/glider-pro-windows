@@ -229,7 +229,8 @@ Boolean OpenHouse (HWND ownerWindow)
 #ifndef COMPILEDEMO
 Boolean OpenSpecificHouse (FSSpec *specs)
 {
-	DBG_UNREFERENCED_PARAMETER(specs);
+	(void)specs;
+
 	return false;
 #if 0
 	SInt16		i;

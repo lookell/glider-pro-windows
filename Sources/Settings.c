@@ -183,7 +183,7 @@ void BrainsApply (HWND prefDlg)
 
 INT_PTR CALLBACK BrainsFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
+	(void)lParam;
 
 	switch (message)
 	{
@@ -228,7 +228,7 @@ BYTE GetLastHotKeyValue (HWND prefDlg, int itemID)
 {
 	BYTE virtualKey;
 
-	UNREFERENCED_PARAMETER(prefDlg);
+	(void)prefDlg;
 
 	virtualKey = 0x00;
 	switch (itemID)
@@ -265,7 +265,7 @@ BYTE GetLastHotKeyValue (HWND prefDlg, int itemID)
 
 void SetLastHotKeyValue (HWND prefDlg, int itemID, BYTE virtualKey)
 {
-	UNREFERENCED_PARAMETER(prefDlg);
+	(void)prefDlg;
 
 	switch (itemID)
 	{
@@ -463,7 +463,7 @@ void ControlApply (HWND prefDlg)
 
 INT_PTR CALLBACK ControlFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
+	(void)lParam;
 
 	switch (message)
 	{
@@ -854,7 +854,7 @@ void DisplayApply (HWND hDlg)
 
 INT_PTR CALLBACK DisplayFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
+	(void)lParam;
 
 	switch (message)
 	{
@@ -958,7 +958,7 @@ INT_PTR CALLBACK PrefsFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 {
 	HICON hIcon;
 
-	UNREFERENCED_PARAMETER(lParam);
+	(void)lParam;
 
 	switch (message)
 	{
