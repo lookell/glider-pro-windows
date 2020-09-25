@@ -577,9 +577,9 @@ void HandleOutlet (dynaType *theDinah)
 			if (onePlayerLeft)
 			{
 				if (playerDead == theGlider.which)
-					CheckDynamicCollision(theDinah, &theGlider2, false);
+					CheckDynamicCollision(theDinah, &theGlider2, true);
 				else
-					CheckDynamicCollision(theDinah, &theGlider, false);
+					CheckDynamicCollision(theDinah, &theGlider, true);
 			}
 			else
 			{
