@@ -37,6 +37,7 @@
 #define kEnemyDropSpeed     8
 
 void CheckDynamicCollision (const dynaType *theDinah, gliderPtr thisGlider, Boolean doOffset);
+void CheckForPlayerCollisions (const dynaType *theDinah, Boolean doOffset);
 Boolean DidBandHitDynamic (const dynaType *theDinah);
 void RenderToast (const dynaType *theDinah);
 void RenderBalloon (const dynaType *theDinah);
@@ -109,6 +110,36 @@ void CheckDynamicCollision (const dynaType *theDinah, gliderPtr thisGlider, Bool
 				PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 			}
 		}
+	}
+}
+
+//--------------------------------------------------------------  CheckForPlayerCollisions
+// Checks for collisions between the one or two gliders and one of the dynamic objects.
+
+void CheckForPlayerCollisions (const dynaType *theDinah, Boolean doOffset)
+{
+	if (twoPlayerGame)
+	{
+		if (onePlayerLeft)
+		{
+			if (playerDead == theGlider.which)
+			{
+				CheckDynamicCollision(theDinah, &theGlider2, doOffset);
+			}
+			else
+			{
+				CheckDynamicCollision(theDinah, &theGlider, doOffset);
+			}
+		}
+		else
+		{
+			CheckDynamicCollision(theDinah, &theGlider, doOffset);
+			CheckDynamicCollision(theDinah, &theGlider2, doOffset);
+		}
+	}
+	else
+	{
+		CheckDynamicCollision(theDinah, &theGlider, doOffset);
 	}
 }
 
@@ -363,25 +394,7 @@ void HandleToast (dynaType *theDinah)
 			if (theDinah->frame >= kNumBreadPicts)
 				theDinah->frame = 0;
 		}
-		if (twoPlayerGame)
-		{
-			if (onePlayerLeft)
-			{
-				if (playerDead == theGlider.which)
-					CheckDynamicCollision(theDinah, &theGlider2, false);
-				else
-					CheckDynamicCollision(theDinah, &theGlider, false);
-			}
-			else
-			{
-				CheckDynamicCollision(theDinah, &theGlider, false);
-				CheckDynamicCollision(theDinah, &theGlider2, false);
-			}
-		}
-		else
-		{
-			CheckDynamicCollision(theDinah, &theGlider, false);
-		}
+		CheckForPlayerCollisions(theDinah, false);
 		VOffsetRect(&theDinah->dest, theDinah->vVel);
 		theDinah->whole = theDinah->dest;
 		if (theDinah->vVel > 0)
@@ -572,25 +585,7 @@ void HandleOutlet (dynaType *theDinah)
 	{
 		theDinah->timer--;
 
-		if (twoPlayerGame)
-		{
-			if (onePlayerLeft)
-			{
-				if (playerDead == theGlider.which)
-					CheckDynamicCollision(theDinah, &theGlider2, true);
-				else
-					CheckDynamicCollision(theDinah, &theGlider, true);
-			}
-			else
-			{
-				CheckDynamicCollision(theDinah, &theGlider, true);
-				CheckDynamicCollision(theDinah, &theGlider2, true);
-			}
-		}
-		else
-		{
-			CheckDynamicCollision(theDinah, &theGlider, true);
-		}
+		CheckForPlayerCollisions(theDinah, true);
 
 		if (theDinah->timer <= 0)
 		{
@@ -829,25 +824,7 @@ void HandleBalloon (dynaType *theDinah)
 				if (theDinah->frame >= 6)
 					theDinah->frame = 0;
 			}
-			if (twoPlayerGame)
-			{
-				if (onePlayerLeft)
-				{
-					if (playerDead == theGlider.which)
-						CheckDynamicCollision(theDinah, &theGlider2, false);
-					else
-						CheckDynamicCollision(theDinah, &theGlider, false);
-				}
-				else
-				{
-					CheckDynamicCollision(theDinah, &theGlider, false);
-					CheckDynamicCollision(theDinah, &theGlider2, false);
-				}
-			}
-			else
-			{
-				CheckDynamicCollision(theDinah, &theGlider, false);
-			}
+			CheckForPlayerCollisions(theDinah, false);
 
 			if ((numBands > 0) && (DidBandHitDynamic(theDinah)))
 			{
@@ -931,25 +908,7 @@ void HandleCopter (dynaType *theDinah)
 			theDinah->frame++;
 			if (theDinah->frame >= 8)
 				theDinah->frame = 0;
-			if (twoPlayerGame)
-			{
-				if (onePlayerLeft)
-				{
-					if (playerDead == theGlider.which)
-						CheckDynamicCollision(theDinah, &theGlider2, false);
-					else
-						CheckDynamicCollision(theDinah, &theGlider, false);
-				}
-				else
-				{
-					CheckDynamicCollision(theDinah, &theGlider, false);
-					CheckDynamicCollision(theDinah, &theGlider2, false);
-				}
-			}
-			else
-			{
-				CheckDynamicCollision(theDinah, &theGlider, false);
-			}
+			CheckForPlayerCollisions(theDinah, false);
 			if ((numBands > 0) && (DidBandHitDynamic(theDinah)))
 			{
 				theDinah->frame = 8;
@@ -1037,25 +996,7 @@ void HandleDart (dynaType *theDinah)
 	{
 		if (theDinah->hVel != 0)  // meaning it isn't falling
 		{
-			if (twoPlayerGame)
-			{
-				if (onePlayerLeft)
-				{
-					if (playerDead == theGlider.which)
-						CheckDynamicCollision(theDinah, &theGlider2, false);
-					else
-						CheckDynamicCollision(theDinah, &theGlider, false);
-				}
-				else
-				{
-					CheckDynamicCollision(theDinah, &theGlider, false);
-					CheckDynamicCollision(theDinah, &theGlider2, false);
-				}
-			}
-			else
-			{
-				CheckDynamicCollision(theDinah, &theGlider, false);
-			}
+			CheckForPlayerCollisions(theDinah, false);
 			if ((numBands > 0) && (DidBandHitDynamic(theDinah)))
 			{
 				if (theDinah->type == kDartLf)
@@ -1146,25 +1087,7 @@ void HandleDart (dynaType *theDinah)
 
 void HandleBall (dynaType *theDinah)
 {
-	if (twoPlayerGame)
-	{
-		if (onePlayerLeft)
-		{
-			if (playerDead == theGlider.which)
-				CheckDynamicCollision(theDinah, &theGlider2, false);
-			else
-				CheckDynamicCollision(theDinah, &theGlider, false);
-		}
-		else
-		{
-			CheckDynamicCollision(theDinah, &theGlider, false);
-			CheckDynamicCollision(theDinah, &theGlider2, false);
-		}
-	}
-	else
-	{
-		CheckDynamicCollision(theDinah, &theGlider, false);
-	}
+	CheckForPlayerCollisions(theDinah, false);
 
 	if (theDinah->moving)  // is ball bouncing?
 	{
@@ -1225,25 +1148,7 @@ void HandleDrip (dynaType *theDinah)
 	{
 		if (evenFrame)
 			theDinah->frame = 9 - theDinah->frame;
-		if (twoPlayerGame)
-		{
-			if (onePlayerLeft)
-			{
-				if (playerDead == theGlider.which)
-					CheckDynamicCollision(theDinah, &theGlider2, false);
-				else
-					CheckDynamicCollision(theDinah, &theGlider, false);
-			}
-			else
-			{
-				CheckDynamicCollision(theDinah, &theGlider, false);
-				CheckDynamicCollision(theDinah, &theGlider2, false);
-			}
-		}
-		else
-		{
-			CheckDynamicCollision(theDinah, &theGlider, false);
-		}
+		CheckForPlayerCollisions(theDinah, false);
 
 		VOffsetRect(&theDinah->dest, theDinah->vVel);
 		if (theDinah->dest.bottom >= theDinah->position)
@@ -1307,25 +1212,7 @@ void HandleFish (dynaType *theDinah)
 	{
 		if ((theDinah->vVel >= 0) && (theDinah->frame < 7))
 			theDinah->frame++;
-		if (twoPlayerGame)
-		{
-			if (onePlayerLeft)
-			{
-				if (playerDead == theGlider.which)
-					CheckDynamicCollision(theDinah, &theGlider2, false);
-				else
-					CheckDynamicCollision(theDinah, &theGlider, false);
-			}
-			else
-			{
-				CheckDynamicCollision(theDinah, &theGlider, false);
-				CheckDynamicCollision(theDinah, &theGlider2, false);
-			}
-		}
-		else
-		{
-			CheckDynamicCollision(theDinah, &theGlider, false);
-		}
+		CheckForPlayerCollisions(theDinah, false);
 
 		VOffsetRect(&theDinah->dest, theDinah->vVel);
 		if (theDinah->dest.bottom >= theDinah->position)  // splash down
