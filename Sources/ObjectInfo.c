@@ -174,7 +174,7 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 		centerVert = bounds.top + (bounds.bottom - bounds.top) / 2;
 
 		hPen = CreatePen(PS_SOLID, 2, GetSysColor(COLOR_WINDOWTEXT));
-		oldPen = SelectObject(hdc, hPen);
+		oldPen = (HPEN)SelectObject(hdc, hPen);
 
 		// Draw an arrow pointing in the currently selected direction
 		if (IsDlgButtonChecked(hDlg, kBlowerUpButton))

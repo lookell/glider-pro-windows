@@ -372,7 +372,7 @@ void DrawCabinet (const Rect *cabinet)
 	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
 			&handleSrc, &handleSrc, &tempRect);
 
-	Mac_FrameRect(backSrcMap, cabinet, GetStockObject(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(backSrcMap, cabinet, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
 }
 
 //--------------------------------------------------------------  DrawSimpleFurniture
@@ -1076,7 +1076,7 @@ void DrawGreaseRt (const Rect *theRect, SInt16 distance, Boolean state)
 
 		QSetRect(&spill, 0, -2, distance - 5, 0);
 		QOffsetRect(&spill, dest.right - 1, dest.bottom);
-		Mac_PaintRect(backSrcMap, &spill, GetStockObject(BLACK_BRUSH));
+		Mac_PaintRect(backSrcMap, &spill, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	}
 }
 
@@ -1100,7 +1100,7 @@ void DrawGreaseLf (const Rect *theRect, SInt16 distance, Boolean state)
 
 		QSetRect(&spill, -distance + 5, -2, 0, 0);
 		QOffsetRect(&spill, dest.left + 1, dest.bottom);
-		Mac_PaintRect(backSrcMap, &spill, GetStockObject(BLACK_BRUSH));
+		Mac_PaintRect(backSrcMap, &spill, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	}
 }
 
@@ -1123,7 +1123,7 @@ void DrawInvisBonus (const Rect *theRect)
 
 void DrawSlider (const Rect *theRect)
 {
-	Mac_FrameRect(backSrcMap, theRect, GetStockObject(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(backSrcMap, theRect, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
 }
 
 //--------------------------------------------------------------  DrawMailboxLeft

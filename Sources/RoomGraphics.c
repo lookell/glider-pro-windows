@@ -80,7 +80,7 @@ void DrawLocale (void)
 	}
 	ListAllLocalObjects();
 
-	Mac_PaintRect(backSrcMap, &backSrcRect, GetStockObject(BLACK_BRUSH));
+	Mac_PaintRect(backSrcMap, &backSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 
 	if (numNeighbors > 3)
 	{
@@ -176,7 +176,7 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 
 	if ((numLights == 0) && (who != kRoomIsEmpty))
 	{
-		Mac_PaintRect(backSrcMap, &localRoomsDest[where], GetStockObject(BLACK_BRUSH));
+		Mac_PaintRect(backSrcMap, &localRoomsDest[where], (HBRUSH)GetStockObject(BLACK_BRUSH));
 		return;
 	}
 
@@ -184,7 +184,7 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 	{
 		if (wardBitSet)
 		{
-			Mac_PaintRect(backSrcMap, &localRoomsDest[where], GetStockObject(BLACK_BRUSH));
+			Mac_PaintRect(backSrcMap, &localRoomsDest[where], (HBRUSH)GetStockObject(BLACK_BRUSH));
 			return;
 		}
 

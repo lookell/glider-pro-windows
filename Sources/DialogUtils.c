@@ -44,7 +44,7 @@ static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
 	if (textLength <= 1)
 		goto ending;
 	oldTextSize = textLength + 1;
-	oldText = calloc(oldTextSize, sizeof(*oldText));
+	oldText = (PWSTR)calloc(oldTextSize, sizeof(*oldText));
 	if (oldText == NULL)
 		goto ending;
 	if (!GetWindowText(hwnd, oldText, oldTextSize))
@@ -74,7 +74,7 @@ static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
 	}
 
 	// Format the window text
-	newText = calloc(newTextSize, sizeof(*newText));
+	newText = (PWSTR)calloc(newTextSize, sizeof(*newText));
 	if (newText == NULL)
 		goto ending;
 	remainingText = newText;
@@ -257,7 +257,7 @@ void GetDialogString (HWND theDialog, int item, StringPtr theString, int stringC
 	itemTextLength = GetWindowTextLength(dialogItem);
 	if (itemTextLength == 0)
 		return;
-	tmpPtr = calloc(itemTextLength + 1, sizeof(*tmpPtr));
+	tmpPtr = (wchar_t *)calloc(itemTextLength + 1, sizeof(*tmpPtr));
 	if (tmpPtr == NULL)
 		return;
 	GetWindowText(dialogItem, tmpPtr, itemTextLength + 1);
@@ -378,7 +378,7 @@ void AddMenuToComboBox (HWND theDialog, int whichItem, HMENU theMenu)
 		succeeded = GetMenuItemInfo(theMenu, menuIndex, TRUE, &menuItemInfo);
 		if (!succeeded)
 			continue;
-		itemString = calloc((menuItemInfo.cch + 1), sizeof(*itemString));
+		itemString = (wchar_t *)calloc((menuItemInfo.cch + 1), sizeof(*itemString));
 		if (itemString == NULL)
 			RedAlert(kErrNoMemory);
 		menuItemInfo.dwTypeData = itemString;

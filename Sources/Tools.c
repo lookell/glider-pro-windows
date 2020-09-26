@@ -157,7 +157,7 @@ void UpdateToolTiles (void)
 	buttonBitmap = CreateCompatibleBitmap(displayDC, 22, 22);
 	if (buttonBitmap != NULL)
 	{
-		prevBitmap = SelectObject(hdc, buttonBitmap);
+		prevBitmap = (HBITMAP)SelectObject(hdc, buttonBitmap);
 		DrawCIcon(hdc, kSelectionTool, -3, -3);
 		SelectObject(hdc, prevBitmap);
 
@@ -182,7 +182,7 @@ void UpdateToolTiles (void)
 		buttonBitmap = CreateCompatibleBitmap(displayDC, 22, 22);
 		if (buttonBitmap != NULL)
 		{
-			prevBitmap = SelectObject(hdc, buttonBitmap);
+			prevBitmap = (HBITMAP)SelectObject(hdc, buttonBitmap);
 			Mac_CopyBits(toolSrcMap, hdc, &srcRect, &destRect, srcCopy, nil);
 			SelectObject(hdc, prevBitmap);
 

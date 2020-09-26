@@ -691,7 +691,7 @@ int ReadGame2Type(byteio *reader, game2Type *data)
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->showFoil));
 	if (data->nRooms < 0)
 		return 0;
-	data->savedData = calloc(data->nRooms, sizeof(*data->savedData));
+	data->savedData = (savedRoom *)calloc(data->nRooms, sizeof(*data->savedData));
 	if ((data->savedData == NULL) && (data->nRooms != 0))
 		return 0;
 	for (i = 0; i < data->nRooms; i++)
@@ -793,7 +793,7 @@ int ReadHouseType(byteio *reader, houseType *data)
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->nRooms));
 	if (data->nRooms < 0)
 		return 0;
-	data->rooms = calloc(data->nRooms, sizeof(*data->rooms));
+	data->rooms = (roomPtr)calloc(data->nRooms, sizeof(*data->rooms));
 	if ((data->rooms == NULL) && (data->nRooms != 0))
 		return 0;
 	for (i = 0; i < data->nRooms; i++)

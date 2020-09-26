@@ -55,7 +55,7 @@ static int ReadRiffChunk(const void **ppBuffer, size_t *pLength, RiffChunk *pChu
 
 	if (ppBuffer == NULL || pLength == NULL || pChunk == NULL)
 		return 0;
-	dataPointer = *ppBuffer;
+	dataPointer = (const unsigned char *)*ppBuffer;
 	dataLength = *pLength;
 	if (dataPointer == NULL || dataLength < 8)
 		return 0;
@@ -151,6 +151,12 @@ int ReadWAVFromMemory(const void *buffer, size_t length, WaveData *waveData)
 }
 
 //==============================================================
+
+#ifdef __cplusplus
+#define MAKE_REFIID(iid) (iid)
+#else
+#define MAKE_REFIID(iid) (&(iid))
+#endif
 
 #define WC_AUDIOOWNER L"GliderAudioOwner"
 #define AUDIO_TICK_MS 50
@@ -726,7 +732,7 @@ static LPDIRECTSOUNDBUFFER8 Audio_CreateSoundBuffer(LPCDSBUFFERDESC pcDSBufferDe
 		return NULL;
 	}
 	hr = IDirectSoundBuffer8_QueryInterface(tempBuffer,
-		&IID_IDirectSoundBuffer8, (void **)&newBuffer);
+		MAKE_REFIID(IID_IDirectSoundBuffer8), (void **)&newBuffer);
 	IDirectSoundBuffer_Release(tempBuffer);
 	if (FAILED(hr))
 	{
@@ -852,7 +858,7 @@ int AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry)
 
 	if (entry->buffer != NULL)
 	{
-		queueEntry.buffer = malloc(entry->length);
+		queueEntry.buffer = (unsigned char *)malloc(entry->length);
 		queueEntry.length = entry->length;
 		if (queueEntry.buffer != NULL)
 		{

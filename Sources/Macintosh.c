@@ -185,15 +185,15 @@ void Mac_CopyMask(
 		return;
 	}
 
-	hbmPrev = SelectObject(tmpDC, srcDIB);
+	hbmPrev = (HBITMAP)SelectObject(tmpDC, srcDIB);
 	StretchBlt(tmpDC, 0, 0, wOut, hOut, srcBits, xSrc, ySrc, wSrc, hSrc, SRCCOPY);
 	SelectObject(tmpDC, hbmPrev);
 
-	hbmPrev = SelectObject(tmpDC, maskDIB);
+	hbmPrev = (HBITMAP)SelectObject(tmpDC, maskDIB);
 	StretchBlt(tmpDC, 0, 0, wOut, hOut, maskBits, xMask, yMask, wMask, hMask, SRCCOPY);
 	SelectObject(tmpDC, hbmPrev);
 
-	hbmPrev = SelectObject(tmpDC, dstDIB);
+	hbmPrev = (HBITMAP)SelectObject(tmpDC, dstDIB);
 	StretchBlt(tmpDC, 0, 0, wOut, hOut, dstBits, xDst, yDst, wDst, hDst, SRCCOPY);
 	SelectObject(tmpDC, hbmPrev);
 
@@ -216,7 +216,7 @@ void Mac_CopyMask(
 
 	// Blit the output image to its final destination, and clean up
 
-	hbmPrev = SelectObject(tmpDC, dstDIB);
+	hbmPrev = (HBITMAP)SelectObject(tmpDC, dstDIB);
 	StretchBlt(dstBits, xDst, yDst, wDst, hDst, tmpDC, 0, 0, wOut, hOut, SRCCOPY);
 	SelectObject(tmpDC, hbmPrev);
 

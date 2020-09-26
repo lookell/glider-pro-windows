@@ -70,7 +70,7 @@ BOOL InitLoadDialog (HWND hDlg)
 	}
 	cxIcon = GetSystemMetrics(SM_CXICON);
 	cyIcon = GetSystemMetrics(SM_CYICON);
-	defaultIcon = LoadImage(HINST_THISCOMPONENT,
+	defaultIcon = (HICON)LoadImage(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(IDI_HOUSE), IMAGE_ICON,
 			cxIcon, cyIcon, LR_DEFAULTCOLOR | LR_SHARED);
 	if (defaultIcon == NULL)
@@ -320,7 +320,7 @@ void DoDirSearch (HWND ownerWindow)
 			// handle a file entry
 			extPtr = wcsrchr(ffd.cFileName, L'.');
 			if (extPtr == NULL)
-				extPtr = L"";
+				extPtr = ffd.cFileName;
 			if ((housesFound < maxFiles) && (wcscmp(extPtr, L".glh") == 0))
 			{
 				hr = StringCchPrintf(theHousesSpecs[housesFound].path,

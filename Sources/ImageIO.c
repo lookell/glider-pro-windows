@@ -588,9 +588,8 @@ static HRESULT ReadIconFileDirectory(ByteSlice *slice, IconFileDirectory **outpu
 	RETURN_IF_FAILED(ReadWORD(&source, &iconReserved));
 	RETURN_IF_FAILED(ReadWORD(&source, &iconType));
 	RETURN_IF_FAILED(ReadWORD(&source, &iconCount));
-	valueSize = offsetof(IconFileDirectory, Entries)
-		+ iconCount * sizeof(IconFileDirEntry);
-	value = malloc(valueSize);
+	valueSize = offsetof(IconFileDirectory, Entries) + (iconCount * sizeof(IconFileDirEntry));
+	value = (IconFileDirectory *)malloc(valueSize);
 	if (value == NULL)
 	{
 		return E_OUTOFMEMORY;
@@ -618,7 +617,7 @@ static HRESULT ConvertIconFileDirToGroupDir(
 
 	outputSize = offsetof(GroupIconDirectory, Entries)
 		+ fileDir->Count * sizeof(GroupIconDirEntry);
-	groupDir = malloc(outputSize);
+	groupDir = (GroupIconDirectory *)malloc(outputSize);
 	if (groupDir == NULL)
 	{
 		return E_OUTOFMEMORY;
@@ -698,7 +697,7 @@ HRESULT LoadMemoryICO(HICON *phIcon, const void *buffer, size_t length, int widt
 	{
 		return E_FAIL;
 	}
-	resBits = malloc(imageLength);
+	resBits = (PBYTE)malloc(imageLength);
 	if (resBits == NULL)
 	{
 		return E_OUTOFMEMORY;

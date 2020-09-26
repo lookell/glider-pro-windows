@@ -180,7 +180,7 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 	{
 		if (thisHouse.nRooms < 0)
 			thisHouse.nRooms = 0;
-		newRoomsPtr = realloc(
+		newRoomsPtr = (roomType *)realloc(
 			thisHouse.rooms,
 			(thisHouse.nRooms + 1) * sizeof(*thisHouse.rooms)
 		);
@@ -235,7 +235,7 @@ void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 	if ((noRoomAtAll) || (!houseUnlocked))
 	{
 		wasColor = SetDCBrushColor(workSrcMap, LtGrayForeColor());
-		Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(DC_BRUSH));
+		Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(DC_BRUSH));
 		SetDCBrushColor(workSrcMap, wasColor);
 
 		ncm.cbSize = sizeof(ncm);

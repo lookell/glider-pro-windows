@@ -611,7 +611,7 @@ void HandleOutlet (dynaType *theDinah)
 		}
 		else
 		{
-			Mac_PaintRect(workSrcMap, &theDinah->dest, GetStockObject(BLACK_BRUSH));
+			Mac_PaintRect(workSrcMap, &theDinah->dest, (HBRUSH)GetStockObject(BLACK_BRUSH));
 		}
 		AddRectToWorkRects(&theDinah->dest);
 	}

@@ -314,9 +314,9 @@ void RedrawMapContents (HDC hdc)
 		SetDCBrushColor(hdc, redColor);
 		activeRoomRect.right++;
 		activeRoomRect.bottom++;
-		Mac_FrameRect(hdc, &activeRoomRect, GetStockObject(DC_BRUSH), 1, 1);
+		Mac_FrameRect(hdc, &activeRoomRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
 		QInsetRect(&activeRoomRect, 1, 1);
-		Mac_FrameRect(hdc, &activeRoomRect, GetStockObject(DC_BRUSH), 1, 1);
+		Mac_FrameRect(hdc, &activeRoomRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
 		QInsetRect(&activeRoomRect, -1, -1);
 	}
 

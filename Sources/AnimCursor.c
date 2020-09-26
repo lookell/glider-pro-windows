@@ -135,7 +135,7 @@ Boolean ReadAcurResource (WORD acurID, acurPtr ballCurs)
 	if (!byteio_read_le_u16(&resReader, &count))
 		goto failed;
 	ballCurs->n = count;
-	ballCurs->frame = calloc(count, sizeof(*ballCurs->frame));
+	ballCurs->frame = (acurFrame *)calloc(count, sizeof(*ballCurs->frame));
 	if (ballCurs->frame == NULL)
 		goto failed;
 	for (i = 0; i < count; i++)

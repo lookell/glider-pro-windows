@@ -136,8 +136,8 @@ void UpdateRoomInfoDialog (HWND hDlg, HDC hdc)
 	else
 		SetDlgItemText(hDlg, kLitUnlitText, L"(Room Is Lit)");
 
-	Mac_FrameRect(hdc, &tileSrc, GetStockObject(BLACK_BRUSH), 1, 1);
-	Mac_FrameRect(hdc, &tileDest, GetStockObject(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(hdc, &tileSrc, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(hdc, &tileDest, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
 }
 #endif
 
@@ -320,13 +320,13 @@ void HiliteTileOver (HWND hDlg, Point mouseIs)
 			QOffsetRect(&hiliteRect,
 				tileSrc.left + (newTileOver * kMiniTileWide),
 				tileSrc.top - 3);
-			Mac_PaintRect(hdc, &hiliteRect, GetStockObject(DC_BRUSH));
+			Mac_PaintRect(hdc, &hiliteRect, (HBRUSH)GetStockObject(DC_BRUSH));
 
 			QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 			QOffsetRect(&hiliteRect,
 				tileSrc.left + (newTileOver * kMiniTileWide),
 				tileSrc.bottom + 1);
-			Mac_PaintRect(hdc, &hiliteRect, GetStockObject(DC_BRUSH));
+			Mac_PaintRect(hdc, &hiliteRect, (HBRUSH)GetStockObject(DC_BRUSH));
 			SetDCBrushColor(hdc, oldColor);
 
 			if (tileOver != -1)

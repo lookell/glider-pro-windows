@@ -82,7 +82,7 @@ void SaveGame2 (HWND ownerWindow)
 
 	numRooms = thisHouse.nRooms;
 
-	savedGame.savedData = calloc(numRooms, sizeof(savedRoom));
+	savedGame.savedData = (savedRoom *)calloc(numRooms, sizeof(savedRoom));
 	if (savedGame.savedData == NULL)
 	{
 		YellowAlert(ownerWindow, kYellowFailedSaveGame, -1);

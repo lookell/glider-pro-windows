@@ -705,7 +705,7 @@ void DrawMarquee (HDC hdc)
 	{
 		Mac_PaintRect(hdc, &theMarquee.handle, marqueeBrush);
 		marqueePen = CreateMarqueePen();
-		wasPen = SelectObject(hdc, marqueePen);
+		wasPen = (HPEN)SelectObject(hdc, marqueePen);
 		switch (theMarquee.direction)
 		{
 			case kAbove:
@@ -770,7 +770,7 @@ void InitMarquee (void)
 	for (i = 0; i < kNumMarqueePats; i++)
 	{
 		hBitmap = CreateBitmap(8, 8, 1, 1, NULL);
-		hbmPrev = SelectObject(hdc, hBitmap);
+		hbmPrev = (HBITMAP)SelectObject(hdc, hBitmap);
 		ImageList_Draw(himlMarquee, i, hdc, 0, 0, ILD_IMAGE);
 		SelectObject(hdc, hbmPrev);
 		theMarquee.pats[i] = hBitmap;

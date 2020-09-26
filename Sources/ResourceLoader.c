@@ -216,7 +216,7 @@ Gp_LoadSoundFromZip (mz_zip_archive *archive, SInt16 soundID, WaveData *sound)
 	// dataBytes over to the beginning of the buffer so that the dataBytes
 	// can be freed normally.
 	memmove(buffer, sound->dataBytes, sound->dataLength);
-	sound->dataBytes = buffer;
+	sound->dataBytes = (unsigned char *)buffer;
 	return S_OK;
 }
 

@@ -753,7 +753,7 @@ void LopOffExtraRooms (void)
 		r = thisHouse.nRooms - count;
 		newSize = sizeof(roomType) * (size_t)r;
 									// resize room array (shrink)
-		newRoomsPtr = realloc(thisHouse.rooms, newSize);
+		newRoomsPtr = (roomPtr)realloc(thisHouse.rooms, newSize);
 		if (newRoomsPtr == NULL)	// problem?
 		{
 			SetMessageTextColor(redColor);

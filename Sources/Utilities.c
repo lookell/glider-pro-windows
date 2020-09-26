@@ -263,7 +263,7 @@ void DrawCIcon (HDC hdc, SInt16 theID, SInt16 h, SInt16 v)
 	if (hdc == NULL)
 		return;
 
-	hIcon = LoadImage(HINST_THISCOMPONENT, MAKEINTRESOURCE(theID),
+	hIcon = (HICON)LoadImage(HINST_THISCOMPONENT, MAKEINTRESOURCE(theID),
 			IMAGE_ICON, 32, 32, LR_DEFAULTCOLOR);
 	if (hIcon != NULL)
 	{

@@ -58,7 +58,7 @@ void ColorRect (HDC hdc, const Rect *theRect, SInt32 color)
 
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
-	Mac_PaintRect(hdc, theRect, GetStockObject(DC_BRUSH));
+	Mac_PaintRect(hdc, theRect, (HBRUSH)GetStockObject(DC_BRUSH));
 	SetDCBrushColor(hdc, wasColor);
 }
 
@@ -76,7 +76,7 @@ void ColorOval (HDC hdc, const Rect *theRect, SInt32 color)
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
 	theRegion = CreateEllipticRgn(theRect->left, theRect->top,
 			theRect->right + 1, theRect->bottom + 1);
-	FillRgn(hdc, theRegion, GetStockObject(DC_BRUSH));
+	FillRgn(hdc, theRegion, (HBRUSH)GetStockObject(DC_BRUSH));
 	DeleteObject(theRegion);
 	SetDCBrushColor(hdc, wasColor);
 }
@@ -92,7 +92,7 @@ void ColorRegion (HDC hdc, HRGN theRgn, SInt32 color)
 
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
-	FillRgn(hdc, theRgn, GetStockObject(DC_BRUSH));
+	FillRgn(hdc, theRgn, (HBRUSH)GetStockObject(DC_BRUSH));
 	SetDCBrushColor(hdc, wasColor);
 }
 
@@ -145,7 +145,7 @@ void ColorFrameRect (HDC hdc, const Rect *theRect, SInt32 color)
 
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
-	Mac_FrameRect(hdc, theRect, GetStockObject(DC_BRUSH), 1, 1);
+	Mac_FrameRect(hdc, theRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
 	SetDCBrushColor(hdc, wasColor);
 }
 
@@ -163,7 +163,7 @@ void ColorFrameOval (HDC hdc, const Rect *theRect, SInt32 color)
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
 	theRegion = CreateEllipticRgn(theRect->left, theRect->top,
 			theRect->right + 1, theRect->bottom + 1);
-	FrameRgn(hdc, theRegion, GetStockObject(DC_BRUSH), 1, 1);
+	FrameRgn(hdc, theRegion, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
 	DeleteObject(theRegion);
 	SetDCBrushColor(hdc, wasColor);
 }

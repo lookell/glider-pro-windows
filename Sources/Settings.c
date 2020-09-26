@@ -714,7 +714,7 @@ void DisplayDefaults (HWND hDlg)
 
 static BOOL AreCommonControlsVersionSix(void)
 {
-	HANDLE comctl32;
+	HMODULE comctl32;
 	DLLGETVERSIONPROC comctl32_DllGetVersion;
 	DLLVERSIONINFO versionInfo;
 	HRESULT hr;
@@ -780,7 +780,7 @@ void DisplayInit (HWND hDlg)
 		loadFlags = enabledLoadFlags;
 	else
 		loadFlags = disabledLoadFlags;
-	display1Icon = LoadImage(HINST_THISCOMPONENT,
+	display1Icon = (HICON)LoadImage(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kDisplay1Icon),
 			IMAGE_ICON, 0, 0, loadFlags);
 	SendMessage(display1Control, BM_SETIMAGE, IMAGE_ICON, (LPARAM)display1Icon);
@@ -789,7 +789,7 @@ void DisplayInit (HWND hDlg)
 		loadFlags = enabledLoadFlags;
 	else
 		loadFlags = disabledLoadFlags;
-	display3Icon = LoadImage(HINST_THISCOMPONENT,
+	display3Icon = (HICON)LoadImage(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kDisplay3Icon),
 			IMAGE_ICON, 0, 0, loadFlags);
 	SendMessage(display3Control, BM_SETIMAGE, IMAGE_ICON, (LPARAM)display3Icon);
@@ -798,7 +798,7 @@ void DisplayInit (HWND hDlg)
 		loadFlags = enabledLoadFlags;
 	else
 		loadFlags = disabledLoadFlags;
-	display9Icon = LoadImage(HINST_THISCOMPONENT,
+	display9Icon = (HICON)LoadImage(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kDisplay9Icon),
 			IMAGE_ICON, 0, 0, loadFlags);
 	SendMessage(display9Control, BM_SETIMAGE, IMAGE_ICON, (LPARAM)display9Icon);

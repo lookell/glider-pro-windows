@@ -166,7 +166,7 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 	tempRect = thisMac.screen;          // paint strip on screen black
 	tempRect.top = tempRect.bottom - 20;	// thisMac.menuHigh
 	mainWindowDC = GetMainWindowDC();
-	Mac_PaintRect(mainWindowDC, &tempRect, GetStockObject(BLACK_BRUSH));
+	Mac_PaintRect(mainWindowDC, &tempRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	ReleaseMainWindowDC(mainWindowDC);
 
 #ifdef COMPILEQT
@@ -176,7 +176,7 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 	}
 #endif
 
-	Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
+	Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	if (quickerTransitions)
 		DissBitsChunky(&workSrcRect);
 	else
@@ -296,7 +296,7 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 	{
 		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 
-		Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
+		Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 		QSetRect(&tempRect, 0, 0, 640, 460);
 		QOffsetRect(&tempRect, splashOriginH, splashOriginV);
 		LoadScaledGraphic(workSrcMap, kSplash8BitPICT, &tempRect);
@@ -775,7 +775,7 @@ void RestoreEntireGameScreen (void)
 
 	tempRect = thisMac.screen;
 	mainWindowDC = GetMainWindowDC();
-	Mac_PaintRect(mainWindowDC, &tempRect, GetStockObject(BLACK_BRUSH));
+	Mac_PaintRect(mainWindowDC, &tempRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	ReleaseMainWindowDC(mainWindowDC);
 
 	DrawLocale();

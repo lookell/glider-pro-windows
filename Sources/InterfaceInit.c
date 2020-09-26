@@ -65,7 +65,7 @@ static HMENU DetachPopupMenu (HMENU rootMenu, UINT id, LPWSTR *title)
 	if (!GetMenuItemInfo(rootMenu, id, FALSE, &mii))
 		return NULL;
 	mii.cch += 1;
-	mii.dwTypeData = calloc(mii.cch, sizeof(*mii.dwTypeData));
+	mii.dwTypeData = (LPWSTR)calloc(mii.cch, sizeof(*mii.dwTypeData));
 	if (mii.dwTypeData == NULL)
 		return NULL;
 	if (!GetMenuItemInfo(rootMenu, id, FALSE, &mii))

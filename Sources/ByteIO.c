@@ -340,7 +340,7 @@ static int minimal_seek(byteio *stream, int64_t offset, int origin, int64_t *new
 
 static handle_reader *handle_reader_init(HANDLE hFile)
 {
-	handle_reader *self = malloc(sizeof(*self));
+	handle_reader *self = (handle_reader *)malloc(sizeof(*self));
 	if (self == NULL)
 		return NULL;
 	self->hFile = hFile;
@@ -351,9 +351,9 @@ static handle_reader *handle_reader_init(HANDLE hFile)
 
 static int handle_reader_read(byteio *stream, void *buffer, size_t size)
 {
-	unsigned char *outptr = buffer;
+	unsigned char *outptr = (unsigned char *)buffer;
 	size_t readsize;
-	handle_reader *self = stream->priv;
+	handle_reader *self = (handle_reader *)stream->priv;
 
 	if (self == NULL)
 	{
@@ -444,7 +444,7 @@ static int handle_reader_close(byteio *stream)
 {
 	LARGE_INTEGER li;
 	BOOL result;
-	handle_reader *self = stream->priv;
+	handle_reader *self = (handle_reader *)stream->priv;
 	if (stream->priv == NULL)
 		return 1;
 	li.QuadPart = -((LONGLONG)self->size);
@@ -474,7 +474,7 @@ int byteio_init_handle_reader(byteio *stream, HANDLE hFile)
 
 static handle_writer *handle_writer_init(HANDLE hFile)
 {
-	handle_writer *self = malloc(sizeof(*self));
+	handle_writer *self = (handle_writer *)malloc(sizeof(*self));
 	if (self == NULL)
 		return NULL;
 	self->hFile = hFile;
@@ -485,9 +485,9 @@ static handle_writer *handle_writer_init(HANDLE hFile)
 
 static int handle_writer_write(byteio *stream, const void *buffer, size_t size)
 {
-	const unsigned char *inptr = buffer;
+	const unsigned char *inptr = (const unsigned char *)buffer;
 	size_t writesize;
-	handle_writer *self = stream->priv;
+	handle_writer *self = (handle_writer *)stream->priv;
 
 	if (self == NULL || buffer == NULL)
 		return 0;
@@ -573,7 +573,7 @@ static int handle_writer_seek(byteio *stream, int64_t offset, int origin, int64_
 static int handle_writer_close(byteio *stream)
 {
 	BOOL result;
-	handle_writer *self = stream->priv;
+	handle_writer *self = (handle_writer *)stream->priv;
 	DWORD numWritten;
 	DWORD numToWrite;
 	if (stream->priv == NULL)
@@ -605,18 +605,18 @@ int byteio_init_handle_writer(byteio *stream, HANDLE hFile)
 
 static memory_reader *memory_reader_init(const void *buffer, size_t size)
 {
-	memory_reader *self = malloc(sizeof(*self));
+	memory_reader *self = (memory_reader *)malloc(sizeof(*self));
 	if (self == NULL || size > (size_t)PTRDIFF_MAX)
 		return NULL;
 	self->size = (ptrdiff_t)size;
 	self->pos = 0;
-	self->buffer = buffer;
+	self->buffer = (const unsigned char *)buffer;
 	return self;
 }
 
 static int memory_reader_read(byteio *stream, void *buffer, size_t size)
 {
-	memory_reader *self = stream->priv;
+	memory_reader *self = (memory_reader *)stream->priv;
 	if (self == NULL || self->buffer == NULL)
 		return 0;
 	if (self->pos >= self->size)
@@ -699,7 +699,7 @@ int byteio_init_memory_reader(byteio *stream, const void *buffer, size_t size)
 
 static memory_writer *memory_writer_init(size_t initial_capacity)
 {
-	memory_writer *self = malloc(sizeof(*self));
+	memory_writer *self = (memory_writer *)malloc(sizeof(*self));
 	if (self == NULL || initial_capacity > (size_t)PTRDIFF_MAX)
 		return NULL;
 	self->size = 0;
@@ -707,7 +707,7 @@ static memory_writer *memory_writer_init(size_t initial_capacity)
 	self->capacity = (ptrdiff_t)initial_capacity;
 	if (self->capacity == 0)
 		self->capacity = BYTEIO_DEFAULT_BUFFER_SIZE;
-	self->buffer = malloc(self->capacity);
+	self->buffer = (unsigned char *)malloc(self->capacity);
 	if (self->buffer == NULL)
 	{
 		free(self);
@@ -718,7 +718,7 @@ static memory_writer *memory_writer_init(size_t initial_capacity)
 
 static int memory_writer_write(byteio *stream, const void *buffer, size_t size)
 {
-	memory_writer *self = stream->priv;
+	memory_writer *self = (memory_writer *)stream->priv;
 	unsigned char *new_buffer;
 	ptrdiff_t write_size;
 	ptrdiff_t new_position;
@@ -738,12 +738,12 @@ static int memory_writer_write(byteio *stream, const void *buffer, size_t size)
 		{
 			new_capacity *= 2;
 		}
-		new_buffer = realloc(self->buffer, new_capacity);
+		new_buffer = (unsigned char *)realloc(self->buffer, new_capacity);
 		if (new_buffer == NULL)
 		{
 			// Try again with just enough memory to complete this write
 			new_capacity = new_position;
-			new_buffer = realloc(self->buffer, new_capacity);
+			new_buffer = (unsigned char *)realloc(self->buffer, new_capacity);
 			if (new_buffer == NULL)
 			{
 				return 0; // out of memory

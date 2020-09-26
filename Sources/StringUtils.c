@@ -34,7 +34,7 @@ void PasStringCopyNum (ConstStringPtr p1, StringPtr p2, Byte charsToCopy);
 
 void PasStringCopy (ConstStringPtr p1, StringPtr p2)
 {
-	register SInt16		stringLength;
+	SInt16 stringLength;
 
 	stringLength = *p2++ = *p1++;
 	while (--stringLength >= 0)
@@ -405,7 +405,7 @@ wchar_t *MacToWinLineEndings(const wchar_t *input)
 		}
 	}
 
-	output = calloc(outputSize, sizeof(*output));
+	output = (wchar_t *)calloc(outputSize, sizeof(*output));
 	if (output == NULL)
 	{
 		return NULL;
@@ -454,7 +454,7 @@ wchar_t *WinToMacLineEndings(const wchar_t *input)
 		}
 	}
 
-	output = calloc(outputSize, sizeof(*output));
+	output = (wchar_t *)calloc(outputSize, sizeof(*output));
 	if (output == NULL)
 	{
 		return NULL;

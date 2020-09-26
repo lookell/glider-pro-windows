@@ -125,7 +125,7 @@ void RedrawSplashScreen (void)
 {
 	Rect		tempRect;
 
-	Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
+	Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	QSetRect(&tempRect, 0, 0, 640, 460);
 	QOffsetRect(&tempRect, splashOriginH, splashOriginV);
 	LoadScaledGraphic(workSrcMap, kSplash8BitPICT, &tempRect);
@@ -271,7 +271,7 @@ void OpenMainWindow (void)
 		if (splashOriginV < 0)
 			splashOriginV = 0;
 
-		Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
+		Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 		LoadGraphic(workSrcMap, kSplash8BitPICT);
 
 		if ((fadeGraysOut) && (isDoColorFade))

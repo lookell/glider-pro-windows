@@ -62,7 +62,7 @@ void DoHighScores (void)
 	Rect		tempRect;
 
 	SpinCursor(3);
-	Mac_PaintRect(workSrcMap, &workSrcRect, GetStockObject(BLACK_BRUSH));
+	Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	QSetRect(&tempRect, 0, 0, 640, 460);
 	QOffsetRect(&tempRect, splashOriginH, splashOriginV);
 	LoadScaledGraphic(workSrcMap, kStarPictID, &tempRect);
@@ -158,10 +158,10 @@ void DrawHighScores (void)
 	QOffsetRect(&tempRect, scoreLeft - 3 + (kScoreWide - bannerWidth) / 2,
 			dropIt + 5 - kScoreSpacing - kKimsLifted);
 	wasColor = SetDCBrushColor(workSrcMap, blackColor);
-	Mac_FrameRect(workSrcMap, &tempRect, GetStockObject(DC_BRUSH), 1, 1);
+	Mac_FrameRect(workSrcMap, &tempRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
 	QOffsetRect(&tempRect, -1, -1);
 	SetDCBrushColor(workSrcMap, yellowColor);
-	Mac_FrameRect(workSrcMap, &tempRect, GetStockObject(DC_BRUSH), 1, 1);
+	Mac_FrameRect(workSrcMap, &tempRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
 	SetDCBrushColor(workSrcMap, wasColor);
 
 	for (i = 0; i < kMaxScores; i++)
