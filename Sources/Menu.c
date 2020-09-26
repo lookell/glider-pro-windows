@@ -92,7 +92,7 @@ void UpdateMenusEditMode (void)
 
 void UpdateMenusNonEditMode (void)
 {
-	if ((noRoomAtAll) || (!houseOpen) || (numberRooms <= 0))
+	if ((noRoomAtAll) || (!houseOpen) || (thisHouse.nRooms <= 0))
 	{
 		EnableMenuItem(gameMenu, ID_NEW_GAME, MF_GRAYED);
 		EnableMenuItem(gameMenu, ID_TWO_PLAYER, MF_GRAYED);

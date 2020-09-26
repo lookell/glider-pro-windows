@@ -45,7 +45,6 @@ Boolean DoesRoomHaveCeiling (void);
 roomPtr thisRoom;
 Rect backSrcRect;
 HDC backSrcMap;
-SInt16 numberRooms;
 SInt16 thisRoomNumber;
 SInt16 previousRoom;
 SInt16 leftThresh;
@@ -192,9 +191,8 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 		}
 		thisHouse.rooms = newRoomsPtr;
 		thisHouse.nRooms++;					// increment nRooms
-		numberRooms = thisHouse.nRooms;
 		previousRoom = thisRoomNumber;
-		thisRoomNumber = numberRooms - 1;
+		thisRoomNumber = thisHouse.nRooms - 1;
 	}
 	else
 	{
@@ -390,7 +388,7 @@ Boolean RoomExists (SInt16 suite, SInt16 floor, SInt16 *roomNum)
 	if (suite < 0)
 		return (foundIt);
 
-	for (i = 0; i < numberRooms; i++)
+	for (i = 0; i < thisHouse.nRooms; i++)
 	{
 		if ((thisHouse.rooms[i].floor == floor) &&
 				(thisHouse.rooms[i].suite == suite))
@@ -604,7 +602,7 @@ SInt16 GetNeighborRoomNumber (SInt16 which)
 	roomH = thisHouse.rooms[thisRoomNumber].suite + hDelta;
 	roomV = thisHouse.rooms[thisRoomNumber].floor + vDelta;
 
-	for (i = 0; i < numberRooms; i++)
+	for (i = 0; i < thisHouse.nRooms; i++)
 	{
 		if ((thisHouse.rooms[i].suite == roomH) &&
 				(thisHouse.rooms[i].floor == roomV))
@@ -720,7 +718,7 @@ SInt16 GetRoomNumber (SInt16 floor, SInt16 suite)
 
 	roomNum = kRoomIsEmpty;
 
-	for (i = 0; i < numberRooms; i++)
+	for (i = 0; i < thisHouse.nRooms; i++)
 	{
 		if ((thisHouse.rooms[i].suite == suite) &&
 				(thisHouse.rooms[i].floor == floor))

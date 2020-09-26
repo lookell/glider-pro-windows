@@ -383,22 +383,21 @@ Boolean ReadHouse (HWND ownerWindow)
 	if (FAILED(hr))
 	{
 		ZeroMemory(&thisHouse, sizeof(thisHouse));
-		numberRooms = 0;
+		thisHouse.nRooms = 0;
 		noRoomAtAll = true;
 		YellowAlert(ownerWindow, kYellowNoRooms, 0);
 		return false;
 	}
 
-	numberRooms = thisHouse.nRooms;
 	#ifdef COMPILEDEMO
-	if (numberRooms != 45)
+	if (thisHouse.nRooms != 45)
 	{
 		return false;
 	}
 	#endif
-	if ((numberRooms < 1) || (byteCount == 0))
+	if ((thisHouse.nRooms < 1) || (byteCount == 0))
 	{
-		numberRooms = 0;
+		thisHouse.nRooms = 0;
 		noRoomAtAll = true;
 		YellowAlert(ownerWindow, kYellowNoRooms, 0);
 		return false;

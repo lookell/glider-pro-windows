@@ -766,7 +766,6 @@ void LopOffExtraRooms (void)
 		}
 									// reflect new room count
 		thisHouse.nRooms -= count;
-		numberRooms = thisHouse.nRooms;
 	}
 }
 

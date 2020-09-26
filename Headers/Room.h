@@ -18,7 +18,6 @@ extern Rect backSrcRect;
 #ifdef GP_USE_WINAPI_H
 extern HDC backSrcMap;
 #endif
-extern SInt16 numberRooms;
 extern SInt16 thisRoomNumber;
 extern SInt16 previousRoom;
 extern SInt16 leftThresh;

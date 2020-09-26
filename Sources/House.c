@@ -178,7 +178,6 @@ void InitializeEmptyHouse (void)
 	wardBitSet = false;
 	phoneBitSet = false;
 
-	numberRooms = 0;
 	mapLeftRoom = 60;
 	mapTopRoom = 50;
 	thisRoomNumber = kRoomIsEmpty;
