@@ -580,13 +580,21 @@ int ReadScoresType(byteio *reader, scoresType *data)
 	size_t i;
 	FORWARD_FALSE(ReadStr31(reader, &data->banner));
 	for (i = 0; i < ARRAYSIZE(data->names); i++)
+	{
 		FORWARD_FALSE(ReadStr15(reader, &data->names[i]));
+	}
 	for (i = 0; i < ARRAYSIZE(data->scores); i++)
+	{
 		FORWARD_FALSE(byteio_read_be_i32(reader, &data->scores[i]));
+	}
 	for (i = 0; i < ARRAYSIZE(data->timeStamps); i++)
+	{
 		FORWARD_FALSE(byteio_read_be_u32(reader, &data->timeStamps[i]));
+	}
 	for (i = 0; i < ARRAYSIZE(data->levels); i++)
+	{
 		FORWARD_FALSE(byteio_read_be_i16(reader, &data->levels[i]));
+	}
 	return 1;
 }
 
@@ -595,13 +603,21 @@ int WriteScoresType(byteio *writer, const scoresType *data)
 	size_t i;
 	FORWARD_FALSE(WriteStr31(writer, &data->banner));
 	for (i = 0; i < ARRAYSIZE(data->names); i++)
+	{
 		FORWARD_FALSE(WriteStr15(writer, &data->names[i]));
+	}
 	for (i = 0; i < ARRAYSIZE(data->scores); i++)
+	{
 		FORWARD_FALSE(byteio_write_be_i32(writer, data->scores[i]));
+	}
 	for (i = 0; i < ARRAYSIZE(data->timeStamps); i++)
+	{
 		FORWARD_FALSE(byteio_write_be_u32(writer, data->timeStamps[i]));
+	}
 	for (i = 0; i < ARRAYSIZE(data->levels); i++)
+	{
 		FORWARD_FALSE(byteio_write_be_i16(writer, data->levels[i]));
+	}
 	return 1;
 }
 
@@ -654,7 +670,9 @@ static int ReadSavedRoom(byteio *reader, savedRoom *data)
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->unusedByte));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->visited));
 	for (i = 0; i < ARRAYSIZE(data->objects); i++)
+	{
 		FORWARD_FALSE(ReadObjectType(reader, &data->objects[i]));
+	}
 	return 1;
 }
 
@@ -665,13 +683,17 @@ static int WriteSavedRoom(byteio *writer, const savedRoom *data)
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->unusedByte));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->visited));
 	for (i = 0; i < ARRAYSIZE(data->objects); i++)
+	{
 		FORWARD_FALSE(WriteObjectType(writer, &data->objects[i]));
+	}
 	return 1;
 }
 
 int ReadGame2Type(byteio *reader, game2Type *data)
 {
 	SInt16 i;
+	data->nRooms = 0;
+	data->savedData = NULL;
 	FORWARD_FALSE(ReadFSSpec(reader, &data->house));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->version));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->wasStarsLeft));
@@ -690,10 +712,16 @@ int ReadGame2Type(byteio *reader, game2Type *data)
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->facing));
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->showFoil));
 	if (data->nRooms < 0)
+	{
+		data->nRooms = 0;
 		return 0;
+	}
 	data->savedData = (savedRoom *)calloc(data->nRooms, sizeof(*data->savedData));
 	if ((data->savedData == NULL) && (data->nRooms != 0))
+	{
+		data->nRooms = 0;
 		return 0;
+	}
 	for (i = 0; i < data->nRooms; i++)
 	{
 		if (ReadSavedRoom(reader, &data->savedData[i]) == 0)
@@ -728,8 +756,12 @@ int WriteGame2Type(byteio *writer, const game2Type *data)
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->facing));
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->showFoil));
 	if (data->savedData != NULL)
+	{
 		for (i = 0; i < data->nRooms; i++)
+		{
 			FORWARD_FALSE(WriteSavedRoom(writer, &data->savedData[i]));
+		}
+	}
 	return 1;
 }
 
@@ -744,13 +776,17 @@ static int ReadRoomType(byteio *reader, roomType *data)
 	FORWARD_FALSE(byteio_read_be_u8(reader, &data->visited));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->background));
 	for (i = 0; i < ARRAYSIZE(data->tiles); i++)
+	{
 		FORWARD_FALSE(byteio_read_be_i16(reader, &data->tiles[i]));
+	}
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->floor));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->suite));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->openings));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->numObjects));
 	for (i = 0; i < ARRAYSIZE(data->objects); i++)
+	{
 		FORWARD_FALSE(ReadObjectType(reader, &data->objects[i]));
+	}
 	return 1;
 }
 
@@ -765,19 +801,25 @@ static int WriteRoomType(byteio *writer, const roomType *data)
 	FORWARD_FALSE(byteio_write_be_u8(writer, data->visited));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->background));
 	for (i = 0; i < ARRAYSIZE(data->tiles); i++)
+	{
 		FORWARD_FALSE(byteio_write_be_i16(writer, data->tiles[i]));
+	}
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->floor));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->suite));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->openings));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->numObjects));
 	for (i = 0; i < ARRAYSIZE(data->objects); i++)
+	{
 		FORWARD_FALSE(WriteObjectType(writer, &data->objects[i]));
+	}
 	return 1;
 }
 
 int ReadHouseType(byteio *reader, houseType *data)
 {
 	SInt16 i;
+	data->nRooms = 0;
+	data->rooms = NULL;
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->version));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->unusedShort));
 	FORWARD_FALSE(byteio_read_be_i32(reader, &data->timeStamp));
@@ -792,10 +834,16 @@ int ReadHouseType(byteio *reader, houseType *data)
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->firstRoom));
 	FORWARD_FALSE(byteio_read_be_i16(reader, &data->nRooms));
 	if (data->nRooms < 0)
+	{
+		data->nRooms = 0;
 		return 0;
+	}
 	data->rooms = (roomPtr)calloc(data->nRooms, sizeof(*data->rooms));
 	if ((data->rooms == NULL) && (data->nRooms != 0))
+	{
+		data->nRooms = 0;
 		return 0;
+	}
 	for (i = 0; i < data->nRooms; i++)
 	{
 		if (ReadRoomType(reader, &data->rooms[i]) == 0)
@@ -826,8 +874,12 @@ int WriteHouseType(byteio *writer, const houseType *data)
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->firstRoom));
 	FORWARD_FALSE(byteio_write_be_i16(writer, data->nRooms));
 	if (data->rooms != NULL)
+	{
 		for (i = 0; i < data->nRooms; i++)
+		{
 			FORWARD_FALSE(WriteRoomType(writer, &data->rooms[i]));
+		}
+	}
 	return 1;
 }
 
