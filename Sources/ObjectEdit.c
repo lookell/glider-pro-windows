@@ -1766,8 +1766,16 @@ void DeselectObject (void)
 Boolean ObjectHasHandle (SInt16 *direction, SInt16 *dist)
 {
 	if ((objActive == kInitialGliderSelected) ||
-			(objActive == kNoObjectSelected))
+		(objActive == kLeftGliderSelected) ||
+		(objActive == kRightGliderSelected) ||
+		(objActive == kNoObjectSelected))
+	{
 		return (false);
+	}
+	if (objActive < 0 || objActive >= kMaxRoomObs)
+	{
+		return (false);
+	}
 
 	switch (thisRoom->objects[objActive].what)
 	{
@@ -1808,20 +1816,24 @@ Boolean ObjectHasHandle (SInt16 *direction, SInt16 *dist)
 		case kInvisBlower:
 		switch (thisRoom->objects[objActive].data.a.vector & 0x0F)
 		{
-			case 1: 	// up
+			case 1:  // up
 			*direction = kAbove;
 			break;
 
-			case 2: 	// right
+			case 2:  // right
 			*direction = kToRight;
 			break;
 
-			case 4: 	// down
+			case 4:  // down
 			*direction = kBelow;
 			break;
 
-			case 8: 	// left
+			case 8:  // left
 			*direction = kToLeft;
+			break;
+
+			default:  // invalid vector
+			return (false);
 			break;
 		}
 		*dist = thisRoom->objects[objActive].data.a.distance;
