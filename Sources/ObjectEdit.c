@@ -90,8 +90,7 @@ SInt16 FindObjectSelected (Point where)
 void DoSelectionClick (HWND hwnd, Point where, Boolean isDoubleClick)
 {
 #ifndef COMPILEDEMO
-	SInt16		direction, dist;
-	POINT		dragPt;
+	POINT dragPt;
 
 	StopMarquee();
 
@@ -102,13 +101,7 @@ void DoSelectionClick (HWND hwnd, Point where, Boolean isDoubleClick)
 	{
 		if (DragDetect(hwnd, dragPt))
 			DragHandle(where);
-		if (ObjectHasHandle(&direction, &dist))
-		{
-			StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
-			HandleBlowerGlider();
-		}
-		else
-			StartMarquee(&roomObjectRects[objActive]);
+		StartMarqueeForActiveObject();
 	}
 	else
 	{
@@ -123,35 +116,14 @@ void DoSelectionClick (HWND hwnd, Point where, Boolean isDoubleClick)
 			if (isDoubleClick)
 			{
 				DoObjectInfo(hwnd);
-				if (ObjectHasHandle(&direction, &dist))
-				{
-					StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
-					HandleBlowerGlider();
-				}
-				else
-					StartMarquee(&roomObjectRects[objActive]);
+				StartMarqueeForActiveObject();
 			}
 			else
 			{
 
 				if (DragDetect(hwnd, dragPt))
 					Gp_DragObject(where);
-				if (ObjectHasHandle(&direction, &dist))
-				{
-					StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
-					HandleBlowerGlider();
-				}
-				else
-				{
-					if (objActive == kInitialGliderSelected)
-						StartMarquee(&initialGliderRect);
-					else if (objActive == kLeftGliderSelected)
-						StartMarquee(&leftStartGliderDest);
-					else if (objActive == kRightGliderSelected)
-						StartMarquee(&rightStartGliderDest);
-					else
-						StartMarquee(&roomObjectRects[objActive]);
-				}
+				StartMarqueeForActiveObject();
 			}
 		}
 	}
@@ -1163,10 +1135,8 @@ void Gp_DeleteObject (void)
 void DuplicateObject (HWND ownerWindow)
 {
 #ifndef COMPILEDEMO
-	objectType	tempObject;
-	Point		placePt;
-	SInt16		direction, dist;
-	Boolean		handled;
+	objectType tempObject;
+	Point placePt;
 
 	tempObject = thisRoom->objects[objActive];
 
@@ -1325,20 +1295,12 @@ void DuplicateObject (HWND ownerWindow)
 		if (KeepObjectLegal())
 		{
 		}
-		handled = ObjectHasHandle(&direction, &dist);
 
 		ReadyBackground(thisRoom->background, thisRoom->tiles);
 		GetThisRoomsObjRects();
 		DrawThisRoomsObjects();
 		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
-
-		if (handled)
-		{
-			StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
-			HandleBlowerGlider();
-		}
-		else
-			StartMarquee(&roomObjectRects[objActive]);
+		StartMarqueeForActiveObject();
 	}
 #endif
 }
@@ -1348,9 +1310,10 @@ void DuplicateObject (HWND ownerWindow)
 void MoveObject (SInt16 whichWay, Boolean shiftDown)
 {
 #ifndef COMPILEDEMO
-	Rect		wasRect;
-	SInt16		deltaH, deltaV, increment;
-	SInt16		dist, direction;
+	Rect wasRect;
+	SInt16 deltaH;
+	SInt16 deltaV;
+	SInt16 increment;
 
 	if (theMode != kEditMode)
 		return;
@@ -1726,23 +1689,7 @@ void MoveObject (SInt16 whichWay, Boolean shiftDown)
 
 	ReadyBackground(thisRoom->background, thisRoom->tiles);
 	DrawThisRoomsObjects();
-
-	if (ObjectHasHandle(&direction, &dist))
-	{
-		StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
-		HandleBlowerGlider();
-	}
-	else
-	{
-		if (objActive == kInitialGliderSelected)
-			StartMarquee(&initialGliderRect);
-		else if (objActive == kLeftGliderSelected)
-			StartMarquee(&leftStartGliderDest);
-		else if (objActive == kRightGliderSelected)
-			StartMarquee(&rightStartGliderDest);
-		else
-			StartMarquee(&roomObjectRects[objActive]);
-	}
+	StartMarqueeForActiveObject();
 #endif
 }
 
@@ -1969,8 +1916,7 @@ void HandleBlowerGlider (void)
 void SelectNextObject (void)
 {
 #ifndef COMPILEDEMO
-	SInt16		direction, dist;
-	Boolean		noneFound;
+	Boolean noneFound;
 
 	if ((theMode != kEditMode) || (thisRoom->numObjects <= 0))
 		return;
@@ -1987,13 +1933,7 @@ void SelectNextObject (void)
 	}
 
 	UpdateMenus(false);
-	if (ObjectHasHandle(&direction, &dist))
-	{
-		StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
-		HandleBlowerGlider();
-	}
-	else
-		StartMarquee(&roomObjectRects[objActive]);
+	StartMarqueeForActiveObject();
 #endif
 }
 
@@ -2002,8 +1942,7 @@ void SelectNextObject (void)
 void SelectPrevObject (void)
 {
 #ifndef COMPILEDEMO
-	SInt16		direction, dist;
-	Boolean		noneFound;
+	Boolean noneFound;
 
 	if ((theMode != kEditMode) || (thisRoom->numObjects <= 0))
 		return;
@@ -2020,13 +1959,7 @@ void SelectPrevObject (void)
 	}
 
 	UpdateMenus(false);
-	if (ObjectHasHandle(&direction, &dist))
-	{
-		StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
-		HandleBlowerGlider();
-	}
-	else
-		StartMarquee(&roomObjectRects[objActive]);
+	StartMarqueeForActiveObject();
 #endif
 }
 
@@ -2758,7 +2691,7 @@ void HiliteAllObjects (void)
 void GoToObjectInRoom (SInt16 object, SInt16 floor, SInt16 suite)
 {
 	#ifndef COMPILEDEMO
-	SInt16		itsNumber, direction, dist;
+	SInt16 itsNumber;
 
 	if (RoomExists(suite, floor, &itsNumber))
 	{
@@ -2774,13 +2707,7 @@ void GoToObjectInRoom (SInt16 object, SInt16 floor, SInt16 suite)
 		if (thisRoom->objects[object].what != kObjectIsEmpty)
 		{
 			objActive = object;
-			if (ObjectHasHandle(&direction, &dist))
-			{
-				StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
-				HandleBlowerGlider();
-			}
-			else
-				StartMarquee(&roomObjectRects[objActive]);
+			StartMarqueeForActiveObject();
 			UpdateMenus(false);
 		}
 	}
@@ -2795,5 +2722,39 @@ void GoToObjectInRoomNum (SInt16 object, SInt16 roomNum)
 
 	if (GetRoomFloorSuite(roomNum, &floor, &suite))
 		GoToObjectInRoom(object, floor, suite);
+}
+
+//--------------------------------------------------------------  StartMarqueeForActiveObject
+
+void StartMarqueeForActiveObject (void)
+{
+	SInt16 direction;
+	SInt16 dist;
+
+	if (ObjectHasHandle(&direction, &dist))
+	{
+		StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
+		HandleBlowerGlider();
+	}
+	else if (objActive == kInitialGliderSelected)
+	{
+		StartMarquee(&initialGliderRect);
+	}
+	else if (objActive == kLeftGliderSelected)
+	{
+		StartMarquee(&leftStartGliderDest);
+	}
+	else if (objActive == kRightGliderSelected)
+	{
+		StartMarquee(&rightStartGliderDest);
+	}
+	else if (objActive >= 0 && objActive < kMaxRoomObs)
+	{
+		StartMarquee(&roomObjectRects[objActive]);
+	}
+	else
+	{
+		StopMarquee();
+	}
 }
 

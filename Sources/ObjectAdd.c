@@ -16,7 +16,6 @@
 #include "HouseLegal.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
-#include "Marquee.h"
 #include "Menu.h"
 #include "ObjectEdit.h"
 #include "Objects.h"
@@ -60,9 +59,9 @@ SInt16 wasFlower;
 
 Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showItNow)
 {
-	Rect		srcRect, newRect;
-	SInt16		direction, dist;
-	Boolean		handled, drawWholeRoom;
+	Rect srcRect;
+	Rect newRect;
+	Boolean drawWholeRoom;
 
 #ifdef COMPILEDEMO
 	return (false);
@@ -790,7 +789,6 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 	}
 	fileDirty = true;
 	UpdateMenus(false);
-	handled = ObjectHasHandle(&direction, &dist);
 
 	if (showItNow)
 	{
@@ -799,16 +797,8 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		GetThisRoomsObjRects();
 		DrawThisRoomsObjects();
 		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
-
-		if (handled)
-		{
-			StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
-			HandleBlowerGlider();
-		}
-		else
-			StartMarquee(&roomObjectRects[objActive]);
+		StartMarqueeForActiveObject();
 	}
-
 
 	return (true);
 #endif

@@ -16,7 +16,6 @@
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "Map.h"
-#include "Marquee.h"
 #include "Menu.h"
 #include "ObjectAdd.h"
 #include "ObjectEdit.h"
@@ -143,8 +142,6 @@ void GetObjectScrap (void)
 {
 	objectType tempObject;
 	Point noPoint;
-	SInt16 direction;
-	SInt16 dist;
 
 	if (hasScrap && !scrapIsARoom)
 	{
@@ -160,15 +157,7 @@ void GetObjectScrap (void)
 			GetThisRoomsObjRects();
 			DrawThisRoomsObjects();
 			Mac_InvalWindowRect(mainWindow, &mainWindowRect);
-			if (ObjectHasHandle(&direction, &dist))
-			{
-				StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
-				HandleBlowerGlider();
-			}
-			else
-			{
-				StartMarquee(&roomObjectRects[objActive]);
-			}
+			StartMarqueeForActiveObject();
 		}
 	}
 }

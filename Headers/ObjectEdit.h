@@ -37,5 +37,6 @@ void DrawThisRoomsObjects (void);
 void HiliteAllObjects (void);
 void GoToObjectInRoom (SInt16 object, SInt16 floor, SInt16 suite);
 void GoToObjectInRoomNum (SInt16 object, SInt16 roomNum);
+void StartMarqueeForActiveObject (void);
 
 #endif

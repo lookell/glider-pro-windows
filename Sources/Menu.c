@@ -480,8 +480,7 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 void DoHouseMenu (HWND hwnd, SInt16 theItem)
 {
 #ifndef COMPILEDEMO
-	SInt16		direction, dist;
-	Boolean		whoCares;
+	Boolean whoCares;
 
 	switch (theItem)
 	{
@@ -529,13 +528,7 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 		if (houseUnlocked)
 		{
 			DoObjectInfo(hwnd);
-			if (ObjectHasHandle(&direction, &dist))
-			{
-				StartMarqueeHandled(&roomObjectRects[objActive], direction, dist);
-				HandleBlowerGlider();
-			}
-			else
-				StartMarquee(&roomObjectRects[objActive]);
+			StartMarqueeForActiveObject();
 		}
 		break;
 
