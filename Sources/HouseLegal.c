@@ -102,7 +102,7 @@ Boolean KeepObjectLegal (void)
 		case kGrecoVent:
 		case kSewerBlower:
 		case kLiftArea:
-		GetObjectRect(&thisRoom->objects[objActive], &bounds);
+		GetObjectRect(theObject, &bounds);
 		if (ForceRectInRect(&bounds, &roomRect))
 		{
 			theObject->data.a.topLeft.h = bounds.left;
@@ -222,7 +222,7 @@ Boolean KeepObjectLegal (void)
 		case kManhole:
 		case kBooks:
 		case kInvisBounce:
-		GetObjectRect(&thisRoom->objects[objActive], &bounds);
+		GetObjectRect(theObject, &bounds);
 		if (ForceRectInRect(&bounds, &roomRect))
 		{
 			theObject->data.b.bounds = bounds;
@@ -255,7 +255,7 @@ Boolean KeepObjectLegal (void)
 		case kSparkle:
 		case kHelium:
 		case kSlider:
-		GetObjectRect(&thisRoom->objects[objActive], &bounds);
+		GetObjectRect(theObject, &bounds);
 		if (ForceRectInRect(&bounds, &roomRect))
 		{
 			theObject->data.c.topLeft.h = bounds.left;
@@ -309,7 +309,7 @@ Boolean KeepObjectLegal (void)
 		case kWindowExLf:
 		case kInvisTrans:
 		case kDeluxeTrans:
-		GetObjectRect(&thisRoom->objects[objActive], &bounds);
+		GetObjectRect(theObject, &bounds);
 		if (ForceRectInRect(&bounds, &roomRect))
 		{
 			theObject->data.d.topLeft.h = bounds.left;
@@ -407,7 +407,7 @@ Boolean KeepObjectLegal (void)
 		case kTrigger:
 		case kLgTrigger:
 		case kSoundTrigger:
-		GetObjectRect(&thisRoom->objects[objActive], &bounds);
+		GetObjectRect(theObject, &bounds);
 		if (ForceRectInRect(&bounds, &roomRect))
 		{
 			theObject->data.e.topLeft.h = bounds.left;
@@ -429,7 +429,7 @@ Boolean KeepObjectLegal (void)
 		case kFlourescent:
 		case kTrackLight:
 		case kInvisLight:
-		GetObjectRect(&thisRoom->objects[objActive], &bounds);
+		GetObjectRect(theObject, &bounds);
 		if (ForceRectInRect(&bounds, &roomRect))
 		{
 			if ((theObject->what == kFlourescent) || (theObject->what == kTrackLight))
@@ -492,7 +492,7 @@ Boolean KeepObjectLegal (void)
 		case kFlowerBox:
 		case kCDs:
 		case kCustomPict:
-		GetObjectRect(&thisRoom->objects[objActive], &bounds);
+		GetObjectRect(theObject, &bounds);
 		if (ForceRectInRect(&bounds, &roomRect))
 		{
 			theObject->data.g.topLeft.h = bounds.left;
@@ -534,7 +534,7 @@ Boolean KeepObjectLegal (void)
 		case kDrip:
 		case kFish:
 		case kCobweb:
-		GetObjectRect(&thisRoom->objects[objActive], &bounds);
+		GetObjectRect(theObject, &bounds);
 		if (ForceRectInRect(&bounds, &roomRect))
 		{
 			theObject->data.h.topLeft.h = bounds.left;
@@ -582,7 +582,7 @@ Boolean KeepObjectLegal (void)
 		case kFaucet:
 		case kRug:
 		case kChimes:
-		GetObjectRect(&thisRoom->objects[objActive], &bounds);
+		GetObjectRect(theObject, &bounds);
 		if (ForceRectInRect(&bounds, &roomRect))
 		{
 			theObject->data.i.bounds = bounds;
