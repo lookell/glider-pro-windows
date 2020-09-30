@@ -1931,7 +1931,7 @@ void SelectNextObject (void)
 	while (noneFound)
 	{
 		objActive++;
-		if (objActive >= kMaxRoomObs)
+		if (objActive < 0 || objActive >= kMaxRoomObs)
 			objActive = 0;
 		if (thisRoom->objects[objActive].what != kObjectIsEmpty)
 			noneFound = false;
@@ -1957,7 +1957,7 @@ void SelectPrevObject (void)
 	while (noneFound)
 	{
 		objActive--;
-		if (objActive < 0)
+		if (objActive < 0 || objActive >= kMaxRoomObs)
 			objActive = kMaxRoomObs - 1;
 		if (thisRoom->objects[objActive].what != kObjectIsEmpty)
 			noneFound = false;
