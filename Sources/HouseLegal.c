@@ -63,8 +63,6 @@ Boolean KeepObjectLegal (void)
 	unchanged = true;
 #ifndef COMPILEDEMO
 
-	theObject = &thisRoom->objects[objActive];
-
 	if (objActive == kInitialGliderSelected)
 	{
 		if (thisHouse.initial.h < 0)
@@ -77,6 +75,12 @@ Boolean KeepObjectLegal (void)
 			thisHouse.initial.v = kTileHigh - kGliderHigh;
 		return (true);
 	}
+	else if (objActive < 0 || objActive >= kMaxRoomObs)
+	{
+		return (true);
+	}
+
+	theObject = &thisRoom->objects[objActive];
 
 	QSetRect(&roomRect, 0, 0, kRoomWide, kTileHigh);
 
