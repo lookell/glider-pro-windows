@@ -135,145 +135,137 @@ void UpdateLinkControl (void)
 
 	linkControl = GetDlgItem(linkWindow, kLinkButton);
 
+	if ((objActive == kNoObjectSelected) ||
+		(objActive == kInitialGliderSelected) ||
+		(objActive == kLeftGliderSelected) ||
+		(objActive == kRightGliderSelected))
+	{
+		EnableWindow(linkControl, FALSE);
+		return;
+	}
+	if (objActive < 0 || objActive >= kMaxRoomObs)
+	{
+		EnableWindow(linkControl, FALSE);
+		return;
+	}
+
 	switch (linkType)
 	{
 	case kSwitchLinkOnly:
-		if (objActive == kNoObjectSelected)
+		switch (thisRoom->objects[objActive].what)
 		{
-			EnableWindow(linkControl, FALSE);
-		}
-		else
-		{
-			switch (thisRoom->objects[objActive].what)
-			{
-			case kFloorVent:
-			case kCeilingVent:
-			case kFloorBlower:
-			case kCeilingBlower:
-			case kSewerGrate:
-			case kLeftFan:
-			case kRightFan:
-			case kInvisBlower:
-			case kGrecoVent:
-			case kSewerBlower:
-			case kLiftArea:
-			case kRedClock:
-			case kBlueClock:
-			case kYellowClock:
-			case kCuckoo:
-			case kPaper:
-			case kBattery:
-			case kBands:
-			case kFoil:
-			case kInvisBonus:
-			case kHelium:
-			case kDeluxeTrans:
-			case kCeilingLight:
-			case kLightBulb:
-			case kTableLamp:
-			case kHipLamp:
-			case kDecoLamp:
-			case kFlourescent:
-			case kTrackLight:
-			case kInvisLight:
-			case kShredder:
-			case kToaster:
-			case kMacPlus:
-			case kTV:
-			case kCoffee:
-			case kOutlet:
-			case kVCR:
-			case kStereo:
-			case kMicrowave:
-			case kBalloon:
-			case kCopterLf:
-			case kCopterRt:
-			case kDartLf:
-			case kDartRt:
-			case kBall:
-			case kDrip:
-			case kFish:
-				EnableWindow(linkControl, TRUE);
-				break;
+		case kFloorVent:
+		case kCeilingVent:
+		case kFloorBlower:
+		case kCeilingBlower:
+		case kSewerGrate:
+		case kLeftFan:
+		case kRightFan:
+		case kInvisBlower:
+		case kGrecoVent:
+		case kSewerBlower:
+		case kLiftArea:
+		case kRedClock:
+		case kBlueClock:
+		case kYellowClock:
+		case kCuckoo:
+		case kPaper:
+		case kBattery:
+		case kBands:
+		case kFoil:
+		case kInvisBonus:
+		case kHelium:
+		case kDeluxeTrans:
+		case kCeilingLight:
+		case kLightBulb:
+		case kTableLamp:
+		case kHipLamp:
+		case kDecoLamp:
+		case kFlourescent:
+		case kTrackLight:
+		case kInvisLight:
+		case kShredder:
+		case kToaster:
+		case kMacPlus:
+		case kTV:
+		case kCoffee:
+		case kOutlet:
+		case kVCR:
+		case kStereo:
+		case kMicrowave:
+		case kBalloon:
+		case kCopterLf:
+		case kCopterRt:
+		case kDartLf:
+		case kDartRt:
+		case kBall:
+		case kDrip:
+		case kFish:
+			EnableWindow(linkControl, TRUE);
+			break;
 
-			default:
-				EnableWindow(linkControl, FALSE);
-				break;
-			}
+		default:
+			EnableWindow(linkControl, FALSE);
+			break;
 		}
 		break;
 
 	case kTriggerLinkOnly:
-		if (objActive == kNoObjectSelected)
+		switch (thisRoom->objects[objActive].what)
 		{
+		case kGreaseRt:
+		case kGreaseLf:
+		case kToaster:
+		case kGuitar:
+		case kCoffee:
+		case kOutlet:
+		case kBalloon:
+		case kCopterLf:
+		case kCopterRt:
+		case kDartLf:
+		case kDartRt:
+		case kDrip:
+		case kFish:
+			EnableWindow(linkControl, TRUE);
+			break;
+
+		case kLightSwitch:
+		case kMachineSwitch:
+		case kThermostat:
+		case kPowerSwitch:
+		case kKnifeSwitch:
+		case kInvisSwitch:
+			EnableWindow(linkControl, (linkRoom == thisRoomNumber));
+			break;
+
+		default:
 			EnableWindow(linkControl, FALSE);
-		}
-		else
-		{
-			switch (thisRoom->objects[objActive].what)
-			{
-			case kGreaseRt:
-			case kGreaseLf:
-			case kToaster:
-			case kGuitar:
-			case kCoffee:
-			case kOutlet:
-			case kBalloon:
-			case kCopterLf:
-			case kCopterRt:
-			case kDartLf:
-			case kDartRt:
-			case kDrip:
-			case kFish:
-				EnableWindow(linkControl, TRUE);
-				break;
-
-			case kLightSwitch:
-			case kMachineSwitch:
-			case kThermostat:
-			case kPowerSwitch:
-			case kKnifeSwitch:
-			case kInvisSwitch:
-				if (linkRoom == thisRoomNumber)
-					EnableWindow(linkControl, TRUE);
-				break;
-
-			default:
-				EnableWindow(linkControl, FALSE);
-				break;
-			}
+			break;
 		}
 		break;
 
 	case kTransportLinkOnly:
-		if (objActive == kNoObjectSelected)
+		switch (thisRoom->objects[objActive].what)
 		{
-			EnableWindow(linkControl, FALSE);
-		}
-		else
-		{
-			switch (thisRoom->objects[objActive].what)
-			{
-			case kMailboxLf:
-			case kMailboxRt:
-			case kCeilingTrans:
-			case kInvisTrans:
-			case kDeluxeTrans:
-			case kInvisLight:
-			case kOzma:
-			case kMirror:
-			case kFireplace:
-			case kWallWindow:
-			case kCalendar:
-			case kBulletin:
-			case kCloud:
-				EnableWindow(linkControl, TRUE);
-				break;
+		case kMailboxLf:
+		case kMailboxRt:
+		case kCeilingTrans:
+		case kInvisTrans:
+		case kDeluxeTrans:
+		case kInvisLight:
+		case kOzma:
+		case kMirror:
+		case kFireplace:
+		case kWallWindow:
+		case kCalendar:
+		case kBulletin:
+		case kCloud:
+			EnableWindow(linkControl, TRUE);
+			break;
 
-			default:
-				EnableWindow(linkControl, FALSE);
-				break;
-			}
+		default:
+			EnableWindow(linkControl, FALSE);
+			break;
 		}
 		break;
 	}
