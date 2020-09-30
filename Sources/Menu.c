@@ -429,7 +429,10 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 			if (fileDirty)
 				SortHouseObjects();
 			if (!QuerySaveChanges(hwnd))
+			{
+				InitCursor();
 				break;
+			}
 			CloseMapWindow();
 			CloseToolsWindow();
 			CloseCoordWindow();
