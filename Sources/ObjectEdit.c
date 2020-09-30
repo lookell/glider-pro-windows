@@ -139,6 +139,11 @@ void DragHandle (Point where)
 	SInt16		hDelta, vDelta;
 	Boolean		whoCares;
 
+	if (objActive < 0 || objActive >= kMaxRoomObs)
+	{
+		return;
+	}
+
 	switch (thisRoom->objects[objActive].what)
 	{
 		case kFloorVent:

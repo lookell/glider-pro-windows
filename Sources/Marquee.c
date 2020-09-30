@@ -661,7 +661,7 @@ Boolean MarqueeHasHandles (SInt16 *direction, SInt16 *dist)
 
 Boolean PtInMarqueeHandle (Point where)
 {
-	return (QPtInRect(where, &theMarquee.handle));
+	return theMarquee.handled && QPtInRect(where, &theMarquee.handle);
 }
 
 //--------------------------------------------------------------  DrawGliderMarquee
