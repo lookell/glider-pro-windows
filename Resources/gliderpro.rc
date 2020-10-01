@@ -626,7 +626,7 @@ kLockHouseIcon          ICON    "Icons\\LockHouse.ico"
 kNoPICTFoundIcon        ICON    "Icons\\NoPICTFound.ico"
 kSaveGameIcon           ICON    "Icons\\SaveGame.ico"
 kNoHighScoreIcon        ICON    "Icons\\NoHighScore.ico"
-kSelectionTool          ICON    "Icons\\SelectionTool.ico"
+kSelectToolIcon         ICON    "Icons\\SelectTool.ico"
 
 //kHandCursorID           CURSOR  "Cursors\\Hand.cur"
 //kVertCursorID           CURSOR  "Cursors\\Vert.cur"

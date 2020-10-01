@@ -182,7 +182,7 @@
 #define kNoPICTFoundIcon        1071
 #define kSaveGameIcon           1072
 #define kNoHighScoreIcon        1073
-#define kSelectionTool          2000
+#define kSelectToolIcon         2000
 
 #define kHandCursorID           128
 #define kVertCursorID           129

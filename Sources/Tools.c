@@ -158,7 +158,7 @@ void UpdateToolTiles (void)
 	if (buttonBitmap != NULL)
 	{
 		prevBitmap = (HBITMAP)SelectObject(hdc, buttonBitmap);
-		DrawCIcon(hdc, kSelectionTool, -3, -3);
+		DrawCIcon(hdc, kSelectToolIcon, -3, -3);
 		SelectObject(hdc, prevBitmap);
 
 		prevButtonBitmap = (HBITMAP)SendDlgItemMessage(toolsWindow,
