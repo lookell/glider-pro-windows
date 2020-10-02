@@ -375,55 +375,6 @@ void ReleaseMainWindowDC (HDC hdc)
 	}
 }
 
-//--------------------------------------------------------------  MapViewportRectToMain
-
-void MapViewportRectToMain (Rect *theRect)
-{
-	if (theMode == kPlayMode)
-	{
-		VOffsetRect(theRect, kScoreboardTall);
-	}
-	else
-	{
-		; // do nothing
-	}
-}	
-
-//--------------------------------------------------------------  MapMainRectToViewport
-
-void MapMainRectToViewport (Rect *theRect)
-{
-	if (theMode == kPlayMode)
-	{
-		VOffsetRect(theRect, -kScoreboardTall);
-	}
-	else
-	{
-		; // do nothing
-	}
-}
-
-//--------------------------------------------------------------  InvalViewportRect
-
-void InvalViewportRect (const Rect *theRect)
-{
-	Rect dirtyRect;
-	RECT tempRect;
-
-	if (mainWindow == NULL)
-	{
-		return;
-	}
-
-	dirtyRect = *theRect;
-	MapViewportRectToMain(&dirtyRect);
-	tempRect.left = dirtyRect.left;
-	tempRect.top = dirtyRect.top;
-	tempRect.right = dirtyRect.right;
-	tempRect.bottom = dirtyRect.bottom;
-	InvalidateRect(mainWindow, &tempRect, FALSE);
-}
-
 //--------------------------------------------------------------  ShowMenuBarOld
 // Displays the menu bar (after having been hidden).
 /*

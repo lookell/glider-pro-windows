@@ -49,7 +49,6 @@ void UpdateEditWindowTitle (void);
 HDC GetMainWindowDC (void);
 void ReleaseMainWindowDC (HDC hdc);
 #endif
-void InvalViewportRect (const Rect *theRect);
 //void ShowMenuBarOld (void);
 //void HideMenuBarOld (void);
 void WashColorIn (void);
