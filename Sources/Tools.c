@@ -20,6 +20,7 @@
 #include "StringUtils.h"
 #include "Utilities.h"
 
+#include <commctrl.h>
 #include <strsafe.h>
 
 
@@ -63,6 +64,7 @@
 
 void CreateToolsOffscreen (void);
 void KillToolsOffscreen (void);
+void GetToolName (PWSTR buffer, size_t length, SInt16 selected, SInt16 mode);
 void UpdateToolName (void);
 void UpdateToolTiles (void);
 INT_PTR CALLBACK ToolsWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -71,6 +73,7 @@ void Tools_OnDestroy (HWND hwnd);
 void Tools_OnMove (HWND hwnd);
 void Tools_OnToolSelChange (HWND hwnd);
 void Tools_OnButtonClick (HWND hwnd, WORD buttonID);
+void UpdateToolTips (HWND hwnd);
 void SwitchToolModes (SInt16 newMode);
 
 
@@ -85,6 +88,7 @@ static HDC toolSrcMap = NULL;
 static SInt16 firstTool;
 static SInt16 lastTool;
 static SInt16 objectBase;
+static HWND toolButtonTooltip;
 
 
 //==============================================================  Functions
@@ -118,6 +122,20 @@ void KillToolsOffscreen (void)
 }
 #endif
 
+//--------------------------------------------------------------  GetToolName
+
+void GetToolName (PWSTR buffer, size_t length, SInt16 selected, SInt16 mode)
+{
+	if (selected == kSelectTool)
+	{
+		StringCchCopy(buffer, length, L"Selection Tool");
+	}
+	else
+	{
+		GetObjectName(buffer, length, selected + ((mode - 1) * 0x0010));
+	}
+}
+
 //--------------------------------------------------------------  UpdateToolName
 
 #ifndef COMPILEDEMO
@@ -125,16 +143,7 @@ void UpdateToolName (void)
 {
 	wchar_t theString[256];
 
-	if (toolSelected == 0)
-	{
-		StringCchCopy(theString, ARRAYSIZE(theString), L"Selection Tool");
-	}
-	else
-	{
-		GetObjectName(theString, ARRAYSIZE(theString),
-			toolSelected + ((toolMode - 1) * 0x0010));
-	}
-
+	GetToolName(theString, ARRAYSIZE(theString), toolSelected, toolMode);
 	SetDlgItemText(toolsWindow, kToolNameText, theString);
 }
 #endif
@@ -298,6 +307,8 @@ INT_PTR Tools_OnInitDialog (HWND hwnd)
 {
 	HMENU rootMenu;
 	MENUITEMINFO menuItemInfo;
+	HFONT dialogFont;
+	SInt16 buttonID;
 
 	rootMenu = LoadMenu(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDM_ROOT));
 	if (rootMenu == NULL)
@@ -310,6 +321,28 @@ INT_PTR Tools_OnInitDialog (HWND hwnd)
 
 	AddMenuToComboBox(hwnd, kToolModeCombo, menuItemInfo.hSubMenu);
 	DestroyMenu(rootMenu);
+
+	toolButtonTooltip = CreateWindowEx(WS_EX_TOOLWINDOW, TOOLTIPS_CLASS, TEXT(""),
+		WS_POPUP | TTS_NOPREFIX, 0, 0, 0, 0, hwnd, NULL, HINST_THISCOMPONENT, NULL);
+	SetWindowPos(toolButtonTooltip, HWND_TOPMOST, 0, 0, 0, 0,
+		SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+	dialogFont = (HFONT)SendMessage(hwnd, WM_GETFONT, 0, 0);
+	SendMessage(toolButtonTooltip, WM_SETFONT, (WPARAM)dialogFont, FALSE);
+	for (buttonID = kToolButtonFirstID; buttonID <= kToolButtonLastID; ++buttonID)
+	{
+		TOOLINFO toolInfo;
+		WCHAR text[256] = L"";
+
+		ZeroMemory(&toolInfo, sizeof(toolInfo));
+		toolInfo.cbSize = sizeof(toolInfo);
+		toolInfo.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
+		toolInfo.hwnd = hwnd;
+		toolInfo.uId = (UINT_PTR)GetDlgItem(hwnd, buttonID);
+		SetRectEmpty(&toolInfo.rect);
+		toolInfo.hinst = NULL;
+		toolInfo.lpszText = text;
+		SendMessage(toolButtonTooltip, TTM_ADDTOOL, 0, (LPARAM)&toolInfo);
+	}
 
 	return FALSE; // don't change the focus
 }
@@ -331,6 +364,11 @@ void Tools_OnDestroy (HWND hwnd)
 		{
 			DeleteObject(buttonBitmap);
 		}
+	}
+	if (toolButtonTooltip != NULL)
+	{
+		DestroyWindow(toolButtonTooltip);
+		toolButtonTooltip = NULL;
 	}
 }
 #endif
@@ -363,7 +401,7 @@ void Tools_OnToolSelChange (HWND hwnd)
 
 //--------------------------------------------------------------  Tools_OnButtonClick
 
-#ifndef COMPiLEDEMO
+#ifndef COMPILEDEMO
 void Tools_OnButtonClick (HWND hwnd, WORD clickedID)
 {
 	SInt16 toolIcon;
@@ -398,6 +436,41 @@ void Tools_OnButtonClick (HWND hwnd, WORD clickedID)
 	SelectTool(toolIcon);
 }
 #endif
+
+//--------------------------------------------------------------  UpdateToolTips
+
+void UpdateToolTips (HWND hwnd)
+{
+	SInt16 buttonID;
+	SInt16 toolIcon;
+	WCHAR buffer[256];
+	TOOLINFO toolInfo;
+
+	for (buttonID = kToolButtonFirstID; buttonID <= kToolButtonLastID; buttonID++)
+	{
+		toolIcon = buttonID - kToolButtonBaseID;
+		if ((toolMode == kBlowerMode) && (toolIcon >= 7))
+		{
+			toolIcon++;
+		}
+		if ((toolMode == kTransportMode) && (toolIcon >= 7))
+		{
+			if (toolIcon >= 11)
+				toolIcon += 4;
+			else
+				toolIcon = ((toolIcon - 7) * 2) + 7;
+		}
+		GetToolName(buffer, ARRAYSIZE(buffer), toolIcon, toolMode);
+
+		ZeroMemory(&toolInfo, sizeof(toolInfo));
+		toolInfo.cbSize = sizeof(toolInfo);
+		toolInfo.hwnd = hwnd;
+		toolInfo.uId = (UINT_PTR)GetDlgItem(hwnd, buttonID);
+		toolInfo.hinst = NULL;
+		toolInfo.lpszText = buffer;
+		SendMessage(toolButtonTooltip, TTM_UPDATETIPTEXT, 0, (LPARAM)&toolInfo);
+	}
+}
 
 //--------------------------------------------------------------  OpenToolsWindow
 
@@ -557,6 +630,7 @@ void SwitchToolModes (SInt16 newMode)
 
 	toolMode = newMode;
 	UpdateToolTiles();
+	UpdateToolTips(toolsWindow);
 }
 #endif
 
