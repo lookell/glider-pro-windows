@@ -21,6 +21,7 @@
 #include "StringUtils.h"
 #include "WinAPI.h"
 
+#include <mmsystem.h>
 #include <shlobj.h>
 #include <strsafe.h>
 
@@ -313,14 +314,14 @@ Boolean WaitForInputEvent (UInt16 seconds)
 	if (seconds < 0)
 		return false;
 
-	startTime = GetTickCount();
+	startTime = timeGetTime();
 	timeout = 1000 * seconds;
 	waiting = true;
 	didResume = false;
 
 	while (waiting)
 	{
-		elapsedTime = GetTickCount() - startTime;
+		elapsedTime = timeGetTime() - startTime;
 		if (elapsedTime > timeout)
 			break;
 		status = MsgWaitForMultipleObjects(0, NULL, FALSE,

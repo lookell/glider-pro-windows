@@ -44,6 +44,8 @@
 #include "Utilities.h"
 #include "WinAPI.h"
 
+#include <mmsystem.h>
+
 
 void ReadInPrefs (HWND ownerWindow);
 void WriteOutPrefs (HWND ownerWindow);
@@ -337,7 +339,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		WashColorIn();
 	}
 
-	incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
+	incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 	while (!quitting)		// this is the main loop
 		HandleEvent();
 /*

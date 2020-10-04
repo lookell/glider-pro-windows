@@ -27,6 +27,8 @@
 #include "SelectHouse.h"
 #include "Tools.h"
 
+#include <mmsystem.h>
+
 
 void HandleIdleTask (void);
 
@@ -309,7 +311,7 @@ void HandleEvent (void)
 	if ((theMode == kSplashMode) && doAutoDemo && !switchedOut && (demoHouseIndex >= 0))
 	{
 		startMillis = incrementModeTime - TicksToMillis(kIdleSplashTicks);
-		nowMillis = GetTickCount();
+		nowMillis = timeGetTime();
 		if (nowMillis - startMillis >= TicksToMillis(kIdleSplashTicks))
 		{
 			DisableMenuBar();

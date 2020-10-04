@@ -40,6 +40,7 @@
 #include "StringUtils.h"
 #include "Tools.h"
 
+#include <mmsystem.h>
 #include <strsafe.h>
 
 
@@ -383,7 +384,7 @@ void DoGameMenu (HWND hwnd, SInt16 theItem)
 			DoLoadHouse(hwnd);
 			OpenCloseEditWindows();
 			UpdateMenus(false);
-			incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
+			incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 			if ((theMode == kSplashMode) || (theMode == kPlayMode))
 			{
 				Rect updateRect;
@@ -442,7 +443,7 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 			CloseMainWindow();
 			theMode = kSplashMode;
 			OpenMainWindow();
-			incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
+			incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 		}
 		else if (theMode == kSplashMode)	// switching to edit mode
 		{
@@ -461,12 +462,12 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 		DisableMenuBar();
 		DoHighScores();
 		EnableMenuBar();
-		incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
+		incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 		break;
 
 		case iPrefs:
 		DoSettingsMain(hwnd);
-		incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
+		incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 		break;
 
 		case iHelp:

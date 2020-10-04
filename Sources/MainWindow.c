@@ -38,6 +38,7 @@
 #include "Transitions.h"
 #include "Utilities.h"
 
+#include <mmsystem.h>
 #include <strsafe.h>
 
 
@@ -47,8 +48,6 @@ void AdjustMainWindowDC (HDC hdc);
 void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick);
 void SetPaletteToGrays (RGBQUAD *colors, UINT numColors, int saturation,
 	int maxSaturation);
-void MapViewportRectToMain (Rect *theRect);
-void MapMainRectToViewport (Rect *theRect);
 void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate);
 
 
@@ -743,7 +742,7 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
 					failedMusic = true;
 				}
 			}
-			incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
+			incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 
 #ifndef COMPILEDEMO
 //			if (theMode == kEditMode)

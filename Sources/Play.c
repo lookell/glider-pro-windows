@@ -303,7 +303,7 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 	}
 	WaitCommandQReleased();
 	demoGoing = false;
-	incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
+	incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 }
 
 //--------------------------------------------------------------  DoDemoGame
@@ -328,7 +328,7 @@ void DoDemoGame (HWND ownerWindow)
 	PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
 	if (OpenHouse(ownerWindow))
 		whoCares = ReadHouse(ownerWindow);
-	incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
+	incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 }
 
 //--------------------------------------------------------------  InitGlider

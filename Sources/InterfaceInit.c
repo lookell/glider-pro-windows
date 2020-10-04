@@ -36,6 +36,8 @@
 
 #include <stdlib.h>
 
+#include <mmsystem.h>
+
 
 static HMENU DetachPopupMenu (HMENU rootMenu, UINT id, LPWSTR *title);
 static HCURSOR LoadSystemCursor (DWORD id);
@@ -222,7 +224,7 @@ void VariableInit (void)
 	lastBackground = kBaseBackgroundID;
 	wasFlower = RandomInt(kNumFlowers);
 	lastHighScore = -1;
-	incrementModeTime = GetTickCount() + TicksToMillis(kIdleSplashTicks);
+	incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 	willMaxFiles = maxFiles;
 
 	fadeInSequence[0] = 4;	// 4
