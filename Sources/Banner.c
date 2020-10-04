@@ -100,7 +100,6 @@ SInt16 CountStarsInHouse (void)
 }
 
 //--------------------------------------------------------------  DrawBannerMessage
-
 // This function prints the author's message acorss the notebook paper banner.
 
 void DrawBannerMessage (Point topLeft)

@@ -322,7 +322,6 @@ void HandleEvent (void)
 }
 
 //--------------------------------------------------------------  IgnoreThisClick
-
 // An inelegant kludge designed to temporarily prevent an unwanted…
 // double-click to be registered.
 

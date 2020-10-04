@@ -28,7 +28,6 @@ Boolean DoWeHaveQuickTime (void)
 }
 
 //--------------------------------------------------------------  WhatsOurDepth
-
 // Determines the pixel bit depth for current device (monitor).
 
 SInt16 WhatsOurDepth (void)
@@ -39,7 +38,6 @@ SInt16 WhatsOurDepth (void)
 }
 
 //--------------------------------------------------------------  GetDeviceRect
-
 // Returns the bounding rectangle for the current device (monitor).
 
 void GetDeviceRect (Rect *theRect)
@@ -51,7 +49,6 @@ void GetDeviceRect (Rect *theRect)
 }
 
 //--------------------------------------------------------------  CheckOurEnvirons
-
 // Calls all the above functions in order to fill out a sort of "spec sheet"…
 // for the current Mac.
 

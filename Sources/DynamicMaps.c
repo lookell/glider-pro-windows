@@ -132,7 +132,6 @@ SInt16 ReBackUpSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 }
 
 //--------------------------------------------------------------  RestoreFromSavedMap
-
 // This copies the saved background swatch to the screen - effectively…
 // covering up or "erasing" the object.
 
@@ -169,7 +168,6 @@ void RestoreFromSavedMap (SInt16 where, SInt16 who, Boolean doSparkle)
 }
 
 //--------------------------------------------------------------  AddSparkle
-
 // This adds a "sparkle" object to the fixed array of sparkles.
 
 void AddSparkle (const Rect *theRect)
@@ -195,7 +193,6 @@ void AddSparkle (const Rect *theRect)
 }
 
 //--------------------------------------------------------------  AddFlyingPoint
-
 // This adds a "flying point" object to the array of flying points.
 
 void AddFlyingPoint (const Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVel)
@@ -252,7 +249,6 @@ void AddFlyingPoint (const Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVe
 }
 
 //--------------------------------------------------------------  BackUpFlames
-
 // This makes copies of the area of the room behind a flame.  The flame…
 // graphic can be "copy masked" to this pixmap then and then simple…
 // CopyBits() calls will properly draw the flame on screen with the…
@@ -283,7 +279,6 @@ void BackUpFlames (const Rect *src, SInt16 index)
 }
 
 //--------------------------------------------------------------  ReBackUpFlames
-
 // Like the above function but this is called when the lighting changes…
 // in a room (lights go on or off).
 
@@ -308,7 +303,6 @@ void ReBackUpFlames (SInt16 where, SInt16 who)
 }
 
 //--------------------------------------------------------------  AddCandleFlame
-
 // This adds a candle flame to tha array of flames.
 
 void AddCandleFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
@@ -362,7 +356,6 @@ void BackUpTikiFlames (const Rect *src, SInt16 index)
 }
 
 //--------------------------------------------------------------  ReBackUpTikiFlames
-
 // This is like the function ReBackUpFlames() but customized for Tiki torches.
 
 void ReBackUpTikiFlames (SInt16 where, SInt16 who)
@@ -386,7 +379,6 @@ void ReBackUpTikiFlames (SInt16 where, SInt16 who)
 }
 
 //--------------------------------------------------------------  AddTikiFlame
-
 // This adds a tiki flame to the array of tiki flames.
 
 void AddTikiFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
@@ -415,7 +407,6 @@ void AddTikiFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 }
 
 //--------------------------------------------------------------  BackUpBBQCoals
-
 // Another one - but for BBQ coals.
 
 void BackUpBBQCoals (const Rect *src, SInt16 index)
@@ -442,7 +433,6 @@ void BackUpBBQCoals (const Rect *src, SInt16 index)
 }
 
 //--------------------------------------------------------------  ReBackUpBBQCoals
-
 // Sense a pattern here?
 
 void ReBackUpBBQCoals (SInt16 where, SInt16 who)
@@ -466,7 +456,6 @@ void ReBackUpBBQCoals (SInt16 where, SInt16 who)
 }
 
 //--------------------------------------------------------------  AddBBQCoals
-
 // Adds BBQ coals to the array of BBQ coals.
 
 void AddBBQCoals (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
@@ -520,7 +509,6 @@ void BackUpPendulum (const Rect *src, SInt16 index)
 }
 
 //--------------------------------------------------------------  ReBackUpPendulum
-
 // Backs up the pendulums in the event of lights going on or off.
 
 void ReBackUpPendulum (SInt16 where, SInt16 who)
@@ -544,7 +532,6 @@ void ReBackUpPendulum (SInt16 where, SInt16 who)
 }
 
 //--------------------------------------------------------------  AddPendulum
-
 // Adds a pendulum to the array of pendulums.
 
 void AddPendulum (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
@@ -580,7 +567,6 @@ void AddPendulum (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 }
 
 //--------------------------------------------------------------  BackUpStar
-
 // Makes a copy of background beneath a star.
 
 void BackUpStar (const Rect *src, SInt16 index)
@@ -606,7 +592,6 @@ void BackUpStar (const Rect *src, SInt16 index)
 }
 
 //--------------------------------------------------------------  ReBackUpStar
-
 // Re-backs up the stars - in the event of lighting switch.
 
 void ReBackUpStar (SInt16 where, SInt16 who)
@@ -630,7 +615,6 @@ void ReBackUpStar (SInt16 where, SInt16 who)
 }
 
 //--------------------------------------------------------------  AddStar
-
 // Adds a star to the star array.
 
 void AddStar (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
@@ -662,7 +646,6 @@ void AddStar (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 }
 
 //--------------------------------------------------------------  StopPendulum
-
 // Will set a flag to kill a pendulum.
 
 void StopPendulum (SInt16 where, SInt16 who)
@@ -677,7 +660,6 @@ void StopPendulum (SInt16 where, SInt16 who)
 }
 
 //--------------------------------------------------------------  StopStar
-
 // Will set a flag to kill a star.
 
 void StopStar (SInt16 where, SInt16 who)
@@ -692,7 +674,6 @@ void StopStar (SInt16 where, SInt16 who)
 }
 
 //--------------------------------------------------------------  AddAShreddedGlider
-
 // Adds a shredded glider.
 
 void AddAShreddedGlider (const Rect *bounds)
@@ -710,7 +691,6 @@ void AddAShreddedGlider (const Rect *bounds)
 }
 
 //--------------------------------------------------------------  RemoveShreds
-
 // Remves the shredded glider.
 
 void RemoveShreds (void)
@@ -746,7 +726,6 @@ void RemoveShreds (void)
 }
 
 //--------------------------------------------------------------  ZeroFlamesAndTheLike
-
 // Zeroes all counters that indicate the number of flames, pendulums, etc there…
 // are in a room.  Called before a room is drawn.  As the room is drawn, the…
 // above functions are called and the counters incremented as objects of the…

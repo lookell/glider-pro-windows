@@ -48,7 +48,6 @@ static SInt16 wasRoom;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  KeepObjectLegal
-
 // Does a test of the current object active for any illegal bounds…
 // or values.  It corrects the erros and returns true if any changes…
 // were made.
@@ -611,7 +610,6 @@ Boolean KeepObjectLegal (void)
 }
 
 //--------------------------------------------------------------  WrapBannerAndTrailer
-
 // Tries to wrap around the text of the banner and trailer messages.
 
 #ifndef COMPILEDEMO
@@ -622,7 +620,6 @@ void WrapBannerAndTrailer (void)
 }
 
 //--------------------------------------------------------------  ValidateNumberOfRooms
-
 // Makes sure the number of room count and actual number of rooms match.
 
 void ValidateNumberOfRooms (void)
@@ -638,7 +635,6 @@ void ValidateNumberOfRooms (void)
 }
 
 //--------------------------------------------------------------  CheckDuplicateFloorSuite
-
 // Error check, looks for rooms with the same floor suite (stacked).
 
 void CheckDuplicateFloorSuite (void)
@@ -675,7 +671,6 @@ void CheckDuplicateFloorSuite (void)
 }
 
 //--------------------------------------------------------------  CompressHouse
-
 // Removes place-holder (deleted) rooms from the middle of the file.
 
 void CompressHouse (void)
@@ -725,7 +720,6 @@ void CompressHouse (void)
 }
 
 //--------------------------------------------------------------  LopOffExtraRooms
-
 // Deletes all empty rooms hanging off the end of the house file.
 
 void LopOffExtraRooms (void)
@@ -774,7 +768,6 @@ void LopOffExtraRooms (void)
 }
 
 //--------------------------------------------------------------  ValidateRoomNumbers
-
 // Error check - ensures that the floor and suite numbers are within legal ranges.
 
 void ValidateRoomNumbers (void)
@@ -815,7 +808,6 @@ void ValidateRoomNumbers (void)
 }
 
 //--------------------------------------------------------------  CountUntitledRooms
-
 // Returns the number of rooms left "Untitled".
 
 void CountUntitledRooms (void)
@@ -835,7 +827,6 @@ void CountUntitledRooms (void)
 }
 
 //--------------------------------------------------------------  CheckRoomNameLength
-
 // Error check - ensures the length of the room name is legal.
 
 void CheckRoomNameLength (void)
@@ -857,7 +848,6 @@ void CheckRoomNameLength (void)
 }
 
 //--------------------------------------------------------------  MakeSureNumObjectsJives
-
 // Error check - ensures the actual count of objects equals number of objects.
 
 void MakeSureNumObjectsJives (void)
@@ -885,7 +875,6 @@ void MakeSureNumObjectsJives (void)
 }
 
 //--------------------------------------------------------------  KeepAllObjectsLegal
-
 // Repeatedly calls KeepObjectLegal() on ALL objects in a house.  Wow!
 
 void KeepAllObjectsLegal (void)
@@ -920,7 +909,6 @@ void KeepAllObjectsLegal (void)
 }
 
 //--------------------------------------------------------------  CheckForStaircasePairs
-
 // Ensures that for every up-stair there is a down-stair.
 
 void CheckForStaircasePairs (void)
@@ -999,7 +987,6 @@ void CheckForStaircasePairs (void)
 #endif
 
 //--------------------------------------------------------------  CheckHouseForProblems
-
 // Calls all the above functions and reports (and corrects) errors.
 
 void CheckHouseForProblems (void)

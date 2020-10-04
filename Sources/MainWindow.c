@@ -76,7 +76,6 @@ static HCURSOR mainWindowCursor;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DrawOnSplash
-
 // Draws additional text on top of splash screen.
 
 void DrawOnSplash (HDC hdc)
@@ -177,7 +176,6 @@ void AdjustMainWindowDC (HDC hdc)
 }
 
 //--------------------------------------------------------------  UpdateMainWindow
-
 // Redraws the main window (depends on mode were in - splash, editing, playing).
 
 void UpdateMainWindow (void)
@@ -281,7 +279,6 @@ void OpenMainWindow (void)
 }
 
 //--------------------------------------------------------------  CloseMainWindow
-
 // Closes the main window.
 
 void CloseMainWindow (void)
@@ -327,7 +324,6 @@ void UpdateEditWindowTitle (void)
 #endif
 
 //--------------------------------------------------------------  HandleMainClick
-
 // Handle a mouse click in the main window (relevant only when editing).
 
 void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick)
@@ -462,7 +458,6 @@ void HideMenuBarOld (void)
 }
 */
 //--------------------------------------------------------------  SetPaletteToGrays
-
 // Sets up a gray palette corresponding in luminance to the given color
 // palette. This is to facilitate the gray->color fade when the game comes up.
 // The ratio given by the 'numer' and 'denom' parameters is the satuaration

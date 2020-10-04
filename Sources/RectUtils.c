@@ -105,7 +105,6 @@ void CenterRectInRect (Rect *rectA, const Rect *rectB)
 }
 
 //--------------------------------------------------------------  HOffsetRect
-
 // Just a simple function to offset a rectangle horizontally only.
 
 void HOffsetRect (Rect *theRect, SInt16 h)
@@ -115,7 +114,6 @@ void HOffsetRect (Rect *theRect, SInt16 h)
 }
 
 //--------------------------------------------------------------  VOffsetRect
-
 // Just a simple function to offset a rectangle vertically only.
 
 void VOffsetRect (Rect *theRect, SInt16 v)
@@ -125,7 +123,6 @@ void VOffsetRect (Rect *theRect, SInt16 v)
 }
 
 //--------------------------------------------------------------  IsRectLeftOfRect
-
 // Given two rects, this function returns true if the first rectangle…
 // is to the left of the second.
 
@@ -141,7 +138,6 @@ Boolean IsRectLeftOfRect (const Rect *rect1, const Rect *rect2)
 }
 
 //--------------------------------------------------------------  QOffsetRect
-
 // This duplicates a Mac ToolBox call, but since it's local, it's faster.
 // It offsets a rectangle both vertically and horizontally.
 
@@ -154,7 +150,6 @@ void QOffsetRect (Rect *theRect, SInt16 h, SInt16 v)
 }
 
 //--------------------------------------------------------------  QSetRect
-
 // This also duplicates a ToolBox call.  It's needed often though, so…
 // any gains in speed are nice.  It sets up a rect structure.
 
@@ -221,7 +216,6 @@ Boolean ForceRectInRect (Rect *small_, const Rect *large)
 }
 
 //--------------------------------------------------------------  QUnionSimilarRect
-
 // Given 2 rects that are assumed to have the same width and height,…
 // this function returns a 3rd rect that is the union of those two.
 

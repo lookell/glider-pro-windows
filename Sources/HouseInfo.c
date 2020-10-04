@@ -41,9 +41,12 @@ void HowToZeroScores (HWND ownerWindow);
 #ifndef COMPILEDEMO
 
 //==============================================================  Functions
-//--------------------------------------------------------------  CountTotalHousePoints
 
+//
 // The following functions all handle the "House Info" dialog in the editor.
+//
+
+//--------------------------------------------------------------  CountTotalHousePoints
 
 SInt32 CountTotalHousePoints (void)
 {

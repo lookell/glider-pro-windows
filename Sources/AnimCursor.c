@@ -44,7 +44,6 @@ static acurRec animCursor = { 0 };
 
 //==============================================================  Functions
 //--------------------------------------------------------------  GetMonoCursors
-
 // Loads b&w cursors (for animated beach ball).
 
 Boolean GetMonoCursors (acurPtr ballCurs)
@@ -78,7 +77,6 @@ Boolean GetMonoCursors (acurPtr ballCurs)
 }
 
 //--------------------------------------------------------------  GetColorCursors
-
 // Loads color cursors (for animated beach ball).
 
 Boolean GetColorCursors (acurPtr ballCurs)
@@ -158,7 +156,6 @@ failed:
 }
 
 //--------------------------------------------------------------  InitAnimatedCursor
-
 // Loads and sets up animated beach ball cursor structures.
 
 void InitAnimatedCursor (WORD acurID)
@@ -180,7 +177,6 @@ void InitAnimatedCursor (WORD acurID)
 }
 
 //--------------------------------------------------------------  LoadCursors
-
 // Just calls the above function.  Other code could be added here though…
 // to add additional cursors.
 
@@ -190,7 +186,6 @@ void LoadCursors (void)
 }
 
 //--------------------------------------------------------------  DisposCursors
-
 // Disposes of all memory allocated by anaimated beach ball cursors.
 
 void DisposCursors (void)
@@ -214,7 +209,6 @@ void DisposCursors (void)
 }
 
 //--------------------------------------------------------------  InitCursor
-
 // Set the cursor to the standard arrow cursor.
 
 void InitCursor (void)
@@ -227,7 +221,6 @@ void InitCursor (void)
 }
 
 //--------------------------------------------------------------  IncrementCursor
-
 // Advances the beach ball cursor one frame.
 
 void IncrementCursor (void)
@@ -254,7 +247,6 @@ void IncrementCursor (void)
 }
 
 //--------------------------------------------------------------  SpinCursor
-
 // Advances the beach ball cursor the number of frames specified.
 
 void SpinCursor (SInt16 incrementIndex)

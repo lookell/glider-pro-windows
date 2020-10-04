@@ -60,7 +60,6 @@ UInt16 isViewportHeight;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  ReadInPrefs
-
 // Called only once when game launches - reads in the preferences saved…
 // from the last time Glider PRO was launched.  If no prefs are found,…
 // it assigns default settings.
@@ -206,7 +205,6 @@ void ReadInPrefs (HWND ownerWindow)
 }
 
 //--------------------------------------------------------------  WriteOutPrefs
-
 // Called just before Glider PRO quits.  This function writes out…
 // the user preferences to disk.
 

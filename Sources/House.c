@@ -149,7 +149,6 @@ Boolean CreateNewHouse (HWND hwndOwner)
 #endif
 
 //--------------------------------------------------------------  InitializeEmptyHouse
-
 // Initializes all the structures for an empty (new) house.
 
 #ifndef COMPILEDEMO
@@ -193,7 +192,6 @@ void InitializeEmptyHouse (void)
 #endif
 
 //--------------------------------------------------------------  RealRoomNumberCount
-
 // Returns the real number of rooms in a house (some rooms may still…
 // be place-holders - they were deleted earlier and are flagged as…
 // deleted but still occupy space in the file).
@@ -216,7 +214,6 @@ SInt16 RealRoomNumberCount (void)
 }
 
 //--------------------------------------------------------------  GetFirstRoomNumber
-
 // Returns the room number (indicee into house file) of the room where…
 // the player is to begin.
 
@@ -240,7 +237,6 @@ SInt16 GetFirstRoomNumber (void)
 }
 
 //--------------------------------------------------------------  WhereDoesGliderBegin
-
 // Returns a rectangle indicating where in the first room the player's…
 // glider is to appear.
 
@@ -260,7 +256,6 @@ void WhereDoesGliderBegin (Rect *theRect, SInt16 mode)
 }
 
 //--------------------------------------------------------------  HouseHasOriginalPicts
-
 // Returns true is the current house has custom artwork imbedded.
 
 static BOOLEAN EnumHousePicts (SInt16 resID, void *userData)
@@ -282,7 +277,6 @@ Boolean HouseHasOriginalPicts (void)
 }
 
 //--------------------------------------------------------------  CountHouseLinks
-
 // Counts up the number of linked objects in a house.
 
 SInt16 CountHouseLinks (void)
@@ -329,7 +323,6 @@ SInt16 CountHouseLinks (void)
 }
 
 //--------------------------------------------------------------  GenerateLinksList
-
 // Generates a list of all objects that have links and what rooms…
 // and objects they are linked to.  It is called in order to preserve…
 // the links if the objects or rooms in a house are to be shuffled…
@@ -400,7 +393,6 @@ void GenerateLinksList (void)
 #endif
 
 //--------------------------------------------------------------  SortRoomObjects
-
 // I'm a little fuzzy on what this does.
 
 #ifndef COMPILEDEMO
@@ -458,7 +450,6 @@ void SortRoomsObjects (SInt16 which)
 #endif
 
 //--------------------------------------------------------------  SortHouseObjects
-
 // I'm a little fuzzy on what this does exactly either.
 
 #ifndef COMPILEDEMO
@@ -514,7 +505,6 @@ void SortHouseObjects (void)
 #endif
 
 //--------------------------------------------------------------  CountRoomsVisited
-
 // Goes through and counts the number of rooms a player has been to in…
 // the current game.
 
@@ -535,7 +525,6 @@ SInt16 CountRoomsVisited (void)
 }
 
 //--------------------------------------------------------------  GenerateRetroLinks
-
 // Walk entire house looking for objects which are linked to objects…
 // in the current room.
 
@@ -693,7 +682,6 @@ INT_PTR CALLBACK GoToFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 }
 
 //--------------------------------------------------------------  DoGoToDialog
-
 // "Go To Room..." dialog.
 
 void DoGoToDialog (HWND ownerWindow)
@@ -722,7 +710,6 @@ void DoGoToDialog (HWND ownerWindow)
 }
 
 //--------------------------------------------------------------  ConvertHouseVer1To2
-
 // This function goes through an old version 1 house and converts it…
 // to version 2.
 

@@ -49,7 +49,6 @@ static SInt16 numGrease;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  HandleGrease
-
 // Goes through all grease objects currently on screen and handles…
 // them.  If they're upright, nothing happens, but if they're in…
 // the course of falling or spilling, this function will handle…
@@ -198,7 +197,6 @@ SInt16 ReBackUpGrease (SInt16 where, SInt16 who)
 }
 
 //--------------------------------------------------------------  AddGrease
-
 // Called when a new room is being set up during a game.  This adds…
 // another jar of grease to the queue of jars to be handled.
 
@@ -251,7 +249,6 @@ SInt16 AddGrease (SInt16 where, SInt16 who, SInt16 h, SInt16 v,
 }
 
 //--------------------------------------------------------------  SpillGrease
-
 // A player has knocked a jar of grease over - this function flags that.
 
 void SpillGrease (SInt16 who, SInt16 index)

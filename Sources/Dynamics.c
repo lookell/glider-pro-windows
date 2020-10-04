@@ -175,9 +175,11 @@ Boolean DidBandHitDynamic (const dynaType *theDinah)
 	return (collided);
 }
 
-//--------------------------------------------------------------  RenderToast
-
+//
 // The following handful of functions handle drawing specific "dynamic" objecsts.
+//
+
+//--------------------------------------------------------------  RenderToast
 
 void RenderToast (const dynaType *theDinah)
 {
@@ -347,10 +349,12 @@ void RenderFish (const dynaType *theDinah)
 	}
 }
 
-//--------------------------------------------------------------  HandleSparkleObject
-
-// The following handful of functions are called each game frame and handle…
+//
+// The following handful of functions are called each game frame and handle
 // the movement and state of the various types of dynamic objects.
+//
+
+//--------------------------------------------------------------  HandleSparkleObject
 
 void HandleSparkleObject (dynaType *theDinah)
 {

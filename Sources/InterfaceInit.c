@@ -45,7 +45,6 @@ static HCURSOR LoadSystemCursor (DWORD id);
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DetachPopupMenu
-
 // Given a menu containing popup menus, detach a menu and retrieve its
 // handle and title. The title string must be released with the standard
 // `free` function. If the function succeeds, the return value is the menu
@@ -85,7 +84,6 @@ static HMENU DetachPopupMenu (HMENU rootMenu, UINT id, LPWSTR *title)
 }
 
 //--------------------------------------------------------------  InitializeMenus
-
 // The menus are loaded from disk and the menu bar set up and drawn.
 
 void InitializeMenus (void)
@@ -146,7 +144,6 @@ static HCURSOR LoadSystemCursor (DWORD id)
 }
 
 //--------------------------------------------------------------  GetExtraCursors
-
 // Extra cursors (custom cursors) like the "hand" and various room…
 // editing cursors are loaded up.
 
@@ -180,7 +177,6 @@ void GetExtraCursors (void)
 }
 
 //--------------------------------------------------------------  VariableInit
-
 // All the simple interface variables are intialized here - Booleans,…
 // shorts, a few Rects, etc.
 

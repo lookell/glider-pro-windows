@@ -260,12 +260,12 @@ void DoHeliumEngaged (gliderPtr thisGlider)
 	}
 }
 
-//--------------------------------------------------------------  GetDemoInput
-
 //
 // NOTE: This function does not perfectly reproduce the input that can be
 // received in normal gameplay. It only allows for one keystroke per frame.
 //
+
+//--------------------------------------------------------------  GetDemoInput
 
 void GetDemoInput (gliderPtr thisGlider)
 {

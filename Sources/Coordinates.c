@@ -42,7 +42,6 @@ static SInt16 coordD;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  SetCoordinateHVD
-
 // Given a horizontal, vertical and distance value, this function…
 // displays these values in the Coordinates window.
 
@@ -60,7 +59,6 @@ void SetCoordinateHVD (SInt16 h, SInt16 v, SInt16 d)
 }
 
 //--------------------------------------------------------------  DeltaCoordinateD
-
 // When the user is dragging a handle (such as the height of a blower)…
 // this function can be called and passed the amount by which the user…
 // has changed the height (delta).  This function then displays it in…
@@ -75,7 +73,6 @@ void DeltaCoordinateD (SInt16 d)
 }
 
 //--------------------------------------------------------------  CoordWindowProc
-
 // Handles messages for the Coordinate window with a dialog procedure.
 
 INT_PTR CALLBACK CoordWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
@@ -110,7 +107,6 @@ INT_PTR CALLBACK CoordWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 }
 
 //--------------------------------------------------------------  UpdateCoordWindow
-
 // Completely redraws and updates the Coordinate window.
 
 void UpdateCoordWindow (void)

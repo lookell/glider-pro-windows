@@ -54,7 +54,6 @@ void PasStringCopyC (const char *s1, StringPtr p2)
 }
 
 //--------------------------------------------------------------  WhichStringFirst
-
 // This is a sorting function that handles two Pascal strings.  It…
 // will return a 1 to indicate the 1st string is "greater", a 1 to…
 // indicate the 2nd was greater and a 0 to indicate that the strings…
@@ -111,7 +110,6 @@ SInt16 WhichStringFirst (ConstStringPtr p1, ConstStringPtr p2)
 }
 
 //--------------------------------------------------------------  PasStringCopyNum
-
 // This function copies a specified number of characters from one…
 // Pascal string to another.
 
@@ -198,7 +196,6 @@ Boolean PasStringEqual (ConstStringPtr p1, ConstStringPtr p2, Boolean caseSens)
 }
 
 //--------------------------------------------------------------  GetLineOfText
-
 // This function walks through a source string and looks for an…
 // entire line of text.  A "line" of text is assumed to be bounded…
 // by carriage returns.  The index variable indicates which line…
@@ -280,7 +277,6 @@ void GetLineOfText (ConstStringPtr srcStr, SInt16 index, StringPtr textLine)
 }
 
 //--------------------------------------------------------------  WrapText
-
 // Given a string and the maximum number of characters to put on…
 // one line, this function goes through and inserts carriage returns…
 // in order to ensure that no line of text exceeds maxChars.
@@ -323,7 +319,6 @@ void WrapText (StringPtr theText, SInt16 maxChars)
 }
 
 //--------------------------------------------------------------  GetFirstWordOfString
-
 // Walks a string looking for a space (denoting first word of string).
 
 void GetFirstWordOfString (ConstStringPtr stringIn, StringPtr stringOut)
@@ -379,7 +374,6 @@ void GetLocalizedString (UInt16 index, wchar_t *pszDest, size_t cchDest)
 }
 
 //--------------------------------------------------------------  MacToWinLineEndings
-
 // This functions takes a wide string and replaces each instance of "\r" with "\r\n".
 // The new string is returned if the function succeeds, or NULL is returned if the
 // function fails (e.g., memory could not be allocated). The returned pointer must
@@ -425,7 +419,6 @@ wchar_t *MacToWinLineEndings(const wchar_t *input)
 }
 
 //--------------------------------------------------------------  WinToMacLineEndings
-
 // This functions takes a wide string and replaces each instance of "\r\n" with "\r".
 // The new string is returned if the function succeeds. or NULL is returned if the
 // function fails (e.g., memory could not be allocated for the new string). The
