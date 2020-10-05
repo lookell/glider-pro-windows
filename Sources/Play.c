@@ -177,10 +177,7 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 #endif
 
 	Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-	if (quickerTransitions)
-		DissBitsChunky(&workSrcRect);
-	else
-		DissBits(&workSrcRect);
+	DissolveScreenOn(&workSrcRect);
 	SetMenu(mainWindow, NULL);
 	UpdateWindow(mainWindow);
 
@@ -188,10 +185,7 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 
 	DrawLocale();
 	RefreshScoreboard(kNormalTitleMode);
-	if (quickerTransitions)
-		DissBitsChunky(&justRoomsRect);
-	else
-		DissBits(&justRoomsRect);
+	DissolveScreenOn(&justRoomsRect);
 	if (mode == kNewGameMode)
 	{
 		BringUpBanner();
@@ -780,9 +774,6 @@ void RestoreEntireGameScreen (void)
 
 	DrawLocale();
 	RefreshScoreboard(kNormalTitleMode);
-	if (quickerTransitions)
-		DissBitsChunky(&justRoomsRect);
-	else
-		DissBits(&justRoomsRect);
+	DissolveScreenOn(&justRoomsRect);
 }
 

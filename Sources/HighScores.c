@@ -17,7 +17,6 @@
 #include "House.h"
 #include "HouseIO.h"
 #include "Macintosh.h"
-#include "Main.h"
 #include "MainWindow.h"
 #include "Menu.h"
 #include "Player.h"
@@ -66,17 +65,11 @@ void DoHighScores (void)
 	QSetRect(&tempRect, 0, 0, 640, 460);
 	QOffsetRect(&tempRect, splashOriginH, splashOriginV);
 	LoadScaledGraphic(workSrcMap, kStarPictID, &tempRect);
-	if (quickerTransitions)
-		DissBitsChunky(&workSrcRect);
-	else
-		DissBits(&workSrcRect);
+	DissolveScreenOn(&workSrcRect);
 	SpinCursor(3);
 	DrawHighScores();
 	SpinCursor(3);
-	if (quickerTransitions)
-		DissBitsChunky(&workSrcRect);
-	else
-		DissBits(&workSrcRect);
+	DissolveScreenOn(&workSrcRect);
 	InitCursor();
 	DelayTicks(60);
 	WaitForInputEvent(30);

@@ -13,7 +13,6 @@
 #include "Environ.h"
 #include "House.h"
 #include "Macintosh.h"
-#include "Main.h"
 #include "MainWindow.h"
 #include "Play.h"
 #include "RectUtils.h"
@@ -161,10 +160,7 @@ void BringUpBanner (void)
 
 	DrawBanner(&topLeft);
 	DrawBannerMessage(topLeft);
-	if (quickerTransitions)
-		DissBitsChunky(&justRoomsRect);		// was workSrcRect
-	else
-		DissBits(&justRoomsRect);
+	DissolveScreenOn(&justRoomsRect);  // was workSrcRect
 	QSetRect(&wholePage, 0, 0, 330, 220);
 	QOffsetRect(&wholePage, topLeft.h, topLeft.v);
 
@@ -176,10 +172,7 @@ void BringUpBanner (void)
 	else
 		WaitForInputEvent(15);
 
-	if (quickerTransitions)
-		DissBitsChunky(&justRoomsRect);
-	else
-		DissBits(&justRoomsRect);
+	DissolveScreenOn(&justRoomsRect);
 }
 
 //--------------------------------------------------------------  DisplayStarsRemaining

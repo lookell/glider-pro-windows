@@ -20,7 +20,6 @@
 #include "HouseIO.h"
 #include "Link.h"
 #include "Macintosh.h"
-#include "Main.h"
 #include "Map.h"
 #include "Marquee.h"
 #include "Menu.h"
@@ -128,10 +127,7 @@ void RedrawSplashScreen (void)
 	QOffsetRect(&tempRect, splashOriginH, splashOriginV);
 	LoadScaledGraphic(workSrcMap, kSplash8BitPICT, &tempRect);
 	DrawOnSplash(workSrcMap);
-	if (quickerTransitions)
-		DissBitsChunky(&workSrcRect);
-	else
-		DissBits(&workSrcRect);
+	DissolveScreenOn(&workSrcRect);
 	CopyRectMainToWork(&workSrcRect);
 }
 

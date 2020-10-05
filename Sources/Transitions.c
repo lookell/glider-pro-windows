@@ -11,10 +11,15 @@
 
 #include "GliderDefines.h"
 #include "Macintosh.h"
+#include "Main.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
 #include "Utilities.h"
 #include "WinAPI.h"
+
+
+void DissBits (const Rect *theRect);
+void DissBitsChunky (const Rect *theRect);
 
 
 //==============================================================  Functions
@@ -93,6 +98,20 @@ void DumpScreenOn (const Rect *theRect)
 	Mac_CopyBits(workSrcMap, mainWindowDC,
 			theRect, theRect, srcCopy, nil);
 	ReleaseMainWindowDC(mainWindowDC);
+}
+
+//--------------------------------------------------------------  DissolveScreenOn
+
+void DissolveScreenOn (const Rect *theRect)
+{
+	if (quickerTransitions)
+	{
+		DissBitsChunky(theRect);
+	}
+	else
+	{
+		DissBits(theRect);
+	}
 }
 
 // The functions DissBits and DissBitsChunky were originally missing,
