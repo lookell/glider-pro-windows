@@ -56,77 +56,76 @@ static SInt16 numGrease;
 
 void HandleGrease (void)
 {
-	Rect		src;
-	SInt16		i;
-
-	if (numGrease == 0)
-		return;
+	Rect src;
+	SInt16 i;
+	greaseType *thisGrease;
 
 	for (i = 0; i < numGrease; i++)
 	{
-		if (grease[i].mode == kGreaseFalling)
+		thisGrease = &grease[i];
+		if (thisGrease->mode == kGreaseFalling)
 		{
-			grease[i].frame++;
-			if (grease[i].frame >= 3)		// grease completely tipped
+			thisGrease->frame++;
+			if (thisGrease->frame >= 3)  // grease completely tipped
 			{
-				grease[i].frame = 3;
-				grease[i].mode = kGreaseSpreading;
-				hotSpots[grease[i].hotNum].action = kSlideIt;
-				hotSpots[grease[i].hotNum].isOn = true;
-				if (grease[i].isRight)
+				thisGrease->frame = 3;
+				thisGrease->mode = kGreaseSpreading;
+				hotSpots[thisGrease->hotNum].action = kSlideIt;
+				hotSpots[thisGrease->hotNum].isOn = true;
+				if (thisGrease->isRight)
 					QSetRect(&src, 0, -2, 2, 0);
 				else
 					QSetRect(&src, -2, -2, 0, 0);
 				QOffsetRect(&src, -playOriginH, -playOriginV);
-				QOffsetRect(&src, grease[i].start, grease[i].dest.bottom);
-				hotSpots[grease[i].hotNum].bounds = src;
+				QOffsetRect(&src, thisGrease->start, thisGrease->dest.bottom);
+				hotSpots[thisGrease->hotNum].bounds = src;
 			}
 
 			QSetRect(&src, 0, 0, 32, 27);
-			QOffsetRect(&src, 0, grease[i].frame * 27);
-			Mac_CopyBits(savedMaps[grease[i].mapNum].map, workSrcMap,
-					&src, &grease[i].dest,
+			QOffsetRect(&src, 0, thisGrease->frame * 27);
+			Mac_CopyBits(savedMaps[thisGrease->mapNum].map, workSrcMap,
+					&src, &thisGrease->dest,
 					srcCopy, nil);
-			Mac_CopyBits(savedMaps[grease[i].mapNum].map, backSrcMap,
-					&src, &grease[i].dest,
+			Mac_CopyBits(savedMaps[thisGrease->mapNum].map, backSrcMap,
+					&src, &thisGrease->dest,
 					srcCopy, nil);
 
-			AddRectToWorkRects(&grease[i].dest);
-			if (grease[i].isRight)
-				QOffsetRect(&grease[i].dest, 2, 0);
+			AddRectToWorkRects(&thisGrease->dest);
+			if (thisGrease->isRight)
+				QOffsetRect(&thisGrease->dest, 2, 0);
 			else
-				QOffsetRect(&grease[i].dest, -2, 0);
+				QOffsetRect(&thisGrease->dest, -2, 0);
 		}
-		else if (grease[i].mode == kGreaseSpreading)
+		else if (thisGrease->mode == kGreaseSpreading)
 		{
-			if (grease[i].isRight)
+			if (thisGrease->isRight)
 			{
 				QSetRect(&src, 0, -2, 2, 0);
-				QOffsetRect(&src, grease[i].start, grease[i].dest.bottom);
-				grease[i].start += 2;
-				hotSpots[grease[i].hotNum].bounds.right += 2;
+				QOffsetRect(&src, thisGrease->start, thisGrease->dest.bottom);
+				thisGrease->start += 2;
+				hotSpots[thisGrease->hotNum].bounds.right += 2;
 			}
 			else
 			{
 				QSetRect(&src, -2, -2, 0, 0);
-				QOffsetRect(&src, grease[i].start, grease[i].dest.bottom);
-				grease[i].start -= 2;
-				hotSpots[grease[i].hotNum].bounds.left -= 2;
+				QOffsetRect(&src, thisGrease->start, thisGrease->dest.bottom);
+				thisGrease->start -= 2;
+				hotSpots[thisGrease->hotNum].bounds.left -= 2;
 			}
 
 			Mac_PaintRect(backSrcMap, &src, (HBRUSH)GetStockObject(BLACK_BRUSH));
 			Mac_PaintRect(workSrcMap, &src, (HBRUSH)GetStockObject(BLACK_BRUSH));
 			AddRectToWorkRects(&src);
 
-			if (grease[i].isRight)
+			if (thisGrease->isRight)
 			{
-				if (grease[i].start >= grease[i].stop)
-					grease[i].mode = kGreaseSpiltIdle;
+				if (thisGrease->start >= thisGrease->stop)
+					thisGrease->mode = kGreaseSpiltIdle;
 			}
 			else
 			{
-				if (grease[i].start <= grease[i].stop)
-					grease[i].mode = kGreaseSpiltIdle;
+				if (thisGrease->start <= thisGrease->stop)
+					thisGrease->mode = kGreaseSpiltIdle;
 			}
 		}
 	}
@@ -177,17 +176,19 @@ void BackupGrease (Rect *src, SInt16 index, Boolean isRight)
 
 SInt16 ReBackUpGrease (SInt16 where, SInt16 who)
 {
-	Rect		src;
-	SInt16		i;
+	Rect src;
+	SInt16 i;
+	const greaseType *thisGrease;
 
 	for (i = 0; i < numGrease; i++)
 	{
-		if ((grease[i].where == where) && (grease[i].who == who))
+		thisGrease = &grease[i];
+		if ((thisGrease->where == where) && (thisGrease->who == who))
 		{
-			if ((grease[i].mode == kGreaseIdle) || (grease[i].mode == kGreaseFalling))
+			if ((thisGrease->mode == kGreaseIdle) || (thisGrease->mode == kGreaseFalling))
 			{
-				src = grease[i].dest;
-				BackupGrease(&src, grease[i].mapNum, grease[i].isRight);
+				src = thisGrease->dest;
+				BackupGrease(&src, thisGrease->mapNum, thisGrease->isRight);
 			}
 			return (i);
 		}
@@ -203,8 +204,10 @@ SInt16 ReBackUpGrease (SInt16 where, SInt16 who)
 SInt16 AddGrease (SInt16 where, SInt16 who, SInt16 h, SInt16 v,
 		SInt16 distance, Boolean isRight)
 {
-	Rect		src, bounds;
-	SInt16		savedNum;
+	Rect src;
+	Rect bounds;
+	SInt16 savedNum;
+	greaseType *thisGrease;
 
 	if (numGrease >= kMaxGrease)
 		return (-1);
@@ -216,29 +219,30 @@ SInt16 AddGrease (SInt16 where, SInt16 who, SInt16 h, SInt16 v,
 	savedNum = BackUpToSavedMap(&bounds, where, who);
 	if (savedNum != -1)
 	{
-		BackupGrease (&src, savedNum, isRight);
+		thisGrease = &grease[numGrease];
+		BackupGrease(&src, savedNum, isRight);
 		if (isRight)
 			QOffsetRect(&src, -8, 0);
 		else
 			QOffsetRect(&src, 8, 0);
-		grease[numGrease].who = who;
-		grease[numGrease].where = where;
-		grease[numGrease].dest = src;
-		grease[numGrease].mapNum = savedNum;
-		grease[numGrease].mode = kGreaseIdle;
-		grease[numGrease].frame = -1;
-		grease[numGrease].hotNum = -1;
+		thisGrease->who = who;
+		thisGrease->where = where;
+		thisGrease->dest = src;
+		thisGrease->mapNum = savedNum;
+		thisGrease->mode = kGreaseIdle;
+		thisGrease->frame = -1;
+		thisGrease->hotNum = -1;
 		if (isRight)
 		{
-			grease[numGrease].isRight = true;
-			grease[numGrease].start = src.right + 4;
-			grease[numGrease].stop = src.right + distance;
+			thisGrease->isRight = true;
+			thisGrease->start = src.right + 4;
+			thisGrease->stop = src.right + distance;
 		}
 		else
 		{
-			grease[numGrease].isRight = false;
-			grease[numGrease].start = src.left - 4;
-			grease[numGrease].stop = src.left - distance;
+			thisGrease->isRight = false;
+			thisGrease->start = src.left - 4;
+			thisGrease->stop = src.left - distance;
 		}
 		numGrease++;
 
@@ -253,15 +257,18 @@ SInt16 AddGrease (SInt16 where, SInt16 who, SInt16 h, SInt16 v,
 
 void SpillGrease (SInt16 who, SInt16 index)
 {
+	greaseType *thisGrease;
+
 	if (who < 0 || who >= numGrease)
 		return;
 	if (index < 0 || index >= nHotSpots)
 		return;
 
-	if (grease[who].mode == kGreaseIdle)
+	thisGrease = &grease[who];
+	if (thisGrease->mode == kGreaseIdle)
 	{
-		grease[who].mode = kGreaseFalling;
-		grease[who].hotNum = index;
+		thisGrease->mode = kGreaseFalling;
+		thisGrease->hotNum = index;
 		PlayPrioritySound(kGreaseSpillSound, kGreaseSpillPriority);
 	}
 }
@@ -271,21 +278,20 @@ void SpillGrease (SInt16 who, SInt16 index)
 
 void RedrawAllGrease (void)
 {
-	Rect		src;
-	SInt16		i;
-
-	if (numGrease == 0)
-		return;
+	Rect src;
+	SInt16 i;
+	const greaseType *thisGrease;
 
 	for (i = 0; i < numGrease; i++)
 	{
-		if (grease[i].hotNum < 0 || grease[i].hotNum >= nHotSpots)
+		thisGrease = &grease[i];
+		if (thisGrease->hotNum < 0 || thisGrease->hotNum >= nHotSpots)
 			continue;
 
-		src = hotSpots[grease[i].hotNum].bounds;
-		if ((grease[i].where == thisRoomNumber) &&
+		src = hotSpots[thisGrease->hotNum].bounds;
+		if ((thisGrease->where == thisRoomNumber) &&
 				((src.bottom - src.top) == 2) &&
-				(grease[i].mode != kGreaseIdle))
+				(thisGrease->mode != kGreaseIdle))
 		{
 			QOffsetRect(&src, playOriginH, playOriginV);
 			Mac_PaintRect(backSrcMap, &src, (HBRUSH)GetStockObject(BLACK_BRUSH));
