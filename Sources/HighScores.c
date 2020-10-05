@@ -87,7 +87,6 @@ void DoHighScores (void)
 void DrawHighScores (void)
 {
 	HDC			tempMap, tempMask;
-	OSErr		theErr;
 	Rect		tempRect, tempRect2;
 	Str255		tempStr;
 	SInt16		scoreLeft, bannerWidth, i, dropIt;
@@ -99,10 +98,10 @@ void DrawHighScores (void)
 	dropIt = 129 + splashOriginV;
 
 	QSetRect(&tempRect, 0, 0, 332, 30);
-	theErr = CreateOffScreenGWorld(&tempMap, &tempRect, kPreferredDepth);
+	tempMap = CreateOffScreenGWorld(&tempRect, kPreferredDepth);
 	LoadGraphic(tempMap, kHighScoresPictID);
 
-	theErr = CreateOffScreenGWorld(&tempMask, &tempRect, 1);
+	tempMask = CreateOffScreenGWorld(&tempRect, 1);
 	LoadGraphic(tempMask, kHighScoresMaskID);
 
 	tempRect2 = tempRect;

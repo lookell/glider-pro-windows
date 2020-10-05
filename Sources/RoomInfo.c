@@ -385,7 +385,6 @@ void RoomInfo_InitDialog (HWND hDlg)
 	wchar_t suiteStr[16];
 	wchar_t objectsStr[16];
 	Rect tileBoxRect;
-	OSErr theErr;
 	SInt16 i;
 
 	CenterOverOwner(hDlg);
@@ -422,7 +421,7 @@ void RoomInfo_InitDialog (HWND hDlg)
 	params.arg[2] = objectsStr;
 	ParamDialogText(hDlg, &params);
 
-	theErr = CreateOffScreenGWorld(&tileSrcMap, &tileSrcRect, kPreferredDepth);
+	tileSrcMap = CreateOffScreenGWorld(&tileSrcRect, kPreferredDepth);
 	if ((tempBack > kStars) && (!PictIDExists(tempBack)))
 	{
 		BitchAboutPICTNotFound(hDlg);

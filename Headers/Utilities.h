@@ -16,7 +16,7 @@ void ToolBoxInit (void);
 SInt16 RandomInt (SInt16 range);
 __declspec(noreturn) void RedAlert (SInt16 errorNumber);
 #ifdef GP_USE_WINAPI_H
-OSErr CreateOffScreenGWorld (HDC *theGWorld, const Rect *bounds, SInt16 depth);
+HDC CreateOffScreenGWorld (const Rect *bounds, SInt16 depth);
 void DisposeGWorld (HDC theGWorld);
 HBITMAP GetPicture (SInt16 resID);
 void LoadGraphic (HDC hdc, SInt16 resID);

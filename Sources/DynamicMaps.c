@@ -81,7 +81,6 @@ void NilSavedMaps (void)
 SInt16 BackUpToSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 {
 	Rect		mapRect;
-	OSErr		theErr;
 
 	if (numSavedMaps >= kMaxSavedMaps)
 		return(-1);
@@ -89,7 +88,7 @@ SInt16 BackUpToSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 	mapRect = *theRect;
 	ZeroRectCorner(&mapRect);
 	savedMaps[numSavedMaps].dest = *theRect;
-	theErr = CreateOffScreenGWorld(&savedMaps[numSavedMaps].map, &mapRect, kPreferredDepth);
+	savedMaps[numSavedMaps].map = CreateOffScreenGWorld(&mapRect, kPreferredDepth);
 
 	Mac_CopyBits(backSrcMap, savedMaps[numSavedMaps].map,
 			theRect, &mapRect, srcCopy, NULL);

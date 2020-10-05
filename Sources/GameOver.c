@@ -277,17 +277,16 @@ void InitDiedGameOver (void)
 	#define		kPageRightOffset	128
 	#define		kPageBackUp			128
 	SInt16		i;
-	OSErr		theErr;
 
 	QSetRect(&pageSrcRect, 0, 0, 25, 32 * 8);
-	theErr = CreateOffScreenGWorld(&gameOverSrcMap, &pageSrcRect, kPreferredDepth);
+	gameOverSrcMap = CreateOffScreenGWorld(&pageSrcRect, kPreferredDepth);
 	LoadGraphic(gameOverSrcMap, kLettersPictID);
 
 	QSetRect(&pageSrcRect, 0, 0, 32, 32 * kPageFrames);
-	theErr = CreateOffScreenGWorld(&pageSrcMap, &pageSrcRect, kPreferredDepth);
+	pageSrcMap = CreateOffScreenGWorld(&pageSrcRect, kPreferredDepth);
 	LoadGraphic(pageSrcMap, kPagesPictID);
 
-	theErr = CreateOffScreenGWorld(&pageMaskMap, &pageSrcRect, 1);
+	pageMaskMap = CreateOffScreenGWorld(&pageSrcRect, 1);
 	LoadGraphic(pageMaskMap, kPagesMaskID);
 
 	for (i = 0; i < kPageFrames; i++)	// initialize src page rects

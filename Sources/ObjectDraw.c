@@ -1134,7 +1134,6 @@ void DrawMailboxLeft (const Rect *theRect, SInt16 down)
 	HDC			tempMap;
 	HDC			tempMask;
 	SInt32		darkGrayC, lightWoodC, darkWoodC;
-	OSErr		theErr;
 
 	darkGrayC = k8DkGray2Color;
 	lightWoodC = k8PissYellowColor;
@@ -1173,10 +1172,10 @@ void DrawMailboxLeft (const Rect *theRect, SInt16 down)
 	}
 
 	bounds = srcRects[kMailboxLf];
-	theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
+	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 	LoadGraphic(tempMap, kMailboxLeftPictID);
 
-	theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
+	tempMask = CreateOffScreenGWorld(&bounds, 1);
 	LoadGraphic(tempMask, kMailboxLeftMaskID);
 
 	Mac_CopyMask(tempMap, tempMask, backSrcMap,
@@ -1194,7 +1193,6 @@ void DrawMailboxRight (const Rect *theRect, SInt16 down)
 	HDC			tempMap;
 	HDC			tempMask;
 	SInt32		darkGrayC, lightWoodC, darkWoodC;
-	OSErr		theErr;
 
 	darkGrayC = k8DkGray2Color;
 	lightWoodC = k8PissYellowColor;
@@ -1233,10 +1231,10 @@ void DrawMailboxRight (const Rect *theRect, SInt16 down)
 	}
 
 	bounds = srcRects[kMailboxRt];
-	theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
+	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 	LoadGraphic(tempMap, kMailboxRightPictID);
 
-	theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
+	tempMask = CreateOffScreenGWorld(&bounds, 1);
 	LoadGraphic(tempMask, kMailboxRightMaskID);
 
 	Mac_CopyMask(tempMap, tempMask, backSrcMap,
@@ -1529,15 +1527,14 @@ void DrawTV (const Rect *theRect, Boolean isOn, Boolean isLit)
 	Rect		bounds;
 	HDC			tempMap;
 	HDC			tempMask;
-	OSErr		theErr;
 
 	if (isLit)
 	{
 		bounds = srcRects[kTV];
-		theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
+		tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 		LoadGraphic(tempMap, kTVPictID);
 
-		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
+		tempMask = CreateOffScreenGWorld(&bounds, 1);
 		LoadGraphic(tempMask, kTVMaskID);
 
 		Mac_CopyMask(tempMap, tempMask, backSrcMap,
@@ -1604,15 +1601,14 @@ void DrawVCR (const Rect *theRect, Boolean isOn, Boolean isLit)
 	Rect		bounds;
 	HDC			tempMap;
 	HDC			tempMask;
-	OSErr		theErr;
 
 	if (isLit)
 	{
 		bounds = srcRects[kVCR];
-		theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
+		tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 		LoadGraphic(tempMap, kVCRPictID);
 
-		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
+		tempMask = CreateOffScreenGWorld(&bounds, 1);
 		LoadGraphic(tempMask, kVCRMaskID);
 
 		Mac_CopyMask(tempMap, tempMask, backSrcMap,
@@ -1644,15 +1640,14 @@ void DrawStereo (const Rect *theRect, Boolean isOn, Boolean isLit)
 	Rect		bounds;
 	HDC			tempMap;
 	HDC			tempMask;
-	OSErr		theErr;
 
 	if (isLit)
 	{
 		bounds = srcRects[kStereo];
-		theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth); 
+		tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth); 
 		LoadGraphic(tempMap, kStereoPictID);
 
-		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
+		tempMask = CreateOffScreenGWorld(&bounds, 1);
 		LoadGraphic(tempMask, kStereoMaskID);
 
 		Mac_CopyMask(tempMap, tempMask, backSrcMap,
@@ -1684,15 +1679,14 @@ void DrawMicrowave (const Rect *theRect, Boolean isOn, Boolean isLit)
 	Rect		bounds;
 	HDC			tempMap;
 	HDC			tempMask;
-	OSErr		theErr;
 
 	if (isLit)
 	{
 		bounds = srcRects[kMicrowave];
-		theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
+		tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 		LoadGraphic(tempMap, kMicrowavePictID);
 
-		theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
+		tempMask = CreateOffScreenGWorld(&bounds, 1);
 		LoadGraphic(tempMask, kMicrowaveMaskID);
 
 		Mac_CopyMask(tempMap, tempMask, backSrcMap,
@@ -2022,7 +2016,6 @@ void DrawPictWithMaskObject (SInt16 what, const Rect *theRect)
 	HDC			tempMap;
 	HDC			tempMask;
 	SInt16		pictID, maskID;
-	OSErr		theErr;
 
 	switch (what)
 	{
@@ -2041,10 +2034,10 @@ void DrawPictWithMaskObject (SInt16 what, const Rect *theRect)
 	}
 
 	bounds = srcRects[what];
-	theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
+	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 	LoadGraphic(tempMap, pictID);
 
-	theErr = CreateOffScreenGWorld(&tempMask, &bounds, 1);
+	tempMask = CreateOffScreenGWorld(&bounds, 1);
 	LoadGraphic(tempMask, maskID);
 
 	Mac_CopyMask(tempMap, tempMask, backSrcMap,
@@ -2061,7 +2054,6 @@ void DrawPictSansWhiteObject (SInt16 what, const Rect *theRect)
 	Rect		bounds;
 	HDC			tempMap;
 	SInt16		pictID;
-	OSErr		theErr;
 
 	switch (what)
 	{
@@ -2150,7 +2142,7 @@ void DrawPictSansWhiteObject (SInt16 what, const Rect *theRect)
 	}
 
 	bounds = srcRects[what];
-	theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
+	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 	LoadGraphic(tempMap, pictID);
 
 	Mac_CopyBits(tempMap, backSrcMap,
@@ -2165,11 +2157,10 @@ void DrawCustPictSansWhite (SInt16 pictID, const Rect *theRect)
 {
 	Rect		bounds;
 	HDC			tempMap;
-	OSErr		theErr;
 
 	bounds = *theRect;
 	ZeroRectCorner(&bounds);
-	theErr = CreateOffScreenGWorld(&tempMap, &bounds, kPreferredDepth);
+	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 	LoadGraphic(tempMap, pictID);
 
 	Mac_CopyBits(tempMap, backSrcMap,

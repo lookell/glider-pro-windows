@@ -46,7 +46,6 @@ void DrawBanner (Point *topLeft)
 	Rect		wholePage, partPage, mapBounds;
 	HDC			tempMap;
 	HDC			tempMask;
-	OSErr		theErr;
 
 	QSetRect(&wholePage, 0, 0, 330, 220);
 	mapBounds = thisMac.screen;
@@ -62,10 +61,10 @@ void DrawBanner (Point *topLeft)
 	partPage.top = partPage.bottom - 30;
 	mapBounds = partPage;
 	ZeroRectCorner(&mapBounds);
-	theErr = CreateOffScreenGWorld(&tempMap, &mapBounds, kPreferredDepth);
+	tempMap = CreateOffScreenGWorld(&mapBounds, kPreferredDepth);
 	LoadGraphic(tempMap, kBannerPageBottomPICT);
 
-	theErr = CreateOffScreenGWorld(&tempMask, &mapBounds, 1);
+	tempMask = CreateOffScreenGWorld(&mapBounds, 1);
 	LoadGraphic(tempMask, kBannerPageBottomMask);
 
 	Mac_CopyMask(tempMap, tempMask, workSrcMap,

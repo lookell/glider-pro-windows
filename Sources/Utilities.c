@@ -148,17 +148,15 @@ __declspec(noreturn) void RedAlert (SInt16 errorNumber)
 //--------------------------------------------------------------------  CreateOffScreenGWorld
 // Creates an offscreen GWorld using the depth passed in.
 
-OSErr CreateOffScreenGWorld (HDC *theGWorld, const Rect *bounds, SInt16 depth)
+HDC CreateOffScreenGWorld (const Rect *bounds, SInt16 depth)
 {
 	HDC			hdcDisplay, hdcSurface;
 	HBITMAP		hbmSurface;
 	INT			cxSurface, cySurface;
 
-	*theGWorld = NULL;
-
 	hdcDisplay = GetDC(NULL);
 	if (hdcDisplay == NULL)
-		return (-1);
+		return NULL;
 	hdcSurface = CreateCompatibleDC(hdcDisplay);
 	cxSurface = bounds->right - bounds->left;
 	cySurface = bounds->bottom - bounds->top;
@@ -173,7 +171,7 @@ OSErr CreateOffScreenGWorld (HDC *theGWorld, const Rect *bounds, SInt16 depth)
 			DeleteDC(hdcSurface);
 		if (hbmSurface)
 			DeleteObject(hbmSurface);
-		return (-1);
+		return NULL;
 	}
 	SaveDC(hdcSurface);
 	SetWindowOrgEx(hdcSurface, bounds->left, bounds->top, NULL);
@@ -184,8 +182,7 @@ OSErr CreateOffScreenGWorld (HDC *theGWorld, const Rect *bounds, SInt16 depth)
 	SetDCPenColor(hdcSurface, RGB(0x00, 0x00, 0x00));
 	SetBkColor(hdcSurface, RGB(0xFF, 0xFF, 0xFF));
 	SetTextColor(hdcSurface, RGB(0x00, 0x00, 0x00));
-	*theGWorld = hdcSurface;
-	return noErr;
+	return hdcSurface;
 }
 
 //--------------------------------------------------------------  DisposeGWorld

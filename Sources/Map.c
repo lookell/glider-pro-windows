@@ -800,12 +800,10 @@ Boolean QueryNewRoom (HWND ownerWindow)
 #ifndef COMPILEDEMO
 void CreateNailOffscreen (void)
 {
-	OSErr		theErr;
-
 	if (nailSrcMap == NULL)
 	{
 		QSetRect(&nailSrcRect, 0, 0, kMapRoomWidth, kMapRoomHeight * (kNumBackgrounds + 1));
-		theErr = CreateOffScreenGWorld(&nailSrcMap, &nailSrcRect, kPreferredDepth);
+		nailSrcMap = CreateOffScreenGWorld(&nailSrcRect, kPreferredDepth);
 		LoadGraphic(nailSrcMap, kThumbnailPictID);
 	}
 }

@@ -98,12 +98,11 @@ static HWND toolButtonTooltip;
 void CreateToolsOffscreen (void)
 {
 	Rect toolSrcRect;
-	OSErr theErr;
 
 	if (toolSrcMap == NULL)
 	{
 		QSetRect(&toolSrcRect, 0, 0, 360, 216);
-		theErr = CreateOffScreenGWorld(&toolSrcMap, &toolSrcRect, kPreferredDepth);
+		toolSrcMap = CreateOffScreenGWorld(&toolSrcRect, kPreferredDepth);
 		LoadGraphic(toolSrcMap, kToolsPictID);
 	}
 }
