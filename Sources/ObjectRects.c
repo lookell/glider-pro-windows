@@ -306,9 +306,9 @@ SInt16 CreateActiveRects (SInt16 who)
 	SInt16		hotSpotNumber, wide, tall;
 	Boolean		isOn;
 
-	// NOTE: `who` is called in the process of adding an entry to the `masterObjects`
-	// table, so checking `who >= numMasterObjects` is incorrect. Just make sure
-	// that the index isn't completely crazy.
+	// NOTE: CreateActiveRects is called in the process of adding an entry to the
+	// `masterObjects` table, so checking `who >= numMasterObjects` is incorrect.
+	// Just make sure that the index isn't completely out of bounds.
 	if (who < 0 || who >= kMaxMasterObjects)
 		return (-1);
 
