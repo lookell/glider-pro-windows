@@ -1774,7 +1774,7 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		QOffsetRect(&theDinah->dest, where->left + 10, where->top + 8);
 		theDinah->whole = theDinah->dest;
 		theDinah->hVel = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
-		position = who->data.g.height;  // reverse engineer init. vel.
+		position = who->data.h.length;  // reverse engineer init. vel.
 		velocity = 0;
 		evenFrame = true;
 		lilFrame = true;

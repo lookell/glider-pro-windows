@@ -530,7 +530,7 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		thisHouse.rooms[room].objects[object].data.c.state = newState;
 		if ((changed) && (local != -1))
 		{
-			masterObjects[local].theObject.data.a.state = false;
+			masterObjects[local].theObject.data.c.state = false;
 			if (room == thisRoomNumber)
 			{
 				thisRoom->objects[object].data.c.state = false;
@@ -1029,12 +1029,12 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 				case kInvisSwitch:
 				case kTrigger:
 				case kLgTrigger:
-				thisHouse.rooms[srcRoom].objects[srcObj].data.d.who =
+				thisHouse.rooms[srcRoom].objects[srcObj].data.e.who =
 						sorted[linksList[i].destObj];
 				break;
 
 				default:
-				thisHouse.rooms[srcRoom].objects[srcObj].data.e.who =
+				thisHouse.rooms[srcRoom].objects[srcObj].data.d.who =
 						sorted[linksList[i].destObj];
 				break;
 			}

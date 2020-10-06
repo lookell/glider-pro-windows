@@ -21,6 +21,7 @@
 #include "Map.h"
 #include "Menu.h"
 #include "ObjectEdit.h"
+#include "Objects.h"
 #include "Play.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
@@ -427,7 +428,14 @@ void SortRoomsObjects (SInt16 which)
 						linksList[destLocations[probe2]].destObj = probe;
 						room = linksList[destLocations[probe2]].srcRoom;
 						obj = linksList[destLocations[probe2]].srcObj;
-						thisHouse.rooms[room].objects[obj].data.e.who = (Byte)probe;
+						if (ObjectIsLinkTransport(&thisHouse.rooms[room].objects[obj]))
+						{
+							thisHouse.rooms[room].objects[obj].data.d.who = (Byte)probe;
+						}
+						else if (ObjectIsLinkSwitch(&thisHouse.rooms[room].objects[obj]))
+						{
+							thisHouse.rooms[room].objects[obj].data.e.who = (Byte)probe;
+						}
 					}
 					fileDirty = true;
 					looking = false;
