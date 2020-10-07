@@ -16,6 +16,16 @@
 
 #define kMaxTempManholes        8
 
+#ifdef GP_USE_WINAPI_H
+typedef struct savedType
+{
+	Rect dest;
+	HDC map;
+	SInt16 where;
+	SInt16 who;
+} savedType;
+#endif
+
 // Blowers
 extern Rect blowerSrcRect;
 #ifdef GP_USE_WINAPI_H

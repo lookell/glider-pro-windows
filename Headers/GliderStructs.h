@@ -9,9 +9,6 @@
 
 #include "GliderDefines.h"
 #include "MacTypes.h"
-#ifdef GP_USE_WINAPI_H
-#include "WinAPI.h"
-#endif
 
 typedef struct blowerType
 {
@@ -251,16 +248,6 @@ typedef struct hotObject
 	Boolean doScrutinize;
 } hotObject, *hotPtr;
 
-#ifdef GP_USE_WINAPI_H
-typedef struct savedType
-{
-	Rect dest;
-	HDC map;
-	SInt16 where;
-	SInt16 who;
-} savedType;
-#endif
-
 typedef struct sparkleType
 {
 	Rect bounds;
@@ -366,15 +353,5 @@ typedef struct retroLink
 	SInt16 room;
 	SInt16 object;
 } retroLink;
-
-#ifdef GP_USE_WINAPI_H
-typedef struct houseSpec
-{
-	wchar_t path[MAX_PATH];
-	wchar_t houseName[33];
-	Str32 name;
-	HICON hIcon;
-} houseSpec, *houseSpecPtr;
-#endif
 
 #endif

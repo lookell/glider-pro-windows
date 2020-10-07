@@ -14,6 +14,16 @@
 #endif
 
 #ifdef GP_USE_WINAPI_H
+typedef struct houseSpec
+{
+	WCHAR path[MAX_PATH];
+	WCHAR houseName[33];
+	Str32 name;
+	HICON hIcon;
+} houseSpec, *houseSpecPtr;
+#endif
+
+#ifdef GP_USE_WINAPI_H
 extern houseSpecPtr theHousesSpecs;
 #endif
 extern SInt16 housesFound;
