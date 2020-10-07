@@ -13,6 +13,9 @@
 #define RETURN_IF_FAILED(hr) \
 	do { HRESULT hr__ = (hr); if (FAILED(hr__)) { return hr__; } } while (0)
 
+#define RETURN_NULL_IF_FAILED(hr) \
+	do { HRESULT hr__ = (hr); if (FAILED(hr__)) { return NULL; } } while (0)
+
 #define FAIL_IF_TRUE(cond) \
 	do { if (cond) { return E_FAIL; } } while (0)
 
@@ -442,28 +445,40 @@ static HRESULT LoadMemoryBMPImpl(HBITMAP *phBitmap, const ByteSlice *slice, BOOL
 	return S_OK;
 }
 
-HRESULT LoadMemoryBMP(HBITMAP *phBitmap, const void *buffer, size_t length)
+HBITMAP LoadMemoryBMP(const void *buffer, size_t length)
 {
 	ByteSlice fileSlice;
+	HBITMAP hBitmap;
 
-	INVALIDARG_IF_TRUE(phBitmap == NULL);
-	INVALIDARG_IF_TRUE(buffer == NULL);
-
+	if (buffer == NULL)
+	{
+		return NULL;
+	}
 	fileSlice.buffer = (const unsigned char *)buffer;
 	fileSlice.length = length;
-	return LoadMemoryBMPImpl(phBitmap, &fileSlice, LOAD_BMP_AS_COMPATIBLE);
+	if (FAILED(LoadMemoryBMPImpl(&hBitmap, &fileSlice, LOAD_BMP_AS_COMPATIBLE)))
+	{
+		hBitmap = NULL;
+	}
+	return hBitmap;
 }
 
-HRESULT LoadMemoryBMPAsDIBSection(HBITMAP *phBitmap, const void *buffer, size_t length)
+HBITMAP LoadMemoryBMPAsDIBSection(const void *buffer, size_t length)
 {
 	ByteSlice fileSlice;
+	HBITMAP hBitmap;
 
-	INVALIDARG_IF_TRUE(phBitmap == NULL);
-	INVALIDARG_IF_TRUE(buffer == NULL);
-
+	if (buffer == NULL)
+	{
+		return NULL;
+	}
 	fileSlice.buffer = (const unsigned char *)buffer;
 	fileSlice.length = length;
-	return LoadMemoryBMPImpl(phBitmap, &fileSlice, LOAD_BMP_AS_DIBSECTION);
+	if (FAILED(LoadMemoryBMPImpl(&hBitmap, &fileSlice, LOAD_BMP_AS_DIBSECTION)))
+	{
+		hBitmap = NULL;
+	}
+	return hBitmap;
 }
 
 // To load .ICO files, the directory data and icon image data are converted
@@ -648,7 +663,7 @@ static HRESULT ConvertIconFileDirToGroupDir(
 	return S_OK;
 }
 
-HRESULT LoadMemoryICO(HICON *phIcon, const void *buffer, size_t length, int width, int height)
+HICON LoadMemoryICO(const void *buffer, size_t length, int width, int height)
 {
 	IconFileDirectory *iconFileDir;
 	GroupIconDirectory *groupIconDir;
@@ -658,17 +673,19 @@ HRESULT LoadMemoryICO(HICON *phIcon, const void *buffer, size_t length, int widt
 	WORD iconIndex;
 	DWORD imageOffset, imageLength, imageEnd;
 	PBYTE resBits;
-	DWORD lastError;
+	HICON hIcon;
 
-	INVALIDARG_IF_TRUE(phIcon == NULL);
-	INVALIDARG_IF_TRUE(buffer == NULL);
+	if (buffer == NULL)
+	{
+		return NULL;
+	}
 
 	fileSlice.buffer = (const unsigned char *)buffer;
 	fileSlice.length = length;
 
 	readerSlice = fileSlice;
-	RETURN_IF_FAILED(ReadIconFileDirectory(&readerSlice, &iconFileDir));
-	RETURN_IF_FAILED(ConvertIconFileDirToGroupDir(iconFileDir, &groupIconDir));
+	RETURN_NULL_IF_FAILED(ReadIconFileDirectory(&readerSlice, &iconFileDir));
+	RETURN_NULL_IF_FAILED(ConvertIconFileDirToGroupDir(iconFileDir, &groupIconDir));
 	// If `width` or `height` are zero here, they are interpreted as the values
 	// of the SM_CXICON and SM_CYICON system metrics instead.
 	iconID = LookupIconIdFromDirectoryEx((PBYTE)groupIconDir, TRUE, width, height, LR_DEFAULTCOLOR);
@@ -677,14 +694,14 @@ HRESULT LoadMemoryICO(HICON *phIcon, const void *buffer, size_t length, int widt
 	if (iconID <= 0)
 	{
 		free(iconFileDir);
-		return HRESULT_FROM_WIN32(GetLastError());
+		return NULL;
 	}
 	else if (iconID > iconFileDir->Count)
 	{
 		// LookupIconIdFromDirectoryEx should never return an invalid value,
 		// given valid data.
 		free(iconFileDir);
-		return E_FAIL;
+		return NULL;
 	}
 
 	iconIndex = (WORD)iconID - 1;
@@ -692,25 +709,19 @@ HRESULT LoadMemoryICO(HICON *phIcon, const void *buffer, size_t length, int widt
 	imageLength = iconFileDir->Entries[iconIndex].BytesInRes;
 	free(iconFileDir);
 	iconFileDir = NULL;
-	RETURN_IF_FAILED(DWordAdd(imageOffset, imageLength, &imageEnd));
+	RETURN_NULL_IF_FAILED(DWordAdd(imageOffset, imageLength, &imageEnd));
 	if (imageEnd > fileSlice.length)
 	{
-		return E_FAIL;
+		return NULL;
 	}
 	resBits = (PBYTE)malloc(imageLength);
 	if (resBits == NULL)
 	{
-		return E_OUTOFMEMORY;
+		return NULL;
 	}
 	memcpy(resBits, &fileSlice.buffer[imageOffset], imageLength);
-	*phIcon = CreateIconFromResourceEx(resBits, imageLength, TRUE,
+	hIcon = CreateIconFromResourceEx(resBits, imageLength, TRUE,
 		0x00030000, width, height, LR_DEFAULTCOLOR);
-	lastError = GetLastError();
 	free(resBits);
-	resBits = NULL;
-	if (*phIcon == NULL)
-	{
-		return HRESULT_FROM_WIN32(lastError);
-	}
-	return S_OK;
+	return hIcon;
 }

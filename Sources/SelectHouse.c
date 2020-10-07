@@ -346,7 +346,7 @@ void DoDirSearch (HWND ownerWindow)
 						hr = Gp_LoadHouseFile(theHousesSpecs[housesFound].path);
 						if (SUCCEEDED(hr))
 						{
-							hr = Gp_LoadHouseIcon(&theHousesSpecs[housesFound].hIcon, 0, 0);
+							theHousesSpecs[housesFound].hIcon = Gp_LoadHouseIcon(0, 0);
 							if (FAILED(hr))
 							{
 								theHousesSpecs[housesFound].hIcon = NULL;

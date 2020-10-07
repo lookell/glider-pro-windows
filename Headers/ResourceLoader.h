@@ -43,11 +43,10 @@ BOOLEAN Gp_HouseFileReadOnly (void);
 // width parameter is zero, the SM_CXICON system metric is used instead.
 // If the height parameter is zero, the SM_CYICON system metric is used
 // instead. If the house does not contain an icon of its own, NULL is
-// returned as the icon and the function returns S_OK. In this case, a
-// default icon should be used.
+// returned. In this case, a default icon should be used.
 //
 // The returned HICON should be cleaned up by calling DestroyIcon().
-HRESULT Gp_LoadHouseIcon (HICON *houseIcon, UINT width, UINT height);
+HICON Gp_LoadHouseIcon (UINT width, UINT height);
 
 // Return the uncompressed size of the house data, in bytes.
 uint64_t Gp_HouseFileDataSize (void);
@@ -72,17 +71,17 @@ BOOLEAN Gp_ImageExists (SInt16 imageID);
 
 // Load an image. The loader attempts to load from the house file first.
 // If that fails, then the loader attempts to load from the built-in
-// assets. If that also fails, then the function fails.
+// assets. If that also fails, then the function fails and returns NULL.
 //
 // The returned HBITMAP should be cleaned up by calling DeleteObject().
-HRESULT Gp_LoadImage (SInt16 imageID, HBITMAP *image);
+HBITMAP Gp_LoadImage (SInt16 imageID);
 
 // Load an image as a DIB section. The only difference between this
 // function and Gp_LoadImage() is that the returned HBITMAP is a handle
 // to a DIB section bitmap.
 //
 // The returned HBITMAP should be cleaned up by calling DeleteObject().
-HRESULT Gp_LoadImageAsDIB (SInt16 imageID, HBITMAP *image);
+HBITMAP Gp_LoadImageAsDIB (SInt16 imageID);
 
 // Return whether the house file or built-in assets contain a sound
 // with the given ID.
@@ -111,17 +110,17 @@ BOOLEAN Gp_BuiltInImageExists (SInt16 imageID);
 
 // Load an image from the built-in assets. If the image does not
 // exist in the built-in assets or the built-in assets have not been
-// loaded yet, the function will fail.
+// loaded yet, the function will return NULL.
 //
 // The returned HBITMAP should be cleaned up by calling DeleteObject().
-HRESULT Gp_LoadBuiltInImage (SInt16 imageID, HBITMAP *image);
+HBITMAP Gp_LoadBuiltInImage (SInt16 imageID);
 
 // Load an image from the built-in assets as a DIB section. The only
 // difference between this function and Gp_LoadBuiltInImage() is that
 // the returned HBITMAP is a DIB section bitmap.
 //
 // The returned HBITMAP should be cleaned up by calling DeleteObject().
-HRESULT Gp_LoadBuiltInImageAsDIB (SInt16 imageID, HBITMAP *image);
+HBITMAP Gp_LoadBuiltInImageAsDIB (SInt16 imageID);
 
 // Enumerate over the IDs of all built-in sounds. The enumeration stops
 // when the enumerator functions returns zero, or there are no more
@@ -147,17 +146,17 @@ HRESULT Gp_EnumHouseImages (Gp_EnumResProc enumProc, void *userData);
 BOOLEAN Gp_HouseImageExists (SInt16 imageID);
 
 // Load an image from the house file. If the image does not exist in the
-// house file or there is no house file loaded, the function will fail.
+// house file or there is no house file loaded, the function returns NULL.
 //
 // The returned HBITMAP should be cleaned up by calling DeleteObject().
-HRESULT Gp_LoadHouseImage (SInt16 imageID, HBITMAP *image);
+HBITMAP Gp_LoadHouseImage (SInt16 imageID);
 
 // Load an image from the house file as a DIB section. The only
 // difference between this function and Gp_LoadHouseImage is that the
 // returned HBITMAP is a DIB section bitmap.
 //
 // The returned HBITMAP should be cleaned up by calling DeleteObject().
-HRESULT Gp_LoadHouseImageAsDIB (SInt16 imageID, HBITMAP *image);
+HBITMAP Gp_LoadHouseImageAsDIB (SInt16 imageID);
 
 // Enumerate over the IDs of all house sounds. The enumeration stops
 // when the enumerator functions returns zero, or there are no more

@@ -204,13 +204,7 @@ void DisposeGWorld (HDC theGWorld)
 
 HBITMAP GetPicture (SInt16 resID)
 {
-	HBITMAP hbm;
-
-	if (FAILED(Gp_LoadImage(resID, &hbm)))
-	{
-		hbm = NULL;
-	}
-	return hbm;
+	return Gp_LoadImage(resID);
 }
 
 //--------------------------------------------------------------  LoadGraphic

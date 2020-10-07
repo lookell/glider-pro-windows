@@ -89,52 +89,50 @@ Gp_ImageExistsInZip (mz_zip_archive *archive, SInt16 imageID)
 
 //--------------------------------------------------------------  Gp_LoadImageFromZip
 
-static HRESULT
-Gp_LoadImageFromZip (mz_zip_archive *archive, SInt16 imageID, HBITMAP *image)
+static HBITMAP
+Gp_LoadImageFromZip (mz_zip_archive *archive, SInt16 imageID)
 {
 	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
 	void *buffer;
 	size_t length;
-	HRESULT hr;
+	HBITMAP image;
 
-	hr = Gp_GetImageFilename(filename, ARRAYSIZE(filename), imageID);
-	if (FAILED(hr))
+	if (FAILED(Gp_GetImageFilename(filename, ARRAYSIZE(filename), imageID)))
 	{
-		return hr;
+		return NULL;
 	}
 	buffer = mz_zip_reader_extract_file_to_heap(archive, filename, &length, 0);
 	if (buffer == NULL)
 	{
-		return E_FAIL;
+		return NULL;
 	}
-	hr = LoadMemoryBMP(image, buffer, length);
+	image = LoadMemoryBMP(buffer, length);
 	free(buffer);
-	return hr;
+	return image;
 }
 
 //--------------------------------------------------------------  Gp_LoadImageAsDIBFromZip
 
-static HRESULT
-Gp_LoadImageAsDIBFromZip (mz_zip_archive *archive, SInt16 imageID, HBITMAP *image)
+static HBITMAP
+Gp_LoadImageAsDIBFromZip (mz_zip_archive *archive, SInt16 imageID)
 {
 	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
 	void *buffer;
 	size_t length;
-	HRESULT hr;
+	HBITMAP image;
 
-	hr = Gp_GetImageFilename(filename, ARRAYSIZE(filename), imageID);
-	if (FAILED(hr))
+	if (FAILED(Gp_GetImageFilename(filename, ARRAYSIZE(filename), imageID)))
 	{
-		return hr;
+		return NULL;
 	}
 	buffer = mz_zip_reader_extract_file_to_heap(archive, filename, &length, 0);
 	if (buffer == NULL)
 	{
-		return E_FAIL;
+		return NULL;
 	}
-	hr = LoadMemoryBMPAsDIBSection(image, buffer, length);
+	image = LoadMemoryBMPAsDIBSection(buffer, length);
 	free(buffer);
-	return hr;
+	return image;
 }
 
 //--------------------------------------------------------------  Gp_GetSoundFilename
@@ -386,28 +384,24 @@ BOOLEAN Gp_HouseFileReadOnly (void)
 
 //--------------------------------------------------------------  Gp_LoadHouseIcon
 
-HRESULT Gp_LoadHouseIcon (HICON *houseIcon, UINT width, UINT height)
+HICON Gp_LoadHouseIcon (UINT width, UINT height)
 {
 	void *buffer;
 	size_t length;
-	HRESULT hr;
+	HICON houseIcon;
 
-	if (houseIcon == NULL)
-	{
-		return E_INVALIDARG;
-	}
 	if (!Gp_HouseFileLoaded())
 	{
-		return E_ILLEGAL_METHOD_CALL;
+		return NULL;
 	}
 	buffer = mz_zip_reader_extract_file_to_heap(&g_houseArchive, "house.ico", &length, 0);
 	if (buffer == NULL)
 	{
-		return E_FAIL;
+		return NULL;
 	}
-	hr = LoadMemoryICO(houseIcon, buffer, length, width, height);
+	houseIcon = LoadMemoryICO(buffer, length, width, height);
 	free(buffer);
-	return hr;
+	return houseIcon;
 }
 
 //--------------------------------------------------------------  Gp_HouseFileDataSize
@@ -621,38 +615,40 @@ BOOLEAN Gp_ImageExists (SInt16 imageID)
 
 //--------------------------------------------------------------  Gp_LoadImage
 
-HRESULT Gp_LoadImage (SInt16 imageID, HBITMAP *image)
+HBITMAP Gp_LoadImage (SInt16 imageID)
 {
-	HRESULT hr;
+	HBITMAP image;
 
-	if (image == NULL)
+	image = Gp_LoadHouseImage(imageID);
+	if (image != NULL)
 	{
-		return E_INVALIDARG;
+		return image;
 	}
-	hr = Gp_LoadHouseImage(imageID, image);
-	if (FAILED(hr))
+	image = Gp_LoadBuiltInImage(imageID);
+	if (image != NULL)
 	{
-		hr = Gp_LoadBuiltInImage(imageID, image);
+		return image;
 	}
-	return hr;
+	return NULL;
 }
 
 //--------------------------------------------------------------  Gp_LoadImageAsDIB
 
-HRESULT Gp_LoadImageAsDIB (SInt16 imageID, HBITMAP *image)
+HBITMAP Gp_LoadImageAsDIB (SInt16 imageID)
 {
-	HRESULT hr;
+	HBITMAP image;
 
-	if (image == NULL)
+	image = Gp_LoadHouseImageAsDIB(imageID);
+	if (image != NULL)
 	{
-		return E_INVALIDARG;
+		return image;
 	}
-	hr = Gp_LoadHouseImageAsDIB(imageID, image);
-	if (FAILED(hr))
+	image = Gp_LoadBuiltInImageAsDIB(imageID);
+	if (image != NULL)
 	{
-		hr = Gp_LoadBuiltInImageAsDIB(imageID, image);
+		return image;
 	}
-	return hr;
+	return NULL;
 }
 
 //--------------------------------------------------------------  Gp_SoundExists
@@ -708,32 +704,24 @@ BOOLEAN Gp_BuiltInImageExists (SInt16 imageID)
 
 //--------------------------------------------------------------  Gp_LoadBuiltInImage
 
-HRESULT Gp_LoadBuiltInImage (SInt16 imageID, HBITMAP *image)
+HBITMAP Gp_LoadBuiltInImage (SInt16 imageID)
 {
-	if (image == NULL)
-	{
-		return E_INVALIDARG;
-	}
 	if (!Gp_BuiltInAssetsLoaded())
 	{
-		return E_ILLEGAL_METHOD_CALL;
+		return NULL;
 	}
-	return Gp_LoadImageFromZip(&g_mermaidArchive, imageID, image);
+	return Gp_LoadImageFromZip(&g_mermaidArchive, imageID);
 }
 
 //--------------------------------------------------------------  Gp_LoadBuiltInImageAsDIB
 
-HRESULT Gp_LoadBuiltInImageAsDIB (SInt16 imageID, HBITMAP *image)
+HBITMAP Gp_LoadBuiltInImageAsDIB (SInt16 imageID)
 {
-	if (image == NULL)
-	{
-		return E_INVALIDARG;
-	}
 	if (!Gp_BuiltInAssetsLoaded())
 	{
-		return E_ILLEGAL_METHOD_CALL;
+		return NULL;
 	}
-	return Gp_LoadImageAsDIBFromZip(&g_mermaidArchive, imageID, image);
+	return Gp_LoadImageAsDIBFromZip(&g_mermaidArchive, imageID);
 }
 
 //--------------------------------------------------------------  Gp_EnumBuiltInSounds
@@ -805,32 +793,24 @@ BOOLEAN Gp_HouseImageExists (SInt16 imageID)
 
 //--------------------------------------------------------------  Gp_LoadHouseImage
 
-HRESULT Gp_LoadHouseImage (SInt16 imageID, HBITMAP *image)
+HBITMAP Gp_LoadHouseImage (SInt16 imageID)
 {
-	if (image == NULL)
-	{
-		return E_INVALIDARG;
-	}
 	if (!Gp_HouseFileLoaded())
 	{
-		return E_ILLEGAL_METHOD_CALL;
+		return NULL;
 	}
-	return Gp_LoadImageFromZip(&g_houseArchive, imageID, image);
+	return Gp_LoadImageFromZip(&g_houseArchive, imageID);
 }
 
 //--------------------------------------------------------------  Gp_LoadHouseImageAsDIB
 
-HRESULT Gp_LoadHouseImageAsDIB (SInt16 imageID, HBITMAP *image)
+HBITMAP Gp_LoadHouseImageAsDIB (SInt16 imageID)
 {
-	if (image == NULL)
-	{
-		return E_INVALIDARG;
-	}
 	if (!Gp_HouseFileLoaded())
 	{
-		return E_ILLEGAL_METHOD_CALL;
+		return NULL;
 	}
-	return Gp_LoadImageAsDIBFromZip(&g_houseArchive, imageID, image);
+	return Gp_LoadImageAsDIBFromZip(&g_houseArchive, imageID);
 }
 
 //--------------------------------------------------------------  Gp_EnumHouseSounds

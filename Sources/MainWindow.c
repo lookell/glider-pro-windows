@@ -511,7 +511,8 @@ void WashColorIn (void)
 
 	DisableMenuBar();
 
-	if (FAILED(Gp_LoadBuiltInImageAsDIB(kSplash8BitPICT, &splashDIB)))
+	splashDIB = Gp_LoadBuiltInImageAsDIB(kSplash8BitPICT);
+	if (splashDIB == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
 	GetClientRect(mainWindow, &clientRect);
