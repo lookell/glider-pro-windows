@@ -177,23 +177,6 @@ void FireTrigger (SInt16 index)
 			break;
 		}
 	}
-	else
-	{
-		triggeredIs = masterObjects[triggerIs].localLink;
-		switch (thisHouse.rooms[triggers[index].room].
-				objects[triggers[index].object].what)
-		{
-			case kGreaseRt:
-			case kGreaseLf:
-			if (SetObjectState(triggers[index].room, triggers[index].object,
-					kForceOn, triggeredIs))
-			{
-				SpillGrease(masterObjects[triggeredIs].dynaNum,
-						masterObjects[triggeredIs].hotNum);
-			}
-			break;
-		}
-	}
 }
 
 //--------------------------------------------------------------  ZeroTriggers
