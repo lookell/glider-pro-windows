@@ -234,7 +234,7 @@ HRESULT Gp_LoadBuiltInAssets (void)
 		g_mermaidFileName, ARRAYSIZE(g_mermaidFileName));
 	if (numChars == ARRAYSIZE(g_mermaidFileName))
 	{
-		return E_NOT_SUFFICIENT_BUFFER;
+		return HRESULT_FROM_WIN32(ERROR_INSUFFICIENT_BUFFER);
 	}
 	else if (numChars == 0)
 	{
@@ -430,7 +430,7 @@ HRESULT Gp_ReadHouseData (houseType *house)
 	}
 	if (!Gp_HouseFileLoaded())
 	{
-		return E_ILLEGAL_METHOD_CALL;
+		return E_FAIL;
 	}
 	buffer = mz_zip_reader_extract_file_to_heap(&g_houseArchive, "house.dat", &length, 0);
 	if (buffer == NULL)
@@ -519,7 +519,7 @@ HRESULT Gp_WriteHouseData (const houseType *house)
 	}
 	if (!Gp_HouseFileLoaded())
 	{
-		return E_ILLEGAL_METHOD_CALL;
+		return E_FAIL;
 	}
 
 	hr = StringCchCopyW(originalFileName, ARRAYSIZE(originalFileName), g_houseFileName);
@@ -686,7 +686,7 @@ HRESULT Gp_EnumBuiltInImages (Gp_EnumResProc enumProc, void *userData)
 	}
 	if (!Gp_BuiltInAssetsLoaded())
 	{
-		return E_ILLEGAL_METHOD_CALL;
+		return E_FAIL;
 	}
 	return Gp_EnumImagesInZip(&g_mermaidArchive, enumProc, userData);
 }
@@ -734,7 +734,7 @@ HRESULT Gp_EnumBuiltInSounds (Gp_EnumResProc enumProc, void *userData)
 	}
 	if (!Gp_BuiltInAssetsLoaded())
 	{
-		return E_ILLEGAL_METHOD_CALL;
+		return E_FAIL;
 	}
 	return Gp_EnumSoundsInZip(&g_mermaidArchive, enumProc, userData);
 }
@@ -760,7 +760,7 @@ HRESULT Gp_LoadBuiltInSound (SInt16 soundID, WaveData *sound)
 	}
 	if (!Gp_BuiltInAssetsLoaded())
 	{
-		return E_ILLEGAL_METHOD_CALL;
+		return E_FAIL;
 	}
 	return Gp_LoadSoundFromZip(&g_mermaidArchive, soundID, sound);
 }
@@ -775,7 +775,7 @@ HRESULT Gp_EnumHouseImages (Gp_EnumResProc enumProc, void *userData)
 	}
 	if (!Gp_HouseFileLoaded())
 	{
-		return E_ILLEGAL_METHOD_CALL;
+		return E_FAIL;
 	}
 	return Gp_EnumImagesInZip(&g_houseArchive, enumProc, userData);
 }
@@ -823,7 +823,7 @@ HRESULT Gp_EnumHouseSounds (Gp_EnumResProc enumProc, void *userData)
 	}
 	if (!Gp_HouseFileLoaded())
 	{
-		return E_ILLEGAL_METHOD_CALL;
+		return E_FAIL;
 	}
 	return Gp_EnumSoundsInZip(&g_houseArchive, enumProc, userData);
 }
@@ -849,7 +849,7 @@ HRESULT Gp_LoadHouseSound (SInt16 soundID, WaveData *sound)
 	}
 	if (!Gp_HouseFileLoaded())
 	{
-		return FALSE;
+		return E_FAIL;
 	}
 	return Gp_LoadSoundFromZip(&g_houseArchive, soundID, sound);
 }
@@ -871,7 +871,7 @@ HRESULT Gp_LoadHouseBounding (SInt16 imageID, boundsType *bounds)
 	}
 	if (!Gp_HouseFileLoaded())
 	{
-		return FALSE;
+		return E_FAIL;
 	}
 	hr = StringCchPrintfA(filename, ARRAYSIZE(filename), "bounds/%d.bin", (int)imageID);
 	if (FAILED(hr))
