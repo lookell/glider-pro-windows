@@ -464,7 +464,7 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 			break;
 
 			case kForceOff:
-			changed = (thisHouse.rooms[room].objects[object].data.a.state == true);
+			changed = (thisHouse.rooms[room].objects[object].data.a.state != false);
 			newState = false;
 			thisHouse.rooms[room].objects[object].data.a.state = newState;
 			break;
@@ -523,7 +523,7 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		case kStar:
 		case kSparkle:
 		case kHelium:
-		changed = (thisHouse.rooms[room].objects[object].data.c.state == true);
+		changed = (thisHouse.rooms[room].objects[object].data.c.state != false);
 		newState = false;
 		thisHouse.rooms[room].objects[object].data.c.state = newState;
 		if ((changed) && (local != -1))
@@ -631,7 +631,7 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 			break;
 
 			case kForceOff:
-			changed = (thisHouse.rooms[room].objects[object].data.f.state == true);
+			changed = (thisHouse.rooms[room].objects[object].data.f.state != false);
 			newState = false;
 			thisHouse.rooms[room].objects[object].data.f.state = newState;
 			break;
@@ -677,7 +677,7 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 			break;
 
 			case kForceOff:
-			changed = (thisHouse.rooms[room].objects[object].data.g.state == true);
+			changed = (thisHouse.rooms[room].objects[object].data.g.state != false);
 			newState = false;
 			thisHouse.rooms[room].objects[object].data.g.state = newState;
 			break;
@@ -724,7 +724,7 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 			break;
 
 			case kForceOff:
-			changed = (thisHouse.rooms[room].objects[object].data.h.state == true);
+			changed = (thisHouse.rooms[room].objects[object].data.h.state != false);
 			newState = false;
 			thisHouse.rooms[room].objects[object].data.h.state = newState;
 			break;
