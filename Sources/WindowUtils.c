@@ -24,7 +24,6 @@ static INT_PTR CALLBACK MessageWindowProc (HWND hDlg, UINT message, WPARAM wPara
 
 
 static HWND mssgWindow;
-static COLORREF mssgTextColor;
 
 
 //==============================================================  Functions
@@ -36,7 +35,6 @@ void OpenMessageWindow (PCWSTR title)
 {
 	MSG msg;
 
-	mssgTextColor = GetSysColor(COLOR_WINDOWTEXT);
 	mssgWindow = CreateDialog(HINST_THISCOMPONENT,
 		MAKEINTRESOURCE(kMessageWindowID),
 		mainWindow, MessageWindowProc);
@@ -66,6 +64,7 @@ static INT_PTR CALLBACK MessageWindowProc (HWND hDlg, UINT message, WPARAM wPara
 	switch (message)
 	{
 	case WM_INITDIALOG:
+		SetWindowLongPtr(hDlg, DWLP_USER, (LONG_PTR)(ULONG_PTR)GetSysColor(COLOR_BTNTEXT));
 		return TRUE;
 
 	case WM_CTLCOLORSTATIC:
@@ -74,7 +73,8 @@ static INT_PTR CALLBACK MessageWindowProc (HWND hDlg, UINT message, WPARAM wPara
 		HWND hwndStatic = (HWND)lParam;
 		if (GetDlgCtrlID(hwndStatic) == kMessageItem)
 		{
-			SetTextColor(hdc, mssgTextColor);
+			COLORREF textColor = (COLORREF)(ULONG_PTR)GetWindowLongPtr(hDlg, DWLP_USER);
+			SetTextColor(hdc, textColor);
 			SetBkColor(hdc, GetSysColor(COLOR_BTNFACE));
 			return (INT_PTR)GetSysColorBrush(COLOR_BTNFACE);
 		}
@@ -115,7 +115,7 @@ void SetMessageTextColor (COLORREF textColor)
 {
 	MSG msg;
 
-	mssgTextColor = textColor;
+	SetWindowLongPtr(mssgWindow, DWLP_USER, (LONG_PTR)(ULONG_PTR)textColor);
 	InvalidateRect(GetDlgItem(mssgWindow, kMessageItem), NULL, TRUE);
 
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
