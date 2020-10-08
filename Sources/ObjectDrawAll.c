@@ -14,7 +14,6 @@
 #include "House.h"
 #include "HouseIO.h"
 #include "Link.h"
-#include "MacTypes.h"
 #include "MainWindow.h"
 #include "Music.h"
 #include "ObjectDraw.h"

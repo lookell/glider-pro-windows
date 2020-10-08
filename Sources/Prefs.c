@@ -12,7 +12,6 @@
 #include "ByteIO.h"
 #include "DialogUtils.h"
 #include "FileError.h"
-#include "Macintosh.h"
 #include "ResourceIDs.h"
 #include "StructIO.h"
 #include "Utilities.h"

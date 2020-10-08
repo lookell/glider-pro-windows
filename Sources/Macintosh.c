@@ -3,7 +3,6 @@
 #include "Macintosh.h"
 
 #include "StringUtils.h"
-#include "WinAPI.h"
 
 
 //--------------------------------------------------------------  CopyBits

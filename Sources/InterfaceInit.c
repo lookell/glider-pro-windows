@@ -29,7 +29,6 @@
 #include "ResourceIDs.h"
 #include "Room.h"
 #include "RoomGraphics.h"
-#include "Scoreboard.h"
 #include "SelectHouse.h"
 #include "Tools.h"
 #include "Utilities.h"

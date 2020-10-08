@@ -16,6 +16,7 @@
 #include "ResourceIDs.h"
 #include "Room.h"
 #include "Utilities.h"
+#include "WinAPI.h"
 
 
 #define k8WhiteColor			0

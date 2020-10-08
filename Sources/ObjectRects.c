@@ -12,7 +12,6 @@
 #include "DynamicMaps.h"
 #include "GliderDefines.h"
 #include "House.h"
-#include "MacTypes.h"
 #include "MainWindow.h"
 #include "Objects.h"
 #include "RectUtils.h"

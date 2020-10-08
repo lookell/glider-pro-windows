@@ -9,6 +9,7 @@
 //============================================================================
 
 
+#include "ByteIO.h"
 #include "DialogUtils.h"
 #include "Interactions.h"
 #include "Macintosh.h"

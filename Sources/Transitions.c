@@ -14,7 +14,6 @@
 #include "Main.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
-#include "Utilities.h"
 #include "WinAPI.h"
 
 

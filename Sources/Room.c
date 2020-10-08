@@ -17,13 +17,10 @@
 #include "MainWindow.h"
 #include "Map.h"
 #include "Menu.h"
-#include "ObjectDrawAll.h"
 #include "ObjectEdit.h"
-#include "ObjectRects.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "ResourceLoader.h"
-#include "RoomInfo.h"
 #include "StringUtils.h"
 #include "Utilities.h"
 

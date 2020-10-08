@@ -10,7 +10,6 @@
 
 
 #include "ByteIO.h"
-#include "MacTypes.h"
 #include "MainWindow.h"
 #include "ResourceIDs.h"
 #include "Utilities.h"

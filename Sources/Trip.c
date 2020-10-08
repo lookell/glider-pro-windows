@@ -9,6 +9,7 @@
 
 #include "Dynamics.h"
 #include "Environ.h"
+#include "HouseIO.h"
 #include "Interactions.h"
 #include "Objects.h"
 #include "Play.h"

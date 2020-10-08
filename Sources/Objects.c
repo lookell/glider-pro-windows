@@ -10,8 +10,6 @@
 
 
 #include "AnimCursor.h"
-#include "GliderDefines.h"
-#include "GliderStructs.h"
 #include "House.h"
 #include "HouseIO.h"
 #include "Link.h"

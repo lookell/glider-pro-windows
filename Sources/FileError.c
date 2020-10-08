@@ -10,7 +10,6 @@
 
 
 #include "DialogUtils.h"
-#include "MacTypes.h"
 #include "ResourceIDs.h"
 
 #include <strsafe.h>

@@ -2,8 +2,6 @@
 
 #include "FrameTimer.h"
 
-#include "WinAPI.h"
-
 // On Windows XP and later (our target platforms), the performance counter
 // functions will not fail, so their return values are not checked.
 

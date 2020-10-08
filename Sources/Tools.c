@@ -17,7 +17,6 @@
 #include "ObjectInfo.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
-#include "StringUtils.h"
 #include "Utilities.h"
 
 #include <commctrl.h>

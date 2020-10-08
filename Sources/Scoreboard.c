@@ -10,7 +10,6 @@
 
 
 #include "ColorUtils.h"
-#include "Interactions.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "Play.h"

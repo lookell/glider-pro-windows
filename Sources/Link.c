@@ -14,7 +14,6 @@
 #include "MainWindow.h"
 #include "Menu.h"
 #include "ObjectEdit.h"
-#include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Room.h"
 #include "Utilities.h"

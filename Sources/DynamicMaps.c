@@ -9,8 +9,6 @@
 //============================================================================
 
 
-#include "Dynamics.h"
-#include "GliderStructs.h"
 #include "Grease.h"
 #include "Macintosh.h"
 #include "MainWindow.h"

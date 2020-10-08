@@ -14,7 +14,6 @@
 #include "HouseIO.h"
 #include "ResourceIDs.h"
 #include "ResourceLoader.h"
-#include "Sound.h"
 #include "Utilities.h"
 #include "WinAPI.h"
 

@@ -27,7 +27,6 @@
 #include "RoomGraphics.h"
 #include "SelectHouse.h"
 #include "Sound.h"
-#include "StringUtils.h"
 #include "Utilities.h"
 
 #include <commctrl.h>

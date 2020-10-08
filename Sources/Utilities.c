@@ -18,7 +18,6 @@
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "ResourceLoader.h"
-#include "StringUtils.h"
 #include "WinAPI.h"
 
 #include <mmsystem.h>

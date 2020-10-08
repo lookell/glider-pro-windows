@@ -17,7 +17,6 @@
 #include "Menu.h"
 #include "Play.h"
 #include "ResourceIDs.h"
-#include "Room.h"
 
 #include <strsafe.h>
 

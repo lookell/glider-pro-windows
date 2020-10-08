@@ -11,7 +11,6 @@
 
 #include "Banner.h"
 #include "DialogUtils.h"
-#include "Environ.h"
 #include "FileError.h"
 #include "HighScores.h"
 #include "House.h"
@@ -29,7 +28,6 @@
 #include "RoomGraphics.h"
 #include "SelectHouse.h"
 #include "StringUtils.h"
-#include "Utilities.h"
 
 #include <strsafe.h>
 

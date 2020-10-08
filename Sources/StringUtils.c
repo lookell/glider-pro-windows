@@ -9,7 +9,6 @@
 //============================================================================
 
 
-#include "MacTypes.h"
 #include "ResourceIDs.h"
 #include "WinAPI.h"
 

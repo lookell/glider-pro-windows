@@ -14,7 +14,6 @@
 #include "Marquee.h"
 #include "Menu.h"
 #include "ObjectEdit.h"
-#include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Utilities.h"
 

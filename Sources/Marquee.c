@@ -19,7 +19,6 @@
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Utilities.h"
-#include "WinAPI.h"
 
 #include <commctrl.h>
 

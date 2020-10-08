@@ -11,7 +11,6 @@
 
 #include "ColorUtils.h"
 #include "DialogUtils.h"
-#include "Environ.h"
 #include "GliderDefines.h"
 #include "House.h"
 #include "HouseIO.h"
@@ -26,7 +25,6 @@
 #include "Room.h"
 #include "Scrap.h"
 #include "Utilities.h"
-#include "WinAPI.h"
 
 
 #define kMapRoomsHigh			9	// was 7

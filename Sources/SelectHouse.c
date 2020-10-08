@@ -11,11 +11,8 @@
 
 #include "AnimCursor.h"
 #include "DialogUtils.h"
-#include "Events.h"
 #include "House.h"
 #include "HouseIO.h"
-#include "MacTypes.h"
-#include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "ResourceLoader.h"
 #include "StringUtils.h"
