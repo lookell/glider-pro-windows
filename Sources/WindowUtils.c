@@ -19,16 +19,14 @@
 static INT_PTR CALLBACK MessageWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 
-static HWND mssgWindow;
-
-
 //==============================================================  Functions
 //--------------------------------------------------------------  OpenMessageWindow
 // Brings up a simple message window.  Nice sort of utility function.
 // Anytime you want a small, quick message to come up, call this.
 
-void OpenMessageWindow (PCWSTR title, HWND hwndOwner)
+HWND OpenMessageWindow (PCWSTR title, HWND hwndOwner)
 {
+	HWND mssgWindow;
 	MSG msg;
 
 	mssgWindow = CreateDialog(HINST_THISCOMPONENT,
@@ -49,6 +47,8 @@ void OpenMessageWindow (PCWSTR title, HWND hwndOwner)
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+
+	return mssgWindow;
 }
 
 //--------------------------------------------------------------  MessageWindowProc
@@ -84,7 +84,7 @@ static INT_PTR CALLBACK MessageWindowProc (HWND hDlg, UINT message, WPARAM wPara
 // For the above message window, this function displays a string of text…
 // in the center of the window.
 
-void SetMessageWindowMessage (PCWSTR message)
+void SetMessageWindowMessage (HWND mssgWindow, PCWSTR message)
 {
 	MSG msg;
 
@@ -107,7 +107,7 @@ void SetMessageWindowMessage (PCWSTR message)
 // text displayed within the window. (This was originally done by calling the
 // QuickDraw function ForeColor before calling SetMessageWindowMessage.)
 
-void SetMessageTextColor (COLORREF textColor)
+void SetMessageTextColor (HWND mssgWindow, COLORREF textColor)
 {
 	MSG msg;
 
@@ -129,7 +129,7 @@ void SetMessageTextColor (COLORREF textColor)
 //--------------------------------------------------------------  CloseMessageWindow
 // Closes the previously referred to "message window".
 
-void CloseMessageWindow (void)
+void CloseMessageWindow (HWND mssgWindow)
 {
 	HWND hwndOwner;
 
@@ -138,7 +138,6 @@ void CloseMessageWindow (void)
 		hwndOwner = GetWindow(mssgWindow, GW_OWNER);
 		EnableWindow(hwndOwner, TRUE);
 		DestroyWindow(mssgWindow);
-		mssgWindow = NULL;
 	}
 }
 

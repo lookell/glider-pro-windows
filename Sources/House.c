@@ -728,11 +728,12 @@ void ConvertHouseVer1To2 (void)
 	wchar_t message[256];
 	SInt16 wasRoom, floor, suite;
 	SInt16 i, h, numRooms;
+	HWND mssgWindow;
 
 	CopyThisRoomToRoom();
 	wasRoom = thisRoomNumber;
 	GetLocalizedString(13, message, ARRAYSIZE(message));
-	OpenMessageWindow(message, mainWindow);
+	mssgWindow = OpenMessageWindow(message, mainWindow);
 
 	SpinCursor(3);
 
@@ -744,7 +745,7 @@ void ConvertHouseVer1To2 (void)
 			StringCchPrintf(roomStr, ARRAYSIZE(roomStr), L"%d", (int)i);
 			GetLocalizedString(14, message, ARRAYSIZE(message));
 			StringCchCat(message, ARRAYSIZE(message), roomStr);
-			SetMessageWindowMessage(message);
+			SetMessageWindowMessage(mssgWindow, message);
 			SpinCursor(1);
 
 			ForceThisRoom(i);
@@ -790,7 +791,7 @@ void ConvertHouseVer1To2 (void)
 	thisHouse.version = kHouseVersion;
 
 	InitCursor();
-	CloseMessageWindow();
+	CloseMessageWindow(mssgWindow);
 	ForceThisRoom(wasRoom);
 }
 

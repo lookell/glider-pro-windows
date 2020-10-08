@@ -11,10 +11,10 @@
 
 #include "WinAPI.h"
 
-void OpenMessageWindow (PCWSTR title, HWND hwndOwner);
-void SetMessageWindowMessage (PCWSTR message);
-void SetMessageTextColor (COLORREF textColor);
-void CloseMessageWindow (void);
+HWND OpenMessageWindow (PCWSTR title, HWND hwndOwner);
+void SetMessageWindowMessage (HWND mssgWindow, PCWSTR message);
+void SetMessageTextColor (HWND mssgWindow, COLORREF textColor);
+void CloseMessageWindow (HWND mssgWindow);
 
 #endif
 

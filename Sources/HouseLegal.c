@@ -32,13 +32,13 @@ void WrapBannerAndTrailer (void);
 void ValidateNumberOfRooms (void);
 void CheckDuplicateFloorSuite (void);
 void CompressHouse (void);
-void LopOffExtraRooms (void);
-void ValidateRoomNumbers (void);
+void LopOffExtraRooms (HWND mssgWindow);
+void ValidateRoomNumbers (HWND mssgWindow);
 void CountUntitledRooms (void);
 void CheckRoomNameLength (void);
 void MakeSureNumObjectsJives (void);
-void KeepAllObjectsLegal (void);
-void CheckForStaircasePairs (void);
+void KeepAllObjectsLegal (HWND mssgWindow);
+void CheckForStaircasePairs (HWND mssgWindow);
 
 
 Boolean isHouseChecks;
@@ -723,7 +723,7 @@ void CompressHouse (void)
 //--------------------------------------------------------------  LopOffExtraRooms
 // Deletes all empty rooms hanging off the end of the house file.
 
-void LopOffExtraRooms (void)
+void LopOffExtraRooms (HWND mssgWindow)
 {
 	size_t newSize;
 	SInt16 r, count;
@@ -755,9 +755,9 @@ void LopOffExtraRooms (void)
 		newRoomsPtr = (roomPtr)realloc(thisHouse.rooms, newSize);
 		if (newRoomsPtr == NULL)	// problem?
 		{
-			SetMessageTextColor(redColor);
+			SetMessageTextColor(mssgWindow, redColor);
 			GetLocalizedString(16, message, ARRAYSIZE(message));
-			SetMessageWindowMessage(message);
+			SetMessageWindowMessage(mssgWindow, message);
 		}
 		else
 		{
@@ -771,7 +771,7 @@ void LopOffExtraRooms (void)
 //--------------------------------------------------------------  ValidateRoomNumbers
 // Error check - ensures that the floor and suite numbers are within legal ranges.
 
-void ValidateRoomNumbers (void)
+void ValidateRoomNumbers (HWND mssgWindow)
 {
 	SInt16 i, numRooms;
 	wchar_t message[256];
@@ -790,18 +790,18 @@ void ValidateRoomNumbers (void)
 					(thisHouse.rooms[i].floor < -7))
 			{
 				thisHouse.rooms[i].suite = kRoomIsEmpty;
-				SetMessageTextColor(redColor);
+				SetMessageTextColor(mssgWindow, redColor);
 				GetLocalizedString(17, message, ARRAYSIZE(message));
-				SetMessageWindowMessage(message);
+				SetMessageWindowMessage(mssgWindow, message);
 				houseErrors++;
 			}
 			if ((thisHouse.rooms[i].suite >= 128) ||
 					(thisHouse.rooms[i].suite < 0))
 			{
 				thisHouse.rooms[i].suite = kRoomIsEmpty;
-				SetMessageTextColor(redColor);
+				SetMessageTextColor(mssgWindow, redColor);
 				GetLocalizedString(18, message, ARRAYSIZE(message));
-				SetMessageWindowMessage(message);
+				SetMessageWindowMessage(mssgWindow, message);
 				houseErrors++;
 			}
 		}
@@ -878,7 +878,7 @@ void MakeSureNumObjectsJives (void)
 //--------------------------------------------------------------  KeepAllObjectsLegal
 // Repeatedly calls KeepObjectLegal() on ALL objects in a house.  Wow!
 
-void KeepAllObjectsLegal (void)
+void KeepAllObjectsLegal (HWND mssgWindow)
 {
 	SInt16 i, h, numRooms;
 	wchar_t message[256];
@@ -896,9 +896,9 @@ void KeepAllObjectsLegal (void)
 				{
 					if (!KeepObjectLegal())
 					{
-						SetMessageTextColor(redColor);
+						SetMessageTextColor(mssgWindow, redColor);
 						GetLocalizedString(19, message, ARRAYSIZE(message));
-						SetMessageWindowMessage(message);
+						SetMessageWindowMessage(mssgWindow, message);
 						houseErrors++;
 						DelayTicks(60);
 					}
@@ -912,7 +912,7 @@ void KeepAllObjectsLegal (void)
 //--------------------------------------------------------------  CheckForStaircasePairs
 // Ensures that for every up-stair there is a down-stair.
 
-void CheckForStaircasePairs (void)
+void CheckForStaircasePairs (HWND mssgWindow)
 {
 	SInt16 i, h, g, numRooms, neighbor;
 	Boolean hasStairs;
@@ -931,9 +931,9 @@ void CheckForStaircasePairs (void)
 					neighbor = GetNeighborRoomNumber(kNorthRoom);
 					if (neighbor == kRoomIsEmpty)
 					{
-						SetMessageTextColor(redColor);
+						SetMessageTextColor(mssgWindow, redColor);
 						GetLocalizedString(20, message, ARRAYSIZE(message));
-						SetMessageWindowMessage(message);
+						SetMessageWindowMessage(mssgWindow, message);
 						DelayTicks(60);
 					}
 					else
@@ -946,9 +946,9 @@ void CheckForStaircasePairs (void)
 						}
 						if (!hasStairs)
 						{
-							SetMessageTextColor(redColor);
+							SetMessageTextColor(mssgWindow, redColor);
 							GetLocalizedString(21, message, ARRAYSIZE(message));
-							SetMessageWindowMessage(message);
+							SetMessageWindowMessage(mssgWindow, message);
 							DelayTicks(60);
 						}
 					}
@@ -959,9 +959,9 @@ void CheckForStaircasePairs (void)
 					neighbor = GetNeighborRoomNumber(kSouthRoom);
 					if (neighbor == kRoomIsEmpty)
 					{
-						SetMessageTextColor(redColor);
+						SetMessageTextColor(mssgWindow, redColor);
 						GetLocalizedString(22, message, ARRAYSIZE(message));
-						SetMessageWindowMessage(message);
+						SetMessageWindowMessage(mssgWindow, message);
 						DelayTicks(60);
 					}
 					else
@@ -974,9 +974,9 @@ void CheckForStaircasePairs (void)
 						}
 						if (!hasStairs)
 						{
-							SetMessageTextColor(redColor);
+							SetMessageTextColor(mssgWindow, redColor);
 							GetLocalizedString(23, message, ARRAYSIZE(message));
-							SetMessageWindowMessage(message);
+							SetMessageWindowMessage(mssgWindow, message);
 							DelayTicks(60);
 						}
 					}
@@ -993,6 +993,7 @@ void CheckForStaircasePairs (void)
 void CheckHouseForProblems (void)
 {
 #ifndef COMPILEDEMO
+	HWND mssgWindow;
 	wchar_t message[256];
 	wchar_t message2[256];
 	SInt16 wasActive;
@@ -1002,26 +1003,26 @@ void CheckHouseForProblems (void)
 	wasRoom = thisRoomNumber;
 	wasActive = objActive;
 	GetLocalizedString(24, message, ARRAYSIZE(message));
-	OpenMessageWindow(message, mainWindow);
+	mssgWindow = OpenMessageWindow(message, mainWindow);
 
 	SpinCursor(3);
-	SetMessageTextColor(blackColor);
+	SetMessageTextColor(mssgWindow, blackColor);
 	GetLocalizedString(25, message, ARRAYSIZE(message));
-	SetMessageWindowMessage(message);
+	SetMessageWindowMessage(mssgWindow, message);
 	WrapBannerAndTrailer();
 
 	if (isHouseChecks)
 	{
 		SpinCursor(3);
-		SetMessageTextColor(blackColor);
+		SetMessageTextColor(mssgWindow, blackColor);
 		GetLocalizedString(26, message, ARRAYSIZE(message));
-		SetMessageWindowMessage(message);
+		SetMessageWindowMessage(mssgWindow, message);
 		ValidateNumberOfRooms();
 		if (houseErrors != 0)
 		{
-			SetMessageTextColor(blackColor);
+			SetMessageTextColor(mssgWindow, blackColor);
 			GetLocalizedString(27, message, ARRAYSIZE(message));
-			SetMessageWindowMessage(message);
+			SetMessageWindowMessage(mssgWindow, message);
 			DelayTicks(60);
 			houseErrors = 0;
 		}
@@ -1037,8 +1038,8 @@ void CheckHouseForProblems (void)
 			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
 			GetLocalizedString(28, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
-			SetMessageTextColor(redColor);
-			SetMessageWindowMessage(message);
+			SetMessageTextColor(mssgWindow, redColor);
+			SetMessageWindowMessage(mssgWindow, message);
 			DelayTicks(45);
 		}
 	}
@@ -1046,19 +1047,19 @@ void CheckHouseForProblems (void)
 	SpinCursor(3);
 	CompressHouse();
 	SpinCursor(3);
-	LopOffExtraRooms();
+	LopOffExtraRooms(mssgWindow);
 
 	if (isHouseChecks)
 	{
 		SpinCursor(3);
-		ValidateRoomNumbers();
+		ValidateRoomNumbers(mssgWindow);
 		if (houseErrors != 0)
 		{
 			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
 			GetLocalizedString(29, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
-			SetMessageTextColor(redColor);
-			SetMessageWindowMessage(message);
+			SetMessageTextColor(mssgWindow, redColor);
+			SetMessageWindowMessage(mssgWindow, message);
 			DelayTicks(60);
 		}
 	}
@@ -1073,8 +1074,8 @@ void CheckHouseForProblems (void)
 			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
 			GetLocalizedString(30, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
-			SetMessageTextColor(blueColor);
-			SetMessageWindowMessage(message);
+			SetMessageTextColor(mssgWindow, blueColor);
+			SetMessageWindowMessage(mssgWindow, message);
 			DelayTicks(45);
 		}
 	}
@@ -1089,8 +1090,8 @@ void CheckHouseForProblems (void)
 			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
 			GetLocalizedString(31, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
-			SetMessageTextColor(blueColor);
-			SetMessageWindowMessage(message);
+			SetMessageTextColor(mssgWindow, blueColor);
+			SetMessageWindowMessage(mssgWindow, message);
 			DelayTicks(45);
 		}
 	}
@@ -1105,8 +1106,8 @@ void CheckHouseForProblems (void)
 			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
 			GetLocalizedString(32, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
-			SetMessageTextColor(redColor);
-			SetMessageWindowMessage(message);
+			SetMessageTextColor(mssgWindow, redColor);
+			SetMessageWindowMessage(mssgWindow, message);
 			DelayTicks(60);
 		}
 	}
@@ -1115,17 +1116,17 @@ void CheckHouseForProblems (void)
 	{
 		SpinCursor(3);
 		houseErrors = 0;
-		SetMessageTextColor(blackColor);
+		SetMessageTextColor(mssgWindow, blackColor);
 		GetLocalizedString(33, message, ARRAYSIZE(message));
-		SetMessageWindowMessage(message);
-		KeepAllObjectsLegal();
+		SetMessageWindowMessage(mssgWindow, message);
+		KeepAllObjectsLegal(mssgWindow);
 		if (houseErrors != 0)
 		{
 			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
 			GetLocalizedString(34, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
-			SetMessageTextColor(redColor);
-			SetMessageWindowMessage(message);
+			SetMessageTextColor(mssgWindow, redColor);
+			SetMessageWindowMessage(mssgWindow, message);
 			DelayTicks(60);
 		}
 	}
@@ -1134,7 +1135,7 @@ void CheckHouseForProblems (void)
 	{
 		SpinCursor(3);
 		houseErrors = 0;
-		CheckForStaircasePairs();
+		CheckForStaircasePairs(mssgWindow);
 	}
 
 	if (isHouseChecks)
@@ -1142,15 +1143,15 @@ void CheckHouseForProblems (void)
 		SpinCursor(3);
 		if (CountStarsInHouse() < 1)
 		{
-			SetMessageTextColor(redColor);
+			SetMessageTextColor(mssgWindow, redColor);
 			GetLocalizedString(35, message, ARRAYSIZE(message));
-			SetMessageWindowMessage(message);
+			SetMessageWindowMessage(mssgWindow, message);
 			DelayTicks(60);
 		}
 	}
 
 	InitCursor();
-	CloseMessageWindow();
+	CloseMessageWindow(mssgWindow);
 	ForceThisRoom(wasRoom);
 	objActive = wasActive;
 #endif
