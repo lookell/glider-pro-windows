@@ -79,7 +79,7 @@ static HCURSOR mainWindowCursor;
 
 void DrawOnSplash (HDC hdc)
 {
-	Str255		houseLoadedStr, tempStr;
+	Str255		houseLoadedStr;
 	HGDIOBJ		theFont, wasFont;
 
 	PasStringCopyC("House: ", houseLoadedStr);
@@ -95,25 +95,6 @@ void DrawOnSplash (HDC hdc)
 		ColorText(hdc, houseLoadedStr, 28L);
 	SelectObject(hdc, wasFont);
 	DeleteObject(theFont);
-
-	#if defined(powerc) || defined(__powerc) // TODO: Change message to "Windows Native!"?
-	{
-		theFont = CreateTahomaFont(-12, FW_BOLD);
-		wasFont = SelectObject(hdc, theFont);
-		PasStringCopyC("PowerPC Native!", tempStr);
-		wasTextColor = SetTextColor(hdc, blackColor);
-		MoveToEx(hdc, splashOriginH + 5, splashOriginV + 457, NULL);
-		Mac_DrawString(hdc, tempStr);
-		SetTextColor(hdc, whiteColor);
-		MoveToEx(hdc, splashOriginH + 4, splashOriginV + 456, NULL);
-		Mac_DrawString(hdc, tempStr);
-		SetTextColor(hdc, wasTextColor);
-		SelectObject(hdc, wasFont);
-		DeleteObject(theFont);
-	}
-	#else
-	(void)tempStr;
-	#endif
 }
 
 //--------------------------------------------------------------  RedrawSplashScreen
