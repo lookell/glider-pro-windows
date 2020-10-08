@@ -248,7 +248,7 @@ void HandleTheMessage (MSG *message)
 }
 
 //--------------------------------------------------------------  HandleEvent
-// "Master" function that tests for events and calls the above functions to…
+// "Master" function that tests for events and calls the above functions to
 // handle each event type.  Not called during and actual game.
 
 void HandleEvent (void)
@@ -322,7 +322,7 @@ void HandleEvent (void)
 }
 
 //--------------------------------------------------------------  IgnoreThisClick
-// An inelegant kludge designed to temporarily prevent an unwanted…
+// An inelegant kludge designed to temporarily prevent an unwanted
 // double-click to be registered.
 
 void IgnoreThisClick (void)

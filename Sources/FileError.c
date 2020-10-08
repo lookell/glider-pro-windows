@@ -18,11 +18,11 @@
 
 //==============================================================  Functions
 //--------------------------------------------------------------  CheckFileError
-// Given a result code (returned from a previous file operation) this…
-// function cheks to see if the result code is an error and, if it is…
-// a common error for which I have a string message, I bring up an…
-// alert with the error message.  If it is an unusual error, I still…
-// bring up an alert but with "Miscellaneous file error" and the…
+// Given a result code (returned from a previous file operation) this
+// function cheks to see if the result code is an error and, if it is
+// a common error for which I have a string message, I bring up an
+// alert with the error message.  If it is an unusual error, I still
+// bring up an alert but with "Miscellaneous file error" and the
 // error ID.
 
 #define dirFulErr		(-33)	// directory full

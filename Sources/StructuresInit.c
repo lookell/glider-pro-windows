@@ -54,7 +54,7 @@ void InitAngel (void);
 
 //==============================================================  Functions
 //--------------------------------------------------------------  InitScoreboardMap
-// Any graphics and structures relating to the scoreboard that appears…
+// Any graphics and structures relating to the scoreboard that appears
 // across the top of the game are initialized and loaded up here.
 
 void InitScoreboardMap (void)
@@ -149,7 +149,7 @@ void InitScoreboardMap (void)
 }
 
 //--------------------------------------------------------------  InitGliderMap
-// Graphics and structures relating to the little paper glider (the…
+// Graphics and structures relating to the little paper glider (the
 // player) are cretaed, loaded up and initialized here.
 
 void InitGliderMap (void)
@@ -637,8 +637,8 @@ void InitClutter (void)
 }
 
 //--------------------------------------------------------------  InitSupport
-// The floor support grphic is loaded up.  It is only visible when…
-// playing in 9-room mode.  It is the horizontal wooden beam that…
+// The floor support grphic is loaded up.  It is only visible when
+// playing in 9-room mode.  It is the horizontal wooden beam that
 // seperates floors from one another.
 
 void InitSupport (void)
@@ -649,8 +649,8 @@ void InitSupport (void)
 }
 
 //--------------------------------------------------------------  InitAngel
-// This loads the graphic of the girl riding the glider.  It is seen…
-// only upon completing a house.  She flies across the screen dropping…
+// This loads the graphic of the girl riding the glider.  It is seen
+// only upon completing a house.  She flies across the screen dropping
 // stars below.
 
 void InitAngel (void)
@@ -665,8 +665,8 @@ void InitAngel (void)
 
 //--------------------------------------------------------------  CreateOffscreens
 // All "utility" or "work" offscreen pix/bit maps are created here.
-// These would be offscreens that are reused throughout a game - they…
-// are not static (mere repositories for graphics).  Most are used…
+// These would be offscreens that are reused throughout a game - they
+// are not static (mere repositories for graphics).  Most are used
 // to facilitate the animation when a game is in progress.
 
 void CreateOffscreens (void)
@@ -702,7 +702,7 @@ void CreateOffscreens (void)
 }
 
 //--------------------------------------------------------------  CreatePointers
-// This function allocates other large structures.  Pointers to hold…
+// This function allocates other large structures.  Pointers to hold
 // large arrays, etc.
 
 void CreatePointers (void)
@@ -748,7 +748,7 @@ void CreatePointers (void)
 }
 
 //--------------------------------------------------------------  InitSrcRects
-// This is a nasty, ugly function that initializes all global rectangles…
+// This is a nasty, ugly function that initializes all global rectangles
 // used in Glider PRO.
 
 void InitSrcRects (void)

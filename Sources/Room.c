@@ -619,7 +619,7 @@ SInt16 GetNeighborRoomNumber (SInt16 which)
 
 void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_)
 {
-	// searches in a clockwise spiral pattern (from thisRoom) for a…
+	// searches in a clockwise spiral pattern (from thisRoom) for a
 	// legitimate neighboring room - then sets thisRoom to it
 	SInt16		distance, h, v;
 	SInt16		hStep, vStep;
@@ -628,9 +628,9 @@ void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_)
 
 	finished = false;
 	distance = 1;	// we begin our walk a distance of one from source room
-	h = -1;			// we begin with the neighbor to the left…
+	h = -1;			// we begin with the neighbor to the left
 	v = 0;			// and on the same floor
-	hStep = 0;		// we don't 'walk' left or right…
+	hStep = 0;		// we don't 'walk' left or right
 	vStep = -1;		// instead, we 'walk' up
 
 	do
@@ -662,9 +662,9 @@ void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_)
 
 					if (hStep == 0)					// we were travelling up or down
 					{
-						if (vStep == -1)			// we were travelling up…
+						if (vStep == -1)			// we were travelling up
 							hStep = 1;				// so begin travelling right
-						else						// we were travelling down…
+						else						// we were travelling down
 							hStep = -1;				// so begin travelling left
 						vStep = 0;
 					}

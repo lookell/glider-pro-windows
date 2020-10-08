@@ -29,7 +29,7 @@ void PasStringCopyNum (ConstStringPtr p1, StringPtr p2, Byte charsToCopy);
 
 //==============================================================  Functions
 //--------------------------------------------------------------  PasStringCopy
-// Given a source string and storage for a second, this function…
+// Given a source string and storage for a second, this function
 // copies from one to the other.  It assumes Pascal style strings.
 
 void PasStringCopy (ConstStringPtr p1, StringPtr p2)
@@ -54,9 +54,9 @@ void PasStringCopyC (const char *s1, StringPtr p2)
 }
 
 //--------------------------------------------------------------  WhichStringFirst
-// This is a sorting function that handles two Pascal strings.  It…
-// will return a 1 to indicate the 1st string is "greater", a 1 to…
-// indicate the 2nd was greater and a 0 to indicate that the strings…
+// This is a sorting function that handles two Pascal strings.  It
+// will return a 1 to indicate the 1st string is "greater", a 1 to
+// indicate the 2nd was greater and a 0 to indicate that the strings
 // are equal.
 
 SInt16 WhichStringFirst (ConstStringPtr p1, ConstStringPtr p2)
@@ -110,7 +110,7 @@ SInt16 WhichStringFirst (ConstStringPtr p1, ConstStringPtr p2)
 }
 
 //--------------------------------------------------------------  PasStringCopyNum
-// This function copies a specified number of characters from one…
+// This function copies a specified number of characters from one
 // Pascal string to another.
 
 void PasStringCopyNum (ConstStringPtr p1, StringPtr p2, Byte charsToCopy)
@@ -130,7 +130,7 @@ void PasStringCopyNum (ConstStringPtr p1, StringPtr p2, Byte charsToCopy)
 }
 
 //--------------------------------------------------------------  PasStringConcat
-// This function concatenates the second Pascal string to the end of…
+// This function concatenates the second Pascal string to the end of
 // the first Pascal string.
 
 void PasStringConcat (StringPtr p1, ConstStringPtr p2)
@@ -196,9 +196,9 @@ Boolean PasStringEqual (ConstStringPtr p1, ConstStringPtr p2, Boolean caseSens)
 }
 
 //--------------------------------------------------------------  GetLineOfText
-// This function walks through a source string and looks for an…
-// entire line of text.  A "line" of text is assumed to be bounded…
-// by carriage returns.  The index variable indicates which line…
+// This function walks through a source string and looks for an
+// entire line of text.  A "line" of text is assumed to be bounded
+// by carriage returns.  The index variable indicates which line
 // is sought.
 
 void GetLineOfText (ConstStringPtr srcStr, SInt16 index, StringPtr textLine)
@@ -277,8 +277,8 @@ void GetLineOfText (ConstStringPtr srcStr, SInt16 index, StringPtr textLine)
 }
 
 //--------------------------------------------------------------  WrapText
-// Given a string and the maximum number of characters to put on…
-// one line, this function goes through and inserts carriage returns…
+// Given a string and the maximum number of characters to put on
+// one line, this function goes through and inserts carriage returns
 // in order to ensure that no line of text exceeds maxChars.
 
 void WrapText (StringPtr theText, SInt16 maxChars)

@@ -74,8 +74,8 @@ void NilSavedMaps (void)
 
 //--------------------------------------------------------------  BackUpToSavedMap
 // Saves a copy of the room behind an object to an array of pixmaps.
-// Then when the object in question is drawn, there is a copy of the…
-// room that it obscured so that, should the player get the object,…
+// Then when the object in question is drawn, there is a copy of the
+// room that it obscured so that, should the player get the object,
 // it can be made to "disappear".
 
 SInt16 BackUpToSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
@@ -101,8 +101,8 @@ SInt16 BackUpToSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 }
 
 //--------------------------------------------------------------  ReBackUpSavedMap
-// This function is similar to the above, but assumes there is already…
-// a slot in the pixmap array for the object.  It re-copies the background…
+// This function is similar to the above, but assumes there is already
+// a slot in the pixmap array for the object.  It re-copies the background
 // and is needed when the lights in the room go on or off.
 
 SInt16 ReBackUpSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
@@ -131,7 +131,7 @@ SInt16 ReBackUpSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 }
 
 //--------------------------------------------------------------  RestoreFromSavedMap
-// This copies the saved background swatch to the screen - effectively…
+// This copies the saved background swatch to the screen - effectively
 // covering up or "erasing" the object.
 
 void RestoreFromSavedMap (SInt16 where, SInt16 who, Boolean doSparkle)
@@ -248,9 +248,9 @@ void AddFlyingPoint (const Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVe
 }
 
 //--------------------------------------------------------------  BackUpFlames
-// This makes copies of the area of the room behind a flame.  The flame…
-// graphic can be "copy masked" to this pixmap then and then simple…
-// CopyBits() calls will properly draw the flame on screen with the…
+// This makes copies of the area of the room behind a flame.  The flame
+// graphic can be "copy masked" to this pixmap then and then simple
+// CopyBits() calls will properly draw the flame on screen with the
 // proper background.
 
 void BackUpFlames (const Rect *src, SInt16 index)
@@ -278,7 +278,7 @@ void BackUpFlames (const Rect *src, SInt16 index)
 }
 
 //--------------------------------------------------------------  ReBackUpFlames
-// Like the above function but this is called when the lighting changes…
+// Like the above function but this is called when the lighting changes
 // in a room (lights go on or off).
 
 void ReBackUpFlames (SInt16 where, SInt16 who)
@@ -483,7 +483,7 @@ void AddBBQCoals (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 }
 
 //--------------------------------------------------------------  BackUpPendulum
-// Just like many of the previous functions, but for the pendulum on the…
+// Just like many of the previous functions, but for the pendulum on the
 // cuckoo clock.
 
 void BackUpPendulum (const Rect *src, SInt16 index)
@@ -725,9 +725,9 @@ void RemoveShreds (void)
 }
 
 //--------------------------------------------------------------  ZeroFlamesAndTheLike
-// Zeroes all counters that indicate the number of flames, pendulums, etc there…
-// are in a room.  Called before a room is drawn.  As the room is drawn, the…
-// above functions are called and the counters incremented as objects of the…
+// Zeroes all counters that indicate the number of flames, pendulums, etc there
+// are in a room.  Called before a room is drawn.  As the room is drawn, the
+// above functions are called and the counters incremented as objects of the
 // specified types are drawn.
 
 void ZeroFlamesAndTheLike (void)

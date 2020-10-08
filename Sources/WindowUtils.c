@@ -81,7 +81,7 @@ static INT_PTR CALLBACK MessageWindowProc (HWND hDlg, UINT message, WPARAM wPara
 }
 
 //--------------------------------------------------------------  SetMessageWindowMessage
-// For the above message window, this function displays a string of text…
+// For the above message window, this function displays a string of text
 // in the center of the window.
 
 void SetMessageWindowMessage (HWND mssgWindow, PCWSTR message)

@@ -49,7 +49,7 @@ void GetDeviceRect (Rect *theRect)
 }
 
 //--------------------------------------------------------------  CheckOurEnvirons
-// Calls all the above functions in order to fill out a sort of "spec sheet"…
+// Calls all the above functions in order to fill out a sort of "spec sheet"
 // for the current Mac.
 
 void CheckOurEnvirons (void)

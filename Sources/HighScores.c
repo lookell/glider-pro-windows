@@ -330,8 +330,8 @@ void ZeroAllButHighestScore (housePtr house)
 }
 
 //--------------------------------------------------------------  TestHighScore
-// This function is called after a game ends in order to test the…
-// current high score against the high score list.  It returns true…
+// This function is called after a game ends in order to test the
+// current high score against the high score list.  It returns true
 // if the player is on the high score list now.
 
 Boolean TestHighScore (HWND ownerWindow)
@@ -483,8 +483,8 @@ INT_PTR CALLBACK BannerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 }
 
 //--------------------------------------------------------------  GetHighScoreBanner
-// A player who gets the #1 slot gets to enter a short message (that…
-// appears across the top of the high scores list).  This dialog…
+// A player who gets the #1 slot gets to enter a short message (that
+// appears across the top of the high scores list).  This dialog
 // gets that message.
 
 void GetHighScoreBanner (HWND ownerWindow)

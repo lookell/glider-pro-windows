@@ -49,9 +49,9 @@ static SInt16 numGrease;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  HandleGrease
-// Goes through all grease objects currently on screen and handles…
-// them.  If they're upright, nothing happens, but if they're in…
-// the course of falling or spilling, this function will handle…
+// Goes through all grease objects currently on screen and handles
+// them.  If they're upright, nothing happens, but if they're in
+// the course of falling or spilling, this function will handle
 // advancing the spill, etc.
 
 void HandleGrease (void)
@@ -132,9 +132,9 @@ void HandleGrease (void)
 }
 
 //--------------------------------------------------------------  BackupGrease
-// This makes copies of the region of the screen the grease is about…
-// to be drawn to.  It is called in the "set up" when a player has…
-// just entered a new room.  The "grease jar falling over" animation…
+// This makes copies of the region of the screen the grease is about
+// to be drawn to.  It is called in the "set up" when a player has
+// just entered a new room.  The "grease jar falling over" animation
 // is set up here.
 
 void BackupGrease (Rect *src, SInt16 index, Boolean isRight)
@@ -169,9 +169,9 @@ void BackupGrease (Rect *src, SInt16 index, Boolean isRight)
 }
 
 //--------------------------------------------------------------  ReBackUpGrease
-// Just like th eabove function but it is called while the player is…
-// active in a room and has changed the lighting situation (like turned…
-// off or on the lights).  It assumes certain data strucutures are…
+// Just like th eabove function but it is called while the player is
+// active in a room and has changed the lighting situation (like turned
+// off or on the lights).  It assumes certain data strucutures are
 // already declared from an earlier call to the above funciton.
 
 SInt16 ReBackUpGrease (SInt16 where, SInt16 who)
@@ -198,7 +198,7 @@ SInt16 ReBackUpGrease (SInt16 where, SInt16 who)
 }
 
 //--------------------------------------------------------------  AddGrease
-// Called when a new room is being set up during a game.  This adds…
+// Called when a new room is being set up during a game.  This adds
 // another jar of grease to the queue of jars to be handled.
 
 SInt16 AddGrease (SInt16 where, SInt16 who, SInt16 h, SInt16 v,

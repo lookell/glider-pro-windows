@@ -37,7 +37,7 @@ static UInt32 theSeed;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  ToolBoxInit
-// The standard ToolBox intialization that must happen when any Mac…
+// The standard ToolBox intialization that must happen when any Mac
 // program first launches.
 
 void ToolBoxInit (void)
@@ -99,7 +99,7 @@ UInt32 RandomLongQUS (void)
 }
 
 //--------------------------------------------------------------  RedAlert
-// Called when we must quit app.  Brings up a dialog informing user…
+// Called when we must quit app.  Brings up a dialog informing user
 // of the problem and the exits to shell.
 
 static BOOL CALLBACK DisableThreadWndProc(HWND window, LPARAM lParam)
@@ -208,8 +208,8 @@ HBITMAP GetPicture (SInt16 resID)
 }
 
 //--------------------------------------------------------------  LoadGraphic
-// Function loads the specified 'PICT' from disk and draws it to…
-// the current port (no scaling, clipping, etc, are done).  Always…
+// Function loads the specified 'PICT' from disk and draws it to
+// the current port (no scaling, clipping, etc, are done).  Always
 // draws in the upper left corner of current port.
 
 void LoadGraphic (HDC hdc, SInt16 resID)
@@ -230,8 +230,8 @@ void LoadGraphic (HDC hdc, SInt16 resID)
 }
 
 //--------------------------------------------------------------  LoadScaledGraphic
-// Loads the specified 'PICT' and draws it mapped to the rectangle…
-// specified.  If this rect isn't the same size of the 'PICT', scaling…
+// Loads the specified 'PICT' and draws it mapped to the rectangle
+// specified.  If this rect isn't the same size of the 'PICT', scaling
 // will occur.
 
 void LoadScaledGraphic (HDC hdc, SInt16 resID, const Rect *theRect)
@@ -387,7 +387,7 @@ Boolean OptionKeyDown (void)
 }
 
 //--------------------------------------------------------------  DelayTicks
-// Lil' function that just sits and waits a specified number of…
+// Lil' function that just sits and waits a specified number of
 // Ticks (1/60 of a second).
 
 void DelayTicks (SInt32 howLong)
@@ -396,7 +396,7 @@ void DelayTicks (SInt32 howLong)
 }
 
 //--------------------------------------------------------------  UnivGetSoundVolume
-// Returns the speaker volume (as set by the user) in the range of…
+// Returns the speaker volume (as set by the user) in the range of
 // zero to seven (handles Sound Manager 3 case as well).
 
 void UnivGetSoundVolume (SInt16 *volume)
@@ -413,7 +413,7 @@ void UnivGetSoundVolume (SInt16 *volume)
 }
 
 //--------------------------------------------------------------  UnivSetSoundVolume
-// Sets the speaker volume to a specified value (in the range of…
+// Sets the speaker volume to a specified value (in the range of
 // zero to seven (handles Sound Manager 3 case as well).
 
 void UnivSetSoundVolume (SInt16 volume)

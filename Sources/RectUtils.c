@@ -9,7 +9,7 @@
 
 //==============================================================  Functions
 //--------------------------------------------------------------  NormalizeRect
-// This function ensures that a rect's top is less than it's bottom…
+// This function ensures that a rect's top is less than it's bottom
 // and that left is less than right.
 
 void NormalizeRect (Rect *theRect)
@@ -32,7 +32,7 @@ void NormalizeRect (Rect *theRect)
 }
 
 //--------------------------------------------------------------  ZeroRectCorner
-// The rect passed in is slid over so that its top left corner is…
+// The rect passed in is slid over so that its top left corner is
 // at coordinates (0, 0).
 
 void ZeroRectCorner (Rect *theRect)		// Offset rect to (0, 0)
@@ -44,7 +44,7 @@ void ZeroRectCorner (Rect *theRect)		// Offset rect to (0, 0)
 }
 
 //--------------------------------------------------------------  CenterRectOnPoint
-// Given a rectangle and a point, this function centers the rectangle…
+// Given a rectangle and a point, this function centers the rectangle
 // on that point.
 
 void CenterRectOnPoint (Rect *theRect, Point where)
@@ -87,7 +87,7 @@ SInt16 RectTall (const Rect *theRect)
 }
 
 //--------------------------------------------------------------  CenterRectInRect
-// Given two rectangles, this function centers the first rectangle…
+// Given two rectangles, this function centers the first rectangle
 // within the second.  The second rect is unchanged.
 
 void CenterRectInRect (Rect *rectA, const Rect *rectB)
@@ -123,7 +123,7 @@ void VOffsetRect (Rect *theRect, SInt16 v)
 }
 
 //--------------------------------------------------------------  IsRectLeftOfRect
-// Given two rects, this function returns true if the first rectangle…
+// Given two rects, this function returns true if the first rectangle
 // is to the left of the second.
 
 Boolean IsRectLeftOfRect (const Rect *rect1, const Rect *rect2)
@@ -150,7 +150,7 @@ void QOffsetRect (Rect *theRect, SInt16 h, SInt16 v)
 }
 
 //--------------------------------------------------------------  QSetRect
-// This also duplicates a ToolBox call.  It's needed often though, so…
+// This also duplicates a ToolBox call.  It's needed often though, so
 // any gains in speed are nice.  It sets up a rect structure.
 
 void QSetRect (Rect *theRect, SInt16 l, SInt16 t, SInt16 r, SInt16 b)
@@ -162,8 +162,8 @@ void QSetRect (Rect *theRect, SInt16 l, SInt16 t, SInt16 r, SInt16 b)
 }
 
 //--------------------------------------------------------------  ForceRectInRect
-// Given a source rectangle and a bounding rectangle, this function…
-// will clip the source rect so that it is entirely within the bounding…
+// Given a source rectangle and a bounding rectangle, this function
+// will clip the source rect so that it is entirely within the bounding
 // rect.  It returns true if any clippiung was necessary.
 
 Boolean ForceRectInRect (Rect *small_, const Rect *large)
@@ -216,7 +216,7 @@ Boolean ForceRectInRect (Rect *small_, const Rect *large)
 }
 
 //--------------------------------------------------------------  QUnionSimilarRect
-// Given 2 rects that are assumed to have the same width and height,…
+// Given 2 rects that are assumed to have the same width and height,
 // this function returns a 3rd rect that is the union of those two.
 
 void QUnionSimilarRect (const Rect *rectA, const Rect *rectB, Rect *rectC)

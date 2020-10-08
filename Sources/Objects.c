@@ -393,12 +393,12 @@ void ListAllLocalObjects (void)
 		ListOneRoomsObjects(kNorthWestRoom);
 	}
 
-	for (i = 0; i < numMasterObjects; i++)				// correlate links with…
+	for (i = 0; i < numMasterObjects; i++)				// correlate links with
 	{													// index into this list
 		if ((masterObjects[i].roomLink != -1) && 		// if object has a link
 				(masterObjects[i].objectLink != -1))
 		{
-			for (n = 0; n < numMasterObjects; n++)		// search for the object…
+			for (n = 0; n < numMasterObjects; n++)		// search for the object
 			{											// linked to in this list
 				if ((masterObjects[i].roomLink == masterObjects[n].roomNum) &&
 						(masterObjects[i].objectLink == masterObjects[n].objectNum))
@@ -948,8 +948,8 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 	SInt16		sorting[kMaxRoomObs];
 	Byte		sorted[kMaxRoomObs];
 
-	if (bringFront)							// No need to bring to front…
-	{										// or send to back if the object…
+	if (bringFront)							// No need to bring to front
+	{										// or send to back if the object
 		if (objActive == (kMaxRoomObs - 1))	// in question is already front-
 			return;							// most or backmost.
 	}
@@ -959,7 +959,7 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 			return;
 	}
 
-	CopyThisRoomToRoom();					// Any changes to room written…
+	CopyThisRoomToRoom();					// Any changes to room written
 											// back to the house handle.
 	numLinks = CountHouseLinks();			// Determine space needed for all links.
 	if (numLinks != 0)						// Create links list of ALL house links.
@@ -971,7 +971,7 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 			YellowAlert(ownerWindow, kYellowCantOrderLinks, -1);
 			return;
 		}
-		GenerateLinksList();				// Fill in links list with src/dest…
+		GenerateLinksList();				// Fill in links list with src/dest
 	}										// data on objects and room numbers.
 
 	for (i = 0; i < kMaxRoomObs; i++)		// Set up an ordered array.
@@ -1009,7 +1009,7 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 	for (i = 0; i < kMaxRoomObs; i++)		// Set up retro-ordered array.
 		sorted[sorting[i]] = (Byte)i;
 
-	for (i = 0; i < numLinks; i++)			// Walk links list in order to assign…
+	for (i = 0; i < numLinks; i++)			// Walk links list in order to assign
 	{										// corrected links to objects moved.
 		if (linksList[i].destRoom == thisRoomNumber)
 		{									// Does link point to room we re-ordered?

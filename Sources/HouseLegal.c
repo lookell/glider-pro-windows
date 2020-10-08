@@ -49,8 +49,8 @@ static SInt16 wasRoom;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  KeepObjectLegal
-// Does a test of the current object active for any illegal bounds…
-// or values.  It corrects the erros and returns true if any changes…
+// Does a test of the current object active for any illegal bounds
+// or values.  It corrects the erros and returns true if any changes
 // were made.
 
 Boolean KeepObjectLegal (void)
@@ -689,7 +689,7 @@ void CompressHouse (void)
 	do
 	{
 		if (thisHouse.rooms[roomNumber].suite != kRoomIsEmpty)
-		{									// if not an empty room…
+		{									// if not an empty room
 			probe = 0;						// start looking for empty slot
 			probing = true;
 			do
@@ -747,7 +747,7 @@ void LopOffExtraRooms (HWND mssgWindow)
 	}
 	while (r > 0);
 
-	if (count > 0)					// if there were trailing empties…
+	if (count > 0)					// if there were trailing empties
 	{
 		r = thisHouse.nRooms - count;
 		newSize = sizeof(roomType) * (size_t)r;

@@ -31,8 +31,8 @@ COLORREF Index2ColorRef (SInt32 color)
 }
 
 //--------------------------------------------------------------  ColorText
-// Given a string and a color index (index into the current palette),…
-// this function draws text in that color.  It assumes the current port,…
+// Given a string and a color index (index into the current palette),
+// this function draws text in that color.  It assumes the current port,
 // the current font, the current pen location, etc.
 
 void ColorText (HDC hdc, ConstStringPtr theStr, SInt32 color)
@@ -46,7 +46,7 @@ void ColorText (HDC hdc, ConstStringPtr theStr, SInt32 color)
 }
 
 //--------------------------------------------------------------  ColorRect
-// Given a rectangle and color index, this function draws a solid…
+// Given a rectangle and color index, this function draws a solid
 // rectangle in that color.  Current port, pen mode, etc. assumed.
 
 void ColorRect (HDC hdc, const Rect *theRect, SInt32 color)
@@ -60,7 +60,7 @@ void ColorRect (HDC hdc, const Rect *theRect, SInt32 color)
 }
 
 //--------------------------------------------------------------  ColorOval
-// Given a rectangle and color index, this function draws a solid…
+// Given a rectangle and color index, this function draws a solid
 // oval in that color.  Current port, pen mode, etc. assumed.
 
 void ColorOval (HDC hdc, const Rect *theRect, SInt32 color)
@@ -78,7 +78,7 @@ void ColorOval (HDC hdc, const Rect *theRect, SInt32 color)
 }
 
 //--------------------------------------------------------------  ColorRegion
-// Given a region and color index, this function draws a solid…
+// Given a region and color index, this function draws a solid
 // region in that color.  Current port, pen mode, etc. assumed.
 
 void ColorRegion (HDC hdc, HRGN theRgn, SInt32 color)
@@ -92,7 +92,7 @@ void ColorRegion (HDC hdc, HRGN theRgn, SInt32 color)
 }
 
 //--------------------------------------------------------------  ColorLine
-// Given a the end points for a line and color index, this function…
+// Given a the end points for a line and color index, this function
 // draws a line in that color.  Current port, pen mode, etc. assumed.
 
 void ColorLine (HDC hdc, SInt16 h0, SInt16 v0, SInt16 h1, SInt16 v1, SInt32 color)
@@ -110,9 +110,9 @@ void ColorLine (HDC hdc, SInt16 h0, SInt16 v0, SInt16 h1, SInt16 v1, SInt32 colo
 }
 
 //--------------------------------------------------------------  HiliteRect
-// Given a rect and two hilite colors, this function frames the top and…
-// left edges of the rect with color 1 and frames the bottom and right…
-// sides with color 2.  A rect can be made to appear "hi-lit" or "3D"…
+// Given a rect and two hilite colors, this function frames the top and
+// left edges of the rect with color 1 and frames the bottom and right
+// sides with color 2.  A rect can be made to appear "hi-lit" or "3D"
 // in this way.
 
 void HiliteRect (HDC hdc, const Rect *theRect, SInt32 color1, SInt32 color2)
@@ -128,7 +128,7 @@ void HiliteRect (HDC hdc, const Rect *theRect, SInt32 color1, SInt32 color2)
 }
 
 //--------------------------------------------------------------  ColorFrameRect
-// Given a rectangle and color index, this function frames a…
+// Given a rectangle and color index, this function frames a
 // rectangle in that color.  Current port, pen mode, etc. assumed.
 
 void ColorFrameRect (HDC hdc, const Rect *theRect, SInt32 color)
@@ -142,7 +142,7 @@ void ColorFrameRect (HDC hdc, const Rect *theRect, SInt32 color)
 }
 
 //--------------------------------------------------------------  ColorFrameOval
-// Given a rectangle and color index, this function frames an…
+// Given a rectangle and color index, this function frames an
 // oval in that color.  Current port, pen mode, etc. assumed.
 
 void ColorFrameOval (HDC hdc, const Rect *theRect, SInt32 color)
@@ -160,7 +160,7 @@ void ColorFrameOval (HDC hdc, const Rect *theRect, SInt32 color)
 }
 
 //--------------------------------------------------------------  LtGrayForeColor
-// This function finds the closest match to a "light gray" in the…
+// This function finds the closest match to a "light gray" in the
 // current palette and sets the pen color to that.
 
 COLORREF LtGrayForeColor (void)
@@ -175,7 +175,7 @@ COLORREF LtGrayForeColor (void)
 }
 
 //--------------------------------------------------------------  GrayForeColor
-// This function finds the closest match to a "medium gray" in the…
+// This function finds the closest match to a "medium gray" in the
 // current palette and sets the pen color to that.
 
 COLORREF GrayForeColor (void)
@@ -190,7 +190,7 @@ COLORREF GrayForeColor (void)
 }
 
 //--------------------------------------------------------------  DkGrayForeColor
-// This function finds the closest match to a "dark gray" in the…
+// This function finds the closest match to a "dark gray" in the
 // current palette and sets the pen color to that.
 
 COLORREF DkGrayForeColor (void)

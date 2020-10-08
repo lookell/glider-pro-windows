@@ -293,7 +293,7 @@ Boolean OpenSavedGame (HWND ownerWindow)
 }
 
 //--------------------------------------------------------------  SaveGame
-// This is probably about 3 days away from becoming the "old" function…
+// This is probably about 3 days away from becoming the "old" function
 // for saving games.
 
 void SaveGame (HWND ownerWindow, Boolean doSave)

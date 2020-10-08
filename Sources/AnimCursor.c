@@ -177,7 +177,7 @@ void InitAnimatedCursor (WORD acurID)
 }
 
 //--------------------------------------------------------------  LoadCursors
-// Just calls the above function.  Other code could be added here though…
+// Just calls the above function.  Other code could be added here though
 // to add additional cursors.
 
 void LoadCursors (void)

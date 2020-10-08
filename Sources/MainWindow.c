@@ -285,7 +285,7 @@ void CloseMainWindow (void)
 }
 
 //--------------------------------------------------------------  UpdateEditWindowTitle
-// Handles changing the title across the top of the main window.  Only…
+// Handles changing the title across the top of the main window.  Only
 // relevant when editing a house (room title displayed in window title).
 
 #ifndef COMPILEDEMO
@@ -492,7 +492,7 @@ void SetPaletteToGrays (RGBQUAD *colors, UINT numColors, int saturation,
 }
 
 //--------------------------------------------------------------  WashColorIn
-// Slowly walks the palette from its gray luminance state to the full color…
+// Slowly walks the palette from its gray luminance state to the full color
 // palette.  In this way, color appears to slowly wash in.
 
 void WashColorIn (void)
