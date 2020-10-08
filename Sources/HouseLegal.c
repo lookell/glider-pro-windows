@@ -13,6 +13,7 @@
 #include "Banner.h"
 #include "House.h"
 #include "Macintosh.h"
+#include "MainWindow.h"
 #include "ObjectEdit.h"
 #include "ObjectRects.h"
 #include "Objects.h"
@@ -1001,7 +1002,7 @@ void CheckHouseForProblems (void)
 	wasRoom = thisRoomNumber;
 	wasActive = objActive;
 	GetLocalizedString(24, message, ARRAYSIZE(message));
-	OpenMessageWindow(message);
+	OpenMessageWindow(message, mainWindow);
 
 	SpinCursor(3);
 	SetMessageTextColor(blackColor);

@@ -11,7 +11,7 @@
 
 #include "WinAPI.h"
 
-void OpenMessageWindow (PCWSTR title);
+void OpenMessageWindow (PCWSTR title, HWND hwndOwner);
 void SetMessageWindowMessage (PCWSTR message);
 void SetMessageTextColor (COLORREF textColor);
 void CloseMessageWindow (void);

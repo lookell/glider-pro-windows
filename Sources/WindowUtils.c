@@ -10,11 +10,7 @@
 
 
 #include "DialogUtils.h"
-#include "MacTypes.h"
-#include "MainWindow.h"
-#include "RectUtils.h"
 #include "ResourceIDs.h"
-#include "StringUtils.h"
 
 
 #define kMessageItem		1001
@@ -31,16 +27,16 @@ static HWND mssgWindow;
 // Brings up a simple message window.  Nice sort of utility function.
 // Anytime you want a small, quick message to come up, call this.
 
-void OpenMessageWindow (PCWSTR title)
+void OpenMessageWindow (PCWSTR title, HWND hwndOwner)
 {
 	MSG msg;
 
 	mssgWindow = CreateDialog(HINST_THISCOMPONENT,
 		MAKEINTRESOURCE(kMessageWindowID),
-		mainWindow, MessageWindowProc);
+		hwndOwner, MessageWindowProc);
 	SetWindowText(mssgWindow, title);
 	CenterOverOwner(mssgWindow);
-	EnableWindow(mainWindow, FALSE);
+	EnableWindow(hwndOwner, FALSE);
 	ShowWindow(mssgWindow, SW_SHOW);
 
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -135,9 +131,12 @@ void SetMessageTextColor (COLORREF textColor)
 
 void CloseMessageWindow (void)
 {
+	HWND hwndOwner;
+
 	if (mssgWindow != NULL)
 	{
-		EnableWindow(mainWindow, TRUE);
+		hwndOwner = GetWindow(mssgWindow, GW_OWNER);
+		EnableWindow(hwndOwner, TRUE);
 		DestroyWindow(mssgWindow);
 		mssgWindow = NULL;
 	}

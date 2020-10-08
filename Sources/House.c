@@ -18,6 +18,7 @@
 #include "HouseIO.h"
 #include "Link.h"
 #include "MacTypes.h"
+#include "MainWindow.h"
 #include "Map.h"
 #include "Menu.h"
 #include "ObjectEdit.h"
@@ -731,7 +732,7 @@ void ConvertHouseVer1To2 (void)
 	CopyThisRoomToRoom();
 	wasRoom = thisRoomNumber;
 	GetLocalizedString(13, message, ARRAYSIZE(message));
-	OpenMessageWindow(message);
+	OpenMessageWindow(message, mainWindow);
 
 	SpinCursor(3);
 
