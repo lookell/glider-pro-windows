@@ -66,19 +66,23 @@ void HandleKeyEvent (HWND hwnd, BYTE vKey)
 #if BUILD_ARCADE_VERSION
 
 		case VK_LEFT:
-		DoOptionsMenu(hwnd, iHighScores);
+		if (theMode == kSplashMode)
+			DoOptionsMenu(hwnd, iHighScores);
 		break;
 
 		case VK_RIGHT:
-		DoOptionsMenu(hwnd, iHelp);
+		if (theMode == kSplashMode)
+			DoOptionsMenu(hwnd, iHelp);
 		break;
 
 		case VK_UP:
-		DoGameMenu(hwnd, iNewGame);
+		if (theMode == kSplashMode)
+			DoGameMenu(hwnd, iNewGame);
 		break;
 
 		case VK_DOWN:
-		DoGameMenu(hwnd, iNewGame);
+		if (theMode == kSplashMode)
+			DoGameMenu(hwnd, iNewGame);
 		break;
 
 #else

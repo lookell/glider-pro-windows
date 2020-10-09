@@ -510,11 +510,11 @@ void PlayGame (void)
 					Mac_DrawPicture(boardSrcMap, thePicture, &bounds);
 					DeleteObject(thePicture);
 				}
-#else
+#endif
+
 //				ShowMenuBarOld();	// TEMP
 				SetMenu(mainWindow, theMenuBar);
 				UpdateWindow(mainWindow);
-#endif
 
 				if (mortals < 0)
 					DoDiedGameOver();
@@ -555,14 +555,11 @@ void PlayGame (void)
 		Mac_DrawPicture(boardSrcMap, thePicture, &bounds);
 		DeleteObject(thePicture);
 	}
-
-#else
+#endif
 
 //	ShowMenuBarOld();	// TEMP
 	SetMenu(mainWindow, theMenuBar);
-	UpdateWindow(mainWindow); 
-
-#endif
+	UpdateWindow(mainWindow);
 }
 
 //--------------------------------------------------------------  SetObjectsToDefaults
