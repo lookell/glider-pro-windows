@@ -16,9 +16,9 @@
 #include "Objects.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "Room.h"
 #include "Sound.h"
-#include "Utilities.h"
 
 
 #define kFloorColumnWide		4
@@ -218,7 +218,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		break;
 
 		case kCustomPict:
-		thePict = GetPicture(who->data.g.height);
+		thePict = Gp_LoadImage(who->data.g.height);
 		if (thePict == NULL)
 		{
 			who->data.g.height = kCustomPictFallbackID;

@@ -22,7 +22,6 @@
 #include "ResourceIDs.h"
 #include "ResourceLoader.h"
 #include "StringUtils.h"
-#include "Utilities.h"
 
 #include <strsafe.h>
 
@@ -269,7 +268,7 @@ void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 		return;
 	}
 
-	thePicture = GetPicture(theID);
+	thePicture = Gp_LoadImage(theID);
 	if (thePicture == NULL)
 	{
 		YellowAlert(mainWindow, kYellowNoBackground, 0);

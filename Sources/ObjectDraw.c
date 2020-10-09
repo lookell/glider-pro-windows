@@ -14,6 +14,7 @@
 #include "Objects.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "Room.h"
 #include "Utilities.h"
 #include "WinAPI.h"
@@ -1912,7 +1913,7 @@ void DrawCalendar (const Rect *theRect)
 	INT			monthLen;
 	HFONT		theFont;
 
-	thePicture = GetPicture(kCalendarPictID);
+	thePicture = Gp_LoadImage(kCalendarPictID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
@@ -1946,7 +1947,7 @@ void DrawBulletin (const Rect *theRect)
 	HBITMAP		thePicture;
 	BITMAP		bmInfo;
 
-	thePicture = GetPicture(kBulletinPictID);
+	thePicture = Gp_LoadImage(kBulletinPictID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
@@ -1999,7 +2000,7 @@ void DrawPictObject (SInt16 what, const Rect *theRect)
 		return;
 	}
 
-	thePicture = GetPicture(pictID);
+	thePicture = Gp_LoadImage(pictID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 

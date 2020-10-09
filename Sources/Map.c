@@ -22,6 +22,7 @@
 #include "Objects.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "Room.h"
 #include "Scrap.h"
 #include "Utilities.h"
@@ -210,7 +211,7 @@ void LoadGraphicPlus (HDC hdc, SInt16 resID, const Rect *theRect)
 {
 	HBITMAP thePicture;
 
-	thePicture = GetPicture(resID);
+	thePicture = Gp_LoadImage(resID);
 	if (thePicture == NULL)
 	{
 		return;

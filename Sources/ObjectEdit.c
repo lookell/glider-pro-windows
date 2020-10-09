@@ -27,6 +27,7 @@
 #include "Player.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "Room.h"
 #include "RoomInfo.h"
 #include "StringUtils.h"
@@ -2206,7 +2207,7 @@ void GetThisRoomsObjRects (void)
 				break;
 
 				case kCustomPict:
-				thePict = GetPicture(thisRoom->objects[i].data.g.height);
+				thePict = Gp_LoadImage(thisRoom->objects[i].data.g.height);
 				if (thePict == NULL)
 				{
 					thisRoom->objects[i].data.g.height = kCustomPictFallbackID;

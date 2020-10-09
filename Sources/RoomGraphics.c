@@ -22,6 +22,7 @@
 #include "RectUtils.h"
 #include "Render.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "Room.h"
 #include "RubberBands.h"
 #include "Sound.h"
@@ -142,10 +143,10 @@ void LoadGraphicSpecial (HDC hdc, SInt16 resID)
 	HBITMAP		thePicture;
 	BITMAP		bmInfo;
 
-	thePicture = GetPicture(resID);
+	thePicture = Gp_LoadImage(resID);
 	if (thePicture == NULL)
 	{
-		thePicture = GetPicture(kSimpleRoom);
+		thePicture = Gp_LoadImage(kSimpleRoom);
 		if (thePicture == NULL)
 		{
 			RedAlert(kErrFailedGraphicLoad);

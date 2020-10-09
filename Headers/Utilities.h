@@ -18,7 +18,6 @@ __declspec(noreturn) void RedAlert (SInt16 errorNumber);
 #ifdef GP_USE_WINAPI_H
 HDC CreateOffScreenGWorld (const Rect *bounds, SInt16 depth);
 void DisposeGWorld (HDC theGWorld);
-HBITMAP GetPicture (SInt16 resID);
 void LoadGraphic (HDC hdc, SInt16 resID);
 void LoadScaledGraphic (HDC hdc, SInt16 resID, const Rect *theRect);
 void DrawCIcon (HDC hdc, SInt16 theID, SInt16 h, SInt16 v);

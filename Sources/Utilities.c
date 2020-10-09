@@ -197,15 +197,6 @@ void DisposeGWorld (HDC theGWorld)
 	DeleteObject(hbmSurface);
 }
 
-//--------------------------------------------------------------  GetPicture
-// Function loads the specified 'PICT' from the house's resources
-// (if the house has that 'PICT') or the game's resources otherwise.
-
-HBITMAP GetPicture (SInt16 resID)
-{
-	return Gp_LoadImage(resID);
-}
-
 //--------------------------------------------------------------  LoadGraphic
 // Function loads the specified 'PICT' from disk and draws it to
 // the current port (no scaling, clipping, etc, are done).  Always
@@ -217,7 +208,7 @@ void LoadGraphic (HDC hdc, SInt16 resID)
 	HBITMAP		thePicture;
 	BITMAP		bmInfo;
 
-	thePicture = GetPicture(resID);
+	thePicture = Gp_LoadImage(resID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
@@ -237,7 +228,7 @@ void LoadScaledGraphic (HDC hdc, SInt16 resID, const Rect *theRect)
 {
 	HBITMAP		thePicture;
 
-	thePicture = GetPicture(resID);
+	thePicture = Gp_LoadImage(resID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 	Mac_DrawPicture(hdc, thePicture, theRect);

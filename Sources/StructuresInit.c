@@ -24,6 +24,7 @@
 #include "Player.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "Room.h"
 #include "RoomGraphics.h"
 #include "RoomInfo.h"
@@ -75,7 +76,7 @@ void InitScoreboardMap (void)
 		hOffset = (RectWide(&boardSrcRect) - kMaxViewWidth) / 2;
 	else
 		hOffset = -576;
-	thePicture = GetPicture(kScoreboardPictID);
+	thePicture = Gp_LoadImage(kScoreboardPictID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
