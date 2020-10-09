@@ -30,6 +30,7 @@
 #include "RectUtils.h"
 #include "Render.h"
 #include "ResourceIDs.h"
+#include "ResourceLoader.h"
 #include "Room.h"
 #include "RoomGraphics.h"
 #include "RubberBands.h"
@@ -500,7 +501,7 @@ void PlayGame (void)
 						hOffset = (RectWide(&boardSrcRect) - kMaxViewWidth) / 2;
 					else
 						hOffset = -576;
-					thePicture = GetPicture(kScoreboardPictID);
+					thePicture = Gp_LoadImage(kScoreboardPictID);
 					if (!thePicture)
 						RedAlert(kErrFailedGraphicLoad);
 					GetObject(thePicture, sizeof(bmInfo), &bmInfo);
@@ -545,7 +546,7 @@ void PlayGame (void)
 			hOffset = (RectWide(&boardSrcRect) - kMaxViewWidth) / 2;
 		else
 			hOffset = -576;
-		thePicture = GetPicture(kScoreboardPictID);
+		thePicture = Gp_LoadImage(kScoreboardPictID);
 		if (!thePicture)
 			RedAlert(kErrFailedGraphicLoad);
 		GetObject(thePicture, sizeof(bmInfo), &bmInfo);
