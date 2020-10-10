@@ -750,18 +750,26 @@ void LopOffExtraRooms (HWND mssgWindow)
 	if (count > 0)					// if there were trailing empties
 	{
 		r = thisHouse.nRooms - count;
-		newSize = sizeof(roomType) * (size_t)r;
 									// resize room array (shrink)
-		newRoomsPtr = (roomPtr)realloc(thisHouse.rooms, newSize);
-		if (newRoomsPtr == NULL)	// problem?
+		if (r <= 0)
 		{
-			SetMessageTextColor(mssgWindow, redColor);
-			GetLocalizedString(16, message, ARRAYSIZE(message));
-			SetMessageWindowMessage(mssgWindow, message);
+			free(thisHouse.rooms);
+			thisHouse.rooms = NULL;
 		}
 		else
 		{
-			thisHouse.rooms = newRoomsPtr;
+			newSize = sizeof(roomType) * (size_t)r;
+			newRoomsPtr = (roomPtr)realloc(thisHouse.rooms, newSize);
+			if (newRoomsPtr == NULL)  // problem?
+			{
+				SetMessageTextColor(mssgWindow, redColor);
+				GetLocalizedString(16, message, ARRAYSIZE(message));
+				SetMessageWindowMessage(mssgWindow, message);
+			}
+			else
+			{
+				thisHouse.rooms = newRoomsPtr;
+			}
 		}
 									// reflect new room count
 		thisHouse.nRooms -= count;

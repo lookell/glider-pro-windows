@@ -513,7 +513,7 @@ typedef struct IconFileDirectory
 	IconFileDirEntry Entries[ANYSIZE_ARRAY];
 } IconFileDirectory;
 
-C_ASSERT(sizeof(IconFileDirectory) == 6 + ANYSIZE_ARRAY * sizeof(IconFileDirEntry));
+C_ASSERT(offsetof(IconFileDirectory, Entries) == 6);
 
 typedef struct GroupIconDirEntry
 {
@@ -537,7 +537,7 @@ typedef struct GroupIconDirectory
 	GroupIconDirEntry Entries[ANYSIZE_ARRAY];
 } GroupIconDirectory;
 
-C_ASSERT(sizeof(GroupIconDirectory) == 6 + ANYSIZE_ARRAY * sizeof(GroupIconDirEntry));
+C_ASSERT(offsetof(GroupIconDirectory, Entries) == 6);
 
 #pragma pack(pop)
 
@@ -598,6 +598,7 @@ static HRESULT ReadIconFileDirectory(ByteSlice *slice, IconFileDirectory **outpu
 	WORD iconCount;
 	WORD idx;
 	size_t valueSize;
+	HRESULT hr;
 
 	source = *slice;
 	RETURN_IF_FAILED(ReadWORD(&source, &iconReserved));
@@ -614,9 +615,19 @@ static HRESULT ReadIconFileDirectory(ByteSlice *slice, IconFileDirectory **outpu
 	value->Count = iconCount;
 	for (idx = 0; idx < iconCount; idx++)
 	{
-		RETURN_IF_FAILED(ReadIconFileDirEntry(&source, &value->Entries[idx]));
+		hr = ReadIconFileDirEntry(&source, &value->Entries[idx]);
+		if (FAILED(hr))
+		{
+			free(value);
+			return hr;
+		}
 	}
-	RETURN_IF_FAILED(CheckIconFileDirectory(value));
+	hr = CheckIconFileDirectory(value);
+	if (FAILED(hr))
+	{
+		free(value);
+		return hr;
+	}
 	*slice = source;
 	*output = value;
 	return S_OK;
@@ -685,7 +696,11 @@ HICON LoadMemoryICO(const void *buffer, size_t length, int width, int height)
 
 	readerSlice = fileSlice;
 	RETURN_NULL_IF_FAILED(ReadIconFileDirectory(&readerSlice, &iconFileDir));
-	RETURN_NULL_IF_FAILED(ConvertIconFileDirToGroupDir(iconFileDir, &groupIconDir));
+	if (FAILED(ConvertIconFileDirToGroupDir(iconFileDir, &groupIconDir)))
+	{
+		free(iconFileDir);
+		return NULL;
+	}
 	// If `width` or `height` are zero here, they are interpreted as the values
 	// of the SM_CXICON and SM_CYICON system metrics instead.
 	iconID = LookupIconIdFromDirectoryEx((PBYTE)groupIconDir, TRUE, width, height, LR_DEFAULTCOLOR);

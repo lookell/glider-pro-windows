@@ -286,7 +286,7 @@ void DrawCabinet (const Rect *cabinet)
 	#define		kCabinetDeep		4
 	#define		kCabinetShadowOff	6
 	Rect		tempRect;
-	SInt32		brownC, dkGrayC, ltTanC, tanC, dkRedC, blackC;
+	SInt32		brownC, dkGrayC, ltTanC, tanC, dkRedC;
 	HRGN		shadowRgn;
 
 	brownC = k8BrownColor;
@@ -294,7 +294,6 @@ void DrawCabinet (const Rect *cabinet)
 	ltTanC = k8LtTanColor;
 	tanC = k8TanColor;
 	dkRedC = k8DkRed2Color;
-	blackC = k8BlackColor;
 
 	BeginPath(backSrcMap);
 	MoveToEx(backSrcMap, cabinet->left, cabinet->bottom, NULL);
@@ -495,13 +494,12 @@ void DrawDresser (const Rect *dresser)
 	#define		kDresserDrawerDrop	12
 	#define		kDresserSideSpare	14
 	Rect		tempRect, dest;
-	SInt32		yellowC, brownC, dkGrayC, ltTanC, dkstRedC;
+	SInt32		yellowC, brownC, ltTanC, dkstRedC;
 	HRGN		shadowRgn;
 	SInt16		nRects, height, i;
 
 	yellowC = k8PissYellowColor;
 	brownC = k8BrownColor;
-	dkGrayC = k8DkstGrayColor;
 	ltTanC = k8LtTanColor;
 	dkstRedC = k8DkRed2Color;
 

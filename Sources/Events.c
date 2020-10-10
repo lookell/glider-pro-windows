@@ -45,11 +45,9 @@ HACCEL editAccelTable;
 
 void HandleKeyEvent (HWND hwnd, BYTE vKey)
 {
-	Boolean shiftDown, commandDown, optionDown;
+	Boolean shiftDown;
 
 	shiftDown = (GetKeyState(VK_SHIFT) < 0);
-	commandDown = (GetKeyState(VK_CONTROL) < 0);
-	optionDown = (GetKeyState(VK_MENU) < 0);
 
 	switch (vKey)
 	{

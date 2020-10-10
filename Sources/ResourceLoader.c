@@ -472,9 +472,7 @@ write_house_to_zip (mz_zip_archive *archive, const houseType *house)
 	void *dataBuffer;
 	size_t dataLength;
 	mz_bool succeeded;
-	HRESULT hr;
 
-	hr = S_OK;
 	if (!byteio_init_memory_writer(&dataWriter, 0))
 	{
 		return E_OUTOFMEMORY;

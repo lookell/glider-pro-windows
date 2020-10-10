@@ -161,6 +161,7 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 
 	tileOver = (mouseIs.h - tileSrc.left) / kMiniTileWide;
 	wasTileOver = -1;
+	*newTileOver = -1;
 	SetRect(&dragRect, 0, 0, kMiniTileWide, 80);
 	OffsetRect(&dragRect,
 		tileSrc.left + (tileOver * kMiniTileWide),
@@ -465,7 +466,7 @@ void RoomInfo_InitDialog (HWND hDlg)
 INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	Point mouseIs;
-	SInt16 newBack, newTileOver, i;
+	SInt16 newBack, i;
 	Boolean forceDraw;
 
 	switch (message)
@@ -595,6 +596,8 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 			ClientToScreen(hDlg, &pt);
 			if (DragDetect(hDlg, pt))
 			{
+				SInt16 newTileOver;
+
 				DragMiniTile(hDlg, mouseIs, &newTileOver);
 				if ((newTileOver >= 0) && (newTileOver < kNumTiles))
 				{

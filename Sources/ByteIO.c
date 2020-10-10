@@ -605,8 +605,12 @@ int byteio_init_handle_writer(byteio *stream, HANDLE hFile)
 
 static memory_reader *memory_reader_init(const void *buffer, size_t size)
 {
-	memory_reader *self = (memory_reader *)malloc(sizeof(*self));
-	if (self == NULL || size > (size_t)PTRDIFF_MAX)
+	memory_reader *self;
+
+	if (size > (size_t)PTRDIFF_MAX)
+		return NULL;
+	self = (memory_reader *)malloc(sizeof(*self));
+	if (self == NULL)
 		return NULL;
 	self->size = (ptrdiff_t)size;
 	self->pos = 0;
