@@ -1,8 +1,5 @@
 #define GP_USE_WINAPI_H
 
-#define CINTERFACE
-#define COBJMACROS
-
 #include "Audio.h"
 #include "WinAPI.h"
 
