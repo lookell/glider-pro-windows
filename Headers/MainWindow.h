@@ -39,6 +39,10 @@ extern SInt16 theMode;
 extern Boolean fadeGraysOut;
 extern Boolean isDoColorFade;
 extern Boolean splashDrawn;
+#ifdef GP_USE_WINAPI_H
+extern HDC splashSrcMap;
+#endif
+extern Rect splashSrcRect;
 
 void RedrawSplashScreen (void);
 void UpdateMainWindow (void);

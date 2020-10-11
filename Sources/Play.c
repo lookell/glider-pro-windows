@@ -292,9 +292,10 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 
 		Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-		QSetRect(&tempRect, 0, 0, 640, 460);
+		tempRect = splashSrcRect;
+		ZeroRectCorner(&tempRect);
 		QOffsetRect(&tempRect, splashOriginH, splashOriginV);
-		LoadScaledGraphic(workSrcMap, kSplash8BitPICT, &tempRect);
+		Mac_CopyBits(splashSrcMap, workSrcMap, &splashSrcRect, &tempRect, srcCopy, nil);
 	}
 	WaitCommandQReleased();
 	demoGoing = false;

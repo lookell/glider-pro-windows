@@ -51,6 +51,7 @@ void InitEnemies (void);
 void InitClutter (void);
 void InitSupport (void);
 void InitAngel (void);
+void InitSplashScreenMap (void);
 
 
 //==============================================================  Functions
@@ -664,6 +665,16 @@ void InitAngel (void)
 	LoadGraphic(angelMaskMap, kAngelMaskID);
 }
 
+//--------------------------------------------------------------  InitSplashScreenMap
+// This loads the graphic for the splash screen.
+
+void InitSplashScreenMap (void)
+{
+	QSetRect(&splashSrcRect, 0, 0, 640, 460);
+	splashSrcMap = CreateOffScreenGWorld(&splashSrcRect, kPreferredDepth);
+	LoadGraphic(splashSrcMap, kSplash8BitPICT);
+}
+
 //--------------------------------------------------------------  CreateOffscreens
 // All "utility" or "work" offscreen pix/bit maps are created here.
 // These would be offscreens that are reused throughout a game - they
@@ -696,6 +707,7 @@ void CreateOffscreens (void)
 	InitClutter();			SpinCursor(1);
 	InitSupport();			SpinCursor(1);
 	InitAngel();			SpinCursor(1);
+	InitSplashScreenMap();
 
 	QSetRect(&tileSrcRect, 0, 0, 128, 80);
 	tileSrcMap = NULL;

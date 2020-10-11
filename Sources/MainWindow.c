@@ -69,6 +69,8 @@ SInt16 theMode;
 Boolean fadeGraysOut;
 Boolean isDoColorFade;
 Boolean splashDrawn;
+HDC splashSrcMap;
+Rect splashSrcRect;
 
 static HCURSOR mainWindowCursor;
 
@@ -101,12 +103,13 @@ void DrawOnSplash (HDC hdc)
 
 void RedrawSplashScreen (void)
 {
-	Rect		tempRect;
+	Rect tempRect;
 
 	Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-	QSetRect(&tempRect, 0, 0, 640, 460);
+	tempRect = splashSrcRect;
+	ZeroRectCorner(&tempRect);
 	QOffsetRect(&tempRect, splashOriginH, splashOriginV);
-	LoadScaledGraphic(workSrcMap, kSplash8BitPICT, &tempRect);
+	Mac_CopyBits(splashSrcMap, workSrcMap, &splashSrcRect, &tempRect, srcCopy, nil);
 	DrawOnSplash(workSrcMap);
 	DissolveScreenOn(&workSrcRect);
 	CopyRectMainToWork(&workSrcRect);
@@ -132,9 +135,10 @@ void PaintMainWindow (HDC hdc)
 	else if (theMode == kSplashMode)
 	{
 		Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-		QSetRect(&tempRect, 0, 0, 640, 460);
+		tempRect = splashSrcRect;
+		ZeroRectCorner(&tempRect);
 		QOffsetRect(&tempRect, splashOriginH, splashOriginV);
-		LoadScaledGraphic(workSrcMap, kSplash8BitPICT, &tempRect);
+		Mac_CopyBits(splashSrcMap, workSrcMap, &splashSrcRect, &tempRect, srcCopy, nil);
 		Mac_CopyBits(workSrcMap, hdc, &workSrcRect, &mainWindowRect, srcCopy, nil);
 		DrawOnSplash(hdc);
 	}
@@ -170,6 +174,7 @@ void OpenMainWindow (void)
 	LONG width, height;
 	WINDOWPLACEMENT placement;
 	DWORD windowStyle;
+	Rect tempRect;
 
 	if (mainWindow != NULL)
 	{
@@ -246,7 +251,9 @@ void OpenMainWindow (void)
 			splashOriginV = 0;
 
 		Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-		LoadGraphic(workSrcMap, kSplash8BitPICT);
+		tempRect = splashSrcRect;
+		ZeroRectCorner(&tempRect);
+		Mac_CopyBits(splashSrcMap, workSrcMap, &splashSrcRect, &tempRect, srcCopy, nil);
 
 		if ((fadeGraysOut) && (isDoColorFade))
 		{
