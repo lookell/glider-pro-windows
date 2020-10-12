@@ -303,7 +303,7 @@ static float VolumeToAmplitudeRatio(float volume)
 	float amplitude;
 
 	volume = ClampVolume(volume);
-	amplitude = volume;
+	amplitude = powf(volume, 1.75f);
 	return amplitude;
 }
 
