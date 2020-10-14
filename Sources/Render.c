@@ -720,6 +720,9 @@ void AddToMirrorRegion (const Rect *theRect)
 {
 	HRGN		tempRgn;
 
+	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
+		return;
+
 	if (mirrorRgn == NULL)
 	{
 		mirrorRgn = CreateRectRgn(theRect->left, theRect->top,

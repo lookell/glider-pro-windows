@@ -32,6 +32,9 @@ void WipeScreenOn (SInt16 direction, const Rect *theRect)
 	SInt16		i, count;
 	HDC			mainWindowDC;
 
+	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
+		return;
+
 	wipeRect = *theRect;
 	switch (direction)
 	{
@@ -163,6 +166,9 @@ void DissBits (const Rect *theRect)
 	INT			chunkSize = 4;
 	UInt32		state;
 
+	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
+		return;
+
 	mainWindowDC = GetMainWindowDC();
 	SaveDC(mainWindowDC);
 	topLeft.x = theRect->left;
@@ -206,6 +212,9 @@ void DissBitsChunky (const Rect *theRect)
 	INT			chunkH, chunkV;
 	INT			chunkSize = 8;
 	UInt32		state;
+
+	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
+		return;
 
 	mainWindowDC = GetMainWindowDC();
 	SaveDC(mainWindowDC);

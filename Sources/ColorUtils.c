@@ -68,6 +68,9 @@ void ColorOval (HDC hdc, const Rect *theRect, SInt32 color)
 	COLORREF	theRGBColor, wasColor;
 	HRGN		theRegion;
 
+	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
+		return;
+
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
 	theRegion = CreateEllipticRgn(theRect->left, theRect->top,
@@ -150,6 +153,9 @@ void ColorFrameOval (HDC hdc, const Rect *theRect, SInt32 color)
 	COLORREF	theRGBColor, wasColor;
 	HRGN		theRegion;
 
+	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
+		return;
+
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
 	theRegion = CreateEllipticRgn(theRect->left, theRect->top,
@@ -210,7 +216,12 @@ COLORREF DkGrayForeColor (void)
 
 void ColorShadowRect (HDC hdc, const Rect *theRect, SInt32 color)
 {
-	HRGN theRgn = CreateRectRgn(theRect->left, theRect->top,
+	HRGN theRgn;
+
+	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
+		return;
+
+	theRgn = CreateRectRgn(theRect->left, theRect->top,
 			theRect->right, theRect->bottom);
 	ColorShadowRegion(hdc, theRgn, color);
 	DeleteObject(theRgn);
@@ -222,7 +233,12 @@ void ColorShadowRect (HDC hdc, const Rect *theRect, SInt32 color)
 
 void ColorShadowOval (HDC hdc, const Rect *theRect, SInt32 color)
 {
-	HRGN theRgn = CreateEllipticRgn(theRect->left, theRect->top,
+	HRGN theRgn;
+
+	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
+		return;
+
+	theRgn = CreateEllipticRgn(theRect->left, theRect->top,
 			theRect->right + 1, theRect->bottom + 1);
 	ColorShadowRegion(hdc, theRgn, color);
 	DeleteObject(theRgn);

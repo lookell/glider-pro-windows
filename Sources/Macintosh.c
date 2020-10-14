@@ -296,7 +296,12 @@ void Mac_DrawString(HDC hdc, ConstStringPtr s)
 
 void Mac_FrameRect(HDC hdc, const Rect *r, HBRUSH hbr, SInt16 w, SInt16 h)
 {
-	HRGN theRgn = CreateRectRgn(r->left, r->top, r->right, r->bottom);
+	HRGN theRgn;
+
+	if (r->left >= r->right || r->top >= r->bottom)
+		return;
+
+	theRgn = CreateRectRgn(r->left, r->top, r->right, r->bottom);
 	FrameRgn(hdc, theRgn, hbr, w, h);
 	DeleteObject(theRgn);
 }
@@ -388,7 +393,12 @@ void Mac_LineTo(HDC hdc, SInt16 h, SInt16 v)
 
 void Mac_PaintRect(HDC hdc, const Rect *r, HBRUSH hbr)
 {
-	HRGN theRgn = CreateRectRgn(r->left, r->top, r->right, r->bottom);
+	HRGN theRgn;
+
+	if (r->left >= r->right || r->top >= r->bottom)
+		return;
+
+	theRgn = CreateRectRgn(r->left, r->top, r->right, r->bottom);
 	FillRgn(hdc, theRgn, hbr);
 	DeleteObject(theRgn);
 }

@@ -153,6 +153,9 @@ HDC CreateOffScreenGWorld (const Rect *bounds, SInt16 depth)
 	HBITMAP		hbmSurface;
 	INT			cxSurface, cySurface;
 
+	if (bounds->left >= bounds->right || bounds->top >= bounds->bottom)
+		return NULL;
+
 	hdcDisplay = GetDC(NULL);
 	if (hdcDisplay == NULL)
 		return NULL;
