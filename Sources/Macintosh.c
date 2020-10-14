@@ -18,6 +18,7 @@ void Mac_CopyBits(
 {
 	INT xSrc, ySrc, wSrc, hSrc;
 	INT xDst, yDst, wDst, hDst;
+	COLORREF wasBkColor, wasTextColor;
 
 	if (srcRect->left >= srcRect->right || srcRect->top >= srcRect->bottom)
 		return;
@@ -35,10 +36,11 @@ void Mac_CopyBits(
 	wDst = dstRect->right - dstRect->left;
 	hDst = dstRect->bottom - dstRect->top;
 
-	SaveDC(dstBits);
 	if (maskRgn != NULL)
-		SelectClipRgn(dstBits, maskRgn);
-
+	{
+		SaveDC(dstBits);
+		ExtSelectClipRgn(dstBits, maskRgn, RGN_AND);
+	}
 	switch (mode)
 	{
 		case srcCopy:
@@ -49,10 +51,12 @@ void Mac_CopyBits(
 		case srcXor:
 		// invert the destination where the source is black
 		// and keep the destination where the source is white
-		SetBkColor(dstBits, RGB(0xFF, 0xFF, 0xFF));
-		SetTextColor(dstBits, RGB(0x00, 0x00, 0x00));
+		wasBkColor = SetBkColor(dstBits, RGB(0xFF, 0xFF, 0xFF));
+		wasTextColor = SetTextColor(dstBits, RGB(0x00, 0x00, 0x00));
 		StretchBlt(dstBits, xDst, yDst, wDst, hDst,
 				srcBits, xSrc, ySrc, wSrc, hSrc, 0x00990066); // DSxn
+		SetTextColor(dstBits, wasTextColor);
+		SetBkColor(dstBits, wasBkColor);
 		break;
 
 		case transparent:
@@ -60,8 +64,10 @@ void Mac_CopyBits(
 				srcBits, xSrc, ySrc, wSrc, hSrc, GetBkColor(dstBits));
 		break;
 	}
-
-	RestoreDC(dstBits, -1);
+	if (maskRgn != NULL)
+	{
+		RestoreDC(dstBits, -1);
+	}
 }
 
 //--------------------------------------------------------------  CopyMask
