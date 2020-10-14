@@ -2054,6 +2054,7 @@ void DrawPictSansWhiteObject (SInt16 what, const Rect *theRect)
 	Rect		bounds;
 	HDC			tempMap;
 	SInt16		pictID;
+	COLORREF	wasBkColor;
 
 	switch (what)
 	{
@@ -2142,11 +2143,19 @@ void DrawPictSansWhiteObject (SInt16 what, const Rect *theRect)
 	}
 
 	bounds = srcRects[what];
+	if (bounds.left >= bounds.right || bounds.top >= bounds.bottom)
+		return;
+
 	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 	LoadGraphic(tempMap, pictID);
 
+	// The transparent mode of Mac_CopyBits uses the current background
+	// color of the *destination* HDC as the transparent color. Only pixels
+	// that don't match the background color (here, white) are copied.
+	wasBkColor = SetBkColor(backSrcMap, RGB(0xFF, 0xFF, 0xFF));
 	Mac_CopyBits(tempMap, backSrcMap,
 			&srcRects[what], theRect, transparent, nil);
+	SetBkColor(backSrcMap, wasBkColor);
 
 	DisposeGWorld(tempMap);
 }
@@ -2157,14 +2166,20 @@ void DrawCustPictSansWhite (SInt16 pictID, const Rect *theRect)
 {
 	Rect		bounds;
 	HDC			tempMap;
+	COLORREF	wasBkColor;
+
+	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
+		return;
 
 	bounds = *theRect;
 	ZeroRectCorner(&bounds);
 	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 	LoadGraphic(tempMap, pictID);
 
+	wasBkColor = SetBkColor(backSrcMap, RGB(0xFF, 0xFF, 0xFF));
 	Mac_CopyBits(tempMap, backSrcMap,
 			&bounds, theRect, transparent, nil);
+	SetBkColor(backSrcMap, wasBkColor);
 
 	DisposeGWorld(tempMap);
 }
