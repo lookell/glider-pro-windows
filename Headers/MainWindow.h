@@ -12,8 +12,6 @@
 #include "WinAPI.h"
 #endif
 
-#define WC_MAINWINDOW L"GliderMainWindow"
-
 #ifdef GP_USE_WINAPI_H
 extern HCURSOR handCursor;
 extern HCURSOR vertCursor;
@@ -44,6 +42,7 @@ extern HDC splashSrcMap;
 #endif
 extern Rect splashSrcRect;
 
+void RegisterMainWindowClass (void);
 void RedrawSplashScreen (void);
 void UpdateMainWindow (void);
 void OpenMainWindow (void);
@@ -60,7 +59,6 @@ void InitMainWindowCursor (void);
 #ifdef GP_USE_WINAPI_H
 HCURSOR GetMainWindowCursor (void);
 void SetMainWindowCursor (HCURSOR hCursor);
-LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 #endif
 
 #endif

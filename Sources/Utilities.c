@@ -42,26 +42,11 @@ static UInt32 theSeed;
 void ToolBoxInit (void)
 {
 	INITCOMMONCONTROLSEX icc;
-	WNDCLASSEX wcMain;
 
 	icc.dwSize = sizeof(icc);
 	icc.dwICC = ICC_WIN95_CLASSES;
 	InitCommonControlsEx(&icc);
-
-	wcMain.cbSize = sizeof(wcMain);
-	wcMain.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-	wcMain.lpfnWndProc = MainWindowProc;
-	wcMain.cbClsExtra = 0;
-	wcMain.cbWndExtra = 0;
-	wcMain.hInstance = HINST_THISCOMPONENT;
-	wcMain.hIcon = LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDI_APPL));
-	wcMain.hCursor = NULL;
-	wcMain.hbrBackground = NULL;
-	wcMain.lpszMenuName = NULL;
-	wcMain.lpszClassName = WC_MAINWINDOW;
-	wcMain.hIconSm = NULL;
-	RegisterClassEx(&wcMain);
-
+	RegisterMainWindowClass();
 	InitRandomLongQUS();
 	InitCursor();
 	switchedOut = false;

@@ -41,12 +41,16 @@
 #include <strsafe.h>
 
 
+#define WC_MAINWINDOW  TEXT("GliderMainWindow")
+
+
 void DrawOnSplash (HDC hdc);
 void PaintMainWindow (HDC hdc);
 void AdjustMainWindowDC (HDC hdc);
 void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick);
 void SetPaletteToGrays (RGBQUAD *colors, UINT numColors, int saturation,
 	int maxSaturation);
+LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate);
 
 
@@ -76,6 +80,27 @@ static HCURSOR mainWindowCursor;
 
 
 //==============================================================  Functions
+//--------------------------------------------------------------  RegisterMainWindowClass
+
+void RegisterMainWindowClass (void)
+{
+	WNDCLASSEX wcx;
+
+	wcx.cbSize = sizeof(wcx);
+	wcx.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+	wcx.lpfnWndProc = MainWindowProc;
+	wcx.cbClsExtra = 0;
+	wcx.cbWndExtra = 0;
+	wcx.hInstance = HINST_THISCOMPONENT;
+	wcx.hIcon = LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDI_APPL));
+	wcx.hCursor = NULL;
+	wcx.hbrBackground = NULL;
+	wcx.lpszMenuName = NULL;
+	wcx.lpszClassName = WC_MAINWINDOW;
+	wcx.hIconSm = NULL;
+	RegisterClassEx(&wcx);
+}
+
 //--------------------------------------------------------------  DrawOnSplash
 // Draws additional text on top of splash screen.
 
