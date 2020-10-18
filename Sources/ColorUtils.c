@@ -250,42 +250,36 @@ void ColorShadowOval (HDC hdc, const Rect *theRect, SInt32 color)
 
 void ColorShadowRegion (HDC hdc, HRGN theRgn, SInt32 color)
 {
-	HBRUSH hbrShadow;
+	HBITMAP shadowBitmap;
+	HBRUSH shadowBrush;
 
 	// create the shadow brush, and save the DC's settings
-	hbrShadow = CreateShadowBrush();
+	shadowBitmap = CreateShadowBitmap();
+	shadowBrush = CreatePatternBrush(shadowBitmap);
 	SaveDC(hdc);
 	// set the black bits in the brush to white on the destination
 	SetTextColor(hdc, RGB(0x00, 0x00, 0x00));
 	SetBkColor(hdc, RGB(0xFF, 0xFF, 0xFF));
 	SetROP2(hdc, R2_MERGENOTPEN); // DPno
-	FillRgn(hdc, theRgn, hbrShadow);
+	FillRgn(hdc, theRgn, shadowBrush);
 	// set the black bits in the brush to the desired color on the destination
 	SetTextColor(hdc, Index2ColorRef(color));
 	SetROP2(hdc, R2_MASKPEN); // DPa
-	FillRgn(hdc, theRgn, hbrShadow);
+	FillRgn(hdc, theRgn, shadowBrush);
 	// restore the DC's settings, and delete the shadow brush
 	RestoreDC(hdc, -1);
-	DeleteObject(hbrShadow);
+	DeleteObject(shadowBrush);
+	DeleteObject(shadowBitmap);
 }
 
-//--------------------------------------------------------------  CreateShadowBrush
-// Create a dithered gray brush for filling in shadows. It can be colorized
-// by calling SetTextColor and SetBkColor on the DC that it's selected into.
+//--------------------------------------------------------------  CreateShadowBitmap
+// Create a dithered gray bitmap for filling in shadows. It can be made into
+// a brush by calling CreatePatternBrush(), and then colorized by calling
+// SetTextColor() and SetBkColor() on the DC that the brush is selected into.
 
-HBRUSH CreateShadowBrush (void)
+HBITMAP CreateShadowBitmap (void)
 {
 	const WORD grayBits[8] = { 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA };
-	static HBITMAP grayDither = NULL;
-
-	if (grayDither == NULL)
-	{
-		grayDither = CreateBitmap(8, 8, 1, 1, grayBits);
-		if (grayDither == NULL)
-		{
-			return NULL;
-		}
-	}
-	return CreatePatternBrush(grayDither);
+	return CreateBitmap(8, 8, 1, 1, grayBits);
 }
 

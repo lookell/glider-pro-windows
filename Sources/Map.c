@@ -229,6 +229,7 @@ void RedrawMapContents (HDC hdc)
 	SInt16 h, i, groundLevel;
 	SInt16 floor, suite, roomNum, type;
 	Boolean activeRoomVisible;
+	HBITMAP ditherBitmap;
 	HBRUSH ditherBrush;
 
 	if (mapWindow == NULL || hdc == NULL)
@@ -238,7 +239,8 @@ void RedrawMapContents (HDC hdc)
 	SetStretchBltMode(hdc, HALFTONE);
 	SetBrushOrgEx(hdc, 0, 0, NULL);
 
-	ditherBrush = CreateShadowBrush();
+	ditherBitmap = CreateShadowBitmap();
+	ditherBrush = CreatePatternBrush(ditherBitmap);
 
 	activeRoomVisible = false;
 	groundLevel = kMapGroundValue - mapTopRoom;
@@ -294,6 +296,7 @@ void RedrawMapContents (HDC hdc)
 	}
 
 	DeleteObject(ditherBrush);
+	DeleteObject(ditherBitmap);
 	SelectObject(hdc, GetStockObject(BLACK_PEN));
 
 	for (i = 1; i < mapRoomsWide; i++)

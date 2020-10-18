@@ -27,7 +27,7 @@ COLORREF DkGrayForeColor (void);
 void ColorShadowRect (HDC hdc, const Rect *theRect, SInt32 color);
 void ColorShadowOval (HDC hdc, const Rect *theRect, SInt32 color);
 void ColorShadowRegion (HDC hdc, HRGN theRgn, SInt32 color);
-HBRUSH CreateShadowBrush (void);
+HBITMAP CreateShadowBitmap (void);
 
 #endif
 
