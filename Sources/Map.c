@@ -231,6 +231,8 @@ void RedrawMapContents (HDC hdc)
 	Boolean activeRoomVisible;
 	HBITMAP ditherBitmap;
 	HBRUSH ditherBrush;
+	HRGN skyRgn, groundRgn, tempRgn;
+	COLORREF wasBkColor, wasTextColor;
 
 	if (mapWindow == NULL || hdc == NULL)
 		return;
@@ -239,8 +241,9 @@ void RedrawMapContents (HDC hdc)
 	SetStretchBltMode(hdc, HALFTONE);
 	SetBrushOrgEx(hdc, 0, 0, NULL);
 
-	ditherBitmap = CreateShadowBitmap();
-	ditherBrush = CreatePatternBrush(ditherBitmap);
+	skyRgn = CreateRectRgn(0, 0, 0, 0);
+	groundRgn = CreateRectRgn(0, 0, 0, 0);
+	tempRgn = CreateRectRgn(0, 0, 0, 0);
 
 	activeRoomVisible = false;
 	groundLevel = kMapGroundValue - mapTopRoom;
@@ -281,22 +284,36 @@ void RedrawMapContents (HDC hdc)
 			}
 			else
 			{
-				SaveDC(hdc);
-
-				SetBkColor(hdc, whiteColor);
+				SetRectRgn(tempRgn, aRoom.left, aRoom.top, aRoom.right, aRoom.bottom);
 				if (i >= groundLevel)
-					SetTextColor(hdc, greenColor);
+				{
+					CombineRgn(groundRgn, groundRgn, tempRgn, RGN_OR);
+				}
 				else
-					SetTextColor(hdc, blueColor);
-				Mac_PaintRect(hdc, &aRoom, ditherBrush);
-
-				RestoreDC(hdc, -1);
+				{
+					CombineRgn(skyRgn, skyRgn, tempRgn, RGN_OR);
+				}
 			}
 		}
 	}
 
+	ditherBitmap = CreateShadowBitmap();
+	ditherBrush = CreatePatternBrush(ditherBitmap);
+	wasBkColor = SetBkColor(hdc, whiteColor);
+	wasTextColor = SetTextColor(hdc, blueColor);
+	FillRgn(hdc, skyRgn, ditherBrush);  // draw the blue sky
+	SetBkColor(hdc, whiteColor);
+	SetTextColor(hdc, greenColor);
+	FillRgn(hdc, groundRgn, ditherBrush);  // draw the green ground
+	SetBkColor(hdc, wasBkColor);
+	SetTextColor(hdc, wasTextColor);
 	DeleteObject(ditherBrush);
 	DeleteObject(ditherBitmap);
+
+	DeleteObject(tempRgn);
+	DeleteObject(groundRgn);
+	DeleteObject(skyRgn);
+
 	SelectObject(hdc, GetStockObject(BLACK_PEN));
 
 	for (i = 1; i < mapRoomsWide; i++)
