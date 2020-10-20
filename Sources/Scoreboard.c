@@ -72,7 +72,7 @@ void RefreshScoreboard (SInt16 mode)
 
 	mainWindowDC = GetMainWindowDC();
 	Mac_CopyBits(boardSrcMap, mainWindowDC,
-			&boardSrcRect, &boardDestRect, srcCopy, 0L);
+			&boardSrcRect, &boardDestRect, srcCopy, nil);
 	ReleaseMainWindowDC(mainWindowDC);
 
 	QuickBatteryRefresh(false);

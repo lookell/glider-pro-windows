@@ -341,7 +341,7 @@ void RenderFish (const dynaType *theDinah)
 	else
 	{
 		Mac_CopyBits(fishSrcMap, workSrcMap,
-				&src, &dest, srcCopy, NULL);
+				&src, &dest, srcCopy, nil);
 		AddRectToBackRects(&dest);
 		dest = theDinah->whole;
 		QOffsetRect(&dest, playOriginH, playOriginV);

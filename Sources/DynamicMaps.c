@@ -89,7 +89,7 @@ SInt16 BackUpToSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 	savedMaps[numSavedMaps].map = CreateOffScreenGWorld(&mapRect, kPreferredDepth);
 
 	Mac_CopyBits(backSrcMap, savedMaps[numSavedMaps].map,
-			theRect, &mapRect, srcCopy, NULL);
+			theRect, &mapRect, srcCopy, nil);
 
 	savedMaps[numSavedMaps].where = where;
 	savedMaps[numSavedMaps].who = who;
@@ -119,7 +119,7 @@ SInt16 ReBackUpSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 			ZeroRectCorner(&mapRect);
 
 			Mac_CopyBits(backSrcMap, savedMaps[foundIndex].map,
-					theRect, &mapRect, srcCopy, NULL);
+					theRect, &mapRect, srcCopy, nil);
 
 			return (foundIndex);
 		}
@@ -146,9 +146,9 @@ void RestoreFromSavedMap (SInt16 where, SInt16 who, Boolean doSparkle)
 			ZeroRectCorner(&mapRect);
 
 			Mac_CopyBits(savedMaps[i].map, backSrcMap,
-					&mapRect, &savedMaps[i].dest, srcCopy, NULL);
+					&mapRect, &savedMaps[i].dest, srcCopy, nil);
 			Mac_CopyBits(savedMaps[i].map, workSrcMap,
-					&mapRect, &savedMaps[i].dest, srcCopy, NULL);
+					&mapRect, &savedMaps[i].dest, srcCopy, nil);
 
 			AddRectToWorkRects(&savedMaps[i].dest);
 
@@ -264,7 +264,7 @@ void BackUpFlames (const Rect *src, SInt16 index)
 	{
 				// Copy background to map.
 		Mac_CopyBits(backSrcMap, savedMaps[index].map,
-				src, &dest, srcCopy, NULL);
+				src, &dest, srcCopy, nil);
 
 				// Copy flame to map.
 		Mac_CopyMask(blowerSrcMap, blowerMaskMap, savedMaps[index].map,
@@ -342,7 +342,7 @@ void BackUpTikiFlames (const Rect *src, SInt16 index)
 	{
 				// copy background to map
 		Mac_CopyBits(backSrcMap, savedMaps[index].map,
-				src, &dest, srcCopy, NULL);
+				src, &dest, srcCopy, nil);
 
 				// copy flame to map
 		Mac_CopyMask(blowerSrcMap, blowerMaskMap, savedMaps[index].map,
@@ -419,7 +419,7 @@ void BackUpBBQCoals (const Rect *src, SInt16 index)
 	{
 				// copy background to map
 		Mac_CopyBits(backSrcMap, savedMaps[index].map,
-				src, &dest, srcCopy, NULL);
+				src, &dest, srcCopy, nil);
 
 				// copy flame to map
 		Mac_CopyMask(blowerSrcMap, blowerMaskMap, savedMaps[index].map,
@@ -496,7 +496,7 @@ void BackUpPendulum (const Rect *src, SInt16 index)
 	for (i = 0; i < kNumPendulums; i++)
 	{
 		Mac_CopyBits(backSrcMap, savedMaps[index].map,
-				src, &dest, srcCopy, NULL);
+				src, &dest, srcCopy, nil);
 
 		Mac_CopyMask(bonusSrcMap, bonusMaskMap, savedMaps[index].map,
 				&pendulumSrc[i], &pendulumSrc[i], &dest);
@@ -578,7 +578,7 @@ void BackUpStar (const Rect *src, SInt16 index)
 	for (i = 0; i < 6; i++)
 	{
 		Mac_CopyBits(backSrcMap, savedMaps[index].map,
-				src, &dest, srcCopy, NULL);
+				src, &dest, srcCopy, nil);
 
 				// copy flame to map
 		Mac_CopyMask(bonusSrcMap, bonusMaskMap, savedMaps[index].map,
