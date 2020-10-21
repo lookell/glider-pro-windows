@@ -289,12 +289,12 @@ void OpenMainWindow (void)
 	}
 	else
 	{
-		mainWindowRect = thisMac.screen;
-		ZeroRectCorner(&mainWindowRect);
-		mainWindowRect.bottom -= 20;		// thisMac.menuHigh
+		rcClient.left = 0;
+		rcClient.top = 0;
+		rcClient.right = RectWide(&thisMac.screen);
+		rcClient.bottom = RectTall(&thisMac.screen);
 		windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
-		SetRect(&rcClient, 0, 0, mainWindowRect.right, mainWindowRect.bottom);
-		AdjustWindowRect(&rcClient, windowStyle, TRUE);
+		AdjustWindowRect(&rcClient, windowStyle, FALSE);
 		width = rcClient.right - rcClient.left;
 		height = rcClient.bottom - rcClient.top;
 		mainWindow = CreateWindow(WC_MAINWINDOW, L"Main Window",
@@ -304,6 +304,12 @@ void OpenMainWindow (void)
 			RedAlert(kErrDialogDidntLoad);
 		CenterOverOwner(mainWindow);
 		ShowWindow(mainWindow, SW_SHOWNORMAL);
+
+		GetClientRect(mainWindow, &rcClient);
+		mainWindowRect.left = 0;
+		mainWindowRect.top = 0;
+		mainWindowRect.right = (SInt16)rcClient.right;
+		mainWindowRect.bottom = (SInt16)rcClient.bottom;
 
 		{
 			RECT clientRect;
