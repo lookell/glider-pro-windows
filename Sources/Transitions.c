@@ -49,7 +49,7 @@ void WipeScreenOn (SInt16 direction, const Rect *theRect)
 		wipeRect.left = wipeRect.right - kWipeRectThick;
 		hOffset = -kWipeRectThick;
 		vOffset = 0;
-		count = workSrcRect.right / kWipeRectThick;
+		count = (workSrcRect.right / kWipeRectThick) + 1;
 		break;
 
 		case kBelow:
@@ -63,7 +63,7 @@ void WipeScreenOn (SInt16 direction, const Rect *theRect)
 		wipeRect.right = wipeRect.left + kWipeRectThick;
 		hOffset = kWipeRectThick;
 		vOffset = 0;
-		count = workSrcRect.right / kWipeRectThick;
+		count = (workSrcRect.right / kWipeRectThick) + 1;
 		break;
 
 		default:
