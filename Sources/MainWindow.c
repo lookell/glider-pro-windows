@@ -315,10 +315,10 @@ void OpenMainWindow (void)
 			ReleaseDC(mainWindow, clientHDC);
 		}
 
-		splashOriginH = ((thisMac.screen.right - thisMac.screen.left) - 640) / 2;
+		splashOriginH = (RectWide(&workSrcRect) - RectWide(&splashSrcRect)) / 2;
 		if (splashOriginH < 0)
 			splashOriginH = 0;
-		splashOriginV = ((thisMac.screen.bottom - thisMac.screen.top) - 480) / 2;
+		splashOriginV = (RectTall(&workSrcRect) - RectTall(&splashSrcRect)) / 2;
 		if (splashOriginV < 0)
 			splashOriginV = 0;
 

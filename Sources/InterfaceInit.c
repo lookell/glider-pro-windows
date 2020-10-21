@@ -246,14 +246,15 @@ void VariableInit (void)
 	coordWindow = NULL;
 
 	houseRect = thisMac.screen;
+	ZeroRectCorner(&houseRect);
 	houseRect.bottom -= kScoreboardTall;
 	if (houseRect.right > kMaxViewWidth)
 		houseRect.right = kMaxViewWidth;
 	if (houseRect.bottom > kMaxViewHeight)
 		houseRect.bottom = kMaxViewHeight;
 
-	playOriginH = (RectWide(&thisMac.screen) - kRoomWide) / 2;
-	playOriginV = (RectTall(&thisMac.screen) - kTileHigh) / 2;
+	playOriginH = (RectWide(&houseRect) - kRoomWide) / 2;
+	playOriginV = (RectTall(&houseRect) - kTileHigh) / 2;
 
 	for (i = 0; i < 9; i++)
 	{

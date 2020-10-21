@@ -79,7 +79,7 @@ void DoGameOver (void)
 	playing = false;
 	SetUpFinalScreen();
 	mainWindowDC = GetMainWindowDC();
-	ColorRect(mainWindowDC, &mainWindowRect, 244);
+	ColorRect(mainWindowDC, &workSrcRect, 244);
 	ReleaseMainWindowDC(mainWindowDC);
 	DoGameOverStarAnimation();
 	if (!TestHighScore(mainWindow))
@@ -118,7 +118,7 @@ void SetUpFinalScreen (void)
 	{
 		GetLineOfText(tempStr, count, subStr);
 		WinFromMacString(outStr, ARRAYSIZE(outStr), subStr);
-		hOffset = HalfRectWide(&thisMac.screen);
+		hOffset = HalfRectWide(&workSrcRect);
 		vOffset = textDown + 32 + (count * 20);
 		SetTextColor(workSrcMap, blackColor);
 		TextOut(workSrcMap, hOffset + 1, vOffset + 1, outStr, subStr[0]);
@@ -297,14 +297,14 @@ void InitDiedGameOver (void)
 	for (i = 0; i < 8; i++)				// initialize dest page rects
 	{
 		QSetRect(&pages[i].dest, 0, 0, 32, 32);
-		CenterRectInRect(&pages[i].dest, &thisMac.screen);
-		QOffsetRect(&pages[i].dest, -thisMac.screen.left, -thisMac.screen.top);
+		CenterRectInRect(&pages[i].dest, &workSrcRect);
+		QOffsetRect(&pages[i].dest, -workSrcRect.left, -workSrcRect.top);
 		if (i < 4)
 			QOffsetRect(&pages[i].dest, -kPageSpacing * (4 - i), 0);
 		else
 			QOffsetRect(&pages[i].dest, kPageSpacing * (i - 3), 0);
-		QOffsetRect(&pages[i].dest, (thisMac.screen.right - thisMac.screen.left) / -2,
-				(thisMac.screen.right - thisMac.screen.left) / -2);
+		QOffsetRect(&pages[i].dest, RectWide(&workSrcRect) / -2,
+				RectWide(&workSrcRect) / -2);
 		if (pages[i].dest.left % 2 == 1)
 			QOffsetRect(&pages[i].dest, 1, 0);
 		pages[i].was = pages[i].dest;
@@ -322,7 +322,7 @@ void InitDiedGameOver (void)
 	roomRgn = CreateRectRgn(justRoomsRect.left, justRoomsRect.top,
 			justRoomsRect.right, justRoomsRect.bottom);
 	pagesStuck = 0;
-	stopPages = ((thisMac.screen.bottom - thisMac.screen.top) / 2) - 16;
+	stopPages = (RectTall(&workSrcRect) / 2) - 16;
 }
 
 //--------------------------------------------------------------  HandlePages

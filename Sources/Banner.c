@@ -48,7 +48,7 @@ void DrawBanner (Point *topLeft)
 	HDC			tempMask;
 
 	QSetRect(&wholePage, 0, 0, 330, 220);
-	mapBounds = thisMac.screen;
+	mapBounds = workSrcRect;
 	ZeroRectCorner(&mapBounds);
 	CenterRectInRect(&wholePage, &mapBounds);
 	topLeft->h = wholePage.left;
@@ -187,15 +187,14 @@ void DisplayStarsRemaining (void)
 	HFONT		textFont;
 
 	QSetRect(&bounds, 0, 0, 256, 64);
-	CenterRectInRect(&bounds, &thisMac.screen);
-	QOffsetRect(&bounds, -thisMac.screen.left, -thisMac.screen.top);
+	CenterRectInRect(&bounds, &workSrcRect);
+	QOffsetRect(&bounds, -workSrcRect.left, -workSrcRect.top);
 	src = bounds;
 	QInsetRect(&src, 64, 32);
 
 	StringCchPrintf(theStr, ARRAYSIZE(theStr), L"%d", (int)numStarsRemaining);
 
 	mainWindowDC = GetMainWindowDC();
-	QOffsetRect(&bounds, 0, -20);
 	if (numStarsRemaining < 2)
 		LoadScaledGraphic(mainWindowDC, kStarRemainingPICT, &bounds);
 	else

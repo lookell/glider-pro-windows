@@ -758,7 +758,8 @@ void RestoreEntireGameScreen (void)
 //	HideMenuBarOld();		// TEMP
 #endif
 
-	tempRect = thisMac.screen;
+	tempRect = workSrcRect;
+	tempRect.top -= kScoreboardTall;  // include the scoreboard
 	mainWindowDC = GetMainWindowDC();
 	Mac_PaintRect(mainWindowDC, &tempRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	ReleaseMainWindowDC(mainWindowDC);

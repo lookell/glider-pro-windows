@@ -94,7 +94,7 @@ void DrawHighScores (void)
 	HFONT		theFont;
 	COLORREF	wasColor;
 
-	scoreLeft = ((thisMac.screen.right - thisMac.screen.left) - kScoreWide) / 2;
+	scoreLeft = (RectWide(&workSrcRect) - kScoreWide) / 2;
 	dropIt = 129 + splashOriginV;
 
 	QSetRect(&tempRect, 0, 0, 332, 30);
