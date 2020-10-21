@@ -99,11 +99,9 @@ static phoneType theChimes;
 
 void NewGame (HWND ownerWindow, SInt16 mode)
 {
-	Rect		tempRect;
-	OSErr		theErr;
-	Boolean		wasPlayMusicPref;
-	HDC			mainWindowDC;
-
+	Rect tempRect;
+	OSErr theErr;
+	Boolean wasPlayMusicPref;
 	TIMECAPS timeCaps;
 	MMRESULT mmResult;
 
@@ -163,12 +161,6 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 #if !BUILD_ARCADE_VERSION
 //	HideMenuBarOld();		// TEMP
 #endif
-
-	tempRect = thisMac.screen;          // paint strip on screen black
-	tempRect.top = tempRect.bottom - 20;	// thisMac.menuHigh
-	mainWindowDC = GetMainWindowDC();
-	Mac_PaintRect(mainWindowDC, &tempRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-	ReleaseMainWindowDC(mainWindowDC);
 
 #ifdef COMPILEQT
 	if ((thisMac.hasQT) && (hasMovie))
