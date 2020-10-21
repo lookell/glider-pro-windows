@@ -144,18 +144,52 @@ void RedrawSplashScreen (void)
 
 void PaintMainWindow (HDC hdc)
 {
+	RECT clientRect;
+	HRGN unpaintedRgn;
+	HRGN justPaintedRgn;
 	Rect tempRect;
+
+	GetClientRect(mainWindow, &clientRect);
+	DPtoLP(hdc, (POINT *)&clientRect, 2);
+	unpaintedRgn = CreateRectRgnIndirect(&clientRect);
+	justPaintedRgn = CreateRectRgn(0, 0, 0, 0);
 
 	if (theMode == kEditMode)
 	{
 		PauseMarquee();
 		Mac_CopyBits(workSrcMap, hdc, &mainWindowRect, &mainWindowRect, srcCopy, nil);
 		ResumeMarquee();
+
+		SetRectRgn(
+			justPaintedRgn,
+			mainWindowRect.left,
+			mainWindowRect.top,
+			mainWindowRect.right,
+			mainWindowRect.bottom
+		);
+		CombineRgn(unpaintedRgn, unpaintedRgn, justPaintedRgn, RGN_DIFF);
 	}
 	else if (theMode == kPlayMode)
 	{
 		Mac_CopyBits(workSrcMap, hdc, &justRoomsRect, &justRoomsRect, srcCopy, nil);
 		RefreshScoreboard(kNormalTitleMode);
+
+		SetRectRgn(
+			justPaintedRgn,
+			justRoomsRect.left,
+			justRoomsRect.top,
+			justRoomsRect.right,
+			justRoomsRect.bottom
+		);
+		CombineRgn(unpaintedRgn, unpaintedRgn, justPaintedRgn, RGN_DIFF);
+		SetRectRgn(
+			justPaintedRgn,
+			boardDestRect.left,
+			boardDestRect.top,
+			boardDestRect.right,
+			boardDestRect.bottom
+		);
+		CombineRgn(unpaintedRgn, unpaintedRgn, justPaintedRgn, RGN_DIFF);
 	}
 	else if (theMode == kSplashMode)
 	{
@@ -164,9 +198,22 @@ void PaintMainWindow (HDC hdc)
 		ZeroRectCorner(&tempRect);
 		QOffsetRect(&tempRect, splashOriginH, splashOriginV);
 		Mac_CopyBits(splashSrcMap, workSrcMap, &splashSrcRect, &tempRect, srcCopy, nil);
-		Mac_CopyBits(workSrcMap, hdc, &workSrcRect, &mainWindowRect, srcCopy, nil);
+		Mac_CopyBits(workSrcMap, hdc, &workSrcRect, &workSrcRect, srcCopy, nil);
 		DrawOnSplash(hdc);
+
+		SetRectRgn(
+			justPaintedRgn,
+			workSrcRect.left,
+			workSrcRect.top,
+			workSrcRect.right,
+			workSrcRect.bottom
+		);
+		CombineRgn(unpaintedRgn, unpaintedRgn, justPaintedRgn, RGN_DIFF);
 	}
+
+	FillRgn(hdc, unpaintedRgn, (HBRUSH)GetStockObject(BLACK_BRUSH));
+	DeleteObject(justPaintedRgn);
+	DeleteObject(unpaintedRgn);
 
 	splashDrawn = true;
 }
