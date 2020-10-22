@@ -42,6 +42,7 @@ SInt16 demoHouseIndex;
 
 static houseSpec extraHouseSpecs[kMaxExtraHouses];
 static SInt16 numExtraHouses = 0;
+static HIMAGELIST houseIconImageList;
 
 
 //==============================================================  Functions
@@ -50,13 +51,10 @@ static SInt16 numExtraHouses = 0;
 #ifndef COMPILEDEMO
 BOOL InitLoadDialog (HWND hDlg)
 {
-	HWND		houseListView;
-	HICON		defaultIcon, loadedIcon;
-	INT			cxIcon, cyIcon;
-	LVITEM		lvItem;
-	LVFINDINFO	lvFindInfo;
-	HIMAGELIST	himl;
-	int			i;
+	HWND houseListView;
+	LVITEM lvItem;
+	LVFINDINFO lvFindInfo;
+	int i;
 
 	CenterOverOwner(hDlg);
 	houseListView = GetDlgItem(hDlg, kHouseListItem);
@@ -65,31 +63,16 @@ BOOL InitLoadDialog (HWND hDlg)
 		EndDialog(hDlg, IDCANCEL);
 		return TRUE;
 	}
-	cxIcon = GetSystemMetrics(SM_CXICON);
-	cyIcon = GetSystemMetrics(SM_CYICON);
-	defaultIcon = (HICON)LoadImage(HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(IDI_HOUSE), IMAGE_ICON,
-			cxIcon, cyIcon, LR_DEFAULTCOLOR | LR_SHARED);
-	if (defaultIcon == NULL)
-	{
-		RedAlert(kErrFailedResourceLoad);
-	}
-	himl = ImageList_Create(cxIcon, cyIcon, ILC_MASK | ILC_COLOR32, housesFound, 0);
 
 	SendMessage(houseListView, WM_SETREDRAW, FALSE, 0);
-	ListView_SetImageList(houseListView, himl, LVSIL_NORMAL);
+	ListView_SetImageList(houseListView, houseIconImageList, LVSIL_NORMAL);
 	for (i = 0; i < housesFound; i++)
 	{
-		loadedIcon = theHousesSpecs[i].hIcon;
-		if (loadedIcon == NULL)
-		{
-			loadedIcon = defaultIcon;
-		}
 		lvItem.mask = LVIF_IMAGE | LVIF_PARAM | LVIF_TEXT;
 		lvItem.iItem = housesFound; // insert at the end
 		lvItem.iSubItem = 0;
 		lvItem.pszText = theHousesSpecs[i].houseName;
-		lvItem.iImage = ImageList_AddIcon(himl, loadedIcon);
+		lvItem.iImage = theHousesSpecs[i].iconIndex;
 		lvItem.lParam = i;
 		ListView_InsertItem(houseListView, &lvItem);
 	}
@@ -275,6 +258,25 @@ void DoDirSearch (HWND ownerWindow)
 	SInt16			i, currentDir, numDirs;
 	PWCH			extPtr, sepPtr;
 	HRESULT			hr;
+	int				cxIcon, cyIcon;
+	HICON			houseIcon;
+
+	cxIcon = GetSystemMetrics(SM_CXICON);
+	cyIcon = GetSystemMetrics(SM_CYICON);
+	houseIcon = (HICON)LoadImage(
+		HINST_THISCOMPONENT,
+		MAKEINTRESOURCE(IDI_HOUSE),
+		IMAGE_ICON,
+		cxIcon,
+		cyIcon,
+		LR_DEFAULTCOLOR | LR_SHARED
+	);
+	if (houseIcon == NULL)
+	{
+		RedAlert(kErrFailedResourceLoad);
+	}
+	houseIconImageList = ImageList_Create(cxIcon, cyIcon, ILC_COLOR32 | ILC_MASK, 0, 0);
+	ImageList_AddIcon(houseIconImageList, houseIcon);
 
 	currentDir = 0;
 	numDirs = 1;
@@ -343,10 +345,16 @@ void DoDirSearch (HWND ownerWindow)
 						hr = Gp_LoadHouseFile(theHousesSpecs[housesFound].path);
 						if (SUCCEEDED(hr))
 						{
-							theHousesSpecs[housesFound].hIcon = Gp_LoadHouseIcon(0, 0);
-							if (FAILED(hr))
+							houseIcon = Gp_LoadHouseIcon(0, 0);
+							if (houseIcon != NULL)
 							{
-								theHousesSpecs[housesFound].hIcon = NULL;
+								theHousesSpecs[housesFound].iconIndex =
+									ImageList_AddIcon(houseIconImageList, houseIcon);
+								DestroyIcon(houseIcon);
+							}
+							else
+							{
+								theHousesSpecs[housesFound].iconIndex = 0;
 							}
 							Gp_UnloadHouseFile();
 							housesFound++;
@@ -411,13 +419,10 @@ void BuildHouseList (HWND ownerWindow)
 {
 	SInt16 i;
 
-	for (i = 0; i < housesFound; i++)		// destroy icons from previous search
+	if (houseIconImageList != NULL)			// destroy icons from previous search
 	{
-		if (theHousesSpecs[i].hIcon != NULL)
-		{
-			DestroyIcon(theHousesSpecs[i].hIcon);
-			theHousesSpecs[i].hIcon = NULL;
-		}
+		ImageList_Destroy(houseIconImageList);
+		houseIconImageList = NULL;
 	}
 	housesFound = 0;						// zero the number of houses found
 	for (i = 0; i < numExtraHouses; i++)	// 1st, insert extra houses into list

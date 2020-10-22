@@ -113,7 +113,7 @@ Boolean CreateNewHouse (HWND hwndOwner)
 	StringCchCopy(theSpec.houseName, ARRAYSIZE(theSpec.houseName),
 		&ofn.lpstrFile[ofn.nFileOffset]);
 	MacFromWinString(theSpec.name, ARRAYSIZE(theSpec.name), theSpec.houseName);
-	theSpec.hIcon = NULL;
+	theSpec.iconIndex = 0;
 
 	// Create the empty house file
 

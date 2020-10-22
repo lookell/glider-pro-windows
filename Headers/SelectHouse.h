@@ -19,7 +19,7 @@ typedef struct houseSpec
 	WCHAR path[MAX_PATH];
 	WCHAR houseName[33];
 	Str32 name;
-	HICON hIcon;
+	int iconIndex;
 } houseSpec, *houseSpecPtr;
 #endif
 
