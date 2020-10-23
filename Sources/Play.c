@@ -669,7 +669,7 @@ void HideGlider (const gliderType *thisGlider)
 
 	if (hasMirror)
 	{
-		QOffsetRect(&tempRect, -20, -16);
+		QOffsetRect(&tempRect, kReflectionOffsetH, KReflectionOffsetV);
 		CopyRectWorkToMain(&tempRect);
 	}
 

@@ -101,7 +101,8 @@ void StartGliderFadingOut (gliderPtr thisGlider)
 		if (hasMirror)
 		{
 			tempBounds = thisGlider->dest;
-			QOffsetRect(&tempBounds, playOriginH - 20, playOriginV - 16);
+			QOffsetRect(&tempBounds, playOriginH, playOriginV);
+			QOffsetRect(&tempBounds, kReflectionOffsetH, KReflectionOffsetV);
 			AddRectToWorkRects(&tempBounds);
 		}
 		thisGlider->dest.right = thisGlider->dest.left + kGliderWide;

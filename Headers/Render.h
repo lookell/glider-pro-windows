@@ -9,6 +9,9 @@
 
 #include "MacTypes.h"
 
+#define kReflectionOffsetH  (-20)
+#define KReflectionOffsetV  (-16)
+
 extern SInt16 numWork2Main;
 extern SInt16 numBack2Work;
 extern Boolean hasMirror;

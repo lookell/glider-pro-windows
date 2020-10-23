@@ -139,7 +139,8 @@ void DrawReflection (const gliderType *thisGlider, Boolean oneOrTwo)
 		which = 1;
 
 	dest = thisGlider->dest;
-	QOffsetRect(&dest, playOriginH - 20, playOriginV - 16);
+	QOffsetRect(&dest, playOriginH, playOriginV);
+	QOffsetRect(&dest, kReflectionOffsetH, KReflectionOffsetV);
 
 	SaveDC(workSrcMap);
 	ExtSelectClipRgn(workSrcMap, mirrorRgn, RGN_AND);
@@ -162,7 +163,8 @@ void DrawReflection (const gliderType *thisGlider, Boolean oneOrTwo)
 	RestoreDC(workSrcMap, -1);
 
 	src = thisGlider->whole;
-	QOffsetRect(&src, playOriginH - 20, playOriginV - 16);
+	QOffsetRect(&src, playOriginH, playOriginV);
+	QOffsetRect(&src, kReflectionOffsetH, KReflectionOffsetV);
 	AddRectToWorkRects(&src);
 	AddRectToBackRects(&dest);
 }
