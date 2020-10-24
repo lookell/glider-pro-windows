@@ -26,6 +26,8 @@
 #define kYellowAlertStringBase		1800
 #define kObjectNameStringsBase		1900
 
+#define IDS_APPLICATION_TITLE   3000
+
 #define IDR_DEMO				128
 
 #define IDR_BLANK_DLL           1000

@@ -241,12 +241,23 @@ void UpdateMainWindow (void)
 
 void OpenMainWindow (void)
 {
+	LPCWSTR titlePtr;
+	int titleLen;
+	WCHAR windowTitle[128];
 	SInt16 whichRoom;
 	RECT rcClient;
 	LONG width, height;
 	WINDOWPLACEMENT placement;
 	DWORD windowStyle;
 	Rect tempRect;
+
+	titleLen = LoadString(HINST_THISCOMPONENT, IDS_APPLICATION_TITLE, (LPWSTR)&titlePtr, 0);
+	if (titleLen <= 0)
+	{
+		titleLen = 0;
+		titlePtr = L"";
+	}
+	StringCchCopyN(windowTitle, ARRAYSIZE(windowTitle), titlePtr, titleLen);
 
 	if (mainWindow != NULL)
 	{
@@ -262,7 +273,7 @@ void OpenMainWindow (void)
 		AdjustWindowRect(&rcClient, windowStyle, TRUE);
 		width = rcClient.right - rcClient.left;
 		height = rcClient.bottom - rcClient.top;
-		mainWindow = CreateWindow(WC_MAINWINDOW, L"Main Window",
+		mainWindow = CreateWindow(WC_MAINWINDOW, windowTitle,
 				windowStyle, 0, 0, width, height,
 				NULL, theMenuBar, HINST_THISCOMPONENT, NULL);
 		if (mainWindow == NULL)
@@ -297,7 +308,7 @@ void OpenMainWindow (void)
 		AdjustWindowRect(&rcClient, windowStyle, FALSE);
 		width = rcClient.right - rcClient.left;
 		height = rcClient.bottom - rcClient.top;
-		mainWindow = CreateWindow(WC_MAINWINDOW, L"Main Window",
+		mainWindow = CreateWindow(WC_MAINWINDOW, windowTitle,
 				windowStyle, CW_USEDEFAULT, CW_USEDEFAULT, width, height,
 				NULL, theMenuBar, HINST_THISCOMPONENT, NULL);
 		if (mainWindow == NULL)

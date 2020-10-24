@@ -397,6 +397,11 @@ STRINGTABLE
     kObjectNameStringsBase + 0x90,              L"Mermaid"
 }
 
+STRINGTABLE
+{
+    IDS_APPLICATION_TITLE,      L"Glider PRO"
+}
+
 IDA_SPLASH ACCELERATORS
 {
     "N", ID_NEW_GAME, VIRTKEY, CONTROL
