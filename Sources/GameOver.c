@@ -132,7 +132,7 @@ void SetUpFinalScreen (void)
 
 	CopyRectWorkToBack(&workSrcRect);
 
-	for (i = 0; i < 5; i++)		// initialize the falling stars
+	for (i = 0; i < 8; i++)		// initialize the falling stars
 	{
 		pages[i].dest = starSrc[0];
 		QOffsetRect(&pages[i].dest,
@@ -169,7 +169,7 @@ void DoGameOverStarAnimation (void)
 		{
 			PlayPrioritySound(kMysticSound, kMysticPriority);
 			which = angelDest.left / 32;
-			which = which % 5;
+			which = which % 8;
 			ZeroRectCorner(&pages[which].dest);
 			QOffsetRect(&pages[which].dest, angelDest.left, angelDest.bottom);
 			if (count < (which + 1))
@@ -244,11 +244,11 @@ void DoGameOverStarAnimation (void)
 			}
 		}
 
-		if (pass < 80)
+		if (pass < 110)
 			pass++;
 		else
 		{
-			WaitForInputEvent(5);
+			WaitForInputEvent(4);
 			noInteruption = false;
 		}
 	}
