@@ -39,6 +39,7 @@ void RenderStars (void);
 void RenderGlider (const gliderType *thisGlider, Boolean oneOrTwo);
 void RenderBands (void);
 void RenderShreds (void);
+HRGN CreateClipRgnFromRects (HDC hdcDest, const Rect *theRects, size_t numRects);
 void CopyRectsQD (void);
 
 
@@ -565,24 +566,46 @@ void RenderShreds (void)
 	}
 }
 
+//--------------------------------------------------------------  CreateClipRgnFromRects
+
+HRGN CreateClipRgnFromRects (HDC hdcDest, const Rect *theRects, size_t numRects)
+{
+	HRGN clipRgn;
+	HRGN tempRgn;
+	POINT points[2];
+	size_t index;
+
+	clipRgn = CreateRectRgn(0, 0, 0, 0);
+	tempRgn = CreateRectRgn(0, 0, 0, 0);
+	for (index = 0; index < numRects; ++index)
+	{
+		points[0].x = theRects[index].left;
+		points[0].y = theRects[index].top;
+		points[1].x = theRects[index].right;
+		points[1].y = theRects[index].bottom;
+		// Clip region coordinates are specified in device units, so
+		// the input rectangles need to be converted accordingly.
+		LPtoDP(hdcDest, points, ARRAYSIZE(points));
+		SetRectRgn(tempRgn, points[0].x, points[0].y, points[1].x, points[1].y);
+		CombineRgn(clipRgn, clipRgn, tempRgn, RGN_OR);
+	}
+	DeleteObject(tempRgn);
+
+	return clipRgn;
+}
+
 //--------------------------------------------------------------  CopyRectsQD
 
 void CopyRectsQD (void)
 {
-	HDC			mainWindowDC;
-	SInt16		i;
-
-	// TODO: Turn the main window blit into a single GDI call, to prevent flicker.
-	// Maybe by creating a region from 'work2MainRects', and 'BitBlt'ing
-	// while using that region for clipping.
+	HDC mainWindowDC;
+	HRGN blitRgn;
+	SInt16 i;
 
 	mainWindowDC = GetMainWindowDC();
-	for (i = 0; i < numWork2Main; i++)
-	{
-		Mac_CopyBits(workSrcMap, mainWindowDC,
-				&work2MainRects[i], &work2MainRects[i],
-				srcCopy, nil);
-	}
+	blitRgn = CreateClipRgnFromRects(mainWindowDC, work2MainRects, numWork2Main);
+	Mac_CopyBits(workSrcMap, mainWindowDC, &workSrcRect, &workSrcRect, srcCopy, blitRgn);
+	DeleteObject(blitRgn);
 	ReleaseMainWindowDC(mainWindowDC);
 
 	for (i = 0; i < numBack2Work; i++)
