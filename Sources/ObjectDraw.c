@@ -144,7 +144,7 @@ void DrawTable (const Rect *tableTop, SInt16 down)
 	QOffsetRect(&tempRect, 0,
 			-HalfRectTall(&tempRect) + kTableShadowTop + down);
 	QOffsetRect(&tempRect, kTableShadowOffset, -kTableShadowOffset);
-	ColorShadowOval(backSrcMap, &tempRect, k8DkstGrayColor);
+	DitherShadowOval(backSrcMap, &tempRect);
 
 	tempRect = *tableTop;
 	QInsetRect(&tempRect, 0, 1);
@@ -223,7 +223,6 @@ void DrawShelf (const Rect *shelfTop)
 	#define		kShelfShadowOff		12
 	Rect		tempRect;
 	SInt32		brownC, ltTanC, tanC, dkRedC, blackC;
-	HRGN		shadowRgn;
 
 	brownC = k8BrownColor;
 	ltTanC = k8LtTanColor;
@@ -239,11 +238,7 @@ void DrawShelf (const Rect *shelfTop)
 	Mac_Line(backSrcMap, -kShelfShadowOff, -kShelfShadowOff);
 	Mac_LineTo(backSrcMap, shelfTop->left, shelfTop->bottom);
 	EndPath(backSrcMap);
-	shadowRgn = PathToRegion(backSrcMap);
-	if (shadowRgn == NULL)
-		RedAlert(kErrUnnaccounted);
-	ColorShadowRegion(backSrcMap, shadowRgn, k8DkstGrayColor);
-	DeleteObject(shadowRgn);
+	DitherShadowPath(backSrcMap);
 
 	tempRect = *shelfTop;
 	QInsetRect(&tempRect, 0, 1);
@@ -287,7 +282,6 @@ void DrawCabinet (const Rect *cabinet)
 	#define		kCabinetShadowOff	6
 	Rect		tempRect;
 	SInt32		brownC, dkGrayC, ltTanC, tanC, dkRedC;
-	HRGN		shadowRgn;
 
 	brownC = k8BrownColor;
 	dkGrayC = k8DkstGrayColor;
@@ -303,11 +297,7 @@ void DrawCabinet (const Rect *cabinet)
 	Mac_Line(backSrcMap, -kCabinetShadowOff, -kCabinetShadowOff);
 	Mac_LineTo(backSrcMap, cabinet->left, cabinet->bottom);
 	EndPath(backSrcMap);
-	shadowRgn = PathToRegion(backSrcMap);
-	if (shadowRgn == NULL)
-		RedAlert(kErrUnnaccounted);
-	ColorShadowRegion(backSrcMap, shadowRgn, dkGrayC);
-	DeleteObject(shadowRgn);
+	DitherShadowPath(backSrcMap);
 
 	tempRect = *cabinet;			// fill bulk of cabinet brown
 	QInsetRect(&tempRect, 1, 1);
@@ -396,7 +386,6 @@ void DrawCounter (const Rect *counter)
 	#define		kCounterStripTall	29
 	#define		kCounterPanelDrop	12
 	Rect		tempRect;
-	HRGN		shadowRgn;
 	SInt32		brownC, dkGrayC, tanC, blackC, dkstRedC;
 	SInt16		nRects, width, i;
 
@@ -415,11 +404,7 @@ void DrawCounter (const Rect *counter)
 	Mac_Line(backSrcMap, -12, -12);
 	Mac_LineTo(backSrcMap, counter->right - 2, counter->bottom);
 	EndPath(backSrcMap);
-	shadowRgn = PathToRegion(backSrcMap);
-	if (shadowRgn == NULL)
-		RedAlert(kErrUnnaccounted);
-	ColorShadowRegion(backSrcMap, shadowRgn, dkGrayC);
-	DeleteObject(shadowRgn);
+	DitherShadowPath(backSrcMap);
 
 	tempRect = *counter;
 	QInsetRect(&tempRect, 2, 2);
@@ -495,7 +480,6 @@ void DrawDresser (const Rect *dresser)
 	#define		kDresserSideSpare	14
 	Rect		tempRect, dest;
 	SInt32		yellowC, brownC, ltTanC, dkstRedC;
-	HRGN		shadowRgn;
 	SInt16		nRects, height, i;
 
 	yellowC = k8PissYellowColor;
@@ -512,11 +496,7 @@ void DrawDresser (const Rect *dresser)
 	Mac_Line(backSrcMap, -RectWide(dresser) + 11, 0);
 	Mac_LineTo(backSrcMap, dresser->left + 10, dresser->bottom + 9);
 	EndPath(backSrcMap);
-	shadowRgn = PathToRegion(backSrcMap);
-	if (shadowRgn == NULL)
-		RedAlert(kErrUnnaccounted);
-	ColorShadowRegion(backSrcMap, shadowRgn, k8DkstGrayColor);
-	DeleteObject(shadowRgn);
+	DitherShadowPath(backSrcMap);
 
 	tempRect = *dresser;
 	QInsetRect(&tempRect, 2, 2);
@@ -604,7 +584,7 @@ void DrawDeckTable (const Rect *tableTop, SInt16 down)
 	QOffsetRect(&tempRect, 0,
 			-HalfRectTall(&tempRect) + kTableShadowTop + down);
 	QOffsetRect(&tempRect, kTableShadowOffset, -kTableShadowOffset);
-	ColorShadowOval(backSrcMap, &tempRect, dkGrayC);
+	DitherShadowOval(backSrcMap, &tempRect);
 
 	tempRect = *tableTop;
 	QInsetRect(&tempRect, 0, 1);

@@ -36,9 +36,6 @@
 #include "WindowUtils.h"
 
 
-#define k8BlackColor            255
-
-
 SInt16 FindObjectSelected (Point where);
 void DragHandle (Point where);
 void Gp_DragObject (Point where);
@@ -2284,7 +2281,7 @@ void DrawThisRoomsObjects (void)
 	{
 		if (GetNumberOfLights(thisRoomNumber) <= 0)
 		{
-			ColorShadowRect(backSrcMap, &backSrcRect, k8BlackColor);
+			DitherShadowRect(backSrcMap, &backSrcRect);
 		}
 
 		for (i = 0; i < kMaxRoomObs; i++)

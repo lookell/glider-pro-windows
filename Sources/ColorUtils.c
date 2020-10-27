@@ -210,11 +210,11 @@ COLORREF DkGrayForeColor (void)
 	return RGB(color.red >> 8, color.green >> 8, color.blue >> 8);
 }
 
-//--------------------------------------------------------------  ColorShadowRect
-// Similar to ColorRect, but every other pixel is set to the specified color
-// to create a dithered shadow.
+//--------------------------------------------------------------  DitherShadowRect
+// This functions fills in every other pixel in the given rectangle with black
+// and leaves the rest unmodified, creating a dithered shadow.
 
-void ColorShadowRect (HDC hdc, const Rect *theRect, SInt32 color)
+void DitherShadowRect (HDC hdc, const Rect *theRect)
 {
 	HRGN theRgn;
 
@@ -223,15 +223,14 @@ void ColorShadowRect (HDC hdc, const Rect *theRect, SInt32 color)
 
 	theRgn = CreateRectRgn(theRect->left, theRect->top,
 			theRect->right, theRect->bottom);
-	ColorShadowRegion(hdc, theRgn, color);
+	DitherShadowRegion(hdc, theRgn);
 	DeleteObject(theRgn);
 }
 
-//--------------------------------------------------------------  ColorShadowOval
-// Similar to ColorOval, but every other pixel is set to the specified color
-// to create a dithered shadow.
+//--------------------------------------------------------------  DitherShadowOval
+// Similar to DitherShadowRect, but the shadow is drawn within the given oval.
 
-void ColorShadowOval (HDC hdc, const Rect *theRect, SInt32 color)
+void DitherShadowOval (HDC hdc, const Rect *theRect)
 {
 	HRGN theRgn;
 
@@ -240,34 +239,60 @@ void ColorShadowOval (HDC hdc, const Rect *theRect, SInt32 color)
 
 	theRgn = CreateEllipticRgn(theRect->left, theRect->top,
 			theRect->right + 1, theRect->bottom + 1);
-	ColorShadowRegion(hdc, theRgn, color);
+	DitherShadowRegion(hdc, theRgn);
 	DeleteObject(theRgn);
 }
 
-//--------------------------------------------------------------  ColorShadowRegion
-// Similar to ColorRegion, but every other pixel is set to the specified color
-// to create a dithered shadow.
+//--------------------------------------------------------------  DitherShadowRegion
+// Similar to DitherShadowRect, but the shadow is drawn within the given region.
+// The region's coordinates are presumed to be in logical units.
 
-void ColorShadowRegion (HDC hdc, HRGN theRgn, SInt32 color)
+void DitherShadowRegion (HDC hdc, HRGN theRgn)
 {
 	HBITMAP shadowBitmap;
 	HBRUSH shadowBrush;
+	COLORREF wasTextColor;
+	COLORREF wasBkColor;
+	int wasROP2;
 
-	// create the shadow brush, and save the DC's settings
 	shadowBitmap = CreateShadowBitmap();
 	shadowBrush = CreatePatternBrush(shadowBitmap);
-	SaveDC(hdc);
-	// set the black bits in the brush to white on the destination
-	SetTextColor(hdc, RGB(0x00, 0x00, 0x00));
-	SetBkColor(hdc, RGB(0xFF, 0xFF, 0xFF));
-	SetROP2(hdc, R2_MERGENOTPEN); // DPno
+	wasTextColor = SetTextColor(hdc, RGB(0x00, 0x00, 0x00));
+	wasBkColor = SetBkColor(hdc, RGB(0xFF, 0xFF, 0xFF));
+	wasROP2 = SetROP2(hdc, R2_MASKPEN);
 	FillRgn(hdc, theRgn, shadowBrush);
-	// set the black bits in the brush to the desired color on the destination
-	SetTextColor(hdc, Index2ColorRef(color));
-	SetROP2(hdc, R2_MASKPEN); // DPa
-	FillRgn(hdc, theRgn, shadowBrush);
-	// restore the DC's settings, and delete the shadow brush
-	RestoreDC(hdc, -1);
+	SetROP2(hdc, wasROP2);
+	SetBkColor(hdc, wasBkColor);
+	SetTextColor(hdc, wasTextColor);
+	DeleteObject(shadowBrush);
+	DeleteObject(shadowBitmap);
+}
+
+//--------------------------------------------------------------  DitherShadowPath
+// Similar to DitherShadowRect, but the shadow is drawn within the current path
+// held in the device context. After filling the path, the path is discarded from
+// the DC.
+
+void DitherShadowPath (HDC hdc)
+{
+	HBITMAP shadowBitmap;
+	HBRUSH shadowBrush;
+	COLORREF wasTextColor;
+	COLORREF wasBkColor;
+	HGDIOBJ wasBrush;
+	int wasROP2;
+
+	shadowBitmap = CreateShadowBitmap();
+	shadowBrush = CreatePatternBrush(shadowBitmap);
+	wasTextColor = SetTextColor(hdc, RGB(0x00, 0x00, 0x00));
+	wasBkColor = SetBkColor(hdc, RGB(0xFF, 0xFF, 0xFF));
+	wasROP2 = SetROP2(hdc, R2_MASKPEN);
+	wasBrush = SelectObject(hdc, shadowBrush);
+	FillPath(hdc);
+	SelectObject(hdc, wasBrush);
+	SetROP2(hdc, wasROP2);
+	SetBkColor(hdc, wasBkColor);
+	SetTextColor(hdc, wasTextColor);
 	DeleteObject(shadowBrush);
 	DeleteObject(shadowBitmap);
 }

@@ -24,9 +24,10 @@ void ColorFrameOval (HDC hdc, const Rect *theRect, SInt32 color);
 COLORREF LtGrayForeColor (void);
 COLORREF GrayForeColor (void);
 COLORREF DkGrayForeColor (void);
-void ColorShadowRect (HDC hdc, const Rect *theRect, SInt32 color);
-void ColorShadowOval (HDC hdc, const Rect *theRect, SInt32 color);
-void ColorShadowRegion (HDC hdc, HRGN theRgn, SInt32 color);
+void DitherShadowRect (HDC hdc, const Rect *theRect);
+void DitherShadowOval (HDC hdc, const Rect *theRect);
+void DitherShadowRegion (HDC hdc, HRGN theRgn);
+void DitherShadowPath (HDC hdc);
 HBITMAP CreateShadowBitmap (void);
 
 #endif
