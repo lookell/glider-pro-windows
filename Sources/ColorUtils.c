@@ -20,14 +20,11 @@
 
 COLORREF Index2ColorRef (SInt32 color)
 {
-	RGBColor rgb;
-
 	if (color < 0 || color >= ARRAYSIZE(MacColor8))
 	{
 		return RGB(0x00, 0x00, 0x00);
 	}
-	rgb = MacColor8[color];
-	return RGB(rgb.red >> 8, rgb.green >> 8, rgb.blue >> 8);
+	return MacColor8[color];
 }
 
 //--------------------------------------------------------------  ColorText

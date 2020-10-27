@@ -9,28 +9,17 @@
 // Convert Macintosh ticks (1/60 second units) to milliseconds
 #define TicksToMillis(ticks) (UInt32)((unsigned long long)(ticks) * 50 / 3)
 
-#define QDBlack		QDColors[0]
-#define QDYellow	QDColors[1]
-#define QDMagenta	QDColors[2]
-#define QDRed		QDColors[3]
-#define QDCyan		QDColors[4]
-#define QDGreen		QDColors[5]
-#define QDBlue		QDColors[6]
-#define QDWhite		QDColors[7]
-extern const RGBColor QDColors[8];
-extern const RGBColor MacColor4[16];
-extern const RGBColor MacColor8[256];
-
 #ifdef GP_USE_WINAPI_H
-#define MAKE_MAC_COLOR_(rgb) RGB((rgb).red >> 8, (rgb).green >> 8, (rgb).blue >> 8)
-#define blackColor MAKE_MAC_COLOR_(QDBlack)
-#define yellowColor MAKE_MAC_COLOR_(QDYellow)
-#define magentaColor MAKE_MAC_COLOR_(QDMagenta)
-#define redColor MAKE_MAC_COLOR_(QDRed)
-#define cyanColor MAKE_MAC_COLOR_(QDCyan)
-#define greenColor MAKE_MAC_COLOR_(QDGreen)
-#define blueColor MAKE_MAC_COLOR_(QDBlue)
-#define whiteColor MAKE_MAC_COLOR_(QDWhite)
+extern const COLORREF blackColor;
+extern const COLORREF yellowColor;
+extern const COLORREF magentaColor;
+extern const COLORREF redColor;
+extern const COLORREF cyanColor;
+extern const COLORREF greenColor;
+extern const COLORREF blueColor;
+extern const COLORREF whiteColor;
+extern const COLORREF MacColor4[16];
+extern const COLORREF MacColor8[256];
 #endif
 
 #define srcCopy 0
