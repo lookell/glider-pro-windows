@@ -327,8 +327,8 @@ void DragRoom (SInt16 clickX, SInt16 clickY, const Rect *roomSrc, SInt16 roomNum
 		}
 	}
 
-	ImageList_EndDrag();
 	ImageList_DragLeave(NULL);
+	ImageList_EndDrag();
 	ImageList_Destroy(dragImageList);
 
 	ScreenToClient(mapWindow, &dragPoint);
