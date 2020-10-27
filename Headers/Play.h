@@ -40,6 +40,5 @@ void DoDemoGame (HWND ownerWindow);
 #endif
 void HideGlider (const gliderType *thisGlider);
 void StrikeChime (void);
-void RestoreEntireGameScreen (void);
 
 #endif

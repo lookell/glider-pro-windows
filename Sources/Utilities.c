@@ -273,20 +273,19 @@ HFONT CreateTahomaFont (LONG height, LONG weight)
 // Wait for either a key to be hit or the mouse button to be clicked.
 // Also has a "timeout" parameter ("seconds").
 
-Boolean WaitForInputEvent (UInt16 seconds)
+void WaitForInputEvent (UInt16 seconds)
 {
 	MSG			theEvent;
 	DWORD		startTime, elapsedTime, timeout;
 	DWORD		status;
-	Boolean		waiting, didResume;
+	Boolean		waiting;
 
 	if (seconds < 0)
-		return false;
+		return;
 
 	startTime = timeGetTime();
 	timeout = 1000 * seconds;
 	waiting = true;
-	didResume = false;
 
 	while (waiting)
 	{
@@ -316,18 +315,9 @@ Boolean WaitForInputEvent (UInt16 seconds)
 				case WM_XBUTTONDOWN:
 				waiting = false;
 				break;
-
-				case WM_ACTIVATEAPP:
-				if (theEvent.wParam)
-				{
-					didResume = true;
-					waiting = false;
-				}
-				break;
 			}
 		}
 	}
-	return (didResume);
 }
 
 //--------------------------------------------------------------  WaitCommandQReleased

@@ -745,27 +745,3 @@ void StrikeChime (void)
 	theChimes.nextRing = 0;
 }
 
-//--------------------------------------------------------------  RestoreEntireGameScreen
-
-void RestoreEntireGameScreen (void)
-{
-	Rect		tempRect;
-	HDC			mainWindowDC;
-
-	//HideCursor();
-
-#if !BUILD_ARCADE_VERSION
-//	HideMenuBarOld();		// TEMP
-#endif
-
-	tempRect = workSrcRect;
-	tempRect.top -= kScoreboardTall;  // include the scoreboard
-	mainWindowDC = GetMainWindowDC();
-	Mac_PaintRect(mainWindowDC, &tempRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-	ReleaseMainWindowDC(mainWindowDC);
-
-	DrawLocale();
-	RefreshScoreboard(kNormalTitleMode);
-	DissolveScreenOn(&justRoomsRect);
-}
-
