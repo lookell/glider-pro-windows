@@ -30,7 +30,6 @@ HBRUSH CreateMarqueeBrush (void);
 HPEN CreateMarqueePen (void);
 void PaintMarqueeRect (HDC hdc, const Rect *theRect);
 void FrameMarqueeRect (HDC hdc, const Rect *theRect);
-void ClipCursorToClientArea (HWND hwnd);
 void DrawGliderMarquee (HDC hdc);
 void DrawMarquee (HDC hdc);
 
@@ -251,20 +250,6 @@ void ResumeMarquee (void)
 		StartMarquee(&theMarquee.bounds);
 }
 
-//--------------------------------------------------------------  ClipCursorToClientArea
-
-void ClipCursorToClientArea (HWND hwnd)
-{
-	RECT clientRect;
-
-	if (hwnd != NULL && IsWindow(hwnd))
-	{
-		GetClientRect(hwnd, &clientRect);
-		MapWindowPoints(hwnd, HWND_DESKTOP, (POINT *)&clientRect, 2);
-		ClipCursor(&clientRect);
-	}
-}
-
 //--------------------------------------------------------------  DragOutMarqueeRect
 
 void DragOutMarqueeRect (Point start, Rect *theRect)
@@ -274,7 +259,6 @@ void DragOutMarqueeRect (Point start, Rect *theRect)
 	MSG msg;
 
 	SetCapture(mainWindow);
-	ClipCursorToClientArea(mainWindow);
 	InitCursor();
 	QSetRect(theRect, start.h, start.v, start.h, start.v);
 	hdc = GetMainWindowDC();
@@ -324,7 +308,6 @@ void DragOutMarqueeRect (Point start, Rect *theRect)
 		if (GetCapture() == mainWindow)
 			ReleaseCapture();
 	}
-	ClipCursor(NULL);
 	hdc = GetMainWindowDC();
 	FrameMarqueeRect(hdc, theRect);
 	ReleaseMainWindowDC(hdc);
@@ -340,7 +323,6 @@ void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 	MSG msg;
 
 	SetCapture(mainWindow);
-	ClipCursorToClientArea(mainWindow);
 	SetCursor(handCursor);
 	StopMarquee();
 	hdc = GetMainWindowDC();
@@ -399,7 +381,6 @@ void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 		if (GetCapture() == mainWindow)
 			ReleaseCapture();
 	}
-	ClipCursor(NULL);
 
 	hdc = GetMainWindowDC();
 	FrameMarqueeRect(hdc, &theMarquee.bounds);
@@ -418,7 +399,6 @@ void DragMarqueeHandle (Point start, SInt16 *dragged)
 	MSG msg;
 
 	SetCapture(mainWindow);
-	ClipCursorToClientArea(mainWindow);
 	if ((theMarquee.direction == kAbove) || (theMarquee.direction == kBelow))
 		SetCursor(vertCursor);
 	else
@@ -527,7 +507,6 @@ void DragMarqueeHandle (Point start, SInt16 *dragged)
 		if (GetCapture() == mainWindow)
 			ReleaseCapture();
 	}
-	ClipCursor(NULL);
 
 	hdc = GetMainWindowDC();
 	FrameMarqueeRect(hdc, &theMarquee.bounds);
@@ -546,7 +525,6 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 	MSG msg;
 
 	SetCapture(mainWindow);
-	ClipCursorToClientArea(mainWindow);
 	if (isTop)
 		SetCursor(diagTopCursor);
 	else
@@ -629,7 +607,6 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 		if (GetCapture() == mainWindow)
 			ReleaseCapture();
 	}
-	ClipCursor(NULL);
 
 	hdc = GetMainWindowDC();
 	FrameMarqueeRect(hdc, &theMarquee.bounds);
