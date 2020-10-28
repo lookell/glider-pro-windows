@@ -74,13 +74,6 @@ typedef struct Rect
 	SInt16 right;
 } Rect;
 
-typedef struct RGBColor
-{
-	UInt16 red;
-	UInt16 green;
-	UInt16 blue;
-} RGBColor;
-
 //
 // Macintosh file specification
 //

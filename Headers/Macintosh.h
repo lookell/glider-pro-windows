@@ -10,6 +10,9 @@
 #define TicksToMillis(ticks) (UInt32)((unsigned long long)(ticks) * 50 / 3)
 
 #ifdef GP_USE_WINAPI_H
+// Make a COLORREF value from three UInt16 components
+#define QD_RGB(r, g, b) RGB(((r) >> 8) & 0xFF, ((g) >> 8) & 0xFF, ((b) >> 8) & 0xFF)
+
 extern const COLORREF blackColor;
 extern const COLORREF yellowColor;
 extern const COLORREF magentaColor;

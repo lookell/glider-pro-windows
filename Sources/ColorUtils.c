@@ -168,13 +168,7 @@ void ColorFrameOval (HDC hdc, const Rect *theRect, SInt32 color)
 
 COLORREF LtGrayForeColor (void)
 {
-	RGBColor	color;
-
-	color.red = 0xBFFF;
-	color.green = 0xBFFF;
-	color.blue = 0xBFFF;
-
-	return RGB(color.red >> 8, color.green >> 8, color.blue >> 8);
+	return QD_RGB(0xBFFF, 0xBFFF, 0xBFFF);
 }
 
 //--------------------------------------------------------------  GrayForeColor
@@ -183,13 +177,7 @@ COLORREF LtGrayForeColor (void)
 
 COLORREF GrayForeColor (void)
 {
-	RGBColor	color;
-
-	color.red = 0x7FFF;
-	color.green = 0x7FFF;
-	color.blue = 0x7FFF;
-
-	return RGB(color.red >> 8, color.green >> 8, color.blue >> 8);
+	return QD_RGB(0x7FFF, 0x7FFF, 0x7FFF);
 }
 
 //--------------------------------------------------------------  DkGrayForeColor
@@ -198,13 +186,7 @@ COLORREF GrayForeColor (void)
 
 COLORREF DkGrayForeColor (void)
 {
-	RGBColor	color;
-
-	color.red = 0x3FFF;
-	color.green = 0x3FFF;
-	color.blue = 0x3FFF;
-
-	return RGB(color.red >> 8, color.green >> 8, color.blue >> 8);
+	return QD_RGB(0x3FFF, 0x3FFF, 0x3FFF);
 }
 
 //--------------------------------------------------------------  DitherShadowRect

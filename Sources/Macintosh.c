@@ -420,8 +420,6 @@ SInt16 Mac_StringWidth(HDC hdc, ConstStringPtr s)
 
 //--------------------------------------------------------------  Global Data
 
-#define QD_RGB(r, g, b) RGB(((r) >> 8) & 0xFF, ((g) >> 8) & 0xFF, ((b) >> 8) & 0xFF)
-
 // The eight basic QuickDraw colors
 const COLORREF blackColor = QD_RGB(0x0000, 0x0000, 0x0000);
 const COLORREF yellowColor = QD_RGB(0xFC00, 0xF37D, 0x052F);
