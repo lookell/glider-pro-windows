@@ -148,7 +148,7 @@ void DrawReflection (const gliderType *thisGlider, Boolean oneOrTwo)
 
 	if (oneOrTwo)
 	{
-		if (showFoil)
+		if ((!twoPlayerGame) && (showFoil))
 			Mac_CopyMask(glid2SrcMap, glidMaskMap, workSrcMap,
 					&thisGlider->src, &thisGlider->mask, &dest);
 		else
