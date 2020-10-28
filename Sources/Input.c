@@ -97,27 +97,43 @@ void DumpDemoData (void)
 	CloseHandle(demoFileHandle);
 }
 
+//--------------------------------------------------------------  DoCommandKeyQuit
+
+void DoCommandKeyQuit (void)
+{
+	playing = false;
+	paused = false;
+	if ((!twoPlayerGame) && (!demoGoing))
+	{
+		if (QuerySaveGame(mainWindow))
+		{
+			SaveGame2(mainWindow); // New save game.
+		}
+	}
+}
+
+//--------------------------------------------------------------  DoCommandKeySave
+
+void DoCommandKeySave (void)
+{
+	RefreshScoreboard(kSavingTitleMode);
+	SaveGame2(mainWindow); // New save game.
+	//HideCursor();
+	CopyRectWorkToMain(&workSrcRect);
+	RefreshScoreboard(kNormalTitleMode);
+}
+
 //--------------------------------------------------------------  DoCommandKey
 
 void DoCommandKey (void)
 {
 	if (IsKeyDown('Q'))
 	{
-		playing = false;
-		paused = false;
-		if ((!twoPlayerGame) && (!demoGoing))
-		{
-			if (QuerySaveGame(mainWindow))
-				SaveGame2(mainWindow); // New save game.
-		}
+		DoCommandKeyQuit();
 	}
 	else if ((IsKeyDown('S')) && (!twoPlayerGame) && (!demoGoing))
 	{
-		RefreshScoreboard(kSavingTitleMode);
-		SaveGame2(mainWindow); // New save game.
-		//HideCursor();
-		CopyRectWorkToMain(&workSrcRect);
-		RefreshScoreboard(kNormalTitleMode);
+		DoCommandKeySave();
 	}
 }
 

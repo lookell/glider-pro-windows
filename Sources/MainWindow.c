@@ -18,6 +18,7 @@
 #include "FrameTimer.h"
 #include "House.h"
 #include "HouseIO.h"
+#include "Input.h"
 #include "Link.h"
 #include "Macintosh.h"
 #include "Map.h"
@@ -682,7 +683,11 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		return 0;
 
 	case WM_CLOSE:
-		SendMessage(hwnd, WM_COMMAND, ID_QUIT, 0);
+		if (theMode == kPlayMode)
+		{
+			DoCommandKeyQuit();
+		}
+		DoMenuChoice(hwnd, ID_QUIT);
 		return 0;
 
 	case WM_COMMAND:

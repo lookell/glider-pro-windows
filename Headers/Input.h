@@ -16,6 +16,8 @@ extern Boolean isEscPauseKey;
 extern Boolean paused;
 
 void DumpDemoData (void);
+void DoCommandKeyQuit (void);
+void DoCommandKeySave (void);
 void GetDemoInput (gliderPtr thisGlider);
 void GetInput (gliderPtr thisGlider);
 
