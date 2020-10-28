@@ -364,7 +364,7 @@ Boolean TestHighScore (HWND ownerWindow)
 			PasStringCopy(highBanner, thisHouse.highScores.banner);
 		}
 		thisHouse.highScores.scores[kMaxScores - 1] = theScore;
-		Mac_GetDateTime(&thisHouse.highScores.timeStamps[kMaxScores - 1]);
+		thisHouse.highScores.timeStamps[kMaxScores - 1] = Mac_GetDateTime();
 		thisHouse.highScores.levels[kMaxScores - 1] = CountRoomsVisited();
 		SortHighScores();
 		gameDirty = true;

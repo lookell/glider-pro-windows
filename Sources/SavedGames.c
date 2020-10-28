@@ -298,8 +298,6 @@ Boolean OpenSavedGame (HWND ownerWindow)
 
 void SaveGame (HWND ownerWindow, Boolean doSave)
 {
-	UInt32			stamp;
-
 	if (twoPlayerGame)
 		return;
 
@@ -307,8 +305,7 @@ void SaveGame (HWND ownerWindow, Boolean doSave)
 	{
 		thisHouse.savedGame.version = kSavedGameVersion;
 		thisHouse.savedGame.wasStarsLeft = numStarsRemaining;
-		Mac_GetDateTime(&stamp);
-		thisHouse.savedGame.timeStamp = (SInt32)stamp;
+		thisHouse.savedGame.timeStamp = (SInt32)Mac_GetDateTime();
 		thisHouse.savedGame.where.h = theGlider.dest.left;
 		thisHouse.savedGame.where.v = theGlider.dest.top;
 		thisHouse.savedGame.score = theScore;

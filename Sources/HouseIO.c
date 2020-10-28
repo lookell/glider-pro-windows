@@ -478,7 +478,7 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 
 	if (fileDirty)
 	{
-		Mac_GetDateTime(&timeStamp);
+		timeStamp = Mac_GetDateTime();
 		timeStamp &= 0x7FFFFFFF;
 
 		if (changeLockStateOfHouse)

@@ -70,7 +70,7 @@ SInt16 RandomInt (SInt16 range)
 
 void InitRandomLongQUS (void)
 {
-	Mac_GetDateTime(&theSeed);
+	theSeed = Mac_GetDateTime();
 }
 
 //--------------------------------------------------------------  RandomLongQUS
