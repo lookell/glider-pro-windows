@@ -253,9 +253,9 @@ void HandleTheMessage (MSG *message)
 
 void HandleEvent (void)
 {
-	MSG theEvent;
-	DWORD startMillis, nowMillis;
-	BOOL messageReceived;
+	MSG msg;
+	DWORD startMillis;
+	DWORD nowMillis;
 
 	if (mainWindow != NULL && GetActiveWindow() == mainWindow)
 	{
@@ -276,35 +276,27 @@ void HandleEvent (void)
 
 	if (switchedOut)
 	{
-		while (GetMessage(&theEvent, NULL, 0, 0))
+		while (GetMessage(&msg, NULL, 0, 0))
 		{
-			if (theEvent.message == WM_QUIT)
+			if (msg.message == WM_QUIT)
 			{
 				quitting = true;
 				return;
 			}
-			HandleTheMessage(&theEvent);
+			HandleTheMessage(&msg);
 			if (!switchedOut)
 				break;
 		}
 	}
 
-	while (1)
+	while (PeekMessageOrWaitForFrame(&msg, NULL, 0, 0, PM_REMOVE))
 	{
-		WaitUntilNextFrameOrMessage(&messageReceived);
-		if (messageReceived == FALSE)
+		if (msg.message == WM_QUIT)
 		{
-			break;
+			quitting = true;
+			return;
 		}
-		while (PeekMessage(&theEvent, NULL, 0, 0, PM_REMOVE))
-		{
-			if (theEvent.message == WM_QUIT)
-			{
-				quitting = true;
-				return;
-			}
-			HandleTheMessage(&theEvent);
-		}
+		HandleTheMessage(&msg);
 	}
 	HandleIdleTask();
 

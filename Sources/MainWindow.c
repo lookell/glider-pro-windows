@@ -580,12 +580,14 @@ void WashColorIn (void)
 	RGBQUAD newColors[256];
 	UINT numColors;
 	HBITMAP splashDIB;
-	HDC splashDC, hdc;
+	HDC splashDC;
+	HDC hdc;
 	RECT clientRect;
-	BOOL messageReceived, fading;
+	BOOL fading;
 	MSG msg;
 	DWORD wasFPS;
-	int i, c;
+	int i;
+	int c;
 
 	DisableMenuBar();
 
@@ -609,26 +611,25 @@ void WashColorIn (void)
 	fading = TRUE;
 	for (i = 0; fading && (i < kGray2ColorSteps); i++)
 	{
-		do
+		while (PeekMessageOrWaitForFrame(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			WaitUntilNextFrameOrMessage(&messageReceived);
-			if (messageReceived)
+			if (msg.message == WM_QUIT)
 			{
-				while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-				{
-					switch (msg.message)
-					{
-					case WM_KEYDOWN:
-					case WM_SYSKEYDOWN:
-					case WM_LBUTTONDOWN:
-						fading = FALSE;
-						break;
-					}
-					TranslateMessage(&msg);
-					DispatchMessage(&msg);
-				}
+				PostQuitMessage((int)msg.wParam);
+				fading = FALSE;
+				break;
 			}
-		} while (messageReceived);
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			switch (msg.message)
+			{
+			case WM_KEYDOWN:
+			case WM_SYSKEYDOWN:
+			case WM_LBUTTONDOWN:
+				fading = FALSE;
+				break;
+			}
+		}
 
 		for (c = 0; c < ARRAYSIZE(newColors); c++)
 		{

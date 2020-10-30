@@ -106,3 +106,32 @@ void WaitUntilNextFrameOrMessage(BOOL *MessageReceived)
 		FrameStart = FrameNext;
 	}
 }
+
+BOOL PeekMessageOrWaitForFrame(LPMSG lpMsg, HWND hWnd,
+	UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
+{
+	BOOL HasMessage;
+	DWORD SleepMS;
+	DWORD WaitResult;
+
+	while (TRUE)
+	{
+		HasMessage = PeekMessage(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
+		if (HasMessage)
+		{
+			return HasMessage;
+		}
+		SleepMS = GetWaitTimeUntilNextFrame();
+		if (SleepMS == 0)
+		{
+			break;
+		}
+		WaitResult = MsgWaitForMultipleObjects(0, NULL, FALSE, SleepMS, QS_ALLINPUT);
+		if (WaitResult != WAIT_OBJECT_0)
+		{
+			break;
+		}
+	}
+	FrameStart = FrameNext;
+	return FALSE;
+}

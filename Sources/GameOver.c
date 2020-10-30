@@ -151,8 +151,7 @@ void SetUpFinalScreen (void)
 void DoGameOverStarAnimation (void)
 {
 	#define		kStarFalls	8
-	BOOL		messageReceived;
-	MSG			theMessage;
+	MSG			msg;
 	Rect		angelDest;
 	SInt16		which, i, count, pass;
 	Boolean		noInteruption;
@@ -214,33 +213,26 @@ void DoGameOverStarAnimation (void)
 		numWork2Main = 0;
 		numBack2Work = 0;
 
-		while (!quitting)
+		while (PeekMessageOrWaitForFrame(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			WaitUntilNextFrameOrMessage(&messageReceived);
-			if (messageReceived == FALSE)
-				break;
-
-			while (PeekMessage(&theMessage, NULL, 0, 0, PM_REMOVE))
+			if (msg.message == WM_QUIT)
 			{
-				if (theMessage.message == WM_QUIT)
-				{
-					PostQuitMessage((int)theMessage.wParam);
-					quitting = true;
-					noInteruption = false;
-					break;
-				}
-				TranslateMessage(&theMessage);
-				DispatchMessage(&theMessage);
-				switch (theMessage.message)
-				{
-				case WM_KEYDOWN:
-				case WM_LBUTTONDOWN:
-				case WM_MBUTTONDOWN:
-				case WM_RBUTTONDOWN:
-				case WM_XBUTTONDOWN:
-					noInteruption = false;
-					break;
-				}
+				PostQuitMessage((int)msg.wParam);
+				quitting = true;
+				noInteruption = false;
+				break;
+			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			switch (msg.message)
+			{
+			case WM_KEYDOWN:
+			case WM_LBUTTONDOWN:
+			case WM_MBUTTONDOWN:
+			case WM_RBUTTONDOWN:
+			case WM_XBUTTONDOWN:
+				noInteruption = false;
+				break;
 			}
 		}
 
@@ -452,9 +444,8 @@ void DrawPages (void)
 
 void DoDiedGameOver (void)
 {
-	MSG			theMessage;
-	BOOL		messageReceived;
-	Boolean		userAborted;
+	MSG msg;
+	Boolean userAborted;
 
 	userAborted = false;
 	InitDiedGameOver();
@@ -465,35 +456,28 @@ void DoDiedGameOver (void)
 	{
 		HandlePages();
 		DrawPages();
-		while (!quitting)
+		while (PeekMessageOrWaitForFrame(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			WaitUntilNextFrameOrMessage(&messageReceived);
-			if (messageReceived == FALSE)
-				break;
-
-			while (PeekMessage(&theMessage, NULL, 0, 0, PM_REMOVE))
+			if (msg.message == WM_QUIT)
 			{
-				if (theMessage.message == WM_QUIT)
-				{
-					PostQuitMessage((int)theMessage.wParam);
-					quitting = true;
-					pagesStuck = 8;
-					userAborted = true;
-					break;
-				}
-				TranslateMessage(&theMessage);
-				DispatchMessage(&theMessage);
-				switch (theMessage.message)
-				{
-				case WM_KEYDOWN:
-				case WM_LBUTTONDOWN:
-				case WM_MBUTTONDOWN:
-				case WM_RBUTTONDOWN:
-				case WM_XBUTTONDOWN:
-					pagesStuck = 8;
-					userAborted = true;
-					break;
-				}
+				PostQuitMessage((int)msg.wParam);
+				quitting = true;
+				pagesStuck = 8;
+				userAborted = true;
+				break;
+			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			switch (msg.message)
+			{
+			case WM_KEYDOWN:
+			case WM_LBUTTONDOWN:
+			case WM_MBUTTONDOWN:
+			case WM_RBUTTONDOWN:
+			case WM_XBUTTONDOWN:
+				pagesStuck = 8;
+				userAborted = true;
+				break;
 			}
 		}
 	}

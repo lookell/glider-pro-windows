@@ -620,8 +620,7 @@ void CopyRectsQD (void)
 
 void RenderFrame (void)
 {
-	BOOL messageReceived;
-	MSG theMessage;
+	MSG msg;
 
 	if (hasMirror)
 	{
@@ -644,23 +643,16 @@ void RenderFrame (void)
 	RenderShreds();
 	RenderBands();
 
-	while (!quitting)
+	while (PeekMessageOrWaitForFrame(&msg, NULL, 0, 0, PM_REMOVE))
 	{
-		WaitUntilNextFrameOrMessage(&messageReceived);
-		if (messageReceived == FALSE)
-			break;
-
-		while (PeekMessage(&theMessage, NULL, 0, 0, PM_REMOVE))
+		if (msg.message == WM_QUIT)
 		{
-			if (theMessage.message == WM_QUIT)
-			{
-				PostQuitMessage((int)theMessage.wParam);
-				quitting = true;
-				break;
-			}
-			TranslateMessage(&theMessage);
-			DispatchMessage(&theMessage);
+			PostQuitMessage((int)msg.wParam);
+			quitting = true;
+			break;
 		}
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
 	}
 
 	CopyRectsQD();
