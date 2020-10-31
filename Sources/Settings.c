@@ -160,9 +160,11 @@ void BrainsInit (HWND prefDlg)
 void BrainsApply (HWND prefDlg)
 {
 	SInt16 wasMaxFiles;
+	Boolean wasDoPrettyMap;
 	UINT tmp;
 
 	wasMaxFiles = willMaxFiles;
+	wasDoPrettyMap = doPrettyMap;
 	tmp = GetDlgItemInt(prefDlg, kMaxFilesItem, NULL, FALSE);
 	if (tmp > 500)
 		tmp = 500;
@@ -176,6 +178,10 @@ void BrainsApply (HWND prefDlg)
 	isHouseChecks = (IsDlgButtonChecked(prefDlg, kDoErrorCheck) != 0);
 	doPrettyMap = (IsDlgButtonChecked(prefDlg, kDoPrettyMapCheck) != 0);
 	doBitchDialogs = (IsDlgButtonChecked(prefDlg, kDoBitchDlgsCheck) != 0);
+	if ((wasDoPrettyMap != doPrettyMap) && (mapWindow != NULL))
+	{
+		InvalidateRect(mapWindow, NULL, FALSE);
+	}
 }
 
 //--------------------------------------------------------------  BrainsFilter
