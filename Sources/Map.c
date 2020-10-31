@@ -205,19 +205,36 @@ void FindNewActiveRoomRect (void)
 }
 #endif
 
-//--------------------------------------------------------------  LoadGraphicPlus
+//--------------------------------------------------------------  DrawMapRoomImage
 
-void LoadGraphicPlus (HDC hdc, SInt16 resID, const Rect *theRect)
+void DrawMapRoomImage (HDC hdc, SInt16 backgroundID, const Rect *dstRect)
 {
-	HBITMAP thePicture;
+	SInt16 type;
+	HBITMAP hBitmap;
+	Rect srcRect;
 
-	thePicture = Gp_LoadImage(resID);
-	if (thePicture == NULL)
+	type = backgroundID - kBaseBackgroundID;
+	hBitmap = NULL;
+	if (type < 0 || type >= kNumBackgrounds)
 	{
-		return;
+		type = kNumBackgrounds;
+		if (doPrettyMap)
+		{
+			hBitmap = Gp_LoadImage(backgroundID);
+		}
 	}
-	Mac_DrawPicture(hdc, thePicture, theRect);
-	DeleteObject(thePicture);
+
+	if (hBitmap != NULL)
+	{
+		Mac_DrawPicture(hdc, hBitmap, dstRect);
+		DeleteObject(hBitmap);
+	}
+	else
+	{
+		QSetRect(&srcRect, 0, 0, kMapRoomWidth, kMapRoomHeight);
+		QOffsetRect(&srcRect, 0, type * kMapRoomHeight);
+		Mac_CopyBits(nailSrcMap, hdc, &srcRect, dstRect, srcCopy, nil);
+	}
 }
 
 //--------------------------------------------------------------  RedrawMapContents
@@ -225,9 +242,9 @@ void LoadGraphicPlus (HDC hdc, SInt16 resID, const Rect *theRect)
 void RedrawMapContents (HDC hdc)
 {
 #ifndef COMPILEDEMO
-	Rect aRoom, src;
+	Rect aRoom;
 	SInt16 h, i, groundLevel;
-	SInt16 floor, suite, roomNum, type;
+	SInt16 floor, suite, roomNum;
 	Boolean activeRoomVisible;
 	HBITMAP ditherBitmap;
 	HBRUSH ditherBrush;
@@ -259,23 +276,7 @@ void RedrawMapContents (HDC hdc)
 			floor = kMapGroundValue - (i + mapTopRoom);
 			if ((RoomExists(suite, floor, &roomNum)) && (houseUnlocked))
 			{
-				type = thisHouse.rooms[roomNum].background - kBaseBackgroundID;
-				if (type > kNumBackgrounds)
-				{
-					if (!doPrettyMap)
-						type = kNumBackgrounds;	// Draw "?" thumbnail.
-				}
-				if (type > kNumBackgrounds)		// Do a "pretty" thumbnail.
-				{
-					LoadGraphicPlus(hdc, type + kBaseBackgroundID, &aRoom);
-				}
-				else
-				{
-					QSetRect(&src, 0, 0, kMapRoomWidth, kMapRoomHeight);
-					QOffsetRect(&src, 0, type * kMapRoomHeight);
-					Mac_CopyBits(nailSrcMap, hdc, &src, &aRoom, srcCopy, nil);
-				}
-
+				DrawMapRoomImage(hdc, thisHouse.rooms[roomNum].background, &aRoom);
 				if (roomNum == thisRoomNumber)
 				{
 					activeRoomRect = aRoom;

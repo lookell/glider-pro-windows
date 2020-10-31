@@ -225,7 +225,7 @@ HIMAGELIST GetRoomDragImageList (const Rect *roomSrc, SInt16 roomNumber)
 				backgroundID = kSimpleRoom;
 			}
 			QSetRect(&roomImageRect, 0, 0, smallWidth, smallHeight);
-			LoadGraphicPlus(tempDC, backgroundID, &roomImageRect);
+			DrawMapRoomImage(tempDC, backgroundID, &roomImageRect);
 			RestoreDC(tempDC, -1);
 		}
 		DeleteDC(tempDC);
