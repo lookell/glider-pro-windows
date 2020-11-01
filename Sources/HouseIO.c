@@ -85,7 +85,7 @@ void OpenHouseMovie (void)
 {
 #ifdef COMPILEQT
 	TimeBase	theTime;
-	FSSpec		theSpec;
+	houseSpec	theSpec;
 	FInfo		finderInfo;
 	Handle		spaceSaver;
 	OSErr		theErr;
@@ -153,6 +153,7 @@ void OpenHouseMovie (void)
 
 		GetMovieBox(theMovie, &movieRect);
 
+		theHousesSpecs[thisHouseIndex].hasMovie = true;
 		hasMovie = true;
 	}
 #endif
@@ -210,10 +211,12 @@ Boolean OpenHouse (HWND ownerWindow)
 		return false;
 	}
 	houseIsReadOnly = Gp_HouseFileReadOnly();
+	theHousesSpecs[thisHouseIndex].readOnly = houseIsReadOnly;
 
 	houseOpen = true;
 
 	hasMovie = false;
+	theHousesSpecs[thisHouseIndex].hasMovie = false;
 	tvInRoom = false;
 	tvWithMovieNumber = -1;
 	OpenHouseMovie();

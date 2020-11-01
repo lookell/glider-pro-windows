@@ -20,6 +20,8 @@ typedef struct houseSpec
 	WCHAR houseName[33];
 	Str32 name;
 	int iconIndex;
+	Boolean readOnly;
+	Boolean hasMovie;
 } houseSpec, *houseSpecPtr;
 #endif
 
