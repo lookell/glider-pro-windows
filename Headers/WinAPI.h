@@ -21,11 +21,6 @@
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 
-// Ask for a C style API for COM interfaces, regardless of whether the
-// source is compiled as C or C++
-#define CINTERFACE
-#define COBJMACROS
-
 // Do the '#include's
 #include <windows.h>
 #include <windowsx.h>
