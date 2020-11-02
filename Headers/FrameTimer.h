@@ -10,7 +10,6 @@
 DWORD GetFrameRate(void);
 void SetFrameRate(DWORD NewFrameRate);
 void WaitUntilNextFrame(void);
-void WaitUntilNextFrameOrMessage(BOOL *MessageReceived);
 BOOL PeekMessageOrWaitForFrame(LPMSG lpMsg, HWND hWnd,
 	UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg);
 
