@@ -73,8 +73,6 @@ void DoHighScores (void)
 	InitCursor();
 	DelayTicks(60);
 	WaitForInputEvent(30);
-
-	RedrawSplashScreen();
 }
 
 //--------------------------------------------------------------  DrawHighScores

@@ -513,6 +513,7 @@ void PlayGame (void)
 					DoDiedGameOver();
 				else
 					DoGameOver();
+				RedrawSplashScreen();
 			}
 		}
 	}

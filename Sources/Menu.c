@@ -461,6 +461,7 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 		case iHighScores:
 		DisableMenuBar();
 		DoHighScores();
+		RedrawSplashScreen();
 		EnableMenuBar();
 		incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 		break;
