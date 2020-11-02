@@ -64,7 +64,7 @@ typedef struct phoneType
 void InitGlider (gliderPtr thisGlider, SInt16 mode);
 void SetHouseToFirstRoom (void);
 void SetHouseToSavedRoom (void);
-void PlayGame (void);
+void PlayGame (SInt16 splashHouseIndex);
 void HandleRoomVisitation (void);
 void SetObjectsToDefaults (void);
 void InitTelephone (void);
@@ -97,7 +97,7 @@ static phoneType theChimes;
 //==============================================================  Functions
 //--------------------------------------------------------------  NewGame
 
-void NewGame (HWND ownerWindow, SInt16 mode)
+void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 {
 	Rect tempRect;
 	OSErr theErr;
@@ -231,8 +231,8 @@ void NewGame (HWND ownerWindow, SInt16 mode)
 		mmResult = timeBeginPeriod(timeCaps.wPeriodMin);
 	}
 
-	playing = true;		// everything before this line is game set-up
-	PlayGame();			// everything following is after a game has ended
+	playing = true;  // everything before this line is game set-up
+	PlayGame(splashHouseIndex);  // everything following is after a game has ended
 
 	if (mmResult == MMSYSERR_NOERROR)
 	{
@@ -309,7 +309,10 @@ void DoDemoGame (HWND ownerWindow)
 	{
 		whoCares = ReadHouse(ownerWindow);
 		demoGoing = true;
-		NewGame(ownerWindow, kNewGameMode);
+		// The previous house's name should be shown on the splash screen
+		// when the demo reaches its game over point, so pass the previous
+		// house's index instead of the index to the demo house.
+		NewGame(ownerWindow, kNewGameMode, wasHouseIndex);
 	}
 	whoCares = CloseHouse(ownerWindow);
 	thisHouseIndex = wasHouseIndex;
@@ -401,7 +404,7 @@ void SetHouseToSavedRoom (void)
 
 //--------------------------------------------------------------  PlayGame
 
-void PlayGame (void)
+void PlayGame (SInt16 splashHouseIndex)
 {
 	while ((playing) && (!quitting))
 	{
@@ -513,7 +516,7 @@ void PlayGame (void)
 					DoDiedGameOver();
 				else
 					DoGameOver();
-				RedrawSplashScreen();
+				RedrawSplashScreen(splashHouseIndex);
 			}
 		}
 	}

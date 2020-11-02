@@ -351,7 +351,7 @@ void DoGameMenu (HWND hwnd, SInt16 theItem)
 		twoPlayerGame = false;
 		resumedSavedGame = false;
 		DisableMenuBar();
-		NewGame(hwnd, kNewGameMode);
+		NewGame(hwnd, kNewGameMode, thisHouseIndex);
 		EnableMenuBar();
 		break;
 
@@ -359,7 +359,7 @@ void DoGameMenu (HWND hwnd, SInt16 theItem)
 		twoPlayerGame = true;
 		resumedSavedGame = false;
 		DisableMenuBar();
-		NewGame(hwnd, kNewGameMode);
+		NewGame(hwnd, kNewGameMode, thisHouseIndex);
 		EnableMenuBar();
 		break;
 
@@ -370,7 +370,7 @@ void DoGameMenu (HWND hwnd, SInt16 theItem)
 		{
 			twoPlayerGame = false;
 			DisableMenuBar();
-			NewGame(hwnd, kResumeGameMode);
+			NewGame(hwnd, kResumeGameMode, thisHouseIndex);
 			EnableMenuBar();
 		}
 		break;
@@ -461,7 +461,7 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 		case iHighScores:
 		DisableMenuBar();
 		DoHighScores();
-		RedrawSplashScreen();
+		RedrawSplashScreen(thisHouseIndex);
 		EnableMenuBar();
 		incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 		break;

@@ -35,7 +35,7 @@ extern Boolean phoneBitSet;
 extern Boolean tvOn;
 
 #ifdef GP_USE_WINAPI_H
-void NewGame (HWND ownerWindow, SInt16 mode);
+void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex);
 void DoDemoGame (HWND ownerWindow);
 #endif
 void HideGlider (const gliderType *thisGlider);

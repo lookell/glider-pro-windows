@@ -43,7 +43,7 @@ extern HDC splashSrcMap;
 extern Rect splashSrcRect;
 
 void RegisterMainWindowClass (void);
-void RedrawSplashScreen (void);
+void RedrawSplashScreen (SInt16 splashHouseIndex);
 void UpdateMainWindow (void);
 void OpenMainWindow (void);
 void CloseMainWindow (void);
