@@ -388,7 +388,7 @@ void RoomInfo_InitDialog (HWND hDlg)
 	Rect tileBoxRect;
 	SInt16 i;
 
-	CenterOverOwner(hDlg);
+	CenterDialogOverOwner(hDlg);
 
 	showHandCursor = false;
 	tileOver = -1;
@@ -669,7 +669,7 @@ INT_PTR CALLBACK OriginalArtFilter (HWND hDlg, UINT message, WPARAM wParam, LPAR
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		SetWindowLongPtr(hDlg, DWLP_USER, lParam);
 		pPictID = (SInt16 *)GetWindowLongPtr(hDlg, DWLP_USER);
 		if (pPictID == NULL)

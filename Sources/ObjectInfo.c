@@ -308,7 +308,7 @@ INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 		if (retroLinkList[objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kBlowerLinkedFrom), SW_HIDE);
 
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		return TRUE;
 
@@ -405,7 +405,7 @@ INT_PTR CALLBACK FurnitureFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 		if ((objActive < 0) || (retroLinkList[objActive].room == -1))
 			ShowWindow(GetDlgItem(hDlg, kFurnitureLinkedFrom), SW_HIDE);
 
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		FocusDefaultButton(hDlg);
 		return FALSE;
@@ -440,7 +440,7 @@ INT_PTR CALLBACK CustPictFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 			wasPict = thisRoom->objects[objActive].data.e.where;
 		SetDlgItemInt(hDlg, kCustPictIDItem, (UINT)wasPict, TRUE);
 
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		return TRUE;
 
@@ -541,7 +541,7 @@ INT_PTR CALLBACK SwitchFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 		if (retroLinkList[objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kSwitchLinkedFrom), SW_HIDE);
 
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)hwndInitialFocus, TRUE);
 		return FALSE;
@@ -593,7 +593,7 @@ INT_PTR CALLBACK TriggerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 		delayIs = thisRoom->objects[objActive].data.e.delay;
 		SetDlgItemInt(hDlg, kTriggerDelayItem, (UINT)delayIs, TRUE);
 
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		hwndFocus = GetDlgItem(hDlg, kTriggerDelayItem);
 		SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)hwndFocus, TRUE);
@@ -648,7 +648,7 @@ INT_PTR CALLBACK LightFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		if (retroLinkList[objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kLightLinkedFrom), SW_HIDE);
 
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		return TRUE;
 
@@ -708,7 +708,7 @@ INT_PTR CALLBACK ApplianceFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 		delay = thisRoom->objects[objActive].data.g.delay;
 		SetDlgItemInt(hDlg, kApplianceDelay, (UINT)delay, TRUE);
 
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		return TRUE;
 
@@ -783,7 +783,7 @@ INT_PTR CALLBACK MicrowaveFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 		else
 			CheckDlgButton(hDlg, kKillFoilCheckbox, BST_UNCHECKED);
 
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		return TRUE;
 
@@ -838,7 +838,7 @@ INT_PTR CALLBACK GreaseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 		else
 			CheckDlgButton(hDlg, kGreaseSpilled, BST_CHECKED);
 
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		return TRUE;
 
@@ -894,7 +894,7 @@ INT_PTR CALLBACK InvisBonusFilter (HWND hDlg, UINT message, WPARAM wParam, LPARA
 		if (retroLinkList[objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kInvisBonusLinkedFrom), SW_HIDE);
 
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		return TRUE;
 
@@ -960,7 +960,7 @@ INT_PTR CALLBACK TransFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		if (thisRoom->objects[objActive].data.d.who == 255)
 			EnableWindow(GetDlgItem(hDlg, kTransGotoButton), FALSE);
 
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)hwndInitialFocus, TRUE);
 		return FALSE;
@@ -1020,7 +1020,7 @@ INT_PTR CALLBACK EnemyFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 			ShowWindow(GetDlgItem(hDlg, kEnemyDelayLabelItem), SW_HIDE);
 		}
 
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		return TRUE;
 
@@ -1079,7 +1079,7 @@ INT_PTR CALLBACK FlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 			flower = 0;
 		CheckRadioButton(hDlg, kRadioFlower1, kRadioFlower6, kRadioFlower1 + flower);
 
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		return TRUE;
 

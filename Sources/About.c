@@ -81,7 +81,7 @@ static INT_PTR CALLBACK AboutFilter (HWND hDlg, UINT message, WPARAM wParam, LPA
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		UpdateMainPict(hDlg);
 		SetTimer(hDlg, ABOUT_TIMER_ID, 2000, NULL);
 		return TRUE;

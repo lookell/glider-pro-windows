@@ -33,7 +33,7 @@ HWND OpenMessageWindow (PCWSTR title, HWND hwndOwner)
 		MAKEINTRESOURCE(kMessageWindowID),
 		hwndOwner, MessageWindowProc);
 	SetWindowText(mssgWindow, title);
-	CenterOverOwner(mssgWindow);
+	CenterDialogOverOwner(mssgWindow);
 	EnableWindow(hwndOwner, FALSE);
 	ShowWindow(mssgWindow, SW_SHOW);
 

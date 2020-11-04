@@ -20,7 +20,8 @@ typedef struct DialogParams
 void ParamDialogText (HWND hDlg, const DialogParams *params);
 SInt16 Alert (SInt16 dialogID, HWND ownerWindow, const DialogParams *params);
 BOOL FocusDefaultButton (HWND hDlg);
-void CenterOverOwner (HWND hwnd);
+void CenterWindowOverOwner (HWND hwnd);
+void CenterDialogOverOwner (HWND hDlg);
 void GetDialogString (HWND theDialog, int item, StringPtr theString, int stringCapacity);
 void SetDialogString (HWND theDialog, int item, ConstStringPtr theString);
 int GetDialogStringLen (HWND theDialog, int item);

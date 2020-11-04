@@ -130,7 +130,7 @@ static INT_PTR CALLBACK AlertProc (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM l
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		if (FocusDefaultButton(hDlg))
 			return FALSE;
@@ -196,50 +196,78 @@ BOOL FocusDefaultButton (HWND hDlg)
 	}
 }
 
-//--------------------------------------------------------------  CenterOverOwner
+//--------------------------------------------------------------  CenterWindowOverRect
+
+void CenterWindowOverRect (HWND hwnd, const RECT *targetRect)
+{
+	RECT windowRect;
+	int windowWidth;
+	int windowHeight;
+	int targetWidth;
+	int targetHeight;
+	int newX;
+	int newY;
+
+	if (!GetWindowRect(hwnd, &windowRect))
+	{
+		return;
+	}
+	windowWidth = windowRect.right - windowRect.left;
+	windowHeight = windowRect.bottom - windowRect.top;
+	targetWidth = targetRect->right - targetRect->left;
+	targetHeight = targetRect->bottom - targetRect->top;
+	// Horizontal spacing is 50% left and 50% right.
+	// Vertical spacing is 45% top and 55% bottom.
+	newX = targetRect->left + ((targetWidth - windowWidth) / 2);
+	newY = targetRect->top + ((targetHeight - windowHeight) * 9 / 20);
+	SetWindowPos(hwnd, NULL, newX, newY, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+}
+
+//--------------------------------------------------------------  CenterWindowOverOwner
 // Centers the given window over its owner. If the window has no
 // owner, then it is centered over the working area of the monitor
 // where it is located.
 
-void CenterOverOwner (HWND hwnd)
+void CenterWindowOverOwner (HWND hwnd)
 {
 	HWND hwndOwner;
 	HMONITOR hMonitor;
 	MONITORINFO monitorInfo;
-	RECT rcWindow, rcOwner;
-	LONG hOffset, vOffset;
-	LONG cxWindow, cyWindow, cxOwner, cyOwner;
+	RECT targetRect;
 
-	if (!GetWindowRect(hwnd, &rcWindow))
-		return;
 	hwndOwner = GetWindow(hwnd, GW_OWNER);
 	if (hwndOwner != NULL)
 	{
-		if (!GetWindowRect(hwndOwner, &rcOwner))
+		if (!GetWindowRect(hwndOwner, &targetRect))
+		{
 			return;
+		}
 	}
 	else
 	{
 		hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
 		if (hMonitor == NULL)
+		{
 			return;
+		}
 		monitorInfo.cbSize = sizeof(monitorInfo);
 		if (!GetMonitorInfo(hMonitor, &monitorInfo))
+		{
 			return;
-		rcOwner = monitorInfo.rcWork;
+		}
+		targetRect = monitorInfo.rcWork;
 	}
+	CenterWindowOverRect(hwnd, &targetRect);
+}
 
-	OffsetRect(&rcWindow, -rcWindow.left, -rcWindow.top);
-	OffsetRect(&rcWindow, rcOwner.left, rcOwner.top);
-	cxOwner = rcOwner.right - rcOwner.left;
-	cyOwner = rcOwner.bottom - rcOwner.top;
-	cxWindow = rcWindow.right - rcWindow.left;
-	cyWindow = rcWindow.bottom - rcWindow.top;
-	hOffset = (cxOwner - cxWindow) / 2; // 50% left, 50% right
-	vOffset = (cyOwner - cyWindow) * 9 / 20; // 45% top, 55% bottom
-	OffsetRect(&rcWindow, hOffset, vOffset);
-	SetWindowPos(hwnd, NULL, rcWindow.left, rcWindow.top, 0, 0,
-			SWP_NOSIZE | SWP_NOZORDER);
+//--------------------------------------------------------------  CenterDialogOverOwner
+// Similar to CenterWindowOverOwner, but also sends the DM_REPOSITION message
+// to ensure that the dialog box is fully visible on the screen.
+
+void CenterDialogOverOwner (HWND hDlg)
+{
+	CenterWindowOverOwner(hDlg);
+	SendMessage(hDlg, DM_REPOSITION, 0, 0);
 }
 
 //--------------------------------------------------------------  GetDialogString

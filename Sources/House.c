@@ -617,7 +617,7 @@ INT_PTR CALLBACK GoToFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		SetWindowLongPtr(hDlg, DWLP_USER, lParam);
 
 		if (GetFirstRoomNumber() == thisRoomNumber)

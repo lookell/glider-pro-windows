@@ -193,7 +193,7 @@ INT_PTR CALLBACK BrainsFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		CenterOverOwner(prefDlg);
+		CenterDialogOverOwner(prefDlg);
 		BrainsInit(prefDlg);
 		return TRUE;
 
@@ -473,7 +473,7 @@ INT_PTR CALLBACK ControlFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARA
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		CenterOverOwner(prefDlg);
+		CenterDialogOverOwner(prefDlg);
 		ControlInit(prefDlg);
 		return TRUE;
 
@@ -607,7 +607,7 @@ INT_PTR CALLBACK SoundFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM 
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		CenterOverOwner(prefDlg);
+		CenterDialogOverOwner(prefDlg);
 		UnivGetSoundVolume(&wasLoudness);
 		SoundPrefsInit(prefDlg);
 		return TRUE;
@@ -864,7 +864,7 @@ INT_PTR CALLBACK DisplayFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		DisplayInit(hDlg);
 		return TRUE;
 
@@ -968,7 +968,7 @@ INT_PTR CALLBACK PrefsFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 
 		hIcon = LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(kNormalDisplayIcon));
 		SendDlgItemMessage(hDlg, kDisplayButton, BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);

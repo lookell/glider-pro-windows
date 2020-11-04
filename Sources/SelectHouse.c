@@ -56,7 +56,7 @@ BOOL InitLoadDialog (HWND hDlg)
 	LVFINDINFO lvFindInfo;
 	int i;
 
-	CenterOverOwner(hDlg);
+	CenterDialogOverOwner(hDlg);
 	houseListView = GetDlgItem(hDlg, kHouseListItem);
 	if (houseListView == NULL)
 	{

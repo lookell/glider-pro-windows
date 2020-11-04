@@ -789,7 +789,7 @@ INT_PTR CALLBACK ResumeFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		return TRUE;
 

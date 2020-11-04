@@ -385,7 +385,7 @@ INT_PTR CALLBACK NameFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
 		SetDialogString(hDlg, kHighNameItem, highName);
 		SendDlgItemMessage(hDlg, kHighNameItem,
@@ -449,7 +449,7 @@ INT_PTR CALLBACK BannerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		CenterOverOwner(hDlg);
+		CenterDialogOverOwner(hDlg);
 		SetDialogString(hDlg, kHighBannerItem, highBanner);
 		SendDlgItemMessage(hDlg, kHighBannerItem,
 				EM_LIMITTEXT, ARRAYSIZE(highBanner) - 1, 0);

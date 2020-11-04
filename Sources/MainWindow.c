@@ -328,7 +328,7 @@ void OpenMainWindow (void)
 				NULL, theMenuBar, HINST_THISCOMPONENT, NULL);
 		if (mainWindow == NULL)
 			RedAlert(kErrDialogDidntLoad);
-		CenterOverOwner(mainWindow);
+		CenterWindowOverOwner(mainWindow);
 		ShowWindow(mainWindow, SW_SHOWNORMAL);
 
 		GetClientRect(mainWindow, &rcClient);
