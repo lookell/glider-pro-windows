@@ -126,11 +126,10 @@ void Gp_PlaySound (SoundOutput *output, SInt16 soundID, SInt16 priority)
 		entry.length = theSoundData[soundID].dataLength;
 		entry.callback = NULL;
 		entry.userdata = NULL;
-		if (AudioChannel_QueueAudio(output->channel, &entry))
-		{
-			output->priority = priority;
-			output->soundID = soundID;
-		}
+		AudioChannel_QueueAudio(output->channel, &entry);
+
+		output->priority = priority;
+		output->soundID = soundID;
 	}
 }
 

@@ -73,11 +73,7 @@ OSErr StartMusic (void)
 		entry.length = theMusicData[musicSoundID].dataLength;
 		entry.callback = NULL;
 		entry.userdata = NULL;
-		if (!AudioChannel_QueueAudio(musicChannel, &entry))
-		{
-			LeaveCriticalSection(&musicCriticalSection);
-			return -1;
-		}
+		AudioChannel_QueueAudio(musicChannel, &entry);
 
 		musicCursor++;
 		if (musicCursor >= kLastMusicPiece)
@@ -90,11 +86,7 @@ OSErr StartMusic (void)
 		entry.length = theMusicData[musicSoundID].dataLength;
 		entry.callback = MusicCallBack;
 		entry.userdata = NULL;
-		if (!AudioChannel_QueueAudio(musicChannel, &entry))
-		{
-			LeaveCriticalSection(&musicCriticalSection);
-			return -1;
-		}
+		AudioChannel_QueueAudio(musicChannel, &entry);
 
 		isMusicOn = true;
 	}

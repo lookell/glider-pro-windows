@@ -81,9 +81,9 @@ AudioChannel *AudioChannel_Open(const WaveFormat *format);
 void AudioChannel_Close(AudioChannel *channel);
 
 // Add an entry to the audio channel's queue. The sound will play as soon as
-// possible  if the queue is empty. The function returns nonzero on success
-// and zero on failure.
-int AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry);
+// possible if the queue is empty. Otherwise, the sound will be played after
+// the other sound entries that are already in the queue.
+void AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry);
 
 // Clear all entries waiting in the channel's queue, and stop all current sound
 // playing.

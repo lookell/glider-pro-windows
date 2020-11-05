@@ -556,26 +556,28 @@ static void Audio_ExecuteCallbacks(AudioChannel *channel, DWORD playCursor, DWOR
 	}
 }
 
-static void Audio_WriteSilence(AudioChannel *channel, unsigned char *buffer, DWORD length)
+static void Audio_WriteSilence(AudioChannel *channel, void *outputPtr, DWORD length)
 {
 	if (channel->format.wBitsPerSample == 8)
 	{
-		memset(buffer, 128, length);
+		memset(outputPtr, 128, length);
 	}
 	else
 	{
-		memset(buffer, 0, length);
+		memset(outputPtr, 0, length);
 	}
 }
 
-static DWORD Audio_WriteData(AudioChannel *channel, unsigned char *buffer, DWORD length)
+static DWORD Audio_WriteData(AudioChannel *channel, void *outputPtr, DWORD length)
 {
+	unsigned char *buffer;
 	DWORD bytesWritten;
 	DWORD bytesLeft;
 	size_t i;
 	AudioQueueEntry *entry;
 	DWORD writeSize;
 
+	buffer = (unsigned char *)outputPtr;
 	bytesWritten = 0;
 	bytesLeft = length;
 	for (i = 0; i < channel->queueSize; i++)
@@ -619,17 +621,35 @@ static DWORD Audio_UpdateBuffer(AudioChannel *channel, DWORD start, DWORD stop)
 		start, lockSize, &ptr1, &size1, &ptr2, &size2, 0);
 	if (SUCCEEDED(hr))
 	{
-		totalSoundBytes += Audio_WriteData(channel, (unsigned char *)ptr1, size1);
+		totalSoundBytes += Audio_WriteData(channel, ptr1, size1);
 		if (ptr2 != NULL)
 		{
-			totalSoundBytes += Audio_WriteData(channel, (unsigned char *)ptr2, size2);
+			totalSoundBytes += Audio_WriteData(channel, ptr2, size2);
 		}
 		IDirectSoundBuffer8_Unlock(channel->audioBuffer, ptr1, size1, ptr2, size2);
 	}
 	return totalSoundBytes;
 }
 
-static void Audio_DestroyChannelHead(AudioChannel *channel);
+static void Audio_DestroyChannelHead(AudioChannel *channel)
+{
+	AudioQueueEntry *entry;
+
+	if (channel->queueSize != 0)
+	{
+		entry = &channel->queue[channel->queueHead];
+		free(entry->buffer);
+		entry->buffer = NULL;
+		entry->length = 0;
+		entry->callback = NULL;
+		entry->userdata = NULL;
+		entry->numDelayBytes = 0;
+		entry->numPlayedBytes = 0;
+		entry->numWrittenBytes = 0;
+		channel->queueHead = (channel->queueHead + 1) % ARRAYSIZE(channel->queue);
+		channel->queueSize -= 1;
+	}
+}
 
 static void Audio_TrimChannelQueue(AudioChannel *channel)
 {
@@ -766,33 +786,31 @@ static void Audio_FillBufferWithSilence(AudioChannel *channel)
 		0, 0, &outputPtr, &outputBytes, NULL, NULL, DSBLOCK_ENTIREBUFFER);
 	if (SUCCEEDED(hr))
 	{
-		Audio_WriteSilence(channel, (unsigned char *)outputPtr, outputBytes);
+		Audio_WriteSilence(channel, outputPtr, outputBytes);
 		IDirectSoundBuffer8_Unlock(channel->audioBuffer, outputPtr, outputBytes, NULL, 0);
 	}
 }
 
-static LPDIRECTSOUNDBUFFER8 Audio_CreateSoundBuffer(LPCDSBUFFERDESC pcDSBufferDesc)
+static LPDIRECTSOUNDBUFFER8 Audio_CreateSoundBuffer(
+	LPDIRECTSOUND8 pDirectSound,
+	LPCDSBUFFERDESC pcDSBufferDesc)
 {
-	AudioDeviceState *self;
 	LPDIRECTSOUNDBUFFER tempBuffer;
 	LPDIRECTSOUNDBUFFER8 newBuffer;
 	HRESULT hr;
 
-	self = Audio_GetDeviceState();
-	hr = IDirectSound8_CreateSoundBuffer(self->audioDevice,
-		pcDSBufferDesc, &tempBuffer, NULL);
+	hr = IDirectSound8_CreateSoundBuffer(pDirectSound, pcDSBufferDesc, &tempBuffer, NULL);
 	if (FAILED(hr))
 	{
 		return NULL;
 	}
-	hr = IDirectSoundBuffer8_QueryInterface(tempBuffer,
+	hr = IDirectSoundBuffer_QueryInterface(tempBuffer,
 		MAKE_REFIID(IID_IDirectSoundBuffer8), (void **)&newBuffer);
 	IDirectSoundBuffer_Release(tempBuffer);
 	if (FAILED(hr))
 	{
 		return NULL;
 	}
-	IDirectSoundBuffer8_SetVolume(newBuffer, self->masterAttenuation);
 	return newBuffer;
 }
 
@@ -859,7 +877,7 @@ AudioChannel *AudioChannel_Open(const WaveFormat *format)
 	bufferDesc.lpwfxFormat = &waveFormat;
 	bufferDesc.guid3DAlgorithm = DS3DALG_DEFAULT;
 
-	audioBuffer = Audio_CreateSoundBuffer(&bufferDesc);
+	audioBuffer = Audio_CreateSoundBuffer(self->audioDevice, &bufferDesc);
 	if (audioBuffer != NULL)
 	{
 		channel = &self->audioChannels[channelIndex];
@@ -871,6 +889,7 @@ AudioChannel *AudioChannel_Open(const WaveFormat *format)
 		channel->isRunningTick = FALSE;
 		channel->queueHead = 0;
 		channel->queueSize = 0;
+		IDirectSoundBuffer8_SetVolume(channel->audioBuffer, self->masterAttenuation);
 		Audio_FillBufferWithSilence(channel);
 		IDirectSoundBuffer8_Play(channel->audioBuffer, 0, 0, DSBPLAY_LOOPING);
 	}
@@ -903,50 +922,41 @@ void AudioChannel_Close(AudioChannel *channel)
 	LeaveCriticalSection(&self->csAudioLock);
 }
 
-int AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry)
+void AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry)
 {
 	AudioDeviceState *self;
 	AudioQueueEntry queueEntry;
-	int hasSpace;
 	size_t queueIndex;
 
 	self = Audio_GetDeviceState();
 	if (self == NULL)
 	{
 		// audio interface not initialized
-		return false;
+		return;
 	}
 
-	if (entry->buffer != NULL)
-	{
-		queueEntry.buffer = (unsigned char *)malloc(entry->length);
-		queueEntry.length = entry->length;
-		if (queueEntry.buffer != NULL)
-		{
-			memcpy(queueEntry.buffer, entry->buffer, entry->length);
-		}
-		else if (entry->length != 0)
-		{
-			// cannot allocate buffer copy
-			return false;
-		}
-	}
-	else
-	{
-		// callback-only entries are not allowed
-		return false;
-	}
-
-	EnterCriticalSection(&self->csAudioLock);
-
+	queueEntry.buffer = NULL;
+	queueEntry.length = 0;
 	queueEntry.callback = entry->callback;
 	queueEntry.userdata = entry->userdata;
 	queueEntry.numDelayBytes = 0;
 	queueEntry.numPlayedBytes = 0;
 	queueEntry.numWrittenBytes = 0;
+	if (entry->buffer != NULL && entry->length != 0)
+	{
+		queueEntry.buffer = (unsigned char *)malloc(entry->length);
+		queueEntry.length = entry->length;
+		if (queueEntry.buffer == NULL)
+		{
+			// cannot allocate buffer copy
+			return;
+		}
+		memcpy(queueEntry.buffer, entry->buffer, entry->length);
+	}
 
-	hasSpace = (channel->queueSize < ARRAYSIZE(channel->queue));
-	if (hasSpace)
+	EnterCriticalSection(&self->csAudioLock);
+
+	if (channel->queueSize < ARRAYSIZE(channel->queue))
 	{
 		queueIndex = channel->queueHead + channel->queueSize;
 		queueIndex = queueIndex % ARRAYSIZE(channel->queue);
@@ -966,27 +976,6 @@ int AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry)
 	}
 
 	LeaveCriticalSection(&self->csAudioLock);
-	return hasSpace;
-}
-
-static void Audio_DestroyChannelHead(AudioChannel *channel)
-{
-	AudioQueueEntry *entry;
-
-	if (channel->queueSize != 0)
-	{
-		entry = &channel->queue[channel->queueHead];
-		free(entry->buffer);
-		entry->buffer = NULL;
-		entry->length = 0;
-		entry->callback = NULL;
-		entry->userdata = NULL;
-		entry->numDelayBytes = 0;
-		entry->numPlayedBytes = 0;
-		entry->numWrittenBytes = 0;
-		channel->queueHead = (channel->queueHead + 1) % ARRAYSIZE(channel->queue);
-		channel->queueSize -= 1;
-	}
 }
 
 void AudioChannel_ClearQueuedAudio(AudioChannel *channel)
