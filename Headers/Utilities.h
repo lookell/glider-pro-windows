@@ -24,7 +24,6 @@ void DrawCIcon (HDC hdc, SInt16 theID, SInt16 h, SInt16 v);
 HFONT CreateTahomaFont (LONG height, LONG weight);
 #endif
 void WaitForInputEvent (UInt16 seconds);
-void WaitCommandQReleased (void);
 Boolean OptionKeyDown (void);
 void DelayTicks (SInt32 howLong);
 void UnivGetSoundVolume (SInt16 *volume);

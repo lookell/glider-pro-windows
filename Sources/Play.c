@@ -289,7 +289,6 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 		QOffsetRect(&tempRect, splashOriginH, splashOriginV);
 		Mac_CopyBits(splashSrcMap, workSrcMap, &splashSrcRect, &tempRect, srcCopy, nil);
 	}
-	WaitCommandQReleased();
 	demoGoing = false;
 	incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 }
