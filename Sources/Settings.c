@@ -775,7 +775,7 @@ void DisplayInit (HWND hDlg)
 		disabledLoadFlags = LR_DEFAULTSIZE | LR_MONOCHROME;
 	}
 
-	if (thisMac.screen.right <= 512)
+	if (thisMac.screen.right <= kRoomWide)
 	{
 		EnableWindow(display3Control, FALSE);
 		EnableWindow(display9Control, FALSE);

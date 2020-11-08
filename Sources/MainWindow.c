@@ -282,8 +282,8 @@ void OpenMainWindow (void)
 
 	if (theMode == kEditMode)
 	{
-		QSetRect(&mainWindowRect, 0, 0, 512, 322);
-		SetRect(&rcClient, 0, 0, 512, 322);
+		QSetRect(&mainWindowRect, 0, 0, kRoomWide, kTileHigh);
+		SetRect(&rcClient, 0, 0, kRoomWide, kTileHigh);
 		windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 		AdjustWindowRect(&rcClient, windowStyle, TRUE);
 		width = rcClient.right - rcClient.left;
