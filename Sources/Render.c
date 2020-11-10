@@ -579,6 +579,11 @@ HRGN CreateClipRgnFromRects (HDC hdcDest, const Rect *theRects, size_t numRects)
 	tempRgn = CreateRectRgn(0, 0, 0, 0);
 	for (index = 0; index < numRects; ++index)
 	{
+		if ((theRects[index].left >= theRects[index].right) ||
+			(theRects[index].top >= theRects[index].bottom))
+		{
+			continue;
+		}
 		points[0].x = theRects[index].left;
 		points[0].y = theRects[index].top;
 		points[1].x = theRects[index].right;
