@@ -9,6 +9,7 @@
 //============================================================================
 
 
+#include "FrameTimer.h"
 #include "GliderDefines.h"
 #include "Macintosh.h"
 #include "Main.h"
@@ -17,6 +18,10 @@
 #include "WinAPI.h"
 
 
+#define kNumWipeFrames  12
+
+
+Rect MakeWipeRect (SInt16 direction, const Rect *theRect, SInt16 index, SInt16 count);
 void DissBits (const Rect *theRect);
 void DissBitsChunky (const Rect *theRect);
 
@@ -26,68 +31,94 @@ void DissBitsChunky (const Rect *theRect);
 
 void WipeScreenOn (SInt16 direction, const Rect *theRect)
 {
-	#define		kWipeRectThick	4
-	Rect		wipeRect;
-	SInt16		hOffset, vOffset;
-	SInt16		i, count;
-	HDC			mainWindowDC;
+	Rect wipeRect;
+	SInt16 count;
+	DWORD prevFrameRate;
+	SInt16 i;
+	HDC mainWindowDC;
 
 	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
 		return;
 
-	wipeRect = *theRect;
 	switch (direction)
 	{
-		case kAbove:
-		wipeRect.bottom = wipeRect.top + kWipeRectThick;
-		hOffset = 0;
-		vOffset = kWipeRectThick;
-		count = ((theRect->bottom - theRect->top) / kWipeRectThick) + 1;
+	case kAbove:
+	case kToRight:
+	case kBelow:
+	case kToLeft:
 		break;
 
-		case kToRight:
-		wipeRect.left = wipeRect.right - kWipeRectThick;
-		hOffset = -kWipeRectThick;
-		vOffset = 0;
-		count = (workSrcRect.right / kWipeRectThick) + 1;
-		break;
-
-		case kBelow:
-		wipeRect.top = wipeRect.bottom - kWipeRectThick;
-		hOffset = 0;
-		vOffset = -kWipeRectThick;
-		count = ((theRect->bottom - theRect->top) / kWipeRectThick) + 1;
-		break;
-
-		case kToLeft:
-		wipeRect.right = wipeRect.left + kWipeRectThick;
-		hOffset = kWipeRectThick;
-		vOffset = 0;
-		count = (workSrcRect.right / kWipeRectThick) + 1;
-		break;
-
-		default:
+	default:
+		DumpScreenOn(theRect);
 		return;
 	}
 
-	mainWindowDC = GetMainWindowDC();
+	count = kNumWipeFrames;
+	prevFrameRate = GetFrameRate();
+	SetFrameRate(60);
 	for (i = 0; i < count; i++)
 	{
+		wipeRect = MakeWipeRect(direction, theRect, i, count);
+		mainWindowDC = GetMainWindowDC();
 		Mac_CopyBits(workSrcMap, mainWindowDC,
 				&wipeRect, &wipeRect, srcCopy, nil);
-
-		QOffsetRect(&wipeRect, hOffset, vOffset);
-
-		if (wipeRect.top < theRect->top)
-			wipeRect.top = theRect->top;
-		else if (wipeRect.top > theRect->bottom)
-			wipeRect.top = theRect->bottom;
-		if (wipeRect.bottom < theRect->top)
-			wipeRect.bottom = theRect->top;
-		else if (wipeRect.bottom > theRect->bottom)
-			wipeRect.bottom = theRect->bottom;
+		ReleaseMainWindowDC(mainWindowDC);
+		WaitUntilNextFrame();
 	}
-	ReleaseMainWindowDC(mainWindowDC);
+	SetFrameRate(prevFrameRate);
+}
+
+//--------------------------------------------------------------  MakeWipeRect
+
+Rect MakeWipeRect (SInt16 direction, const Rect *theRect, SInt16 index, SInt16 count)
+{
+	SInt16 destWidth;
+	SInt16 destHeight;
+	Rect wipeRect;
+
+	destWidth = theRect->right - theRect->left;
+	destHeight = theRect->bottom - theRect->top;
+
+	switch (direction)
+	{
+	case kAbove:
+		wipeRect.left = 0;
+		wipeRect.top = index * destHeight / count;
+		wipeRect.right = destWidth;
+		wipeRect.bottom = (index + 1) * destHeight / count;
+		break;
+
+	case kToRight:
+		wipeRect.left = (count - index - 1) * destWidth / count;
+		wipeRect.top = 0;
+		wipeRect.right = (count - index) * destWidth / count;
+		wipeRect.bottom = destHeight;
+		break;
+
+	case kBelow:
+		wipeRect.left = 0;
+		wipeRect.top = (count - index - 1) * destHeight / count;
+		wipeRect.right = destWidth;
+		wipeRect.bottom = (count - index) * destHeight / count;
+		break;
+
+	case kToLeft:
+		wipeRect.left = index * destWidth / count;
+		wipeRect.top = 0;
+		wipeRect.right = (index + 1) * destWidth / count;
+		wipeRect.bottom = destHeight;
+		break;
+
+	default:
+		wipeRect.left = 0;
+		wipeRect.top = 0;
+		wipeRect.right = 0;
+		wipeRect.bottom = 0;
+		break;
+	}
+
+	QOffsetRect(&wipeRect, theRect->left, theRect->top);
+	return wipeRect;
 }
 
 //--------------------------------------------------------------  DumpScreenOn
