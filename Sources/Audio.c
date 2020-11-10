@@ -155,7 +155,6 @@ int ReadWAVFromMemory(const void *buffer, size_t length, WaveData *waveData)
 #define MAKE_REFIID(iid) (&(iid))
 #endif
 
-#define WC_AUDIOOWNER L"GliderAudioOwner"
 #define AUDIO_TICK_MS 50
 
 typedef struct AudioQueueEntry
@@ -186,7 +185,6 @@ typedef struct AudioDeviceState
 {
 	CRITICAL_SECTION csAudioLock;
 	LPDIRECTSOUND8 audioDevice;
-	HWND audioWindow;
 	float masterVolume;
 	LONG masterAttenuation;
 	AudioChannel audioChannels[8];  // enough for our purposes
@@ -217,8 +215,6 @@ int Audio_InitDevice(void)
 	AudioDeviceState *prevSelf;
 	AudioDeviceState *self;
 	LPDIRECTSOUND8 newDevice;
-	WNDCLASSEX wcx;
-	HWND newWindow;
 	size_t idx;
 	HRESULT hr;
 
@@ -228,47 +224,17 @@ int Audio_InitDevice(void)
 		// audio device already initialized
 		return false;
 	}
-	wcx.cbSize = sizeof(wcx);
-	if (!GetClassInfoEx(HINST_THISCOMPONENT, WC_AUDIOOWNER, &wcx))
-	{
-		wcx.cbSize = sizeof(wcx);
-		wcx.style = 0;
-		wcx.lpfnWndProc = DefWindowProc;
-		wcx.cbClsExtra = 0;
-		wcx.cbWndExtra = 0;
-		wcx.hInstance = HINST_THISCOMPONENT;
-		wcx.hIcon = NULL;
-		wcx.hCursor = NULL;
-		wcx.hbrBackground = NULL;
-		wcx.lpszMenuName = NULL;
-		wcx.lpszClassName = WC_AUDIOOWNER;
-		wcx.hIconSm = NULL;
-		if (!RegisterClassEx(&wcx))
-		{
-			// cannot register audio owner window class
-			return false;
-		}
-	}
-	newWindow = CreateWindow(WC_AUDIOOWNER, L"", 0x00000000,
-		0, 0, 0, 0, HWND_MESSAGE, NULL, HINST_THISCOMPONENT, NULL);
-	if (newWindow == NULL)
-	{
-		// cannot create audio owner window
-		return false;
-	}
 	hr = DirectSoundCreate8(&DSDEVID_DefaultPlayback, &newDevice, NULL);
 	if (FAILED(hr))
 	{
 		// cannot get device pointer
-		DestroyWindow(newWindow);
 		return false;
 	}
-	hr = IDirectSound8_SetCooperativeLevel(newDevice, newWindow, DSSCL_PRIORITY);
+	hr = IDirectSound8_SetCooperativeLevel(newDevice, GetDesktopWindow(), DSSCL_PRIORITY);
 	if (FAILED(hr))
 	{
 		// cannot set device cooperative level
 		IDirectSound8_Release(newDevice);
-		DestroyWindow(newWindow);
 		return false;
 	}
 
@@ -277,13 +243,11 @@ int Audio_InitDevice(void)
 	{
 		// could not allocate memory
 		IDirectSound8_Release(newDevice);
-		DestroyWindow(newWindow);
 		return false;
 	}
 
 	InitializeCriticalSection(&self->csAudioLock);
 	self->audioDevice = newDevice;
-	self->audioWindow = newWindow;
 	self->masterVolume = 1.0f;
 	self->masterAttenuation = DSBVOLUME_MAX;
 	for (idx = 0; idx < ARRAYSIZE(self->audioChannels); idx++)
@@ -319,11 +283,6 @@ void Audio_KillDevice(void)
 		// need to be released separately.
 		IDirectSound8_Release(self->audioDevice);
 		self->audioDevice = NULL;
-	}
-	if (self->audioWindow != NULL)
-	{
-		DestroyWindow(self->audioWindow);
-		self->audioWindow = NULL;
 	}
 
 	LeaveCriticalSection(&self->csAudioLock);
