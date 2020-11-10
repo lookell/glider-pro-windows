@@ -54,6 +54,7 @@ void SetPaletteToGrays (RGBQUAD *colors, UINT numColors, int saturation,
 	int maxSaturation);
 LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate);
+LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam);
 
 
 HCURSOR handCursor;
@@ -740,8 +741,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		return 0;
 
 	case WM_KEYDOWN:
-		HandleKeyEvent(hwnd, (BYTE)wParam);
-		return 0;
+		return MainWindow_OnKeyDown(hwnd, wParam, lParam);
 
 	case WM_LBUTTONDOWN:
 	case WM_LBUTTONDBLCLK:
@@ -847,3 +847,169 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
 		}
 	}
 }
+
+//--------------------------------------------------------------  MainWindow_OnKeyDown
+
+LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam)
+{
+	BYTE vKey;
+	Boolean shiftDown;
+
+	vKey = (BYTE)wParam;
+	shiftDown = (GetKeyState(VK_SHIFT) < 0);
+
+	switch (vKey)
+	{
+	case VK_PRIOR: // page up
+		if (houseUnlocked)
+			PrevToolMode();
+		break;
+
+	case VK_NEXT: // page down
+		if (houseUnlocked)
+			NextToolMode();
+		break;
+
+#if BUILD_ARCADE_VERSION
+
+	case VK_LEFT:
+		if (theMode == kSplashMode)
+			DoOptionsMenu(hwnd, iHighScores);
+		break;
+
+	case VK_RIGHT:
+		if (theMode == kSplashMode)
+			DoOptionsMenu(hwnd, iHelp);
+		break;
+
+	case VK_UP:
+		if (theMode == kSplashMode)
+			DoGameMenu(hwnd, iNewGame);
+		break;
+
+	case VK_DOWN:
+		if (theMode == kSplashMode)
+			DoGameMenu(hwnd, iNewGame);
+		break;
+
+#else
+
+	case VK_LEFT:
+		if (houseUnlocked)
+		{
+			if (objActive == kNoObjectSelected)
+				SelectNeighborRoom(kRoomToLeft);
+			else
+				MoveObject(kBumpLeft, shiftDown);
+		}
+		break;
+
+	case VK_RIGHT:
+		if (houseUnlocked)
+		{
+			if (objActive == kNoObjectSelected)
+				SelectNeighborRoom(kRoomToRight);
+			else
+				MoveObject(kBumpRight, shiftDown);
+		}
+		break;
+
+	case VK_UP:
+		if (houseUnlocked)
+		{
+			if (objActive == kNoObjectSelected)
+				SelectNeighborRoom(kRoomAbove);
+			else
+				MoveObject(kBumpUp, shiftDown);
+		}
+		break;
+
+	case VK_DOWN:
+		if (houseUnlocked)
+		{
+			if (objActive == kNoObjectSelected)
+				SelectNeighborRoom(kRoomBelow);
+			else
+				MoveObject(kBumpDown, shiftDown);
+		}
+		break;
+
+#endif
+
+	case VK_DELETE:
+		if (houseUnlocked)
+		{
+			if (objActive == kNoObjectSelected)
+				DeleteRoom(hwnd, true);
+			else
+				Gp_DeleteObject();
+		}
+		break;
+
+	case VK_TAB:
+		if ((theMode == kEditMode) && (houseUnlocked))
+		{
+			if (shiftDown)
+				SelectPrevObject();
+			else
+				SelectNextObject();
+		}
+		break;
+
+	case VK_ESCAPE:
+		if ((theMode == kEditMode) && (houseUnlocked))
+			DeselectObject();
+		break;
+
+	case 'A':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kApplianceMode);
+		break;
+
+	case 'B':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kBlowerMode);
+		break;
+
+	case 'C':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kClutterMode);
+		break;
+
+	case 'E':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kEnemyMode);
+		break;
+
+	case 'F':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kFurnitureMode);
+		break;
+
+	case 'L':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kLightMode);
+		break;
+
+	case 'P':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kBonusMode);
+		break;
+
+	case 'S':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kSwitchMode);
+		break;
+
+	case 'T':
+		if ((theMode == kEditMode) && (houseUnlocked))
+			SetSpecificToolMode(kTransportMode);
+		break;
+
+	default:
+		break;
+	}
+
+	return 0;
+}
+

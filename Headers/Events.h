@@ -21,9 +21,6 @@ extern HACCEL splashAccelTable;
 extern HACCEL editAccelTable;
 #endif
 
-#ifdef GP_USE_WINAPI_H
-void HandleKeyEvent (HWND hwnd, BYTE vkey);
-#endif
 void HandleEvent (void);
 void IgnoreThisClick (void);
 
