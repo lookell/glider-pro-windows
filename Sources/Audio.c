@@ -263,6 +263,7 @@ int Audio_InitDevice(void)
 void Audio_KillDevice(void)
 {
 	AudioDeviceState *self;
+	size_t i;
 
 	self = Audio_SetDeviceState(NULL);
 	if (self == NULL)
@@ -276,11 +277,15 @@ void Audio_KillDevice(void)
 		DeleteTimerQueueTimer(NULL, self->audioTimerHandle, INVALID_HANDLE_VALUE);
 		self->audioTimerHandle = NULL;
 	}
+	for (i = 0; i < ARRAYSIZE(self->audioChannels); ++i)
+	{
+		if (self->audioChannels[i].audioBuffer != NULL)
+		{
+			AudioChannel_Close(&self->audioChannels[i]);
+		}
+	}
 	if (self->audioDevice != NULL)
 	{
-		// When the sound device is released, all sound buffers created
-		// by the sound device are also released. The sound buffers do not
-		// need to be released separately.
 		IDirectSound8_Release(self->audioDevice);
 		self->audioDevice = NULL;
 	}
