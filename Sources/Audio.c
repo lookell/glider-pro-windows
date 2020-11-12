@@ -701,18 +701,21 @@ static void AudioChannel_RunTick(AudioChannel *channel)
 		return;
 	}
 
+	if (channel->isRunningTick)
+	{
+		// prevent recursive calls
+		return;
+	}
+	channel->isRunningTick = TRUE;
+
 	numPlayedBytes = BytesInRange(channel, channel->lastPlayCursor, playCursor);
 	Audio_UpdatePlayState(channel, numPlayedBytes);
 	channel->lastPlayCursor = playCursor;
 
 	Audio_HandleDelayBytes(channel, playCursor, writeCursor);
-
-	channel->isRunningTick = TRUE;
 	Audio_ExecuteCallbacks(channel, playCursor, writeCursor);
-	channel->isRunningTick = FALSE;
-
+	// If callbacks added new entries, their delays must be calculated too
 	Audio_HandleDelayBytes(channel, playCursor, writeCursor);
-
 	Audio_TrimChannelQueue(channel);
 
 	if (channel->queueSize == 0)
@@ -721,6 +724,8 @@ static void AudioChannel_RunTick(AudioChannel *channel)
 	}
 	channel->outputCursor += Audio_UpdateBuffer(channel, channel->outputCursor, playCursor);
 	channel->outputCursor %= channel->totalByteSize;
+
+	channel->isRunningTick = FALSE;
 }
 
 static VOID CALLBACK RunAudioChannelTicks(PVOID Parameter, BOOLEAN TimerOrWaitFired)
@@ -921,13 +926,8 @@ void AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry)
 		queueIndex = queueIndex % ARRAYSIZE(channel->queue);
 		channel->queue[queueIndex] = queueEntry;
 		channel->queueSize += 1;
-		if (!channel->isRunningTick)
-		{
-			// only run the channel's tick function if it is not already running,
-			// so as to not call AudioChannel_RunTick recursively
-			AudioChannel_RunTick(channel);
-			IDirectSoundBuffer8_Play(channel->audioBuffer, 0, 0, DSBPLAY_LOOPING);
-		}
+		AudioChannel_RunTick(channel);
+		IDirectSoundBuffer8_Play(channel->audioBuffer, 0, 0, DSBPLAY_LOOPING);
 	}
 
 	LeaveCriticalSection(&self->csAudioLock);
@@ -949,10 +949,7 @@ void AudioChannel_ClearQueuedAudio(AudioChannel *channel)
 	{
 		Audio_DestroyChannelHead(channel);
 	}
-	if (!channel->isRunningTick)
-	{
-		AudioChannel_RunTick(channel);
-	}
+	AudioChannel_RunTick(channel);
 
 	LeaveCriticalSection(&self->csAudioLock);
 }
