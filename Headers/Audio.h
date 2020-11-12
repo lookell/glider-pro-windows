@@ -19,9 +19,29 @@ typedef struct WaveData
 
 typedef struct AudioChannel AudioChannel;
 
-// A callback function that is called shortly before an audio entry finishes
-// playing. It is not called if the audio queue is cleared. The callback
-// may be NULL, to have nothing happened when the entry finishes playing.
+// A callback function that is called in response to certain events happening
+// to an audio entry in the channel queue.
+//
+// * The "ending" callback is called shortly before an audio entry finishes
+//   playing. The intent of this callback is to allow a new audio entry to
+//   be added to the channel queue to be played immediately after the
+//   almost-finished entry.
+//
+//   If this callback is set to NULL in an audio entry, then nothing happens
+//   in response to the audio entry being close to finishing.
+//
+// * The "destroy" callback is called when the audio entry's data buffer is no
+//   longer being used by this audio library. Either the entry has completely
+//   finished playing, or the audio queue was cleared by the user or by the
+//   closing of the audio channel. The intent of this callback is to notify
+//   the owner of the data buffer that the data buffer doesn't need to exist
+//   any more. The data buffer must be valid until this callback is called.
+//
+//   If this callback is set to NULL in an audio entry, then nothing happens
+//   in response to the audio entry being released. To ensure that the data
+//   buffer is no longer being used, call the AudioChannel_Close function or
+//   the AudioChannel_ClearQueuedAudio function before freeing the data buffer.
+//
 typedef void (*AudioCallback)(AudioChannel *channel, void *userdata);
 
 typedef struct AudioEntry
@@ -30,9 +50,11 @@ typedef struct AudioEntry
 	const unsigned char *buffer;
 	// The number of bytes in the data buffer.
 	uint32_t length;
-	// The callback function, called shortly before playback finishes.
-	AudioCallback callback;
-	// User data to be passed to the callback function.
+	// The ending callback function.
+	AudioCallback endingCallback;
+	// The destroy callback function.
+	AudioCallback destroyCallback;
+	// User data to be passed to the callback functions.
 	void *userdata;
 } AudioEntry;
 

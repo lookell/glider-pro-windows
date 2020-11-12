@@ -124,7 +124,8 @@ void Gp_PlaySound (SoundOutput *output, SInt16 soundID, SInt16 priority)
 
 		entry.buffer = theSoundData[soundID].dataBytes;
 		entry.length = theSoundData[soundID].dataLength;
-		entry.callback = NULL;
+		entry.endingCallback = NULL;
+		entry.destroyCallback = NULL;
 		entry.userdata = NULL;
 		AudioChannel_QueueAudio(output->channel, &entry);
 
@@ -343,8 +344,7 @@ void KillSound (void)
 	{
 		return;
 	}
-
-	DumpBufferSounds();
 	CloseSoundChannels();
+	DumpBufferSounds();
 }
 

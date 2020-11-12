@@ -159,9 +159,10 @@ int ReadWAVFromMemory(const void *buffer, size_t length, WaveData *waveData)
 
 typedef struct AudioQueueEntry
 {
-	unsigned char *buffer;
+	const unsigned char *buffer;
 	DWORD length;
-	AudioCallback callback;
+	AudioCallback endingCallback;
+	AudioCallback destroyCallback;
 	void *userdata;
 	DWORD numDelayBytes;
 	DWORD numPlayedBytes;
@@ -511,11 +512,11 @@ static void Audio_ExecuteCallbacks(AudioChannel *channel, DWORD playCursor, DWOR
 			break;
 		}
 		callbackThreshold -= bytesLeftToPlay;
-		if (entry->callback != NULL)
+		if (entry->endingCallback != NULL)
 		{
-			entry->callback(channel, entry->userdata);
+			entry->endingCallback(channel, entry->userdata);
 			// make sure callback function is executed only once
-			entry->callback = NULL;
+			entry->endingCallback = NULL;
 		}
 	}
 }
@@ -602,10 +603,14 @@ static void Audio_DestroyChannelHead(AudioChannel *channel)
 	if (channel->queueSize != 0)
 	{
 		entry = &channel->queue[channel->queueHead];
-		free(entry->buffer);
+		if (entry->destroyCallback != NULL)
+		{
+			entry->destroyCallback(channel, entry->userdata);
+		}
 		entry->buffer = NULL;
 		entry->length = 0;
-		entry->callback = NULL;
+		entry->endingCallback = NULL;
+		entry->destroyCallback = NULL;
 		entry->userdata = NULL;
 		entry->numDelayBytes = 0;
 		entry->numPlayedBytes = 0;
@@ -899,24 +904,14 @@ void AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry)
 		return;
 	}
 
-	queueEntry.buffer = NULL;
-	queueEntry.length = 0;
-	queueEntry.callback = entry->callback;
+	queueEntry.buffer = entry->buffer;
+	queueEntry.length = entry->length;
+	queueEntry.endingCallback = entry->endingCallback;
+	queueEntry.destroyCallback = entry->destroyCallback;
 	queueEntry.userdata = entry->userdata;
 	queueEntry.numDelayBytes = 0;
 	queueEntry.numPlayedBytes = 0;
 	queueEntry.numWrittenBytes = 0;
-	if (entry->buffer != NULL && entry->length != 0)
-	{
-		queueEntry.buffer = (unsigned char *)malloc(entry->length);
-		queueEntry.length = entry->length;
-		if (queueEntry.buffer == NULL)
-		{
-			// cannot allocate buffer copy
-			return;
-		}
-		memcpy(queueEntry.buffer, entry->buffer, entry->length);
-	}
 
 	EnterCriticalSection(&self->csAudioLock);
 
@@ -933,10 +928,6 @@ void AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry)
 			AudioChannel_RunTick(channel);
 			IDirectSoundBuffer8_Play(channel->audioBuffer, 0, 0, DSBPLAY_LOOPING);
 		}
-	}
-	else
-	{
-		free(queueEntry.buffer);
 	}
 
 	LeaveCriticalSection(&self->csAudioLock);

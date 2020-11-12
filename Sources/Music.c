@@ -71,7 +71,8 @@ OSErr StartMusic (void)
 
 		entry.buffer = theMusicData[musicSoundID].dataBytes;
 		entry.length = theMusicData[musicSoundID].dataLength;
-		entry.callback = NULL;
+		entry.endingCallback = NULL;
+		entry.destroyCallback = NULL;
 		entry.userdata = NULL;
 		AudioChannel_QueueAudio(musicChannel, &entry);
 
@@ -84,7 +85,8 @@ OSErr StartMusic (void)
 
 		entry.buffer = theMusicData[musicSoundID].dataBytes;
 		entry.length = theMusicData[musicSoundID].dataLength;
-		entry.callback = MusicCallBack;
+		entry.endingCallback = MusicCallBack;
+		entry.destroyCallback = NULL;
 		entry.userdata = NULL;
 		AudioChannel_QueueAudio(musicChannel, &entry);
 
@@ -213,7 +215,8 @@ void MusicCallBack (AudioChannel *channel, void *userdata)
 
 	entry.buffer = theMusicData[musicSoundID].dataBytes;
 	entry.length = theMusicData[musicSoundID].dataLength;
-	entry.callback = MusicCallBack;
+	entry.endingCallback = MusicCallBack;
+	entry.destroyCallback = NULL;
 	entry.userdata = NULL;
 	AudioChannel_QueueAudio(channel, &entry);
 
@@ -372,8 +375,8 @@ void KillMusic (void)
 	}
 
 	StopTheMusic();
-	DumpMusicSounds();
 	CloseMusicChannel();
+	DumpMusicSounds();
 	DeleteCriticalSection(&musicCriticalSection);
 }
 
