@@ -122,6 +122,7 @@ void KillToolsOffscreen (void)
 
 //--------------------------------------------------------------  GetToolName
 
+#ifndef COMPILEDEMO
 void GetToolName (PWSTR buffer, size_t length, SInt16 selected, SInt16 mode)
 {
 	if (selected == kSelectTool)
@@ -133,6 +134,7 @@ void GetToolName (PWSTR buffer, size_t length, SInt16 selected, SInt16 mode)
 		GetObjectName(buffer, length, selected + ((mode - 1) * 0x0010));
 	}
 }
+#endif
 
 //--------------------------------------------------------------  UpdateToolName
 
@@ -437,6 +439,7 @@ void Tools_OnButtonClick (HWND hwnd, WORD clickedID)
 
 //--------------------------------------------------------------  UpdateToolTips
 
+#ifndef COMPILEDEMO
 void UpdateToolTips (HWND hwnd)
 {
 	SInt16 buttonID;
@@ -469,6 +472,7 @@ void UpdateToolTips (HWND hwnd)
 		SendMessage(toolButtonTooltip, TTM_UPDATETIPTEXT, 0, (LPARAM)&toolInfo);
 	}
 }
+#endif
 
 //--------------------------------------------------------------  OpenToolsWindow
 

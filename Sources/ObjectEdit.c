@@ -2730,6 +2730,7 @@ void GoToObjectInRoomNum (SInt16 object, SInt16 roomNum)
 
 //--------------------------------------------------------------  StartMarqueeForActiveObject
 
+#ifndef COMPILEDEMO
 void StartMarqueeForActiveObject (void)
 {
 	SInt16 direction;
@@ -2761,4 +2762,5 @@ void StartMarqueeForActiveObject (void)
 		StopMarquee();
 	}
 }
+#endif
 
