@@ -93,7 +93,6 @@ static HWND toolButtonTooltip;
 //==============================================================  Functions
 //--------------------------------------------------------------  CreateToolsOffscreen
 
-#ifndef COMPILEDEMO
 void CreateToolsOffscreen (void)
 {
 	Rect toolSrcRect;
@@ -105,11 +104,9 @@ void CreateToolsOffscreen (void)
 		LoadGraphic(toolSrcMap, kToolsPictID);
 	}
 }
-#endif
 
 //--------------------------------------------------------------  KillToolsOffscreen
 
-#ifndef COMPILEDEMO
 void KillToolsOffscreen (void)
 {
 	if (toolSrcMap != NULL)
@@ -118,11 +115,9 @@ void KillToolsOffscreen (void)
 		toolSrcMap = NULL;
 	}
 }
-#endif
 
 //--------------------------------------------------------------  GetToolName
 
-#ifndef COMPILEDEMO
 void GetToolName (PWSTR buffer, size_t length, SInt16 selected, SInt16 mode)
 {
 	if (selected == kSelectTool)
@@ -134,11 +129,9 @@ void GetToolName (PWSTR buffer, size_t length, SInt16 selected, SInt16 mode)
 		GetObjectName(buffer, length, selected + ((mode - 1) * 0x0010));
 	}
 }
-#endif
 
 //--------------------------------------------------------------  UpdateToolName
 
-#ifndef COMPILEDEMO
 void UpdateToolName (void)
 {
 	wchar_t theString[256];
@@ -146,11 +139,9 @@ void UpdateToolName (void)
 	GetToolName(theString, ARRAYSIZE(theString), toolSelected, toolMode);
 	SetDlgItemText(toolsWindow, kToolNameText, theString);
 }
-#endif
 
 //--------------------------------------------------------------  UpdateToolTiles
 
-#ifndef COMPILEDEMO
 void UpdateToolTiles (void)
 {
 	Rect srcRect, destRect;
@@ -208,7 +199,6 @@ void UpdateToolTiles (void)
 	DeleteDC(hdc);
 	ReleaseDC(NULL, displayDC);
 }
-#endif
 
 //--------------------------------------------------------------  SelectTool
 
@@ -240,7 +230,6 @@ void SelectTool (SInt16 which)
 
 //--------------------------------------------------------------  ToolsWindowProc
 
-#ifndef COMPILEDEMO
 INT_PTR CALLBACK ToolsWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	(void)lParam;
@@ -298,11 +287,9 @@ INT_PTR CALLBACK ToolsWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 	}
 	return FALSE;
 }
-#endif
 
 //--------------------------------------------------------------  Tools_OnInitDialog
 
-#ifndef COMPILEDEMO
 INT_PTR Tools_OnInitDialog (HWND hwnd)
 {
 	HMENU rootMenu;
@@ -346,11 +333,9 @@ INT_PTR Tools_OnInitDialog (HWND hwnd)
 
 	return FALSE; // don't change the focus
 }
-#endif
 
 //--------------------------------------------------------------  Tools_OnDestroy
 
-#ifndef COMPILEDEMO
 void Tools_OnDestroy (HWND hwnd)
 {
 	HBITMAP buttonBitmap;
@@ -371,11 +356,9 @@ void Tools_OnDestroy (HWND hwnd)
 		toolButtonTooltip = NULL;
 	}
 }
-#endif
 
 //--------------------------------------------------------------  Tools_OnMove
 
-#ifndef COMPILEDEMO
 void Tools_OnMove (HWND hwnd)
 {
 	WINDOWPLACEMENT placement;
@@ -385,11 +368,9 @@ void Tools_OnMove (HWND hwnd)
 	isToolsH = (SInt16)placement.rcNormalPosition.left;
 	isToolsV = (SInt16)placement.rcNormalPosition.top;
 }
-#endif
 
 //--------------------------------------------------------------  Tools_OnToolSelChange
 
-#ifndef COMPILEDEMO
 void Tools_OnToolSelChange (HWND hwnd)
 {
 	SInt16 newMode;
@@ -397,11 +378,9 @@ void Tools_OnToolSelChange (HWND hwnd)
 	GetComboBoxMenuValue(hwnd, kToolModeCombo, &newMode);
 	SwitchToolModes(newMode);
 }
-#endif
 
 //--------------------------------------------------------------  Tools_OnButtonClick
 
-#ifndef COMPILEDEMO
 void Tools_OnButtonClick (HWND hwnd, WORD clickedID)
 {
 	SInt16 toolIcon;
@@ -435,11 +414,9 @@ void Tools_OnButtonClick (HWND hwnd, WORD clickedID)
 	}
 	SelectTool(toolIcon);
 }
-#endif
 
 //--------------------------------------------------------------  UpdateToolTips
 
-#ifndef COMPILEDEMO
 void UpdateToolTips (HWND hwnd)
 {
 	SInt16 buttonID;
@@ -472,7 +449,6 @@ void UpdateToolTips (HWND hwnd)
 		SendMessage(toolButtonTooltip, TTM_UPDATETIPTEXT, 0, (LPARAM)&toolInfo);
 	}
 }
-#endif
 
 //--------------------------------------------------------------  OpenToolsWindow
 
@@ -550,7 +526,6 @@ void ToggleToolsWindow (void)
 
 //--------------------------------------------------------------  SwitchToolModes
 
-#ifndef COMPILEDEMO
 void SwitchToolModes (SInt16 newMode)
 {
 	HWND hwndButton;
@@ -634,7 +609,6 @@ void SwitchToolModes (SInt16 newMode)
 	UpdateToolTiles();
 	UpdateToolTips(toolsWindow);
 }
-#endif
 
 //--------------------------------------------------------------  NextToolMode
 

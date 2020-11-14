@@ -41,7 +41,6 @@ static objectType savedObjectScrap;
 //--------------------------------------------------------------  PutRoomScrap
 // This function copies the current room into the clipboard.
 
-#ifndef COMPILEDEMO
 void PutRoomScrap (void)
 {
 	if (thisRoomNumber >= 0 && thisRoomNumber < thisHouse.nRooms)
@@ -55,12 +54,10 @@ void PutRoomScrap (void)
 		scrapIsARoom = true;
 	}
 }
-#endif
 
 //--------------------------------------------------------------  PutObjectScrap
 // This function copies the currently selected object into the clipboard.
 
-#ifndef COMPILEDEMO
 void PutObjectScrap (void)
 {
 	if (objActive >= 0 && objActive < kMaxRoomObs)
@@ -74,12 +71,10 @@ void PutObjectScrap (void)
 		scrapIsARoom = false;
 	}
 }
-#endif
 
 //--------------------------------------------------------------  GetRoomScrap
 // This function pastes a room from the clipboard.
 
-#ifndef COMPILEDEMO
 void GetRoomScrap (void)
 {
 	SInt16 srcFloor;
@@ -132,12 +127,10 @@ void GetRoomScrap (void)
 		UpdateMenus(false);
 	}
 }
-#endif
 
 //--------------------------------------------------------------  GetObjectScrap
 // This function pastes an object from the clipboard.
 
-#ifndef COMPILEDEMO
 void GetObjectScrap (void)
 {
 	objectType tempObject;
@@ -161,11 +154,9 @@ void GetObjectScrap (void)
 		}
 	}
 }
-#endif
 
 //--------------------------------------------------------------  SeeIfValidScrapAvailable
 
-#ifndef COMPILEDEMO
 void SeeIfValidScrapAvailable (Boolean updateMenus)
 {
 	if (updateMenus)
@@ -173,7 +164,6 @@ void SeeIfValidScrapAvailable (Boolean updateMenus)
 		UpdateClipboardMenus();
 	}
 }
-#endif
 
 //--------------------------------------------------------------  GetRoomDragImageList
 

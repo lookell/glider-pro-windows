@@ -77,7 +77,6 @@ void ExtractFloorSuite (SInt16 combo, SInt16 *floor, SInt16 *suite)
 
 //--------------------------------------------------------------  LinkWindowProc
 
-#ifndef COMPILEDEMO
 INT_PTR CALLBACK LinkWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	(void)lParam;
@@ -120,7 +119,6 @@ INT_PTR CALLBACK LinkWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 	}
 	return FALSE;
 }
-#endif
 
 //--------------------------------------------------------------  UpdateLinkControl
 
@@ -314,7 +312,6 @@ void CloseLinkWindow (void)
 
 //--------------------------------------------------------------  DoLink
 
-#ifndef COMPILEDEMO
 void DoLink (void)
 {
 	SInt16 floor, suite;
@@ -361,11 +358,9 @@ void DoLink (void)
 		CloseLinkWindow();
 	}
 }
-#endif
 
 //--------------------------------------------------------------  DoUnlink
 
-#ifndef COMPILEDEMO
 void DoUnlink (void)
 {
 	if (thisRoomNumber == linkRoom)
@@ -398,5 +393,4 @@ void DoUnlink (void)
 	UpdateMenus(false);
 	CloseLinkWindow();
 }
-#endif
 

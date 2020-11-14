@@ -37,8 +37,6 @@ Boolean WarnLockingHouse (HWND ownerWindow);
 void HowToZeroScores (HWND ownerWindow);
 
 
-#ifndef COMPILEDEMO
-
 //==============================================================  Functions
 
 //
@@ -252,6 +250,4 @@ void HowToZeroScores (HWND ownerWindow)
 		break;
 	}
 }
-
-#endif
 

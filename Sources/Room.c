@@ -59,7 +59,6 @@ Boolean doBitchDialogs;
 //==============================================================  Functions
 //--------------------------------------------------------------  SetInitialTiles
 
-#ifndef COMPILEDEMO
 void SetInitialTiles (SInt16 background, SInt16 *theTiles)
 {
 	SInt16 i;
@@ -136,11 +135,9 @@ void SetInitialTiles (SInt16 background, SInt16 *theTiles)
 		break;
 	}
 }
-#endif
 
 //--------------------------------------------------------------  CreateNewRoom
 
-#ifndef COMPILEDEMO
 Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 {
 	SInt16		i, availableRoom;
@@ -212,7 +209,6 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 
 	return (true);
 }
-#endif
 
 //--------------------------------------------------------------  ReadyBackground
 
@@ -459,7 +455,6 @@ void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 
 //--------------------------------------------------------------  QueryDeleteRoom
 
-#ifndef COMPILEDEMO
 Boolean QueryDeleteRoom (HWND ownerWindow)
 {
 	SInt16 hitWhat;
@@ -470,7 +465,6 @@ Boolean QueryDeleteRoom (HWND ownerWindow)
 	else
 		return (false);
 }
-#endif
 
 //--------------------------------------------------------------  DoesNeighborRoomExist
 

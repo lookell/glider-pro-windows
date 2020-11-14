@@ -937,7 +937,6 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 
 //--------------------------------------------------------------  SendObjectToBack
 
-#ifndef COMPILEDEMO
 void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 {
 	objectType	savedObject;
@@ -1054,5 +1053,4 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 
 	InitCursor();
 }
-#endif
 

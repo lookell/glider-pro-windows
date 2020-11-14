@@ -48,7 +48,6 @@ static HIMAGELIST houseIconImageList;
 //==============================================================  Functions
 //--------------------------------------------------------------  InitLoadDialog
 
-#ifndef COMPILEDEMO
 BOOL InitLoadDialog (HWND hDlg)
 {
 	HWND houseListView;
@@ -92,11 +91,9 @@ BOOL InitLoadDialog (HWND hDlg)
 
 	return TRUE;
 }
-#endif
 
 //--------------------------------------------------------------  LoadFilter
 
-#ifndef COMPILEDEMO
 INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	HWND		houseListView;
@@ -164,18 +161,15 @@ INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	return FALSE;
 }
-#endif
 
 //--------------------------------------------------------------  DoLoadHouse
 
-#ifndef COMPILEDEMO
 void DoLoadHouse (HWND ownerWindow)
 {
 	DialogBox(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kLoadHouseDialogID),
 			ownerWindow, LoadFilter);
 }
-#endif
 
 //--------------------------------------------------------------  SortHouseList
 

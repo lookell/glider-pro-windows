@@ -613,7 +613,6 @@ Boolean KeepObjectLegal (void)
 //--------------------------------------------------------------  WrapBannerAndTrailer
 // Tries to wrap around the text of the banner and trailer messages.
 
-#ifndef COMPILEDEMO
 void WrapBannerAndTrailer (void)
 {
 	WrapText(thisHouse.banner, 40);
@@ -993,7 +992,6 @@ void CheckForStaircasePairs (HWND mssgWindow)
 		}
 	}
 }
-#endif
 
 //--------------------------------------------------------------  CheckHouseForProblems
 // Calls all the above functions and reports (and corrects) errors.

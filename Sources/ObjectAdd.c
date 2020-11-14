@@ -808,7 +808,6 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 
 //--------------------------------------------------------------  FindEmptyObjectSlot
 
-#ifndef COMPILEDEMO
 SInt16 FindEmptyObjectSlot (void)
 {
 	SInt16		i, emptySlot;
@@ -1079,6 +1078,4 @@ void ShoutNoMoreSpecialObjects (HWND ownerWindow)
 {
 	Alert(kNoMoreSpecialAlert, ownerWindow, NULL);
 }
-
-#endif
 

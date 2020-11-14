@@ -227,7 +227,6 @@ Boolean OpenHouse (HWND ownerWindow)
 //--------------------------------------------------------------  OpenSpecificHouse
 // Opens the specific house passed in.
 
-#ifndef COMPILEDEMO
 Boolean OpenSpecificHouse (FSSpec *specs)
 {
 	(void)specs;
@@ -261,11 +260,9 @@ Boolean OpenSpecificHouse (FSSpec *specs)
 	return (itOpened);
 #endif
 }
-#endif
 
 //--------------------------------------------------------------  SaveHouseAs
 
-#ifndef COMPILEDEMO
 Boolean SaveHouseAs (void)
 {
 	// TEMP - fix this later -- use NavServices (see House.c)
@@ -334,7 +331,6 @@ Boolean SaveHouseAs (void)
 	*/
 	return false;
 }
-#endif
 
 //--------------------------------------------------------------  ReadHouse
 // With a house open, this function reads in the actual bits of data
@@ -572,7 +568,6 @@ Boolean CloseHouse (HWND ownerWindow)
 // If changes were made, this function will present the user with a
 // dialog asking them if they would like to save the changes.
 
-#ifndef COMPILEDEMO
 Boolean QuerySaveChanges (HWND ownerWindow)
 {
 	DialogParams	params = { 0 };
@@ -611,7 +606,6 @@ Boolean QuerySaveChanges (HWND ownerWindow)
 	else
 		return (false);
 }
-#endif
 
 //--------------------------------------------------------------  YellowAlert
 // This is a dialog used to present an error code and explanation

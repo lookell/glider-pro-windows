@@ -66,7 +66,6 @@ static Rect wasActiveRoomRect;
 //==============================================================  Functions
 //--------------------------------------------------------------  RegisterMapWindowClass
 
-#ifndef COMPILEDEMO
 void RegisterMapWindowClass (void)
 {
 	WNDCLASSEX wcx;
@@ -90,11 +89,9 @@ void RegisterMapWindowClass (void)
 			RedAlert(kErrUnnaccounted);
 	}
 }
-#endif
 
 //--------------------------------------------------------------  ThisRoomVisibleOnMap
 
-#ifndef COMPILEDEMO
 Boolean ThisRoomVisibleOnMap (void)
 {
 	SInt16		h, v;
@@ -109,11 +106,9 @@ Boolean ThisRoomVisibleOnMap (void)
 	else
 		return (true);
 }
-#endif
 
 //--------------------------------------------------------------  CenterMapOnRoom
 
-#ifndef COMPILEDEMO
 void CenterMapOnRoom (SInt16 h, SInt16 v)
 {
 	SCROLLINFO scrollInfo;
@@ -145,11 +140,9 @@ void CenterMapOnRoom (SInt16 h, SInt16 v)
 		SetScrollInfo(mapWindow, SB_VERT, &scrollInfo, TRUE);
 	}
 }
-#endif
 
 //--------------------------------------------------------------  FlagMapRoomsForUpdate
 
-#ifndef COMPILEDEMO
 void FlagMapRoomsForUpdate (void)
 {
 	if (mapWindow == NULL)
@@ -158,11 +151,9 @@ void FlagMapRoomsForUpdate (void)
 	Mac_InvalWindowRect(mapWindow, &wasActiveRoomRect);
 	Mac_InvalWindowRect(mapWindow, &activeRoomRect);
 }
-#endif
 
 //--------------------------------------------------------------  FindNewActiveRoomRect
 
-#ifndef COMPILEDEMO
 void FindNewActiveRoomRect (void)
 {
 	Rect		aRoom;
@@ -203,7 +194,6 @@ void FindNewActiveRoomRect (void)
 		QInsetRect(&activeRoomRect, -1, -1);
 	}
 }
-#endif
 
 //--------------------------------------------------------------  DrawMapRoomImage
 
@@ -573,7 +563,6 @@ void ToggleMapWindow (void)
 
 //--------------------------------------------------------------  MapWindowProc
 
-#ifndef COMPILEDEMO
 LRESULT CALLBACK MapWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
@@ -625,10 +614,8 @@ LRESULT CALLBACK MapWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 	}
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
-#endif
 
 //--------------------------------------------------------------  LiveHScrollAction
-#ifndef COMPILEDEMO
 
 void LiveHScrollAction (HWND hwnd, WORD scrollRequest)
 {
@@ -676,10 +663,8 @@ void LiveHScrollAction (HWND hwnd, WORD scrollRequest)
 		UpdateMapWindow();
 	}
 }
-#endif
 
 //--------------------------------------------------------------  LiveVScrollAction
-#ifndef COMPILEDEMO
 
 void LiveVScrollAction (HWND hwnd, WORD scrollRequest)
 {
@@ -728,7 +713,6 @@ void LiveVScrollAction (HWND hwnd, WORD scrollRequest)
 		UpdateMapWindow();
 	}
 }
-#endif
 
 //--------------------------------------------------------------  HandleMapClick
 
@@ -802,7 +786,6 @@ void HandleMapClick (SInt16 clickX, SInt16 clickY)
 
 //--------------------------------------------------------------  QueryNewRoom
 
-#ifndef COMPILEDEMO
 Boolean QueryNewRoom (HWND ownerWindow)
 {
 	SInt16 hitWhat;
@@ -813,11 +796,9 @@ Boolean QueryNewRoom (HWND ownerWindow)
 	else
 		return (false);
 }
-#endif
 
 //--------------------------------------------------------------  CreateNailOffscreen
 
-#ifndef COMPILEDEMO
 void CreateNailOffscreen (void)
 {
 	if (nailSrcMap == NULL)
@@ -827,11 +808,9 @@ void CreateNailOffscreen (void)
 		LoadGraphic(nailSrcMap, kThumbnailPictID);
 	}
 }
-#endif
 
 //--------------------------------------------------------------  KillNailOffscreen
 
-#ifndef COMPILEDEMO
 void KillNailOffscreen (void)
 {
 	if (nailSrcMap != NULL)
@@ -840,7 +819,6 @@ void KillNailOffscreen (void)
 		nailSrcMap = NULL;
 	}
 }
-#endif
 
 //--------------------------------------------------------------  MoveRoom
 

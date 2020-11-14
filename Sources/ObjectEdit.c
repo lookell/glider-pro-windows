@@ -57,7 +57,6 @@ static Boolean isFirstRoom;
 //==============================================================  Functions
 //--------------------------------------------------------------  FindObjectSelected
 
-#ifndef COMPILEDEMO
 SInt16 FindObjectSelected (Point where)
 {
 	SInt16		found, i;
@@ -81,7 +80,6 @@ SInt16 FindObjectSelected (Point where)
 	}
 	return (found);
 }
-#endif
 
 //--------------------------------------------------------------  DoSelectionClick
 
@@ -131,7 +129,6 @@ void DoSelectionClick (HWND hwnd, Point where, Boolean isDoubleClick)
 
 //--------------------------------------------------------------  DragHandle
 
-#ifndef COMPILEDEMO
 void DragHandle (Point where)
 {
 	SInt16		hDelta, vDelta;
@@ -339,11 +336,9 @@ void DragHandle (Point where)
 	fileDirty = true;
 	UpdateMenus(false);
 }
-#endif
 
 //--------------------------------------------------------------  DragObject
 
-#ifndef COMPILEDEMO
 void Gp_DragObject (Point where)
 {
 	Rect		newRect, wasRect;
@@ -760,7 +755,6 @@ void Gp_DragObject (Point where)
 	ReadyBackground(thisRoom->background, thisRoom->tiles);
 	DrawThisRoomsObjects();
 }
-#endif
 
 //--------------------------------------------------------------  DoNewObjectClick
 
@@ -1713,7 +1707,6 @@ void DeselectObject (void)
 
 //--------------------------------------------------------------  ObjectHasHandle
 
-#ifndef COMPILEDEMO
 Boolean ObjectHasHandle (SInt16 *direction, SInt16 *dist)
 {
 	if ((objActive == kInitialGliderSelected) ||
@@ -1873,7 +1866,6 @@ Boolean ObjectHasHandle (SInt16 *direction, SInt16 *dist)
 		break;
 	}
 }
-#endif
 
 //--------------------------------------------------------------  ObjectIsUpBlower
 
@@ -1969,7 +1961,6 @@ void SelectPrevObject (void)
 
 //--------------------------------------------------------------  GetThisRoomsObjRects
 
-#ifndef COMPILEDEMO
 void GetThisRoomsObjRects (void)
 {
 	HBITMAP		thePict;
@@ -2265,11 +2256,9 @@ void GetThisRoomsObjRects (void)
 		}
 	}
 }
-#endif
 
 //--------------------------------------------------------------  DrawThisRoomsObjects
 
-#ifndef COMPILEDEMO
 void DrawThisRoomsObjects (void)
 {
 	Rect		tempRect;
@@ -2635,7 +2624,6 @@ void DrawThisRoomsObjects (void)
 	Mac_CopyBits(backSrcMap, workSrcMap,
 			&backSrcRect, &backSrcRect, srcCopy, nil);
 }
-#endif
 
 //--------------------------------------------------------------  HiliteAllObjects
 
@@ -2730,7 +2718,6 @@ void GoToObjectInRoomNum (SInt16 object, SInt16 roomNum)
 
 //--------------------------------------------------------------  StartMarqueeForActiveObject
 
-#ifndef COMPILEDEMO
 void StartMarqueeForActiveObject (void)
 {
 	SInt16 direction;
@@ -2762,5 +2749,4 @@ void StartMarqueeForActiveObject (void)
 		StopMarquee();
 	}
 }
-#endif
 

@@ -64,7 +64,6 @@ static SInt16 destLocations[kMaxRoomObs];
 //--------------------------------------------------------------  CreateNewHouse
 // Called to create a new house file.
 
-#ifndef COMPILEDEMO
 Boolean CreateNewHouse (HWND hwndOwner)
 {
 	OPENFILENAME ofn;
@@ -144,12 +143,10 @@ Boolean CreateNewHouse (HWND hwndOwner)
 
 	return true;
 }
-#endif
 
 //--------------------------------------------------------------  InitializeEmptyHouse
 // Initializes all the structures for an empty (new) house.
 
-#ifndef COMPILEDEMO
 void InitializeEmptyHouse (void)
 {
 	wchar_t tempStr[256];
@@ -187,7 +184,6 @@ void InitializeEmptyHouse (void)
 	UpdateMenus(false);
 	ReflectCurrentRoom(true);
 }
-#endif
 
 //--------------------------------------------------------------  RealRoomNumberCount
 // Returns the real number of rooms in a house (some rooms may still
@@ -326,7 +322,6 @@ SInt16 CountHouseLinks (void)
 // the links if the objects or rooms in a house are to be shuffled
 // around.
 
-#ifndef COMPILEDEMO
 void GenerateLinksList (void)
 {
 	objectType	thisObject;
@@ -388,12 +383,10 @@ void GenerateLinksList (void)
 		}
 	}
 }
-#endif
 
 //--------------------------------------------------------------  SortRoomObjects
 // I'm a little fuzzy on what this does.
 
-#ifndef COMPILEDEMO
 void SortRoomsObjects (SInt16 which)
 {
 	SInt16		probe, probe2, room, obj;
@@ -452,12 +445,10 @@ void SortRoomsObjects (SInt16 which)
 	}
 	while (busy);
 }
-#endif
 
 //--------------------------------------------------------------  SortHouseObjects
 // I'm a little fuzzy on what this does exactly either.
 
-#ifndef COMPILEDEMO
 void SortHouseObjects (void)
 {
 	SInt16		numLinks, numRooms, r, i, l;
@@ -507,7 +498,6 @@ void SortHouseObjects (void)
 	free(linksList);
 	ForceThisRoom(thisRoomNumber);
 }
-#endif
 
 //--------------------------------------------------------------  CountRoomsVisited
 // Goes through and counts the number of rooms a player has been to in

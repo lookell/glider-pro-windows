@@ -126,8 +126,6 @@ void DoEnemyObjectInfo (HWND hwndOwner);
 void DoFlowerObjectInfo (HWND hwndOwner);
 
 
-#ifndef COMPILEDEMO
-
 //==============================================================  Functions
 //--------------------------------------------------------------  GetObjectName
 
@@ -1770,6 +1768,4 @@ void DoObjectInfo (HWND hwndOwner)
 		break;
 	}
 }
-
-#endif
 

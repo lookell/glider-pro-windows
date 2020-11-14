@@ -381,7 +381,6 @@ void CloseMainWindow (void)
 // Handles changing the title across the top of the main window.  Only
 // relevant when editing a house (room title displayed in window title).
 
-#ifndef COMPILEDEMO
 void UpdateEditWindowTitle (void)
 {
 	wchar_t houseName[64];
@@ -410,7 +409,6 @@ void UpdateEditWindowTitle (void)
 	}
 	SetWindowText(mainWindow, newTitle);
 }
-#endif
 
 //--------------------------------------------------------------  HandleMainClick
 // Handle a mouse click in the main window (relevant only when editing).

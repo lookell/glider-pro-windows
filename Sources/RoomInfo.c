@@ -113,7 +113,6 @@ void LoadTileSrcGraphic (HDC hdc, SInt16 backID, const Rect *theRect)
 
 //--------------------------------------------------------------  UpdateRoomInfoDialog
 
-#ifndef COMPILEDEMO
 void UpdateRoomInfoDialog (HWND hDlg, HDC hdc)
 {
 	Rect src, dest;
@@ -139,11 +138,9 @@ void UpdateRoomInfoDialog (HWND hDlg, HDC hdc)
 	Mac_FrameRect(hdc, &tileSrc, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
 	Mac_FrameRect(hdc, &tileDest, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
 }
-#endif
 
 //--------------------------------------------------------------  DragMiniTile
 
-#ifndef COMPILEDEMO
 void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 {
 	RECT dragRect;
@@ -297,11 +294,9 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 	DrawFocusRect(hdc, &dragRect);
 	ReleaseDC(hDlg, hdc);
 }
-#endif
 
 //--------------------------------------------------------------  HiliteTileOver
 
-#ifndef COMPILEDEMO
 void HiliteTileOver (HWND hDlg, Point mouseIs)
 {
 	SInt16 newTileOver;
@@ -372,11 +367,9 @@ void HiliteTileOver (HWND hDlg, Point mouseIs)
 		}
 	}
 }
-#endif
 
 //--------------------------------------------------------------  RoomInfo_InitDialog
 
-#ifndef COMPILEDEMO
 void RoomInfo_InitDialog (HWND hDlg)
 {
 	HMENU rootMenu, backgroundsMenu;
@@ -458,11 +451,9 @@ void RoomInfo_InitDialog (HWND hDlg)
 	else
 		EnableWindow(GetDlgItem(hDlg, kBoundsButton), FALSE);
 }
-#endif
 
 //--------------------------------------------------------------  RoomFilter
 
-#ifndef COMPILEDEMO
 INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	Point mouseIs;
@@ -628,7 +619,6 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 	}
 	return FALSE;
 }
-#endif
 
 //--------------------------------------------------------------  DoRoomInfo
 
@@ -643,8 +633,6 @@ void DoRoomInfo (HWND hwndOwner)
 
 //--------------------------------------------------------------  SendButtonClickedCommand
 
-#ifndef COMPILEDEMO
-
 LRESULT SendButtonClickedCommand (HWND hDlg, int ctrlID)
 {
 	return SendMessage(hDlg, WM_COMMAND,
@@ -652,11 +640,7 @@ LRESULT SendButtonClickedCommand (HWND hDlg, int ctrlID)
 		(LPARAM)GetDlgItem(hDlg, ctrlID));
 }
 
-#endif
-
 //--------------------------------------------------------------  OriginalArtFilter
-
-#ifndef COMPILEDEMO
 
 INT_PTR CALLBACK OriginalArtFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -785,11 +769,9 @@ INT_PTR CALLBACK OriginalArtFilter (HWND hDlg, UINT message, WPARAM wParam, LPAR
 	}
 	return FALSE;
 }
-#endif
 
 //--------------------------------------------------------------  ChooseOriginalArt
 
-#ifndef COMPILEDEMO
 SInt16 ChooseOriginalArt (HWND hwndOwner, SInt16 wasPictID)
 {
 	SInt16 newPictID;
@@ -814,7 +796,6 @@ SInt16 ChooseOriginalArt (HWND hwndOwner, SInt16 wasPictID)
 		return wasPictID;
 	}
 }
-#endif
 
 //--------------------------------------------------------------  PictIDExists
 
@@ -854,10 +835,8 @@ SInt16 GetFirstPICT (void)
 
 //--------------------------------------------------------------  BitchAboutPICTNotFound
 
-#ifndef COMPILEDEMO
 void BitchAboutPICTNotFound (HWND ownerWindow)
 {
 	Alert(kNoPICTFoundAlert, ownerWindow, NULL);
 }
-#endif
 
