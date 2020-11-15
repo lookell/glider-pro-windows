@@ -211,51 +211,59 @@ static AudioDeviceState *Audio_SetDeviceState(AudioDeviceState *newState)
 	);
 }
 
+static VOID CALLBACK RunAudioChannelTicks(PVOID Parameter, BOOLEAN TimerOrWaitFired);
+
 int Audio_InitDevice(void)
 {
 	AudioDeviceState *prevSelf;
 	AudioDeviceState *self;
-	LPDIRECTSOUND8 newDevice;
-	size_t idx;
 	HRESULT hr;
+	HWND hwndOwner;
+	BOOL succeeded;
 
 	prevSelf = Audio_GetDeviceState();
 	if (prevSelf != NULL)
 	{
-		// audio device already initialized
-		return false;
+		return FALSE;
 	}
-	hr = DirectSoundCreate8(&DSDEVID_DefaultPlayback, &newDevice, NULL);
-	if (FAILED(hr))
-	{
-		// cannot get device pointer
-		return false;
-	}
-	hr = IDirectSound8_SetCooperativeLevel(newDevice, GetDesktopWindow(), DSSCL_PRIORITY);
-	if (FAILED(hr))
-	{
-		// cannot set device cooperative level
-		IDirectSound8_Release(newDevice);
-		return false;
-	}
-
 	self = (AudioDeviceState *)calloc(1, sizeof(*self));
 	if (self == NULL)
 	{
-		// could not allocate memory
-		IDirectSound8_Release(newDevice);
-		return false;
+		return FALSE;
 	}
-
-	InitializeCriticalSection(&self->csAudioLock);
-	self->audioDevice = newDevice;
+	hr = DirectSoundCreate8(&DSDEVID_DefaultPlayback, &self->audioDevice, NULL);
+	if (FAILED(hr))
+	{
+		free(self);
+		return FALSE;
+	}
+	hwndOwner = GetDesktopWindow();
+	hr = IDirectSound8_SetCooperativeLevel(self->audioDevice, hwndOwner, DSSCL_PRIORITY);
+	if (FAILED(hr))
+	{
+		IDirectSound8_Release(self->audioDevice);
+		free(self);
+		return FALSE;
+	}
 	self->masterVolume = 1.0f;
 	self->masterAttenuation = DSBVOLUME_MAX;
-	for (idx = 0; idx < ARRAYSIZE(self->audioChannels); idx++)
+	InitializeCriticalSection(&self->csAudioLock);
+	succeeded = CreateTimerQueueTimer(
+		&self->audioTimerHandle,
+		NULL,
+		RunAudioChannelTicks,
+		NULL,
+		AUDIO_TICK_MS,
+		AUDIO_TICK_MS,
+		WT_EXECUTEDEFAULT
+	);
+	if (!succeeded)
 	{
-		self->audioChannels[idx].audioBuffer = NULL;
+		DeleteCriticalSection(&self->csAudioLock);
+		IDirectSound8_Release(self->audioDevice);
+		free(self);
+		return false;
 	}
-	self->audioTimerHandle = NULL;
 
 	Audio_SetDeviceState(self);
 	return true;
@@ -271,13 +279,9 @@ void Audio_KillDevice(void)
 	{
 		return;
 	}
-
 	EnterCriticalSection(&self->csAudioLock);
-	if (self->audioTimerHandle != NULL)
-	{
-		DeleteTimerQueueTimer(NULL, self->audioTimerHandle, INVALID_HANDLE_VALUE);
-		self->audioTimerHandle = NULL;
-	}
+
+	DeleteTimerQueueTimer(NULL, self->audioTimerHandle, INVALID_HANDLE_VALUE);
 	for (i = 0; i < ARRAYSIZE(self->audioChannels); ++i)
 	{
 		if (self->audioChannels[i].audioBuffer != NULL)
@@ -285,11 +289,7 @@ void Audio_KillDevice(void)
 			AudioChannel_Close(&self->audioChannels[i]);
 		}
 	}
-	if (self->audioDevice != NULL)
-	{
-		IDirectSound8_Release(self->audioDevice);
-		self->audioDevice = NULL;
-	}
+	IDirectSound8_Release(self->audioDevice);
 
 	LeaveCriticalSection(&self->csAudioLock);
 	DeleteCriticalSection(&self->csAudioLock);
@@ -791,7 +791,6 @@ static LPDIRECTSOUNDBUFFER8 Audio_CreateSoundBuffer(
 AudioChannel *AudioChannel_Open(const WaveFormat *format)
 {
 	AudioDeviceState *self;
-	BOOL succeeded;
 	size_t i;
 	size_t channelIndex;
 	WAVEFORMATEX waveFormat = { 0 };
@@ -806,19 +805,6 @@ AudioChannel *AudioChannel_Open(const WaveFormat *format)
 		return NULL;
 	}
 	EnterCriticalSection(&self->csAudioLock);
-
-	if (self->audioTimerHandle == NULL)
-	{
-		succeeded = CreateTimerQueueTimer(&self->audioTimerHandle, NULL, RunAudioChannelTicks,
-			NULL, AUDIO_TICK_MS, AUDIO_TICK_MS, WT_EXECUTEDEFAULT);
-		if (!succeeded)
-		{
-			// audio tick timer cannot be created
-			self->audioTimerHandle = NULL;
-			LeaveCriticalSection(&self->csAudioLock);
-			return NULL;
-		}
-	}
 
 	channelIndex = ARRAYSIZE(self->audioChannels);
 	for (i = 0; i < ARRAYSIZE(self->audioChannels); i++)
