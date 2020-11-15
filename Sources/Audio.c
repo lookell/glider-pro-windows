@@ -279,9 +279,10 @@ void Audio_KillDevice(void)
 	{
 		return;
 	}
+	// NOTE: Making sure that audio ticks finish before destroying audio resources
+	DeleteTimerQueueTimer(NULL, self->audioTimerHandle, INVALID_HANDLE_VALUE);
 	EnterCriticalSection(&self->csAudioLock);
 
-	DeleteTimerQueueTimer(NULL, self->audioTimerHandle, INVALID_HANDLE_VALUE);
 	for (i = 0; i < ARRAYSIZE(self->audioChannels); ++i)
 	{
 		if (self->audioChannels[i].audioBuffer != NULL)
@@ -737,6 +738,10 @@ static VOID CALLBACK RunAudioChannelTicks(PVOID Parameter, BOOLEAN TimerOrWaitFi
 	(void)TimerOrWaitFired;
 
 	self = Audio_GetDeviceState();
+	if (self == NULL)
+	{
+		return;
+	}
 	EnterCriticalSection(&self->csAudioLock);
 
 	for (i = 0; i < ARRAYSIZE(self->audioChannels); i++)
