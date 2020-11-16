@@ -475,7 +475,10 @@ void PlayGame (SInt16 splashHouseIndex)
 				else
 					DoGameOver();
 				if (!demoGoing)
-					TestHighScore(mainWindow);
+				{
+					if (TestHighScore(mainWindow))
+						DoHighScores();
+				}
 				RedrawSplashScreen(splashHouseIndex);
 			}
 		}

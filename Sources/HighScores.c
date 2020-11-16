@@ -368,13 +368,7 @@ Boolean TestHighScore (HWND ownerWindow)
 		gameDirty = true;
 	}
 
-	if (placing != -1)
-	{
-		DoHighScores();
-		return (true);
-	}
-	else
-		return (false);
+	return (placing != -1);
 }
 
 //--------------------------------------------------------------  NameFilter
