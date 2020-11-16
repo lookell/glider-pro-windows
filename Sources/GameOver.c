@@ -12,7 +12,6 @@
 #include "ColorUtils.h"
 #include "Environ.h"
 #include "FrameTimer.h"
-#include "HighScores.h"
 #include "House.h"
 #include "Macintosh.h"
 #include "Main.h"
@@ -82,7 +81,6 @@ void DoGameOver (void)
 	ColorRect(mainWindowDC, &workSrcRect, 244);
 	ReleaseMainWindowDC(mainWindowDC);
 	DoGameOverStarAnimation();
-	TestHighScore(mainWindow);
 }
 
 //--------------------------------------------------------------  SetUpFinalScreen
@@ -503,7 +501,6 @@ void DoDiedGameOver (void)
 	{
 		if (!userAborted)
 			WaitForInputEvent(10);
-		TestHighScore(mainWindow);
 	}
 }
 

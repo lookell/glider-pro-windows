@@ -16,6 +16,7 @@
 #include "Environ.h"
 #include "Events.h"
 #include "GameOver.h"
+#include "HighScores.h"
 #include "House.h"
 #include "HouseIO.h"
 #include "Input.h"
@@ -473,6 +474,8 @@ void PlayGame (SInt16 splashHouseIndex)
 					DoDiedGameOver();
 				else
 					DoGameOver();
+				if (!demoGoing)
+					TestHighScore(mainWindow);
 				RedrawSplashScreen(splashHouseIndex);
 			}
 		}
