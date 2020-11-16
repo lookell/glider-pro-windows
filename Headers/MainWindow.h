@@ -52,8 +52,6 @@ void UpdateEditWindowTitle (void);
 HDC GetMainWindowDC (void);
 void ReleaseMainWindowDC (HDC hdc);
 #endif
-//void ShowMenuBarOld (void);
-//void HideMenuBarOld (void);
 void WashColorIn (void);
 void InitMainWindowCursor (void);
 #ifdef GP_USE_WINAPI_H

@@ -158,10 +158,6 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 		LoadGraphic(glid2SrcMap, kGliderFoilPictID);
 	}
 
-#if !BUILD_ARCADE_VERSION
-//	HideMenuBarOld();		// TEMP
-#endif
-
 #ifdef COMPILEQT
 	if ((thisMac.hasQT) && (hasMovie))
 	{
@@ -173,8 +169,6 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 	DissolveScreenOn(&workSrcRect);
 	SetMenu(mainWindow, NULL);
 	UpdateWindow(mainWindow);
-
-//	DebugStr("\pIf screen isn't black, exit to shell.");	// TEMP TEMP TEMP
 
 	DrawLocale();
 	RefreshScoreboard(kNormalTitleMode);
@@ -469,45 +463,9 @@ void PlayGame (SInt16 splashHouseIndex)
 			countDown--;
 			if (countDown <= 0)
 			{
-#if BUILD_ARCADE_VERSION
-				HDC			mainWindowDC;
-#endif
-
 				HideGlider(&theGlider);
 				RefreshScoreboard(kNormalTitleMode);
 
-#if BUILD_ARCADE_VERSION
-			// Need to paint over the scoreboard black.
-
-				Mac_PaintRect(boardSrcMap, &boardSrcRect, GetStockObject(BLACK_BRUSH));
-
-				mainWindowDC = GetMainWindowDC();
-				Mac_CopyBits(boardSrcMap, mainWindowDC,
-						&boardSrcRect, &boardDestRect, srcCopy, 0L);
-				ReleaseMainWindowDC(mainWindowDC);
-
-				{
-					Rect		bounds;
-					HBITMAP		thePicture;
-					BITMAP		bmInfo;
-					SInt16		hOffset;
-
-					if (boardSrcRect.right >= 640)
-						hOffset = (RectWide(&boardSrcRect) - kMaxViewWidth) / 2;
-					else
-						hOffset = -576;
-					thePicture = Gp_LoadImage(kScoreboardPictID);
-					if (!thePicture)
-						RedAlert(kErrFailedGraphicLoad);
-					GetObject(thePicture, sizeof(bmInfo), &bmInfo);
-					QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
-					QOffsetRect(&bounds, hOffset, 0);
-					Mac_DrawPicture(boardSrcMap, thePicture, &bounds);
-					DeleteObject(thePicture);
-				}
-#endif
-
-//				ShowMenuBarOld();	// TEMP
 				SetMenu(mainWindow, theMenuBar);
 				UpdateWindow(mainWindow);
 
@@ -520,40 +478,6 @@ void PlayGame (SInt16 splashHouseIndex)
 		}
 	}
 
-#if BUILD_ARCADE_VERSION
-	{
-		HDC			mainWindowDC;
-
-		Mac_PaintRect(boardSrcMap, &boardSrcRect, GetStockObject(BLACK_BRUSH));
-
-		mainWindowDC = GetMainWindowDC();
-		Mac_CopyBits(boardSrcMap, mainWindowDC,
-				&boardSrcRect, &boardDestRect, srcCopy, 0L);
-		ReleaseMainWindowDC(mainWindowDC);
-	}
-
-	{
-		Rect		bounds;
-		HBITMAP		thePicture;
-		BITMAP		bmInfo;
-		SInt16		hOffset;
-
-		if (boardSrcRect.right >= 640)
-			hOffset = (RectWide(&boardSrcRect) - kMaxViewWidth) / 2;
-		else
-			hOffset = -576;
-		thePicture = Gp_LoadImage(kScoreboardPictID);
-		if (!thePicture)
-			RedAlert(kErrFailedGraphicLoad);
-		GetObject(thePicture, sizeof(bmInfo), &bmInfo);
-		QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
-		QOffsetRect(&bounds, hOffset, 0);
-		Mac_DrawPicture(boardSrcMap, thePicture, &bounds);
-		DeleteObject(thePicture);
-	}
-#endif
-
-//	ShowMenuBarOld();	// TEMP
 	SetMenu(mainWindow, theMenuBar);
 	UpdateWindow(mainWindow);
 }

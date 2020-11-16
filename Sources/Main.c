@@ -331,10 +331,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	DelayTicks(6);
 	InitializeMenus();					InitCursor();
 
-#if BUILD_ARCADE_VERSION
-//	HideMenuBarOld();
-#endif
-
 	if (isDoColorFade)
 	{
 		WashColorIn();
@@ -343,11 +339,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 	while (!quitting)		// this is the main loop
 		HandleEvent();
-/*
-#if BUILD_ARCADE_VERSION
-	ShowMenuBarOld();
-#endif
-*/
+
 	CloseMainWindow();
 	KillMusic();
 	KillSound();

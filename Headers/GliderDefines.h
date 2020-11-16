@@ -15,7 +15,6 @@
 //#define COMPILEDEMO
 //#define CAREFULDEBUG
 //#define COMPILEQT
-#define BUILD_ARCADE_VERSION		0
 
 #define kYellowUnaccounted			1
 #define kYellowFailedResOpen		2

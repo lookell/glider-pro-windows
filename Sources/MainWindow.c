@@ -457,93 +457,6 @@ void ReleaseMainWindowDC (HDC hdc)
 	}
 }
 
-//--------------------------------------------------------------  ShowMenuBarOld
-// Displays the menu bar (after having been hidden).
-/*
-void ShowMenuBarOld (void)
-{
-	Rect			theRect;
-	GrafPtr			wasPort, tempPort;
-	RgnHandle		worldRgn, menuBarRgn;
-
-	if (LMGetMBarHeight() == 0)
-	{
-		GetPort(&wasPort);
-		tempPort = (GrafPtr)NewPtrClear(sizeof(GrafPort));
-		OpenPort(tempPort);
-		SetPort((GrafPtr)tempPort);
-
-		LMSetMBarHeight(thisMac.menuHigh);
-
-		theRect = (**GetGrayRgn()).rgnBBox;
-		UnionRect(&theRect, &qd.screenBits.bounds, &theRect);
-		worldRgn = NewRgn();
-		OpenRgn();
-		FrameRoundRect(&theRect, 16, 16);
-		CloseRgn(worldRgn);
-
-		theRect = qd.screenBits.bounds;
-		theRect.bottom = theRect.top + thisMac.menuHigh;
-		menuBarRgn = NewRgn();
-		RectRgn(menuBarRgn, &theRect);
-
-		SectRgn(worldRgn, menuBarRgn, menuBarRgn);	//	/------------------\
-		DisposeRgn(worldRgn);						//	|__________________|
-
-		UnionRgn(tempPort->visRgn, menuBarRgn, tempPort->visRgn);
-		DiffRgn(tempPort->visRgn, menuBarRgn, tempPort->visRgn);
-		DisposeRgn(menuBarRgn);
-
-		ClosePort(tempPort);
-		SetPort((GrafPtr)wasPort);
-
-		DrawMenuBar();
-	}
-}
-*/
-//--------------------------------------------------------------  HideMenuBarOld
-// Hides the menu bar - completely erasing it from the screen.
-/*
-void HideMenuBarOld (void)
-{
-	Rect			theRect;
-	RgnHandle		worldRgn, menuBarRgn;
-	GrafPtr			wasPort, tempPort;
-
-	if (LMGetMBarHeight() != 0)
-	{
-		GetPort(&wasPort);
-		tempPort = (GrafPtr)NewPtrClear(sizeof(GrafPort));
-		OpenPort(tempPort);
-		SetPort((GrafPtr)tempPort);
-
-		LMSetMBarHeight(0);
-
-		theRect = (**GetGrayRgn()).rgnBBox;
-		UnionRect(&theRect, &qd.screenBits.bounds, &theRect);
-		worldRgn = NewRgn();
-		OpenRgn();
-		FrameRoundRect(&theRect, 16, 16);
-		CloseRgn(worldRgn);
-
-		theRect = qd.screenBits.bounds;
-		theRect.bottom = theRect.top + thisMac.menuHigh;
-		menuBarRgn = NewRgn();
-		RectRgn(menuBarRgn, &theRect);
-
-		SectRgn(worldRgn, menuBarRgn, menuBarRgn);	//	/------------------\
-		DisposeRgn(worldRgn);						//	|__________________|
-
-		UnionRgn(tempPort->visRgn, menuBarRgn, tempPort->visRgn);
-		DisposeRgn(menuBarRgn);
-
-		PaintRect(&theRect);
-
-		ClosePort(tempPort);
-		SetPort((GrafPtr)wasPort);
-	}
-}
-*/
 //--------------------------------------------------------------  SetPaletteToGrays
 // Sets up a gray palette corresponding in luminance to the given color
 // palette. This is to facilitate the gray->color fade when the game comes up.
@@ -868,30 +781,6 @@ LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam)
 			NextToolMode();
 		break;
 
-#if BUILD_ARCADE_VERSION
-
-	case VK_LEFT:
-		if (theMode == kSplashMode)
-			DoOptionsMenu(hwnd, iHighScores);
-		break;
-
-	case VK_RIGHT:
-		if (theMode == kSplashMode)
-			DoOptionsMenu(hwnd, iHelp);
-		break;
-
-	case VK_UP:
-		if (theMode == kSplashMode)
-			DoGameMenu(hwnd, iNewGame);
-		break;
-
-	case VK_DOWN:
-		if (theMode == kSplashMode)
-			DoGameMenu(hwnd, iNewGame);
-		break;
-
-#else
-
 	case VK_LEFT:
 		if (houseUnlocked)
 		{
@@ -931,8 +820,6 @@ LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam)
 				MoveObject(kBumpDown, shiftDown);
 		}
 		break;
-
-#endif
 
 	case VK_DELETE:
 		if (houseUnlocked)

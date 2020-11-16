@@ -291,23 +291,8 @@ void GetDemoInput (gliderPtr thisGlider)
 
 	if (thisGlider->which == kPlayer1)
 	{
-#if BUILD_ARCADE_VERSION
-
-		if ((IsKeyDown(thisGlider->leftKey)) ||
-				(IsKeyDown(thisGlider->rightKey)) ||
-				(IsKeyDown(thisGlider->battKey)) ||
-				(IsKeyDown(thisGlider->bandKey)))
-		{
-			playing = false;
-			paused = false;
-		}
-
-#else
-
 		if (IsKeyDown(VK_CONTROL))
 			DoCommandKey();
-
-#endif
 	}
 
 	if (thisGlider->mode == kGliderBurning)
