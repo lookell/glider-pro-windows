@@ -182,14 +182,14 @@ void DissolveScreenOn (const Rect *theRect)
 // In Glider PRO, DissBits uses 4 x 4 chunks, and DissBitsChunky uses 8 x 8 chunks.
 // These chunks are used to transition only the primary rectangle of the screen,
 // and not the menu bar or scoreboard. To adapt to a variable screen resolution,
-// the screen is treated as if it's very large (roughly 2048 x 2048). Any
-// coordinates generated that lie outside the visible area will be skipped.
+// the screen is treated as if it's very large (2048 x 1024). Any rectangles
+// generated that lie outside of the visible area will be skipped.
 
 //--------------------------------------------------------------  DissBits
 
 void DissBits (const Rect *theRect)
 {
-	UInt32		lfsrMask = 0x20013;		// 1 to 262143 (2^18 - 1)
+	UInt32		lfsrMask = 0x10016;  // 1 to 131071 (2^17 - 1)
 	HDC			mainWindowDC;
 	POINT		topLeft, botRight;
 	HRGN		theClipRgn;
@@ -219,9 +219,9 @@ void DissBits (const Rect *theRect)
 		else
 			state = (state >> 1);
 		chunkH = chunkSize * (state & 0x1FF); // 4 * (0 to 511)
+		chunkV = chunkSize * ((state >> 9) & 0xFF); // 4 * (0 to 255)
 		if ((theRect->left > chunkH + chunkSize - 1) || (chunkH >= theRect->right))
 			continue;
-		chunkV = chunkSize * ((state >> 9) & 0x1FF); // 4 * (0 to 511)
 		if ((theRect->top > chunkV + chunkSize - 1) || (chunkV >= theRect->bottom))
 			continue;
 		BitBlt(mainWindowDC, chunkH, chunkV, chunkSize, chunkSize,
@@ -236,7 +236,7 @@ void DissBits (const Rect *theRect)
 
 void DissBitsChunky (const Rect *theRect)
 {
-	UInt32		lfsrMask = 0x8016;		// 1 to 65535 (2^16 - 1)
+	UInt32		lfsrMask = 0x4016;  // 1 to 32767 (2^15 - 1)
 	HDC			mainWindowDC;
 	POINT		topLeft, botRight;
 	HRGN		theClipRgn;
@@ -266,9 +266,9 @@ void DissBitsChunky (const Rect *theRect)
 		else
 			state = (state >> 1);
 		chunkH = chunkSize * (state & 0xFF); // 8 * (0 to 255)
+		chunkV = chunkSize * ((state >> 8) & 0x7F); // 8 * (0 to 127)
 		if ((theRect->left > chunkH + chunkSize - 1) || (chunkH >= theRect->right))
 			continue;
-		chunkV = chunkSize * ((state >> 8) & 0xFF); // 8 * (0 to 255)
 		if ((theRect->top > chunkV + chunkSize - 1) || (chunkV >= theRect->bottom))
 			continue;
 		BitBlt(mainWindowDC, chunkH, chunkV, chunkSize, chunkSize,
