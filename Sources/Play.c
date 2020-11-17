@@ -467,9 +467,6 @@ void PlayGame (SInt16 splashHouseIndex)
 				HideGlider(&theGlider);
 				RefreshScoreboard(kNormalTitleMode);
 
-				SetMenu(mainWindow, theMenuBar);
-				UpdateWindow(mainWindow);
-
 				if (mortals < 0)
 					DoDiedGameOver();
 				else
@@ -477,15 +474,17 @@ void PlayGame (SInt16 splashHouseIndex)
 				if (!demoGoing)
 				{
 					if (TestHighScore(mainWindow))
+					{
+						SetMenu(mainWindow, theMenuBar);
 						DoHighScores();
+					}
 				}
+				SetMenu(mainWindow, theMenuBar);
 				RedrawSplashScreen(splashHouseIndex);
 			}
 		}
 	}
-
 	SetMenu(mainWindow, theMenuBar);
-	UpdateWindow(mainWindow);
 }
 
 //--------------------------------------------------------------  SetObjectsToDefaults
