@@ -189,28 +189,30 @@ void DissolveScreenOn (const Rect *theRect)
 
 void DissBits (const Rect *theRect)
 {
-	UInt32		lfsrMask = 0x10016;  // 1 to 131071 (2^17 - 1)
-	HDC			mainWindowDC;
-	POINT		topLeft, botRight;
-	HRGN		theClipRgn;
-	INT			chunkH, chunkV;
-	INT			chunkSize = 4;
-	UInt32		state;
+	const UInt32 lfsrMask = 0x10016;  // 1 to 131071 (2^17 - 1)
+	const INT chunkSize = 4;
+
+	HDC mainWindowDC;
+	RECT clipRect;
+	HRGN theClipRgn;
+	INT chunkH;
+	INT chunkV;
+	UInt32 state;
 
 	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
 		return;
 
 	mainWindowDC = GetMainWindowDC();
 	SaveDC(mainWindowDC);
-	topLeft.x = theRect->left;
-	topLeft.y = theRect->top;
-	botRight.x = theRect->right;
-	botRight.y = theRect->bottom;
-	LPtoDP(mainWindowDC, &topLeft, 1);
-	LPtoDP(mainWindowDC, &botRight, 1);
-	theClipRgn = CreateRectRgn(topLeft.x, topLeft.y, botRight.x, botRight.y);
+	clipRect.left = theRect->left;
+	clipRect.top = theRect->top;
+	clipRect.right = theRect->right;
+	clipRect.bottom = theRect->bottom;
+	LPtoDP(mainWindowDC, (LPPOINT)&clipRect, 2);
+	theClipRgn = CreateRectRgnIndirect(&clipRect);
 	ExtSelectClipRgn(mainWindowDC, theClipRgn, RGN_AND);
 	DeleteObject(theClipRgn);
+
 	state = 1;
 	do
 	{
@@ -218,8 +220,10 @@ void DissBits (const Rect *theRect)
 			state = (state >> 1) ^ lfsrMask;
 		else
 			state = (state >> 1);
+
 		chunkH = chunkSize * (state & 0x1FF); // 4 * (0 to 511)
 		chunkV = chunkSize * ((state >> 9) & 0xFF); // 4 * (0 to 255)
+
 		if ((theRect->left > chunkH + chunkSize - 1) || (chunkH >= theRect->right))
 			continue;
 		if ((theRect->top > chunkV + chunkSize - 1) || (chunkV >= theRect->bottom))
@@ -228,6 +232,7 @@ void DissBits (const Rect *theRect)
 				workSrcMap, chunkH, chunkV, SRCCOPY);
 	} while (state != 1);
 	BitBlt(mainWindowDC, 0, 0, chunkSize, chunkSize, workSrcMap, 0, 0, SRCCOPY);
+
 	RestoreDC(mainWindowDC, -1);
 	ReleaseMainWindowDC(mainWindowDC);
 }
@@ -236,28 +241,30 @@ void DissBits (const Rect *theRect)
 
 void DissBitsChunky (const Rect *theRect)
 {
-	UInt32		lfsrMask = 0x4016;  // 1 to 32767 (2^15 - 1)
-	HDC			mainWindowDC;
-	POINT		topLeft, botRight;
-	HRGN		theClipRgn;
-	INT			chunkH, chunkV;
-	INT			chunkSize = 8;
-	UInt32		state;
+	const UInt32 lfsrMask = 0x4016;  // 1 to 32767 (2^15 - 1)
+	const INT chunkSize = 8;
+
+	HDC mainWindowDC;
+	RECT clipRect;
+	HRGN theClipRgn;
+	INT chunkH;
+	INT chunkV;
+	UInt32 state;
 
 	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
 		return;
 
 	mainWindowDC = GetMainWindowDC();
 	SaveDC(mainWindowDC);
-	topLeft.x = theRect->left;
-	topLeft.y = theRect->top;
-	botRight.x = theRect->right;
-	botRight.y = theRect->bottom;
-	LPtoDP(mainWindowDC, &topLeft, 1);
-	LPtoDP(mainWindowDC, &botRight, 1);
-	theClipRgn = CreateRectRgn(topLeft.x, topLeft.y, botRight.x, botRight.y);
+	clipRect.left = theRect->left;
+	clipRect.top = theRect->top;
+	clipRect.right = theRect->right;
+	clipRect.bottom = theRect->bottom;
+	LPtoDP(mainWindowDC, (LPPOINT)&clipRect, 2);
+	theClipRgn = CreateRectRgnIndirect(&clipRect);
 	ExtSelectClipRgn(mainWindowDC, theClipRgn, RGN_AND);
 	DeleteObject(theClipRgn);
+
 	state = 1;
 	do
 	{
@@ -265,8 +272,10 @@ void DissBitsChunky (const Rect *theRect)
 			state = (state >> 1) ^ lfsrMask;
 		else
 			state = (state >> 1);
+
 		chunkH = chunkSize * (state & 0xFF); // 8 * (0 to 255)
 		chunkV = chunkSize * ((state >> 8) & 0x7F); // 8 * (0 to 127)
+
 		if ((theRect->left > chunkH + chunkSize - 1) || (chunkH >= theRect->right))
 			continue;
 		if ((theRect->top > chunkV + chunkSize - 1) || (chunkV >= theRect->bottom))
@@ -275,6 +284,7 @@ void DissBitsChunky (const Rect *theRect)
 			workSrcMap, chunkH, chunkV, SRCCOPY);
 	} while (state != 1);
 	BitBlt(mainWindowDC, 0, 0, chunkSize, chunkSize, workSrcMap, 0, 0, SRCCOPY);
+
 	RestoreDC(mainWindowDC, -1);
 	ReleaseMainWindowDC(mainWindowDC);
 }
