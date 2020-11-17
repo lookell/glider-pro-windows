@@ -43,22 +43,22 @@ FILESUBTYPE 0x00000000
 
 IDR_DEMO RT_DEMO "demo.bin"
 
-rAcurID RT_ACUR
-{
-    12,
-    kBeachBallCursor01,
-    kBeachBallCursor02,
-    kBeachBallCursor03,
-    kBeachBallCursor04,
-    kBeachBallCursor05,
-    kBeachBallCursor06,
-    kBeachBallCursor07,
-    kBeachBallCursor08,
-    kBeachBallCursor09,
-    kBeachBallCursor10,
-    kBeachBallCursor11,
-    kBeachBallCursor12,
-}
+//rAcurID RT_ACUR
+//{
+//    12,
+//    kBeachBallCursor01,
+//    kBeachBallCursor02,
+//    kBeachBallCursor03,
+//    kBeachBallCursor04,
+//    kBeachBallCursor05,
+//    kBeachBallCursor06,
+//    kBeachBallCursor07,
+//    kBeachBallCursor08,
+//    kBeachBallCursor09,
+//    kBeachBallCursor10,
+//    kBeachBallCursor11,
+//    kBeachBallCursor12,
+//}
 
 STRINGTABLE
 {
@@ -637,18 +637,18 @@ kSelectToolIcon         ICON    "Icons\\SelectTool.ico"
 //kVertCursorID           CURSOR  "Cursors\\Vert.cur"
 //kHoriCursorID           CURSOR  "Cursors\\Hori.cur"
 //kDiagCursorID           CURSOR  "Cursors\\Diag.cur"
-kBeachBallCursor12      CURSOR  "Cursors\\BeachBall12.cur"
-kBeachBallCursor11      CURSOR  "Cursors\\BeachBall11.cur"
-kBeachBallCursor10      CURSOR  "Cursors\\BeachBall10.cur"
-kBeachBallCursor09      CURSOR  "Cursors\\BeachBall09.cur"
-kBeachBallCursor08      CURSOR  "Cursors\\BeachBall08.cur"
-kBeachBallCursor07      CURSOR  "Cursors\\BeachBall07.cur"
-kBeachBallCursor06      CURSOR  "Cursors\\BeachBall06.cur"
-kBeachBallCursor05      CURSOR  "Cursors\\BeachBall05.cur"
-kBeachBallCursor04      CURSOR  "Cursors\\BeachBall04.cur"
-kBeachBallCursor03      CURSOR  "Cursors\\BeachBall03.cur"
-kBeachBallCursor02      CURSOR  "Cursors\\BeachBall02.cur"
-kBeachBallCursor01      CURSOR  "Cursors\\BeachBall01.cur"
+//kBeachBallCursor12      CURSOR  "Cursors\\BeachBall12.cur"
+//kBeachBallCursor11      CURSOR  "Cursors\\BeachBall11.cur"
+//kBeachBallCursor10      CURSOR  "Cursors\\BeachBall10.cur"
+//kBeachBallCursor09      CURSOR  "Cursors\\BeachBall09.cur"
+//kBeachBallCursor08      CURSOR  "Cursors\\BeachBall08.cur"
+//kBeachBallCursor07      CURSOR  "Cursors\\BeachBall07.cur"
+//kBeachBallCursor06      CURSOR  "Cursors\\BeachBall06.cur"
+//kBeachBallCursor05      CURSOR  "Cursors\\BeachBall05.cur"
+//kBeachBallCursor04      CURSOR  "Cursors\\BeachBall04.cur"
+//kBeachBallCursor03      CURSOR  "Cursors\\BeachBall03.cur"
+//kBeachBallCursor02      CURSOR  "Cursors\\BeachBall02.cur"
+//kBeachBallCursor01      CURSOR  "Cursors\\BeachBall01.cur"
 
 kMarqueePatListID       BITMAP  "Patterns\\MarqueeImageList.bmp"
 

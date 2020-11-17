@@ -491,7 +491,7 @@ void SortHouseObjects (void)
 		SortRoomsObjects(r);
 
 		if ((r & 0x0007) == 0x0007)
-			IncrementCursor();
+			SpinCursor(1);
 	}
 
 	SpinCursor(3);

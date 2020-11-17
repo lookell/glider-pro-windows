@@ -302,7 +302,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	CheckOurEnvirons();
 	if (FAILED(Gp_LoadBuiltInAssets()))
 		RedAlert(kErrFailedResourceLoad);
-	LoadCursors();
 
 	VariableInit();						SpinCursor(2);
 	GetExtraCursors();					SpinCursor(2);
