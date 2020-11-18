@@ -172,7 +172,7 @@ typedef struct AudioQueueEntry
 
 struct AudioChannel
 {
-	LPDIRECTSOUNDBUFFER8 audioBuffer;
+	LPDIRECTSOUNDBUFFER audioBuffer;
 	WAVEFORMATEX format;
 	DWORD totalByteSize;
 	DWORD lastPlayCursor;
@@ -385,7 +385,7 @@ static DWORD Audio_UpdateBuffer(AudioChannel *channel, DWORD start, DWORD stop)
 	{
 		return totalSoundBytes;
 	}
-	hr = IDirectSoundBuffer8_Lock(channel->audioBuffer,
+	hr = IDirectSoundBuffer_Lock(channel->audioBuffer,
 		start, lockSize, &ptr1, &size1, &ptr2, &size2, 0);
 	if (SUCCEEDED(hr))
 	{
@@ -394,7 +394,7 @@ static DWORD Audio_UpdateBuffer(AudioChannel *channel, DWORD start, DWORD stop)
 		{
 			totalSoundBytes += Audio_WriteData(channel, ptr2, size2);
 		}
-		IDirectSoundBuffer8_Unlock(channel->audioBuffer, ptr1, size1, ptr2, size2);
+		IDirectSoundBuffer_Unlock(channel->audioBuffer, ptr1, size1, ptr2, size2);
 	}
 	return totalSoundBytes;
 }
@@ -497,7 +497,7 @@ static void AudioChannel_RunTick(AudioChannel *channel)
 	DWORD writeCursor;
 	DWORD numPlayedBytes;
 
-	hr = IDirectSoundBuffer8_GetCurrentPosition(
+	hr = IDirectSoundBuffer_GetCurrentPosition(
 		channel->audioBuffer, &playCursor, &writeCursor);
 	if (FAILED(hr))
 	{
@@ -563,36 +563,13 @@ static void Audio_FillBufferWithSilence(AudioChannel *channel)
 	DWORD outputBytes;
 	HRESULT hr;
 
-	hr = IDirectSoundBuffer8_Lock(channel->audioBuffer,
+	hr = IDirectSoundBuffer_Lock(channel->audioBuffer,
 		0, 0, &outputPtr, &outputBytes, NULL, NULL, DSBLOCK_ENTIREBUFFER);
 	if (SUCCEEDED(hr))
 	{
 		Audio_WriteSilence(channel, outputPtr, outputBytes);
-		IDirectSoundBuffer8_Unlock(channel->audioBuffer, outputPtr, outputBytes, NULL, 0);
+		IDirectSoundBuffer_Unlock(channel->audioBuffer, outputPtr, outputBytes, NULL, 0);
 	}
-}
-
-static LPDIRECTSOUNDBUFFER8 Audio_CreateSoundBuffer(
-	LPDIRECTSOUND8 pDirectSound,
-	LPCDSBUFFERDESC pcDSBufferDesc)
-{
-	LPDIRECTSOUNDBUFFER tempBuffer;
-	LPDIRECTSOUNDBUFFER8 newBuffer;
-	HRESULT hr;
-
-	hr = IDirectSound8_CreateSoundBuffer(pDirectSound, pcDSBufferDesc, &tempBuffer, NULL);
-	if (FAILED(hr))
-	{
-		return NULL;
-	}
-	hr = IDirectSoundBuffer_QueryInterface(tempBuffer,
-		MAKE_REFIID(IID_IDirectSoundBuffer8), (void **)&newBuffer);
-	IDirectSoundBuffer_Release(tempBuffer);
-	if (FAILED(hr))
-	{
-		return NULL;
-	}
-	return newBuffer;
 }
 
 static float ClampVolume(float volume)
@@ -782,7 +759,7 @@ void Audio_SetMasterVolume(float newVolume)
 	{
 		if (self->audioChannels[i].audioBuffer != NULL)
 		{
-			IDirectSoundBuffer8_SetVolume(
+			IDirectSoundBuffer_SetVolume(
 				self->audioChannels[i].audioBuffer,
 				self->masterAttenuation
 			);
@@ -799,7 +776,8 @@ AudioChannel *AudioChannel_Open(const WaveFormat *format)
 	size_t channelIndex;
 	WAVEFORMATEX waveFormat = { 0 };
 	DSBUFFERDESC bufferDesc = { 0 };
-	LPDIRECTSOUNDBUFFER8 audioBuffer;
+	LPDIRECTSOUNDBUFFER audioBuffer;
+	HRESULT hr;
 	AudioChannel *channel;
 
 	self = Audio_GetDeviceState();
@@ -841,8 +819,8 @@ AudioChannel *AudioChannel_Open(const WaveFormat *format)
 	bufferDesc.lpwfxFormat = &waveFormat;
 	bufferDesc.guid3DAlgorithm = DS3DALG_DEFAULT;
 
-	audioBuffer = Audio_CreateSoundBuffer(self->audioDevice, &bufferDesc);
-	if (audioBuffer != NULL)
+	hr = IDirectSound8_CreateSoundBuffer(self->audioDevice, &bufferDesc, &audioBuffer, NULL);
+	if (SUCCEEDED(hr))
 	{
 		channel = &self->audioChannels[channelIndex];
 		channel->audioBuffer = audioBuffer;
@@ -853,9 +831,9 @@ AudioChannel *AudioChannel_Open(const WaveFormat *format)
 		channel->isRunningTick = FALSE;
 		channel->queueHead = 0;
 		channel->queueSize = 0;
-		IDirectSoundBuffer8_SetVolume(channel->audioBuffer, self->masterAttenuation);
+		IDirectSoundBuffer_SetVolume(channel->audioBuffer, self->masterAttenuation);
 		Audio_FillBufferWithSilence(channel);
-		IDirectSoundBuffer8_Play(channel->audioBuffer, 0, 0, DSBPLAY_LOOPING);
+		IDirectSoundBuffer_Play(channel->audioBuffer, 0, 0, DSBPLAY_LOOPING);
 	}
 	else
 	{
@@ -880,7 +858,7 @@ void AudioChannel_Close(AudioChannel *channel)
 	EnterCriticalSection(&self->csAudioLock);
 
 	AudioChannel_ClearQueuedAudio(channel);
-	IDirectSoundBuffer8_Release(channel->audioBuffer);
+	IDirectSoundBuffer_Release(channel->audioBuffer);
 	channel->audioBuffer = NULL;
 
 	LeaveCriticalSection(&self->csAudioLock);
@@ -917,7 +895,7 @@ void AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry)
 		channel->queue[queueIndex] = queueEntry;
 		channel->queueSize += 1;
 		AudioChannel_RunTick(channel);
-		IDirectSoundBuffer8_Play(channel->audioBuffer, 0, 0, DSBPLAY_LOOPING);
+		IDirectSoundBuffer_Play(channel->audioBuffer, 0, 0, DSBPLAY_LOOPING);
 	}
 
 	LeaveCriticalSection(&self->csAudioLock);
