@@ -5,13 +5,14 @@
 
 // NOTE: <mmsystem.h> MUST come before <dsound.h>
 #include <mmsystem.h>
-
 #include <dsound.h>
 
 #include <math.h>
 #include <stdlib.h>
 
 #include "ResourceIDs.h"
+
+//===========================================================================//
 
 static FOURCC read_fourcc(const unsigned char *buf)
 {
@@ -147,7 +148,7 @@ int ReadWAVFromMemory(const void *buffer, size_t length, WaveData *waveData)
 	return 1;
 }
 
-//==============================================================
+//===========================================================================//
 
 #ifdef __cplusplus
 #define MAKE_REFIID(iid) (iid)
@@ -210,205 +211,6 @@ static AudioDeviceState *Audio_SetDeviceState(AudioDeviceState *newState)
 		newState
 	);
 }
-
-static VOID CALLBACK RunAudioChannelTicks(PVOID Parameter, BOOLEAN TimerOrWaitFired);
-
-int Audio_InitDevice(void)
-{
-	AudioDeviceState *prevSelf;
-	AudioDeviceState *self;
-	HRESULT hr;
-	HWND hwndOwner;
-	BOOL succeeded;
-
-	prevSelf = Audio_GetDeviceState();
-	if (prevSelf != NULL)
-	{
-		return FALSE;
-	}
-	self = (AudioDeviceState *)calloc(1, sizeof(*self));
-	if (self == NULL)
-	{
-		return FALSE;
-	}
-	hr = DirectSoundCreate8(&DSDEVID_DefaultPlayback, &self->audioDevice, NULL);
-	if (FAILED(hr))
-	{
-		free(self);
-		return FALSE;
-	}
-	hwndOwner = GetDesktopWindow();
-	hr = IDirectSound8_SetCooperativeLevel(self->audioDevice, hwndOwner, DSSCL_PRIORITY);
-	if (FAILED(hr))
-	{
-		IDirectSound8_Release(self->audioDevice);
-		free(self);
-		return FALSE;
-	}
-	self->masterVolume = 1.0f;
-	self->masterAttenuation = DSBVOLUME_MAX;
-	InitializeCriticalSection(&self->csAudioLock);
-	succeeded = CreateTimerQueueTimer(
-		&self->audioTimerHandle,
-		NULL,
-		RunAudioChannelTicks,
-		NULL,
-		AUDIO_TICK_MS,
-		AUDIO_TICK_MS,
-		WT_EXECUTEDEFAULT
-	);
-	if (!succeeded)
-	{
-		DeleteCriticalSection(&self->csAudioLock);
-		IDirectSound8_Release(self->audioDevice);
-		free(self);
-		return false;
-	}
-
-	Audio_SetDeviceState(self);
-	return true;
-}
-
-void Audio_KillDevice(void)
-{
-	AudioDeviceState *self;
-	size_t i;
-
-	self = Audio_SetDeviceState(NULL);
-	if (self == NULL)
-	{
-		return;
-	}
-	// NOTE: Making sure that audio ticks finish before destroying audio resources
-	DeleteTimerQueueTimer(NULL, self->audioTimerHandle, INVALID_HANDLE_VALUE);
-	EnterCriticalSection(&self->csAudioLock);
-
-	for (i = 0; i < ARRAYSIZE(self->audioChannels); ++i)
-	{
-		if (self->audioChannels[i].audioBuffer != NULL)
-		{
-			AudioChannel_Close(&self->audioChannels[i]);
-		}
-	}
-	IDirectSound8_Release(self->audioDevice);
-
-	LeaveCriticalSection(&self->csAudioLock);
-	DeleteCriticalSection(&self->csAudioLock);
-	free(self);
-}
-
-static float ClampVolume(float volume)
-{
-	if (volume <= FLT_MIN)
-	{
-		return FLT_MIN;
-	}
-	else if (volume >= 1.0f)
-	{
-		return 1.0f;
-	}
-	else
-	{
-		return volume;
-	}
-}
-
-static float VolumeToAmplitudeRatio(float volume)
-{
-	float amplitude;
-
-	volume = ClampVolume(volume);
-	amplitude = powf(volume, 1.75f);
-	return amplitude;
-}
-
-static float AmplitudeRatioToDecibels(float amplitude)
-{
-	return 20.0f * log10f(amplitude);
-}
-
-static LONG DecibelsToAttenuation(float decibels)
-{
-	return (LONG)(decibels * 100.0f);
-}
-
-static LONG ClampAttenuation(LONG attenuation)
-{
-	if (attenuation <= DSBVOLUME_MIN)
-	{
-		return DSBVOLUME_MIN;
-	}
-	else if (attenuation >= DSBVOLUME_MAX)
-	{
-		return DSBVOLUME_MAX;
-	}
-	else
-	{
-		return attenuation;
-	}
-}
-
-static LONG VolumeToAttenuation(float volume)
-{
-	float amplitude;
-	float decibels;
-	LONG attenuation;
-
-	volume = ClampVolume(volume);
-	amplitude = VolumeToAmplitudeRatio(volume);
-	decibels = AmplitudeRatioToDecibels(amplitude);
-	attenuation = DecibelsToAttenuation(decibels);
-	attenuation = ClampAttenuation(attenuation);
-	return attenuation;
-}
-
-float Audio_GetMasterVolume(void)
-{
-	AudioDeviceState *self;
-	float volume;
-
-	self = Audio_GetDeviceState();
-	if (self == NULL)
-	{
-		return 0.0f;
-	}
-	EnterCriticalSection(&self->csAudioLock);
-
-	volume = self->masterVolume;
-
-	LeaveCriticalSection(&self->csAudioLock);
-	return volume;
-}
-
-void Audio_SetMasterVolume(float newVolume)
-{
-	AudioDeviceState *self;
-	size_t i;
-
-	self = Audio_GetDeviceState();
-	if (self == NULL)
-	{
-		return;
-	}
-	EnterCriticalSection(&self->csAudioLock);
-
-	self->masterVolume = newVolume;
-	self->masterAttenuation = VolumeToAttenuation(newVolume);
-	for (i = 0; i < ARRAYSIZE(self->audioChannels); i++)
-	{
-		if (self->audioChannels[i].audioBuffer != NULL)
-		{
-			IDirectSoundBuffer8_SetVolume(
-				self->audioChannels[i].audioBuffer,
-				self->masterAttenuation
-			);
-		}
-	}
-
-	LeaveCriticalSection(&self->csAudioLock);
-}
-
-//-------------------------------------
 
 static void Audio_UpdatePlayState(AudioChannel *channel, DWORD numPlayedBytes)
 {
@@ -791,6 +593,203 @@ static LPDIRECTSOUNDBUFFER8 Audio_CreateSoundBuffer(
 		return NULL;
 	}
 	return newBuffer;
+}
+
+static float ClampVolume(float volume)
+{
+	if (volume <= FLT_MIN)
+	{
+		return FLT_MIN;
+	}
+	else if (volume >= 1.0f)
+	{
+		return 1.0f;
+	}
+	else
+	{
+		return volume;
+	}
+}
+
+static float VolumeToAmplitudeRatio(float volume)
+{
+	float amplitude;
+
+	volume = ClampVolume(volume);
+	amplitude = powf(volume, 1.75f);
+	return amplitude;
+}
+
+static float AmplitudeRatioToDecibels(float amplitude)
+{
+	return 20.0f * log10f(amplitude);
+}
+
+static LONG DecibelsToAttenuation(float decibels)
+{
+	return (LONG)(decibels * 100.0f);
+}
+
+static LONG ClampAttenuation(LONG attenuation)
+{
+	if (attenuation <= DSBVOLUME_MIN)
+	{
+		return DSBVOLUME_MIN;
+	}
+	else if (attenuation >= DSBVOLUME_MAX)
+	{
+		return DSBVOLUME_MAX;
+	}
+	else
+	{
+		return attenuation;
+	}
+}
+
+static LONG VolumeToAttenuation(float volume)
+{
+	float amplitude;
+	float decibels;
+	LONG attenuation;
+
+	volume = ClampVolume(volume);
+	amplitude = VolumeToAmplitudeRatio(volume);
+	decibels = AmplitudeRatioToDecibels(amplitude);
+	attenuation = DecibelsToAttenuation(decibels);
+	attenuation = ClampAttenuation(attenuation);
+	return attenuation;
+}
+
+//===========================================================================//
+
+int Audio_InitDevice(void)
+{
+	AudioDeviceState *prevSelf;
+	AudioDeviceState *self;
+	HRESULT hr;
+	HWND hwndOwner;
+	BOOL succeeded;
+
+	prevSelf = Audio_GetDeviceState();
+	if (prevSelf != NULL)
+	{
+		return FALSE;
+	}
+	self = (AudioDeviceState *)calloc(1, sizeof(*self));
+	if (self == NULL)
+	{
+		return FALSE;
+	}
+	hr = DirectSoundCreate8(&DSDEVID_DefaultPlayback, &self->audioDevice, NULL);
+	if (FAILED(hr))
+	{
+		free(self);
+		return FALSE;
+	}
+	hwndOwner = GetDesktopWindow();
+	hr = IDirectSound8_SetCooperativeLevel(self->audioDevice, hwndOwner, DSSCL_PRIORITY);
+	if (FAILED(hr))
+	{
+		IDirectSound8_Release(self->audioDevice);
+		free(self);
+		return FALSE;
+	}
+	self->masterVolume = 1.0f;
+	self->masterAttenuation = DSBVOLUME_MAX;
+	InitializeCriticalSection(&self->csAudioLock);
+	succeeded = CreateTimerQueueTimer(
+		&self->audioTimerHandle,
+		NULL,
+		RunAudioChannelTicks,
+		NULL,
+		AUDIO_TICK_MS,
+		AUDIO_TICK_MS,
+		WT_EXECUTEDEFAULT
+	);
+	if (!succeeded)
+	{
+		DeleteCriticalSection(&self->csAudioLock);
+		IDirectSound8_Release(self->audioDevice);
+		free(self);
+		return false;
+	}
+
+	Audio_SetDeviceState(self);
+	return true;
+}
+
+void Audio_KillDevice(void)
+{
+	AudioDeviceState *self;
+	size_t i;
+
+	self = Audio_SetDeviceState(NULL);
+	if (self == NULL)
+	{
+		return;
+	}
+	// NOTE: Making sure that audio ticks finish before destroying audio resources
+	DeleteTimerQueueTimer(NULL, self->audioTimerHandle, INVALID_HANDLE_VALUE);
+	EnterCriticalSection(&self->csAudioLock);
+
+	for (i = 0; i < ARRAYSIZE(self->audioChannels); ++i)
+	{
+		if (self->audioChannels[i].audioBuffer != NULL)
+		{
+			AudioChannel_Close(&self->audioChannels[i]);
+		}
+	}
+	IDirectSound8_Release(self->audioDevice);
+
+	LeaveCriticalSection(&self->csAudioLock);
+	DeleteCriticalSection(&self->csAudioLock);
+	free(self);
+}
+
+float Audio_GetMasterVolume(void)
+{
+	AudioDeviceState *self;
+	float volume;
+
+	self = Audio_GetDeviceState();
+	if (self == NULL)
+	{
+		return 0.0f;
+	}
+	EnterCriticalSection(&self->csAudioLock);
+
+	volume = self->masterVolume;
+
+	LeaveCriticalSection(&self->csAudioLock);
+	return volume;
+}
+
+void Audio_SetMasterVolume(float newVolume)
+{
+	AudioDeviceState *self;
+	size_t i;
+
+	self = Audio_GetDeviceState();
+	if (self == NULL)
+	{
+		return;
+	}
+	EnterCriticalSection(&self->csAudioLock);
+
+	self->masterVolume = newVolume;
+	self->masterAttenuation = VolumeToAttenuation(newVolume);
+	for (i = 0; i < ARRAYSIZE(self->audioChannels); i++)
+	{
+		if (self->audioChannels[i].audioBuffer != NULL)
+		{
+			IDirectSoundBuffer8_SetVolume(
+				self->audioChannels[i].audioBuffer,
+				self->masterAttenuation
+			);
+		}
+	}
+
+	LeaveCriticalSection(&self->csAudioLock);
 }
 
 AudioChannel *AudioChannel_Open(const WaveFormat *format)
