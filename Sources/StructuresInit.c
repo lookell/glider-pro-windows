@@ -52,6 +52,7 @@ void InitClutter (void);
 void InitSupport (void);
 void InitAngel (void);
 void InitSplashScreenMap (void);
+Boolean GetDemoDataPointer (void **ppDemoData, size_t *pDemoSize);
 
 
 //==============================================================  Functions
@@ -714,16 +715,49 @@ void CreateOffscreens (void)
 //	????
 }
 
+//--------------------------------------------------------------  GetDemoDataPointer
+
+Boolean GetDemoDataPointer (void **ppDemoData, size_t *pDemoSize)
+{
+	HRSRC hResInfo;
+	HGLOBAL hResData;
+	DWORD resSize;
+	LPVOID resData;
+
+	hResInfo = FindResource(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDR_DEMO), RT_DEMO);
+	if (hResInfo == NULL)
+	{
+		return false;
+	}
+	hResData = LoadResource(HINST_THISCOMPONENT, hResInfo);
+	if (hResData == NULL)
+	{
+		return false;
+	}
+	resSize = SizeofResource(HINST_THISCOMPONENT, hResInfo);
+	if (resSize == 0)
+	{
+		return false;
+	}
+	resData = LockResource(hResData);
+	if (resData == NULL)
+	{
+		return false;
+	}
+	*ppDemoData = resData;
+	*pDemoSize = resSize;
+	return true;
+}
+
 //--------------------------------------------------------------  CreatePointers
 // This function allocates other large structures.  Pointers to hold
 // large arrays, etc.
 
 void CreatePointers (void)
 {
-	DWORD demoResourceSize;
-	LPVOID demoResourceData;
+	size_t demoResourceSize;
+	void *demoResourceData;
 	byteio demoReader;
-	HRESULT hr;
 	size_t i;
 
 	thisRoom = NULL;
@@ -743,10 +777,9 @@ void CreatePointers (void)
 	// Make sure that demoData can hold the demo resource data.
 	C_ASSERT((kDemoLength / demoTypeByteSize) <= ARRAYSIZE(demoData));
 
-	hr = LoadModuleResource(HINST_THISCOMPONENT,
-		MAKEINTRESOURCE(IDR_DEMO), RT_DEMO,
-		&demoResourceData, &demoResourceSize);
-	if (FAILED(hr) || demoResourceSize != kDemoLength)
+	if (!GetDemoDataPointer(&demoResourceData, &demoResourceSize))
+		RedAlert(kErrFailedResourceLoad);
+	if (demoResourceSize != kDemoLength)
 		RedAlert(kErrFailedResourceLoad);
 
 	if (!byteio_init_memory_reader(&demoReader, demoResourceData, demoResourceSize))

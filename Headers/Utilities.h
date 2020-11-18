@@ -30,8 +30,6 @@ void UnivGetSoundVolume (SInt16 *volume);
 void UnivSetSoundVolume (SInt16 volume);
 #ifdef GP_USE_WINAPI_H
 BOOL GetDataFolderPath (LPWSTR lpDataPath, DWORD cchDataPath);
-HRESULT LoadModuleResource (HMODULE hModule, LPCWSTR pResName, LPCWSTR pResType,
-	LPVOID *ppResData, DWORD *pResByteSize);
 #endif
 
 #endif
