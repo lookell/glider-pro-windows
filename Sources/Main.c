@@ -327,7 +327,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		whoCares = ReadHouse(mainWindow);
 
 	PlayPrioritySound(kBirdSound, kBirdPriority);
-	DelayTicks(6);
 	InitializeMenus();					InitCursor();
 
 	if (isDoColorFade)
