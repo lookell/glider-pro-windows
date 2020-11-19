@@ -571,8 +571,23 @@ fn read_dont_care_v2(reader: impl Seek, num: i64) -> io::Result<PicV2Op> {
     skip_bytes(reader, num).map(|_| PicV2Op::DontCare)
 }
 
+#[derive(Clone)]
+struct OffsetOrigin {
+    dh: i16,
+    dv: i16,
+}
+
+impl OffsetOrigin {
+    fn read_from(mut reader: impl Read) -> io::Result<Self> {
+        let dh = reader.read_be_i16()?;
+        let dv = reader.read_be_i16()?;
+        Ok(Self { dh, dv })
+    }
+}
+
 enum PicV1Op {
     DontCare,
+    OffsetOrigin(OffsetOrigin),
     BitsRect(BitsRect),
     BitsRgn(BitsRgn),
     PackBitsRect(BitsRect),
@@ -598,7 +613,7 @@ impl PicV1Op {
             0x09 => Some(read_dont_care_v1(reader, 8)?),
             0x0A => Some(read_dont_care_v1(reader, 8)?),
             0x0B => Some(read_dont_care_v1(reader, 4)?),
-            0x0C => Some(read_dont_care_v1(reader, 4)?),
+            0x0C => Some(PicV1Op::OffsetOrigin(OffsetOrigin::read_from(reader)?)),
             0x0D => Some(read_dont_care_v1(reader, 2)?),
             0x0E => Some(read_dont_care_v1(reader, 4)?),
             0x0F => Some(read_dont_care_v1(reader, 4)?),
@@ -665,6 +680,7 @@ impl PicV1Op {
 
 enum PicV2Op {
     DontCare,
+    OffsetOrigin(OffsetOrigin),
     BitsRect(BitsRect),
     BitsRgn(BitsRgn),
     PackBitsRect(BitsRect),
@@ -693,7 +709,7 @@ impl PicV2Op {
             0x0009 => Some(read_dont_care_v2(reader, 8)?),
             0x000A => Some(read_dont_care_v2(reader, 8)?),
             0x000B => Some(read_dont_care_v2(reader, 4)?),
-            0x000C => Some(read_dont_care_v2(reader, 4)?),
+            0x000C => Some(PicV2Op::OffsetOrigin(OffsetOrigin::read_from(reader)?)),
             0x000D => Some(read_dont_care_v2(reader, 2)?),
             0x000E => Some(read_dont_care_v2(reader, 4)?),
             0x000F => Some(read_dont_care_v2(reader, 4)?),
@@ -816,11 +832,12 @@ impl PicV2Op {
 }
 
 fn extract_bits_data_v1(pic_data: &[PicV1Op]) -> Vec<BitsRect> {
+    let mut origin = Point { h: 0, v: 0 };
     let mut list = Vec::new();
     for opcode in pic_data {
-        match opcode {
-            PicV1Op::BitsRect(data) => list.push(data.clone()),
-            PicV1Op::BitsRgn(data) => list.push(BitsRect {
+        let data = match opcode {
+            PicV1Op::BitsRect(data) => Some(data.clone()),
+            PicV1Op::BitsRgn(data) => Some(BitsRect {
                 pixMap: data.pixMap,
                 ctTable: data.ctTable.clone(),
                 srcRect: data.srcRect,
@@ -828,8 +845,8 @@ fn extract_bits_data_v1(pic_data: &[PicV1Op]) -> Vec<BitsRect> {
                 mode: data.mode,
                 data: data.data.clone(),
             }),
-            PicV1Op::PackBitsRect(data) => list.push(data.clone()),
-            PicV1Op::PackBitsRgn(data) => list.push(BitsRect {
+            PicV1Op::PackBitsRect(data) => Some(data.clone()),
+            PicV1Op::PackBitsRgn(data) => Some(BitsRect {
                 pixMap: data.pixMap,
                 ctTable: data.ctTable.clone(),
                 srcRect: data.srcRect,
@@ -837,18 +854,31 @@ fn extract_bits_data_v1(pic_data: &[PicV1Op]) -> Vec<BitsRect> {
                 mode: data.mode,
                 data: data.data.clone(),
             }),
-            _ => {}
+            PicV1Op::OffsetOrigin(offset) => {
+                origin.h += offset.dh;
+                origin.v += offset.dv;
+                None
+            }
+            _ => None,
+        };
+        if let Some(mut bits_rect) = data {
+            bits_rect.dstRect.left -= origin.h;
+            bits_rect.dstRect.top -= origin.v;
+            bits_rect.dstRect.right -= origin.h;
+            bits_rect.dstRect.bottom -= origin.v;
+            list.push(bits_rect);
         }
     }
     list
 }
 
 fn extract_bits_data_v2(pic_data: &[PicV2Op]) -> Vec<BitsRect> {
+    let mut origin = Point { h: 0, v: 0 };
     let mut list = Vec::new();
     for opcode in pic_data {
-        match opcode {
-            PicV2Op::BitsRect(data) => list.push(data.clone()),
-            PicV2Op::BitsRgn(data) => list.push(BitsRect {
+        let data = match opcode {
+            PicV2Op::BitsRect(data) => Some(data.clone()),
+            PicV2Op::BitsRgn(data) => Some(BitsRect {
                 pixMap: data.pixMap,
                 ctTable: data.ctTable.clone(),
                 srcRect: data.srcRect,
@@ -856,8 +886,8 @@ fn extract_bits_data_v2(pic_data: &[PicV2Op]) -> Vec<BitsRect> {
                 mode: data.mode,
                 data: data.data.clone(),
             }),
-            PicV2Op::PackBitsRect(data) => list.push(data.clone()),
-            PicV2Op::PackBitsRgn(data) => list.push(BitsRect {
+            PicV2Op::PackBitsRect(data) => Some(data.clone()),
+            PicV2Op::PackBitsRgn(data) => Some(BitsRect {
                 pixMap: data.pixMap,
                 ctTable: data.ctTable.clone(),
                 srcRect: data.srcRect,
@@ -865,7 +895,7 @@ fn extract_bits_data_v2(pic_data: &[PicV2Op]) -> Vec<BitsRect> {
                 mode: data.mode,
                 data: data.data.clone(),
             }),
-            PicV2Op::DirectBitsRect(data) => list.push(BitsRect {
+            PicV2Op::DirectBitsRect(data) => Some(BitsRect {
                 pixMap: data.pixMap,
                 ctTable: ColorTable::default(),
                 srcRect: data.srcRect,
@@ -873,7 +903,7 @@ fn extract_bits_data_v2(pic_data: &[PicV2Op]) -> Vec<BitsRect> {
                 mode: data.mode,
                 data: data.data.clone(),
             }),
-            PicV2Op::DirectBitsRgn(data) => list.push(BitsRect {
+            PicV2Op::DirectBitsRgn(data) => Some(BitsRect {
                 pixMap: data.pixMap,
                 ctTable: ColorTable::default(),
                 srcRect: data.srcRect,
@@ -881,7 +911,19 @@ fn extract_bits_data_v2(pic_data: &[PicV2Op]) -> Vec<BitsRect> {
                 mode: data.mode,
                 data: data.data.clone(),
             }),
-            _ => {}
+            PicV2Op::OffsetOrigin(offset) => {
+                origin.h += offset.dh;
+                origin.v += offset.dv;
+                None
+            }
+            _ => None,
+        };
+        if let Some(mut bits_rect) = data {
+            bits_rect.dstRect.left -= origin.h;
+            bits_rect.dstRect.top -= origin.v;
+            bits_rect.dstRect.right -= origin.h;
+            bits_rect.dstRect.bottom -= origin.v;
+            list.push(bits_rect);
         }
     }
     list
