@@ -99,7 +99,7 @@ void FlushAnyTriggerPlaying (void)
 {
 	if (triggerSoundOutput.channel != NULL)
 	{
-		AudioChannel_ClearQueuedAudio(triggerSoundOutput.channel);
+		AudioChannel_ClearAudio(triggerSoundOutput.channel);
 	}
 }
 
@@ -120,7 +120,7 @@ void Gp_PlaySound (SoundOutput *output, SInt16 soundID, SInt16 priority)
 
 	if (isSoundOn)
 	{
-		AudioChannel_ClearQueuedAudio(output->channel);
+		AudioChannel_ClearAudio(output->channel);
 
 		entry.buffer = theSoundData[soundID].dataBytes;
 		entry.length = theSoundData[soundID].dataLength;

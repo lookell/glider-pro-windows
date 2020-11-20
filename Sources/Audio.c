@@ -778,7 +778,7 @@ static void AudioDevice_QueueChannelAudio(AudioChannel *channel, const AudioEntr
 	IDirectSoundBuffer_Play(channel->audioBuffer, 0, 0, DSBPLAY_LOOPING);
 }
 
-static void AudioDevice_ClearChannelQueue(AudioChannel *channel)
+static void AudioDevice_ClearChannelAudio(AudioChannel *channel)
 {
 	while (channel->queueSize != 0)
 	{
@@ -795,7 +795,7 @@ static int AudioDevice_IsChannelPlaying(AudioChannel *channel)
 
 static void AudioDevice_CloseChannel(AudioChannel *channel)
 {
-	AudioDevice_ClearChannelQueue(channel);
+	AudioDevice_ClearChannelAudio(channel);
 	IDirectSoundBuffer_Release(channel->audioBuffer);
 	channel->audioBuffer = NULL;
 }
@@ -911,7 +911,7 @@ void AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry)
 	}
 }
 
-void AudioChannel_ClearQueuedAudio(AudioChannel *channel)
+void AudioChannel_ClearAudio(AudioChannel *channel)
 {
 	AudioDeviceState *self;
 
@@ -919,7 +919,7 @@ void AudioChannel_ClearQueuedAudio(AudioChannel *channel)
 	if (self != NULL)
 	{
 		EnterCriticalSection(&self->csAudioLock);
-		AudioDevice_ClearChannelQueue(channel);
+		AudioDevice_ClearChannelAudio(channel);
 		LeaveCriticalSection(&self->csAudioLock);
 	}
 }

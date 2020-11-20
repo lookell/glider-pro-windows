@@ -40,7 +40,7 @@ typedef struct AudioChannel AudioChannel;
 //   If this callback is set to NULL in an audio entry, then nothing happens
 //   in response to the audio entry being released. To ensure that the data
 //   buffer is no longer being used, call the AudioChannel_Close function or
-//   the AudioChannel_ClearQueuedAudio function before freeing the data buffer.
+//   the AudioChannel_ClearAudio function before freeing the data buffer.
 //
 typedef void (*AudioCallback)(AudioChannel *channel, void *userdata);
 
@@ -109,7 +109,7 @@ void AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry);
 
 // Clear all entries waiting in the channel's queue, and stop all current sound
 // playing.
-void AudioChannel_ClearQueuedAudio(AudioChannel *channel);
+void AudioChannel_ClearAudio(AudioChannel *channel);
 
 // Return whether the audio channel is currently playing any audio.
 // Returns nonzero to indicate that the channel is playing, and zero otherwise.

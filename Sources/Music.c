@@ -67,7 +67,7 @@ OSErr StartMusic (void)
 	UnivGetSoundVolume(&soundVolume);
 	if ((!isMusicOn) && (soundVolume != 0) && (!failedMusic))
 	{
-		AudioChannel_ClearQueuedAudio(musicChannel);
+		AudioChannel_ClearAudio(musicChannel);
 
 		entry.buffer = theMusicData[musicSoundID].dataBytes;
 		entry.length = theMusicData[musicSoundID].dataLength;
@@ -111,7 +111,7 @@ void StopTheMusic (void)
 
 	if ((isMusicOn) && (!failedMusic))
 	{
-		AudioChannel_ClearQueuedAudio(musicChannel);
+		AudioChannel_ClearAudio(musicChannel);
 		isMusicOn = false;
 	}
 
