@@ -227,30 +227,24 @@ Boolean OpenHouse (HWND ownerWindow)
 //--------------------------------------------------------------  OpenSpecificHouse
 // Opens the specific house passed in.
 
-Boolean OpenSpecificHouse (FSSpec *specs)
+Boolean OpenSpecificHouse (PCWSTR filename, HWND ownerWindow)
 {
-	(void)specs;
-
-	return false;
-#if 0
-	SInt16		i;
-	Boolean		itOpened;
+	SInt16 i;
+	Boolean itOpened;
 
 	if ((housesFound < 1) || (thisHouseIndex == -1))
 		return (false);
 
-	itOpened = true;
+	itOpened = false;
 
 	for (i = 0; i < housesFound; i++)
 	{
-		if ((theHousesSpecs[i].vRefNum == specs->vRefNum) &&
-				(theHousesSpecs[i].parID == specs->parID) &&
-				(PasStringEqual(theHousesSpecs[i].name, specs->name, false)))
+		if (wcscmp(theHousesSpecs[i].path, filename) == 0)
 		{
 			thisHouseIndex = i;
 			PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
-			if (OpenHouse())
-				itOpened = ReadHouse();
+			if (OpenHouse(ownerWindow))
+				itOpened = ReadHouse(ownerWindow);
 			else
 				itOpened = false;
 			break;
@@ -258,7 +252,6 @@ Boolean OpenSpecificHouse (FSSpec *specs)
 	}
 
 	return (itOpened);
-#endif
 }
 
 //--------------------------------------------------------------  SaveHouseAs

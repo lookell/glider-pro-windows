@@ -26,8 +26,8 @@ extern Boolean tvInRoom;
 
 #ifdef GP_USE_WINAPI_H
 Boolean OpenHouse (HWND ownerWindow);
+Boolean OpenSpecificHouse (PCWSTR filename, HWND ownerWindow);
 #endif
-Boolean OpenSpecificHouse (FSSpec *specs);
 Boolean SaveHouseAs (void);
 #ifdef GP_USE_WINAPI_H
 Boolean ReadHouse (HWND ownerWindow);
