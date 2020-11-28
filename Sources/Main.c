@@ -43,6 +43,7 @@
 #include "WinAPI.h"
 
 #include <mmsystem.h>
+#include <ole2.h>
 
 
 void ReadInPrefs (HWND ownerWindow);
@@ -275,12 +276,13 @@ void WriteOutPrefs (HWND ownerWindow)
 		MessageBeep(MB_ICONWARNING);
 }
 
-//--------------------------------------------------------------  main
-// Here is main().  The first function called when Glider PRO comes up.
+//--------------------------------------------------------------  wWinMain
+// Here is the main function.  The first function called when Glider PRO comes up.
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-		LPWSTR lpCmdLine, int nShowCmd)
+int WINAPI
+wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd)
 {
+	HRESULT hr;
 	Boolean whoCares;
 	int audioInitialized;
 
@@ -288,6 +290,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	(void)hPrevInstance;
 	(void)lpCmdLine;
 	(void)nShowCmd;
+
+	hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+	if (FAILED(hr))
+	{
+		return 1;
+	}
 
 	audioInitialized = Audio_InitDevice();
 	if (!audioInitialized)
@@ -369,6 +377,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		Audio_KillDevice();
 		audioInitialized = false;
 	}
+
+	CoUninitialize();
 
 	return 0;
 }
