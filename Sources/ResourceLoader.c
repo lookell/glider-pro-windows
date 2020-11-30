@@ -11,6 +11,12 @@
 
 #include <stdio.h>
 
+#define HOUSE_DATA_NAME  "house.dat"
+#define HOUSE_ICON_NAME  "house.ico"
+#define BOUNDS_FORMAT_STRING  "bounds/%d.bin"
+#define IMAGES_FORMAT_STRING  "images/%d.bmp"
+#define SOUNDS_FORMAT_STRING  "sounds/%d.wav"
+
 static wchar_t g_mermaidFileName[MAX_PATH];
 static FILE *g_mermaidFilePtr = NULL;
 static mz_zip_archive g_mermaidArchive;
@@ -41,36 +47,25 @@ Gp_FileSizeInZip (mz_zip_archive *archive, const char *filename)
 //--------------------------------------------------------------  Gp_GetImageFilename
 
 static HRESULT
-Gp_GetImageFilename (PSTR pszDest, size_t cchDest, SInt16 imageID)
+Gp_GetImageFilename (PSTR pszDest, size_t cchDest, SInt16 resID)
 {
-	return StringCchPrintfA(pszDest, cchDest, "images/%d.bmp", (int)imageID);
+	return StringCchPrintfA(pszDest, cchDest, IMAGES_FORMAT_STRING, (int)resID);
 }
 
-//--------------------------------------------------------------  Gp_EnumImagesInZip
+//--------------------------------------------------------------  Gp_GetSoundFilename
 
 static HRESULT
-Gp_EnumImagesInZip (mz_zip_archive *archive, Gp_EnumResProc enumProc, void *userData)
+Gp_GetSoundFilename (PSTR pszDest, size_t cchDest, SInt16 resID)
 {
-	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
-	mz_uint idx, numImages;
-	int resID;
+	return StringCchPrintfA(pszDest, cchDest, SOUNDS_FORMAT_STRING, (int)resID);
+}
 
-	numImages = mz_zip_reader_get_num_files(archive);
-	for (idx = 0; idx < numImages; idx++)
-	{
-		if (!mz_zip_reader_get_filename(archive, idx, filename, sizeof(filename)))
-		{
-			return E_FAIL;
-		}
-		if (sscanf_s(filename, "images/%d.bmp", &resID) == 1)
-		{
-			if (!enumProc((SInt16)resID, userData))
-			{
-				break;
-			}
-		}
-	}
-	return S_OK;
+//--------------------------------------------------------------  Gp_GetBoundFilename
+
+static HRESULT
+Gp_GetBoundFilename (PSTR pszDest, size_t cchDest, SInt16 resID)
+{
+	return StringCchPrintfA(pszDest, cchDest, BOUNDS_FORMAT_STRING, (int)resID);
 }
 
 //--------------------------------------------------------------  Gp_ImageExistsInZip
@@ -133,56 +128,6 @@ Gp_LoadImageAsDIBFromZip (mz_zip_archive *archive, SInt16 imageID)
 	image = LoadMemoryBMPAsDIBSection(buffer, length);
 	free(buffer);
 	return image;
-}
-
-//--------------------------------------------------------------  Gp_GetSoundFilename
-
-static HRESULT
-Gp_GetSoundFilename (PSTR pszDest, size_t cchDest, SInt16 soundID)
-{
-	return StringCchPrintfA(pszDest, cchDest, "sounds/%d.wav", (int)soundID);
-}
-
-//--------------------------------------------------------------  Gp_EnumSoundsInZip
-
-static HRESULT
-Gp_EnumSoundsInZip (mz_zip_archive *archive, Gp_EnumResProc enumProc, void *userData)
-{
-	mz_uint idx;
-	mz_uint numImages;
-	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
-	int resID;
-
-	numImages = mz_zip_reader_get_num_files(archive);
-	for (idx = 0; idx < numImages; idx++)
-	{
-		if (!mz_zip_reader_get_filename(archive, idx, filename, sizeof(filename)))
-		{
-			return E_FAIL;
-		}
-		if (sscanf_s(filename, "sounds/%d.wav", &resID) == 1)
-		{
-			if (!enumProc((SInt16)resID, userData))
-			{
-				break;
-			}
-		}
-	}
-	return S_OK;
-}
-
-//--------------------------------------------------------------  Gp_SoundExistsInZip
-
-static BOOLEAN
-Gp_SoundExistsInZip (mz_zip_archive *archive, SInt16 soundID)
-{
-	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
-
-	if (FAILED(Gp_GetSoundFilename(filename, ARRAYSIZE(filename), soundID)))
-	{
-		return FALSE;
-	}
-	return (mz_zip_reader_locate_file(archive, filename, NULL, 0) >= 0);
 }
 
 //--------------------------------------------------------------  Gp_LoadSoundFromZip
@@ -394,7 +339,7 @@ HICON Gp_LoadHouseIcon (UINT width, UINT height)
 	{
 		return NULL;
 	}
-	buffer = mz_zip_reader_extract_file_to_heap(&g_houseArchive, "house.ico", &length, 0);
+	buffer = mz_zip_reader_extract_file_to_heap(&g_houseArchive, HOUSE_ICON_NAME, &length, 0);
 	if (buffer == NULL)
 	{
 		return NULL;
@@ -412,7 +357,7 @@ uint64_t Gp_HouseFileDataSize (void)
 	{
 		return 0;
 	}
-	return Gp_FileSizeInZip(&g_houseArchive, "house.dat");
+	return Gp_FileSizeInZip(&g_houseArchive, HOUSE_DATA_NAME);
 }
 
 //--------------------------------------------------------------  Gp_ReadHouseData
@@ -432,7 +377,7 @@ HRESULT Gp_ReadHouseData (houseType *house)
 	{
 		return E_FAIL;
 	}
-	buffer = mz_zip_reader_extract_file_to_heap(&g_houseArchive, "house.dat", &length, 0);
+	buffer = mz_zip_reader_extract_file_to_heap(&g_houseArchive, HOUSE_DATA_NAME, &length, 0);
 	if (buffer == NULL)
 	{
 		return E_FAIL;
@@ -486,7 +431,7 @@ write_house_to_zip (mz_zip_archive *archive, const houseType *house)
 	{
 		return E_FAIL;
 	}
-	succeeded = mz_zip_writer_add_mem(archive, "house.dat", dataBuffer,
+	succeeded = mz_zip_writer_add_mem(archive, HOUSE_DATA_NAME, dataBuffer,
 		dataLength, (mz_uint)MZ_DEFAULT_COMPRESSION);
 	free(dataBuffer);
 	if (!succeeded)
@@ -549,7 +494,7 @@ HRESULT Gp_WriteHouseData (const houseType *house)
 	}
 
 	numFiles = mz_zip_reader_get_num_files(&g_houseArchive);
-	if (!mz_zip_reader_locate_file_v2(&g_houseArchive, "house.dat", NULL, 0, &houseDataIndex))
+	if (!mz_zip_reader_locate_file_v2(&g_houseArchive, HOUSE_DATA_NAME, NULL, 0, &houseDataIndex))
 	{
 		houseDataIndex = numFiles;
 	}
@@ -604,13 +549,6 @@ HRESULT Gp_WriteHouseData (const houseType *house)
 	return hr;
 }
 
-//--------------------------------------------------------------  Gp_ImageExists
-
-BOOLEAN Gp_ImageExists (SInt16 imageID)
-{
-	return Gp_HouseImageExists(imageID) || Gp_BuiltInImageExists(imageID);
-}
-
 //--------------------------------------------------------------  Gp_LoadImage
 
 HBITMAP Gp_LoadImage (SInt16 imageID)
@@ -649,13 +587,6 @@ HBITMAP Gp_LoadImageAsDIB (SInt16 imageID)
 	return NULL;
 }
 
-//--------------------------------------------------------------  Gp_SoundExists
-
-BOOLEAN Gp_SoundExists (SInt16 soundID)
-{
-	return Gp_HouseSoundExists(soundID) || Gp_BuiltInSoundExists(soundID);
-}
-
 //--------------------------------------------------------------  Gp_LoadSound
 
 HRESULT Gp_LoadSound (SInt16 soundID, WaveData *sound)
@@ -672,32 +603,6 @@ HRESULT Gp_LoadSound (SInt16 soundID, WaveData *sound)
 		hr = Gp_LoadBuiltInSound(soundID, sound);
 	}
 	return hr;
-}
-
-//--------------------------------------------------------------  Gp_EnumBuiltInImages
-
-HRESULT Gp_EnumBuiltInImages (Gp_EnumResProc enumProc, void *userData)
-{
-	if (enumProc == NULL)
-	{
-		return E_INVALIDARG;
-	}
-	if (!Gp_BuiltInAssetsLoaded())
-	{
-		return E_FAIL;
-	}
-	return Gp_EnumImagesInZip(&g_mermaidArchive, enumProc, userData);
-}
-
-//--------------------------------------------------------------  Gp_BuiltInImageExists
-
-BOOLEAN Gp_BuiltInImageExists (SInt16 imageID)
-{
-	if (!Gp_BuiltInAssetsLoaded())
-	{
-		return FALSE;
-	}
-	return Gp_ImageExistsInZip(&g_mermaidArchive, imageID);
 }
 
 //--------------------------------------------------------------  Gp_LoadBuiltInImage
@@ -722,32 +627,6 @@ HBITMAP Gp_LoadBuiltInImageAsDIB (SInt16 imageID)
 	return Gp_LoadImageAsDIBFromZip(&g_mermaidArchive, imageID);
 }
 
-//--------------------------------------------------------------  Gp_EnumBuiltInSounds
-
-HRESULT Gp_EnumBuiltInSounds (Gp_EnumResProc enumProc, void *userData)
-{
-	if (enumProc == NULL)
-	{
-		return E_INVALIDARG;
-	}
-	if (!Gp_BuiltInAssetsLoaded())
-	{
-		return E_FAIL;
-	}
-	return Gp_EnumSoundsInZip(&g_mermaidArchive, enumProc, userData);
-}
-
-//--------------------------------------------------------------  Gp_BuiltInSoundExists
-
-BOOLEAN Gp_BuiltInSoundExists (SInt16 soundID)
-{
-	if (!Gp_BuiltInAssetsLoaded())
-	{
-		return FALSE;
-	}
-	return Gp_SoundExistsInZip(&g_mermaidArchive, soundID);
-}
-
 //--------------------------------------------------------------  Gp_LoadBuiltInSound
 
 HRESULT Gp_LoadBuiltInSound (SInt16 soundID, WaveData *sound)
@@ -763,19 +642,47 @@ HRESULT Gp_LoadBuiltInSound (SInt16 soundID, WaveData *sound)
 	return Gp_LoadSoundFromZip(&g_mermaidArchive, soundID, sound);
 }
 
-//--------------------------------------------------------------  Gp_EnumHouseImages
+//--------------------------------------------------------------  Gp_GetFirstImageID
 
-HRESULT Gp_EnumHouseImages (Gp_EnumResProc enumProc, void *userData)
+SInt16 Gp_GetFirstHouseImageID (SInt16 minimum, SInt16 maximum, SInt16 def)
 {
-	if (enumProc == NULL)
-	{
-		return E_INVALIDARG;
-	}
+	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
+	mz_uint index;
+	mz_uint numFiles;
+	Boolean foundImage;
+	SInt16 firstID;
+	int thisID;
+
 	if (!Gp_HouseFileLoaded())
 	{
-		return E_FAIL;
+		return def;
 	}
-	return Gp_EnumImagesInZip(&g_houseArchive, enumProc, userData);
+	foundImage = false;
+	firstID = def;
+	numFiles = mz_zip_reader_get_num_files(&g_houseArchive);
+	for (index = 0; index < numFiles; ++index)
+	{
+		if (!mz_zip_reader_get_filename(&g_houseArchive, index, filename, sizeof(filename)))
+		{
+			continue;
+		}
+		if (sscanf_s(filename, IMAGES_FORMAT_STRING, &thisID) == 1)
+		{
+			if ((int)minimum <= thisID && thisID <= (int)maximum)
+			{
+				if (!foundImage)
+				{
+					foundImage = true;
+					firstID = (SInt16)thisID;
+				}
+				if (firstID > (SInt16)thisID)
+				{
+					firstID = (SInt16)thisID;
+				}
+			}
+		}
+	}
+	return firstID;
 }
 
 //--------------------------------------------------------------  Gp_HouseImageExists
@@ -809,32 +716,6 @@ HBITMAP Gp_LoadHouseImageAsDIB (SInt16 imageID)
 		return NULL;
 	}
 	return Gp_LoadImageAsDIBFromZip(&g_houseArchive, imageID);
-}
-
-//--------------------------------------------------------------  Gp_EnumHouseSounds
-
-HRESULT Gp_EnumHouseSounds (Gp_EnumResProc enumProc, void *userData)
-{
-	if (enumProc == NULL)
-	{
-		return E_INVALIDARG;
-	}
-	if (!Gp_HouseFileLoaded())
-	{
-		return E_FAIL;
-	}
-	return Gp_EnumSoundsInZip(&g_houseArchive, enumProc, userData);
-}
-
-//--------------------------------------------------------------  Gp_HouseSoundExists
-
-BOOLEAN Gp_HouseSoundExists (SInt16 soundID)
-{
-	if (!Gp_HouseFileLoaded())
-	{
-		return FALSE;
-	}
-	return Gp_SoundExistsInZip(&g_houseArchive, soundID);
 }
 
 //--------------------------------------------------------------  Gp_LoadHouseSound
@@ -871,7 +752,7 @@ HRESULT Gp_LoadHouseBounding (SInt16 imageID, boundsType *bounds)
 	{
 		return E_FAIL;
 	}
-	hr = StringCchPrintfA(filename, ARRAYSIZE(filename), "bounds/%d.bin", (int)imageID);
+	hr = Gp_GetBoundFilename(filename, ARRAYSIZE(filename), imageID);
 	if (FAILED(hr))
 	{
 		return hr;

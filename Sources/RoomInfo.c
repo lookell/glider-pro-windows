@@ -399,7 +399,7 @@ void RoomInfo_InitDialog (HWND hDlg)
 		RedAlert(kErrFailedResourceLoad);
 	}
 	backgroundsMenu = menuItem.hSubMenu;
-	if (!HouseHasOriginalPicts())
+	if (GetFirstPICT() == -1)
 	{
 		DeleteMenu(backgroundsMenu, kUserBackground, MF_BYCOMMAND);
 	}
@@ -806,31 +806,9 @@ Boolean PictIDExists (SInt16 theID)
 
 //--------------------------------------------------------------  GetFirstPICT
 
-static BOOLEAN GetFirstPict_EnumProc (SInt16 resID, void *userData)
-{
-	SInt16 *pID;
-
-	pID = (SInt16 *)userData;
-	if (resID >= kUserBackground)
-	{
-		if (*pID == -1 || *pID > resID)
-		{
-			*pID = resID;
-		}
-	}
-	return TRUE;
-}
-
 SInt16 GetFirstPICT (void)
 {
-	SInt16 resID;
-
-	resID = -1;
-	if (FAILED(Gp_EnumHouseImages(GetFirstPict_EnumProc, &resID)))
-	{
-		resID = -1;
-	}
-	return resID;
+	return Gp_GetFirstHouseImageID(kUserBackground, 3799, -1);
 }
 
 //--------------------------------------------------------------  BitchAboutPICTNotFound

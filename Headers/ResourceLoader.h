@@ -65,10 +65,6 @@ HRESULT Gp_ReadHouseData (houseType *house);
 // should check whether the house file is still loaded.
 HRESULT Gp_WriteHouseData (const houseType *house);
 
-// Return whether the house file or built-in assets contain an image
-// with the given ID.
-BOOLEAN Gp_ImageExists (SInt16 imageID);
-
 // Load an image. The loader attempts to load from the house file first.
 // If that fails, then the loader attempts to load from the built-in
 // assets. If that also fails, then the function fails and returns NULL.
@@ -83,10 +79,6 @@ HBITMAP Gp_LoadImage (SInt16 imageID);
 // The returned HBITMAP should be cleaned up by calling DeleteObject().
 HBITMAP Gp_LoadImageAsDIB (SInt16 imageID);
 
-// Return whether the house file or built-in assets contain a sound
-// with the given ID.
-BOOLEAN Gp_SoundExists (SInt16 soundID);
-
 // Load a sound. The loader attempts to load from the house file first.
 // If that fails, then the loader attempts to load from the built-in
 // assets. If that also fails, then the function fails.
@@ -99,14 +91,6 @@ HRESULT Gp_LoadSound (SInt16 soundID, WaveData *sound);
 // enumerator function. Return nonzero to continue enumerating, or zero
 // to stop.
 typedef BOOLEAN (*Gp_EnumResProc)(SInt16 resID, void *userData);
-
-// Enumerate over the IDs of built-in images. The enumeration stops
-// when the enumerator functions returns zero, or there are no more
-// images to enumerate.
-HRESULT Gp_EnumBuiltInImages (Gp_EnumResProc enumProc, void *userData);
-
-// Return whether the built-in assets contain an image with the given ID.
-BOOLEAN Gp_BuiltInImageExists (SInt16 imageID);
 
 // Load an image from the built-in assets. If the image does not
 // exist in the built-in assets or the built-in assets have not been
@@ -122,14 +106,6 @@ HBITMAP Gp_LoadBuiltInImage (SInt16 imageID);
 // The returned HBITMAP should be cleaned up by calling DeleteObject().
 HBITMAP Gp_LoadBuiltInImageAsDIB (SInt16 imageID);
 
-// Enumerate over the IDs of all built-in sounds. The enumeration stops
-// when the enumerator functions returns zero, or there are no more
-// sounds to enumerate.
-HRESULT Gp_EnumBuiltInSounds (Gp_EnumResProc enumProc, void *userData);
-
-// Return whether the built-in assets contain a sound with the given ID.
-BOOLEAN Gp_BuiltInSoundExists (SInt16 soundID);
-
 // Load a sound from the built-in assets. If the sound does not
 // exist in the built-in assets or the built-in assets have not been
 // loaded yet, the function will fail.
@@ -137,10 +113,10 @@ BOOLEAN Gp_BuiltInSoundExists (SInt16 soundID);
 // The field sound->dataBytes should be cleaned up by calling free().
 HRESULT Gp_LoadBuiltInSound (SInt16 soundID, WaveData *sound);
 
-// Enumerate over the IDs of all house images. The enumeration stops
-// when the enumerator functions returns zero, or there are no more
-// images to enumerate.
-HRESULT Gp_EnumHouseImages (Gp_EnumResProc enumProc, void *userData);
+// Return the first image ID in the given range, or the default value
+// in the 'def' parameter if no image is in the given range. The
+// 'first' and 'last' parameters are both inclusive.
+SInt16 Gp_GetFirstHouseImageID (SInt16 first, SInt16 last, SInt16 def);
 
 // Return whether the house file contains an image with the given ID.
 BOOLEAN Gp_HouseImageExists (SInt16 imageID);
@@ -157,14 +133,6 @@ HBITMAP Gp_LoadHouseImage (SInt16 imageID);
 //
 // The returned HBITMAP should be cleaned up by calling DeleteObject().
 HBITMAP Gp_LoadHouseImageAsDIB (SInt16 imageID);
-
-// Enumerate over the IDs of all house sounds. The enumeration stops
-// when the enumerator functions returns zero, or there are no more
-// sounds to enumerate.
-HRESULT Gp_EnumHouseSounds (Gp_EnumResProc enumProc, void *userData);
-
-// Return whether the house file contains a sound with the given ID.
-BOOLEAN Gp_HouseSoundExists (SInt16 soundID);
 
 // Load a sound from the house file. If the sound does not exist in
 // the built-in assets or the built-in assets have not been loaded yet,

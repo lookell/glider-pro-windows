@@ -249,27 +249,6 @@ void WhereDoesGliderBegin (Rect *theRect, SInt16 mode)
 	QOffsetRect(theRect, initialPt.h, initialPt.v);
 }
 
-//--------------------------------------------------------------  HouseHasOriginalPicts
-// Returns true is the current house has custom artwork imbedded.
-
-static BOOLEAN EnumHousePicts (SInt16 resID, void *userData)
-{
-	(void)resID;
-
-	// If this function is called, then there is at least one custom image.
-	*((Boolean *)userData) = true;
-	return FALSE;
-}
-
-Boolean HouseHasOriginalPicts (void)
-{
-	Boolean hasPicts;
-
-	hasPicts = false;
-	Gp_EnumHouseImages(EnumHousePicts, &hasPicts);
-	return hasPicts;
-}
-
 //--------------------------------------------------------------  CountHouseLinks
 // Counts up the number of linked objects in a house.
 

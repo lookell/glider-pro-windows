@@ -29,7 +29,6 @@ void InitializeEmptyHouse (void);
 SInt16 RealRoomNumberCount (void);
 SInt16 GetFirstRoomNumber (void);
 void WhereDoesGliderBegin (Rect *theRect, SInt16 mode);
-Boolean HouseHasOriginalPicts (void);
 SInt16 CountHouseLinks (void);
 void GenerateLinksList (void);
 void SortHouseObjects (void);
