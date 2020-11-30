@@ -75,11 +75,14 @@ void ReadInPrefs (HWND ownerWindow)
 
 	if (LoadPrefs(ownerWindow, &thePrefs, kPrefsVersion))
 	{
-#if COMPILEDEMO
-		PasStringCopyC("Demo House", thisHouseName);
-#else
-		PasStringCopy(thePrefs.wasDefaultName, thisHouseName);
-#endif
+		if (COMPILEDEMO)
+		{
+			PasStringCopyC("Demo House", thisHouseName);
+		}
+		else
+		{
+			PasStringCopy(thePrefs.wasDefaultName, thisHouseName);
+		}
 		isViewportWidth = thePrefs.wasViewportWidth;
 		if (isViewportWidth < minimumWidth)
 		{
@@ -141,11 +144,14 @@ void ReadInPrefs (HWND ownerWindow)
 	}
 	else
 	{
-#if COMPILEDEMO
-		PasStringCopyC("Demo House", thisHouseName);
-#else
-		PasStringCopyC("Slumberland", thisHouseName);
-#endif
+		if (COMPILEDEMO)
+		{
+			PasStringCopyC("Demo House", thisHouseName);
+		}
+		else
+		{
+			PasStringCopyC("Slumberland", thisHouseName);
+		}
 		isViewportWidth = 640;
 		isViewportHeight = 480;
 		PasStringCopyC("Your Name", highName);
@@ -219,11 +225,14 @@ void WriteOutPrefs (HWND ownerWindow)
 
 	UnivGetSoundVolume(&theVolume);
 
-#if COMPILEDEMO
-	PasStringCopyC("Demo House", thePrefs.wasDefaultName);
-#else
-	PasStringCopy(thisHouseName, thePrefs.wasDefaultName);
-#endif
+	if (COMPILEDEMO)
+	{
+		PasStringCopyC("Demo House", thePrefs.wasDefaultName);
+	}
+	else
+	{
+		PasStringCopy(thisHouseName, thePrefs.wasDefaultName);
+	}
 	thePrefs.wasViewportWidth = isViewportWidth;
 	thePrefs.wasViewportHeight = isViewportHeight;
 	PasStringCopy(highName, thePrefs.wasHighName);

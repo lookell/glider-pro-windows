@@ -744,10 +744,11 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
 			}
 			incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 
-#if !COMPILEDEMO
-//			if (theMode == kEditMode)
-//				SeeIfValidScrapAvailable(true);
-#endif
+			if (!COMPILEDEMO)
+			{
+//				if (theMode == kEditMode)
+//					SeeIfValidScrapAvailable(true);
+			}
 		}
 		else
 		{
@@ -765,6 +766,8 @@ LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam)
 {
 	BYTE vKey;
 	Boolean shiftDown;
+
+	(void)lParam;
 
 	vKey = (BYTE)wParam;
 	shiftDown = (GetKeyState(VK_SHIFT) < 0);

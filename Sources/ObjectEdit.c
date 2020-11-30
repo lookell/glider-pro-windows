@@ -85,8 +85,10 @@ SInt16 FindObjectSelected (Point where)
 
 void DoSelectionClick (HWND hwnd, Point where, Boolean isDoubleClick)
 {
-#if !COMPILEDEMO
 	POINT dragPt;
+
+	if (COMPILEDEMO)
+		return;
 
 	StopMarquee();
 
@@ -124,7 +126,6 @@ void DoSelectionClick (HWND hwnd, Point where, Boolean isDoubleClick)
 		}
 	}
 	UpdateMenus(false);
-#endif
 }
 
 //--------------------------------------------------------------  DragHandle
@@ -760,8 +761,10 @@ void Gp_DragObject (Point where)
 
 void DoNewObjectClick (HWND ownerWindow, Point where)
 {
-#if !COMPILEDEMO
 	SInt16		whatObject;
+
+	if (COMPILEDEMO)
+		return;
 
 	StopMarquee();
 	objActive = kNoObjectSelected;
@@ -772,19 +775,20 @@ void DoNewObjectClick (HWND ownerWindow, Point where)
 	UpdateMenus(false);
 
 	AddObjectPairing();
-#endif
 }
 
 //--------------------------------------------------------------  AddObjectPairing
 
 void AddObjectPairing (void)
 {
-#if !COMPILEDEMO
 	roomType *testRoomPtr;
 	SInt16 roomNum;
 	SInt16 emptySlot;
 	wchar_t message[256];
 	HWND mssgWindow;
+
+	if (COMPILEDEMO)
+		return;
 
 	if (thisRoom->objects[objActive].what == kDoorInRt)
 	{
@@ -1088,15 +1092,16 @@ void AddObjectPairing (void)
 			}
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DeleteObject
 
 void Gp_DeleteObject (void)
 {
-#if !COMPILEDEMO
 	SInt16		i;
+
+	if (COMPILEDEMO)
+		return;
 
 	if ((theMode != kEditMode) || (objActive == kNoObjectSelected))
 		return;
@@ -1125,16 +1130,17 @@ void Gp_DeleteObject (void)
 	DeselectObject();
 	ReadyBackground(thisRoom->background, thisRoom->tiles);
 	DrawThisRoomsObjects();
-#endif
 }
 
 //--------------------------------------------------------------  DuplicateObject
 
 void DuplicateObject (HWND ownerWindow)
 {
-#if !COMPILEDEMO
 	objectType tempObject;
 	Point placePt;
+
+	if (COMPILEDEMO)
+		return;
 
 	tempObject = thisRoom->objects[objActive];
 
@@ -1300,18 +1306,19 @@ void DuplicateObject (HWND ownerWindow)
 		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
 		StartMarqueeForActiveObject();
 	}
-#endif
 }
 
 //--------------------------------------------------------------  MoveObject
 
 void MoveObject (SInt16 whichWay, Boolean shiftDown)
 {
-#if !COMPILEDEMO
 	Rect wasRect;
 	SInt16 deltaH;
 	SInt16 deltaV;
 	SInt16 increment;
+
+	if (COMPILEDEMO)
+		return;
 
 	if (theMode != kEditMode)
 		return;
@@ -1688,21 +1695,21 @@ void MoveObject (SInt16 whichWay, Boolean shiftDown)
 	ReadyBackground(thisRoom->background, thisRoom->tiles);
 	DrawThisRoomsObjects();
 	StartMarqueeForActiveObject();
-#endif
 }
 
 //--------------------------------------------------------------  DeselectObject
 
 void DeselectObject (void)
 {
-#if !COMPILEDEMO
+	if (COMPILEDEMO)
+		return;
+
 	if ((theMode != kEditMode) || (objActive == kNoObjectSelected))
 		return;
 
 	objActive = kNoObjectSelected;
 	StopMarquee();
 	UpdateMenus(false);
-#endif
 }
 
 //--------------------------------------------------------------  ObjectHasHandle
@@ -1892,8 +1899,10 @@ Boolean ObjectIsUpBlower (const objectType *who)
 
 void HandleBlowerGlider (void)
 {
-#if !COMPILEDEMO
 	SInt16		direction, dist;
+
+	if (COMPILEDEMO)
+		return;
 
 	if (ObjectIsUpBlower(&thisRoom->objects[objActive]))
 	{
@@ -1904,15 +1913,16 @@ void HandleBlowerGlider (void)
 					roomObjectRects[objActive].top - dist);
 		}
 	}
-#endif
 }
 
 //--------------------------------------------------------------  SelectNextObject
 
 void SelectNextObject (void)
 {
-#if !COMPILEDEMO
 	Boolean noneFound;
+
+	if (COMPILEDEMO)
+		return;
 
 	if ((theMode != kEditMode) || (thisRoom->numObjects <= 0))
 		return;
@@ -1930,15 +1940,16 @@ void SelectNextObject (void)
 
 	UpdateMenus(false);
 	StartMarqueeForActiveObject();
-#endif
 }
 
 //--------------------------------------------------------------  SelectPrevObject
 
 void SelectPrevObject (void)
 {
-#if !COMPILEDEMO
 	Boolean noneFound;
+
+	if (COMPILEDEMO)
+		return;
 
 	if ((theMode != kEditMode) || (thisRoom->numObjects <= 0))
 		return;
@@ -1956,7 +1967,6 @@ void SelectPrevObject (void)
 
 	UpdateMenus(false);
 	StartMarqueeForActiveObject();
-#endif
 }
 
 //--------------------------------------------------------------  GetThisRoomsObjRects
@@ -2629,11 +2639,13 @@ void DrawThisRoomsObjects (void)
 
 void HiliteAllObjects (void)
 {
-#if !COMPILEDEMO
 	HDC			mainWindowDC;
 	RECT		focusRects[ARRAYSIZE(roomObjectRects)];
 	MSG			msg;
 	SInt16		i;
+
+	if (COMPILEDEMO)
+		return;
 
 	if (theMode != kEditMode)
 		return;
@@ -2675,15 +2687,16 @@ void HiliteAllObjects (void)
 	ReleaseMainWindowDC(mainWindowDC);
 
 	ResumeMarquee();
-#endif
 }
 
 //--------------------------------------------------------------  GoToObjectInRoom
 
 void GoToObjectInRoom (SInt16 object, SInt16 floor, SInt16 suite)
 {
-	#if !COMPILEDEMO
 	SInt16 itsNumber;
+
+	if (COMPILEDEMO)
+		return;
 
 	if (RoomExists(suite, floor, &itsNumber))
 	{
@@ -2703,7 +2716,6 @@ void GoToObjectInRoom (SInt16 object, SInt16 floor, SInt16 suite)
 			UpdateMenus(false);
 		}
 	}
-	#endif
 }
 
 //--------------------------------------------------------------  GoToObjectInRoomNum

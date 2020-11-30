@@ -198,9 +198,8 @@ void VariableInit (void)
 //	scrapIsARoom = true;
 	splashDrawn = false;
 
-#if !COMPILEDEMO
-//	SeeIfValidScrapAvailable(false);
-#endif
+//	if (!COMPILEDEMO)
+//		SeeIfValidScrapAvailable(false);
 
 	theGlider.which = kPlayer1;
 	theGlider2.which = kPlayer2;

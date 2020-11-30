@@ -297,7 +297,9 @@ void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 
 void ReflectCurrentRoom (Boolean forceMapRedraw)
 {
-#if !COMPILEDEMO
+	if (COMPILEDEMO)
+		return;
+
 	if (theMode != kEditMode)
 		return;
 
@@ -325,7 +327,6 @@ void ReflectCurrentRoom (Boolean forceMapRedraw)
 	GetThisRoomsObjRects();
 	DrawThisRoomsObjects();
 	Mac_InvalWindowRect(mainWindow, &mainWindowRect);
-#endif
 }
 
 //--------------------------------------------------------------  CopyRoomToThisRoom
@@ -412,10 +413,11 @@ Boolean RoomNumExists (SInt16 roomNum)
 
 void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 {
-#if !COMPILEDEMO
 	SInt16		wasFloor_, wasSuite_;
 	Boolean		firstDeleted;
 
+	if (COMPILEDEMO)
+		return;
 	if ((theMode != kEditMode) || (noRoomAtAll))
 		return;
 	if (thisRoomNumber < 0 || thisRoomNumber >= thisHouse.nRooms)
@@ -450,7 +452,6 @@ void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 	fileDirty = true;
 	UpdateMenus(false);
 	ReflectCurrentRoom(false);
-#endif
 }
 
 //--------------------------------------------------------------  QueryDeleteRoom
@@ -470,10 +471,10 @@ Boolean QueryDeleteRoom (HWND ownerWindow)
 
 SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor)
 {
-#if COMPILEDEMO
-	return(-1);
-#else
 	SInt16		newH, newV, newRoomNumber;
+
+	if (COMPILEDEMO)
+		return(-1);
 
 	if (theMode != kEditMode)
 		return(-1);
@@ -504,15 +505,16 @@ SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor)
 		return (newRoomNumber);
 	else
 		return (-1);
-#endif
 }
 
 //--------------------------------------------------------------  SelectNeighborRoom
 
 void SelectNeighborRoom (SInt16 whichNeighbor)
 {
-#if !COMPILEDEMO
 	SInt16		newRoomNumber;
+
+	if (COMPILEDEMO)
+		return;
 
 	newRoomNumber = DoesNeighborRoomExist(whichNeighbor);
 
@@ -522,7 +524,6 @@ void SelectNeighborRoom (SInt16 whichNeighbor)
 		CopyRoomToThisRoom(newRoomNumber);
 		ReflectCurrentRoom(false);
 	}
-#endif
 }
 
 //--------------------------------------------------------------  GetNeighborRoomNumber

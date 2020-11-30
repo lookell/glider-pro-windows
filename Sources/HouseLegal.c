@@ -61,7 +61,9 @@ Boolean KeepObjectLegal (void)
 	Boolean		unchanged;
 
 	unchanged = true;
-#if !COMPILEDEMO
+
+	if (COMPILEDEMO)
+		return (unchanged);
 
 	if (objActive == kInitialGliderSelected)
 	{
@@ -605,7 +607,6 @@ Boolean KeepObjectLegal (void)
 
 	}
 
-#endif
 
 	return (unchanged);
 }
@@ -998,11 +999,13 @@ void CheckForStaircasePairs (HWND mssgWindow)
 
 void CheckHouseForProblems (void)
 {
-#if !COMPILEDEMO
 	HWND mssgWindow;
 	wchar_t message[256];
 	wchar_t message2[256];
 	SInt16 wasActive;
+
+	if (COMPILEDEMO)
+		return;
 
 	houseErrors = 0;
 	CopyThisRoomToRoom();
@@ -1160,6 +1163,5 @@ void CheckHouseForProblems (void)
 	CloseMessageWindow(mssgWindow);
 	ForceThisRoom(wasRoom);
 	objActive = wasActive;
-#endif
 }
 

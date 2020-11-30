@@ -124,8 +124,10 @@ INT_PTR CALLBACK LinkWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 
 void UpdateLinkControl (void)
 {
-#if !COMPILEDEMO
 	HWND linkControl;
+
+	if (COMPILEDEMO)
+		return;
 
 	if (linkWindow == NULL)
 		return;
@@ -266,15 +268,16 @@ void UpdateLinkControl (void)
 		}
 		break;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  OpenLinkWindow
 
 void OpenLinkWindow (void)
 {
-#if !COMPILEDEMO
 	WINDOWPLACEMENT placement;
+
+	if (COMPILEDEMO)
+		return;
 
 	if (linkWindow == NULL)
 	{
@@ -297,7 +300,6 @@ void OpenLinkWindow (void)
 		linkObject = 255;
 		UpdateLinkControl();
 	}
-#endif
 }
 
 //--------------------------------------------------------------  CloseLinkWindow

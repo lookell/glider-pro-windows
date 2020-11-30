@@ -204,8 +204,10 @@ void UpdateToolTiles (void)
 
 void SelectTool (SInt16 which)
 {
-#if !COMPILEDEMO
 	SInt16 toolIcon;
+
+	if (COMPILEDEMO)
+		return;
 
 	toolIcon = which;
 	if ((toolMode == kBlowerMode) && (toolIcon >= 7))
@@ -225,7 +227,6 @@ void SelectTool (SInt16 which)
 
 	toolSelected = which;
 	UpdateToolName();
-#endif
 }
 
 //--------------------------------------------------------------  ToolsWindowProc
@@ -454,8 +455,10 @@ void UpdateToolTips (HWND hwnd)
 
 void OpenToolsWindow (void)
 {
-#if !COMPILEDEMO
 	WINDOWPLACEMENT placement;
+
+	if (COMPILEDEMO)
+		return;
 
 	if (toolsWindow == NULL)
 	{
@@ -488,14 +491,15 @@ void OpenToolsWindow (void)
 	}
 
 	UpdateToolsCheckmark(true);
-#endif
 }
 
 //--------------------------------------------------------------  CloseToolsWindow
 
 void CloseToolsWindow (void)
 {
-#if !COMPILEDEMO
+	if (COMPILEDEMO)
+		return;
+
 	if (toolsWindow != NULL)
 	{
 		DestroyWindow(toolsWindow);
@@ -503,14 +507,15 @@ void CloseToolsWindow (void)
 	}
 	KillToolsOffscreen();
 	UpdateToolsCheckmark(false);
-#endif
 }
 
 //--------------------------------------------------------------  ToggleToolsWindow
 
 void ToggleToolsWindow (void)
 {
-#if !COMPILEDEMO
+	if (COMPILEDEMO)
+		return;
+
 	if (toolsWindow == NULL)
 	{
 		OpenToolsWindow();
@@ -521,7 +526,6 @@ void ToggleToolsWindow (void)
 		CloseToolsWindow();
 		isToolsOpen = false;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  SwitchToolModes
@@ -614,7 +618,9 @@ void SwitchToolModes (SInt16 newMode)
 
 void NextToolMode (void)
 {
-#if !COMPILEDEMO
+	if (COMPILEDEMO)
+		return;
+
 	if (toolsWindow == NULL)
 		return;
 
@@ -625,14 +631,15 @@ void NextToolMode (void)
 		SwitchToolModes(toolMode);
 		toolSelected = kSelectTool;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  PrevToolMode
 
 void PrevToolMode (void)
 {
-#if !COMPILEDEMO
+	if (COMPILEDEMO)
+		return;
+
 	if (toolsWindow == NULL)
 		return;
 
@@ -643,14 +650,15 @@ void PrevToolMode (void)
 		SwitchToolModes(toolMode);
 		toolSelected = kSelectTool;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  SetSpecificToolMode
 
 void SetSpecificToolMode (SInt16 modeToSet)
 {
-#if !COMPILEDEMO
+	if (COMPILEDEMO)
+		return;
+
 	if ((toolsWindow == NULL) || (theMode != kEditMode))
 		return;
 
@@ -658,6 +666,5 @@ void SetSpecificToolMode (SInt16 modeToSet)
 	SetComboBoxMenuValue(toolsWindow, kToolModeCombo, toolMode);
 	SwitchToolModes(toolMode);
 	toolSelected = kSelectTool;
-#endif
 }
 

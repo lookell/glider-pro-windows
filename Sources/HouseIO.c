@@ -195,12 +195,13 @@ Boolean OpenHouse (HWND ownerWindow)
 		return false;
 	}
 
-	#if COMPILEDEMO
-	if (lstrcmpi(theHousesSpecs[thisHouseIndex].houseName, L"Demo House") != 0)
+	if (COMPILEDEMO)
 	{
-		return false;
+		if (lstrcmpi(theHousesSpecs[thisHouseIndex].houseName, L"Demo House") != 0)
+		{
+			return false;
+		}
 	}
-	#endif
 
 	hr = Gp_LoadHouseFile(theHousesSpecs[thisHouseIndex].path);
 	if (FAILED(hr))
@@ -359,12 +360,13 @@ Boolean ReadHouse (HWND ownerWindow)
 
 	byteCount = Gp_HouseFileDataSize();
 
-	#if COMPILEDEMO
-	if (byteCount != 16526)
+	if (COMPILEDEMO)
 	{
-		return false;
+		if (byteCount != 16526)
+		{
+			return false;
+		}
 	}
-	#endif
 
 	free(thisHouse.rooms);
 	ZeroMemory(&thisHouse, sizeof(thisHouse));
@@ -379,12 +381,13 @@ Boolean ReadHouse (HWND ownerWindow)
 		return false;
 	}
 
-	#if COMPILEDEMO
-	if (thisHouse.nRooms != 45)
+	if (COMPILEDEMO)
 	{
-		return false;
+		if (thisHouse.nRooms != 45)
+		{
+			return false;
+		}
 	}
-	#endif
 	if ((thisHouse.nRooms < 1) || (byteCount == 0))
 	{
 		thisHouse.nRooms = 0;
@@ -401,22 +404,24 @@ Boolean ReadHouse (HWND ownerWindow)
 	}
 
 	houseUnlocked = ((thisHouse.timeStamp & 0x00000001) == 0);
-	#if COMPILEDEMO
-	if (houseUnlocked)
+	if (COMPILEDEMO)
 	{
-		return false;
+		if (houseUnlocked)
+		{
+			return false;
+		}
 	}
-	#endif
 	changeLockStateOfHouse = false;
 	saveHouseLocked = false;
 
 	whichRoom = thisHouse.firstRoom;
-	#if COMPILEDEMO
-	if (whichRoom != 0)
+	if (COMPILEDEMO)
 	{
-		return false;
+		if (whichRoom != 0)
+		{
+			return false;
+		}
 	}
-	#endif
 
 	wardBitSet = ((thisHouse.flags & 0x00000001) == 0x00000001);
 	phoneBitSet = ((thisHouse.flags & 0x00000002) == 0x00000002);
@@ -539,12 +544,13 @@ Boolean CloseHouse (HWND ownerWindow)
 	}
 	else if (fileDirty)
 	{
-#if !COMPILEDEMO
-		if (!QuerySaveChanges(ownerWindow)) // false signifies user canceled
+		if (!COMPILEDEMO)
 		{
-			return(false);
+			if (!QuerySaveChanges(ownerWindow)) // false signifies user canceled
+			{
+				return(false);
+			}
 		}
-#endif
 	}
 
 	CloseHouseMovie();

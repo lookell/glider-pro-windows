@@ -46,7 +46,9 @@ static SInt16 coordD;
 
 void SetCoordinateHVD (SInt16 h, SInt16 v, SInt16 d)
 {
-#if !COMPILEDEMO
+	if (COMPILEDEMO)
+		return;
+
 	if (h != -2)
 		coordH = h;
 	if (v != -2)
@@ -54,7 +56,6 @@ void SetCoordinateHVD (SInt16 h, SInt16 v, SInt16 d)
 	if (d != -2)
 		coordD = d;
 	UpdateCoordWindow();
-#endif
 }
 
 //--------------------------------------------------------------  DeltaCoordinateD
@@ -65,10 +66,11 @@ void SetCoordinateHVD (SInt16 h, SInt16 v, SInt16 d)
 
 void DeltaCoordinateD (SInt16 d)
 {
-#if !COMPILEDEMO
+	if (COMPILEDEMO)
+		return;
+
 	coordD = d;
 	UpdateCoordWindow();
-#endif
 }
 
 //--------------------------------------------------------------  CoordWindowProc
@@ -110,8 +112,10 @@ INT_PTR CALLBACK CoordWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 
 void UpdateCoordWindow (void)
 {
-#if !COMPILEDEMO
 	WCHAR text[256];
+
+	if (COMPILEDEMO)
+		return;
 
 	if (coordWindow == NULL)
 		return;
@@ -133,7 +137,6 @@ void UpdateCoordWindow (void)
 	else
 		StringCchCopy(text, ARRAYSIZE(text), L"d: -");
 	SetDlgItemText(coordWindow, kDistCoordItem, text);
-#endif
 }
 
 //--------------------------------------------------------------  OpenCoordWindow
@@ -141,9 +144,11 @@ void UpdateCoordWindow (void)
 
 void OpenCoordWindow (void)
 {
-#if !COMPILEDEMO
 	WINDOWPLACEMENT placement;
 	SInt16 direction, dist;
+
+	if (COMPILEDEMO)
+		return;
 
 	if (coordWindow == NULL)
 	{
@@ -182,7 +187,6 @@ void OpenCoordWindow (void)
 	}
 
 	UpdateCoordinateCheckmark(true);
-#endif
 }
 
 //--------------------------------------------------------------  CloseCoordWindow
@@ -203,7 +207,9 @@ void CloseCoordWindow (void)
 
 void ToggleCoordinateWindow (void)
 {
-#if !COMPILEDEMO
+	if (COMPILEDEMO)
+		return;
+
 	if (coordWindow == NULL)
 	{
 		OpenCoordWindow();
@@ -214,6 +220,5 @@ void ToggleCoordinateWindow (void)
 		CloseCoordWindow();
 		isCoordOpen = false;
 	}
-#endif
 }
 

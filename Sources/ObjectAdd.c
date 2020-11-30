@@ -64,9 +64,9 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 	Rect newRect;
 	Boolean drawWholeRoom;
 
-#if COMPILEDEMO
-	return (false);
-#else
+	if (COMPILEDEMO)
+		return (false);
+
 	objActive = FindEmptyObjectSlot();
 	if (objActive == -1)
 	{
@@ -803,7 +803,6 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 	}
 
 	return (true);
-#endif
 }
 
 //--------------------------------------------------------------  FindEmptyObjectSlot

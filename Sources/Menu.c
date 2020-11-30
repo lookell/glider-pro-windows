@@ -374,9 +374,11 @@ void DoGameMenu (HWND hwnd, SInt16 theItem)
 		break;
 
 		case iLoadHouse:
-#if COMPILEDEMO
-		DoNotInDemo(hwnd);
-#else
+		if (COMPILEDEMO)
+		{
+			DoNotInDemo(hwnd);
+			return;
+		}
 		if (splashDrawn)
 		{
 			DoLoadHouse(hwnd);
@@ -392,17 +394,15 @@ void DoGameMenu (HWND hwnd, SInt16 theItem)
 				Mac_InvalWindowRect(mainWindow, &updateRect);
 			}
 		}
-#endif
 		break;
 
 		case iQuit:
-#if !COMPILEDEMO
 		quitting = true;
-		if (!QuerySaveChanges(hwnd))
-			quitting = false;
-#else
-		quitting = true;
-#endif
+		if (!COMPILEDEMO)
+		{
+			if (!QuerySaveChanges(hwnd))
+				quitting = false;
+		}
 		if (quitting)
 			PostQuitMessage(0);
 		break;
@@ -420,9 +420,11 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 	switch (theItem)
 	{
 		case iEditor:
-#if COMPILEDEMO
-		DoNotInDemo(hwnd);
-#else
+		if (COMPILEDEMO)
+		{
+			DoNotInDemo(hwnd);
+			return;
+		}
 		if (theMode == kEditMode)			// switching to splash mode
 		{
 			if (fileDirty)
@@ -453,7 +455,6 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 		}
 		InitCursor();
 		UpdateMenus(true);
-#endif
 		break;
 
 		case iHighScores:
@@ -482,8 +483,10 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 
 void DoHouseMenu (HWND hwnd, SInt16 theItem)
 {
-#if !COMPILEDEMO
 	Boolean whoCares;
+
+	if (COMPILEDEMO)
+		return;
 
 	switch (theItem)
 	{
@@ -620,7 +623,6 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 			ToggleCoordinateWindow();
 		break;
 	}
-#endif
 }
 
 //--------------------------------------------------------------  DoMenuChoice
