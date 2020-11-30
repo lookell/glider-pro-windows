@@ -85,7 +85,7 @@ SInt16 FindObjectSelected (Point where)
 
 void DoSelectionClick (HWND hwnd, Point where, Boolean isDoubleClick)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	POINT dragPt;
 
 	StopMarquee();
@@ -760,7 +760,7 @@ void Gp_DragObject (Point where)
 
 void DoNewObjectClick (HWND ownerWindow, Point where)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	SInt16		whatObject;
 
 	StopMarquee();
@@ -779,7 +779,7 @@ void DoNewObjectClick (HWND ownerWindow, Point where)
 
 void AddObjectPairing (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	roomType *testRoomPtr;
 	SInt16 roomNum;
 	SInt16 emptySlot;
@@ -1095,7 +1095,7 @@ void AddObjectPairing (void)
 
 void Gp_DeleteObject (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	SInt16		i;
 
 	if ((theMode != kEditMode) || (objActive == kNoObjectSelected))
@@ -1132,7 +1132,7 @@ void Gp_DeleteObject (void)
 
 void DuplicateObject (HWND ownerWindow)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	objectType tempObject;
 	Point placePt;
 
@@ -1307,7 +1307,7 @@ void DuplicateObject (HWND ownerWindow)
 
 void MoveObject (SInt16 whichWay, Boolean shiftDown)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	Rect wasRect;
 	SInt16 deltaH;
 	SInt16 deltaV;
@@ -1695,7 +1695,7 @@ void MoveObject (SInt16 whichWay, Boolean shiftDown)
 
 void DeselectObject (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	if ((theMode != kEditMode) || (objActive == kNoObjectSelected))
 		return;
 
@@ -1892,7 +1892,7 @@ Boolean ObjectIsUpBlower (const objectType *who)
 
 void HandleBlowerGlider (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	SInt16		direction, dist;
 
 	if (ObjectIsUpBlower(&thisRoom->objects[objActive]))
@@ -1911,7 +1911,7 @@ void HandleBlowerGlider (void)
 
 void SelectNextObject (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	Boolean noneFound;
 
 	if ((theMode != kEditMode) || (thisRoom->numObjects <= 0))
@@ -1937,7 +1937,7 @@ void SelectNextObject (void)
 
 void SelectPrevObject (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	Boolean noneFound;
 
 	if ((theMode != kEditMode) || (thisRoom->numObjects <= 0))
@@ -2629,7 +2629,7 @@ void DrawThisRoomsObjects (void)
 
 void HiliteAllObjects (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	HDC			mainWindowDC;
 	RECT		focusRects[ARRAYSIZE(roomObjectRects)];
 	MSG			msg;
@@ -2682,7 +2682,7 @@ void HiliteAllObjects (void)
 
 void GoToObjectInRoom (SInt16 object, SInt16 floor, SInt16 suite)
 {
-	#ifndef COMPILEDEMO
+	#if !COMPILEDEMO
 	SInt16 itsNumber;
 
 	if (RoomExists(suite, floor, &itsNumber))

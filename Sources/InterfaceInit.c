@@ -198,7 +198,7 @@ void VariableInit (void)
 //	scrapIsARoom = true;
 	splashDrawn = false;
 
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 //	SeeIfValidScrapAvailable(false);
 #endif
 

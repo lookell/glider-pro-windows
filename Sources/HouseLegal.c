@@ -61,7 +61,7 @@ Boolean KeepObjectLegal (void)
 	Boolean		unchanged;
 
 	unchanged = true;
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 
 	if (objActive == kInitialGliderSelected)
 	{
@@ -998,7 +998,7 @@ void CheckForStaircasePairs (HWND mssgWindow)
 
 void CheckHouseForProblems (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	HWND mssgWindow;
 	wchar_t message[256];
 	wchar_t message2[256];

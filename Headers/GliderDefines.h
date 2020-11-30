@@ -12,7 +12,9 @@
 #endif
 
 //#define CREATEDEMODATA
-//#define COMPILEDEMO
+#ifndef COMPILEDEMO
+#define COMPILEDEMO  0
+#endif
 //#define CAREFULDEBUG
 //#define COMPILEQT
 

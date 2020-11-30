@@ -374,7 +374,7 @@ void DoGameMenu (HWND hwnd, SInt16 theItem)
 		break;
 
 		case iLoadHouse:
-#ifdef COMPILEDEMO
+#if COMPILEDEMO
 		DoNotInDemo(hwnd);
 #else
 		if (splashDrawn)
@@ -396,7 +396,7 @@ void DoGameMenu (HWND hwnd, SInt16 theItem)
 		break;
 
 		case iQuit:
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 		quitting = true;
 		if (!QuerySaveChanges(hwnd))
 			quitting = false;
@@ -420,7 +420,7 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 	switch (theItem)
 	{
 		case iEditor:
-#ifdef COMPILEDEMO
+#if COMPILEDEMO
 		DoNotInDemo(hwnd);
 #else
 		if (theMode == kEditMode)			// switching to splash mode
@@ -482,7 +482,7 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 
 void DoHouseMenu (HWND hwnd, SInt16 theItem)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	Boolean whoCares;
 
 	switch (theItem)

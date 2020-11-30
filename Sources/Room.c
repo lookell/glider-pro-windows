@@ -297,7 +297,7 @@ void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 
 void ReflectCurrentRoom (Boolean forceMapRedraw)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	if (theMode != kEditMode)
 		return;
 
@@ -412,7 +412,7 @@ Boolean RoomNumExists (SInt16 roomNum)
 
 void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	SInt16		wasFloor_, wasSuite_;
 	Boolean		firstDeleted;
 
@@ -470,7 +470,7 @@ Boolean QueryDeleteRoom (HWND ownerWindow)
 
 SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor)
 {
-#ifdef COMPILEDEMO
+#if COMPILEDEMO
 	return(-1);
 #else
 	SInt16		newH, newV, newRoomNumber;
@@ -511,7 +511,7 @@ SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor)
 
 void SelectNeighborRoom (SInt16 whichNeighbor)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	SInt16		newRoomNumber;
 
 	newRoomNumber = DoesNeighborRoomExist(whichNeighbor);

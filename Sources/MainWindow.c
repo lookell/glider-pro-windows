@@ -744,7 +744,7 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
 			}
 			incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
 
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 //			if (theMode == kEditMode)
 //				SeeIfValidScrapAvailable(true);
 #endif

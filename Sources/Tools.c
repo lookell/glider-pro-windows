@@ -204,7 +204,7 @@ void UpdateToolTiles (void)
 
 void SelectTool (SInt16 which)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	SInt16 toolIcon;
 
 	toolIcon = which;
@@ -454,7 +454,7 @@ void UpdateToolTips (HWND hwnd)
 
 void OpenToolsWindow (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	WINDOWPLACEMENT placement;
 
 	if (toolsWindow == NULL)
@@ -495,7 +495,7 @@ void OpenToolsWindow (void)
 
 void CloseToolsWindow (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	if (toolsWindow != NULL)
 	{
 		DestroyWindow(toolsWindow);
@@ -510,7 +510,7 @@ void CloseToolsWindow (void)
 
 void ToggleToolsWindow (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	if (toolsWindow == NULL)
 	{
 		OpenToolsWindow();
@@ -614,7 +614,7 @@ void SwitchToolModes (SInt16 newMode)
 
 void NextToolMode (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	if (toolsWindow == NULL)
 		return;
 
@@ -632,7 +632,7 @@ void NextToolMode (void)
 
 void PrevToolMode (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	if (toolsWindow == NULL)
 		return;
 
@@ -650,7 +650,7 @@ void PrevToolMode (void)
 
 void SetSpecificToolMode (SInt16 modeToSet)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	if ((toolsWindow == NULL) || (theMode != kEditMode))
 		return;
 

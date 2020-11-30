@@ -624,7 +624,7 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 
 void DoRoomInfo (HWND hwndOwner)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	DialogBox(HINST_THISCOMPONENT,
 		MAKEINTRESOURCE(kRoomInfoDialogID),
 		hwndOwner, RoomFilter);

@@ -195,7 +195,7 @@ Boolean OpenHouse (HWND ownerWindow)
 		return false;
 	}
 
-	#ifdef COMPILEDEMO
+	#if COMPILEDEMO
 	if (lstrcmpi(theHousesSpecs[thisHouseIndex].houseName, L"Demo House") != 0)
 	{
 		return false;
@@ -359,7 +359,7 @@ Boolean ReadHouse (HWND ownerWindow)
 
 	byteCount = Gp_HouseFileDataSize();
 
-	#ifdef COMPILEDEMO
+	#if COMPILEDEMO
 	if (byteCount != 16526)
 	{
 		return false;
@@ -379,7 +379,7 @@ Boolean ReadHouse (HWND ownerWindow)
 		return false;
 	}
 
-	#ifdef COMPILEDEMO
+	#if COMPILEDEMO
 	if (thisHouse.nRooms != 45)
 	{
 		return false;
@@ -401,7 +401,7 @@ Boolean ReadHouse (HWND ownerWindow)
 	}
 
 	houseUnlocked = ((thisHouse.timeStamp & 0x00000001) == 0);
-	#ifdef COMPILEDEMO
+	#if COMPILEDEMO
 	if (houseUnlocked)
 	{
 		return false;
@@ -411,7 +411,7 @@ Boolean ReadHouse (HWND ownerWindow)
 	saveHouseLocked = false;
 
 	whichRoom = thisHouse.firstRoom;
-	#ifdef COMPILEDEMO
+	#if COMPILEDEMO
 	if (whichRoom != 0)
 	{
 		return false;
@@ -539,7 +539,7 @@ Boolean CloseHouse (HWND ownerWindow)
 	}
 	else if (fileDirty)
 	{
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 		if (!QuerySaveChanges(ownerWindow)) // false signifies user canceled
 		{
 			return(false);

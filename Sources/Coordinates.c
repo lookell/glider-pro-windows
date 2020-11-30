@@ -46,7 +46,7 @@ static SInt16 coordD;
 
 void SetCoordinateHVD (SInt16 h, SInt16 v, SInt16 d)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	if (h != -2)
 		coordH = h;
 	if (v != -2)
@@ -65,7 +65,7 @@ void SetCoordinateHVD (SInt16 h, SInt16 v, SInt16 d)
 
 void DeltaCoordinateD (SInt16 d)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	coordD = d;
 	UpdateCoordWindow();
 #endif
@@ -110,7 +110,7 @@ INT_PTR CALLBACK CoordWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 
 void UpdateCoordWindow (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	WCHAR text[256];
 
 	if (coordWindow == NULL)
@@ -141,7 +141,7 @@ void UpdateCoordWindow (void)
 
 void OpenCoordWindow (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	WINDOWPLACEMENT placement;
 	SInt16 direction, dist;
 
@@ -203,7 +203,7 @@ void CloseCoordWindow (void)
 
 void ToggleCoordinateWindow (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	if (coordWindow == NULL)
 	{
 		OpenCoordWindow();

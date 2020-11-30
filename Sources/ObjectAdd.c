@@ -64,7 +64,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 	Rect newRect;
 	Boolean drawWholeRoom;
 
-#ifdef COMPILEDEMO
+#if COMPILEDEMO
 	return (false);
 #else
 	objActive = FindEmptyObjectSlot();

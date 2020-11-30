@@ -231,7 +231,7 @@ void DrawMapRoomImage (HDC hdc, SInt16 backgroundID, const Rect *dstRect)
 
 void RedrawMapContents (HDC hdc)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	Rect aRoom;
 	SInt16 h, i, groundLevel;
 	SInt16 floor, suite, roomNum;
@@ -338,7 +338,7 @@ void RedrawMapContents (HDC hdc)
 
 void UpdateMapWindow (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	SCROLLINFO scrollInfo;
 
 	if (mapWindow == NULL)
@@ -468,7 +468,7 @@ void HandleMapSizeMessage (HWND hwnd)
 
 void OpenMapWindow (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	RECT windowRect;
 	DWORD windowStyle, extendedStyle;
 	WINDOWPLACEMENT placement;
@@ -533,7 +533,7 @@ void OpenMapWindow (void)
 
 void CloseMapWindow (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	if (mapWindow != NULL)
 	{
 		DestroyWindow(mapWindow);
@@ -547,7 +547,7 @@ void CloseMapWindow (void)
 
 void ToggleMapWindow (void)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	if (mapWindow == NULL)
 	{
 		OpenMapWindow();
@@ -718,7 +718,7 @@ void LiveVScrollAction (HWND hwnd, WORD scrollRequest)
 
 void HandleMapClick (SInt16 clickX, SInt16 clickY)
 {
-#ifndef COMPILEDEMO
+#if !COMPILEDEMO
 	SInt16 localH, localV;
 	SInt16 roomH, roomV, itsNumber;
 	Point clickPoint;

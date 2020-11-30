@@ -75,7 +75,7 @@ void ReadInPrefs (HWND ownerWindow)
 
 	if (LoadPrefs(ownerWindow, &thePrefs, kPrefsVersion))
 	{
-#ifdef COMPILEDEMO
+#if COMPILEDEMO
 		PasStringCopyC("Demo House", thisHouseName);
 #else
 		PasStringCopy(thePrefs.wasDefaultName, thisHouseName);
@@ -141,7 +141,7 @@ void ReadInPrefs (HWND ownerWindow)
 	}
 	else
 	{
-#ifdef COMPILEDEMO
+#if COMPILEDEMO
 		PasStringCopyC("Demo House", thisHouseName);
 #else
 		PasStringCopyC("Slumberland", thisHouseName);
@@ -219,7 +219,7 @@ void WriteOutPrefs (HWND ownerWindow)
 
 	UnivGetSoundVolume(&theVolume);
 
-#ifdef COMPILEDEMO
+#if COMPILEDEMO
 	PasStringCopyC("Demo House", thePrefs.wasDefaultName);
 #else
 	PasStringCopy(thisHouseName, thePrefs.wasDefaultName);
