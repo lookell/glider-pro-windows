@@ -502,6 +502,7 @@ void SetPaletteToGrays (RGBQUAD *colors, UINT numColors, int saturation,
 void WashColorIn (void)
 {
 	const int kGray2ColorSteps = 180;
+	MMRESULT mmResult;
 	RGBQUAD wasColors[256];
 	RGBQUAD newColors[256];
 	UINT numColors;
@@ -514,6 +515,8 @@ void WashColorIn (void)
 	DWORD wasFPS;
 	int i;
 	int c;
+
+	mmResult = timeBeginPeriod(1);
 
 	DisableMenuBar();
 
@@ -576,6 +579,11 @@ void WashColorIn (void)
 	DeleteObject(splashDIB);
 	EnableMenuBar();
 	InvalidateRect(mainWindow, NULL, TRUE);
+
+	if (mmResult == TIMERR_NOERROR)
+	{
+		timeEndPeriod(1);
+	}
 }
 
 //--------------------------------------------------------------  InitMainWindowCursor
