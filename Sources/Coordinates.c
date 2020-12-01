@@ -9,7 +9,6 @@
 //============================================================================
 
 
-#include "Macintosh.h"
 #include "MainWindow.h"
 #include "Marquee.h"
 #include "Menu.h"
@@ -99,7 +98,7 @@ INT_PTR CALLBACK CoordWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 	case WM_CTLCOLORSTATIC:
 		SetBkColor((HDC)wParam, GetSysColor(COLOR_BTNFACE));
 		if (GetDlgCtrlID((HWND)lParam) == kDistCoordItem)
-			SetTextColor((HDC)wParam, blueColor);
+			SetTextColor((HDC)wParam, GetSysColor(COLOR_HOTLIGHT));
 		else
 			SetTextColor((HDC)wParam, GetSysColor(COLOR_BTNTEXT));
 		return (INT_PTR)GetSysColorBrush(COLOR_BTNFACE);
