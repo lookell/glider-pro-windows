@@ -60,7 +60,7 @@ Boolean WritePrefs (HWND ownerWindow, LPCWSTR prefsFilePath, const prefsInfo *th
 			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (fileHandle == INVALID_HANDLE_VALUE)
 	{
-		CheckFileError(ownerWindow, GetLastError(), L"Preferences");
+		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(GetLastError()), L"Preferences");
 		return false;
 	}
 	if (!byteio_init_handle_writer(&byteWriter, fileHandle))
@@ -71,7 +71,7 @@ Boolean WritePrefs (HWND ownerWindow, LPCWSTR prefsFilePath, const prefsInfo *th
 
 	if (!WritePrefsInfo(&byteWriter, thePrefs))
 	{
-		CheckFileError(ownerWindow, GetLastError(), L"Preferences");
+		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(GetLastError()), L"Preferences");
 		byteio_close(&byteWriter);
 		CloseHandle(fileHandle);
 		return false;
@@ -79,13 +79,13 @@ Boolean WritePrefs (HWND ownerWindow, LPCWSTR prefsFilePath, const prefsInfo *th
 
 	if (!byteio_close(&byteWriter))
 	{
-		CheckFileError(ownerWindow, GetLastError(), L"Preferences");
+		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(GetLastError()), L"Preferences");
 		CloseHandle(fileHandle);
 		return false;
 	}
 	if (!CloseHandle(fileHandle))
 	{
-		CheckFileError(ownerWindow, GetLastError(), L"Preferences");
+		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(GetLastError()), L"Preferences");
 		return false;
 	}
 
@@ -123,7 +123,7 @@ HRESULT ReadPrefs (HWND ownerWindow, LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 	{
 		lastError = GetLastError();
 		if (lastError != ERROR_FILE_NOT_FOUND)
-			CheckFileError(ownerWindow, lastError, L"Preferences");
+			CheckFileError(ownerWindow, HRESULT_FROM_WIN32(lastError), L"Preferences");
 		return HRESULT_FROM_WIN32(lastError);
 	}
 	if (!byteio_init_handle_reader(&byteReader, fileHandle))
@@ -136,7 +136,7 @@ HRESULT ReadPrefs (HWND ownerWindow, LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 	{
 		lastError = GetLastError();
 		if (lastError != ERROR_HANDLE_EOF)
-			CheckFileError(ownerWindow, lastError, L"Preferences");
+			CheckFileError(ownerWindow, HRESULT_FROM_WIN32(lastError), L"Preferences");
 		byteio_close(&byteReader);
 		CloseHandle(fileHandle);
 		return HRESULT_FROM_WIN32(lastError);
@@ -145,14 +145,14 @@ HRESULT ReadPrefs (HWND ownerWindow, LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 	if (!byteio_close(&byteReader))
 	{
 		lastError = GetLastError();
-		CheckFileError(ownerWindow, lastError, L"Preferences");
+		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(lastError), L"Preferences");
 		CloseHandle(fileHandle);
 		return HRESULT_FROM_WIN32(lastError);
 	}
 	if (!CloseHandle(fileHandle))
 	{
 		lastError = GetLastError();
-		CheckFileError(ownerWindow, lastError, L"Preferences");
+		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(lastError), L"Preferences");
 		return HRESULT_FROM_WIN32(lastError);
 	}
 

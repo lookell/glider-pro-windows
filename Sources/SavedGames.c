@@ -150,15 +150,15 @@ void SaveGame2 (HWND ownerWindow)
 		if (byteio_init_handle_writer(&byteWriter, gameFileHandle))
 		{
 			if (!WriteGame2Type(&byteWriter, &savedGame))
-				CheckFileError(ownerWindow, GetLastError(), L"Saved Game");
+				CheckFileError(ownerWindow, HRESULT_FROM_WIN32(GetLastError()), L"Saved Game");
 			if (!byteio_close(&byteWriter))
-				CheckFileError(ownerWindow, GetLastError(), L"Saved Game");
+				CheckFileError(ownerWindow, HRESULT_FROM_WIN32(GetLastError()), L"Saved Game");
 		}
 		CloseHandle(gameFileHandle);
 	}
 	else
 	{
-		CheckFileError(ownerWindow, GetLastError(), L"Saved Game");
+		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(GetLastError()), L"Saved Game");
 	}
 	free(savedGame.savedData);
 }
@@ -217,7 +217,7 @@ Boolean OpenSavedGame (HWND ownerWindow)
 			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (gameFileHandle == INVALID_HANDLE_VALUE)
 	{
-		CheckFileError(ownerWindow, GetLastError(), L"Saved Game");
+		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(GetLastError()), L"Saved Game");
 		return false;
 	}
 	if (!byteio_init_handle_reader(&byteReader, gameFileHandle))
@@ -229,7 +229,7 @@ Boolean OpenSavedGame (HWND ownerWindow)
 	CloseHandle(gameFileHandle);
 	if (result == 0)
 	{
-		CheckFileError(ownerWindow, lastError, L"Saved Game");
+		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(lastError), L"Saved Game");
 		free(savedGame.savedData);
 		return false;
 	}

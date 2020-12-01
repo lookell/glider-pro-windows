@@ -8,14 +8,69 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DialogUtils.h"
 #include "ResourceIDs.h"
 
 #include <strsafe.h>
 
+static LPWSTR GetHResultErrorString (HRESULT hResult);
 
 //==============================================================  Functions
+//--------------------------------------------------------------  GetHResultErrorString
+// Given an HRESULT code, returns an error string. Free the string
+// with a call to LocalFree().
+
+static LPWSTR GetHResultErrorString (HRESULT hResult)
+{
+	DWORD formatFlags;
+	LPWSTR errorString;
+	DWORD formatResult;
+	size_t length;
+
+	formatFlags = 0;
+	formatFlags |= FORMAT_MESSAGE_ALLOCATE_BUFFER;
+	formatFlags |= FORMAT_MESSAGE_FROM_SYSTEM;
+	formatFlags |= FORMAT_MESSAGE_IGNORE_INSERTS;
+	errorString = NULL;
+	formatResult = FormatMessageW(
+		formatFlags,
+		NULL,
+		(DWORD)hResult,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPWSTR)&errorString,
+		0,
+		NULL
+	);
+	if (formatResult == 0)
+	{
+		errorString = (LPWSTR)LocalAlloc(LPTR, sizeof(*errorString) * 32);
+		if (errorString != NULL)
+		{
+			StringCchPrintfW(
+				errorString,
+				32,
+				L"Unknown error 0x%08lX",
+				(unsigned long)hResult
+			);
+		}
+		return errorString;
+	}
+	length = wcslen(errorString);
+	// Remove trailing \r\n pair if present
+	if (length >= 2)
+	{
+		if (errorString[length - 1] == L'\n')
+		{
+			errorString[length - 1] = L'\0';
+			if (errorString[length - 2] == L'\r')
+			{
+				errorString[length - 2] = L'\0';
+			}
+		}
+	}
+	return errorString;
+}
+
 //--------------------------------------------------------------  CheckFileError
 // Given a result code (returned from a previous file operation) this
 // function cheks to see if the result code is an error and, if it is
@@ -41,16 +96,14 @@
 #define permErr			(-54)	// permissions error (on file open)
 #define wrPermErr		(-61)	// write permissions error
 
-Boolean CheckFileError (HWND ownerWindow, DWORD resultCode, PCWSTR fileName)
+Boolean CheckFileError (HWND ownerWindow, HRESULT resultCode, PCWSTR fileName)
 {
 	SInt16			dummyInt;
 	DialogParams	params = { 0 };
 	LPWSTR			errMessage;
 	wchar_t			errNumString[32];
-	DWORD			formatFlags;
-	DWORD			result;
 
-	if (resultCode == ERROR_SUCCESS)	// No problems?  Then cruise
+	if (SUCCEEDED(resultCode))  // No problems?  Then cruise
 		return(true);
 
 	/*
@@ -110,14 +163,8 @@ Boolean CheckFileError (HWND ownerWindow, DWORD resultCode, PCWSTR fileName)
 	}
 	*/
 
-	formatFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER
-		| FORMAT_MESSAGE_IGNORE_INSERTS
-		| FORMAT_MESSAGE_FROM_SYSTEM;
-	result = FormatMessage(formatFlags, NULL, resultCode, 0, (LPWSTR)&errMessage, 0, NULL);
-	if (result == 0)
-		errMessage = NULL;
-
-	StringCchPrintf(errNumString, ARRAYSIZE(errNumString), L"%lu", (ULONG)resultCode);
+	errMessage = GetHResultErrorString(resultCode);
+	StringCchPrintf(errNumString, ARRAYSIZE(errNumString), L"0x%08lX", (ULONG)resultCode);
 
 	params.arg[0] = errMessage;
 	params.arg[1] = errNumString;

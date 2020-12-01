@@ -207,7 +207,7 @@ Boolean OpenHouse (HWND ownerWindow)
 	if (FAILED(hr))
 	{
 		houseIsReadOnly = false;
-		CheckFileError(ownerWindow, ERROR_OPEN_FAILED,
+		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(ERROR_OPEN_FAILED),
 			theHousesSpecs[thisHouseIndex].houseName);
 		return false;
 	}
@@ -498,11 +498,7 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 	hr = Gp_WriteHouseData(&thisHouse);
 	if (FAILED(hr))
 	{
-		if (HRESULT_FACILITY(hr) == FACILITY_WIN32)
-		{
-			CheckFileError(ownerWindow, (DWORD)HRESULT_CODE(hr),
-				theHousesSpecs[thisHouseIndex].houseName);
-		}
+		CheckFileError(ownerWindow, hr, theHousesSpecs[thisHouseIndex].houseName);
 		return false;
 	}
 

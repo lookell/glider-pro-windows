@@ -549,7 +549,7 @@ Boolean WriteScoresToDisk (HWND ownerWindow)
 			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (scoresFileHandle == INVALID_HANDLE_VALUE)
 	{
-		CheckFileError(ownerWindow, GetLastError(), L"High Scores File");
+		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(GetLastError()), L"High Scores File");
 		return false;
 	}
 
@@ -564,7 +564,7 @@ Boolean WriteScoresToDisk (HWND ownerWindow)
 	CloseHandle(scoresFileHandle);
 	if (!writeSucceeded)
 	{
-		CheckFileError(ownerWindow, lastError, L"High Scores File");
+		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(lastError), L"High Scores File");
 		return false;
 	}
 
@@ -592,7 +592,7 @@ Boolean ReadScoresFromDisk (HWND ownerWindow)
 	if (scoresFileHandle == INVALID_HANDLE_VALUE)
 	{
 		if (lastError != ERROR_FILE_NOT_FOUND)
-			CheckFileError(ownerWindow, lastError, L"High Scores File");
+			CheckFileError(ownerWindow, HRESULT_FROM_WIN32(lastError), L"High Scores File");
 		return false;
 	}
 
@@ -607,7 +607,7 @@ Boolean ReadScoresFromDisk (HWND ownerWindow)
 	CloseHandle(scoresFileHandle);
 	if (!readSucceeded)
 	{
-		CheckFileError(ownerWindow, lastError, L"High Scores File");
+		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(lastError), L"High Scores File");
 		return false;
 	}
 

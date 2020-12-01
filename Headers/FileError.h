@@ -12,7 +12,7 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-Boolean CheckFileError (HWND ownerWindow, DWORD resultCode, PCWSTR fileName);
+Boolean CheckFileError (HWND ownerWindow, HRESULT resultCode, PCWSTR fileName);
 
 #endif
 
