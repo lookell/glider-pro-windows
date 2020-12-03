@@ -488,6 +488,9 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 	if (COMPILEDEMO)
 		return;
 
+	if (theMode != kEditMode)
+		return;
+
 	switch (theItem)
 	{
 		case iNewHouse:
