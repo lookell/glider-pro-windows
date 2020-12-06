@@ -393,9 +393,9 @@ void GetInput (gliderPtr thisGlider)
 		thisGlider->heldRight = false;
 		if (IsKeyDown(thisGlider->rightKey))			// right key
 		{
-		#ifdef CREATEDEMODATA
-			LogDemoKey(0);
-		#endif
+			if (CREATEDEMODATA)
+				LogDemoKey(0);
+
 			if (IsKeyDown(thisGlider->leftKey))
 			{
 				ToggleGliderFacing(thisGlider);
@@ -410,9 +410,9 @@ void GetInput (gliderPtr thisGlider)
 		}
 		else if (IsKeyDown(thisGlider->leftKey))		// left key
 		{
-		#ifdef CREATEDEMODATA
-			LogDemoKey(1);
-		#endif
+			if (CREATEDEMODATA)
+				LogDemoKey(1);
+
 			thisGlider->hDesiredVel -= kNormalThrust;
 			thisGlider->tipped = (thisGlider->facing == kFaceRight);
 			thisGlider->heldLeft = true;
@@ -423,9 +423,9 @@ void GetInput (gliderPtr thisGlider)
 		if ((IsKeyDown(thisGlider->battKey)) && (batteryTotal != 0) &&
 				(thisGlider->mode == kGliderNormal))
 		{
-		#ifdef CREATEDEMODATA
-			LogDemoKey(2);
-		#endif
+			if (CREATEDEMODATA)
+				LogDemoKey(2);
+
 			if (batteryTotal > 0)
 				DoBatteryEngaged(thisGlider);
 			else
@@ -437,9 +437,9 @@ void GetInput (gliderPtr thisGlider)
 		if ((IsKeyDown(thisGlider->bandKey)) && (bandsTotal > 0) &&
 				(thisGlider->mode == kGliderNormal))
 		{
-		#ifdef CREATEDEMODATA
-			LogDemoKey(3);
-		#endif
+			if (CREATEDEMODATA)
+				LogDemoKey(3);
+
 			if (!thisGlider->fireHeld)
 			{
 				if (AddBand(thisGlider, thisGlider->dest.left + 24,

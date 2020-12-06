@@ -200,9 +200,10 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 	InitTelephone();
 	wasPlayMusicPref = isPlayMusicGame;
 
-#ifdef CREATEDEMODATA
-	MessageBeep(MB_ICONINFORMATION);
-#endif
+	if (CREATEDEMODATA)
+	{
+		MessageBeep(MB_ICONINFORMATION);
+	}
 
 #ifdef COMPILEQT
 	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom))
@@ -234,9 +235,10 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 		timeEndPeriod(timeCaps.wPeriodMin);
 	}
 
-#ifdef CREATEDEMODATA
-	DumpDemoData();
-#endif
+	if (CREATEDEMODATA)
+	{
+		DumpDemoData();
+	}
 
 	isPlayMusicGame = wasPlayMusicPref;
 	ZeroMirrorRegion();

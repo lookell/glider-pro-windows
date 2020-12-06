@@ -773,24 +773,25 @@ void CreatePointers (void)
 	if (theHousesSpecs == NULL)
 		RedAlert(kErrNoMemory);
 
-#ifndef CREATEDEMODATA
 	// Make sure that demoData can hold the demo resource data.
 	C_ASSERT((kDemoLength / demoTypeByteSize) <= ARRAYSIZE(demoData));
 
-	if (!GetDemoDataPointer(&demoResourceData, &demoResourceSize))
-		RedAlert(kErrFailedResourceLoad);
-	if (demoResourceSize != kDemoLength)
-		RedAlert(kErrFailedResourceLoad);
-
-	if (!byteio_init_memory_reader(&demoReader, demoResourceData, demoResourceSize))
-		RedAlert(kErrNoMemory);
-	for (i = 0; i < (kDemoLength / demoTypeByteSize); i++)
+	if (!CREATEDEMODATA)
 	{
-		if (!ReadDemoType(&demoReader, &demoData[i]))
+		if (!GetDemoDataPointer(&demoResourceData, &demoResourceSize))
 			RedAlert(kErrFailedResourceLoad);
+		if (demoResourceSize != kDemoLength)
+			RedAlert(kErrFailedResourceLoad);
+
+		if (!byteio_init_memory_reader(&demoReader, demoResourceData, demoResourceSize))
+			RedAlert(kErrNoMemory);
+		for (i = 0; i < (kDemoLength / demoTypeByteSize); i++)
+		{
+			if (!ReadDemoType(&demoReader, &demoData[i]))
+				RedAlert(kErrFailedResourceLoad);
+		}
+		byteio_close(&demoReader);
 	}
-	byteio_close(&demoReader);
-#endif
 }
 
 //--------------------------------------------------------------  InitSrcRects

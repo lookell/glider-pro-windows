@@ -11,7 +11,9 @@
 #include "MacTypes.h"
 #endif
 
-//#define CREATEDEMODATA
+#ifndef CREATEDEMODATA
+#define CREATEDEMODATA  0
+#endif
 #ifndef COMPILEDEMO
 #define COMPILEDEMO  0
 #endif
