@@ -27,19 +27,23 @@ struct Gp_ResourceFile
 static Gp_ResourceFile *g_mermaidRes;
 static Gp_ResourceFile *g_houseRes;
 
-//--------------------------------------------------------------  Gp_FileSizeInZip
+//--------------------------------------------------------------  Gp_FileSizeInResFile
 
 static uint64_t
-Gp_FileSizeInZip (mz_zip_archive *archive, const char *filename)
+Gp_FileSizeInResFile (Gp_ResourceFile *resFile, const char *filename)
 {
 	mz_uint32 file_index;
 	mz_zip_archive_file_stat file_stat;
 
-	if (!mz_zip_reader_locate_file_v2(archive, filename, NULL, 0, &file_index))
+	if (resFile == NULL)
 	{
 		return 0;
 	}
-	if (!mz_zip_reader_file_stat(archive, file_index, &file_stat))
+	if (!mz_zip_reader_locate_file_v2(&resFile->archive, filename, NULL, 0, &file_index))
+	{
+		return 0;
+	}
+	if (!mz_zip_reader_file_stat(&resFile->archive, file_index, &file_stat))
 	{
 		return 0;
 	}
@@ -70,35 +74,55 @@ Gp_GetBoundFilename (PSTR pszDest, size_t cchDest, SInt16 resID)
 	return StringCchPrintfA(pszDest, cchDest, BOUNDS_FORMAT_STRING, (int)resID);
 }
 
-//--------------------------------------------------------------  Gp_ImageExistsInZip
+//--------------------------------------------------------------  Gp_ImageExistsInResFile
 
 static BOOLEAN
-Gp_ImageExistsInZip (mz_zip_archive *archive, SInt16 imageID)
+Gp_ImageExistsInResFile (Gp_ResourceFile *resFile, SInt16 imageID)
 {
 	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
 
+	if (resFile == NULL)
+	{
+		return FALSE;
+	}
 	if (FAILED(Gp_GetImageFilename(filename, ARRAYSIZE(filename), imageID)))
 	{
 		return FALSE;
 	}
-	return (mz_zip_reader_locate_file(archive, filename, NULL, 0) >= 0);
+	return (mz_zip_reader_locate_file(&resFile->archive, filename, NULL, 0) >= 0);
 }
 
-//--------------------------------------------------------------  Gp_LoadImageFromZip
+//--------------------------------------------------------------  Gp_ExtractFromResFile
+
+static void *
+Gp_ExtractFromResFile (Gp_ResourceFile *resFile, const char *filename, size_t *pLength)
+{
+	if ((resFile == NULL) || (filename == NULL) || (pLength == NULL))
+	{
+		return NULL;
+	}
+	return mz_zip_reader_extract_file_to_heap(&resFile->archive, filename, pLength, 0);
+}
+
+//--------------------------------------------------------------  Gp_LoadImageFromResFile
 
 static HBITMAP
-Gp_LoadImageFromZip (mz_zip_archive *archive, SInt16 imageID)
+Gp_LoadImageFromResFile (Gp_ResourceFile *resFile, SInt16 imageID)
 {
 	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
 	void *buffer;
 	size_t length;
 	HBITMAP image;
 
+	if (resFile == NULL)
+	{
+		return NULL;
+	}
 	if (FAILED(Gp_GetImageFilename(filename, ARRAYSIZE(filename), imageID)))
 	{
 		return NULL;
 	}
-	buffer = mz_zip_reader_extract_file_to_heap(archive, filename, &length, 0);
+	buffer = Gp_ExtractFromResFile(resFile, filename, &length);
 	if (buffer == NULL)
 	{
 		return NULL;
@@ -108,21 +132,25 @@ Gp_LoadImageFromZip (mz_zip_archive *archive, SInt16 imageID)
 	return image;
 }
 
-//--------------------------------------------------------------  Gp_LoadImageAsDIBFromZip
+//--------------------------------------------------------------  Gp_LoadImageAsDIBFromResFile
 
 static HBITMAP
-Gp_LoadImageAsDIBFromZip (mz_zip_archive *archive, SInt16 imageID)
+Gp_LoadImageAsDIBFromResFile (Gp_ResourceFile *resFile, SInt16 imageID)
 {
 	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
 	void *buffer;
 	size_t length;
 	HBITMAP image;
 
+	if (resFile == NULL)
+	{
+		return NULL;
+	}
 	if (FAILED(Gp_GetImageFilename(filename, ARRAYSIZE(filename), imageID)))
 	{
 		return NULL;
 	}
-	buffer = mz_zip_reader_extract_file_to_heap(archive, filename, &length, 0);
+	buffer = Gp_ExtractFromResFile(resFile, filename, &length);
 	if (buffer == NULL)
 	{
 		return NULL;
@@ -132,22 +160,26 @@ Gp_LoadImageAsDIBFromZip (mz_zip_archive *archive, SInt16 imageID)
 	return image;
 }
 
-//--------------------------------------------------------------  Gp_LoadSoundFromZip
+//--------------------------------------------------------------  Gp_LoadSoundFromResFile
 
 static HRESULT
-Gp_LoadSoundFromZip (mz_zip_archive *archive, SInt16 soundID, WaveData *sound)
+Gp_LoadSoundFromResFile (Gp_ResourceFile *resFile, SInt16 soundID, WaveData *sound)
 {
 	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
 	void *buffer;
 	size_t length;
 	HRESULT hr;
 
+	if ((resFile == NULL) || (sound == NULL))
+	{
+		return E_INVALIDARG;
+	}
 	hr = Gp_GetSoundFilename(filename, ARRAYSIZE(filename), soundID);
 	if (FAILED(hr))
 	{
 		return hr;
 	}
-	buffer = mz_zip_reader_extract_file_to_heap(archive, filename, &length, 0);
+	buffer = Gp_ExtractFromResFile(resFile, filename, &length);
 	if (buffer == NULL)
 	{
 		return E_FAIL;
@@ -165,61 +197,100 @@ Gp_LoadSoundFromZip (mz_zip_archive *archive, SInt16 soundID, WaveData *sound)
 	return S_OK;
 }
 
+//--------------------------------------------------------------  Gp_OpenResFile
+
+static Gp_ResourceFile *
+Gp_OpenResFile (PCWSTR fileName)
+{
+	Gp_ResourceFile *resFile;
+	HRESULT hr;
+	errno_t err;
+	mz_bool mz_succeeded;
+
+	if (fileName == NULL)
+	{
+		return NULL;
+	}
+	resFile = (Gp_ResourceFile *)calloc(1, sizeof(*resFile));
+	if (resFile == NULL)
+	{
+		return NULL;
+	}
+	hr = StringCchCopyW(resFile->fileName, ARRAYSIZE(resFile->fileName), fileName);
+	if (FAILED(hr))
+	{
+		free(resFile);
+		return NULL;
+	}
+	err = _wfopen_s(&resFile->filePtr, fileName, L"rb");
+	if ((err != 0) || (resFile->filePtr == NULL))
+	{
+		free(resFile);
+		return NULL;
+	}
+	mz_zip_zero_struct(&resFile->archive);
+	mz_succeeded = mz_zip_reader_init_cfile(&resFile->archive, resFile->filePtr, 0, 0);
+	if (!mz_succeeded)
+	{
+		fclose(resFile->filePtr);
+		free(resFile);
+		return NULL;
+	}
+	return resFile;
+}
+
+//--------------------------------------------------------------  Gp_CloseResFile
+
+static void
+Gp_CloseResFile (Gp_ResourceFile *resFile)
+{
+	if (resFile == NULL)
+	{
+		return;
+	}
+	mz_zip_end(&resFile->archive);
+	fclose(resFile->filePtr);
+	free(resFile);
+}
+
 //--------------------------------------------------------------  Gp_LoadBuiltInAssets
 
 HRESULT Gp_LoadBuiltInAssets (void)
 {
-	Gp_ResourceFile *resFile;
+	WCHAR mermaidFileName[MAX_PATH];
 	DWORD numChars;
 	wchar_t *lastSlash;
 	HRESULT hr;
+	Gp_ResourceFile *resFile;
 
 	if (Gp_BuiltInAssetsLoaded())
 	{
 		return S_OK;
 	}
-	resFile = (Gp_ResourceFile *)calloc(1, sizeof(*resFile));
-	if (resFile == NULL)
-	{
-		return E_OUTOFMEMORY;
-	}
 	numChars = GetModuleFileNameW(HINST_THISCOMPONENT,
-		resFile->fileName, ARRAYSIZE(resFile->fileName));
-	if (numChars == ARRAYSIZE(resFile->fileName))
+		mermaidFileName, ARRAYSIZE(mermaidFileName));
+	if (numChars == ARRAYSIZE(mermaidFileName))
 	{
-		free(resFile);
 		return HRESULT_FROM_WIN32(ERROR_INSUFFICIENT_BUFFER);
 	}
 	else if (numChars == 0)
 	{
-		free(resFile);
 		return HRESULT_FROM_WIN32(GetLastError());
 	}
-	lastSlash = wcsrchr(resFile->fileName, L'\\');
+	lastSlash = wcsrchr(mermaidFileName, L'\\');
 	if (lastSlash == NULL)
 	{
-		lastSlash = &resFile->fileName[0];
+		lastSlash = &mermaidFileName[0];
 	}
 	*lastSlash = L'\0';
-	hr = StringCchCatW(resFile->fileName, ARRAYSIZE(resFile->fileName), L"\\Mermaid.dat");
+	hr = StringCchCatW(mermaidFileName, ARRAYSIZE(mermaidFileName), L"\\Mermaid.dat");
 	if (FAILED(hr))
 	{
-		free(resFile);
 		return hr;
 	}
-	if (_wfopen_s(&resFile->filePtr, resFile->fileName, L"rb") != 0)
+	resFile = Gp_OpenResFile(mermaidFileName);
+	if (resFile == NULL)
 	{
-		free(resFile);
-		return E_FAIL;
-	}
-	// NOTE: The zip archive structure must be passed directly for initialization,
-	// because it sets up pointers to itself. Do not initialize it separately and
-	// then move the result into resFile->archive!
-	mz_zip_zero_struct(&resFile->archive);
-	if (!mz_zip_reader_init_cfile(&resFile->archive, resFile->filePtr, 0, 0))
-	{
-		fclose(resFile->filePtr);
-		free(resFile);
 		return E_FAIL;
 	}
 	g_mermaidRes = resFile;
@@ -230,13 +301,8 @@ HRESULT Gp_LoadBuiltInAssets (void)
 
 void Gp_UnloadBuiltInAssets (void)
 {
-	if (Gp_BuiltInAssetsLoaded())
-	{
-		mz_zip_end(&g_mermaidRes->archive);
-		fclose(g_mermaidRes->filePtr);
-		free(g_mermaidRes);
-		g_mermaidRes = NULL;
-	}
+	Gp_CloseResFile(g_mermaidRes);
+	g_mermaidRes = NULL;
 }
 
 //--------------------------------------------------------------  Gp_BuiltInAssetsLoaded
@@ -281,30 +347,11 @@ HRESULT Gp_CreateHouseFile (PCWSTR fileName)
 HRESULT Gp_LoadHouseFile (PCWSTR fileName)
 {
 	Gp_ResourceFile *resFile;
-	HRESULT hr;
 
 	Gp_UnloadHouseFile();
-	resFile = (Gp_ResourceFile *)calloc(1, sizeof(*resFile));
+	resFile = Gp_OpenResFile(fileName);
 	if (resFile == NULL)
 	{
-		return E_OUTOFMEMORY;
-	}
-	hr = StringCchCopyW(resFile->fileName, ARRAYSIZE(resFile->fileName), fileName);
-	if (FAILED(hr))
-	{
-		free(resFile);
-		return hr;
-	}
-	if (_wfopen_s(&resFile->filePtr, fileName, L"rb") != 0)
-	{
-		free(resFile);
-		return E_FAIL;
-	}
-	mz_zip_zero_struct(&resFile->archive);
-	if (!mz_zip_reader_init_cfile(&resFile->archive, resFile->filePtr, 0, 0))
-	{
-		fclose(resFile->filePtr);
-		free(resFile);
 		return E_FAIL;
 	}
 	g_houseRes = resFile;
@@ -315,13 +362,8 @@ HRESULT Gp_LoadHouseFile (PCWSTR fileName)
 
 void Gp_UnloadHouseFile (void)
 {
-	if (g_houseRes != NULL)
-	{
-		mz_zip_end(&g_houseRes->archive);
-		fclose(g_houseRes->filePtr);
-		free(g_houseRes);
-		g_houseRes = NULL;
-	}
+	Gp_CloseResFile(g_houseRes);
+	g_houseRes = NULL;
 }
 
 //--------------------------------------------------------------  Gp_HouseFileLoaded
@@ -357,11 +399,7 @@ HICON Gp_LoadHouseIcon (UINT width, UINT height)
 	size_t length;
 	HICON houseIcon;
 
-	if (!Gp_HouseFileLoaded())
-	{
-		return NULL;
-	}
-	buffer = mz_zip_reader_extract_file_to_heap(&g_houseRes->archive, HOUSE_ICON_NAME, &length, 0);
+	buffer = Gp_ExtractFromResFile(g_houseRes, HOUSE_ICON_NAME, &length);
 	if (buffer == NULL)
 	{
 		return NULL;
@@ -375,11 +413,7 @@ HICON Gp_LoadHouseIcon (UINT width, UINT height)
 
 uint64_t Gp_HouseFileDataSize (void)
 {
-	if (!Gp_HouseFileLoaded())
-	{
-		return 0;
-	}
-	return Gp_FileSizeInZip(&g_houseRes->archive, HOUSE_DATA_NAME);
+	return Gp_FileSizeInResFile(g_houseRes, HOUSE_DATA_NAME);
 }
 
 //--------------------------------------------------------------  Gp_ReadHouseData
@@ -395,11 +429,7 @@ HRESULT Gp_ReadHouseData (houseType *house)
 	{
 		return E_INVALIDARG;
 	}
-	if (!Gp_HouseFileLoaded())
-	{
-		return E_FAIL;
-	}
-	buffer = mz_zip_reader_extract_file_to_heap(&g_houseRes->archive, HOUSE_DATA_NAME, &length, 0);
+	buffer = Gp_ExtractFromResFile(g_houseRes, HOUSE_DATA_NAME, &length);
 	if (buffer == NULL)
 	{
 		return E_FAIL;
@@ -631,37 +661,21 @@ HRESULT Gp_LoadSound (SInt16 soundID, WaveData *sound)
 
 HBITMAP Gp_LoadBuiltInImage (SInt16 imageID)
 {
-	if (!Gp_BuiltInAssetsLoaded())
-	{
-		return NULL;
-	}
-	return Gp_LoadImageFromZip(&g_mermaidRes->archive, imageID);
+	return Gp_LoadImageFromResFile(g_mermaidRes, imageID);
 }
 
 //--------------------------------------------------------------  Gp_LoadBuiltInImageAsDIB
 
 HBITMAP Gp_LoadBuiltInImageAsDIB (SInt16 imageID)
 {
-	if (!Gp_BuiltInAssetsLoaded())
-	{
-		return NULL;
-	}
-	return Gp_LoadImageAsDIBFromZip(&g_mermaidRes->archive, imageID);
+	return Gp_LoadImageAsDIBFromResFile(g_mermaidRes, imageID);
 }
 
 //--------------------------------------------------------------  Gp_LoadBuiltInSound
 
 HRESULT Gp_LoadBuiltInSound (SInt16 soundID, WaveData *sound)
 {
-	if (sound == NULL)
-	{
-		return E_INVALIDARG;
-	}
-	if (!Gp_BuiltInAssetsLoaded())
-	{
-		return E_FAIL;
-	}
-	return Gp_LoadSoundFromZip(&g_mermaidRes->archive, soundID, sound);
+	return Gp_LoadSoundFromResFile(g_mermaidRes, soundID, sound);
 }
 
 //--------------------------------------------------------------  Gp_GetFirstImageID
@@ -711,48 +725,28 @@ SInt16 Gp_GetFirstHouseImageID (SInt16 minimum, SInt16 maximum, SInt16 def)
 
 BOOLEAN Gp_HouseImageExists (SInt16 imageID)
 {
-	if (!Gp_HouseFileLoaded())
-	{
-		return FALSE;
-	}
-	return Gp_ImageExistsInZip(&g_houseRes->archive, imageID);
+	return Gp_ImageExistsInResFile(g_houseRes, imageID);
 }
 
 //--------------------------------------------------------------  Gp_LoadHouseImage
 
 HBITMAP Gp_LoadHouseImage (SInt16 imageID)
 {
-	if (!Gp_HouseFileLoaded())
-	{
-		return NULL;
-	}
-	return Gp_LoadImageFromZip(&g_houseRes->archive, imageID);
+	return Gp_LoadImageFromResFile(g_houseRes, imageID);
 }
 
 //--------------------------------------------------------------  Gp_LoadHouseImageAsDIB
 
 HBITMAP Gp_LoadHouseImageAsDIB (SInt16 imageID)
 {
-	if (!Gp_HouseFileLoaded())
-	{
-		return NULL;
-	}
-	return Gp_LoadImageAsDIBFromZip(&g_houseRes->archive, imageID);
+	return Gp_LoadImageAsDIBFromResFile(g_houseRes, imageID);
 }
 
 //--------------------------------------------------------------  Gp_LoadHouseSound
 
 HRESULT Gp_LoadHouseSound (SInt16 soundID, WaveData *sound)
 {
-	if (sound == NULL)
-	{
-		return E_INVALIDARG;
-	}
-	if (!Gp_HouseFileLoaded())
-	{
-		return E_FAIL;
-	}
-	return Gp_LoadSoundFromZip(&g_houseRes->archive, soundID, sound);
+	return Gp_LoadSoundFromResFile(g_houseRes, soundID, sound);
 }
 
 //--------------------------------------------------------------  Gp_LoadHouseBounding
@@ -770,16 +764,12 @@ HRESULT Gp_LoadHouseBounding (SInt16 imageID, boundsType *bounds)
 	{
 		return E_INVALIDARG;
 	}
-	if (!Gp_HouseFileLoaded())
-	{
-		return E_FAIL;
-	}
 	hr = Gp_GetBoundFilename(filename, ARRAYSIZE(filename), imageID);
 	if (FAILED(hr))
 	{
 		return hr;
 	}
-	buffer = mz_zip_reader_extract_file_to_heap(&g_houseRes->archive, filename, &length, 0);
+	buffer = Gp_ExtractFromResFile(g_houseRes, filename, &length);
 	if (buffer == NULL)
 	{
 		return E_FAIL;
