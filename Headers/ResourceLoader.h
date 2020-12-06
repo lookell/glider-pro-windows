@@ -7,6 +7,8 @@
 #include "GliderStructs.h"
 #include "WinAPI.h"
 
+typedef struct Gp_ResourceFile Gp_ResourceFile;
+
 // Load in the game's built-in assets from the Mermaid.dat file.
 // If the assets have already been loaded, then the function succeeds
 // and nothing happens.
