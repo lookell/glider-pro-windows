@@ -17,20 +17,20 @@
 #define IMAGES_FORMAT_STRING  "images/%d.bmp"
 #define SOUNDS_FORMAT_STRING  "sounds/%d.wav"
 
-struct Gp_ResourceFile
+struct Gp_HouseFile
 {
 	WCHAR fileName[MAX_PATH];
 	FILE *filePtr;
 	mz_zip_archive archive;
 };
 
-static Gp_ResourceFile *g_mermaidRes;
-static Gp_ResourceFile *g_houseRes;
+static Gp_HouseFile *g_mermaidRes;
+static Gp_HouseFile *g_houseRes;
 
 //--------------------------------------------------------------  Gp_FileSizeInResFile
 
 static uint64_t
-Gp_FileSizeInResFile (Gp_ResourceFile *resFile, const char *filename)
+Gp_FileSizeInResFile (Gp_HouseFile *resFile, const char *filename)
 {
 	mz_uint32 file_index;
 	mz_zip_archive_file_stat file_stat;
@@ -77,7 +77,7 @@ Gp_GetBoundFilename (PSTR pszDest, size_t cchDest, SInt16 resID)
 //--------------------------------------------------------------  Gp_ImageExistsInResFile
 
 static BOOLEAN
-Gp_ImageExistsInResFile (Gp_ResourceFile *resFile, SInt16 imageID)
+Gp_ImageExistsInResFile (Gp_HouseFile *resFile, SInt16 imageID)
 {
 	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
 
@@ -95,7 +95,7 @@ Gp_ImageExistsInResFile (Gp_ResourceFile *resFile, SInt16 imageID)
 //--------------------------------------------------------------  Gp_ExtractFromResFile
 
 static void *
-Gp_ExtractFromResFile (Gp_ResourceFile *resFile, const char *filename, size_t *pLength)
+Gp_ExtractFromResFile (Gp_HouseFile *resFile, const char *filename, size_t *pLength)
 {
 	if ((resFile == NULL) || (filename == NULL) || (pLength == NULL))
 	{
@@ -107,7 +107,7 @@ Gp_ExtractFromResFile (Gp_ResourceFile *resFile, const char *filename, size_t *p
 //--------------------------------------------------------------  Gp_LoadImageFromResFile
 
 static HBITMAP
-Gp_LoadImageFromResFile (Gp_ResourceFile *resFile, SInt16 imageID)
+Gp_LoadImageFromResFile (Gp_HouseFile *resFile, SInt16 imageID)
 {
 	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
 	void *buffer;
@@ -135,7 +135,7 @@ Gp_LoadImageFromResFile (Gp_ResourceFile *resFile, SInt16 imageID)
 //--------------------------------------------------------------  Gp_LoadImageAsDIBFromResFile
 
 static HBITMAP
-Gp_LoadImageAsDIBFromResFile (Gp_ResourceFile *resFile, SInt16 imageID)
+Gp_LoadImageAsDIBFromResFile (Gp_HouseFile *resFile, SInt16 imageID)
 {
 	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
 	void *buffer;
@@ -163,7 +163,7 @@ Gp_LoadImageAsDIBFromResFile (Gp_ResourceFile *resFile, SInt16 imageID)
 //--------------------------------------------------------------  Gp_LoadSoundFromResFile
 
 static HRESULT
-Gp_LoadSoundFromResFile (Gp_ResourceFile *resFile, SInt16 soundID, WaveData *sound)
+Gp_LoadSoundFromResFile (Gp_HouseFile *resFile, SInt16 soundID, WaveData *sound)
 {
 	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
 	void *buffer;
@@ -199,10 +199,10 @@ Gp_LoadSoundFromResFile (Gp_ResourceFile *resFile, SInt16 soundID, WaveData *sou
 
 //--------------------------------------------------------------  Gp_OpenResFile
 
-static Gp_ResourceFile *
+static Gp_HouseFile *
 Gp_OpenResFile (PCWSTR fileName)
 {
-	Gp_ResourceFile *resFile;
+	Gp_HouseFile *resFile;
 	HRESULT hr;
 	errno_t err;
 	mz_bool mz_succeeded;
@@ -211,7 +211,7 @@ Gp_OpenResFile (PCWSTR fileName)
 	{
 		return NULL;
 	}
-	resFile = (Gp_ResourceFile *)calloc(1, sizeof(*resFile));
+	resFile = (Gp_HouseFile *)calloc(1, sizeof(*resFile));
 	if (resFile == NULL)
 	{
 		return NULL;
@@ -242,7 +242,7 @@ Gp_OpenResFile (PCWSTR fileName)
 //--------------------------------------------------------------  Gp_CloseResFile
 
 static void
-Gp_CloseResFile (Gp_ResourceFile *resFile)
+Gp_CloseResFile (Gp_HouseFile *resFile)
 {
 	if (resFile == NULL)
 	{
@@ -261,7 +261,7 @@ HRESULT Gp_LoadBuiltInAssets (void)
 	DWORD numChars;
 	wchar_t *lastSlash;
 	HRESULT hr;
-	Gp_ResourceFile *resFile;
+	Gp_HouseFile *resFile;
 
 	if (Gp_BuiltInAssetsLoaded())
 	{
@@ -346,7 +346,7 @@ HRESULT Gp_CreateHouseFile (PCWSTR fileName)
 
 HRESULT Gp_LoadHouseFile (PCWSTR fileName)
 {
-	Gp_ResourceFile *resFile;
+	Gp_HouseFile *resFile;
 
 	Gp_UnloadHouseFile();
 	resFile = Gp_OpenResFile(fileName);
