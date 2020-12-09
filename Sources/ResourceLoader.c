@@ -6,6 +6,7 @@
 #include "ImageIO.h"
 #include "miniz.h"
 #include "StructIO.h"
+#include "Utilities.h" // TEMP TEMP TEMP
 
 #include <strsafe.h>
 
@@ -25,7 +26,6 @@ struct Gp_HouseFile
 };
 
 static Gp_HouseFile *g_mermaidRes;
-static Gp_HouseFile *g_houseRes;
 
 //--------------------------------------------------------------  Gp_FileSizeInResFile
 
@@ -197,6 +197,40 @@ Gp_LoadSoundFromResFile (Gp_HouseFile *resFile, SInt16 soundID, WaveData *sound)
 	return S_OK;
 }
 
+//--------------------------------------------------------------  Gp_OpenResFileImpl
+
+static HRESULT
+Gp_OpenResFileImpl (Gp_HouseFile *houseFile, PCWSTR fileName)
+{
+	HRESULT hr;
+	errno_t err;
+	mz_bool succeeded;
+
+	if (fileName != NULL)
+	{
+		hr = StringCchCopyW(houseFile->fileName, ARRAYSIZE(houseFile->fileName), fileName);
+		if (FAILED(hr))
+		{
+			return hr;
+		}
+	}
+	err = _wfopen_s(&houseFile->filePtr, houseFile->fileName, L"rb");
+	if ((err != 0) || (houseFile->filePtr == NULL))
+	{
+		return E_FAIL;
+	}
+	mz_zip_zero_struct(&houseFile->archive);
+	succeeded = mz_zip_reader_init_cfile(&houseFile->archive, houseFile->filePtr, 0, 0);
+	if (!succeeded)
+	{
+		fclose(houseFile->filePtr);
+		houseFile->filePtr = NULL;
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 //--------------------------------------------------------------  Gp_OpenResFile
 
 static Gp_HouseFile *
@@ -204,8 +238,6 @@ Gp_OpenResFile (PCWSTR fileName)
 {
 	Gp_HouseFile *resFile;
 	HRESULT hr;
-	errno_t err;
-	mz_bool mz_succeeded;
 
 	if (fileName == NULL)
 	{
@@ -216,27 +248,23 @@ Gp_OpenResFile (PCWSTR fileName)
 	{
 		return NULL;
 	}
-	hr = StringCchCopyW(resFile->fileName, ARRAYSIZE(resFile->fileName), fileName);
+	hr = Gp_OpenResFileImpl(resFile, fileName);
 	if (FAILED(hr))
 	{
 		free(resFile);
 		return NULL;
 	}
-	err = _wfopen_s(&resFile->filePtr, fileName, L"rb");
-	if ((err != 0) || (resFile->filePtr == NULL))
-	{
-		free(resFile);
-		return NULL;
-	}
-	mz_zip_zero_struct(&resFile->archive);
-	mz_succeeded = mz_zip_reader_init_cfile(&resFile->archive, resFile->filePtr, 0, 0);
-	if (!mz_succeeded)
-	{
-		fclose(resFile->filePtr);
-		free(resFile);
-		return NULL;
-	}
 	return resFile;
+}
+
+//--------------------------------------------------------------  Gp_CloseResFileImpl
+
+static void
+Gp_CloseResFileImpl (Gp_HouseFile *houseFile)
+{
+	mz_zip_end(&houseFile->archive);
+	fclose(houseFile->filePtr);
+	houseFile->filePtr = NULL;
 }
 
 //--------------------------------------------------------------  Gp_CloseResFile
@@ -248,8 +276,7 @@ Gp_CloseResFile (Gp_HouseFile *resFile)
 	{
 		return;
 	}
-	mz_zip_end(&resFile->archive);
-	fclose(resFile->filePtr);
+	Gp_CloseResFileImpl(resFile);
 	free(resFile);
 }
 
@@ -319,7 +346,8 @@ HRESULT Gp_CreateHouseFile (PCWSTR fileName)
 	FILE *newHouseFilePtr;
 	mz_zip_archive newHouseArchive;
 
-	if (_wfopen_s(&newHouseFilePtr, fileName, L"wb") != 0)
+	if ((_wfopen_s(&newHouseFilePtr, fileName, L"wb") != 0)
+		|| (newHouseFilePtr == NULL))
 	{
 		return E_FAIL;
 	}
@@ -344,46 +372,29 @@ HRESULT Gp_CreateHouseFile (PCWSTR fileName)
 
 //--------------------------------------------------------------  Gp_LoadHouseFile
 
-HRESULT Gp_LoadHouseFile (PCWSTR fileName)
+Gp_HouseFile *Gp_LoadHouseFile (PCWSTR fileName)
 {
-	Gp_HouseFile *resFile;
-
-	Gp_UnloadHouseFile();
-	resFile = Gp_OpenResFile(fileName);
-	if (resFile == NULL)
-	{
-		return E_FAIL;
-	}
-	g_houseRes = resFile;
-	return S_OK;
+	return Gp_OpenResFile(fileName);
 }
 
 //--------------------------------------------------------------  Gp_UnloadHouseFile
 
-void Gp_UnloadHouseFile (void)
+void Gp_UnloadHouseFile (Gp_HouseFile *houseFile)
 {
-	Gp_CloseResFile(g_houseRes);
-	g_houseRes = NULL;
-}
-
-//--------------------------------------------------------------  Gp_HouseFileLoaded
-
-BOOLEAN Gp_HouseFileLoaded (void)
-{
-	return (g_houseRes != NULL);
+	Gp_CloseResFile(houseFile);
 }
 
 //--------------------------------------------------------------  Gp_HouseFileReadOnly
 
-BOOLEAN Gp_HouseFileReadOnly (void)
+BOOLEAN Gp_HouseFileReadOnly (Gp_HouseFile *houseFile)
 {
 	DWORD fileAttributes;
 
-	if (!Gp_HouseFileLoaded())
+	if (houseFile == NULL)
 	{
 		return TRUE;
 	}
-	fileAttributes = GetFileAttributesW(g_houseRes->fileName);
+	fileAttributes = GetFileAttributesW(houseFile->fileName);
 	if (fileAttributes == INVALID_FILE_ATTRIBUTES)
 	{
 		return TRUE;
@@ -393,13 +404,13 @@ BOOLEAN Gp_HouseFileReadOnly (void)
 
 //--------------------------------------------------------------  Gp_LoadHouseIcon
 
-HICON Gp_LoadHouseIcon (UINT width, UINT height)
+HICON Gp_LoadHouseIcon (Gp_HouseFile *houseFile, UINT width, UINT height)
 {
 	void *buffer;
 	size_t length;
 	HICON houseIcon;
 
-	buffer = Gp_ExtractFromResFile(g_houseRes, HOUSE_ICON_NAME, &length);
+	buffer = Gp_ExtractFromResFile(houseFile, HOUSE_ICON_NAME, &length);
 	if (buffer == NULL)
 	{
 		return NULL;
@@ -411,25 +422,25 @@ HICON Gp_LoadHouseIcon (UINT width, UINT height)
 
 //--------------------------------------------------------------  Gp_HouseFileDataSize
 
-uint64_t Gp_HouseFileDataSize (void)
+uint64_t Gp_HouseFileDataSize (Gp_HouseFile *houseFile)
 {
-	return Gp_FileSizeInResFile(g_houseRes, HOUSE_DATA_NAME);
+	return Gp_FileSizeInResFile(houseFile, HOUSE_DATA_NAME);
 }
 
 //--------------------------------------------------------------  Gp_ReadHouseData
 
-HRESULT Gp_ReadHouseData (houseType *house)
+HRESULT Gp_ReadHouseData (Gp_HouseFile *houseFile, houseType *houseData)
 {
 	void *buffer;
 	size_t length;
 	byteio reader;
 	int succeeded;
 
-	if (house == NULL)
+	if (houseData == NULL)
 	{
 		return E_INVALIDARG;
 	}
-	buffer = Gp_ExtractFromResFile(g_houseRes, HOUSE_DATA_NAME, &length);
+	buffer = Gp_ExtractFromResFile(houseFile, HOUSE_DATA_NAME, &length);
 	if (buffer == NULL)
 	{
 		return E_FAIL;
@@ -439,7 +450,7 @@ HRESULT Gp_ReadHouseData (houseType *house)
 		free(buffer);
 		return E_FAIL;
 	}
-	succeeded = ReadHouseType(&reader, house);
+	succeeded = ReadHouseType(&reader, houseData);
 	byteio_close(&reader);
 	free(buffer);
 	return succeeded ? S_OK : E_FAIL;
@@ -495,45 +506,35 @@ write_house_to_zip (mz_zip_archive *archive, const houseType *house)
 
 //--------------------------------------------------------------  Gp_WriteHouseData
 
-HRESULT Gp_WriteHouseData (const houseType *house)
+HRESULT Gp_WriteHouseData (Gp_HouseFile *houseFile, const houseType *houseData)
 {
-	wchar_t backUpFileName[MAX_PATH];
 	wchar_t outputFileName[MAX_PATH];
-	wchar_t originalFileName[MAX_PATH];
 	FILE *outputFilePtr;
 	mz_zip_archive outputArchive;
 	mz_uint fileIndex;
 	mz_uint houseDataIndex;
 	mz_uint numFiles;
+	BOOL succeeded;
 	DWORD lastError;
 	HRESULT hr;
 
-	if (house == NULL)
-	{
-		return E_INVALIDARG;
-	}
-	if (!Gp_HouseFileLoaded())
+	if (houseFile == NULL)
 	{
 		return E_FAIL;
 	}
+	if (houseData == NULL)
+	{
+		return E_INVALIDARG;
+	}
 
-	hr = StringCchCopyW(originalFileName, ARRAYSIZE(originalFileName), g_houseRes->fileName);
-	if (FAILED(hr))
-	{
-		return hr;
-	}
-	hr = concat_strings(backUpFileName, ARRAYSIZE(backUpFileName), originalFileName, L".bak");
-	if (FAILED(hr))
-	{
-		return hr;
-	}
-	hr = concat_strings(outputFileName, ARRAYSIZE(outputFileName), originalFileName, L".tmp");
+	hr = concat_strings(outputFileName, ARRAYSIZE(outputFileName), houseFile->fileName, L".tmp");
 	if (FAILED(hr))
 	{
 		return hr;
 	}
 
-	if (_wfopen_s(&outputFilePtr, outputFileName, L"wb") != 0)
+	if ((_wfopen_s(&outputFilePtr, outputFileName, L"wb") != 0)
+		|| (outputFilePtr == NULL))
 	{
 		return E_FAIL;
 	}
@@ -545,8 +546,8 @@ HRESULT Gp_WriteHouseData (const houseType *house)
 		return E_FAIL;
 	}
 
-	numFiles = mz_zip_reader_get_num_files(&g_houseRes->archive);
-	if (!mz_zip_reader_locate_file_v2(&g_houseRes->archive, HOUSE_DATA_NAME, NULL, 0, &houseDataIndex))
+	numFiles = mz_zip_reader_get_num_files(&houseFile->archive);
+	if (!mz_zip_reader_locate_file_v2(&houseFile->archive, HOUSE_DATA_NAME, NULL, 0, &houseDataIndex))
 	{
 		houseDataIndex = numFiles;
 	}
@@ -555,7 +556,7 @@ HRESULT Gp_WriteHouseData (const houseType *house)
 	{
 		if (fileIndex != houseDataIndex)
 		{
-			if (!mz_zip_writer_add_from_zip_reader(&outputArchive, &g_houseRes->archive, fileIndex))
+			if (!mz_zip_writer_add_from_zip_reader(&outputArchive, &houseFile->archive, fileIndex))
 			{
 				hr = E_FAIL;
 				break;
@@ -564,7 +565,7 @@ HRESULT Gp_WriteHouseData (const houseType *house)
 	}
 	if (SUCCEEDED(hr))
 	{
-		hr = write_house_to_zip(&outputArchive, house);
+		hr = write_house_to_zip(&outputArchive, houseData);
 	}
 	if (SUCCEEDED(hr))
 	{
@@ -578,36 +579,45 @@ HRESULT Gp_WriteHouseData (const houseType *house)
 		return hr;
 	}
 
-	Gp_UnloadHouseFile();
+	//
+	// Temporarily close the zip archive and file stream.
+	//
+	Gp_CloseResFileImpl(houseFile);
+
 	lastError = ERROR_SUCCESS;
-	if (!ReplaceFileW(originalFileName, outputFileName, backUpFileName, 0, NULL, NULL))
+	succeeded = ReplaceFileW(houseFile->fileName, outputFileName, NULL, 0, NULL, NULL);
+	if (!succeeded)
 	{
-		_wremove(outputFileName);
-		lastError = GetLastError();
-		if (lastError == ERROR_UNABLE_TO_MOVE_REPLACEMENT_2)
+		succeeded = MoveFileEx(outputFileName, houseFile->fileName,
+			MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED);
+		if (!succeeded)
 		{
-			if (!MoveFileExW(backUpFileName, originalFileName, MOVEFILE_REPLACE_EXISTING))
-			{
-				lastError = GetLastError();
-			}
+			lastError = GetLastError();
 		}
 	}
-	hr = Gp_LoadHouseFile(originalFileName);
-	_wremove(backUpFileName);
-	if (SUCCEEDED(hr) && lastError != ERROR_SUCCESS)
+
+	//
+	// Restore the zip archive and file stream.
+	//
+	hr = Gp_OpenResFileImpl(houseFile, NULL);
+	if (FAILED(hr))
 	{
-		hr = HRESULT_FROM_WIN32(lastError);
+		RedAlert(kErrUnnaccounted); // FIXME FIXME FIXME
+	}
+	if (SUCCEEDED(hr) && (!succeeded))
+	{
+		hr = (lastError != ERROR_SUCCESS) ? HRESULT_FROM_WIN32(lastError) : E_FAIL;
 	}
 	return hr;
 }
 
 //--------------------------------------------------------------  Gp_LoadImage
 
-HBITMAP Gp_LoadImage (SInt16 imageID)
+HBITMAP Gp_LoadImage (Gp_HouseFile *houseFile, SInt16 imageID)
 {
 	HBITMAP image;
 
-	image = Gp_LoadHouseImage(imageID);
+	image = Gp_LoadHouseImage(houseFile, imageID);
 	if (image != NULL)
 	{
 		return image;
@@ -622,11 +632,11 @@ HBITMAP Gp_LoadImage (SInt16 imageID)
 
 //--------------------------------------------------------------  Gp_LoadImageAsDIB
 
-HBITMAP Gp_LoadImageAsDIB (SInt16 imageID)
+HBITMAP Gp_LoadImageAsDIB (Gp_HouseFile *houseFile, SInt16 imageID)
 {
 	HBITMAP image;
 
-	image = Gp_LoadHouseImageAsDIB(imageID);
+	image = Gp_LoadHouseImageAsDIB(houseFile, imageID);
 	if (image != NULL)
 	{
 		return image;
@@ -641,7 +651,7 @@ HBITMAP Gp_LoadImageAsDIB (SInt16 imageID)
 
 //--------------------------------------------------------------  Gp_LoadSound
 
-HRESULT Gp_LoadSound (SInt16 soundID, WaveData *sound)
+HRESULT Gp_LoadSound (Gp_HouseFile *houseFile, SInt16 soundID, WaveData *sound)
 {
 	HRESULT hr;
 
@@ -649,7 +659,7 @@ HRESULT Gp_LoadSound (SInt16 soundID, WaveData *sound)
 	{
 		return E_INVALIDARG;
 	}
-	hr = Gp_LoadHouseSound(soundID, sound);
+	hr = Gp_LoadHouseSound(houseFile, soundID, sound);
 	if (FAILED(hr))
 	{
 		hr = Gp_LoadBuiltInSound(soundID, sound);
@@ -680,7 +690,8 @@ HRESULT Gp_LoadBuiltInSound (SInt16 soundID, WaveData *sound)
 
 //--------------------------------------------------------------  Gp_GetFirstImageID
 
-SInt16 Gp_GetFirstHouseImageID (SInt16 minimum, SInt16 maximum, SInt16 def)
+SInt16 Gp_GetFirstHouseImageID (Gp_HouseFile *houseFile,
+	SInt16 minimum, SInt16 maximum, SInt16 def)
 {
 	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
 	mz_uint index;
@@ -689,16 +700,16 @@ SInt16 Gp_GetFirstHouseImageID (SInt16 minimum, SInt16 maximum, SInt16 def)
 	SInt16 firstID;
 	int thisID;
 
-	if (!Gp_HouseFileLoaded())
+	if (houseFile == NULL)
 	{
 		return def;
 	}
 	foundImage = false;
 	firstID = def;
-	numFiles = mz_zip_reader_get_num_files(&g_houseRes->archive);
+	numFiles = mz_zip_reader_get_num_files(&houseFile->archive);
 	for (index = 0; index < numFiles; ++index)
 	{
-		if (!mz_zip_reader_get_filename(&g_houseRes->archive, index, filename, sizeof(filename)))
+		if (!mz_zip_reader_get_filename(&houseFile->archive, index, filename, sizeof(filename)))
 		{
 			continue;
 		}
@@ -723,35 +734,35 @@ SInt16 Gp_GetFirstHouseImageID (SInt16 minimum, SInt16 maximum, SInt16 def)
 
 //--------------------------------------------------------------  Gp_HouseImageExists
 
-BOOLEAN Gp_HouseImageExists (SInt16 imageID)
+BOOLEAN Gp_HouseImageExists (Gp_HouseFile *houseFile, SInt16 imageID)
 {
-	return Gp_ImageExistsInResFile(g_houseRes, imageID);
+	return Gp_ImageExistsInResFile(houseFile, imageID);
 }
 
 //--------------------------------------------------------------  Gp_LoadHouseImage
 
-HBITMAP Gp_LoadHouseImage (SInt16 imageID)
+HBITMAP Gp_LoadHouseImage (Gp_HouseFile *houseFile, SInt16 imageID)
 {
-	return Gp_LoadImageFromResFile(g_houseRes, imageID);
+	return Gp_LoadImageFromResFile(houseFile, imageID);
 }
 
 //--------------------------------------------------------------  Gp_LoadHouseImageAsDIB
 
-HBITMAP Gp_LoadHouseImageAsDIB (SInt16 imageID)
+HBITMAP Gp_LoadHouseImageAsDIB (Gp_HouseFile *houseFile, SInt16 imageID)
 {
-	return Gp_LoadImageAsDIBFromResFile(g_houseRes, imageID);
+	return Gp_LoadImageAsDIBFromResFile(houseFile, imageID);
 }
 
 //--------------------------------------------------------------  Gp_LoadHouseSound
 
-HRESULT Gp_LoadHouseSound (SInt16 soundID, WaveData *sound)
+HRESULT Gp_LoadHouseSound (Gp_HouseFile *houseFile, SInt16 soundID, WaveData *sound)
 {
-	return Gp_LoadSoundFromResFile(g_houseRes, soundID, sound);
+	return Gp_LoadSoundFromResFile(houseFile, soundID, sound);
 }
 
 //--------------------------------------------------------------  Gp_LoadHouseBounding
 
-HRESULT Gp_LoadHouseBounding (SInt16 imageID, boundsType *bounds)
+HRESULT Gp_LoadHouseBounding (Gp_HouseFile *houseFile, SInt16 imageID, boundsType *bounds)
 {
 	char filename[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
 	void *buffer;
@@ -769,7 +780,7 @@ HRESULT Gp_LoadHouseBounding (SInt16 imageID, boundsType *bounds)
 	{
 		return hr;
 	}
-	buffer = Gp_ExtractFromResFile(g_houseRes, filename, &length);
+	buffer = Gp_ExtractFromResFile(houseFile, filename, &length);
 	if (buffer == NULL)
 	{
 		return E_FAIL;

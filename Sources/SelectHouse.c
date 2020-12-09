@@ -254,6 +254,7 @@ void DoDirSearch (HWND ownerWindow)
 	HRESULT			hr;
 	int				cxIcon, cyIcon;
 	HICON			houseIcon;
+	Gp_HouseFile *houseFile;
 
 	cxIcon = GetSystemMetrics(SM_CXICON);
 	cyIcon = GetSystemMetrics(SM_CYICON);
@@ -334,12 +335,10 @@ void DoDirSearch (HWND ownerWindow)
 								theHousesSpecs[housesFound].houseName);
 
 						// Extract the house's icon.
-						// TODO: Upgrade the ResourceLoader interface to handle multiple
-						// houses. (Perhaps return the mz_zip_archive* as a void*.)
-						hr = Gp_LoadHouseFile(theHousesSpecs[housesFound].path);
-						if (SUCCEEDED(hr))
+						houseFile = Gp_LoadHouseFile(theHousesSpecs[housesFound].path);
+						if (houseFile != NULL)
 						{
-							houseIcon = Gp_LoadHouseIcon(0, 0);
+							houseIcon = Gp_LoadHouseIcon(houseFile, cxIcon, cyIcon);
 							if (houseIcon != NULL)
 							{
 								theHousesSpecs[housesFound].iconIndex =
@@ -350,11 +349,10 @@ void DoDirSearch (HWND ownerWindow)
 							{
 								theHousesSpecs[housesFound].iconIndex = 0;
 							}
-							theHousesSpecs[housesFound].readOnly =
-								((ffd.dwFileAttributes & FILE_ATTRIBUTE_READONLY) != 0);
+							theHousesSpecs[housesFound].readOnly = Gp_HouseFileReadOnly(houseFile);
 							// TODO: QuickTime movie support (or equivalent)
 							theHousesSpecs[housesFound].hasMovie = false;
-							Gp_UnloadHouseFile();
+							Gp_UnloadHouseFile(houseFile);
 							housesFound++;
 						}
 					}

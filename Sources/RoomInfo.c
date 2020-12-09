@@ -802,14 +802,14 @@ SInt16 ChooseOriginalArt (HWND hwndOwner, SInt16 wasPictID)
 
 Boolean PictIDExists (SInt16 theID)
 {
-	return (Boolean)Gp_HouseImageExists(theID);
+	return Gp_HouseImageExists(g_theHouseFile, theID);
 }
 
 //--------------------------------------------------------------  GetFirstPICT
 
 SInt16 GetFirstPICT (void)
 {
-	return Gp_GetFirstHouseImageID(kUserBackground, 3799, -1);
+	return Gp_GetFirstHouseImageID(g_theHouseFile, kUserBackground, 3799, -1);
 }
 
 //--------------------------------------------------------------  BitchAboutPICTNotFound

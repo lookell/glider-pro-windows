@@ -362,7 +362,8 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 	{
 		if (!CloseHouse(NULL))
 		{
-			Gp_UnloadHouseFile();
+			Gp_UnloadHouseFile(g_theHouseFile);
+			g_theHouseFile = NULL;
 			houseOpen = false;
 		}
 	}

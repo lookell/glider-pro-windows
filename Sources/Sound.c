@@ -156,7 +156,7 @@ OSErr LoadTriggerSound (SInt16 soundID)
 
 //	FlushAnyTriggerPlaying();
 
-	if (FAILED(Gp_LoadHouseSound(soundID, &theSoundData[kTriggerSound])))
+	if (FAILED(Gp_LoadHouseSound(g_theHouseFile, soundID, &theSoundData[kTriggerSound])))
 	{
 		ZeroMemory(&theSoundData[kTriggerSound], sizeof(theSoundData[kTriggerSound]));
 		return -1;

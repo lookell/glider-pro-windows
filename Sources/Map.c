@@ -210,7 +210,7 @@ void DrawMapRoomImage (HDC hdc, SInt16 backgroundID, const Rect *dstRect)
 		type = kNumBackgrounds;
 		if (doPrettyMap)
 		{
-			hBitmap = Gp_LoadImage(backgroundID);
+			hBitmap = Gp_LoadImage(g_theHouseFile, backgroundID);
 		}
 	}
 

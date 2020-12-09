@@ -264,7 +264,7 @@ void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 		return;
 	}
 
-	thePicture = Gp_LoadImage(theID);
+	thePicture = Gp_LoadImage(g_theHouseFile, theID);
 	if (thePicture == NULL)
 	{
 		YellowAlert(mainWindow, kYellowNoBackground, 0);
@@ -900,9 +900,9 @@ SInt16 GetOriginalBounding (SInt16 theID)
 	SInt16		boundCode;
 
 	boundCode = 0;
-	if (FAILED(Gp_LoadHouseBounding(theID, &boundsRes)))
+	if (FAILED(Gp_LoadHouseBounding(g_theHouseFile, theID, &boundsRes)))
 	{
-		if (Gp_HouseImageExists(theID))
+		if (Gp_HouseImageExists(g_theHouseFile, theID))
 		{
 			YellowAlert(mainWindow, kYellowNoBoundsRes, 0);
 		}

@@ -9,6 +9,7 @@
 
 #include "MacTypes.h"
 #ifdef GP_USE_WINAPI_H
+#include "ResourceLoader.h"
 #include "WinAPI.h"
 #endif
 
@@ -18,6 +19,9 @@ extern SInt16 wasHouseVersion;
 extern Boolean houseOpen;
 extern Boolean fileDirty;
 extern Boolean gameDirty;
+#ifdef GP_USE_WINAPI_H
+extern Gp_HouseFile *g_theHouseFile;
+#endif
 extern Boolean changeLockStateOfHouse;
 extern Boolean saveHouseLocked;
 extern Boolean houseIsReadOnly;

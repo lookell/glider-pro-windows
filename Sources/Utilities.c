@@ -13,6 +13,7 @@
 #include "Audio.h"
 #include "DialogUtils.h"
 #include "Events.h"
+#include "HouseIO.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
@@ -197,7 +198,7 @@ void LoadGraphic (HDC hdc, SInt16 resID)
 	HBITMAP		thePicture;
 	BITMAP		bmInfo;
 
-	thePicture = Gp_LoadImage(resID);
+	thePicture = Gp_LoadImage(g_theHouseFile, resID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
@@ -217,7 +218,7 @@ void LoadScaledGraphic (HDC hdc, SInt16 resID, const Rect *theRect)
 {
 	HBITMAP		thePicture;
 
-	thePicture = Gp_LoadImage(resID);
+	thePicture = Gp_LoadImage(g_theHouseFile, resID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 	Mac_DrawPicture(hdc, thePicture, theRect);

@@ -2205,7 +2205,7 @@ void GetThisRoomsObjRects (void)
 				break;
 
 				case kCustomPict:
-				thePict = Gp_LoadImage(thisRoom->objects[i].data.g.height);
+				thePict = Gp_LoadImage(g_theHouseFile, thisRoom->objects[i].data.g.height);
 				if (thePict == NULL)
 				{
 					thisRoom->objects[i].data.g.height = kCustomPictFallbackID;

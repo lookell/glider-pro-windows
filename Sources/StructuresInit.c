@@ -78,7 +78,7 @@ void InitScoreboardMap (void)
 		hOffset = (RectWide(&boardSrcRect) - kMaxViewWidth) / 2;
 	else
 		hOffset = -576;
-	thePicture = Gp_LoadImage(kScoreboardPictID);
+	thePicture = Gp_LoadBuiltInImage(kScoreboardPictID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 	GetObject(thePicture, sizeof(bmInfo), &bmInfo);

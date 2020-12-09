@@ -49,6 +49,7 @@ SInt16 wasHouseVersion;
 Boolean houseOpen;
 Boolean fileDirty;
 Boolean gameDirty;
+Gp_HouseFile *g_theHouseFile;
 Boolean changeLockStateOfHouse;
 Boolean saveHouseLocked;
 Boolean houseIsReadOnly;
@@ -181,8 +182,6 @@ void CloseHouseMovie (void)
 
 Boolean OpenHouse (HWND ownerWindow)
 {
-	HRESULT hr;
-
 	if (houseOpen)
 	{
 		if (!CloseHouse(ownerWindow))
@@ -203,15 +202,15 @@ Boolean OpenHouse (HWND ownerWindow)
 		}
 	}
 
-	hr = Gp_LoadHouseFile(theHousesSpecs[thisHouseIndex].path);
-	if (FAILED(hr))
+	g_theHouseFile = Gp_LoadHouseFile(theHousesSpecs[thisHouseIndex].path);
+	if (g_theHouseFile == NULL)
 	{
 		houseIsReadOnly = false;
 		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(ERROR_OPEN_FAILED),
 			theHousesSpecs[thisHouseIndex].houseName);
 		return false;
 	}
-	houseIsReadOnly = Gp_HouseFileReadOnly();
+	houseIsReadOnly = Gp_HouseFileReadOnly(g_theHouseFile);
 	theHousesSpecs[thisHouseIndex].readOnly = houseIsReadOnly;
 
 	houseOpen = true;
@@ -358,7 +357,7 @@ Boolean ReadHouse (HWND ownerWindow)
 		}
 	}
 
-	byteCount = Gp_HouseFileDataSize();
+	byteCount = Gp_HouseFileDataSize(g_theHouseFile);
 
 	if (COMPILEDEMO)
 	{
@@ -371,7 +370,7 @@ Boolean ReadHouse (HWND ownerWindow)
 	free(thisHouse.rooms);
 	ZeroMemory(&thisHouse, sizeof(thisHouse));
 
-	hr = Gp_ReadHouseData(&thisHouse);
+	hr = Gp_ReadHouseData(g_theHouseFile, &thisHouse);
 	if (FAILED(hr))
 	{
 		ZeroMemory(&thisHouse, sizeof(thisHouse));
@@ -495,7 +494,7 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 		thisHouse.version = wasHouseVersion;
 	}
 
-	hr = Gp_WriteHouseData(&thisHouse);
+	hr = Gp_WriteHouseData(g_theHouseFile, &thisHouse);
 	if (FAILED(hr))
 	{
 		CheckFileError(ownerWindow, hr, theHousesSpecs[thisHouseIndex].houseName);
@@ -550,7 +549,8 @@ Boolean CloseHouse (HWND ownerWindow)
 	}
 
 	CloseHouseMovie();
-	Gp_UnloadHouseFile();
+	Gp_UnloadHouseFile(g_theHouseFile);
+	g_theHouseFile = NULL;
 
 	houseOpen = false;
 

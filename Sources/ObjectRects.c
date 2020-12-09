@@ -12,6 +12,7 @@
 #include "DynamicMaps.h"
 #include "GliderDefines.h"
 #include "House.h"
+#include "HouseIO.h"
 #include "MainWindow.h"
 #include "Objects.h"
 #include "RectUtils.h"
@@ -218,7 +219,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		break;
 
 		case kCustomPict:
-		thePict = Gp_LoadImage(who->data.g.height);
+		thePict = Gp_LoadImage(g_theHouseFile, who->data.g.height);
 		if (thePict == NULL)
 		{
 			who->data.g.height = kCustomPictFallbackID;

@@ -10,6 +10,7 @@
 
 
 #include "ColorUtils.h"
+#include "HouseIO.h"
 #include "Macintosh.h"
 #include "Objects.h"
 #include "RectUtils.h"
@@ -1891,7 +1892,7 @@ void DrawCalendar (const Rect *theRect)
 	INT			monthLen;
 	HFONT		theFont;
 
-	thePicture = Gp_LoadImage(kCalendarPictID);
+	thePicture = Gp_LoadImage(g_theHouseFile, kCalendarPictID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
@@ -1925,7 +1926,7 @@ void DrawBulletin (const Rect *theRect)
 	HBITMAP		thePicture;
 	BITMAP		bmInfo;
 
-	thePicture = Gp_LoadImage(kBulletinPictID);
+	thePicture = Gp_LoadImage(g_theHouseFile, kBulletinPictID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
@@ -1978,7 +1979,7 @@ void DrawPictObject (SInt16 what, const Rect *theRect)
 		return;
 	}
 
-	thePicture = Gp_LoadImage(pictID);
+	thePicture = Gp_LoadImage(g_theHouseFile, pictID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 

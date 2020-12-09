@@ -143,10 +143,10 @@ void LoadGraphicSpecial (HDC hdc, SInt16 resID)
 	HBITMAP		thePicture;
 	BITMAP		bmInfo;
 
-	thePicture = Gp_LoadImage(resID);
+	thePicture = Gp_LoadImage(g_theHouseFile, resID);
 	if (thePicture == NULL)
 	{
-		thePicture = Gp_LoadImage(kSimpleRoom);
+		thePicture = Gp_LoadImage(g_theHouseFile, kSimpleRoom);
 		if (thePicture == NULL)
 		{
 			RedAlert(kErrFailedGraphicLoad);
