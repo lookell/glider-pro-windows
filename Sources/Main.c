@@ -44,7 +44,7 @@
 
 #include <commctrl.h>
 #include <mmsystem.h>
-#include <ole2.h>
+#include <objbase.h>
 
 
 void ReadInPrefs (HWND ownerWindow);
