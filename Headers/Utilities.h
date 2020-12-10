@@ -12,8 +12,8 @@
 #include "WinAPI.h"
 #endif
 
-void ToolBoxInit (void);
 SInt16 RandomInt (SInt16 range);
+void InitRandomLongQUS (void);
 __declspec(noreturn) void RedAlert (SInt16 errorNumber);
 #ifdef GP_USE_WINAPI_H
 HDC CreateOffScreenGWorld (const Rect *bounds, SInt16 depth);

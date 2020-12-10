@@ -42,6 +42,7 @@
 #include "Utilities.h"
 #include "WinAPI.h"
 
+#include <commctrl.h>
 #include <mmsystem.h>
 #include <ole2.h>
 
@@ -294,6 +295,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 	HRESULT hr;
 	Boolean whoCares;
 	int audioInitialized;
+	INITCOMMONCONTROLSEX icc;
 
 	(void)hInstance;
 	(void)hPrevInstance;
@@ -313,7 +315,15 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 		dontLoadMusic = true;
 	}
 
-	ToolBoxInit();
+	ZeroMemory(&icc, sizeof(icc));
+	icc.dwSize = sizeof(icc);
+	icc.dwICC = ICC_WIN95_CLASSES;
+	InitCommonControlsEx(&icc);
+	RegisterMainWindowClass();
+	InitRandomLongQUS();
+	InitCursor();
+	switchedOut = false;
+
 	// NOTE: ReadInPrefs() must come before CheckOurEnvirons()
 	ReadInPrefs(NULL);
 	CheckOurEnvirons();

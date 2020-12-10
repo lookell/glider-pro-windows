@@ -9,10 +9,8 @@
 //============================================================================
 
 
-#include "AnimCursor.h"
 #include "Audio.h"
 #include "DialogUtils.h"
-#include "Events.h"
 #include "HouseIO.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
@@ -28,7 +26,6 @@
 #include <stdlib.h>
 
 
-void InitRandomLongQUS (void);
 UInt32 RandomLongQUS (void);
 
 
@@ -36,23 +33,6 @@ static UInt32 theSeed;
 
 
 //==============================================================  Functions
-//--------------------------------------------------------------  ToolBoxInit
-// The standard ToolBox intialization that must happen when any Mac
-// program first launches.
-
-void ToolBoxInit (void)
-{
-	INITCOMMONCONTROLSEX icc;
-
-	icc.dwSize = sizeof(icc);
-	icc.dwICC = ICC_WIN95_CLASSES;
-	InitCommonControlsEx(&icc);
-	RegisterMainWindowClass();
-	InitRandomLongQUS();
-	InitCursor();
-	switchedOut = false;
-}
-
 //--------------------------------------------------------------  RandomInt
 // Returns a random integer (short) within "range".
 
