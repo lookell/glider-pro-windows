@@ -184,7 +184,7 @@
 #define kEditMode					1
 #define kPlayMode					2
 
-#define kIdleSplashTicks			7200L		// 2 minutes
+#define kIdleSplashTime				120000  // 2 minutes as milliseconds
 
 #define kRoomAbove					1
 #define kRoomBelow					2

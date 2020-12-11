@@ -750,7 +750,7 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
 					failedMusic = true;
 				}
 			}
-			incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
+			incrementModeTime = timeGetTime() + kIdleSplashTime;
 
 			if (!COMPILEDEMO)
 			{

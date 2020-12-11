@@ -13,7 +13,6 @@
 #include "FrameTimer.h"
 #include "House.h"
 #include "Link.h"
-#include "Macintosh.h"
 #include "Main.h"
 #include "MainWindow.h"
 #include "Marquee.h"
@@ -140,9 +139,9 @@ void HandleEvent (void)
 
 	if ((theMode == kSplashMode) && doAutoDemo && !switchedOut && (demoHouseIndex >= 0))
 	{
-		startMillis = incrementModeTime - TicksToMillis(kIdleSplashTicks);
+		startMillis = incrementModeTime - kIdleSplashTime;
 		nowMillis = timeGetTime();
-		if (nowMillis - startMillis >= TicksToMillis(kIdleSplashTicks))
+		if (nowMillis - startMillis >= kIdleSplashTime)
 		{
 			DisableMenuBar();
 			DoDemoGame(mainWindow);

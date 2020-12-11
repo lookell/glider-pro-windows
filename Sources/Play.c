@@ -287,7 +287,7 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 		Mac_CopyBits(splashSrcMap, workSrcMap, &splashSrcRect, &tempRect, srcCopy, nil);
 	}
 	demoGoing = false;
-	incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
+	incrementModeTime = timeGetTime() + kIdleSplashTime;
 }
 
 //--------------------------------------------------------------  DoDemoGame
@@ -315,7 +315,7 @@ void DoDemoGame (HWND ownerWindow)
 	PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
 	if (OpenHouse(ownerWindow))
 		whoCares = ReadHouse(ownerWindow);
-	incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
+	incrementModeTime = timeGetTime() + kIdleSplashTime;
 }
 
 //--------------------------------------------------------------  InitGlider

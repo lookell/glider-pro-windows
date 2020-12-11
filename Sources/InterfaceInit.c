@@ -16,7 +16,6 @@
 #include "HouseIO.h"
 #include "Input.h"
 #include "Link.h"
-#include "Macintosh.h"
 #include "Main.h"
 #include "MainWindow.h"
 #include "Map.h"
@@ -218,7 +217,7 @@ void VariableInit (void)
 	lastBackground = kBaseBackgroundID;
 	wasFlower = RandomInt(kNumFlowers);
 	lastHighScore = -1;
-	incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
+	incrementModeTime = timeGetTime() + kIdleSplashTime;
 	willMaxFiles = maxFiles;
 
 	fadeInSequence[0] = 4;	// 4

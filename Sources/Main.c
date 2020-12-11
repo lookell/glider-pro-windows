@@ -22,7 +22,6 @@
 #include "Input.h"
 #include "InterfaceInit.h"
 #include "Link.h"
-#include "Macintosh.h"
 #include "MainWindow.h"
 #include "Map.h"
 #include "Marquee.h"
@@ -361,7 +360,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 		WashColorIn();
 	}
 
-	incrementModeTime = timeGetTime() + TicksToMillis(kIdleSplashTicks);
+	incrementModeTime = timeGetTime() + kIdleSplashTime;
 	while (!quitting)		// this is the main loop
 		HandleEvent();
 
