@@ -88,23 +88,23 @@ void LoadTileSrcGraphic (HDC hdc, SInt16 backID, const Rect *theRect)
 	switch (backID)
 	{
 	case kBasement:
-		LoadScaledGraphic(hdc, kBasementTileSrc, theRect);
+		LoadScaledGraphic(hdc, g_theHouseFile, kBasementTileSrc, theRect);
 		break;
 
 	case kDirt:
-		LoadScaledGraphic(hdc, kDirtTileSrc, theRect);
+		LoadScaledGraphic(hdc, g_theHouseFile, kDirtTileSrc, theRect);
 		break;
 
 	case kStratosphere:
-		LoadScaledGraphic(hdc, kStratosphereTileSrc, theRect);
+		LoadScaledGraphic(hdc, g_theHouseFile, kStratosphereTileSrc, theRect);
 		break;
 
 	case kStars:
-		LoadScaledGraphic(hdc, kStarsTileSrc, theRect);
+		LoadScaledGraphic(hdc, g_theHouseFile, kStarsTileSrc, theRect);
 		break;
 
 	default:
-		LoadScaledGraphic(hdc, backID, theRect);
+		LoadScaledGraphic(hdc, g_theHouseFile, backID, theRect);
 		break;
 	}
 

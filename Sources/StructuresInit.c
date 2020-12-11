@@ -89,7 +89,7 @@ void InitScoreboardMap (void)
 
 	QSetRect(&badgeSrcRect, 0, 0, 32, 66);				// 2144 pixels
 	badgeSrcMap = CreateOffScreenGWorld(&badgeSrcRect, kPreferredDepth);
-	LoadGraphic(badgeSrcMap, kBadgePictID);
+	LoadGraphic(badgeSrcMap, GP_BUILTIN_ASSETS, kBadgePictID);
 
 	boardDestRect = boardSrcRect;
 	QOffsetRect(&boardDestRect, 0, -kScoreboardTall);
@@ -161,13 +161,13 @@ void InitGliderMap (void)
 
 	QSetRect(&glidSrcRect, 0, 0, kGliderWide, 668);	// 32112 pixels
 	glidSrcMap = CreateOffScreenGWorld(&glidSrcRect, kPreferredDepth);
-	LoadGraphic(glidSrcMap, kGliderPictID);
+	LoadGraphic(glidSrcMap, GP_BUILTIN_ASSETS, kGliderPictID);
 
 	glid2SrcMap = CreateOffScreenGWorld(&glidSrcRect, kPreferredDepth);
-	LoadGraphic(glid2SrcMap, kGlider2PictID);
+	LoadGraphic(glid2SrcMap, GP_BUILTIN_ASSETS, kGlider2PictID);
 
 	glidMaskMap = CreateOffScreenGWorld(&glidSrcRect, 1);
-	LoadGraphic(glidMaskMap, kGliderMaskID);
+	LoadGraphic(glidMaskMap, GP_BUILTIN_ASSETS, kGliderMaskID);
 
 	for (i = 0; i <= 20; i++)
 	{
@@ -187,10 +187,10 @@ void InitGliderMap (void)
 
 	QSetRect(&shadowSrcRect, 0, 0, kGliderWide, kShadowHigh * kNumShadowSrcRects);
 	shadowSrcMap = CreateOffScreenGWorld(&shadowSrcRect, kPreferredDepth);
-	LoadGraphic(shadowSrcMap, kShadowPictID);
+	LoadGraphic(shadowSrcMap, GP_BUILTIN_ASSETS, kShadowPictID);
 
 	shadowMaskMap = CreateOffScreenGWorld(&shadowSrcRect, 1);
-	LoadGraphic(shadowMaskMap, kShadowMaskID);
+	LoadGraphic(shadowMaskMap, GP_BUILTIN_ASSETS, kShadowMaskID);
 
 	for (i = 0; i < kNumShadowSrcRects; i++)
 	{
@@ -200,10 +200,10 @@ void InitGliderMap (void)
 
 	QSetRect(&bandsSrcRect, 0, 0, 16, 18);		// 304 pixels
 	bandsSrcMap = CreateOffScreenGWorld(&bandsSrcRect, kPreferredDepth);
-	LoadGraphic(bandsSrcMap, kRubberBandsPictID);
+	LoadGraphic(bandsSrcMap, GP_BUILTIN_ASSETS, kRubberBandsPictID);
 
 	bandsMaskMap = CreateOffScreenGWorld(&bandsSrcRect, 1);
-	LoadGraphic(bandsMaskMap, kRubberBandsMaskID);
+	LoadGraphic(bandsMaskMap, GP_BUILTIN_ASSETS, kRubberBandsMaskID);
 
 	for (i = 0; i < 3; i++)
 	{
@@ -222,10 +222,10 @@ void InitBlowers (void)
 
 	QSetRect(&blowerSrcRect, 0, 0, 48, 402);	// 19344 pixels
 	blowerSrcMap = CreateOffScreenGWorld(&blowerSrcRect, kPreferredDepth);
-	LoadGraphic(blowerSrcMap, kBlowerPictID);
+	LoadGraphic(blowerSrcMap, GP_BUILTIN_ASSETS, kBlowerPictID);
 
 	blowerMaskMap = CreateOffScreenGWorld(&blowerSrcRect, 1);
-	LoadGraphic(blowerMaskMap, kBlowerMaskID);
+	LoadGraphic(blowerMaskMap, GP_BUILTIN_ASSETS, kBlowerMaskID);
 
 	for (i = 0; i < kNumCandleFlames; i++)
 	{
@@ -260,10 +260,10 @@ void InitFurniture (void)
 {
 	QSetRect(&furnitureSrcRect, 0, 0, 64, 278);		// 17856 pixels
 	furnitureSrcMap = CreateOffScreenGWorld(&furnitureSrcRect, kPreferredDepth);
-	LoadGraphic(furnitureSrcMap, kFurniturePictID);
+	LoadGraphic(furnitureSrcMap, GP_BUILTIN_ASSETS, kFurniturePictID);
 
 	furnitureMaskMap = CreateOffScreenGWorld(&furnitureSrcRect, 1);
-	LoadGraphic(furnitureMaskMap, kFurnitureMaskID);
+	LoadGraphic(furnitureMaskMap, GP_BUILTIN_ASSETS, kFurnitureMaskID);
 
 	QSetRect(&tableSrc, 0, 0, 64, 22);
 	QOffsetRect(&tableSrc, 0, 0);
@@ -300,10 +300,10 @@ void InitPrizes (void)
 
 	QSetRect(&bonusSrcRect, 0, 0, 88, 378);		// 33264 pixels
 	bonusSrcMap = CreateOffScreenGWorld(&bonusSrcRect, kPreferredDepth);
-	LoadGraphic(bonusSrcMap, kBonusPictID);
+	LoadGraphic(bonusSrcMap, GP_BUILTIN_ASSETS, kBonusPictID);
 
 	bonusMaskMap = CreateOffScreenGWorld(&bonusSrcRect, 1);
-	LoadGraphic(bonusMaskMap, kBonusMaskID);
+	LoadGraphic(bonusMaskMap, GP_BUILTIN_ASSETS, kBonusMaskID);
 
 	for (i = 0; i < 11; i++)
 	{
@@ -351,10 +351,10 @@ void InitPrizes (void)
 
 	QSetRect(&pointsSrcRect, 0, 0, 24, 120);		// 2880 pixels
 	pointsSrcMap = CreateOffScreenGWorld(&pointsSrcRect, kPreferredDepth);
-	LoadGraphic(pointsSrcMap, kPointsPictID);
+	LoadGraphic(pointsSrcMap, GP_BUILTIN_ASSETS, kPointsPictID);
 
 	pointsMaskMap = CreateOffScreenGWorld(&pointsSrcRect, 1);
-	LoadGraphic(pointsMaskMap, kPointsMaskID);
+	LoadGraphic(pointsMaskMap, GP_BUILTIN_ASSETS, kPointsMaskID);
 
 	for (i = 0; i < 15; i++)
 	{
@@ -371,10 +371,10 @@ void InitTransports (void)
 {
 	QSetRect(&transSrcRect, 0, 0, 56, 32);	// 1848 pixels
 	transSrcMap = CreateOffScreenGWorld(&transSrcRect, kPreferredDepth);
-	LoadGraphic(transSrcMap, kTransportPictID);
+	LoadGraphic(transSrcMap, GP_BUILTIN_ASSETS, kTransportPictID);
 
 	transMaskMap = CreateOffScreenGWorld(&transSrcRect, 1);
-	LoadGraphic(transMaskMap, kTransportMaskID);
+	LoadGraphic(transMaskMap, GP_BUILTIN_ASSETS, kTransportMaskID);
 }
 
 //--------------------------------------------------------------  InitSwitches
@@ -385,7 +385,7 @@ void InitSwitches (void)
 {
 	QSetRect(&switchSrcRect, 0, 0, 32, 104);	// 3360 pixels
 	switchSrcMap = CreateOffScreenGWorld(&switchSrcRect, kPreferredDepth);
-	LoadGraphic(switchSrcMap, kSwitchPictID);
+	LoadGraphic(switchSrcMap, GP_BUILTIN_ASSETS, kSwitchPictID);
 
 	QSetRect(&lightSwitchSrc[0], 0, 0, 15, 24);
 	QOffsetRect(&lightSwitchSrc[0], 0, 0);
@@ -423,10 +423,10 @@ void InitLights (void)
 
 	QSetRect(&lightSrcRect, 0, 0, 72, 126);		// 9144 pixels
 	lightSrcMap = CreateOffScreenGWorld(&lightSrcRect, kPreferredDepth);
-	LoadGraphic(lightSrcMap, kLightPictID);
+	LoadGraphic(lightSrcMap, GP_BUILTIN_ASSETS, kLightPictID);
 
 	lightMaskMap = CreateOffScreenGWorld(&lightSrcRect, 1);
-	LoadGraphic(lightMaskMap, kLightMaskID);
+	LoadGraphic(lightMaskMap, GP_BUILTIN_ASSETS, kLightMaskID);
 
 	QSetRect(&flourescentSrc1, 0, 0, 16, 12);
 	QOffsetRect(&flourescentSrc1, 0, 78);
@@ -451,24 +451,24 @@ void InitAppliances (void)
 
 	QSetRect(&applianceSrcRect, 0, 0, 80, 269);		// 21600 pixels
 	applianceSrcMap = CreateOffScreenGWorld(&applianceSrcRect, kPreferredDepth);
-	LoadGraphic(applianceSrcMap, kAppliancePictID);
+	LoadGraphic(applianceSrcMap, GP_BUILTIN_ASSETS, kAppliancePictID);
 
 	applianceMaskMap = CreateOffScreenGWorld(&applianceSrcRect, 1);
-	LoadGraphic(applianceMaskMap, kApplianceMaskID);
+	LoadGraphic(applianceMaskMap, GP_BUILTIN_ASSETS, kApplianceMaskID);
 
 	QSetRect(&toastSrcRect, 0, 0, 32, 174);			// 5600 pixels
 	toastSrcMap = CreateOffScreenGWorld(&toastSrcRect, kPreferredDepth);
-	LoadGraphic(toastSrcMap, kToastPictID);
+	LoadGraphic(toastSrcMap, GP_BUILTIN_ASSETS, kToastPictID);
 
 	toastMaskMap = CreateOffScreenGWorld(&toastSrcRect, 1);
-	LoadGraphic(toastMaskMap, kToastMaskID);
+	LoadGraphic(toastMaskMap, GP_BUILTIN_ASSETS, kToastMaskID);
 
 	QSetRect(&shredSrcRect, 0, 0, 40, 35);			// 1440 pixels
 	shredSrcMap = CreateOffScreenGWorld(&shredSrcRect, kPreferredDepth);
-	LoadGraphic(shredSrcMap, kShreddedPictID);
+	LoadGraphic(shredSrcMap, GP_BUILTIN_ASSETS, kShreddedPictID);
 
 	shredMaskMap = CreateOffScreenGWorld(&shredSrcRect, 1);
-	LoadGraphic(shredMaskMap, kShreddedMaskID);
+	LoadGraphic(shredMaskMap, GP_BUILTIN_ASSETS, kShreddedMaskID);
 
 	QSetRect(&plusScreen1, 0, 0, 32, 22);
 	QOffsetRect(&plusScreen1, 48, 127);
@@ -523,52 +523,52 @@ void InitEnemies (void)
 
 	QSetRect(&balloonSrcRect, 0, 0, 24, 30 * kNumBalloonFrames);
 	balloonSrcMap = CreateOffScreenGWorld(&balloonSrcRect, kPreferredDepth);
-	LoadGraphic(balloonSrcMap, kBalloonPictID);
+	LoadGraphic(balloonSrcMap, GP_BUILTIN_ASSETS, kBalloonPictID);
 
 	balloonMaskMap = CreateOffScreenGWorld(&balloonSrcRect, 1);
-	LoadGraphic(balloonMaskMap, kBalloonMaskID);
+	LoadGraphic(balloonMaskMap, GP_BUILTIN_ASSETS, kBalloonMaskID);
 
 	QSetRect(&copterSrcRect, 0, 0, 32, 30 * kNumCopterFrames);
 	copterSrcMap = CreateOffScreenGWorld(&copterSrcRect, kPreferredDepth);
-	LoadGraphic(copterSrcMap, kCopterPictID);
+	LoadGraphic(copterSrcMap, GP_BUILTIN_ASSETS, kCopterPictID);
 
 	copterMaskMap = CreateOffScreenGWorld(&copterSrcRect, 1);
-	LoadGraphic(copterMaskMap, kCopterMaskID);
+	LoadGraphic(copterMaskMap, GP_BUILTIN_ASSETS, kCopterMaskID);
 
 	QSetRect(&dartSrcRect, 0, 0, 64, 19 * kNumDartFrames);
 	dartSrcMap = CreateOffScreenGWorld(&dartSrcRect, kPreferredDepth);
-	LoadGraphic(dartSrcMap, kDartPictID);
+	LoadGraphic(dartSrcMap, GP_BUILTIN_ASSETS, kDartPictID);
 
 	dartMaskMap = CreateOffScreenGWorld(&dartSrcRect, 1);
-	LoadGraphic(dartMaskMap, kDartMaskID);
+	LoadGraphic(dartMaskMap, GP_BUILTIN_ASSETS, kDartMaskID);
 
 	QSetRect(&ballSrcRect, 0, 0, 32, 32 * kNumBallFrames);
 	ballSrcMap = CreateOffScreenGWorld(&ballSrcRect, kPreferredDepth);
-	LoadGraphic(ballSrcMap, kBallPictID);
+	LoadGraphic(ballSrcMap, GP_BUILTIN_ASSETS, kBallPictID);
 
 	ballMaskMap = CreateOffScreenGWorld(&ballSrcRect, 1);
-	LoadGraphic(ballMaskMap, kBallMaskID);
+	LoadGraphic(ballMaskMap, GP_BUILTIN_ASSETS, kBallMaskID);
 
 	QSetRect(&dripSrcRect, 0, 0, 16, 12 * kNumDripFrames);
 	dripSrcMap = CreateOffScreenGWorld(&dripSrcRect, kPreferredDepth);
-	LoadGraphic(dripSrcMap, kDripPictID);
+	LoadGraphic(dripSrcMap, GP_BUILTIN_ASSETS, kDripPictID);
 
 	dripMaskMap = CreateOffScreenGWorld(&dripSrcRect, 1);
-	LoadGraphic(dripMaskMap, kDripMaskID);
+	LoadGraphic(dripMaskMap, GP_BUILTIN_ASSETS, kDripMaskID);
 
 	QSetRect(&enemySrcRect, 0, 0, 36, 33);
 	enemySrcMap = CreateOffScreenGWorld(&enemySrcRect, kPreferredDepth);
-	LoadGraphic(enemySrcMap, kEnemyPictID);
+	LoadGraphic(enemySrcMap, GP_BUILTIN_ASSETS, kEnemyPictID);
 
 	enemyMaskMap = CreateOffScreenGWorld(&enemySrcRect, 1);
-	LoadGraphic(enemyMaskMap, kEnemyMaskID);
+	LoadGraphic(enemyMaskMap, GP_BUILTIN_ASSETS, kEnemyMaskID);
 
 	QSetRect(&fishSrcRect, 0, 0, 16, 16 * kNumFishFrames);
 	fishSrcMap = CreateOffScreenGWorld(&fishSrcRect, kPreferredDepth);
-	LoadGraphic(fishSrcMap, kFishPictID);
+	LoadGraphic(fishSrcMap, GP_BUILTIN_ASSETS, kFishPictID);
 
 	fishMaskMap = CreateOffScreenGWorld(&fishSrcRect, 1);
-	LoadGraphic(fishMaskMap, kFishMaskID);
+	LoadGraphic(fishMaskMap, GP_BUILTIN_ASSETS, kFishMaskID);
 
 	for (i = 0; i < kNumBalloonFrames; i++)
 	{
@@ -615,10 +615,10 @@ void InitClutter (void)
 {
 	QSetRect(&clutterSrcRect, 0, 0, 128, 69);
 	clutterSrcMap = CreateOffScreenGWorld(&clutterSrcRect, kPreferredDepth);
-	LoadGraphic(clutterSrcMap, kClutterPictID);
+	LoadGraphic(clutterSrcMap, GP_BUILTIN_ASSETS, kClutterPictID);
 
 	clutterMaskMap = CreateOffScreenGWorld(&clutterSrcRect, 1);
-	LoadGraphic(clutterMaskMap, kClutterMaskID);
+	LoadGraphic(clutterMaskMap, GP_BUILTIN_ASSETS, kClutterMaskID);
 
 	QSetRect(&flowerSrc[0], 0, 0, 10, 28);
 	QOffsetRect(&flowerSrc[0], 0, 23);
@@ -648,7 +648,7 @@ void InitSupport (void)
 {
 	QSetRect(&suppSrcRect, 0, 0, kRoomWide, kFloorSupportTall);		// 44
 	suppSrcMap = CreateOffScreenGWorld(&suppSrcRect, kPreferredDepth);
-	LoadGraphic(suppSrcMap, kSupportPictID);
+	LoadGraphic(suppSrcMap, GP_BUILTIN_ASSETS, kSupportPictID);
 }
 
 //--------------------------------------------------------------  InitAngel
@@ -660,10 +660,10 @@ void InitAngel (void)
 {
 	QSetRect(&angelSrcRect, 0, 0, 96, 44);
 	angelSrcMap = CreateOffScreenGWorld(&angelSrcRect, kPreferredDepth);
-	LoadGraphic(angelSrcMap, kAngelPictID);
+	LoadGraphic(angelSrcMap, GP_BUILTIN_ASSETS, kAngelPictID);
 
 	angelMaskMap = CreateOffScreenGWorld(&angelSrcRect, 1);
-	LoadGraphic(angelMaskMap, kAngelMaskID);
+	LoadGraphic(angelMaskMap, GP_BUILTIN_ASSETS, kAngelMaskID);
 }
 
 //--------------------------------------------------------------  InitSplashScreenMap
@@ -673,7 +673,7 @@ void InitSplashScreenMap (void)
 {
 	QSetRect(&splashSrcRect, 0, 0, 640, 460);
 	splashSrcMap = CreateOffScreenGWorld(&splashSrcRect, kPreferredDepth);
-	LoadGraphic(splashSrcMap, kSplash8BitPICT);
+	LoadGraphic(splashSrcMap, GP_BUILTIN_ASSETS, kSplash8BitPICT);
 }
 
 //--------------------------------------------------------------  CreateOffscreens

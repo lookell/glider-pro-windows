@@ -811,7 +811,7 @@ void CreateNailOffscreen (void)
 	{
 		QSetRect(&nailSrcRect, 0, 0, kMapRoomWidth, kMapRoomHeight * (kNumBackgrounds + 1));
 		nailSrcMap = CreateOffScreenGWorld(&nailSrcRect, kPreferredDepth);
-		LoadGraphic(nailSrcMap, kThumbnailPictID);
+		LoadGraphic(nailSrcMap, g_theHouseFile, kThumbnailPictID);
 	}
 }
 

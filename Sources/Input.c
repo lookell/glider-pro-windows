@@ -11,6 +11,7 @@
 
 #include "ByteIO.h"
 #include "DialogUtils.h"
+#include "HouseIO.h"
 #include "Interactions.h"
 #include "Macintosh.h"
 #include "Main.h"
@@ -149,9 +150,9 @@ void DoPause (void)
 	CenterRectInRect(&bounds, &houseRect);
 	mainWindowDC = GetMainWindowDC();
 	if (isEscPauseKey)
-		LoadScaledGraphic(mainWindowDC, kEscPausePictID, &bounds);
+		LoadScaledGraphic(mainWindowDC, g_theHouseFile, kEscPausePictID, &bounds);
 	else
-		LoadScaledGraphic(mainWindowDC, kTabPausePictID, &bounds);
+		LoadScaledGraphic(mainWindowDC, g_theHouseFile, kTabPausePictID, &bounds);
 	ReleaseMainWindowDC(mainWindowDC);
 
 	while (GetMessage(&msg, NULL, 0, 0))

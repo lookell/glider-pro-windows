@@ -149,14 +149,14 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 	{
 		InitGlider(&theGlider, kNewGameMode);
 		InitGlider(&theGlider2, kNewGameMode);
-		LoadGraphic(glidSrcMap, kGliderPictID);
-		LoadGraphic(glid2SrcMap, kGlider2PictID);
+		LoadGraphic(glidSrcMap, g_theHouseFile, kGliderPictID);
+		LoadGraphic(glid2SrcMap, g_theHouseFile, kGlider2PictID);
 	}
 	else
 	{
 		InitGlider(&theGlider, mode);
-		LoadGraphic(glidSrcMap, kGliderPictID);
-		LoadGraphic(glid2SrcMap, kGliderFoilPictID);
+		LoadGraphic(glidSrcMap, g_theHouseFile, kGliderPictID);
+		LoadGraphic(glid2SrcMap, g_theHouseFile, kGliderFoilPictID);
 	}
 
 #ifdef COMPILEQT

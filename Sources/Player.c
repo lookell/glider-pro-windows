@@ -11,6 +11,7 @@
 
 #include "DynamicMaps.h"
 #include "GameOver.h"
+#include "HouseIO.h"
 #include "Interactions.h"
 #include "MainWindow.h"
 #include "Modes.h"
@@ -1161,8 +1162,8 @@ void DeckGliderInFoil (gliderPtr thisGlider)
 
 	if (twoPlayerGame)
 	{
-		LoadGraphic(glidSrcMap, kGliderFoilPictID);
-		LoadGraphic(glid2SrcMap, kGliderFoil2PictID);
+		LoadGraphic(glidSrcMap, g_theHouseFile, kGliderFoilPictID);
+		LoadGraphic(glid2SrcMap, g_theHouseFile, kGliderFoil2PictID);
 	}
 
 	if (thisGlider->facing == kFaceLeft)
@@ -1219,8 +1220,8 @@ void RemoveFoilFromGlider (gliderPtr thisGlider)
 
 	if (twoPlayerGame)
 	{
-		LoadGraphic(glidSrcMap, kGliderPictID);
-		LoadGraphic(glid2SrcMap, kGlider2PictID);
+		LoadGraphic(glidSrcMap, g_theHouseFile, kGliderPictID);
+		LoadGraphic(glid2SrcMap, g_theHouseFile, kGlider2PictID);
 	}
 
 	if (thisGlider->facing == kFaceLeft)

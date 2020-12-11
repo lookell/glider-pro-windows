@@ -64,7 +64,7 @@ void DoHighScores (void)
 	Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	QSetRect(&tempRect, 0, 0, 640, 460);
 	QOffsetRect(&tempRect, splashOriginH, splashOriginV);
-	LoadScaledGraphic(workSrcMap, kStarPictID, &tempRect);
+	LoadScaledGraphic(workSrcMap, g_theHouseFile, kStarPictID, &tempRect);
 	DissolveScreenOn(&workSrcRect);
 	SpinCursor(3);
 	DrawHighScores();
@@ -97,10 +97,10 @@ void DrawHighScores (void)
 
 	QSetRect(&tempRect, 0, 0, 332, 30);
 	tempMap = CreateOffScreenGWorld(&tempRect, kPreferredDepth);
-	LoadGraphic(tempMap, kHighScoresPictID);
+	LoadGraphic(tempMap, g_theHouseFile, kHighScoresPictID);
 
 	tempMask = CreateOffScreenGWorld(&tempRect, 1);
-	LoadGraphic(tempMask, kHighScoresMaskID);
+	LoadGraphic(tempMask, g_theHouseFile, kHighScoresMaskID);
 
 	tempRect2 = tempRect;
 	QOffsetRect(&tempRect2, scoreLeft + (kScoreWide - 332) / 2, dropIt - 60);

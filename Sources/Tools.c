@@ -11,6 +11,7 @@
 
 #include "DialogUtils.h"
 #include "GliderDefines.h"
+#include "HouseIO.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "Menu.h"
@@ -101,7 +102,7 @@ void CreateToolsOffscreen (void)
 	{
 		QSetRect(&toolSrcRect, 0, 0, 360, 216);
 		toolSrcMap = CreateOffScreenGWorld(&toolSrcRect, kPreferredDepth);
-		LoadGraphic(toolSrcMap, kToolsPictID);
+		LoadGraphic(toolSrcMap, g_theHouseFile, kToolsPictID);
 	}
 }
 

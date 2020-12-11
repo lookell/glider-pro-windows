@@ -12,6 +12,7 @@
 #include "ColorUtils.h"
 #include "Environ.h"
 #include "House.h"
+#include "HouseIO.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "Play.h"
@@ -55,17 +56,17 @@ void DrawBanner (Point *topLeft)
 	topLeft->v = wholePage.top;
 	partPage = wholePage;
 	partPage.bottom = partPage.top + 190;
-	LoadScaledGraphic(workSrcMap, kBannerPageTopPICT, &partPage);
+	LoadScaledGraphic(workSrcMap, g_theHouseFile, kBannerPageTopPICT, &partPage);
 
 	partPage = wholePage;
 	partPage.top = partPage.bottom - 30;
 	mapBounds = partPage;
 	ZeroRectCorner(&mapBounds);
 	tempMap = CreateOffScreenGWorld(&mapBounds, kPreferredDepth);
-	LoadGraphic(tempMap, kBannerPageBottomPICT);
+	LoadGraphic(tempMap, g_theHouseFile, kBannerPageBottomPICT);
 
 	tempMask = CreateOffScreenGWorld(&mapBounds, 1);
-	LoadGraphic(tempMask, kBannerPageBottomMask);
+	LoadGraphic(tempMask, g_theHouseFile, kBannerPageBottomMask);
 
 	Mac_CopyMask(tempMap, tempMask, workSrcMap,
 			&mapBounds, &mapBounds, &partPage);
@@ -196,11 +197,13 @@ void DisplayStarsRemaining (void)
 
 	mainWindowDC = GetMainWindowDC();
 	if (numStarsRemaining < 2)
-		LoadScaledGraphic(mainWindowDC, kStarRemainingPICT, &bounds);
+	{
+		LoadScaledGraphic(mainWindowDC, g_theHouseFile, kStarRemainingPICT, &bounds);
+	}
 	else
 	{
 		SaveDC(mainWindowDC);
-		LoadScaledGraphic(mainWindowDC, kStarsRemainingPICT, &bounds);
+		LoadScaledGraphic(mainWindowDC, g_theHouseFile, kStarsRemainingPICT, &bounds);
 		textFont = CreateTahomaFont(-12, FW_BOLD);
 		SelectObject(mainWindowDC, textFont);
 		SetTextAlign(mainWindowDC, TA_BASELINE | TA_CENTER);

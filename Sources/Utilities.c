@@ -11,7 +11,6 @@
 
 #include "Audio.h"
 #include "DialogUtils.h"
-#include "HouseIO.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "RectUtils.h"
@@ -172,13 +171,13 @@ void DisposeGWorld (HDC theGWorld)
 // the current port (no scaling, clipping, etc, are done).  Always
 // draws in the upper left corner of current port.
 
-void LoadGraphic (HDC hdc, SInt16 resID)
+void LoadGraphic (HDC hdc, Gp_HouseFile *houseFile, SInt16 resID)
 {
-	Rect		bounds;
-	HBITMAP		thePicture;
-	BITMAP		bmInfo;
+	Rect bounds;
+	HBITMAP thePicture;
+	BITMAP bmInfo;
 
-	thePicture = Gp_LoadImage(g_theHouseFile, resID);
+	thePicture = Gp_LoadImage(houseFile, resID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
@@ -194,11 +193,11 @@ void LoadGraphic (HDC hdc, SInt16 resID)
 // specified.  If this rect isn't the same size of the 'PICT', scaling
 // will occur.
 
-void LoadScaledGraphic (HDC hdc, SInt16 resID, const Rect *theRect)
+void LoadScaledGraphic (HDC hdc, Gp_HouseFile *houseFile, SInt16 resID, const Rect *theRect)
 {
-	HBITMAP		thePicture;
+	HBITMAP thePicture;
 
-	thePicture = Gp_LoadImage(g_theHouseFile, resID);
+	thePicture = Gp_LoadImage(houseFile, resID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 	Mac_DrawPicture(hdc, thePicture, theRect);

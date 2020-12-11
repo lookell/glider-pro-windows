@@ -1154,10 +1154,10 @@ void DrawMailboxLeft (const Rect *theRect, SInt16 down)
 
 	bounds = srcRects[kMailboxLf];
 	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
-	LoadGraphic(tempMap, kMailboxLeftPictID);
+	LoadGraphic(tempMap, g_theHouseFile, kMailboxLeftPictID);
 
 	tempMask = CreateOffScreenGWorld(&bounds, 1);
-	LoadGraphic(tempMask, kMailboxLeftMaskID);
+	LoadGraphic(tempMask, g_theHouseFile, kMailboxLeftMaskID);
 
 	Mac_CopyMask(tempMap, tempMask, backSrcMap,
 			&srcRects[kMailboxLf], &srcRects[kMailboxLf], theRect);
@@ -1213,10 +1213,10 @@ void DrawMailboxRight (const Rect *theRect, SInt16 down)
 
 	bounds = srcRects[kMailboxRt];
 	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
-	LoadGraphic(tempMap, kMailboxRightPictID);
+	LoadGraphic(tempMap, g_theHouseFile, kMailboxRightPictID);
 
 	tempMask = CreateOffScreenGWorld(&bounds, 1);
-	LoadGraphic(tempMask, kMailboxRightMaskID);
+	LoadGraphic(tempMask, g_theHouseFile, kMailboxRightMaskID);
 
 	Mac_CopyMask(tempMap, tempMask, backSrcMap,
 			&srcRects[kMailboxRt], &srcRects[kMailboxRt], theRect);
@@ -1513,10 +1513,10 @@ void DrawTV (const Rect *theRect, Boolean isOn, Boolean isLit)
 	{
 		bounds = srcRects[kTV];
 		tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
-		LoadGraphic(tempMap, kTVPictID);
+		LoadGraphic(tempMap, g_theHouseFile, kTVPictID);
 
 		tempMask = CreateOffScreenGWorld(&bounds, 1);
-		LoadGraphic(tempMask, kTVMaskID);
+		LoadGraphic(tempMask, g_theHouseFile, kTVMaskID);
 
 		Mac_CopyMask(tempMap, tempMask, backSrcMap,
 				&srcRects[kTV], &srcRects[kTV], theRect);
@@ -1587,10 +1587,10 @@ void DrawVCR (const Rect *theRect, Boolean isOn, Boolean isLit)
 	{
 		bounds = srcRects[kVCR];
 		tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
-		LoadGraphic(tempMap, kVCRPictID);
+		LoadGraphic(tempMap, g_theHouseFile, kVCRPictID);
 
 		tempMask = CreateOffScreenGWorld(&bounds, 1);
-		LoadGraphic(tempMask, kVCRMaskID);
+		LoadGraphic(tempMask, g_theHouseFile, kVCRMaskID);
 
 		Mac_CopyMask(tempMap, tempMask, backSrcMap,
 				&srcRects[kVCR], &srcRects[kVCR], theRect);
@@ -1626,10 +1626,10 @@ void DrawStereo (const Rect *theRect, Boolean isOn, Boolean isLit)
 	{
 		bounds = srcRects[kStereo];
 		tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth); 
-		LoadGraphic(tempMap, kStereoPictID);
+		LoadGraphic(tempMap, g_theHouseFile, kStereoPictID);
 
 		tempMask = CreateOffScreenGWorld(&bounds, 1);
-		LoadGraphic(tempMask, kStereoMaskID);
+		LoadGraphic(tempMask, g_theHouseFile, kStereoMaskID);
 
 		Mac_CopyMask(tempMap, tempMask, backSrcMap,
 				&srcRects[kStereo], &srcRects[kStereo], theRect);
@@ -1665,10 +1665,10 @@ void DrawMicrowave (const Rect *theRect, Boolean isOn, Boolean isLit)
 	{
 		bounds = srcRects[kMicrowave];
 		tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
-		LoadGraphic(tempMap, kMicrowavePictID);
+		LoadGraphic(tempMap, g_theHouseFile, kMicrowavePictID);
 
 		tempMask = CreateOffScreenGWorld(&bounds, 1);
-		LoadGraphic(tempMask, kMicrowaveMaskID);
+		LoadGraphic(tempMask, g_theHouseFile, kMicrowaveMaskID);
 
 		Mac_CopyMask(tempMap, tempMask, backSrcMap,
 				&srcRects[kMicrowave], &srcRects[kMicrowave], theRect);
@@ -2016,10 +2016,10 @@ void DrawPictWithMaskObject (SInt16 what, const Rect *theRect)
 
 	bounds = srcRects[what];
 	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
-	LoadGraphic(tempMap, pictID);
+	LoadGraphic(tempMap, g_theHouseFile, pictID);
 
 	tempMask = CreateOffScreenGWorld(&bounds, 1);
-	LoadGraphic(tempMask, maskID);
+	LoadGraphic(tempMask, g_theHouseFile, maskID);
 
 	Mac_CopyMask(tempMap, tempMask, backSrcMap,
 			&srcRects[what], &srcRects[what], theRect);
@@ -2128,7 +2128,7 @@ void DrawPictSansWhiteObject (SInt16 what, const Rect *theRect)
 		return;
 
 	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
-	LoadGraphic(tempMap, pictID);
+	LoadGraphic(tempMap, g_theHouseFile, pictID);
 
 	// The transparent mode of Mac_CopyBits uses the current background
 	// color of the *destination* HDC as the transparent color. Only pixels
@@ -2155,7 +2155,7 @@ void DrawCustPictSansWhite (SInt16 pictID, const Rect *theRect)
 	bounds = *theRect;
 	ZeroRectCorner(&bounds);
 	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
-	LoadGraphic(tempMap, pictID);
+	LoadGraphic(tempMap, g_theHouseFile, pictID);
 
 	wasBkColor = SetBkColor(backSrcMap, RGB(0xFF, 0xFF, 0xFF));
 	Mac_CopyBits(tempMap, backSrcMap,

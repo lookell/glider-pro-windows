@@ -252,7 +252,8 @@ void DrawFloorSupport (void)
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(backSrcMap, kManholeThruFloor, &tempManholes[i]);
+				LoadScaledGraphic(backSrcMap, g_theHouseFile,
+					kManholeThruFloor, &tempManholes[i]);
 			}
 	}
 
@@ -269,7 +270,8 @@ void DrawFloorSupport (void)
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(backSrcMap, kManholeThruFloor, &tempManholes[i]);
+				LoadScaledGraphic(backSrcMap, g_theHouseFile,
+					kManholeThruFloor, &tempManholes[i]);
 			}
 	}
 
@@ -285,7 +287,8 @@ void DrawFloorSupport (void)
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(backSrcMap, kManholeThruFloor, &tempManholes[i]);
+				LoadScaledGraphic(backSrcMap, g_theHouseFile,
+					kManholeThruFloor, &tempManholes[i]);
 			}
 	}
 
@@ -302,7 +305,8 @@ void DrawFloorSupport (void)
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(backSrcMap, kManholeThruFloor, &tempManholes[i]);
+				LoadScaledGraphic(backSrcMap, g_theHouseFile,
+					kManholeThruFloor, &tempManholes[i]);
 			}
 	}
 
@@ -319,7 +323,8 @@ void DrawFloorSupport (void)
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(backSrcMap, kManholeThruFloor, &tempManholes[i]);
+				LoadScaledGraphic(backSrcMap, g_theHouseFile,
+					kManholeThruFloor, &tempManholes[i]);
 			}
 	}
 
@@ -336,7 +341,8 @@ void DrawFloorSupport (void)
 			{
 				tempManholes[i].top = dest.top;
 				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(backSrcMap, kManholeThruFloor, &tempManholes[i]);
+				LoadScaledGraphic(backSrcMap, g_theHouseFile,
+					kManholeThruFloor, &tempManholes[i]);
 			}
 	}
 }

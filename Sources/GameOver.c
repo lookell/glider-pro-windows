@@ -13,6 +13,7 @@
 #include "Environ.h"
 #include "FrameTimer.h"
 #include "House.h"
+#include "HouseIO.h"
 #include "Macintosh.h"
 #include "Main.h"
 #include "MainWindow.h"
@@ -98,7 +99,7 @@ void SetUpFinalScreen (void)
 	ColorRect(workSrcMap, &workSrcRect, 244);
 	QSetRect(&tempRect, 0, 0, 640, 460);
 	CenterRectInRect(&tempRect, &workSrcRect);
-	LoadScaledGraphic(workSrcMap, kMilkywayPictID, &tempRect);
+	LoadScaledGraphic(workSrcMap, g_theHouseFile, kMilkywayPictID, &tempRect);
 	textDown = tempRect.top;
 	if (textDown < 0)
 		textDown = 0;
@@ -268,14 +269,14 @@ void InitDiedGameOver (void)
 
 	QSetRect(&pageSrcRect, 0, 0, 25, 32 * 8);
 	gameOverSrcMap = CreateOffScreenGWorld(&pageSrcRect, kPreferredDepth);
-	LoadGraphic(gameOverSrcMap, kLettersPictID);
+	LoadGraphic(gameOverSrcMap, g_theHouseFile, kLettersPictID);
 
 	QSetRect(&pageSrcRect, 0, 0, 32, 32 * kPageFrames);
 	pageSrcMap = CreateOffScreenGWorld(&pageSrcRect, kPreferredDepth);
-	LoadGraphic(pageSrcMap, kPagesPictID);
+	LoadGraphic(pageSrcMap, g_theHouseFile, kPagesPictID);
 
 	pageMaskMap = CreateOffScreenGWorld(&pageSrcRect, 1);
-	LoadGraphic(pageMaskMap, kPagesMaskID);
+	LoadGraphic(pageMaskMap, g_theHouseFile, kPagesMaskID);
 
 	for (i = 0; i < kPageFrames; i++)	// initialize src page rects
 	{
