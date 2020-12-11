@@ -28,7 +28,6 @@ HFONT CreateTahomaFont (LONG height, LONG weight);
 #endif
 void WaitForInputEvent (UInt16 seconds);
 Boolean OptionKeyDown (void);
-void DelayTicks (SInt32 howLong);
 void UnivGetSoundVolume (SInt16 *volume);
 void UnivSetSoundVolume (SInt16 volume);
 #ifdef GP_USE_WINAPI_H

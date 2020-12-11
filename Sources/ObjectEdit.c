@@ -32,7 +32,6 @@
 #include "RoomInfo.h"
 #include "StringUtils.h"
 #include "Tools.h"
-#include "Utilities.h"
 #include "WindowUtils.h"
 
 
@@ -815,7 +814,7 @@ void AddObjectPairing (void)
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(46, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
-				DelayTicks(60);
+				Sleep(1000);
 				CloseMessageWindow(mssgWindow);
 			}
 		}
@@ -845,7 +844,7 @@ void AddObjectPairing (void)
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(46, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
-				DelayTicks(60);
+				Sleep(1000);
 				CloseMessageWindow(mssgWindow);
 			}
 		}
@@ -875,7 +874,7 @@ void AddObjectPairing (void)
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(47, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
-				DelayTicks(60);
+				Sleep(1000);
 				CloseMessageWindow(mssgWindow);
 			}
 		}
@@ -905,7 +904,7 @@ void AddObjectPairing (void)
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(47, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
-				DelayTicks(60);
+				Sleep(1000);
 				CloseMessageWindow(mssgWindow);
 			}
 		}
@@ -935,7 +934,7 @@ void AddObjectPairing (void)
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(48, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
-				DelayTicks(60);
+				Sleep(1000);
 				CloseMessageWindow(mssgWindow);
 			}
 		}
@@ -965,7 +964,7 @@ void AddObjectPairing (void)
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(48, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
-				DelayTicks(60);
+				Sleep(1000);
 				CloseMessageWindow(mssgWindow);
 			}
 		}
@@ -995,7 +994,7 @@ void AddObjectPairing (void)
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(49, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
-				DelayTicks(60);
+				Sleep(1000);
 				CloseMessageWindow(mssgWindow);
 			}
 		}
@@ -1025,7 +1024,7 @@ void AddObjectPairing (void)
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(49, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
-				DelayTicks(60);
+				Sleep(1000);
 				CloseMessageWindow(mssgWindow);
 			}
 		}
@@ -1056,7 +1055,7 @@ void AddObjectPairing (void)
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(50, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
-				DelayTicks(60);
+				Sleep(1000);
 				CloseMessageWindow(mssgWindow);
 			}
 		}
@@ -1087,7 +1086,7 @@ void AddObjectPairing (void)
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(51, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
-				DelayTicks(60);
+				Sleep(1000);
 				CloseMessageWindow(mssgWindow);
 			}
 		}

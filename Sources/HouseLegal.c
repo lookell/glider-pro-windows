@@ -20,7 +20,6 @@
 #include "RectUtils.h"
 #include "Room.h"
 #include "StringUtils.h"
-#include "Utilities.h"
 #include "WindowUtils.h"
 
 #include <strsafe.h>
@@ -908,7 +907,7 @@ void KeepAllObjectsLegal (HWND mssgWindow)
 						GetLocalizedString(19, message, ARRAYSIZE(message));
 						SetMessageWindowMessage(mssgWindow, message);
 						houseErrors++;
-						DelayTicks(60);
+						Sleep(1000);
 					}
 				}
 			}
@@ -942,7 +941,7 @@ void CheckForStaircasePairs (HWND mssgWindow)
 						SetMessageTextColor(mssgWindow, redColor);
 						GetLocalizedString(20, message, ARRAYSIZE(message));
 						SetMessageWindowMessage(mssgWindow, message);
-						DelayTicks(60);
+						Sleep(1000);
 					}
 					else
 					{
@@ -957,7 +956,7 @@ void CheckForStaircasePairs (HWND mssgWindow)
 							SetMessageTextColor(mssgWindow, redColor);
 							GetLocalizedString(21, message, ARRAYSIZE(message));
 							SetMessageWindowMessage(mssgWindow, message);
-							DelayTicks(60);
+							Sleep(1000);
 						}
 					}
 				}
@@ -970,7 +969,7 @@ void CheckForStaircasePairs (HWND mssgWindow)
 						SetMessageTextColor(mssgWindow, redColor);
 						GetLocalizedString(22, message, ARRAYSIZE(message));
 						SetMessageWindowMessage(mssgWindow, message);
-						DelayTicks(60);
+						Sleep(1000);
 					}
 					else
 					{
@@ -985,7 +984,7 @@ void CheckForStaircasePairs (HWND mssgWindow)
 							SetMessageTextColor(mssgWindow, redColor);
 							GetLocalizedString(23, message, ARRAYSIZE(message));
 							SetMessageWindowMessage(mssgWindow, message);
-							DelayTicks(60);
+							Sleep(1000);
 						}
 					}
 				}
@@ -1032,7 +1031,7 @@ void CheckHouseForProblems (void)
 			SetMessageTextColor(mssgWindow, blackColor);
 			GetLocalizedString(27, message, ARRAYSIZE(message));
 			SetMessageWindowMessage(mssgWindow, message);
-			DelayTicks(60);
+			Sleep(1000);
 			houseErrors = 0;
 		}
 	}
@@ -1049,7 +1048,7 @@ void CheckHouseForProblems (void)
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, redColor);
 			SetMessageWindowMessage(mssgWindow, message);
-			DelayTicks(45);
+			Sleep(750);
 		}
 	}
 
@@ -1069,7 +1068,7 @@ void CheckHouseForProblems (void)
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, redColor);
 			SetMessageWindowMessage(mssgWindow, message);
-			DelayTicks(60);
+			Sleep(1000);
 		}
 	}
 
@@ -1085,7 +1084,7 @@ void CheckHouseForProblems (void)
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, blueColor);
 			SetMessageWindowMessage(mssgWindow, message);
-			DelayTicks(45);
+			Sleep(750);
 		}
 	}
 
@@ -1101,7 +1100,7 @@ void CheckHouseForProblems (void)
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, blueColor);
 			SetMessageWindowMessage(mssgWindow, message);
-			DelayTicks(45);
+			Sleep(750);
 		}
 	}
 
@@ -1117,7 +1116,7 @@ void CheckHouseForProblems (void)
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, redColor);
 			SetMessageWindowMessage(mssgWindow, message);
-			DelayTicks(60);
+			Sleep(1000);
 		}
 	}
 
@@ -1136,7 +1135,7 @@ void CheckHouseForProblems (void)
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, redColor);
 			SetMessageWindowMessage(mssgWindow, message);
-			DelayTicks(60);
+			Sleep(1000);
 		}
 	}
 
@@ -1155,7 +1154,7 @@ void CheckHouseForProblems (void)
 			SetMessageTextColor(mssgWindow, redColor);
 			GetLocalizedString(35, message, ARRAYSIZE(message));
 			SetMessageWindowMessage(mssgWindow, message);
-			DelayTicks(60);
+			Sleep(1000);
 		}
 	}
 

@@ -309,15 +309,6 @@ Boolean OptionKeyDown (void)
 	return (GetKeyState(VK_MENU) < 0);
 }
 
-//--------------------------------------------------------------  DelayTicks
-// Lil' function that just sits and waits a specified number of
-// Ticks (1/60 of a second).
-
-void DelayTicks (SInt32 howLong)
-{
-	Sleep(TicksToMillis(howLong));
-}
-
 //--------------------------------------------------------------  UnivGetSoundVolume
 // Returns the speaker volume (as set by the user) in the range of
 // zero to seven (handles Sound Manager 3 case as well).

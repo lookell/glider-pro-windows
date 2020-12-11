@@ -71,7 +71,7 @@ void DoHighScores (void)
 	SpinCursor(3);
 	DissolveScreenOn(&workSrcRect);
 	InitCursor();
-	DelayTicks(60);
+	Sleep(1000);
 	WaitForInputEvent(30);
 }
 

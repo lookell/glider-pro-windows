@@ -215,7 +215,7 @@ void DisplayStarsRemaining (void)
 	}
 	ReleaseMainWindowDC(mainWindowDC);
 
-	DelayTicks(60);
+	Sleep(1000);
 	WaitForInputEvent(30);
 	CopyRectWorkToMain(&bounds);
 }
