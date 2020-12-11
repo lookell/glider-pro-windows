@@ -1,8 +1,6 @@
 #ifndef FRAME_TIMER_H_
 #define FRAME_TIMER_H_
 
-#ifdef GP_USE_WINAPI_H
-
 #include "WinAPI.h"
 
 #define FRAME_TIMER_DEFAULT_FPS 30
@@ -14,7 +12,5 @@ void SetFrameRate(DWORD NewFrameRate);
 void WaitUntilNextFrame(void);
 BOOL PeekMessageOrWaitForFrame(LPMSG lpMsg, HWND hWnd,
 	UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg);
-
-#endif
 
 #endif

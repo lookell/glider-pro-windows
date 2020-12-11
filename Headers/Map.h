@@ -8,13 +8,9 @@
 //============================================================================
 
 #include "MacTypes.h"
-#ifdef GP_USE_WINAPI_H
 #include "WinAPI.h"
-#endif
 
-#ifdef GP_USE_WINAPI_H
 extern HWND mapWindow;
-#endif
 extern SInt16 isMapH;
 extern SInt16 isMapV;
 extern SInt16 mapRoomsWide;
@@ -28,9 +24,7 @@ Boolean ThisRoomVisibleOnMap (void);
 void CenterMapOnRoom (SInt16 h, SInt16 v);
 void FlagMapRoomsForUpdate (void);
 void FindNewActiveRoomRect (void);
-#ifdef GP_USE_WINAPI_H
 void DrawMapRoomImage (HDC hdc, SInt16 backgroundID, const Rect *theRect);
-#endif
 void UpdateMapWindow (void);
 void OpenMapWindow (void);
 void CloseMapWindow (void);

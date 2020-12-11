@@ -7,13 +7,9 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-#ifdef GP_USE_WINAPI_H
-
 #include "MacTypes.h"
 #include "WinAPI.h"
 
 Boolean CheckFileError (HWND ownerWindow, HRESULT resultCode, PCWSTR fileName);
-
-#endif
 
 #endif

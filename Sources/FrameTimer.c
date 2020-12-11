@@ -1,5 +1,3 @@
-#define GP_USE_WINAPI_H
-
 #include "FrameTimer.h"
 
 // On Windows XP and later (our target platforms), the performance counter

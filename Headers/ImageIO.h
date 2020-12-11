@@ -1,8 +1,6 @@
 #ifndef IMAGE_IO_H_
 #define IMAGE_IO_H_
 
-#ifdef GP_USE_WINAPI_H
-
 #include "WinAPI.h"
 
 // Load a .BMP file from a memory buffer and return a compatible bitmap.
@@ -19,7 +17,5 @@ HBITMAP LoadMemoryBMPAsDIBSection(const void *buffer, size_t length);
 // If `width` is zero, then `GetSystemMetrics(SM_CXICON)` is used instead.
 // If `height` is zero, then `GetSystemMetrics(SM_CYICON)` is used instead.
 HICON LoadMemoryICO(const void *buffer, size_t length, int width, int height);
-
-#endif
 
 #endif

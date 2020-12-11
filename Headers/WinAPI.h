@@ -1,8 +1,6 @@
 #ifndef WINAPI_H_
 #define WINAPI_H_
 
-#ifdef GP_USE_WINAPI_H
-
 // Ask for strict type definitions
 #define STRICT
 
@@ -29,7 +27,5 @@
 // of the current module.
 EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 #define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
-
-#endif
 
 #endif

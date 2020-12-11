@@ -9,23 +9,17 @@
 
 #include "GliderDefines.h"
 #include "MacTypes.h"
-#ifdef GP_USE_WINAPI_H
 #include "WinAPI.h"
-#endif
 
 extern Rect roomObjectRects[kMaxRoomObs];
 extern Rect leftStartGliderSrc;
 extern Rect rightStartGliderSrc;
 extern SInt16 objActive;
 
-#ifdef GP_USE_WINAPI_H
 void DoSelectionClick (HWND hwnd, Point where, Boolean isDoubleClick);
 void DoNewObjectClick (HWND ownerWindow, Point where);
-#endif
 void Gp_DeleteObject (void);
-#ifdef GP_USE_WINAPI_H
 void DuplicateObject (HWND ownerWindow);
-#endif
 void MoveObject (SInt16 whichWay, Boolean shiftDown);
 void DeselectObject (void);
 Boolean ObjectHasHandle (SInt16 *direction, SInt16 *dist);

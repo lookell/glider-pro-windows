@@ -8,13 +8,9 @@
 //============================================================================
 
 #include "MacTypes.h"
-#ifdef GP_USE_WINAPI_H
 #include "WinAPI.h"
-#endif
 
-#ifdef GP_USE_WINAPI_H
 extern HWND linkWindow;
-#endif
 extern SInt16 isLinkH;
 extern SInt16 isLinkV;
 extern SInt16 linkRoom;

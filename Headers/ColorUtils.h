@@ -7,8 +7,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-#ifdef GP_USE_WINAPI_H
-
 #include "MacTypes.h"
 #include "WinAPI.h"
 
@@ -29,7 +27,5 @@ void DitherShadowOval (HDC hdc, const Rect *theRect);
 void DitherShadowRegion (HDC hdc, HRGN theRgn);
 void DitherShadowPath (HDC hdc);
 HBITMAP CreateShadowBitmap (void);
-
-#endif
 
 #endif

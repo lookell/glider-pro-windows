@@ -7,8 +7,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-#ifdef GP_USE_WINAPI_H
-
 #include "MacTypes.h"
 #include "WinAPI.h"
 
@@ -29,7 +27,5 @@ void GetDialogItemRect (HWND theDialog, int item, Rect *theRect);
 void AddMenuToComboBox (HWND theDialog, int whichItem, HMENU theMenu);
 void GetComboBoxMenuValue (HWND theDialog, int whichItem, SInt16 *value);
 void SetComboBoxMenuValue (HWND theDialog, int whichItem, SInt16 value);
-
-#endif
 
 #endif
