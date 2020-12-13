@@ -275,6 +275,10 @@ Boolean OpenSavedGame (HWND ownerWindow)
 		smallGame.facing = savedGame.facing;
 		smallGame.showFoil = savedGame.showFoil;
 
+		if (savedGame.savedData == NULL)
+		{
+			savedGame.nRooms = 0;
+		}
 		for (r = 0; r < savedGame.nRooms; r++)
 		{
 			srcRoom = &(savedGame.savedData[r]);

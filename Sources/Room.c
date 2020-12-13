@@ -138,8 +138,10 @@ void SetInitialTiles (SInt16 background, SInt16 *theTiles)
 
 Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 {
-	SInt16		i, availableRoom;
-	roomPtr		newRoomsPtr;
+	SInt16 i;
+	SInt16 availableRoom;
+	size_t newRoomsCount;
+	roomPtr newRoomsPtr;
 
 	CopyThisRoomToRoom();					// save off current room
 
@@ -171,10 +173,9 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 	{
 		if (thisHouse.nRooms < 0)
 			thisHouse.nRooms = 0;
-		newRoomsPtr = (roomType *)realloc(
-			thisHouse.rooms,
-			(thisHouse.nRooms + 1) * sizeof(*thisHouse.rooms)
-		);
+		newRoomsCount = (size_t)thisHouse.nRooms + 1;
+		newRoomsPtr = (roomType *)realloc(thisHouse.rooms,
+			newRoomsCount * sizeof(*thisHouse.rooms));
 		if (newRoomsPtr == NULL)
 		{
 			YellowAlert(ownerWindow, kYellowUnaccounted, -1);

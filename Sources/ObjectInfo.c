@@ -1186,8 +1186,11 @@ void DoFurnitureObjectInfo (HWND hwndOwner)
 
 	if (result == kFurnitureLinkedFrom)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object,
-			retroLinkList[objActive].room);
+		if ((objActive >= 0) && (objActive < kMaxRoomObs))
+		{
+			GoToObjectInRoomNum(retroLinkList[objActive].object,
+				retroLinkList[objActive].room);
+		}
 	}
 }
 
