@@ -7,7 +7,6 @@
 //============================================================================
 
 
-#include "AnimCursor.h"
 #include "DialogUtils.h"
 #include "House.h"
 #include "HouseIO.h"
@@ -282,7 +281,6 @@ void DoDirSearch (HWND ownerWindow)
 
 	while (numDirs > 0)
 	{
-		SpinCursor(1);
 		if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
 			// handle a directory entry

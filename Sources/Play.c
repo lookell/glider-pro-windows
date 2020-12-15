@@ -7,7 +7,6 @@
 //============================================================================
 
 
-#include "AnimCursor.h"
 #include "Banner.h"
 #include "DynamicMaps.h"
 #include "Dynamics.h"
@@ -127,7 +126,6 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 	}
 	if (mode != kResumeGameMode)
 		SetObjectsToDefaults();
-	//HideCursor();
 	if (mode == kResumeGameMode)
 		SetHouseToSavedRoom();
 	else if (mode == kNewGameMode)
@@ -252,7 +250,6 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 
 	twoPlayerGame = false;
 	theMode = kSplashMode;
-	InitCursor();
 	if (isPlayMusicIdle)
 	{
 		if (!isMusicOn)

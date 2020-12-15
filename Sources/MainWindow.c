@@ -7,7 +7,6 @@
 //============================================================================
 
 
-#include "AnimCursor.h"
 #include "ColorUtils.h"
 #include "Coordinates.h"
 #include "DialogUtils.h"
@@ -55,11 +54,6 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate);
 LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam);
 
 
-HCURSOR handCursor;
-HCURSOR vertCursor;
-HCURSOR horiCursor;
-HCURSOR diagBotCursor;
-HCURSOR diagTopCursor;
 Rect workSrcRect;
 HDC workSrcMap;
 Rect mainWindowRect;
@@ -77,8 +71,6 @@ Boolean splashDrawn;
 HDC splashSrcMap;
 Rect splashSrcRect;
 
-static HCURSOR mainWindowCursor;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  RegisterMainWindowClass
@@ -94,7 +86,7 @@ void RegisterMainWindowClass (void)
 	wcx.cbWndExtra = 0;
 	wcx.hInstance = HINST_THISCOMPONENT;
 	wcx.hIcon = LoadIcon(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDI_APPL));
-	wcx.hCursor = NULL;
+	wcx.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wcx.hbrBackground = NULL;
 	wcx.lpszMenuName = NULL;
 	wcx.lpszClassName = WC_MAINWINDOW;
@@ -584,27 +576,6 @@ void WashColorIn (void)
 	}
 }
 
-//--------------------------------------------------------------  InitMainWindowCursor
-
-void InitMainWindowCursor (void)
-{
-	SetMainWindowCursor(LoadCursor(NULL, IDC_ARROW));
-}
-
-//--------------------------------------------------------------  GetMainWindowCursor
-
-HCURSOR GetMainWindowCursor (void)
-{
-	return mainWindowCursor;
-}
-
-//--------------------------------------------------------------  SetMainWindowCursor
-
-void SetMainWindowCursor (HCURSOR hCursor)
-{
-	mainWindowCursor = hCursor;
-}
-
 //--------------------------------------------------------------  MainWindowProc
 
 LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -625,10 +596,6 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	case WM_COMMAND:
 		DoMenuChoice(hwnd, LOWORD(wParam));
-		return 0;
-
-	case WM_CREATE:
-		SetMainWindowCursor(LoadCursor(NULL, IDC_ARROW));
 		return 0;
 
 	case WM_DESTROY:
@@ -689,14 +656,6 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		}
 		return 0;
 
-	case WM_SETCURSOR:
-		if (LOWORD(lParam) == HTCLIENT)
-		{
-			SetCursor(GetMainWindowCursor());
-			return TRUE;
-		}
-		break;
-
 	case WM_PAINT:
 	{
 		PAINTSTRUCT ps;
@@ -723,11 +682,9 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
 			switchedOut = false;
 			if (isPlayMusicGame && !isMusicOn)
 				StartMusic();
-			//HideCursor();
 		}
 		else
 		{
-			InitCursor();
 			switchedOut = true;
 			if (isPlayMusicGame && isMusicOn)
 				StopTheMusic();
@@ -738,7 +695,6 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
 		if (fActivate)
 		{
 			switchedOut = false;
-			InitCursor();
 			if ((isPlayMusicIdle) && (theMode != kEditMode))
 			{
 				OSErr theErr = StartMusic();
@@ -759,7 +715,6 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
 		else
 		{
 			switchedOut = true;
-			InitCursor();
 			if ((isMusicOn) && (theMode != kEditMode))
 				StopTheMusic();
 		}

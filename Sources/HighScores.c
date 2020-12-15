@@ -7,7 +7,6 @@
 //============================================================================
 
 
-#include "AnimCursor.h"
 #include "ByteIO.h"
 #include "DialogUtils.h"
 #include "Environ.h"
@@ -58,17 +57,13 @@ void DoHighScores (void)
 {
 	Rect		tempRect;
 
-	SpinCursor(3);
 	Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	QSetRect(&tempRect, 0, 0, 640, 460);
 	QOffsetRect(&tempRect, splashOriginH, splashOriginV);
 	LoadScaledGraphic(workSrcMap, g_theHouseFile, kStarPictID, &tempRect);
 	DissolveScreenOn(&workSrcRect);
-	SpinCursor(3);
 	DrawHighScores();
-	SpinCursor(3);
 	DissolveScreenOn(&workSrcRect);
-	InitCursor();
 	Sleep(1000);
 	WaitForInputEvent(30);
 }
@@ -156,7 +151,6 @@ void DrawHighScores (void)
 	{
 		if (thisHouse.highScores.scores[i] > 0L)
 		{
-			SpinCursor(1);
 			NumToString(i + 1L, tempStr);		// draw placing number
 			SetTextColor(workSrcMap, blackColor);
 			if (i == 0)

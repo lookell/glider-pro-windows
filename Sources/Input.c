@@ -117,7 +117,6 @@ void DoCommandKeySave (void)
 {
 	RefreshScoreboard(kSavingTitleMode);
 	SaveGame2(mainWindow); // New save game.
-	//HideCursor();
 	CopyRectWorkToMain(&workSrcRect);
 	RefreshScoreboard(kNormalTitleMode);
 }

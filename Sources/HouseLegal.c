@@ -7,7 +7,6 @@
 //============================================================================
 
 
-#include "AnimCursor.h"
 #include "Banner.h"
 #include "House.h"
 #include "Macintosh.h"
@@ -1011,7 +1010,6 @@ void CheckHouseForProblems (void)
 	GetLocalizedString(24, message, ARRAYSIZE(message));
 	mssgWindow = OpenMessageWindow(message, mainWindow);
 
-	SpinCursor(3);
 	SetMessageTextColor(mssgWindow, blackColor);
 	GetLocalizedString(25, message, ARRAYSIZE(message));
 	SetMessageWindowMessage(mssgWindow, message);
@@ -1019,7 +1017,6 @@ void CheckHouseForProblems (void)
 
 	if (isHouseChecks)
 	{
-		SpinCursor(3);
 		SetMessageTextColor(mssgWindow, blackColor);
 		GetLocalizedString(26, message, ARRAYSIZE(message));
 		SetMessageWindowMessage(mssgWindow, message);
@@ -1036,7 +1033,6 @@ void CheckHouseForProblems (void)
 
 	if (isHouseChecks)
 	{
-		SpinCursor(3);
 		houseErrors = 0;
 		CheckDuplicateFloorSuite();
 		if (houseErrors != 0)
@@ -1050,14 +1046,11 @@ void CheckHouseForProblems (void)
 		}
 	}
 
-	SpinCursor(3);
 	CompressHouse();
-	SpinCursor(3);
 	LopOffExtraRooms(mssgWindow);
 
 	if (isHouseChecks)
 	{
-		SpinCursor(3);
 		ValidateRoomNumbers(mssgWindow);
 		if (houseErrors != 0)
 		{
@@ -1072,7 +1065,6 @@ void CheckHouseForProblems (void)
 
 	if (isHouseChecks)
 	{
-		SpinCursor(3);
 		houseErrors = 0;
 		CountUntitledRooms();
 		if (houseErrors != 0)
@@ -1088,7 +1080,6 @@ void CheckHouseForProblems (void)
 
 	if (isHouseChecks)
 	{
-		SpinCursor(3);
 		houseErrors = 0;
 		CheckRoomNameLength();
 		if (houseErrors != 0)
@@ -1104,7 +1095,6 @@ void CheckHouseForProblems (void)
 
 	if (isHouseChecks)
 	{
-		SpinCursor(3);
 		houseErrors = 0;
 		MakeSureNumObjectsJives();
 		if (houseErrors != 0)
@@ -1120,7 +1110,6 @@ void CheckHouseForProblems (void)
 
 	if (isHouseChecks)
 	{
-		SpinCursor(3);
 		houseErrors = 0;
 		SetMessageTextColor(mssgWindow, blackColor);
 		GetLocalizedString(33, message, ARRAYSIZE(message));
@@ -1139,14 +1128,12 @@ void CheckHouseForProblems (void)
 
 	if (isHouseChecks)
 	{
-		SpinCursor(3);
 		houseErrors = 0;
 		CheckForStaircasePairs(mssgWindow);
 	}
 
 	if (isHouseChecks)
 	{
-		SpinCursor(3);
 		if (CountStarsInHouse() < 1)
 		{
 			SetMessageTextColor(mssgWindow, redColor);
@@ -1156,7 +1143,6 @@ void CheckHouseForProblems (void)
 		}
 	}
 
-	InitCursor();
 	CloseMessageWindow(mssgWindow);
 	ForceThisRoom(wasRoom);
 	objActive = wasActive;

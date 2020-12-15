@@ -36,7 +36,6 @@ target_sources(
   miniz/miniz.c
   # Glider PRO source files
   Headers/About.h
-  Headers/AnimCursor.h
   Headers/Audio.h
   Headers/Banner.h
   Headers/ByteIO.h
@@ -109,7 +108,6 @@ target_sources(
   Headers/WindowUtils.h
   Resources/gliderpro.rc
   Sources/About.c
-  Sources/AnimCursor.c
   Sources/Audio.c
   Sources/Banner.c
   Sources/ByteIO.c

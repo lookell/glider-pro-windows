@@ -7,7 +7,6 @@
 //============================================================================
 
 
-#include "AnimCursor.h"
 #include "House.h"
 #include "HouseIO.h"
 #include "Link.h"
@@ -981,7 +980,6 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 			thisHouse.rooms[thisRoomNumber].objects[i] =
 					thisHouse.rooms[thisRoomNumber].objects[i + 1];
 			sorting[i] = sorting[i + 1];
-			SpinCursor(2);
 		}
 											// Insert object at end of array.
 		thisHouse.rooms[thisRoomNumber].objects[kMaxRoomObs - 1] = savedObject;
@@ -994,7 +992,6 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 			thisHouse.rooms[thisRoomNumber].objects[i] =
 					thisHouse.rooms[thisRoomNumber].objects[i - 1];
 			sorting[i] = sorting[i - 1];
-			SpinCursor(2);
 		}
 											// Insert object at beginning of array.
 		thisHouse.rooms[thisRoomNumber].objects[0] = savedObject;
@@ -1048,7 +1045,5 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 	ReadyBackground(thisRoom->background, thisRoom->tiles);
 	DrawThisRoomsObjects();
 	GenerateRetroLinks();
-
-	InitCursor();
 }
 

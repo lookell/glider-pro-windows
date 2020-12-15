@@ -8,7 +8,6 @@
 //============================================================================
 
 
-#include "AnimCursor.h"
 #include "Audio.h"
 #include "Coordinates.h"
 #include "Environ.h"
@@ -318,7 +317,6 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 	InitCommonControlsEx(&icc);
 	RegisterMainWindowClass();
 	InitRandomLongQUS();
-	InitCursor();
 	switchedOut = false;
 
 	// NOTE: ReadInPrefs() must come before CheckOurEnvirons()
@@ -327,14 +325,13 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 	if (FAILED(Gp_LoadBuiltInAssets()))
 		RedAlert(kErrFailedResourceLoad);
 
-	VariableInit();						SpinCursor(2);
-	GetExtraCursors();					SpinCursor(2);
+	VariableInit();
 	InitMarquee();
-	CreatePointers();					SpinCursor(2);
+	CreatePointers();
 	InitSrcRects();
-	CreateOffscreens();					SpinCursor(2);
-	InitSound(NULL);					SpinCursor(2);
-	InitMusic(NULL);					SpinCursor(2);
+	CreateOffscreens();
+	InitSound(NULL);
+	InitMusic(NULL);
 	OpenMainWindow();
 
 #ifdef COMPILEQT
@@ -351,7 +348,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 		whoCares = ReadHouse(mainWindow);
 
 	PlayPrioritySound(kBirdSound, kBirdPriority);
-	InitializeMenus();					InitCursor();
+	InitializeMenus();
 
 	if (isDoColorFade)
 	{

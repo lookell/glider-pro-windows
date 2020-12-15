@@ -7,7 +7,6 @@
 //============================================================================
 
 
-#include "AnimCursor.h"
 #include "DialogUtils.h"
 #include "FileError.h"
 #include "HighScores.h"
@@ -133,7 +132,6 @@ Boolean CreateNewHouse (HWND hwndOwner)
 	PasStringCopy(theSpec.name, thisHouseName);
 	AddExtraHouse(&theSpec);
 	BuildHouseList(hwndOwner);
-	InitCursor();
 	if (!OpenHouse(hwndOwner))
 	{
 		return false;
@@ -430,8 +428,6 @@ void SortHouseObjects (void)
 {
 	SInt16		numLinks, numRooms, r, i, l;
 
-	SpinCursor(3);
-
 	CopyThisRoomToRoom();
 
 	numLinks = CountHouseLinks();
@@ -466,12 +462,8 @@ void SortHouseObjects (void)
 			}
 		}
 		SortRoomsObjects(r);
-
-		if ((r & 0x0007) == 0x0007)
-			SpinCursor(1);
 	}
 
-	SpinCursor(3);
 	free(linksList);
 	ForceThisRoom(thisRoomNumber);
 }
@@ -698,8 +690,6 @@ void ConvertHouseVer1To2 (void)
 	GetLocalizedString(13, message, ARRAYSIZE(message));
 	mssgWindow = OpenMessageWindow(message, mainWindow);
 
-	SpinCursor(3);
-
 	numRooms = thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
@@ -709,7 +699,6 @@ void ConvertHouseVer1To2 (void)
 			GetLocalizedString(14, message, ARRAYSIZE(message));
 			StringCchCat(message, ARRAYSIZE(message), roomStr);
 			SetMessageWindowMessage(mssgWindow, message);
-			SpinCursor(1);
 
 			ForceThisRoom(i);
 			for (h = 0; h < kMaxRoomObs; h++)
@@ -753,7 +742,6 @@ void ConvertHouseVer1To2 (void)
 
 	thisHouse.version = kHouseVersion;
 
-	InitCursor();
 	CloseMessageWindow(mssgWindow);
 	ForceThisRoom(wasRoom);
 }
@@ -772,7 +760,6 @@ void ShiftWholeHouse (SInt16 howFar)
 	char		wasState;
 
 	OpenMessageWindow_Pascal("\pShifting Whole House…");
-	SpinCursor(3);
 
 	CopyThisRoomToRoom();
 	wasRoom = thisRoomNumber;
@@ -784,8 +771,6 @@ void ShiftWholeHouse (SInt16 howFar)
 	{
 		if ((*thisHouse)->rooms[i].suite != kRoomIsEmpty)
 		{
-			SpinCursor(1);
-
 			ForceThisRoom(i);
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
@@ -797,7 +782,6 @@ void ShiftWholeHouse (SInt16 howFar)
 	HSetState((Handle)thisHouse, wasState);
 	ForceThisRoom(wasRoom);
 
-	InitCursor();
 	CloseMessageWindow();
 #endif
 }

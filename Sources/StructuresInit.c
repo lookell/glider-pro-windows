@@ -7,7 +7,6 @@
 //============================================================================
 
 
-#include "AnimCursor.h"
 #include "ByteIO.h"
 #include "DynamicMaps.h"
 #include "Dynamics.h"
@@ -693,19 +692,19 @@ void CreateOffscreens (void)
 	ZeroRectCorner(&backSrcRect);
 	backSrcMap = CreateOffScreenGWorld(&backSrcRect, kPreferredDepth);
 
-	InitScoreboardMap();	SpinCursor(1);
-	InitGliderMap();		SpinCursor(1);
-	InitBlowers();			SpinCursor(1);
-	InitFurniture();		SpinCursor(1);
-	InitPrizes();			SpinCursor(1);
-	InitTransports();		SpinCursor(1);
-	InitSwitches();			SpinCursor(1);
-	InitLights();			SpinCursor(1);
-	InitAppliances();		SpinCursor(1);
-	InitEnemies();			SpinCursor(1);
-	InitClutter();			SpinCursor(1);
-	InitSupport();			SpinCursor(1);
-	InitAngel();			SpinCursor(1);
+	InitScoreboardMap();
+	InitGliderMap();
+	InitBlowers();
+	InitFurniture();
+	InitPrizes();
+	InitTransports();
+	InitSwitches();
+	InitLights();
+	InitAppliances();
+	InitEnemies();
+	InitClutter();
+	InitSupport();
+	InitAngel();
 	InitSplashScreenMap();
 
 	QSetRect(&tileSrcRect, 0, 0, 128, 80);

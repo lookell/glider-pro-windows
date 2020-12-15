@@ -8,7 +8,6 @@
 //============================================================================
 
 void InitializeMenus (void);
-void GetExtraCursors (void);
 void VariableInit (void);
 
 #endif

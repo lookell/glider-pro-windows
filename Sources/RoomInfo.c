@@ -12,7 +12,6 @@
 #include "House.h"
 #include "HouseIO.h"
 #include "Macintosh.h"
-#include "MainWindow.h"
 #include "Menu.h"
 #include "RectUtils.h"
 #include "Room.h"
@@ -141,6 +140,8 @@ void UpdateRoomInfoDialog (HWND hDlg, HDC hdc)
 
 void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 {
+	HCURSOR dragCursor = NULL;
+	HCURSOR oldCursor = NULL;
 	RECT dragRect;
 	Rect hiliteRect;
 	Point mouseWas;
@@ -150,7 +151,12 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 	MSG msg;
 
 	SetCapture(hDlg);
-	SetCursor(handCursor);
+
+	dragCursor = LoadCursor(NULL, IDC_SIZEALL);
+	if (dragCursor != NULL)
+	{
+		oldCursor = SetCursor(dragCursor);
+	}
 
 	hiliteBrush = CreateSolidBrush(blueColor);
 
@@ -291,6 +297,11 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 	}
 	DrawFocusRect(hdc, &dragRect);
 	ReleaseDC(hDlg, hdc);
+
+	if (dragCursor != NULL)
+	{
+		SetCursor(oldCursor);
+	}
 }
 
 //--------------------------------------------------------------  HiliteTileOver
@@ -568,6 +579,9 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 	case WM_SETCURSOR:
 		if (showHandCursor)
 		{
+			HCURSOR handCursor;
+
+			handCursor = LoadCursor(NULL, IDC_SIZEALL);
 			SetCursor(handCursor);
 			SetWindowLongPtr(hDlg, DWLP_MSGRESULT, TRUE);
 			return TRUE;

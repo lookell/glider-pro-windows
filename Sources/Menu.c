@@ -8,7 +8,6 @@
 
 
 #include "About.h"
-#include "AnimCursor.h"
 #include "Coordinates.h"
 #include "DialogUtils.h"
 #include "Events.h"
@@ -428,10 +427,7 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 			if (fileDirty)
 				SortHouseObjects();
 			if (!QuerySaveChanges(hwnd))
-			{
-				InitCursor();
 				break;
-			}
 			CloseMapWindow();
 			CloseToolsWindow();
 			CloseCoordWindow();
@@ -451,7 +447,6 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 			OpenMainWindow();
 			OpenCloseEditWindows();
 		}
-		InitCursor();
 		UpdateMenus(true);
 		break;
 

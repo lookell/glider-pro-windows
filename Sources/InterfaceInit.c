@@ -36,7 +36,6 @@
 
 
 static HMENU DetachPopupMenu (HMENU rootMenu, UINT id, LPWSTR *title);
-static HCURSOR LoadSystemCursor (DWORD id);
 
 
 //==============================================================  Functions
@@ -128,48 +127,6 @@ void InitializeMenus (void)
 
 	UpdateMenus(false);
 	DestroyMenu(rootMenu);
-}
-
-//--------------------------------------------------------------  LoadSystemCursor
-// Load up a system cursor and return a handle to it. Exits the program
-// if the cursor fails to load (this should never happen).
-
-static HCURSOR LoadSystemCursor (DWORD id)
-{
-	return (HCURSOR)LoadImage(NULL, MAKEINTRESOURCE(id), IMAGE_CURSOR, 0, 0, LR_SHARED);
-}
-
-//--------------------------------------------------------------  GetExtraCursors
-// Extra cursors (custom cursors) like the "hand" and various room
-// editing cursors are loaded up.
-
-void GetExtraCursors (void)
-{
-	handCursor = LoadSystemCursor(OCR_SIZEALL);
-	if (handCursor == NULL)
-	{
-		RedAlert(kErrFailedResourceLoad);
-	}
-	vertCursor = LoadSystemCursor(OCR_SIZENS);
-	if (vertCursor == NULL)
-	{
-		RedAlert(kErrFailedResourceLoad);
-	}
-	horiCursor = LoadSystemCursor(OCR_SIZEWE);
-	if (horiCursor == NULL)
-	{
-		RedAlert(kErrFailedResourceLoad);
-	}
-	diagBotCursor = LoadSystemCursor(OCR_SIZENWSE);
-	if (diagBotCursor == NULL)
-	{
-		RedAlert(kErrFailedResourceLoad);
-	}
-	diagTopCursor = LoadSystemCursor(OCR_SIZENESW);
-	if (diagTopCursor == NULL)
-	{
-		RedAlert(kErrFailedResourceLoad);
-	}
 }
 
 //--------------------------------------------------------------  VariableInit

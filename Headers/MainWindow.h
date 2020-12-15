@@ -10,11 +10,6 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern HCURSOR handCursor;
-extern HCURSOR vertCursor;
-extern HCURSOR horiCursor;
-extern HCURSOR diagBotCursor;
-extern HCURSOR diagTopCursor;
 extern Rect workSrcRect;
 extern HDC workSrcMap;
 extern Rect mainWindowRect;
@@ -41,8 +36,5 @@ void UpdateEditWindowTitle (void);
 HDC GetMainWindowDC (void);
 void ReleaseMainWindowDC (HDC hdc);
 void WashColorIn (void);
-void InitMainWindowCursor (void);
-HCURSOR GetMainWindowCursor (void);
-void SetMainWindowCursor (HCURSOR hCursor);
 
 #endif

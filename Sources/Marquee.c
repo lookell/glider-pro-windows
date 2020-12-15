@@ -7,7 +7,6 @@
 //============================================================================
 
 
-#include "AnimCursor.h"
 #include "Coordinates.h"
 #include "GliderDefines.h"
 #include "Macintosh.h"
@@ -257,7 +256,6 @@ void DragOutMarqueeRect (Point start, Rect *theRect)
 	MSG msg;
 
 	SetCapture(mainWindow);
-	InitCursor();
 	QSetRect(theRect, start.h, start.v, start.h, start.v);
 	hdc = GetMainWindowDC();
 	FrameMarqueeRect(hdc, theRect);
@@ -315,18 +313,25 @@ void DragOutMarqueeRect (Point start, Rect *theRect)
 
 void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 {
+	HCURSOR dragCursor = NULL;
+	HCURSOR oldCursor = NULL;
 	Point wasPt, newPt;
 	SInt16 deltaH, deltaV;
 	HDC hdc;
 	MSG msg;
 
 	SetCapture(mainWindow);
-	SetCursor(handCursor);
 	StopMarquee();
 	hdc = GetMainWindowDC();
 	theMarquee.bounds = *theRect;
 	FrameMarqueeRect(hdc, &theMarquee.bounds);
 	ReleaseMainWindowDC(hdc);
+
+	dragCursor = LoadCursor(NULL, IDC_SIZEALL);
+	if (dragCursor != NULL)
+	{
+		oldCursor = SetCursor(dragCursor);
+	}
 
 	wasPt = start;
 	while (GetMessage(&msg, NULL, 0, 0))
@@ -384,28 +389,43 @@ void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 	FrameMarqueeRect(hdc, &theMarquee.bounds);
 	ReleaseMainWindowDC(hdc);
 	*theRect = theMarquee.bounds;
-	InitCursor();
+
+	if (dragCursor != NULL)
+	{
+		SetCursor(oldCursor);
+	}
 }
 
 //--------------------------------------------------------------  DragMarqueeHandle
 
 void DragMarqueeHandle (Point start, SInt16 *dragged)
 {
+	HCURSOR dragCursor = NULL;
+	HCURSOR oldCursor = NULL;
 	Point wasPt, newPt;
 	SInt16 deltaH, deltaV;
 	HDC hdc;
 	MSG msg;
 
 	SetCapture(mainWindow);
-	if ((theMarquee.direction == kAbove) || (theMarquee.direction == kBelow))
-		SetCursor(vertCursor);
-	else
-		SetCursor(horiCursor);
 	StopMarquee();
 	hdc = GetMainWindowDC();
 	FrameMarqueeRect(hdc, &theMarquee.bounds);
 	PaintMarqueeRect(hdc, &theMarquee.handle);
 	ReleaseMainWindowDC(hdc);
+
+	if ((theMarquee.direction == kAbove) || (theMarquee.direction == kBelow))
+	{
+		dragCursor = LoadCursor(NULL, IDC_SIZENS);
+	}
+	else
+	{
+		dragCursor = LoadCursor(NULL, IDC_SIZEWE);
+	}
+	if (dragCursor != NULL)
+	{
+		oldCursor = SetCursor(dragCursor);
+	}
 
 	wasPt = start;
 	while (GetMessage(&msg, NULL, 0, 0))
@@ -510,28 +530,43 @@ void DragMarqueeHandle (Point start, SInt16 *dragged)
 	FrameMarqueeRect(hdc, &theMarquee.bounds);
 	PaintMarqueeRect(hdc, &theMarquee.handle);
 	ReleaseMainWindowDC(hdc);
-	InitCursor();
+
+	if (dragCursor != NULL)
+	{
+		SetCursor(oldCursor);
+	}
 }
 
 //--------------------------------------------------------------  DragMarqueeCorner
 
 void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean isTop)
 {
+	HCURSOR dragCursor = NULL;
+	HCURSOR oldCursor = NULL;
 	Point wasPt, newPt;
 	SInt16 deltaH, deltaV;
 	HDC hdc;
 	MSG msg;
 
 	SetCapture(mainWindow);
-	if (isTop)
-		SetCursor(diagTopCursor);
-	else
-		SetCursor(diagBotCursor);
 	StopMarquee();
 	hdc = GetMainWindowDC();
 	FrameMarqueeRect(hdc, &theMarquee.bounds);
 	PaintMarqueeRect(hdc, &theMarquee.handle);
 	ReleaseMainWindowDC(hdc);
+
+	if (isTop)
+	{
+		dragCursor = LoadCursor(NULL, IDC_SIZENESW);
+	}
+	else
+	{
+		dragCursor = LoadCursor(NULL, IDC_SIZENWSE);
+	}
+	if (dragCursor != NULL)
+	{
+		oldCursor = SetCursor(dragCursor);
+	}
 
 	wasPt = start;
 	while (GetMessage(&msg, NULL, 0, 0))
@@ -610,7 +645,11 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 	FrameMarqueeRect(hdc, &theMarquee.bounds);
 	PaintMarqueeRect(hdc, &theMarquee.handle);
 	ReleaseMainWindowDC(hdc);
-	InitCursor();
+
+	if (dragCursor != NULL)
+	{
+		SetCursor(oldCursor);
+	}
 }
 
 //--------------------------------------------------------------  MarqueeHasHandles
