@@ -276,3 +276,13 @@ add_custom_command(
   WORKING_DIRECTORY "${MERMAID_DIRECTORY}"
   DEPENDS "${MERMAID_DEPENDENCIES}"
 )
+
+#
+# Make sure Mermaid.dat is next to the executable, if it isn't already
+#
+
+add_custom_command(
+  TARGET gliderpro POST_BUILD
+  COMMAND "${CMAKE_COMMAND}" -E
+    copy "${MERMAID_OUTPUT}" "$<TARGET_FILE_DIR:gliderpro>/Mermaid.dat"
+)
