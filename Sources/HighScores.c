@@ -579,7 +579,7 @@ Boolean ReadScoresFromDisk (HWND ownerWindow)
 	if (!GetHighScoresFilePath(pathBuffer, ARRAYSIZE(pathBuffer), thisHouseName))
 		return false;
 
-	scoresFileHandle = CreateFile(pathBuffer, GENERIC_READ, 0, NULL,
+	scoresFileHandle = CreateFile(pathBuffer, GENERIC_READ, FILE_SHARE_READ, NULL,
 			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	lastError = GetLastError();
 	if (scoresFileHandle == INVALID_HANDLE_VALUE)
