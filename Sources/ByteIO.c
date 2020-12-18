@@ -18,10 +18,6 @@ struct byteio {
 
 //--------------------------------------------------------------
 
-static int minimal_read(byteio *stream, void *buffer, size_t size);
-static int minimal_write(byteio *stream, const void *buffer, size_t size);
-static int minimal_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
-
 typedef struct handle_reader {
 	HANDLE hFile;
 	size_t size;
@@ -31,6 +27,7 @@ typedef struct handle_reader {
 
 static handle_reader *handle_reader_init(HANDLE hFile);
 static int handle_reader_read(byteio *stream, void *buffer, size_t size);
+static int handle_reader_write(byteio *stream, const void *buffer, size_t size);
 static int handle_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
 static int handle_reader_close(byteio *stream);
 
@@ -42,6 +39,7 @@ typedef struct handle_writer {
 } handle_writer;
 
 static handle_writer *handle_writer_init(HANDLE hFile);
+static int handle_writer_read(byteio *stream, void *buffer, size_t size);
 static int handle_writer_write(byteio *stream, const void *buffer, size_t size);
 static int handle_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
 static int handle_writer_close(byteio *stream);
@@ -54,6 +52,7 @@ typedef struct memory_reader {
 
 static memory_reader *memory_reader_init(const void *buffer, size_t size);
 static int memory_reader_read(byteio *stream, void *buffer, size_t size);
+static int memory_reader_write(byteio *stream, const void *buffer, size_t size);
 static int memory_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
 static int memory_reader_close(byteio *stream);
 
@@ -65,6 +64,7 @@ typedef struct memory_writer {
 } memory_writer;
 
 static memory_writer *memory_writer_init(size_t initial_capacity);
+static int memory_writer_read(byteio *stream, void *buffer, size_t size);
 static int memory_writer_write(byteio *stream, const void *buffer, size_t size);
 static int memory_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
 static int memory_writer_close(byteio *stream);
@@ -320,36 +320,6 @@ int byteio_write_le_i32(byteio *stream, int32_t num)
 
 //--------------------------------------------------------------
 
-static int minimal_read(byteio *stream, void *buffer, size_t num)
-{
-	(void)stream;
-	(void)buffer;
-	(void)num;
-
-	return 0;
-}
-
-static int minimal_write(byteio *stream, const void *buffer, size_t num)
-{
-	(void)stream;
-	(void)buffer;
-	(void)num;
-
-	return 0;
-}
-
-static int minimal_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
-{
-	(void)stream;
-	(void)offset;
-	(void)origin;
-	(void)newPos;
-
-	return 0;
-}
-
-//--------------------------------------------------------------
-
 static handle_reader *handle_reader_init(HANDLE hFile)
 {
 	handle_reader *self = (handle_reader *)malloc(sizeof(*self));
@@ -400,6 +370,15 @@ static int handle_reader_read(byteio *stream, void *buffer, size_t size)
 		self->size -= readsize;
 	}
 	return 1;
+}
+
+static int handle_reader_write(byteio *stream, const void *buffer, size_t size)
+{
+	(void)stream;
+	(void)buffer;
+	(void)size;
+
+	return 0;
 }
 
 static int handle_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
@@ -480,7 +459,7 @@ byteio *byteio_init_handle_reader(HANDLE fileHandle)
 		return NULL;
 	}
 	stream->fn_read = handle_reader_read;
-	stream->fn_write = minimal_write;
+	stream->fn_write = handle_reader_write;
 	stream->fn_seek = handle_reader_seek;
 	stream->fn_close = handle_reader_close;
 	stream->priv = handle_reader_init(fileHandle);
@@ -503,6 +482,15 @@ static handle_writer *handle_writer_init(HANDLE hFile)
 	self->bufptr = &self->buffer[0];
 	self->size = sizeof(self->buffer);
 	return self;
+}
+
+static int handle_writer_read(byteio *stream, void *buffer, size_t size)
+{
+	(void)stream;
+	(void)buffer;
+	(void)size;
+
+	return 0;
 }
 
 static int handle_writer_write(byteio *stream, const void *buffer, size_t size)
@@ -620,7 +608,7 @@ byteio *byteio_init_handle_writer(HANDLE fileHandle)
 	{
 		return NULL;
 	}
-	stream->fn_read = minimal_read;
+	stream->fn_read = handle_writer_read;
 	stream->fn_write = handle_writer_write;
 	stream->fn_seek = handle_writer_seek;
 	stream->fn_close = handle_writer_close;
@@ -668,6 +656,15 @@ static int memory_reader_read(byteio *stream, void *buffer, size_t size)
 		memcpy(buffer, &self->buffer[self->pos], size);
 	self->pos += size;
 	return 1;
+}
+
+static int memory_reader_write(byteio *stream, const void *buffer, size_t size)
+{
+	(void)stream;
+	(void)buffer;
+	(void)size;
+
+	return 0;
 }
 
 static int memory_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
@@ -731,7 +728,7 @@ byteio *byteio_init_memory_reader(const void *buffer, size_t size)
 		return NULL;
 	}
 	stream->fn_read = memory_reader_read;
-	stream->fn_write = minimal_write;
+	stream->fn_write = memory_reader_write;
 	stream->fn_seek = memory_reader_seek;
 	stream->fn_close = memory_reader_close;
 	stream->priv = memory_reader_init(buffer, size);
@@ -762,6 +759,15 @@ static memory_writer *memory_writer_init(size_t initial_capacity)
 		return NULL;
 	}
 	return self;
+}
+
+static int memory_writer_read(byteio *stream, void *buffer, size_t size)
+{
+	(void)stream;
+	(void)buffer;
+	(void)size;
+
+	return 0;
 }
 
 static int memory_writer_write(byteio *stream, const void *buffer, size_t size)
@@ -872,7 +878,7 @@ byteio *byteio_init_memory_writer(size_t initial_capacity)
 	{
 		return NULL;
 	}
-	stream->fn_read = minimal_read;
+	stream->fn_read = memory_writer_read;
 	stream->fn_write = memory_writer_write;
 	stream->fn_seek = memory_writer_seek;
 	stream->fn_close = memory_writer_close;
@@ -887,7 +893,7 @@ byteio *byteio_init_memory_writer(size_t initial_capacity)
 
 static int byteio_is_memory_writer(byteio *stream)
 {
-	return (stream->fn_read == minimal_read) &&
+	return (stream->fn_read == memory_writer_read) &&
 		(stream->fn_write == memory_writer_write) &&
 		(stream->fn_seek == memory_writer_seek) &&
 		(stream->fn_close == memory_writer_close);
