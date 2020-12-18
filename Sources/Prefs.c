@@ -52,7 +52,7 @@ Boolean GetPrefsFilePath (LPWSTR lpFilePath, size_t cchFilePath)
 Boolean WritePrefs (HWND ownerWindow, LPCWSTR prefsFilePath, const prefsInfo *thePrefs)
 {
 	HANDLE		fileHandle;
-	byteio		byteWriter;
+	byteio		*byteWriter;
 
 	fileHandle = CreateFile(prefsFilePath, GENERIC_WRITE, 0, NULL,
 			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -61,21 +61,22 @@ Boolean WritePrefs (HWND ownerWindow, LPCWSTR prefsFilePath, const prefsInfo *th
 		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(GetLastError()), L"Preferences");
 		return false;
 	}
-	if (!byteio_init_handle_writer(&byteWriter, fileHandle))
+	byteWriter = byteio_init_handle_writer(fileHandle);
+	if (byteWriter == NULL)
 	{
 		CloseHandle(fileHandle);
 		return false;
 	}
 
-	if (!WritePrefsInfo(&byteWriter, thePrefs))
+	if (!WritePrefsInfo(byteWriter, thePrefs))
 	{
 		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(GetLastError()), L"Preferences");
-		byteio_close(&byteWriter);
+		byteio_close(byteWriter);
 		CloseHandle(fileHandle);
 		return false;
 	}
 
-	if (!byteio_close(&byteWriter))
+	if (!byteio_close(byteWriter))
 	{
 		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(GetLastError()), L"Preferences");
 		CloseHandle(fileHandle);
@@ -112,7 +113,7 @@ Boolean SavePrefs (HWND ownerWindow, prefsInfo *thePrefs, SInt16 versionNow)
 HRESULT ReadPrefs (HWND ownerWindow, LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 {
 	HANDLE		fileHandle;
-	byteio		byteReader;
+	byteio		*byteReader;
 	DWORD		lastError;
 
 	fileHandle = CreateFile(prefsFilePath, GENERIC_READ, FILE_SHARE_READ, NULL,
@@ -124,23 +125,24 @@ HRESULT ReadPrefs (HWND ownerWindow, LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 			CheckFileError(ownerWindow, HRESULT_FROM_WIN32(lastError), L"Preferences");
 		return HRESULT_FROM_WIN32(lastError);
 	}
-	if (!byteio_init_handle_reader(&byteReader, fileHandle))
+	byteReader = byteio_init_handle_reader(fileHandle);
+	if (byteReader == NULL)
 	{
 		CloseHandle(fileHandle);
 		return E_OUTOFMEMORY;
 	}
 
-	if (!ReadPrefsInfo(&byteReader, thePrefs))
+	if (!ReadPrefsInfo(byteReader, thePrefs))
 	{
 		lastError = GetLastError();
 		if (lastError != ERROR_HANDLE_EOF)
 			CheckFileError(ownerWindow, HRESULT_FROM_WIN32(lastError), L"Preferences");
-		byteio_close(&byteReader);
+		byteio_close(byteReader);
 		CloseHandle(fileHandle);
 		return HRESULT_FROM_WIN32(lastError);
 	}
 
-	if (!byteio_close(&byteReader))
+	if (!byteio_close(byteReader))
 	{
 		lastError = GetLastError();
 		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(lastError), L"Preferences");

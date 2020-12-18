@@ -75,7 +75,7 @@ void LogDemoKey (Byte keyIs)
 void DumpDemoData (void)
 {
 	HANDLE demoFileHandle;
-	byteio demoWriter;
+	byteio *demoWriter;
 	SInt16 i;
 
 	demoFileHandle = CreateFile(L"demo.bin", GENERIC_WRITE, 0, NULL,
@@ -84,15 +84,16 @@ void DumpDemoData (void)
 	{
 		return;
 	}
-	if (!byteio_init_handle_writer(&demoWriter, demoFileHandle))
+	demoWriter = byteio_init_handle_writer(demoFileHandle);
+	if (demoWriter == NULL)
 	{
 		RedAlert(kErrNoMemory);
 	}
 	for (i = 0; i < demoIndex; i++)
 	{
-		WriteDemoType(&demoWriter, &demoData[i]);
+		WriteDemoType(demoWriter, &demoData[i]);
 	}
-	byteio_close(&demoWriter);
+	byteio_close(demoWriter);
 	CloseHandle(demoFileHandle);
 }
 

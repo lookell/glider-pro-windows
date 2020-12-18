@@ -9,32 +9,24 @@
 
 // The `byteio` structure is used to perform sequential input or output,
 // using a Windows HANDLE or an in-memory buffer.
-typedef struct byteio {
-	int (*fn_read)(struct byteio *stream, void *buffer, size_t size);
-	int (*fn_write)(struct byteio *stream, const void *buffer, size_t size);
-	int (*fn_seek)(struct byteio *stream, int64_t offset, int origin, int64_t *newPos);
-	int (*fn_close)(struct byteio *stream);
-	void *priv;
-} byteio;
+typedef struct byteio byteio;
 
 // All functions in this interface that return an `int` return a nonzero
 // value on success, and zero on failure.
 
 // Initialize a `byteio` structure to read bytes from a Windows file HANDLE.
-int byteio_init_handle_reader(byteio *stream, HANDLE hFile);
+byteio *byteio_init_handle_reader(HANDLE fileHandle);
 
 // Initialize a `byteio` structure to write bytes into a Windows file HANDLE.
-int byteio_init_handle_writer(byteio *stream, HANDLE hFile);
+byteio *byteio_init_handle_writer(HANDLE fileHandle);
 
 // Initialize a `byteio` structure to read bytes from a memory buffer.
-int byteio_init_memory_reader(byteio *stream, const void *buffer, size_t size);
+byteio *byteio_init_memory_reader(const void *buffer, size_t size);
 
 // Initialize a `byteio` structure to write bytes into a memory buffer.
-int byteio_init_memory_writer(byteio *stream, size_t initial_capacity);
+byteio *byteio_init_memory_writer(size_t initial_capacity);
 
-// Close an initialized `byteio` structure. The `byteio` structure must have
-// been previously initialized by one of the `byteio_init_XXX` functions, and
-// must not have been closed before this call.
+// Close an initialized `byteio` structure.
 //
 // If this is called on a memory writer, the buffer will be lost. Call the
 // `byteio_close_and_get_buffer` function instead to close the memory writer
@@ -44,7 +36,7 @@ int byteio_close(byteio *stream);
 // Close a memory writer and retrieve its resulting buffer. This buffer should
 // be freed with the standard `free` function when you are finished with it.
 // If this function is called on a `byteio` structure that isn't a memory
-// writer, then the function will fail without doing anything.
+// writer, then the function will call byteio_close.
 int byteio_close_and_get_buffer(byteio *stream, void **bufferPtr, size_t *bufferLen);
 
 // Read exactly `size` bytes into the array `buffer`. If the `buffer` parameter

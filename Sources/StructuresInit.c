@@ -754,7 +754,7 @@ void CreatePointers (void)
 {
 	size_t demoResourceSize;
 	void *demoResourceData;
-	byteio demoReader;
+	byteio *demoReader;
 	size_t i;
 
 	thisRoom = NULL;
@@ -780,14 +780,15 @@ void CreatePointers (void)
 		if (demoResourceSize != kDemoLength)
 			RedAlert(kErrFailedResourceLoad);
 
-		if (!byteio_init_memory_reader(&demoReader, demoResourceData, demoResourceSize))
+		demoReader = byteio_init_memory_reader(demoResourceData, demoResourceSize);
+		if (demoReader == NULL)
 			RedAlert(kErrNoMemory);
 		for (i = 0; i < (kDemoLength / demoTypeByteSize); i++)
 		{
-			if (!ReadDemoType(&demoReader, &demoData[i]))
+			if (!ReadDemoType(demoReader, &demoData[i]))
 				RedAlert(kErrFailedResourceLoad);
 		}
-		byteio_close(&demoReader);
+		byteio_close(demoReader);
 	}
 }
 

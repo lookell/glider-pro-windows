@@ -303,7 +303,7 @@ HRESULT Gp_ReadHouseData (Gp_HouseFile *houseFile, houseType *houseData)
 {
 	void *buffer;
 	size_t length;
-	byteio reader;
+	byteio *reader;
 	int succeeded;
 
 	if ((houseFile == NULL) || (houseData == NULL))
@@ -315,13 +315,14 @@ HRESULT Gp_ReadHouseData (Gp_HouseFile *houseFile, houseType *houseData)
 	{
 		return E_FAIL;
 	}
-	if (!byteio_init_memory_reader(&reader, buffer, length))
+	reader = byteio_init_memory_reader(buffer, length);
+	if (reader == NULL)
 	{
 		free(buffer);
 		return E_FAIL;
 	}
-	succeeded = ReadHouseType(&reader, houseData);
-	byteio_close(&reader);
+	succeeded = ReadHouseType(reader, houseData);
+	byteio_close(reader);
 	free(buffer);
 	return succeeded ? S_OK : E_FAIL;
 }
@@ -331,21 +332,22 @@ HRESULT Gp_ReadHouseData (Gp_HouseFile *houseFile, houseType *houseData)
 static HRESULT
 write_house_to_zip (mz_zip_archive *archive, const houseType *house)
 {
-	byteio dataWriter;
+	byteio *dataWriter;
 	void *dataBuffer;
 	size_t dataLength;
 	mz_bool succeeded;
 
-	if (!byteio_init_memory_writer(&dataWriter, 0))
+	dataWriter = byteio_init_memory_writer(0);
+	if (dataWriter == NULL)
 	{
 		return E_OUTOFMEMORY;
 	}
-	if (!WriteHouseType(&dataWriter, house))
+	if (!WriteHouseType(dataWriter, house))
 	{
-		byteio_close(&dataWriter);
+		byteio_close(dataWriter);
 		return E_OUTOFMEMORY;
 	}
-	if (!byteio_close_and_get_buffer(&dataWriter, &dataBuffer, &dataLength))
+	if (!byteio_close_and_get_buffer(dataWriter, &dataBuffer, &dataLength))
 	{
 		return E_FAIL;
 	}
@@ -688,7 +690,7 @@ HRESULT Gp_LoadHouseBounding (Gp_HouseFile *houseFile, SInt16 imageID, boundsTyp
 	char fileName[MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE];
 	void *buffer;
 	size_t length;
-	byteio byteReader;
+	byteio *byteReader;
 	int succeeded;
 	HRESULT hr;
 
@@ -706,13 +708,14 @@ HRESULT Gp_LoadHouseBounding (Gp_HouseFile *houseFile, SInt16 imageID, boundsTyp
 	{
 		return E_FAIL;
 	}
-	if (!byteio_init_memory_reader(&byteReader, buffer, length))
+	byteReader = byteio_init_memory_reader(buffer, length);
+	if (byteReader == NULL)
 	{
 		free(buffer);
 		return E_OUTOFMEMORY;
 	}
-	succeeded = ReadBoundsType(&byteReader, bounds);
-	byteio_close(&byteReader);
+	succeeded = ReadBoundsType(byteReader, bounds);
+	byteio_close(byteReader);
 	free(buffer);
 	hr = succeeded ? S_OK : E_FAIL;
 	return hr;

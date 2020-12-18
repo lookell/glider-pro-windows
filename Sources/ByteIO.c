@@ -8,6 +8,14 @@
 
 typedef int ASSERT_CHAR_BIT_IS_EIGHT[(CHAR_BIT == 8) ? 1 : -1];
 
+struct byteio {
+	int (*fn_read)(byteio *stream, void *buffer, size_t size);
+	int (*fn_write)(byteio *stream, const void *buffer, size_t size);
+	int (*fn_seek)(byteio *stream, int64_t offset, int origin, int64_t *newPos);
+	int (*fn_close)(byteio *stream);
+	void *priv;
+};
+
 //--------------------------------------------------------------
 
 static int minimal_read(byteio *stream, void *buffer, size_t size);
@@ -93,9 +101,15 @@ int byteio_tell(byteio *stream, int64_t *curPos)
 
 int byteio_close(byteio *stream)
 {
+	int succeeded;
+
 	if (stream == NULL)
+	{
 		return 0;
-	return stream->fn_close(stream);
+	}
+	succeeded = stream->fn_close(stream);
+	free(stream);
+	return succeeded;
 }
 
 //--------------------------------------------------------------
@@ -443,8 +457,6 @@ static int handle_reader_close(byteio *stream)
 	LARGE_INTEGER li;
 	BOOL result;
 	handle_reader *self = (handle_reader *)stream->priv;
-	if (stream->priv == NULL)
-		return 1;
 	li.QuadPart = -((LONGLONG)self->size);
 	result = SetFilePointerEx(self->hFile, li, NULL, FILE_CURRENT);
 	free(stream->priv);
@@ -454,18 +466,30 @@ static int handle_reader_close(byteio *stream)
 	return 1;
 }
 
-int byteio_init_handle_reader(byteio *stream, HANDLE hFile)
+byteio *byteio_init_handle_reader(HANDLE fileHandle)
 {
+	byteio *stream;
+
+	if (fileHandle == NULL || fileHandle == INVALID_HANDLE_VALUE)
+	{
+		return NULL;
+	}
+	stream = (byteio *)calloc(1, sizeof(*stream));
 	if (stream == NULL)
-		return 0;
+	{
+		return NULL;
+	}
 	stream->fn_read = handle_reader_read;
 	stream->fn_write = minimal_write;
 	stream->fn_seek = handle_reader_seek;
 	stream->fn_close = handle_reader_close;
-	stream->priv = handle_reader_init(hFile);
+	stream->priv = handle_reader_init(fileHandle);
 	if (stream->priv == NULL)
-		return 0;
-	return 1;
+	{
+		free(stream);
+		return NULL;
+	}
+	return stream;
 }
 
 //--------------------------------------------------------------
@@ -574,8 +598,6 @@ static int handle_writer_close(byteio *stream)
 	handle_writer *self = (handle_writer *)stream->priv;
 	DWORD numWritten;
 	DWORD numToWrite;
-	if (stream->priv == NULL)
-		return 1;
 	numToWrite = (DWORD)(sizeof(self->buffer) - self->size);
 	result = WriteFile(self->hFile, self->buffer, numToWrite, &numWritten, NULL);
 	free(stream->priv);
@@ -585,18 +607,30 @@ static int handle_writer_close(byteio *stream)
 	return 1;
 }
 
-int byteio_init_handle_writer(byteio *stream, HANDLE hFile)
+byteio *byteio_init_handle_writer(HANDLE fileHandle)
 {
+	byteio *stream;
+
+	if (fileHandle == NULL || fileHandle == INVALID_HANDLE_VALUE)
+	{
+		return NULL;
+	}
+	stream = (byteio *)calloc(1, sizeof(*stream));
 	if (stream == NULL)
-		return 0;
+	{
+		return NULL;
+	}
 	stream->fn_read = minimal_read;
 	stream->fn_write = handle_writer_write;
 	stream->fn_seek = handle_writer_seek;
 	stream->fn_close = handle_writer_close;
-	stream->priv = handle_writer_init(hFile);
+	stream->priv = handle_writer_init(fileHandle);
 	if (stream->priv == NULL)
-		return 0;
-	return 1;
+	{
+		free(stream);
+		return NULL;
+	}
+	return stream;
 }
 
 //--------------------------------------------------------------
@@ -683,18 +717,30 @@ static int memory_reader_close(byteio *stream)
 	return 1;
 }
 
-int byteio_init_memory_reader(byteio *stream, const void *buffer, size_t size)
+byteio *byteio_init_memory_reader(const void *buffer, size_t size)
 {
-	if (stream == NULL || buffer == NULL)
-		return 0;
+	byteio *stream;
+
+	if (buffer == NULL)
+	{
+		return NULL;
+	}
+	stream = (byteio *)calloc(1, sizeof(*stream));
+	if (stream == NULL)
+	{
+		return NULL;
+	}
 	stream->fn_read = memory_reader_read;
 	stream->fn_write = minimal_write;
 	stream->fn_seek = memory_reader_seek;
 	stream->fn_close = memory_reader_close;
 	stream->priv = memory_reader_init(buffer, size);
 	if (stream->priv == NULL)
-		return 0;
-	return 1;
+	{
+		free(stream);
+		return NULL;
+	}
+	return stream;
 }
 
 //--------------------------------------------------------------
@@ -807,42 +853,63 @@ static int memory_writer_seek(byteio *stream, int64_t offset, int origin, int64_
 
 static int memory_writer_close(byteio *stream)
 {
+	free(((memory_writer *)stream->priv)->buffer);
 	free(stream->priv);
 	stream->priv = NULL;
 	return 1;
 }
 
-int byteio_init_memory_writer(byteio *stream, size_t initial_capacity)
+byteio *byteio_init_memory_writer(size_t initial_capacity)
 {
-	if (stream == NULL || initial_capacity > (size_t)PTRDIFF_MAX)
-		return 0;
+	byteio *stream;
+
+	if (initial_capacity > (size_t)PTRDIFF_MAX)
+	{
+		return NULL;
+	}
+	stream = (byteio *)calloc(1, sizeof(*stream));
+	if (stream == NULL)
+	{
+		return NULL;
+	}
 	stream->fn_read = minimal_read;
 	stream->fn_write = memory_writer_write;
 	stream->fn_seek = memory_writer_seek;
 	stream->fn_close = memory_writer_close;
 	stream->priv = memory_writer_init(initial_capacity);
 	if (stream->priv == NULL)
-		return 0;
-	return 1;
+	{
+		free(stream);
+		return NULL;
+	}
+	return stream;
+}
+
+static int byteio_is_memory_writer(byteio *stream)
+{
+	return (stream->fn_read == minimal_read) &&
+		(stream->fn_write == memory_writer_write) &&
+		(stream->fn_seek == memory_writer_seek) &&
+		(stream->fn_close == memory_writer_close);
 }
 
 int byteio_close_and_get_buffer(byteio *stream, void **bufferPtr, size_t *bufferLen)
 {
-	if (stream == NULL || stream->priv == NULL)
+	*bufferPtr = NULL;
+	*bufferLen = 0;
+	if (stream == NULL)
+	{
 		return 0;
-	if (bufferPtr == NULL || bufferLen == NULL)
-		return 0;
-	// Check the function pointers to see if it's a memory writer
-	if (stream->fn_read != minimal_read)
-		return 0;
-	if (stream->fn_write != memory_writer_write)
-		return 0;
-	if (stream->fn_seek != memory_writer_seek)
-		return 0;
-	if (stream->fn_close != memory_writer_close)
-		return 0;
-	// Write out the buffer pointer and length, and then close up
-	*bufferPtr = ((memory_writer *)stream->priv)->buffer;
-	*bufferLen = ((memory_writer *)stream->priv)->size;
-	return stream->fn_close(stream);
+	}
+	if (byteio_is_memory_writer(stream))
+	{
+		memory_writer *writer;
+
+		writer = (memory_writer *)stream->priv;
+		*bufferPtr = writer->buffer;
+		*bufferLen = writer->size;
+		writer->buffer = NULL;
+		writer->size = 0;
+	}
+	return byteio_close(stream);
 }
