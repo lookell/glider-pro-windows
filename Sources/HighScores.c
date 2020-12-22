@@ -41,7 +41,7 @@ void GetHighScoreName (HWND ownerWindow, SInt16 place);
 INT_PTR CALLBACK BannerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 void GetHighScoreBanner (HWND ownerWindow);
 Boolean FindHighScoresFolder (LPWSTR scoresDirPath, DWORD cchDirPath);
-Boolean GetHighScoresFilePath (LPWSTR lpPath, DWORD cchPath, StringPtr baseName);
+Boolean GetHighScoresFilePath (LPWSTR lpPath, DWORD cchPath, ConstStringPtr baseName);
 
 
 Str31 highBanner;
@@ -505,7 +505,7 @@ Boolean FindHighScoresFolder (LPWSTR scoresDirPath, DWORD cchDirPath)
 
 //--------------------------------------------------------------  GetHighScoresFilePath
 
-Boolean GetHighScoresFilePath (LPWSTR lpPath, DWORD cchPath, StringPtr baseName)
+Boolean GetHighScoresFilePath (LPWSTR lpPath, DWORD cchPath, ConstStringPtr baseName)
 {
 	WCHAR pathBuffer[MAX_PATH];
 	WCHAR wideBaseName[256];
