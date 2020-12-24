@@ -756,6 +756,7 @@ void CreatePointers (void)
 	void *demoResourceData;
 	byteio *demoReader;
 	size_t i;
+	HRESULT hr;
 
 	thisRoom = NULL;
 	thisRoom = (roomPtr)malloc(sizeof(roomType));
@@ -785,8 +786,11 @@ void CreatePointers (void)
 			RedAlert(kErrNoMemory);
 		for (i = 0; i < (kDemoLength / demoTypeByteSize); i++)
 		{
-			if (!ReadDemoType(demoReader, &demoData[i]))
+			hr = ReadDemoType(demoReader, &demoData[i]);
+			if (FAILED(hr))
+			{
 				RedAlert(kErrFailedResourceLoad);
+			}
 		}
 		byteio_close(demoReader);
 	}

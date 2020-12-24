@@ -531,8 +531,8 @@ Boolean WriteScoresToDisk (HWND ownerWindow)
 	WCHAR		pathBuffer[MAX_PATH];
 	HANDLE		scoresFileHandle;
 	byteio		*byteWriter;
-	int			writeSucceeded;
-	DWORD		lastError;
+	HRESULT		writeResult;
+	HRESULT		closeResult;
 
 	if (!GetHighScoresFilePath(pathBuffer, ARRAYSIZE(pathBuffer), thisHouseName))
 		return false;
@@ -551,13 +551,17 @@ Boolean WriteScoresToDisk (HWND ownerWindow)
 		CloseHandle(scoresFileHandle);
 		return false;
 	}
-	writeSucceeded = WriteScoresType(byteWriter, &thisHouse.highScores);
-	lastError = GetLastError();
-	byteio_close(byteWriter);
+	writeResult = WriteScoresType(byteWriter, &thisHouse.highScores);
+	closeResult = byteio_close(byteWriter);
 	CloseHandle(scoresFileHandle);
-	if (!writeSucceeded)
+	if (FAILED(writeResult))
 	{
-		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(lastError), L"High Scores File");
+		CheckFileError(ownerWindow, writeResult, L"High Scores File");
+		return false;
+	}
+	if (FAILED(closeResult))
+	{
+		CheckFileError(ownerWindow, closeResult, L"High Scores File");
 		return false;
 	}
 
@@ -573,7 +577,7 @@ Boolean ReadScoresFromDisk (HWND ownerWindow)
 	WCHAR		pathBuffer[MAX_PATH];
 	HANDLE		scoresFileHandle;
 	byteio		*byteReader;
-	int			readSucceeded;
+	HRESULT		readResult;
 	DWORD		lastError;
 
 	if (!GetHighScoresFilePath(pathBuffer, ARRAYSIZE(pathBuffer), thisHouseName))
@@ -595,13 +599,12 @@ Boolean ReadScoresFromDisk (HWND ownerWindow)
 		CloseHandle(scoresFileHandle);
 		return false;
 	}
-	readSucceeded = ReadScoresType(byteReader, &tempScores);
-	lastError = GetLastError();
+	readResult = ReadScoresType(byteReader, &tempScores);
 	byteio_close(byteReader);
 	CloseHandle(scoresFileHandle);
-	if (!readSucceeded)
+	if (FAILED(readResult))
 	{
-		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(lastError), L"High Scores File");
+		CheckFileError(ownerWindow, readResult, L"High Scores File");
 		return false;
 	}
 

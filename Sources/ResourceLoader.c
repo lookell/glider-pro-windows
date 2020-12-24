@@ -304,7 +304,7 @@ HRESULT Gp_ReadHouseData (Gp_HouseFile *houseFile, houseType *houseData)
 	void *buffer;
 	size_t length;
 	byteio *reader;
-	int succeeded;
+	HRESULT hr;
 
 	if ((houseFile == NULL) || (houseData == NULL))
 	{
@@ -321,10 +321,10 @@ HRESULT Gp_ReadHouseData (Gp_HouseFile *houseFile, houseType *houseData)
 		free(buffer);
 		return E_FAIL;
 	}
-	succeeded = ReadHouseType(reader, houseData);
+	hr = ReadHouseType(reader, houseData);
 	byteio_close(reader);
 	free(buffer);
-	return succeeded ? S_OK : E_FAIL;
+	return hr;
 }
 
 //--------------------------------------------------------------  write_house_to_zip
@@ -335,6 +335,8 @@ write_house_to_zip (mz_zip_archive *archive, const houseType *house)
 	byteio *dataWriter;
 	void *dataBuffer;
 	size_t dataLength;
+	HRESULT writeResult;
+	HRESULT closeResult;
 	mz_bool succeeded;
 
 	dataWriter = byteio_init_memory_writer(0);
@@ -342,12 +344,17 @@ write_house_to_zip (mz_zip_archive *archive, const houseType *house)
 	{
 		return E_OUTOFMEMORY;
 	}
-	if (!WriteHouseType(dataWriter, house))
+	writeResult = WriteHouseType(dataWriter, house);
+	closeResult = byteio_close_and_get_buffer(dataWriter, &dataBuffer, &dataLength);
+	if (FAILED(writeResult))
 	{
-		byteio_close(dataWriter);
-		return E_OUTOFMEMORY;
+		return writeResult;
 	}
-	if (!byteio_close_and_get_buffer(dataWriter, &dataBuffer, &dataLength))
+	if (FAILED(closeResult))
+	{
+		return closeResult;
+	}
+	if (dataBuffer == NULL)
 	{
 		return E_FAIL;
 	}
@@ -691,7 +698,6 @@ HRESULT Gp_LoadHouseBounding (Gp_HouseFile *houseFile, SInt16 imageID, boundsTyp
 	void *buffer;
 	size_t length;
 	byteio *byteReader;
-	int succeeded;
 	HRESULT hr;
 
 	if ((houseFile == NULL) || (bounds == NULL))
@@ -714,10 +720,9 @@ HRESULT Gp_LoadHouseBounding (Gp_HouseFile *houseFile, SInt16 imageID, boundsTyp
 		free(buffer);
 		return E_OUTOFMEMORY;
 	}
-	succeeded = ReadBoundsType(byteReader, bounds);
+	hr = ReadBoundsType(byteReader, bounds);
 	byteio_close(byteReader);
 	free(buffer);
-	hr = succeeded ? S_OK : E_FAIL;
 	return hr;
 }
 

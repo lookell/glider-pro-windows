@@ -9,10 +9,10 @@
 typedef int ASSERT_CHAR_BIT_IS_EIGHT[(CHAR_BIT == 8) ? 1 : -1];
 
 struct byteio {
-	int (*fn_read)(byteio *stream, void *buffer, size_t size);
-	int (*fn_write)(byteio *stream, const void *buffer, size_t size);
-	int (*fn_seek)(byteio *stream, int64_t offset, int origin, int64_t *newPos);
-	int (*fn_close)(byteio *stream);
+	HRESULT (*fn_read)(byteio *stream, void *buffer, size_t size);
+	HRESULT (*fn_write)(byteio *stream, const void *buffer, size_t size);
+	HRESULT (*fn_seek)(byteio *stream, int64_t offset, int origin, int64_t *newPos);
+	HRESULT (*fn_close)(byteio *stream);
 };
 
 //--------------------------------------------------------------
@@ -25,10 +25,10 @@ typedef struct handle_reader {
 	unsigned char buffer[BYTEIO_DEFAULT_BUFFER_SIZE];
 } handle_reader;
 
-static int handle_reader_read(byteio *stream, void *buffer, size_t size);
-static int handle_reader_write(byteio *stream, const void *buffer, size_t size);
-static int handle_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
-static int handle_reader_close(byteio *stream);
+static HRESULT handle_reader_read(byteio *stream, void *buffer, size_t size);
+static HRESULT handle_reader_write(byteio *stream, const void *buffer, size_t size);
+static HRESULT handle_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
+static HRESULT handle_reader_close(byteio *stream);
 
 typedef struct handle_writer {
 	byteio base;
@@ -38,10 +38,10 @@ typedef struct handle_writer {
 	unsigned char buffer[BYTEIO_DEFAULT_BUFFER_SIZE];
 } handle_writer;
 
-static int handle_writer_read(byteio *stream, void *buffer, size_t size);
-static int handle_writer_write(byteio *stream, const void *buffer, size_t size);
-static int handle_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
-static int handle_writer_close(byteio *stream);
+static HRESULT handle_writer_read(byteio *stream, void *buffer, size_t size);
+static HRESULT handle_writer_write(byteio *stream, const void *buffer, size_t size);
+static HRESULT handle_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
+static HRESULT handle_writer_close(byteio *stream);
 
 typedef struct memory_reader {
 	byteio base;
@@ -50,10 +50,10 @@ typedef struct memory_reader {
 	const unsigned char *buffer;
 } memory_reader;
 
-static int memory_reader_read(byteio *stream, void *buffer, size_t size);
-static int memory_reader_write(byteio *stream, const void *buffer, size_t size);
-static int memory_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
-static int memory_reader_close(byteio *stream);
+static HRESULT memory_reader_read(byteio *stream, void *buffer, size_t size);
+static HRESULT memory_reader_write(byteio *stream, const void *buffer, size_t size);
+static HRESULT memory_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
+static HRESULT memory_reader_close(byteio *stream);
 
 typedef struct memory_writer {
 	byteio base;
@@ -63,171 +63,179 @@ typedef struct memory_writer {
 	unsigned char *buffer;
 } memory_writer;
 
-static int memory_writer_read(byteio *stream, void *buffer, size_t size);
-static int memory_writer_write(byteio *stream, const void *buffer, size_t size);
-static int memory_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
-static int memory_writer_close(byteio *stream);
+static HRESULT memory_writer_read(byteio *stream, void *buffer, size_t size);
+static HRESULT memory_writer_write(byteio *stream, const void *buffer, size_t size);
+static HRESULT memory_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
+static HRESULT memory_writer_close(byteio *stream);
 
 //--------------------------------------------------------------
 
-int byteio_read(byteio *stream, void *buffer, size_t size)
-{
-	if (stream == NULL)
-		return 0;
-	return stream->fn_read(stream, buffer, size);
-}
-
-int byteio_write(byteio *stream, const void *buffer, size_t size)
-{
-	if (stream == NULL || buffer == NULL)
-		return 0;
-	return stream->fn_write(stream, buffer, size);
-}
-
-int byteio_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
-{
-	if (stream == NULL)
-		return 0;
-	if (origin != SEEK_SET && origin != SEEK_CUR && origin != SEEK_END)
-		return 0;
-	return stream->fn_seek(stream, offset, origin, newPos);
-}
-
-int byteio_tell(byteio *stream, int64_t *curPos)
-{
-	return byteio_seek(stream, 0, SEEK_CUR, curPos);
-}
-
-int byteio_close(byteio *stream)
+HRESULT byteio_read(byteio *stream, void *buffer, size_t size)
 {
 	if (stream == NULL)
 	{
-		return 0;
+		return E_INVALIDARG;
+	}
+	return stream->fn_read(stream, buffer, size);
+}
+
+HRESULT byteio_write(byteio *stream, const void *buffer, size_t size)
+{
+	if (stream == NULL)
+	{
+		return E_INVALIDARG;
+	}
+	return stream->fn_write(stream, buffer, size);
+}
+
+HRESULT byteio_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
+{
+	if (stream == NULL)
+	{
+		return E_INVALIDARG;
+	}
+	return stream->fn_seek(stream, offset, origin, newPos);
+}
+
+HRESULT byteio_tell(byteio *stream, int64_t *curPos)
+{
+	if (stream == NULL)
+	{
+		return E_INVALIDARG;
+	}
+	return stream->fn_seek(stream, 0, SEEK_CUR, curPos);
+}
+
+HRESULT byteio_close(byteio *stream)
+{
+	if (stream == NULL)
+	{
+		return E_INVALIDARG;
 	}
 	return stream->fn_close(stream);
 }
 
 //--------------------------------------------------------------
 
-int byteio_read_be_u8(byteio *stream, uint8_t *num)
+HRESULT byteio_read_be_u8(byteio *stream, uint8_t *num)
 {
 	unsigned char buffer[sizeof(uint8_t)];
-	int succeeded;
+	HRESULT hr;
 
-	succeeded = byteio_read(stream, buffer, sizeof(buffer));
-	if (succeeded && num != NULL)
+	hr = byteio_read(stream, buffer, sizeof(buffer));
+	if (SUCCEEDED(hr) && num != NULL)
 	{
 		*num = ((uint8_t)buffer[0]);
 	}
-	return succeeded;
+	return hr;
 }
 
-int byteio_read_le_u8(byteio *stream, uint8_t *num)
+HRESULT byteio_read_le_u8(byteio *stream, uint8_t *num)
 {
 	unsigned char buffer[sizeof(uint8_t)];
-	int succeeded;
+	HRESULT hr;
 
-	succeeded = byteio_read(stream, buffer, sizeof(buffer));
-	if (succeeded && num != NULL)
+	hr = byteio_read(stream, buffer, sizeof(buffer));
+	if (SUCCEEDED(hr) && num != NULL)
 	{
 		*num = ((uint8_t)buffer[0]);
 	}
-	return succeeded;
+	return hr;
 }
 
-int byteio_read_be_i8(byteio *stream, int8_t *num)
+HRESULT byteio_read_be_i8(byteio *stream, int8_t *num)
 {
 	return byteio_read_be_u8(stream, (uint8_t *)num);
 }
 
-int byteio_read_le_i8(byteio *stream, int8_t *num)
+HRESULT byteio_read_le_i8(byteio *stream, int8_t *num)
 {
 	return byteio_read_le_u8(stream, (uint8_t *)num);
 }
 
-int byteio_read_be_u16(byteio *stream, uint16_t *num)
+HRESULT byteio_read_be_u16(byteio *stream, uint16_t *num)
 {
 	unsigned char buffer[sizeof(uint16_t)];
-	int succeeded;
+	HRESULT hr;
 
-	succeeded = byteio_read(stream, buffer, sizeof(buffer));
-	if (succeeded && num != NULL)
+	hr = byteio_read(stream, buffer, sizeof(buffer));
+	if (SUCCEEDED(hr) && num != NULL)
 	{
 		*num = ((uint16_t)buffer[0] << 8)
 			| ((uint16_t)buffer[1]);
 	}
-	return succeeded;
+	return hr;
 }
 
-int byteio_read_le_u16(byteio *stream, uint16_t *num)
+HRESULT byteio_read_le_u16(byteio *stream, uint16_t *num)
 {
 	unsigned char buffer[sizeof(uint16_t)];
-	int succeeded;
+	HRESULT hr;
 
-	succeeded = byteio_read(stream, buffer, sizeof(buffer));
-	if (succeeded && num != NULL)
+	hr = byteio_read(stream, buffer, sizeof(buffer));
+	if (SUCCEEDED(hr) && num != NULL)
 	{
 		*num = ((uint16_t)buffer[0])
 			| ((uint16_t)buffer[1] << 8);
 	}
-	return succeeded;
+	return hr;
 }
 
-int byteio_read_be_i16(byteio *stream, int16_t *num)
+HRESULT byteio_read_be_i16(byteio *stream, int16_t *num)
 {
 	return byteio_read_be_u16(stream, (uint16_t *)num);
 }
 
-int byteio_read_le_i16(byteio *stream, int16_t *num)
+HRESULT byteio_read_le_i16(byteio *stream, int16_t *num)
 {
 	return byteio_read_le_u16(stream, (uint16_t *)num);
 }
 
-int byteio_read_be_u32(byteio *stream, uint32_t *num)
+HRESULT byteio_read_be_u32(byteio *stream, uint32_t *num)
 {
 	unsigned char buffer[sizeof(uint32_t)];
-	int succeeded;
+	HRESULT hr;
 
-	succeeded = byteio_read(stream, buffer, sizeof(buffer));
-	if (succeeded && num != NULL)
+	hr = byteio_read(stream, buffer, sizeof(buffer));
+	if (SUCCEEDED(hr) && num != NULL)
 	{
 		*num = ((uint32_t)buffer[0] << 24)
 			| ((uint32_t)buffer[1] << 16)
 			| ((uint32_t)buffer[2] << 8)
 			| ((uint32_t)buffer[3]);
 	}
-	return succeeded;
+	return hr;
 }
 
-int byteio_read_le_u32(byteio *stream, uint32_t *num)
+HRESULT byteio_read_le_u32(byteio *stream, uint32_t *num)
 {
 	unsigned char buffer[sizeof(uint32_t)];
-	int succeeded;
+	HRESULT hr;
 
-	succeeded = byteio_read(stream, buffer, sizeof(buffer));
-	if (succeeded && num != NULL)
+	hr = byteio_read(stream, buffer, sizeof(buffer));
+	if (SUCCEEDED(hr) && num != NULL)
 	{
 		*num = ((uint32_t)buffer[0])
 			| ((uint32_t)buffer[1] << 8)
 			| ((uint32_t)buffer[2] << 16)
 			| ((uint32_t)buffer[3] << 24);
 	}
-	return succeeded;
+	return hr;
 }
 
-int byteio_read_be_i32(byteio *stream, int32_t *num)
+HRESULT byteio_read_be_i32(byteio *stream, int32_t *num)
 {
 	return byteio_read_be_u32(stream, (uint32_t *)num);
 }
 
-int byteio_read_le_i32(byteio *stream, int32_t *num)
+HRESULT byteio_read_le_i32(byteio *stream, int32_t *num)
 {
 	return byteio_read_le_u32(stream, (uint32_t *)num);
 }
 
 //--------------------------------------------------------------
 
-int byteio_write_be_u8(byteio *stream, uint8_t num)
+HRESULT byteio_write_be_u8(byteio *stream, uint8_t num)
 {
 	unsigned char buffer[sizeof(uint8_t)];
 
@@ -235,7 +243,7 @@ int byteio_write_be_u8(byteio *stream, uint8_t num)
 	return byteio_write(stream, buffer, sizeof(buffer));
 }
 
-int byteio_write_le_u8(byteio *stream, uint8_t num)
+HRESULT byteio_write_le_u8(byteio *stream, uint8_t num)
 {
 	unsigned char buffer[sizeof(uint8_t)];
 
@@ -243,17 +251,17 @@ int byteio_write_le_u8(byteio *stream, uint8_t num)
 	return byteio_write(stream, buffer, sizeof(buffer));
 }
 
-int byteio_write_be_i8(byteio *stream, int8_t num)
+HRESULT byteio_write_be_i8(byteio *stream, int8_t num)
 {
 	return byteio_write_be_u8(stream, (uint8_t)num);
 }
 
-int byteio_write_le_i8(byteio *stream, int8_t num)
+HRESULT byteio_write_le_i8(byteio *stream, int8_t num)
 {
 	return byteio_write_le_u8(stream, (uint8_t)num);
 }
 
-int byteio_write_be_u16(byteio *stream, uint16_t num)
+HRESULT byteio_write_be_u16(byteio *stream, uint16_t num)
 {
 	unsigned char buffer[sizeof(uint16_t)];
 
@@ -262,7 +270,7 @@ int byteio_write_be_u16(byteio *stream, uint16_t num)
 	return byteio_write(stream, buffer, sizeof(buffer));
 }
 
-int byteio_write_le_u16(byteio *stream, uint16_t num)
+HRESULT byteio_write_le_u16(byteio *stream, uint16_t num)
 {
 	unsigned char buffer[sizeof(uint16_t)];
 
@@ -271,17 +279,17 @@ int byteio_write_le_u16(byteio *stream, uint16_t num)
 	return byteio_write(stream, buffer, sizeof(buffer));
 }
 
-int byteio_write_be_i16(byteio *stream, int16_t num)
+HRESULT byteio_write_be_i16(byteio *stream, int16_t num)
 {
 	return byteio_write_be_u16(stream, (uint16_t)num);
 }
 
-int byteio_write_le_i16(byteio *stream, int16_t num)
+HRESULT byteio_write_le_i16(byteio *stream, int16_t num)
 {
 	return byteio_write_le_u16(stream, (uint16_t)num);
 }
 
-int byteio_write_be_u32(byteio *stream, uint32_t num)
+HRESULT byteio_write_be_u32(byteio *stream, uint32_t num)
 {
 	unsigned char buffer[sizeof(uint32_t)];
 
@@ -292,7 +300,7 @@ int byteio_write_be_u32(byteio *stream, uint32_t num)
 	return byteio_write(stream, buffer, sizeof(buffer));
 }
 
-int byteio_write_le_u32(byteio *stream, uint32_t num)
+HRESULT byteio_write_le_u32(byteio *stream, uint32_t num)
 {
 	unsigned char buffer[sizeof(uint32_t)];
 
@@ -303,46 +311,53 @@ int byteio_write_le_u32(byteio *stream, uint32_t num)
 	return byteio_write(stream, buffer, sizeof(buffer));
 }
 
-int byteio_write_be_i32(byteio *stream, int32_t num)
+HRESULT byteio_write_be_i32(byteio *stream, int32_t num)
 {
 	return byteio_write_be_u32(stream, (uint32_t)num);
 }
 
-int byteio_write_le_i32(byteio *stream, int32_t num)
+HRESULT byteio_write_le_i32(byteio *stream, int32_t num)
 {
 	return byteio_write_le_u32(stream, (uint32_t)num);
 }
 
 //--------------------------------------------------------------
 
-static int handle_reader_read(byteio *stream, void *buffer, size_t size)
+static HRESULT handle_reader_read(byteio *stream, void *buffer, size_t size)
 {
+	handle_reader *self = (handle_reader *)stream;
 	unsigned char *outptr = (unsigned char *)buffer;
 	size_t readsize;
-	handle_reader *self = (handle_reader *)stream;
+	DWORD numRead;
+	DWORD lastError;
 
 	if (self == NULL)
 	{
-		SetLastError(ERROR_INVALID_PARAMETER);
-		return 0;
+		return E_INVALIDARG;
 	}
 	while (size != 0)
 	{
 		// Fill up the buffer, if needed
 		if (self->size == 0)
 		{
-			DWORD numRead;
 			self->bufptr = &self->buffer[0];
+			SetLastError(0);
 			if (!ReadFile(self->hFile, self->buffer, sizeof(self->buffer), &numRead, NULL))
-				return 0;
+			{
+				lastError = GetLastError();
+				if (lastError == 0)
+				{
+					return E_FAIL;
+				}
+				return HRESULT_FROM_WIN32(lastError);
+			}
 			self->size = numRead;
 		}
 		// Read as much as we can from the buffer
 		readsize = (self->size <= size) ? self->size : size;
 		if (readsize == 0)
 		{
-			SetLastError(ERROR_HANDLE_EOF);
-			return 0;
+			return HRESULT_FROM_WIN32(ERROR_HANDLE_EOF);
 		}
 		if (outptr != NULL)
 		{
@@ -353,79 +368,102 @@ static int handle_reader_read(byteio *stream, void *buffer, size_t size)
 		self->bufptr += readsize;
 		self->size -= readsize;
 	}
-	return 1;
+	return S_OK;
 }
 
-static int handle_reader_write(byteio *stream, const void *buffer, size_t size)
+static HRESULT handle_reader_write(byteio *stream, const void *buffer, size_t size)
 {
 	(void)stream;
 	(void)buffer;
 	(void)size;
 
-	return 0;
+	return E_NOTIMPL;
 }
 
-static int handle_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
+static HRESULT handle_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
 {
 	handle_reader *self = (handle_reader *)stream;
-	LARGE_INTEGER fileOffset, newFilePointer;
-	BOOL succeeded;
+	LARGE_INTEGER fileOffset;
+	LARGE_INTEGER newFilePointer;
+	DWORD moveMethod;
+	DWORD lastError;
 
 	if (self == NULL)
 	{
-		SetLastError(ERROR_INVALID_PARAMETER);
-		return 0;
+		return E_INVALIDARG;
 	}
 	// "Unread" any buffered data, and seek backwards to the correct position
 	fileOffset.QuadPart = -((LONGLONG)self->size);
-	succeeded = SetFilePointerEx(self->hFile, fileOffset, NULL, FILE_CURRENT);
 	self->bufptr = &self->buffer[0];
 	self->size = 0;
-	if (!succeeded)
+	SetLastError(0);
+	if (!SetFilePointerEx(self->hFile, fileOffset, NULL, FILE_CURRENT))
 	{
-		return succeeded;
+		lastError = GetLastError();
+		if (lastError == 0)
+		{
+			return E_FAIL;
+		}
+		return HRESULT_FROM_WIN32(lastError);
 	}
 	// Perform the actual seek operation
 	fileOffset.QuadPart = offset;
 	switch (origin)
 	{
 	case SEEK_SET:
-		succeeded = SetFilePointerEx(self->hFile, fileOffset, &newFilePointer, FILE_BEGIN);
+		moveMethod = FILE_BEGIN;
 		break;
 
 	case SEEK_CUR:
-		succeeded = SetFilePointerEx(self->hFile, fileOffset, &newFilePointer, FILE_CURRENT);
+		moveMethod = FILE_CURRENT;
 		break;
 
 	case SEEK_END:
-		succeeded = SetFilePointerEx(self->hFile, fileOffset, &newFilePointer, FILE_END);
+		moveMethod = FILE_END;
 		break;
 
 	default:
-		SetLastError(ERROR_INVALID_PARAMETER);
-		newFilePointer.QuadPart = -1;
-		succeeded = 0;
-		break;
+		return E_INVALIDARG;
+	}
+	SetLastError(0);
+	if (!SetFilePointerEx(self->hFile, fileOffset, &newFilePointer, moveMethod))
+	{
+		lastError = GetLastError();
+		if (lastError == 0)
+		{
+			return E_FAIL;
+		}
+		return HRESULT_FROM_WIN32(lastError);
 	}
 	// Return the new position to the caller
-	if (succeeded && newPos != NULL)
+	if (newPos != NULL)
 	{
 		*newPos = newFilePointer.QuadPart;
 	}
-	return succeeded;
+	return S_OK;
 }
 
-static int handle_reader_close(byteio *stream)
+static HRESULT handle_reader_close(byteio *stream)
 {
-	LARGE_INTEGER li;
-	BOOL result;
 	handle_reader *self = (handle_reader *)stream;
-	li.QuadPart = -((LONGLONG)self->size);
-	result = SetFilePointerEx(self->hFile, li, NULL, FILE_CURRENT);
+	LARGE_INTEGER fileOffset;
+	HANDLE fileHandle;
+	DWORD lastError;
+
+	fileOffset.QuadPart = -((LONGLONG)self->size);
+	fileHandle = self->hFile;
 	free(self);
-	if (result == FALSE)
-		return 0;
-	return 1;
+	SetLastError(0);
+	if (!SetFilePointerEx(fileHandle, fileOffset, NULL, FILE_CURRENT))
+	{
+		lastError = GetLastError();
+		if (lastError != 0)
+		{
+			return E_FAIL;
+		}
+		return HRESULT_FROM_WIN32(lastError);
+	}
+	return S_OK;
 }
 
 byteio *byteio_init_handle_reader(HANDLE fileHandle)
@@ -453,35 +491,48 @@ byteio *byteio_init_handle_reader(HANDLE fileHandle)
 
 //--------------------------------------------------------------
 
-static int handle_writer_read(byteio *stream, void *buffer, size_t size)
+static HRESULT handle_writer_read(byteio *stream, void *buffer, size_t size)
 {
 	(void)stream;
 	(void)buffer;
 	(void)size;
 
-	return 0;
+	return E_NOTIMPL;
 }
 
-static int handle_writer_write(byteio *stream, const void *buffer, size_t size)
+static HRESULT handle_writer_write(byteio *stream, const void *buffer, size_t size)
 {
+	handle_writer *self = (handle_writer *)stream;
 	const unsigned char *inptr = (const unsigned char *)buffer;
 	size_t writesize;
-	handle_writer *self = (handle_writer *)stream;
+	DWORD numWritten;
+	DWORD lastError;
 
 	if (self == NULL || buffer == NULL)
-		return 0;
+	{
+		return E_INVALIDARG;
+	}
 	while (size != 0)
 	{
 		// Empty the buffer, if needed
 		if (self->size == 0)
 		{
-			DWORD numWritten;
 			self->bufptr = &self->buffer[0];
-			if (!WriteFile(self->hFile, self->buffer, sizeof(self->buffer), &numWritten, NULL))
-				return 0;
-			if (numWritten != sizeof(self->buffer))
-				return 0;
 			self->size = sizeof(self->buffer);
+			SetLastError(0);
+			if (!WriteFile(self->hFile, self->buffer, sizeof(self->buffer), &numWritten, NULL))
+			{
+				lastError = GetLastError();
+				if (lastError == 0)
+				{
+					return E_FAIL;
+				}
+				return HRESULT_FROM_WIN32(lastError);
+			}
+			if (numWritten != sizeof(self->buffer))
+			{
+				return E_FAIL;
+			}
 		}
 		// Write as much as we can into the buffer
 		writesize = (self->size <= size) ? self->size : size;
@@ -491,76 +542,104 @@ static int handle_writer_write(byteio *stream, const void *buffer, size_t size)
 		self->bufptr += writesize;
 		self->size -= writesize;
 	}
-	return 1;
+	return S_OK;
 }
 
-static int handle_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
+static HRESULT handle_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
 {
 	handle_writer *self = (handle_writer *)stream;
-	DWORD numToWrite, numWritten;
-	LARGE_INTEGER fileOffset, newFilePointer;
-	BOOL succeeded;
+	DWORD numToWrite;
+	DWORD numWritten;
+	LARGE_INTEGER fileOffset;
+	LARGE_INTEGER newFilePointer;
+	DWORD moveMethod;
+	DWORD lastError;
 
 	if (self == NULL)
 	{
-		SetLastError(ERROR_INVALID_PARAMETER);
-		return 0;
+		return E_INVALIDARG;
 	}
 	// Write out any buffered data, so that we start in the correct position
 	numToWrite = (DWORD)(sizeof(self->buffer) - self->size);
-	succeeded = WriteFile(self->hFile, self->buffer, numToWrite, &numWritten, NULL);
-	if (succeeded)
-	{
-		succeeded = (numWritten == numToWrite);
-	}
 	self->bufptr = &self->buffer[0];
 	self->size = sizeof(self->buffer);
-	if (!succeeded)
+	SetLastError(0);
+	if (!WriteFile(self->hFile, self->buffer, numToWrite, &numWritten, NULL))
 	{
-		return succeeded;
+		lastError = GetLastError();
+		if (lastError == 0)
+		{
+			return E_FAIL;
+		}
+		return HRESULT_FROM_WIN32(lastError);
+	}
+	if (numWritten != numToWrite)
+	{
+		return E_FAIL;
 	}
 	// Perform the actual seek operation
 	fileOffset.QuadPart = offset;
 	switch (origin)
 	{
 	case SEEK_SET:
-		succeeded = SetFilePointerEx(self->hFile, fileOffset, &newFilePointer, FILE_BEGIN);
+		moveMethod = FILE_BEGIN;
 		break;
 	
 	case SEEK_CUR:
-		succeeded = SetFilePointerEx(self->hFile, fileOffset, &newFilePointer, FILE_CURRENT);
+		moveMethod = FILE_CURRENT;
 		break;
 	
 	case SEEK_END:
-		succeeded = SetFilePointerEx(self->hFile, fileOffset, &newFilePointer, FILE_END);
+		moveMethod = FILE_END;
 		break;
 	
 	default:
-		SetLastError(ERROR_INVALID_PARAMETER);
-		newFilePointer.QuadPart = -1;
-		succeeded = 0;
-		break;
+		return E_INVALIDARG;
+	}
+	SetLastError(0);
+	if (!SetFilePointerEx(self->hFile, fileOffset, &newFilePointer, moveMethod))
+	{
+		lastError = GetLastError();
+		if (lastError == 0)
+		{
+			return E_FAIL;
+		}
+		return HRESULT_FROM_WIN32(lastError);
 	}
 	// Return the new position to the caller
-	if (succeeded && newPos != NULL)
+	if (newPos != NULL)
 	{
 		*newPos = newFilePointer.QuadPart;
 	}
-	return succeeded;
+	return S_OK;
 }
 
-static int handle_writer_close(byteio *stream)
+static HRESULT handle_writer_close(byteio *stream)
 {
-	BOOL result;
 	handle_writer *self = (handle_writer *)stream;
+	BOOL succeeded;
 	DWORD numWritten;
 	DWORD numToWrite;
+	DWORD lastError;
+
 	numToWrite = (DWORD)(sizeof(self->buffer) - self->size);
-	result = WriteFile(self->hFile, self->buffer, numToWrite, &numWritten, NULL);
+	SetLastError(0);
+	succeeded = WriteFile(self->hFile, self->buffer, numToWrite, &numWritten, NULL);
+	lastError = GetLastError();
 	free(self);
-	if (result == FALSE || numWritten != numToWrite)
-		return 0;
-	return 1;
+	if (!succeeded)
+	{
+		if (lastError == 0)
+		{
+			return E_FAIL;
+		}
+		return HRESULT_FROM_WIN32(lastError);
+	}
+	if (numWritten != numToWrite)
+	{
+		return E_FAIL;
+	}
+	return S_OK;
 }
 
 byteio *byteio_init_handle_writer(HANDLE fileHandle)
@@ -588,36 +667,43 @@ byteio *byteio_init_handle_writer(HANDLE fileHandle)
 
 //--------------------------------------------------------------
 
-static int memory_reader_read(byteio *stream, void *buffer, size_t size)
+static HRESULT memory_reader_read(byteio *stream, void *buffer, size_t size)
 {
 	memory_reader *self = (memory_reader *)stream;
-	if (self == NULL || self->buffer == NULL)
-		return 0;
+	size_t numBytesAvailable;
+
+	if (self == NULL)
+	{
+		return E_INVALIDARG;
+	}
 	if (self->pos >= self->size)
-		return 0;
-	if (size > (size_t)PTRDIFF_MAX)
-		return 0;
-	if (self->size - self->pos < (ptrdiff_t)size)
+	{
+		return HRESULT_FROM_WIN32(ERROR_HANDLE_EOF);
+	}
+	numBytesAvailable = (size_t)self->size - (size_t)self->pos;
+	if (numBytesAvailable < size)
 	{
 		self->pos = self->size;
-		return 0;
+		return HRESULT_FROM_WIN32(ERROR_HANDLE_EOF);
 	}
 	if (buffer != NULL)
+	{
 		memcpy(buffer, &self->buffer[self->pos], size);
+	}
 	self->pos += size;
-	return 1;
+	return S_OK;
 }
 
-static int memory_reader_write(byteio *stream, const void *buffer, size_t size)
+static HRESULT memory_reader_write(byteio *stream, const void *buffer, size_t size)
 {
 	(void)stream;
 	(void)buffer;
 	(void)size;
 
-	return 0;
+	return E_NOTIMPL;
 }
 
-static int memory_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
+static HRESULT memory_reader_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
 {
 	memory_reader *self = (memory_reader *)stream;
 	ptrdiff_t memoryPos;
@@ -625,7 +711,7 @@ static int memory_reader_seek(byteio *stream, int64_t offset, int origin, int64_
 
 	if (self == NULL || offset < PTRDIFF_MIN || offset > PTRDIFF_MAX)
 	{
-		return 0;
+		return E_INVALIDARG;
 	}
 	memoryOffset = (ptrdiff_t)offset;
 	switch (origin)
@@ -643,26 +729,26 @@ static int memory_reader_seek(byteio *stream, int64_t offset, int origin, int64_
 		break;
 
 	default:
-		return 0; // invalid parameter
+		return E_INVALIDARG;
 	}
 	if (memoryPos < 0)
 	{
-		return 0; // negative seek
+		return HRESULT_FROM_WIN32(ERROR_NEGATIVE_SEEK);
 	}
 	self->pos = memoryPos;
 	if (newPos)
 	{
 		*newPos = (int64_t)self->pos;
 	}
-	return 1;
+	return S_OK;
 }
 
-static int memory_reader_close(byteio *stream)
+static HRESULT memory_reader_close(byteio *stream)
 {
 	memory_reader *self = (memory_reader *)stream;
 
 	free(self);
-	return 1;
+	return S_OK;
 }
 
 byteio *byteio_init_memory_reader(const void *buffer, size_t size)
@@ -690,16 +776,16 @@ byteio *byteio_init_memory_reader(const void *buffer, size_t size)
 
 //--------------------------------------------------------------
 
-static int memory_writer_read(byteio *stream, void *buffer, size_t size)
+static HRESULT memory_writer_read(byteio *stream, void *buffer, size_t size)
 {
 	(void)stream;
 	(void)buffer;
 	(void)size;
 
-	return 0;
+	return E_NOTIMPL;
 }
 
-static int memory_writer_write(byteio *stream, const void *buffer, size_t size)
+static HRESULT memory_writer_write(byteio *stream, const void *buffer, size_t size)
 {
 	memory_writer *self = (memory_writer *)stream;
 	unsigned char *new_buffer;
@@ -708,9 +794,13 @@ static int memory_writer_write(byteio *stream, const void *buffer, size_t size)
 	ptrdiff_t new_capacity;
 
 	if (self == NULL || self->buffer == NULL || buffer == NULL)
-		return 0;
+	{
+		return E_INVALIDARG;
+	}
 	if (size > (size_t)PTRDIFF_MAX)
-		return 0;
+	{
+		return E_INVALIDARG;
+	}
 	write_size = (ptrdiff_t)size;
 	new_position = self->pos + write_size;
 	// Does the buffer size need to grow?
@@ -729,7 +819,7 @@ static int memory_writer_write(byteio *stream, const void *buffer, size_t size)
 			new_buffer = (unsigned char *)realloc(self->buffer, new_capacity);
 			if (new_buffer == NULL)
 			{
-				return 0; // out of memory
+				return E_OUTOFMEMORY;
 			}
 		}
 		self->buffer = new_buffer;
@@ -743,10 +833,10 @@ static int memory_writer_write(byteio *stream, const void *buffer, size_t size)
 	{
 		self->size = new_position;
 	}
-	return 1;
+	return S_OK;
 }
 
-static int memory_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
+static HRESULT memory_writer_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
 {
 	memory_writer *self = (memory_writer *)stream;
 	ptrdiff_t memoryPos;
@@ -754,7 +844,7 @@ static int memory_writer_seek(byteio *stream, int64_t offset, int origin, int64_
 
 	if (self == NULL || offset < PTRDIFF_MIN || offset > PTRDIFF_MAX)
 	{
-		return 0;
+		return E_INVALIDARG;
 	}
 	memoryOffset = (ptrdiff_t)offset;
 	switch (origin)
@@ -772,27 +862,27 @@ static int memory_writer_seek(byteio *stream, int64_t offset, int origin, int64_
 		break;
 
 	default:
-		return 0; // invalid parameter
+		return E_INVALIDARG;
 	}
 	if (memoryPos < 0)
 	{
-		return 0; // negative seek
+		return HRESULT_FROM_WIN32(ERROR_NEGATIVE_SEEK);
 	}
 	self->pos = memoryPos;
 	if (newPos)
 	{
 		*newPos = (int64_t)self->pos;
 	}
-	return 1;
+	return S_OK;
 }
 
-static int memory_writer_close(byteio *stream)
+static HRESULT memory_writer_close(byteio *stream)
 {
 	memory_writer *self = (memory_writer *)stream;
 
 	free(self->buffer);
 	free(self);
-	return 1;
+	return S_OK;
 }
 
 byteio *byteio_init_memory_writer(size_t initial_capacity)
@@ -836,13 +926,13 @@ static int byteio_is_memory_writer(byteio *stream)
 		(stream->fn_close == memory_writer_close);
 }
 
-int byteio_close_and_get_buffer(byteio *stream, void **bufferPtr, size_t *bufferLen)
+HRESULT byteio_close_and_get_buffer(byteio *stream, void **bufferPtr, size_t *bufferLen)
 {
 	*bufferPtr = NULL;
 	*bufferLen = 0;
 	if (stream == NULL)
 	{
-		return 0;
+		return E_INVALIDARG;
 	}
 	if (byteio_is_memory_writer(stream))
 	{
