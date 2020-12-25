@@ -32,7 +32,10 @@ HWND OpenMessageWindow (PCWSTR title, HWND hwndOwner)
 		hwndOwner, MessageWindowProc);
 	SetWindowText(mssgWindow, title);
 	CenterDialogOverOwner(mssgWindow);
-	EnableWindow(hwndOwner, FALSE);
+	if (hwndOwner != NULL)
+	{
+		EnableWindow(hwndOwner, FALSE);
+	}
 	ShowWindow(mssgWindow, SW_SHOW);
 
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -134,7 +137,10 @@ void CloseMessageWindow (HWND mssgWindow)
 	if (mssgWindow != NULL)
 	{
 		hwndOwner = GetWindow(mssgWindow, GW_OWNER);
-		EnableWindow(hwndOwner, TRUE);
+		if (hwndOwner != NULL)
+		{
+			EnableWindow(hwndOwner, TRUE);
+		}
 		DestroyWindow(mssgWindow);
 	}
 }
