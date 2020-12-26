@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 //==============================================================  Functions
 //--------------------------------------------------------------  NormalizeRect
 // This function ensures that a rect's top is less than it's bottom
@@ -308,4 +307,3 @@ Boolean QSectRect (const Rect *src1, const Rect *src2, Rect *dstRect)
 	*dstRect = sectRect;
 	return true;
 }
-

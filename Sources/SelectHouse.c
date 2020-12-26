@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DialogUtils.h"
 #include "House.h"
 #include "HouseIO.h"
@@ -18,17 +17,14 @@
 #include <commctrl.h>
 #include <strsafe.h>
 
-
 #define kHouseListItem			1000
 #define kMaxExtraHouses			8
-
 
 BOOL InitLoadDialog (HWND hDlg);
 INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void SortHouseList (void);
 BOOL GetHouseFolderPath (LPWSTR buffer, DWORD cch);
 void DoDirSearch (HWND ownerWindow);
-
 
 houseSpecPtr theHousesSpecs;
 SInt16 housesFound;
@@ -40,7 +36,6 @@ SInt16 demoHouseIndex;
 static houseSpec extraHouseSpecs[kMaxExtraHouses];
 static SInt16 numExtraHouses = 0;
 static HIMAGELIST houseIconImageList;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  InitLoadDialog
@@ -438,4 +433,3 @@ void AddExtraHouse (const houseSpec *newHouse)
 	extraHouseSpecs[numExtraHouses] = *newHouse;
 	numExtraHouses++;
 }
-

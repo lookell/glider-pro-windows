@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "ResourceIDs.h"
 #include "WinAPI.h"
 
@@ -15,14 +14,11 @@
 #include <limits.h>
 #include <stdlib.h>
 
-
 #define MAC_ROMAN_CODEPAGE          10000
 #define kReturnKeyASCII             0x0D
 #define kSpaceBarASCII              0x20
 
-
 void PasStringCopyNum (ConstStringPtr p1, StringPtr p2, Byte charsToCopy);
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  PasStringCopy
@@ -561,4 +557,3 @@ int MacFromWinString(StringPtr macbuf, int maclen, const wchar_t *winbuf)
 	macbuf[0] = (Byte)result;
 	return result;
 }
-

@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "ByteIO.h"
 #include "DialogUtils.h"
 #include "Environ.h"
@@ -27,12 +26,10 @@
 
 #include <strsafe.h>
 
-
 #define kHighNameItem			1002
 #define kNameNCharsItem			1005
 #define kHighBannerItem			1002
 #define kBannerScoreNCharsItem	1005
-
 
 void DrawHighScores (void);
 void SortHighScores (void);
@@ -43,11 +40,9 @@ void GetHighScoreBanner (HWND ownerWindow);
 Boolean FindHighScoresFolder (LPWSTR scoresDirPath, DWORD cchDirPath);
 Boolean GetHighScoresFilePath (LPWSTR lpPath, DWORD cchPath, ConstStringPtr baseName);
 
-
 Str31 highBanner;
 Str15 highName;
 SInt16 lastHighScore;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DoHighScores
@@ -611,4 +606,3 @@ Boolean ReadScoresFromDisk (HWND ownerWindow)
 	thisHouse.highScores = tempScores;
 	return true;
 }
-

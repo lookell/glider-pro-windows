@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "ColorUtils.h"
 #include "Events.h"
 #include "House.h"
@@ -32,13 +31,11 @@
 #include "Tools.h"
 #include "WindowUtils.h"
 
-
 SInt16 FindObjectSelected (Point where);
 void DragHandle (Point where);
 void Gp_DragObject (Point where);
 void AddObjectPairing (void);
 Boolean ObjectIsUpBlower (const objectType *who);
-
 
 Rect roomObjectRects[kMaxRoomObs];
 Rect leftStartGliderSrc;
@@ -49,7 +46,6 @@ static Rect initialGliderRect;
 static Rect leftStartGliderDest;
 static Rect rightStartGliderDest;
 static Boolean isFirstRoom;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  FindObjectSelected
@@ -2758,4 +2754,3 @@ void StartMarqueeForActiveObject (void)
 		StopMarquee();
 	}
 }
-

@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "House.h"
 #include "MainWindow.h"
 #include "ObjectRects.h"
@@ -20,13 +19,10 @@
 #include "Sound.h"
 #include "Transit.h"
 
-
 void FlagGliderFaceLeft (gliderPtr thisGlider);
 void FlagGliderFaceRight (gliderPtr thisGlider);
 
-
 SInt16 saidFollow;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  StartGliderFadingIn
@@ -631,4 +627,3 @@ void TagGliderIdle (gliderPtr thisGlider)
 	thisGlider->mode = kGliderIdle;
 	thisGlider->hVel = 30;			// used for 30 frame delay
 }
-

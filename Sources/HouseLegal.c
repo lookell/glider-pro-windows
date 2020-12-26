@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Banner.h"
 #include "House.h"
 #include "Macintosh.h"
@@ -23,7 +22,6 @@
 
 #include <stdlib.h>
 
-
 void WrapBannerAndTrailer (void);
 void ValidateNumberOfRooms (void);
 void CheckDuplicateFloorSuite (void);
@@ -36,12 +34,10 @@ void MakeSureNumObjectsJives (void);
 void KeepAllObjectsLegal (HWND mssgWindow);
 void CheckForStaircasePairs (HWND mssgWindow);
 
-
 Boolean isHouseChecks;
 
 static SInt16 houseErrors;
 static SInt16 wasRoom;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  KeepObjectLegal
@@ -603,7 +599,6 @@ Boolean KeepObjectLegal (void)
 
 	}
 
-
 	return (unchanged);
 }
 
@@ -1147,4 +1142,3 @@ void CheckHouseForProblems (void)
 	ForceThisRoom(wasRoom);
 	objActive = wasActive;
 }
-

@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Coordinates.h"
 #include "Environ.h"
 #include "Events.h"
@@ -34,9 +33,7 @@
 
 #include <mmsystem.h>
 
-
 static HMENU DetachPopupMenu (HMENU rootMenu, UINT id, LPWSTR *title);
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DetachPopupMenu
@@ -223,4 +220,3 @@ void VariableInit (void)
 	QOffsetRect(&localRoomsDest[kWestRoom], -kRoomWide, 0);
 	QOffsetRect(&localRoomsDest[kNorthWestRoom], -kRoomWide, -kVertLocalOffset);
 }
-

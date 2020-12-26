@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Banner.h"
 #include "DynamicMaps.h"
 #include "GameOver.h"
@@ -27,7 +26,6 @@
 #include "Triggers.h"
 #include "Trip.h"
 
-
 #define kFloorVentLift			-6
 #define kCeilingVentDrop		8
 #define kFanStrength			12
@@ -35,7 +33,6 @@
 #define kHeliumSupply			150
 #define kBandsSupply			8
 #define kFoilSupply				8
-
 
 Boolean GliderHitTop (gliderPtr thisGlider, const Rect *theRect);
 Boolean GliderInRect (const gliderType *thisGlider, const Rect *theRect);
@@ -56,11 +53,9 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, SInt16 index);
 void CheckForHotSpots (void);
 void WebGlider (gliderPtr thisGlider, const Rect *webBounds);
 
-
 SInt16 otherPlayerEscaped;
 
 static SInt16 activeRectEscaped;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  GliderHitSides
@@ -1787,4 +1782,3 @@ void WebGlider (gliderPtr thisGlider, const Rect *webBounds)
 		PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 	}
 }
-

@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "ByteIO.h"
 #include "DynamicMaps.h"
 #include "Dynamics.h"
@@ -34,7 +33,6 @@
 
 #include <stdlib.h>
 
-
 void InitScoreboardMap (void);
 void InitGliderMap (void);
 void InitBlowers (void);
@@ -50,7 +48,6 @@ void InitSupport (void);
 void InitAngel (void);
 void InitSplashScreenMap (void);
 Boolean GetDemoDataPointer (void **ppDemoData, size_t *pDemoSize);
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  InitScoreboardMap
@@ -970,4 +967,3 @@ void InitSrcRects (void)
 	QSetRect(&srcRects[kRug], 0, 0, 144, 18);
 	QSetRect(&srcRects[kChimes], 0, 0, 28, 74);
 }
-

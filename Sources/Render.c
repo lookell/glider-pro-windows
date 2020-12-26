@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DynamicMaps.h"
 #include "Dynamics.h"
 #include "FrameTimer.h"
@@ -24,9 +23,7 @@
 #include "RubberBands.h"
 #include "Sound.h"
 
-
 #define kMaxGarbageRects		48
-
 
 void DrawReflection (const gliderType *thisGlider, Boolean oneOrTwo);
 void RenderFlames (void);
@@ -40,7 +37,6 @@ void RenderShreds (void);
 HRGN CreateClipRgnFromRects (HDC hdcDest, const Rect *theRects, size_t numRects);
 void CopyRectsQD (void);
 
-
 SInt16 numWork2Main;
 SInt16 numBack2Work;
 Boolean hasMirror;
@@ -48,7 +44,6 @@ Boolean hasMirror;
 static Rect work2MainRects[kMaxGarbageRects];
 static Rect back2WorkRects[kMaxGarbageRects];
 static HRGN mirrorRgn;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  AddRectToWorkRects
@@ -770,4 +765,3 @@ void ZeroMirrorRegion (void)
 	mirrorRgn = NULL;
 	hasMirror = false;
 }
-

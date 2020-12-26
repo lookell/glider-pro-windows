@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DialogUtils.h"
 #include "FileError.h"
 #include "HighScores.h"
@@ -34,17 +33,14 @@
 
 #include <stdlib.h>
 
-
 #define kGoToFirstRadio		1002
 #define kGoToPrevRadio		1003
 #define kGoToFSRadio		1004
 #define kFloorEditText		1005
 #define kSuiteEditText		1006
 
-
 void SortRoomsObjects (SInt16 which);
 INT_PTR CALLBACK GoToFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
-
 
 houseType thisHouse;
 linksPtr linksList;
@@ -55,7 +51,6 @@ Str32 thisHouseName;
 
 static SInt16 srcLocations[kMaxRoomObs];
 static SInt16 destLocations[kMaxRoomObs];
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  CreateNewHouse
@@ -785,4 +780,3 @@ void ShiftWholeHouse (SInt16 howFar)
 	CloseMessageWindow();
 #endif
 }
-

@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DialogUtils.h"
 #include "HighScores.h"
 #include "House.h"
@@ -18,7 +17,6 @@
 
 #include <strsafe.h>
 
-
 #define kBannerTextItem			1004
 #define kLockHouseButton		1006
 #define kClearScoresButton		1009
@@ -28,12 +26,10 @@
 #define kTrailerNCharsItem		1016
 #define kHouseSizeItem			1018
 
-
 SInt32 CountTotalHousePoints (void);
 INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 Boolean WarnLockingHouse (HWND ownerWindow);
 void HowToZeroScores (HWND ownerWindow);
-
 
 //==============================================================  Functions
 
@@ -248,4 +244,3 @@ void HowToZeroScores (HWND ownerWindow)
 		break;
 	}
 }
-

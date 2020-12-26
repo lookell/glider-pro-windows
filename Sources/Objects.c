@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "House.h"
 #include "HouseIO.h"
 #include "Link.h"
@@ -22,11 +21,9 @@
 
 #include <stdlib.h>
 
-
 SInt16 GetRoomLinked (const objectType *who);
 SInt16 GetObjectLinked (const objectType *who);
 void ListOneRoomsObjects (SInt16 where);
-
 
 // Blowers
 Rect blowerSrcRect;
@@ -154,7 +151,6 @@ SInt16 numMasterObjects;
 SInt16 numTempManholes;
 SInt16 tvWithMovieNumber;
 Boolean newState;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  IsThisValid
@@ -1046,4 +1042,3 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 	DrawThisRoomsObjects();
 	GenerateRetroLinks();
 }
-

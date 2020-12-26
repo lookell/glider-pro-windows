@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Audio.h"
 #include "DialogUtils.h"
 #include "Macintosh.h"
@@ -22,12 +21,9 @@
 
 #include <stdlib.h>
 
-
 UInt32 RandomLongQUS (void);
 
-
 static UInt32 theSeed;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  RandomInt
@@ -389,4 +385,3 @@ BOOL GetDataFolderPath (LPWSTR lpDataPath, DWORD cchDataPath)
 
 	return TRUE;
 }
-

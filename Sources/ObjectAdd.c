@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DialogUtils.h"
 #include "GliderDefines.h"
 #include "House.h"
@@ -22,7 +21,6 @@
 #include "Room.h"
 #include "Utilities.h"
 
-
 #define kMaxSoundTriggers		1
 #define kMaxStairs				1
 #define kMouseholeBottom		295
@@ -30,7 +28,6 @@
 #define kManholeSits			322
 #define kGrecoVentTop			303
 #define kSewerBlowerTop			292
-
 
 SInt16 FindEmptyObjectSlot (void);
 void ShoutNoMoreObjects (HWND ownerWindow);
@@ -48,9 +45,7 @@ SInt16 HowManyShredderObjects (void);
 SInt16 HowManyDynamicObjects (void);
 void ShoutNoMoreSpecialObjects (HWND ownerWindow);
 
-
 SInt16 wasFlower;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  AddNewObject
@@ -1075,4 +1070,3 @@ void ShoutNoMoreSpecialObjects (HWND ownerWindow)
 {
 	Alert(kNoMoreSpecialAlert, ownerWindow, NULL);
 }
-

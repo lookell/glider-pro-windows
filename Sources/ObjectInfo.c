@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DialogUtils.h"
 #include "GliderStructs.h"
 #include "House.h"
@@ -24,7 +23,6 @@
 #include "Room.h"
 
 #include <strsafe.h>
-
 
 #define kBlowerInitialState     1006
 #define kForceCheckbox          1007
@@ -94,7 +92,6 @@
 #define kRadioFlower6           1011
 #define kFlowerLinkedFrom       1013
 
-
 void UpdateBlowerInfo (HWND hDlg, HDC hdc);
 INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK FurnitureFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
@@ -122,7 +119,6 @@ void DoInvisBonusObjectInfo (HWND hwndOwner);
 void DoTransObjectInfo (HWND hwndOwner);
 void DoEnemyObjectInfo (HWND hwndOwner);
 void DoFlowerObjectInfo (HWND hwndOwner);
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  GetObjectName
@@ -1769,4 +1765,3 @@ void DoObjectInfo (HWND hwndOwner)
 		break;
 	}
 }
-

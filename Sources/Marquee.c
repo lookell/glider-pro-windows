@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Coordinates.h"
 #include "GliderDefines.h"
 #include "Macintosh.h"
@@ -19,9 +18,7 @@
 
 #include <commctrl.h>
 
-
 #define kHandleSideLong			9
-
 
 HBRUSH CreateMarqueeBrush (void);
 HPEN CreateMarqueePen (void);
@@ -30,12 +27,10 @@ void FrameMarqueeRect (HDC hdc, const Rect *theRect);
 void DrawGliderMarquee (HDC hdc);
 void DrawMarquee (HDC hdc);
 
-
 marquee theMarquee;
 
 static Rect marqueeGliderRect;
 static Boolean gliderMarqueeUp;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  CreateMarqueeBrush
@@ -797,4 +792,3 @@ void InitMarquee (void)
 	theMarquee.handled = false;
 	gliderMarqueeUp = false;
 }
-

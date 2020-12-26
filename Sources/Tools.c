@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DialogUtils.h"
 #include "GliderDefines.h"
 #include "HouseIO.h"
@@ -20,7 +19,6 @@
 
 #include <commctrl.h>
 #include <strsafe.h>
-
 
 #define kToolModeCombo      1000
 #define kToolButtonBaseID   2000
@@ -59,7 +57,6 @@
 #define kLastClutter		15
 #define kClutterBase		161
 
-
 void CreateToolsOffscreen (void);
 void KillToolsOffscreen (void);
 void GetToolName (PWSTR buffer, size_t length, SInt16 selected, SInt16 mode);
@@ -74,7 +71,6 @@ void Tools_OnButtonClick (HWND hwnd, WORD buttonID);
 void UpdateToolTips (HWND hwnd);
 void SwitchToolModes (SInt16 newMode);
 
-
 HWND toolsWindow;
 SInt16 isToolsH;
 SInt16 isToolsV;
@@ -87,7 +83,6 @@ static SInt16 firstTool;
 static SInt16 lastTool;
 static SInt16 objectBase;
 static HWND toolButtonTooltip;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  CreateToolsOffscreen
@@ -666,4 +661,3 @@ void SetSpecificToolMode (SInt16 modeToSet)
 	SwitchToolModes(toolMode);
 	toolSelected = kSelectTool;
 }
-

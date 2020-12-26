@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "ColorUtils.h"
 #include "Coordinates.h"
 #include "DialogUtils.h"
@@ -39,9 +38,7 @@
 #include <mmsystem.h>
 #include <strsafe.h>
 
-
 #define WC_MAINWINDOW  TEXT("GliderMainWindow")
-
 
 void DrawOnSplash (HDC hdc, SInt16 splashHouseIndex);
 void PaintMainWindow (HDC hdc);
@@ -52,7 +49,6 @@ void SetPaletteToGrays (RGBQUAD *colors, UINT numColors, int saturation,
 LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate);
 LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam);
-
 
 Rect workSrcRect;
 HDC workSrcMap;
@@ -70,7 +66,6 @@ Boolean isDoColorFade;
 Boolean splashDrawn;
 HDC splashSrcMap;
 Rect splashSrcRect;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  RegisterMainWindowClass
@@ -861,4 +856,3 @@ LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam)
 
 	return 0;
 }
-

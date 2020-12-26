@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DynamicMaps.h"
 #include "GliderDefines.h"
 #include "House.h"
@@ -19,7 +18,6 @@
 #include "Room.h"
 #include "Sound.h"
 
-
 #define kFloorColumnWide		4
 #define kCeilingColumnWide		24
 #define kFanColumnThick			16
@@ -28,10 +26,8 @@
 #define kStoolThick				25
 #define kShredderActiveHigh		40
 
-
 SInt16 AddActiveRect (const Rect *bounds, SInt16 action, SInt16 who, Boolean isOn,
 	Boolean doScrutinize);
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  GetObjectRect
@@ -1189,4 +1185,3 @@ SInt16 GetDownStairsLeftEdge (void)
 
 	return (leftEdge);
 }
-

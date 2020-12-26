@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "House.h"
 #include "HouseIO.h"
 #include "MainWindow.h"
@@ -16,15 +15,12 @@
 #include "Room.h"
 #include "Utilities.h"
 
-
 #define kLinkButton     1300
 #define kUnlinkButton   1310
-
 
 INT_PTR CALLBACK LinkWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 void DoLink (void);
 void DoUnlink (void);
-
 
 HWND linkWindow;
 SInt16 isLinkH;
@@ -33,7 +29,6 @@ SInt16 linkRoom;
 SInt16 linkType;
 Byte linkObject;
 Boolean linkerIsSwitch;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  MergeFloorSuite
@@ -393,4 +388,3 @@ void DoUnlink (void)
 	UpdateMenus(false);
 	CloseLinkWindow();
 }
-

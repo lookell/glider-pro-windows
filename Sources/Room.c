@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "ColorUtils.h"
 #include "DialogUtils.h"
 #include "House.h"
@@ -25,16 +24,13 @@
 
 #include <stdlib.h>
 
-
 #define kYesDoDeleteRoom		IDOK
-
 
 Boolean QueryDeleteRoom (HWND ownerWindow);
 void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_);
 SInt16 GetOriginalBounding (SInt16 theID);
 Boolean DoesRoomHaveFloor (void);
 Boolean DoesRoomHaveCeiling (void);
-
 
 roomPtr thisRoom;
 Rect backSrcRect;
@@ -52,7 +48,6 @@ Boolean rightOpen;
 Boolean topOpen;
 Boolean bottomOpen;
 Boolean doBitchDialogs;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  SetInitialTiles
@@ -1163,4 +1158,3 @@ Boolean DoesRoomHaveCeiling (void)
 	}
 	return (hasCeiling);
 }
-

@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "ByteIO.h"
 #include "DialogUtils.h"
 #include "HouseIO.h"
@@ -29,15 +28,12 @@
 #include "Transit.h"
 #include "Utilities.h"
 
-
 #define kNormalThrust		5
 #define kHyperThrust		8
 #define kHeliumLift			4
 
-
 #define IsKeyDown(vkey) (GetActiveWindow() == mainWindow && GetAsyncKeyState(vkey) < 0)
 #define IsKeyUp(vkey) (GetActiveWindow() != mainWindow || GetAsyncKeyState(vkey) >= 0)
-
 
 void LogDemoKey (Byte keyIs);
 void DoCommandKey (void);
@@ -46,7 +42,6 @@ void DoBatteryEngaged (gliderPtr thisGlider);
 void DoHeliumEngaged (gliderPtr thisGlider);
 Boolean QuerySaveGame (HWND ownerWindow);
 
-
 demoType demoData[2000];
 SInt16 demoIndex;
 Boolean isEscPauseKey;
@@ -54,7 +49,6 @@ Boolean paused;
 
 static SInt16 batteryFrame;
 static Boolean batteryWasEngaged;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  LogDemoKey
@@ -483,4 +477,3 @@ Boolean QuerySaveGame (HWND ownerWindow)
 	else
 		return (false);
 }
-

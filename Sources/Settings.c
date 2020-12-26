@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DialogUtils.h"
 #include "Environ.h"
 #include "Events.h"
@@ -29,7 +28,6 @@
 
 #include <commctrl.h>
 #include <shlwapi.h> // for DLLGETVERSIONPROC and DLLGETVERSIONINFO
-
 
 #define kDisplayButton			1003
 #define kSoundButton			1004
@@ -76,7 +74,6 @@
 #define kDoPrettyMapCheck		1013
 #define kDoBitchDlgsCheck		1014
 
-
 void SetBrainsToDefaults (HWND prefDlg);
 void BrainsInit (HWND prefDlg);
 void BrainsApply (HWND prefDlg);
@@ -112,7 +109,6 @@ void SetAllDefaults (HWND ownerWindow);
 INT_PTR CALLBACK PrefsFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 void BitchAboutChanges (HWND ownerWindow);
 
-
 static Boolean nextRestartChange;
 static BYTE tempLeftKeyOne;
 static BYTE tempRightKeyOne;
@@ -122,7 +118,6 @@ static BYTE tempLeftKeyTwo;
 static BYTE tempRightKeyTwo;
 static BYTE tempBattKeyTwo;
 static BYTE tempBandKeyTwo;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  SetBrainsToDefaults
@@ -1044,4 +1039,3 @@ void BitchAboutChanges (HWND ownerWindow)
 {
 	Alert(kChangesEffectAlert, ownerWindow, NULL);
 }
-

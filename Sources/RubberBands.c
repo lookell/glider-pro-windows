@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Grease.h"
 #include "Interactions.h"
 #include "MainWindow.h"
@@ -19,15 +18,12 @@
 #include "Sound.h"
 #include "Triggers.h"
 
-
 #define kRubberBandVelocity		20
 #define kBandFallCount			4
 #define kKillBandMode			-1
 
-
 void CheckBandCollision (SInt16 who);
 void KillBand (SInt16 which);
-
 
 bandType bands[kMaxRubberBands];
 Rect bandsSrcRect;
@@ -37,7 +33,6 @@ HDC bandsMaskMap;
 SInt16 numBands;
 
 static SInt16 bandHitLast;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  CheckBandCollision
@@ -323,4 +318,3 @@ void KillAllBands (void)
 
 	numBands = 0;
 }
-

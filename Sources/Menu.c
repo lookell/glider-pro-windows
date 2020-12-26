@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "About.h"
 #include "Coordinates.h"
 #include "DialogUtils.h"
@@ -40,10 +39,8 @@
 #include <mmsystem.h>
 #include <strsafe.h>
 
-
 #define kSheWantsNewGame		1001
 #define kSheWantsResumeGame		1002
-
 
 void UpdateMenusEditMode (void);
 void UpdateMenusNonEditMode (void);
@@ -54,7 +51,6 @@ SInt16 QueryResumeGame (HWND ownerWindow);
 void DoNotInDemo (HWND ownerWindow);
 void HeyYourPissingAHighScore (HWND ownerWindow);
 void OpenCloseEditWindows (void);
-
 
 HMENU theMenuBar;
 HMENU appleMenu;
@@ -67,7 +63,6 @@ LPWSTR optionsMenuTitle;
 LPWSTR houseMenuTitle;
 Boolean menusUp;
 Boolean resumedSavedGame;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  UpdateMenusEditMode
@@ -900,5 +895,3 @@ void DisableMenuBar(void)
 		EnableMenuItem(theMenuBar, i, MF_BYPOSITION | MF_GRAYED);
 	DrawMenuBar(mainWindow);
 }
-
-

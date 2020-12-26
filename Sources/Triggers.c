@@ -6,15 +6,12 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Grease.h"
 #include "Objects.h"
 #include "Sound.h"
 #include "Trip.h"
 
-
 #define kMaxTriggers			16
-
 
 typedef struct trigType
 {
@@ -26,13 +23,10 @@ typedef struct trigType
 	Boolean armed;
 } trigType;
 
-
 SInt16 FindEmptyTriggerSlot (void);
 void FireTrigger (SInt16 index);
 
-
 static trigType triggers[kMaxTriggers];
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  ArmTrigger
@@ -187,4 +181,3 @@ void ZeroTriggers (void)
 	for (i = 0; i < kMaxTriggers; i++)
 		triggers[i].armed = false;
 }
-

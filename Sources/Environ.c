@@ -6,17 +6,13 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Main.h"
-
 
 Boolean DoWeHaveQuickTime (void);
 SInt16 WhatsOurDepth (void);
 void GetDeviceRect (Rect *theRect);
 
-
 macEnviron thisMac;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DoWeHaveQuickTime
@@ -58,4 +54,3 @@ void CheckOurEnvirons (void)
 	thisMac.isDepth = WhatsOurDepth();
 	thisMac.hasQT = DoWeHaveQuickTime();
 }
-

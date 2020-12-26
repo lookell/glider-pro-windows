@@ -1805,4 +1805,3 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 
 	return (numDynamics - 1);
 }
-

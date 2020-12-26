@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Dynamics.h"
 #include "Environ.h"
 #include "HouseIO.h"
@@ -14,7 +13,6 @@
 #include "Objects.h"
 #include "Play.h"
 #include "Sound.h"
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  ToggleToaster
@@ -312,4 +310,3 @@ void UpdateOutletsLighting (SInt16 room, SInt16 nLights)
 			dinahs[i].hVel = nLights;
 	}
 }
-

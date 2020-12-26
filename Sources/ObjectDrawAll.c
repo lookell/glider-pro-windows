@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DynamicMaps.h"
 #include "Dynamics.h"
 #include "Environ.h"
@@ -24,7 +23,6 @@
 #include "Render.h"
 #include "Room.h"
 #include "RoomGraphics.h"
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DrawARoomsObjects
@@ -970,4 +968,3 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 		}
 	}
 }
-

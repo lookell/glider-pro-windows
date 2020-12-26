@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Audio.h"
 #include "GliderDefines.h"
 #include "HouseIO.h"
@@ -17,19 +16,16 @@
 
 #include <stdlib.h>
 
-
 #define kBaseBufferMusicID      2000
 #define kMaxMusic               7
 #define kLastMusicPiece         16
 #define kLastGamePiece          6
-
 
 void MusicCallBack (AudioChannel *channel, void *userdata);
 OSErr LoadMusicSounds (void);
 OSErr DumpMusicSounds (void);
 OSErr OpenMusicChannel (void);
 OSErr CloseMusicChannel (void);
-
 
 Boolean isMusicOn;
 Boolean isPlayMusicIdle;
@@ -45,7 +41,6 @@ static SInt16 musicCursor;
 static SInt16 musicScore[kLastMusicPiece];
 static SInt16 gameScore[kLastGamePiece];
 static SInt16 musicMode;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  StartMusic
@@ -377,4 +372,3 @@ void KillMusic (void)
 	DumpMusicSounds();
 	DeleteCriticalSection(&musicCriticalSection);
 }
-

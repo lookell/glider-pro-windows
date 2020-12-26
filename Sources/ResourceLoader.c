@@ -725,4 +725,3 @@ HRESULT Gp_LoadHouseBounding (Gp_HouseFile *houseFile, SInt16 imageID, boundsTyp
 	free(buffer);
 	return hr;
 }
-

@@ -2,7 +2,6 @@
 
 #include "StringUtils.h"
 
-
 //--------------------------------------------------------------  CopyBits
 // Copy some portion of a bitmap from one graphics port to another.
 

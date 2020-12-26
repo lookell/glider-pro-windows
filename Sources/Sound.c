@@ -6,14 +6,12 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Audio.h"
 #include "HouseIO.h"
 #include "ResourceIDs.h"
 #include "ResourceLoader.h"
 
 #include <stdlib.h>
-
 
 #define kBaseBufferSoundID			1000
 #define kMaxSounds					64
@@ -22,14 +20,12 @@
 
 C_ASSERT(kTriggerSound == kMaxSounds - 1);
 
-
 typedef struct SoundOutput
 {
 	AudioChannel *channel;
 	SInt16 priority;
 	SInt16 soundID;
 } SoundOutput;
-
 
 void Gp_PlaySound (SoundOutput *output, SInt16 soundID, SInt16 priority);
 void CheckSoundOutput (SoundOutput *output);
@@ -38,7 +34,6 @@ void DumpBufferSounds (void);
 OSErr OpenSoundChannels (void);
 OSErr CloseSoundChannels (void);
 
-
 Boolean dontLoadSounds;
 Boolean isSoundOn;
 
@@ -46,7 +41,6 @@ static SoundOutput soundOutputs[kNumSoundChannels];
 static SoundOutput triggerSoundOutput;
 static WaveData theSoundData[kMaxSounds];
 static Boolean failedSound;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  PlayPrioritySound
@@ -345,4 +339,3 @@ void KillSound (void)
 	CloseSoundChannels();
 	DumpBufferSounds();
 }
-

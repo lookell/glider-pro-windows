@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Banner.h"
 #include "DynamicMaps.h"
 #include "Dynamics.h"
@@ -43,13 +42,11 @@
 
 #include <mmsystem.h>
 
-
 #define kInitialGliders			2
 #define kRingDelay				90
 #define kRingSpread				25000	// 25000
 #define kRingBaseDelay			5000	// 5000
 #define kChimeDelay				180
-
 
 typedef struct phoneType
 {
@@ -57,7 +54,6 @@ typedef struct phoneType
 	SInt16 rings;
 	SInt16 delay;
 } phoneType, *phonePtr;
-
 
 void InitGlider (gliderPtr thisGlider, SInt16 mode);
 void SetHouseToFirstRoom (void);
@@ -67,7 +63,6 @@ void HandleRoomVisitation (void);
 void SetObjectsToDefaults (void);
 void InitTelephone (void);
 void HandleTelephone (void);
-
 
 Rect glidSrcRect;
 Rect justRoomsRect;
@@ -90,7 +85,6 @@ Boolean tvOn;
 
 static phoneType thePhone;
 static phoneType theChimes;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  NewGame
@@ -673,4 +667,3 @@ void StrikeChime (void)
 {
 	theChimes.nextRing = 0;
 }
-

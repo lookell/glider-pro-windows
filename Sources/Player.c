@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DynamicMaps.h"
 #include "GameOver.h"
 #include "HouseIO.h"
@@ -22,13 +21,11 @@
 #include "Transit.h"
 #include "Utilities.h"
 
-
 #define kGravity				3
 #define kHImpulse				2
 #define kVImpulse				2
 #define kMaxHVel				16
 #define kShredderCountdown		-68
-
 
 void MoveGlider (gliderPtr thisGlider);
 void MoveGliderNormal (gliderPtr thisGlider);
@@ -54,7 +51,6 @@ void MoveGliderShredding (gliderPtr thisGlider);
 void HandleIdleGlider (gliderPtr thisGlider);
 void OffAMortal (gliderPtr thisGlider);
 
-
 gliderType theGlider;
 gliderType theGlider2;
 Rect shadowSrcRect;
@@ -71,7 +67,6 @@ SInt16 transRoom;
 Boolean shadowVisible;
 Boolean onePlayerLeft;
 Boolean playerDead;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  MoveGlider
@@ -1613,4 +1608,3 @@ void OffAMortal (gliderPtr thisGlider)
 		otherPlayerEscaped = kPlayerIsDeadForever;
 	}
 }
-

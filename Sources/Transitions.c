@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "FrameTimer.h"
 #include "GliderDefines.h"
 #include "Macintosh.h"
@@ -15,14 +14,11 @@
 #include "RectUtils.h"
 #include "WinAPI.h"
 
-
 #define kNumWipeFrames  12
-
 
 Rect MakeWipeRect (SInt16 direction, const Rect *theRect, SInt16 index, SInt16 count);
 void DissBits (const Rect *theRect);
 void DissBitsChunky (const Rect *theRect);
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  WipeScreenOn
@@ -286,4 +282,3 @@ void DissBitsChunky (const Rect *theRect)
 	RestoreDC(mainWindowDC, -1);
 	ReleaseMainWindowDC(mainWindowDC);
 }
-

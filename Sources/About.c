@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DialogUtils.h"
 #include "Environ.h"
 #include "ResourceIDs.h"
@@ -14,16 +13,13 @@
 
 #include <strsafe.h>
 
-
 #define kTextItemVers		1002
 #define kPictItemMain		1004
 #define kFreeMemoryText		1007
 #define kScreenInfoText		1008
 
-
 static void UpdateMainPict (HWND hDlg);
 static INT_PTR CALLBACK AboutFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DoAbout
@@ -105,4 +101,3 @@ static INT_PTR CALLBACK AboutFilter (HWND hDlg, UINT message, WPARAM wParam, LPA
 	}
 	return FALSE;
 }
-

@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "ColorUtils.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
@@ -20,15 +19,12 @@
 
 #include <strsafe.h>
 
-
 #define kGrayBackgroundColor    251
 #define kScoreRollAmount        13
-
 
 void RefreshRoomTitle (SInt16 mode);
 void RefreshNumGliders (void);
 void RefreshPoints (void);
-
 
 Rect boardSrcRect;
 Rect badgeSrcRect;
@@ -53,7 +49,6 @@ SInt16 wasScoreboardMode;
 
 static SInt32 displayedScore;
 static Boolean doRollScore;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  RefreshScoreboard
@@ -428,4 +423,3 @@ void AdjustScoreboardHeight (void)
 		wasScoreboardMode = newMode;
 	}
 }
-

@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "ByteIO.h"
 #include "DialogUtils.h"
 #include "FileError.h"
@@ -16,16 +15,13 @@
 
 #include <strsafe.h>
 
-
 #define	kPrefFileName		L"Glider Prefs"
-
 
 Boolean GetPrefsFilePath (LPWSTR lpFilePath, size_t cchFilePath);
 Boolean WritePrefs (HWND ownerWindow, LPCWSTR prefsFilePath, const prefsInfo *thePrefs);
 HRESULT ReadPrefs (HWND ownerWindow, LPCWSTR prefsFilePath, prefsInfo *thePrefs);
 Boolean DeletePrefs (LPCWSTR prefsFilePath);
 void BringUpDeletePrefsAlert (HWND ownerWindow);
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  GetPrefsFPath
@@ -188,4 +184,3 @@ void BringUpDeletePrefsAlert (HWND ownerWindow)
 {
 	Alert(kNewPrefsAlertID, ownerWindow, NULL);
 }
-

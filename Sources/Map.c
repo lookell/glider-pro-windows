@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "ColorUtils.h"
 #include "DialogUtils.h"
 #include "GliderDefines.h"
@@ -25,13 +24,11 @@
 #include "Scrap.h"
 #include "Utilities.h"
 
-
 #define kMapRoomsHigh			9	// was 7
 #define kMapRoomsWide			9	// was 7
 #define kMapGroundValue			56
 #define kYesDoNewRoom			IDOK
 #define WC_MAPWINDOW            L"GliderMapWindow"
-
 
 void RegisterMapWindowClass (void);
 void RedrawMapContents (HDC hdc);
@@ -59,7 +56,6 @@ static Rect nailSrcRect;
 static HDC nailSrcMap = NULL;
 static Rect activeRoomRect;
 static Rect wasActiveRoomRect;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  RegisterMapWindowClass
@@ -914,4 +910,3 @@ void MoveRoom (Point wherePt)
 		UpdateMapWindow();
 	}
 }
-

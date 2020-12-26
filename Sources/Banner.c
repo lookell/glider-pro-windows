@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "ColorUtils.h"
 #include "Environ.h"
 #include "House.h"
@@ -25,14 +24,11 @@
 
 #include <strsafe.h>
 
-
 void DrawBanner (Point *topLeft);
 void DrawBannerMessage (Point topLeft);
 
-
 SInt16 numStarsRemaining;
 Boolean bannerStarCountOn;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DrawBanner
@@ -217,4 +213,3 @@ void DisplayStarsRemaining (void)
 	WaitForInputEvent(30);
 	CopyRectWorkToMain(&bounds);
 }
-

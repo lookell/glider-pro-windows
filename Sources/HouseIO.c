@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Banner.h"
 #include "DialogUtils.h"
 #include "FileError.h"
@@ -31,15 +30,12 @@
 
 #include <stdlib.h>
 
-
 #define kSaveChanges			IDYES
 #define kDiscardChanges			IDNO
-
 
 void LoopMovie (void);
 void OpenHouseMovie (void);
 void CloseHouseMovie (void);
-
 
 Movie theMovie;
 Rect movieRect;
@@ -53,7 +49,6 @@ Boolean saveHouseLocked;
 Boolean houseIsReadOnly;
 Boolean hasMovie;
 Boolean tvInRoom;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  LoopMovie
@@ -316,7 +311,6 @@ Boolean SaveHouseAs (void)
 			}
 		}
 	}
-
 
 	return (noProblems);
 	*/
@@ -623,4 +617,3 @@ void YellowAlert (HWND ownerWindow, SInt16 whichAlert, SInt16 identifier)
 	params.arg[1] = errNumStr;
 	whoCares = Alert(kYellowAlert, ownerWindow, &params);
 }
-

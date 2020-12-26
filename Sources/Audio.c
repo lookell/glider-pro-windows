@@ -1184,4 +1184,3 @@ int AudioChannel_IsPlaying(AudioChannel *channel)
 	}
 	return cmdData.isPlaying;
 }
-

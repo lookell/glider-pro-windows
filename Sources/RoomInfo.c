@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DialogUtils.h"
 #include "GliderDefines.h"
 #include "House.h"
@@ -20,7 +19,6 @@
 #include "Utilities.h"
 
 #include <strsafe.h>
-
 
 #define kRoomNameItem               1003
 #define kRoomLocationBox            1006
@@ -45,7 +43,6 @@
 
 #define kMiniTileWide               16
 
-
 void LoadTileSrcGraphic (HDC hdc, SInt16 backID, const Rect *theRect);
 void UpdateRoomInfoDialog (HWND hDlg, HDC hdc);
 void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver);
@@ -59,7 +56,6 @@ Boolean PictIDExists (SInt16 theID);
 SInt16 GetFirstPICT (void);
 void BitchAboutPICTNotFound (HWND ownerWindow);
 
-
 Rect tileSrcRect;
 HDC tileSrcMap;
 
@@ -69,7 +65,6 @@ static Rect tileDest;
 static SInt16 tileOver;
 static SInt16 tempBack;
 static Boolean showHandCursor = false;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  LoadTileSrcGraphic
@@ -830,4 +825,3 @@ void BitchAboutPICTNotFound (HWND ownerWindow)
 {
 	Alert(kNoPICTFoundAlert, ownerWindow, NULL);
 }
-

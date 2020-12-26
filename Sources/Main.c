@@ -7,7 +7,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Audio.h"
 #include "Coordinates.h"
 #include "Environ.h"
@@ -42,17 +41,14 @@
 #include <mmsystem.h>
 #include <objbase.h>
 
-
 void ReadInPrefs (HWND ownerWindow);
 void WriteOutPrefs (HWND ownerWindow);
-
 
 Boolean quitting;
 Boolean quickerTransitions;
 Boolean isUseSecondScreen;
 UInt16 isViewportWidth;
 UInt16 isViewportHeight;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  ReadInPrefs
@@ -396,4 +392,3 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 
 	return 0;
 }
-

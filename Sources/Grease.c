@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DynamicMaps.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
@@ -16,12 +15,10 @@
 #include "Room.h"
 #include "Sound.h"
 
-
 #define kGreaseIdle			0
 #define kGreaseFalling		1
 #define kGreaseSpreading	2
 #define kGreaseSpiltIdle	3
-
 
 typedef struct greaseType
 {
@@ -37,13 +34,10 @@ typedef struct greaseType
 	Boolean isRight;
 } greaseType;
 
-
 void BackupGrease (Rect *src, SInt16 index, Boolean isRight);
-
 
 static greaseType grease[kMaxGrease];
 static SInt16 numGrease;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  HandleGrease
@@ -306,4 +300,3 @@ void ZeroGrease (void)
 {
 	numGrease = 0;
 }
-

@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "GliderStructs.h"
 #include "House.h"
 #include "HouseIO.h"
@@ -24,16 +23,13 @@
 
 #include <commctrl.h>
 
-
 HIMAGELIST GetRoomDragImageList (const Rect *roomSrc, SInt16 roomNumber);
-
 
 Boolean hasScrap;
 Boolean scrapIsARoom;
 
 static roomType savedRoomScrap;
 static objectType savedObjectScrap;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  PutRoomScrap
@@ -329,4 +325,3 @@ void DragRoom (SInt16 clickX, SInt16 clickY, const Rect *roomSrc, SInt16 roomNum
 		MoveRoom(pt);
 	}
 }
-

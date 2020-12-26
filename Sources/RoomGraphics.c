@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "DynamicMaps.h"
 #include "Dynamics.h"
 #include "Environ.h"
@@ -29,14 +28,12 @@
 #include "Trip.h"
 #include "Utilities.h"
 
-
 void LoadGraphicSpecial (HDC hdc, SInt16 resID);
 void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation);
 void DrawFloorSupport (void);
 void ReadyBackMap (void);
 void RestoreWorkMap (void);
 void DrawLighting (void);
-
 
 Rect suppSrcRect;
 HDC suppSrcMap;
@@ -50,7 +47,6 @@ SInt16 thisBackground;
 Boolean wardBitSet;
 
 static Boolean isStructure[9];
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DrawLocale
@@ -419,4 +415,3 @@ void RedrawRoomLighting (void)
 		shadowVisible = IsShadowVisible();
 	}
 }
-

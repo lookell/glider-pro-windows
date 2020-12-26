@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Grease.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
@@ -17,13 +16,11 @@
 #include "Sound.h"
 #include "Utilities.h"
 
-
 void BackUpFlames (const Rect *src, SInt16 index);
 void BackUpTikiFlames (const Rect *src, SInt16 index);
 void BackUpBBQCoals (const Rect *src, SInt16 index);
 void BackUpPendulum (const Rect *src, SInt16 index);
 void BackUpStar (const Rect *src, SInt16 index);
-
 
 sparkleType sparkles[kMaxSparkles];
 flyingPtType flyingPoints[kMaxFlyingPts];
@@ -45,7 +42,6 @@ SInt16 numPendulums;
 SInt16 clockFrame;
 SInt16 numStars;
 SInt16 numShredded;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  NilSavedMaps
@@ -267,7 +263,6 @@ void BackUpFlames (const Rect *src, SInt16 index)
 				// Copy flame to map.
 		Mac_CopyMask(blowerSrcMap, blowerMaskMap, savedMaps[index].map,
 				&flame[i], &flame[i], &dest);
-
 
 		QOffsetRect(&dest, 0, 15);
 	}
@@ -737,4 +732,3 @@ void ZeroFlamesAndTheLike (void)
 	numShredded = 0;
 	numChimes = 0;
 }
-

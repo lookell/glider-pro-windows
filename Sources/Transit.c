@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Environ.h"
 #include "House.h"
 #include "HouseIO.h"
@@ -23,15 +22,12 @@
 #include "Sound.h"
 #include "Transitions.h"
 
-
 void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat);
 void HandleRoomVisitation (void);
-
 
 SInt16 linkedToWhat;
 Boolean takingTheStairs;
 Boolean firstPlayer;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  WhatAreWeLinkedTo
@@ -566,4 +562,3 @@ void FollowTheLeader (void)
 		break;
 	}
 }
-

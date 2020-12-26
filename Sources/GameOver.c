@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "ColorUtils.h"
 #include "Environ.h"
 #include "FrameTimer.h"
@@ -25,10 +24,8 @@
 #include "StringUtils.h"
 #include "Utilities.h"
 
-
 #define kNumCountDownFrames		16
 #define kPageFrames				14
-
 
 typedef struct pageType
 {
@@ -39,13 +36,11 @@ typedef struct pageType
 	Boolean stuck;
 } pageType, *pagePtr;
 
-
 void DoGameOverStarAnimation (void);
 void SetUpFinalScreen (void);
 void InitDiedGameOver (void);
 void HandlePages (void);
 void DrawPages (void);
-
 
 Rect angelSrcRect;
 HDC angelSrcMap;
@@ -63,7 +58,6 @@ static HDC gameOverSrcMap;
 static HDC pageMaskMap;
 static SInt16 stopPages;
 static SInt16 pagesStuck;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DoGameOver
@@ -502,4 +496,3 @@ void DoDiedGameOver (void)
 			WaitForInputEvent(10);
 	}
 }
-

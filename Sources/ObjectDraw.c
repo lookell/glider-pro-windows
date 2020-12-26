@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "ColorUtils.h"
 #include "HouseIO.h"
 #include "Macintosh.h"
@@ -17,7 +16,6 @@
 #include "Room.h"
 #include "Utilities.h"
 #include "WinAPI.h"
-
 
 #define k8WhiteColor			0
 #define kYellowColor			5
@@ -57,11 +55,9 @@
 #define kTikiPoleBase			300
 #define	kMailboxBase			296
 
-
 void DrawClockDigit (SInt16 number, const Rect *dest);
 void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand);
 void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand);
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DrawSimpleBlowers
@@ -2162,4 +2158,3 @@ void DrawCustPictSansWhite (SInt16 pictID, const Rect *theRect)
 
 	DisposeGWorld(tempMap);
 }
-

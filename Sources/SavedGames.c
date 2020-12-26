@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Banner.h"
 #include "ByteIO.h"
 #include "DialogUtils.h"
@@ -29,16 +28,12 @@
 
 #include <stdlib.h>
 
-
 #define kSavedGameVersion		0x0200
-
 
 BOOL GetSaveFolderPath (LPWSTR lpSavePath, DWORD cchSavePath);
 void SavedGameMismatchError (HWND ownerWindow, ConstStringPtr gameName);
 
-
 gameType smallGame;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  GetSaveFolderPath
@@ -347,4 +342,3 @@ void SaveGame (HWND ownerWindow, Boolean doSave)
 			YellowAlert(ownerWindow, kYellowFailedWrite, 0);
 	}
 }
-

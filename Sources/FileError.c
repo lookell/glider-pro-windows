@@ -171,4 +171,3 @@ Boolean CheckFileError (HWND ownerWindow, HRESULT resultCode, PCWSTR fileName)
 	LocalFree(errMessage);
 	return(false);
 }
-

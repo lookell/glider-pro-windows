@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "MainWindow.h"
 #include "Marquee.h"
 #include "Menu.h"
@@ -16,15 +15,12 @@
 
 #include <strsafe.h>
 
-
 #define kHoriCoordItem		1001
 #define kVertCoordItem		1002
 #define kDistCoordItem		1003
 
-
 INT_PTR CALLBACK CoordWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 void UpdateCoordWindow (void);
-
 
 HWND coordWindow;
 SInt16 isCoordH;
@@ -34,7 +30,6 @@ Boolean isCoordOpen;
 static SInt16 coordH;
 static SInt16 coordV;
 static SInt16 coordD;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  SetCoordinateHVD
@@ -218,4 +213,3 @@ void ToggleCoordinateWindow (void)
 		isCoordOpen = false;
 	}
 }
-

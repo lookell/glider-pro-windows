@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "Coordinates.h"
 #include "FrameTimer.h"
 #include "House.h"
@@ -24,9 +23,7 @@
 
 #include <mmsystem.h>
 
-
 void HandleIdleTask (void);
-
 
 UInt32 incrementModeTime;
 Boolean doAutoDemo;
@@ -34,7 +31,6 @@ Boolean switchedOut;
 Boolean ignoreDoubleClick;
 HACCEL splashAccelTable;
 HACCEL editAccelTable;
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  HandleIdleTask
@@ -156,4 +152,3 @@ void IgnoreThisClick (void)
 {
 	ignoreDoubleClick = true;
 }
-

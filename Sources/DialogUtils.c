@@ -6,7 +6,6 @@
 //----------------------------------------------------------------------------
 //============================================================================
 
-
 #include "GliderDefines.h"
 #include "StringUtils.h"
 #include "Utilities.h"
@@ -15,10 +14,8 @@
 
 #include <stdlib.h>
 
-
 static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam);
 static INT_PTR CALLBACK AlertProc (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
 
 //==============================================================  Functions
 //--------------------------------------------------------------  FormatWindowText
@@ -470,4 +467,3 @@ void SetComboBoxMenuValue (HWND theDialog, int whichItem, SInt16 value)
 		}
 	}
 }
-
