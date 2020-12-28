@@ -50,22 +50,22 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate);
 LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam);
 
-Rect workSrcRect;
-HDC workSrcMap;
-Rect mainWindowRect;
-HWND mainWindow;
-SInt16 isEditH;
-SInt16 isEditV;
-SInt16 playOriginH;
-SInt16 playOriginV;
-SInt16 splashOriginH;
-SInt16 splashOriginV;
-SInt16 theMode;
-Boolean fadeGraysOut;
-Boolean isDoColorFade;
-Boolean splashDrawn;
-HDC splashSrcMap;
-Rect splashSrcRect;
+Rect g_workSrcRect;
+HDC g_workSrcMap;
+Rect g_mainWindowRect;
+HWND g_mainWindow;
+SInt16 g_isEditH;
+SInt16 g_isEditV;
+SInt16 g_playOriginH;
+SInt16 g_playOriginV;
+SInt16 g_splashOriginH;
+SInt16 g_splashOriginV;
+SInt16 g_theMode;
+Boolean g_fadeGraysOut;
+Boolean g_isDoColorFade;
+Boolean g_splashDrawn;
+HDC g_splashSrcMap;
+Rect g_splashSrcRect;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  RegisterMainWindowClass
@@ -93,9 +93,9 @@ void RegisterMainWindowClass (void)
 // Draws additional text on top of splash screen.
 //
 // The appropriate house name to display may not be the current house, so an index
-// into 'theHousesSpecs' is passed in to specify which house to display on the
-// splash screen. In most cases, the value should be 'thisHouseIndex', but during
-// the demo, 'thisHouseIndex' refers to the demo house and not the house that the
+// into 'g_theHousesSpecs' is passed in to specify which house to display on the
+// splash screen. In most cases, the value should be 'g_thisHouseIndex', but during
+// the demo, 'g_thisHouseIndex' refers to the demo house and not the house that the
 // player had loaded up before. The DoDemoGame() function handles this subtlety.
 
 void DrawOnSplash (HDC hdc, SInt16 splashHouseIndex)
@@ -105,16 +105,16 @@ void DrawOnSplash (HDC hdc, SInt16 splashHouseIndex)
 	HGDIOBJ wasFont;
 	houseSpec splashHouseSpec;
 
-	if (splashHouseIndex < 0 || splashHouseIndex >= housesFound)
+	if (splashHouseIndex < 0 || splashHouseIndex >= g_housesFound)
 		return;
 
-	splashHouseSpec = theHousesSpecs[splashHouseIndex];
+	splashHouseSpec = g_theHousesSpecs[splashHouseIndex];
 
 	PasStringCopyC("House: ", houseLoadedStr);
 	PasStringConcat(houseLoadedStr, splashHouseSpec.name);
-	if ((thisMac.hasQT) && (splashHouseSpec.hasMovie))
+	if ((g_thisMac.hasQT) && (splashHouseSpec.hasMovie))
 		PasStringConcatC(houseLoadedStr, " (QT)");
-	MoveToEx(hdc, splashOriginH + 436, splashOriginV + 314, NULL);
+	MoveToEx(hdc, g_splashOriginH + 436, g_splashOriginV + 314, NULL);
 	theFont = CreateTahomaFont(-9, FW_BOLD);
 	wasFont = SelectObject(hdc, theFont);
 	if (splashHouseSpec.readOnly)
@@ -131,14 +131,14 @@ void RedrawSplashScreen (SInt16 splashHouseIndex)
 {
 	Rect tempRect;
 
-	Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-	tempRect = splashSrcRect;
+	Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+	tempRect = g_splashSrcRect;
 	ZeroRectCorner(&tempRect);
-	QOffsetRect(&tempRect, splashOriginH, splashOriginV);
-	Mac_CopyBits(splashSrcMap, workSrcMap, &splashSrcRect, &tempRect, srcCopy, nil);
-	DrawOnSplash(workSrcMap, splashHouseIndex);
-	DissolveScreenOn(&workSrcRect);
-	CopyRectMainToWork(&workSrcRect);
+	QOffsetRect(&tempRect, g_splashOriginH, g_splashOriginV);
+	Mac_CopyBits(g_splashSrcMap, g_workSrcMap, &g_splashSrcRect, &tempRect, srcCopy, nil);
+	DrawOnSplash(g_workSrcMap, splashHouseIndex);
+	DissolveScreenOn(&g_workSrcRect);
+	CopyRectMainToWork(&g_workSrcRect);
 }
 
 //--------------------------------------------------------------  PaintMainWindow
@@ -150,64 +150,64 @@ void PaintMainWindow (HDC hdc)
 	HRGN justPaintedRgn;
 	Rect tempRect;
 
-	GetClientRect(mainWindow, &clientRect);
+	GetClientRect(g_mainWindow, &clientRect);
 	DPtoLP(hdc, (POINT *)&clientRect, 2);
 	unpaintedRgn = CreateRectRgnIndirect(&clientRect);
 	justPaintedRgn = CreateRectRgn(0, 0, 0, 0);
 
-	if (theMode == kEditMode)
+	if (g_theMode == kEditMode)
 	{
 		PauseMarquee();
-		Mac_CopyBits(workSrcMap, hdc, &mainWindowRect, &mainWindowRect, srcCopy, nil);
+		Mac_CopyBits(g_workSrcMap, hdc, &g_mainWindowRect, &g_mainWindowRect, srcCopy, nil);
 		ResumeMarquee();
 
 		SetRectRgn(
 			justPaintedRgn,
-			mainWindowRect.left,
-			mainWindowRect.top,
-			mainWindowRect.right,
-			mainWindowRect.bottom
+			g_mainWindowRect.left,
+			g_mainWindowRect.top,
+			g_mainWindowRect.right,
+			g_mainWindowRect.bottom
 		);
 		CombineRgn(unpaintedRgn, unpaintedRgn, justPaintedRgn, RGN_DIFF);
 	}
-	else if (theMode == kPlayMode)
+	else if (g_theMode == kPlayMode)
 	{
-		Mac_CopyBits(workSrcMap, hdc, &justRoomsRect, &justRoomsRect, srcCopy, nil);
+		Mac_CopyBits(g_workSrcMap, hdc, &g_justRoomsRect, &g_justRoomsRect, srcCopy, nil);
 		RefreshScoreboard(kNormalTitleMode);
 
 		SetRectRgn(
 			justPaintedRgn,
-			justRoomsRect.left,
-			justRoomsRect.top,
-			justRoomsRect.right,
-			justRoomsRect.bottom
+			g_justRoomsRect.left,
+			g_justRoomsRect.top,
+			g_justRoomsRect.right,
+			g_justRoomsRect.bottom
 		);
 		CombineRgn(unpaintedRgn, unpaintedRgn, justPaintedRgn, RGN_DIFF);
 		SetRectRgn(
 			justPaintedRgn,
-			boardDestRect.left,
-			boardDestRect.top,
-			boardDestRect.right,
-			boardDestRect.bottom
+			g_boardDestRect.left,
+			g_boardDestRect.top,
+			g_boardDestRect.right,
+			g_boardDestRect.bottom
 		);
 		CombineRgn(unpaintedRgn, unpaintedRgn, justPaintedRgn, RGN_DIFF);
 	}
-	else if (theMode == kSplashMode)
+	else if (g_theMode == kSplashMode)
 	{
-		Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-		tempRect = splashSrcRect;
+		Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+		tempRect = g_splashSrcRect;
 		ZeroRectCorner(&tempRect);
-		QOffsetRect(&tempRect, splashOriginH, splashOriginV);
-		Mac_CopyBits(splashSrcMap, workSrcMap, &splashSrcRect, &tempRect, srcCopy, nil);
-		Mac_CopyBits(workSrcMap, hdc, &workSrcRect, &workSrcRect, srcCopy, nil);
-		DrawOnSplash(hdc, thisHouseIndex);
+		QOffsetRect(&tempRect, g_splashOriginH, g_splashOriginV);
+		Mac_CopyBits(g_splashSrcMap, g_workSrcMap, &g_splashSrcRect, &tempRect, srcCopy, nil);
+		Mac_CopyBits(g_workSrcMap, hdc, &g_workSrcRect, &g_workSrcRect, srcCopy, nil);
+		DrawOnSplash(hdc, g_thisHouseIndex);
 
 		SetRectRgn(
 			justPaintedRgn,
-			workSrcRect.left,
-			workSrcRect.top,
-			workSrcRect.right,
-			workSrcRect.bottom
+			g_workSrcRect.left,
+			g_workSrcRect.top,
+			g_workSrcRect.right,
+			g_workSrcRect.bottom
 		);
 		CombineRgn(unpaintedRgn, unpaintedRgn, justPaintedRgn, RGN_DIFF);
 	}
@@ -216,14 +216,14 @@ void PaintMainWindow (HDC hdc)
 	DeleteObject(justPaintedRgn);
 	DeleteObject(unpaintedRgn);
 
-	splashDrawn = true;
+	g_splashDrawn = true;
 }
 
 //--------------------------------------------------------------  AdjustMainWindowDC
 
 void AdjustMainWindowDC (HDC hdc)
 {
-	if (GetMenu(mainWindow) == NULL)
+	if (GetMenu(g_mainWindow) == NULL)
 	{
 		SetWindowOrgEx(hdc, 0, -kScoreboardTall, NULL);
 	}
@@ -234,7 +234,7 @@ void AdjustMainWindowDC (HDC hdc)
 
 void UpdateMainWindow (void)
 {
-	UpdateWindow(mainWindow);
+	UpdateWindow(g_mainWindow);
 }
 
 //--------------------------------------------------------------  OpenMainWindow
@@ -260,40 +260,40 @@ void OpenMainWindow (void)
 	}
 	StringCchCopyN(windowTitle, ARRAYSIZE(windowTitle), titlePtr, titleLen);
 
-	if (mainWindow != NULL)
+	if (g_mainWindow != NULL)
 	{
-		YellowAlert(mainWindow, kYellowUnaccounted, 6);
+		YellowAlert(g_mainWindow, kYellowUnaccounted, 6);
 		return;
 	}
 
-	if (theMode == kEditMode)
+	if (g_theMode == kEditMode)
 	{
-		QSetRect(&mainWindowRect, 0, 0, kRoomWide, kTileHigh);
+		QSetRect(&g_mainWindowRect, 0, 0, kRoomWide, kTileHigh);
 		SetRect(&rcClient, 0, 0, kRoomWide, kTileHigh);
 		windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 		AdjustWindowRect(&rcClient, windowStyle, TRUE);
 		width = rcClient.right - rcClient.left;
 		height = rcClient.bottom - rcClient.top;
-		mainWindow = CreateWindow(WC_MAINWINDOW, windowTitle,
+		g_mainWindow = CreateWindow(WC_MAINWINDOW, windowTitle,
 				windowStyle, 0, 0, width, height,
-				NULL, theMenuBar, HINST_THISCOMPONENT, NULL);
-		if (mainWindow == NULL)
+				NULL, g_theMenuBar, HINST_THISCOMPONENT, NULL);
+		if (g_mainWindow == NULL)
 			RedAlert(kErrDialogDidntLoad);
 
 		if (OptionKeyDown())
 		{
-			isEditH = 3;
-			isEditV = 41;
+			g_isEditH = 3;
+			g_isEditV = 41;
 		}
 
 		placement.length = sizeof(placement);
-		GetWindowPlacement(mainWindow, &placement);
+		GetWindowPlacement(g_mainWindow, &placement);
 		OffsetRect(&placement.rcNormalPosition,
 				-placement.rcNormalPosition.left,
 				-placement.rcNormalPosition.top);
-		OffsetRect(&placement.rcNormalPosition, isEditH, isEditV);
+		OffsetRect(&placement.rcNormalPosition, g_isEditH, g_isEditV);
 		placement.showCmd = SW_SHOWNORMAL;
-		SetWindowPlacement(mainWindow, &placement);
+		SetWindowPlacement(g_mainWindow, &placement);
 
 		whichRoom = GetFirstRoomNumber();
 		CopyRoomToThisRoom(whichRoom);
@@ -303,51 +303,51 @@ void OpenMainWindow (void)
 	{
 		rcClient.left = 0;
 		rcClient.top = 0;
-		rcClient.right = RectWide(&thisMac.screen);
-		rcClient.bottom = RectTall(&thisMac.screen);
+		rcClient.right = RectWide(&g_thisMac.screen);
+		rcClient.bottom = RectTall(&g_thisMac.screen);
 		windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 		AdjustWindowRect(&rcClient, windowStyle, FALSE);
 		width = rcClient.right - rcClient.left;
 		height = rcClient.bottom - rcClient.top;
-		mainWindow = CreateWindow(WC_MAINWINDOW, windowTitle,
+		g_mainWindow = CreateWindow(WC_MAINWINDOW, windowTitle,
 				windowStyle, CW_USEDEFAULT, CW_USEDEFAULT, width, height,
-				NULL, theMenuBar, HINST_THISCOMPONENT, NULL);
-		if (mainWindow == NULL)
+				NULL, g_theMenuBar, HINST_THISCOMPONENT, NULL);
+		if (g_mainWindow == NULL)
 			RedAlert(kErrDialogDidntLoad);
-		CenterWindowOverOwner(mainWindow);
-		ShowWindow(mainWindow, SW_SHOWNORMAL);
+		CenterWindowOverOwner(g_mainWindow);
+		ShowWindow(g_mainWindow, SW_SHOWNORMAL);
 
-		GetClientRect(mainWindow, &rcClient);
-		mainWindowRect.left = 0;
-		mainWindowRect.top = 0;
-		mainWindowRect.right = (SInt16)rcClient.right;
-		mainWindowRect.bottom = (SInt16)rcClient.bottom;
+		GetClientRect(g_mainWindow, &rcClient);
+		g_mainWindowRect.left = 0;
+		g_mainWindowRect.top = 0;
+		g_mainWindowRect.right = (SInt16)rcClient.right;
+		g_mainWindowRect.bottom = (SInt16)rcClient.bottom;
 
 		{
 			RECT clientRect;
 			HDC clientHDC;
 
-			GetClientRect(mainWindow, &clientRect);
-			clientHDC = GetDC(mainWindow);
+			GetClientRect(g_mainWindow, &clientRect);
+			clientHDC = GetDC(g_mainWindow);
 			PatBlt(clientHDC, 0, 0, clientRect.right, clientRect.bottom, BLACKNESS);
-			ReleaseDC(mainWindow, clientHDC);
+			ReleaseDC(g_mainWindow, clientHDC);
 		}
 
-		splashOriginH = (RectWide(&workSrcRect) - RectWide(&splashSrcRect)) / 2;
-		if (splashOriginH < 0)
-			splashOriginH = 0;
-		splashOriginV = (RectTall(&workSrcRect) - RectTall(&splashSrcRect)) / 2;
-		if (splashOriginV < 0)
-			splashOriginV = 0;
+		g_splashOriginH = (RectWide(&g_workSrcRect) - RectWide(&g_splashSrcRect)) / 2;
+		if (g_splashOriginH < 0)
+			g_splashOriginH = 0;
+		g_splashOriginV = (RectTall(&g_workSrcRect) - RectTall(&g_splashSrcRect)) / 2;
+		if (g_splashOriginV < 0)
+			g_splashOriginV = 0;
 
-		Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-		tempRect = splashSrcRect;
+		Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+		tempRect = g_splashSrcRect;
 		ZeroRectCorner(&tempRect);
-		Mac_CopyBits(splashSrcMap, workSrcMap, &splashSrcRect, &tempRect, srcCopy, nil);
+		Mac_CopyBits(g_splashSrcMap, g_workSrcMap, &g_splashSrcRect, &tempRect, srcCopy, nil);
 
-		if ((fadeGraysOut) && (isDoColorFade))
+		if ((g_fadeGraysOut) && (g_isDoColorFade))
 		{
-			fadeGraysOut = false;
+			g_fadeGraysOut = false;
 		}
 	}
 }
@@ -357,9 +357,9 @@ void OpenMainWindow (void)
 
 void CloseMainWindow (void)
 {
-	if (mainWindow != NULL)
-		DestroyWindow(mainWindow);
-	mainWindow = NULL;
+	if (g_mainWindow != NULL)
+		DestroyWindow(g_mainWindow);
+	g_mainWindow = NULL;
 }
 
 //--------------------------------------------------------------  UpdateEditWindowTitle
@@ -372,27 +372,27 @@ void UpdateEditWindowTitle (void)
 	wchar_t roomName[32];
 	wchar_t newTitle[256];
 
-	if (mainWindow == NULL)
+	if (g_mainWindow == NULL)
 	{
 		return;
 	}
 
-	WinFromMacString(houseName, ARRAYSIZE(houseName), thisHouseName);
-	if (noRoomAtAll)
+	WinFromMacString(houseName, ARRAYSIZE(houseName), g_thisHouseName);
+	if (g_noRoomAtAll)
 	{
 		StringCchPrintf(newTitle, ARRAYSIZE(newTitle), L"%s - No rooms", houseName);
 	}
-	else if (houseUnlocked)
+	else if (g_houseUnlocked)
 	{
-		WinFromMacString(roomName, ARRAYSIZE(roomName), thisRoom->name);
+		WinFromMacString(roomName, ARRAYSIZE(roomName), g_thisRoom->name);
 		StringCchPrintf(newTitle, ARRAYSIZE(newTitle), L"%s - %s (%d, %d)",
-			houseName, roomName, (int)thisRoom->floor, (int)thisRoom->suite);
+			houseName, roomName, (int)g_thisRoom->floor, (int)g_thisRoom->suite);
 	}
 	else
 	{
 		StringCchPrintf(newTitle, ARRAYSIZE(newTitle), L"%s - House Locked", houseName);
 	}
-	SetWindowText(mainWindow, newTitle);
+	SetWindowText(g_mainWindow, newTitle);
 }
 
 //--------------------------------------------------------------  HandleMainClick
@@ -400,10 +400,10 @@ void UpdateEditWindowTitle (void)
 
 void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick)
 {
-	if ((theMode != kEditMode) || (mainWindow == NULL) || (!houseUnlocked))
+	if ((g_theMode != kEditMode) || (g_mainWindow == NULL) || (!g_houseUnlocked))
 		return;
 
-	if (toolSelected == kSelectTool)
+	if (g_toolSelected == kSelectTool)
 		DoSelectionClick(hwnd, wherePt, isDoubleClick);
 	else
 		DoNewObjectClick(hwnd, wherePt);
@@ -420,9 +420,9 @@ HDC GetMainWindowDC (void)
 {
 	HDC hdc;
 
-	if (mainWindow != NULL)
+	if (g_mainWindow != NULL)
 	{
-		hdc = GetDC(mainWindow);
+		hdc = GetDC(g_mainWindow);
 		AdjustMainWindowDC(hdc);
 		return hdc;
 	}
@@ -438,7 +438,7 @@ void ReleaseMainWindowDC (HDC hdc)
 {
 	if (hdc != NULL)
 	{
-		ReleaseDC(mainWindow, hdc);
+		ReleaseDC(g_mainWindow, hdc);
 	}
 }
 
@@ -509,7 +509,7 @@ void WashColorIn (void)
 	if (splashDIB == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
-	GetClientRect(mainWindow, &clientRect);
+	GetClientRect(g_mainWindow, &clientRect);
 
 	splashDC = CreateCompatibleDC(NULL);
 	SaveDC(splashDC);
@@ -553,9 +553,9 @@ void WashColorIn (void)
 		SetDIBColorTable(splashDC, 0, ARRAYSIZE(newColors), newColors);
 
 		hdc = GetMainWindowDC();
-		BitBlt(hdc, splashOriginH, splashOriginV, 640, 460, splashDC, 0, 0, SRCCOPY);
+		BitBlt(hdc, g_splashOriginH, g_splashOriginV, 640, 460, splashDC, 0, 0, SRCCOPY);
 		ReleaseMainWindowDC(hdc);
-		ValidateRect(mainWindow, NULL);
+		ValidateRect(g_mainWindow, NULL);
 	}
 
 	SetFrameRate(wasFPS);
@@ -563,7 +563,7 @@ void WashColorIn (void)
 	DeleteDC(splashDC);
 	DeleteObject(splashDIB);
 	EnableMenuBar();
-	InvalidateRect(mainWindow, NULL, TRUE);
+	InvalidateRect(g_mainWindow, NULL, TRUE);
 
 	if (mmResult == TIMERR_NOERROR)
 	{
@@ -582,7 +582,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		return 0;
 
 	case WM_CLOSE:
-		if (theMode == kPlayMode)
+		if (g_theMode == kPlayMode)
 		{
 			DoCommandKeyQuit();
 		}
@@ -601,21 +601,21 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		return 0;
 
 	case WM_ENABLE:
-		if (mapWindow != NULL && IsWindow(mapWindow))
+		if (g_mapWindow != NULL && IsWindow(g_mapWindow))
 		{
-			EnableWindow(mapWindow, !!wParam);
+			EnableWindow(g_mapWindow, !!wParam);
 		}
-		if (toolsWindow != NULL && IsWindow(toolsWindow))
+		if (g_toolsWindow != NULL && IsWindow(g_toolsWindow))
 		{
-			EnableWindow(toolsWindow, !!wParam);
+			EnableWindow(g_toolsWindow, !!wParam);
 		}
-		if (linkWindow != NULL && IsWindow(linkWindow))
+		if (g_linkWindow != NULL && IsWindow(g_linkWindow))
 		{
-			EnableWindow(linkWindow, !!wParam);
+			EnableWindow(g_linkWindow, !!wParam);
 		}
-		if (coordWindow != NULL && IsWindow(coordWindow))
+		if (g_coordWindow != NULL && IsWindow(g_coordWindow))
 		{
-			EnableWindow(coordWindow, !!wParam);
+			EnableWindow(g_coordWindow, !!wParam);
 		}
 		return 0;
 
@@ -628,7 +628,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		Point wherePt;
 		wherePt.h = GET_X_LPARAM(lParam);
 		wherePt.v = GET_Y_LPARAM(lParam);
-		if (uMsg == WM_LBUTTONDBLCLK && !ignoreDoubleClick)
+		if (uMsg == WM_LBUTTONDBLCLK && !g_ignoreDoubleClick)
 		{
 			HandleMainClick(hwnd, wherePt, true);
 		}
@@ -636,18 +636,18 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		{
 			HandleMainClick(hwnd, wherePt, false);
 		}
-		ignoreDoubleClick = false;
+		g_ignoreDoubleClick = false;
 		return 0;
 	}
 
 	case WM_MOVE:
-		if (theMode == kEditMode)
+		if (g_theMode == kEditMode)
 		{
 			WINDOWPLACEMENT placement;
 			placement.length = sizeof(placement);
 			GetWindowPlacement(hwnd, &placement);
-			isEditH = (SInt16)placement.rcNormalPosition.left;
-			isEditV = (SInt16)placement.rcNormalPosition.top;
+			g_isEditH = (SInt16)placement.rcNormalPosition.left;
+			g_isEditV = (SInt16)placement.rcNormalPosition.top;
 		}
 		return 0;
 
@@ -670,18 +670,18 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
 {
-	if (theMode == kPlayMode)
+	if (g_theMode == kPlayMode)
 	{
 		if (fActivate)
 		{
-			switchedOut = false;
-			if (isPlayMusicGame && !isMusicOn)
+			g_switchedOut = false;
+			if (g_isPlayMusicGame && !g_isMusicOn)
 				StartMusic();
 		}
 		else
 		{
-			switchedOut = true;
-			if (isPlayMusicGame && isMusicOn)
+			g_switchedOut = true;
+			if (g_isPlayMusicGame && g_isMusicOn)
 				StopTheMusic();
 		}
 	}
@@ -689,28 +689,28 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
 	{
 		if (fActivate)
 		{
-			switchedOut = false;
-			if ((isPlayMusicIdle) && (theMode != kEditMode))
+			g_switchedOut = false;
+			if ((g_isPlayMusicIdle) && (g_theMode != kEditMode))
 			{
 				OSErr theErr = StartMusic();
 				if (theErr != noErr)
 				{
 					YellowAlert(hwnd, kYellowNoMusic, theErr);
-					failedMusic = true;
+					g_failedMusic = true;
 				}
 			}
-			incrementModeTime = timeGetTime() + kIdleSplashTime;
+			g_incrementModeTime = timeGetTime() + kIdleSplashTime;
 
 			if (!COMPILEDEMO)
 			{
-//				if (theMode == kEditMode)
+//				if (g_theMode == kEditMode)
 //					SeeIfValidScrapAvailable(true);
 			}
 		}
 		else
 		{
-			switchedOut = true;
-			if ((isMusicOn) && (theMode != kEditMode))
+			g_switchedOut = true;
+			if ((g_isMusicOn) && (g_theMode != kEditMode))
 				StopTheMusic();
 		}
 	}
@@ -731,19 +731,19 @@ LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam)
 	switch (vKey)
 	{
 	case VK_PRIOR: // page up
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 			PrevToolMode();
 		break;
 
 	case VK_NEXT: // page down
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 			NextToolMode();
 		break;
 
 	case VK_LEFT:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 		{
-			if (objActive == kNoObjectSelected)
+			if (g_objActive == kNoObjectSelected)
 				SelectNeighborRoom(kRoomToLeft);
 			else
 				MoveObject(kBumpLeft, shiftDown);
@@ -751,9 +751,9 @@ LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case VK_RIGHT:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 		{
-			if (objActive == kNoObjectSelected)
+			if (g_objActive == kNoObjectSelected)
 				SelectNeighborRoom(kRoomToRight);
 			else
 				MoveObject(kBumpRight, shiftDown);
@@ -761,9 +761,9 @@ LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case VK_UP:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 		{
-			if (objActive == kNoObjectSelected)
+			if (g_objActive == kNoObjectSelected)
 				SelectNeighborRoom(kRoomAbove);
 			else
 				MoveObject(kBumpUp, shiftDown);
@@ -771,9 +771,9 @@ LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case VK_DOWN:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 		{
-			if (objActive == kNoObjectSelected)
+			if (g_objActive == kNoObjectSelected)
 				SelectNeighborRoom(kRoomBelow);
 			else
 				MoveObject(kBumpDown, shiftDown);
@@ -781,9 +781,9 @@ LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case VK_DELETE:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 		{
-			if (objActive == kNoObjectSelected)
+			if (g_objActive == kNoObjectSelected)
 				DeleteRoom(hwnd, true);
 			else
 				Gp_DeleteObject();
@@ -791,7 +791,7 @@ LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case VK_TAB:
-		if ((theMode == kEditMode) && (houseUnlocked))
+		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 		{
 			if (shiftDown)
 				SelectPrevObject();
@@ -801,52 +801,52 @@ LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case VK_ESCAPE:
-		if ((theMode == kEditMode) && (houseUnlocked))
+		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			DeselectObject();
 		break;
 
 	case 'A':
-		if ((theMode == kEditMode) && (houseUnlocked))
+		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kApplianceMode);
 		break;
 
 	case 'B':
-		if ((theMode == kEditMode) && (houseUnlocked))
+		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kBlowerMode);
 		break;
 
 	case 'C':
-		if ((theMode == kEditMode) && (houseUnlocked))
+		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kClutterMode);
 		break;
 
 	case 'E':
-		if ((theMode == kEditMode) && (houseUnlocked))
+		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kEnemyMode);
 		break;
 
 	case 'F':
-		if ((theMode == kEditMode) && (houseUnlocked))
+		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kFurnitureMode);
 		break;
 
 	case 'L':
-		if ((theMode == kEditMode) && (houseUnlocked))
+		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kLightMode);
 		break;
 
 	case 'P':
-		if ((theMode == kEditMode) && (houseUnlocked))
+		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kBonusMode);
 		break;
 
 	case 'S':
-		if ((theMode == kEditMode) && (houseUnlocked))
+		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kSwitchMode);
 		break;
 
 	case 'T':
-		if ((theMode == kEditMode) && (houseUnlocked))
+		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kTransportMode);
 		break;
 

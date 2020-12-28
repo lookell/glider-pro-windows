@@ -12,9 +12,9 @@
 #define kReflectionOffsetH  (-20)
 #define KReflectionOffsetV  (-16)
 
-extern SInt16 numWork2Main;
-extern SInt16 numBack2Work;
-extern Boolean hasMirror;
+extern SInt16 g_numWork2Main;
+extern SInt16 g_numBack2Work;
+extern Boolean g_hasMirror;
 
 void AddRectToWorkRects (const Rect *theRect);
 void AddRectToBackRects (const Rect *theRect);

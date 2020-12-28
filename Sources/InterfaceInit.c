@@ -85,41 +85,41 @@ void InitializeMenus (void)
 
 	mii.cbSize = sizeof(mii);
 	mii.fMask = MIIM_ID | MIIM_STRING | MIIM_SUBMENU;
-	theMenuBar = CreateMenu();
+	g_theMenuBar = CreateMenu();
 	rootMenu = LoadMenu(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDM_ROOT));
 	if (rootMenu == NULL)
 		RedAlert(kErrFailedResourceLoad);
 
-	gameMenu = DetachPopupMenu(rootMenu, kGameMenuID, &gameMenuTitle);
-	if (gameMenu == NULL)
+	g_gameMenu = DetachPopupMenu(rootMenu, kGameMenuID, &g_gameMenuTitle);
+	if (g_gameMenu == NULL)
 		RedAlert(kErrFailedResourceLoad);
 	mii.wID = kGameMenuID;
-	mii.hSubMenu = gameMenu;
-	mii.dwTypeData = gameMenuTitle;
-	InsertMenuItem(theMenuBar, GetMenuItemCount(theMenuBar), TRUE, &mii);
+	mii.hSubMenu = g_gameMenu;
+	mii.dwTypeData = g_gameMenuTitle;
+	InsertMenuItem(g_theMenuBar, GetMenuItemCount(g_theMenuBar), TRUE, &mii);
 
-	optionsMenu = DetachPopupMenu(rootMenu, kOptionsMenuID, &optionsMenuTitle);
-	if (optionsMenu == NULL)
+	g_optionsMenu = DetachPopupMenu(rootMenu, kOptionsMenuID, &g_optionsMenuTitle);
+	if (g_optionsMenu == NULL)
 		RedAlert(kErrFailedResourceLoad);
 	mii.wID = kOptionsMenuID;
-	mii.hSubMenu = optionsMenu;
-	mii.dwTypeData = optionsMenuTitle;
-	InsertMenuItem(theMenuBar, GetMenuItemCount(theMenuBar), TRUE, &mii);
+	mii.hSubMenu = g_optionsMenu;
+	mii.dwTypeData = g_optionsMenuTitle;
+	InsertMenuItem(g_theMenuBar, GetMenuItemCount(g_theMenuBar), TRUE, &mii);
 
-	appleMenu = DetachPopupMenu(rootMenu, kAppleMenuID, &appleMenuTitle);
-	if (appleMenu == NULL)
+	g_appleMenu = DetachPopupMenu(rootMenu, kAppleMenuID, &g_appleMenuTitle);
+	if (g_appleMenu == NULL)
 		RedAlert(kErrFailedResourceLoad);
 	mii.wID = kAppleMenuID;
-	mii.hSubMenu = appleMenu;
-	mii.dwTypeData = appleMenuTitle;
-	InsertMenuItem(theMenuBar, GetMenuItemCount(theMenuBar), TRUE, &mii);
+	mii.hSubMenu = g_appleMenu;
+	mii.dwTypeData = g_appleMenuTitle;
+	InsertMenuItem(g_theMenuBar, GetMenuItemCount(g_theMenuBar), TRUE, &mii);
 
-	menusUp = true;
-	if (mainWindow != NULL)
-		SetMenu(mainWindow, theMenuBar);
+	g_menusUp = true;
+	if (g_mainWindow != NULL)
+		SetMenu(g_mainWindow, g_theMenuBar);
 
-	houseMenu = DetachPopupMenu(rootMenu, kHouseMenuID, &houseMenuTitle);
-	if (houseMenu == NULL)
+	g_houseMenu = DetachPopupMenu(rootMenu, kHouseMenuID, &g_houseMenuTitle);
+	if (g_houseMenu == NULL)
 		RedAlert(kErrFailedResourceLoad);
 
 	UpdateMenus(false);
@@ -134,89 +134,89 @@ void VariableInit (void)
 {
 	size_t		i;
 
-	theMenuBar = NULL;
-	menusUp = false;
-	quitting = false;
-	houseOpen = false;
-	newRoomNow = false;
-	playing = false;
-	evenFrame = false;
-	fadeGraysOut = true;
-	twoPlayerGame = false;
-	paused = false;
-	hasMirror = false;
-	demoGoing = false;
-//	scrapIsARoom = true;
-	splashDrawn = false;
+	g_theMenuBar = NULL;
+	g_menusUp = false;
+	g_quitting = false;
+	g_houseOpen = false;
+	g_newRoomNow = false;
+	g_playing = false;
+	g_evenFrame = false;
+	g_fadeGraysOut = true;
+	g_twoPlayerGame = false;
+	g_paused = false;
+	g_hasMirror = false;
+	g_demoGoing = false;
+//	g_scrapIsARoom = true;
+	g_splashDrawn = false;
 
 //	if (!COMPILEDEMO)
 //		SeeIfValidScrapAvailable(false);
 
-	theGlider.which = kPlayer1;
-	theGlider2.which = kPlayer2;
+	g_theGlider.which = kPlayer1;
+	g_theGlider2.which = kPlayer2;
 
-	splashAccelTable = LoadAccelerators(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDA_SPLASH));
-	if (splashAccelTable == NULL)
+	g_splashAccelTable = LoadAccelerators(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDA_SPLASH));
+	if (g_splashAccelTable == NULL)
 		RedAlert(kErrFailedResourceLoad);
-	editAccelTable = LoadAccelerators(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDA_EDIT));
-	if (editAccelTable == NULL)
+	g_editAccelTable = LoadAccelerators(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDA_EDIT));
+	if (g_editAccelTable == NULL)
 		RedAlert(kErrFailedResourceLoad);
 
-	theMode = kSplashMode;
-	thisRoomNumber = 0;
-	previousRoom = -1;
-	toolSelected = kSelectTool;
-	lastBackground = kBaseBackgroundID;
-	wasFlower = RandomInt(kNumFlowers);
-	lastHighScore = -1;
-	incrementModeTime = timeGetTime() + kIdleSplashTime;
-	willMaxFiles = maxFiles;
+	g_theMode = kSplashMode;
+	g_thisRoomNumber = 0;
+	g_previousRoom = -1;
+	g_toolSelected = kSelectTool;
+	g_lastBackground = kBaseBackgroundID;
+	g_wasFlower = RandomInt(kNumFlowers);
+	g_lastHighScore = -1;
+	g_incrementModeTime = timeGetTime() + kIdleSplashTime;
+	g_willMaxFiles = g_maxFiles;
 
-	fadeInSequence[0] = 4;	// 4
-	fadeInSequence[1] = 5;
-	fadeInSequence[2] = 6;
-	fadeInSequence[3] = 7;
-	fadeInSequence[4] = 5;	// 5
-	fadeInSequence[5] = 6;
-	fadeInSequence[6] = 7;
-	fadeInSequence[7] = 8;
-	fadeInSequence[8] = 6;	// 6
-	fadeInSequence[9] = 7;
-	fadeInSequence[10] = 8;
-	fadeInSequence[11] = 9;
-	fadeInSequence[12] = 7;	// 7
-	fadeInSequence[13] = 8;
-	fadeInSequence[14] = 9;
-	fadeInSequence[15] = 10;
+	g_fadeInSequence[0] = 4;	// 4
+	g_fadeInSequence[1] = 5;
+	g_fadeInSequence[2] = 6;
+	g_fadeInSequence[3] = 7;
+	g_fadeInSequence[4] = 5;	// 5
+	g_fadeInSequence[5] = 6;
+	g_fadeInSequence[6] = 7;
+	g_fadeInSequence[7] = 8;
+	g_fadeInSequence[8] = 6;	// 6
+	g_fadeInSequence[9] = 7;
+	g_fadeInSequence[10] = 8;
+	g_fadeInSequence[11] = 9;
+	g_fadeInSequence[12] = 7;	// 7
+	g_fadeInSequence[13] = 8;
+	g_fadeInSequence[14] = 9;
+	g_fadeInSequence[15] = 10;
 
-	mainWindow = NULL;
-	mapWindow = NULL;
-	toolsWindow = NULL;
-	linkWindow = NULL;
-	coordWindow = NULL;
+	g_mainWindow = NULL;
+	g_mapWindow = NULL;
+	g_toolsWindow = NULL;
+	g_linkWindow = NULL;
+	g_coordWindow = NULL;
 
-	houseRect = thisMac.screen;
-	ZeroRectCorner(&houseRect);
-	houseRect.bottom -= kScoreboardTall;
-	if (houseRect.right > kMaxViewWidth)
-		houseRect.right = kMaxViewWidth;
-	if (houseRect.bottom > kMaxViewHeight)
-		houseRect.bottom = kMaxViewHeight;
+	g_houseRect = g_thisMac.screen;
+	ZeroRectCorner(&g_houseRect);
+	g_houseRect.bottom -= kScoreboardTall;
+	if (g_houseRect.right > kMaxViewWidth)
+		g_houseRect.right = kMaxViewWidth;
+	if (g_houseRect.bottom > kMaxViewHeight)
+		g_houseRect.bottom = kMaxViewHeight;
 
-	playOriginH = (RectWide(&houseRect) - kRoomWide) / 2;
-	playOriginV = (RectTall(&houseRect) - kTileHigh) / 2;
+	g_playOriginH = (RectWide(&g_houseRect) - kRoomWide) / 2;
+	g_playOriginV = (RectTall(&g_houseRect) - kTileHigh) / 2;
 
 	for (i = 0; i < 9; i++)
 	{
-		QSetRect(&localRoomsDest[i], 0, 0, kRoomWide, kTileHigh);
-		QOffsetRect(&localRoomsDest[i], playOriginH, playOriginV);
+		QSetRect(&g_localRoomsDest[i], 0, 0, kRoomWide, kTileHigh);
+		QOffsetRect(&g_localRoomsDest[i], g_playOriginH, g_playOriginV);
 	}
-	QOffsetRect(&localRoomsDest[kNorthRoom], 0, -kVertLocalOffset);
-	QOffsetRect(&localRoomsDest[kNorthEastRoom], kRoomWide, -kVertLocalOffset);
-	QOffsetRect(&localRoomsDest[kEastRoom], kRoomWide, 0);
-	QOffsetRect(&localRoomsDest[kSouthEastRoom], kRoomWide, kVertLocalOffset);
-	QOffsetRect(&localRoomsDest[kSouthRoom], 0, kVertLocalOffset);
-	QOffsetRect(&localRoomsDest[kSouthWestRoom], -kRoomWide, kVertLocalOffset);
-	QOffsetRect(&localRoomsDest[kWestRoom], -kRoomWide, 0);
-	QOffsetRect(&localRoomsDest[kNorthWestRoom], -kRoomWide, -kVertLocalOffset);
+	QOffsetRect(&g_localRoomsDest[kNorthRoom], 0, -kVertLocalOffset);
+	QOffsetRect(&g_localRoomsDest[kNorthEastRoom], kRoomWide, -kVertLocalOffset);
+	QOffsetRect(&g_localRoomsDest[kEastRoom], kRoomWide, 0);
+	QOffsetRect(&g_localRoomsDest[kSouthEastRoom], kRoomWide, kVertLocalOffset);
+	QOffsetRect(&g_localRoomsDest[kSouthRoom], 0, kVertLocalOffset);
+	QOffsetRect(&g_localRoomsDest[kSouthWestRoom], -kRoomWide, kVertLocalOffset);
+	QOffsetRect(&g_localRoomsDest[kWestRoom], -kRoomWide, 0);
+	QOffsetRect(&g_localRoomsDest[kNorthWestRoom], -kRoomWide, -kVertLocalOffset);
 }

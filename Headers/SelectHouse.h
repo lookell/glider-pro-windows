@@ -21,12 +21,12 @@ typedef struct houseSpec
 	Boolean hasMovie;
 } houseSpec, *houseSpecPtr;
 
-extern houseSpecPtr theHousesSpecs;
-extern SInt16 housesFound;
-extern SInt16 thisHouseIndex;
-extern SInt16 maxFiles;
-extern SInt16 willMaxFiles;
-extern SInt16 demoHouseIndex;
+extern houseSpecPtr g_theHousesSpecs;
+extern SInt16 g_housesFound;
+extern SInt16 g_thisHouseIndex;
+extern SInt16 g_maxFiles;
+extern SInt16 g_willMaxFiles;
+extern SInt16 g_demoHouseIndex;
 
 void DoLoadHouse (HWND ownerWindow);
 BOOL GetHouseFolderPath (LPWSTR buffer, DWORD cch);

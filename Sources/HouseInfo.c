@@ -46,14 +46,14 @@ SInt32 CountTotalHousePoints (void)
 
 	pointTotal = (SInt32)RealRoomNumberCount() * (SInt32)kRoomVisitScore;
 
-	numRooms = thisHouse.nRooms;
+	numRooms = g_thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
+		if (g_thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				switch (thisHouse.rooms[i].objects[h].what)
+				switch (g_thisHouse.rooms[i].objects[h].what)
 				{
 					case kRedClock:
 					pointTotal += kRedClockPoints;
@@ -76,7 +76,7 @@ SInt32 CountTotalHousePoints (void)
 					break;
 
 					case kInvisBonus:
-					pointTotal += thisHouse.rooms[i].objects[h].data.c.points;
+					pointTotal += g_thisHouse.rooms[i].objects[h].data.c.points;
 					break;
 
 					default:
@@ -108,13 +108,13 @@ INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		// NOTE: Multiline edit controls don't send EN_CHANGE notifications
 		// to their parent when the text is set via WM_SETTEXT, so we'll send
 		// these notifications manually.
-		SetDialogString(hDlg, kBannerTextItem, thisHouse.banner);
+		SetDialogString(hDlg, kBannerTextItem, g_thisHouse.banner);
 		SendEditChangeNotification(hDlg, kBannerTextItem);
-		SetDialogString(hDlg, kTrailerTextItem, thisHouse.trailer);
+		SetDialogString(hDlg, kTrailerTextItem, g_thisHouse.trailer);
 		SendEditChangeNotification(hDlg, kTrailerTextItem);
 
 		SetDlgItemInt(hDlg, kHouseSizeItem, CountTotalHousePoints(), TRUE);
-		if (phoneBitSet)
+		if (g_phoneBitSet)
 			CheckDlgButton(hDlg, kNoPhoneCheck, BST_CHECKED);
 		else
 			CheckDlgButton(hDlg, kNoPhoneCheck, BST_UNCHECKED);
@@ -125,17 +125,17 @@ INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		{
 		case IDOK:
 			GetDialogString(hDlg, kBannerTextItem,
-					thisHouse.banner, ARRAYSIZE(thisHouse.banner));
+					g_thisHouse.banner, ARRAYSIZE(g_thisHouse.banner));
 			GetDialogString(hDlg, kTrailerTextItem,
-					thisHouse.trailer, ARRAYSIZE(thisHouse.trailer));
+					g_thisHouse.trailer, ARRAYSIZE(g_thisHouse.trailer));
 
-			phoneBitSet = (IsDlgButtonChecked(hDlg, kNoPhoneCheck) != BST_UNCHECKED);
-			if (phoneBitSet)
-				thisHouse.flags = thisHouse.flags | 0x00000002;
+			g_phoneBitSet = (IsDlgButtonChecked(hDlg, kNoPhoneCheck) != BST_UNCHECKED);
+			if (g_phoneBitSet)
+				g_thisHouse.flags = g_thisHouse.flags | 0x00000002;
 			else
-				thisHouse.flags = thisHouse.flags & 0xFFFFFFFD;
+				g_thisHouse.flags = g_thisHouse.flags & 0xFFFFFFFD;
 
-			fileDirty = true;
+			g_fileDirty = true;
 			UpdateMenus(false);
 			EndDialog(hDlg, IDOK);
 			break;
@@ -147,9 +147,9 @@ INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		case kLockHouseButton:
 			if (WarnLockingHouse(hDlg))
 			{
-				changeLockStateOfHouse = true;
-				saveHouseLocked = true;
-				fileDirty = true;
+				g_changeLockStateOfHouse = true;
+				g_saveHouseLocked = true;
+				g_fileDirty = true;
 				UpdateMenus(false);
 			}
 			break;
@@ -191,11 +191,11 @@ void DoHouseInfo (HWND ownerWindow)
 	wchar_t nRoomsStr[32];
 
 	numRooms = RealRoomNumberCount();
-	version = thisHouse.version;
-	if (thisHouse.firstRoom >= 0 && thisHouse.firstRoom < thisHouse.nRooms)
+	version = g_thisHouse.version;
+	if (g_thisHouse.firstRoom >= 0 && g_thisHouse.firstRoom < g_thisHouse.nRooms)
 	{
-		h = (SInt32)thisHouse.rooms[thisHouse.firstRoom].suite;
-		v = (SInt32)thisHouse.rooms[thisHouse.firstRoom].floor;
+		h = (SInt32)g_thisHouse.rooms[g_thisHouse.firstRoom].suite;
+		v = (SInt32)g_thisHouse.rooms[g_thisHouse.firstRoom].floor;
 	}
 
 	// Convert version to two strings, the 1's and 1/10th's part.
@@ -232,14 +232,14 @@ void HowToZeroScores (HWND ownerWindow)
 	switch (hitWhat)
 	{
 		case 1002:	// zero all
-		ZeroHighScores(&thisHouse);
-		fileDirty = true;
+		ZeroHighScores(&g_thisHouse);
+		g_fileDirty = true;
 		UpdateMenus(false);
 		break;
 
 		case 1003:	// zero all but highest
-		ZeroAllButHighestScore(&thisHouse);
-		fileDirty = true;
+		ZeroAllButHighestScore(&g_thisHouse);
+		g_fileDirty = true;
 		UpdateMenus(false);
 		break;
 	}

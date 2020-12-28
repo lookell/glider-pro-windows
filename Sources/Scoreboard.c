@@ -26,29 +26,29 @@ void RefreshRoomTitle (SInt16 mode);
 void RefreshNumGliders (void);
 void RefreshPoints (void);
 
-Rect boardSrcRect;
-Rect badgeSrcRect;
-Rect boardDestRect;
-HDC boardSrcMap;
-HDC badgeSrcMap;
-Rect boardTSrcRect;
-Rect boardTDestRect;
-HDC boardTSrcMap;
-Rect boardGSrcRect;
-Rect boardGDestRect;
-HDC boardGSrcMap;
-Rect boardPSrcRect;
-Rect boardPDestRect;
-HDC boardPSrcMap;
-Rect boardPQDestRect;
-Rect boardGQDestRect;
-Rect badgesBlankRects[kNumBadges];
-Rect badgesBadgesRects[kNumBadges];
-Rect badgesDestRects[kNumBadges];
-SInt16 wasScoreboardMode;
+Rect g_boardSrcRect;
+Rect g_badgeSrcRect;
+Rect g_boardDestRect;
+HDC g_boardSrcMap;
+HDC g_badgeSrcMap;
+Rect g_boardTSrcRect;
+Rect g_boardTDestRect;
+HDC g_boardTSrcMap;
+Rect g_boardGSrcRect;
+Rect g_boardGDestRect;
+HDC g_boardGSrcMap;
+Rect g_boardPSrcRect;
+Rect g_boardPDestRect;
+HDC g_boardPSrcMap;
+Rect g_boardPQDestRect;
+Rect g_boardGQDestRect;
+Rect g_badgesBlankRects[kNumBadges];
+Rect g_badgesBadgesRects[kNumBadges];
+Rect g_badgesDestRects[kNumBadges];
+SInt16 g_wasScoreboardMode;
 
-static SInt32 displayedScore;
-static Boolean doRollScore;
+static SInt32 g_displayedScore;
+static Boolean g_doRollScore;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  RefreshScoreboard
@@ -57,15 +57,15 @@ void RefreshScoreboard (SInt16 mode)
 {
 	HDC			mainWindowDC;
 
-	doRollScore = true;
+	g_doRollScore = true;
 
 	RefreshRoomTitle(mode);
 	RefreshNumGliders();
 	RefreshPoints();
 
 	mainWindowDC = GetMainWindowDC();
-	Mac_CopyBits(boardSrcMap, mainWindowDC,
-			&boardSrcRect, &boardDestRect, srcCopy, nil);
+	Mac_CopyBits(g_boardSrcMap, mainWindowDC,
+			&g_boardSrcRect, &g_boardDestRect, srcCopy, nil);
 	ReleaseMainWindowDC(mainWindowDC);
 
 	QuickBatteryRefresh(false);
@@ -83,55 +83,55 @@ void HandleDynamicScoreboard (void)
 	#define		kBandsLow		2		// 25%
 	SInt32		whosTurn;
 
-	if (theScore > displayedScore)
+	if (g_theScore > g_displayedScore)
 	{
-		if (doRollScore)
+		if (g_doRollScore)
 		{
-			displayedScore += kScoreRollAmount;
-			if (displayedScore > theScore)
-				displayedScore = theScore;
+			g_displayedScore += kScoreRollAmount;
+			if (g_displayedScore > g_theScore)
+				g_displayedScore = g_theScore;
 		}
 		else
-			displayedScore = theScore;
+			g_displayedScore = g_theScore;
 
 		PlayPrioritySound(kScoreTikSound, kScoreTikPriority);
 		QuickScoreRefresh();
 	}
 
-	whosTurn = gameFrame & 0x00000007;
+	whosTurn = g_gameFrame & 0x00000007;
 	switch (whosTurn)
 	{
 		case 0:		// show foil
-		if ((foilTotal > 0) && (foilTotal < kFoilLow))
+		if ((g_foilTotal > 0) && (g_foilTotal < kFoilLow))
 			QuickFoilRefresh(false);
 		break;
 
 		case 1:		// hide battery
-		if ((batteryTotal > 0) && (batteryTotal < kBatteryLow))
+		if ((g_batteryTotal > 0) && (g_batteryTotal < kBatteryLow))
 			QuickBatteryRefresh(true);
-		else if ((batteryTotal < 0) && (batteryTotal > kHeliumLow))
+		else if ((g_batteryTotal < 0) && (g_batteryTotal > kHeliumLow))
 			QuickBatteryRefresh(true);
 		break;
 
 		case 2:		// show rubber bands
-		if ((bandsTotal > 0) && (bandsTotal < kBandsLow))
+		if ((g_bandsTotal > 0) && (g_bandsTotal < kBandsLow))
 			QuickBandsRefresh(false);
 		break;
 
 		case 4:		// show battery
-		if ((batteryTotal > 0) && (batteryTotal < kBatteryLow))
+		if ((g_batteryTotal > 0) && (g_batteryTotal < kBatteryLow))
 			QuickBatteryRefresh(false);
-		else if ((batteryTotal < 0) && (batteryTotal > kHeliumLow))
+		else if ((g_batteryTotal < 0) && (g_batteryTotal > kHeliumLow))
 			QuickBatteryRefresh(false);
 		break;
 
 		case 5:		// hide foil
-		if ((foilTotal > 0) && (foilTotal < kFoilLow))
+		if ((g_foilTotal > 0) && (g_foilTotal < kFoilLow))
 			QuickFoilRefresh(true);
 		break;
 
 		case 7:		// hide rubber bands
-		if ((bandsTotal > 0) && (bandsTotal < kBandsLow))
+		if ((g_bandsTotal > 0) && (g_bandsTotal < kBandsLow))
 			QuickBandsRefresh(true);
 		break;
 	}
@@ -144,7 +144,7 @@ void RefreshRoomTitle (SInt16 mode)
 	wchar_t titleString[256];
 	int numChars;
 
-	ColorRect(boardTSrcMap, &boardTSrcRect, kGrayBackgroundColor);
+	ColorRect(g_boardTSrcMap, &g_boardTSrcRect, kGrayBackgroundColor);
 
 	switch (mode)
 	{
@@ -156,25 +156,25 @@ void RefreshRoomTitle (SInt16 mode)
 		StringCchCopy(titleString, ARRAYSIZE(titleString), L"Saving Game…");
 		break;
 	default:
-		WinFromMacString(titleString, ARRAYSIZE(titleString), thisRoom->name);
+		WinFromMacString(titleString, ARRAYSIZE(titleString), g_thisRoom->name);
 		break;
 	}
 	numChars = (int)wcslen(titleString);
 
-	SaveDC(boardTSrcMap);
-	SetBkMode(boardTSrcMap, TRANSPARENT);
-	SetTextAlign(boardTSrcMap, TA_TOP | TA_LEFT);
+	SaveDC(g_boardTSrcMap);
+	SetBkMode(g_boardTSrcMap, TRANSPARENT);
+	SetTextAlign(g_boardTSrcMap, TA_TOP | TA_LEFT);
 
-	SetTextColor(boardTSrcMap, blackColor);
-	TextOut(boardTSrcMap, 1, 1, titleString, numChars);
+	SetTextColor(g_boardTSrcMap, blackColor);
+	TextOut(g_boardTSrcMap, 1, 1, titleString, numChars);
 
-	SetTextColor(boardTSrcMap, whiteColor);
-	TextOut(boardTSrcMap, 0, 0, titleString, numChars);
+	SetTextColor(g_boardTSrcMap, whiteColor);
+	TextOut(g_boardTSrcMap, 0, 0, titleString, numChars);
 
-	RestoreDC(boardTSrcMap, -1);
+	RestoreDC(g_boardTSrcMap, -1);
 
-	Mac_CopyBits(boardTSrcMap, boardSrcMap,
-			&boardTSrcRect, &boardTDestRect, srcCopy, nil);
+	Mac_CopyBits(g_boardTSrcMap, g_boardSrcMap,
+			&g_boardTSrcRect, &g_boardTDestRect, srcCopy, nil);
 }
 
 //--------------------------------------------------------------  RefreshNumGliders
@@ -185,9 +185,9 @@ void RefreshNumGliders (void)
 	SInt32 displayMortals;
 	int numChars;
 
-	ColorRect(boardGSrcMap, &boardGSrcRect, kGrayBackgroundColor);
+	ColorRect(g_boardGSrcMap, &g_boardGSrcRect, kGrayBackgroundColor);
 
-	displayMortals = mortals;
+	displayMortals = g_mortals;
 	if (displayMortals < 0)
 	{
 		displayMortals = 0;
@@ -195,20 +195,20 @@ void RefreshNumGliders (void)
 	StringCchPrintf(nGlidersStr, ARRAYSIZE(nGlidersStr), L"%ld", (long)displayMortals);
 	numChars = (int)wcslen(nGlidersStr);
 
-	SaveDC(boardGSrcMap);
-	SetBkMode(boardGSrcMap, TRANSPARENT);
-	SetTextAlign(boardGSrcMap, TA_TOP | TA_LEFT);
+	SaveDC(g_boardGSrcMap);
+	SetBkMode(g_boardGSrcMap, TRANSPARENT);
+	SetTextAlign(g_boardGSrcMap, TA_TOP | TA_LEFT);
 
-	SetTextColor(boardGSrcMap, blackColor);
-	TextOut(boardGSrcMap, 1, 1, nGlidersStr, numChars);
+	SetTextColor(g_boardGSrcMap, blackColor);
+	TextOut(g_boardGSrcMap, 1, 1, nGlidersStr, numChars);
 
-	SetTextColor(boardGSrcMap, whiteColor);
-	TextOut(boardGSrcMap, 0, 0, nGlidersStr, numChars);
+	SetTextColor(g_boardGSrcMap, whiteColor);
+	TextOut(g_boardGSrcMap, 0, 0, nGlidersStr, numChars);
 
-	RestoreDC(boardGSrcMap, -1);
+	RestoreDC(g_boardGSrcMap, -1);
 
-	Mac_CopyBits(boardGSrcMap, boardSrcMap,
-			&boardGSrcRect, &boardGDestRect, srcCopy, nil);
+	Mac_CopyBits(g_boardGSrcMap, g_boardSrcMap,
+			&g_boardGSrcRect, &g_boardGDestRect, srcCopy, nil);
 }
 
 //--------------------------------------------------------------  RefreshPoints
@@ -218,27 +218,27 @@ void RefreshPoints (void)
 	wchar_t scoreStr[256];
 	int numChars;
 
-	ColorRect(boardPSrcMap, &boardPSrcRect, kGrayBackgroundColor);
+	ColorRect(g_boardPSrcMap, &g_boardPSrcRect, kGrayBackgroundColor);
 
-	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)theScore);
+	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)g_theScore);
 	numChars = (int)wcslen(scoreStr);
 
-	SaveDC(boardPSrcMap);
-	SetBkMode(boardPSrcMap, TRANSPARENT);
-	SetTextAlign(boardPSrcMap, TA_TOP | TA_LEFT);
+	SaveDC(g_boardPSrcMap);
+	SetBkMode(g_boardPSrcMap, TRANSPARENT);
+	SetTextAlign(g_boardPSrcMap, TA_TOP | TA_LEFT);
 
-	SetTextColor(boardPSrcMap, blackColor);
-	TextOut(boardPSrcMap, 1, 1, scoreStr, numChars);
+	SetTextColor(g_boardPSrcMap, blackColor);
+	TextOut(g_boardPSrcMap, 1, 1, scoreStr, numChars);
 
-	SetTextColor(boardPSrcMap, whiteColor);
-	TextOut(boardPSrcMap, 0, 0, scoreStr, numChars);
+	SetTextColor(g_boardPSrcMap, whiteColor);
+	TextOut(g_boardPSrcMap, 0, 0, scoreStr, numChars);
 
-	RestoreDC(boardPSrcMap, -1);
+	RestoreDC(g_boardPSrcMap, -1);
 
-	Mac_CopyBits(boardPSrcMap, boardSrcMap,
-			&boardPSrcRect, &boardPDestRect, srcCopy, nil);
+	Mac_CopyBits(g_boardPSrcMap, g_boardSrcMap,
+			&g_boardPSrcRect, &g_boardPDestRect, srcCopy, nil);
 
-	displayedScore = theScore;
+	g_displayedScore = g_theScore;
 }
 
 //--------------------------------------------------------------  QuickGlidersRefresh
@@ -249,26 +249,26 @@ void QuickGlidersRefresh (void)
 	int numChars;
 	HDC mainWindowDC;
 
-	ColorRect(boardGSrcMap, &boardGSrcRect, kGrayBackgroundColor);
+	ColorRect(g_boardGSrcMap, &g_boardGSrcRect, kGrayBackgroundColor);
 
-	StringCchPrintf(nGlidersStr, ARRAYSIZE(nGlidersStr), L"%ld", (long)mortals);
+	StringCchPrintf(nGlidersStr, ARRAYSIZE(nGlidersStr), L"%ld", (long)g_mortals);
 	numChars = (int)wcslen(nGlidersStr);
 
-	SaveDC(boardGSrcMap);
-	SetBkMode(boardGSrcMap, TRANSPARENT);
-	SetTextAlign(boardGSrcMap, TA_TOP | TA_LEFT);
+	SaveDC(g_boardGSrcMap);
+	SetBkMode(g_boardGSrcMap, TRANSPARENT);
+	SetTextAlign(g_boardGSrcMap, TA_TOP | TA_LEFT);
 
-	SetTextColor(boardGSrcMap, blackColor);
-	TextOut(boardGSrcMap, 1, 1, nGlidersStr, numChars);
+	SetTextColor(g_boardGSrcMap, blackColor);
+	TextOut(g_boardGSrcMap, 1, 1, nGlidersStr, numChars);
 
-	SetTextColor(boardGSrcMap, whiteColor);
-	TextOut(boardGSrcMap, 0, 0, nGlidersStr, numChars);
+	SetTextColor(g_boardGSrcMap, whiteColor);
+	TextOut(g_boardGSrcMap, 0, 0, nGlidersStr, numChars);
 
-	RestoreDC(boardGSrcMap, -1);
+	RestoreDC(g_boardGSrcMap, -1);
 
 	mainWindowDC = GetMainWindowDC();
-	Mac_CopyBits(boardGSrcMap, mainWindowDC,
-			&boardGSrcRect, &boardGQDestRect, srcCopy, nil);
+	Mac_CopyBits(g_boardGSrcMap, mainWindowDC,
+			&g_boardGSrcRect, &g_boardGQDestRect, srcCopy, nil);
 	ReleaseMainWindowDC(mainWindowDC);
 }
 
@@ -280,26 +280,26 @@ void QuickScoreRefresh (void)
 	int numChars;
 	HDC mainWindowDC;
 
-	ColorRect(boardPSrcMap, &boardPSrcRect, kGrayBackgroundColor);
+	ColorRect(g_boardPSrcMap, &g_boardPSrcRect, kGrayBackgroundColor);
 
-	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)displayedScore);
+	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)g_displayedScore);
 	numChars = (int)wcslen(scoreStr);
 
-	SaveDC(boardPSrcMap);
-	SetBkMode(boardPSrcMap, TRANSPARENT);
-	SetTextAlign(boardPSrcMap, TA_TOP | TA_LEFT);
+	SaveDC(g_boardPSrcMap);
+	SetBkMode(g_boardPSrcMap, TRANSPARENT);
+	SetTextAlign(g_boardPSrcMap, TA_TOP | TA_LEFT);
 
-	SetTextColor(boardPSrcMap, blackColor);
-	TextOut(boardPSrcMap, 1, 1, scoreStr, numChars);
+	SetTextColor(g_boardPSrcMap, blackColor);
+	TextOut(g_boardPSrcMap, 1, 1, scoreStr, numChars);
 
-	SetTextColor(boardPSrcMap, whiteColor);
-	TextOut(boardPSrcMap, 0, 0, scoreStr, numChars);
+	SetTextColor(g_boardPSrcMap, whiteColor);
+	TextOut(g_boardPSrcMap, 0, 0, scoreStr, numChars);
 
-	RestoreDC(boardPSrcMap, -1);
+	RestoreDC(g_boardPSrcMap, -1);
 
 	mainWindowDC = GetMainWindowDC();
-	Mac_CopyBits(boardPSrcMap, mainWindowDC,
-			&boardPSrcRect, &boardPQDestRect, srcCopy, nil);
+	Mac_CopyBits(g_boardPSrcMap, mainWindowDC,
+			&g_boardPSrcRect, &g_boardPQDestRect, srcCopy, nil);
 	ReleaseMainWindowDC(mainWindowDC);
 }
 
@@ -310,25 +310,25 @@ void QuickBatteryRefresh (Boolean flash)
 	HDC			mainWindowDC;
 
 	mainWindowDC = GetMainWindowDC();
-	if ((batteryTotal > 0) && (!flash))
+	if ((g_batteryTotal > 0) && (!flash))
 	{
-		Mac_CopyBits(badgeSrcMap, mainWindowDC,
-				&badgesBadgesRects[kBatteryBadge],
-				&badgesDestRects[kBatteryBadge],
+		Mac_CopyBits(g_badgeSrcMap, mainWindowDC,
+				&g_badgesBadgesRects[kBatteryBadge],
+				&g_badgesDestRects[kBatteryBadge],
 				srcCopy, nil);
 	}
-	else if ((batteryTotal < 0) && (!flash))
+	else if ((g_batteryTotal < 0) && (!flash))
 	{
-		Mac_CopyBits(badgeSrcMap, mainWindowDC,
-				&badgesBadgesRects[kHeliumBadge],
-				&badgesDestRects[kHeliumBadge],
+		Mac_CopyBits(g_badgeSrcMap, mainWindowDC,
+				&g_badgesBadgesRects[kHeliumBadge],
+				&g_badgesDestRects[kHeliumBadge],
 				srcCopy, nil);
 	}
 	else
 	{
-		Mac_CopyBits(badgeSrcMap, mainWindowDC,
-				&badgesBlankRects[kBatteryBadge],
-				&badgesDestRects[kBatteryBadge],
+		Mac_CopyBits(g_badgeSrcMap, mainWindowDC,
+				&g_badgesBlankRects[kBatteryBadge],
+				&g_badgesDestRects[kBatteryBadge],
 				srcCopy, nil);
 	}
 	ReleaseMainWindowDC(mainWindowDC);
@@ -341,18 +341,18 @@ void QuickBandsRefresh (Boolean flash)
 	HDC			mainWindowDC;
 
 	mainWindowDC = GetMainWindowDC();
-	if ((bandsTotal > 0) && (!flash))
+	if ((g_bandsTotal > 0) && (!flash))
 	{
-		Mac_CopyBits(badgeSrcMap, mainWindowDC,
-				&badgesBadgesRects[kBandsBadge],
-				&badgesDestRects[kBandsBadge],
+		Mac_CopyBits(g_badgeSrcMap, mainWindowDC,
+				&g_badgesBadgesRects[kBandsBadge],
+				&g_badgesDestRects[kBandsBadge],
 				srcCopy, nil);
 	}
 	else
 	{
-		Mac_CopyBits(badgeSrcMap, mainWindowDC,
-				&badgesBlankRects[kBandsBadge],
-				&badgesDestRects[kBandsBadge],
+		Mac_CopyBits(g_badgeSrcMap, mainWindowDC,
+				&g_badgesBlankRects[kBandsBadge],
+				&g_badgesDestRects[kBandsBadge],
 				srcCopy, nil);
 	}
 	ReleaseMainWindowDC(mainWindowDC);
@@ -365,18 +365,18 @@ void QuickFoilRefresh (Boolean flash)
 	HDC			mainWindowDC;
 
 	mainWindowDC = GetMainWindowDC();
-	if ((foilTotal > 0) && (!flash))
+	if ((g_foilTotal > 0) && (!flash))
 	{
-		Mac_CopyBits(badgeSrcMap, mainWindowDC,
-				&badgesBadgesRects[kFoilBadge],
-				&badgesDestRects[kFoilBadge],
+		Mac_CopyBits(g_badgeSrcMap, mainWindowDC,
+				&g_badgesBadgesRects[kFoilBadge],
+				&g_badgesDestRects[kFoilBadge],
 				srcCopy, nil);
 	}
 	else
 	{
-		Mac_CopyBits(badgeSrcMap, mainWindowDC,
-				&badgesBlankRects[kFoilBadge],
-				&badgesDestRects[kFoilBadge],
+		Mac_CopyBits(g_badgeSrcMap, mainWindowDC,
+				&g_badgesBlankRects[kFoilBadge],
+				&g_badgesDestRects[kFoilBadge],
 				srcCopy, nil);
 	}
 	ReleaseMainWindowDC(mainWindowDC);
@@ -388,38 +388,38 @@ void AdjustScoreboardHeight (void)
 {
 	SInt16		offset, newMode;
 
-	if (numNeighbors == 9)
+	if (g_numNeighbors == 9)
 		newMode = kScoreboardHigh;
 	else
 		newMode = kScoreboardLow;
 
-	if (wasScoreboardMode != newMode)
+	if (g_wasScoreboardMode != newMode)
 	{
 		offset = 0;
 		switch (newMode)
 		{
 			case kScoreboardHigh:		// 9 neighbors
-			offset = localRoomsDest[kCentralRoom].top;
+			offset = g_localRoomsDest[kCentralRoom].top;
 			offset = -offset;
-			justRoomsRect = workSrcRect;
+			g_justRoomsRect = g_workSrcRect;
 			break;
 
 			case kScoreboardLow:		// 1 or 3 neighbors
-			offset = localRoomsDest[kCentralRoom].top;
-			justRoomsRect = workSrcRect;
-			justRoomsRect.top = localRoomsDest[kCentralRoom].top;
-			justRoomsRect.bottom = localRoomsDest[kCentralRoom].bottom;
+			offset = g_localRoomsDest[kCentralRoom].top;
+			g_justRoomsRect = g_workSrcRect;
+			g_justRoomsRect.top = g_localRoomsDest[kCentralRoom].top;
+			g_justRoomsRect.bottom = g_localRoomsDest[kCentralRoom].bottom;
 			break;
 		}
 
-		QOffsetRect(&boardDestRect, 0, offset);
-		QOffsetRect(&boardGQDestRect, 0, offset);
-		QOffsetRect(&boardPQDestRect, 0, offset);
-		QOffsetRect(&badgesDestRects[kBatteryBadge], 0, offset);
-		QOffsetRect(&badgesDestRects[kBandsBadge], 0, offset);
-		QOffsetRect(&badgesDestRects[kFoilBadge], 0, offset);
-		QOffsetRect(&badgesDestRects[kHeliumBadge], 0, offset);
+		QOffsetRect(&g_boardDestRect, 0, offset);
+		QOffsetRect(&g_boardGQDestRect, 0, offset);
+		QOffsetRect(&g_boardPQDestRect, 0, offset);
+		QOffsetRect(&g_badgesDestRects[kBatteryBadge], 0, offset);
+		QOffsetRect(&g_badgesDestRects[kBandsBadge], 0, offset);
+		QOffsetRect(&g_badgesDestRects[kFoilBadge], 0, offset);
+		QOffsetRect(&g_badgesDestRects[kHeliumBadge], 0, offset);
 
-		wasScoreboardMode = newMode;
+		g_wasScoreboardMode = newMode;
 	}
 }

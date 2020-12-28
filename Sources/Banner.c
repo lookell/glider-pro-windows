@@ -27,8 +27,8 @@
 void DrawBanner (Point *topLeft);
 void DrawBannerMessage (Point topLeft);
 
-SInt16 numStarsRemaining;
-Boolean bannerStarCountOn;
+SInt16 g_numStarsRemaining;
+Boolean g_bannerStarCountOn;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DrawBanner
@@ -43,14 +43,14 @@ void DrawBanner (Point *topLeft)
 	HDC			tempMask;
 
 	QSetRect(&wholePage, 0, 0, 330, 220);
-	mapBounds = workSrcRect;
+	mapBounds = g_workSrcRect;
 	ZeroRectCorner(&mapBounds);
 	CenterRectInRect(&wholePage, &mapBounds);
 	topLeft->h = wholePage.left;
 	topLeft->v = wholePage.top;
 	partPage = wholePage;
 	partPage.bottom = partPage.top + 190;
-	LoadScaledGraphic(workSrcMap, g_theHouseFile, kBannerPageTopPICT, &partPage);
+	LoadScaledGraphic(g_workSrcMap, g_theHouseFile, kBannerPageTopPICT, &partPage);
 
 	partPage = wholePage;
 	partPage.top = partPage.bottom - 30;
@@ -62,7 +62,7 @@ void DrawBanner (Point *topLeft)
 	tempMask = CreateOffScreenGWorld(&mapBounds, 1);
 	LoadGraphic(tempMask, g_theHouseFile, kBannerPageBottomMask);
 
-	Mac_CopyMask(tempMap, tempMask, workSrcMap,
+	Mac_CopyMask(tempMap, tempMask, g_workSrcMap,
 			&mapBounds, &mapBounds, &partPage);
 
 	DisposeGWorld(tempMap);
@@ -78,13 +78,13 @@ SInt16 CountStarsInHouse (void)
 
 	numStars = 0;
 
-	numRooms = thisHouse.nRooms;
+	numRooms = g_thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
+		if (g_thisHouse.rooms[i].suite != kRoomIsEmpty)
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				if (thisHouse.rooms[i].objects[h].what == kStar)
+				if (g_thisHouse.rooms[i].objects[h].what == kStar)
 					numStars++;
 			}
 	}
@@ -101,46 +101,46 @@ void DrawBannerMessage (Point topLeft)
 	SInt16		count;
 	HFONT		bannerFont;
 
-	PasStringCopy(thisHouse.banner, bannerStr);
+	PasStringCopy(g_thisHouse.banner, bannerStr);
 
 	bannerFont = CreateTahomaFont(-12, FW_BOLD);
-	SaveDC(workSrcMap);
-	SelectObject(workSrcMap, bannerFont);
-	SetTextColor(workSrcMap, blackColor);
+	SaveDC(g_workSrcMap);
+	SelectObject(g_workSrcMap, bannerFont);
+	SetTextColor(g_workSrcMap, blackColor);
 	count = 0;
 	do
 	{
 		GetLineOfText(bannerStr, count, subStr);
-		MoveToEx(workSrcMap, topLeft.h + 16, topLeft.v + 32 + (count * 20), NULL);
-		Mac_DrawString(workSrcMap, subStr);
+		MoveToEx(g_workSrcMap, topLeft.h + 16, topLeft.v + 32 + (count * 20), NULL);
+		Mac_DrawString(g_workSrcMap, subStr);
 		count++;
 	}
 	while (subStr[0] > 0);
 
-	if (bannerStarCountOn)
+	if (g_bannerStarCountOn)
 	{
-		if (numStarsRemaining != 1)
+		if (g_numStarsRemaining != 1)
 			GetLocalizedString_Pascal(1, bannerStr);
 		else
 			GetLocalizedString_Pascal(2, bannerStr);
 
-		NumToString((SInt32)numStarsRemaining, subStr);
+		NumToString((SInt32)g_numStarsRemaining, subStr);
 		PasStringConcat(bannerStr, subStr);
 
-		if (numStarsRemaining != 1)
+		if (g_numStarsRemaining != 1)
 			GetLocalizedString_Pascal(3, subStr);
 		else
 			GetLocalizedString_Pascal(4, subStr);
 		PasStringConcat(bannerStr, subStr);
 
-		SetTextColor(workSrcMap, redColor);
-		MoveToEx(workSrcMap, topLeft.h + 16, topLeft.v + 164, NULL);
-		Mac_DrawString(workSrcMap, bannerStr);
-		MoveToEx(workSrcMap, topLeft.h + 16, topLeft.v + 180, NULL);
+		SetTextColor(g_workSrcMap, redColor);
+		MoveToEx(g_workSrcMap, topLeft.h + 16, topLeft.v + 164, NULL);
+		Mac_DrawString(g_workSrcMap, bannerStr);
+		MoveToEx(g_workSrcMap, topLeft.h + 16, topLeft.v + 180, NULL);
 		GetLocalizedString_Pascal(5, subStr);
-		Mac_DrawString(workSrcMap, subStr);
+		Mac_DrawString(g_workSrcMap, subStr);
 	}
-	RestoreDC(workSrcMap, -1);
+	RestoreDC(g_workSrcMap, -1);
 	DeleteObject(bannerFont);
 }
 
@@ -154,19 +154,19 @@ void BringUpBanner (void)
 
 	DrawBanner(&topLeft);
 	DrawBannerMessage(topLeft);
-	DissolveScreenOn(&justRoomsRect);  // was workSrcRect
+	DissolveScreenOn(&g_justRoomsRect);  // was g_workSrcRect
 	QSetRect(&wholePage, 0, 0, 330, 220);
 	QOffsetRect(&wholePage, topLeft.h, topLeft.v);
 
-	Mac_CopyBits(backSrcMap, workSrcMap,
+	Mac_CopyBits(g_backSrcMap, g_workSrcMap,
 			&wholePage, &wholePage, srcCopy, nil);
 
-	if (demoGoing)
+	if (g_demoGoing)
 		WaitForInputEvent(4);
 	else
 		WaitForInputEvent(15);
 
-	DissolveScreenOn(&justRoomsRect);
+	DissolveScreenOn(&g_justRoomsRect);
 }
 
 //--------------------------------------------------------------  DisplayStarsRemaining
@@ -182,15 +182,15 @@ void DisplayStarsRemaining (void)
 	HFONT		textFont;
 
 	QSetRect(&bounds, 0, 0, 256, 64);
-	CenterRectInRect(&bounds, &workSrcRect);
-	QOffsetRect(&bounds, -workSrcRect.left, -workSrcRect.top);
+	CenterRectInRect(&bounds, &g_workSrcRect);
+	QOffsetRect(&bounds, -g_workSrcRect.left, -g_workSrcRect.top);
 	src = bounds;
 	QInsetRect(&src, 64, 32);
 
-	StringCchPrintf(theStr, ARRAYSIZE(theStr), L"%d", (int)numStarsRemaining);
+	StringCchPrintf(theStr, ARRAYSIZE(theStr), L"%d", (int)g_numStarsRemaining);
 
 	mainWindowDC = GetMainWindowDC();
-	if (numStarsRemaining < 2)
+	if (g_numStarsRemaining < 2)
 	{
 		LoadScaledGraphic(mainWindowDC, g_theHouseFile, kStarRemainingPICT, &bounds);
 	}

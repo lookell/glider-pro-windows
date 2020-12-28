@@ -10,11 +10,11 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern Rect angelSrcRect;
-extern HDC angelSrcMap;
-extern HDC angelMaskMap;
-extern SInt16 countDown;
-extern Boolean gameOver;
+extern Rect g_angelSrcRect;
+extern HDC g_angelSrcMap;
+extern HDC g_angelMaskMap;
+extern SInt16 g_countDown;
+extern Boolean g_gameOver;
 
 void DoGameOver (void);
 void FlagGameOver (void);

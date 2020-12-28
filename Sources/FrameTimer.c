@@ -3,9 +3,9 @@
 // On Windows XP and later (our target platforms), the performance counter
 // functions will not fail, so their return values are not checked.
 
-static DWORD CurrentFrameRate = FRAME_TIMER_DEFAULT_FPS;
-static LONGLONG FrameStart = 0;
-static LONGLONG FrameNext = 0;
+static DWORD g_CurrentFrameRate = FRAME_TIMER_DEFAULT_FPS;
+static LONGLONG g_FrameStart = 0;
+static LONGLONG g_FrameNext = 0;
 
 LONGLONG GetPerformanceCounter(void)
 {
@@ -29,12 +29,12 @@ LONGLONG GetPerformanceFrequency(void)
 
 DWORD GetFrameRate(void)
 {
-	return CurrentFrameRate;
+	return g_CurrentFrameRate;
 }
 
 void SetFrameRate(DWORD NewFrameRate)
 {
-	CurrentFrameRate = NewFrameRate;
+	g_CurrentFrameRate = NewFrameRate;
 }
 
 static LONGLONG GetCountsPerFrame(void)
@@ -60,16 +60,16 @@ static DWORD GetWaitTimeUntilNextFrame(void)
 	CountsPerMS = GetCountsPerMS();
 	FrameNow = GetPerformanceCounter();
 
-	CountsElapsed = FrameNow - FrameStart;
+	CountsElapsed = FrameNow - g_FrameStart;
 	if (CountsElapsed >= CountsPerFrame)
 	{
-		FrameNext = FrameNow;
+		g_FrameNext = FrameNow;
 		SleepMS = 0;
 	}
 	else
 	{
-		FrameNext = FrameStart + CountsPerFrame;
-		CountsToSleep = FrameNext - FrameNow;
+		g_FrameNext = g_FrameStart + CountsPerFrame;
+		CountsToSleep = g_FrameNext - FrameNow;
 		SleepMS = (DWORD)(CountsToSleep / CountsPerMS);
 	}
 	return SleepMS;
@@ -84,7 +84,7 @@ void WaitUntilNextFrame(void)
 	{
 		Sleep(SleepMS);
 	}
-	FrameStart = FrameNext;
+	g_FrameStart = g_FrameNext;
 }
 
 BOOL PeekMessageOrWaitForFrame(LPMSG lpMsg, HWND hWnd,
@@ -112,6 +112,6 @@ BOOL PeekMessageOrWaitForFrame(LPMSG lpMsg, HWND hWnd,
 			break;
 		}
 	}
-	FrameStart = FrameNext;
+	g_FrameStart = g_FrameNext;
 	return FALSE;
 }

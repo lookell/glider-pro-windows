@@ -22,14 +22,14 @@
 INT_PTR CALLBACK CoordWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 void UpdateCoordWindow (void);
 
-HWND coordWindow;
-SInt16 isCoordH;
-SInt16 isCoordV;
-Boolean isCoordOpen;
+HWND g_coordWindow;
+SInt16 g_isCoordH;
+SInt16 g_isCoordV;
+Boolean g_isCoordOpen;
 
-static SInt16 coordH;
-static SInt16 coordV;
-static SInt16 coordD;
+static SInt16 g_coordH;
+static SInt16 g_coordV;
+static SInt16 g_coordD;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  SetCoordinateHVD
@@ -42,11 +42,11 @@ void SetCoordinateHVD (SInt16 h, SInt16 v, SInt16 d)
 		return;
 
 	if (h != -2)
-		coordH = h;
+		g_coordH = h;
 	if (v != -2)
-		coordV = v;
+		g_coordV = v;
 	if (d != -2)
-		coordD = d;
+		g_coordD = d;
 	UpdateCoordWindow();
 }
 
@@ -61,7 +61,7 @@ void DeltaCoordinateD (SInt16 d)
 	if (COMPILEDEMO)
 		return;
 
-	coordD = d;
+	g_coordD = d;
 	UpdateCoordWindow();
 }
 
@@ -84,8 +84,8 @@ INT_PTR CALLBACK CoordWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 	case WM_MOVE:
 		placement.length = sizeof(placement);
 		GetWindowPlacement(hDlg, &placement);
-		isCoordH = (SInt16)placement.rcNormalPosition.left;
-		isCoordV = (SInt16)placement.rcNormalPosition.top;
+		g_isCoordH = (SInt16)placement.rcNormalPosition.left;
+		g_isCoordV = (SInt16)placement.rcNormalPosition.top;
 		return TRUE;
 
 	case WM_CTLCOLORSTATIC:
@@ -109,26 +109,26 @@ void UpdateCoordWindow (void)
 	if (COMPILEDEMO)
 		return;
 
-	if (coordWindow == NULL)
+	if (g_coordWindow == NULL)
 		return;
 
-	if (coordH != -1)
-		StringCchPrintf(text, ARRAYSIZE(text), L"h: %ld", (long)coordH);
+	if (g_coordH != -1)
+		StringCchPrintf(text, ARRAYSIZE(text), L"h: %ld", (long)g_coordH);
 	else
 		StringCchCopy(text, ARRAYSIZE(text), L"h: -");
-	SetDlgItemText(coordWindow, kHoriCoordItem, text);
+	SetDlgItemText(g_coordWindow, kHoriCoordItem, text);
 
-	if (coordV != -1)
-		StringCchPrintf(text, ARRAYSIZE(text), L"v: %ld", (long)coordV);
+	if (g_coordV != -1)
+		StringCchPrintf(text, ARRAYSIZE(text), L"v: %ld", (long)g_coordV);
 	else
 		StringCchCopy(text, ARRAYSIZE(text), L"v: -");
-	SetDlgItemText(coordWindow, kVertCoordItem, text);
+	SetDlgItemText(g_coordWindow, kVertCoordItem, text);
 
-	if (coordD != -1)
-		StringCchPrintf(text, ARRAYSIZE(text), L"d: %ld", (long)coordD);
+	if (g_coordD != -1)
+		StringCchPrintf(text, ARRAYSIZE(text), L"d: %ld", (long)g_coordD);
 	else
 		StringCchCopy(text, ARRAYSIZE(text), L"d: -");
-	SetDlgItemText(coordWindow, kDistCoordItem, text);
+	SetDlgItemText(g_coordWindow, kDistCoordItem, text);
 }
 
 //--------------------------------------------------------------  OpenCoordWindow
@@ -142,39 +142,39 @@ void OpenCoordWindow (void)
 	if (COMPILEDEMO)
 		return;
 
-	if (coordWindow == NULL)
+	if (g_coordWindow == NULL)
 	{
-		coordWindow = CreateDialog(HINST_THISCOMPONENT,
+		g_coordWindow = CreateDialog(HINST_THISCOMPONENT,
 				MAKEINTRESOURCE(kCoordinateWindowID),
-				mainWindow, CoordWindowProc);
+				g_mainWindow, CoordWindowProc);
 
-		if (coordWindow == NULL)
+		if (g_coordWindow == NULL)
 			RedAlert(kErrNoMemory);
 
 //		if (OptionKeyDown())
 //		{
-//			isCoordH = qd.screenBits.bounds.right - 55;
-//			isCoordV = 204;
+//			g_isCoordH = qd.screenBits.bounds.right - 55;
+//			g_isCoordV = 204;
 //		}
 		placement.length = sizeof(placement);
-		GetWindowPlacement(coordWindow, &placement);
+		GetWindowPlacement(g_coordWindow, &placement);
 		OffsetRect(&placement.rcNormalPosition,
 				-placement.rcNormalPosition.left,
 				-placement.rcNormalPosition.top);
-		OffsetRect(&placement.rcNormalPosition, isCoordH, isCoordV);
+		OffsetRect(&placement.rcNormalPosition, g_isCoordH, g_isCoordV);
 		placement.showCmd = SW_SHOWNOACTIVATE;
-		SetWindowPlacement(coordWindow, &placement);
+		SetWindowPlacement(g_coordWindow, &placement);
 
-		coordH = -1;
-		coordV = -1;
-		coordD = -1;
+		g_coordH = -1;
+		g_coordV = -1;
+		g_coordD = -1;
 		UpdateCoordWindow();
 
-		if (objActive != kNoObjectSelected)
+		if (g_objActive != kNoObjectSelected)
 		{
 			if (ObjectHasHandle(&direction, &dist))
-				coordD = dist;
-			SetCoordinateHVD(theMarquee.bounds.left, theMarquee.bounds.top, coordD);
+				g_coordD = dist;
+			SetCoordinateHVD(g_theMarquee.bounds.left, g_theMarquee.bounds.top, g_coordD);
 		}
 	}
 
@@ -186,10 +186,10 @@ void OpenCoordWindow (void)
 
 void CloseCoordWindow (void)
 {
-	if (coordWindow != NULL)
+	if (g_coordWindow != NULL)
 	{
-		DestroyWindow(coordWindow);
-		coordWindow = NULL;
+		DestroyWindow(g_coordWindow);
+		g_coordWindow = NULL;
 	}
 	UpdateCoordinateCheckmark(false);
 }
@@ -202,14 +202,14 @@ void ToggleCoordinateWindow (void)
 	if (COMPILEDEMO)
 		return;
 
-	if (coordWindow == NULL)
+	if (g_coordWindow == NULL)
 	{
 		OpenCoordWindow();
-		isCoordOpen = true;
+		g_isCoordOpen = true;
 	}
 	else
 	{
 		CloseCoordWindow();
-		isCoordOpen = false;
+		g_isCoordOpen = false;
 	}
 }

@@ -27,17 +27,17 @@ void FrameMarqueeRect (HDC hdc, const Rect *theRect);
 void DrawGliderMarquee (HDC hdc);
 void DrawMarquee (HDC hdc);
 
-marquee theMarquee;
+marquee g_theMarquee;
 
-static Rect marqueeGliderRect;
-static Boolean gliderMarqueeUp;
+static Rect g_marqueeGliderRect;
+static Boolean g_gliderMarqueeUp;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  CreateMarqueeBrush
 
 HBRUSH CreateMarqueeBrush (void)
 {
-	return CreatePatternBrush(theMarquee.pats[theMarquee.index]);
+	return CreatePatternBrush(g_theMarquee.pats[g_theMarquee.index]);
 }
 
 //--------------------------------------------------------------  CreateMarqueePen
@@ -48,7 +48,7 @@ HPEN CreateMarqueePen (void)
 
 	logBrush.lbStyle = BS_PATTERN;
 	logBrush.lbColor = 0;
-	logBrush.lbHatch = (ULONG_PTR)theMarquee.pats[theMarquee.index];
+	logBrush.lbHatch = (ULONG_PTR)g_theMarquee.pats[g_theMarquee.index];
 	return ExtCreatePen(PS_GEOMETRIC | PS_SOLID, 1, &logBrush, 0, NULL);
 }
 
@@ -86,16 +86,16 @@ void DoMarquee (void)
 {
 	HDC hdc;
 
-	if ((!theMarquee.active) || (theMarquee.paused))
+	if ((!g_theMarquee.active) || (g_theMarquee.paused))
 		return;
 
 	hdc = GetMainWindowDC();
 
 	DrawMarquee(hdc);
 
-	theMarquee.index++;
-	if (theMarquee.index >= kNumMarqueePats)
-		theMarquee.index = 0;
+	g_theMarquee.index++;
+	if (g_theMarquee.index >= kNumMarqueePats)
+		g_theMarquee.index = 0;
 
 	DrawMarquee(hdc);
 	
@@ -108,22 +108,22 @@ void StartMarquee (const Rect *theRect)
 {
 	HDC hdc;
 
-	if (theMarquee.active)
+	if (g_theMarquee.active)
 		StopMarquee();
 
-	if (objActive == kNoObjectSelected)
+	if (g_objActive == kNoObjectSelected)
 		return;
 
-	theMarquee.bounds = *theRect;
-	theMarquee.active = true;
-	theMarquee.paused = false;
-	theMarquee.handled = false;
+	g_theMarquee.bounds = *theRect;
+	g_theMarquee.active = true;
+	g_theMarquee.paused = false;
+	g_theMarquee.handled = false;
 
 	hdc = GetMainWindowDC();
 	DrawMarquee(hdc);
 	ReleaseMainWindowDC(hdc);
 
-	SetCoordinateHVD(theMarquee.bounds.left, theMarquee.bounds.top, -1);
+	SetCoordinateHVD(g_theMarquee.bounds.left, g_theMarquee.bounds.top, -1);
 }
 
 //--------------------------------------------------------------  StartMarqueeHandled
@@ -132,62 +132,62 @@ void StartMarqueeHandled (const Rect *theRect, SInt16 direction, SInt16 dist)
 {
 	HDC hdc;
 
-	if (theMarquee.active)
+	if (g_theMarquee.active)
 		StopMarquee();
 
-	if (objActive == kNoObjectSelected)
+	if (g_objActive == kNoObjectSelected)
 		return;
 
-	theMarquee.bounds = *theRect;
-	theMarquee.active = true;
-	theMarquee.paused = false;
-	theMarquee.handled = true;
-	QSetRect(&theMarquee.handle, 0, 0, kHandleSideLong, kHandleSideLong);
-	QOffsetRect(&theMarquee.handle, kHandleSideLong / -2, kHandleSideLong / -2);
+	g_theMarquee.bounds = *theRect;
+	g_theMarquee.active = true;
+	g_theMarquee.paused = false;
+	g_theMarquee.handled = true;
+	QSetRect(&g_theMarquee.handle, 0, 0, kHandleSideLong, kHandleSideLong);
+	QOffsetRect(&g_theMarquee.handle, kHandleSideLong / -2, kHandleSideLong / -2);
 	switch (direction)
 	{
 		case kAbove:
-		QOffsetRect(&theMarquee.handle, theMarquee.bounds.left,
-				theMarquee.bounds.top);
-		QOffsetRect(&theMarquee.handle, HalfRectWide(&theMarquee.bounds), -dist);
+		QOffsetRect(&g_theMarquee.handle, g_theMarquee.bounds.left,
+				g_theMarquee.bounds.top);
+		QOffsetRect(&g_theMarquee.handle, HalfRectWide(&g_theMarquee.bounds), -dist);
 		break;
 
 		case kToRight:
-		QOffsetRect(&theMarquee.handle, theMarquee.bounds.right,
-				theMarquee.bounds.top);
-		QOffsetRect(&theMarquee.handle, dist, HalfRectTall(&theMarquee.bounds));
+		QOffsetRect(&g_theMarquee.handle, g_theMarquee.bounds.right,
+				g_theMarquee.bounds.top);
+		QOffsetRect(&g_theMarquee.handle, dist, HalfRectTall(&g_theMarquee.bounds));
 		break;
 
 		case kBelow:
-		QOffsetRect(&theMarquee.handle, theMarquee.bounds.left,
-				theMarquee.bounds.bottom);
-		QOffsetRect(&theMarquee.handle, HalfRectWide(&theMarquee.bounds), dist);
+		QOffsetRect(&g_theMarquee.handle, g_theMarquee.bounds.left,
+				g_theMarquee.bounds.bottom);
+		QOffsetRect(&g_theMarquee.handle, HalfRectWide(&g_theMarquee.bounds), dist);
 		break;
 
 		case kToLeft:
-		QOffsetRect(&theMarquee.handle, theMarquee.bounds.left,
-				theMarquee.bounds.top);
-		QOffsetRect(&theMarquee.handle, -dist, HalfRectTall(&theMarquee.bounds));
+		QOffsetRect(&g_theMarquee.handle, g_theMarquee.bounds.left,
+				g_theMarquee.bounds.top);
+		QOffsetRect(&g_theMarquee.handle, -dist, HalfRectTall(&g_theMarquee.bounds));
 		break;
 
 		case kBottomCorner:
-		QOffsetRect(&theMarquee.handle, theMarquee.bounds.right,
-				theMarquee.bounds.bottom);
+		QOffsetRect(&g_theMarquee.handle, g_theMarquee.bounds.right,
+				g_theMarquee.bounds.bottom);
 		break;
 
 		case kTopCorner:
-		QOffsetRect(&theMarquee.handle, theMarquee.bounds.right,
-				theMarquee.bounds.top);
+		QOffsetRect(&g_theMarquee.handle, g_theMarquee.bounds.right,
+				g_theMarquee.bounds.top);
 		break;
 	}
-	theMarquee.direction = direction;
-	theMarquee.dist = dist;
+	g_theMarquee.direction = direction;
+	g_theMarquee.dist = dist;
 
 	hdc = GetMainWindowDC();
 	DrawMarquee(hdc);
 	ReleaseMainWindowDC(hdc);
 
-	SetCoordinateHVD(theMarquee.bounds.left, theMarquee.bounds.top, dist);
+	SetCoordinateHVD(g_theMarquee.bounds.left, g_theMarquee.bounds.top, dist);
 }
 
 //--------------------------------------------------------------  StopMarquee
@@ -196,22 +196,22 @@ void StopMarquee (void)
 {
 	HDC hdc;
 
-	if (gliderMarqueeUp)
+	if (g_gliderMarqueeUp)
 	{
 		hdc = GetMainWindowDC();
 		DrawGliderMarquee(hdc);
 		ReleaseMainWindowDC(hdc);
-		gliderMarqueeUp = false;
+		g_gliderMarqueeUp = false;
 	}
 
-	if (!theMarquee.active)
+	if (!g_theMarquee.active)
 		return;
 
 	hdc = GetMainWindowDC();
 	DrawMarquee(hdc);
 	ReleaseMainWindowDC(hdc);
 
-	theMarquee.active = false;
+	g_theMarquee.active = false;
 	SetCoordinateHVD(-1, -1, -1);
 }
 
@@ -219,10 +219,10 @@ void StopMarquee (void)
 
 void PauseMarquee (void)
 {
-	if (!theMarquee.active)
+	if (!g_theMarquee.active)
 		return;
 
-	theMarquee.paused = true;
+	g_theMarquee.paused = true;
 	StopMarquee();
 }
 
@@ -230,16 +230,16 @@ void PauseMarquee (void)
 
 void ResumeMarquee (void)
 {
-	if (!theMarquee.paused)
+	if (!g_theMarquee.paused)
 		return;
 
-	if (theMarquee.handled)
+	if (g_theMarquee.handled)
 	{
-		StartMarqueeHandled(&theMarquee.bounds, theMarquee.direction, theMarquee.dist);
+		StartMarqueeHandled(&g_theMarquee.bounds, g_theMarquee.direction, g_theMarquee.dist);
 		HandleBlowerGlider();
 	}
 	else
-		StartMarquee(&theMarquee.bounds);
+		StartMarquee(&g_theMarquee.bounds);
 }
 
 //--------------------------------------------------------------  DragOutMarqueeRect
@@ -250,7 +250,7 @@ void DragOutMarqueeRect (Point start, Rect *theRect)
 	HDC hdc;
 	MSG msg;
 
-	SetCapture(mainWindow);
+	SetCapture(g_mainWindow);
 	QSetRect(theRect, start.h, start.v, start.h, start.v);
 	hdc = GetMainWindowDC();
 	FrameMarqueeRect(hdc, theRect);
@@ -274,7 +274,7 @@ void DragOutMarqueeRect (Point start, Rect *theRect)
 			break;
 
 		case WM_LBUTTONUP:
-			if (GetCapture() == mainWindow)
+			if (GetCapture() == g_mainWindow)
 				ReleaseCapture();
 			break;
 
@@ -290,13 +290,13 @@ void DragOutMarqueeRect (Point start, Rect *theRect)
 			DispatchMessage(&msg);
 			break;
 		}
-		if (GetCapture() != mainWindow)
+		if (GetCapture() != g_mainWindow)
 			break;
 	}
 	if (msg.message == WM_QUIT)
 	{
 		PostQuitMessage((int)msg.wParam);
-		if (GetCapture() == mainWindow)
+		if (GetCapture() == g_mainWindow)
 			ReleaseCapture();
 	}
 	hdc = GetMainWindowDC();
@@ -315,11 +315,11 @@ void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 	HDC hdc;
 	MSG msg;
 
-	SetCapture(mainWindow);
+	SetCapture(g_mainWindow);
 	StopMarquee();
 	hdc = GetMainWindowDC();
-	theMarquee.bounds = *theRect;
-	FrameMarqueeRect(hdc, &theMarquee.bounds);
+	g_theMarquee.bounds = *theRect;
+	FrameMarqueeRect(hdc, &g_theMarquee.bounds);
 	ReleaseMainWindowDC(hdc);
 
 	dragCursor = LoadCursor(NULL, IDC_SIZEALL);
@@ -345,16 +345,16 @@ void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 			else
 				deltaV = newPt.v - wasPt.v;
 			hdc = GetMainWindowDC();
-			FrameMarqueeRect(hdc, &theMarquee.bounds);
-			QOffsetRect(&theMarquee.bounds, deltaH, deltaV);
-			FrameMarqueeRect(hdc, &theMarquee.bounds);
+			FrameMarqueeRect(hdc, &g_theMarquee.bounds);
+			QOffsetRect(&g_theMarquee.bounds, deltaH, deltaV);
+			FrameMarqueeRect(hdc, &g_theMarquee.bounds);
 			ReleaseMainWindowDC(hdc);
 			wasPt = newPt;
-			SetCoordinateHVD(theMarquee.bounds.left, theMarquee.bounds.top, -2);
+			SetCoordinateHVD(g_theMarquee.bounds.left, g_theMarquee.bounds.top, -2);
 			break;
 
 		case WM_LBUTTONUP:
-			if (GetCapture() == mainWindow)
+			if (GetCapture() == g_mainWindow)
 				ReleaseCapture();
 			break;
 
@@ -370,20 +370,20 @@ void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 			DispatchMessage(&msg);
 			break;
 		}
-		if (GetCapture() != mainWindow)
+		if (GetCapture() != g_mainWindow)
 			break;
 	}
 	if (msg.message == WM_QUIT)
 	{
 		PostQuitMessage((int)msg.wParam);
-		if (GetCapture() == mainWindow)
+		if (GetCapture() == g_mainWindow)
 			ReleaseCapture();
 	}
 
 	hdc = GetMainWindowDC();
-	FrameMarqueeRect(hdc, &theMarquee.bounds);
+	FrameMarqueeRect(hdc, &g_theMarquee.bounds);
 	ReleaseMainWindowDC(hdc);
-	*theRect = theMarquee.bounds;
+	*theRect = g_theMarquee.bounds;
 
 	if (dragCursor != NULL)
 	{
@@ -402,14 +402,14 @@ void DragMarqueeHandle (Point start, SInt16 *dragged)
 	HDC hdc;
 	MSG msg;
 
-	SetCapture(mainWindow);
+	SetCapture(g_mainWindow);
 	StopMarquee();
 	hdc = GetMainWindowDC();
-	FrameMarqueeRect(hdc, &theMarquee.bounds);
-	PaintMarqueeRect(hdc, &theMarquee.handle);
+	FrameMarqueeRect(hdc, &g_theMarquee.bounds);
+	PaintMarqueeRect(hdc, &g_theMarquee.handle);
 	ReleaseMainWindowDC(hdc);
 
-	if ((theMarquee.direction == kAbove) || (theMarquee.direction == kBelow))
+	if ((g_theMarquee.direction == kAbove) || (g_theMarquee.direction == kBelow))
 	{
 		dragCursor = LoadCursor(NULL, IDC_SIZENS);
 	}
@@ -430,7 +430,7 @@ void DragMarqueeHandle (Point start, SInt16 *dragged)
 		case WM_MOUSEMOVE:
 			newPt.h = GET_X_LPARAM(msg.lParam);
 			newPt.v = GET_Y_LPARAM(msg.lParam);
-			switch (theMarquee.direction)
+			switch (g_theMarquee.direction)
 			{
 			case kAbove:
 				deltaH = 0;
@@ -487,15 +487,15 @@ void DragMarqueeHandle (Point start, SInt16 *dragged)
 			}
 
 			hdc = GetMainWindowDC();
-			PaintMarqueeRect(hdc, &theMarquee.handle);
-			QOffsetRect(&theMarquee.handle, deltaH, deltaV);
-			PaintMarqueeRect(hdc, &theMarquee.handle);
+			PaintMarqueeRect(hdc, &g_theMarquee.handle);
+			QOffsetRect(&g_theMarquee.handle, deltaH, deltaV);
+			PaintMarqueeRect(hdc, &g_theMarquee.handle);
 			ReleaseMainWindowDC(hdc);
 			wasPt = newPt;
 			break;
 
 		case WM_LBUTTONUP:
-			if (GetCapture() == mainWindow)
+			if (GetCapture() == g_mainWindow)
 				ReleaseCapture();
 			break;
 
@@ -511,19 +511,19 @@ void DragMarqueeHandle (Point start, SInt16 *dragged)
 			DispatchMessage(&msg);
 			break;
 		}
-		if (GetCapture() != mainWindow)
+		if (GetCapture() != g_mainWindow)
 			break;
 	}
 	if (msg.message == WM_QUIT)
 	{
 		PostQuitMessage((int)msg.wParam);
-		if (GetCapture() == mainWindow)
+		if (GetCapture() == g_mainWindow)
 			ReleaseCapture();
 	}
 
 	hdc = GetMainWindowDC();
-	FrameMarqueeRect(hdc, &theMarquee.bounds);
-	PaintMarqueeRect(hdc, &theMarquee.handle);
+	FrameMarqueeRect(hdc, &g_theMarquee.bounds);
+	PaintMarqueeRect(hdc, &g_theMarquee.handle);
 	ReleaseMainWindowDC(hdc);
 
 	if (dragCursor != NULL)
@@ -543,11 +543,11 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 	HDC hdc;
 	MSG msg;
 
-	SetCapture(mainWindow);
+	SetCapture(g_mainWindow);
 	StopMarquee();
 	hdc = GetMainWindowDC();
-	FrameMarqueeRect(hdc, &theMarquee.bounds);
-	PaintMarqueeRect(hdc, &theMarquee.handle);
+	FrameMarqueeRect(hdc, &g_theMarquee.bounds);
+	PaintMarqueeRect(hdc, &g_theMarquee.handle);
 	ReleaseMainWindowDC(hdc);
 
 	if (isTop)
@@ -589,28 +589,28 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 				*vDragged = 0;
 			}
 			hdc = GetMainWindowDC();
-			FrameMarqueeRect(hdc, &theMarquee.bounds);
-			PaintMarqueeRect(hdc, &theMarquee.handle);
+			FrameMarqueeRect(hdc, &g_theMarquee.bounds);
+			PaintMarqueeRect(hdc, &g_theMarquee.handle);
 			if (isTop)
 			{
-				QOffsetRect(&theMarquee.handle, deltaH, -deltaV);
-				theMarquee.bounds.right += deltaH;
-				theMarquee.bounds.top -= deltaV;
+				QOffsetRect(&g_theMarquee.handle, deltaH, -deltaV);
+				g_theMarquee.bounds.right += deltaH;
+				g_theMarquee.bounds.top -= deltaV;
 			}
 			else
 			{
-				QOffsetRect(&theMarquee.handle, deltaH, deltaV);
-				theMarquee.bounds.right += deltaH;
-				theMarquee.bounds.bottom += deltaV;
+				QOffsetRect(&g_theMarquee.handle, deltaH, deltaV);
+				g_theMarquee.bounds.right += deltaH;
+				g_theMarquee.bounds.bottom += deltaV;
 			}
-			FrameMarqueeRect(hdc, &theMarquee.bounds);
-			PaintMarqueeRect(hdc, &theMarquee.handle);
+			FrameMarqueeRect(hdc, &g_theMarquee.bounds);
+			PaintMarqueeRect(hdc, &g_theMarquee.handle);
 			ReleaseMainWindowDC(hdc);
 			wasPt = newPt;
 			break;
 
 		case WM_LBUTTONUP:
-			if (GetCapture() == mainWindow)
+			if (GetCapture() == g_mainWindow)
 				ReleaseCapture();
 			break;
 
@@ -626,19 +626,19 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 			DispatchMessage(&msg);
 			break;
 		}
-		if (GetCapture() != mainWindow)
+		if (GetCapture() != g_mainWindow)
 			break;
 	}
 	if (msg.message == WM_QUIT)
 	{
 		PostQuitMessage((int)msg.wParam);
-		if (GetCapture() == mainWindow)
+		if (GetCapture() == g_mainWindow)
 			ReleaseCapture();
 	}
 
 	hdc = GetMainWindowDC();
-	FrameMarqueeRect(hdc, &theMarquee.bounds);
-	PaintMarqueeRect(hdc, &theMarquee.handle);
+	FrameMarqueeRect(hdc, &g_theMarquee.bounds);
+	PaintMarqueeRect(hdc, &g_theMarquee.handle);
 	ReleaseMainWindowDC(hdc);
 
 	if (dragCursor != NULL)
@@ -651,10 +651,10 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 
 Boolean MarqueeHasHandles (SInt16 *direction, SInt16 *dist)
 {
-	if (theMarquee.handled)
+	if (g_theMarquee.handled)
 	{
-		*direction = theMarquee.direction;
-		*dist = theMarquee.dist;
+		*direction = g_theMarquee.direction;
+		*dist = g_theMarquee.dist;
 		return (true);
 	}
 	else
@@ -669,15 +669,15 @@ Boolean MarqueeHasHandles (SInt16 *direction, SInt16 *dist)
 
 Boolean PtInMarqueeHandle (Point where)
 {
-	return theMarquee.handled && QPtInRect(where, &theMarquee.handle);
+	return g_theMarquee.handled && QPtInRect(where, &g_theMarquee.handle);
 }
 
 //--------------------------------------------------------------  DrawGliderMarquee
 
 void DrawGliderMarquee (HDC hdc)
 {
-	Mac_CopyBits(blowerMaskMap, hdc,
-			&leftStartGliderSrc, &marqueeGliderRect,
+	Mac_CopyBits(g_blowerMaskMap, hdc,
+			&g_leftStartGliderSrc, &g_marqueeGliderRect,
 			srcXor, nil);
 }
 
@@ -687,14 +687,14 @@ void SetMarqueeGliderRect (SInt16 h, SInt16 v)
 {
 	HDC hdc;
 
-	marqueeGliderRect = leftStartGliderSrc;
-	ZeroRectCorner(&marqueeGliderRect);
-	QOffsetRect(&marqueeGliderRect, h - kHalfGliderWide, v - kGliderHigh);
+	g_marqueeGliderRect = g_leftStartGliderSrc;
+	ZeroRectCorner(&g_marqueeGliderRect);
+	QOffsetRect(&g_marqueeGliderRect, h - kHalfGliderWide, v - kGliderHigh);
 
 	hdc = GetMainWindowDC();
 	DrawGliderMarquee(hdc);
 	ReleaseMainWindowDC(hdc);
-	gliderMarqueeUp = true;
+	g_gliderMarqueeUp = true;
 }
 
 //--------------------------------------------------------------  DrawMarquee
@@ -708,40 +708,40 @@ void DrawMarquee (HDC hdc)
 	marqueeBrush = CreateMarqueeBrush();
 	wasROP2 = SetROP2(hdc, R2_XORPEN);
 
-	Mac_FrameRect(hdc, &theMarquee.bounds, marqueeBrush, 1, 1); 
-	if (theMarquee.handled)
+	Mac_FrameRect(hdc, &g_theMarquee.bounds, marqueeBrush, 1, 1); 
+	if (g_theMarquee.handled)
 	{
-		Mac_PaintRect(hdc, &theMarquee.handle, marqueeBrush);
+		Mac_PaintRect(hdc, &g_theMarquee.handle, marqueeBrush);
 		marqueePen = CreateMarqueePen();
 		wasPen = (HPEN)SelectObject(hdc, marqueePen);
-		switch (theMarquee.direction)
+		switch (g_theMarquee.direction)
 		{
 			case kAbove:
-			MoveToEx(hdc, theMarquee.handle.left + (kHandleSideLong / 2),
-					theMarquee.handle.bottom, NULL);
-			Mac_LineTo(hdc, theMarquee.handle.left + (kHandleSideLong / 2),
-					theMarquee.bounds.top - 1);
+			MoveToEx(hdc, g_theMarquee.handle.left + (kHandleSideLong / 2),
+					g_theMarquee.handle.bottom, NULL);
+			Mac_LineTo(hdc, g_theMarquee.handle.left + (kHandleSideLong / 2),
+					g_theMarquee.bounds.top - 1);
 			break;
 
 			case kToRight:
-			MoveToEx(hdc, theMarquee.handle.left,
-					theMarquee.handle.top + (kHandleSideLong / 2), NULL);
-			Mac_LineTo(hdc, theMarquee.bounds.right,
-					theMarquee.handle.top + (kHandleSideLong / 2));
+			MoveToEx(hdc, g_theMarquee.handle.left,
+					g_theMarquee.handle.top + (kHandleSideLong / 2), NULL);
+			Mac_LineTo(hdc, g_theMarquee.bounds.right,
+					g_theMarquee.handle.top + (kHandleSideLong / 2));
 			break;
 
 			case kBelow:
-			MoveToEx(hdc, theMarquee.handle.left + (kHandleSideLong / 2),
-					theMarquee.handle.top - 1, NULL);
-			Mac_LineTo(hdc, theMarquee.handle.left + (kHandleSideLong / 2),
-					theMarquee.bounds.bottom);
+			MoveToEx(hdc, g_theMarquee.handle.left + (kHandleSideLong / 2),
+					g_theMarquee.handle.top - 1, NULL);
+			Mac_LineTo(hdc, g_theMarquee.handle.left + (kHandleSideLong / 2),
+					g_theMarquee.bounds.bottom);
 			break;
 
 			case kToLeft:
-			MoveToEx(hdc, theMarquee.handle.right,
-					theMarquee.handle.top + (kHandleSideLong / 2), NULL);
-			Mac_LineTo(hdc, theMarquee.bounds.left,
-					theMarquee.handle.top + (kHandleSideLong / 2));
+			MoveToEx(hdc, g_theMarquee.handle.right,
+					g_theMarquee.handle.top + (kHandleSideLong / 2), NULL);
+			Mac_LineTo(hdc, g_theMarquee.bounds.left,
+					g_theMarquee.handle.top + (kHandleSideLong / 2));
 			break;
 		}
 		SelectObject(hdc, wasPen);
@@ -751,7 +751,7 @@ void DrawMarquee (HDC hdc)
 	SetROP2(hdc, wasROP2);
 	DeleteObject(marqueeBrush);
 
-	if (gliderMarqueeUp)
+	if (g_gliderMarqueeUp)
 		DrawGliderMarquee(hdc);
 }
 
@@ -781,14 +781,14 @@ void InitMarquee (void)
 		hbmPrev = (HBITMAP)SelectObject(hdc, hBitmap);
 		ImageList_Draw(himlMarquee, i, hdc, 0, 0, ILD_IMAGE);
 		SelectObject(hdc, hbmPrev);
-		theMarquee.pats[i] = hBitmap;
+		g_theMarquee.pats[i] = hBitmap;
 	}
 	DeleteDC(hdc);
 	ImageList_Destroy(himlMarquee);
 
-	theMarquee.index = 0;
-	theMarquee.active = false;
-	theMarquee.paused = false;
-	theMarquee.handled = false;
-	gliderMarqueeUp = false;
+	g_theMarquee.index = 0;
+	g_theMarquee.active = false;
+	g_theMarquee.paused = false;
+	g_theMarquee.handled = false;
+	g_gliderMarqueeUp = false;
 }

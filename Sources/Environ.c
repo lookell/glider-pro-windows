@@ -12,7 +12,7 @@ Boolean DoWeHaveQuickTime (void);
 SInt16 WhatsOurDepth (void);
 void GetDeviceRect (Rect *theRect);
 
-macEnviron thisMac;
+macEnviron g_thisMac;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DoWeHaveQuickTime
@@ -40,8 +40,8 @@ void GetDeviceRect (Rect *theRect)
 {
 	theRect->left = 0;
 	theRect->top = 0;
-	theRect->right = (SInt16)isViewportWidth;
-	theRect->bottom = (SInt16)isViewportHeight;
+	theRect->right = (SInt16)g_isViewportWidth;
+	theRect->bottom = (SInt16)g_isViewportHeight;
 }
 
 //--------------------------------------------------------------  CheckOurEnvirons
@@ -50,7 +50,7 @@ void GetDeviceRect (Rect *theRect)
 
 void CheckOurEnvirons (void)
 {
-	GetDeviceRect(&thisMac.screen);
-	thisMac.isDepth = WhatsOurDepth();
-	thisMac.hasQT = DoWeHaveQuickTime();
+	GetDeviceRect(&g_thisMac.screen);
+	g_thisMac.isDepth = WhatsOurDepth();
+	g_thisMac.hasQT = DoWeHaveQuickTime();
 }

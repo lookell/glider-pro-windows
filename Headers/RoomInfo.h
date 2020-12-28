@@ -10,8 +10,8 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern Rect tileSrcRect;
-extern HDC tileSrcMap;
+extern Rect g_tileSrcRect;
+extern HDC g_tileSrcMap;
 
 void DoRoomInfo (HWND hwndOwner);
 

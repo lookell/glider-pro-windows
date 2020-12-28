@@ -64,27 +64,27 @@ void SetObjectsToDefaults (void);
 void InitTelephone (void);
 void HandleTelephone (void);
 
-Rect glidSrcRect;
-Rect justRoomsRect;
-HDC glidSrcMap;
-HDC glid2SrcMap;
-HDC glidMaskMap;
-SInt32 gameFrame;
-SInt16 batteryTotal;
-SInt16 bandsTotal;
-SInt16 foilTotal;
-SInt16 mortals;
-Boolean playing;
-Boolean evenFrame;
-Boolean twoPlayerGame;
-Boolean showFoil;
-Boolean demoGoing;
-Boolean playerSuicide;
-Boolean phoneBitSet;
-Boolean tvOn;
+Rect g_glidSrcRect;
+Rect g_justRoomsRect;
+HDC g_glidSrcMap;
+HDC g_glid2SrcMap;
+HDC g_glidMaskMap;
+SInt32 g_gameFrame;
+SInt16 g_batteryTotal;
+SInt16 g_bandsTotal;
+SInt16 g_foilTotal;
+SInt16 g_mortals;
+Boolean g_playing;
+Boolean g_evenFrame;
+Boolean g_twoPlayerGame;
+Boolean g_showFoil;
+Boolean g_demoGoing;
+Boolean g_playerSuicide;
+Boolean g_phoneBitSet;
+Boolean g_tvOn;
 
-static phoneType thePhone;
-static phoneType theChimes;
+static phoneType g_thePhone;
+static phoneType g_theChimes;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  NewGame
@@ -98,24 +98,24 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 	MMRESULT mmResult;
 
 	AdjustScoreboardHeight();
-	gameOver = false;
-	theMode = kPlayMode;
-	if (isPlayMusicGame)
+	g_gameOver = false;
+	g_theMode = kPlayMode;
+	if (g_isPlayMusicGame)
 	{
-		if (!isMusicOn)
+		if (!g_isMusicOn)
 		{
 			theErr = StartMusic();
 			if (theErr != noErr)
 			{
 				YellowAlert(ownerWindow, kYellowNoMusic, theErr);
-				failedMusic = true;
+				g_failedMusic = true;
 			}
 		}
 		SetMusicalMode(kPlayGameScoreMode);
 	}
 	else
 	{
-		if (isMusicOn)
+		if (g_isMusicOn)
 			StopTheMusic();
 	}
 	if (mode != kResumeGameMode)
@@ -127,68 +127,68 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 	DetermineRoomOpenings();
 	NilSavedMaps();
 
-	gameFrame = 0L;
-	numBands = 0;
-	demoIndex = 0;
-	saidFollow = 0;
-	otherPlayerEscaped = kNoOneEscaped;
-	onePlayerLeft = false;
-	playerSuicide = false;
+	g_gameFrame = 0L;
+	g_numBands = 0;
+	g_demoIndex = 0;
+	g_saidFollow = 0;
+	g_otherPlayerEscaped = kNoOneEscaped;
+	g_onePlayerLeft = false;
+	g_playerSuicide = false;
 
-	if (twoPlayerGame)					// initialize glider(s)
+	if (g_twoPlayerGame)					// initialize glider(s)
 	{
-		InitGlider(&theGlider, kNewGameMode);
-		InitGlider(&theGlider2, kNewGameMode);
-		LoadGraphic(glidSrcMap, g_theHouseFile, kGliderPictID);
-		LoadGraphic(glid2SrcMap, g_theHouseFile, kGlider2PictID);
+		InitGlider(&g_theGlider, kNewGameMode);
+		InitGlider(&g_theGlider2, kNewGameMode);
+		LoadGraphic(g_glidSrcMap, g_theHouseFile, kGliderPictID);
+		LoadGraphic(g_glid2SrcMap, g_theHouseFile, kGlider2PictID);
 	}
 	else
 	{
-		InitGlider(&theGlider, mode);
-		LoadGraphic(glidSrcMap, g_theHouseFile, kGliderPictID);
-		LoadGraphic(glid2SrcMap, g_theHouseFile, kGliderFoilPictID);
+		InitGlider(&g_theGlider, mode);
+		LoadGraphic(g_glidSrcMap, g_theHouseFile, kGliderPictID);
+		LoadGraphic(g_glid2SrcMap, g_theHouseFile, kGliderFoilPictID);
 	}
 
 #ifdef COMPILEQT
-	if ((thisMac.hasQT) && (hasMovie))
+	if ((g_thisMac.hasQT) && (g_hasMovie))
 	{
-		SetMovieGWorld(theMovie, (CGrafPtr)mainWindow, nil);
+		SetMovieGWorld(g_theMovie, (CGrafPtr)g_mainWindow, nil);
 	}
 #endif
 
-	Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-	DissolveScreenOn(&workSrcRect);
-	SetMenu(mainWindow, NULL);
-	UpdateWindow(mainWindow);
+	Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+	DissolveScreenOn(&g_workSrcRect);
+	SetMenu(g_mainWindow, NULL);
+	UpdateWindow(g_mainWindow);
 
 	DrawLocale();
 	RefreshScoreboard(kNormalTitleMode);
-	DissolveScreenOn(&justRoomsRect);
+	DissolveScreenOn(&g_justRoomsRect);
 	if (mode == kNewGameMode)
 	{
 		BringUpBanner();
-		DumpScreenOn(&justRoomsRect);
+		DumpScreenOn(&g_justRoomsRect);
 	}
 	else if (mode == kResumeGameMode)
 	{
 		DisplayStarsRemaining();
-		DumpScreenOn(&justRoomsRect);
+		DumpScreenOn(&g_justRoomsRect);
 	}
 	else
 	{
-		DumpScreenOn(&justRoomsRect);
+		DumpScreenOn(&g_justRoomsRect);
 	}
 
 	InitGarbageRects();
-	StartGliderFadingIn(&theGlider);
-	if (twoPlayerGame)
+	StartGliderFadingIn(&g_theGlider);
+	if (g_twoPlayerGame)
 	{
-		StartGliderFadingIn(&theGlider2);
-		TagGliderIdle(&theGlider2);
-		theGlider2.dontDraw = true;
+		StartGliderFadingIn(&g_theGlider2);
+		TagGliderIdle(&g_theGlider2);
+		g_theGlider2.dontDraw = true;
 	}
 	InitTelephone();
-	wasPlayMusicPref = isPlayMusicGame;
+	wasPlayMusicPref = g_isPlayMusicGame;
 
 	if (CREATEDEMODATA)
 	{
@@ -196,13 +196,13 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 	}
 
 #ifdef COMPILEQT
-	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom))
+	if ((g_thisMac.hasQT) && (g_hasMovie) && (g_tvInRoom))
 	{
-		SetMovieActive(theMovie, true);
-		if (tvOn)
+		SetMovieActive(g_theMovie, true);
+		if (g_tvOn)
 		{
-			StartMovie(theMovie);
-			MoviesTask(theMovie, 0);
+			StartMovie(g_theMovie);
+			MoviesTask(g_theMovie, 0);
 		}
 	}
 #endif
@@ -217,7 +217,7 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 		mmResult = timeBeginPeriod(timeCaps.wPeriodMin);
 	}
 
-	playing = true;  // everything before this line is game set-up
+	g_playing = true;  // everything before this line is game set-up
 	PlayGame(splashHouseIndex);  // everything following is after a game has ended
 
 	if (mmResult == MMSYSERR_NOERROR)
@@ -230,53 +230,53 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 		DumpDemoData();
 	}
 
-	isPlayMusicGame = wasPlayMusicPref;
+	g_isPlayMusicGame = wasPlayMusicPref;
 	ZeroMirrorRegion();
 
 #ifdef COMPILEQT
-	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom))
+	if ((g_thisMac.hasQT) && (g_hasMovie) && (g_tvInRoom))
 	{
-		tvInRoom = false;
-		StopMovie(theMovie);
-		SetMovieActive(theMovie, false);
+		g_tvInRoom = false;
+		StopMovie(g_theMovie);
+		SetMovieActive(g_theMovie, false);
 	}
 #endif
 
-	twoPlayerGame = false;
-	theMode = kSplashMode;
-	if (isPlayMusicIdle)
+	g_twoPlayerGame = false;
+	g_theMode = kSplashMode;
+	if (g_isPlayMusicIdle)
 	{
-		if (!isMusicOn)
+		if (!g_isMusicOn)
 		{
 			theErr = StartMusic();
 			if (theErr != noErr)
 			{
 				YellowAlert(ownerWindow, kYellowNoMusic, theErr);
-				failedMusic = true;
+				g_failedMusic = true;
 			}
 		}
 		SetMusicalMode(kPlayWholeScoreMode);
 	}
 	else
 	{
-		if (isMusicOn)
+		if (g_isMusicOn)
 			StopTheMusic();
 	}
 	NilSavedMaps();
 	UpdateMenus(false);
 
-	if (!gameOver)
+	if (!g_gameOver)
 	{
-		Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+		Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
 
-		Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-		tempRect = splashSrcRect;
+		Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+		tempRect = g_splashSrcRect;
 		ZeroRectCorner(&tempRect);
-		QOffsetRect(&tempRect, splashOriginH, splashOriginV);
-		Mac_CopyBits(splashSrcMap, workSrcMap, &splashSrcRect, &tempRect, srcCopy, nil);
+		QOffsetRect(&tempRect, g_splashOriginH, g_splashOriginV);
+		Mac_CopyBits(g_splashSrcMap, g_workSrcMap, &g_splashSrcRect, &tempRect, srcCopy, nil);
 	}
-	demoGoing = false;
-	incrementModeTime = timeGetTime() + kIdleSplashTime;
+	g_demoGoing = false;
+	g_incrementModeTime = timeGetTime() + kIdleSplashTime;
 }
 
 //--------------------------------------------------------------  DoDemoGame
@@ -286,25 +286,25 @@ void DoDemoGame (HWND ownerWindow)
 	SInt16		wasHouseIndex;
 	Boolean		whoCares;
 
-	wasHouseIndex = thisHouseIndex;
+	wasHouseIndex = g_thisHouseIndex;
 	whoCares = CloseHouse(ownerWindow);
-	thisHouseIndex = demoHouseIndex;
-	PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
+	g_thisHouseIndex = g_demoHouseIndex;
+	PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, g_thisHouseName);
 	if (OpenHouse(ownerWindow))
 	{
 		whoCares = ReadHouse(ownerWindow);
-		demoGoing = true;
+		g_demoGoing = true;
 		// The previous house's name should be shown on the splash screen
 		// when the demo reaches its game over point, so pass the previous
 		// house's index instead of the index to the demo house.
 		NewGame(ownerWindow, kNewGameMode, wasHouseIndex);
 	}
 	whoCares = CloseHouse(ownerWindow);
-	thisHouseIndex = wasHouseIndex;
-	PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
+	g_thisHouseIndex = wasHouseIndex;
+	PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, g_thisHouseName);
 	if (OpenHouse(ownerWindow))
 		whoCares = ReadHouse(ownerWindow);
-	incrementModeTime = timeGetTime() + kIdleSplashTime;
+	g_incrementModeTime = timeGetTime() + kIdleSplashTime;
 }
 
 //--------------------------------------------------------------  InitGlider
@@ -314,20 +314,20 @@ void InitGlider (gliderPtr thisGlider, SInt16 mode)
 	WhereDoesGliderBegin(&thisGlider->dest, mode);
 
 	if (mode == kResumeGameMode)
-		numStarsRemaining = smallGame.wasStarsLeft;
+		g_numStarsRemaining = g_smallGame.wasStarsLeft;
 	else if (mode == kNewGameMode)
-		numStarsRemaining = CountStarsInHouse();
+		g_numStarsRemaining = CountStarsInHouse();
 
 	if (mode == kResumeGameMode)
 	{
-		theScore = smallGame.score;
-		mortals = smallGame.numGliders;
-		batteryTotal = smallGame.energy;
-		bandsTotal = smallGame.bands;
-		foilTotal = smallGame.foil;
-		thisGlider->mode = smallGame.gliderState;
-		thisGlider->facing = smallGame.facing;
-		showFoil = smallGame.showFoil;
+		g_theScore = g_smallGame.score;
+		g_mortals = g_smallGame.numGliders;
+		g_batteryTotal = g_smallGame.energy;
+		g_bandsTotal = g_smallGame.bands;
+		g_foilTotal = g_smallGame.foil;
+		thisGlider->mode = g_smallGame.gliderState;
+		thisGlider->facing = g_smallGame.facing;
+		g_showFoil = g_smallGame.showFoil;
 
 		switch (thisGlider->mode)
 		{
@@ -342,18 +342,18 @@ void InitGlider (gliderPtr thisGlider, SInt16 mode)
 	}
 	else
 	{
-		theScore = 0L;
-		mortals = kInitialGliders;
-		if (twoPlayerGame)
-			mortals += kInitialGliders;
-		batteryTotal = 0;
-		bandsTotal = 0;
-		foilTotal = 0;
+		g_theScore = 0L;
+		g_mortals = kInitialGliders;
+		if (g_twoPlayerGame)
+			g_mortals += kInitialGliders;
+		g_batteryTotal = 0;
+		g_bandsTotal = 0;
+		g_foilTotal = 0;
 		thisGlider->mode = kGliderNormal;
 		thisGlider->facing = kFaceRight;
-		thisGlider->src = gliderSrc[0];
-		thisGlider->mask = gliderSrc[0];
-		showFoil = false;
+		thisGlider->src = g_gliderSrc[0];
+		thisGlider->mask = g_gliderSrc[0];
+		g_showFoil = false;
 	}
 
 	QSetRect(&thisGlider->destShadow, 0, 0, kGliderWide, kShadowHigh);
@@ -384,41 +384,41 @@ void SetHouseToFirstRoom (void)
 
 void SetHouseToSavedRoom (void)
 {
-	ForceThisRoom(smallGame.roomNumber);
+	ForceThisRoom(g_smallGame.roomNumber);
 }
 
 //--------------------------------------------------------------  PlayGame
 
 void PlayGame (SInt16 splashHouseIndex)
 {
-	while ((playing) && (!quitting))
+	while ((g_playing) && (!g_quitting))
 	{
-		gameFrame++;
-		evenFrame = !evenFrame;
+		g_gameFrame++;
+		g_evenFrame = !g_evenFrame;
 
 		HandleTelephone();
 
-		if (twoPlayerGame)
+		if (g_twoPlayerGame)
 		{
 			HandleDynamics();
-			if (!gameOver)
+			if (!g_gameOver)
 			{
-				GetInput(&theGlider);
-				GetInput(&theGlider2);
+				GetInput(&g_theGlider);
+				GetInput(&g_theGlider2);
 				HandleInteraction();
 			}
 			HandleTriggers();
 			HandleBands();
-			if (!gameOver)
+			if (!g_gameOver)
 			{
-				HandleGlider(&theGlider);
-				HandleGlider(&theGlider2);
+				HandleGlider(&g_theGlider);
+				HandleGlider(&g_theGlider2);
 			}
-			if (playing)
+			if (g_playing)
 			{
 #ifdef COMPILEQT
-				if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) && (tvOn))
-						MoviesTask(theMovie, 0);
+				if ((g_thisMac.hasQT) && (g_hasMovie) && (g_tvInRoom) && (g_tvOn))
+						MoviesTask(g_theMovie, 0);
 #endif
 				RenderFrame();
 				HandleDynamicScoreboard();
@@ -427,55 +427,55 @@ void PlayGame (SInt16 splashHouseIndex)
 		else
 		{
 			HandleDynamics();
-			if (!gameOver)
+			if (!g_gameOver)
 			{
-				if (demoGoing)
-					GetDemoInput(&theGlider);
+				if (g_demoGoing)
+					GetDemoInput(&g_theGlider);
 				else
-					GetInput(&theGlider);
+					GetInput(&g_theGlider);
 				HandleInteraction();
 			}
 			HandleTriggers();
 			HandleBands();
-			if (!gameOver)
-				HandleGlider(&theGlider);
-			if (playing)
+			if (!g_gameOver)
+				HandleGlider(&g_theGlider);
+			if (g_playing)
 			{
 #ifdef COMPILEQT
-				if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) && (tvOn))
-						MoviesTask(theMovie, 0);
+				if ((g_thisMac.hasQT) && (g_hasMovie) && (g_tvInRoom) && (g_tvOn))
+						MoviesTask(g_theMovie, 0);
 #endif
 				RenderFrame();
 				HandleDynamicScoreboard();
 			}
 		}
 
-		if (gameOver)
+		if (g_gameOver)
 		{
-			countDown--;
-			if (countDown <= 0)
+			g_countDown--;
+			if (g_countDown <= 0)
 			{
-				HideGlider(&theGlider);
+				HideGlider(&g_theGlider);
 				RefreshScoreboard(kNormalTitleMode);
 
-				if (mortals < 0)
+				if (g_mortals < 0)
 					DoDiedGameOver();
 				else
 					DoGameOver();
-				if (!demoGoing)
+				if (!g_demoGoing)
 				{
-					if (TestHighScore(mainWindow))
+					if (TestHighScore(g_mainWindow))
 					{
-						SetMenu(mainWindow, theMenuBar);
+						SetMenu(g_mainWindow, g_theMenuBar);
 						DoHighScores();
 					}
 				}
-				SetMenu(mainWindow, theMenuBar);
+				SetMenu(g_mainWindow, g_theMenuBar);
 				RedrawSplashScreen(splashHouseIndex);
 			}
 		}
 	}
-	SetMenu(mainWindow, theMenuBar);
+	SetMenu(g_mainWindow, g_theMenuBar);
 }
 
 //--------------------------------------------------------------  SetObjectsToDefaults
@@ -486,14 +486,14 @@ void SetObjectsToDefaults (void)
 	SInt16		r, i;
 	Boolean		initState;
 
-	numRooms = thisHouse.nRooms;
+	numRooms = g_thisHouse.nRooms;
 
 	for (r = 0; r < numRooms; r++)
 	{
-		thisHouse.rooms[r].visited = false;
+		g_thisHouse.rooms[r].visited = false;
 		for (i = 0; i < kMaxRoomObs; i++)
 		{
-			switch (thisHouse.rooms[r].objects[i].what)
+			switch (g_thisHouse.rooms[r].objects[i].what)
 			{
 				case kFloorVent:
 				case kCeilingVent:
@@ -506,8 +506,8 @@ void SetObjectsToDefaults (void)
 				case kGrecoVent:
 				case kSewerBlower:
 				case kLiftArea:
-				thisHouse.rooms[r].objects[i].data.a.state =
-					thisHouse.rooms[r].objects[i].data.a.initial;
+				g_thisHouse.rooms[r].objects[i].data.a.state =
+					g_thisHouse.rooms[r].objects[i].data.a.initial;
 				break;
 
 				case kRedClock:
@@ -524,14 +524,14 @@ void SetObjectsToDefaults (void)
 				case kStar:
 				case kSparkle:
 				case kHelium:
-				thisHouse.rooms[r].objects[i].data.c.state =
-					thisHouse.rooms[r].objects[i].data.c.initial;
+				g_thisHouse.rooms[r].objects[i].data.c.state =
+					g_thisHouse.rooms[r].objects[i].data.c.initial;
 				break;
 
 				case kDeluxeTrans:
-				initState = (thisHouse.rooms[r].objects[i].data.d.wide & 0xF0) >> 4;
-				thisHouse.rooms[r].objects[i].data.d.wide &= 0xF0;
-				thisHouse.rooms[r].objects[i].data.d.wide += initState;
+				initState = (g_thisHouse.rooms[r].objects[i].data.d.wide & 0xF0) >> 4;
+				g_thisHouse.rooms[r].objects[i].data.d.wide &= 0xF0;
+				g_thisHouse.rooms[r].objects[i].data.d.wide += initState;
 				break;
 
 				case kCeilingLight:
@@ -542,12 +542,12 @@ void SetObjectsToDefaults (void)
 				case kFlourescent:
 				case kTrackLight:
 				case kInvisLight:
-				thisHouse.rooms[r].objects[i].data.f.state =
-					thisHouse.rooms[r].objects[i].data.f.initial;
+				g_thisHouse.rooms[r].objects[i].data.f.state =
+					g_thisHouse.rooms[r].objects[i].data.f.initial;
 				break;
 
 				case kStereo:
-				thisHouse.rooms[r].objects[i].data.g.state = isPlayMusicGame;
+				g_thisHouse.rooms[r].objects[i].data.g.state = g_isPlayMusicGame;
 				break;
 
 				case kShredder:
@@ -559,8 +559,8 @@ void SetObjectsToDefaults (void)
 				case kOutlet:
 				case kVCR:
 				case kMicrowave:
-				thisHouse.rooms[r].objects[i].data.g.state =
-					thisHouse.rooms[r].objects[i].data.g.initial;
+				g_thisHouse.rooms[r].objects[i].data.g.state =
+					g_thisHouse.rooms[r].objects[i].data.g.initial;
 				break;
 
 				case kBalloon:
@@ -571,8 +571,8 @@ void SetObjectsToDefaults (void)
 				case kBall:
 				case kDrip:
 				case kFish:
-				thisHouse.rooms[r].objects[i].data.h.state =
-					thisHouse.rooms[r].objects[i].data.h.initial;
+				g_thisHouse.rooms[r].objects[i].data.h.state =
+					g_thisHouse.rooms[r].objects[i].data.h.initial;
 				break;
 
 			}
@@ -587,17 +587,17 @@ void HideGlider (const gliderType *thisGlider)
 	Rect		tempRect;
 
 	tempRect = thisGlider->whole;
-	QOffsetRect(&tempRect, playOriginH, playOriginV);
+	QOffsetRect(&tempRect, g_playOriginH, g_playOriginV);
 	CopyRectWorkToMain(&tempRect);
 
-	if (hasMirror)
+	if (g_hasMirror)
 	{
 		QOffsetRect(&tempRect, kReflectionOffsetH, KReflectionOffsetV);
 		CopyRectWorkToMain(&tempRect);
 	}
 
 	tempRect = thisGlider->wholeShadow;
-	QOffsetRect(&tempRect, playOriginH, playOriginV);
+	QOffsetRect(&tempRect, g_playOriginH, g_playOriginV);
 	CopyRectWorkToMain(&tempRect);
 }
 
@@ -605,11 +605,11 @@ void HideGlider (const gliderType *thisGlider)
 
 void InitTelephone (void)
 {
-	thePhone.nextRing = RandomInt(kRingSpread) + kRingBaseDelay;
-	thePhone.rings = RandomInt(3) + 3;
-	thePhone.delay = kRingDelay;
+	g_thePhone.nextRing = RandomInt(kRingSpread) + kRingBaseDelay;
+	g_thePhone.rings = RandomInt(3) + 3;
+	g_thePhone.delay = kRingDelay;
 
-	theChimes.nextRing = RandomInt(kChimeDelay) + 1;
+	g_theChimes.nextRing = RandomInt(kChimeDelay) + 1;
 }
 
 //--------------------------------------------------------------  HandleTelephone
@@ -618,46 +618,46 @@ void HandleTelephone (void)
 {
 	SInt16		delayTime;
 
-	if (!phoneBitSet)
+	if (!g_phoneBitSet)
 	{
-		if (thePhone.nextRing == 0)
+		if (g_thePhone.nextRing == 0)
 		{
-			if (thePhone.delay == 0)
+			if (g_thePhone.delay == 0)
 			{
-				thePhone.delay = kRingDelay;
+				g_thePhone.delay = kRingDelay;
 				PlayPrioritySound(kPhoneRingSound, kPhoneRingPriority);
-				thePhone.rings--;
-				if (thePhone.rings == 0)
+				g_thePhone.rings--;
+				if (g_thePhone.rings == 0)
 				{
-					thePhone.nextRing = RandomInt(kRingSpread) + kRingBaseDelay;
-					thePhone.rings = RandomInt(3) + 3;
+					g_thePhone.nextRing = RandomInt(kRingSpread) + kRingBaseDelay;
+					g_thePhone.rings = RandomInt(3) + 3;
 				}
 			}
 			else
-				thePhone.delay--;
+				g_thePhone.delay--;
 		}
 		else
-			thePhone.nextRing--;
+			g_thePhone.nextRing--;
 	}
 	// handle also the wind chimes (if they are present)
 
-	if (numChimes > 0)
+	if (g_numChimes > 0)
 	{
-		if (theChimes.nextRing == 0)
+		if (g_theChimes.nextRing == 0)
 		{
 			if (RandomInt(2) == 0)
 				PlayPrioritySound(kChime1Sound, kChime1Priority);
 			else
 				PlayPrioritySound(kChime2Sound, kChime2Priority);
 
-			delayTime = kChimeDelay / numChimes;
+			delayTime = kChimeDelay / g_numChimes;
 			if (delayTime < 2)
 				delayTime = 2;
 
-			theChimes.nextRing = RandomInt(delayTime) + 1;
+			g_theChimes.nextRing = RandomInt(delayTime) + 1;
 		}
 		else
-			theChimes.nextRing--;
+			g_theChimes.nextRing--;
 	}
 }
 
@@ -665,5 +665,5 @@ void HandleTelephone (void)
 
 void StrikeChime (void)
 {
-	theChimes.nextRing = 0;
+	g_theChimes.nextRing = 0;
 }

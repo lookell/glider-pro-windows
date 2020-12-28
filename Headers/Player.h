@@ -12,22 +12,22 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern gliderType theGlider;
-extern gliderType theGlider2;
-extern Rect shadowSrcRect;
-extern HDC shadowSrcMap;
-extern HDC shadowMaskMap;
-extern Rect shadowSrc[kNumShadowSrcRects];
-extern Rect gliderSrc[kNumGliderSrcRects];
-extern Rect transRect;
-extern SInt32 theScore;
-extern SInt16 fadeInSequence[kLastFadeSequence];
-extern SInt16 rightClip;
-extern SInt16 leftClip;
-extern SInt16 transRoom;
-extern Boolean shadowVisible;
-extern Boolean onePlayerLeft;
-extern Boolean playerDead;
+extern gliderType g_theGlider;
+extern gliderType g_theGlider2;
+extern Rect g_shadowSrcRect;
+extern HDC g_shadowSrcMap;
+extern HDC g_shadowMaskMap;
+extern Rect g_shadowSrc[kNumShadowSrcRects];
+extern Rect g_gliderSrc[kNumGliderSrcRects];
+extern Rect g_transRect;
+extern SInt32 g_theScore;
+extern SInt16 g_fadeInSequence[kLastFadeSequence];
+extern SInt16 g_rightClip;
+extern SInt16 g_leftClip;
+extern SInt16 g_transRoom;
+extern Boolean g_shadowVisible;
+extern Boolean g_onePlayerLeft;
+extern Boolean g_playerDead;
 
 void FinishGliderUpStairs (gliderPtr thisGlider);
 void FinishGliderDownStairs (gliderPtr thisGlider);

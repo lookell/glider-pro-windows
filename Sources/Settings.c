@@ -109,15 +109,15 @@ void SetAllDefaults (HWND ownerWindow);
 INT_PTR CALLBACK PrefsFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 void BitchAboutChanges (HWND ownerWindow);
 
-static Boolean nextRestartChange;
-static BYTE tempLeftKeyOne;
-static BYTE tempRightKeyOne;
-static BYTE tempBattKeyOne;
-static BYTE tempBandKeyOne;
-static BYTE tempLeftKeyTwo;
-static BYTE tempRightKeyTwo;
-static BYTE tempBattKeyTwo;
-static BYTE tempBandKeyTwo;
+static Boolean g_nextRestartChange;
+static BYTE g_tempLeftKeyOne;
+static BYTE g_tempRightKeyOne;
+static BYTE g_tempBattKeyOne;
+static BYTE g_tempBandKeyOne;
+static BYTE g_tempLeftKeyTwo;
+static BYTE g_tempRightKeyTwo;
+static BYTE g_tempBattKeyTwo;
+static BYTE g_tempBandKeyTwo;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  SetBrainsToDefaults
@@ -138,14 +138,14 @@ void SetBrainsToDefaults (HWND prefDlg)
 
 void BrainsInit (HWND prefDlg)
 {
-	SetDlgItemInt(prefDlg, kMaxFilesItem, willMaxFiles, FALSE);
-	CheckDlgButton(prefDlg, kQuickTransitCheck, (quickerTransitions != 0));
+	SetDlgItemInt(prefDlg, kMaxFilesItem, g_willMaxFiles, FALSE);
+	CheckDlgButton(prefDlg, kQuickTransitCheck, (g_quickerTransitions != 0));
 	CheckDlgButton(prefDlg, kDoZoomsCheck, BST_CHECKED);
-	CheckDlgButton(prefDlg, kDoDemoCheck, (doAutoDemo != 0));
+	CheckDlgButton(prefDlg, kDoDemoCheck, (g_doAutoDemo != 0));
 	CheckDlgButton(prefDlg, kDoBackgroundCheck, BST_CHECKED);
-	CheckDlgButton(prefDlg, kDoErrorCheck, (isHouseChecks != 0));
-	CheckDlgButton(prefDlg, kDoPrettyMapCheck, (doPrettyMap != 0));
-	CheckDlgButton(prefDlg, kDoBitchDlgsCheck, (doBitchDialogs != 0));
+	CheckDlgButton(prefDlg, kDoErrorCheck, (g_isHouseChecks != 0));
+	CheckDlgButton(prefDlg, kDoPrettyMapCheck, (g_doPrettyMap != 0));
+	CheckDlgButton(prefDlg, kDoBitchDlgsCheck, (g_doBitchDialogs != 0));
 }
 
 //--------------------------------------------------------------  BrainsApply
@@ -156,24 +156,24 @@ void BrainsApply (HWND prefDlg)
 	Boolean wasDoPrettyMap;
 	UINT tmp;
 
-	wasMaxFiles = willMaxFiles;
-	wasDoPrettyMap = doPrettyMap;
+	wasMaxFiles = g_willMaxFiles;
+	wasDoPrettyMap = g_doPrettyMap;
 	tmp = GetDlgItemInt(prefDlg, kMaxFilesItem, NULL, FALSE);
 	if (tmp > 500)
 		tmp = 500;
 	else if (tmp < 12)
 		tmp = 12;
-	willMaxFiles = (SInt16)tmp;
-	if (willMaxFiles != wasMaxFiles)
-		nextRestartChange = true;
-	quickerTransitions = (IsDlgButtonChecked(prefDlg, kQuickTransitCheck) != 0);
-	doAutoDemo = (IsDlgButtonChecked(prefDlg, kDoDemoCheck) != 0);
-	isHouseChecks = (IsDlgButtonChecked(prefDlg, kDoErrorCheck) != 0);
-	doPrettyMap = (IsDlgButtonChecked(prefDlg, kDoPrettyMapCheck) != 0);
-	doBitchDialogs = (IsDlgButtonChecked(prefDlg, kDoBitchDlgsCheck) != 0);
-	if ((wasDoPrettyMap != doPrettyMap) && (mapWindow != NULL))
+	g_willMaxFiles = (SInt16)tmp;
+	if (g_willMaxFiles != wasMaxFiles)
+		g_nextRestartChange = true;
+	g_quickerTransitions = (IsDlgButtonChecked(prefDlg, kQuickTransitCheck) != 0);
+	g_doAutoDemo = (IsDlgButtonChecked(prefDlg, kDoDemoCheck) != 0);
+	g_isHouseChecks = (IsDlgButtonChecked(prefDlg, kDoErrorCheck) != 0);
+	g_doPrettyMap = (IsDlgButtonChecked(prefDlg, kDoPrettyMapCheck) != 0);
+	g_doBitchDialogs = (IsDlgButtonChecked(prefDlg, kDoBitchDlgsCheck) != 0);
+	if ((wasDoPrettyMap != g_doPrettyMap) && (g_mapWindow != NULL))
 	{
-		InvalidateRect(mapWindow, NULL, FALSE);
+		InvalidateRect(g_mapWindow, NULL, FALSE);
 	}
 }
 
@@ -232,28 +232,28 @@ BYTE GetLastHotKeyValue (HWND prefDlg, int itemID)
 	switch (itemID)
 	{
 	case kLeftControlOne:
-		virtualKey = tempLeftKeyOne;
+		virtualKey = g_tempLeftKeyOne;
 		break;
 	case kRightControlOne:
-		virtualKey = tempRightKeyOne;
+		virtualKey = g_tempRightKeyOne;
 		break;
 	case kBattControlOne:
-		virtualKey = tempBattKeyOne;
+		virtualKey = g_tempBattKeyOne;
 		break;
 	case kBandControlOne:
-		virtualKey = tempBandKeyOne;
+		virtualKey = g_tempBandKeyOne;
 		break;
 	case kLeftControlTwo:
-		virtualKey = tempLeftKeyTwo;
+		virtualKey = g_tempLeftKeyTwo;
 		break;
 	case kRightControlTwo:
-		virtualKey = tempRightKeyTwo;
+		virtualKey = g_tempRightKeyTwo;
 		break;
 	case kBattControlTwo:
-		virtualKey = tempBattKeyTwo;
+		virtualKey = g_tempBattKeyTwo;
 		break;
 	case kBandControlTwo:
-		virtualKey = tempBandKeyTwo;
+		virtualKey = g_tempBandKeyTwo;
 		break;
 	}
 	return virtualKey;
@@ -268,28 +268,28 @@ void SetLastHotKeyValue (HWND prefDlg, int itemID, BYTE virtualKey)
 	switch (itemID)
 	{
 	case kLeftControlOne:
-		tempLeftKeyOne = virtualKey;
+		g_tempLeftKeyOne = virtualKey;
 		break;
 	case kRightControlOne:
-		tempRightKeyOne = virtualKey;
+		g_tempRightKeyOne = virtualKey;
 		break;
 	case kBattControlOne:
-		tempBattKeyOne = virtualKey;
+		g_tempBattKeyOne = virtualKey;
 		break;
 	case kBandControlOne:
-		tempBandKeyOne = virtualKey;
+		g_tempBandKeyOne = virtualKey;
 		break;
 	case kLeftControlTwo:
-		tempLeftKeyTwo = virtualKey;
+		g_tempLeftKeyTwo = virtualKey;
 		break;
 	case kRightControlTwo:
-		tempRightKeyTwo = virtualKey;
+		g_tempRightKeyTwo = virtualKey;
 		break;
 	case kBattControlTwo:
-		tempBattKeyTwo = virtualKey;
+		g_tempBattKeyTwo = virtualKey;
 		break;
 	case kBandControlTwo:
-		tempBandKeyTwo = virtualKey;
+		g_tempBandKeyTwo = virtualKey;
 		break;
 	}
 }
@@ -413,15 +413,15 @@ void SetControlsToDefaults (HWND prefDlg)
 
 void ControlInit (HWND prefDlg)
 {
-	SetHotKeyValue(prefDlg, kLeftControlOne, (BYTE)theGlider.leftKey);
-	SetHotKeyValue(prefDlg, kRightControlOne, (BYTE)theGlider.rightKey);
-	SetHotKeyValue(prefDlg, kBattControlOne, (BYTE)theGlider.battKey);
-	SetHotKeyValue(prefDlg, kBandControlOne, (BYTE)theGlider.bandKey);
-	SetHotKeyValue(prefDlg, kLeftControlTwo, (BYTE)theGlider2.leftKey);
-	SetHotKeyValue(prefDlg, kRightControlTwo, (BYTE)theGlider2.rightKey);
-	SetHotKeyValue(prefDlg, kBattControlTwo, (BYTE)theGlider2.battKey);
-	SetHotKeyValue(prefDlg, kBandControlTwo, (BYTE)theGlider2.bandKey);
-	if (isEscPauseKey)
+	SetHotKeyValue(prefDlg, kLeftControlOne, (BYTE)g_theGlider.leftKey);
+	SetHotKeyValue(prefDlg, kRightControlOne, (BYTE)g_theGlider.rightKey);
+	SetHotKeyValue(prefDlg, kBattControlOne, (BYTE)g_theGlider.battKey);
+	SetHotKeyValue(prefDlg, kBandControlOne, (BYTE)g_theGlider.bandKey);
+	SetHotKeyValue(prefDlg, kLeftControlTwo, (BYTE)g_theGlider2.leftKey);
+	SetHotKeyValue(prefDlg, kRightControlTwo, (BYTE)g_theGlider2.rightKey);
+	SetHotKeyValue(prefDlg, kBattControlTwo, (BYTE)g_theGlider2.battKey);
+	SetHotKeyValue(prefDlg, kBandControlTwo, (BYTE)g_theGlider2.bandKey);
+	if (g_isEscPauseKey)
 	{
 		CheckRadioButton(prefDlg, kESCPausesRadio, kTABPausesRadio, kESCPausesRadio);
 	}
@@ -435,25 +435,25 @@ void ControlInit (HWND prefDlg)
 
 void ControlApply (HWND prefDlg)
 {
-	theGlider.leftKey = tempLeftKeyOne;
-	theGlider.rightKey = tempRightKeyOne;
-	theGlider.battKey = tempBattKeyOne;
-	theGlider.bandKey = tempBandKeyOne;
-	theGlider2.leftKey = tempLeftKeyTwo;
-	theGlider2.rightKey = tempRightKeyTwo;
-	theGlider2.battKey = tempBattKeyTwo;
-	theGlider2.bandKey = tempBandKeyTwo;
+	g_theGlider.leftKey = g_tempLeftKeyOne;
+	g_theGlider.rightKey = g_tempRightKeyOne;
+	g_theGlider.battKey = g_tempBattKeyOne;
+	g_theGlider.bandKey = g_tempBandKeyOne;
+	g_theGlider2.leftKey = g_tempLeftKeyTwo;
+	g_theGlider2.rightKey = g_tempRightKeyTwo;
+	g_theGlider2.battKey = g_tempBattKeyTwo;
+	g_theGlider2.bandKey = g_tempBandKeyTwo;
 	if (IsDlgButtonChecked(prefDlg, kESCPausesRadio))
 	{
-		isEscPauseKey = true;
+		g_isEscPauseKey = true;
 	}
 	else if (IsDlgButtonChecked(prefDlg, kTABPausesRadio))
 	{
-		isEscPauseKey = false;
+		g_isEscPauseKey = false;
 	}
 	else
 	{
-		isEscPauseKey = false;
+		g_isEscPauseKey = false;
 	}
 }
 
@@ -542,8 +542,8 @@ void SoundPrefsInit (HWND prefDlg)
 		theVolume = 11;
 	SetDlgItemInt(prefDlg, kVolNumberItem, theVolume, TRUE);
 
-	CheckDlgButton(prefDlg, kIdleMusicItem, (isPlayMusicIdle != 0));
-	CheckDlgButton(prefDlg, kPlayMusicItem, (isPlayMusicGame != 0));
+	CheckDlgButton(prefDlg, kIdleMusicItem, (g_isPlayMusicIdle != 0));
+	CheckDlgButton(prefDlg, kPlayMusicItem, (g_isPlayMusicGame != 0));
 }
 
 //--------------------------------------------------------------  SoundPrefsApply
@@ -552,11 +552,11 @@ void SoundPrefsApply (HWND prefDlg)
 {
 	SInt16 tempVolume;
 
-	isPlayMusicIdle = (IsDlgButtonChecked(prefDlg, kIdleMusicItem) != 0);
-	isPlayMusicGame = (IsDlgButtonChecked(prefDlg, kPlayMusicItem) != 0);
+	g_isPlayMusicIdle = (IsDlgButtonChecked(prefDlg, kIdleMusicItem) != 0);
+	g_isPlayMusicGame = (IsDlgButtonChecked(prefDlg, kPlayMusicItem) != 0);
 
 	UnivGetSoundVolume(&tempVolume);
-	isSoundOn = (tempVolume != 0);
+	g_isSoundOn = (tempVolume != 0);
 }
 
 //--------------------------------------------------------------  HandleSoundMusicChange
@@ -565,7 +565,7 @@ void HandleSoundMusicChange (HWND prefDlg, SInt16 newVolume, Boolean sayIt)
 {
 	OSErr		theErr;
 
-	isSoundOn = (newVolume != 0);
+	g_isSoundOn = (newVolume != 0);
 
 	if (IsDlgButtonChecked(prefDlg, kIdleMusicItem))
 	{
@@ -573,13 +573,13 @@ void HandleSoundMusicChange (HWND prefDlg, SInt16 newVolume, Boolean sayIt)
 			StopTheMusic();
 		else
 		{
-			if (!isMusicOn)
+			if (!g_isMusicOn)
 			{
 				theErr = StartMusic();
 				if (theErr != noErr)
 				{
 					YellowAlert(prefDlg, kYellowNoMusic, theErr);
-					failedMusic = true;
+					g_failedMusic = true;
 				}
 			}
 		}
@@ -616,11 +616,11 @@ INT_PTR CALLBACK SoundFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM 
 		case IDCANCEL:
 			UnivSetSoundVolume(wasLoudness);
 			HandleSoundMusicChange(prefDlg, wasLoudness, false);
-			isPlayMusicIdle = (isPlayMusicIdle != 0);
+			g_isPlayMusicIdle = (g_isPlayMusicIdle != 0);
 			wasIdle = (IsDlgButtonChecked(prefDlg, kIdleMusicItem) != 0);
-			if (isPlayMusicIdle != wasIdle)
+			if (g_isPlayMusicIdle != wasIdle)
 			{
-				if (isPlayMusicIdle)
+				if (g_isPlayMusicIdle)
 				{
 					if (wasLoudness != 0)
 					{
@@ -628,7 +628,7 @@ INT_PTR CALLBACK SoundFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM 
 						if (theErr != noErr)
 						{
 							YellowAlert(prefDlg, kYellowNoMusic, theErr);
-							failedMusic = true;
+							g_failedMusic = true;
 						}
 					}
 				}
@@ -648,7 +648,7 @@ INT_PTR CALLBACK SoundFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM 
 					if (theErr != noErr)
 					{
 						YellowAlert(prefDlg, kYellowNoMusic, theErr);
-						failedMusic = true;
+						g_failedMusic = true;
 					}
 				}
 			}
@@ -768,7 +768,7 @@ void DisplayInit (HWND hDlg)
 		disabledLoadFlags = LR_DEFAULTSIZE | LR_MONOCHROME;
 	}
 
-	if (thisMac.screen.right <= kRoomWide)
+	if (g_thisMac.screen.right <= kRoomWide)
 	{
 		EnableWindow(display3Control, FALSE);
 		EnableWindow(display9Control, FALSE);
@@ -801,25 +801,25 @@ void DisplayInit (HWND hDlg)
 			IMAGE_ICON, 0, 0, loadFlags);
 	SendMessage(display9Control, BM_SETIMAGE, IMAGE_ICON, (LPARAM)display9Icon);
 
-	if (numNeighbors == 1)
+	if (g_numNeighbors == 1)
 		CheckRadioButton(hDlg, kDisplay1Item, kDisplay9Item, kDisplay1Item);
-	else if (numNeighbors == 3)
+	else if (g_numNeighbors == 3)
 		CheckRadioButton(hDlg, kDisplay1Item, kDisplay9Item, kDisplay3Item);
-	else if (numNeighbors == 9)
+	else if (g_numNeighbors == 9)
 		CheckRadioButton(hDlg, kDisplay1Item, kDisplay9Item, kDisplay9Item);
 	else
 		CheckRadioButton(hDlg, kDisplay1Item, kDisplay9Item, kDisplay9Item);
 
 	CheckRadioButton(hDlg, kCurrentDepth, k16Depth, kCurrentDepth);
 
-	if (isDoColorFade)
+	if (g_isDoColorFade)
 		CheckDlgButton(hDlg, kDoColorFadeItem, BST_CHECKED);
 	else
 		CheckDlgButton(hDlg, kDoColorFadeItem, BST_UNCHECKED);
 
 	CheckDlgButton(hDlg, kUseQDItem, BST_CHECKED);
 
-	if (isUseSecondScreen)
+	if (g_isUseSecondScreen)
 		CheckDlgButton(hDlg, kUseScreen2Item, BST_CHECKED);
 	else
 		CheckDlgButton(hDlg, kUseScreen2Item, BST_UNCHECKED);
@@ -832,20 +832,20 @@ void DisplayApply (HWND hDlg)
 	Boolean wasScreen2;
 
 	if (IsDlgButtonChecked(hDlg, kDisplay1Item))
-		numNeighbors = 1;
+		g_numNeighbors = 1;
 	else if (IsDlgButtonChecked(hDlg, kDisplay3Item))
-		numNeighbors = 3;
+		g_numNeighbors = 3;
 	else if (IsDlgButtonChecked(hDlg, kDisplay9Item))
-		numNeighbors = 9;
+		g_numNeighbors = 9;
 	else
-		numNeighbors = 9;
+		g_numNeighbors = 9;
 
-	isDoColorFade = (IsDlgButtonChecked(hDlg, kDoColorFadeItem) != 0);
+	g_isDoColorFade = (IsDlgButtonChecked(hDlg, kDoColorFadeItem) != 0);
 
-	wasScreen2 = (isUseSecondScreen != 0);
-	isUseSecondScreen = (IsDlgButtonChecked(hDlg, kUseScreen2Item) != 0);
-	if (wasScreen2 != isUseSecondScreen)
-		nextRestartChange = true;
+	wasScreen2 = (g_isUseSecondScreen != 0);
+	g_isUseSecondScreen = (IsDlgButtonChecked(hDlg, kUseScreen2Item) != 0);
+	if (wasScreen2 != g_isUseSecondScreen)
+		g_nextRestartChange = true;
 }
 
 //--------------------------------------------------------------  DisplayFilter
@@ -915,39 +915,39 @@ void SetAllDefaults (HWND ownerWindow)
 {
 	OSErr		theErr;
 								// Default brain settings
-	willMaxFiles = 48;
-	doAutoDemo = true;
-	isHouseChecks = true;
-	doPrettyMap = true;
-	doBitchDialogs = true;
+	g_willMaxFiles = 48;
+	g_doAutoDemo = true;
+	g_isHouseChecks = true;
+	g_doPrettyMap = true;
+	g_doBitchDialogs = true;
 								// Default control settings
-	theGlider.leftKey = VK_LEFT;
-	theGlider.rightKey = VK_RIGHT;
-	theGlider.battKey = VK_DOWN;
-	theGlider.bandKey = VK_UP;
-	theGlider2.leftKey = 'A';
-	theGlider2.rightKey = 'D';
-	theGlider2.battKey = 'S';
-	theGlider2.bandKey = 'W';
-	isEscPauseKey = false;
+	g_theGlider.leftKey = VK_LEFT;
+	g_theGlider.rightKey = VK_RIGHT;
+	g_theGlider.battKey = VK_DOWN;
+	g_theGlider.bandKey = VK_UP;
+	g_theGlider2.leftKey = 'A';
+	g_theGlider2.rightKey = 'D';
+	g_theGlider2.battKey = 'S';
+	g_theGlider2.bandKey = 'W';
+	g_isEscPauseKey = false;
 								// Default sound settings
-	isPlayMusicIdle = true;
-	isPlayMusicGame = true;
+	g_isPlayMusicIdle = true;
+	g_isPlayMusicGame = true;
 	UnivSetSoundVolume(3);
-	isSoundOn = true;
-	if (!isMusicOn)
+	g_isSoundOn = true;
+	if (!g_isMusicOn)
 	{
 		theErr = StartMusic();
 		if (theErr != noErr)
 		{
 			YellowAlert(ownerWindow, kYellowNoMusic, theErr);
-			failedMusic = true;
+			g_failedMusic = true;
 		}
 	}
 								// Default display settings
-	numNeighbors = 9;
-	quickerTransitions = false;
-	isDoColorFade = true;
+	g_numNeighbors = 9;
+	g_quickerTransitions = false;
+	g_isDoColorFade = true;
 }
 
 //--------------------------------------------------------------  PrefsFilter
@@ -1001,11 +1001,11 @@ INT_PTR CALLBACK PrefsFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		case kBrainsButton:
 			// TODO: reconsider using the Option key (Alt in Windows) as a
 			// modifier key, because it already has special meaning in Windows.
-			if ((OptionKeyDown()) && (!houseUnlocked))
+			if ((OptionKeyDown()) && (!g_houseUnlocked))
 			{
-				houseUnlocked = true;
-				changeLockStateOfHouse = true;
-				saveHouseLocked = false;
+				g_houseUnlocked = true;
+				g_changeLockStateOfHouse = true;
+				g_saveHouseLocked = false;
 			}
 			DoBrainsPrefs(hDlg);
 			break;
@@ -1023,13 +1023,13 @@ INT_PTR CALLBACK PrefsFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 
 void DoSettingsMain (HWND ownerWindow)
 {
-	nextRestartChange = false;
+	g_nextRestartChange = false;
 
 	DialogBox(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kMainPrefsDialID),
 			ownerWindow, PrefsFilter);
 
-	if (nextRestartChange)
+	if (g_nextRestartChange)
 		BitchAboutChanges(ownerWindow);
 }
 

@@ -42,22 +42,22 @@ void InitDiedGameOver (void);
 void HandlePages (void);
 void DrawPages (void);
 
-Rect angelSrcRect;
-HDC angelSrcMap;
-HDC angelMaskMap;
-SInt16 countDown;
-Boolean gameOver;
+Rect g_angelSrcRect;
+HDC g_angelSrcMap;
+HDC g_angelMaskMap;
+SInt16 g_countDown;
+Boolean g_gameOver;
 
-static pageType pages[8];
-static Rect pageSrcRect;
-static Rect pageSrc[kPageFrames];
-static Rect lettersSrc[8];
-static HRGN roomRgn;
-static HDC pageSrcMap;
-static HDC gameOverSrcMap;
-static HDC pageMaskMap;
-static SInt16 stopPages;
-static SInt16 pagesStuck;
+static pageType g_pages[8];
+static Rect g_pageSrcRect;
+static Rect g_pageSrc[kPageFrames];
+static Rect g_lettersSrc[8];
+static HRGN g_roomRgn;
+static HDC g_pageSrcMap;
+static HDC g_gameOverSrcMap;
+static HDC g_pageMaskMap;
+static SInt16 g_stopPages;
+static SInt16 g_pagesStuck;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DoGameOver
@@ -68,10 +68,10 @@ void DoGameOver (void)
 {
 	HDC			mainWindowDC;
 
-	playing = false;
+	g_playing = false;
 	SetUpFinalScreen();
 	mainWindowDC = GetMainWindowDC();
-	ColorRect(mainWindowDC, &workSrcRect, 244);
+	ColorRect(mainWindowDC, &g_workSrcRect, 244);
 	ReleaseMainWindowDC(mainWindowDC);
 	DoGameOverStarAnimation();
 }
@@ -88,49 +88,49 @@ void SetUpFinalScreen (void)
 	SInt16		count, hOffset, vOffset, i, textDown;
 	HFONT		gameOverFont;
 
-	ColorRect(workSrcMap, &workSrcRect, 244);
+	ColorRect(g_workSrcMap, &g_workSrcRect, 244);
 	QSetRect(&tempRect, 0, 0, 640, 460);
-	CenterRectInRect(&tempRect, &workSrcRect);
-	LoadScaledGraphic(workSrcMap, g_theHouseFile, kMilkywayPictID, &tempRect);
+	CenterRectInRect(&tempRect, &g_workSrcRect);
+	LoadScaledGraphic(g_workSrcMap, g_theHouseFile, kMilkywayPictID, &tempRect);
 	textDown = tempRect.top;
 	if (textDown < 0)
 		textDown = 0;
 
-	PasStringCopy(thisHouse.trailer, tempStr);
+	PasStringCopy(g_thisHouse.trailer, tempStr);
 
-	SaveDC(workSrcMap);
+	SaveDC(g_workSrcMap);
 	gameOverFont = CreateTahomaFont(-12, FW_BOLD);
-	SelectObject(workSrcMap, gameOverFont);
-	SetBkMode(workSrcMap, TRANSPARENT);
-	SetTextAlign(workSrcMap, TA_BASELINE | TA_CENTER);
+	SelectObject(g_workSrcMap, gameOverFont);
+	SetBkMode(g_workSrcMap, TRANSPARENT);
+	SetTextAlign(g_workSrcMap, TA_BASELINE | TA_CENTER);
 	count = 0;
 	do
 	{
 		GetLineOfText(tempStr, count, subStr);
 		WinFromMacString(outStr, ARRAYSIZE(outStr), subStr);
-		hOffset = HalfRectWide(&workSrcRect);
+		hOffset = HalfRectWide(&g_workSrcRect);
 		vOffset = textDown + 32 + (count * 20);
-		SetTextColor(workSrcMap, blackColor);
-		TextOut(workSrcMap, hOffset + 1, vOffset + 1, outStr, subStr[0]);
-		SetTextColor(workSrcMap, whiteColor);
-		TextOut(workSrcMap, hOffset, vOffset, outStr, subStr[0]);
+		SetTextColor(g_workSrcMap, blackColor);
+		TextOut(g_workSrcMap, hOffset + 1, vOffset + 1, outStr, subStr[0]);
+		SetTextColor(g_workSrcMap, whiteColor);
+		TextOut(g_workSrcMap, hOffset, vOffset, outStr, subStr[0]);
 		count++;
 	}
 	while (subStr[0] > 0);
-	RestoreDC(workSrcMap, -1);
+	RestoreDC(g_workSrcMap, -1);
 	DeleteObject(gameOverFont);
 
-	CopyRectWorkToBack(&workSrcRect);
+	CopyRectWorkToBack(&g_workSrcRect);
 
 	for (i = 0; i < 8; i++)		// initialize the falling stars
 	{
-		pages[i].dest = starSrc[0];
-		QOffsetRect(&pages[i].dest,
-				workSrcRect.right + RandomInt(workSrcRect.right / 5) +
-				(workSrcRect.right/ 4) * i,
-				RandomInt(workSrcRect.bottom) - workSrcRect.bottom / 2);
-		pages[i].was = pages[i].dest;
-		pages[i].frame = RandomInt(6);
+		g_pages[i].dest = g_starSrc[0];
+		QOffsetRect(&g_pages[i].dest,
+				g_workSrcRect.right + RandomInt(g_workSrcRect.right / 5) +
+				(g_workSrcRect.right/ 4) * i,
+				RandomInt(g_workSrcRect.bottom) - g_workSrcRect.bottom / 2);
+		g_pages[i].was = g_pages[i].dest;
+		g_pages[i].frame = RandomInt(6);
 	}
 }
 
@@ -146,7 +146,7 @@ void DoGameOverStarAnimation (void)
 	SInt16		which, i, count, pass;
 	Boolean		noInteruption;
 
-	angelDest = angelSrcRect;
+	angelDest = g_angelSrcRect;
 	QOffsetRect(&angelDest, -96, 0);
 	noInteruption = true;
 	count = 0;
@@ -159,37 +159,37 @@ void DoGameOverStarAnimation (void)
 			PlayPrioritySound(kMysticSound, kMysticPriority);
 			which = angelDest.left / 32;
 			which = which % 8;
-			ZeroRectCorner(&pages[which].dest);
-			QOffsetRect(&pages[which].dest, angelDest.left, angelDest.bottom);
+			ZeroRectCorner(&g_pages[which].dest);
+			QOffsetRect(&g_pages[which].dest, angelDest.left, angelDest.bottom);
 			if (count < (which + 1))
 				count = which + 1;
 		}
 
 		for (i = 0; i < count; i++)
 		{
-			pages[i].frame++;
-			if (pages[i].frame >= 6)
-				pages[i].frame = 0;
+			g_pages[i].frame++;
+			if (g_pages[i].frame >= 6)
+				g_pages[i].frame = 0;
 
-			Mac_CopyMask(bonusSrcMap, bonusMaskMap, workSrcMap,
-					&starSrc[pages[i].frame],
-					&starSrc[pages[i].frame],
-					&pages[i].dest);
+			Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_workSrcMap,
+					&g_starSrc[g_pages[i].frame],
+					&g_starSrc[g_pages[i].frame],
+					&g_pages[i].dest);
 
-			pages[i].was = pages[i].dest;
-			pages[i].was.top -= kStarFalls;
+			g_pages[i].was = g_pages[i].dest;
+			g_pages[i].was.top -= kStarFalls;
 
-			AddRectToWorkRectsWhole(&pages[i].was);
-			AddRectToBackRects(&pages[i].dest);
+			AddRectToWorkRectsWhole(&g_pages[i].was);
+			AddRectToBackRects(&g_pages[i].dest);
 
-			if (pages[i].dest.top < workSrcRect.bottom)
-				QOffsetRect(&pages[i].dest, 0, kStarFalls);
+			if (g_pages[i].dest.top < g_workSrcRect.bottom)
+				QOffsetRect(&g_pages[i].dest, 0, kStarFalls);
 		}
 
-		if (angelDest.left <= (workSrcRect.right + 2))
+		if (angelDest.left <= (g_workSrcRect.right + 2))
 		{
-			Mac_CopyMask(angelSrcMap, angelMaskMap, workSrcMap,
-					&angelSrcRect, &angelSrcRect, &angelDest);
+			Mac_CopyMask(g_angelSrcMap, g_angelMaskMap, g_workSrcMap,
+					&g_angelSrcRect, &g_angelSrcRect, &angelDest);
 			angelDest.left -= 2;
 			AddRectToWorkRectsWhole(&angelDest);
 			angelDest.left += 2;
@@ -200,15 +200,15 @@ void DoGameOverStarAnimation (void)
 
 		CopyRectsQD();
 
-		numWork2Main = 0;
-		numBack2Work = 0;
+		g_numWork2Main = 0;
+		g_numBack2Work = 0;
 
 		while (PeekMessageOrWaitForFrame(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if (msg.message == WM_QUIT)
 			{
 				PostQuitMessage((int)msg.wParam);
-				quitting = true;
+				g_quitting = true;
 				noInteruption = false;
 				break;
 			}
@@ -242,8 +242,8 @@ void DoGameOverStarAnimation (void)
 
 void FlagGameOver (void)
 {
-	gameOver = true;
-	countDown = kNumCountDownFrames;
+	g_gameOver = true;
+	g_countDown = kNumCountDownFrames;
 	SetMusicalMode(kPlayWholeScoreMode);
 }
 
@@ -259,52 +259,52 @@ void InitDiedGameOver (void)
 	#define		kPageBackUp			128
 	SInt16		i;
 
-	QSetRect(&pageSrcRect, 0, 0, 25, 32 * 8);
-	gameOverSrcMap = CreateOffScreenGWorld(&pageSrcRect, kPreferredDepth);
-	LoadGraphic(gameOverSrcMap, g_theHouseFile, kLettersPictID);
+	QSetRect(&g_pageSrcRect, 0, 0, 25, 32 * 8);
+	g_gameOverSrcMap = CreateOffScreenGWorld(&g_pageSrcRect, kPreferredDepth);
+	LoadGraphic(g_gameOverSrcMap, g_theHouseFile, kLettersPictID);
 
-	QSetRect(&pageSrcRect, 0, 0, 32, 32 * kPageFrames);
-	pageSrcMap = CreateOffScreenGWorld(&pageSrcRect, kPreferredDepth);
-	LoadGraphic(pageSrcMap, g_theHouseFile, kPagesPictID);
+	QSetRect(&g_pageSrcRect, 0, 0, 32, 32 * kPageFrames);
+	g_pageSrcMap = CreateOffScreenGWorld(&g_pageSrcRect, kPreferredDepth);
+	LoadGraphic(g_pageSrcMap, g_theHouseFile, kPagesPictID);
 
-	pageMaskMap = CreateOffScreenGWorld(&pageSrcRect, 1);
-	LoadGraphic(pageMaskMap, g_theHouseFile, kPagesMaskID);
+	g_pageMaskMap = CreateOffScreenGWorld(&g_pageSrcRect, 1);
+	LoadGraphic(g_pageMaskMap, g_theHouseFile, kPagesMaskID);
 
 	for (i = 0; i < kPageFrames; i++)	// initialize src page rects
 	{
-		QSetRect(&pageSrc[i], 0, 0, 32, 32);
-		QOffsetRect(&pageSrc[i], 0, 32 * i);
+		QSetRect(&g_pageSrc[i], 0, 0, 32, 32);
+		QOffsetRect(&g_pageSrc[i], 0, 32 * i);
 	}
 
 	for (i = 0; i < 8; i++)				// initialize dest page rects
 	{
-		QSetRect(&pages[i].dest, 0, 0, 32, 32);
-		CenterRectInRect(&pages[i].dest, &workSrcRect);
-		QOffsetRect(&pages[i].dest, -workSrcRect.left, -workSrcRect.top);
+		QSetRect(&g_pages[i].dest, 0, 0, 32, 32);
+		CenterRectInRect(&g_pages[i].dest, &g_workSrcRect);
+		QOffsetRect(&g_pages[i].dest, -g_workSrcRect.left, -g_workSrcRect.top);
 		if (i < 4)
-			QOffsetRect(&pages[i].dest, -kPageSpacing * (4 - i), 0);
+			QOffsetRect(&g_pages[i].dest, -kPageSpacing * (4 - i), 0);
 		else
-			QOffsetRect(&pages[i].dest, kPageSpacing * (i - 3), 0);
-		QOffsetRect(&pages[i].dest, RectWide(&workSrcRect) / -2,
-				RectWide(&workSrcRect) / -2);
-		if (pages[i].dest.left % 2 == 1)
-			QOffsetRect(&pages[i].dest, 1, 0);
-		pages[i].was = pages[i].dest;
-		pages[i].frame = 0;
-		pages[i].counter = RandomInt(32);
-		pages[i].stuck = false;
+			QOffsetRect(&g_pages[i].dest, kPageSpacing * (i - 3), 0);
+		QOffsetRect(&g_pages[i].dest, RectWide(&g_workSrcRect) / -2,
+				RectWide(&g_workSrcRect) / -2);
+		if (g_pages[i].dest.left % 2 == 1)
+			QOffsetRect(&g_pages[i].dest, 1, 0);
+		g_pages[i].was = g_pages[i].dest;
+		g_pages[i].frame = 0;
+		g_pages[i].counter = RandomInt(32);
+		g_pages[i].stuck = false;
 	}
 
 	for (i = 0; i < 8; i++)
 	{
-		QSetRect(&lettersSrc[i], 0, 0, 25, 32);
-		QOffsetRect(&lettersSrc[i], 0, 32 * i);
+		QSetRect(&g_lettersSrc[i], 0, 0, 25, 32);
+		QOffsetRect(&g_lettersSrc[i], 0, 32 * i);
 	}
 
-	roomRgn = CreateRectRgn(justRoomsRect.left, justRoomsRect.top,
-			justRoomsRect.right, justRoomsRect.bottom);
-	pagesStuck = 0;
-	stopPages = (RectTall(&workSrcRect) / 2) - 16;
+	g_roomRgn = CreateRectRgn(g_justRoomsRect.left, g_justRoomsRect.top,
+			g_justRoomsRect.right, g_justRoomsRect.bottom);
+	g_pagesStuck = 0;
+	g_stopPages = (RectTall(&g_workSrcRect) / 2) - 16;
 }
 
 //--------------------------------------------------------------  HandlePages
@@ -316,69 +316,69 @@ void HandlePages (void)
 
 	for (i = 0; i < 8; i++)
 	{
-		if ((pages[i].dest.bottom + RandomInt(8)) > stopPages)
+		if ((g_pages[i].dest.bottom + RandomInt(8)) > g_stopPages)
 		{
-			pages[i].frame = 0;
-			if (!pages[i].stuck)
+			g_pages[i].frame = 0;
+			if (!g_pages[i].stuck)
 			{
-				pages[i].dest.right = pages[i].dest.left + 25;
-				pages[i].stuck = true;
-				pagesStuck++;
+				g_pages[i].dest.right = g_pages[i].dest.left + 25;
+				g_pages[i].stuck = true;
+				g_pagesStuck++;
 			}
 		}
 		else
 		{
-			if (pages[i].frame == 0)
+			if (g_pages[i].frame == 0)
 			{
-				pages[i].counter--;
-				if (pages[i].counter <= 0)
-					pages[i].frame = 1;
+				g_pages[i].counter--;
+				if (g_pages[i].counter <= 0)
+					g_pages[i].frame = 1;
 			}
-			else if (pages[i].frame == 7)
+			else if (g_pages[i].frame == 7)
 			{
-				pages[i].counter--;
-				if (pages[i].counter <= 0)
+				g_pages[i].counter--;
+				if (g_pages[i].counter <= 0)
 				{
-					pages[i].frame = 8;
+					g_pages[i].frame = 8;
 					if (RandomInt(2) == 0)
 						PlayPrioritySound(kPaper3Sound, kPapersPriority);
 					else
 						PlayPrioritySound(kPaper4Sound, kPapersPriority);
 				}
 				else
-					QOffsetRect(&pages[i].dest, 10, 10);
+					QOffsetRect(&g_pages[i].dest, 10, 10);
 			}
 			else
 			{
-				pages[i].frame++;
-				switch (pages[i].frame)
+				g_pages[i].frame++;
+				switch (g_pages[i].frame)
 				{
 					case 5:
-					QOffsetRect(&pages[i].dest, 6, 6);
+					QOffsetRect(&g_pages[i].dest, 6, 6);
 					break;
 
 					case 6:
-					QOffsetRect(&pages[i].dest, 8, 8);
+					QOffsetRect(&g_pages[i].dest, 8, 8);
 					break;
 
 					case 7:
-					QOffsetRect(&pages[i].dest, 8, 8);
-					pages[i].counter = RandomInt(4) + 4;
+					QOffsetRect(&g_pages[i].dest, 8, 8);
+					g_pages[i].counter = RandomInt(4) + 4;
 					break;
 
 					case 8:
 					case 9:
-					QOffsetRect(&pages[i].dest, 8, 8);
+					QOffsetRect(&g_pages[i].dest, 8, 8);
 					break;
 
 					case 10:
-					QOffsetRect(&pages[i].dest, 6, 6);
+					QOffsetRect(&g_pages[i].dest, 6, 6);
 					break;
 
 					case kPageFrames:
-					QOffsetRect(&pages[i].dest, 8, 0);
-					pages[i].frame = 0;
-					pages[i].counter = RandomInt(8) + 8;
+					QOffsetRect(&g_pages[i].dest, 8, 0);
+					g_pages[i].frame = 0;
+					g_pages[i].counter = RandomInt(8) + 8;
 					if (RandomInt(2) == 0)
 						PlayPrioritySound(kPaper1Sound, kPapersPriority);
 					else
@@ -400,30 +400,30 @@ void DrawPages (void)
 
 	for (i = 0; i < 8; i++)
 	{
-		if (pages[i].stuck)
+		if (g_pages[i].stuck)
 		{
-			Mac_CopyBits(gameOverSrcMap, workSrcMap,
-					&lettersSrc[i], &pages[i].dest,
-					srcCopy, roomRgn);
+			Mac_CopyBits(g_gameOverSrcMap, g_workSrcMap,
+					&g_lettersSrc[i], &g_pages[i].dest,
+					srcCopy, g_roomRgn);
 		}
 		else
 		{
-			Mac_CopyMask(pageSrcMap, pageMaskMap, workSrcMap,
-					&pageSrc[pages[i].frame],
-					&pageSrc[pages[i].frame],
-					&pages[i].dest);
+			Mac_CopyMask(g_pageSrcMap, g_pageMaskMap, g_workSrcMap,
+					&g_pageSrc[g_pages[i].frame],
+					&g_pageSrc[g_pages[i].frame],
+					&g_pages[i].dest);
 		}
 
-		QUnionSimilarRect(&pages[i].dest, &pages[i].was, &pages[i].was);
-		AddRectToWorkRects(&pages[i].was);
-		AddRectToBackRects(&pages[i].dest);
+		QUnionSimilarRect(&g_pages[i].dest, &g_pages[i].was, &g_pages[i].was);
+		AddRectToWorkRects(&g_pages[i].was);
+		AddRectToBackRects(&g_pages[i].dest);
 
 		CopyRectsQD();
 
-		numWork2Main = 0;
-		numBack2Work = 0;
+		g_numWork2Main = 0;
+		g_numBack2Work = 0;
 
-		pages[i].was = pages[i].dest;
+		g_pages[i].was = g_pages[i].dest;
 	}
 }
 
@@ -439,10 +439,10 @@ void DoDiedGameOver (void)
 
 	userAborted = false;
 	InitDiedGameOver();
-	CopyRectMainToWork(&workSrcRect);
-	CopyRectMainToBack(&workSrcRect);
+	CopyRectMainToWork(&g_workSrcRect);
+	CopyRectMainToBack(&g_workSrcRect);
 
-	while (pagesStuck < 8)
+	while (g_pagesStuck < 8)
 	{
 		HandlePages();
 		DrawPages();
@@ -451,8 +451,8 @@ void DoDiedGameOver (void)
 			if (msg.message == WM_QUIT)
 			{
 				PostQuitMessage((int)msg.wParam);
-				quitting = true;
-				pagesStuck = 8;
+				g_quitting = true;
+				g_pagesStuck = 8;
 				userAborted = true;
 				break;
 			}
@@ -465,27 +465,27 @@ void DoDiedGameOver (void)
 			case WM_MBUTTONDOWN:
 			case WM_RBUTTONDOWN:
 			case WM_XBUTTONDOWN:
-				pagesStuck = 8;
+				g_pagesStuck = 8;
 				userAborted = true;
 				break;
 			}
 		}
 	}
 
-	if (roomRgn != nil)
-		DeleteObject(roomRgn);
+	if (g_roomRgn != nil)
+		DeleteObject(g_roomRgn);
 
-	DisposeGWorld(pageSrcMap);
-	pageSrcMap = nil;
+	DisposeGWorld(g_pageSrcMap);
+	g_pageSrcMap = nil;
 
-	DisposeGWorld(pageMaskMap);
-	pageMaskMap = nil;
+	DisposeGWorld(g_pageMaskMap);
+	g_pageMaskMap = nil;
 
-	DisposeGWorld(gameOverSrcMap);
-	gameOverSrcMap = nil;
-	playing = false;
+	DisposeGWorld(g_gameOverSrcMap);
+	g_gameOverSrcMap = nil;
+	g_playing = false;
 
-	if (demoGoing)
+	if (g_demoGoing)
 	{
 		if (!userAborted)
 			WaitForInputEvent(1);

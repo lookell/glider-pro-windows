@@ -34,10 +34,10 @@ void MakeSureNumObjectsJives (void);
 void KeepAllObjectsLegal (HWND mssgWindow);
 void CheckForStaircasePairs (HWND mssgWindow);
 
-Boolean isHouseChecks;
+Boolean g_isHouseChecks;
 
-static SInt16 houseErrors;
-static SInt16 wasRoom;
+static SInt16 g_houseErrors;
+static SInt16 g_wasRoom;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  KeepObjectLegal
@@ -57,24 +57,24 @@ Boolean KeepObjectLegal (void)
 	if (COMPILEDEMO)
 		return (unchanged);
 
-	if (objActive == kInitialGliderSelected)
+	if (g_objActive == kInitialGliderSelected)
 	{
-		if (thisHouse.initial.h < 0)
-			thisHouse.initial.h = 0;
-		if (thisHouse.initial.v < 0)
-			thisHouse.initial.v = 0;
-		if (thisHouse.initial.h > (kRoomWide - kGliderWide))
-			thisHouse.initial.h = kRoomWide - kGliderWide;
-		if (thisHouse.initial.v > (kTileHigh - kGliderHigh))
-			thisHouse.initial.v = kTileHigh - kGliderHigh;
+		if (g_thisHouse.initial.h < 0)
+			g_thisHouse.initial.h = 0;
+		if (g_thisHouse.initial.v < 0)
+			g_thisHouse.initial.v = 0;
+		if (g_thisHouse.initial.h > (kRoomWide - kGliderWide))
+			g_thisHouse.initial.h = kRoomWide - kGliderWide;
+		if (g_thisHouse.initial.v > (kTileHigh - kGliderHigh))
+			g_thisHouse.initial.v = kTileHigh - kGliderHigh;
 		return (true);
 	}
-	else if (objActive < 0 || objActive >= kMaxRoomObs)
+	else if (g_objActive < 0 || g_objActive >= kMaxRoomObs)
 	{
 		return (true);
 	}
 
-	theObject = &thisRoom->objects[objActive];
+	theObject = &g_thisRoom->objects[g_objActive];
 
 	QSetRect(&roomRect, 0, 0, kRoomWide, kTileHigh);
 
@@ -229,7 +229,7 @@ Boolean KeepObjectLegal (void)
 					(((bounds.left + 29) / 64) * 64) + 3;
 			theObject->data.b.bounds.right =
 					theObject->data.b.bounds.left +
-					RectWide(&srcRects[kManhole]);
+					RectWide(&g_srcRects[kManhole]);
 			unchanged = false;
 		}
 		break;
@@ -319,7 +319,7 @@ Boolean KeepObjectLegal (void)
 				(theObject->what == kDoorInRt))
 		{
 			if (theObject->data.d.topLeft.h +
-					HalfRectWide(&srcRects[kDoorInLf]) > (kRoomWide / 2))
+					HalfRectWide(&g_srcRects[kDoorInLf]) > (kRoomWide / 2))
 			{
 				theObject->data.d.topLeft.h = kDoorInRtLeft;
 				theObject->what = kDoorInRt;
@@ -334,7 +334,7 @@ Boolean KeepObjectLegal (void)
 				(theObject->what == kDoorExLf))
 		{
 			if (theObject->data.d.topLeft.h +
-					HalfRectWide(&srcRects[kDoorExRt]) > (kRoomWide / 2))
+					HalfRectWide(&g_srcRects[kDoorExRt]) > (kRoomWide / 2))
 			{
 				theObject->data.d.topLeft.h = kDoorExRtLeft;
 				theObject->what = kDoorExRt;
@@ -349,7 +349,7 @@ Boolean KeepObjectLegal (void)
 				(theObject->what == kWindowInRt))
 		{
 			if (theObject->data.d.topLeft.h +
-					HalfRectWide(&srcRects[kWindowInLf]) > (kRoomWide / 2))
+					HalfRectWide(&g_srcRects[kWindowInLf]) > (kRoomWide / 2))
 			{
 				theObject->data.d.topLeft.h = kWindowInRtLeft;
 				theObject->what = kWindowInRt;
@@ -364,7 +364,7 @@ Boolean KeepObjectLegal (void)
 				(theObject->what == kWindowExLf))
 		{
 			if (theObject->data.d.topLeft.h +
-					HalfRectWide(&srcRects[kWindowExRt]) > (kRoomWide / 2))
+					HalfRectWide(&g_srcRects[kWindowExRt]) > (kRoomWide / 2))
 			{
 				theObject->data.d.topLeft.h = kWindowExRtLeft;
 				theObject->what = kWindowExRt;
@@ -607,8 +607,8 @@ Boolean KeepObjectLegal (void)
 
 void WrapBannerAndTrailer (void)
 {
-	WrapText(thisHouse.banner, 40);
-	WrapText(thisHouse.trailer, 64);
+	WrapText(g_thisHouse.banner, 40);
+	WrapText(g_thisHouse.trailer, 64);
 }
 
 //--------------------------------------------------------------  ValidateNumberOfRooms
@@ -637,13 +637,13 @@ void CheckDuplicateFloorSuite (void)
 
 	ZeroMemory(&pidgeonHoles, sizeof(pidgeonHoles));
 
-	numRooms = thisHouse.nRooms;
+	numRooms = g_thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
+		if (g_thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
-			bitPlace = ((thisHouse.rooms[i].floor + 7) * 128) +
-					thisHouse.rooms[i].suite;
+			bitPlace = ((g_thisHouse.rooms[i].floor + 7) * 128) +
+					g_thisHouse.rooms[i].suite;
 			if ((bitPlace < 0) || (bitPlace >= kRoomsTimesSuites))
 			{
 				//OutputDebugString(L"Blew array\n");
@@ -651,8 +651,8 @@ void CheckDuplicateFloorSuite (void)
 			}
 			if (pidgeonHoles[bitPlace] != 0)
 			{
-				houseErrors++;
-				thisHouse.rooms[i].suite = kRoomIsEmpty;
+				g_houseErrors++;
+				g_thisHouse.rooms[i].suite = kRoomIsEmpty;
 			}
 			else
 			{
@@ -670,29 +670,29 @@ void CompressHouse (void)
 	SInt16		wasFirstRoom, roomNumber, probe;
 	Boolean		compressing, probing;
 
-	if (thisHouse.nRooms <= 0)
+	if (g_thisHouse.nRooms <= 0)
 	{
 		return;
 	}
-	wasFirstRoom = thisHouse.firstRoom;
+	wasFirstRoom = g_thisHouse.firstRoom;
 	compressing = true;
-	roomNumber = thisHouse.nRooms - 1;		// start with last room
+	roomNumber = g_thisHouse.nRooms - 1;		// start with last room
 	do
 	{
-		if (thisHouse.rooms[roomNumber].suite != kRoomIsEmpty)
+		if (g_thisHouse.rooms[roomNumber].suite != kRoomIsEmpty)
 		{									// if not an empty room
 			probe = 0;						// start looking for empty slot
 			probing = true;
 			do
 			{								// test room at probe to see if empty
-				if (thisHouse.rooms[probe].suite == kRoomIsEmpty)
+				if (g_thisHouse.rooms[probe].suite == kRoomIsEmpty)
 				{							// if it is, copy room there
-					thisHouse.rooms[probe] = thisHouse.rooms[roomNumber];
-					thisHouse.rooms[roomNumber].suite = kRoomIsEmpty;
+					g_thisHouse.rooms[probe] = g_thisHouse.rooms[roomNumber];
+					g_thisHouse.rooms[roomNumber].suite = kRoomIsEmpty;
 					if (roomNumber == wasFirstRoom)
-						thisHouse.firstRoom = probe;
-					if (roomNumber == wasRoom)
-						wasRoom = probe;
+						g_thisHouse.firstRoom = probe;
+					if (roomNumber == g_wasRoom)
+						g_wasRoom = probe;
 					probing = false;
 				}
 				probe++;					// bump probe up to next room
@@ -721,17 +721,17 @@ void LopOffExtraRooms (HWND mssgWindow)
 	wchar_t message[256];
 	roomPtr newRoomsPtr;
 
-	if (thisHouse.nRooms <= 0)
+	if (g_thisHouse.nRooms <= 0)
 	{
 		return;
 	}
 
 	count = 0;
-	r = thisHouse.nRooms;			// begin at last room
+	r = g_thisHouse.nRooms;			// begin at last room
 	do
 	{
 		r--;						// look for trailing empties
-		if (thisHouse.rooms[r].suite == kRoomIsEmpty)
+		if (g_thisHouse.rooms[r].suite == kRoomIsEmpty)
 			count++;
 		else
 			r = 0;
@@ -740,17 +740,17 @@ void LopOffExtraRooms (HWND mssgWindow)
 
 	if (count > 0)					// if there were trailing empties
 	{
-		r = thisHouse.nRooms - count;
+		r = g_thisHouse.nRooms - count;
 									// resize room array (shrink)
 		if (r <= 0)
 		{
-			free(thisHouse.rooms);
-			thisHouse.rooms = NULL;
+			free(g_thisHouse.rooms);
+			g_thisHouse.rooms = NULL;
 		}
 		else
 		{
 			newSize = sizeof(roomType) * (size_t)r;
-			newRoomsPtr = (roomPtr)realloc(thisHouse.rooms, newSize);
+			newRoomsPtr = (roomPtr)realloc(g_thisHouse.rooms, newSize);
 			if (newRoomsPtr == NULL)  // problem?
 			{
 				SetMessageTextColor(mssgWindow, redColor);
@@ -759,11 +759,11 @@ void LopOffExtraRooms (HWND mssgWindow)
 			}
 			else
 			{
-				thisHouse.rooms = newRoomsPtr;
+				g_thisHouse.rooms = newRoomsPtr;
 			}
 		}
 									// reflect new room count
-		thisHouse.nRooms -= count;
+		g_thisHouse.nRooms -= count;
 	}
 }
 
@@ -775,33 +775,33 @@ void ValidateRoomNumbers (HWND mssgWindow)
 	SInt16 i, numRooms;
 	wchar_t message[256];
 
-	numRooms = thisHouse.nRooms;
+	numRooms = g_thisHouse.nRooms;
 	if (numRooms < 0)
 	{
-		thisHouse.nRooms = 0;
+		g_thisHouse.nRooms = 0;
 		numRooms = 0;
 	}
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
+		if (g_thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
-			if ((thisHouse.rooms[i].floor > 56) ||
-					(thisHouse.rooms[i].floor < -7))
+			if ((g_thisHouse.rooms[i].floor > 56) ||
+					(g_thisHouse.rooms[i].floor < -7))
 			{
-				thisHouse.rooms[i].suite = kRoomIsEmpty;
+				g_thisHouse.rooms[i].suite = kRoomIsEmpty;
 				SetMessageTextColor(mssgWindow, redColor);
 				GetLocalizedString(17, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
-				houseErrors++;
+				g_houseErrors++;
 			}
-			if ((thisHouse.rooms[i].suite >= 128) ||
-					(thisHouse.rooms[i].suite < 0))
+			if ((g_thisHouse.rooms[i].suite >= 128) ||
+					(g_thisHouse.rooms[i].suite < 0))
 			{
-				thisHouse.rooms[i].suite = kRoomIsEmpty;
+				g_thisHouse.rooms[i].suite = kRoomIsEmpty;
 				SetMessageTextColor(mssgWindow, redColor);
 				GetLocalizedString(18, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
-				houseErrors++;
+				g_houseErrors++;
 			}
 		}
 	}
@@ -817,12 +817,12 @@ void CountUntitledRooms (void)
 
 	PasStringCopyC("Untitled Room", untitledRoomStr);
 
-	numRooms = thisHouse.nRooms;
+	numRooms = g_thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if ((thisHouse.rooms[i].suite != kRoomIsEmpty) &&
-				(PasStringEqual(thisHouse.rooms[i].name, untitledRoomStr, false)))
-			houseErrors++;
+		if ((g_thisHouse.rooms[i].suite != kRoomIsEmpty) &&
+				(PasStringEqual(g_thisHouse.rooms[i].name, untitledRoomStr, false)))
+			g_houseErrors++;
 	}
 }
 
@@ -833,16 +833,16 @@ void CheckRoomNameLength (void)
 {
 	SInt16		i, numRooms;
 
-	numRooms = thisHouse.nRooms;
+	numRooms = g_thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		thisHouse.rooms[i].unusedByte = 0;
+		g_thisHouse.rooms[i].unusedByte = 0;
 
-		if ((thisHouse.rooms[i].suite != kRoomIsEmpty) &&
-				(thisHouse.rooms[i].name[0] > 27))
+		if ((g_thisHouse.rooms[i].suite != kRoomIsEmpty) &&
+				(g_thisHouse.rooms[i].name[0] > 27))
 		{
-			thisHouse.rooms[i].name[0] = 27;
-			houseErrors++;
+			g_thisHouse.rooms[i].name[0] = 27;
+			g_houseErrors++;
 		}
 	}
 }
@@ -854,21 +854,21 @@ void MakeSureNumObjectsJives (void)
 {
 	SInt16		i, h, numRooms, count;
 
-	numRooms = thisHouse.nRooms;
+	numRooms = g_thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
+		if (g_thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
 			count = 0;
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				if (thisHouse.rooms[i].objects[h].what != kObjectIsEmpty)
+				if (g_thisHouse.rooms[i].objects[h].what != kObjectIsEmpty)
 					count++;
 			}
-			if (count != thisHouse.rooms[i].numObjects)
+			if (count != g_thisHouse.rooms[i].numObjects)
 			{
-				houseErrors++;
-				thisHouse.rooms[i].numObjects = count;
+				g_houseErrors++;
+				g_thisHouse.rooms[i].numObjects = count;
 			}
 		}
 	}
@@ -882,23 +882,23 @@ void KeepAllObjectsLegal (HWND mssgWindow)
 	SInt16 i, h, numRooms;
 	wchar_t message[256];
 
-	numRooms = thisHouse.nRooms;
+	numRooms = g_thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
+		if (g_thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
 			ForceThisRoom(i);
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				objActive = h;
-				if (thisRoom->objects[objActive].what != kObjectIsEmpty)
+				g_objActive = h;
+				if (g_thisRoom->objects[g_objActive].what != kObjectIsEmpty)
 				{
 					if (!KeepObjectLegal())
 					{
 						SetMessageTextColor(mssgWindow, redColor);
 						GetLocalizedString(19, message, ARRAYSIZE(message));
 						SetMessageWindowMessage(mssgWindow, message);
-						houseErrors++;
+						g_houseErrors++;
 						Sleep(1000);
 					}
 				}
@@ -917,16 +917,16 @@ void CheckForStaircasePairs (HWND mssgWindow)
 	Boolean hasStairs;
 	wchar_t message[256];
 
-	numRooms = thisHouse.nRooms;
+	numRooms = g_thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (thisHouse.rooms[i].suite != kRoomIsEmpty)
+		if (g_thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				if (thisHouse.rooms[i].objects[h].what == kUpStairs)
+				if (g_thisHouse.rooms[i].objects[h].what == kUpStairs)
 				{
-					thisRoomNumber = i;
+					g_thisRoomNumber = i;
 					neighbor = GetNeighborRoomNumber(kNorthRoom);
 					if (neighbor == kRoomIsEmpty)
 					{
@@ -940,7 +940,7 @@ void CheckForStaircasePairs (HWND mssgWindow)
 						hasStairs = false;
 						for (g = 0; g < kMaxRoomObs; g++)
 						{
-							if (thisHouse.rooms[neighbor].objects[g].what == kDownStairs)
+							if (g_thisHouse.rooms[neighbor].objects[g].what == kDownStairs)
 								hasStairs = true;
 						}
 						if (!hasStairs)
@@ -952,9 +952,9 @@ void CheckForStaircasePairs (HWND mssgWindow)
 						}
 					}
 				}
-				else if (thisHouse.rooms[i].objects[h].what == kDownStairs)
+				else if (g_thisHouse.rooms[i].objects[h].what == kDownStairs)
 				{
-					thisRoomNumber = i;
+					g_thisRoomNumber = i;
 					neighbor = GetNeighborRoomNumber(kSouthRoom);
 					if (neighbor == kRoomIsEmpty)
 					{
@@ -968,7 +968,7 @@ void CheckForStaircasePairs (HWND mssgWindow)
 						hasStairs = false;
 						for (g = 0; g < kMaxRoomObs; g++)
 						{
-							if (thisHouse.rooms[neighbor].objects[g].what == kUpStairs)
+							if (g_thisHouse.rooms[neighbor].objects[g].what == kUpStairs)
 								hasStairs = true;
 						}
 						if (!hasStairs)
@@ -998,41 +998,41 @@ void CheckHouseForProblems (void)
 	if (COMPILEDEMO)
 		return;
 
-	houseErrors = 0;
+	g_houseErrors = 0;
 	CopyThisRoomToRoom();
-	wasRoom = thisRoomNumber;
-	wasActive = objActive;
+	g_wasRoom = g_thisRoomNumber;
+	wasActive = g_objActive;
 	GetLocalizedString(24, message, ARRAYSIZE(message));
-	mssgWindow = OpenMessageWindow(message, mainWindow);
+	mssgWindow = OpenMessageWindow(message, g_mainWindow);
 
 	SetMessageTextColor(mssgWindow, blackColor);
 	GetLocalizedString(25, message, ARRAYSIZE(message));
 	SetMessageWindowMessage(mssgWindow, message);
 	WrapBannerAndTrailer();
 
-	if (isHouseChecks)
+	if (g_isHouseChecks)
 	{
 		SetMessageTextColor(mssgWindow, blackColor);
 		GetLocalizedString(26, message, ARRAYSIZE(message));
 		SetMessageWindowMessage(mssgWindow, message);
 		ValidateNumberOfRooms();
-		if (houseErrors != 0)
+		if (g_houseErrors != 0)
 		{
 			SetMessageTextColor(mssgWindow, blackColor);
 			GetLocalizedString(27, message, ARRAYSIZE(message));
 			SetMessageWindowMessage(mssgWindow, message);
 			Sleep(1000);
-			houseErrors = 0;
+			g_houseErrors = 0;
 		}
 	}
 
-	if (isHouseChecks)
+	if (g_isHouseChecks)
 	{
-		houseErrors = 0;
+		g_houseErrors = 0;
 		CheckDuplicateFloorSuite();
-		if (houseErrors != 0)
+		if (g_houseErrors != 0)
 		{
-			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
+			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)g_houseErrors);
 			GetLocalizedString(28, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, redColor);
@@ -1044,12 +1044,12 @@ void CheckHouseForProblems (void)
 	CompressHouse();
 	LopOffExtraRooms(mssgWindow);
 
-	if (isHouseChecks)
+	if (g_isHouseChecks)
 	{
 		ValidateRoomNumbers(mssgWindow);
-		if (houseErrors != 0)
+		if (g_houseErrors != 0)
 		{
-			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
+			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)g_houseErrors);
 			GetLocalizedString(29, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, redColor);
@@ -1058,13 +1058,13 @@ void CheckHouseForProblems (void)
 		}
 	}
 
-	if (isHouseChecks)
+	if (g_isHouseChecks)
 	{
-		houseErrors = 0;
+		g_houseErrors = 0;
 		CountUntitledRooms();
-		if (houseErrors != 0)
+		if (g_houseErrors != 0)
 		{
-			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
+			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)g_houseErrors);
 			GetLocalizedString(30, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, blueColor);
@@ -1073,13 +1073,13 @@ void CheckHouseForProblems (void)
 		}
 	}
 
-	if (isHouseChecks)
+	if (g_isHouseChecks)
 	{
-		houseErrors = 0;
+		g_houseErrors = 0;
 		CheckRoomNameLength();
-		if (houseErrors != 0)
+		if (g_houseErrors != 0)
 		{
-			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
+			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)g_houseErrors);
 			GetLocalizedString(31, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, blueColor);
@@ -1088,13 +1088,13 @@ void CheckHouseForProblems (void)
 		}
 	}
 
-	if (isHouseChecks)
+	if (g_isHouseChecks)
 	{
-		houseErrors = 0;
+		g_houseErrors = 0;
 		MakeSureNumObjectsJives();
-		if (houseErrors != 0)
+		if (g_houseErrors != 0)
 		{
-			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
+			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)g_houseErrors);
 			GetLocalizedString(32, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, redColor);
@@ -1103,16 +1103,16 @@ void CheckHouseForProblems (void)
 		}
 	}
 
-	if (isHouseChecks)
+	if (g_isHouseChecks)
 	{
-		houseErrors = 0;
+		g_houseErrors = 0;
 		SetMessageTextColor(mssgWindow, blackColor);
 		GetLocalizedString(33, message, ARRAYSIZE(message));
 		SetMessageWindowMessage(mssgWindow, message);
 		KeepAllObjectsLegal(mssgWindow);
-		if (houseErrors != 0)
+		if (g_houseErrors != 0)
 		{
-			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)houseErrors);
+			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)g_houseErrors);
 			GetLocalizedString(34, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, redColor);
@@ -1121,13 +1121,13 @@ void CheckHouseForProblems (void)
 		}
 	}
 
-	if (isHouseChecks)
+	if (g_isHouseChecks)
 	{
-		houseErrors = 0;
+		g_houseErrors = 0;
 		CheckForStaircasePairs(mssgWindow);
 	}
 
-	if (isHouseChecks)
+	if (g_isHouseChecks)
 	{
 		if (CountStarsInHouse() < 1)
 		{
@@ -1139,6 +1139,6 @@ void CheckHouseForProblems (void)
 	}
 
 	CloseMessageWindow(mssgWindow);
-	ForceThisRoom(wasRoom);
-	objActive = wasActive;
+	ForceThisRoom(g_wasRoom);
+	g_objActive = wasActive;
 }

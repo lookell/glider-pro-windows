@@ -11,18 +11,18 @@
 #include "ResourceLoader.h"
 #include "WinAPI.h"
 
-extern Movie theMovie;
-extern Rect movieRect;
-extern SInt16 wasHouseVersion;
-extern Boolean houseOpen;
-extern Boolean fileDirty;
-extern Boolean gameDirty;
+extern Movie g_theMovie;
+extern Rect g_movieRect;
+extern SInt16 g_wasHouseVersion;
+extern Boolean g_houseOpen;
+extern Boolean g_fileDirty;
+extern Boolean g_gameDirty;
 extern Gp_HouseFile *g_theHouseFile;
-extern Boolean changeLockStateOfHouse;
-extern Boolean saveHouseLocked;
-extern Boolean houseIsReadOnly;
-extern Boolean hasMovie;
-extern Boolean tvInRoom;
+extern Boolean g_changeLockStateOfHouse;
+extern Boolean g_saveHouseLocked;
+extern Boolean g_houseIsReadOnly;
+extern Boolean g_hasMovie;
+extern Boolean g_tvInRoom;
 
 Boolean OpenHouse (HWND ownerWindow);
 Boolean OpenSpecificHouse (PCWSTR filename, HWND ownerWindow);

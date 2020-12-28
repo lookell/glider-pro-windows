@@ -52,17 +52,17 @@ void DoNotInDemo (HWND ownerWindow);
 void HeyYourPissingAHighScore (HWND ownerWindow);
 void OpenCloseEditWindows (void);
 
-HMENU theMenuBar;
-HMENU appleMenu;
-HMENU gameMenu;
-HMENU optionsMenu;
-HMENU houseMenu;
-LPWSTR appleMenuTitle;
-LPWSTR gameMenuTitle;
-LPWSTR optionsMenuTitle;
-LPWSTR houseMenuTitle;
-Boolean menusUp;
-Boolean resumedSavedGame;
+HMENU g_theMenuBar;
+HMENU g_appleMenu;
+HMENU g_gameMenu;
+HMENU g_optionsMenu;
+HMENU g_houseMenu;
+LPWSTR g_appleMenuTitle;
+LPWSTR g_gameMenuTitle;
+LPWSTR g_optionsMenuTitle;
+LPWSTR g_houseMenuTitle;
+Boolean g_menusUp;
+Boolean g_resumedSavedGame;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  UpdateMenusEditMode
@@ -70,12 +70,12 @@ Boolean resumedSavedGame;
 
 void UpdateMenusEditMode (void)
 {
-	EnableMenuItem(gameMenu, ID_NEW_GAME, MF_GRAYED);
-	EnableMenuItem(gameMenu, ID_TWO_PLAYER, MF_GRAYED);
-	EnableMenuItem(gameMenu, ID_OPEN_SAVED_GAME, MF_GRAYED);
-	EnableMenuItem(optionsMenu, ID_HIGH_SCORES, MF_GRAYED);
-	EnableMenuItem(optionsMenu, ID_DEMO, MF_GRAYED);
-	CheckMenuItem(optionsMenu, ID_EDITOR, MF_CHECKED);
+	EnableMenuItem(g_gameMenu, ID_NEW_GAME, MF_GRAYED);
+	EnableMenuItem(g_gameMenu, ID_TWO_PLAYER, MF_GRAYED);
+	EnableMenuItem(g_gameMenu, ID_OPEN_SAVED_GAME, MF_GRAYED);
+	EnableMenuItem(g_optionsMenu, ID_HIGH_SCORES, MF_GRAYED);
+	EnableMenuItem(g_optionsMenu, ID_DEMO, MF_GRAYED);
+	CheckMenuItem(g_optionsMenu, ID_EDITOR, MF_CHECKED);
 }
 
 //--------------------------------------------------------------  UpdateMenusNonEditMode
@@ -83,35 +83,35 @@ void UpdateMenusEditMode (void)
 
 void UpdateMenusNonEditMode (void)
 {
-	if ((noRoomAtAll) || (!houseOpen) || (thisHouse.nRooms <= 0))
+	if ((g_noRoomAtAll) || (!g_houseOpen) || (g_thisHouse.nRooms <= 0))
 	{
-		EnableMenuItem(gameMenu, ID_NEW_GAME, MF_GRAYED);
-		EnableMenuItem(gameMenu, ID_TWO_PLAYER, MF_GRAYED);
-		EnableMenuItem(gameMenu, ID_OPEN_SAVED_GAME, MF_GRAYED);
-		if (houseOpen)
+		EnableMenuItem(g_gameMenu, ID_NEW_GAME, MF_GRAYED);
+		EnableMenuItem(g_gameMenu, ID_TWO_PLAYER, MF_GRAYED);
+		EnableMenuItem(g_gameMenu, ID_OPEN_SAVED_GAME, MF_GRAYED);
+		if (g_houseOpen)
 		{
-			EnableMenuItem(gameMenu, ID_LOAD_HOUSE, MF_ENABLED);
-			EnableMenuItem(optionsMenu, ID_HIGH_SCORES, MF_ENABLED);
+			EnableMenuItem(g_gameMenu, ID_LOAD_HOUSE, MF_ENABLED);
+			EnableMenuItem(g_optionsMenu, ID_HIGH_SCORES, MF_ENABLED);
 		}
 		else
 		{
-			EnableMenuItem(gameMenu, ID_LOAD_HOUSE, MF_GRAYED);
-			EnableMenuItem(optionsMenu, ID_HIGH_SCORES, MF_GRAYED);
+			EnableMenuItem(g_gameMenu, ID_LOAD_HOUSE, MF_GRAYED);
+			EnableMenuItem(g_optionsMenu, ID_HIGH_SCORES, MF_GRAYED);
 		}
 	}
 	else
 	{
-		EnableMenuItem(gameMenu, ID_NEW_GAME, MF_ENABLED);
-		EnableMenuItem(gameMenu, ID_TWO_PLAYER, MF_ENABLED);
-		EnableMenuItem(gameMenu, ID_OPEN_SAVED_GAME, MF_ENABLED);
-		EnableMenuItem(gameMenu, ID_LOAD_HOUSE, MF_ENABLED);
-		EnableMenuItem(optionsMenu, ID_HIGH_SCORES, MF_ENABLED);
+		EnableMenuItem(g_gameMenu, ID_NEW_GAME, MF_ENABLED);
+		EnableMenuItem(g_gameMenu, ID_TWO_PLAYER, MF_ENABLED);
+		EnableMenuItem(g_gameMenu, ID_OPEN_SAVED_GAME, MF_ENABLED);
+		EnableMenuItem(g_gameMenu, ID_LOAD_HOUSE, MF_ENABLED);
+		EnableMenuItem(g_optionsMenu, ID_HIGH_SCORES, MF_ENABLED);
 	}
-	if (demoHouseIndex == -1)
-		EnableMenuItem(optionsMenu, ID_DEMO, MF_GRAYED);
+	if (g_demoHouseIndex == -1)
+		EnableMenuItem(g_optionsMenu, ID_DEMO, MF_GRAYED);
 	else
-		EnableMenuItem(optionsMenu, ID_DEMO, MF_ENABLED);
-	CheckMenuItem(optionsMenu, ID_EDITOR, MF_UNCHECKED);
+		EnableMenuItem(g_optionsMenu, ID_DEMO, MF_ENABLED);
+	CheckMenuItem(g_optionsMenu, ID_EDITOR, MF_UNCHECKED);
 }
 
 //--------------------------------------------------------------  UpdateMenusHouseOpen
@@ -119,45 +119,45 @@ void UpdateMenusNonEditMode (void)
 
 void UpdateMenusHouseOpen (void)
 {
-	EnableMenuItem(gameMenu, ID_LOAD_HOUSE, MF_ENABLED);
-	if ((fileDirty) && (houseUnlocked))
-		EnableMenuItem(houseMenu, ID_SAVE_HOUSE, MF_ENABLED);
+	EnableMenuItem(g_gameMenu, ID_LOAD_HOUSE, MF_ENABLED);
+	if ((g_fileDirty) && (g_houseUnlocked))
+		EnableMenuItem(g_houseMenu, ID_SAVE_HOUSE, MF_ENABLED);
 	else
-		EnableMenuItem(houseMenu, ID_SAVE_HOUSE, MF_GRAYED);
-	if (houseUnlocked)
+		EnableMenuItem(g_houseMenu, ID_SAVE_HOUSE, MF_GRAYED);
+	if (g_houseUnlocked)
 	{
-		// EnableMenuItem(houseMenu, iSaveAs);
-		EnableMenuItem(houseMenu, ID_HOUSE_INFO, MF_ENABLED);
+		// EnableMenuItem(g_houseMenu, iSaveAs);
+		EnableMenuItem(g_houseMenu, ID_HOUSE_INFO, MF_ENABLED);
 	}
 	else
 	{
-		// DisableMenuItem(houseMenu, iSaveAs);
-		EnableMenuItem(houseMenu, ID_HOUSE_INFO, MF_GRAYED);
+		// DisableMenuItem(g_houseMenu, iSaveAs);
+		EnableMenuItem(g_houseMenu, ID_HOUSE_INFO, MF_GRAYED);
 	}
-	if ((noRoomAtAll) || (!houseUnlocked))
-		EnableMenuItem(houseMenu, ID_ROOM_INFO, MF_GRAYED);
+	if ((g_noRoomAtAll) || (!g_houseUnlocked))
+		EnableMenuItem(g_houseMenu, ID_ROOM_INFO, MF_GRAYED);
 	else
-		EnableMenuItem(houseMenu, ID_ROOM_INFO, MF_ENABLED);
-	if ((objActive == kNoObjectSelected) || (!houseUnlocked))
+		EnableMenuItem(g_houseMenu, ID_ROOM_INFO, MF_ENABLED);
+	if ((g_objActive == kNoObjectSelected) || (!g_houseUnlocked))
 	{
-		EnableMenuItem(houseMenu, ID_OBJECT_INFO, MF_GRAYED);
-		EnableMenuItem(houseMenu, ID_BRING_FORWARD, MF_GRAYED);
-		EnableMenuItem(houseMenu, ID_SEND_BACK, MF_GRAYED);
+		EnableMenuItem(g_houseMenu, ID_OBJECT_INFO, MF_GRAYED);
+		EnableMenuItem(g_houseMenu, ID_BRING_FORWARD, MF_GRAYED);
+		EnableMenuItem(g_houseMenu, ID_SEND_BACK, MF_GRAYED);
 	}
 	else
 	{
-		EnableMenuItem(houseMenu, ID_OBJECT_INFO, MF_ENABLED);
-		if ((objActive == kInitialGliderSelected) ||
-				(objActive == kLeftGliderSelected) ||
-				(objActive == kRightGliderSelected))
+		EnableMenuItem(g_houseMenu, ID_OBJECT_INFO, MF_ENABLED);
+		if ((g_objActive == kInitialGliderSelected) ||
+				(g_objActive == kLeftGliderSelected) ||
+				(g_objActive == kRightGliderSelected))
 		{
-			EnableMenuItem(houseMenu, ID_BRING_FORWARD, MF_GRAYED);
-			EnableMenuItem(houseMenu, ID_SEND_BACK, MF_GRAYED);
+			EnableMenuItem(g_houseMenu, ID_BRING_FORWARD, MF_GRAYED);
+			EnableMenuItem(g_houseMenu, ID_SEND_BACK, MF_GRAYED);
 		}
 		else
 		{
-			EnableMenuItem(houseMenu, ID_BRING_FORWARD, MF_ENABLED);
-			EnableMenuItem(houseMenu, ID_SEND_BACK, MF_ENABLED);
+			EnableMenuItem(g_houseMenu, ID_BRING_FORWARD, MF_ENABLED);
+			EnableMenuItem(g_houseMenu, ID_SEND_BACK, MF_ENABLED);
 		}
 	}
 }
@@ -167,17 +167,17 @@ void UpdateMenusHouseOpen (void)
 
 void UpdateMenusHouseClosed (void)
 {
-	EnableMenuItem(gameMenu, ID_LOAD_HOUSE, MF_GRAYED);
-	EnableMenuItem(houseMenu, ID_SAVE_HOUSE, MF_GRAYED);
-	// DisableMenuItem(houseMenu, iSaveAs);
-	EnableMenuItem(houseMenu, ID_HOUSE_INFO, MF_GRAYED);
-	EnableMenuItem(houseMenu, ID_ROOM_INFO, MF_GRAYED);
-	EnableMenuItem(houseMenu, ID_OBJECT_INFO, MF_GRAYED);
-	EnableMenuItem(houseMenu, ID_CUT, MF_GRAYED);
-	EnableMenuItem(houseMenu, ID_COPY, MF_GRAYED);
-	EnableMenuItem(houseMenu, ID_PASTE, MF_GRAYED);
-	EnableMenuItem(houseMenu, ID_CLEAR, MF_GRAYED);
-	EnableMenuItem(houseMenu, ID_DUPLICATE, MF_GRAYED);
+	EnableMenuItem(g_gameMenu, ID_LOAD_HOUSE, MF_GRAYED);
+	EnableMenuItem(g_houseMenu, ID_SAVE_HOUSE, MF_GRAYED);
+	// DisableMenuItem(g_houseMenu, iSaveAs);
+	EnableMenuItem(g_houseMenu, ID_HOUSE_INFO, MF_GRAYED);
+	EnableMenuItem(g_houseMenu, ID_ROOM_INFO, MF_GRAYED);
+	EnableMenuItem(g_houseMenu, ID_OBJECT_INFO, MF_GRAYED);
+	EnableMenuItem(g_houseMenu, ID_CUT, MF_GRAYED);
+	EnableMenuItem(g_houseMenu, ID_COPY, MF_GRAYED);
+	EnableMenuItem(g_houseMenu, ID_PASTE, MF_GRAYED);
+	EnableMenuItem(g_houseMenu, ID_CLEAR, MF_GRAYED);
+	EnableMenuItem(g_houseMenu, ID_DUPLICATE, MF_GRAYED);
 }
 
 //--------------------------------------------------------------  UpdateClipboardMenus
@@ -200,71 +200,71 @@ void UpdateClipboardMenus (void)
 {
 	wchar_t title[256];
 
-	if (!houseOpen)
+	if (!g_houseOpen)
 		return;
 
-	if (houseUnlocked)
+	if (g_houseUnlocked)
 	{
-		if (objActive > kNoObjectSelected)
+		if (g_objActive > kNoObjectSelected)
 		{
 			GetLocalizedString(36, title, ARRAYSIZE(title));
-			SetMenuItemText(houseMenu, ID_CUT, title);
+			SetMenuItemText(g_houseMenu, ID_CUT, title);
 			GetLocalizedString(37, title, ARRAYSIZE(title));
-			SetMenuItemText(houseMenu, ID_COPY, title);
+			SetMenuItemText(g_houseMenu, ID_COPY, title);
 			GetLocalizedString(38, title, ARRAYSIZE(title));
-			SetMenuItemText(houseMenu, ID_CLEAR, title);
-			EnableMenuItem(houseMenu, ID_DUPLICATE, MF_ENABLED);
+			SetMenuItemText(g_houseMenu, ID_CLEAR, title);
+			EnableMenuItem(g_houseMenu, ID_DUPLICATE, MF_ENABLED);
 		}
 		else
 		{
 			GetLocalizedString(39, title, ARRAYSIZE(title));
-			SetMenuItemText(houseMenu, ID_CUT, title);
+			SetMenuItemText(g_houseMenu, ID_CUT, title);
 			GetLocalizedString(40, title, ARRAYSIZE(title));
-			SetMenuItemText(houseMenu, ID_COPY, title);
+			SetMenuItemText(g_houseMenu, ID_COPY, title);
 			GetLocalizedString(41, title, ARRAYSIZE(title));
-			SetMenuItemText(houseMenu, ID_CLEAR, title);
-			EnableMenuItem(houseMenu, ID_DUPLICATE, MF_GRAYED);
+			SetMenuItemText(g_houseMenu, ID_CLEAR, title);
+			EnableMenuItem(g_houseMenu, ID_DUPLICATE, MF_GRAYED);
 		}
 
-		EnableMenuItem(houseMenu, ID_CUT, MF_ENABLED);
-		EnableMenuItem(houseMenu, ID_COPY, MF_ENABLED);
-		if (hasScrap)
+		EnableMenuItem(g_houseMenu, ID_CUT, MF_ENABLED);
+		EnableMenuItem(g_houseMenu, ID_COPY, MF_ENABLED);
+		if (g_hasScrap)
 		{
-			EnableMenuItem(houseMenu, ID_PASTE, MF_ENABLED);
-			if (scrapIsARoom)
+			EnableMenuItem(g_houseMenu, ID_PASTE, MF_ENABLED);
+			if (g_scrapIsARoom)
 			{
 				GetLocalizedString(42, title, ARRAYSIZE(title));
-				SetMenuItemText(houseMenu, ID_PASTE, title);
+				SetMenuItemText(g_houseMenu, ID_PASTE, title);
 			}
 			else
 			{
 				GetLocalizedString(43, title, ARRAYSIZE(title));
-				SetMenuItemText(houseMenu, ID_PASTE, title);
+				SetMenuItemText(g_houseMenu, ID_PASTE, title);
 			}
 		}
 		else
 		{
-			EnableMenuItem(houseMenu, ID_PASTE, MF_GRAYED);
+			EnableMenuItem(g_houseMenu, ID_PASTE, MF_GRAYED);
 			GetLocalizedString(44, title, ARRAYSIZE(title));
-			SetMenuItemText(houseMenu, ID_PASTE, title);
+			SetMenuItemText(g_houseMenu, ID_PASTE, title);
 		}
-		EnableMenuItem(houseMenu, ID_CLEAR, MF_ENABLED);
-		EnableMenuItem(houseMenu, ID_GO_TO_ROOM, MF_ENABLED);
-		EnableMenuItem(houseMenu, ID_MAP_WINDOW, MF_ENABLED);
-		EnableMenuItem(houseMenu, ID_OBJECT_WINDOW, MF_ENABLED);
-		EnableMenuItem(houseMenu, ID_COORDINATE_WINDOW, MF_ENABLED);
+		EnableMenuItem(g_houseMenu, ID_CLEAR, MF_ENABLED);
+		EnableMenuItem(g_houseMenu, ID_GO_TO_ROOM, MF_ENABLED);
+		EnableMenuItem(g_houseMenu, ID_MAP_WINDOW, MF_ENABLED);
+		EnableMenuItem(g_houseMenu, ID_OBJECT_WINDOW, MF_ENABLED);
+		EnableMenuItem(g_houseMenu, ID_COORDINATE_WINDOW, MF_ENABLED);
 	}
 	else
 	{
-		EnableMenuItem(houseMenu, ID_CUT, MF_GRAYED);
-		EnableMenuItem(houseMenu, ID_COPY, MF_GRAYED);
-		EnableMenuItem(houseMenu, ID_PASTE, MF_GRAYED);
-		EnableMenuItem(houseMenu, ID_CLEAR, MF_GRAYED);
-		EnableMenuItem(houseMenu, ID_DUPLICATE, MF_GRAYED);
-		EnableMenuItem(houseMenu, ID_GO_TO_ROOM, MF_GRAYED);
-		EnableMenuItem(houseMenu, ID_MAP_WINDOW, MF_GRAYED);
-		EnableMenuItem(houseMenu, ID_OBJECT_WINDOW, MF_GRAYED);
-		EnableMenuItem(houseMenu, ID_COORDINATE_WINDOW, MF_GRAYED);
+		EnableMenuItem(g_houseMenu, ID_CUT, MF_GRAYED);
+		EnableMenuItem(g_houseMenu, ID_COPY, MF_GRAYED);
+		EnableMenuItem(g_houseMenu, ID_PASTE, MF_GRAYED);
+		EnableMenuItem(g_houseMenu, ID_CLEAR, MF_GRAYED);
+		EnableMenuItem(g_houseMenu, ID_DUPLICATE, MF_GRAYED);
+		EnableMenuItem(g_houseMenu, ID_GO_TO_ROOM, MF_GRAYED);
+		EnableMenuItem(g_houseMenu, ID_MAP_WINDOW, MF_GRAYED);
+		EnableMenuItem(g_houseMenu, ID_OBJECT_WINDOW, MF_GRAYED);
+		EnableMenuItem(g_houseMenu, ID_COORDINATE_WINDOW, MF_GRAYED);
 	}
 }
 
@@ -278,30 +278,30 @@ void UpdateMenus (Boolean newMode)
 {
 	MENUITEMINFO mii;
 
-	if (!menusUp)
+	if (!g_menusUp)
 		return;
 
 	if (newMode)
 	{
-		if (theMode == kEditMode)
+		if (g_theMode == kEditMode)
 		{
 			mii.cbSize = sizeof(mii);
 			mii.fMask = MIIM_ID | MIIM_STRING | MIIM_SUBMENU;
 			mii.wID = kHouseMenuID;
-			mii.hSubMenu = houseMenu;
-			mii.dwTypeData = houseMenuTitle;
-			InsertMenuItem(theMenuBar, kAppleMenuID, FALSE, &mii);
+			mii.hSubMenu = g_houseMenu;
+			mii.dwTypeData = g_houseMenuTitle;
+			InsertMenuItem(g_theMenuBar, kAppleMenuID, FALSE, &mii);
 		}
 		else
 		{
-			RemoveMenu(theMenuBar, kHouseMenuID, MF_BYCOMMAND);
+			RemoveMenu(g_theMenuBar, kHouseMenuID, MF_BYCOMMAND);
 		}
 	}
 
-	if (theMode == kEditMode)
+	if (g_theMode == kEditMode)
 	{
 		UpdateMenusEditMode();
-		if (houseOpen)
+		if (g_houseOpen)
 		{
 			UpdateMenusHouseOpen();
 			UpdateClipboardMenus();
@@ -313,8 +313,8 @@ void UpdateMenus (Boolean newMode)
 	else
 		UpdateMenusNonEditMode();
 
-	if (mainWindow != NULL)
-		DrawMenuBar(mainWindow);
+	if (g_mainWindow != NULL)
+		DrawMenuBar(g_mainWindow);
 }
 
 //--------------------------------------------------------------  DoAppleMenu
@@ -338,29 +338,29 @@ void DoGameMenu (HWND hwnd, SInt16 theItem)
 	switch (theItem)
 	{
 		case iNewGame:
-		twoPlayerGame = false;
-		resumedSavedGame = false;
+		g_twoPlayerGame = false;
+		g_resumedSavedGame = false;
 		DisableMenuBar();
-		NewGame(hwnd, kNewGameMode, thisHouseIndex);
+		NewGame(hwnd, kNewGameMode, g_thisHouseIndex);
 		EnableMenuBar();
 		break;
 
 		case iTwoPlayer:
-		twoPlayerGame = true;
-		resumedSavedGame = false;
+		g_twoPlayerGame = true;
+		g_resumedSavedGame = false;
 		DisableMenuBar();
-		NewGame(hwnd, kNewGameMode, thisHouseIndex);
+		NewGame(hwnd, kNewGameMode, g_thisHouseIndex);
 		EnableMenuBar();
 		break;
 
 		case iOpenSavedGame:
-		resumedSavedGame = true;
+		g_resumedSavedGame = true;
 		HeyYourPissingAHighScore(hwnd);
 		if (OpenSavedGame(hwnd))
 		{
-			twoPlayerGame = false;
+			g_twoPlayerGame = false;
 			DisableMenuBar();
-			NewGame(hwnd, kResumeGameMode, thisHouseIndex);
+			NewGame(hwnd, kResumeGameMode, g_thisHouseIndex);
 			EnableMenuBar();
 		}
 		break;
@@ -371,31 +371,31 @@ void DoGameMenu (HWND hwnd, SInt16 theItem)
 			DoNotInDemo(hwnd);
 			return;
 		}
-		if (splashDrawn)
+		if (g_splashDrawn)
 		{
 			DoLoadHouse(hwnd);
 			OpenCloseEditWindows();
 			UpdateMenus(false);
-			incrementModeTime = timeGetTime() + kIdleSplashTime;
-			if ((theMode == kSplashMode) || (theMode == kPlayMode))
+			g_incrementModeTime = timeGetTime() + kIdleSplashTime;
+			if ((g_theMode == kSplashMode) || (g_theMode == kPlayMode))
 			{
 				Rect updateRect;
 
 				QSetRect(&updateRect, 0, 0, 210, 20);
-				QOffsetRect(&updateRect, splashOriginH + 430, splashOriginV + 300);
-				Mac_InvalWindowRect(mainWindow, &updateRect);
+				QOffsetRect(&updateRect, g_splashOriginH + 430, g_splashOriginV + 300);
+				Mac_InvalWindowRect(g_mainWindow, &updateRect);
 			}
 		}
 		break;
 
 		case iQuit:
-		quitting = true;
+		g_quitting = true;
 		if (!COMPILEDEMO)
 		{
 			if (!QuerySaveChanges(hwnd))
-				quitting = false;
+				g_quitting = false;
 		}
-		if (quitting)
+		if (g_quitting)
 			PostQuitMessage(0);
 		break;
 
@@ -417,9 +417,9 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 			DoNotInDemo(hwnd);
 			return;
 		}
-		if (theMode == kEditMode)			// switching to splash mode
+		if (g_theMode == kEditMode)			// switching to splash mode
 		{
-			if (fileDirty)
+			if (g_fileDirty)
 				SortHouseObjects();
 			if (!QuerySaveChanges(hwnd))
 				break;
@@ -430,15 +430,15 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 			DeselectObject();
 			StopMarquee();
 			CloseMainWindow();
-			theMode = kSplashMode;
+			g_theMode = kSplashMode;
 			OpenMainWindow();
-			incrementModeTime = timeGetTime() + kIdleSplashTime;
+			g_incrementModeTime = timeGetTime() + kIdleSplashTime;
 		}
-		else if (theMode == kSplashMode)	// switching to edit mode
+		else if (g_theMode == kSplashMode)	// switching to edit mode
 		{
 			StopTheMusic();
 			CloseMainWindow();
-			theMode = kEditMode;
+			g_theMode = kEditMode;
 			OpenMainWindow();
 			OpenCloseEditWindows();
 		}
@@ -448,14 +448,14 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 		case iHighScores:
 		DisableMenuBar();
 		DoHighScores();
-		RedrawSplashScreen(thisHouseIndex);
+		RedrawSplashScreen(g_thisHouseIndex);
 		EnableMenuBar();
-		incrementModeTime = timeGetTime() + kIdleSplashTime;
+		g_incrementModeTime = timeGetTime() + kIdleSplashTime;
 		break;
 
 		case iPrefs:
 		DoSettingsMain(hwnd);
-		incrementModeTime = timeGetTime() + kIdleSplashTime;
+		g_incrementModeTime = timeGetTime() + kIdleSplashTime;
 		break;
 
 		case iHelp:
@@ -476,7 +476,7 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 	if (COMPILEDEMO)
 		return;
 
-	if (theMode != kEditMode)
+	if (g_theMode != kEditMode)
 		return;
 
 	switch (theItem)
@@ -491,17 +491,17 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 
 		case iSave:
 		DeselectObject();
-		if (fileDirty)
+		if (g_fileDirty)
 			SortHouseObjects();
-		if ((fileDirty) && (houseUnlocked))
+		if ((g_fileDirty) && (g_houseUnlocked))
 		{
 //			SaveGame(false);
-			if (wasHouseVersion < kHouseVersion)
+			if (g_wasHouseVersion < kHouseVersion)
 				ConvertHouseVer1To2();
-			wasHouseVersion = kHouseVersion;
+			g_wasHouseVersion = kHouseVersion;
 			whoCares = WriteHouse(hwnd, true);
-			ForceThisRoom(thisRoomNumber);
-			ReadyBackground(thisRoom->background, thisRoom->tiles);
+			ForceThisRoom(g_thisRoomNumber);
+			ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 			GetThisRoomsObjRects();
 			DrawThisRoomsObjects();
 		}
@@ -512,17 +512,17 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 //		break;
 
 		case iHouse:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 			DoHouseInfo(hwnd);
 		break;
 
 		case iRoom:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 			DoRoomInfo(hwnd);
 		break;
 
 		case iObject:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 		{
 			DoObjectInfo(hwnd);
 			StartMarqueeForActiveObject();
@@ -530,9 +530,9 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 		break;
 
 		case iCut:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 		{
-			if (objActive > kNoObjectSelected)
+			if (g_objActive > kNoObjectSelected)
 			{
 				PutObjectScrap();
 				Gp_DeleteObject();
@@ -547,9 +547,9 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 		break;
 
 		case iCopy:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 		{
-			if (objActive > kNoObjectSelected)
+			if (g_objActive > kNoObjectSelected)
 				PutObjectScrap();
 			else
 				PutRoomScrap();
@@ -558,9 +558,9 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 		break;
 
 		case iPaste:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 		{
-			if (scrapIsARoom)
+			if (g_scrapIsARoom)
 				GetRoomScrap();
 			else
 				GetObjectScrap();
@@ -569,9 +569,9 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 		break;
 
 		case iClear:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 		{
-			if (objActive > kNoObjectSelected)
+			if (g_objActive > kNoObjectSelected)
 				Gp_DeleteObject();
 			else
 				DeleteRoom(hwnd, false);
@@ -580,37 +580,37 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 		break;
 
 		case iDuplicate:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 			DuplicateObject(hwnd);
 		break;
 
 		case iBringForward:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 			BringSendFrontBack(hwnd, true);
 		break;
 
 		case iSendBack:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 			BringSendFrontBack(hwnd, false);
 		break;
 
 		case iGoToRoom:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 			DoGoToDialog(hwnd);
 		break;
 
 		case iMapWindow:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 			ToggleMapWindow();
 		break;
 
 		case iObjectWindow:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 			ToggleToolsWindow();
 		break;
 
 		case iCoordinateWindow:
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 			ToggleCoordinateWindow();
 		break;
 	}
@@ -735,13 +735,13 @@ void DoMenuChoice (HWND hwnd, WORD menuChoice)
 
 void UpdateMapCheckmark (Boolean checkIt)
 {
-	if (!menusUp)
+	if (!g_menusUp)
 		return;
 
 	if (checkIt)
-		CheckMenuItem(houseMenu, ID_MAP_WINDOW, MF_CHECKED);
+		CheckMenuItem(g_houseMenu, ID_MAP_WINDOW, MF_CHECKED);
 	else
-		CheckMenuItem(houseMenu, ID_MAP_WINDOW, MF_UNCHECKED);
+		CheckMenuItem(g_houseMenu, ID_MAP_WINDOW, MF_UNCHECKED);
 }
 
 //--------------------------------------------------------------  UpdateToolsCheckmark
@@ -749,13 +749,13 @@ void UpdateMapCheckmark (Boolean checkIt)
 
 void UpdateToolsCheckmark (Boolean checkIt)
 {
-	if (!menusUp)
+	if (!g_menusUp)
 		return;
 
 	if (checkIt)
-		CheckMenuItem(houseMenu, ID_OBJECT_WINDOW, MF_CHECKED);
+		CheckMenuItem(g_houseMenu, ID_OBJECT_WINDOW, MF_CHECKED);
 	else
-		CheckMenuItem(houseMenu, ID_OBJECT_WINDOW, MF_UNCHECKED);
+		CheckMenuItem(g_houseMenu, ID_OBJECT_WINDOW, MF_UNCHECKED);
 }
 
 //--------------------------------------------------------------  UpdateCoordinateCheckmark
@@ -763,13 +763,13 @@ void UpdateToolsCheckmark (Boolean checkIt)
 
 void UpdateCoordinateCheckmark (Boolean checkIt)
 {
-	if (!menusUp)
+	if (!g_menusUp)
 		return;
 
 	if (checkIt)
-		CheckMenuItem(houseMenu, ID_COORDINATE_WINDOW, MF_CHECKED);
+		CheckMenuItem(g_houseMenu, ID_COORDINATE_WINDOW, MF_CHECKED);
 	else
-		CheckMenuItem(houseMenu, ID_COORDINATE_WINDOW, MF_UNCHECKED);
+		CheckMenuItem(g_houseMenu, ID_COORDINATE_WINDOW, MF_UNCHECKED);
 }
 
 //--------------------------------------------------------------  ResumeFilter
@@ -810,8 +810,8 @@ SInt16 QueryResumeGame (HWND ownerWindow)
 	SInt32 hadPoints;
 	SInt16 hadGliders;
 
-	hadPoints = thisHouse.savedGame.score;
-	hadGliders = thisHouse.savedGame.numGliders;
+	hadPoints = g_thisHouse.savedGame.score;
+	hadGliders = g_thisHouse.savedGame.numGliders;
 	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)hadPoints);
 	StringCchPrintf(glidStr, ARRAYSIZE(glidStr), L"%ld", (long)hadGliders);
 
@@ -846,15 +846,15 @@ void HeyYourPissingAHighScore (HWND ownerWindow)
 
 void OpenCloseEditWindows (void)
 {
-	if (theMode == kEditMode)
+	if (g_theMode == kEditMode)
 	{
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 		{
-			if (isMapOpen)
+			if (g_isMapOpen)
 				OpenMapWindow();
-			if (isToolsOpen)
+			if (g_isToolsOpen)
 				OpenToolsWindow();
-			if (isCoordOpen)
+			if (g_isCoordOpen)
 				OpenCoordWindow();
 		}
 		else
@@ -876,10 +876,10 @@ void EnableMenuBar (void)
 {
 	int i, n;
 
-	n = GetMenuItemCount(theMenuBar);
+	n = GetMenuItemCount(g_theMenuBar);
 	for (i = 0; i < n; i++)
-		EnableMenuItem(theMenuBar, i, MF_BYPOSITION | MF_ENABLED);
-	DrawMenuBar(mainWindow);
+		EnableMenuItem(g_theMenuBar, i, MF_BYPOSITION | MF_ENABLED);
+	DrawMenuBar(g_mainWindow);
 }
 
 //--------------------------------------------------------------  EnableMenuBar
@@ -890,8 +890,8 @@ void DisableMenuBar(void)
 {
 	int i, n;
 
-	n = GetMenuItemCount(theMenuBar);
+	n = GetMenuItemCount(g_theMenuBar);
 	for (i = 0; i < n; i++)
-		EnableMenuItem(theMenuBar, i, MF_BYPOSITION | MF_GRAYED);
-	DrawMenuBar(mainWindow);
+		EnableMenuItem(g_theMenuBar, i, MF_BYPOSITION | MF_GRAYED);
+	DrawMenuBar(g_mainWindow);
 }

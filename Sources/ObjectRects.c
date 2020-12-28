@@ -55,7 +55,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		case kInvisBlower:
 		case kGrecoVent:
 		case kSewerBlower:
-		*itsRect = srcRects[who->what];
+		*itsRect = g_srcRects[who->what];
 		ZeroRectCorner(itsRect);
 		QOffsetRect(itsRect, who->data.a.topLeft.h, who->data.a.topLeft.v);
 		break;
@@ -97,7 +97,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		case kStar:
 		case kSparkle:
 		case kHelium:
-		*itsRect = srcRects[who->what];
+		*itsRect = g_srcRects[who->what];
 		ZeroRectCorner(itsRect);
 		QOffsetRect(itsRect,
 				who->data.c.topLeft.h,
@@ -105,7 +105,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		break;
 
 		case kSlider:
-		*itsRect = srcRects[who->what];
+		*itsRect = g_srcRects[who->what];
 		ZeroRectCorner(itsRect);
 		QOffsetRect(itsRect,
 				who->data.c.topLeft.h,
@@ -127,7 +127,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		case kWindowInRt:
 		case kWindowExRt:
 		case kWindowExLf:
-		*itsRect = srcRects[who->what];
+		*itsRect = g_srcRects[who->what];
 		ZeroRectCorner(itsRect);
 		QOffsetRect(itsRect,
 				who->data.d.topLeft.h,
@@ -135,7 +135,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		break;
 
 		case kInvisTrans:
-		*itsRect = srcRects[who->what];
+		*itsRect = g_srcRects[who->what];
 		ZeroRectCorner(itsRect);
 		QOffsetRect(itsRect,
 				who->data.d.topLeft.h,
@@ -162,7 +162,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		case kTrigger:
 		case kLgTrigger:
 		case kSoundTrigger:
-		*itsRect = srcRects[who->what];
+		*itsRect = g_srcRects[who->what];
 		ZeroRectCorner(itsRect);
 		QOffsetRect(itsRect,
 				who->data.e.topLeft.h,
@@ -175,7 +175,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		case kHipLamp:
 		case kDecoLamp:
 		case kInvisLight:
-		*itsRect = srcRects[who->what];
+		*itsRect = g_srcRects[who->what];
 		ZeroRectCorner(itsRect);
 		QOffsetRect(itsRect,
 				who->data.f.topLeft.h,
@@ -184,7 +184,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 
 		case kFlourescent:
 		case kTrackLight:
-		*itsRect = srcRects[who->what];
+		*itsRect = g_srcRects[who->what];
 		ZeroRectCorner(itsRect);
 		itsRect->right = who->data.f.length;
 		QOffsetRect(itsRect,
@@ -205,7 +205,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		case kCinderBlock:
 		case kFlowerBox:
 		case kCDs:
-		*itsRect = srcRects[who->what];
+		*itsRect = g_srcRects[who->what];
 		ZeroRectCorner(itsRect);
 		QOffsetRect(itsRect,
 				who->data.g.topLeft.h,
@@ -217,7 +217,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		if (thePict == NULL)
 		{
 			who->data.g.height = kCustomPictFallbackID;
-			*itsRect = srcRects[who->what];
+			*itsRect = g_srcRects[who->what];
 		}
 		else
 		{
@@ -240,7 +240,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		case kDrip:
 		case kFish:
 		case kCobweb:
-		*itsRect = srcRects[who->what];
+		*itsRect = g_srcRects[who->what];
 		ZeroRectCorner(itsRect);
 		QOffsetRect(itsRect,
 				who->data.h.topLeft.h,
@@ -277,18 +277,18 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 SInt16 AddActiveRect (const Rect *bounds, SInt16 action, SInt16 who, Boolean isOn,
 	Boolean doScrutinize)
 {
-	if (nHotSpots >= kMaxHotSpots)
+	if (g_nHotSpots >= kMaxHotSpots)
 		return (-1);
 
-	hotSpots[nHotSpots].bounds = *bounds;		// the active rect
-	hotSpots[nHotSpots].action = action;		// what it does
-	hotSpots[nHotSpots].who = who;				// local obj. linked to
-	hotSpots[nHotSpots].isOn = isOn;			// is it active?
-	hotSpots[nHotSpots].stillOver = false;
-	hotSpots[nHotSpots].doScrutinize = doScrutinize;
-	nHotSpots++;
+	g_hotSpots[g_nHotSpots].bounds = *bounds;		// the active rect
+	g_hotSpots[g_nHotSpots].action = action;		// what it does
+	g_hotSpots[g_nHotSpots].who = who;				// local obj. linked to
+	g_hotSpots[g_nHotSpots].isOn = isOn;			// is it active?
+	g_hotSpots[g_nHotSpots].stillOver = false;
+	g_hotSpots[g_nHotSpots].doScrutinize = doScrutinize;
+	g_nHotSpots++;
 
-	return (nHotSpots - 1);
+	return (g_nHotSpots - 1);
 }
 
 //--------------------------------------------------------------  CreateActiveRects
@@ -301,13 +301,13 @@ SInt16 CreateActiveRects (SInt16 who)
 	Boolean		isOn;
 
 	// NOTE: CreateActiveRects is called in the process of adding an entry to the
-	// `masterObjects` table, so checking `who >= numMasterObjects` is incorrect.
+	// `masterObjects` table, so checking `who >= g_numMasterObjects` is incorrect.
 	// Just make sure that the index isn't completely out of bounds.
 	if (who < 0 || who >= kMaxMasterObjects)
 		return (-1);
 
 	hotSpotNumber = -1;
-	theObject = masterObjects[who].theObject;
+	theObject = g_masterObjects[who].theObject;
 
 	switch (theObject.what)
 	{
@@ -317,7 +317,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kFloorVent:
 		QSetRect(&bounds, 0, -theObject.data.a.distance, kFloorColumnWide, 0);
 		QOffsetRect(&bounds,
-				HalfRectWide(&srcRects[kFloorVent]) - kFloorColumnWide / 2, 0);
+				HalfRectWide(&g_srcRects[kFloorVent]) - kFloorColumnWide / 2, 0);
 		QOffsetRect(&bounds, theObject.data.a.topLeft.h,
 				theObject.data.a.topLeft.v);
 		hotSpotNumber = AddActiveRect(&bounds, kLiftIt, who, theObject.data.a.state,
@@ -327,7 +327,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kCeilingVent:
 		QSetRect(&bounds, 0, 0, kCeilingColumnWide, theObject.data.a.distance);
 		QOffsetRect(&bounds,
-				HalfRectWide(&srcRects[kCeilingVent]) - kCeilingColumnWide / 2,
+				HalfRectWide(&g_srcRects[kCeilingVent]) - kCeilingColumnWide / 2,
 				0);
 		QOffsetRect(&bounds,
 				theObject.data.a.topLeft.h,
@@ -339,7 +339,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kFloorBlower:
 		QSetRect(&bounds, 0, -theObject.data.a.distance, kFloorColumnWide, 0);
 		QOffsetRect(&bounds,
-				HalfRectWide(&srcRects[kFloorBlower]) - kFloorColumnWide / 2,
+				HalfRectWide(&g_srcRects[kFloorBlower]) - kFloorColumnWide / 2,
 				0);
 		QOffsetRect(&bounds,
 				theObject.data.a.topLeft.h,
@@ -351,7 +351,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kCeilingBlower:
 		QSetRect(&bounds, 0, 0, kCeilingColumnWide, theObject.data.a.distance);
 		QOffsetRect(&bounds,
-				HalfRectWide(&srcRects[kCeilingBlower]) - kCeilingColumnWide / 2,
+				HalfRectWide(&g_srcRects[kCeilingBlower]) - kCeilingColumnWide / 2,
 				0);
 		QOffsetRect(&bounds,
 				theObject.data.a.topLeft.h,
@@ -363,7 +363,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kSewerGrate:
 		QSetRect(&bounds, 0, -theObject.data.a.distance, kFloorColumnWide, 0);
 		QOffsetRect(&bounds,
-				HalfRectWide(&srcRects[kSewerGrate]) - kFloorColumnWide / 2,
+				HalfRectWide(&g_srcRects[kSewerGrate]) - kFloorColumnWide / 2,
 				0);
 		QOffsetRect(&bounds,
 				theObject.data.a.topLeft.h,
@@ -394,7 +394,7 @@ SInt16 CreateActiveRects (SInt16 who)
 				theObject.data.a.topLeft.v + 12);
 		hotSpotNumber = AddActiveRect(&bounds, kDissolveIt, who, true, true);
 		QSetRect(&bounds, 0, 0, theObject.data.a.distance, kFanColumnThick);
-		QOffsetRect(&bounds, RectWide(&srcRects[kRightFan]), kFanColumnDown);
+		QOffsetRect(&bounds, RectWide(&g_srcRects[kRightFan]), kFanColumnDown);
 		QOffsetRect(&bounds,
 				theObject.data.a.topLeft.h,
 				theObject.data.a.topLeft.v);
@@ -405,7 +405,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kTaper:
 		QSetRect(&bounds, 0, -theObject.data.a.distance, kFloorColumnWide, 0);
 		QOffsetRect(&bounds,
-				HalfRectWide(&srcRects[kTaper]) - kFloorColumnWide / 2,
+				HalfRectWide(&g_srcRects[kTaper]) - kFloorColumnWide / 2,
 				0);
 		QOffsetRect(&bounds,
 				theObject.data.a.topLeft.h,
@@ -430,7 +430,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kCandle:
 		QSetRect(&bounds, 0, -theObject.data.a.distance, kFloorColumnWide, 0);
 		QOffsetRect(&bounds,
-				HalfRectWide(&srcRects[kCandle]) - kFloorColumnWide / 2,
+				HalfRectWide(&g_srcRects[kCandle]) - kFloorColumnWide / 2,
 				0);
 		QOffsetRect(&bounds,
 				theObject.data.a.topLeft.h - 2,
@@ -455,7 +455,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kStubby:
 		QSetRect(&bounds, 0, -theObject.data.a.distance, kFloorColumnWide, 0);
 		QOffsetRect(&bounds,
-				(HalfRectWide(&srcRects[kStubby]) - kFloorColumnWide / 2) - 1,
+				(HalfRectWide(&g_srcRects[kStubby]) - kFloorColumnWide / 2) - 1,
 				0);
 		QOffsetRect(&bounds,
 				theObject.data.a.topLeft.h,
@@ -480,7 +480,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kTiki:
 		QSetRect(&bounds, 0, -theObject.data.a.distance, kFloorColumnWide, 0);
 		QOffsetRect(&bounds,
-				HalfRectWide(&srcRects[kTiki]) - kFloorColumnWide / 2,
+				HalfRectWide(&g_srcRects[kTiki]) - kFloorColumnWide / 2,
 				0);
 		QOffsetRect(&bounds,
 				theObject.data.a.topLeft.h,
@@ -505,7 +505,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kBBQ:
 		QSetRect(&bounds, 0, -theObject.data.a.distance, kFloorColumnWide, 8);
 		QOffsetRect(&bounds,
-				HalfRectWide(&srcRects[kBBQ]) - kFloorColumnWide / 2, 0);
+				HalfRectWide(&g_srcRects[kBBQ]) - kFloorColumnWide / 2, 0);
 		QOffsetRect(&bounds, theObject.data.a.topLeft.h,
 				theObject.data.a.topLeft.v);
 		if ((bounds.bottom - bounds.top) > kDeadlyFlameHeight)
@@ -572,7 +572,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kGrecoVent:
 		QSetRect(&bounds, 0, -theObject.data.a.distance, kFloorColumnWide, 0);
 		QOffsetRect(&bounds,
-				HalfRectWide(&srcRects[kGrecoVent]) - kFloorColumnWide / 2,
+				HalfRectWide(&g_srcRects[kGrecoVent]) - kFloorColumnWide / 2,
 				0);
 		QOffsetRect(&bounds,
 				theObject.data.a.topLeft.h,
@@ -584,7 +584,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kSewerBlower:
 		QSetRect(&bounds, 0, -theObject.data.a.distance, kFloorColumnWide, 0);
 		QOffsetRect(&bounds,
-				HalfRectWide(&srcRects[kSewerBlower]) - kFloorColumnWide / 2,
+				HalfRectWide(&g_srcRects[kSewerBlower]) - kFloorColumnWide / 2,
 				0);
 		QOffsetRect(&bounds,
 				theObject.data.a.topLeft.h,
@@ -675,7 +675,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kInvisBonus:
 		case kStar:
 		case kHelium:
-		bounds = srcRects[theObject.what];
+		bounds = g_srcRects[theObject.what];
 		ZeroRectCorner(&bounds);
 		QOffsetRect(&bounds,
 				theObject.data.c.topLeft.h,
@@ -687,7 +687,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kGreaseRt:
 		if (theObject.data.c.state)
 		{
-			bounds = srcRects[theObject.what];
+			bounds = g_srcRects[theObject.what];
 			ZeroRectCorner(&bounds);
 			QOffsetRect(&bounds, theObject.data.c.topLeft.h,
 					theObject.data.c.topLeft.v);
@@ -706,7 +706,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kGreaseLf:
 		if (theObject.data.c.state)
 		{
-			bounds = srcRects[theObject.what];
+			bounds = g_srcRects[theObject.what];
 			ZeroRectCorner(&bounds);
 			QOffsetRect(&bounds, theObject.data.c.topLeft.h,
 					theObject.data.c.topLeft.v);
@@ -723,7 +723,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		break;
 
 		case kSparkle:
-		bounds = srcRects[theObject.what];
+		bounds = g_srcRects[theObject.what];
 		ZeroRectCorner(&bounds);
 		QOffsetRect(&bounds,
 				theObject.data.c.topLeft.h,
@@ -747,7 +747,7 @@ SInt16 CreateActiveRects (SInt16 who)
 
 		case kDownStairs:
 		QSetRect(&bounds, -80, -56, 0, 0);
-		QOffsetRect(&bounds, srcRects[kDownStairs].right, 170);
+		QOffsetRect(&bounds, g_srcRects[kDownStairs].right, 170);
 		QOffsetRect(&bounds,
 				theObject.data.d.topLeft.h,
 				theObject.data.d.topLeft.v);
@@ -782,7 +782,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		if (theObject.data.d.who != 255)
 		{
 			QSetRect(&bounds, 0, -48, 76, 0);
-			QOffsetRect(&bounds, -8, RectTall(&srcRects[kFloorTrans]));
+			QOffsetRect(&bounds, -8, RectTall(&g_srcRects[kFloorTrans]));
 			QOffsetRect(&bounds,
 					theObject.data.d.topLeft.h,
 					theObject.data.d.topLeft.v);
@@ -909,7 +909,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kInvisSwitch:
 		case kTrigger:
 		case kLgTrigger:
-		bounds = srcRects[theObject.what];
+		bounds = g_srcRects[theObject.what];
 		ZeroRectCorner(&bounds);
 		QOffsetRect(&bounds,
 				theObject.data.e.topLeft.h,
@@ -944,7 +944,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		break;
 
 		case kShredder:
-		bounds = srcRects[theObject.what];
+		bounds = g_srcRects[theObject.what];
 		bounds.bottom = bounds.top + kShredderActiveHigh;
 		bounds.right += 48;
 		ZeroRectCorner(&bounds);
@@ -963,7 +963,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		break;
 
 		case kOutlet:
-		bounds = srcRects[theObject.what];
+		bounds = g_srcRects[theObject.what];
 		ZeroRectCorner(&bounds);
 		QOffsetRect(&bounds,
 				theObject.data.g.topLeft.h,
@@ -973,7 +973,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		break;
 
 		case kMicrowave:
-		bounds = srcRects[theObject.what];
+		bounds = g_srcRects[theObject.what];
 		ZeroRectCorner(&bounds);
 		QOffsetRect(&bounds,
 				theObject.data.g.topLeft.h,
@@ -993,7 +993,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kCinderBlock:
 		case kFlowerBox:
 		case kCDs:
-		bounds = srcRects[theObject.what];
+		bounds = g_srcRects[theObject.what];
 		ZeroRectCorner(&bounds);
 		QOffsetRect(&bounds,
 				theObject.data.g.topLeft.h,
@@ -1011,7 +1011,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kDartRt:
 		case kBall:
 		case kDrip:
-		bounds = srcRects[theObject.what];
+		bounds = g_srcRects[theObject.what];
 		ZeroRectCorner(&bounds);
 		QOffsetRect(&bounds,
 				theObject.data.h.topLeft.h,
@@ -1020,7 +1020,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		break;
 
 		case kFish:
-		bounds = srcRects[theObject.what];
+		bounds = g_srcRects[theObject.what];
 		ZeroRectCorner(&bounds);
 		QOffsetRect(&bounds,
 				theObject.data.h.topLeft.h,
@@ -1029,7 +1029,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		break;
 
 		case kCobweb:
-		bounds = srcRects[theObject.what];
+		bounds = g_srcRects[theObject.what];
 		ZeroRectCorner(&bounds);
 		QOffsetRect(&bounds,
 				theObject.data.h.topLeft.h,
@@ -1055,8 +1055,8 @@ SInt16 CreateActiveRects (SInt16 who)
 		break;
 
 		case kChimes:
-		numChimes++;
-		bounds = srcRects[kChimes];
+		g_numChimes++;
+		bounds = g_srcRects[kChimes];
 		ZeroRectCorner(&bounds);
 		QOffsetRect(&bounds,
 				theObject.data.i.bounds.left,
@@ -1098,7 +1098,7 @@ SInt16 VerticalRoomOffset (SInt16 neighbor)
 
 void OffsetRectRoomRelative (Rect *theRect, SInt16 neighbor)
 {
-	QOffsetRect(theRect, playOriginH, playOriginV);
+	QOffsetRect(theRect, g_playOriginH, g_playOriginV);
 
 	switch (neighbor)
 	{
@@ -1145,15 +1145,15 @@ SInt16 GetUpStairsRightEdge (void)
 
 	rightEdge = kRoomWide;
 
-	if (thisRoomNumber < 0 || thisRoomNumber >= thisHouse.nRooms)
+	if (g_thisRoomNumber < 0 || g_thisRoomNumber >= g_thisHouse.nRooms)
 		return (rightEdge);
 
 	for (i = 0; i < kMaxRoomObs; i++)
 	{
-		thisObject = thisHouse.rooms[thisRoomNumber].objects[i];
+		thisObject = g_thisHouse.rooms[g_thisRoomNumber].objects[i];
 		if (thisObject.what == kDownStairs)
 		{
-			rightEdge = thisObject.data.d.topLeft.h + srcRects[kDownStairs].right - 1;
+			rightEdge = thisObject.data.d.topLeft.h + g_srcRects[kDownStairs].right - 1;
 			break;
 		}
 	}
@@ -1170,12 +1170,12 @@ SInt16 GetDownStairsLeftEdge (void)
 
 	leftEdge = 0;
 
-	if (thisRoomNumber < 0 || thisRoomNumber >= thisHouse.nRooms)
+	if (g_thisRoomNumber < 0 || g_thisRoomNumber >= g_thisHouse.nRooms)
 		return (leftEdge);
 
 	for (i = 0; i < kMaxRoomObs; i++)
 	{
-		thisObject = thisHouse.rooms[thisRoomNumber].objects[i];
+		thisObject = g_thisHouse.rooms[g_thisRoomNumber].objects[i];
 		if (thisObject.what == kUpStairs)
 		{
 			leftEdge = thisObject.data.d.topLeft.h + 1;

@@ -150,8 +150,8 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 	HPEN hPen, oldPen;
 	HWND focusedWindow;
 
-	if ((thisRoom->objects[objActive].what != kLeftFan) &&
-		(thisRoom->objects[objActive].what != kRightFan))
+	if ((g_thisRoom->objects[g_objActive].what != kLeftFan) &&
+		(g_thisRoom->objects[g_objActive].what != kRightFan))
 	{
 		GetWindowRect(GetDlgItem(hDlg, kBlowerArrow), &bounds);
 		MapWindowPoints(HWND_DESKTOP, hDlg, (POINT *)&bounds, 2);
@@ -236,9 +236,9 @@ INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		what = thisRoom->objects[objActive].what;
+		what = g_thisRoom->objects[g_objActive].what;
 
-		if (thisRoom->objects[objActive].data.a.initial)
+		if (g_thisRoom->objects[g_objActive].data.a.initial)
 			CheckDlgButton(hDlg, kBlowerInitialState, BST_CHECKED);
 		else
 			CheckDlgButton(hDlg, kBlowerInitialState, BST_UNCHECKED);
@@ -269,22 +269,22 @@ INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 			ShowWindow(GetDlgItem(hDlg, kRightFacingRadio), SW_HIDE);
 		}
 
-		if ((thisRoom->objects[objActive].data.a.vector & 0x01) == 0x01)
+		if ((g_thisRoom->objects[g_objActive].data.a.vector & 0x01) == 0x01)
 		{
 			CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
 				kBlowerUpButton);
 		}
-		else if ((thisRoom->objects[objActive].data.a.vector & 0x02) == 0x02)
+		else if ((g_thisRoom->objects[g_objActive].data.a.vector & 0x02) == 0x02)
 		{
 			CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
 				kBlowerRightButton);
 		}
-		else if ((thisRoom->objects[objActive].data.a.vector & 0x04) == 0x04)
+		else if ((g_thisRoom->objects[g_objActive].data.a.vector & 0x04) == 0x04)
 		{
 			CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
 				kBlowerDownButton);
 		}
-		else if ((thisRoom->objects[objActive].data.a.vector & 0x08) == 0x08)
+		else if ((g_thisRoom->objects[g_objActive].data.a.vector & 0x08) == 0x08)
 		{
 			CheckRadioButton(hDlg, kBlowerUpButton, kBlowerLeftButton,
 				kBlowerLeftButton);
@@ -297,7 +297,7 @@ INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 			ShowWindow(GetDlgItem(hDlg, kBlowerLeftButton), SW_HIDE);
 		}
 
-		if (retroLinkList[objActive].room == -1)
+		if (g_retroLinkList[g_objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kBlowerLinkedFrom), SW_HIDE);
 
 		CenterDialogOverOwner(hDlg);
@@ -309,40 +309,40 @@ INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 		{
 		case IDOK:
 		case kBlowerLinkedFrom:
-			what = thisRoom->objects[objActive].what;
+			what = g_thisRoom->objects[g_objActive].what;
 
 			if (IsDlgButtonChecked(hDlg, kBlowerInitialState))
-				thisRoom->objects[objActive].data.a.initial = true;
+				g_thisRoom->objects[g_objActive].data.a.initial = true;
 			else
-				thisRoom->objects[objActive].data.a.initial = false;
+				g_thisRoom->objects[g_objActive].data.a.initial = false;
 
 			if ((what == kInvisBlower) || (what == kLiftArea))
 			{
 				if (IsDlgButtonChecked(hDlg, kBlowerUpButton))
-					thisRoom->objects[objActive].data.a.vector = 0x01;
+					g_thisRoom->objects[g_objActive].data.a.vector = 0x01;
 				else if (IsDlgButtonChecked(hDlg, kBlowerRightButton))
-					thisRoom->objects[objActive].data.a.vector = 0x02;
+					g_thisRoom->objects[g_objActive].data.a.vector = 0x02;
 				else if (IsDlgButtonChecked(hDlg, kBlowerDownButton))
-					thisRoom->objects[objActive].data.a.vector = 0x04;
+					g_thisRoom->objects[g_objActive].data.a.vector = 0x04;
 				else if (IsDlgButtonChecked(hDlg, kBlowerLeftButton))
-					thisRoom->objects[objActive].data.a.vector = 0x08;
+					g_thisRoom->objects[g_objActive].data.a.vector = 0x08;
 			}
 
 			if ((what == kLeftFan) || (what == kRightFan))
 			{
 				if (IsDlgButtonChecked(hDlg, kLeftFacingRadio))
-					thisRoom->objects[objActive].what = kLeftFan;
+					g_thisRoom->objects[g_objActive].what = kLeftFan;
 				else
-					thisRoom->objects[objActive].what = kRightFan;
+					g_thisRoom->objects[g_objActive].what = kRightFan;
 				if (KeepObjectLegal())
 				{
 				}
-				Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+				Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
 				GetThisRoomsObjRects();
-				ReadyBackground(thisRoom->background, thisRoom->tiles);
+				ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 				DrawThisRoomsObjects();
 			}
-			fileDirty = true;
+			g_fileDirty = true;
 			UpdateMenus(false);
 			EndDialog(hDlg, LOWORD(wParam));
 			break;
@@ -394,7 +394,7 @@ INT_PTR CALLBACK FurnitureFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		if ((objActive < 0) || (retroLinkList[objActive].room == -1))
+		if ((g_objActive < 0) || (g_retroLinkList[g_objActive].room == -1))
 			ShowWindow(GetDlgItem(hDlg, kFurnitureLinkedFrom), SW_HIDE);
 
 		CenterDialogOverOwner(hDlg);
@@ -426,10 +426,10 @@ INT_PTR CALLBACK CustPictFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		if (thisRoom->objects[objActive].what == kCustomPict)
-			wasPict = thisRoom->objects[objActive].data.g.height;
+		if (g_thisRoom->objects[g_objActive].what == kCustomPict)
+			wasPict = g_thisRoom->objects[g_objActive].data.g.height;
 		else
-			wasPict = thisRoom->objects[objActive].data.e.where;
+			wasPict = g_thisRoom->objects[g_objActive].data.e.where;
 		SetDlgItemInt(hDlg, kCustPictIDItem, (UINT)wasPict, TRUE);
 
 		CenterDialogOverOwner(hDlg);
@@ -441,27 +441,27 @@ INT_PTR CALLBACK CustPictFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 		{
 		case IDOK:
 			wasPict = (INT)GetDlgItemInt(hDlg, kCustPictIDItem, NULL, TRUE);
-			if (thisRoom->objects[objActive].what == kCustomPict)
+			if (g_thisRoom->objects[g_objActive].what == kCustomPict)
 			{
 				if ((wasPict < 10000) || (wasPict > 32767))
 				{
 					MessageBeep(MB_ICONWARNING);
-					wasPict = thisRoom->objects[objActive].data.g.height;
+					wasPict = g_thisRoom->objects[g_objActive].data.g.height;
 					SetDlgItemInt(hDlg, kCustPictIDItem, (UINT)wasPict, TRUE);
 					hwndPictID = GetDlgItem(hDlg, kCustPictIDItem);
 					SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)hwndPictID, TRUE);
 				}
 				else
 				{
-					thisRoom->objects[objActive].data.g.height = (SInt16)wasPict;
+					g_thisRoom->objects[g_objActive].data.g.height = (SInt16)wasPict;
 					if (KeepObjectLegal())
 					{
 					}
-					fileDirty = true;
+					g_fileDirty = true;
 					UpdateMenus(false);
-					Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+					Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
 					GetThisRoomsObjRects();
-					ReadyBackground(thisRoom->background, thisRoom->tiles);
+					ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 					DrawThisRoomsObjects();
 					EndDialog(hDlg, LOWORD(wParam));
 				}
@@ -471,19 +471,19 @@ INT_PTR CALLBACK CustPictFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 				if ((wasPict < 3000) || (wasPict > 32767))
 				{
 					MessageBeep(MB_ICONWARNING);
-					wasPict = thisRoom->objects[objActive].data.e.where;
+					wasPict = g_thisRoom->objects[g_objActive].data.e.where;
 					SetDlgItemInt(hDlg, kCustPictIDItem, (UINT)wasPict, TRUE);
 					hwndPictID = GetDlgItem(hDlg, kCustPictIDItem);
 					SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)hwndPictID, TRUE);
 				}
 				else
 				{
-					thisRoom->objects[objActive].data.e.where = (SInt16)wasPict;
-					fileDirty = true;
+					g_thisRoom->objects[g_objActive].data.e.where = (SInt16)wasPict;
+					g_fileDirty = true;
 					UpdateMenus(false);
-					Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+					Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
 					GetThisRoomsObjRects();
-					ReadyBackground(thisRoom->background, thisRoom->tiles);
+					ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 					DrawThisRoomsObjects();
 					EndDialog(hDlg, LOWORD(wParam));
 				}
@@ -509,17 +509,17 @@ INT_PTR CALLBACK SwitchFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 	{
 		HWND hwndInitialFocus = NULL;
 
-		if (thisRoom->objects[objActive].data.e.type == kToggle)
+		if (g_thisRoom->objects[g_objActive].data.e.type == kToggle)
 		{
 			hwndInitialFocus = GetDlgItem(hDlg, kToggleRadio);
 			CheckRadioButton(hDlg, kToggleRadio, kForceOffRadio, kToggleRadio);
 		}
-		else if (thisRoom->objects[objActive].data.e.type == kForceOn)
+		else if (g_thisRoom->objects[g_objActive].data.e.type == kForceOn)
 		{
 			hwndInitialFocus = GetDlgItem(hDlg, kForceOnRadio);
 			CheckRadioButton(hDlg, kToggleRadio, kForceOffRadio, kForceOnRadio);
 		}
-		else if (thisRoom->objects[objActive].data.e.type == kForceOff)
+		else if (g_thisRoom->objects[g_objActive].data.e.type == kForceOff)
 		{
 			hwndInitialFocus = GetDlgItem(hDlg, kForceOffRadio);
 			CheckRadioButton(hDlg, kToggleRadio, kForceOffRadio, kForceOffRadio);
@@ -527,10 +527,10 @@ INT_PTR CALLBACK SwitchFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 		if (hwndInitialFocus == NULL)
 			hwndInitialFocus = GetDlgItem(hDlg, kToggleRadio);
 
-		if (thisRoom->objects[objActive].data.e.who == 255)
+		if (g_thisRoom->objects[g_objActive].data.e.who == 255)
 			EnableWindow(GetDlgItem(hDlg, kSwitchGotoButton), FALSE);
 
-		if (retroLinkList[objActive].room == -1)
+		if (g_retroLinkList[g_objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kSwitchLinkedFrom), SW_HIDE);
 
 		CenterDialogOverOwner(hDlg);
@@ -547,12 +547,12 @@ INT_PTR CALLBACK SwitchFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 		case kSwitchGotoButton:
 		case kSwitchLinkedFrom:
 			if (IsDlgButtonChecked(hDlg, kToggleRadio))
-				thisRoom->objects[objActive].data.e.type = kToggle;
+				g_thisRoom->objects[g_objActive].data.e.type = kToggle;
 			else if (IsDlgButtonChecked(hDlg, kForceOnRadio))
-				thisRoom->objects[objActive].data.e.type = kForceOn;
+				g_thisRoom->objects[g_objActive].data.e.type = kForceOn;
 			else if (IsDlgButtonChecked(hDlg, kForceOffRadio))
-				thisRoom->objects[objActive].data.e.type = kForceOff;
-			fileDirty = true;
+				g_thisRoom->objects[g_objActive].data.e.type = kForceOff;
+			g_fileDirty = true;
 			UpdateMenus(false);
 			EndDialog(hDlg, LOWORD(wParam));
 			break;
@@ -576,13 +576,13 @@ INT_PTR CALLBACK TriggerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		if (retroLinkList[objActive].room == -1)
+		if (g_retroLinkList[g_objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kTriggerLinkedFrom), SW_HIDE);
 
-		if (thisRoom->objects[objActive].data.e.who == 255)
+		if (g_thisRoom->objects[g_objActive].data.e.who == 255)
 			EnableWindow(GetDlgItem(hDlg, kTriggerGotoButton), FALSE);
 
-		delayIs = thisRoom->objects[objActive].data.e.delay;
+		delayIs = g_thisRoom->objects[g_objActive].data.e.delay;
 		SetDlgItemInt(hDlg, kTriggerDelayItem, (UINT)delayIs, TRUE);
 
 		CenterDialogOverOwner(hDlg);
@@ -602,15 +602,15 @@ INT_PTR CALLBACK TriggerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			if ((delayIs < 0) || (delayIs > 32767))
 			{
 				MessageBeep(MB_ICONWARNING);
-				delayIs = thisRoom->objects[objActive].data.e.delay;
+				delayIs = g_thisRoom->objects[g_objActive].data.e.delay;
 				SetDlgItemInt(hDlg, kTriggerDelayItem, (UINT)delayIs, TRUE);
 				hwndFocus = GetDlgItem(hDlg, kTriggerDelayItem);
 				SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)hwndFocus, TRUE);
 			}
 			else
 			{
-				thisRoom->objects[objActive].data.e.delay = (SInt16)delayIs;
-				fileDirty = true;
+				g_thisRoom->objects[g_objActive].data.e.delay = (SInt16)delayIs;
+				g_fileDirty = true;
 				UpdateMenus(false);
 				EndDialog(hDlg, LOWORD(wParam));
 			}
@@ -632,12 +632,12 @@ INT_PTR CALLBACK LightFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		if (thisRoom->objects[objActive].data.f.initial)
+		if (g_thisRoom->objects[g_objActive].data.f.initial)
 			CheckDlgButton(hDlg, kLightInitialState, BST_CHECKED);
 		else
 			CheckDlgButton(hDlg, kLightInitialState, BST_UNCHECKED);
 
-		if (retroLinkList[objActive].room == -1)
+		if (g_retroLinkList[g_objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kLightLinkedFrom), SW_HIDE);
 
 		CenterDialogOverOwner(hDlg);
@@ -650,14 +650,14 @@ INT_PTR CALLBACK LightFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		case IDOK:
 		case kLightLinkedFrom:
 			if (IsDlgButtonChecked(hDlg, kLightInitialState))
-				thisRoom->objects[objActive].data.f.initial = true;
+				g_thisRoom->objects[g_objActive].data.f.initial = true;
 			else
-				thisRoom->objects[objActive].data.f.initial = false;
+				g_thisRoom->objects[g_objActive].data.f.initial = false;
 
-			ReadyBackground(thisRoom->background, thisRoom->tiles);
+			ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 			DrawThisRoomsObjects();
-			Mac_InvalWindowRect(mainWindow, &mainWindowRect);
-			fileDirty = true;
+			Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+			g_fileDirty = true;
 			UpdateMenus(false);
 			EndDialog(hDlg, LOWORD(wParam));
 			break;
@@ -681,15 +681,15 @@ INT_PTR CALLBACK ApplianceFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		if (retroLinkList[objActive].room == -1)
+		if (g_retroLinkList[g_objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kApplianceLinkedFrom), SW_HIDE);
 
-		if (thisRoom->objects[objActive].data.g.initial)
+		if (g_thisRoom->objects[g_objActive].data.g.initial)
 			CheckDlgButton(hDlg, kApplianceInitialState, BST_CHECKED);
 		else
 			CheckDlgButton(hDlg, kApplianceInitialState, BST_UNCHECKED);
 
-		what = thisRoom->objects[objActive].what;
+		what = g_thisRoom->objects[g_objActive].what;
 		if ((what == kShredder) || (what == kMacPlus) || (what == kTV) ||
 			(what == kCoffee) || (what == kVCR) || (what == kMicrowave))
 		{
@@ -697,7 +697,7 @@ INT_PTR CALLBACK ApplianceFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 			ShowWindow(GetDlgItem(hDlg, kApplianceDelayLabel), SW_HIDE);
 		}
 
-		delay = thisRoom->objects[objActive].data.g.delay;
+		delay = g_thisRoom->objects[g_objActive].data.g.delay;
 		SetDlgItemInt(hDlg, kApplianceDelay, (UINT)delay, TRUE);
 
 		CenterDialogOverOwner(hDlg);
@@ -713,23 +713,23 @@ INT_PTR CALLBACK ApplianceFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 			if ((delay < 0) || (delay > 255))
 			{
 				MessageBeep(MB_ICONWARNING);
-				delay = thisRoom->objects[objActive].data.g.delay;
+				delay = g_thisRoom->objects[g_objActive].data.g.delay;
 				SetDlgItemInt(hDlg, kApplianceDelay, (UINT)delay, TRUE);
 				SendMessage(hDlg, WM_NEXTDLGCTL,
 					(WPARAM)GetDlgItem(hDlg, kApplianceDelay), TRUE);
 			}
 			else
 			{
-				thisRoom->objects[objActive].data.g.delay = (Byte)delay;
+				g_thisRoom->objects[g_objActive].data.g.delay = (Byte)delay;
 				if (IsDlgButtonChecked(hDlg, kApplianceInitialState))
-					thisRoom->objects[objActive].data.g.initial = true;
+					g_thisRoom->objects[g_objActive].data.g.initial = true;
 				else
-					thisRoom->objects[objActive].data.g.initial = false;
-				fileDirty = true;
+					g_thisRoom->objects[g_objActive].data.g.initial = false;
+				g_fileDirty = true;
 				UpdateMenus(false);
-				Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+				Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
 				GetThisRoomsObjRects();
-				ReadyBackground(thisRoom->background, thisRoom->tiles);
+				ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 				DrawThisRoomsObjects();
 				EndDialog(hDlg, LOWORD(wParam));
 			}
@@ -753,15 +753,15 @@ INT_PTR CALLBACK MicrowaveFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		if (retroLinkList[objActive].room == -1)
+		if (g_retroLinkList[g_objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kMicrowaveLinkedFrom), SW_HIDE);
 
-		if (thisRoom->objects[objActive].data.g.initial)
+		if (g_thisRoom->objects[g_objActive].data.g.initial)
 			CheckDlgButton(hDlg, kMicrowaveInitialState, BST_CHECKED);
 		else
 			CheckDlgButton(hDlg, kMicrowaveInitialState, BST_UNCHECKED);
 
-		kills = thisRoom->objects[objActive].data.g.byte0;
+		kills = g_thisRoom->objects[g_objActive].data.g.byte0;
 		if ((kills & 0x01) == 0x01)
 			CheckDlgButton(hDlg, kKillBandsCheckbox, BST_CHECKED);
 		else
@@ -785,9 +785,9 @@ INT_PTR CALLBACK MicrowaveFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 		case IDOK:
 		case kMicrowaveLinkedFrom:
 			if (IsDlgButtonChecked(hDlg, kMicrowaveInitialState))
-				thisRoom->objects[objActive].data.g.initial = true;
+				g_thisRoom->objects[g_objActive].data.g.initial = true;
 			else
-				thisRoom->objects[objActive].data.g.initial = false;
+				g_thisRoom->objects[g_objActive].data.g.initial = false;
 			kills = 0;
 			if (IsDlgButtonChecked(hDlg, kKillBandsCheckbox))
 				kills += 1;
@@ -795,13 +795,13 @@ INT_PTR CALLBACK MicrowaveFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 				kills += 2;
 			if (IsDlgButtonChecked(hDlg, kKillFoilCheckbox))
 				kills += 4;
-			thisRoom->objects[objActive].data.g.byte0 = kills;
+			g_thisRoom->objects[g_objActive].data.g.byte0 = kills;
 
-			fileDirty = true;
+			g_fileDirty = true;
 			UpdateMenus(false);
-			Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+			Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
 			GetThisRoomsObjRects();
-			ReadyBackground(thisRoom->background, thisRoom->tiles);
+			ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 			DrawThisRoomsObjects();
 			EndDialog(hDlg, LOWORD(wParam));
 			break;
@@ -822,10 +822,10 @@ INT_PTR CALLBACK GreaseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		if (retroLinkList[objActive].room == -1)
+		if (g_retroLinkList[g_objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kGreaseLinkedFrom), SW_HIDE);
 
-		if (thisRoom->objects[objActive].data.c.initial)
+		if (g_thisRoom->objects[g_objActive].data.c.initial)
 			CheckDlgButton(hDlg, kGreaseSpilled, BST_UNCHECKED);
 		else
 			CheckDlgButton(hDlg, kGreaseSpilled, BST_CHECKED);
@@ -840,14 +840,14 @@ INT_PTR CALLBACK GreaseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 		case IDOK:
 		case kGreaseLinkedFrom:
 			if (IsDlgButtonChecked(hDlg, kGreaseSpilled))
-				thisRoom->objects[objActive].data.c.initial = false;
+				g_thisRoom->objects[g_objActive].data.c.initial = false;
 			else
-				thisRoom->objects[objActive].data.c.initial = true;
-			fileDirty = true;
+				g_thisRoom->objects[g_objActive].data.c.initial = true;
+			g_fileDirty = true;
 			UpdateMenus(false);
-			Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+			Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
 			GetThisRoomsObjRects();
-			ReadyBackground(thisRoom->background, thisRoom->tiles);
+			ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 			DrawThisRoomsObjects();
 			EndDialog(hDlg, LOWORD(wParam));
 			break;
@@ -868,7 +868,7 @@ INT_PTR CALLBACK InvisBonusFilter (HWND hDlg, UINT message, WPARAM wParam, LPARA
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		switch (thisRoom->objects[objActive].data.c.points)
+		switch (g_thisRoom->objects[g_objActive].data.c.points)
 		{
 		case 300:
 			CheckRadioButton(hDlg, k100PtRadio, k500PtRadio, k300PtRadio);
@@ -883,7 +883,7 @@ INT_PTR CALLBACK InvisBonusFilter (HWND hDlg, UINT message, WPARAM wParam, LPARA
 			break;
 		}
 
-		if (retroLinkList[objActive].room == -1)
+		if (g_retroLinkList[g_objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kInvisBonusLinkedFrom), SW_HIDE);
 
 		CenterDialogOverOwner(hDlg);
@@ -897,17 +897,17 @@ INT_PTR CALLBACK InvisBonusFilter (HWND hDlg, UINT message, WPARAM wParam, LPARA
 		case kInvisBonusLinkedFrom:
 			if (IsDlgButtonChecked(hDlg, k100PtRadio))
 			{
-				thisRoom->objects[objActive].data.c.points = 100;
+				g_thisRoom->objects[g_objActive].data.c.points = 100;
 			}
 			else if (IsDlgButtonChecked(hDlg, k300PtRadio))
 			{
-				thisRoom->objects[objActive].data.c.points = 300;
+				g_thisRoom->objects[g_objActive].data.c.points = 300;
 			}
 			else if (IsDlgButtonChecked(hDlg, k500PtRadio))
 			{
-				thisRoom->objects[objActive].data.c.points = 500;
+				g_thisRoom->objects[g_objActive].data.c.points = 500;
 			}
-			fileDirty = true;
+			g_fileDirty = true;
 			UpdateMenus(false);
 			EndDialog(hDlg, LOWORD(wParam));
 			break;
@@ -931,17 +931,17 @@ INT_PTR CALLBACK TransFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		if (retroLinkList[objActive].room == -1)
+		if (g_retroLinkList[g_objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kTransLinkedFrom), SW_HIDE);
 
-		if (thisRoom->objects[objActive].what != kDeluxeTrans)
+		if (g_thisRoom->objects[g_objActive].what != kDeluxeTrans)
 		{
 			ShowWindow(GetDlgItem(hDlg, kTransInitialState), SW_HIDE);
 			hwndInitialFocus = GetDlgItem(hDlg, IDOK);
 		}
 		else
 		{
-			initialState = (thisRoom->objects[objActive].data.d.wide & 0xF0) >> 4;
+			initialState = (g_thisRoom->objects[g_objActive].data.d.wide & 0xF0) >> 4;
 			if (initialState)
 				CheckDlgButton(hDlg, kTransInitialState, BST_CHECKED);
 			else
@@ -949,7 +949,7 @@ INT_PTR CALLBACK TransFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 			hwndInitialFocus = GetDlgItem(hDlg, kTransInitialState);
 		}
 
-		if (thisRoom->objects[objActive].data.d.who == 255)
+		if (g_thisRoom->objects[g_objActive].data.d.who == 255)
 			EnableWindow(GetDlgItem(hDlg, kTransGotoButton), FALSE);
 
 		CenterDialogOverOwner(hDlg);
@@ -964,15 +964,15 @@ INT_PTR CALLBACK TransFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		case kLinkTransButton:
 		case kTransGotoButton:
 		case kTransLinkedFrom:
-			if (thisRoom->objects[objActive].what == kDeluxeTrans)
+			if (g_thisRoom->objects[g_objActive].what == kDeluxeTrans)
 			{
 				if (IsDlgButtonChecked(hDlg, kTransInitialState))
 					initialState = 0x1;
 				else
 					initialState = 0x0;
-				thisRoom->objects[objActive].data.d.wide = initialState << 4;
+				g_thisRoom->objects[g_objActive].data.d.wide = initialState << 4;
 			}
-			fileDirty = true;
+			g_fileDirty = true;
 			UpdateMenus(false);
 			EndDialog(hDlg, LOWORD(wParam));
 			break;
@@ -995,18 +995,18 @@ INT_PTR CALLBACK EnemyFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		if (retroLinkList[objActive].room == -1)
+		if (g_retroLinkList[g_objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kEnemyLinkedFrom), SW_HIDE);
 
-		delay = thisRoom->objects[objActive].data.h.delay;
+		delay = g_thisRoom->objects[g_objActive].data.h.delay;
 		SetDlgItemInt(hDlg, kEnemyDelayItem, (UINT)delay, TRUE);
 
-		if (thisRoom->objects[objActive].data.h.initial)
+		if (g_thisRoom->objects[g_objActive].data.h.initial)
 			CheckDlgButton(hDlg, kEnemyInitialState, BST_CHECKED);
 		else
 			CheckDlgButton(hDlg, kEnemyInitialState, BST_UNCHECKED);
 
-		if (thisRoom->objects[objActive].what == kBall)
+		if (g_thisRoom->objects[g_objActive].what == kBall)
 		{
 			ShowWindow(GetDlgItem(hDlg, kEnemyDelayItem), SW_HIDE);
 			ShowWindow(GetDlgItem(hDlg, kEnemyDelayLabelItem), SW_HIDE);
@@ -1023,10 +1023,10 @@ INT_PTR CALLBACK EnemyFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		case kEnemyLinkedFrom:
 			delay = GetDlgItemInt(hDlg, kEnemyDelayItem, NULL, TRUE);
 			if (((delay < 0) || (delay > 255)) &&
-				(thisRoom->objects[objActive].what != kBall))
+				(g_thisRoom->objects[g_objActive].what != kBall))
 			{
 				MessageBeep(MB_ICONWARNING);
-				delay = thisRoom->objects[objActive].data.h.delay;
+				delay = g_thisRoom->objects[g_objActive].data.h.delay;
 				SetDlgItemInt(hDlg, kEnemyDelayItem, (UINT)delay, TRUE);
 				SendMessage(hDlg, WM_NEXTDLGCTL,
 					(WPARAM)GetDlgItem(hDlg, kEnemyDelayItem), TRUE);
@@ -1034,12 +1034,12 @@ INT_PTR CALLBACK EnemyFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 			else
 			{
 				if (IsDlgButtonChecked(hDlg, kEnemyInitialState))
-					thisRoom->objects[objActive].data.h.initial = true;
+					g_thisRoom->objects[g_objActive].data.h.initial = true;
 				else
-					thisRoom->objects[objActive].data.h.initial = false;
-				if (thisRoom->objects[objActive].what != kBall)
-					thisRoom->objects[objActive].data.h.delay = (Byte)delay;
-				fileDirty = true;
+					g_thisRoom->objects[g_objActive].data.h.initial = false;
+				if (g_thisRoom->objects[g_objActive].what != kBall)
+					g_thisRoom->objects[g_objActive].data.h.delay = (Byte)delay;
+				g_fileDirty = true;
 				UpdateMenus(false);
 				EndDialog(hDlg, LOWORD(wParam));
 			}
@@ -1063,10 +1063,10 @@ INT_PTR CALLBACK FlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		if (retroLinkList[objActive].room == -1)
+		if (g_retroLinkList[g_objActive].room == -1)
 			ShowWindow(GetDlgItem(hDlg, kFlowerLinkedFrom), SW_HIDE);
 
-		flower = thisRoom->objects[objActive].data.i.pict;
+		flower = g_thisRoom->objects[g_objActive].data.i.pict;
 		if ((flower < 0) || (flower >= kNumFlowers))
 			flower = 0;
 		CheckRadioButton(hDlg, kRadioFlower1, kRadioFlower6, kRadioFlower1 + flower);
@@ -1085,23 +1085,23 @@ INT_PTR CALLBACK FlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 					break;
 			if (flower >= kNumFlowers)
 				flower = 0;
-			if (flower != thisRoom->objects[objActive].data.i.pict)
+			if (flower != g_thisRoom->objects[g_objActive].data.i.pict)
 			{
-				Mac_InvalWindowRect(mainWindow, &thisRoom->objects[objActive].data.i.bounds);
-				thisRoom->objects[objActive].data.i.bounds.right =
-					thisRoom->objects[objActive].data.i.bounds.left +
-					RectWide(&flowerSrc[flower]);
-				thisRoom->objects[objActive].data.i.bounds.top =
-					thisRoom->objects[objActive].data.i.bounds.bottom -
-					RectTall(&flowerSrc[flower]);
-				thisRoom->objects[objActive].data.i.pict = flower;
-				Mac_InvalWindowRect(mainWindow, &thisRoom->objects[objActive].data.i.bounds);
+				Mac_InvalWindowRect(g_mainWindow, &g_thisRoom->objects[g_objActive].data.i.bounds);
+				g_thisRoom->objects[g_objActive].data.i.bounds.right =
+					g_thisRoom->objects[g_objActive].data.i.bounds.left +
+					RectWide(&g_flowerSrc[flower]);
+				g_thisRoom->objects[g_objActive].data.i.bounds.top =
+					g_thisRoom->objects[g_objActive].data.i.bounds.bottom -
+					RectTall(&g_flowerSrc[flower]);
+				g_thisRoom->objects[g_objActive].data.i.pict = flower;
+				Mac_InvalWindowRect(g_mainWindow, &g_thisRoom->objects[g_objActive].data.i.bounds);
 				GetThisRoomsObjRects();
-				ReadyBackground(thisRoom->background, thisRoom->tiles);
+				ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 				DrawThisRoomsObjects();
-				fileDirty = true;
+				g_fileDirty = true;
 				UpdateMenus(false);
-				wasFlower = flower;
+				g_wasFlower = flower;
 			}
 			EndDialog(hDlg, LOWORD(wParam));
 			break;
@@ -1125,10 +1125,10 @@ void DoBlowerObjectInfo (HWND hwndOwner)
 	wchar_t distStr[16];
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
 	StringCchPrintf(distStr, ARRAYSIZE(distStr), L"%d",
-		(int)thisRoom->objects[objActive].data.a.distance);
+		(int)g_thisRoom->objects[g_objActive].data.a.distance);
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
@@ -1139,8 +1139,8 @@ void DoBlowerObjectInfo (HWND hwndOwner)
 
 	if (result == kBlowerLinkedFrom)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object,
-			retroLinkList[objActive].room);
+		GoToObjectInRoomNum(g_retroLinkList[g_objActive].object,
+			g_retroLinkList[g_objActive].room);
 	}
 }
 
@@ -1153,25 +1153,25 @@ void DoFurnitureObjectInfo (HWND hwndOwner)
 	wchar_t kindStr[256];
 	INT_PTR result;
 
-	if (objActive == kInitialGliderSelected)
+	if (g_objActive == kInitialGliderSelected)
 	{
 		StringCchCopy(numberStr, ARRAYSIZE(numberStr), L"-");
 		StringCchCopy(kindStr, ARRAYSIZE(kindStr), L"Glider Begins");
 	}
-	else if (objActive == kLeftGliderSelected)
+	else if (g_objActive == kLeftGliderSelected)
 	{
 		StringCchCopy(numberStr, ARRAYSIZE(numberStr), L"-");
 		StringCchCopy(kindStr, ARRAYSIZE(kindStr), L"New Glider (left)");
 	}
-	else if (objActive == kRightGliderSelected)
+	else if (g_objActive == kRightGliderSelected)
 	{
 		StringCchCopy(numberStr, ARRAYSIZE(numberStr), L"-");
 		StringCchCopy(kindStr, ARRAYSIZE(kindStr), L"New Glider (right)");
 	}
 	else
 	{
-		StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
-		GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
+		StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+		GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
 	}
 
 	params.arg[0] = numberStr;
@@ -1182,10 +1182,10 @@ void DoFurnitureObjectInfo (HWND hwndOwner)
 
 	if (result == kFurnitureLinkedFrom)
 	{
-		if ((objActive >= 0) && (objActive < kMaxRoomObs))
+		if ((g_objActive >= 0) && (g_objActive < kMaxRoomObs))
 		{
-			GoToObjectInRoomNum(retroLinkList[objActive].object,
-				retroLinkList[objActive].room);
+			GoToObjectInRoomNum(g_retroLinkList[g_objActive].object,
+				g_retroLinkList[g_objActive].room);
 		}
 	}
 }
@@ -1198,10 +1198,10 @@ void DoCustPictObjectInfo (HWND hwndOwner)
 	wchar_t numberStr[16];
 	wchar_t kindStr[256];
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
 
-	if (thisRoom->objects[objActive].what == kCustomPict)
+	if (g_thisRoom->objects[g_objActive].what == kCustomPict)
 	{
 		params.arg[0] = numberStr;
 		params.arg[1] = kindStr;
@@ -1235,26 +1235,26 @@ void DoSwitchObjectInfo (HWND hwndOwner)
 	floor = 0;
 	suite = kRoomIsEmpty;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
-	if (thisRoom->objects[objActive].data.e.where == -1)
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	if (g_thisRoom->objects[g_objActive].data.e.where == -1)
 	{
 		StringCchCopy(roomStr, ARRAYSIZE(roomStr), L"none");
 	}
 	else
 	{
-		ExtractFloorSuite(thisRoom->objects[objActive].data.e.where, &floor, &suite);
+		ExtractFloorSuite(g_thisRoom->objects[g_objActive].data.e.where, &floor, &suite);
 		StringCchPrintf(roomStr, ARRAYSIZE(roomStr), L"%d / %d", (int)floor, (int)suite);
 	}
 
-	if (thisRoom->objects[objActive].data.e.who == 255)
+	if (g_thisRoom->objects[g_objActive].data.e.who == 255)
 	{
 		StringCchCopy(objStr, ARRAYSIZE(objStr), L"none");
 	}
 	else
 	{
 		StringCchPrintf(objStr, ARRAYSIZE(objStr), L"%d",
-			(int)(thisRoom->objects[objActive].data.e.who + 1));
+			(int)(g_thisRoom->objects[g_objActive].data.e.who + 1));
 	}
 
 	params.arg[0] = numberStr;
@@ -1267,21 +1267,21 @@ void DoSwitchObjectInfo (HWND hwndOwner)
 
 	if (result == kLinkSwitchButton)
 	{
-		linkType = kSwitchLinkOnly;
-		linkerIsSwitch = true;
+		g_linkType = kSwitchLinkOnly;
+		g_linkerIsSwitch = true;
 		OpenLinkWindow();
-		linkRoom = thisRoomNumber;
-		linkObject = (Byte)objActive;
+		g_linkRoom = g_thisRoomNumber;
+		g_linkObject = (Byte)g_objActive;
 		DeselectObject();
 	}
 	else if (result == kSwitchGotoButton)
 	{
-		GoToObjectInRoom(thisRoom->objects[objActive].data.e.who, floor, suite);
+		GoToObjectInRoom(g_thisRoom->objects[g_objActive].data.e.who, floor, suite);
 	}
 	else if (result == kSwitchLinkedFrom)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object,
-			retroLinkList[objActive].room);
+		GoToObjectInRoomNum(g_retroLinkList[g_objActive].object,
+			g_retroLinkList[g_objActive].room);
 	}
 }
 
@@ -1300,26 +1300,26 @@ void DoTriggerObjectInfo (HWND hwndOwner)
 	floor = 0;
 	suite = kRoomIsEmpty;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
-	if (thisRoom->objects[objActive].data.e.where == -1)
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	if (g_thisRoom->objects[g_objActive].data.e.where == -1)
 	{
 		StringCchCopy(roomStr, ARRAYSIZE(roomStr), L"none");
 	}
 	else
 	{
-		ExtractFloorSuite(thisRoom->objects[objActive].data.e.where, &floor, &suite);
+		ExtractFloorSuite(g_thisRoom->objects[g_objActive].data.e.where, &floor, &suite);
 		StringCchPrintf(roomStr, ARRAYSIZE(roomStr), L"%d / %d", (int)floor, (int)suite);
 	}
 
-	if (thisRoom->objects[objActive].data.e.who == 255)
+	if (g_thisRoom->objects[g_objActive].data.e.who == 255)
 	{
 		StringCchCopy(objStr, ARRAYSIZE(objStr), L"none");
 	}
 	else
 	{
 		StringCchPrintf(objStr, ARRAYSIZE(objStr), L"%d",
-			(int)(thisRoom->objects[objActive].data.e.who + 1));
+			(int)(g_thisRoom->objects[g_objActive].data.e.who + 1));
 	}
 
 	params.arg[0] = numberStr;
@@ -1332,21 +1332,21 @@ void DoTriggerObjectInfo (HWND hwndOwner)
 
 	if (result == kLinkTriggerButton)
 	{
-		linkType = kTriggerLinkOnly;
-		linkerIsSwitch = true;
+		g_linkType = kTriggerLinkOnly;
+		g_linkerIsSwitch = true;
 		OpenLinkWindow();
-		linkRoom = thisRoomNumber;
-		linkObject = (Byte)objActive;
+		g_linkRoom = g_thisRoomNumber;
+		g_linkObject = (Byte)g_objActive;
 		DeselectObject();
 	}
 	else if (result == kTriggerGotoButton)
 	{
-		GoToObjectInRoom(thisRoom->objects[objActive].data.e.who, floor, suite);
+		GoToObjectInRoom(g_thisRoom->objects[g_objActive].data.e.who, floor, suite);
 	}
 	else if (result == kTriggerLinkedFrom)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object,
-			retroLinkList[objActive].room);
+		GoToObjectInRoomNum(g_retroLinkList[g_objActive].object,
+			g_retroLinkList[g_objActive].room);
 	}
 }
 
@@ -1359,8 +1359,8 @@ void DoLightObjectInfo (HWND hwndOwner)
 	wchar_t kindStr[256];
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
@@ -1370,8 +1370,8 @@ void DoLightObjectInfo (HWND hwndOwner)
 
 	if (result == kLightLinkedFrom)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object,
-			retroLinkList[objActive].room);
+		GoToObjectInRoomNum(g_retroLinkList[g_objActive].object,
+			g_retroLinkList[g_objActive].room);
 	}
 }
 
@@ -1384,8 +1384,8 @@ void DoApplianceObjectInfo (HWND hwndOwner)
 	wchar_t kindStr[256];
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
@@ -1395,8 +1395,8 @@ void DoApplianceObjectInfo (HWND hwndOwner)
 
 	if (result == kApplianceLinkedFrom)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object,
-			retroLinkList[objActive].room);
+		GoToObjectInRoomNum(g_retroLinkList[g_objActive].object,
+			g_retroLinkList[g_objActive].room);
 	}
 }
 
@@ -1409,8 +1409,8 @@ void DoMicrowaveObjectInfo (HWND hwndOwner)
 	wchar_t kindStr[256];
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
@@ -1420,8 +1420,8 @@ void DoMicrowaveObjectInfo (HWND hwndOwner)
 
 	if (result == kMicrowaveLinkedFrom)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object,
-			retroLinkList[objActive].room);
+		GoToObjectInRoomNum(g_retroLinkList[g_objActive].object,
+			g_retroLinkList[g_objActive].room);
 	}
 }
 
@@ -1434,8 +1434,8 @@ void DoGreaseObjectInfo (HWND hwndOwner)
 	wchar_t kindStr[256];
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
@@ -1445,8 +1445,8 @@ void DoGreaseObjectInfo (HWND hwndOwner)
 
 	if (result == kGreaseLinkedFrom)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object,
-			retroLinkList[objActive].room);
+		GoToObjectInRoomNum(g_retroLinkList[g_objActive].object,
+			g_retroLinkList[g_objActive].room);
 	}
 }
 
@@ -1459,8 +1459,8 @@ void DoInvisBonusObjectInfo (HWND hwndOwner)
 	wchar_t kindStr[256];
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
@@ -1470,8 +1470,8 @@ void DoInvisBonusObjectInfo (HWND hwndOwner)
 
 	if (result == kInvisBonusLinkedFrom)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object,
-			retroLinkList[objActive].room);
+		GoToObjectInRoomNum(g_retroLinkList[g_objActive].object,
+			g_retroLinkList[g_objActive].room);
 	}
 }
 
@@ -1490,26 +1490,26 @@ void DoTransObjectInfo (HWND hwndOwner)
 	floor = 0;
 	suite = kRoomIsEmpty;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
-	if (thisRoom->objects[objActive].data.d.where == -1)
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	if (g_thisRoom->objects[g_objActive].data.d.where == -1)
 	{
 		StringCchCopy(roomStr, ARRAYSIZE(roomStr), L"none");
 	}
 	else
 	{
-		ExtractFloorSuite(thisRoom->objects[objActive].data.d.where, &floor, &suite);
+		ExtractFloorSuite(g_thisRoom->objects[g_objActive].data.d.where, &floor, &suite);
 		StringCchPrintf(roomStr, ARRAYSIZE(roomStr), L"%d / %d", (int)floor, (int)suite);
 	}
 
-	if (thisRoom->objects[objActive].data.d.who == 255)
+	if (g_thisRoom->objects[g_objActive].data.d.who == 255)
 	{
 		StringCchCopy(objStr, ARRAYSIZE(objStr), L"none");
 	}
 	else
 	{
 		StringCchPrintf(objStr, ARRAYSIZE(objStr), L"%d",
-			(int)thisRoom->objects[objActive].data.d.who + 1);
+			(int)g_thisRoom->objects[g_objActive].data.d.who + 1);
 	}
 
 	params.arg[0] = numberStr;
@@ -1522,21 +1522,21 @@ void DoTransObjectInfo (HWND hwndOwner)
 
 	if (result == kLinkTransButton)
 	{
-		linkType = kTransportLinkOnly;
-		linkerIsSwitch = false;
+		g_linkType = kTransportLinkOnly;
+		g_linkerIsSwitch = false;
 		OpenLinkWindow();
-		linkRoom = thisRoomNumber;
-		linkObject = (Byte)objActive;
+		g_linkRoom = g_thisRoomNumber;
+		g_linkObject = (Byte)g_objActive;
 		DeselectObject();
 	}
 	else if (result == kTransGotoButton)
 	{
-		GoToObjectInRoom(thisRoom->objects[objActive].data.d.who, floor, suite);
+		GoToObjectInRoom(g_thisRoom->objects[g_objActive].data.d.who, floor, suite);
 	}
 	else if (result == kTransLinkedFrom)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object,
-			retroLinkList[objActive].room);
+		GoToObjectInRoomNum(g_retroLinkList[g_objActive].object,
+			g_retroLinkList[g_objActive].room);
 	}
 }
 
@@ -1549,8 +1549,8 @@ void DoEnemyObjectInfo (HWND hwndOwner)
 	wchar_t kindStr[256];
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
@@ -1560,8 +1560,8 @@ void DoEnemyObjectInfo (HWND hwndOwner)
 
 	if (result == kEnemyLinkedFrom)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object,
-			retroLinkList[objActive].room);
+		GoToObjectInRoomNum(g_retroLinkList[g_objActive].object,
+			g_retroLinkList[g_objActive].room);
 	}
 }
 
@@ -1574,8 +1574,8 @@ void DoFlowerObjectInfo (HWND hwndOwner)
 	wchar_t kindStr[256];
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), thisRoom->objects[objActive].what);
+	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
@@ -1585,8 +1585,8 @@ void DoFlowerObjectInfo (HWND hwndOwner)
 
 	if (result == kFlowerLinkedFrom)
 	{
-		GoToObjectInRoomNum(retroLinkList[objActive].object,
-			retroLinkList[objActive].room);
+		GoToObjectInRoomNum(g_retroLinkList[g_objActive].object,
+			g_retroLinkList[g_objActive].room);
 	}
 }
 
@@ -1594,15 +1594,15 @@ void DoFlowerObjectInfo (HWND hwndOwner)
 
 void DoObjectInfo (HWND hwndOwner)
 {
-	if ((objActive == kInitialGliderSelected) ||
-		(objActive == kLeftGliderSelected) ||
-		(objActive == kRightGliderSelected))
+	if ((g_objActive == kInitialGliderSelected) ||
+		(g_objActive == kLeftGliderSelected) ||
+		(g_objActive == kRightGliderSelected))
 	{
 		DoFurnitureObjectInfo(hwndOwner);
 		return;
 	}
 
-	switch (thisRoom->objects[objActive].what)
+	switch (g_thisRoom->objects[g_objActive].what)
 	{
 	case kFloorVent:
 	case kCeilingVent:

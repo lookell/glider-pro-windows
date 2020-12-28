@@ -11,22 +11,22 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern roomPtr thisRoom;
-extern Rect backSrcRect;
-extern HDC backSrcMap;
-extern SInt16 thisRoomNumber;
-extern SInt16 previousRoom;
-extern SInt16 leftThresh;
-extern SInt16 rightThresh;
-extern SInt16 lastBackground;
-extern Boolean autoRoomEdit;
-extern Boolean newRoomNow;
-extern Boolean noRoomAtAll;
-extern Boolean leftOpen;
-extern Boolean rightOpen;
-extern Boolean topOpen;
-extern Boolean bottomOpen;
-extern Boolean doBitchDialogs;
+extern roomPtr g_thisRoom;
+extern Rect g_backSrcRect;
+extern HDC g_backSrcMap;
+extern SInt16 g_thisRoomNumber;
+extern SInt16 g_previousRoom;
+extern SInt16 g_leftThresh;
+extern SInt16 g_rightThresh;
+extern SInt16 g_lastBackground;
+extern Boolean g_autoRoomEdit;
+extern Boolean g_newRoomNow;
+extern Boolean g_noRoomAtAll;
+extern Boolean g_leftOpen;
+extern Boolean g_rightOpen;
+extern Boolean g_topOpen;
+extern Boolean g_bottomOpen;
+extern Boolean g_doBitchDialogs;
 
 void SetInitialTiles (SInt16 background, SInt16 *theTiles);
 Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v);

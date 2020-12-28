@@ -24,7 +24,7 @@ typedef struct marquee
 	Boolean handled;
 } marquee;
 
-extern marquee theMarquee;
+extern marquee g_theMarquee;
 
 void DoMarquee (void);
 void StartMarquee (const Rect *theRect);

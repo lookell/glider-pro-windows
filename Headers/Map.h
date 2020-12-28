@@ -10,15 +10,15 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern HWND mapWindow;
-extern SInt16 isMapH;
-extern SInt16 isMapV;
-extern SInt16 mapRoomsWide;
-extern SInt16 mapRoomsHigh;
-extern SInt16 mapLeftRoom;
-extern SInt16 mapTopRoom;
-extern Boolean isMapOpen;
-extern Boolean doPrettyMap;
+extern HWND g_mapWindow;
+extern SInt16 g_isMapH;
+extern SInt16 g_isMapV;
+extern SInt16 g_mapRoomsWide;
+extern SInt16 g_mapRoomsHigh;
+extern SInt16 g_mapLeftRoom;
+extern SInt16 g_mapTopRoom;
+extern Boolean g_isMapOpen;
+extern Boolean g_doPrettyMap;
 
 Boolean ThisRoomVisibleOnMap (void);
 void CenterMapOnRoom (SInt16 h, SInt16 v);

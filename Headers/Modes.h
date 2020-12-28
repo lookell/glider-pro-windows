@@ -10,7 +10,7 @@
 #include "GliderStructs.h"
 #include "MacTypes.h"
 
-extern SInt16 saidFollow;
+extern SInt16 g_saidFollow;
 
 void StartGliderFadingIn (gliderPtr thisGlider);
 void StartGliderTransportingIn (gliderPtr thisGlider);

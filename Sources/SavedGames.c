@@ -33,7 +33,7 @@
 BOOL GetSaveFolderPath (LPWSTR lpSavePath, DWORD cchSavePath);
 void SavedGameMismatchError (HWND ownerWindow, ConstStringPtr gameName);
 
-gameType smallGame;
+gameType g_smallGame;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  GetSaveFolderPath
@@ -75,7 +75,7 @@ void SaveGame2 (HWND ownerWindow)
 	if (!GetSaveFolderPath(startPath, ARRAYSIZE(startPath)))
 		startPath[0] = L'\0';
 
-	numRooms = thisHouse.nRooms;
+	numRooms = g_thisHouse.nRooms;
 
 	savedGame.savedData = (savedRoom *)calloc(numRooms, sizeof(savedRoom));
 	if (savedGame.savedData == NULL)
@@ -84,7 +84,7 @@ void SaveGame2 (HWND ownerWindow)
 		return;
 	}
 
-	GetFirstWordOfString(thisHouseName, gameNameStr);
+	GetFirstWordOfString(g_thisHouseName, gameNameStr);
 	PasStringConcatC(gameNameStr, " Game");
 
 	WinFromMacString(gamePath, ARRAYSIZE(gamePath), gameNameStr);
@@ -107,29 +107,29 @@ void SaveGame2 (HWND ownerWindow)
 
 	savedGame.house.vRefNum = 0;
 	savedGame.house.parID = 0;
-	PasStringCopy(theHousesSpecs[thisHouseIndex].name, savedGame.house.name);
+	PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, savedGame.house.name);
 	savedGame.version = kSavedGameVersion;
-	savedGame.wasStarsLeft = numStarsRemaining;
-	savedGame.timeStamp = thisHouse.timeStamp;
-	savedGame.where.h = theGlider.dest.left;
-	savedGame.where.v = theGlider.dest.top;
-	savedGame.score = theScore;
+	savedGame.wasStarsLeft = g_numStarsRemaining;
+	savedGame.timeStamp = g_thisHouse.timeStamp;
+	savedGame.where.h = g_theGlider.dest.left;
+	savedGame.where.v = g_theGlider.dest.top;
+	savedGame.score = g_theScore;
 	savedGame.unusedLong = 0L;
 	savedGame.unusedLong2 = 0L;
-	savedGame.energy = batteryTotal;
-	savedGame.bands = bandsTotal;
-	savedGame.roomNumber = thisRoomNumber;
-	savedGame.gliderState = theGlider.mode;
-	savedGame.numGliders = mortals;
-	savedGame.foil = foilTotal;
+	savedGame.energy = g_batteryTotal;
+	savedGame.bands = g_bandsTotal;
+	savedGame.roomNumber = g_thisRoomNumber;
+	savedGame.gliderState = g_theGlider.mode;
+	savedGame.numGliders = g_mortals;
+	savedGame.foil = g_foilTotal;
 	savedGame.nRooms = numRooms;
-	savedGame.facing = theGlider.facing;
-	savedGame.showFoil = showFoil;
+	savedGame.facing = g_theGlider.facing;
+	savedGame.showFoil = g_showFoil;
 
 	for (r = 0; r < numRooms; r++)
 	{
 		destRoom = &(savedGame.savedData[r]);
-		srcRoom = &(thisHouse.rooms[r]);
+		srcRoom = &(g_thisHouse.rooms[r]);
 
 		destRoom->unusedShort = 0;
 		destRoom->unusedByte = 0;
@@ -178,7 +178,7 @@ void SavedGameMismatchError (HWND ownerWindow, ConstStringPtr gameName)
 	wchar_t houseStr[64];
 
 	WinFromMacString(gameStr, ARRAYSIZE(gameStr), gameName);
-	WinFromMacString(houseStr, ARRAYSIZE(houseStr), thisHouseName);
+	WinFromMacString(houseStr, ARRAYSIZE(houseStr), g_thisHouseName);
 
 	params.arg[0] = gameStr;
 	params.arg[1] = houseStr;
@@ -238,13 +238,13 @@ Boolean OpenSavedGame (HWND ownerWindow)
 		return false;
 	}
 
-	if (!PasStringEqual(savedGame.house.name, thisHouseName, true))
+	if (!PasStringEqual(savedGame.house.name, g_thisHouseName, true))
 	{
 		SavedGameMismatchError(ownerWindow, savedGame.house.name);
 		free(savedGame.savedData);
 		return false;
 	}
-	else if (thisHouse.timeStamp != savedGame.timeStamp)
+	else if (g_thisHouse.timeStamp != savedGame.timeStamp)
 	{
 		YellowAlert(ownerWindow, kYellowSavedTimeWrong, 0);
 		free(savedGame.savedData);
@@ -256,30 +256,30 @@ Boolean OpenSavedGame (HWND ownerWindow)
 		free(savedGame.savedData);
 		return false;
 	}
-	else if (savedGame.nRooms != thisHouse.nRooms)
+	else if (savedGame.nRooms != g_thisHouse.nRooms)
 	{
 		YellowAlert(ownerWindow, kYellowSavedRoomsWrong,
-				savedGame.nRooms - thisHouse.nRooms);
+				savedGame.nRooms - g_thisHouse.nRooms);
 		free(savedGame.savedData);
 		return false;
 	}
 	else
 	{
-		smallGame.wasStarsLeft = savedGame.wasStarsLeft;
-		smallGame.where.h = savedGame.where.h;
-		smallGame.where.v = savedGame.where.v;
-		smallGame.score = savedGame.score;
-		smallGame.unusedLong = savedGame.unusedLong;
-		smallGame.unusedLong2 = savedGame.unusedLong2;
-		smallGame.energy = savedGame.energy;
-		smallGame.bands = savedGame.bands;
-		smallGame.roomNumber = savedGame.roomNumber;
-		smallGame.gliderState = savedGame.gliderState;
-		smallGame.numGliders = savedGame.numGliders;
-		smallGame.foil = savedGame.foil;
-		smallGame.unusedShort = 0;
-		smallGame.facing = savedGame.facing;
-		smallGame.showFoil = savedGame.showFoil;
+		g_smallGame.wasStarsLeft = savedGame.wasStarsLeft;
+		g_smallGame.where.h = savedGame.where.h;
+		g_smallGame.where.v = savedGame.where.v;
+		g_smallGame.score = savedGame.score;
+		g_smallGame.unusedLong = savedGame.unusedLong;
+		g_smallGame.unusedLong2 = savedGame.unusedLong2;
+		g_smallGame.energy = savedGame.energy;
+		g_smallGame.bands = savedGame.bands;
+		g_smallGame.roomNumber = savedGame.roomNumber;
+		g_smallGame.gliderState = savedGame.gliderState;
+		g_smallGame.numGliders = savedGame.numGliders;
+		g_smallGame.foil = savedGame.foil;
+		g_smallGame.unusedShort = 0;
+		g_smallGame.facing = savedGame.facing;
+		g_smallGame.showFoil = savedGame.showFoil;
 
 		if (savedGame.savedData == NULL)
 		{
@@ -288,7 +288,7 @@ Boolean OpenSavedGame (HWND ownerWindow)
 		for (r = 0; r < savedGame.nRooms; r++)
 		{
 			srcRoom = &(savedGame.savedData[r]);
-			destRoom = &(thisHouse.rooms[r]);
+			destRoom = &(g_thisHouse.rooms[r]);
 			destRoom->visited = srcRoom->visited;
 			for (i = 0; i < kMaxRoomObs; i++)
 				destRoom->objects[i] = srcRoom->objects[i];
@@ -306,39 +306,39 @@ Boolean OpenSavedGame (HWND ownerWindow)
 
 void SaveGame (HWND ownerWindow, Boolean doSave)
 {
-	if (twoPlayerGame)
+	if (g_twoPlayerGame)
 		return;
 
 	if (doSave)
 	{
-		thisHouse.savedGame.version = kSavedGameVersion;
-		thisHouse.savedGame.wasStarsLeft = numStarsRemaining;
-		thisHouse.savedGame.timeStamp = (SInt32)Mac_GetDateTime();
-		thisHouse.savedGame.where.h = theGlider.dest.left;
-		thisHouse.savedGame.where.v = theGlider.dest.top;
-		thisHouse.savedGame.score = theScore;
-		thisHouse.savedGame.unusedLong = 0L;
-		thisHouse.savedGame.unusedLong2 = 0L;
-		thisHouse.savedGame.energy = batteryTotal;
-		thisHouse.savedGame.bands = bandsTotal;
-		thisHouse.savedGame.roomNumber = thisRoomNumber;
-		thisHouse.savedGame.gliderState = theGlider.mode;
-		thisHouse.savedGame.numGliders = mortals;
-		thisHouse.savedGame.foil = foilTotal;
-		thisHouse.savedGame.unusedShort = 0;
-		thisHouse.savedGame.facing = theGlider.facing;
-		thisHouse.savedGame.showFoil = showFoil;
+		g_thisHouse.savedGame.version = kSavedGameVersion;
+		g_thisHouse.savedGame.wasStarsLeft = g_numStarsRemaining;
+		g_thisHouse.savedGame.timeStamp = (SInt32)Mac_GetDateTime();
+		g_thisHouse.savedGame.where.h = g_theGlider.dest.left;
+		g_thisHouse.savedGame.where.v = g_theGlider.dest.top;
+		g_thisHouse.savedGame.score = g_theScore;
+		g_thisHouse.savedGame.unusedLong = 0L;
+		g_thisHouse.savedGame.unusedLong2 = 0L;
+		g_thisHouse.savedGame.energy = g_batteryTotal;
+		g_thisHouse.savedGame.bands = g_bandsTotal;
+		g_thisHouse.savedGame.roomNumber = g_thisRoomNumber;
+		g_thisHouse.savedGame.gliderState = g_theGlider.mode;
+		g_thisHouse.savedGame.numGliders = g_mortals;
+		g_thisHouse.savedGame.foil = g_foilTotal;
+		g_thisHouse.savedGame.unusedShort = 0;
+		g_thisHouse.savedGame.facing = g_theGlider.facing;
+		g_thisHouse.savedGame.showFoil = g_showFoil;
 
-		thisHouse.hasGame = true;
+		g_thisHouse.hasGame = true;
 	}
 	else
 	{
-		thisHouse.hasGame = false;
+		g_thisHouse.hasGame = false;
 	}
 
 	if (doSave)
 	{
-		if (!WriteHouse(ownerWindow, theMode == kEditMode))
+		if (!WriteHouse(ownerWindow, g_theMode == kEditMode))
 			YellowAlert(ownerWindow, kYellowFailedWrite, 0);
 	}
 }

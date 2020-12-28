@@ -9,8 +9,8 @@
 
 #include "MacTypes.h"
 
-extern SInt16 numStarsRemaining;
-extern Boolean bannerStarCountOn;
+extern SInt16 g_numStarsRemaining;
+extern Boolean g_bannerStarCountOn;
 
 SInt16 CountStarsInHouse (void);
 void BringUpBanner (void);

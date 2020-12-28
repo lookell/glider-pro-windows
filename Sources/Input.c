@@ -32,8 +32,8 @@
 #define kHyperThrust		8
 #define kHeliumLift			4
 
-#define IsKeyDown(vkey) (GetActiveWindow() == mainWindow && GetAsyncKeyState(vkey) < 0)
-#define IsKeyUp(vkey) (GetActiveWindow() != mainWindow || GetAsyncKeyState(vkey) >= 0)
+#define IsKeyDown(vkey) (GetActiveWindow() == g_mainWindow && GetAsyncKeyState(vkey) < 0)
+#define IsKeyUp(vkey) (GetActiveWindow() != g_mainWindow || GetAsyncKeyState(vkey) >= 0)
 
 void LogDemoKey (Byte keyIs);
 void DoCommandKey (void);
@@ -42,26 +42,26 @@ void DoBatteryEngaged (gliderPtr thisGlider);
 void DoHeliumEngaged (gliderPtr thisGlider);
 Boolean QuerySaveGame (HWND ownerWindow);
 
-demoType demoData[2000];
-SInt16 demoIndex;
-Boolean isEscPauseKey;
-Boolean paused;
+demoType g_demoData[2000];
+SInt16 g_demoIndex;
+Boolean g_isEscPauseKey;
+Boolean g_paused;
 
-static SInt16 batteryFrame;
-static Boolean batteryWasEngaged;
+static SInt16 g_batteryFrame;
+static Boolean g_batteryWasEngaged;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  LogDemoKey
 
 void LogDemoKey (Byte keyIs)
 {
-	if (demoIndex >= ARRAYSIZE(demoData))
+	if (g_demoIndex >= ARRAYSIZE(g_demoData))
 	{
 		return;
 	}
-	demoData[demoIndex].frame = gameFrame;
-	demoData[demoIndex].key = keyIs;
-	demoIndex++;
+	g_demoData[g_demoIndex].frame = g_gameFrame;
+	g_demoData[g_demoIndex].key = keyIs;
+	g_demoIndex++;
 }
 
 //--------------------------------------------------------------  DumpDemoData
@@ -83,9 +83,9 @@ void DumpDemoData (void)
 	{
 		RedAlert(kErrNoMemory);
 	}
-	for (i = 0; i < demoIndex; i++)
+	for (i = 0; i < g_demoIndex; i++)
 	{
-		WriteDemoType(demoWriter, &demoData[i]);
+		WriteDemoType(demoWriter, &g_demoData[i]);
 	}
 	byteio_close(demoWriter);
 	CloseHandle(demoFileHandle);
@@ -95,13 +95,13 @@ void DumpDemoData (void)
 
 void DoCommandKeyQuit (void)
 {
-	playing = false;
-	paused = false;
-	if ((!twoPlayerGame) && (!demoGoing))
+	g_playing = false;
+	g_paused = false;
+	if ((!g_twoPlayerGame) && (!g_demoGoing))
 	{
-		if (QuerySaveGame(mainWindow))
+		if (QuerySaveGame(g_mainWindow))
 		{
-			SaveGame2(mainWindow); // New save game.
+			SaveGame2(g_mainWindow); // New save game.
 		}
 	}
 }
@@ -111,8 +111,8 @@ void DoCommandKeyQuit (void)
 void DoCommandKeySave (void)
 {
 	RefreshScoreboard(kSavingTitleMode);
-	SaveGame2(mainWindow); // New save game.
-	CopyRectWorkToMain(&workSrcRect);
+	SaveGame2(g_mainWindow); // New save game.
+	CopyRectWorkToMain(&g_workSrcRect);
 	RefreshScoreboard(kNormalTitleMode);
 }
 
@@ -124,7 +124,7 @@ void DoCommandKey (void)
 	{
 		DoCommandKeyQuit();
 	}
-	else if ((IsKeyDown('S')) && (!twoPlayerGame) && (!demoGoing))
+	else if ((IsKeyDown('S')) && (!g_twoPlayerGame) && (!g_demoGoing))
 	{
 		DoCommandKeySave();
 	}
@@ -139,9 +139,9 @@ void DoPause (void)
 	HDC			mainWindowDC;
 
 	QSetRect(&bounds, 0, 0, 214, 54);
-	CenterRectInRect(&bounds, &houseRect);
+	CenterRectInRect(&bounds, &g_houseRect);
 	mainWindowDC = GetMainWindowDC();
-	if (isEscPauseKey)
+	if (g_isEscPauseKey)
 		LoadScaledGraphic(mainWindowDC, g_theHouseFile, kEscPausePictID, &bounds);
 	else
 		LoadScaledGraphic(mainWindowDC, g_theHouseFile, kTabPausePictID, &bounds);
@@ -152,39 +152,39 @@ void DoPause (void)
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 		// continue once the pause key is up
-		if ((isEscPauseKey && IsKeyUp(VK_ESCAPE)) ||
-				(!isEscPauseKey && IsKeyUp(VK_TAB)))
+		if ((g_isEscPauseKey && IsKeyUp(VK_ESCAPE)) ||
+				(!g_isEscPauseKey && IsKeyUp(VK_TAB)))
 			break;
 	}
 	if (msg.message == WM_QUIT)
 	{
 		PostQuitMessage((int)msg.wParam);
-		quitting = true;
+		g_quitting = true;
 		return;
 	}
 
-	paused = true;
-	while (paused && GetMessage(&msg, NULL, 0, 0))
+	g_paused = true;
+	while (g_paused && GetMessage(&msg, NULL, 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 		// continue once the pause key is down again
-		if ((isEscPauseKey && IsKeyDown(VK_ESCAPE)) ||
-				(!isEscPauseKey && IsKeyDown(VK_TAB)))
-			paused = false;
+		if ((g_isEscPauseKey && IsKeyDown(VK_ESCAPE)) ||
+				(!g_isEscPauseKey && IsKeyDown(VK_TAB)))
+			g_paused = false;
 		else if (IsKeyDown(VK_CONTROL))
 			DoCommandKey();
 	}
 	if (msg.message == WM_QUIT)
 	{		
 		PostQuitMessage((int)msg.wParam);
-		paused = false;
-		quitting = true;
+		g_paused = false;
+		g_quitting = true;
 		return;
 	}
 
 	mainWindowDC = GetMainWindowDC();
-	Mac_CopyBits(workSrcMap, mainWindowDC,
+	Mac_CopyBits(g_workSrcMap, mainWindowDC,
 			&bounds, &bounds, srcCopy, nil);
 	ReleaseMainWindowDC(mainWindowDC);
 
@@ -193,14 +193,14 @@ void DoPause (void)
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 		// continue once the pause key is up
-		if ((isEscPauseKey && IsKeyUp(VK_ESCAPE)) ||
-				(!isEscPauseKey && IsKeyUp(VK_TAB)))
+		if ((g_isEscPauseKey && IsKeyUp(VK_ESCAPE)) ||
+				(!g_isEscPauseKey && IsKeyUp(VK_TAB)))
 			break;
 	}
 	if (msg.message == WM_QUIT)
 	{
 		PostQuitMessage((int)msg.wParam);
-		quitting = true;
+		g_quitting = true;
 		return;
 	}
 }
@@ -224,23 +224,23 @@ void DoBatteryEngaged (gliderPtr thisGlider)
 			thisGlider->hVel += kHyperThrust;
 	}
 
-	batteryTotal--;
+	g_batteryTotal--;
 
-	if (batteryTotal == 0)
+	if (g_batteryTotal == 0)
 	{
 		QuickBatteryRefresh(false);
 		PlayPrioritySound(kFizzleSound, kFizzlePriority);
 	}
 	else
 	{
-		if (!batteryWasEngaged)
-			batteryFrame = 0;
-		if (batteryFrame == 0)
+		if (!g_batteryWasEngaged)
+			g_batteryFrame = 0;
+		if (g_batteryFrame == 0)
 			PlayPrioritySound(kThrustSound, kThrustPriority);
-		batteryFrame++;
-		if (batteryFrame >= 4)
-			batteryFrame = 0;
-		batteryWasEngaged = true;
+		g_batteryFrame++;
+		if (g_batteryFrame >= 4)
+			g_batteryFrame = 0;
+		g_batteryWasEngaged = true;
 	}
 }
 
@@ -249,24 +249,24 @@ void DoBatteryEngaged (gliderPtr thisGlider)
 void DoHeliumEngaged (gliderPtr thisGlider)
 {
 	thisGlider->vDesiredVel = -kHeliumLift;
-	batteryTotal++;
+	g_batteryTotal++;
 
-	if (batteryTotal == 0)
+	if (g_batteryTotal == 0)
 	{
 		QuickBatteryRefresh(false);
 		PlayPrioritySound(kFizzleSound, kFizzlePriority);
-		batteryWasEngaged = false;
+		g_batteryWasEngaged = false;
 	}
 	else
 	{
-		if (!batteryWasEngaged)
-			batteryFrame = 0;
-		if (batteryFrame == 0)
+		if (!g_batteryWasEngaged)
+			g_batteryFrame = 0;
+		if (g_batteryFrame == 0)
 			PlayPrioritySound(kHissSound, kHissPriority);
-		batteryFrame++;
-		if (batteryFrame >= 4)
-			batteryFrame = 0;
-		batteryWasEngaged = true;
+		g_batteryFrame++;
+		if (g_batteryFrame >= 4)
+			g_batteryFrame = 0;
+		g_batteryWasEngaged = true;
 	}
 }
 
@@ -303,12 +303,12 @@ void GetDemoInput (gliderPtr thisGlider)
 
 		demoFrame = -1;
 		demoKey = 255;
-		if (demoIndex < ARRAYSIZE(demoData))
+		if (g_demoIndex < ARRAYSIZE(g_demoData))
 		{
-			demoFrame = demoData[demoIndex].frame;
-			demoKey = demoData[demoIndex].key;
+			demoFrame = g_demoData[g_demoIndex].frame;
+			demoKey = g_demoData[g_demoIndex].key;
 		}
-		if (gameFrame == demoFrame)
+		if (g_gameFrame == demoFrame)
 		{
 			switch (demoKey)
 			{
@@ -327,7 +327,7 @@ void GetDemoInput (gliderPtr thisGlider)
 				break;
 
 				case 2: // battery key
-				if (batteryTotal > 0)
+				if (g_batteryTotal > 0)
 					DoBatteryEngaged(thisGlider);
 				else
 					DoHeliumEngaged(thisGlider);
@@ -340,8 +340,8 @@ void GetDemoInput (gliderPtr thisGlider)
 					if (AddBand(thisGlider, thisGlider->dest.left + 24,
 							thisGlider->dest.top + 10, thisGlider->facing))
 					{
-						bandsTotal--;
-						if (bandsTotal <= 0)
+						g_bandsTotal--;
+						if (g_bandsTotal <= 0)
 							QuickBandsRefresh(false);
 
 						thisGlider->fireHeld = true;
@@ -350,13 +350,13 @@ void GetDemoInput (gliderPtr thisGlider)
 				break;
 			}
 
-			demoIndex++;
+			g_demoIndex++;
 		}
 		else
 			thisGlider->fireHeld = false;
 
-		if ((isEscPauseKey && IsKeyDown(VK_ESCAPE)) ||
-				(!isEscPauseKey && IsKeyDown(VK_TAB)))
+		if ((g_isEscPauseKey && IsKeyDown(VK_ESCAPE)) ||
+				(!g_isEscPauseKey && IsKeyDown(VK_TAB)))
 		{
 			DoPause();
 		}
@@ -413,21 +413,21 @@ void GetInput (gliderPtr thisGlider)
 		else
 			thisGlider->tipped = false;
 
-		if ((IsKeyDown(thisGlider->battKey)) && (batteryTotal != 0) &&
+		if ((IsKeyDown(thisGlider->battKey)) && (g_batteryTotal != 0) &&
 				(thisGlider->mode == kGliderNormal))
 		{
 			if (CREATEDEMODATA)
 				LogDemoKey(2);
 
-			if (batteryTotal > 0)
+			if (g_batteryTotal > 0)
 				DoBatteryEngaged(thisGlider);
 			else
 				DoHeliumEngaged(thisGlider);
 		}
 		else
-			batteryWasEngaged = false;
+			g_batteryWasEngaged = false;
 
-		if ((IsKeyDown(thisGlider->bandKey)) && (bandsTotal > 0) &&
+		if ((IsKeyDown(thisGlider->bandKey)) && (g_bandsTotal > 0) &&
 				(thisGlider->mode == kGliderNormal))
 		{
 			if (CREATEDEMODATA)
@@ -438,8 +438,8 @@ void GetInput (gliderPtr thisGlider)
 				if (AddBand(thisGlider, thisGlider->dest.left + 24,
 						thisGlider->dest.top + 10, thisGlider->facing))
 				{
-					bandsTotal--;
-					if (bandsTotal <= 0)
+					g_bandsTotal--;
+					if (g_bandsTotal <= 0)
 						QuickBandsRefresh(false);
 
 					thisGlider->fireHeld = true;
@@ -449,15 +449,15 @@ void GetInput (gliderPtr thisGlider)
 		else
 			thisGlider->fireHeld = false;
 
-		if ((otherPlayerEscaped != kNoOneEscaped) &&
+		if ((g_otherPlayerEscaped != kNoOneEscaped) &&
 				(IsKeyDown(VK_DELETE)) &&
-				(thisGlider->which) && (!onePlayerLeft))
+				(thisGlider->which) && (!g_onePlayerLeft))
 		{
 			ForceKillGlider();
 		}
 
-		if ((isEscPauseKey && IsKeyDown(VK_ESCAPE)) ||
-				(!isEscPauseKey && IsKeyDown(VK_TAB)))
+		if ((g_isEscPauseKey && IsKeyDown(VK_ESCAPE)) ||
+				(!g_isEscPauseKey && IsKeyDown(VK_TAB)))
 		{
 			DoPause();
 		}

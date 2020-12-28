@@ -32,22 +32,22 @@ SInt16 GetOriginalBounding (SInt16 theID);
 Boolean DoesRoomHaveFloor (void);
 Boolean DoesRoomHaveCeiling (void);
 
-roomPtr thisRoom;
-Rect backSrcRect;
-HDC backSrcMap;
-SInt16 thisRoomNumber;
-SInt16 previousRoom;
-SInt16 leftThresh;
-SInt16 rightThresh;
-SInt16 lastBackground;
-Boolean autoRoomEdit;
-Boolean newRoomNow;
-Boolean noRoomAtAll;
-Boolean leftOpen;
-Boolean rightOpen;
-Boolean topOpen;
-Boolean bottomOpen;
-Boolean doBitchDialogs;
+roomPtr g_thisRoom;
+Rect g_backSrcRect;
+HDC g_backSrcMap;
+SInt16 g_thisRoomNumber;
+SInt16 g_previousRoom;
+SInt16 g_leftThresh;
+SInt16 g_rightThresh;
+SInt16 g_lastBackground;
+Boolean g_autoRoomEdit;
+Boolean g_newRoomNow;
+Boolean g_noRoomAtAll;
+Boolean g_leftOpen;
+Boolean g_rightOpen;
+Boolean g_topOpen;
+Boolean g_bottomOpen;
+Boolean g_doBitchDialogs;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  SetInitialTiles
@@ -140,25 +140,25 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 
 	CopyThisRoomToRoom();					// save off current room
 
-	PasStringCopyC("Untitled Room", thisRoom->name);
-	thisRoom->leftStart = 32;				// fill out fields of new room
-	thisRoom->rightStart = 32;
-	thisRoom->bounds = 0;
-	thisRoom->unusedByte = 0;
-	thisRoom->visited = false;
-	thisRoom->background = lastBackground;
-	SetInitialTiles(thisRoom->background, thisRoom->tiles);
-	thisRoom->floor = v;
-	thisRoom->suite = h;
-	thisRoom->openings = 0;
-	thisRoom->numObjects = 0;
+	PasStringCopyC("Untitled Room", g_thisRoom->name);
+	g_thisRoom->leftStart = 32;				// fill out fields of new room
+	g_thisRoom->rightStart = 32;
+	g_thisRoom->bounds = 0;
+	g_thisRoom->unusedByte = 0;
+	g_thisRoom->visited = false;
+	g_thisRoom->background = g_lastBackground;
+	SetInitialTiles(g_thisRoom->background, g_thisRoom->tiles);
+	g_thisRoom->floor = v;
+	g_thisRoom->suite = h;
+	g_thisRoom->openings = 0;
+	g_thisRoom->numObjects = 0;
 	for (i = 0; i < kMaxRoomObs; i++)		// zero out all objects
-		thisRoom->objects[i].what = kObjectIsEmpty;
+		g_thisRoom->objects[i].what = kObjectIsEmpty;
 
 	availableRoom = -1;						// assume no available rooms
-	if (thisHouse.nRooms > 0)				// look for an empty room
-		for (i = 0; i < thisHouse.nRooms; i++)
-			if (thisHouse.rooms[i].suite == kRoomIsEmpty)
+	if (g_thisHouse.nRooms > 0)				// look for an empty room
+		for (i = 0; i < g_thisHouse.nRooms; i++)
+			if (g_thisHouse.rooms[i].suite == kRoomIsEmpty)
 			{
 				availableRoom = i;
 				break;
@@ -166,40 +166,40 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 
 	if (availableRoom == -1)				// found no available rooms
 	{
-		if (thisHouse.nRooms < 0)
-			thisHouse.nRooms = 0;
-		newRoomsCount = (size_t)thisHouse.nRooms + 1;
-		newRoomsPtr = (roomType *)realloc(thisHouse.rooms,
-			newRoomsCount * sizeof(*thisHouse.rooms));
+		if (g_thisHouse.nRooms < 0)
+			g_thisHouse.nRooms = 0;
+		newRoomsCount = (size_t)g_thisHouse.nRooms + 1;
+		newRoomsPtr = (roomType *)realloc(g_thisHouse.rooms,
+			newRoomsCount * sizeof(*g_thisHouse.rooms));
 		if (newRoomsPtr == NULL)
 		{
 			YellowAlert(ownerWindow, kYellowUnaccounted, -1);
 			return (false);
 		}
-		thisHouse.rooms = newRoomsPtr;
-		thisHouse.nRooms++;					// increment nRooms
-		previousRoom = thisRoomNumber;
-		thisRoomNumber = thisHouse.nRooms - 1;
+		g_thisHouse.rooms = newRoomsPtr;
+		g_thisHouse.nRooms++;					// increment nRooms
+		g_previousRoom = g_thisRoomNumber;
+		g_thisRoomNumber = g_thisHouse.nRooms - 1;
 	}
 	else
 	{
-		previousRoom = thisRoomNumber;
-		thisRoomNumber = availableRoom;
+		g_previousRoom = g_thisRoomNumber;
+		g_thisRoomNumber = availableRoom;
 	}
 
-	if (noRoomAtAll)
-		thisHouse.firstRoom = thisRoomNumber;
+	if (g_noRoomAtAll)
+		g_thisHouse.firstRoom = g_thisRoomNumber;
 
 	CopyThisRoomToRoom();
 	UpdateEditWindowTitle();
-	noRoomAtAll = false;
-	fileDirty = true;
+	g_noRoomAtAll = false;
+	g_fileDirty = true;
 	UpdateMenus(false);
 
 	if (GetKeyState(VK_SHIFT) < 0)
-		newRoomNow = false;
+		g_newRoomNow = false;
 	else
-		newRoomNow = autoRoomEdit;			// Flag to bring up RoomInfo
+		g_newRoomNow = g_autoRoomEdit;			// Flag to bring up RoomInfo
 
 	return (true);
 }
@@ -218,11 +218,11 @@ void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 	HFONT hFont;
 	wchar_t theString[256];
 
-	if ((noRoomAtAll) || (!houseUnlocked))
+	if ((g_noRoomAtAll) || (!g_houseUnlocked))
 	{
-		wasColor = SetDCBrushColor(workSrcMap, LtGrayForeColor());
-		Mac_PaintRect(workSrcMap, &workSrcRect, (HBRUSH)GetStockObject(DC_BRUSH));
-		SetDCBrushColor(workSrcMap, wasColor);
+		wasColor = SetDCBrushColor(g_workSrcMap, LtGrayForeColor());
+		Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(DC_BRUSH));
+		SetDCBrushColor(g_workSrcMap, wasColor);
 
 		ncm.cbSize = sizeof(ncm);
 		hFont = NULL;
@@ -235,7 +235,7 @@ void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 			hFont = (HFONT)GetStockObject(SYSTEM_FONT);
 		}
 
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 		{
 			StringCchCopy(theString, ARRAYSIZE(theString), L"No Rooms");
 		}
@@ -244,30 +244,30 @@ void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 			StringCchCopy(theString, ARRAYSIZE(theString), L"Nothing to show");
 		}
 
-		SaveDC(workSrcMap);
-		SetTextColor(workSrcMap, blackColor);
-		SetTextAlign(workSrcMap, TA_TOP | TA_LEFT | TA_NOUPDATECP);
-		SetBkMode(workSrcMap, TRANSPARENT);
-		SelectObject(workSrcMap, hFont);
-		TextOut(workSrcMap, 10, 10, theString, (int)wcslen(theString));
-		RestoreDC(workSrcMap, -1);
+		SaveDC(g_workSrcMap);
+		SetTextColor(g_workSrcMap, blackColor);
+		SetTextAlign(g_workSrcMap, TA_TOP | TA_LEFT | TA_NOUPDATECP);
+		SetBkMode(g_workSrcMap, TRANSPARENT);
+		SelectObject(g_workSrcMap, hFont);
+		TextOut(g_workSrcMap, 10, 10, theString, (int)wcslen(theString));
+		RestoreDC(g_workSrcMap, -1);
 		DeleteObject(hFont);
 
-		Mac_CopyBits(workSrcMap, backSrcMap,
-				&workSrcRect, &workSrcRect, srcCopy, nil);
+		Mac_CopyBits(g_workSrcMap, g_backSrcMap,
+				&g_workSrcRect, &g_workSrcRect, srcCopy, nil);
 		return;
 	}
 
 	thePicture = Gp_LoadImage(g_theHouseFile, theID);
 	if (thePicture == NULL)
 	{
-		YellowAlert(mainWindow, kYellowNoBackground, 0);
+		YellowAlert(g_mainWindow, kYellowNoBackground, 0);
 		return;
 	}
 
 	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
 	QSetRect(&dest, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
-	Mac_DrawPicture(workSrcMap, thePicture, &dest);
+	Mac_DrawPicture(g_workSrcMap, thePicture, &dest);
 	DeleteObject(thePicture);
 
 	QSetRect(&src, 0, 0, kTileWide, kTileHigh);
@@ -276,14 +276,14 @@ void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 	{
 		src.left = theTiles[i] * kTileWide;
 		src.right = src.left + kTileWide;
-		Mac_CopyBits(workSrcMap, backSrcMap,
+		Mac_CopyBits(g_workSrcMap, g_backSrcMap,
 				&src, &dest, srcCopy, nil);
 		QOffsetRect(&dest, kTileWide, 0);
 	}
 
 	QSetRect(&src, 0, 0, kRoomWide, kTileHigh);
 	QSetRect(&dest, 0, 0, kRoomWide, kTileHigh);
-	Mac_CopyBits(backSrcMap, workSrcMap,
+	Mac_CopyBits(g_backSrcMap, g_workSrcMap,
 			&src, &dest, srcCopy, nil);
 }
 
@@ -294,10 +294,10 @@ void ReflectCurrentRoom (Boolean forceMapRedraw)
 	if (COMPILEDEMO)
 		return;
 
-	if (theMode != kEditMode)
+	if (g_theMode != kEditMode)
 		return;
 
-	if ((noRoomAtAll) || (!houseUnlocked))
+	if ((g_noRoomAtAll) || (!g_houseUnlocked))
 	{
 		CenterMapOnRoom(64, 1);
 		UpdateMapWindow();
@@ -306,7 +306,7 @@ void ReflectCurrentRoom (Boolean forceMapRedraw)
 	{
 		if ((!ThisRoomVisibleOnMap()) || (forceMapRedraw))
 		{
-			CenterMapOnRoom(thisRoom->suite, thisRoom->floor);
+			CenterMapOnRoom(g_thisRoom->suite, g_thisRoom->floor);
 			UpdateMapWindow();			// whole map window redrawm
 		}
 		else
@@ -317,10 +317,10 @@ void ReflectCurrentRoom (Boolean forceMapRedraw)
 	}
 	GenerateRetroLinks();
 	UpdateEditWindowTitle();
-	ReadyBackground(thisRoom->background, thisRoom->tiles);
+	ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 	GetThisRoomsObjRects();
 	DrawThisRoomsObjects();
-	Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+	Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
 }
 
 //--------------------------------------------------------------  CopyRoomToThisRoom
@@ -338,28 +338,28 @@ void CopyRoomToThisRoom (SInt16 roomNumber)
 
 void CopyThisRoomToRoom (void)
 {
-	if (noRoomAtAll)
+	if (g_noRoomAtAll)
 		return;
-	if (thisRoomNumber < 0 || thisRoomNumber >= thisHouse.nRooms)
+	if (g_thisRoomNumber < 0 || g_thisRoomNumber >= g_thisHouse.nRooms)
 		return;
 
-	thisHouse.rooms[thisRoomNumber] = *thisRoom;	// copy back to house
+	g_thisHouse.rooms[g_thisRoomNumber] = *g_thisRoom;	// copy back to house
 }
 
 //--------------------------------------------------------------  ForceThisRoom
 
 void ForceThisRoom (SInt16 roomNumber)
 {
-	if (roomNumber < 0 || roomNumber >= thisHouse.nRooms)
+	if (roomNumber < 0 || roomNumber >= g_thisHouse.nRooms)
 		return;
 
-	if (roomNumber < thisHouse.nRooms)
-		*thisRoom = thisHouse.rooms[roomNumber];
+	if (roomNumber < g_thisHouse.nRooms)
+		*g_thisRoom = g_thisHouse.rooms[roomNumber];
 	else
-		YellowAlert(mainWindow, kYellowIllegalRoomNum, 0);
+		YellowAlert(g_mainWindow, kYellowIllegalRoomNum, 0);
 
-	previousRoom = thisRoomNumber;
-	thisRoomNumber = roomNumber;
+	g_previousRoom = g_thisRoomNumber;
+	g_thisRoomNumber = roomNumber;
 }
 
 //--------------------------------------------------------------  RoomExists
@@ -375,10 +375,10 @@ Boolean RoomExists (SInt16 suite, SInt16 floor, SInt16 *roomNum)
 	if (suite < 0)
 		return (foundIt);
 
-	for (i = 0; i < thisHouse.nRooms; i++)
+	for (i = 0; i < g_thisHouse.nRooms; i++)
 	{
-		if ((thisHouse.rooms[i].floor == floor) &&
-				(thisHouse.rooms[i].suite == suite))
+		if ((g_thisHouse.rooms[i].floor == floor) &&
+				(g_thisHouse.rooms[i].suite == suite))
 		{
 			foundIt = true;
 			*roomNum = i;
@@ -412,9 +412,9 @@ void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 
 	if (COMPILEDEMO)
 		return;
-	if ((theMode != kEditMode) || (noRoomAtAll))
+	if ((g_theMode != kEditMode) || (g_noRoomAtAll))
 		return;
-	if (thisRoomNumber < 0 || thisRoomNumber >= thisHouse.nRooms)
+	if (g_thisRoomNumber < 0 || g_thisRoomNumber >= g_thisHouse.nRooms)
 		return;
 
 	if (doWarn)
@@ -425,25 +425,25 @@ void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 
 	DeselectObject();
 
-	wasFloor_ = thisHouse.rooms[thisRoomNumber].floor;
-	wasSuite_ = thisHouse.rooms[thisRoomNumber].suite;
-	firstDeleted = (thisHouse.firstRoom == thisRoomNumber);		// is room "first"
-	thisRoom->suite = kRoomIsEmpty;
-	thisHouse.rooms[thisRoomNumber].suite = kRoomIsEmpty;
+	wasFloor_ = g_thisHouse.rooms[g_thisRoomNumber].floor;
+	wasSuite_ = g_thisHouse.rooms[g_thisRoomNumber].suite;
+	firstDeleted = (g_thisHouse.firstRoom == g_thisRoomNumber);		// is room "first"
+	g_thisRoom->suite = kRoomIsEmpty;
+	g_thisHouse.rooms[g_thisRoomNumber].suite = kRoomIsEmpty;
 
-	noRoomAtAll = (RealRoomNumberCount() == 0);					// see if now no rooms
-	if (noRoomAtAll)
-		thisRoomNumber = kRoomIsEmpty;
+	g_noRoomAtAll = (RealRoomNumberCount() == 0);					// see if now no rooms
+	if (g_noRoomAtAll)
+		g_thisRoomNumber = kRoomIsEmpty;
 	else
 		SetToNearestNeighborRoom(wasFloor_, wasSuite_);
 
 	if (firstDeleted)
 	{
-		thisHouse.firstRoom = thisRoomNumber;
+		g_thisHouse.firstRoom = g_thisRoomNumber;
 	}
 
-	newRoomNow = false;
-	fileDirty = true;
+	g_newRoomNow = false;
+	g_fileDirty = true;
 	UpdateMenus(false);
 	ReflectCurrentRoom(false);
 }
@@ -470,11 +470,11 @@ SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor)
 	if (COMPILEDEMO)
 		return(-1);
 
-	if (theMode != kEditMode)
+	if (g_theMode != kEditMode)
 		return(-1);
 
-	newH = thisRoom->suite;
-	newV = thisRoom->floor;
+	newH = g_thisRoom->suite;
+	newV = g_thisRoom->floor;
 
 	switch (whichNeighbor)
 	{
@@ -580,17 +580,17 @@ SInt16 GetNeighborRoomNumber (SInt16 which)
 		break;
 	}
 
-	if (thisRoomNumber < 0 || thisRoomNumber >= thisHouse.nRooms)
+	if (g_thisRoomNumber < 0 || g_thisRoomNumber >= g_thisHouse.nRooms)
 		return kRoomIsEmpty;
 
 	roomNum = kRoomIsEmpty;
-	roomH = thisHouse.rooms[thisRoomNumber].suite + hDelta;
-	roomV = thisHouse.rooms[thisRoomNumber].floor + vDelta;
+	roomH = g_thisHouse.rooms[g_thisRoomNumber].suite + hDelta;
+	roomV = g_thisHouse.rooms[g_thisRoomNumber].floor + vDelta;
 
-	for (i = 0; i < thisHouse.nRooms; i++)
+	for (i = 0; i < g_thisHouse.nRooms; i++)
 	{
-		if ((thisHouse.rooms[i].suite == roomH) &&
-				(thisHouse.rooms[i].floor == roomV))
+		if ((g_thisHouse.rooms[i].suite == roomH) &&
+				(g_thisHouse.rooms[i].floor == roomV))
 		{
 			roomNum = i;
 			break;
@@ -604,8 +604,8 @@ SInt16 GetNeighborRoomNumber (SInt16 which)
 
 void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_)
 {
-	// searches in a clockwise spiral pattern (from thisRoom) for a
-	// legitimate neighboring room - then sets thisRoom to it
+	// searches in a clockwise spiral pattern (from g_thisRoom) for a
+	// legitimate neighboring room - then sets g_thisRoom to it
 	SInt16		distance, h, v;
 	SInt16		hStep, vStep;
 	SInt16		testRoomNum, testH, testV;
@@ -672,13 +672,13 @@ Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite)
 {
 	Boolean		isRoom;
 
-	if (room < 0 || room >= thisHouse.nRooms)
+	if (room < 0 || room >= g_thisHouse.nRooms)
 	{
 		*floor = 0;
 		*suite = kRoomIsEmpty;
 		isRoom = false;
 	}
-	else if (thisHouse.rooms[room].suite == kRoomIsEmpty)
+	else if (g_thisHouse.rooms[room].suite == kRoomIsEmpty)
 	{
 		*floor = 0;
 		*suite = kRoomIsEmpty;
@@ -686,8 +686,8 @@ Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite)
 	}
 	else
 	{
-		*suite = thisHouse.rooms[room].suite;
-		*floor = thisHouse.rooms[room].floor;
+		*suite = g_thisHouse.rooms[room].suite;
+		*floor = g_thisHouse.rooms[room].floor;
 		isRoom = true;
 	}
 
@@ -703,10 +703,10 @@ SInt16 GetRoomNumber (SInt16 floor, SInt16 suite)
 
 	roomNum = kRoomIsEmpty;
 
-	for (i = 0; i < thisHouse.nRooms; i++)
+	for (i = 0; i < g_thisHouse.nRooms; i++)
 	{
-		if ((thisHouse.rooms[i].suite == suite) &&
-				(thisHouse.rooms[i].floor == floor))
+		if ((g_thisHouse.rooms[i].suite == suite) &&
+				(g_thisHouse.rooms[i].floor == floor))
 		{
 			roomNum = i;
 			break;
@@ -722,18 +722,18 @@ Boolean IsRoomAStructure (SInt16 roomNum)
 {
 	Boolean		isStructure;
 
-	if (roomNum < 0 || roomNum >= thisHouse.nRooms)
+	if (roomNum < 0 || roomNum >= g_thisHouse.nRooms)
 		return (false);
 
-	if (thisHouse.rooms[roomNum].background >= kUserBackground)
+	if (g_thisHouse.rooms[roomNum].background >= kUserBackground)
 	{
-		if (thisHouse.rooms[roomNum].bounds != 0)
+		if (g_thisHouse.rooms[roomNum].bounds != 0)
 		{
-			isStructure = ((thisHouse.rooms[roomNum].bounds & 32) == 32);
+			isStructure = ((g_thisHouse.rooms[roomNum].bounds & 32) == 32);
 		}
 		else
 		{
-			if (thisHouse.rooms[roomNum].background < kUserStructureRange)
+			if (g_thisHouse.rooms[roomNum].background < kUserStructureRange)
 				isStructure = true;
 			else
 				isStructure = false;
@@ -741,7 +741,7 @@ Boolean IsRoomAStructure (SInt16 roomNum)
 	}
 	else
 	{
-		switch (thisHouse.rooms[roomNum].background)
+		switch (g_thisHouse.rooms[roomNum].background)
 		{
 			case kPaneledRoom:
 			case kSimpleRoom:
@@ -772,28 +772,28 @@ void DetermineRoomOpenings (void)
 	SInt16		whichBack, leftTile, rightTile;
 	SInt16		boundsCode;
 
-	whichBack = thisRoom->background;
-	leftTile = thisRoom->tiles[0];
-	rightTile = thisRoom->tiles[kNumTiles - 1];
+	whichBack = g_thisRoom->background;
+	leftTile = g_thisRoom->tiles[0];
+	rightTile = g_thisRoom->tiles[kNumTiles - 1];
 
 	if (whichBack >= kUserBackground)
 	{
-		if (thisRoom->bounds != 0)
-			boundsCode = thisRoom->bounds >> 1;
+		if (g_thisRoom->bounds != 0)
+			boundsCode = g_thisRoom->bounds >> 1;
 		else
 			boundsCode = GetOriginalBounding(whichBack);
-		leftOpen = ((boundsCode & 0x0001) == 0x0001);
-		rightOpen = ((boundsCode & 0x0004) == 0x0004);
+		g_leftOpen = ((boundsCode & 0x0001) == 0x0001);
+		g_rightOpen = ((boundsCode & 0x0004) == 0x0004);
 
-		if (leftOpen)
-			leftThresh = kNoLeftWallLimit;
+		if (g_leftOpen)
+			g_leftThresh = kNoLeftWallLimit;
 		else
-			leftThresh = kLeftWallLimit;
+			g_leftThresh = kLeftWallLimit;
 
-		if (rightOpen)
-			rightThresh = kNoRightWallLimit;
+		if (g_rightOpen)
+			g_rightThresh = kNoRightWallLimit;
 		else
-			rightThresh = kRightWallLimit;
+			g_rightThresh = kRightWallLimit;
 	}
 	else
 	{
@@ -810,41 +810,41 @@ void DetermineRoomOpenings (void)
 			case kLibrary:
 			case kSky:
 			if (leftTile == 0)
-				leftThresh = kLeftWallLimit;
+				g_leftThresh = kLeftWallLimit;
 			else
-				leftThresh = kNoLeftWallLimit;
+				g_leftThresh = kNoLeftWallLimit;
 			if (rightTile == (kNumTiles - 1))
-				rightThresh = kRightWallLimit;
+				g_rightThresh = kRightWallLimit;
 			else
-				rightThresh = kNoRightWallLimit;
-			leftOpen = (leftTile != 0);
-			rightOpen = (rightTile != (kNumTiles - 1));
+				g_rightThresh = kNoRightWallLimit;
+			g_leftOpen = (leftTile != 0);
+			g_rightOpen = (rightTile != (kNumTiles - 1));
 			break;
 
 			case kDirt:
 			if (leftTile == 1)
-				leftThresh = kLeftWallLimit;
+				g_leftThresh = kLeftWallLimit;
 			else
-				leftThresh = kNoLeftWallLimit;
+				g_leftThresh = kNoLeftWallLimit;
 			if (rightTile == (kNumTiles - 1))
-				rightThresh = kRightWallLimit;
+				g_rightThresh = kRightWallLimit;
 			else
-				rightThresh = kNoRightWallLimit;
-			leftOpen = (leftTile != 0);
-			rightOpen = (rightTile != (kNumTiles - 1));
+				g_rightThresh = kNoRightWallLimit;
+			g_leftOpen = (leftTile != 0);
+			g_rightOpen = (rightTile != (kNumTiles - 1));
 			break;
 
 			case kMeadow:
 			if (leftTile == 6)
-				leftThresh = kLeftWallLimit;
+				g_leftThresh = kLeftWallLimit;
 			else
-				leftThresh = kNoLeftWallLimit;
+				g_leftThresh = kNoLeftWallLimit;
 			if (rightTile == 7)
-				rightThresh = kRightWallLimit;
+				g_rightThresh = kRightWallLimit;
 			else
-				rightThresh = kNoRightWallLimit;
-			leftOpen = (leftTile != 6);
-			rightOpen = (rightTile != 7);
+				g_rightThresh = kNoRightWallLimit;
+			g_leftOpen = (leftTile != 6);
+			g_rightOpen = (rightTile != 7);
 			break;
 
 			case kGarden:
@@ -852,38 +852,38 @@ void DetermineRoomOpenings (void)
 			case kField:
 			case kStratosphere:
 			case kStars:
-			leftThresh = kNoLeftWallLimit;
-			rightThresh = kNoRightWallLimit;
-			leftOpen = true;
-			rightOpen = true;
+			g_leftThresh = kNoLeftWallLimit;
+			g_rightThresh = kNoRightWallLimit;
+			g_leftOpen = true;
+			g_rightOpen = true;
 			break;
 
 			default:
 			if (leftTile == 0)
-				leftThresh = kLeftWallLimit;
+				g_leftThresh = kLeftWallLimit;
 			else
-				leftThresh = kNoLeftWallLimit;
+				g_leftThresh = kNoLeftWallLimit;
 
 			if (rightTile == (kNumTiles - 1))
-				rightThresh = kRightWallLimit;
+				g_rightThresh = kRightWallLimit;
 			else
-				rightThresh = kNoRightWallLimit;
+				g_rightThresh = kNoRightWallLimit;
 
-			leftOpen = (leftTile != 0);
-			rightOpen = (rightTile != (kNumTiles - 1));
+			g_leftOpen = (leftTile != 0);
+			g_rightOpen = (rightTile != (kNumTiles - 1));
 			break;
 		}
 	}
 
 	if (DoesRoomHaveFloor())
-		bottomOpen = false;
+		g_bottomOpen = false;
 	else
-		bottomOpen = true;
+		g_bottomOpen = true;
 
 	if (DoesRoomHaveCeiling())
-		topOpen = false;
+		g_topOpen = false;
 	else
-		topOpen = true;
+		g_topOpen = true;
 }
 
 //--------------------------------------------------------------  GetOriginalBounding
@@ -898,7 +898,7 @@ SInt16 GetOriginalBounding (SInt16 theID)
 	{
 		if (Gp_HouseImageExists(g_theHouseFile, theID))
 		{
-			YellowAlert(mainWindow, kYellowNoBoundsRes, 0);
+			YellowAlert(g_mainWindow, kYellowNoBoundsRes, 0);
 		}
 	}
 	else
@@ -930,9 +930,9 @@ SInt16 GetNumberOfLights (SInt16 where)
 {
 	SInt16		i, count;
 
-	if (theMode == kEditMode)
+	if (g_theMode == kEditMode)
 	{
-		switch (thisRoom->background)
+		switch (g_thisRoom->background)
 		{
 			case kGarden:
 			case kSkywalk:
@@ -947,10 +947,10 @@ SInt16 GetNumberOfLights (SInt16 where)
 
 			case kDirt:
 			count = 0;
-			if ((thisRoom->tiles[0] == 0) && (thisRoom->tiles[1] == 0) &&
-					(thisRoom->tiles[2] == 0) && (thisRoom->tiles[3] == 0) &&
-					(thisRoom->tiles[4] == 0) && (thisRoom->tiles[5] == 0) &&
-					(thisRoom->tiles[6] == 0) && (thisRoom->tiles[7] == 0))
+			if ((g_thisRoom->tiles[0] == 0) && (g_thisRoom->tiles[1] == 0) &&
+					(g_thisRoom->tiles[2] == 0) && (g_thisRoom->tiles[3] == 0) &&
+					(g_thisRoom->tiles[4] == 0) && (g_thisRoom->tiles[5] == 0) &&
+					(g_thisRoom->tiles[6] == 0) && (g_thisRoom->tiles[7] == 0))
 				count = 1;
 			break;
 
@@ -962,7 +962,7 @@ SInt16 GetNumberOfLights (SInt16 where)
 		{
 			for (i = 0; i < kMaxRoomObs; i++)
 			{
-				switch (thisRoom->objects[i].what)
+				switch (g_thisRoom->objects[i].what)
 				{
 					case kDoorInLf:
 					case kDoorInRt:
@@ -980,7 +980,7 @@ SInt16 GetNumberOfLights (SInt16 where)
 					case kFlourescent:
 					case kTrackLight:
 					case kInvisLight:
-					if (thisRoom->objects[i].data.f.initial)
+					if (g_thisRoom->objects[i].data.f.initial)
 						count++;
 					break;
 				}
@@ -989,9 +989,9 @@ SInt16 GetNumberOfLights (SInt16 where)
 	}
 	else
 	{
-		if (where < 0 || where >= thisHouse.nRooms)
+		if (where < 0 || where >= g_thisHouse.nRooms)
 			return 0;
-		switch (thisHouse.rooms[where].background)
+		switch (g_thisHouse.rooms[where].background)
 		{
 			case kGarden:
 			case kSkywalk:
@@ -1006,14 +1006,14 @@ SInt16 GetNumberOfLights (SInt16 where)
 
 			case kDirt:
 			count = 0;
-			if ((thisHouse.rooms[where].tiles[0] == 0) &&
-					(thisHouse.rooms[where].tiles[1] == 0) &&
-					(thisHouse.rooms[where].tiles[2] == 0) &&
-					(thisHouse.rooms[where].tiles[3] == 0) &&
-					(thisHouse.rooms[where].tiles[4] == 0) &&
-					(thisHouse.rooms[where].tiles[5] == 0) &&
-					(thisHouse.rooms[where].tiles[6] == 0) &&
-					(thisHouse.rooms[where].tiles[7] == 0))
+			if ((g_thisHouse.rooms[where].tiles[0] == 0) &&
+					(g_thisHouse.rooms[where].tiles[1] == 0) &&
+					(g_thisHouse.rooms[where].tiles[2] == 0) &&
+					(g_thisHouse.rooms[where].tiles[3] == 0) &&
+					(g_thisHouse.rooms[where].tiles[4] == 0) &&
+					(g_thisHouse.rooms[where].tiles[5] == 0) &&
+					(g_thisHouse.rooms[where].tiles[6] == 0) &&
+					(g_thisHouse.rooms[where].tiles[7] == 0))
 				count = 1;
 			break;
 
@@ -1025,7 +1025,7 @@ SInt16 GetNumberOfLights (SInt16 where)
 		{
 			for (i = 0; i < kMaxRoomObs; i++)
 			{
-				switch (thisHouse.rooms[where].objects[i].what)
+				switch (g_thisHouse.rooms[where].objects[i].what)
 				{
 					case kDoorInLf:
 					case kDoorInRt:
@@ -1043,7 +1043,7 @@ SInt16 GetNumberOfLights (SInt16 where)
 					case kFlourescent:
 					case kTrackLight:
 					case kInvisLight:
-					if (thisHouse.rooms[where].objects[i].data.f.state)
+					if (g_thisHouse.rooms[where].objects[i].data.f.state)
 						count++;
 					break;
 				}
@@ -1060,17 +1060,17 @@ Boolean IsShadowVisible (void)
 	SInt16		boundsCode;
 	Boolean		hasFloor;
 
-	if (thisRoom->background >= kUserBackground)
+	if (g_thisRoom->background >= kUserBackground)
 	{
-		if (thisRoom->bounds != 0)			// is this a version 2.0 house?
-			boundsCode = (thisRoom->bounds >> 1);
+		if (g_thisRoom->bounds != 0)			// is this a version 2.0 house?
+			boundsCode = (g_thisRoom->bounds >> 1);
 		else
-			boundsCode = GetOriginalBounding(thisRoom->background);
+			boundsCode = GetOriginalBounding(g_thisRoom->background);
 		hasFloor = ((boundsCode & 0x0008) != 0x0008);
 	}
 	else
 	{
-		switch (thisRoom->background)
+		switch (g_thisRoom->background)
 		{
 			case kRoof:
 			case kSky:
@@ -1095,17 +1095,17 @@ Boolean DoesRoomHaveFloor (void)
 	SInt16		boundsCode;
 	Boolean		hasFloor;
 
-	if (thisRoom->background >= kUserBackground)
+	if (g_thisRoom->background >= kUserBackground)
 	{
-		if (thisRoom->bounds != 0)			// is this a version 2.0 house?
-			boundsCode = (thisRoom->bounds >> 1);
+		if (g_thisRoom->bounds != 0)			// is this a version 2.0 house?
+			boundsCode = (g_thisRoom->bounds >> 1);
 		else
-			boundsCode = GetOriginalBounding(thisRoom->background);
+			boundsCode = GetOriginalBounding(g_thisRoom->background);
 		hasFloor = ((boundsCode & 0x0008) != 0x0008);
 	}
 	else
 	{
-		switch (thisRoom->background)
+		switch (g_thisRoom->background)
 		{
 			case kSky:
 			case kStratosphere:
@@ -1129,17 +1129,17 @@ Boolean DoesRoomHaveCeiling (void)
 	SInt16		boundsCode;
 	Boolean		hasCeiling;
 
-	if (thisRoom->background >= kUserBackground)
+	if (g_thisRoom->background >= kUserBackground)
 	{
-		if (thisRoom->bounds != 0)			// is this a version 2.0 house?
-			boundsCode = (thisRoom->bounds >> 1);
+		if (g_thisRoom->bounds != 0)			// is this a version 2.0 house?
+			boundsCode = (g_thisRoom->bounds >> 1);
 		else
-			boundsCode = GetOriginalBounding(thisRoom->background);
+			boundsCode = GetOriginalBounding(g_thisRoom->background);
 		hasCeiling = ((boundsCode & 0x0002) != 0x0002);
 	}
 	else
 	{
-		switch (thisRoom->background)
+		switch (g_thisRoom->background)
 		{
 			case kGarden:
 			case kMeadow:

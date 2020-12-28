@@ -25,9 +25,9 @@
 void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat);
 void HandleRoomVisitation (void);
 
-SInt16 linkedToWhat;
-Boolean takingTheStairs;
-Boolean firstPlayer;
+SInt16 g_linkedToWhat;
+Boolean g_takingTheStairs;
+Boolean g_firstPlayer;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  WhatAreWeLinkedTo
@@ -37,7 +37,7 @@ SInt16 WhatAreWeLinkedTo (SInt16 where, Byte who)
 	SInt16 what;
 	SInt16 whatType;
 
-	if (where < 0 || where >= thisHouse.nRooms)
+	if (where < 0 || where >= g_thisHouse.nRooms)
 	{
 		return kLinkedToOther;
 	}
@@ -46,7 +46,7 @@ SInt16 WhatAreWeLinkedTo (SInt16 where, Byte who)
 		return kLinkedToOther;
 	}
 
-	what = thisHouse.rooms[where].objects[who].what;
+	what = g_thisHouse.rooms[where].objects[who].what;
 
 	switch (what)
 	{
@@ -76,7 +76,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 {
 	Rect		tempRect;
 
-	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
+	if ((g_twoPlayerGame) && (g_onePlayerLeft) && (thisGlider->which == g_playerDead))
 		return;
 
 	FlagGliderNormal(thisGlider);
@@ -86,7 +86,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 		case kLinkedToOther:
 		StartGliderTransportingIn(thisGlider);	// set glider's mode
 		tempRect = thisGlider->dest;			// position glider
-		CenterRectInRect(&tempRect, &transRect);
+		CenterRectInRect(&tempRect, &g_transRect);
 		thisGlider->dest.left = tempRect.left;
 		thisGlider->dest.right = tempRect.right;
 		thisGlider->dest.top = tempRect.top;
@@ -100,7 +100,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 
 		case kLinkedToLeftMailbox:
 		StartGliderMailingOut(thisGlider);
-		thisGlider->clip = transRect;		// fix clip
+		thisGlider->clip = g_transRect;		// fix clip
 		thisGlider->clip.right -= 64;
 		thisGlider->clip.bottom -= 25;
 		tempRect = thisGlider->dest;
@@ -116,7 +116,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 
 		case kLinkedToRightMailbox:
 		StartGliderMailingOut(thisGlider);
-		thisGlider->clip = transRect;		// fix clip
+		thisGlider->clip = g_transRect;		// fix clip
 		thisGlider->clip.left += 79;
 		thisGlider->clip.bottom -= 25;
 		tempRect = thisGlider->dest;
@@ -133,7 +133,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 		case kLinkedToCeilingDuct:
 		StartGliderDuctingIn(thisGlider);
 		tempRect = thisGlider->dest;		// set glider's position
-		CenterRectInRect(&tempRect, &transRect);
+		CenterRectInRect(&tempRect, &g_transRect);
 		thisGlider->dest.left = tempRect.left;
 		thisGlider->dest.right = tempRect.right;
 		thisGlider->dest.top = tempRect.top;
@@ -152,7 +152,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 		break;
 	}
 
-	if ((twoPlayerGame) && (thisGlider->which != firstPlayer))
+	if ((g_twoPlayerGame) && (thisGlider->which != g_firstPlayer))
 		TagGliderIdle(thisGlider);
 }
 
@@ -167,81 +167,81 @@ void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 	{
 		case kToRight:
 		SetMusicalMode(kProdGameScoreMode);
-		if (twoPlayerGame)
+		if (g_twoPlayerGame)
 		{
-			UndoGliderLimbo(&theGlider);
-			UndoGliderLimbo(&theGlider2);
-			InsureGliderFacingRight(&theGlider);
-			InsureGliderFacingRight(&theGlider2);
+			UndoGliderLimbo(&g_theGlider);
+			UndoGliderLimbo(&g_theGlider2);
+			InsureGliderFacingRight(&g_theGlider);
+			InsureGliderFacingRight(&g_theGlider2);
 		}
 		else
 			InsureGliderFacingRight(thisGlider);
-		ForceThisRoom(localNumbers[kEastRoom]);
-		if (twoPlayerGame)
+		ForceThisRoom(g_localNumbers[kEastRoom]);
+		if (g_twoPlayerGame)
 		{
-			OffsetGlider(&theGlider, kToLeft);
-			OffsetGlider(&theGlider2, kToLeft);
+			OffsetGlider(&g_theGlider, kToLeft);
+			OffsetGlider(&g_theGlider2, kToLeft);
 			QSetRect(&enterRect, 0, 0, 48, 20);
 			QOffsetRect(&enterRect, 0,
-					kGliderStartsDown + (SInt16)thisRoom->leftStart - 2);
-			theGlider.enteredRect = enterRect;
-			theGlider2.enteredRect = enterRect;
+					kGliderStartsDown + (SInt16)g_thisRoom->leftStart - 2);
+			g_theGlider.enteredRect = enterRect;
+			g_theGlider2.enteredRect = enterRect;
 		}
 		else
 		{
 			OffsetGlider(thisGlider, kToLeft);
 			QSetRect(&enterRect, 0, 0, 48, 20);
 			QOffsetRect(&enterRect, 0,
-					kGliderStartsDown + (SInt16)thisRoom->leftStart - 2);
+					kGliderStartsDown + (SInt16)g_thisRoom->leftStart - 2);
 			thisGlider->enteredRect = enterRect;
 		}
 		break;
 
 		case kToLeft:
 		SetMusicalMode(kProdGameScoreMode);
-		if (twoPlayerGame)
+		if (g_twoPlayerGame)
 		{
-			UndoGliderLimbo(&theGlider);
-			UndoGliderLimbo(&theGlider2);
-			InsureGliderFacingLeft(&theGlider);
-			InsureGliderFacingLeft(&theGlider2);
+			UndoGliderLimbo(&g_theGlider);
+			UndoGliderLimbo(&g_theGlider2);
+			InsureGliderFacingLeft(&g_theGlider);
+			InsureGliderFacingLeft(&g_theGlider2);
 		}
 		else
 			InsureGliderFacingLeft(thisGlider);
-		ForceThisRoom(localNumbers[kWestRoom]);
-		if (twoPlayerGame)
+		ForceThisRoom(g_localNumbers[kWestRoom]);
+		if (g_twoPlayerGame)
 		{
-			OffsetGlider(&theGlider, kToRight);
-			OffsetGlider(&theGlider2, kToRight);
+			OffsetGlider(&g_theGlider, kToRight);
+			OffsetGlider(&g_theGlider2, kToRight);
 			QSetRect(&enterRect, 0, 0, 48, 20);
 			QOffsetRect(&enterRect, kRoomWide - 48,
-					kGliderStartsDown + (SInt16)thisRoom->rightStart - 2);
-			theGlider.enteredRect = enterRect;
-			theGlider2.enteredRect = enterRect;
+					kGliderStartsDown + (SInt16)g_thisRoom->rightStart - 2);
+			g_theGlider.enteredRect = enterRect;
+			g_theGlider2.enteredRect = enterRect;
 		}
 		else
 		{
 			OffsetGlider(thisGlider, kToRight);
 			QSetRect(&enterRect, 0, 0, 48, 20);
 			QOffsetRect(&enterRect, kRoomWide - 48,
-					kGliderStartsDown + (SInt16)thisRoom->rightStart - 2);
+					kGliderStartsDown + (SInt16)g_thisRoom->rightStart - 2);
 			thisGlider->enteredRect = enterRect;
 		}
 		break;
 
 		case kAbove:
 		SetMusicalMode(kKickGameScoreMode);
-		ForceThisRoom(localNumbers[kNorthRoom]);
-		if (!takingTheStairs)
+		ForceThisRoom(g_localNumbers[kNorthRoom]);
+		if (!g_takingTheStairs)
 		{
-			if (twoPlayerGame)
+			if (g_twoPlayerGame)
 			{
-				UndoGliderLimbo(&theGlider);
-				UndoGliderLimbo(&theGlider2);
-				OffsetGlider(&theGlider, kBelow);
-				OffsetGlider(&theGlider2, kBelow);
-				theGlider.enteredRect = theGlider.dest;
-				theGlider2.enteredRect = theGlider2.dest;
+				UndoGliderLimbo(&g_theGlider);
+				UndoGliderLimbo(&g_theGlider2);
+				OffsetGlider(&g_theGlider, kBelow);
+				OffsetGlider(&g_theGlider2, kBelow);
+				g_theGlider.enteredRect = g_theGlider.dest;
+				g_theGlider2.enteredRect = g_theGlider2.dest;
 			}
 			else
 			{
@@ -251,10 +251,10 @@ void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 		}
 		else
 		{
-			if (twoPlayerGame)
+			if (g_twoPlayerGame)
 			{
-				ReadyGliderForTripUpStairs(&theGlider);
-				ReadyGliderForTripUpStairs(&theGlider2);
+				ReadyGliderForTripUpStairs(&g_theGlider);
+				ReadyGliderForTripUpStairs(&g_theGlider2);
 			}
 			else
 				ReadyGliderForTripUpStairs(thisGlider);
@@ -263,17 +263,17 @@ void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 
 		case kBelow:
 		SetMusicalMode(kKickGameScoreMode);
-		ForceThisRoom(localNumbers[kSouthRoom]);
-		if (!takingTheStairs)
+		ForceThisRoom(g_localNumbers[kSouthRoom]);
+		if (!g_takingTheStairs)
 		{
-			if (twoPlayerGame)
+			if (g_twoPlayerGame)
 			{
-				UndoGliderLimbo(&theGlider);
-				UndoGliderLimbo(&theGlider2);
-				OffsetGlider(&theGlider, kAbove);
-				OffsetGlider(&theGlider2, kAbove);
-				theGlider.enteredRect = theGlider.dest;
-				theGlider2.enteredRect = theGlider2.dest;
+				UndoGliderLimbo(&g_theGlider);
+				UndoGliderLimbo(&g_theGlider2);
+				OffsetGlider(&g_theGlider, kAbove);
+				OffsetGlider(&g_theGlider2, kAbove);
+				g_theGlider.enteredRect = g_theGlider.dest;
+				g_theGlider2.enteredRect = g_theGlider2.dest;
 			}
 			else
 			{
@@ -283,10 +283,10 @@ void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 		}
 		else
 		{
-			if (twoPlayerGame)
+			if (g_twoPlayerGame)
 			{
-				ReadyGliderForTripDownStairs(&theGlider);
-				ReadyGliderForTripDownStairs(&theGlider2);
+				ReadyGliderForTripDownStairs(&g_theGlider);
+				ReadyGliderForTripDownStairs(&g_theGlider2);
 			}
 			else
 				ReadyGliderForTripDownStairs(thisGlider);
@@ -297,24 +297,24 @@ void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 		break;
 	}
 
-	if ((twoPlayerGame) && (!onePlayerLeft))
+	if ((g_twoPlayerGame) && (!g_onePlayerLeft))
 	{
-		if (firstPlayer == kPlayer1)
-			TagGliderIdle(&theGlider2);
+		if (g_firstPlayer == kPlayer1)
+			TagGliderIdle(&g_theGlider2);
 		else
-			TagGliderIdle(&theGlider);
+			TagGliderIdle(&g_theGlider);
 	}
 
 	ReadyLevel();
 	RefreshScoreboard(kNormalTitleMode);
-	WipeScreenOn(where, &justRoomsRect);
+	WipeScreenOn(where, &g_justRoomsRect);
 
 #ifdef COMPILEQT
 	RenderFrame();
-	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) && (tvOn))
+	if ((g_thisMac.hasQT) && (g_hasMovie) && (g_tvInRoom) && (g_tvOn))
 	{
-		GoToBeginningOfMovie(theMovie);
-		StartMovie(theMovie);
+		GoToBeginningOfMovie(g_theMovie);
+		StartMovie(g_theMovie);
 	}
 #endif
 }
@@ -328,31 +328,31 @@ void TransportRoomToRoom (gliderPtr thisGlider)
 	SetMusicalMode(kKickGameScoreMode);
 	HandleRoomVisitation();
 
-	sameRoom = (transRoom == thisRoomNumber);
+	sameRoom = (g_transRoom == g_thisRoomNumber);
 	if (!sameRoom)
-		ForceThisRoom(transRoom);
-	if (twoPlayerGame)
+		ForceThisRoom(g_transRoom);
+	if (g_twoPlayerGame)
 	{
-		UndoGliderLimbo(&theGlider);			// turn off limbo if needed
-		UndoGliderLimbo(&theGlider2);			// turn off limbo if needed
-		ReadyGliderFromTransit(&theGlider, linkedToWhat);
-		ReadyGliderFromTransit(&theGlider2, linkedToWhat);
+		UndoGliderLimbo(&g_theGlider);			// turn off limbo if needed
+		UndoGliderLimbo(&g_theGlider2);			// turn off limbo if needed
+		ReadyGliderFromTransit(&g_theGlider, g_linkedToWhat);
+		ReadyGliderFromTransit(&g_theGlider2, g_linkedToWhat);
 	}
 	else
-		ReadyGliderFromTransit(thisGlider, linkedToWhat);
+		ReadyGliderFromTransit(thisGlider, g_linkedToWhat);
 
 	if (!sameRoom)
 		ReadyLevel();
 	RefreshScoreboard(kNormalTitleMode);
 	if (!sameRoom)
-		WipeScreenOn(kAbove, &justRoomsRect);
+		WipeScreenOn(kAbove, &g_justRoomsRect);
 
 #ifdef COMPILEQT
 	RenderFrame();
-	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) && (tvOn))
+	if ((g_thisMac.hasQT) && (g_hasMovie) && (g_tvInRoom) && (g_tvOn))
 	{
-		GoToBeginningOfMovie(theMovie);
-		StartMovie(theMovie);
+		GoToBeginningOfMovie(g_theMovie);
+		StartMovie(g_theMovie);
 	}
 #endif
 }
@@ -366,32 +366,32 @@ void MoveDuctToDuct (gliderPtr thisGlider)
 	SetMusicalMode(kKickGameScoreMode);
 	HandleRoomVisitation();
 
-	sameRoom = (transRoom == thisRoomNumber);
+	sameRoom = (g_transRoom == g_thisRoomNumber);
 	if (!sameRoom)
-		ForceThisRoom(transRoom);
+		ForceThisRoom(g_transRoom);
 
-	if (twoPlayerGame)
+	if (g_twoPlayerGame)
 	{
-		UndoGliderLimbo(&theGlider);			// turn off limbo if needed
-		UndoGliderLimbo(&theGlider2);			// turn off limbo if needed
-		ReadyGliderFromTransit(&theGlider, linkedToWhat);
-		ReadyGliderFromTransit(&theGlider2, linkedToWhat);
+		UndoGliderLimbo(&g_theGlider);			// turn off limbo if needed
+		UndoGliderLimbo(&g_theGlider2);			// turn off limbo if needed
+		ReadyGliderFromTransit(&g_theGlider, g_linkedToWhat);
+		ReadyGliderFromTransit(&g_theGlider2, g_linkedToWhat);
 	}
 	else
-		ReadyGliderFromTransit(thisGlider, linkedToWhat);
+		ReadyGliderFromTransit(thisGlider, g_linkedToWhat);
 
 	if (!sameRoom)
 		ReadyLevel();
 	RefreshScoreboard(kNormalTitleMode);
 	if (!sameRoom)
-		WipeScreenOn(kAbove, &justRoomsRect);
+		WipeScreenOn(kAbove, &g_justRoomsRect);
 
 #ifdef COMPILEQT
 	RenderFrame();
-	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) && (tvOn))
+	if ((g_thisMac.hasQT) && (g_hasMovie) && (g_tvInRoom) && (g_tvOn))
 	{
-		GoToBeginningOfMovie(theMovie);
-		StartMovie(theMovie);
+		GoToBeginningOfMovie(g_theMovie);
+		StartMovie(g_theMovie);
 	}
 #endif
 }
@@ -405,32 +405,32 @@ void MoveMailToMail (gliderPtr thisGlider)
 	SetMusicalMode(kKickGameScoreMode);
 	HandleRoomVisitation();
 
-	sameRoom = (transRoom == thisRoomNumber);
+	sameRoom = (g_transRoom == g_thisRoomNumber);
 	if (!sameRoom)
-		ForceThisRoom(transRoom);
+		ForceThisRoom(g_transRoom);
 
-	if (twoPlayerGame)
+	if (g_twoPlayerGame)
 	{
-		UndoGliderLimbo(&theGlider);			// turn off limbo if needed
-		UndoGliderLimbo(&theGlider2);			// turn off limbo if needed
-		ReadyGliderFromTransit(&theGlider, linkedToWhat);
-		ReadyGliderFromTransit(&theGlider2, linkedToWhat);
+		UndoGliderLimbo(&g_theGlider);			// turn off limbo if needed
+		UndoGliderLimbo(&g_theGlider2);			// turn off limbo if needed
+		ReadyGliderFromTransit(&g_theGlider, g_linkedToWhat);
+		ReadyGliderFromTransit(&g_theGlider2, g_linkedToWhat);
 	}
 	else
-		ReadyGliderFromTransit(thisGlider, linkedToWhat);
+		ReadyGliderFromTransit(thisGlider, g_linkedToWhat);
 
 	if (!sameRoom)
 		ReadyLevel();
 	RefreshScoreboard(kNormalTitleMode);
 	if (!sameRoom)
-		WipeScreenOn(kAbove, &justRoomsRect);
+		WipeScreenOn(kAbove, &g_justRoomsRect);
 
 #ifdef COMPILEQT
 	RenderFrame();
-	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) && (tvOn))
+	if ((g_thisMac.hasQT) && (g_hasMovie) && (g_tvInRoom) && (g_tvOn))
 	{
-		GoToBeginningOfMovie(theMovie);
-		StartMovie(theMovie);
+		GoToBeginningOfMovie(g_theMovie);
+		StartMovie(g_theMovie);
 	}
 #endif
 }
@@ -439,11 +439,11 @@ void MoveMailToMail (gliderPtr thisGlider)
 
 void HandleRoomVisitation (void)
 {
-	if (!thisRoom->visited)
+	if (!g_thisRoom->visited)
 	{
-		thisHouse.rooms[localNumbers[kCentralRoom]].visited = true;
-		theScore += kRoomVisitScore;
-		thisRoom->visited = true;
+		g_thisHouse.rooms[g_localNumbers[kCentralRoom]].visited = true;
+		g_theScore += kRoomVisitScore;
+		g_thisRoom->visited = true;
 	}
 }
 
@@ -451,22 +451,22 @@ void HandleRoomVisitation (void)
 
 void ForceKillGlider (void)
 {
-	if (theGlider.mode == kGliderInLimbo)
+	if (g_theGlider.mode == kGliderInLimbo)
 	{
-		if (theGlider2.mode != kGliderFadingOut)
+		if (g_theGlider2.mode != kGliderFadingOut)
 		{
-			StartGliderFadingOut(&theGlider2);
+			StartGliderFadingOut(&g_theGlider2);
 			PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
-			playerSuicide = true;
+			g_playerSuicide = true;
 		}
 	}
-	else if (theGlider2.mode == kGliderInLimbo)
+	else if (g_theGlider2.mode == kGliderInLimbo)
 	{
-		if (theGlider.mode != kGliderFadingOut)
+		if (g_theGlider.mode != kGliderFadingOut)
 		{
-			StartGliderFadingOut(&theGlider);
+			StartGliderFadingOut(&g_theGlider);
 			PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
-			playerSuicide = true;
+			g_playerSuicide = true;
 		}
 	}
 }
@@ -478,25 +478,25 @@ void FollowTheLeader (void)
 	SInt16		wasEscaped;
 	Boolean		oneOrTwo;
 
-	playerSuicide = false;
-	wasEscaped = otherPlayerEscaped;
-	otherPlayerEscaped = kNoOneEscaped;
+	g_playerSuicide = false;
+	wasEscaped = g_otherPlayerEscaped;
+	g_otherPlayerEscaped = kNoOneEscaped;
 
-	if (theGlider.mode == kGliderInLimbo)
+	if (g_theGlider.mode == kGliderInLimbo)
 	{
 		oneOrTwo = true;
-		theGlider2.dest = theGlider.dest;
-		theGlider2.destShadow = theGlider.destShadow;
-		theGlider2.whole = theGlider2.dest;
-		theGlider2.wholeShadow = theGlider2.destShadow;
+		g_theGlider2.dest = g_theGlider.dest;
+		g_theGlider2.destShadow = g_theGlider.destShadow;
+		g_theGlider2.whole = g_theGlider2.dest;
+		g_theGlider2.wholeShadow = g_theGlider2.destShadow;
 	}
-	else if (theGlider2.mode == kGliderInLimbo)
+	else if (g_theGlider2.mode == kGliderInLimbo)
 	{
 		oneOrTwo = false;
-		theGlider.dest = theGlider2.dest;
-		theGlider.destShadow = theGlider2.destShadow;
-		theGlider.whole = theGlider.dest;
-		theGlider.wholeShadow = theGlider.destShadow;
+		g_theGlider.dest = g_theGlider2.dest;
+		g_theGlider.destShadow = g_theGlider2.destShadow;
+		g_theGlider.whole = g_theGlider.dest;
+		g_theGlider.wholeShadow = g_theGlider.destShadow;
 	}
 	else
 	{
@@ -509,53 +509,53 @@ void FollowTheLeader (void)
 		case kPlayerEscapingUpStairs:
 		case kPlayerEscapedUpStairs:
 		if (oneOrTwo)
-			MoveRoomToRoom(&theGlider2, kAbove);
+			MoveRoomToRoom(&g_theGlider2, kAbove);
 		else
-			MoveRoomToRoom(&theGlider, kAbove);
+			MoveRoomToRoom(&g_theGlider, kAbove);
 		break;
 
 		case kPlayerEscapedDown:
 		case kPlayerEscapingDownStairs:
 		case kPlayerEscapedDownStairs:
 		if (oneOrTwo)
-			MoveRoomToRoom(&theGlider2, kBelow);
+			MoveRoomToRoom(&g_theGlider2, kBelow);
 		else
-			MoveRoomToRoom(&theGlider, kBelow);
+			MoveRoomToRoom(&g_theGlider, kBelow);
 		break;
 
 		case kPlayerEscapedLeft:
 		if (oneOrTwo)
-			MoveRoomToRoom(&theGlider2, kToLeft);
+			MoveRoomToRoom(&g_theGlider2, kToLeft);
 		else
-			MoveRoomToRoom(&theGlider, kToLeft);
+			MoveRoomToRoom(&g_theGlider, kToLeft);
 		break;
 
 		case kPlayerEscapedRight:
 		if (oneOrTwo)
-			MoveRoomToRoom(&theGlider2, kToRight);
+			MoveRoomToRoom(&g_theGlider2, kToRight);
 		else
-			MoveRoomToRoom(&theGlider, kToRight);
+			MoveRoomToRoom(&g_theGlider, kToRight);
 		break;
 
 		case kPlayerTransportedOut:
 		if (oneOrTwo)
-			TransportRoomToRoom(&theGlider2);
+			TransportRoomToRoom(&g_theGlider2);
 		else
-			TransportRoomToRoom(&theGlider);
+			TransportRoomToRoom(&g_theGlider);
 		break;
 
 		case kPlayerMailedOut:
 		if (oneOrTwo)
-			MoveMailToMail(&theGlider2);
+			MoveMailToMail(&g_theGlider2);
 		else
-			MoveMailToMail(&theGlider);
+			MoveMailToMail(&g_theGlider);
 		break;
 
 		case kPlayerDuckedOut:
 		if (oneOrTwo)
-			MoveDuctToDuct(&theGlider2);
+			MoveDuctToDuct(&g_theGlider2);
 		else
-			MoveDuctToDuct(&theGlider);
+			MoveDuctToDuct(&g_theGlider);
 		break;
 
 		default:

@@ -26,7 +26,7 @@ typedef struct trigType
 SInt16 FindEmptyTriggerSlot (void);
 void FireTrigger (SInt16 index);
 
-static trigType triggers[kMaxTriggers];
+static trigType g_triggers[kMaxTriggers];
 
 //==============================================================  Functions
 //--------------------------------------------------------------  ArmTrigger
@@ -43,12 +43,12 @@ void ArmTrigger (hotPtr who)
 	if (where != -1)
 	{
 		whoLinked = who->who;				// what is trigger's obj. #
-		triggers[where].room = masterObjects[whoLinked].roomLink;
-		triggers[where].object = masterObjects[whoLinked].objectLink;
-		triggers[where].index = whoLinked;
-		triggers[where].timer = masterObjects[whoLinked].theObject.data.e.delay * 3;
-		triggers[where].what = masterObjects[triggers[where].object].theObject.what;
-		triggers[where].armed = true;
+		g_triggers[where].room = g_masterObjects[whoLinked].roomLink;
+		g_triggers[where].object = g_masterObjects[whoLinked].objectLink;
+		g_triggers[where].index = whoLinked;
+		g_triggers[where].timer = g_masterObjects[whoLinked].theObject.data.e.delay * 3;
+		g_triggers[where].what = g_masterObjects[g_triggers[where].object].theObject.what;
+		g_triggers[where].armed = true;
 	}
 
 	who->stillOver = true;
@@ -64,7 +64,7 @@ SInt16 FindEmptyTriggerSlot (void)
 
 	for (i = 0; i < kMaxTriggers; i++)
 	{
-		if (!triggers[i].armed)
+		if (!g_triggers[i].armed)
 		{
 			where = i;
 			break;
@@ -82,13 +82,13 @@ void HandleTriggers (void)
 
 	for (i = 0; i < kMaxTriggers; i++)
 	{
-		if (triggers[i].armed)
+		if (g_triggers[i].armed)
 		{
-			triggers[i].timer--;
-			if (triggers[i].timer <= 0)
+			g_triggers[i].timer--;
+			if (g_triggers[i].timer <= 0)
 			{
-				triggers[i].timer = 0;
-				triggers[i].armed = false;
+				g_triggers[i].timer = 0;
+				g_triggers[i].armed = false;
 				FireTrigger(i);
 			}
 		}
@@ -101,20 +101,20 @@ void FireTrigger (SInt16 index)
 {
 	SInt16		triggerIs, triggeredIs;
 
-	triggerIs = triggers[index].index;
+	triggerIs = g_triggers[index].index;
 
-	if (masterObjects[triggerIs].localLink != -1)
+	if (g_masterObjects[triggerIs].localLink != -1)
 	{
-		triggeredIs = masterObjects[triggerIs].localLink;
-		switch (masterObjects[triggeredIs].theObject.what)
+		triggeredIs = g_masterObjects[triggerIs].localLink;
+		switch (g_masterObjects[triggeredIs].theObject.what)
 		{
 			case kGreaseRt:
 			case kGreaseLf:
-			if (SetObjectState(triggers[index].room, triggers[index].object,
+			if (SetObjectState(g_triggers[index].room, g_triggers[index].object,
 					kForceOn, triggeredIs))
 			{
-				SpillGrease(masterObjects[triggeredIs].dynaNum,
-						masterObjects[triggeredIs].hotNum);
+				SpillGrease(g_masterObjects[triggeredIs].dynaNum,
+						g_masterObjects[triggeredIs].hotNum);
 			}
 			break;
 
@@ -124,7 +124,7 @@ void FireTrigger (SInt16 index)
 			case kPowerSwitch:
 			case kKnifeSwitch:
 			case kInvisSwitch:
-			TriggerSwitch(masterObjects[triggeredIs].dynaNum);
+			TriggerSwitch(g_masterObjects[triggeredIs].dynaNum);
 			break;
 
 			case kSoundTrigger:
@@ -132,7 +132,7 @@ void FireTrigger (SInt16 index)
 			break;
 
 			case kToaster:
-			TriggerToast(masterObjects[triggeredIs].dynaNum);
+			TriggerToast(g_masterObjects[triggeredIs].dynaNum);
 			break;
 
 			case kGuitar:
@@ -144,29 +144,29 @@ void FireTrigger (SInt16 index)
 			break;
 
 			case kOutlet:
-			TriggerOutlet(masterObjects[triggeredIs].dynaNum);
+			TriggerOutlet(g_masterObjects[triggeredIs].dynaNum);
 			break;
 
 			case kBalloon:
-			TriggerBalloon(masterObjects[triggeredIs].dynaNum);
+			TriggerBalloon(g_masterObjects[triggeredIs].dynaNum);
 			break;
 
 			case kCopterLf:
 			case kCopterRt:
-			TriggerCopter(masterObjects[triggeredIs].dynaNum);
+			TriggerCopter(g_masterObjects[triggeredIs].dynaNum);
 			break;
 
 			case kDartLf:
 			case kDartRt:
-			TriggerDart(masterObjects[triggeredIs].dynaNum);
+			TriggerDart(g_masterObjects[triggeredIs].dynaNum);
 			break;
 
 			case kDrip:
-			TriggerDrip(masterObjects[triggeredIs].dynaNum);
+			TriggerDrip(g_masterObjects[triggeredIs].dynaNum);
 			break;
 
 			case kFish:
-			TriggerFish(masterObjects[triggeredIs].dynaNum);
+			TriggerFish(g_masterObjects[triggeredIs].dynaNum);
 			break;
 		}
 	}
@@ -179,5 +179,5 @@ void ZeroTriggers (void)
 	SInt16		i;
 
 	for (i = 0; i < kMaxTriggers; i++)
-		triggers[i].armed = false;
+		g_triggers[i].armed = false;
 }

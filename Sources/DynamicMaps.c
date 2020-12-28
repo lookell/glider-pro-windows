@@ -22,26 +22,26 @@ void BackUpBBQCoals (const Rect *src, SInt16 index);
 void BackUpPendulum (const Rect *src, SInt16 index);
 void BackUpStar (const Rect *src, SInt16 index);
 
-sparkleType sparkles[kMaxSparkles];
-flyingPtType flyingPoints[kMaxFlyingPts];
-flameType flames[kMaxCandles];
-flameType tikiFlames[kMaxTikis];
-flameType bbqCoals[kMaxCoals];
-pendulumType pendulums[kMaxPendulums];
-starType theStars[kMaxStars];
-shredType shreds[kMaxShredded];
-Rect pointsSrc[15];
-SInt16 numSparkles;
-SInt16 numFlyingPts;
-SInt16 numChimes;
-SInt16 numFlames;
-SInt16 numSavedMaps;
-SInt16 numTikiFlames;
-SInt16 numCoals;
-SInt16 numPendulums;
-SInt16 clockFrame;
-SInt16 numStars;
-SInt16 numShredded;
+sparkleType g_sparkles[kMaxSparkles];
+flyingPtType g_flyingPoints[kMaxFlyingPts];
+flameType g_flames[kMaxCandles];
+flameType g_tikiFlames[kMaxTikis];
+flameType g_bbqCoals[kMaxCoals];
+pendulumType g_pendulums[kMaxPendulums];
+starType g_theStars[kMaxStars];
+shredType g_shreds[kMaxShredded];
+Rect g_pointsSrc[15];
+SInt16 g_numSparkles;
+SInt16 g_numFlyingPts;
+SInt16 g_numChimes;
+SInt16 g_numFlames;
+SInt16 g_numSavedMaps;
+SInt16 g_numTikiFlames;
+SInt16 g_numCoals;
+SInt16 g_numPendulums;
+SInt16 g_clockFrame;
+SInt16 g_numStars;
+SInt16 g_numShredded;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  NilSavedMaps
@@ -53,15 +53,15 @@ void NilSavedMaps (void)
 
 	for (i = 0; i < kMaxSavedMaps; i++)
 	{
-		if (savedMaps[i].map != NULL)
+		if (g_savedMaps[i].map != NULL)
 		{
-			DisposeGWorld(savedMaps[i].map);
-			savedMaps[i].map = NULL;
+			DisposeGWorld(g_savedMaps[i].map);
+			g_savedMaps[i].map = NULL;
 		}
-		savedMaps[i].where = -1;
-		savedMaps[i].who = -1;
+		g_savedMaps[i].where = -1;
+		g_savedMaps[i].who = -1;
 	}
-	numSavedMaps = 0;
+	g_numSavedMaps = 0;
 }
 
 //--------------------------------------------------------------  BackUpToSavedMap
@@ -74,22 +74,22 @@ SInt16 BackUpToSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 {
 	Rect		mapRect;
 
-	if (numSavedMaps >= kMaxSavedMaps)
+	if (g_numSavedMaps >= kMaxSavedMaps)
 		return(-1);
 
 	mapRect = *theRect;
 	ZeroRectCorner(&mapRect);
-	savedMaps[numSavedMaps].dest = *theRect;
-	savedMaps[numSavedMaps].map = CreateOffScreenGWorld(&mapRect, kPreferredDepth);
+	g_savedMaps[g_numSavedMaps].dest = *theRect;
+	g_savedMaps[g_numSavedMaps].map = CreateOffScreenGWorld(&mapRect, kPreferredDepth);
 
-	Mac_CopyBits(backSrcMap, savedMaps[numSavedMaps].map,
+	Mac_CopyBits(g_backSrcMap, g_savedMaps[g_numSavedMaps].map,
 			theRect, &mapRect, srcCopy, nil);
 
-	savedMaps[numSavedMaps].where = where;
-	savedMaps[numSavedMaps].who = who;
-	numSavedMaps++;
+	g_savedMaps[g_numSavedMaps].where = where;
+	g_savedMaps[g_numSavedMaps].who = who;
+	g_numSavedMaps++;
 
-	return (numSavedMaps - 1);	// return array index
+	return (g_numSavedMaps - 1);	// return array index
 }
 
 //--------------------------------------------------------------  ReBackUpSavedMap
@@ -104,15 +104,15 @@ SInt16 ReBackUpSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 
 	foundIndex = -1;
 
-	for (i = 0; i < numSavedMaps; i++)
+	for (i = 0; i < g_numSavedMaps; i++)
 	{
-		if ((savedMaps[i].where == where) && (savedMaps[i].who == who))
+		if ((g_savedMaps[i].where == where) && (g_savedMaps[i].who == who))
 		{
 			foundIndex = i;
 			mapRect = *theRect;
 			ZeroRectCorner(&mapRect);
 
-			Mac_CopyBits(backSrcMap, savedMaps[foundIndex].map,
+			Mac_CopyBits(g_backSrcMap, g_savedMaps[foundIndex].map,
 					theRect, &mapRect, srcCopy, nil);
 
 			return (foundIndex);
@@ -131,25 +131,25 @@ void RestoreFromSavedMap (SInt16 where, SInt16 who, Boolean doSparkle)
 	Rect		mapRect, bounds;
 	SInt16		i;
 
-	for (i = 0; i < numSavedMaps; i++)
+	for (i = 0; i < g_numSavedMaps; i++)
 	{
-		if ((savedMaps[i].where == where) && (savedMaps[i].who == who) &&
-				(savedMaps[i].map != NULL))
+		if ((g_savedMaps[i].where == where) && (g_savedMaps[i].who == who) &&
+				(g_savedMaps[i].map != NULL))
 		{
-			mapRect = savedMaps[i].dest;
+			mapRect = g_savedMaps[i].dest;
 			ZeroRectCorner(&mapRect);
 
-			Mac_CopyBits(savedMaps[i].map, backSrcMap,
-					&mapRect, &savedMaps[i].dest, srcCopy, nil);
-			Mac_CopyBits(savedMaps[i].map, workSrcMap,
-					&mapRect, &savedMaps[i].dest, srcCopy, nil);
+			Mac_CopyBits(g_savedMaps[i].map, g_backSrcMap,
+					&mapRect, &g_savedMaps[i].dest, srcCopy, nil);
+			Mac_CopyBits(g_savedMaps[i].map, g_workSrcMap,
+					&mapRect, &g_savedMaps[i].dest, srcCopy, nil);
 
-			AddRectToWorkRects(&savedMaps[i].dest);
+			AddRectToWorkRects(&g_savedMaps[i].dest);
 
 			if (doSparkle)
 			{
-				bounds = savedMaps[i].dest;
-				QOffsetRect(&bounds, -playOriginH, -playOriginV);
+				bounds = g_savedMaps[i].dest;
+				QOffsetRect(&bounds, -g_playOriginH, -g_playOriginV);
 				AddSparkle(&bounds);
 				PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 			}
@@ -166,18 +166,18 @@ void AddSparkle (const Rect *theRect)
 	Rect		centeredRect;
 	SInt16		i;
 
-	if (numSparkles < kMaxSparkles)
+	if (g_numSparkles < kMaxSparkles)
 	{
-		centeredRect = sparkleSrc[0];
+		centeredRect = g_sparkleSrc[0];
 		CenterRectInRect(&centeredRect, theRect);
-		QOffsetRect(&centeredRect, playOriginH, playOriginV);
+		QOffsetRect(&centeredRect, g_playOriginH, g_playOriginV);
 
 		for (i = 0; i < kMaxSparkles; i++)
-			if (sparkles[i].mode == -1)
+			if (g_sparkles[i].mode == -1)
 			{
-				sparkles[i].bounds = centeredRect;
-				sparkles[i].mode = 0;
-				numSparkles++;
+				g_sparkles[i].bounds = centeredRect;
+				g_sparkles[i].mode = 0;
+				g_numSparkles++;
 				break;
 			}
 	}
@@ -191,49 +191,49 @@ void AddFlyingPoint (const Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVe
 	Rect		centeredRect;
 	SInt16		i;
 
-	if (numFlyingPts < kMaxFlyingPts)
+	if (g_numFlyingPts < kMaxFlyingPts)
 	{
-		centeredRect = pointsSrc[0];
+		centeredRect = g_pointsSrc[0];
 		CenterRectInRect(&centeredRect, theRect);
-		QOffsetRect(&centeredRect, playOriginH, playOriginV);
+		QOffsetRect(&centeredRect, g_playOriginH, g_playOriginV);
 
 		for (i = 0; i < kMaxFlyingPts; i++)
-			if (flyingPoints[i].mode == -1)
+			if (g_flyingPoints[i].mode == -1)
 			{
-				flyingPoints[i].dest = centeredRect;
-				flyingPoints[i].whole = centeredRect;
-				flyingPoints[i].loops = 0;
-				flyingPoints[i].hVel = hVel;
-				flyingPoints[i].vVel = vVel;
+				g_flyingPoints[i].dest = centeredRect;
+				g_flyingPoints[i].whole = centeredRect;
+				g_flyingPoints[i].loops = 0;
+				g_flyingPoints[i].hVel = hVel;
+				g_flyingPoints[i].vVel = vVel;
 				switch (points)
 				{
 					case 100:
-					flyingPoints[i].start = 12;
-					flyingPoints[i].stop = 14;
+					g_flyingPoints[i].start = 12;
+					g_flyingPoints[i].stop = 14;
 					break;
 
 					case 250:
-					flyingPoints[i].start = 9;
-					flyingPoints[i].stop = 11;
+					g_flyingPoints[i].start = 9;
+					g_flyingPoints[i].stop = 11;
 					break;
 
 					case 300:
-					flyingPoints[i].start = 6;
-					flyingPoints[i].stop = 8;
+					g_flyingPoints[i].start = 6;
+					g_flyingPoints[i].stop = 8;
 					break;
 
 					case 500:
-					flyingPoints[i].start = 3;
-					flyingPoints[i].stop = 5;
+					g_flyingPoints[i].start = 3;
+					g_flyingPoints[i].stop = 5;
 					break;
 
 					default:
-					flyingPoints[i].start = 0;
-					flyingPoints[i].stop = 2;
+					g_flyingPoints[i].start = 0;
+					g_flyingPoints[i].stop = 2;
 					break;
 				}
-				flyingPoints[i].mode = flyingPoints[i].start;
-				numFlyingPts++;
+				g_flyingPoints[i].mode = g_flyingPoints[i].start;
+				g_numFlyingPts++;
 				break;
 			}
 	}
@@ -250,19 +250,19 @@ void BackUpFlames (const Rect *src, SInt16 index)
 	Rect		dest;
 	SInt16		i;
 
-	if (index < 0 || index >= numSavedMaps)
+	if (index < 0 || index >= g_numSavedMaps)
 		return;
 
 	QSetRect(&dest, 0, 0, 16, 15);
 	for (i = 0; i < kNumCandleFlames; i++)
 	{
 				// Copy background to map.
-		Mac_CopyBits(backSrcMap, savedMaps[index].map,
+		Mac_CopyBits(g_backSrcMap, g_savedMaps[index].map,
 				src, &dest, srcCopy, nil);
 
 				// Copy flame to map.
-		Mac_CopyMask(blowerSrcMap, blowerMaskMap, savedMaps[index].map,
-				&flame[i], &flame[i], &dest);
+		Mac_CopyMask(g_blowerSrcMap, g_blowerMaskMap, g_savedMaps[index].map,
+				&g_flame[i], &g_flame[i], &dest);
 
 		QOffsetRect(&dest, 0, 15);
 	}
@@ -276,15 +276,15 @@ void ReBackUpFlames (SInt16 where, SInt16 who)
 {
 	SInt16		i, f;
 
-	for (i = 0; i < numSavedMaps; i++)
+	for (i = 0; i < g_numSavedMaps; i++)
 	{
-		if ((savedMaps[i].where == where) && (savedMaps[i].who == who))
+		if ((g_savedMaps[i].where == where) && (g_savedMaps[i].who == who))
 		{
-			for (f = 0; f < numFlames; f++)
+			for (f = 0; f < g_numFlames; f++)
 			{
-				if (flames[f].who == i)
+				if (g_flames[f].who == i)
 				{
-					BackUpFlames(&flames[f].dest, i);
+					BackUpFlames(&g_flames[f].dest, i);
 					return;
 				}
 			}
@@ -300,7 +300,7 @@ void AddCandleFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 	Rect		src, bounds;
 	SInt16		savedNum;
 
-	if ((numFlames >= kMaxCandles) || (h < 16) || (v < 15))
+	if ((g_numFlames >= kMaxCandles) || (h < 16) || (v < 15))
 		return;
 
 	QSetRect(&src, 0, 0, 16, 15);
@@ -310,12 +310,12 @@ void AddCandleFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 	if (savedNum != -1)
 	{
 		BackUpFlames(&src, savedNum);
-		flames[numFlames].dest = src;
-		flames[numFlames].mode = RandomInt(kNumCandleFlames);
-		QSetRect(&flames[numFlames].src, 0, 0, 16, 15);
-		QOffsetRect(&flames[numFlames].src, 0, flames[numFlames].mode * 15);
-		flames[numFlames].who = savedNum;
-		numFlames++;
+		g_flames[g_numFlames].dest = src;
+		g_flames[g_numFlames].mode = RandomInt(kNumCandleFlames);
+		QSetRect(&g_flames[g_numFlames].src, 0, 0, 16, 15);
+		QOffsetRect(&g_flames[g_numFlames].src, 0, g_flames[g_numFlames].mode * 15);
+		g_flames[g_numFlames].who = savedNum;
+		g_numFlames++;
 	}
 }
 
@@ -327,19 +327,19 @@ void BackUpTikiFlames (const Rect *src, SInt16 index)
 	Rect		dest;
 	SInt16		i;
 
-	if (index < 0 || index >= numSavedMaps)
+	if (index < 0 || index >= g_numSavedMaps)
 		return;
 
 	QSetRect(&dest, 0, 0, 8, 10);
 	for (i = 0; i < kNumTikiFlames; i++)
 	{
 				// copy background to map
-		Mac_CopyBits(backSrcMap, savedMaps[index].map,
+		Mac_CopyBits(g_backSrcMap, g_savedMaps[index].map,
 				src, &dest, srcCopy, nil);
 
 				// copy flame to map
-		Mac_CopyMask(blowerSrcMap, blowerMaskMap, savedMaps[index].map,
-				&tikiFlame[i], &tikiFlame[i], &dest);
+		Mac_CopyMask(g_blowerSrcMap, g_blowerMaskMap, g_savedMaps[index].map,
+				&g_tikiFlame[i], &g_tikiFlame[i], &dest);
 
 		QOffsetRect(&dest, 0, 10);
 	}
@@ -352,15 +352,15 @@ void ReBackUpTikiFlames (SInt16 where, SInt16 who)
 {
 	SInt16		i, f;
 
-	for (i = 0; i < numSavedMaps; i++)
+	for (i = 0; i < g_numSavedMaps; i++)
 	{
-		if ((savedMaps[i].where == where) && (savedMaps[i].who == who))
+		if ((g_savedMaps[i].where == where) && (g_savedMaps[i].who == who))
 		{
-			for (f = 0; f < numTikiFlames; f++)
+			for (f = 0; f < g_numTikiFlames; f++)
 			{
-				if (tikiFlames[f].who == i)
+				if (g_tikiFlames[f].who == i)
 				{
-					BackUpTikiFlames(&tikiFlames[f].dest, i);
+					BackUpTikiFlames(&g_tikiFlames[f].dest, i);
 					return;
 				}
 			}
@@ -376,7 +376,7 @@ void AddTikiFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 	Rect		src, bounds;
 	SInt16		savedNum;
 
-	if ((numTikiFlames >= kMaxTikis) || (h < 8) || (v < 10))
+	if ((g_numTikiFlames >= kMaxTikis) || (h < 8) || (v < 10))
 		return;
 
 	QSetRect(&src, 0, 0, 8, 10);
@@ -386,13 +386,13 @@ void AddTikiFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 	if (savedNum != -1)
 	{
 		BackUpTikiFlames(&src, savedNum);
-		tikiFlames[numTikiFlames].dest = src;
-		tikiFlames[numTikiFlames].mode = RandomInt(kNumTikiFlames);
-		QSetRect(&tikiFlames[numTikiFlames].src, 0, 0, 8, 10);
-		QOffsetRect(&tikiFlames[numTikiFlames].src, 0,
-				tikiFlames[numTikiFlames].mode * 10);
-		tikiFlames[numTikiFlames].who = savedNum;
-		numTikiFlames++;
+		g_tikiFlames[g_numTikiFlames].dest = src;
+		g_tikiFlames[g_numTikiFlames].mode = RandomInt(kNumTikiFlames);
+		QSetRect(&g_tikiFlames[g_numTikiFlames].src, 0, 0, 8, 10);
+		QOffsetRect(&g_tikiFlames[g_numTikiFlames].src, 0,
+				g_tikiFlames[g_numTikiFlames].mode * 10);
+		g_tikiFlames[g_numTikiFlames].who = savedNum;
+		g_numTikiFlames++;
 	}
 }
 
@@ -404,19 +404,19 @@ void BackUpBBQCoals (const Rect *src, SInt16 index)
 	Rect		dest;
 	SInt16		i;
 
-	if (index < 0 || index >= numSavedMaps)
+	if (index < 0 || index >= g_numSavedMaps)
 		return;
 
 	QSetRect(&dest, 0, 0, 32, 9);
 	for (i = 0; i < kNumBBQCoals; i++)
 	{
 				// copy background to map
-		Mac_CopyBits(backSrcMap, savedMaps[index].map,
+		Mac_CopyBits(g_backSrcMap, g_savedMaps[index].map,
 				src, &dest, srcCopy, nil);
 
 				// copy flame to map
-		Mac_CopyMask(blowerSrcMap, blowerMaskMap, savedMaps[index].map,
-				&coals[i], &coals[i], &dest);
+		Mac_CopyMask(g_blowerSrcMap, g_blowerMaskMap, g_savedMaps[index].map,
+				&g_coals[i], &g_coals[i], &dest);
 
 		QOffsetRect(&dest, 0, 9);
 	}
@@ -429,15 +429,15 @@ void ReBackUpBBQCoals (SInt16 where, SInt16 who)
 {
 	SInt16		i, f;
 
-	for (i = 0; i < numSavedMaps; i++)
+	for (i = 0; i < g_numSavedMaps; i++)
 	{
-		if ((savedMaps[i].where == where) && (savedMaps[i].who == who))
+		if ((g_savedMaps[i].where == where) && (g_savedMaps[i].who == who))
 		{
-			for (f = 0; f < numCoals; f++)
+			for (f = 0; f < g_numCoals; f++)
 			{
-				if (bbqCoals[f].who == i)
+				if (g_bbqCoals[f].who == i)
 				{
-					BackUpBBQCoals(&bbqCoals[f].dest, i);
+					BackUpBBQCoals(&g_bbqCoals[f].dest, i);
 					return;
 				}
 			}
@@ -453,7 +453,7 @@ void AddBBQCoals (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 	Rect		src, bounds;
 	SInt16		savedNum;
 
-	if ((numCoals >= kMaxCoals) || (h < 32) || (v < 9))
+	if ((g_numCoals >= kMaxCoals) || (h < 32) || (v < 9))
 		return;
 
 	QSetRect(&src, 0, 0, 32, 9);
@@ -463,13 +463,13 @@ void AddBBQCoals (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 	if (savedNum != -1)
 	{
 		BackUpBBQCoals(&src, savedNum);
-		bbqCoals[numCoals].dest = src;
-		bbqCoals[numCoals].mode = RandomInt(kNumBBQCoals);
-		QSetRect(&bbqCoals[numCoals].src, 0, 0, 32, 9);
-		QOffsetRect(&bbqCoals[numCoals].src, 0, bbqCoals[numCoals].mode * 9);
-		bbqCoals[numCoals].who = savedNum;
+		g_bbqCoals[g_numCoals].dest = src;
+		g_bbqCoals[g_numCoals].mode = RandomInt(kNumBBQCoals);
+		QSetRect(&g_bbqCoals[g_numCoals].src, 0, 0, 32, 9);
+		QOffsetRect(&g_bbqCoals[g_numCoals].src, 0, g_bbqCoals[g_numCoals].mode * 9);
+		g_bbqCoals[g_numCoals].who = savedNum;
 
-		numCoals++;
+		g_numCoals++;
 	}
 }
 
@@ -482,17 +482,17 @@ void BackUpPendulum (const Rect *src, SInt16 index)
 	Rect		dest;
 	SInt16		i;
 
-	if (index < 0 || index >= numSavedMaps)
+	if (index < 0 || index >= g_numSavedMaps)
 		return;
 
 	QSetRect(&dest, 0, 0, 32, 28);
 	for (i = 0; i < kNumPendulums; i++)
 	{
-		Mac_CopyBits(backSrcMap, savedMaps[index].map,
+		Mac_CopyBits(g_backSrcMap, g_savedMaps[index].map,
 				src, &dest, srcCopy, nil);
 
-		Mac_CopyMask(bonusSrcMap, bonusMaskMap, savedMaps[index].map,
-				&pendulumSrc[i], &pendulumSrc[i], &dest);
+		Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_savedMaps[index].map,
+				&g_pendulumSrc[i], &g_pendulumSrc[i], &dest);
 
 		QOffsetRect(&dest, 0, 28);
 	}
@@ -505,15 +505,15 @@ void ReBackUpPendulum (SInt16 where, SInt16 who)
 {
 	SInt16		i, f;
 
-	for (i = 0; i < numSavedMaps; i++)
+	for (i = 0; i < g_numSavedMaps; i++)
 	{
-		if ((savedMaps[i].where == where) && (savedMaps[i].who == who))
+		if ((g_savedMaps[i].where == where) && (g_savedMaps[i].who == who))
 		{
-			for (f = 0; f < numPendulums; f++)
+			for (f = 0; f < g_numPendulums; f++)
 			{
-				if (pendulums[f].who == i)
+				if (g_pendulums[f].who == i)
 				{
-					BackUpPendulum(&pendulums[f].dest, i);
+					BackUpPendulum(&g_pendulums[f].dest, i);
 					return;
 				}
 			}
@@ -529,10 +529,10 @@ void AddPendulum (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 	Rect		src, bounds;
 	SInt16		savedNum;
 
-	if ((numPendulums >= kMaxPendulums) || (h < 32) || (v < 28))
+	if ((g_numPendulums >= kMaxPendulums) || (h < 32) || (v < 28))
 		return;
 
-	clockFrame = 10;
+	g_clockFrame = 10;
 	QSetRect(&bounds, 0, 0, 32, 28 * kNumPendulums);
 	savedNum = BackUpToSavedMap(&bounds, where, who);
 	if (savedNum != -1)
@@ -540,19 +540,19 @@ void AddPendulum (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 		QSetRect(&src, 0, 0, 32, 28);
 		QOffsetRect(&src, h, v);
 		BackUpPendulum(&src, savedNum);
-		pendulums[numPendulums].dest = src;
-		pendulums[numPendulums].mode = 1;
+		g_pendulums[g_numPendulums].dest = src;
+		g_pendulums[g_numPendulums].mode = 1;
 		if (RandomInt(2) == 0)
-			pendulums[numPendulums].toOrFro = true;
+			g_pendulums[g_numPendulums].toOrFro = true;
 		else
-			pendulums[numPendulums].toOrFro = false;
-		pendulums[numPendulums].active = true;
-		QSetRect(&pendulums[numPendulums].src, 0, 0, 32, 28);
-		QOffsetRect(&pendulums[numPendulums].src, 0, 28);
-		pendulums[numPendulums].who = savedNum;
-		pendulums[numPendulums].where = where;
-		pendulums[numPendulums].link = who;
-		numPendulums++;
+			g_pendulums[g_numPendulums].toOrFro = false;
+		g_pendulums[g_numPendulums].active = true;
+		QSetRect(&g_pendulums[g_numPendulums].src, 0, 0, 32, 28);
+		QOffsetRect(&g_pendulums[g_numPendulums].src, 0, 28);
+		g_pendulums[g_numPendulums].who = savedNum;
+		g_pendulums[g_numPendulums].where = where;
+		g_pendulums[g_numPendulums].link = who;
+		g_numPendulums++;
 	}
 }
 
@@ -564,18 +564,18 @@ void BackUpStar (const Rect *src, SInt16 index)
 	Rect		dest;
 	SInt16		i;
 
-	if (index < 0 || index >= numSavedMaps)
+	if (index < 0 || index >= g_numSavedMaps)
 		return;
 
 	QSetRect(&dest, 0, 0, 32, 31);
 	for (i = 0; i < 6; i++)
 	{
-		Mac_CopyBits(backSrcMap, savedMaps[index].map,
+		Mac_CopyBits(g_backSrcMap, g_savedMaps[index].map,
 				src, &dest, srcCopy, nil);
 
 				// copy flame to map
-		Mac_CopyMask(bonusSrcMap, bonusMaskMap, savedMaps[index].map,
-				&starSrc[i], &starSrc[i], &dest);
+		Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_savedMaps[index].map,
+				&g_starSrc[i], &g_starSrc[i], &dest);
 
 		QOffsetRect(&dest, 0, 31);
 	}
@@ -588,15 +588,15 @@ void ReBackUpStar (SInt16 where, SInt16 who)
 {
 	SInt16		i, f;
 
-	for (i = 0; i < numSavedMaps; i++)
+	for (i = 0; i < g_numSavedMaps; i++)
 	{
-		if ((savedMaps[i].where == where) && (savedMaps[i].who == who))
+		if ((g_savedMaps[i].where == where) && (g_savedMaps[i].who == who))
 		{
-			for (f = 0; f < numStars; f++)
+			for (f = 0; f < g_numStars; f++)
 			{
-				if (theStars[f].who == i)
+				if (g_theStars[f].who == i)
 				{
-					BackUpStar(&theStars[f].dest, i);
+					BackUpStar(&g_theStars[f].dest, i);
 					return;
 				}
 			}
@@ -612,7 +612,7 @@ void AddStar (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 	Rect		src, bounds;
 	SInt16		savedNum;
 
-	if (numStars >= kMaxStars)
+	if (g_numStars >= kMaxStars)
 		return;
 
 	QSetRect(&src, 0, 0, 32, 31);
@@ -623,15 +623,15 @@ void AddStar (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 	if (savedNum != -1)
 	{
 		BackUpStar(&src, savedNum);
-		theStars[numStars].dest = src;
-		theStars[numStars].mode = RandomInt(6);
-		QSetRect(&theStars[numStars].src, 0, 0, 32, 31);
-		QOffsetRect(&theStars[numStars].src, 0, theStars[numStars].mode * 31);
-		theStars[numStars].who = savedNum;
-		theStars[numStars].link = who;
-		theStars[numStars].where = where;
+		g_theStars[g_numStars].dest = src;
+		g_theStars[g_numStars].mode = RandomInt(6);
+		QSetRect(&g_theStars[g_numStars].src, 0, 0, 32, 31);
+		QOffsetRect(&g_theStars[g_numStars].src, 0, g_theStars[g_numStars].mode * 31);
+		g_theStars[g_numStars].who = savedNum;
+		g_theStars[g_numStars].link = who;
+		g_theStars[g_numStars].where = where;
 
-		numStars++;
+		g_numStars++;
 	}
 }
 
@@ -642,10 +642,10 @@ void StopPendulum (SInt16 where, SInt16 who)
 {
 	SInt16		i;
 
-	for (i = 0; i < numPendulums; i++)
+	for (i = 0; i < g_numPendulums; i++)
 	{
-		if ((pendulums[i].link == who) && (pendulums[i].where == where))
-			pendulums[i].active = false;
+		if ((g_pendulums[i].link == who) && (g_pendulums[i].where == where))
+			g_pendulums[i].active = false;
 	}
 }
 
@@ -656,10 +656,10 @@ void StopStar (SInt16 where, SInt16 who)
 {
 	SInt16		i;
 
-	for (i = 0; i < numStars; i++)
+	for (i = 0; i < g_numStars; i++)
 	{
-		if ((theStars[i].link == who) && (theStars[i].where == where))
-			theStars[i].mode = -1;
+		if ((g_theStars[i].link == who) && (g_theStars[i].where == where))
+			g_theStars[i].mode = -1;
 	}
 }
 
@@ -668,16 +668,16 @@ void StopStar (SInt16 where, SInt16 who)
 
 void AddAShreddedGlider (const Rect *bounds)
 {
-	if (numShredded >= kMaxShredded)
+	if (g_numShredded >= kMaxShredded)
 		return;
 
-	shreds[numShredded].bounds.left = bounds->left + 4;
-	shreds[numShredded].bounds.right = shreds[numShredded].bounds.left + 40;
-	shreds[numShredded].bounds.top = bounds->top + 14;
-	shreds[numShredded].bounds.bottom = shreds[numShredded].bounds.top;
-	shreds[numShredded].frame = 0;
+	g_shreds[g_numShredded].bounds.left = bounds->left + 4;
+	g_shreds[g_numShredded].bounds.right = g_shreds[g_numShredded].bounds.left + 40;
+	g_shreds[g_numShredded].bounds.top = bounds->top + 14;
+	g_shreds[g_numShredded].bounds.bottom = g_shreds[g_numShredded].bounds.top;
+	g_shreds[g_numShredded].frame = 0;
 
-	numShredded++;
+	g_numShredded++;
 }
 
 //--------------------------------------------------------------  RemoveShreds
@@ -689,28 +689,28 @@ void RemoveShreds (void)
 
 	largest = 0;
 	who = -1;
-	for (i = 0; i < numShredded; i++)
+	for (i = 0; i < g_numShredded; i++)
 	{
-		if (shreds[i].frame > largest)
+		if (g_shreds[i].frame > largest)
 		{
-			largest = shreds[i].frame;
+			largest = g_shreds[i].frame;
 			who = i;
 		}
 	}
 
 	if (who != -1)
 	{
-		if (who == (numShredded - 1))
+		if (who == (g_numShredded - 1))
 		{
-			numShredded--;
-			shreds[who].frame = 0;
+			g_numShredded--;
+			g_shreds[who].frame = 0;
 		}
 		else
 		{
-			numShredded--;
-			shreds[who].bounds = shreds[numShredded].bounds;
-			shreds[who].frame = shreds[numShredded].frame;
-			shreds[numShredded].frame = 0;
+			g_numShredded--;
+			g_shreds[who].bounds = g_shreds[g_numShredded].bounds;
+			g_shreds[who].frame = g_shreds[g_numShredded].frame;
+			g_shreds[g_numShredded].frame = 0;
 		}
 	}
 }
@@ -723,12 +723,12 @@ void RemoveShreds (void)
 
 void ZeroFlamesAndTheLike (void)
 {
-	numFlames = 0;
-	numTikiFlames = 0;
-	numCoals = 0;
-	numPendulums = 0;
+	g_numFlames = 0;
+	g_numTikiFlames = 0;
+	g_numCoals = 0;
+	g_numPendulums = 0;
 	ZeroGrease();
-	numStars = 0;
-	numShredded = 0;
-	numChimes = 0;
+	g_numStars = 0;
+	g_numShredded = 0;
+	g_numChimes = 0;
 }

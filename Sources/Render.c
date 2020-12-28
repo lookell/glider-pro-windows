@@ -37,31 +37,31 @@ void RenderShreds (void);
 HRGN CreateClipRgnFromRects (HDC hdcDest, const Rect *theRects, size_t numRects);
 void CopyRectsQD (void);
 
-SInt16 numWork2Main;
-SInt16 numBack2Work;
-Boolean hasMirror;
+SInt16 g_numWork2Main;
+SInt16 g_numBack2Work;
+Boolean g_hasMirror;
 
-static Rect work2MainRects[kMaxGarbageRects];
-static Rect back2WorkRects[kMaxGarbageRects];
-static HRGN mirrorRgn;
+static Rect g_work2MainRects[kMaxGarbageRects];
+static Rect g_back2WorkRects[kMaxGarbageRects];
+static HRGN g_mirrorRgn;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  AddRectToWorkRects
 
 void AddRectToWorkRects (const Rect *theRect)
 {
-	if (numWork2Main < (kMaxGarbageRects - 1))
+	if (g_numWork2Main < (kMaxGarbageRects - 1))
 	{
-		work2MainRects[numWork2Main] = *theRect;
-		if (work2MainRects[numWork2Main].left < justRoomsRect.left)
-			work2MainRects[numWork2Main].left = justRoomsRect.left;
-		else if (work2MainRects[numWork2Main].right > justRoomsRect.right)
-			work2MainRects[numWork2Main].right = justRoomsRect.right;
-		if (work2MainRects[numWork2Main].top < justRoomsRect.top)
-			work2MainRects[numWork2Main].top = justRoomsRect.top;
-		else if (work2MainRects[numWork2Main].bottom > justRoomsRect.bottom)
-			work2MainRects[numWork2Main].bottom = justRoomsRect.bottom;
-		numWork2Main++;
+		g_work2MainRects[g_numWork2Main] = *theRect;
+		if (g_work2MainRects[g_numWork2Main].left < g_justRoomsRect.left)
+			g_work2MainRects[g_numWork2Main].left = g_justRoomsRect.left;
+		else if (g_work2MainRects[g_numWork2Main].right > g_justRoomsRect.right)
+			g_work2MainRects[g_numWork2Main].right = g_justRoomsRect.right;
+		if (g_work2MainRects[g_numWork2Main].top < g_justRoomsRect.top)
+			g_work2MainRects[g_numWork2Main].top = g_justRoomsRect.top;
+		else if (g_work2MainRects[g_numWork2Main].bottom > g_justRoomsRect.bottom)
+			g_work2MainRects[g_numWork2Main].bottom = g_justRoomsRect.bottom;
+		g_numWork2Main++;
 	}
 }
 
@@ -69,18 +69,18 @@ void AddRectToWorkRects (const Rect *theRect)
 
 void AddRectToBackRects (const Rect *theRect)
 {
-	if (numBack2Work < (kMaxGarbageRects - 1))
+	if (g_numBack2Work < (kMaxGarbageRects - 1))
 	{
-		back2WorkRects[numBack2Work] = *theRect;
-		if (back2WorkRects[numBack2Work].left < 0)
-			back2WorkRects[numBack2Work].left = 0;
-		else if (back2WorkRects[numBack2Work].right > workSrcRect.right)
-			back2WorkRects[numBack2Work].right = workSrcRect.right;
-		if (back2WorkRects[numBack2Work].top < 0)
-			back2WorkRects[numBack2Work].top = 0;
-		else if (back2WorkRects[numBack2Work].bottom > workSrcRect.bottom)
-			back2WorkRects[numBack2Work].bottom = workSrcRect.bottom;
-		numBack2Work++;
+		g_back2WorkRects[g_numBack2Work] = *theRect;
+		if (g_back2WorkRects[g_numBack2Work].left < 0)
+			g_back2WorkRects[g_numBack2Work].left = 0;
+		else if (g_back2WorkRects[g_numBack2Work].right > g_workSrcRect.right)
+			g_back2WorkRects[g_numBack2Work].right = g_workSrcRect.right;
+		if (g_back2WorkRects[g_numBack2Work].top < 0)
+			g_back2WorkRects[g_numBack2Work].top = 0;
+		else if (g_back2WorkRects[g_numBack2Work].bottom > g_workSrcRect.bottom)
+			g_back2WorkRects[g_numBack2Work].bottom = g_workSrcRect.bottom;
+		g_numBack2Work++;
 	}
 }
 
@@ -88,32 +88,32 @@ void AddRectToBackRects (const Rect *theRect)
 
 void AddRectToWorkRectsWhole (const Rect *theRect)
 {
-	if (numWork2Main < (kMaxGarbageRects - 1))
+	if (g_numWork2Main < (kMaxGarbageRects - 1))
 	{
-		if ((theRect->right <= workSrcRect.left) ||
-				(theRect->bottom <= workSrcRect.top) ||
-				(theRect->left >= workSrcRect.right) ||
-				(theRect->top >= workSrcRect.bottom))
+		if ((theRect->right <= g_workSrcRect.left) ||
+				(theRect->bottom <= g_workSrcRect.top) ||
+				(theRect->left >= g_workSrcRect.right) ||
+				(theRect->top >= g_workSrcRect.bottom))
 			return;
 
-		work2MainRects[numWork2Main] = *theRect;
+		g_work2MainRects[g_numWork2Main] = *theRect;
 
-		if (work2MainRects[numWork2Main].left < workSrcRect.left)
-			work2MainRects[numWork2Main].left = workSrcRect.left;
-		else if (work2MainRects[numWork2Main].right > workSrcRect.right)
-			work2MainRects[numWork2Main].right = workSrcRect.right;
-		if (work2MainRects[numWork2Main].top < workSrcRect.top)
-			work2MainRects[numWork2Main].top = workSrcRect.top;
-		else if (work2MainRects[numWork2Main].bottom > workSrcRect.bottom)
-			work2MainRects[numWork2Main].bottom = workSrcRect.bottom;
+		if (g_work2MainRects[g_numWork2Main].left < g_workSrcRect.left)
+			g_work2MainRects[g_numWork2Main].left = g_workSrcRect.left;
+		else if (g_work2MainRects[g_numWork2Main].right > g_workSrcRect.right)
+			g_work2MainRects[g_numWork2Main].right = g_workSrcRect.right;
+		if (g_work2MainRects[g_numWork2Main].top < g_workSrcRect.top)
+			g_work2MainRects[g_numWork2Main].top = g_workSrcRect.top;
+		else if (g_work2MainRects[g_numWork2Main].bottom > g_workSrcRect.bottom)
+			g_work2MainRects[g_numWork2Main].bottom = g_workSrcRect.bottom;
 
-		if ((work2MainRects[numWork2Main].right ==
-				work2MainRects[numWork2Main].left) ||
-				(work2MainRects[numWork2Main].top ==
-				work2MainRects[numWork2Main].bottom))
+		if ((g_work2MainRects[g_numWork2Main].right ==
+				g_work2MainRects[g_numWork2Main].left) ||
+				(g_work2MainRects[g_numWork2Main].top ==
+				g_work2MainRects[g_numWork2Main].bottom))
 			return;
 
-		numWork2Main++;
+		g_numWork2Main++;
 	}
 }
 
@@ -133,31 +133,31 @@ void DrawReflection (const gliderType *thisGlider, Boolean oneOrTwo)
 		which = 1;
 
 	dest = thisGlider->dest;
-	QOffsetRect(&dest, playOriginH, playOriginV);
+	QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 	QOffsetRect(&dest, kReflectionOffsetH, KReflectionOffsetV);
 
-	SaveDC(workSrcMap);
-	ExtSelectClipRgn(workSrcMap, mirrorRgn, RGN_AND);
+	SaveDC(g_workSrcMap);
+	ExtSelectClipRgn(g_workSrcMap, g_mirrorRgn, RGN_AND);
 
 	if (oneOrTwo)
 	{
-		if ((!twoPlayerGame) && (showFoil))
-			Mac_CopyMask(glid2SrcMap, glidMaskMap, workSrcMap,
+		if ((!g_twoPlayerGame) && (g_showFoil))
+			Mac_CopyMask(g_glid2SrcMap, g_glidMaskMap, g_workSrcMap,
 					&thisGlider->src, &thisGlider->mask, &dest);
 		else
-			Mac_CopyMask(glidSrcMap, glidMaskMap, workSrcMap,
+			Mac_CopyMask(g_glidSrcMap, g_glidMaskMap, g_workSrcMap,
 					&thisGlider->src, &thisGlider->mask, &dest);
 	}
 	else
 	{
-		Mac_CopyMask(glid2SrcMap, glidMaskMap, workSrcMap,
+		Mac_CopyMask(g_glid2SrcMap, g_glidMaskMap, g_workSrcMap,
 				&thisGlider->src, &thisGlider->mask, &dest);
 	}
 
-	RestoreDC(workSrcMap, -1);
+	RestoreDC(g_workSrcMap, -1);
 
 	src = thisGlider->whole;
-	QOffsetRect(&src, playOriginH, playOriginV);
+	QOffsetRect(&src, g_playOriginH, g_playOriginV);
 	QOffsetRect(&src, kReflectionOffsetH, KReflectionOffsetV);
 	AddRectToWorkRects(&src);
 	AddRectToBackRects(&dest);
@@ -169,61 +169,61 @@ void RenderFlames (void)
 {
 	SInt16		i;
 
-	if ((numFlames == 0) && (numTikiFlames == 0) && (numCoals == 0))
+	if ((g_numFlames == 0) && (g_numTikiFlames == 0) && (g_numCoals == 0))
 		return;
 
-	for (i = 0; i < numFlames; i++)
+	for (i = 0; i < g_numFlames; i++)
 	{
-		flames[i].mode++;
-		flames[i].src.top += 15;
-		flames[i].src.bottom += 15;
-		if (flames[i].mode >= kNumCandleFlames)
+		g_flames[i].mode++;
+		g_flames[i].src.top += 15;
+		g_flames[i].src.bottom += 15;
+		if (g_flames[i].mode >= kNumCandleFlames)
 		{
-			flames[i].mode = 0;
-			flames[i].src.top = 0;
-			flames[i].src.bottom = 15;
+			g_flames[i].mode = 0;
+			g_flames[i].src.top = 0;
+			g_flames[i].src.bottom = 15;
 		}
 
-		Mac_CopyBits(savedMaps[flames[i].who].map, workSrcMap,
-				&flames[i].src, &flames[i].dest, srcCopy, nil);
+		Mac_CopyBits(g_savedMaps[g_flames[i].who].map, g_workSrcMap,
+				&g_flames[i].src, &g_flames[i].dest, srcCopy, nil);
 
-		AddRectToWorkRects(&flames[i].dest);
+		AddRectToWorkRects(&g_flames[i].dest);
 	}
 
-	for (i = 0; i < numTikiFlames; i++)
+	for (i = 0; i < g_numTikiFlames; i++)
 	{
-		tikiFlames[i].mode++;
-		tikiFlames[i].src.top += 10;
-		tikiFlames[i].src.bottom += 10;
-		if (tikiFlames[i].mode >= kNumTikiFlames)
+		g_tikiFlames[i].mode++;
+		g_tikiFlames[i].src.top += 10;
+		g_tikiFlames[i].src.bottom += 10;
+		if (g_tikiFlames[i].mode >= kNumTikiFlames)
 		{
-			tikiFlames[i].mode = 0;
-			tikiFlames[i].src.top = 0;
-			tikiFlames[i].src.bottom = 10;
+			g_tikiFlames[i].mode = 0;
+			g_tikiFlames[i].src.top = 0;
+			g_tikiFlames[i].src.bottom = 10;
 		}
 
-		Mac_CopyBits(savedMaps[tikiFlames[i].who].map, workSrcMap,
-				&tikiFlames[i].src, &tikiFlames[i].dest, srcCopy, nil);
+		Mac_CopyBits(g_savedMaps[g_tikiFlames[i].who].map, g_workSrcMap,
+				&g_tikiFlames[i].src, &g_tikiFlames[i].dest, srcCopy, nil);
 
-		AddRectToWorkRects(&tikiFlames[i].dest);
+		AddRectToWorkRects(&g_tikiFlames[i].dest);
 	}
 
-	for (i = 0; i < numCoals; i++)
+	for (i = 0; i < g_numCoals; i++)
 	{
-		bbqCoals[i].mode++;
-		bbqCoals[i].src.top += 9;
-		bbqCoals[i].src.bottom += 9;
-		if (bbqCoals[i].mode >= kNumBBQCoals)
+		g_bbqCoals[i].mode++;
+		g_bbqCoals[i].src.top += 9;
+		g_bbqCoals[i].src.bottom += 9;
+		if (g_bbqCoals[i].mode >= kNumBBQCoals)
 		{
-			bbqCoals[i].mode = 0;
-			bbqCoals[i].src.top = 0;
-			bbqCoals[i].src.bottom = 9;
+			g_bbqCoals[i].mode = 0;
+			g_bbqCoals[i].src.top = 0;
+			g_bbqCoals[i].src.bottom = 9;
 		}
 
-		Mac_CopyBits(savedMaps[bbqCoals[i].who].map, workSrcMap,
-				&bbqCoals[i].src, &bbqCoals[i].dest, srcCopy, nil);
+		Mac_CopyBits(g_savedMaps[g_bbqCoals[i].who].map, g_workSrcMap,
+				&g_bbqCoals[i].src, &g_bbqCoals[i].dest, srcCopy, nil);
 
-		AddRectToWorkRects(&bbqCoals[i].dest);
+		AddRectToWorkRects(&g_bbqCoals[i].dest);
 	}
 }
 
@@ -236,28 +236,28 @@ void RenderPendulums (void)
 
 	playedTikTok = false;
 
-	if (numPendulums == 0)
+	if (g_numPendulums == 0)
 		return;
 
-	clockFrame++;
-	if ((clockFrame == 10) || (clockFrame == 15))
+	g_clockFrame++;
+	if ((g_clockFrame == 10) || (g_clockFrame == 15))
 	{
-		if (clockFrame >= 15)
-			clockFrame = 0;
+		if (g_clockFrame >= 15)
+			g_clockFrame = 0;
 
-		for (i = 0; i < numPendulums; i++)
+		for (i = 0; i < g_numPendulums; i++)
 		{
-			if (pendulums[i].active)
+			if (g_pendulums[i].active)
 			{
-				if (pendulums[i].toOrFro)
+				if (g_pendulums[i].toOrFro)
 				{
-					pendulums[i].mode++;
-					pendulums[i].src.top += 28;
-					pendulums[i].src.bottom += 28;
+					g_pendulums[i].mode++;
+					g_pendulums[i].src.top += 28;
+					g_pendulums[i].src.bottom += 28;
 
-					if (pendulums[i].mode >= 2)
+					if (g_pendulums[i].mode >= 2)
 					{
-						pendulums[i].toOrFro = !pendulums[i].toOrFro;
+						g_pendulums[i].toOrFro = !g_pendulums[i].toOrFro;
 						if (!playedTikTok)
 						{
 							PlayPrioritySound(kTikSound, kTikPriority);
@@ -267,13 +267,13 @@ void RenderPendulums (void)
 				}
 				else
 				{
-					pendulums[i].mode--;
-					pendulums[i].src.top -= 28;
-					pendulums[i].src.bottom -= 28;
+					g_pendulums[i].mode--;
+					g_pendulums[i].src.top -= 28;
+					g_pendulums[i].src.bottom -= 28;
 
-					if (pendulums[i].mode <= 0)
+					if (g_pendulums[i].mode <= 0)
 					{
-						pendulums[i].toOrFro = !pendulums[i].toOrFro;
+						g_pendulums[i].toOrFro = !g_pendulums[i].toOrFro;
 						if (!playedTikTok)
 						{
 							PlayPrioritySound(kTokSound, kTokPriority);
@@ -282,10 +282,10 @@ void RenderPendulums (void)
 					}
 				}
 
-				Mac_CopyBits(savedMaps[pendulums[i].who].map, workSrcMap,
-						&pendulums[i].src, &pendulums[i].dest, srcCopy, nil);
+				Mac_CopyBits(g_savedMaps[g_pendulums[i].who].map, g_workSrcMap,
+						&g_pendulums[i].src, &g_pendulums[i].dest, srcCopy, nil);
 
-				AddRectToWorkRects(&pendulums[i].dest);
+				AddRectToWorkRects(&g_pendulums[i].dest);
 			}
 		}
 	}
@@ -297,52 +297,52 @@ void RenderFlyingPoints (void)
 {
 	SInt16		i;
 
-	if (numFlyingPts == 0)
+	if (g_numFlyingPts == 0)
 		return;
 
 	for (i = 0; i < kMaxFlyingPts; i++)
 	{
-		if (flyingPoints[i].mode != -1)
+		if (g_flyingPoints[i].mode != -1)
 		{
-			if (flyingPoints[i].mode > flyingPoints[i].stop)
+			if (g_flyingPoints[i].mode > g_flyingPoints[i].stop)
 			{
-				flyingPoints[i].mode = flyingPoints[i].start;
-				flyingPoints[i].loops++;
+				g_flyingPoints[i].mode = g_flyingPoints[i].start;
+				g_flyingPoints[i].loops++;
 			}
 
-			if (flyingPoints[i].loops >= kMaxFlyingPointsLoop)
+			if (g_flyingPoints[i].loops >= kMaxFlyingPointsLoop)
 			{
-				AddRectToWorkRects(&flyingPoints[i].dest);
-				flyingPoints[i].mode = -1;
-				numFlyingPts--;
+				AddRectToWorkRects(&g_flyingPoints[i].dest);
+				g_flyingPoints[i].mode = -1;
+				g_numFlyingPts--;
 			}
 			else
 			{
-				flyingPoints[i].dest.left += flyingPoints[i].hVel;
-				flyingPoints[i].dest.right += flyingPoints[i].hVel;
+				g_flyingPoints[i].dest.left += g_flyingPoints[i].hVel;
+				g_flyingPoints[i].dest.right += g_flyingPoints[i].hVel;
 
-				if (flyingPoints[i].hVel > 0)
-					flyingPoints[i].whole.right = flyingPoints[i].dest.right;
+				if (g_flyingPoints[i].hVel > 0)
+					g_flyingPoints[i].whole.right = g_flyingPoints[i].dest.right;
 				else
-					flyingPoints[i].whole.left = flyingPoints[i].dest.left;
+					g_flyingPoints[i].whole.left = g_flyingPoints[i].dest.left;
 
-				flyingPoints[i].dest.top += flyingPoints[i].vVel;
-				flyingPoints[i].dest.bottom += flyingPoints[i].vVel;
+				g_flyingPoints[i].dest.top += g_flyingPoints[i].vVel;
+				g_flyingPoints[i].dest.bottom += g_flyingPoints[i].vVel;
 
-				if (flyingPoints[i].vVel > 0)
-					flyingPoints[i].whole.bottom = flyingPoints[i].dest.bottom;
+				if (g_flyingPoints[i].vVel > 0)
+					g_flyingPoints[i].whole.bottom = g_flyingPoints[i].dest.bottom;
 				else
-					flyingPoints[i].whole.top = flyingPoints[i].dest.top;
+					g_flyingPoints[i].whole.top = g_flyingPoints[i].dest.top;
 
-				Mac_CopyMask(pointsSrcMap, pointsMaskMap, workSrcMap,
-						&pointsSrc[flyingPoints[i].mode],
-						&pointsSrc[flyingPoints[i].mode],
-						&flyingPoints[i].dest);
+				Mac_CopyMask(g_pointsSrcMap, g_pointsMaskMap, g_workSrcMap,
+						&g_pointsSrc[g_flyingPoints[i].mode],
+						&g_pointsSrc[g_flyingPoints[i].mode],
+						&g_flyingPoints[i].dest);
 
-				AddRectToWorkRects(&flyingPoints[i].whole);
-				AddRectToBackRects(&flyingPoints[i].dest);
-				flyingPoints[i].whole = flyingPoints[i].dest;
-				flyingPoints[i].mode++;
+				AddRectToWorkRects(&g_flyingPoints[i].whole);
+				AddRectToBackRects(&g_flyingPoints[i].dest);
+				g_flyingPoints[i].whole = g_flyingPoints[i].dest;
+				g_flyingPoints[i].mode++;
 			}
 		}
 	}
@@ -354,29 +354,29 @@ void RenderSparkles (void)
 {
 	SInt16		i;
 
-	if (numSparkles == 0)
+	if (g_numSparkles == 0)
 		return;
 
 	for (i = 0; i < kMaxSparkles; i++)
 	{
-		if (sparkles[i].mode != -1)
+		if (g_sparkles[i].mode != -1)
 		{
-			if (sparkles[i].mode >= kNumSparkleModes)
+			if (g_sparkles[i].mode >= kNumSparkleModes)
 			{
-				AddRectToWorkRects(&sparkles[i].bounds);
-				sparkles[i].mode = -1;
-				numSparkles--;
+				AddRectToWorkRects(&g_sparkles[i].bounds);
+				g_sparkles[i].mode = -1;
+				g_numSparkles--;
 			}
 			else
 			{
-				Mac_CopyMask(bonusSrcMap, bonusMaskMap, workSrcMap,
-						&sparkleSrc[sparkles[i].mode],
-						&sparkleSrc[sparkles[i].mode],
-						&sparkles[i].bounds);
+				Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_workSrcMap,
+						&g_sparkleSrc[g_sparkles[i].mode],
+						&g_sparkleSrc[g_sparkles[i].mode],
+						&g_sparkles[i].bounds);
 
-				AddRectToWorkRects(&sparkles[i].bounds);
-				AddRectToBackRects(&sparkles[i].bounds);
-				sparkles[i].mode++;
+				AddRectToWorkRects(&g_sparkles[i].bounds);
+				AddRectToBackRects(&g_sparkles[i].bounds);
+				g_sparkles[i].mode++;
 			}
 		}
 	}
@@ -388,27 +388,27 @@ void RenderStars (void)
 {
 	SInt16		i;
 
-	if (numStars == 0)
+	if (g_numStars == 0)
 		return;
 
-	for (i = 0; i < numStars; i++)
+	for (i = 0; i < g_numStars; i++)
 	{
-		if (theStars[i].mode != -1)
+		if (g_theStars[i].mode != -1)
 		{
-			theStars[i].mode++;
-			theStars[i].src.top += 31;
-			theStars[i].src.bottom += 31;
-			if (theStars[i].mode >= 6)
+			g_theStars[i].mode++;
+			g_theStars[i].src.top += 31;
+			g_theStars[i].src.bottom += 31;
+			if (g_theStars[i].mode >= 6)
 			{
-				theStars[i].mode = 0;
-				theStars[i].src.top = 0;
-				theStars[i].src.bottom = 31;
+				g_theStars[i].mode = 0;
+				g_theStars[i].src.top = 0;
+				g_theStars[i].src.bottom = 31;
 			}
 
-			Mac_CopyBits(savedMaps[theStars[i].who].map, workSrcMap,
-					&theStars[i].src, &theStars[i].dest, srcCopy, nil);
+			Mac_CopyBits(g_savedMaps[g_theStars[i].who].map, g_workSrcMap,
+					&g_theStars[i].src, &g_theStars[i].dest, srcCopy, nil);
 
-			AddRectToWorkRects(&theStars[i].dest);
+			AddRectToWorkRects(&g_theStars[i].dest);
 		}
 	}
 }
@@ -428,57 +428,57 @@ void RenderGlider (const gliderType *thisGlider, Boolean oneOrTwo)
 	else
 		which = 1;
 
-	if (shadowVisible)
+	if (g_shadowVisible)
 	{
 		dest = thisGlider->destShadow;
-		QOffsetRect(&dest, playOriginH, playOriginV);
+		QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 
 		if ((thisGlider->mode == kGliderComingUp) ||
 				(thisGlider->mode == kGliderGoingDown))
 		{
-			src = shadowSrc[which];
+			src = g_shadowSrc[which];
 			src.right = src.left + (dest.right - dest.left);
 
-			Mac_CopyMask(shadowSrcMap, shadowMaskMap, workSrcMap,
+			Mac_CopyMask(g_shadowSrcMap, g_shadowMaskMap, g_workSrcMap,
 					&src, &src, &dest);
 		}
 		else if (thisGlider->mode == kGliderComingDown)
 		{
-			src = shadowSrc[which];
+			src = g_shadowSrc[which];
 			src.left = src.right - (dest.right - dest.left);
 
-			Mac_CopyMask(shadowSrcMap, shadowMaskMap, workSrcMap,
+			Mac_CopyMask(g_shadowSrcMap, g_shadowMaskMap, g_workSrcMap,
 					&src, &src, &dest);
 		}
 		else
-			Mac_CopyMask(shadowSrcMap, shadowMaskMap, workSrcMap,
-					&shadowSrc[which], &shadowSrc[which], &dest);
+			Mac_CopyMask(g_shadowSrcMap, g_shadowMaskMap, g_workSrcMap,
+					&g_shadowSrc[which], &g_shadowSrc[which], &dest);
 		src = thisGlider->wholeShadow;
-		QOffsetRect(&src, playOriginH, playOriginV);
+		QOffsetRect(&src, g_playOriginH, g_playOriginV);
 		AddRectToWorkRects(&src);
 		AddRectToBackRects(&dest);
 	}
 
 	dest = thisGlider->dest;
-	QOffsetRect(&dest, playOriginH, playOriginV);
+	QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 
 	if (oneOrTwo)
 	{
-		if ((!twoPlayerGame) && (showFoil))
-			Mac_CopyMask(glid2SrcMap, glidMaskMap, workSrcMap,
+		if ((!g_twoPlayerGame) && (g_showFoil))
+			Mac_CopyMask(g_glid2SrcMap, g_glidMaskMap, g_workSrcMap,
 					&thisGlider->src, &thisGlider->mask, &dest);
 		else
-			Mac_CopyMask(glidSrcMap, glidMaskMap, workSrcMap,
+			Mac_CopyMask(g_glidSrcMap, g_glidMaskMap, g_workSrcMap,
 					&thisGlider->src, &thisGlider->mask, &dest);
 	}
 	else
 	{
-		Mac_CopyMask(glid2SrcMap, glidMaskMap, workSrcMap,
+		Mac_CopyMask(g_glid2SrcMap, g_glidMaskMap, g_workSrcMap,
 				&thisGlider->src, &thisGlider->mask, &dest);
 	}
 
 	src = thisGlider->whole;
-	QOffsetRect(&src, playOriginH, playOriginV);
+	QOffsetRect(&src, g_playOriginH, g_playOriginV);
 	AddRectToWorkRects(&src);
 	AddRectToBackRects(&dest);
 }
@@ -490,16 +490,16 @@ void RenderBands (void)
 	Rect		dest;
 	SInt16		i;
 
-	if (numBands == 0)
+	if (g_numBands == 0)
 		return;
 
-	for (i = 0; i < numBands; i++)
+	for (i = 0; i < g_numBands; i++)
 	{
-		dest = bands[i].dest;
-		QOffsetRect(&dest, playOriginH, playOriginV);
-		Mac_CopyMask(bandsSrcMap, bandsMaskMap, workSrcMap,
-				&bandRects[bands[i].mode],
-				&bandRects[bands[i].mode], &dest);
+		dest = g_bands[i].dest;
+		QOffsetRect(&dest, g_playOriginH, g_playOriginV);
+		Mac_CopyMask(g_bandsSrcMap, g_bandsMaskMap, g_workSrcMap,
+				&g_bandRects[g_bands[i].mode],
+				&g_bandRects[g_bands[i].mode], &dest);
 
 		AddRectToWorkRects(&dest);
 		AddRectToBackRects(&dest);
@@ -513,42 +513,42 @@ void RenderShreds (void)
 	Rect		src, dest;
 	SInt16		i, high;
 
-	if (numShredded > 0)
+	if (g_numShredded > 0)
 	{
-		for (i = 0; i < numShredded; i++)
+		for (i = 0; i < g_numShredded; i++)
 		{
-			if (shreds[i].frame == 0)
+			if (g_shreds[i].frame == 0)
 			{
-				shreds[i].bounds.bottom += 1;
-				high = shreds[i].bounds.bottom - shreds[i].bounds.top;
+				g_shreds[i].bounds.bottom += 1;
+				high = g_shreds[i].bounds.bottom - g_shreds[i].bounds.top;
 				if (high >= 35)
-					shreds[i].frame = 1;
-				src = shredSrcRect;
+					g_shreds[i].frame = 1;
+				src = g_shredSrcRect;
 				src.top = src.bottom - high;
-				dest = shreds[i].bounds;
-				QOffsetRect(&dest, playOriginH, playOriginV);
-				Mac_CopyMask(shredSrcMap, shredMaskMap, workSrcMap,
+				dest = g_shreds[i].bounds;
+				QOffsetRect(&dest, g_playOriginH, g_playOriginV);
+				Mac_CopyMask(g_shredSrcMap, g_shredMaskMap, g_workSrcMap,
 						&src, &src, &dest);
 				AddRectToBackRects(&dest);
 				dest.top--;
 				AddRectToWorkRects(&dest);
 				PlayPrioritySound(kShredSound, kShredPriority);
 			}
-			else if (shreds[i].frame < 20)
+			else if (g_shreds[i].frame < 20)
 			{
-				shreds[i].bounds.top += 4;
-				shreds[i].bounds.bottom += 4;
-				dest = shreds[i].bounds;
-				QOffsetRect(&dest, playOriginH, playOriginV);
-				shreds[i].frame++;
-				if (shreds[i].frame < 20)
+				g_shreds[i].bounds.top += 4;
+				g_shreds[i].bounds.bottom += 4;
+				dest = g_shreds[i].bounds;
+				QOffsetRect(&dest, g_playOriginH, g_playOriginV);
+				g_shreds[i].frame++;
+				if (g_shreds[i].frame < 20)
 				{
-					Mac_CopyMask(shredSrcMap, shredMaskMap, workSrcMap,
-							&shredSrcRect, &shredSrcRect, &dest);
+					Mac_CopyMask(g_shredSrcMap, g_shredMaskMap, g_workSrcMap,
+							&g_shredSrcRect, &g_shredSrcRect, &dest);
 				}
 				else
 				{
-					AddSparkle(&shreds[i].bounds);
+					AddSparkle(&g_shreds[i].bounds);
 					PlayPrioritySound(kFadeOutSound, kFadeOutPriority);
 				}
 				AddRectToBackRects(&dest);
@@ -601,15 +601,15 @@ void CopyRectsQD (void)
 	SInt16 i;
 
 	mainWindowDC = GetMainWindowDC();
-	blitRgn = CreateClipRgnFromRects(mainWindowDC, work2MainRects, numWork2Main);
-	Mac_CopyBits(workSrcMap, mainWindowDC, &workSrcRect, &workSrcRect, srcCopy, blitRgn);
+	blitRgn = CreateClipRgnFromRects(mainWindowDC, g_work2MainRects, g_numWork2Main);
+	Mac_CopyBits(g_workSrcMap, mainWindowDC, &g_workSrcRect, &g_workSrcRect, srcCopy, blitRgn);
 	DeleteObject(blitRgn);
 	ReleaseMainWindowDC(mainWindowDC);
 
-	for (i = 0; i < numBack2Work; i++)
+	for (i = 0; i < g_numBack2Work; i++)
 	{
-		Mac_CopyBits(backSrcMap, workSrcMap,
-				&back2WorkRects[i], &back2WorkRects[i],
+		Mac_CopyBits(g_backSrcMap, g_workSrcMap,
+				&g_back2WorkRects[i], &g_back2WorkRects[i],
 				srcCopy, nil);
 	}
 }
@@ -620,24 +620,24 @@ void RenderFrame (void)
 {
 	MSG msg;
 
-	if (hasMirror)
+	if (g_hasMirror)
 	{
-		DrawReflection(&theGlider, true);
-		if (twoPlayerGame)
-			DrawReflection(&theGlider2, false);
+		DrawReflection(&g_theGlider, true);
+		if (g_twoPlayerGame)
+			DrawReflection(&g_theGlider2, false);
 	}
 	HandleGrease();
 	RenderPendulums();
-	if (evenFrame)
+	if (g_evenFrame)
 		RenderFlames();
 	else
 		RenderStars();
 	RenderDynamics();
 	RenderFlyingPoints();
 	RenderSparkles();
-	RenderGlider(&theGlider, true);
-	if (twoPlayerGame)
-		RenderGlider(&theGlider2, false);
+	RenderGlider(&g_theGlider, true);
+	if (g_twoPlayerGame)
+		RenderGlider(&g_theGlider2, false);
 	RenderShreds();
 	RenderBands();
 
@@ -646,7 +646,7 @@ void RenderFrame (void)
 		if (msg.message == WM_QUIT)
 		{
 			PostQuitMessage((int)msg.wParam);
-			quitting = true;
+			g_quitting = true;
 			break;
 		}
 		TranslateMessage(&msg);
@@ -655,8 +655,8 @@ void RenderFrame (void)
 
 	CopyRectsQD();
 
-	numWork2Main = 0;
-	numBack2Work = 0;
+	g_numWork2Main = 0;
+	g_numBack2Work = 0;
 }
 
 //--------------------------------------------------------------  InitGarbageRects
@@ -665,23 +665,23 @@ void InitGarbageRects (void)
 {
 	SInt16		i;
 
-	numWork2Main = 0;
-	numBack2Work = 0;
+	g_numWork2Main = 0;
+	g_numBack2Work = 0;
 
-	numSparkles = 0;
+	g_numSparkles = 0;
 	for (i = 0; i < kMaxSparkles; i++)
-		sparkles[i].mode = -1;
+		g_sparkles[i].mode = -1;
 
-	numFlyingPts = 0;
+	g_numFlyingPts = 0;
 	for (i = 0; i < kMaxFlyingPts; i++)
-		flyingPoints[i].mode = -1;
+		g_flyingPoints[i].mode = -1;
 }
 
 //--------------------------------------------------------------  CopyRectBackToWork
 
 void CopyRectBackToWork (const Rect *theRect)
 {
-	Mac_CopyBits(backSrcMap, workSrcMap,
+	Mac_CopyBits(g_backSrcMap, g_workSrcMap,
 			theRect, theRect, srcCopy, nil);
 }
 
@@ -689,7 +689,7 @@ void CopyRectBackToWork (const Rect *theRect)
 
 void CopyRectWorkToBack (const Rect *theRect)
 {
-	Mac_CopyBits(workSrcMap, backSrcMap,
+	Mac_CopyBits(g_workSrcMap, g_backSrcMap,
 			theRect, theRect, srcCopy, nil);
 }
 
@@ -700,7 +700,7 @@ void CopyRectWorkToMain (const Rect *theRect)
 	HDC			mainWindowDC;
 
 	mainWindowDC = GetMainWindowDC();
-	Mac_CopyBits(workSrcMap, mainWindowDC,
+	Mac_CopyBits(g_workSrcMap, mainWindowDC,
 			theRect, theRect, srcCopy, nil);
 	ReleaseMainWindowDC(mainWindowDC);
 }
@@ -712,7 +712,7 @@ void CopyRectMainToWork (const Rect *theRect)
 	HDC			mainWindowDC;
 
 	mainWindowDC = GetMainWindowDC();
-	Mac_CopyBits(mainWindowDC, workSrcMap,
+	Mac_CopyBits(mainWindowDC, g_workSrcMap,
 			theRect, theRect, srcCopy, nil);
 	ReleaseMainWindowDC(mainWindowDC);
 }
@@ -724,7 +724,7 @@ void CopyRectMainToBack (const Rect *theRect)
 	HDC			mainWindowDC;
 
 	mainWindowDC = GetMainWindowDC();
-	Mac_CopyBits(mainWindowDC, backSrcMap,
+	Mac_CopyBits(mainWindowDC, g_backSrcMap,
 			theRect, theRect, srcCopy, nil);
 	ReleaseMainWindowDC(mainWindowDC);
 }
@@ -738,9 +738,9 @@ void AddToMirrorRegion (const Rect *theRect)
 	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
 		return;
 
-	if (mirrorRgn == NULL)
+	if (g_mirrorRgn == NULL)
 	{
-		mirrorRgn = CreateRectRgn(theRect->left, theRect->top,
+		g_mirrorRgn = CreateRectRgn(theRect->left, theRect->top,
 				theRect->right, theRect->bottom);
 	}
 	else
@@ -749,19 +749,19 @@ void AddToMirrorRegion (const Rect *theRect)
 				theRect->right, theRect->bottom);
 		if (tempRgn != NULL)
 		{
-			CombineRgn(mirrorRgn, mirrorRgn, tempRgn, RGN_OR);
+			CombineRgn(g_mirrorRgn, g_mirrorRgn, tempRgn, RGN_OR);
 			DeleteObject(tempRgn);
 		}
 	}
-	hasMirror = true;
+	g_hasMirror = true;
 }
 
 //--------------------------------------------------------------  ZeroMirrorRegion
 
 void ZeroMirrorRegion (void)
 {
-	if (mirrorRgn != NULL)
-		DeleteObject(mirrorRgn);
-	mirrorRgn = NULL;
-	hasMirror = false;
+	if (g_mirrorRgn != NULL)
+		DeleteObject(g_mirrorRgn);
+	g_mirrorRgn = NULL;
+	g_hasMirror = false;
 }

@@ -60,9 +60,9 @@ void HandleBall (dynaType *theDinah);
 void HandleDrip (dynaType *theDinah);
 void HandleFish (dynaType *theDinah);
 
-Rect breadSrc[kNumBreadPicts];
-dynaType dinahs[kMaxDynamicObs];
-SInt16 numDynamics;
+Rect g_breadSrc[kNumBreadPicts];
+dynaType g_dinahs[kMaxDynamicObs];
+SInt16 g_numDynamics;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  CheckDynamicCollision
@@ -75,7 +75,7 @@ void CheckDynamicCollision (const dynaType *theDinah, gliderPtr thisGlider, Bool
 
 	dinahRect = theDinah->dest;
 	if (doOffset)
-		QOffsetRect(&dinahRect, -playOriginH, -playOriginV);
+		QOffsetRect(&dinahRect, -g_playOriginH, -g_playOriginV);
 
 	if (SectGlider(thisGlider, &dinahRect, true))
 	{
@@ -86,7 +86,7 @@ void CheckDynamicCollision (const dynaType *theDinah, gliderPtr thisGlider, Bool
 				(thisGlider->mode == kGliderGoingFoil) ||
 				(thisGlider->mode == kGliderLosingFoil))
 		{
-			if ((foilTotal > 0) || (thisGlider->mode == kGliderLosingFoil))
+			if ((g_foilTotal > 0) || (thisGlider->mode == kGliderLosingFoil))
 			{
 				if (IsRectLeftOfRect(&dinahRect, &thisGlider->dest))
 					thisGlider->hDesiredVel = kShoveVelocity;
@@ -95,10 +95,10 @@ void CheckDynamicCollision (const dynaType *theDinah, gliderPtr thisGlider, Bool
 				if (theDinah->vVel < 0)
 					thisGlider->vDesiredVel = theDinah->vVel;
 				PlayPrioritySound(kFoilHitSound, kFoilHitPriority);
-				if ((evenFrame) && (foilTotal > 0))
+				if ((g_evenFrame) && (g_foilTotal > 0))
 				{
-					foilTotal--;
-					if (foilTotal <= 0)
+					g_foilTotal--;
+					if (g_foilTotal <= 0)
 						StartGliderFoilLosing(thisGlider);
 				}
 			}
@@ -116,28 +116,28 @@ void CheckDynamicCollision (const dynaType *theDinah, gliderPtr thisGlider, Bool
 
 void CheckForPlayerCollisions (const dynaType *theDinah, Boolean doOffset)
 {
-	if (twoPlayerGame)
+	if (g_twoPlayerGame)
 	{
-		if (onePlayerLeft)
+		if (g_onePlayerLeft)
 		{
-			if (playerDead == theGlider.which)
+			if (g_playerDead == g_theGlider.which)
 			{
-				CheckDynamicCollision(theDinah, &theGlider2, doOffset);
+				CheckDynamicCollision(theDinah, &g_theGlider2, doOffset);
 			}
 			else
 			{
-				CheckDynamicCollision(theDinah, &theGlider, doOffset);
+				CheckDynamicCollision(theDinah, &g_theGlider, doOffset);
 			}
 		}
 		else
 		{
-			CheckDynamicCollision(theDinah, &theGlider, doOffset);
-			CheckDynamicCollision(theDinah, &theGlider2, doOffset);
+			CheckDynamicCollision(theDinah, &g_theGlider, doOffset);
+			CheckDynamicCollision(theDinah, &g_theGlider2, doOffset);
 		}
 	}
 	else
 	{
-		CheckDynamicCollision(theDinah, &theGlider, doOffset);
+		CheckDynamicCollision(theDinah, &g_theGlider, doOffset);
 	}
 }
 
@@ -153,15 +153,15 @@ Boolean DidBandHitDynamic (const dynaType *theDinah)
 	dinahRect = theDinah->dest;
 
 	collided = false;
-	for (i = 0; i < numBands; i++)
+	for (i = 0; i < g_numBands; i++)
 	{
-		if (bands[i].dest.bottom < dinahRect.top)
+		if (g_bands[i].dest.bottom < dinahRect.top)
 			collided = false;
-		else if (bands[i].dest.top > dinahRect.bottom)
+		else if (g_bands[i].dest.top > dinahRect.bottom)
 			collided = false;
-		else if (bands[i].dest.right < dinahRect.left)
+		else if (g_bands[i].dest.right < dinahRect.left)
 			collided = false;
-		else if (bands[i].dest.left > dinahRect.right)
+		else if (g_bands[i].dest.left > dinahRect.right)
 			collided = false;
 		else
 			collided = true;
@@ -188,8 +188,8 @@ void RenderToast (const dynaType *theDinah)
 	if (theDinah->moving)
 	{
 		dest = theDinah->dest;
-		QOffsetRect(&dest, playOriginH, playOriginV);
-		src = breadSrc[theDinah->frame];
+		QOffsetRect(&dest, g_playOriginH, g_playOriginV);
+		src = g_breadSrc[theDinah->frame];
 		vClip = theDinah->dest.bottom - theDinah->hVel;
 		if (vClip > 0)
 		{
@@ -197,12 +197,12 @@ void RenderToast (const dynaType *theDinah)
 			dest.bottom -= vClip;
 		}
 
-		Mac_CopyMask(toastSrcMap, toastMaskMap, workSrcMap,
+		Mac_CopyMask(g_toastSrcMap, g_toastMaskMap, g_workSrcMap,
 				&src, &src, &dest);
 
 		AddRectToBackRects(&dest);
 		dest = theDinah->whole;
-		QOffsetRect(&dest, playOriginH, playOriginV);
+		QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 		AddRectToWorkRects(&dest);
 	}
 }
@@ -217,15 +217,15 @@ void RenderBalloon (const dynaType *theDinah)
 	if (theDinah->moving)
 	{
 		dest = theDinah->dest;
-		QOffsetRect(&dest, playOriginH, playOriginV);
-		src = balloonSrc[theDinah->frame];
+		QOffsetRect(&dest, g_playOriginH, g_playOriginV);
+		src = g_balloonSrc[theDinah->frame];
 
-		Mac_CopyMask(balloonSrcMap, balloonMaskMap, workSrcMap,
+		Mac_CopyMask(g_balloonSrcMap, g_balloonMaskMap, g_workSrcMap,
 				&src, &src, &dest);
 
 		AddRectToBackRects(&dest);
 		dest = theDinah->whole;
-		QOffsetRect(&dest, playOriginH, playOriginV);
+		QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 		AddRectToWorkRects(&dest);
 	}
 }
@@ -240,15 +240,15 @@ void RenderCopter (const dynaType *theDinah)
 	if (theDinah->moving)
 	{
 		dest = theDinah->dest;
-		QOffsetRect(&dest, playOriginH, playOriginV);
-		src = copterSrc[theDinah->frame];
+		QOffsetRect(&dest, g_playOriginH, g_playOriginV);
+		src = g_copterSrc[theDinah->frame];
 
-		Mac_CopyMask(copterSrcMap, copterMaskMap, workSrcMap,
+		Mac_CopyMask(g_copterSrcMap, g_copterMaskMap, g_workSrcMap,
 				&src, &src, &dest);
 
 		AddRectToBackRects(&dest);
 		dest = theDinah->whole;
-		QOffsetRect(&dest, playOriginH, playOriginV);
+		QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 		AddRectToWorkRects(&dest);
 	}
 }
@@ -263,15 +263,15 @@ void RenderDart (const dynaType *theDinah)
 	if (theDinah->moving)
 	{
 		dest = theDinah->dest;
-		QOffsetRect(&dest, playOriginH, playOriginV);
-		src = dartSrc[theDinah->frame];
+		QOffsetRect(&dest, g_playOriginH, g_playOriginV);
+		src = g_dartSrc[theDinah->frame];
 
-		Mac_CopyMask(dartSrcMap, dartMaskMap, workSrcMap,
+		Mac_CopyMask(g_dartSrcMap, g_dartMaskMap, g_workSrcMap,
 				&src, &src, &dest);
 
 		AddRectToBackRects(&dest);
 		dest = theDinah->whole;
-		QOffsetRect(&dest, playOriginH, playOriginV);
+		QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 		AddRectToWorkRects(&dest);
 	}
 }
@@ -284,15 +284,15 @@ void RenderBall (const dynaType *theDinah)
 	Rect dest;
 
 	dest = theDinah->dest;
-	QOffsetRect(&dest, playOriginH, playOriginV);
-	src = ballSrc[theDinah->frame];
+	QOffsetRect(&dest, g_playOriginH, g_playOriginV);
+	src = g_ballSrc[theDinah->frame];
 
-	Mac_CopyMask(ballSrcMap, ballMaskMap, workSrcMap,
+	Mac_CopyMask(g_ballSrcMap, g_ballMaskMap, g_workSrcMap,
 			&src, &src, &dest);
 
 	AddRectToBackRects(&dest);
 	dest = theDinah->whole;
-	QOffsetRect(&dest, playOriginH, playOriginV);
+	QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 	AddRectToWorkRects(&dest);
 }
 
@@ -304,15 +304,15 @@ void RenderDrip (const dynaType *theDinah)
 	Rect dest;
 
 	dest = theDinah->dest;
-	QOffsetRect(&dest, playOriginH, playOriginV);
-	src = dripSrc[theDinah->frame];
+	QOffsetRect(&dest, g_playOriginH, g_playOriginV);
+	src = g_dripSrc[theDinah->frame];
 
-	Mac_CopyMask(dripSrcMap, dripMaskMap, workSrcMap,
+	Mac_CopyMask(g_dripSrcMap, g_dripMaskMap, g_workSrcMap,
 			&src, &src, &dest);
 
 	AddRectToBackRects(&dest);
 	dest = theDinah->whole;
-	QOffsetRect(&dest, playOriginH, playOriginV);
+	QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 	AddRectToWorkRects(&dest);
 }
 
@@ -324,25 +324,25 @@ void RenderFish (const dynaType *theDinah)
 	Rect dest;
 
 	dest = theDinah->dest;
-	QOffsetRect(&dest, playOriginH, playOriginV);
-	src = fishSrc[theDinah->frame];
+	QOffsetRect(&dest, g_playOriginH, g_playOriginV);
+	src = g_fishSrc[theDinah->frame];
 
 	if (theDinah->moving)
 	{
-		Mac_CopyMask(fishSrcMap, fishMaskMap, workSrcMap,
+		Mac_CopyMask(g_fishSrcMap, g_fishMaskMap, g_workSrcMap,
 				&src, &src, &dest);
 		AddRectToBackRects(&dest);
 		dest = theDinah->whole;
-		QOffsetRect(&dest, playOriginH, playOriginV);
+		QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 		AddRectToWorkRects(&dest);
 	}
 	else
 	{
-		Mac_CopyBits(fishSrcMap, workSrcMap,
+		Mac_CopyBits(g_fishSrcMap, g_workSrcMap,
 				&src, &dest, srcCopy, nil);
 		AddRectToBackRects(&dest);
 		dest = theDinah->whole;
-		QOffsetRect(&dest, playOriginH, playOriginV);
+		QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 		AddRectToWorkRects(&dest);
 	}
 }
@@ -390,7 +390,7 @@ void HandleToast (dynaType *theDinah)
 
 	if (theDinah->moving)
 	{
-		if (evenFrame)
+		if (g_evenFrame)
 		{
 			theDinah->frame++;
 			if (theDinah->frame >= kNumBreadPicts)
@@ -407,7 +407,7 @@ void HandleToast (dynaType *theDinah)
 		if (theDinah->vVel > theDinah->count)
 		{
 			dest = theDinah->whole;
-			QOffsetRect(&dest, playOriginH, playOriginV);
+			QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 			AddRectToWorkRects(&dest);
 			theDinah->moving = false;
 			theDinah->frame = theDinah->timer;
@@ -451,8 +451,8 @@ void HandleMacPlus (dynaType *theDinah)
 			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacBeepSound, kMacBeepPriority);
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&plusScreen2, &theDinah->dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_plusScreen2, &theDinah->dest,
 						srcCopy, nil);
 				AddRectToBackRects(&theDinah->dest);
 			}
@@ -470,8 +470,8 @@ void HandleMacPlus (dynaType *theDinah)
 			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&plusScreen1, &theDinah->dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_plusScreen1, &theDinah->dest,
 						srcCopy, nil);
 				AddRectToBackRects(&theDinah->dest);
 			}
@@ -490,8 +490,8 @@ void HandleTV (dynaType *theDinah, SInt16 who)
 		{
 			if (theDinah->timer == 0)
 			{
-				if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) &&
-						(who == tvWithMovieNumber))
+				if ((g_thisMac.hasQT) && (g_hasMovie) && (g_tvInRoom) &&
+						(who == g_tvWithMovieNumber))
 				{
 				}
 				else
@@ -502,14 +502,14 @@ void HandleTV (dynaType *theDinah, SInt16 who)
 			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kTVOnSound, kTVOnPriority);
-				if ((thisMac.hasQT) && (hasMovie) && (tvInRoom) &&
-						(who == tvWithMovieNumber))
+				if ((g_thisMac.hasQT) && (g_hasMovie) && (g_tvInRoom) &&
+						(who == g_tvWithMovieNumber))
 				{
 				}
 				else
 				{
-					Mac_CopyBits(applianceSrcMap, backSrcMap,
-							&tvScreen2, &theDinah->dest,
+					Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+							&g_tvScreen2, &theDinah->dest,
 							srcCopy, nil);
 					AddRectToBackRects(&theDinah->dest);
 				}
@@ -524,8 +524,8 @@ void HandleTV (dynaType *theDinah, SInt16 who)
 			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kTVOffSound, kTVOffPriority);
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&tvScreen1, &theDinah->dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_tvScreen1, &theDinah->dest,
 						srcCopy, nil);
 				AddRectToBackRects(&theDinah->dest);
 			}
@@ -550,8 +550,8 @@ void HandleCoffee (dynaType *theDinah)
 			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&coffeeLight2, &theDinah->dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_coffeeLight2, &theDinah->dest,
 						srcCopy, nil);
 				AddRectToBackRects(&theDinah->dest);
 			}
@@ -570,8 +570,8 @@ void HandleCoffee (dynaType *theDinah)
 			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&coffeeLight1, &theDinah->dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_coffeeLight1, &theDinah->dest,
 						srcCopy, nil);
 				AddRectToBackRects(&theDinah->dest);
 			}
@@ -606,14 +606,14 @@ void HandleOutlet (dynaType *theDinah)
 
 		if ((theDinah->position != 0) || (theDinah->hVel > 0))
 		{
-			Mac_CopyBits(applianceSrcMap, workSrcMap,
-					&outletSrc[theDinah->frame],
+			Mac_CopyBits(g_applianceSrcMap, g_workSrcMap,
+					&g_outletSrc[theDinah->frame],
 					&theDinah->dest,
 					srcCopy, nil);
 		}
 		else
 		{
-			Mac_PaintRect(workSrcMap, &theDinah->dest, (HBRUSH)GetStockObject(BLACK_BRUSH));
+			Mac_PaintRect(g_workSrcMap, &theDinah->dest, (HBRUSH)GetStockObject(BLACK_BRUSH));
 		}
 		AddRectToWorkRects(&theDinah->dest);
 	}
@@ -659,8 +659,8 @@ void HandleVCR (dynaType *theDinah)
 			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kVCRSound, kVCRPriority);
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&vcrTime2, &theDinah->dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_vcrTime2, &theDinah->dest,
 						srcCopy, nil);
 				AddRectToBackRects(&theDinah->dest);
 			}
@@ -674,15 +674,15 @@ void HandleVCR (dynaType *theDinah)
 			{
 				if (theDinah->frame == 0)
 				{
-					Mac_CopyBits(applianceSrcMap, backSrcMap,
-							&vcrTime2, &theDinah->dest,
+					Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+							&g_vcrTime2, &theDinah->dest,
 							srcCopy, nil);
 					AddRectToBackRects(&theDinah->dest);
 				}
 				else
 				{
-					Mac_CopyBits(applianceSrcMap, backSrcMap,
-							&vcrTime1, &theDinah->dest,
+					Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+							&g_vcrTime1, &theDinah->dest,
 							srcCopy, nil);
 					AddRectToBackRects(&theDinah->dest);
 				}
@@ -697,8 +697,8 @@ void HandleVCR (dynaType *theDinah)
 			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&vcrTime1, &theDinah->dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_vcrTime1, &theDinah->dest,
 						srcCopy, nil);
 				AddRectToBackRects(&theDinah->dest);
 			}
@@ -723,8 +723,8 @@ void HandleStereo (dynaType *theDinah)
 			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&stereoLight2, &theDinah->dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_stereoLight2, &theDinah->dest,
 						srcCopy, nil);
 				AddRectToBackRects(&theDinah->dest);
 			}
@@ -739,8 +739,8 @@ void HandleStereo (dynaType *theDinah)
 			else if (theDinah->timer == 1)
 			{
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&stereoLight1, &theDinah->dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_stereoLight1, &theDinah->dest,
 						srcCopy, nil);
 				AddRectToBackRects(&theDinah->dest);
 			}
@@ -768,16 +768,16 @@ void HandleMicrowave (dynaType *theDinah)
 				PlayPrioritySound(kMacOnSound, kMacOnPriority);
 				dest = theDinah->dest;
 				dest.right = dest.left + 16;
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&microOn, &dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_microOn, &dest,
 						srcCopy, nil);
 				QOffsetRect(&dest, 16, 0);
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&microOn, &dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_microOn, &dest,
 						srcCopy, nil);
 				QOffsetRect(&dest, 16, 0);
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&microOn, &dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_microOn, &dest,
 						srcCopy, nil);
 				AddRectToBackRects(&theDinah->dest);
 			}
@@ -793,16 +793,16 @@ void HandleMicrowave (dynaType *theDinah)
 				PlayPrioritySound(kMacOffSound, kMacOffPriority);
 				dest = theDinah->dest;
 				dest.right = dest.left + 16;
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&microOff, &dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_microOff, &dest,
 						srcCopy, nil);
 				QOffsetRect(&dest, 16, 0);
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&microOff, &dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_microOff, &dest,
 						srcCopy, nil);
 				QOffsetRect(&dest, 16, 0);
-				Mac_CopyBits(applianceSrcMap, backSrcMap,
-						&microOff, &dest,
+				Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+						&g_microOff, &dest,
 						srcCopy, nil);
 				AddRectToBackRects(&theDinah->dest);
 			}
@@ -820,7 +820,7 @@ void HandleBalloon (dynaType *theDinah)
 	{
 		if (theDinah->vVel < 0)
 		{
-			if (evenFrame)
+			if (g_evenFrame)
 			{
 				theDinah->frame++;
 				if (theDinah->frame >= 6)
@@ -828,7 +828,7 @@ void HandleBalloon (dynaType *theDinah)
 			}
 			CheckForPlayerCollisions(theDinah, false);
 
-			if ((numBands > 0) && (DidBandHitDynamic(theDinah)))
+			if ((g_numBands > 0) && (DidBandHitDynamic(theDinah)))
 			{
 				theDinah->frame = 6;
 				theDinah->vVel = kEnemyDropSpeed;
@@ -843,7 +843,7 @@ void HandleBalloon (dynaType *theDinah)
 		}
 		else
 		{
-			if (evenFrame)
+			if (g_evenFrame)
 			{
 				theDinah->frame++;
 				if (theDinah->frame >= 8)
@@ -859,7 +859,7 @@ void HandleBalloon (dynaType *theDinah)
 				(theDinah->dest.bottom >= kBalloonStart))
 		{
 			dest = theDinah->whole;
-			QOffsetRect(&dest, playOriginH, playOriginV);
+			QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 			AddRectToWorkRects(&dest);
 			dest = theDinah->dest;
 			AddSparkle(&dest);
@@ -868,7 +868,7 @@ void HandleBalloon (dynaType *theDinah)
 			theDinah->vVel = -2;
 			theDinah->timer = theDinah->count;
 			theDinah->dest.bottom = kBalloonStart;
-			theDinah->dest.top = theDinah->dest.bottom - RectTall(&balloonSrc[0]);
+			theDinah->dest.top = theDinah->dest.bottom - RectTall(&g_balloonSrc[0]);
 			theDinah->whole = theDinah->dest;
 		}
 	}
@@ -911,7 +911,7 @@ void HandleCopter (dynaType *theDinah)
 			if (theDinah->frame >= 8)
 				theDinah->frame = 0;
 			CheckForPlayerCollisions(theDinah, false);
-			if ((numBands > 0) && (DidBandHitDynamic(theDinah)))
+			if ((g_numBands > 0) && (DidBandHitDynamic(theDinah)))
 			{
 				theDinah->frame = 8;
 				theDinah->hVel = 0;
@@ -944,7 +944,7 @@ void HandleCopter (dynaType *theDinah)
 				(theDinah->dest.bottom >= kCopterStop))
 		{
 			dest = theDinah->whole;
-			QOffsetRect(&dest, playOriginH, playOriginV);
+			QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 			AddRectToWorkRects(&dest);
 			dest = theDinah->dest;
 			AddSparkle(&dest);
@@ -957,7 +957,7 @@ void HandleCopter (dynaType *theDinah)
 				theDinah->hVel = 1;
 			theDinah->timer = theDinah->count;
 			theDinah->dest.top = kCopterStart;
-			theDinah->dest.bottom = theDinah->dest.top + RectTall(&copterSrc[0]);
+			theDinah->dest.bottom = theDinah->dest.top + RectTall(&g_copterSrc[0]);
 			theDinah->dest.left = theDinah->position;
 			theDinah->dest.right = theDinah->dest.left + 32;
 			theDinah->whole = theDinah->dest;
@@ -999,7 +999,7 @@ void HandleDart (dynaType *theDinah)
 		if (theDinah->hVel != 0)  // meaning it isn't falling
 		{
 			CheckForPlayerCollisions(theDinah, false);
-			if ((numBands > 0) && (DidBandHitDynamic(theDinah)))
+			if ((g_numBands > 0) && (DidBandHitDynamic(theDinah)))
 			{
 				if (theDinah->type == kDartLf)
 					theDinah->frame = 1;
@@ -1033,7 +1033,7 @@ void HandleDart (dynaType *theDinah)
 				(theDinah->dest.bottom >= kDartStop))
 		{
 			dest = theDinah->whole;
-			QOffsetRect(&dest, playOriginH, playOriginV);
+			QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 			AddRectToWorkRects(&dest);
 			dest = theDinah->dest;
 			AddSparkle(&dest);
@@ -1045,18 +1045,18 @@ void HandleDart (dynaType *theDinah)
 				theDinah->frame = 0;
 				theDinah->hVel = -kDartVelocity;
 				theDinah->dest.right = kRoomWide;
-				theDinah->dest.left = theDinah->dest.right - RectWide(&dartSrc[0]);
+				theDinah->dest.left = theDinah->dest.right - RectWide(&g_dartSrc[0]);
 			}
 			else
 			{
 				theDinah->frame = 2;
 				theDinah->hVel = kDartVelocity;
 				theDinah->dest.left = 0;
-				theDinah->dest.right = theDinah->dest.left + RectWide(&dartSrc[0]);
+				theDinah->dest.right = theDinah->dest.left + RectWide(&g_dartSrc[0]);
 			}
 			theDinah->timer = theDinah->count;
 			theDinah->dest.top = theDinah->position;
-			theDinah->dest.bottom = theDinah->dest.top + RectTall(&dartSrc[0]);
+			theDinah->dest.bottom = theDinah->dest.top + RectTall(&g_dartSrc[0]);
 			theDinah->whole = theDinah->dest;
 		}
 	}
@@ -1124,7 +1124,7 @@ void HandleBall (dynaType *theDinah)
 				theDinah->whole.top -= theDinah->vVel;
 			else
 				theDinah->whole.bottom -= theDinah->vVel;
-			if (evenFrame)
+			if (g_evenFrame)
 				theDinah->vVel++;
 			theDinah->frame = 0;
 		}
@@ -1135,7 +1135,7 @@ void HandleBall (dynaType *theDinah)
 		{
 			theDinah->vVel = theDinah->count;
 			theDinah->moving = true;
-			evenFrame = true;
+			g_evenFrame = true;
 		}
 	}
 }
@@ -1148,7 +1148,7 @@ void HandleDrip (dynaType *theDinah)
 
 	if (theDinah->moving)
 	{
-		if (evenFrame)
+		if (g_evenFrame)
 			theDinah->frame = 9 - theDinah->frame;
 		CheckForPlayerCollisions(theDinah, false);
 
@@ -1156,7 +1156,7 @@ void HandleDrip (dynaType *theDinah)
 		if (theDinah->dest.bottom >= theDinah->position)
 		{
 			dest = theDinah->whole;
-			QOffsetRect(&dest, playOriginH, playOriginV);
+			QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 			AddRectToWorkRects(&dest);
 			theDinah->dest.top = theDinah->hVel;
 			theDinah->dest.bottom = theDinah->dest.top + 12;
@@ -1170,7 +1170,7 @@ void HandleDrip (dynaType *theDinah)
 		{
 			theDinah->whole = theDinah->dest;
 			theDinah->whole.top -= theDinah->vVel;
-			if (evenFrame)
+			if (g_evenFrame)
 				theDinah->vVel++;
 		}
 	}
@@ -1220,7 +1220,7 @@ void HandleFish (dynaType *theDinah)
 		if (theDinah->dest.bottom >= theDinah->position)  // splash down
 		{
 			dest = theDinah->whole;
-			QOffsetRect(&dest, playOriginH, playOriginV);
+			QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 			AddRectToWorkRects(&dest);
 			theDinah->dest.bottom = theDinah->position;
 			theDinah->dest.top = theDinah->dest.bottom - 16;
@@ -1240,7 +1240,7 @@ void HandleFish (dynaType *theDinah)
 				theDinah->whole.top -= theDinah->vVel;
 			else
 				theDinah->whole.bottom -= theDinah->vVel;
-			if (evenFrame)
+			if (g_evenFrame)
 				theDinah->vVel++;
 		}
 	}
@@ -1287,9 +1287,9 @@ void HandleDynamics (void)
 	dynaType *theDinah;
 	SInt16 i;
 
-	for (i = 0; i < numDynamics; i++)
+	for (i = 0; i < g_numDynamics; i++)
 	{
-		theDinah = &dinahs[i];
+		theDinah = &g_dinahs[i];
 		switch (theDinah->type)
 		{
 			case kSparkle:
@@ -1369,9 +1369,9 @@ void RenderDynamics (void)
 	const dynaType *theDinah;
 	SInt16 i;
 
-	for (i = 0; i < numDynamics; i++)
+	for (i = 0; i < g_numDynamics; i++)
 	{
-		theDinah = &dinahs[i];
+		theDinah = &g_dinahs[i];
 		switch (theDinah->type)
 		{
 			case kToaster:
@@ -1420,7 +1420,7 @@ void ZeroDinahs (void)
 
 	for (i = 0; i < kMaxDynamicObs; i++)
 	{
-		theDinah = &dinahs[i];
+		theDinah = &g_dinahs[i];
 		theDinah->type = kObjectIsEmpty;
 		QSetRect(&theDinah->dest, 0, 0, 0, 0);
 		QSetRect(&theDinah->whole, 0, 0, 0, 0);
@@ -1434,7 +1434,7 @@ void ZeroDinahs (void)
 		theDinah->byte0 = 0;
 		theDinah->active = false;
 	}
-	numDynamics = 0;
+	g_numDynamics = 0;
 }
 
 //--------------------------------------------------------------  AddDynamicObject
@@ -1449,16 +1449,16 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 	Boolean lilFrame;
 	dynaType *theDinah;
 
-	if (numDynamics >= kMaxDynamicObs)
+	if (g_numDynamics >= kMaxDynamicObs)
 		return (-1);
 
-	theDinah = &dinahs[numDynamics];
+	theDinah = &g_dinahs[g_numDynamics];
 
 	theDinah->type = what;
 	switch (what)
 	{
 		case kSparkle:
-		theDinah->dest = sparkleSrc[0];
+		theDinah->dest = g_sparkleSrc[0];
 		ZeroRectCorner(&theDinah->dest);
 		QOffsetRect(&theDinah->dest, where->left, where->top);
 		theDinah->whole = theDinah->dest;
@@ -1476,7 +1476,7 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		break;
 
 		case kToaster:
-		theDinah->dest = breadSrc[0];
+		theDinah->dest = g_breadSrc[0];
 		CenterRectInRect(&theDinah->dest, where);
 		VOffsetRect(&theDinah->dest, where->top - theDinah->dest.top);
 		theDinah->whole = theDinah->dest;
@@ -1502,11 +1502,11 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		break;
 
 		case kMacPlus:
-		theDinah->dest = plusScreen1;
+		theDinah->dest = g_plusScreen1;
 		ZeroRectCorner(&theDinah->dest);
 		QOffsetRect(&theDinah->dest,
-				where->left + playOriginH + 10,
-				where->top + playOriginV + 7);
+				where->left + g_playOriginH + 10,
+				where->top + g_playOriginV + 7);
 		theDinah->whole = theDinah->dest;
 		theDinah->hVel = 0;
 		theDinah->vVel = 0;
@@ -1522,11 +1522,11 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		break;
 
 		case kTV:
-		theDinah->dest = tvScreen1;
+		theDinah->dest = g_tvScreen1;
 		ZeroRectCorner(&theDinah->dest);
 		QOffsetRect(&theDinah->dest,
-				where->left + playOriginH + 17,
-				where->top + playOriginV + 10);
+				where->left + g_playOriginH + 17,
+				where->top + g_playOriginV + 10);
 		theDinah->whole = theDinah->dest;
 		theDinah->hVel = 0;
 		theDinah->vVel = 0;
@@ -1542,11 +1542,11 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		break;
 
 		case kCoffee:
-		theDinah->dest = coffeeLight1;
+		theDinah->dest = g_coffeeLight1;
 		ZeroRectCorner(&theDinah->dest);
 		QOffsetRect(&theDinah->dest,
-				where->left + playOriginH + 32,
-				where->top + playOriginV + 57);
+				where->left + g_playOriginH + 32,
+				where->top + g_playOriginV + 57);
 		theDinah->whole = theDinah->dest;
 		theDinah->hVel = 0;
 		theDinah->vVel = 0;
@@ -1565,13 +1565,13 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		break;
 
 		case kOutlet:
-		theDinah->dest = outletSrc[0];
+		theDinah->dest = g_outletSrc[0];
 		ZeroRectCorner(&theDinah->dest);
 		QOffsetRect(&theDinah->dest,
-				where->left + playOriginH,
-				where->top + playOriginV);
+				where->left + g_playOriginH,
+				where->top + g_playOriginV);
 		theDinah->whole = theDinah->dest;
-		theDinah->hVel = numLights;
+		theDinah->hVel = g_numLights;
 		theDinah->vVel = 0;
 		theDinah->count = ((SInt16)who->data.g.delay * 6) / kTicksPerFrame;
 		theDinah->frame = 0;
@@ -1585,11 +1585,11 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		break;
 
 		case kVCR:
-		theDinah->dest = vcrTime1;
+		theDinah->dest = g_vcrTime1;
 		ZeroRectCorner(&theDinah->dest);
 		QOffsetRect(&theDinah->dest,
-				where->left + playOriginH + 64,
-				where->top + playOriginV + 6);
+				where->left + g_playOriginH + 64,
+				where->top + g_playOriginV + 6);
 		theDinah->whole = theDinah->dest;
 		theDinah->hVel = 0;
 		theDinah->vVel = 0;
@@ -1608,11 +1608,11 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		break;
 
 		case kStereo:
-		theDinah->dest = stereoLight1;
+		theDinah->dest = g_stereoLight1;
 		ZeroRectCorner(&theDinah->dest);
 		QOffsetRect(&theDinah->dest,
-				where->left + playOriginH + 56,
-				where->top + playOriginV + 20);
+				where->left + g_playOriginH + 56,
+				where->top + g_playOriginV + 20);
 		theDinah->whole = theDinah->dest;
 		theDinah->hVel = 0;
 		theDinah->vVel = 0;
@@ -1628,11 +1628,11 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		break;
 
 		case kMicrowave:
-		theDinah->dest = microOn;
+		theDinah->dest = g_microOn;
 		ZeroRectCorner(&theDinah->dest);
 		QOffsetRect(&theDinah->dest,
-				where->left + playOriginH + 14,
-				where->top + playOriginV + 13);
+				where->left + g_playOriginH + 14,
+				where->top + g_playOriginV + 13);
 		theDinah->dest.right = theDinah->dest.left + 48;
 		theDinah->whole = theDinah->dest;
 		theDinah->hVel = 0;
@@ -1649,11 +1649,11 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		break;
 
 		case kBalloon:
-		theDinah->dest = balloonSrc[0];
+		theDinah->dest = g_balloonSrc[0];
 		ZeroRectCorner(&theDinah->dest);
 		QOffsetRect(&theDinah->dest, where->left, 0);
 		theDinah->dest.bottom = kBalloonStart;
-		theDinah->dest.top = theDinah->dest.bottom - RectTall(&balloonSrc[0]);
+		theDinah->dest.top = theDinah->dest.bottom - RectTall(&g_balloonSrc[0]);
 		theDinah->whole = theDinah->dest;
 		theDinah->hVel = 0;
 		theDinah->vVel = -2;
@@ -1670,11 +1670,11 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 
 		case kCopterLf:
 		case kCopterRt:
-		theDinah->dest = copterSrc[0];
+		theDinah->dest = g_copterSrc[0];
 		ZeroRectCorner(&theDinah->dest);
 		QOffsetRect(&theDinah->dest, where->left, 0);
 		theDinah->dest.top = kCopterStart;
-		theDinah->dest.bottom = theDinah->dest.top + RectTall(&copterSrc[0]);
+		theDinah->dest.bottom = theDinah->dest.top + RectTall(&g_copterSrc[0]);
 		theDinah->whole = theDinah->dest;
 		if (what == kCopterLf)
 			theDinah->hVel = -1;
@@ -1694,11 +1694,11 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 
 		case kDartLf:
 		case kDartRt:
-		theDinah->dest = dartSrc[0];
+		theDinah->dest = g_dartSrc[0];
 		ZeroRectCorner(&theDinah->dest);
 		if (what == kDartLf)
 		{
-			QOffsetRect(&theDinah->dest, kRoomWide - RectWide(&dartSrc[0]), where->top);
+			QOffsetRect(&theDinah->dest, kRoomWide - RectWide(&g_dartSrc[0]), where->top);
 			theDinah->hVel = -kDartVelocity;
 			theDinah->frame = 0;
 		}
@@ -1720,14 +1720,14 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		break;
 
 		case kBall:
-		theDinah->dest = ballSrc[0];
+		theDinah->dest = g_ballSrc[0];
 		ZeroRectCorner(&theDinah->dest);
 		QOffsetRect(&theDinah->dest, where->left, where->top);
 		theDinah->whole = theDinah->dest;
 		theDinah->hVel = 0;
 		position = who->data.h.length;  // reverse engineer init. vel.
 		velocity = 0;
-		evenFrame = true;
+		g_evenFrame = true;
 		lilFrame = true;
 		do
 		{
@@ -1750,7 +1750,7 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		break;
 
 		case kDrip:
-		theDinah->dest = dripSrc[0];
+		theDinah->dest = g_dripSrc[0];
 		CenterRectInRect(&theDinah->dest, where);
 		VOffsetRect(&theDinah->dest, where->top - theDinah->dest.top);
 		theDinah->whole = theDinah->dest;
@@ -1768,13 +1768,13 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		break;
 
 		case kFish:
-		theDinah->dest = fishSrc[0];
+		theDinah->dest = g_fishSrc[0];
 		QOffsetRect(&theDinah->dest, where->left + 10, where->top + 8);
 		theDinah->whole = theDinah->dest;
 		theDinah->hVel = ((SInt16)who->data.h.delay * 6) / kTicksPerFrame;
 		position = who->data.h.length;  // reverse engineer init. vel.
 		velocity = 0;
-		evenFrame = true;
+		g_evenFrame = true;
 		lilFrame = true;
 		do
 		{
@@ -1801,7 +1801,7 @@ SInt16 AddDynamicObject (SInt16 what, const Rect *where, const objectType *who,
 		break;
 	}
 
-	numDynamics++;
+	g_numDynamics++;
 
-	return (numDynamics - 1);
+	return (g_numDynamics - 1);
 }

@@ -22,20 +22,20 @@ INT_PTR CALLBACK LinkWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 void DoLink (void);
 void DoUnlink (void);
 
-HWND linkWindow;
-SInt16 isLinkH;
-SInt16 isLinkV;
-SInt16 linkRoom;
-SInt16 linkType;
-Byte linkObject;
-Boolean linkerIsSwitch;
+HWND g_linkWindow;
+SInt16 g_isLinkH;
+SInt16 g_isLinkV;
+SInt16 g_linkRoom;
+SInt16 g_linkType;
+Byte g_linkObject;
+Boolean g_linkerIsSwitch;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  MergeFloorSuite
 
 SInt16 MergeFloorSuite (SInt16 floor, SInt16 suite)
 {
-	if (thisHouse.version < 0x0200)     // old floor/suite combo
+	if (g_thisHouse.version < 0x0200)     // old floor/suite combo
 	{
 		return ((floor * 100) + suite);
 	}
@@ -56,7 +56,7 @@ SInt16 MergeFloorSuiteVer2 (SInt16 floor, SInt16 suite)
 
 void ExtractFloorSuite (SInt16 combo, SInt16 *floor, SInt16 *suite)
 {
-	if (thisHouse.version < 0x0200)     // old floor/suite combo
+	if (g_thisHouse.version < 0x0200)     // old floor/suite combo
 	{
 		*floor = (combo / 100) - kNumUndergroundFloors;
 		*suite = combo % 100;
@@ -84,8 +84,8 @@ INT_PTR CALLBACK LinkWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 		WINDOWPLACEMENT placement;
 		placement.length = sizeof(placement);
 		GetWindowPlacement(hDlg, &placement);
-		isLinkH = (SInt16)placement.rcNormalPosition.left;
-		isLinkV = (SInt16)placement.rcNormalPosition.top;
+		g_isLinkH = (SInt16)placement.rcNormalPosition.left;
+		g_isLinkV = (SInt16)placement.rcNormalPosition.top;
 		return TRUE;
 	}
 
@@ -103,7 +103,7 @@ INT_PTR CALLBACK LinkWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 			else if (LOWORD(wParam) == kUnlinkButton)
 				DoUnlink();
 
-			if (thisRoomNumber == linkRoom)
+			if (g_thisRoomNumber == g_linkRoom)
 				CopyThisRoomToRoom();
 			GenerateRetroLinks();
 			break;
@@ -122,29 +122,29 @@ void UpdateLinkControl (void)
 	if (COMPILEDEMO)
 		return;
 
-	if (linkWindow == NULL)
+	if (g_linkWindow == NULL)
 		return;
 
-	linkControl = GetDlgItem(linkWindow, kLinkButton);
+	linkControl = GetDlgItem(g_linkWindow, kLinkButton);
 
-	if ((objActive == kNoObjectSelected) ||
-		(objActive == kInitialGliderSelected) ||
-		(objActive == kLeftGliderSelected) ||
-		(objActive == kRightGliderSelected))
+	if ((g_objActive == kNoObjectSelected) ||
+		(g_objActive == kInitialGliderSelected) ||
+		(g_objActive == kLeftGliderSelected) ||
+		(g_objActive == kRightGliderSelected))
 	{
 		EnableWindow(linkControl, FALSE);
 		return;
 	}
-	if (objActive < 0 || objActive >= kMaxRoomObs)
+	if (g_objActive < 0 || g_objActive >= kMaxRoomObs)
 	{
 		EnableWindow(linkControl, FALSE);
 		return;
 	}
 
-	switch (linkType)
+	switch (g_linkType)
 	{
 	case kSwitchLinkOnly:
-		switch (thisRoom->objects[objActive].what)
+		switch (g_thisRoom->objects[g_objActive].what)
 		{
 		case kFloorVent:
 		case kCeilingVent:
@@ -203,7 +203,7 @@ void UpdateLinkControl (void)
 		break;
 
 	case kTriggerLinkOnly:
-		switch (thisRoom->objects[objActive].what)
+		switch (g_thisRoom->objects[g_objActive].what)
 		{
 		case kGreaseRt:
 		case kGreaseLf:
@@ -227,7 +227,7 @@ void UpdateLinkControl (void)
 		case kPowerSwitch:
 		case kKnifeSwitch:
 		case kInvisSwitch:
-			EnableWindow(linkControl, (linkRoom == thisRoomNumber));
+			EnableWindow(linkControl, (g_linkRoom == g_thisRoomNumber));
 			break;
 
 		default:
@@ -237,7 +237,7 @@ void UpdateLinkControl (void)
 		break;
 
 	case kTransportLinkOnly:
-		switch (thisRoom->objects[objActive].what)
+		switch (g_thisRoom->objects[g_objActive].what)
 		{
 		case kMailboxLf:
 		case kMailboxRt:
@@ -272,25 +272,25 @@ void OpenLinkWindow (void)
 	if (COMPILEDEMO)
 		return;
 
-	if (linkWindow == NULL)
+	if (g_linkWindow == NULL)
 	{
-		linkWindow = CreateDialog(HINST_THISCOMPONENT,
+		g_linkWindow = CreateDialog(HINST_THISCOMPONENT,
 				MAKEINTRESOURCE(kLinkWindowID),
-				mainWindow, LinkWindowProc);
-		if (linkWindow == NULL)
+				g_mainWindow, LinkWindowProc);
+		if (g_linkWindow == NULL)
 			RedAlert(kErrFailedResourceLoad);
 
 		placement.length = sizeof(placement);
-		GetWindowPlacement(linkWindow, &placement);
+		GetWindowPlacement(g_linkWindow, &placement);
 		OffsetRect(&placement.rcNormalPosition,
 				-placement.rcNormalPosition.left,
 				-placement.rcNormalPosition.top);
-		OffsetRect(&placement.rcNormalPosition, isLinkH, isLinkV);
+		OffsetRect(&placement.rcNormalPosition, g_isLinkH, g_isLinkV);
 		placement.showCmd = SW_SHOWNOACTIVATE;
-		SetWindowPlacement(linkWindow, &placement);
+		SetWindowPlacement(g_linkWindow, &placement);
 
-		linkRoom = -1;
-		linkObject = 255;
+		g_linkRoom = -1;
+		g_linkObject = 255;
 		UpdateLinkControl();
 	}
 }
@@ -299,10 +299,10 @@ void OpenLinkWindow (void)
 
 void CloseLinkWindow (void)
 {
-	if (linkWindow != NULL)
-		DestroyWindow(linkWindow);
+	if (g_linkWindow != NULL)
+		DestroyWindow(g_linkWindow);
 
-	linkWindow = NULL;
+	g_linkWindow = NULL;
 }
 
 //--------------------------------------------------------------  DoLink
@@ -311,44 +311,44 @@ void DoLink (void)
 {
 	SInt16 floor, suite;
 
-	if (GetRoomFloorSuite(thisRoomNumber, &floor, &suite))
+	if (GetRoomFloorSuite(g_thisRoomNumber, &floor, &suite))
 	{
 		floor += kNumUndergroundFloors;
-		if (thisRoomNumber == linkRoom)
+		if (g_thisRoomNumber == g_linkRoom)
 		{
-			if (linkerIsSwitch)
+			if (g_linkerIsSwitch)
 			{
-				thisRoom->objects[linkObject].data.e.where =
+				g_thisRoom->objects[g_linkObject].data.e.where =
 						MergeFloorSuite(floor, suite);
-				thisRoom->objects[linkObject].data.e.who =
-						(Byte)objActive;
+				g_thisRoom->objects[g_linkObject].data.e.who =
+						(Byte)g_objActive;
 			}
 			else
 			{
-				thisRoom->objects[linkObject].data.d.where =
+				g_thisRoom->objects[g_linkObject].data.d.where =
 						MergeFloorSuite(floor, suite);
-				thisRoom->objects[linkObject].data.d.who =
-						(Byte)objActive;
+				g_thisRoom->objects[g_linkObject].data.d.who =
+						(Byte)g_objActive;
 			}
 		}
 		else
 		{
-			if (linkerIsSwitch)
+			if (g_linkerIsSwitch)
 			{
-				thisHouse.rooms[linkRoom].objects[linkObject].data.e.where =
+				g_thisHouse.rooms[g_linkRoom].objects[g_linkObject].data.e.where =
 						MergeFloorSuite(floor, suite);
-				thisHouse.rooms[linkRoom].objects[linkObject].data.e.who =
-						(Byte)objActive;
+				g_thisHouse.rooms[g_linkRoom].objects[g_linkObject].data.e.who =
+						(Byte)g_objActive;
 			}
 			else	// linker is transport
 			{
-				thisHouse.rooms[linkRoom].objects[linkObject].data.d.where =
+				g_thisHouse.rooms[g_linkRoom].objects[g_linkObject].data.d.where =
 						MergeFloorSuite(floor, suite);
-				thisHouse.rooms[linkRoom].objects[linkObject].data.d.who =
-						(Byte)objActive;
+				g_thisHouse.rooms[g_linkRoom].objects[g_linkObject].data.d.who =
+						(Byte)g_objActive;
 			}
 		}
-		fileDirty = true;
+		g_fileDirty = true;
 		UpdateMenus(false);
 		CloseLinkWindow();
 	}
@@ -358,33 +358,33 @@ void DoLink (void)
 
 void DoUnlink (void)
 {
-	if (thisRoomNumber == linkRoom)
+	if (g_thisRoomNumber == g_linkRoom)
 	{
-		if (linkerIsSwitch)
+		if (g_linkerIsSwitch)
 		{
-			thisRoom->objects[linkObject].data.e.where = -1;
-			thisRoom->objects[linkObject].data.e.who = 255;
+			g_thisRoom->objects[g_linkObject].data.e.where = -1;
+			g_thisRoom->objects[g_linkObject].data.e.who = 255;
 		}
 		else
 		{
-			thisRoom->objects[linkObject].data.d.where = -1;
-			thisRoom->objects[linkObject].data.d.who = 255;
+			g_thisRoom->objects[g_linkObject].data.d.where = -1;
+			g_thisRoom->objects[g_linkObject].data.d.who = 255;
 		}
 	}
 	else
 	{
-		if (linkerIsSwitch)
+		if (g_linkerIsSwitch)
 		{
-			thisHouse.rooms[linkRoom].objects[linkObject].data.e.where = -1;
-			thisHouse.rooms[linkRoom].objects[linkObject].data.e.who = 255;
+			g_thisHouse.rooms[g_linkRoom].objects[g_linkObject].data.e.where = -1;
+			g_thisHouse.rooms[g_linkRoom].objects[g_linkObject].data.e.who = 255;
 		}
 		else
 		{
-			thisHouse.rooms[linkRoom].objects[linkObject].data.d.where = -1;
-			thisHouse.rooms[linkRoom].objects[linkObject].data.d.who = 255;
+			g_thisHouse.rooms[g_linkRoom].objects[g_linkObject].data.d.where = -1;
+			g_thisHouse.rooms[g_linkRoom].objects[g_linkObject].data.d.who = 255;
 		}
 	}
-	fileDirty = true;
+	g_fileDirty = true;
 	UpdateMenus(false);
 	CloseLinkWindow();
 }

@@ -26,131 +26,131 @@ SInt16 GetObjectLinked (const objectType *who);
 void ListOneRoomsObjects (SInt16 where);
 
 // Blowers
-Rect blowerSrcRect;
-HDC blowerSrcMap;
-HDC blowerMaskMap;
-Rect flame[kNumCandleFlames];
-Rect tikiFlame[kNumTikiFlames];
-Rect coals[kNumBBQCoals];
+Rect g_blowerSrcRect;
+HDC g_blowerSrcMap;
+HDC g_blowerMaskMap;
+Rect g_flame[kNumCandleFlames];
+Rect g_tikiFlame[kNumTikiFlames];
+Rect g_coals[kNumBBQCoals];
 
 // Furniture
-Rect furnitureSrcRect;
-HDC furnitureSrcMap;
-HDC furnitureMaskMap;
-Rect tableSrc;
-Rect shelfSrc;
-Rect hingeSrc;
-Rect handleSrc;
-Rect knobSrc;
-Rect leftFootSrc;
-Rect rightFootSrc;
-Rect deckSrc;
+Rect g_furnitureSrcRect;
+HDC g_furnitureSrcMap;
+HDC g_furnitureMaskMap;
+Rect g_tableSrc;
+Rect g_shelfSrc;
+Rect g_hingeSrc;
+Rect g_handleSrc;
+Rect g_knobSrc;
+Rect g_leftFootSrc;
+Rect g_rightFootSrc;
+Rect g_deckSrc;
 
 // Bonuses
-Rect bonusSrcRect;
-HDC bonusSrcMap;
-HDC bonusMaskMap;
-Rect pointsSrcRect;
-HDC pointsSrcMap;
-HDC pointsMaskMap;
-Rect starSrc[6];
-Rect sparkleSrc[kNumSparkleModes];
-Rect digits[11];
-Rect pendulumSrc[3];
-Rect greaseSrcRt[4];
-Rect greaseSrcLf[4];
+Rect g_bonusSrcRect;
+HDC g_bonusSrcMap;
+HDC g_bonusMaskMap;
+Rect g_pointsSrcRect;
+HDC g_pointsSrcMap;
+HDC g_pointsMaskMap;
+Rect g_starSrc[6];
+Rect g_sparkleSrc[kNumSparkleModes];
+Rect g_digits[11];
+Rect g_pendulumSrc[3];
+Rect g_greaseSrcRt[4];
+Rect g_greaseSrcLf[4];
 
 // Transport
-Rect transSrcRect;
-HDC transSrcMap;
-HDC transMaskMap;
+Rect g_transSrcRect;
+HDC g_transSrcMap;
+HDC g_transMaskMap;
 
 // Switches
-Rect switchSrcRect;
-HDC switchSrcMap;
-Rect lightSwitchSrc[2];
-Rect machineSwitchSrc[2];
-Rect thermostatSrc[2];
-Rect powerSrc[2];
-Rect knifeSwitchSrc[2];
+Rect g_switchSrcRect;
+HDC g_switchSrcMap;
+Rect g_lightSwitchSrc[2];
+Rect g_machineSwitchSrc[2];
+Rect g_thermostatSrc[2];
+Rect g_powerSrc[2];
+Rect g_knifeSwitchSrc[2];
 
 // Lights
-Rect lightSrcRect;
-HDC lightSrcMap;
-HDC lightMaskMap;
-Rect flourescentSrc1;
-Rect flourescentSrc2;
-Rect trackLightSrc[kNumTrackLights];
+Rect g_lightSrcRect;
+HDC g_lightSrcMap;
+HDC g_lightMaskMap;
+Rect g_flourescentSrc1;
+Rect g_flourescentSrc2;
+Rect g_trackLightSrc[kNumTrackLights];
 
 // Appliances
-Rect applianceSrcRect;
-HDC applianceSrcMap;
-HDC applianceMaskMap;
-Rect toastSrcRect;
-HDC toastSrcMap;
-HDC toastMaskMap;
-Rect shredSrcRect;
-HDC shredSrcMap;
-HDC shredMaskMap;
-Rect plusScreen1;
-Rect plusScreen2;
-Rect tvScreen1;
-Rect tvScreen2;
-Rect coffeeLight1;
-Rect coffeeLight2;
-Rect vcrTime1;
-Rect vcrTime2;
-Rect stereoLight1;
-Rect stereoLight2;
-Rect microOn;
-Rect microOff;
-Rect outletSrc[kNumOutletPicts];
+Rect g_applianceSrcRect;
+HDC g_applianceSrcMap;
+HDC g_applianceMaskMap;
+Rect g_toastSrcRect;
+HDC g_toastSrcMap;
+HDC g_toastMaskMap;
+Rect g_shredSrcRect;
+HDC g_shredSrcMap;
+HDC g_shredMaskMap;
+Rect g_plusScreen1;
+Rect g_plusScreen2;
+Rect g_tvScreen1;
+Rect g_tvScreen2;
+Rect g_coffeeLight1;
+Rect g_coffeeLight2;
+Rect g_vcrTime1;
+Rect g_vcrTime2;
+Rect g_stereoLight1;
+Rect g_stereoLight2;
+Rect g_microOn;
+Rect g_microOff;
+Rect g_outletSrc[kNumOutletPicts];
 
 // Enemies
-Rect balloonSrcRect;
-HDC balloonSrcMap;
-HDC balloonMaskMap;
-Rect balloonSrc[kNumBalloonFrames];
-Rect copterSrcRect;
-HDC copterSrcMap;
-HDC copterMaskMap;
-Rect copterSrc[kNumCopterFrames];
-Rect dartSrcRect;
-HDC dartSrcMap;
-HDC dartMaskMap;
-Rect dartSrc[kNumDartFrames];
-Rect ballSrcRect;
-HDC ballSrcMap;
-HDC ballMaskMap;
-Rect ballSrc[kNumBallFrames];
-Rect dripSrcRect;
-HDC dripSrcMap;
-HDC dripMaskMap;
-Rect dripSrc[kNumDripFrames];
-Rect fishSrcRect;
-HDC fishSrcMap;
-HDC fishMaskMap;
-Rect fishSrc[kNumFishFrames];
-Rect enemySrcRect;
-HDC enemySrcMap;
-HDC enemyMaskMap;
+Rect g_balloonSrcRect;
+HDC g_balloonSrcMap;
+HDC g_balloonMaskMap;
+Rect g_balloonSrc[kNumBalloonFrames];
+Rect g_copterSrcRect;
+HDC g_copterSrcMap;
+HDC g_copterMaskMap;
+Rect g_copterSrc[kNumCopterFrames];
+Rect g_dartSrcRect;
+HDC g_dartSrcMap;
+HDC g_dartMaskMap;
+Rect g_dartSrc[kNumDartFrames];
+Rect g_ballSrcRect;
+HDC g_ballSrcMap;
+HDC g_ballMaskMap;
+Rect g_ballSrc[kNumBallFrames];
+Rect g_dripSrcRect;
+HDC g_dripSrcMap;
+HDC g_dripMaskMap;
+Rect g_dripSrc[kNumDripFrames];
+Rect g_fishSrcRect;
+HDC g_fishSrcMap;
+HDC g_fishMaskMap;
+Rect g_fishSrc[kNumFishFrames];
+Rect g_enemySrcRect;
+HDC g_enemySrcMap;
+HDC g_enemyMaskMap;
 
 // Clutter
-HDC clutterSrcMap;
-HDC clutterMaskMap;
-Rect clutterSrcRect;
-Rect flowerSrc[kNumFlowers];
+HDC g_clutterSrcMap;
+HDC g_clutterMaskMap;
+Rect g_clutterSrcRect;
+Rect g_flowerSrc[kNumFlowers];
 
-Rect srcRects[kNumSrcRects];
-Rect tempManholes[kMaxTempManholes];
-savedType savedMaps[kMaxSavedMaps];
-objDataType masterObjects[kMaxMasterObjects];
-hotObject hotSpots[kMaxHotSpots];
-SInt16 nHotSpots;
-SInt16 numMasterObjects;
-SInt16 numTempManholes;
-SInt16 tvWithMovieNumber;
-Boolean newState;
+Rect g_srcRects[kNumSrcRects];
+Rect g_tempManholes[kMaxTempManholes];
+savedType g_savedMaps[kMaxSavedMaps];
+objDataType g_masterObjects[kMaxMasterObjects];
+hotObject g_hotSpots[kMaxHotSpots];
+SInt16 g_nHotSpots;
+SInt16 g_numMasterObjects;
+SInt16 g_numTempManholes;
+SInt16 g_tvWithMovieNumber;
+Boolean g_newState;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  IsThisValid
@@ -159,14 +159,14 @@ Boolean IsThisValid (SInt16 where, SInt16 who)
 {
 	Boolean		itsGood;
 
-	if (where < 0 || where >= thisHouse.nRooms)
+	if (where < 0 || where >= g_thisHouse.nRooms)
 		return (false);
 	if (who < 0 || who >= kMaxRoomObs)
 		return (false);
 
 	itsGood = true;
 
-	switch (thisHouse.rooms[where].objects[who].what)
+	switch (g_thisHouse.rooms[where].objects[who].what)
 	{
 		case kObjectIsEmpty:
 		itsGood = false;
@@ -184,7 +184,7 @@ Boolean IsThisValid (SInt16 where, SInt16 who)
 		case kStar:
 		case kSparkle:
 		case kHelium:
-		itsGood = thisHouse.rooms[where].objects[who].data.c.state;
+		itsGood = g_thisHouse.rooms[where].objects[who].data.c.state;
 		break;
 	}
 
@@ -326,33 +326,33 @@ void ListOneRoomsObjects (SInt16 where)
 	objectType	thisObject;
 	SInt16		roomNum, n;
 
-	if (where < 0 || where >= ARRAYSIZE(localNumbers))
+	if (where < 0 || where >= ARRAYSIZE(g_localNumbers))
 		return;
 
-	roomNum = localNumbers[where];
-	if (roomNum < 0 || roomNum >= thisHouse.nRooms)
+	roomNum = g_localNumbers[where];
+	if (roomNum < 0 || roomNum >= g_thisHouse.nRooms)
 		return;
 
 	for (n = 0; n < kMaxRoomObs; n++)
 	{
-		if (numMasterObjects < kMaxMasterObjects)
+		if (g_numMasterObjects < kMaxMasterObjects)
 		{
-			thisObject = thisHouse.rooms[roomNum].objects[n];
+			thisObject = g_thisHouse.rooms[roomNum].objects[n];
 
-			masterObjects[numMasterObjects].roomNum = roomNum;
-			masterObjects[numMasterObjects].objectNum = n;
-			masterObjects[numMasterObjects].roomLink = GetRoomLinked(&thisObject);
-			masterObjects[numMasterObjects].objectLink = GetObjectLinked(&thisObject);
-			masterObjects[numMasterObjects].localLink = -1;
-			masterObjects[numMasterObjects].theObject = thisHouse.rooms[roomNum].objects[n];
+			g_masterObjects[g_numMasterObjects].roomNum = roomNum;
+			g_masterObjects[g_numMasterObjects].objectNum = n;
+			g_masterObjects[g_numMasterObjects].roomLink = GetRoomLinked(&thisObject);
+			g_masterObjects[g_numMasterObjects].objectLink = GetObjectLinked(&thisObject);
+			g_masterObjects[g_numMasterObjects].localLink = -1;
+			g_masterObjects[g_numMasterObjects].theObject = g_thisHouse.rooms[roomNum].objects[n];
 
 			if ((where == kCentralRoom) && (IsThisValid(roomNum, n)))
-				masterObjects[numMasterObjects].hotNum = CreateActiveRects(n);
+				g_masterObjects[g_numMasterObjects].hotNum = CreateActiveRects(n);
 			else
-				masterObjects[numMasterObjects].hotNum = -1;
-			masterObjects[numMasterObjects].dynaNum = -1;
+				g_masterObjects[g_numMasterObjects].hotNum = -1;
+			g_masterObjects[g_numMasterObjects].dynaNum = -1;
 
-			numMasterObjects++;
+			g_numMasterObjects++;
 		}
 	}
 }
@@ -363,18 +363,18 @@ void ListAllLocalObjects (void)
 {
 	SInt16		i, n;
 
-	numMasterObjects = 0;
-	nHotSpots = 0;
+	g_numMasterObjects = 0;
+	g_nHotSpots = 0;
 
 	ListOneRoomsObjects(kCentralRoom);
 
-	if (numNeighbors > 1)
+	if (g_numNeighbors > 1)
 	{
 		ListOneRoomsObjects(kEastRoom);
 		ListOneRoomsObjects(kWestRoom);
 	}
 
-	if (numNeighbors > 3)
+	if (g_numNeighbors > 3)
 	{
 		ListOneRoomsObjects(kNorthRoom);
 		ListOneRoomsObjects(kNorthEastRoom);
@@ -384,17 +384,17 @@ void ListAllLocalObjects (void)
 		ListOneRoomsObjects(kNorthWestRoom);
 	}
 
-	for (i = 0; i < numMasterObjects; i++)				// correlate links with
+	for (i = 0; i < g_numMasterObjects; i++)				// correlate links with
 	{													// index into this list
-		if ((masterObjects[i].roomLink != -1) && 		// if object has a link
-				(masterObjects[i].objectLink != -1))
+		if ((g_masterObjects[i].roomLink != -1) && 		// if object has a link
+				(g_masterObjects[i].objectLink != -1))
 		{
-			for (n = 0; n < numMasterObjects; n++)		// search for the object
+			for (n = 0; n < g_numMasterObjects; n++)		// search for the object
 			{											// linked to in this list
-				if ((masterObjects[i].roomLink == masterObjects[n].roomNum) &&
-						(masterObjects[i].objectLink == masterObjects[n].objectNum))
+				if ((g_masterObjects[i].roomLink == g_masterObjects[n].roomNum) &&
+						(g_masterObjects[i].objectLink == g_masterObjects[n].objectNum))
 				{
-					masterObjects[i].localLink = n;		// log the index
+					g_masterObjects[i].localLink = n;		// log the index
 				}
 			}
 		}
@@ -407,12 +407,12 @@ void AddTempManholeRect (const Rect *manHole)
 {
 	Rect		tempRect;
 
-	if (numTempManholes < kMaxTempManholes)
+	if (g_numTempManholes < kMaxTempManholes)
 	{
 		tempRect = *manHole;
 		tempRect.bottom = tempRect.top + kFloorSupportTall;
-		tempManholes[numTempManholes] = tempRect;
-		numTempManholes++;
+		g_tempManholes[g_numTempManholes] = tempRect;
+		g_numTempManholes++;
 	}
 }
 
@@ -424,12 +424,12 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 
 	changed = false;
 
-	if (room < 0 || room >= thisHouse.nRooms)
+	if (room < 0 || room >= g_thisHouse.nRooms)
 		return (changed);
 	if (object < 0 || object >= kMaxRoomObs)
 		return (changed);
 
-	switch (thisHouse.rooms[room].objects[object].what)
+	switch (g_thisHouse.rooms[room].objects[object].what)
 	{
 		case kFloorVent:
 		case kCeilingVent:
@@ -445,34 +445,34 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		switch (action)
 		{
 			case kToggle:
-			newState = !thisHouse.rooms[room].objects[object].data.a.state;
-			thisHouse.rooms[room].objects[object].data.a.state = newState;
+			g_newState = !g_thisHouse.rooms[room].objects[object].data.a.state;
+			g_thisHouse.rooms[room].objects[object].data.a.state = g_newState;
 			changed = true;
 			break;
 
 			case kForceOn:
-			changed = (thisHouse.rooms[room].objects[object].data.a.state == false);
-			newState = true;
-			thisHouse.rooms[room].objects[object].data.a.state = newState;
+			changed = (g_thisHouse.rooms[room].objects[object].data.a.state == false);
+			g_newState = true;
+			g_thisHouse.rooms[room].objects[object].data.a.state = g_newState;
 			break;
 
 			case kForceOff:
-			changed = (thisHouse.rooms[room].objects[object].data.a.state != false);
-			newState = false;
-			thisHouse.rooms[room].objects[object].data.a.state = newState;
+			changed = (g_thisHouse.rooms[room].objects[object].data.a.state != false);
+			g_newState = false;
+			g_thisHouse.rooms[room].objects[object].data.a.state = g_newState;
 			break;
 		}
 		if ((changed) && (local != -1))
 		{
-			masterObjects[local].theObject.data.a.state = newState;
-			if (room == thisRoomNumber)
-				thisRoom->objects[object].data.a.state = newState;
-			if (newState)
+			g_masterObjects[local].theObject.data.a.state = g_newState;
+			if (room == g_thisRoomNumber)
+				g_thisRoom->objects[object].data.a.state = g_newState;
+			if (g_newState)
 				PlayPrioritySound(kBlowerOn, kBlowerOnPriority);
 			else
 				PlayPrioritySound(kBlowerOff, kBlowerOffPriority);
-			if (masterObjects[local].hotNum != -1)
-				hotSpots[masterObjects[local].hotNum].isOn = newState;
+			if (g_masterObjects[local].hotNum != -1)
+				g_hotSpots[g_masterObjects[local].hotNum].isOn = g_newState;
 		}
 		break;
 
@@ -516,17 +516,17 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		case kStar:
 		case kSparkle:
 		case kHelium:
-		changed = (thisHouse.rooms[room].objects[object].data.c.state != false);
-		newState = false;
-		thisHouse.rooms[room].objects[object].data.c.state = newState;
+		changed = (g_thisHouse.rooms[room].objects[object].data.c.state != false);
+		g_newState = false;
+		g_thisHouse.rooms[room].objects[object].data.c.state = g_newState;
 		if ((changed) && (local != -1))
 		{
-			masterObjects[local].theObject.data.c.state = false;
-			if (room == thisRoomNumber)
+			g_masterObjects[local].theObject.data.c.state = false;
+			if (room == g_thisRoomNumber)
 			{
-				thisRoom->objects[object].data.c.state = false;
-				if (masterObjects[local].hotNum != -1)
-					hotSpots[masterObjects[local].hotNum].isOn = false;
+				g_thisRoom->objects[object].data.c.state = false;
+				if (g_masterObjects[local].hotNum != -1)
+					g_hotSpots[g_masterObjects[local].hotNum].isOn = false;
 			}
 		}
 		break;
@@ -557,36 +557,36 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		switch (action)
 		{
 			case kToggle:
-			newState = thisHouse.rooms[room].objects[object].data.d.wide & 0x0F;
-			newState = !newState;
-			thisHouse.rooms[room].objects[object].data.d.wide &= 0xF0;
-			thisHouse.rooms[room].objects[object].data.d.wide += newState;
+			g_newState = g_thisHouse.rooms[room].objects[object].data.d.wide & 0x0F;
+			g_newState = !g_newState;
+			g_thisHouse.rooms[room].objects[object].data.d.wide &= 0xF0;
+			g_thisHouse.rooms[room].objects[object].data.d.wide += g_newState;
 			changed = true;
 			break;
 
 			case kForceOn:
-			changed = ((thisHouse.rooms[room].objects[object].data.d.wide & 0x0F) == 0x00);
-			newState = true;
-			thisHouse.rooms[room].objects[object].data.d.wide &= 0xF0;
-			thisHouse.rooms[room].objects[object].data.d.wide += newState;
+			changed = ((g_thisHouse.rooms[room].objects[object].data.d.wide & 0x0F) == 0x00);
+			g_newState = true;
+			g_thisHouse.rooms[room].objects[object].data.d.wide &= 0xF0;
+			g_thisHouse.rooms[room].objects[object].data.d.wide += g_newState;
 			break;
 
 			case kForceOff:
-			changed = ((thisHouse.rooms[room].objects[object].data.d.wide & 0x0F) != 0x00);
-			newState = false;
-			thisHouse.rooms[room].objects[object].data.d.wide &= 0xF0;
-			thisHouse.rooms[room].objects[object].data.d.wide += newState;
+			changed = ((g_thisHouse.rooms[room].objects[object].data.d.wide & 0x0F) != 0x00);
+			g_newState = false;
+			g_thisHouse.rooms[room].objects[object].data.d.wide &= 0xF0;
+			g_thisHouse.rooms[room].objects[object].data.d.wide += g_newState;
 			break;
 		}
 		if ((changed) && (local != -1))
 		{
-			masterObjects[local].theObject.data.d.wide =
-					thisHouse.rooms[room].objects[object].data.d.wide;
-			if (room == thisRoomNumber)
-				thisRoom->objects[object].data.d.wide =
-						thisHouse.rooms[room].objects[object].data.d.wide;
-			if (masterObjects[local].hotNum != -1)
-				hotSpots[masterObjects[local].hotNum].isOn = newState;
+			g_masterObjects[local].theObject.data.d.wide =
+					g_thisHouse.rooms[room].objects[object].data.d.wide;
+			if (room == g_thisRoomNumber)
+				g_thisRoom->objects[object].data.d.wide =
+						g_thisHouse.rooms[room].objects[object].data.d.wide;
+			if (g_masterObjects[local].hotNum != -1)
+				g_hotSpots[g_masterObjects[local].hotNum].isOn = g_newState;
 		}
 		break;
 
@@ -612,28 +612,28 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		switch (action)
 		{
 			case kToggle:
-			newState = !thisHouse.rooms[room].objects[object].data.f.state;
-			thisHouse.rooms[room].objects[object].data.f.state = newState;
+			g_newState = !g_thisHouse.rooms[room].objects[object].data.f.state;
+			g_thisHouse.rooms[room].objects[object].data.f.state = g_newState;
 			changed = true;
 			break;
 
 			case kForceOn:
-			changed = (thisHouse.rooms[room].objects[object].data.f.state == false);
-			newState = true;
-			thisHouse.rooms[room].objects[object].data.f.state = newState;
+			changed = (g_thisHouse.rooms[room].objects[object].data.f.state == false);
+			g_newState = true;
+			g_thisHouse.rooms[room].objects[object].data.f.state = g_newState;
 			break;
 
 			case kForceOff:
-			changed = (thisHouse.rooms[room].objects[object].data.f.state != false);
-			newState = false;
-			thisHouse.rooms[room].objects[object].data.f.state = newState;
+			changed = (g_thisHouse.rooms[room].objects[object].data.f.state != false);
+			g_newState = false;
+			g_thisHouse.rooms[room].objects[object].data.f.state = g_newState;
 			break;
 		}
 		if ((changed) && (local != -1))
 		{
-			masterObjects[local].theObject.data.f.state = newState;
-			if (room == thisRoomNumber)
-				thisRoom->objects[object].data.f.state = newState;
+			g_masterObjects[local].theObject.data.f.state = g_newState;
+			if (room == g_thisRoomNumber)
+				g_thisRoom->objects[object].data.f.state = g_newState;
 		}
 		break;
 
@@ -642,8 +642,8 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		break;
 
 		case kStereo:
-		newState = !isPlayMusicGame;
-		isPlayMusicGame = newState;
+		g_newState = !g_isPlayMusicGame;
+		g_isPlayMusicGame = g_newState;
 		changed = true;
 		break;
 
@@ -658,31 +658,31 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		switch (action)
 		{
 			case kToggle:
-			newState = !thisHouse.rooms[room].objects[object].data.g.state;
-			thisHouse.rooms[room].objects[object].data.g.state = newState;
+			g_newState = !g_thisHouse.rooms[room].objects[object].data.g.state;
+			g_thisHouse.rooms[room].objects[object].data.g.state = g_newState;
 			changed = true;
 			break;
 
 			case kForceOn:
-			changed = (thisHouse.rooms[room].objects[object].data.g.state == false);
-			newState = true;
-			thisHouse.rooms[room].objects[object].data.g.state = newState;
+			changed = (g_thisHouse.rooms[room].objects[object].data.g.state == false);
+			g_newState = true;
+			g_thisHouse.rooms[room].objects[object].data.g.state = g_newState;
 			break;
 
 			case kForceOff:
-			changed = (thisHouse.rooms[room].objects[object].data.g.state != false);
-			newState = false;
-			thisHouse.rooms[room].objects[object].data.g.state = newState;
+			changed = (g_thisHouse.rooms[room].objects[object].data.g.state != false);
+			g_newState = false;
+			g_thisHouse.rooms[room].objects[object].data.g.state = g_newState;
 			break;
 		}
 		if ((changed) && (local != -1))
 		{
-			masterObjects[local].theObject.data.g.state = newState;
-			if (room == thisRoomNumber)
+			g_masterObjects[local].theObject.data.g.state = g_newState;
+			if (room == g_thisRoomNumber)
 			{
-				thisRoom->objects[object].data.g.state = newState;
-				if (thisHouse.rooms[room].objects[object].what == kShredder)
-					hotSpots[masterObjects[local].hotNum].isOn = newState;
+				g_thisRoom->objects[object].data.g.state = g_newState;
+				if (g_thisHouse.rooms[room].objects[object].what == kShredder)
+					g_hotSpots[g_masterObjects[local].hotNum].isOn = g_newState;
 			}
 		}
 		break;
@@ -705,28 +705,28 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		switch (action)
 		{
 			case kToggle:
-			newState = !thisHouse.rooms[room].objects[object].data.h.state;
-			thisHouse.rooms[room].objects[object].data.h.state = newState;
+			g_newState = !g_thisHouse.rooms[room].objects[object].data.h.state;
+			g_thisHouse.rooms[room].objects[object].data.h.state = g_newState;
 			changed = true;
 			break;
 
 			case kForceOn:
-			changed = (thisHouse.rooms[room].objects[object].data.h.state == false);
-			newState = true;
-			thisHouse.rooms[room].objects[object].data.h.state = newState;
+			changed = (g_thisHouse.rooms[room].objects[object].data.h.state == false);
+			g_newState = true;
+			g_thisHouse.rooms[room].objects[object].data.h.state = g_newState;
 			break;
 
 			case kForceOff:
-			changed = (thisHouse.rooms[room].objects[object].data.h.state != false);
-			newState = false;
-			thisHouse.rooms[room].objects[object].data.h.state = newState;
+			changed = (g_thisHouse.rooms[room].objects[object].data.h.state != false);
+			g_newState = false;
+			g_thisHouse.rooms[room].objects[object].data.h.state = g_newState;
 			break;
 		}
 		if ((changed) && (local != -1))
 		{
-			masterObjects[local].theObject.data.h.state = newState;
-			if (room == thisRoomNumber)
-				thisRoom->objects[object].data.h.state = newState;
+			g_masterObjects[local].theObject.data.h.state = g_newState;
+			if (room == g_thisRoomNumber)
+				g_thisRoom->objects[object].data.h.state = g_newState;
 		}
 		break;
 
@@ -764,12 +764,12 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 
 	theState = true;
 
-	if (room < 0 || room >= thisHouse.nRooms)
+	if (room < 0 || room >= g_thisHouse.nRooms)
 		return (theState);
 	if (object < 0 || object >= kMaxRoomObs)
 		return (theState);
 
-	switch (thisHouse.rooms[room].objects[object].what)
+	switch (g_thisHouse.rooms[room].objects[object].what)
 	{
 		case kFloorVent:
 		case kCeilingVent:
@@ -782,7 +782,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kGrecoVent:
 		case kSewerBlower:
 		case kLiftArea:
-		theState = thisHouse.rooms[room].objects[object].data.a.state;
+		theState = g_thisHouse.rooms[room].objects[object].data.a.state;
 		break;
 
 		case kTaper:
@@ -823,7 +823,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kStar:
 		case kSparkle:
 		case kHelium:
-		theState = thisHouse.rooms[room].objects[object].data.c.state;
+		theState = g_thisHouse.rooms[room].objects[object].data.c.state;
 		break;
 
 		case kSlider:
@@ -847,7 +847,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		break;
 
 		case kDeluxeTrans:
-		theState = thisHouse.rooms[room].objects[object].data.d.wide & 0x0F;
+		theState = g_thisHouse.rooms[room].objects[object].data.d.wide & 0x0F;
 		break;
 
 		case kLightSwitch:
@@ -868,11 +868,11 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kFlourescent:
 		case kTrackLight:
 		case kInvisLight:
-		theState = thisHouse.rooms[room].objects[object].data.f.state;
+		theState = g_thisHouse.rooms[room].objects[object].data.f.state;
 		break;
 
 		case kStereo:
-		theState = isPlayMusicGame;
+		theState = g_isPlayMusicGame;
 		break;
 
 		case kShredder:
@@ -884,7 +884,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kOutlet:
 		case kVCR:
 		case kMicrowave:
-		theState = thisHouse.rooms[room].objects[object].data.g.state;
+		theState = g_thisHouse.rooms[room].objects[object].data.g.state;
 		break;
 
 		case kCinderBlock:
@@ -901,7 +901,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kBall:
 		case kDrip:
 		case kFish:
-		theState = thisHouse.rooms[room].objects[object].data.h.state;
+		theState = g_thisHouse.rooms[room].objects[object].data.h.state;
 		break;
 
 		case kCobweb:
@@ -940,12 +940,12 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 
 	if (bringFront)							// No need to bring to front
 	{										// or send to back if the object
-		if (objActive == (kMaxRoomObs - 1))	// in question is already front-
+		if (g_objActive == (kMaxRoomObs - 1))	// in question is already front-
 			return;							// most or backmost.
 	}
 	else
 	{
-		if (objActive == 0)
+		if (g_objActive == 0)
 			return;
 	}
 
@@ -954,9 +954,9 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 	numLinks = CountHouseLinks();			// Determine space needed for all links.
 	if (numLinks != 0)						// Create links list of ALL house links.
 	{
-		linksList = NULL;
-		linksList = (linksPtr)calloc(numLinks, sizeof(*linksList));
-		if (linksList == NULL)
+		g_linksList = NULL;
+		g_linksList = (linksPtr)calloc(numLinks, sizeof(*g_linksList));
+		if (g_linksList == NULL)
 		{
 			YellowAlert(ownerWindow, kYellowCantOrderLinks, -1);
 			return;
@@ -967,31 +967,31 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 	for (i = 0; i < kMaxRoomObs; i++)		// Set up an ordered array.
 		sorting[i] = i;
 
-	savedObject = thisHouse.rooms[thisRoomNumber].objects[objActive];
+	savedObject = g_thisHouse.rooms[g_thisRoomNumber].objects[g_objActive];
 
 	if (bringFront)
 	{
-		for (i = objActive; i < kMaxRoomObs - 1; i++)
+		for (i = g_objActive; i < kMaxRoomObs - 1; i++)
 		{									// Pull all objects down to fill hole.
-			thisHouse.rooms[thisRoomNumber].objects[i] =
-					thisHouse.rooms[thisRoomNumber].objects[i + 1];
+			g_thisHouse.rooms[g_thisRoomNumber].objects[i] =
+					g_thisHouse.rooms[g_thisRoomNumber].objects[i + 1];
 			sorting[i] = sorting[i + 1];
 		}
 											// Insert object at end of array.
-		thisHouse.rooms[thisRoomNumber].objects[kMaxRoomObs - 1] = savedObject;
-		sorting[kMaxRoomObs - 1] = objActive;
+		g_thisHouse.rooms[g_thisRoomNumber].objects[kMaxRoomObs - 1] = savedObject;
+		sorting[kMaxRoomObs - 1] = g_objActive;
 	}
 	else
 	{
-		for (i = objActive; i > 0; i--)
+		for (i = g_objActive; i > 0; i--)
 		{									// Move all objects up to fill hole.
-			thisHouse.rooms[thisRoomNumber].objects[i] =
-					thisHouse.rooms[thisRoomNumber].objects[i - 1];
+			g_thisHouse.rooms[g_thisRoomNumber].objects[i] =
+					g_thisHouse.rooms[g_thisRoomNumber].objects[i - 1];
 			sorting[i] = sorting[i - 1];
 		}
 											// Insert object at beginning of array.
-		thisHouse.rooms[thisRoomNumber].objects[0] = savedObject;
-		sorting[0] = objActive;
+		g_thisHouse.rooms[g_thisRoomNumber].objects[0] = savedObject;
+		sorting[0] = g_objActive;
 	}
 
 	for (i = 0; i < kMaxRoomObs; i++)		// Set up retro-ordered array.
@@ -999,15 +999,15 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 
 	for (i = 0; i < numLinks; i++)			// Walk links list in order to assign
 	{										// corrected links to objects moved.
-		if (linksList[i].destRoom == thisRoomNumber)
+		if (g_linksList[i].destRoom == g_thisRoomNumber)
 		{									// Does link point to room we re-ordered?
-			srcRoom = linksList[i].srcRoom;	// Room where-which an object is linked from.
-			if (srcRoom == thisRoomNumber)	// Handle special case for local links.
-				srcObj = sorted[linksList[i].srcObj];
+			srcRoom = g_linksList[i].srcRoom;	// Room where-which an object is linked from.
+			if (srcRoom == g_thisRoomNumber)	// Handle special case for local links.
+				srcObj = sorted[g_linksList[i].srcObj];
 			else
-				srcObj = linksList[i].srcObj;
+				srcObj = g_linksList[i].srcObj;
 
-			switch (thisHouse.rooms[srcRoom].objects[srcObj].what)
+			switch (g_thisHouse.rooms[srcRoom].objects[srcObj].what)
 			{
 				case kLightSwitch:
 				case kMachineSwitch:
@@ -1017,28 +1017,28 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 				case kInvisSwitch:
 				case kTrigger:
 				case kLgTrigger:
-				thisHouse.rooms[srcRoom].objects[srcObj].data.e.who =
-						sorted[linksList[i].destObj];
+				g_thisHouse.rooms[srcRoom].objects[srcObj].data.e.who =
+						sorted[g_linksList[i].destObj];
 				break;
 
 				default:
-				thisHouse.rooms[srcRoom].objects[srcObj].data.d.who =
-						sorted[linksList[i].destObj];
+				g_thisHouse.rooms[srcRoom].objects[srcObj].data.d.who =
+						sorted[g_linksList[i].destObj];
 				break;
 			}
 		}
 	}
 
-	free(linksList);
+	free(g_linksList);
 
-	ForceThisRoom(thisRoomNumber);
+	ForceThisRoom(g_thisRoomNumber);
 
-	fileDirty = true;
+	g_fileDirty = true;
 	UpdateMenus(false);
-	Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+	Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
 	DeselectObject();
 	GetThisRoomsObjRects();
-	ReadyBackground(thisRoom->background, thisRoom->tiles);
+	ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 	DrawThisRoomsObjects();
 	GenerateRetroLinks();
 }

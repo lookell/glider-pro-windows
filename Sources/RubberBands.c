@@ -25,14 +25,14 @@
 void CheckBandCollision (SInt16 who);
 void KillBand (SInt16 which);
 
-bandType bands[kMaxRubberBands];
-Rect bandsSrcRect;
-Rect bandRects[3];
-HDC bandsSrcMap;
-HDC bandsMaskMap;
-SInt16 numBands;
+bandType g_bands[kMaxRubberBands];
+Rect g_bandsSrcRect;
+Rect g_bandRects[3];
+HDC g_bandsSrcMap;
+HDC g_bandsMaskMap;
+SInt16 g_numBands;
 
-static SInt16 bandHitLast;
+static SInt16 g_bandHitLast;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  CheckBandCollision
@@ -44,41 +44,41 @@ void CheckBandCollision (SInt16 who)
 
 	nothingCollided = true;
 
-	if ((leftThresh == kLeftWallLimit) && (bands[who].dest.left < kLeftWallLimit))
+	if ((g_leftThresh == kLeftWallLimit) && (g_bands[who].dest.left < kLeftWallLimit))
 	{
-		if (bands[who].hVel < 0)
-			bands[who].hVel = -bands[who].hVel;
-		bands[who].dest.left = kLeftWallLimit;
-		bands[who].dest.right = bands[who].dest.left + 16;
+		if (g_bands[who].hVel < 0)
+			g_bands[who].hVel = -g_bands[who].hVel;
+		g_bands[who].dest.left = kLeftWallLimit;
+		g_bands[who].dest.right = g_bands[who].dest.left + 16;
 		PlayPrioritySound(kBandReboundSound, kBandReboundPriority);
 		collided = true;
 	}
-	else if ((rightThresh == kRightWallLimit) && (bands[who].dest.right > kRightWallLimit))
+	else if ((g_rightThresh == kRightWallLimit) && (g_bands[who].dest.right > kRightWallLimit))
 	{
-		if (bands[who].hVel > 0)
-			bands[who].hVel = -bands[who].hVel;
-		bands[who].dest.right = kRightWallLimit;
-		bands[who].dest.left = bands[who].dest.right - 16;
+		if (g_bands[who].hVel > 0)
+			g_bands[who].hVel = -g_bands[who].hVel;
+		g_bands[who].dest.right = kRightWallLimit;
+		g_bands[who].dest.left = g_bands[who].dest.right - 16;
 		PlayPrioritySound(kBandReboundSound, kBandReboundPriority);
 		collided = true;
 	}
 
-	for (i = 0; i < nHotSpots; i++)
+	for (i = 0; i < g_nHotSpots; i++)
 	{
-		if (hotSpots[i].isOn)
+		if (g_hotSpots[i].isOn)
 		{
-			action = hotSpots[i].action;
+			action = g_hotSpots[i].action;
 			if ((action == kDissolveIt) || (action == kRewardIt) ||
 					(action == kSwitchIt) || (action == kTriggerIt) ||
 					(action == kBounceIt))
 			{
-				if (bands[who].dest.bottom < hotSpots[i].bounds.top)
+				if (g_bands[who].dest.bottom < g_hotSpots[i].bounds.top)
 					collided = false;
-				else if (bands[who].dest.top > hotSpots[i].bounds.bottom)
+				else if (g_bands[who].dest.top > g_hotSpots[i].bounds.bottom)
 					collided = false;
-				else if (bands[who].dest.right < hotSpots[i].bounds.left)
+				else if (g_bands[who].dest.right < g_hotSpots[i].bounds.left)
 					collided = false;
-				else if (bands[who].dest.left > hotSpots[i].bounds.right)
+				else if (g_bands[who].dest.left > g_hotSpots[i].bounds.right)
 					collided = false;
 				else
 					collided = true;
@@ -86,58 +86,58 @@ void CheckBandCollision (SInt16 who)
 				if (collided)
 				{
 					nothingCollided = false;	// we have detected a collision
-					if (bandHitLast != i)		// don't count it if same as last frame
+					if (g_bandHitLast != i)		// don't count it if same as last frame
 					{							// we don't want rapid on/off toggles
-						bandHitLast = i;		// note who so we don't double-toggle it
+						g_bandHitLast = i;		// note who so we don't double-toggle it
 						if ((action == kDissolveIt) || (action == kBounceIt))
 						{
-							if (bands[who].hVel > 0)
+							if (g_bands[who].hVel > 0)
 							{
-								if ((bands[who].dest.right - bands[who].hVel) <
-										hotSpots[i].bounds.left)
+								if ((g_bands[who].dest.right - g_bands[who].hVel) <
+										g_hotSpots[i].bounds.left)
 								{
-									bands[who].hVel = -bands[who].hVel;
-									bands[who].dest.right = hotSpots[i].bounds.left;
-									bands[who].dest.left = bands[who].dest.right - 16;
+									g_bands[who].hVel = -g_bands[who].hVel;
+									g_bands[who].dest.right = g_hotSpots[i].bounds.left;
+									g_bands[who].dest.left = g_bands[who].dest.right - 16;
 								}
 								else
-									bands[who].mode = kKillBandMode;
+									g_bands[who].mode = kKillBandMode;
 							}
 							else
 							{
-								if ((bands[who].dest.left - bands[who].hVel) >
-										hotSpots[i].bounds.right)
+								if ((g_bands[who].dest.left - g_bands[who].hVel) >
+										g_hotSpots[i].bounds.right)
 								{
-									bands[who].hVel = -bands[who].hVel;
-									bands[who].dest.left = hotSpots[i].bounds.right;
-									bands[who].dest.right = bands[who].dest.left + 16;
+									g_bands[who].hVel = -g_bands[who].hVel;
+									g_bands[who].dest.left = g_hotSpots[i].bounds.right;
+									g_bands[who].dest.right = g_bands[who].dest.left + 16;
 								}
 								else
-									bands[who].mode = kKillBandMode;
+									g_bands[who].mode = kKillBandMode;
 							}
 							PlayPrioritySound(kBandReboundSound, kBandReboundPriority);
 							break;
 						}
 						else if (action == kRewardIt)
 						{
-							whoLinked = hotSpots[i].who;
-							if ((masterObjects[whoLinked].theObject.what == kGreaseRt) ||
-									(masterObjects[whoLinked].theObject.what == kGreaseLf))
+							whoLinked = g_hotSpots[i].who;
+							if ((g_masterObjects[whoLinked].theObject.what == kGreaseRt) ||
+									(g_masterObjects[whoLinked].theObject.what == kGreaseLf))
 							{
-								if (SetObjectState(thisRoomNumber,
-										masterObjects[whoLinked].objectNum, 0, whoLinked))
-									SpillGrease(masterObjects[whoLinked].dynaNum,
-											masterObjects[whoLinked].hotNum);
-								hotSpots[i].isOn = false;
+								if (SetObjectState(g_thisRoomNumber,
+										g_masterObjects[whoLinked].objectNum, 0, whoLinked))
+									SpillGrease(g_masterObjects[whoLinked].dynaNum,
+											g_masterObjects[whoLinked].hotNum);
+								g_hotSpots[i].isOn = false;
 							}
 						}
 						else if (action == kSwitchIt)
 						{
-							HandleSwitches(&hotSpots[i]);
+							HandleSwitches(&g_hotSpots[i]);
 						}
 						else if (action == kTriggerIt)
 						{
-							ArmTrigger(&hotSpots[i]);
+							ArmTrigger(&g_hotSpots[i]);
 						}
 					}
 				}
@@ -146,63 +146,63 @@ void CheckBandCollision (SInt16 who)
 	}
 
 	if (nothingCollided)		// the rubberband has hit nothing
-		bandHitLast = -1;		// so make note of that for the next time
+		g_bandHitLast = -1;		// so make note of that for the next time
 
-	if (bands[who].hVel != 0)
+	if (g_bands[who].hVel != 0)
 	{
-		if (bands[who].dest.bottom < theGlider.dest.top)
+		if (g_bands[who].dest.bottom < g_theGlider.dest.top)
 			collided = false;
-		else if (bands[who].dest.top > theGlider.dest.bottom)
+		else if (g_bands[who].dest.top > g_theGlider.dest.bottom)
 			collided = false;
-		else if (bands[who].dest.right < theGlider.dest.left)
+		else if (g_bands[who].dest.right < g_theGlider.dest.left)
 			collided = false;
-		else if (bands[who].dest.left > theGlider.dest.right)
+		else if (g_bands[who].dest.left > g_theGlider.dest.right)
 			collided = false;
 		else
 			collided = true;
 
 		if (collided)
 		{
-			if ((!twoPlayerGame) || (!onePlayerLeft) || (playerDead == kPlayer2))
+			if ((!g_twoPlayerGame) || (!g_onePlayerLeft) || (g_playerDead == kPlayer2))
 			{
-				theGlider.hVel += (bands[who].hVel / 2);
-				bands[who].hVel = 0;
+				g_theGlider.hVel += (g_bands[who].hVel / 2);
+				g_bands[who].hVel = 0;
 				PlayPrioritySound(kHitWallSound, kHitWallPriority);
 			}
 		}
 
-		if (twoPlayerGame)
+		if (g_twoPlayerGame)
 		{
-			if (bands[who].dest.bottom < theGlider2.dest.top)
+			if (g_bands[who].dest.bottom < g_theGlider2.dest.top)
 				collided = false;
-			else if (bands[who].dest.top > theGlider2.dest.bottom)
+			else if (g_bands[who].dest.top > g_theGlider2.dest.bottom)
 				collided = false;
-			else if (bands[who].dest.right < theGlider2.dest.left)
+			else if (g_bands[who].dest.right < g_theGlider2.dest.left)
 				collided = false;
-			else if (bands[who].dest.left > theGlider2.dest.right)
+			else if (g_bands[who].dest.left > g_theGlider2.dest.right)
 				collided = false;
 			else
 				collided = true;
 
 			if (collided)
 			{
-				if ((!onePlayerLeft) || (playerDead == kPlayer1))
+				if ((!g_onePlayerLeft) || (g_playerDead == kPlayer1))
 				{
-					theGlider2.hVel += (bands[who].hVel / 2);
-					bands[who].hVel = 0;
+					g_theGlider2.hVel += (g_bands[who].hVel / 2);
+					g_bands[who].hVel = 0;
 					PlayPrioritySound(kHitWallSound, kHitWallPriority);
 				}
 			}
 		}
 	}
-	if ((bands[who].dest.left < kLeftWallLimit) ||
-			(bands[who].dest.right > kRightWallLimit))
+	if ((g_bands[who].dest.left < kLeftWallLimit) ||
+			(g_bands[who].dest.right > kRightWallLimit))
 	{
-		bands[who].mode = kKillBandMode;
+		g_bands[who].mode = kKillBandMode;
 	}
-	else if (bands[who].dest.bottom > kFloorLimit)
+	else if (g_bands[who].dest.bottom > kFloorLimit)
 	{
-		bands[who].mode = kKillBandMode;
+		g_bands[who].mode = kKillBandMode;
 	}
 }
 
@@ -213,30 +213,30 @@ void HandleBands (void)
 	Rect		dest;
 	SInt16		i, count;
 
-	if (numBands == 0)
+	if (g_numBands == 0)
 		return;
 
-	for (i = 0; i < numBands; i++)
+	for (i = 0; i < g_numBands; i++)
 	{
-		bands[i].mode++;
-		if (bands[i].mode > 2)
-			bands[i].mode = 0;
+		g_bands[i].mode++;
+		if (g_bands[i].mode > 2)
+			g_bands[i].mode = 0;
 
-		bands[i].count++;
-		if (bands[i].count >= kBandFallCount)
+		g_bands[i].count++;
+		if (g_bands[i].count >= kBandFallCount)
 		{
-			bands[i].vVel++;
-			bands[i].count = 0;
+			g_bands[i].vVel++;
+			g_bands[i].count = 0;
 		}
 
-		dest = bands[i].dest;
-		QOffsetRect(&dest, playOriginH, playOriginV);
+		dest = g_bands[i].dest;
+		QOffsetRect(&dest, g_playOriginH, g_playOriginV);
 		AddRectToWorkRects(&dest);
 
-		bands[i].dest.left += bands[i].hVel;
-		bands[i].dest.right += bands[i].hVel;
-		bands[i].dest.top += bands[i].vVel;
-		bands[i].dest.bottom += bands[i].vVel;
+		g_bands[i].dest.left += g_bands[i].hVel;
+		g_bands[i].dest.right += g_bands[i].hVel;
+		g_bands[i].dest.top += g_bands[i].vVel;
+		g_bands[i].dest.bottom += g_bands[i].vVel;
 
 		CheckBandCollision(i);
 	}
@@ -244,49 +244,49 @@ void HandleBands (void)
 	count = 0;
 	do
 	{
-		while (bands[count].mode == kKillBandMode)
+		while (g_bands[count].mode == kKillBandMode)
 		{
-			bands[count].mode = 0;
+			g_bands[count].mode = 0;
 			KillBand(count);
 		}
 		count++;
 	}
-	while (count < numBands);
+	while (count < g_numBands);
 }
 
 //--------------------------------------------------------------  AddBand
 
 Boolean AddBand (gliderPtr thisGlider, SInt16 h, SInt16 v, Boolean direction)
 {
-	if (numBands >= kMaxRubberBands)
+	if (g_numBands >= kMaxRubberBands)
 		return (false);
 
-	bands[numBands].mode = 0;
-	bands[numBands].count = 0;
+	g_bands[g_numBands].mode = 0;
+	g_bands[g_numBands].count = 0;
 	if (thisGlider->tipped)
-		bands[numBands].vVel = -2;
+		g_bands[g_numBands].vVel = -2;
 	else
-		bands[numBands].vVel = 0;
-	bands[numBands].dest.left = h - 8;
-	bands[numBands].dest.right = h + 8;
-	bands[numBands].dest.top = v - 3;
-	bands[numBands].dest.bottom = v + 3;
+		g_bands[g_numBands].vVel = 0;
+	g_bands[g_numBands].dest.left = h - 8;
+	g_bands[g_numBands].dest.right = h + 8;
+	g_bands[g_numBands].dest.top = v - 3;
+	g_bands[g_numBands].dest.bottom = v + 3;
 
 	if (direction == kFaceLeft)
 	{
-		bands[numBands].dest.left -= 32;
-		bands[numBands].dest.right -= 32;
-		bands[numBands].hVel = -kRubberBandVelocity;
+		g_bands[g_numBands].dest.left -= 32;
+		g_bands[g_numBands].dest.right -= 32;
+		g_bands[g_numBands].hVel = -kRubberBandVelocity;
 	}
 	else
 	{
-		bands[numBands].dest.left += 32;
-		bands[numBands].dest.right += 32;
-		bands[numBands].hVel = kRubberBandVelocity;
+		g_bands[g_numBands].dest.left += 32;
+		g_bands[g_numBands].dest.right += 32;
+		g_bands[g_numBands].hVel = kRubberBandVelocity;
 	}
 
-	thisGlider->hVel -= (bands[numBands].hVel / 2);
-	numBands++;
+	thisGlider->hVel -= (g_bands[g_numBands].hVel / 2);
+	g_numBands++;
 
 	PlayPrioritySound(kFireBandSound, kFireBandPriority);
 	return (true);
@@ -298,11 +298,11 @@ void KillBand (SInt16 which)
 {
 	SInt16		lastBand;
 
-	lastBand = numBands - 1;
+	lastBand = g_numBands - 1;
 	if (which != lastBand)
-		bands[which] = bands[lastBand];
+		g_bands[which] = g_bands[lastBand];
 
-	numBands--;
+	g_numBands--;
 }
 
 //--------------------------------------------------------------  KillAllBands
@@ -313,8 +313,8 @@ void KillAllBands (void)
 
 	for (i = 0; i < kMaxRubberBands; i++)
 	{
-		bands[i].mode = 0;
+		g_bands[i].mode = 0;
 	}
 
-	numBands = 0;
+	g_numBands = 0;
 }

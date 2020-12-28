@@ -12,13 +12,13 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern houseType thisHouse;
-extern linksPtr linksList;
-extern Str32 thisHouseName;
-extern SInt16 wasFloor;
-extern SInt16 wasSuite;
-extern retroLink retroLinkList[kMaxRoomObs];
-extern Boolean houseUnlocked;
+extern houseType g_thisHouse;
+extern linksPtr g_linksList;
+extern Str32 g_thisHouseName;
+extern SInt16 g_wasFloor;
+extern SInt16 g_wasSuite;
+extern retroLink g_retroLinkList[kMaxRoomObs];
+extern Boolean g_houseUnlocked;
 
 Boolean CreateNewHouse (HWND hwndOwner);
 void InitializeEmptyHouse (void);

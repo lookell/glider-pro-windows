@@ -27,20 +27,20 @@ OSErr DumpMusicSounds (void);
 OSErr OpenMusicChannel (void);
 OSErr CloseMusicChannel (void);
 
-Boolean isMusicOn;
-Boolean isPlayMusicIdle;
-Boolean isPlayMusicGame;
-Boolean failedMusic;
-Boolean dontLoadMusic;
+Boolean g_isMusicOn;
+Boolean g_isPlayMusicIdle;
+Boolean g_isPlayMusicGame;
+Boolean g_failedMusic;
+Boolean g_dontLoadMusic;
 
-static AudioChannel *musicChannel;
-static CRITICAL_SECTION musicCriticalSection;
-static WaveData theMusicData[kMaxMusic];
-static SInt16 musicSoundID;
-static SInt16 musicCursor;
-static SInt16 musicScore[kLastMusicPiece];
-static SInt16 gameScore[kLastGamePiece];
-static SInt16 musicMode;
+static AudioChannel *g_musicChannel;
+static CRITICAL_SECTION g_musicCriticalSection;
+static WaveData g_theMusicData[kMaxMusic];
+static SInt16 g_musicSoundID;
+static SInt16 g_musicCursor;
+static SInt16 g_musicScore[kLastMusicPiece];
+static SInt16 g_gameScore[kLastGamePiece];
+static SInt16 g_musicMode;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  StartMusic
@@ -50,43 +50,43 @@ OSErr StartMusic (void)
 	AudioEntry entry;
 	SInt16 soundVolume;
 
-	if (dontLoadMusic)
+	if (g_dontLoadMusic)
 	{
 		return noErr;
 	}
 
-	EnterCriticalSection(&musicCriticalSection);
+	EnterCriticalSection(&g_musicCriticalSection);
 
 	UnivGetSoundVolume(&soundVolume);
-	if ((!isMusicOn) && (soundVolume != 0) && (!failedMusic))
+	if ((!g_isMusicOn) && (soundVolume != 0) && (!g_failedMusic))
 	{
-		AudioChannel_ClearAudio(musicChannel);
+		AudioChannel_ClearAudio(g_musicChannel);
 
-		entry.buffer = theMusicData[musicSoundID].dataBytes;
-		entry.length = theMusicData[musicSoundID].dataLength;
+		entry.buffer = g_theMusicData[g_musicSoundID].dataBytes;
+		entry.length = g_theMusicData[g_musicSoundID].dataLength;
 		entry.endingCallback = NULL;
 		entry.destroyCallback = NULL;
 		entry.userdata = NULL;
-		AudioChannel_QueueAudio(musicChannel, &entry);
+		AudioChannel_QueueAudio(g_musicChannel, &entry);
 
-		musicCursor++;
-		if (musicCursor >= kLastMusicPiece)
+		g_musicCursor++;
+		if (g_musicCursor >= kLastMusicPiece)
 		{
-			musicCursor = 0;
+			g_musicCursor = 0;
 		}
-		musicSoundID = musicScore[musicCursor];
+		g_musicSoundID = g_musicScore[g_musicCursor];
 
-		entry.buffer = theMusicData[musicSoundID].dataBytes;
-		entry.length = theMusicData[musicSoundID].dataLength;
+		entry.buffer = g_theMusicData[g_musicSoundID].dataBytes;
+		entry.length = g_theMusicData[g_musicSoundID].dataLength;
 		entry.endingCallback = MusicCallBack;
 		entry.destroyCallback = NULL;
 		entry.userdata = NULL;
-		AudioChannel_QueueAudio(musicChannel, &entry);
+		AudioChannel_QueueAudio(g_musicChannel, &entry);
 
-		isMusicOn = true;
+		g_isMusicOn = true;
 	}
 
-	LeaveCriticalSection(&musicCriticalSection);
+	LeaveCriticalSection(&g_musicCriticalSection);
 
 	return noErr;
 }
@@ -95,41 +95,41 @@ OSErr StartMusic (void)
 
 void StopTheMusic (void)
 {
-	if (dontLoadMusic)
+	if (g_dontLoadMusic)
 	{
 		return;
 	}
 
-	EnterCriticalSection(&musicCriticalSection);
+	EnterCriticalSection(&g_musicCriticalSection);
 
-	if ((isMusicOn) && (!failedMusic))
+	if ((g_isMusicOn) && (!g_failedMusic))
 	{
-		AudioChannel_ClearAudio(musicChannel);
-		isMusicOn = false;
+		AudioChannel_ClearAudio(g_musicChannel);
+		g_isMusicOn = false;
 	}
 
-	LeaveCriticalSection(&musicCriticalSection);
+	LeaveCriticalSection(&g_musicCriticalSection);
 }
 
 //--------------------------------------------------------------  ToggleMusicWhilePlaying
 
 void ToggleMusicWhilePlaying (void)
 {
-	if (dontLoadMusic)
+	if (g_dontLoadMusic)
 	{
 		return;
 	}
 
-	if (isPlayMusicGame)
+	if (g_isPlayMusicGame)
 	{
-		if (!isMusicOn)
+		if (!g_isMusicOn)
 		{
 			StartMusic();
 		}
 	}
 	else
 	{
-		if (isMusicOn)
+		if (g_isMusicOn)
 		{
 			StopTheMusic();
 		}
@@ -140,30 +140,30 @@ void ToggleMusicWhilePlaying (void)
 
 void SetMusicalMode (SInt16 newMode)
 {
-	if (dontLoadMusic)
+	if (g_dontLoadMusic)
 	{
 		return;
 	}
 
-	EnterCriticalSection(&musicCriticalSection);
+	EnterCriticalSection(&g_musicCriticalSection);
 
 	switch (newMode)
 	{
 		case kKickGameScoreMode:
-		musicCursor = 2;
+		g_musicCursor = 2;
 		break;
 
 		case kProdGameScoreMode:
-		musicCursor = -1;
+		g_musicCursor = -1;
 		break;
 
 		default:
-		musicMode = newMode;
-		musicCursor = 0;
+		g_musicMode = newMode;
+		g_musicCursor = 0;
 		break;
 	}
 
-	LeaveCriticalSection(&musicCriticalSection);
+	LeaveCriticalSection(&g_musicCriticalSection);
 }
 
 //--------------------------------------------------------------  MusicCallBack
@@ -174,46 +174,46 @@ void MusicCallBack (AudioChannel *channel, void *userdata)
 
 	(void)userdata;
 
-	EnterCriticalSection(&musicCriticalSection);
+	EnterCriticalSection(&g_musicCriticalSection);
 
-	switch (musicMode)
+	switch (g_musicMode)
 	{
 		case kPlayGameScoreMode:
-		musicCursor++;
-		if (musicCursor >= kLastGamePiece)
+		g_musicCursor++;
+		if (g_musicCursor >= kLastGamePiece)
 		{
-			musicCursor = 1;
+			g_musicCursor = 1;
 		}
-		musicSoundID = gameScore[musicCursor];
-		if (musicSoundID < 0)
+		g_musicSoundID = g_gameScore[g_musicCursor];
+		if (g_musicSoundID < 0)
 		{
-			musicCursor += musicSoundID;
-			musicSoundID = gameScore[musicCursor];
+			g_musicCursor += g_musicSoundID;
+			g_musicSoundID = g_gameScore[g_musicCursor];
 		}
 		break;
 
 		case kPlayWholeScoreMode:
-		musicCursor++;
-		if (musicCursor >= kLastMusicPiece - 1)
+		g_musicCursor++;
+		if (g_musicCursor >= kLastMusicPiece - 1)
 		{
-			musicCursor = 0;
+			g_musicCursor = 0;
 		}
-		musicSoundID = musicScore[musicCursor];
+		g_musicSoundID = g_musicScore[g_musicCursor];
 		break;
 
 		default:
-		musicSoundID = musicMode;
+		g_musicSoundID = g_musicMode;
 		break;
 	}
 
-	entry.buffer = theMusicData[musicSoundID].dataBytes;
-	entry.length = theMusicData[musicSoundID].dataLength;
+	entry.buffer = g_theMusicData[g_musicSoundID].dataBytes;
+	entry.length = g_theMusicData[g_musicSoundID].dataLength;
 	entry.endingCallback = MusicCallBack;
 	entry.destroyCallback = NULL;
 	entry.userdata = NULL;
 	AudioChannel_QueueAudio(channel, &entry);
 
-	LeaveCriticalSection(&musicCriticalSection);
+	LeaveCriticalSection(&g_musicCriticalSection);
 }
 
 //--------------------------------------------------------------  LoadMusicSounds
@@ -225,13 +225,13 @@ OSErr LoadMusicSounds (void)
 
 	for (i = 0; i < kMaxMusic; i++)
 	{
-		theMusicData[i].dataLength = 0;
-		theMusicData[i].dataBytes = NULL;
+		g_theMusicData[i].dataLength = 0;
+		g_theMusicData[i].dataBytes = NULL;
 	}
 
 	for (i = 0; i < kMaxMusic; i++)
 	{
-		hr = Gp_LoadBuiltInSound(i + kBaseBufferMusicID, &theMusicData[i]);
+		hr = Gp_LoadBuiltInSound(i + kBaseBufferMusicID, &g_theMusicData[i]);
 		if (FAILED(hr))
 		{
 			return -1;
@@ -241,15 +241,15 @@ OSErr LoadMusicSounds (void)
 	// Test to make sure that all music resources have the same format
 	for (i = 1; i < kMaxMusic; i++)
 	{
-		if (theMusicData[i].format.channels != theMusicData[0].format.channels)
+		if (g_theMusicData[i].format.channels != g_theMusicData[0].format.channels)
 		{
 			return -2;
 		}
-		if (theMusicData[i].format.bitsPerSample != theMusicData[0].format.bitsPerSample)
+		if (g_theMusicData[i].format.bitsPerSample != g_theMusicData[0].format.bitsPerSample)
 		{
 			return -2;
 		}
-		if (theMusicData[i].format.samplesPerSec != theMusicData[0].format.samplesPerSec)
+		if (g_theMusicData[i].format.samplesPerSec != g_theMusicData[0].format.samplesPerSec)
 		{
 			return -2;
 		}
@@ -266,9 +266,9 @@ OSErr DumpMusicSounds (void)
 
 	for (i = 0; i < kMaxMusic; i++)
 	{
-		free((void *)theMusicData[i].dataBytes);
-		theMusicData[i].dataBytes = NULL;
-		theMusicData[i].dataLength = 0;
+		free((void *)g_theMusicData[i].dataBytes);
+		g_theMusicData[i].dataBytes = NULL;
+		g_theMusicData[i].dataLength = 0;
 	}
 	return noErr;
 }
@@ -277,8 +277,8 @@ OSErr DumpMusicSounds (void)
 
 OSErr OpenMusicChannel (void)
 {
-	musicChannel = AudioChannel_Open(&theMusicData[0].format);
-	if (musicChannel == NULL)
+	g_musicChannel = AudioChannel_Open(&g_theMusicData[0].format);
+	if (g_musicChannel == NULL)
 	{
 		return -1;
 	}
@@ -289,10 +289,10 @@ OSErr OpenMusicChannel (void)
 
 OSErr CloseMusicChannel (void)
 {
-	if (musicChannel != NULL)
+	if (g_musicChannel != NULL)
 	{
-		AudioChannel_Close(musicChannel);
-		musicChannel = NULL;
+		AudioChannel_Close(g_musicChannel);
+		g_musicChannel = NULL;
 	}
 	return noErr;
 }
@@ -303,66 +303,66 @@ void InitMusic (HWND ownerWindow)
 {
 	OSErr		theErr;
 
-	if (dontLoadMusic)
+	if (g_dontLoadMusic)
 	{
 		return;
 	}
 
-	InitializeCriticalSection(&musicCriticalSection);
+	InitializeCriticalSection(&g_musicCriticalSection);
 
-	musicChannel = NULL;
+	g_musicChannel = NULL;
 
-	failedMusic = false;
-	isMusicOn = false;
+	g_failedMusic = false;
+	g_isMusicOn = false;
 	theErr = LoadMusicSounds();
 	if (theErr != noErr)
 	{
 		YellowAlert(ownerWindow, kYellowNoMusic, theErr);
-		failedMusic = true;
+		g_failedMusic = true;
 		return;
 	}
 	theErr = OpenMusicChannel();
 	if (theErr != noErr)
 	{
 		YellowAlert(ownerWindow, kYellowNoMusic, theErr);
-		failedMusic = true;
+		g_failedMusic = true;
 		return;
 	}
 
-	musicScore[0] = 0;
-	musicScore[1] = 1;
-	musicScore[2] = 2;
-	musicScore[3] = 3;
-	musicScore[4] = 4;
-	musicScore[5] = 4;
-	musicScore[6] = 0;
-	musicScore[7] = 1;
-	musicScore[8] = 2;
-	musicScore[9] = 3;
-	musicScore[10] = kPlayChorus;
-	musicScore[11] = kPlayChorus;
-	musicScore[12] = kPlayRefrainSparse1;
-	musicScore[13] = kPlayRefrainSparse2;
-	musicScore[14] = kPlayChorus;
-	musicScore[15] = kPlayChorus;
+	g_musicScore[0] = 0;
+	g_musicScore[1] = 1;
+	g_musicScore[2] = 2;
+	g_musicScore[3] = 3;
+	g_musicScore[4] = 4;
+	g_musicScore[5] = 4;
+	g_musicScore[6] = 0;
+	g_musicScore[7] = 1;
+	g_musicScore[8] = 2;
+	g_musicScore[9] = 3;
+	g_musicScore[10] = kPlayChorus;
+	g_musicScore[11] = kPlayChorus;
+	g_musicScore[12] = kPlayRefrainSparse1;
+	g_musicScore[13] = kPlayRefrainSparse2;
+	g_musicScore[14] = kPlayChorus;
+	g_musicScore[15] = kPlayChorus;
 
-	gameScore[0] = kPlayRefrainSparse2;
-	gameScore[1] = kPlayRefrainSparse1;
-	gameScore[2] = -1;
-	gameScore[3] = kPlayRefrainSparse2;
-	gameScore[4] = kPlayChorus;
-	gameScore[5] = kPlayChorus;
+	g_gameScore[0] = kPlayRefrainSparse2;
+	g_gameScore[1] = kPlayRefrainSparse1;
+	g_gameScore[2] = -1;
+	g_gameScore[3] = kPlayRefrainSparse2;
+	g_gameScore[4] = kPlayChorus;
+	g_gameScore[5] = kPlayChorus;
 
-	musicCursor = 0;
-	musicSoundID = musicScore[musicCursor];
-	musicMode = kPlayWholeScoreMode;
+	g_musicCursor = 0;
+	g_musicSoundID = g_musicScore[g_musicCursor];
+	g_musicMode = kPlayWholeScoreMode;
 }
 
 //--------------------------------------------------------------  KillMusic
 
 void KillMusic (void)
 {
-	if (dontLoadMusic)
+	if (g_dontLoadMusic)
 	{
 		return;
 	}
@@ -370,5 +370,5 @@ void KillMusic (void)
 	StopTheMusic();
 	CloseMusicChannel();
 	DumpMusicSounds();
-	DeleteCriticalSection(&musicCriticalSection);
+	DeleteCriticalSection(&g_musicCriticalSection);
 }

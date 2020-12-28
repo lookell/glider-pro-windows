@@ -10,10 +10,10 @@
 #include "GliderStructs.h"
 #include "MacTypes.h"
 
-extern demoType demoData[2000];
-extern SInt16 demoIndex;
-extern Boolean isEscPauseKey;
-extern Boolean paused;
+extern demoType g_demoData[2000];
+extern SInt16 g_demoIndex;
+extern Boolean g_isEscPauseKey;
+extern Boolean g_paused;
 
 void DumpDemoData (void);
 void DoCommandKeyQuit (void);

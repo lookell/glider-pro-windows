@@ -55,9 +55,9 @@ static void UpdateMainPict (HWND hDlg)
 	}
 	SetDlgItemText(hDlg, kFreeMemoryText, theStr);
 
-	screenWidth = thisMac.screen.right - thisMac.screen.left;
-	screenHeight = thisMac.screen.bottom - thisMac.screen.top;
-	screenDepth = thisMac.isDepth;
+	screenWidth = g_thisMac.screen.right - g_thisMac.screen.left;
+	screenHeight = g_thisMac.screen.bottom - g_thisMac.screen.top;
+	screenDepth = g_thisMac.isDepth;
 	StringCchPrintf(theStr, ARRAYSIZE(theStr), L"Screen: %ldx%ldx%ld",
 			screenWidth, screenHeight, screenDepth);
 	SetDlgItemText(hDlg, kScreenInfoText, theStr);

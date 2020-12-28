@@ -42,20 +42,20 @@ Boolean QueryNewRoom (HWND ownerWindow);
 void CreateNailOffscreen (void);
 void KillNailOffscreen (void);
 
-HWND mapWindow;
-SInt16 isMapH;
-SInt16 isMapV;
-SInt16 mapRoomsWide;
-SInt16 mapRoomsHigh;
-SInt16 mapLeftRoom;
-SInt16 mapTopRoom;
-Boolean isMapOpen;
-Boolean doPrettyMap;
+HWND g_mapWindow;
+SInt16 g_isMapH;
+SInt16 g_isMapV;
+SInt16 g_mapRoomsWide;
+SInt16 g_mapRoomsHigh;
+SInt16 g_mapLeftRoom;
+SInt16 g_mapTopRoom;
+Boolean g_isMapOpen;
+Boolean g_doPrettyMap;
 
-static Rect nailSrcRect;
-static HDC nailSrcMap = NULL;
-static Rect activeRoomRect;
-static Rect wasActiveRoomRect;
+static Rect g_nailSrcRect;
+static HDC g_nailSrcMap = NULL;
+static Rect g_activeRoomRect;
+static Rect g_wasActiveRoomRect;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  RegisterMapWindowClass
@@ -90,12 +90,12 @@ Boolean ThisRoomVisibleOnMap (void)
 {
 	SInt16		h, v;
 
-	h = thisRoom->suite;
-	v = kMapGroundValue - thisRoom->floor;
+	h = g_thisRoom->suite;
+	v = kMapGroundValue - g_thisRoom->floor;
 
-	if ((h < mapLeftRoom) || (v < mapTopRoom) ||
-			(h >= (mapLeftRoom + mapRoomsWide)) ||
-			(v >= (mapTopRoom + mapRoomsHigh)))
+	if ((h < g_mapLeftRoom) || (v < g_mapTopRoom) ||
+			(h >= (g_mapLeftRoom + g_mapRoomsWide)) ||
+			(v >= (g_mapTopRoom + g_mapRoomsHigh)))
 		return (false);
 	else
 		return (true);
@@ -107,31 +107,31 @@ void CenterMapOnRoom (SInt16 h, SInt16 v)
 {
 	SCROLLINFO scrollInfo;
 
-	if (mapWindow == NULL)
+	if (g_mapWindow == NULL)
 		return;
 
-	mapLeftRoom = h - (mapRoomsWide / 2);
-	mapTopRoom = (kMapGroundValue - v) - (mapRoomsHigh / 2);
+	g_mapLeftRoom = h - (g_mapRoomsWide / 2);
+	g_mapTopRoom = (kMapGroundValue - v) - (g_mapRoomsHigh / 2);
 
-	if (mapLeftRoom < 0)
-		mapLeftRoom = 0;
-	else if (mapLeftRoom > (kMaxNumRoomsH - mapRoomsWide))
-		mapLeftRoom = kMaxNumRoomsH - mapRoomsWide;
+	if (g_mapLeftRoom < 0)
+		g_mapLeftRoom = 0;
+	else if (g_mapLeftRoom > (kMaxNumRoomsH - g_mapRoomsWide))
+		g_mapLeftRoom = kMaxNumRoomsH - g_mapRoomsWide;
 
-	if (mapTopRoom < 0)
-		mapTopRoom = 0;
-	else if (mapTopRoom > (kMaxNumRoomsV - mapRoomsHigh))
-		mapTopRoom = kMaxNumRoomsV - mapRoomsHigh;
+	if (g_mapTopRoom < 0)
+		g_mapTopRoom = 0;
+	else if (g_mapTopRoom > (kMaxNumRoomsV - g_mapRoomsHigh))
+		g_mapTopRoom = kMaxNumRoomsV - g_mapRoomsHigh;
 
-	if (mapWindow != NULL)
+	if (g_mapWindow != NULL)
 	{
 		scrollInfo.cbSize = sizeof(scrollInfo);
 		scrollInfo.fMask = SIF_POS;
 
-		scrollInfo.nPos = mapLeftRoom;
-		SetScrollInfo(mapWindow, SB_HORZ, &scrollInfo, TRUE);
-		scrollInfo.nPos = mapTopRoom;
-		SetScrollInfo(mapWindow, SB_VERT, &scrollInfo, TRUE);
+		scrollInfo.nPos = g_mapLeftRoom;
+		SetScrollInfo(g_mapWindow, SB_HORZ, &scrollInfo, TRUE);
+		scrollInfo.nPos = g_mapTopRoom;
+		SetScrollInfo(g_mapWindow, SB_VERT, &scrollInfo, TRUE);
 	}
 }
 
@@ -139,11 +139,11 @@ void CenterMapOnRoom (SInt16 h, SInt16 v)
 
 void FlagMapRoomsForUpdate (void)
 {
-	if (mapWindow == NULL)
+	if (g_mapWindow == NULL)
 		return;
 
-	Mac_InvalWindowRect(mapWindow, &wasActiveRoomRect);
-	Mac_InvalWindowRect(mapWindow, &activeRoomRect);
+	Mac_InvalWindowRect(g_mapWindow, &g_wasActiveRoomRect);
+	Mac_InvalWindowRect(g_mapWindow, &g_activeRoomRect);
 }
 
 //--------------------------------------------------------------  FindNewActiveRoomRect
@@ -155,26 +155,26 @@ void FindNewActiveRoomRect (void)
 	SInt16		floor, suite, whoCares;
 	Boolean		activeRoomVisible;
 
-	if (mapWindow == nil)
+	if (g_mapWindow == nil)
 		return;
 
 	activeRoomVisible = false;
 
-	for (i = 0; i < mapRoomsHigh; i++)
+	for (i = 0; i < g_mapRoomsHigh; i++)
 	{
-		for (h = 0; h < mapRoomsWide; h++)
+		for (h = 0; h < g_mapRoomsWide; h++)
 		{
 			QSetRect(&aRoom, 0, 0, kMapRoomWidth, kMapRoomHeight);
 			QOffsetRect(&aRoom, kMapRoomWidth * h, kMapRoomHeight * i);
 
-			suite = h + mapLeftRoom;
-			floor = kMapGroundValue - (i + mapTopRoom);
-			if ((RoomExists(suite, floor, &whoCares)) && (houseUnlocked))
+			suite = h + g_mapLeftRoom;
+			floor = kMapGroundValue - (i + g_mapTopRoom);
+			if ((RoomExists(suite, floor, &whoCares)) && (g_houseUnlocked))
 			{
-				if (whoCares == thisRoomNumber)
+				if (whoCares == g_thisRoomNumber)
 				{
-					wasActiveRoomRect = activeRoomRect;
-					activeRoomRect = aRoom;
+					g_wasActiveRoomRect = g_activeRoomRect;
+					g_activeRoomRect = aRoom;
 					activeRoomVisible = true;
 				}
 			}
@@ -183,9 +183,9 @@ void FindNewActiveRoomRect (void)
 
 	if (activeRoomVisible)
 	{
-		activeRoomRect.right++;
-		activeRoomRect.bottom++;
-		QInsetRect(&activeRoomRect, -1, -1);
+		g_activeRoomRect.right++;
+		g_activeRoomRect.bottom++;
+		QInsetRect(&g_activeRoomRect, -1, -1);
 	}
 }
 
@@ -202,7 +202,7 @@ void DrawMapRoomImage (HDC hdc, SInt16 backgroundID, const Rect *dstRect)
 	if (type < 0 || type >= kNumBackgrounds)
 	{
 		type = kNumBackgrounds;
-		if (doPrettyMap)
+		if (g_doPrettyMap)
 		{
 			hBitmap = Gp_LoadImage(g_theHouseFile, backgroundID);
 		}
@@ -217,7 +217,7 @@ void DrawMapRoomImage (HDC hdc, SInt16 backgroundID, const Rect *dstRect)
 	{
 		QSetRect(&srcRect, 0, 0, kMapRoomWidth, kMapRoomHeight);
 		QOffsetRect(&srcRect, 0, type * kMapRoomHeight);
-		Mac_CopyBits(nailSrcMap, hdc, &srcRect, dstRect, srcCopy, nil);
+		Mac_CopyBits(g_nailSrcMap, hdc, &srcRect, dstRect, srcCopy, nil);
 	}
 }
 
@@ -237,7 +237,7 @@ void RedrawMapContents (HDC hdc)
 	if (COMPILEDEMO)
 		return;
 
-	if (mapWindow == NULL || hdc == NULL)
+	if (g_mapWindow == NULL || hdc == NULL)
 		return;
 
 	SaveDC(hdc);
@@ -249,23 +249,23 @@ void RedrawMapContents (HDC hdc)
 	tempRgn = CreateRectRgn(0, 0, 0, 0);
 
 	activeRoomVisible = false;
-	groundLevel = kMapGroundValue - mapTopRoom;
+	groundLevel = kMapGroundValue - g_mapTopRoom;
 
-	for (i = 0; i < mapRoomsHigh; i++)
+	for (i = 0; i < g_mapRoomsHigh; i++)
 	{
-		for (h = 0; h < mapRoomsWide; h++)
+		for (h = 0; h < g_mapRoomsWide; h++)
 		{
 			QSetRect(&aRoom, 0, 0, kMapRoomWidth, kMapRoomHeight);
 			QOffsetRect(&aRoom, kMapRoomWidth * h, kMapRoomHeight * i);
 
-			suite = h + mapLeftRoom;
-			floor = kMapGroundValue - (i + mapTopRoom);
-			if ((RoomExists(suite, floor, &roomNum)) && (houseUnlocked))
+			suite = h + g_mapLeftRoom;
+			floor = kMapGroundValue - (i + g_mapTopRoom);
+			if ((RoomExists(suite, floor, &roomNum)) && (g_houseUnlocked))
 			{
-				DrawMapRoomImage(hdc, thisHouse.rooms[roomNum].background, &aRoom);
-				if (roomNum == thisRoomNumber)
+				DrawMapRoomImage(hdc, g_thisHouse.rooms[roomNum].background, &aRoom);
+				if (roomNum == g_thisRoomNumber)
 				{
-					activeRoomRect = aRoom;
+					g_activeRoomRect = aRoom;
 					activeRoomVisible = true;
 				}
 			}
@@ -303,27 +303,27 @@ void RedrawMapContents (HDC hdc)
 
 	SelectObject(hdc, GetStockObject(BLACK_PEN));
 
-	for (i = 1; i < mapRoomsWide; i++)
+	for (i = 1; i < g_mapRoomsWide; i++)
 	{
 		MoveToEx(hdc, i * kMapRoomWidth, 0, NULL);
-		Mac_Line(hdc, 0, mapRoomsHigh * kMapRoomHeight);
+		Mac_Line(hdc, 0, g_mapRoomsHigh * kMapRoomHeight);
 	}
 
-	for (i = 1; i < mapRoomsHigh; i++)
+	for (i = 1; i < g_mapRoomsHigh; i++)
 	{
 		MoveToEx(hdc, 0, i * kMapRoomHeight, NULL);
-		Mac_Line(hdc, mapRoomsWide * kMapRoomWidth, 0);
+		Mac_Line(hdc, g_mapRoomsWide * kMapRoomWidth, 0);
 	}
 
 	if (activeRoomVisible)
 	{
 		SetDCBrushColor(hdc, redColor);
-		activeRoomRect.right++;
-		activeRoomRect.bottom++;
-		Mac_FrameRect(hdc, &activeRoomRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
-		QInsetRect(&activeRoomRect, 1, 1);
-		Mac_FrameRect(hdc, &activeRoomRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
-		QInsetRect(&activeRoomRect, -1, -1);
+		g_activeRoomRect.right++;
+		g_activeRoomRect.bottom++;
+		Mac_FrameRect(hdc, &g_activeRoomRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
+		QInsetRect(&g_activeRoomRect, 1, 1);
+		Mac_FrameRect(hdc, &g_activeRoomRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
+		QInsetRect(&g_activeRoomRect, -1, -1);
 	}
 
 	RestoreDC(hdc, -1);
@@ -338,18 +338,18 @@ void UpdateMapWindow (void)
 	if (COMPILEDEMO)
 		return;
 
-	if (mapWindow == NULL)
+	if (g_mapWindow == NULL)
 		return;
 
 	scrollInfo.cbSize = sizeof(scrollInfo);
 
 	scrollInfo.fMask = SIF_POS;
-	scrollInfo.nPos = mapLeftRoom;
-	SetScrollInfo(mapWindow, SB_HORZ, &scrollInfo, TRUE);
-	scrollInfo.nPos = mapTopRoom;
-	SetScrollInfo(mapWindow, SB_VERT, &scrollInfo, TRUE);
+	scrollInfo.nPos = g_mapLeftRoom;
+	SetScrollInfo(g_mapWindow, SB_HORZ, &scrollInfo, TRUE);
+	scrollInfo.nPos = g_mapTopRoom;
+	SetScrollInfo(g_mapWindow, SB_VERT, &scrollInfo, TRUE);
 
-	RedrawWindow(mapWindow, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
+	RedrawWindow(g_mapWindow, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 }
 
 //--------------------------------------------------------------  HandleMapSizingMessage
@@ -435,26 +435,26 @@ void HandleMapSizeMessage (HWND hwnd)
 	clientWidth = clientRect.right;
 	clientHeight = clientRect.bottom;
 
-	wasMapRoomsWide = mapRoomsWide;
-	wasMapRoomsHigh = mapRoomsHigh;
-	mapRoomsWide = (SInt16)(clientWidth / kMapRoomWidth);
-	mapRoomsHigh = (SInt16)(clientHeight / kMapRoomHeight);
+	wasMapRoomsWide = g_mapRoomsWide;
+	wasMapRoomsHigh = g_mapRoomsHigh;
+	g_mapRoomsWide = (SInt16)(clientWidth / kMapRoomWidth);
+	g_mapRoomsHigh = (SInt16)(clientHeight / kMapRoomHeight);
 
 	scrollInfo.cbSize = sizeof(scrollInfo);
 
 	scrollInfo.fMask = SIF_PAGE | SIF_DISABLENOSCROLL;
-	scrollInfo.nPage = mapRoomsWide;
+	scrollInfo.nPage = g_mapRoomsWide;
 	SetScrollInfo(hwnd, SB_HORZ, &scrollInfo, TRUE);
-	scrollInfo.nPage = mapRoomsHigh;
+	scrollInfo.nPage = g_mapRoomsHigh;
 	SetScrollInfo(hwnd, SB_VERT, &scrollInfo, TRUE);
 
 	scrollInfo.fMask = SIF_POS;
 	GetScrollInfo(hwnd, SB_HORZ, &scrollInfo);
-	mapLeftRoom = (SInt16)scrollInfo.nPos;
+	g_mapLeftRoom = (SInt16)scrollInfo.nPos;
 	GetScrollInfo(hwnd, SB_VERT, &scrollInfo);
-	mapTopRoom = (SInt16)scrollInfo.nPos;
+	g_mapTopRoom = (SInt16)scrollInfo.nPos;
 
-	if (mapRoomsWide != wasMapRoomsWide || mapRoomsHigh != wasMapRoomsHigh)
+	if (g_mapRoomsWide != wasMapRoomsWide || g_mapRoomsHigh != wasMapRoomsHigh)
 	{
 		InvalidateRect(hwnd, NULL, TRUE);
 	}
@@ -472,7 +472,7 @@ void OpenMapWindow (void)
 	if (COMPILEDEMO)
 		return;
 
-	if (mapWindow == NULL)
+	if (g_mapWindow == NULL)
 	{
 		RegisterMapWindowClass();
 		CreateNailOffscreen();
@@ -481,46 +481,46 @@ void OpenMapWindow (void)
 			WS_HSCROLL | WS_VSCROLL;
 		extendedStyle = WS_EX_DLGMODALFRAME;
 		SetRect(&windowRect, 0, 0,
-			mapRoomsWide * kMapRoomWidth + GetSystemMetrics(SM_CXVSCROLL),
-			mapRoomsHigh * kMapRoomHeight + GetSystemMetrics(SM_CYHSCROLL));
+			g_mapRoomsWide * kMapRoomWidth + GetSystemMetrics(SM_CXVSCROLL),
+			g_mapRoomsHigh * kMapRoomHeight + GetSystemMetrics(SM_CYHSCROLL));
 		AdjustWindowRectEx(&windowRect, windowStyle, FALSE, extendedStyle);
-		mapWindow = CreateWindowEx(extendedStyle, WC_MAPWINDOW, L"Map",
-			windowStyle, 0, 0, 0, 0, mainWindow, NULL, HINST_THISCOMPONENT, NULL);
+		g_mapWindow = CreateWindowEx(extendedStyle, WC_MAPWINDOW, L"Map",
+			windowStyle, 0, 0, 0, 0, g_mainWindow, NULL, HINST_THISCOMPONENT, NULL);
 
-		if (mapWindow == NULL)
+		if (g_mapWindow == NULL)
 			RedAlert(kErrNoMemory);
 
 //		if (OptionKeyDown())
 //		{
-//			isMapH = 3;
-//			isMapV = qd.screenBits.bounds.bottom - 100;
+//			g_isMapH = 3;
+//			g_isMapV = qd.screenBits.bounds.bottom - 100;
 //		}
 		placement.length = sizeof(placement);
-		GetWindowPlacement(mapWindow, &placement);
+		GetWindowPlacement(g_mapWindow, &placement);
 		placement.flags = 0;
 		OffsetRect(&windowRect, -windowRect.left, -windowRect.top);
-		OffsetRect(&windowRect, isMapH, isMapV);
+		OffsetRect(&windowRect, g_isMapH, g_isMapV);
 		placement.rcNormalPosition = windowRect;
 		placement.showCmd = SW_SHOWNOACTIVATE;
-		SetWindowPlacement(mapWindow, &placement);
+		SetWindowPlacement(g_mapWindow, &placement);
 
-		QSetRect(&wasActiveRoomRect, 0, 0, 1, 1);
-		QSetRect(&activeRoomRect, 0, 0, 1, 1);
+		QSetRect(&g_wasActiveRoomRect, 0, 0, 1, 1);
+		QSetRect(&g_activeRoomRect, 0, 0, 1, 1);
 
 		scrollInfo.cbSize = sizeof(scrollInfo);
 		scrollInfo.fMask = SIF_RANGE | SIF_PAGE | SIF_DISABLENOSCROLL;
 
 		scrollInfo.nMin = 0;
 		scrollInfo.nMax = kMaxNumRoomsH - 1;
-		scrollInfo.nPage = mapRoomsWide;
-		SetScrollInfo(mapWindow, SB_HORZ, &scrollInfo, TRUE);
+		scrollInfo.nPage = g_mapRoomsWide;
+		SetScrollInfo(g_mapWindow, SB_HORZ, &scrollInfo, TRUE);
 
 		scrollInfo.nMin = 0;
 		scrollInfo.nMax = kMaxNumRoomsV - 1;
-		scrollInfo.nPage = mapRoomsHigh;
-		SetScrollInfo(mapWindow, SB_VERT, &scrollInfo, TRUE);
+		scrollInfo.nPage = g_mapRoomsHigh;
+		SetScrollInfo(g_mapWindow, SB_VERT, &scrollInfo, TRUE);
 
-		CenterMapOnRoom(thisRoom->suite, thisRoom->floor);
+		CenterMapOnRoom(g_thisRoom->suite, g_thisRoom->floor);
 	}
 
 	UpdateMapCheckmark(true);
@@ -533,10 +533,10 @@ void CloseMapWindow (void)
 	if (COMPILEDEMO)
 		return;
 
-	if (mapWindow != NULL)
+	if (g_mapWindow != NULL)
 	{
-		DestroyWindow(mapWindow);
-		mapWindow = NULL;
+		DestroyWindow(g_mapWindow);
+		g_mapWindow = NULL;
 	}
 	UpdateMapCheckmark(false);
 }
@@ -548,15 +548,15 @@ void ToggleMapWindow (void)
 	if (COMPILEDEMO)
 		return;
 
-	if (mapWindow == NULL)
+	if (g_mapWindow == NULL)
 	{
 		OpenMapWindow();
-		isMapOpen = true;
+		g_isMapOpen = true;
 	}
 	else
 	{
 		CloseMapWindow();
-		isMapOpen = false;
+		g_isMapOpen = false;
 	}
 }
 
@@ -571,8 +571,8 @@ LRESULT CALLBACK MapWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 		WINDOWPLACEMENT placement;
 		placement.length = sizeof(placement);
 		GetWindowPlacement(hwnd, &placement);
-		isMapH = (SInt16)placement.rcNormalPosition.left;
-		isMapV = (SInt16)placement.rcNormalPosition.top;
+		g_isMapH = (SInt16)placement.rcNormalPosition.left;
+		g_isMapV = (SInt16)placement.rcNormalPosition.top;
 		return 0;
 	}
 
@@ -636,10 +636,10 @@ void LiveHScrollAction (HWND hwnd, WORD scrollRequest)
 		newValue = wasValue + 1;
 		break;
 	case SB_PAGELEFT:
-		newValue = wasValue - (mapRoomsWide / 2);
+		newValue = wasValue - (g_mapRoomsWide / 2);
 		break;
 	case SB_PAGERIGHT:
-		newValue = wasValue + (mapRoomsWide / 2);
+		newValue = wasValue + (g_mapRoomsWide / 2);
 		break;
 	case SB_THUMBTRACK:
 		newValue = scrollInfo.nTrackPos;
@@ -658,7 +658,7 @@ void LiveHScrollAction (HWND hwnd, WORD scrollRequest)
 	GetScrollInfo(hwnd, SB_HORZ, &scrollInfo);
 	if (scrollInfo.nPos != wasValue)
 	{
-		mapLeftRoom = (SInt16)scrollInfo.nPos;
+		g_mapLeftRoom = (SInt16)scrollInfo.nPos;
 		UpdateMapWindow();
 	}
 }
@@ -685,10 +685,10 @@ void LiveVScrollAction (HWND hwnd, WORD scrollRequest)
 		newValue = wasValue + 1;
 		break;
 	case SB_PAGEUP:
-		newValue = wasValue - (mapRoomsHigh / 2);
+		newValue = wasValue - (g_mapRoomsHigh / 2);
 		break;
 	case SB_PAGEDOWN:
-		newValue = wasValue + (mapRoomsHigh / 2);
+		newValue = wasValue + (g_mapRoomsHigh / 2);
 		break;
 	case SB_THUMBTRACK:
 		newValue = scrollInfo.nTrackPos;
@@ -708,7 +708,7 @@ void LiveVScrollAction (HWND hwnd, WORD scrollRequest)
 	newValue = scrollInfo.nPos;
 	if (newValue != wasValue)
 	{
-		mapTopRoom = (SInt16)scrollInfo.nPos;
+		g_mapTopRoom = (SInt16)scrollInfo.nPos;
 		UpdateMapWindow();
 	}
 }
@@ -728,13 +728,13 @@ void HandleMapClick (SInt16 clickX, SInt16 clickY)
 	localH = clickX / kMapRoomWidth;
 	localV = clickY / kMapRoomHeight;
 
-	if ((localH >= mapRoomsWide) || (localV >= mapRoomsHigh))
+	if ((localH >= g_mapRoomsWide) || (localV >= g_mapRoomsHigh))
 		return;
 	if ((localH < 0) || (localV < 0))
 		return;
 
-	roomH = localH + mapLeftRoom;
-	roomV = kMapGroundValue - (localV + mapTopRoom);
+	roomH = localH + g_mapLeftRoom;
+	roomV = kMapGroundValue - (localV + g_mapTopRoom);
 
 	if (RoomExists(roomH, roomV, &itsNumber))
 	{
@@ -750,13 +750,13 @@ void HandleMapClick (SInt16 clickX, SInt16 clickY)
 	}
 	else
 	{
-		if (doBitchDialogs)
+		if (g_doBitchDialogs)
 		{
-			if (QueryNewRoom(mainWindow))
+			if (QueryNewRoom(g_mainWindow))
 			{
-				if (!CreateNewRoom(mainWindow, roomH, roomV))
+				if (!CreateNewRoom(g_mainWindow, roomH, roomV))
 				{
-					YellowAlert(mainWindow, kYellowUnaccounted, 11);
+					YellowAlert(g_mainWindow, kYellowUnaccounted, 11);
 					return;
 				}
 				else
@@ -770,9 +770,9 @@ void HandleMapClick (SInt16 clickX, SInt16 clickY)
 		}
 		else
 		{
-			if (!CreateNewRoom(mainWindow, roomH, roomV))
+			if (!CreateNewRoom(g_mainWindow, roomH, roomV))
 			{
-				YellowAlert(mainWindow, kYellowUnaccounted, 11);
+				YellowAlert(g_mainWindow, kYellowUnaccounted, 11);
 				return;
 			}
 			else
@@ -801,11 +801,11 @@ Boolean QueryNewRoom (HWND ownerWindow)
 
 void CreateNailOffscreen (void)
 {
-	if (nailSrcMap == NULL)
+	if (g_nailSrcMap == NULL)
 	{
-		QSetRect(&nailSrcRect, 0, 0, kMapRoomWidth, kMapRoomHeight * (kNumBackgrounds + 1));
-		nailSrcMap = CreateOffScreenGWorld(&nailSrcRect, kPreferredDepth);
-		LoadGraphic(nailSrcMap, g_theHouseFile, kThumbnailPictID);
+		QSetRect(&g_nailSrcRect, 0, 0, kMapRoomWidth, kMapRoomHeight * (kNumBackgrounds + 1));
+		g_nailSrcMap = CreateOffScreenGWorld(&g_nailSrcRect, kPreferredDepth);
+		LoadGraphic(g_nailSrcMap, g_theHouseFile, kThumbnailPictID);
 	}
 }
 
@@ -813,10 +813,10 @@ void CreateNailOffscreen (void)
 
 void KillNailOffscreen (void)
 {
-	if (nailSrcMap != NULL)
+	if (g_nailSrcMap != NULL)
 	{
-		DisposeGWorld(nailSrcMap);
-		nailSrcMap = NULL;
+		DisposeGWorld(g_nailSrcMap);
+		g_nailSrcMap = NULL;
 	}
 }
 
@@ -842,28 +842,28 @@ void MoveRoom (Point wherePt)
 	localH = wherePt.h / kMapRoomWidth;
 	localV = wherePt.v / kMapRoomHeight;
 
-	if ((localH >= mapRoomsWide) || (localV >= mapRoomsHigh))
+	if ((localH >= g_mapRoomsWide) || (localV >= g_mapRoomsHigh))
 		return;
 
-	roomH = localH + mapLeftRoom;
-	roomV = kMapGroundValue - (localV + mapTopRoom);
+	roomH = localH + g_mapLeftRoom;
+	roomV = kMapGroundValue - (localV + g_mapTopRoom);
 
 	if (RoomExists(roomH, roomV, &itsNumber) == false)
 	{
-		srcFloor = thisRoom->floor;
-		srcSuite = thisRoom->suite;
+		srcFloor = g_thisRoom->floor;
+		srcSuite = g_thisRoom->suite;
 		packedSrcCombo = MergeFloorSuite(srcFloor + kNumUndergroundFloors, srcSuite);
 		destFloor = roomV;
 		destSuite = roomH;
 		packedDestCombo = MergeFloorSuite(destFloor + kNumUndergroundFloors, destSuite);
 
-		thisRoom->floor = destFloor;
-		thisRoom->suite = destSuite;
+		g_thisRoom->floor = destFloor;
+		g_thisRoom->suite = destSuite;
 
 		// fix up links within this room
 		for (i = 0; i < kMaxRoomObs; i++)
 		{
-			theObject = &thisRoom->objects[i];
+			theObject = &g_thisRoom->objects[i];
 			if (ObjectIsLinkSwitch(theObject))
 			{
 				if (theObject->data.e.where == packedSrcCombo)
@@ -881,11 +881,11 @@ void MoveRoom (Point wherePt)
 		}
 
 		// fix up links from other rooms to this room
-		for (r = 0; r < thisHouse.nRooms; r++)
+		for (r = 0; r < g_thisHouse.nRooms; r++)
 		{
 			for (i = 0; i < kMaxRoomObs; i++)
 			{
-				theObject = &thisHouse.rooms[r].objects[i];
+				theObject = &g_thisHouse.rooms[r].objects[i];
 				if (ObjectIsLinkSwitch(theObject))
 				{
 					if (theObject->data.e.where == packedSrcCombo)
@@ -905,7 +905,7 @@ void MoveRoom (Point wherePt)
 
 		CopyThisRoomToRoom();
 		ReflectCurrentRoom(false);
-		fileDirty = true;
+		g_fileDirty = true;
 		UpdateMenus(false);
 		UpdateMapWindow();
 	}

@@ -25,12 +25,12 @@
 
 void HandleIdleTask (void);
 
-UInt32 incrementModeTime;
-Boolean doAutoDemo;
-Boolean switchedOut;
-Boolean ignoreDoubleClick;
-HACCEL splashAccelTable;
-HACCEL editAccelTable;
+UInt32 g_incrementModeTime;
+Boolean g_doAutoDemo;
+Boolean g_switchedOut;
+Boolean g_ignoreDoubleClick;
+HACCEL g_splashAccelTable;
+HACCEL g_editAccelTable;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  HandleIdleTask
@@ -38,15 +38,15 @@ HACCEL editAccelTable;
 
 void HandleIdleTask (void)
 {
-	if (theMode == kEditMode)
+	if (g_theMode == kEditMode)
 	{
 		DoMarquee();
 
-		if ((autoRoomEdit) && (newRoomNow))
+		if ((g_autoRoomEdit) && (g_newRoomNow))
 		{
-			if (theMode == kEditMode)
-				DoRoomInfo(mainWindow);
-			newRoomNow = false;
+			if (g_theMode == kEditMode)
+				DoRoomInfo(g_mainWindow);
+			g_newRoomNow = false;
 		}
 	}
 }
@@ -57,21 +57,21 @@ void HandleIdleTask (void)
 
 void HandleTheMessage (MSG *message)
 {
-	if (IsWindow(coordWindow) && IsDialogMessage(coordWindow, message))
+	if (IsWindow(g_coordWindow) && IsDialogMessage(g_coordWindow, message))
 		return;
-	if (IsWindow(linkWindow) && IsDialogMessage(linkWindow, message))
+	if (IsWindow(g_linkWindow) && IsDialogMessage(g_linkWindow, message))
 		return;
-	if (IsWindow(toolsWindow) && IsDialogMessage(toolsWindow, message))
+	if (IsWindow(g_toolsWindow) && IsDialogMessage(g_toolsWindow, message))
 		return;
 
-	if (theMode == kSplashMode)
+	if (g_theMode == kSplashMode)
 	{
-		if (TranslateAccelerator(mainWindow, splashAccelTable, message))
+		if (TranslateAccelerator(g_mainWindow, g_splashAccelTable, message))
 			return;
 	}
-	else if (theMode == kEditMode)
+	else if (g_theMode == kEditMode)
 	{
-		if (TranslateAccelerator(mainWindow, editAccelTable, message))
+		if (TranslateAccelerator(g_mainWindow, g_editAccelTable, message))
 			return;
 	}
 	TranslateMessage(message);
@@ -88,7 +88,7 @@ void HandleEvent (void)
 	DWORD startMillis;
 	DWORD nowMillis;
 
-	if (mainWindow != NULL && GetActiveWindow() == mainWindow)
+	if (g_mainWindow != NULL && GetActiveWindow() == g_mainWindow)
 	{
 		// TODO: Maybe don't use the Alt key as an Option key substitute, since
 		// it already has meaning for Windows (activating the menu bar, in this
@@ -98,24 +98,24 @@ void HandleEvent (void)
 		{
 			HiliteAllObjects();
 		}
-		else if ((GetAsyncKeyState(VK_MENU) < 0) && (theMode == kEditMode) &&
-				(houseUnlocked))
+		else if ((GetAsyncKeyState(VK_MENU) < 0) && (g_theMode == kEditMode) &&
+				(g_houseUnlocked))
 		{
 			SelectTool(kSelectTool);
 		}
 	}
 
-	if (switchedOut)
+	if (g_switchedOut)
 	{
 		while (GetMessage(&msg, NULL, 0, 0))
 		{
 			if (msg.message == WM_QUIT)
 			{
-				quitting = true;
+				g_quitting = true;
 				return;
 			}
 			HandleTheMessage(&msg);
-			if (!switchedOut)
+			if (!g_switchedOut)
 				break;
 		}
 	}
@@ -124,21 +124,21 @@ void HandleEvent (void)
 	{
 		if (msg.message == WM_QUIT)
 		{
-			quitting = true;
+			g_quitting = true;
 			return;
 		}
 		HandleTheMessage(&msg);
 	}
 	HandleIdleTask();
 
-	if ((theMode == kSplashMode) && doAutoDemo && !switchedOut && (demoHouseIndex >= 0))
+	if ((g_theMode == kSplashMode) && g_doAutoDemo && !g_switchedOut && (g_demoHouseIndex >= 0))
 	{
-		startMillis = incrementModeTime - kIdleSplashTime;
+		startMillis = g_incrementModeTime - kIdleSplashTime;
 		nowMillis = timeGetTime();
 		if (nowMillis - startMillis >= kIdleSplashTime)
 		{
 			DisableMenuBar();
-			DoDemoGame(mainWindow);
+			DoDemoGame(g_mainWindow);
 			EnableMenuBar();
 		}
 	}
@@ -150,5 +150,5 @@ void HandleEvent (void)
 
 void IgnoreThisClick (void)
 {
-	ignoreDoubleClick = true;
+	g_ignoreDoubleClick = true;
 }

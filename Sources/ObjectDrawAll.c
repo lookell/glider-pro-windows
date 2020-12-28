@@ -40,21 +40,21 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 
 	if (neighbor < 0 || neighbor >= 9)
 		return;
-	if ((localNumbers[neighbor] < 0) || (localNumbers[neighbor] >= thisHouse.nRooms))
+	if ((g_localNumbers[neighbor] < 0) || (g_localNumbers[neighbor] >= g_thisHouse.nRooms))
 		return;
 
-	testRect = houseRect;
+	testRect = g_houseRect;
 	ZeroRectCorner(&testRect);
-	isLit = (numLights > 0);
+	isLit = (g_numLights > 0);
 
 	for (i = 0; i < kMaxRoomObs; i++)
 	{
 		dynamicNum = -1;
 		legit = -1;
 
-		if (IsThisValid(localNumbers[neighbor], i))
+		if (IsThisValid(g_localNumbers[neighbor], i))
 		{
-			thisObject = thisHouse.rooms[localNumbers[neighbor]].objects[i];
+			thisObject = g_thisHouse.rooms[g_localNumbers[neighbor]].objects[i];
 			switch (thisObject.what)
 			{
 				case kObjectIsEmpty:
@@ -85,24 +85,24 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if (neighbor == kCentralRoom)
 					{
 						if (redraw)
-							ReBackUpFlames(localNumbers[neighbor], i);
+							ReBackUpFlames(g_localNumbers[neighbor], i);
 						else
-							AddCandleFlame(localNumbers[neighbor], i,
+							AddCandleFlame(g_localNumbers[neighbor], i,
 									itsRect.left + 10, itsRect.top + 7);
 					}
 					else
 					{
 						QSetRect(&rectA, 0, 0, 16, 15);
 						QOffsetRect(&rectA, itsRect.left + 10 - 8, itsRect.top + 7 - 15);
-						rectB = localRoomsDest[kCentralRoom];
+						rectB = g_localRoomsDest[kCentralRoom];
 						rectB.top -= kFloorSupportTall;
 						rectB.bottom += kFloorSupportTall;
 						if (!QSectRect(&rectA, &rectB, &whoCares))
 						{
 							if (redraw)
-								ReBackUpFlames(localNumbers[neighbor], i);
+								ReBackUpFlames(g_localNumbers[neighbor], i);
 							else
-								AddCandleFlame(localNumbers[neighbor], i,
+								AddCandleFlame(g_localNumbers[neighbor], i,
 										itsRect.left + 10, itsRect.top + 7);
 						}
 					}
@@ -119,24 +119,24 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if (neighbor == kCentralRoom)
 					{
 						if (redraw)
-							ReBackUpFlames(localNumbers[neighbor], i);
+							ReBackUpFlames(g_localNumbers[neighbor], i);
 						else
-							AddCandleFlame(localNumbers[neighbor], i,
+							AddCandleFlame(g_localNumbers[neighbor], i,
 									itsRect.left + 14, itsRect.top + 7);
 					}
 					else
 					{
 						QSetRect(&rectA, 0, 0, 16, 15);
 						QOffsetRect(&rectA, itsRect.left + 14 - 8, itsRect.top + 7 - 15);
-						rectB = localRoomsDest[kCentralRoom];
+						rectB = g_localRoomsDest[kCentralRoom];
 						rectB.top -= kFloorSupportTall;
 						rectB.bottom += kFloorSupportTall;
 						if (!QSectRect(&rectA, &rectB, &whoCares))
 						{
 							if (redraw)
-								ReBackUpFlames(localNumbers[neighbor], i);
+								ReBackUpFlames(g_localNumbers[neighbor], i);
 							else
-								AddCandleFlame(localNumbers[neighbor], i,
+								AddCandleFlame(g_localNumbers[neighbor], i,
 										itsRect.left + 14, itsRect.top + 7);
 						}
 					}
@@ -153,24 +153,24 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if (neighbor == kCentralRoom)
 					{
 						if (redraw)
-							ReBackUpFlames(localNumbers[neighbor], i);
+							ReBackUpFlames(g_localNumbers[neighbor], i);
 						else
-							AddCandleFlame(localNumbers[neighbor], i,
+							AddCandleFlame(g_localNumbers[neighbor], i,
 									itsRect.left + 9, itsRect.top + 7);
 					}
 					else
 					{
 						QSetRect(&rectA, 0, 0, 16, 15);
 						QOffsetRect(&rectA, itsRect.left + 9 - 8, itsRect.top + 7 - 15);
-						rectB = localRoomsDest[kCentralRoom];
+						rectB = g_localRoomsDest[kCentralRoom];
 						rectB.top -= kFloorSupportTall;
 						rectB.bottom += kFloorSupportTall;
 						if (!QSectRect(&rectA, &rectB, &whoCares))
 						{
 							if (redraw)
-								ReBackUpFlames(localNumbers[neighbor], i);
+								ReBackUpFlames(g_localNumbers[neighbor], i);
 							else
-								AddCandleFlame(localNumbers[neighbor], i,
+								AddCandleFlame(g_localNumbers[neighbor], i,
 										itsRect.left + 9, itsRect.top + 7);
 						}
 					}
@@ -181,11 +181,11 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
-					DrawTiki(&itsRect, playOriginV + VerticalRoomOffset(neighbor));
+					DrawTiki(&itsRect, g_playOriginV + VerticalRoomOffset(neighbor));
 				if (redraw)
-					ReBackUpTikiFlames(localNumbers[neighbor], i);
+					ReBackUpTikiFlames(g_localNumbers[neighbor], i);
 				else
-					AddTikiFlame(localNumbers[neighbor], i,
+					AddTikiFlame(g_localNumbers[neighbor], i,
 							itsRect.left + 10, itsRect.top - 9);
 				break;
 
@@ -197,9 +197,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if (isLit)
 						DrawPictSansWhiteObject(thisObject.what, &itsRect);
 					if (redraw)
-						ReBackUpBBQCoals(localNumbers[neighbor], i);
+						ReBackUpBBQCoals(g_localNumbers[neighbor], i);
 					else
-						AddBBQCoals(localNumbers[neighbor], i,
+						AddBBQCoals(g_localNumbers[neighbor], i,
 								itsRect.left + 16, itsRect.top + 9);
 				}
 				break;
@@ -212,7 +212,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
-					DrawTable(&itsRect, playOriginV);
+					DrawTable(&itsRect, g_playOriginV);
 				break;
 
 				case kShelf:
@@ -263,14 +263,14 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
-					DrawDeckTable(&itsRect, playOriginV);
+					DrawDeckTable(&itsRect, g_playOriginV);
 				break;
 
 				case kStool:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
-					DrawStool(&itsRect, playOriginV + VerticalRoomOffset(neighbor));
+					DrawStool(&itsRect, g_playOriginV + VerticalRoomOffset(neighbor));
 				break;
 
 				case kInvisObstacle:
@@ -296,9 +296,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (redraw)
-						legit = ReBackUpSavedMap(&itsRect, localNumbers[neighbor], i);
+						legit = ReBackUpSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					else
-						legit = BackUpToSavedMap(&itsRect, localNumbers[neighbor], i);
+						legit = BackUpToSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					if (legit != -1)
 						DrawRedClock(&itsRect);
 				}
@@ -310,9 +310,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (redraw)
-						legit = ReBackUpSavedMap(&itsRect, localNumbers[neighbor], i);
+						legit = ReBackUpSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					else
-						legit = BackUpToSavedMap(&itsRect, localNumbers[neighbor], i);
+						legit = BackUpToSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					if (legit != -1)
 						DrawBlueClock(&itsRect);
 				}
@@ -324,9 +324,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (redraw)
-						legit = ReBackUpSavedMap(&itsRect, localNumbers[neighbor], i);
+						legit = ReBackUpSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					else
-						legit = BackUpToSavedMap(&itsRect, localNumbers[neighbor], i);
+						legit = BackUpToSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					if (legit != -1)
 						DrawYellowClock(&itsRect);
 				}
@@ -338,16 +338,16 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (redraw)
-						legit = ReBackUpSavedMap(&itsRect, localNumbers[neighbor], i);
+						legit = ReBackUpSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					else
-						legit = BackUpToSavedMap(&itsRect, localNumbers[neighbor], i);
+						legit = BackUpToSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					if (legit != -1)
 					{
 						DrawCuckoo(&itsRect);
 						if (redraw)
-							ReBackUpPendulum(localNumbers[neighbor], i);
+							ReBackUpPendulum(g_localNumbers[neighbor], i);
 						else
-							AddPendulum(localNumbers[neighbor], i,
+							AddPendulum(g_localNumbers[neighbor], i,
 									itsRect.left + 4, itsRect.top + 46);
 					}
 				}
@@ -362,9 +362,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (redraw)
-						legit = ReBackUpSavedMap(&itsRect, localNumbers[neighbor], i);
+						legit = ReBackUpSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					else
-						legit = BackUpToSavedMap(&itsRect, localNumbers[neighbor], i);
+						legit = BackUpToSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					if (legit != -1)
 						DrawSimplePrizes(thisObject.what, &itsRect);
 				}
@@ -378,9 +378,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if (QSectRect(&itsRect, &testRect, &whoCares))
 					{
 						if (redraw)
-							dynamicNum = ReBackUpGrease(localNumbers[neighbor], i);
+							dynamicNum = ReBackUpGrease(g_localNumbers[neighbor], i);
 						else
-							dynamicNum = AddGrease(localNumbers[neighbor], i,
+							dynamicNum = AddGrease(g_localNumbers[neighbor], i,
 									itsRect.left, itsRect.top,
 									thisObject.data.c.length, true);
 						if (dynamicNum != -1)
@@ -399,9 +399,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if (QSectRect(&itsRect, &testRect, &whoCares))
 					{
 						if (redraw)
-							dynamicNum = ReBackUpGrease(localNumbers[neighbor], i);
+							dynamicNum = ReBackUpGrease(g_localNumbers[neighbor], i);
 						else
-							dynamicNum = AddGrease(localNumbers[neighbor], i,
+							dynamicNum = AddGrease(g_localNumbers[neighbor], i,
 									itsRect.left, itsRect.top,
 									thisObject.data.c.length, false);
 						if (dynamicNum != -1)
@@ -418,9 +418,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (redraw)
-						legit = ReBackUpSavedMap(&itsRect, localNumbers[neighbor], i);
+						legit = ReBackUpSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					else
-						legit = BackUpToSavedMap(&itsRect, localNumbers[neighbor], i);
+						legit = BackUpToSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					if (legit != -1)
 						DrawFoil(&itsRect);
 				}
@@ -436,15 +436,15 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (redraw)
-						legit = ReBackUpSavedMap(&itsRect, localNumbers[neighbor], i);
+						legit = ReBackUpSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					else
-						legit = BackUpToSavedMap(&itsRect, localNumbers[neighbor], i);
+						legit = BackUpToSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					if (legit != -1)
 					{
 						if (redraw)
-							ReBackUpStar(localNumbers[neighbor], i);
+							ReBackUpStar(g_localNumbers[neighbor], i);
 						else
-							AddStar(localNumbers[neighbor], i, itsRect.left,
+							AddStar(g_localNumbers[neighbor], i, itsRect.left,
 									itsRect.top);
 						DrawSimplePrizes(thisObject.what, &itsRect);
 					}
@@ -459,9 +459,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if ((!redraw) && (neighbor == kCentralRoom))
 					{
 						rectA = itsRect;
-						QOffsetRect(&rectA, -playOriginH, -playOriginV);
+						QOffsetRect(&rectA, -g_playOriginH, -g_playOriginV);
 						dynamicNum = AddDynamicObject(kSparkle, &rectA, &thisObject,
-								localNumbers[neighbor], i, thisObject.data.c.state);
+								g_localNumbers[neighbor], i, thisObject.data.c.state);
 					}
 				}
 				break;
@@ -491,13 +491,13 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kMailboxLf:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				DrawMailboxLeft(&itsRect, playOriginV + VerticalRoomOffset(neighbor));
+				DrawMailboxLeft(&itsRect, g_playOriginV + VerticalRoomOffset(neighbor));
 				break;
 
 				case kMailboxRt:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				DrawMailboxRight(&itsRect, playOriginV + VerticalRoomOffset(neighbor));
+				DrawMailboxRight(&itsRect, g_playOriginV + VerticalRoomOffset(neighbor));
 				break;
 
 				case kFloorTrans:
@@ -522,7 +522,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					obj = (SInt16)thisObject.data.e.who;
 					DrawLightSwitch(&itsRect, GetObjectState(room, obj));
 				}
-				dynamicNum = masterObjects[i].hotNum;
+				dynamicNum = g_masterObjects[i].hotNum;
 				break;
 
 				case kMachineSwitch:
@@ -535,7 +535,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					obj = (SInt16)thisObject.data.e.who;
 					DrawMachineSwitch(&itsRect, GetObjectState(room, obj));
 				}
-				dynamicNum = masterObjects[i].hotNum;
+				dynamicNum = g_masterObjects[i].hotNum;
 				break;
 
 				case kThermostat:
@@ -548,7 +548,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					obj = (SInt16)thisObject.data.e.who;
 					DrawThermostat(&itsRect, GetObjectState(room, obj));
 				}
-				dynamicNum = masterObjects[i].hotNum;
+				dynamicNum = g_masterObjects[i].hotNum;
 				break;
 
 				case kPowerSwitch:
@@ -561,7 +561,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					obj = (SInt16)thisObject.data.e.who;
 					DrawPowerSwitch(&itsRect, GetObjectState(room, obj));
 				}
-				dynamicNum = masterObjects[i].hotNum;
+				dynamicNum = g_masterObjects[i].hotNum;
 				break;
 
 				case kKnifeSwitch:
@@ -574,11 +574,11 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					obj = (SInt16)thisObject.data.e.who;
 					DrawKnifeSwitch(&itsRect, GetObjectState(room, obj));
 				}
-				dynamicNum = masterObjects[i].hotNum;
+				dynamicNum = g_masterObjects[i].hotNum;
 				break;
 
 				case kInvisSwitch:
-				dynamicNum = masterObjects[i].hotNum;
+				dynamicNum = g_masterObjects[i].hotNum;
 				break;
 
 				case kTrigger:
@@ -655,9 +655,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if ((!redraw) && (neighbor == kCentralRoom))
 					{
 						rectA = itsRect;
-						QOffsetRect(&rectA, -playOriginH, -playOriginV);
+						QOffsetRect(&rectA, -g_playOriginH, -g_playOriginV);
 						dynamicNum = AddDynamicObject(kToaster, &rectA, &thisObject,
-								localNumbers[neighbor], i, thisObject.data.g.state);
+								g_localNumbers[neighbor], i, thisObject.data.g.state);
 					}
 				}
 				break;
@@ -671,9 +671,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if (!redraw)
 					{
 						rectA = itsRect;
-						QOffsetRect(&rectA, -playOriginH, -playOriginV);
+						QOffsetRect(&rectA, -g_playOriginH, -g_playOriginV);
 						dynamicNum = AddDynamicObject(kMacPlus, &rectA, &thisObject,
-								localNumbers[neighbor], i, thisObject.data.g.state);
+								g_localNumbers[neighbor], i, thisObject.data.g.state);
 					}
 				}
 				break;
@@ -684,35 +684,35 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 #ifdef COMPILEQT
-					if ((thisMac.hasQT) && (hasMovie) && (neighbor == kCentralRoom) &&
-							(!tvInRoom))
+					if ((g_thisMac.hasQT) && (g_hasMovie) && (neighbor == kCentralRoom) &&
+							(!g_tvInRoom))
 					{
-						whoCares = tvScreen1;
+						whoCares = g_tvScreen1;
 						ZeroRectCorner(&whoCares);
 						OffsetRect(&whoCares, itsRect.left + 17, itsRect.top + 10);
-						GetMovieBox(theMovie, &movieRect);
-						CenterRectInRect(&movieRect, &whoCares);
-						SetMovieBox(theMovie, &movieRect);
+						GetMovieBox(g_theMovie, &g_movieRect);
+						CenterRectInRect(&g_movieRect, &whoCares);
+						SetMovieBox(g_theMovie, &g_movieRect);
 						theRgn = NewRgn();
 						RectRgn(theRgn, &whoCares);
-						SetMovieDisplayClipRgn(theMovie, theRgn);
+						SetMovieDisplayClipRgn(g_theMovie, theRgn);
 						DisposeRgn(theRgn);
-						tvOn = thisObject.data.g.state;
+						g_tvOn = thisObject.data.g.state;
 					}
 #endif
 					DrawTV(&itsRect, thisObject.data.g.state, isLit);
 					if (!redraw)
 					{
 						rectA = itsRect;
-						QOffsetRect(&rectA, -playOriginH, -playOriginV);
+						QOffsetRect(&rectA, -g_playOriginH, -g_playOriginV);
 						dynamicNum = AddDynamicObject(kTV, &rectA, &thisObject,
-								localNumbers[neighbor], i, thisObject.data.g.state);
+								g_localNumbers[neighbor], i, thisObject.data.g.state);
 #ifdef COMPILEQT
-						if ((thisMac.hasQT) && (hasMovie) && (neighbor == kCentralRoom) &&
-								(!tvInRoom))
+						if ((g_thisMac.hasQT) && (g_hasMovie) && (neighbor == kCentralRoom) &&
+								(!g_tvInRoom))
 						{
-							tvWithMovieNumber = dynamicNum;
-							tvInRoom = true;
+							g_tvWithMovieNumber = dynamicNum;
+							g_tvInRoom = true;
 						}
 #endif
 					}
@@ -728,9 +728,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if (!redraw)
 					{
 						rectA = itsRect;
-						QOffsetRect(&rectA, -playOriginH, -playOriginV);
+						QOffsetRect(&rectA, -g_playOriginH, -g_playOriginV);
 						dynamicNum = AddDynamicObject(kCoffee, &rectA, &thisObject,
-								localNumbers[neighbor], i, thisObject.data.g.state);
+								g_localNumbers[neighbor], i, thisObject.data.g.state);
 					}
 				}
 				break;
@@ -745,9 +745,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if (!redraw)
 					{
 						rectA = itsRect;
-						QOffsetRect(&rectA, -playOriginH, -playOriginV);
+						QOffsetRect(&rectA, -g_playOriginH, -g_playOriginV);
 						dynamicNum = AddDynamicObject(kOutlet, &rectA, &thisObject,
-								localNumbers[neighbor], i, thisObject.data.g.state);
+								g_localNumbers[neighbor], i, thisObject.data.g.state);
 					}
 				}
 				break;
@@ -761,9 +761,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if (!redraw)
 					{
 						rectA = itsRect;
-						QOffsetRect(&rectA, -playOriginH, -playOriginV);
+						QOffsetRect(&rectA, -g_playOriginH, -g_playOriginV);
 						dynamicNum = AddDynamicObject(kVCR, &rectA, &thisObject,
-								localNumbers[neighbor], i, thisObject.data.g.state);
+								g_localNumbers[neighbor], i, thisObject.data.g.state);
 					}
 				}
 				break;
@@ -773,13 +773,13 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
-					DrawStereo(&itsRect, isPlayMusicGame, isLit);
+					DrawStereo(&itsRect, g_isPlayMusicGame, isLit);
 					if (!redraw)
 					{
 						rectA = itsRect;
-						QOffsetRect(&rectA, -playOriginH, -playOriginV);
+						QOffsetRect(&rectA, -g_playOriginH, -g_playOriginV);
 						dynamicNum = AddDynamicObject(kStereo, &rectA, &thisObject,
-								localNumbers[neighbor], i, thisObject.data.g.state);
+								g_localNumbers[neighbor], i, thisObject.data.g.state);
 					}
 				}
 				break;
@@ -793,9 +793,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if (!redraw)
 					{
 						rectA = itsRect;
-						QOffsetRect(&rectA, -playOriginH, -playOriginV);
+						QOffsetRect(&rectA, -g_playOriginH, -g_playOriginV);
 						dynamicNum = AddDynamicObject(kMicrowave, &rectA, &thisObject,
-								localNumbers[neighbor], i, thisObject.data.g.state);
+								g_localNumbers[neighbor], i, thisObject.data.g.state);
 					}
 				}
 				break;
@@ -805,9 +805,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				{
 					GetObjectRect(&thisObject, &itsRect);
 					OffsetRectRoomRelative(&itsRect, neighbor);
-					QOffsetRect(&itsRect, -playOriginH, -playOriginV);
+					QOffsetRect(&itsRect, -g_playOriginH, -g_playOriginV);
 					dynamicNum = AddDynamicObject(kBalloon, &itsRect, &thisObject,
-							localNumbers[neighbor], i, thisObject.data.h.state);
+							g_localNumbers[neighbor], i, thisObject.data.h.state);
 				}
 				break;
 
@@ -816,9 +816,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				{
 					GetObjectRect(&thisObject, &itsRect);
 					OffsetRectRoomRelative(&itsRect, neighbor);
-					QOffsetRect(&itsRect, -playOriginH, -playOriginV);
+					QOffsetRect(&itsRect, -g_playOriginH, -g_playOriginV);
 					dynamicNum = AddDynamicObject(kCopterLf, &itsRect, &thisObject,
-							localNumbers[neighbor], i, thisObject.data.h.state);
+							g_localNumbers[neighbor], i, thisObject.data.h.state);
 				}
 				break;
 
@@ -827,9 +827,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				{
 					GetObjectRect(&thisObject, &itsRect);
 					OffsetRectRoomRelative(&itsRect, neighbor);
-					QOffsetRect(&itsRect, -playOriginH, -playOriginV);
+					QOffsetRect(&itsRect, -g_playOriginH, -g_playOriginV);
 					dynamicNum = AddDynamicObject(kCopterRt, &itsRect, &thisObject,
-							localNumbers[neighbor], i, thisObject.data.h.state);
+							g_localNumbers[neighbor], i, thisObject.data.h.state);
 				}
 				break;
 
@@ -838,9 +838,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				{
 					GetObjectRect(&thisObject, &itsRect);
 					OffsetRectRoomRelative(&itsRect, neighbor);
-					QOffsetRect(&itsRect, -playOriginH, -playOriginV);
+					QOffsetRect(&itsRect, -g_playOriginH, -g_playOriginV);
 					dynamicNum = AddDynamicObject(kDartLf, &itsRect, &thisObject,
-							localNumbers[neighbor], i, thisObject.data.h.state);
+							g_localNumbers[neighbor], i, thisObject.data.h.state);
 				}
 				break;
 
@@ -849,9 +849,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				{
 					GetObjectRect(&thisObject, &itsRect);
 					OffsetRectRoomRelative(&itsRect, neighbor);
-					QOffsetRect(&itsRect, -playOriginH, -playOriginV);
+					QOffsetRect(&itsRect, -g_playOriginH, -g_playOriginV);
 					dynamicNum = AddDynamicObject(kDartRt, &itsRect, &thisObject,
-							localNumbers[neighbor], i, thisObject.data.h.state);
+							g_localNumbers[neighbor], i, thisObject.data.h.state);
 				}
 				break;
 
@@ -860,9 +860,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				{
 					GetObjectRect(&thisObject, &itsRect);
 					OffsetRectRoomRelative(&itsRect, neighbor);
-					QOffsetRect(&itsRect, -playOriginH, -playOriginV);
+					QOffsetRect(&itsRect, -g_playOriginH, -g_playOriginV);
 					dynamicNum = AddDynamicObject(kBall, &itsRect, &thisObject,
-							localNumbers[neighbor], i, thisObject.data.h.state);
+							g_localNumbers[neighbor], i, thisObject.data.h.state);
 				}
 				break;
 
@@ -875,9 +875,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if ((!redraw) && (neighbor == kCentralRoom))
 					{
 						rectA = itsRect;
-						QOffsetRect(&rectA, -playOriginH, -playOriginV);
+						QOffsetRect(&rectA, -g_playOriginH, -g_playOriginV);
 						dynamicNum = AddDynamicObject(kDrip, &rectA, &thisObject,
-								localNumbers[neighbor], i, thisObject.data.h.state);
+								g_localNumbers[neighbor], i, thisObject.data.h.state);
 					}
 				}
 				break;
@@ -891,9 +891,9 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					if ((!redraw) && (neighbor == kCentralRoom))
 					{
 						rectA = itsRect;
-						QOffsetRect(&rectA, -playOriginH, -playOriginV);
+						QOffsetRect(&rectA, -g_playOriginH, -g_playOriginV);
 						dynamicNum = AddDynamicObject(kFish, &rectA, &thisObject,
-								localNumbers[neighbor], i, thisObject.data.h.state);
+								g_localNumbers[neighbor], i, thisObject.data.h.state);
 					}
 				}
 				break;
@@ -959,11 +959,11 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 
 		if (!redraw)									// set up links
 		{
-			for (n = 0; n < numMasterObjects; n++)
+			for (n = 0; n < g_numMasterObjects; n++)
 			{
-				if ((masterObjects[n].objectNum == i) &&
-						(masterObjects[n].roomNum == localNumbers[neighbor]))
-					masterObjects[n].dynaNum = dynamicNum;
+				if ((g_masterObjects[n].objectNum == i) &&
+						(g_masterObjects[n].roomNum == g_localNumbers[neighbor]))
+					g_masterObjects[n].dynaNum = dynamicNum;
 			}
 		}
 	}

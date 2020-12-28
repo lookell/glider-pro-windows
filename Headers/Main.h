@@ -9,10 +9,10 @@
 
 #include "MacTypes.h"
 
-extern Boolean quitting;
-extern Boolean quickerTransitions;
-extern Boolean isUseSecondScreen;
-extern UInt16 isViewportWidth;
-extern UInt16 isViewportHeight;
+extern Boolean g_quitting;
+extern Boolean g_quickerTransitions;
+extern Boolean g_isUseSecondScreen;
+extern UInt16 g_isViewportWidth;
+extern UInt16 g_isViewportHeight;
 
 #endif

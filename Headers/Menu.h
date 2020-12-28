@@ -11,17 +11,17 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern HMENU theMenuBar;
-extern HMENU appleMenu;
-extern HMENU gameMenu;
-extern HMENU optionsMenu;
-extern HMENU houseMenu;
-extern LPWSTR appleMenuTitle;
-extern LPWSTR gameMenuTitle;
-extern LPWSTR optionsMenuTitle;
-extern LPWSTR houseMenuTitle;
-extern Boolean menusUp;
-extern Boolean resumedSavedGame;
+extern HMENU g_theMenuBar;
+extern HMENU g_appleMenu;
+extern HMENU g_gameMenu;
+extern HMENU g_optionsMenu;
+extern HMENU g_houseMenu;
+extern LPWSTR g_appleMenuTitle;
+extern LPWSTR g_gameMenuTitle;
+extern LPWSTR g_optionsMenuTitle;
+extern LPWSTR g_houseMenuTitle;
+extern Boolean g_menusUp;
+extern Boolean g_resumedSavedGame;
 
 void UpdateClipboardMenus (void);
 void UpdateMenus (Boolean newMode);

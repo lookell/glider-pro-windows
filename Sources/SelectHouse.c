@@ -26,16 +26,16 @@ void SortHouseList (void);
 BOOL GetHouseFolderPath (LPWSTR buffer, DWORD cch);
 void DoDirSearch (HWND ownerWindow);
 
-houseSpecPtr theHousesSpecs;
-SInt16 housesFound;
-SInt16 thisHouseIndex;
-SInt16 maxFiles;
-SInt16 willMaxFiles;
-SInt16 demoHouseIndex;
+houseSpecPtr g_theHousesSpecs;
+SInt16 g_housesFound;
+SInt16 g_thisHouseIndex;
+SInt16 g_maxFiles;
+SInt16 g_willMaxFiles;
+SInt16 g_demoHouseIndex;
 
-static houseSpec extraHouseSpecs[kMaxExtraHouses];
-static SInt16 numExtraHouses = 0;
-static HIMAGELIST houseIconImageList;
+static houseSpec g_extraHouseSpecs[kMaxExtraHouses];
+static SInt16 g_numExtraHouses = 0;
+static HIMAGELIST g_houseIconImageList;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  InitLoadDialog
@@ -56,14 +56,14 @@ BOOL InitLoadDialog (HWND hDlg)
 	}
 
 	SendMessage(houseListView, WM_SETREDRAW, FALSE, 0);
-	ListView_SetImageList(houseListView, houseIconImageList, LVSIL_NORMAL);
-	for (i = 0; i < housesFound; i++)
+	ListView_SetImageList(houseListView, g_houseIconImageList, LVSIL_NORMAL);
+	for (i = 0; i < g_housesFound; i++)
 	{
 		lvItem.mask = LVIF_IMAGE | LVIF_PARAM | LVIF_TEXT;
-		lvItem.iItem = housesFound; // insert at the end
+		lvItem.iItem = g_housesFound; // insert at the end
 		lvItem.iSubItem = 0;
-		lvItem.pszText = theHousesSpecs[i].houseName;
-		lvItem.iImage = theHousesSpecs[i].iconIndex;
+		lvItem.pszText = g_theHousesSpecs[i].houseName;
+		lvItem.iImage = g_theHousesSpecs[i].iconIndex;
 		lvItem.lParam = i;
 		ListView_InsertItem(houseListView, &lvItem);
 	}
@@ -71,7 +71,7 @@ BOOL InitLoadDialog (HWND hDlg)
 
 	// automatically select and focus the currently loaded house
 	lvFindInfo.flags = LVFI_PARAM;
-	lvFindInfo.lParam = thisHouseIndex;
+	lvFindInfo.lParam = g_thisHouseIndex;
 	i = ListView_FindItem(houseListView, -1, &lvFindInfo);
 	if (i < 0)
 	{
@@ -110,11 +110,11 @@ INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				lvItem.iItem = selectedIndex;
 				lvItem.iSubItem = 0;
 				ListView_GetItem(houseListView, &lvItem);
-				if (lvItem.lParam != thisHouseIndex)
+				if (lvItem.lParam != g_thisHouseIndex)
 				{
-					thisHouseIndex = (SInt16)lvItem.lParam;
+					g_thisHouseIndex = (SInt16)lvItem.lParam;
 					whoCares = CloseHouse(hDlg);
-					PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
+					PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, g_thisHouseName);
 					if (OpenHouse(hDlg))
 						whoCares = ReadHouse(hDlg);
 				}
@@ -171,32 +171,32 @@ void SortHouseList (void)
 	SInt16		i, h, whosFirst;
 
 	i = 0;			// remove exact duplicate houses
-	while (i < housesFound)
+	while (i < g_housesFound)
 	{
 		h = i + 1;
-		while (h < housesFound)
+		while (h < g_housesFound)
 		{
-			if (PasStringEqual(theHousesSpecs[i].name, theHousesSpecs[h].name, true))
+			if (PasStringEqual(g_theHousesSpecs[i].name, g_theHousesSpecs[h].name, true))
 			{
-				theHousesSpecs[h] = theHousesSpecs[housesFound - 1];
-				housesFound--;
+				g_theHousesSpecs[h] = g_theHousesSpecs[g_housesFound - 1];
+				g_housesFound--;
 			}
 			h++;
 		}
 		i++;
 	}
 
-	for (i = 0; i < housesFound - 1; i++)
+	for (i = 0; i < g_housesFound - 1; i++)
 	{
-		for (h = 0; h < (housesFound - i - 1); h++)
+		for (h = 0; h < (g_housesFound - i - 1); h++)
 		{
-			whosFirst = WhichStringFirst(theHousesSpecs[h].name,
-					theHousesSpecs[h + 1].name);
+			whosFirst = WhichStringFirst(g_theHousesSpecs[h].name,
+					g_theHousesSpecs[h + 1].name);
 			if (whosFirst == 1)
 			{
-				tempSpec = theHousesSpecs[h + 1];
-				theHousesSpecs[h + 1] = theHousesSpecs[h];
-				theHousesSpecs[h] = tempSpec;
+				tempSpec = g_theHousesSpecs[h + 1];
+				g_theHousesSpecs[h + 1] = g_theHousesSpecs[h];
+				g_theHousesSpecs[h] = tempSpec;
 			}
 		}
 	}
@@ -262,8 +262,8 @@ void DoDirSearch (HWND ownerWindow)
 	{
 		RedAlert(kErrFailedResourceLoad);
 	}
-	houseIconImageList = ImageList_Create(cxIcon, cyIcon, ILC_COLOR32 | ILC_MASK, 0, 0);
-	ImageList_AddIcon(houseIconImageList, houseIcon);
+	g_houseIconImageList = ImageList_Create(cxIcon, cyIcon, ILC_COLOR32 | ILC_MASK, 0, 0);
+	ImageList_AddIcon(g_houseIconImageList, houseIcon);
 
 	currentDir = 0;
 	numDirs = 1;
@@ -306,45 +306,45 @@ void DoDirSearch (HWND ownerWindow)
 			extPtr = wcsrchr(ffd.cFileName, L'.');
 			if (extPtr == NULL)
 				extPtr = ffd.cFileName;
-			if ((housesFound < maxFiles) && (wcscmp(extPtr, L".glh") == 0))
+			if ((g_housesFound < g_maxFiles) && (wcscmp(extPtr, L".glh") == 0))
 			{
-				hr = StringCchPrintf(theHousesSpecs[housesFound].path,
-						ARRAYSIZE(theHousesSpecs[housesFound].path),
+				hr = StringCchPrintf(g_theHousesSpecs[g_housesFound].path,
+						ARRAYSIZE(g_theHousesSpecs[g_housesFound].path),
 						L"%s\\%s", pathString, ffd.cFileName);
 				if (SUCCEEDED(hr))
 				{
 					*extPtr = L'\0';
-					hr = StringCchCopy(theHousesSpecs[housesFound].houseName,
-							ARRAYSIZE(theHousesSpecs[housesFound].houseName),
+					hr = StringCchCopy(g_theHousesSpecs[g_housesFound].houseName,
+							ARRAYSIZE(g_theHousesSpecs[g_housesFound].houseName),
 							ffd.cFileName);
 					if (SUCCEEDED(hr) || hr == STRSAFE_E_INSUFFICIENT_BUFFER)
 					{
 						// STRSAFE_E_INSUFFICIENT_BUFFER is okay. Just means that the
 						// house's name will be truncated on display.
-						MacFromWinString(theHousesSpecs[housesFound].name,
-								ARRAYSIZE(theHousesSpecs[housesFound].name),
-								theHousesSpecs[housesFound].houseName);
+						MacFromWinString(g_theHousesSpecs[g_housesFound].name,
+								ARRAYSIZE(g_theHousesSpecs[g_housesFound].name),
+								g_theHousesSpecs[g_housesFound].houseName);
 
 						// Extract the house's icon.
-						houseFile = Gp_LoadHouseFile(theHousesSpecs[housesFound].path);
+						houseFile = Gp_LoadHouseFile(g_theHousesSpecs[g_housesFound].path);
 						if (houseFile != NULL)
 						{
 							houseIcon = Gp_LoadHouseIcon(houseFile, cxIcon, cyIcon);
 							if (houseIcon != NULL)
 							{
-								theHousesSpecs[housesFound].iconIndex =
-									ImageList_AddIcon(houseIconImageList, houseIcon);
+								g_theHousesSpecs[g_housesFound].iconIndex =
+									ImageList_AddIcon(g_houseIconImageList, houseIcon);
 								DestroyIcon(houseIcon);
 							}
 							else
 							{
-								theHousesSpecs[housesFound].iconIndex = 0;
+								g_theHousesSpecs[g_housesFound].iconIndex = 0;
 							}
-							theHousesSpecs[housesFound].readOnly = Gp_HouseFileReadOnly(houseFile);
+							g_theHousesSpecs[g_housesFound].readOnly = Gp_HouseFileReadOnly(houseFile);
 							// TODO: QuickTime movie support (or equivalent)
-							theHousesSpecs[housesFound].hasMovie = false;
+							g_theHousesSpecs[g_housesFound].hasMovie = false;
 							Gp_UnloadHouseFile(houseFile);
-							housesFound++;
+							g_housesFound++;
 						}
 					}
 				}
@@ -365,35 +365,35 @@ void DoDirSearch (HWND ownerWindow)
 		}
 	}
 
-	if (housesFound < 1)
+	if (g_housesFound < 1)
 	{
-		thisHouseIndex = -1;
-		demoHouseIndex = -1;
+		g_thisHouseIndex = -1;
+		g_demoHouseIndex = -1;
 		YellowAlert(ownerWindow, kYellowNoHouses, 0);
 	}
 	else
 	{
 		SortHouseList();
-		thisHouseIndex = 0;
-		for (i = 0; i < housesFound; i++)
+		g_thisHouseIndex = 0;
+		for (i = 0; i < g_housesFound; i++)
 		{
-			if (PasStringEqual(theHousesSpecs[i].name, thisHouseName, false))
+			if (PasStringEqual(g_theHousesSpecs[i].name, g_thisHouseName, false))
 			{
-				thisHouseIndex = i;
+				g_thisHouseIndex = i;
 				break;
 			}
 		}
-		PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
+		PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, g_thisHouseName);
 
-		demoHouseIndex = -1;
-		for (i = 0; i < housesFound; i++)
+		g_demoHouseIndex = -1;
+		for (i = 0; i < g_housesFound; i++)
 		{
 			Str32 demoHouseName;
 
 			PasStringCopyC("Demo House", demoHouseName);
-			if (PasStringEqual(theHousesSpecs[i].name, demoHouseName, false))
+			if (PasStringEqual(g_theHousesSpecs[i].name, demoHouseName, false))
 			{
-				demoHouseIndex = i;
+				g_demoHouseIndex = i;
 				break;
 			}
 		}
@@ -406,18 +406,18 @@ void BuildHouseList (HWND ownerWindow)
 {
 	SInt16 i;
 
-	if (houseIconImageList != NULL)			// destroy icons from previous search
+	if (g_houseIconImageList != NULL)			// destroy icons from previous search
 	{
-		ImageList_Destroy(houseIconImageList);
-		houseIconImageList = NULL;
+		ImageList_Destroy(g_houseIconImageList);
+		g_houseIconImageList = NULL;
 	}
-	housesFound = 0;						// zero the number of houses found
-	for (i = 0; i < numExtraHouses; i++)	// 1st, insert extra houses into list
+	g_housesFound = 0;						// zero the number of houses found
+	for (i = 0; i < g_numExtraHouses; i++)	// 1st, insert extra houses into list
 	{
-		if (housesFound < maxFiles)
+		if (g_housesFound < g_maxFiles)
 		{
-			theHousesSpecs[housesFound] = extraHouseSpecs[i];
-			housesFound++;
+			g_theHousesSpecs[g_housesFound] = g_extraHouseSpecs[i];
+			g_housesFound++;
 		}
 	}
 	DoDirSearch(ownerWindow);				// now, search folders for the rest
@@ -427,9 +427,9 @@ void BuildHouseList (HWND ownerWindow)
 
 void AddExtraHouse (const houseSpec *newHouse)
 {
-	if (numExtraHouses >= kMaxExtraHouses)
+	if (g_numExtraHouses >= kMaxExtraHouses)
 		return;
 
-	extraHouseSpecs[numExtraHouses] = *newHouse;
-	numExtraHouses++;
+	g_extraHouseSpecs[g_numExtraHouses] = *newHouse;
+	g_numExtraHouses++;
 }

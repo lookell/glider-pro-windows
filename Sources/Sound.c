@@ -34,13 +34,13 @@ void DumpBufferSounds (void);
 OSErr OpenSoundChannels (void);
 OSErr CloseSoundChannels (void);
 
-Boolean dontLoadSounds;
-Boolean isSoundOn;
+Boolean g_dontLoadSounds;
+Boolean g_isSoundOn;
 
-static SoundOutput soundOutputs[kNumSoundChannels];
-static SoundOutput triggerSoundOutput;
-static WaveData theSoundData[kMaxSounds];
-static Boolean failedSound;
+static SoundOutput g_soundOutputs[kNumSoundChannels];
+static SoundOutput g_triggerSoundOutput;
+static WaveData g_theSoundData[kMaxSounds];
+static Boolean g_failedSound;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  PlayPrioritySound
@@ -51,37 +51,37 @@ void PlayPrioritySound (SInt16 which, SInt16 priority)
 	SInt16 lowestPriority;
 	SInt16 i;
 
-	if (failedSound || dontLoadSounds)
+	if (g_failedSound || g_dontLoadSounds)
 	{
 		return;
 	}
 
 	if (priority == kTriggerPriority)
 	{
-		CheckSoundOutput(&triggerSoundOutput);
-		if (triggerSoundOutput.priority != kTriggerPriority)
+		CheckSoundOutput(&g_triggerSoundOutput);
+		if (g_triggerSoundOutput.priority != kTriggerPriority)
 		{
-			Gp_PlaySound(&triggerSoundOutput, which, priority);
+			Gp_PlaySound(&g_triggerSoundOutput, which, priority);
 		}
 		return;
 	}
 
-	CheckSoundOutput(&soundOutputs[0]);
+	CheckSoundOutput(&g_soundOutputs[0]);
 	whosLowest = 0;
-	lowestPriority = soundOutputs[0].priority;
+	lowestPriority = g_soundOutputs[0].priority;
 	for (i = 1; i < kNumSoundChannels; i++)
 	{
-		CheckSoundOutput(&soundOutputs[i]);
-		if (soundOutputs[i].priority < lowestPriority)
+		CheckSoundOutput(&g_soundOutputs[i]);
+		if (g_soundOutputs[i].priority < lowestPriority)
 		{
 			whosLowest = i;
-			lowestPriority = soundOutputs[whosLowest].priority;
+			lowestPriority = g_soundOutputs[whosLowest].priority;
 		}
 	}
 
 	if (priority >= lowestPriority)
 	{
-		Gp_PlaySound(&soundOutputs[whosLowest], which, priority);
+		Gp_PlaySound(&g_soundOutputs[whosLowest], which, priority);
 	}
 }
 
@@ -89,9 +89,9 @@ void PlayPrioritySound (SInt16 which, SInt16 priority)
 
 void FlushAnyTriggerPlaying (void)
 {
-	if (triggerSoundOutput.channel != NULL)
+	if (g_triggerSoundOutput.channel != NULL)
 	{
-		AudioChannel_ClearAudio(triggerSoundOutput.channel);
+		AudioChannel_ClearAudio(g_triggerSoundOutput.channel);
 	}
 }
 
@@ -101,7 +101,7 @@ void Gp_PlaySound (SoundOutput *output, SInt16 soundID, SInt16 priority)
 {
 	AudioEntry entry;
 
-	if (failedSound || dontLoadSounds)
+	if (g_failedSound || g_dontLoadSounds)
 	{
 		return;
 	}
@@ -110,12 +110,12 @@ void Gp_PlaySound (SoundOutput *output, SInt16 soundID, SInt16 priority)
 		return;
 	}
 
-	if (isSoundOn)
+	if (g_isSoundOn)
 	{
 		AudioChannel_ClearAudio(output->channel);
 
-		entry.buffer = theSoundData[soundID].dataBytes;
-		entry.length = theSoundData[soundID].dataLength;
+		entry.buffer = g_theSoundData[soundID].dataBytes;
+		entry.length = g_theSoundData[soundID].dataLength;
 		entry.endingCallback = NULL;
 		entry.destroyCallback = NULL;
 		entry.userdata = NULL;
@@ -141,25 +141,25 @@ void CheckSoundOutput (SoundOutput *output)
 
 OSErr LoadTriggerSound (SInt16 soundID)
 {
-	if ((dontLoadSounds) || (theSoundData[kTriggerSound].dataBytes != NULL))
+	if ((g_dontLoadSounds) || (g_theSoundData[kTriggerSound].dataBytes != NULL))
 	{
 		return -1;
 	}
 
 //	FlushAnyTriggerPlaying();
 
-	if (FAILED(Gp_LoadHouseSound(g_theHouseFile, soundID, &theSoundData[kTriggerSound])))
+	if (FAILED(Gp_LoadHouseSound(g_theHouseFile, soundID, &g_theSoundData[kTriggerSound])))
 	{
-		ZeroMemory(&theSoundData[kTriggerSound], sizeof(theSoundData[kTriggerSound]));
+		ZeroMemory(&g_theSoundData[kTriggerSound], sizeof(g_theSoundData[kTriggerSound]));
 		return -1;
 	}
 
-	triggerSoundOutput.channel = AudioChannel_Open(&theSoundData[kTriggerSound].format);
-	if (triggerSoundOutput.channel == NULL)
+	g_triggerSoundOutput.channel = AudioChannel_Open(&g_theSoundData[kTriggerSound].format);
+	if (g_triggerSoundOutput.channel == NULL)
 	{
-		free((void *)theSoundData[kTriggerSound].dataBytes);
-		theSoundData[kTriggerSound].dataBytes = NULL;
-		theSoundData[kTriggerSound].dataLength = 0;
+		free((void *)g_theSoundData[kTriggerSound].dataBytes);
+		g_theSoundData[kTriggerSound].dataBytes = NULL;
+		g_theSoundData[kTriggerSound].dataLength = 0;
 		return -1;
 	}
 
@@ -170,16 +170,16 @@ OSErr LoadTriggerSound (SInt16 soundID)
 
 void DumpTriggerSound (void)
 {
-	if (triggerSoundOutput.channel != NULL)
+	if (g_triggerSoundOutput.channel != NULL)
 	{
-		AudioChannel_Close(triggerSoundOutput.channel);
-		triggerSoundOutput.channel = NULL;
-		triggerSoundOutput.priority = 0;
-		triggerSoundOutput.soundID = kNoSoundPlaying;
+		AudioChannel_Close(g_triggerSoundOutput.channel);
+		g_triggerSoundOutput.channel = NULL;
+		g_triggerSoundOutput.priority = 0;
+		g_triggerSoundOutput.soundID = kNoSoundPlaying;
 	}
-	free((void *)theSoundData[kTriggerSound].dataBytes);
-	theSoundData[kTriggerSound].dataBytes = NULL;
-	theSoundData[kTriggerSound].dataLength = 0;
+	free((void *)g_theSoundData[kTriggerSound].dataBytes);
+	g_theSoundData[kTriggerSound].dataBytes = NULL;
+	g_theSoundData[kTriggerSound].dataLength = 0;
 }
 
 //--------------------------------------------------------------  LoadBufferSounds
@@ -192,7 +192,7 @@ OSErr LoadBufferSounds (void)
 
 	for (i = 0; i < kMaxSounds - 1; i++)
 	{
-		hr = Gp_LoadBuiltInSound(i + kBaseBufferSoundID, &theSoundData[i]);
+		hr = Gp_LoadBuiltInSound(i + kBaseBufferSoundID, &g_theSoundData[i]);
 		if (FAILED(hr))
 		{
 			return -1;
@@ -200,25 +200,25 @@ OSErr LoadBufferSounds (void)
 	}
 
 	// Make sure that all built-in sounds have the same format
-	expectedFormat = theSoundData[0].format;
+	expectedFormat = g_theSoundData[0].format;
 	for (i = 0; i < kMaxSounds - 1; i++)
 	{
-		if (theSoundData[i].format.channels != expectedFormat.channels)
+		if (g_theSoundData[i].format.channels != expectedFormat.channels)
 		{
 			return -2;
 		}
-		if (theSoundData[i].format.bitsPerSample != expectedFormat.bitsPerSample)
+		if (g_theSoundData[i].format.bitsPerSample != expectedFormat.bitsPerSample)
 		{
 			return -2;
 		}
-		if (theSoundData[i].format.samplesPerSec != expectedFormat.samplesPerSec)
+		if (g_theSoundData[i].format.samplesPerSec != expectedFormat.samplesPerSec)
 		{
 			return -2;
 		}
 	}
 
-	theSoundData[kMaxSounds - 1].dataBytes = NULL;
-	theSoundData[kMaxSounds - 1].dataLength = 0;
+	g_theSoundData[kMaxSounds - 1].dataBytes = NULL;
+	g_theSoundData[kMaxSounds - 1].dataLength = 0;
 
 	return noErr;
 }
@@ -231,9 +231,9 @@ void DumpBufferSounds (void)
 
 	for (i = 0; i < kMaxSounds - 1; i++)
 	{
-		free((void *)theSoundData[i].dataBytes);
-		theSoundData[i].dataBytes = NULL;
-		theSoundData[i].dataLength = 0;
+		free((void *)g_theSoundData[i].dataBytes);
+		g_theSoundData[i].dataBytes = NULL;
+		g_theSoundData[i].dataLength = 0;
 	}
 }
 
@@ -248,17 +248,17 @@ OSErr OpenSoundChannels (void)
 
 	for (i = 0; i < kNumSoundChannels; i++)
 	{
-		soundOutputs[i].channel = AudioChannel_Open(&theSoundData[0].format);
-		if (soundOutputs[i].channel == NULL)
+		g_soundOutputs[i].channel = AudioChannel_Open(&g_theSoundData[0].format);
+		if (g_soundOutputs[i].channel == NULL)
 		{
 			theErr = -5;
 			break;
 		}
 	}
 
-	triggerSoundOutput.channel = NULL;
-	triggerSoundOutput.priority = 0;
-	triggerSoundOutput.soundID = kNoSoundPlaying;
+	g_triggerSoundOutput.channel = NULL;
+	g_triggerSoundOutput.priority = 0;
+	g_triggerSoundOutput.soundID = kNoSoundPlaying;
 
 	if (theErr != noErr)
 	{
@@ -279,10 +279,10 @@ OSErr CloseSoundChannels (void)
 
 	for (i = 0; i < kNumSoundChannels; i++)
 	{
-		if (soundOutputs[i].channel != NULL)
+		if (g_soundOutputs[i].channel != NULL)
 		{
-			AudioChannel_Close(soundOutputs[i].channel);
-			soundOutputs[i].channel = NULL;
+			AudioChannel_Close(g_soundOutputs[i].channel);
+			g_soundOutputs[i].channel = NULL;
 		}
 	}
 
@@ -296,34 +296,34 @@ void InitSound (HWND ownerWindow)
 	OSErr		theErr;
 	SInt16		i;
 
-	if (dontLoadSounds)
+	if (g_dontLoadSounds)
 	{
 		return;
 	}
 
-	failedSound = false;
+	g_failedSound = false;
 
 	for (i = 0; i < kNumSoundChannels; i++)
 	{
-		soundOutputs[i].channel = NULL;
-		soundOutputs[i].priority = 0;
-		soundOutputs[i].soundID = kNoSoundPlaying;
+		g_soundOutputs[i].channel = NULL;
+		g_soundOutputs[i].priority = 0;
+		g_soundOutputs[i].soundID = kNoSoundPlaying;
 	}
 
 	theErr = LoadBufferSounds();
 	if (theErr != noErr)
 	{
 		YellowAlert(ownerWindow, kYellowFailedSound, theErr);
-		failedSound = true;
+		g_failedSound = true;
 	}
 
-	if (!failedSound)
+	if (!g_failedSound)
 	{
 		theErr = OpenSoundChannels();
 		if (theErr != noErr)
 		{
 			YellowAlert(ownerWindow, kYellowFailedSound, theErr);
-			failedSound = true;
+			g_failedSound = true;
 		}
 	}
 }
@@ -332,7 +332,7 @@ void InitSound (HWND ownerWindow)
 
 void KillSound (void)
 {
-	if (dontLoadSounds)
+	if (g_dontLoadSounds)
 	{
 		return;
 	}

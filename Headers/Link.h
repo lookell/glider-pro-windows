@@ -10,13 +10,13 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern HWND linkWindow;
-extern SInt16 isLinkH;
-extern SInt16 isLinkV;
-extern SInt16 linkRoom;
-extern SInt16 linkType;
-extern Byte linkObject;
-extern Boolean linkerIsSwitch;
+extern HWND g_linkWindow;
+extern SInt16 g_isLinkH;
+extern SInt16 g_isLinkV;
+extern SInt16 g_linkRoom;
+extern SInt16 g_linkType;
+extern Byte g_linkObject;
+extern Boolean g_linkerIsSwitch;
 
 SInt16 MergeFloorSuite (SInt16 floor, SInt16 suite);
 SInt16 MergeFloorSuiteVer2 (SInt16 floor, SInt16 suite);

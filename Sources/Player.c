@@ -51,22 +51,22 @@ void MoveGliderShredding (gliderPtr thisGlider);
 void HandleIdleGlider (gliderPtr thisGlider);
 void OffAMortal (gliderPtr thisGlider);
 
-gliderType theGlider;
-gliderType theGlider2;
-Rect shadowSrcRect;
-HDC shadowSrcMap;
-HDC shadowMaskMap;
-Rect shadowSrc[kNumShadowSrcRects];
-Rect gliderSrc[kNumGliderSrcRects];
-Rect transRect;
-SInt32 theScore;
-SInt16 fadeInSequence[kLastFadeSequence];
-SInt16 rightClip;
-SInt16 leftClip;
-SInt16 transRoom;
-Boolean shadowVisible;
-Boolean onePlayerLeft;
-Boolean playerDead;
+gliderType g_theGlider;
+gliderType g_theGlider2;
+Rect g_shadowSrcRect;
+HDC g_shadowSrcMap;
+HDC g_shadowMaskMap;
+Rect g_shadowSrc[kNumShadowSrcRects];
+Rect g_gliderSrc[kNumGliderSrcRects];
+Rect g_transRect;
+SInt32 g_theScore;
+SInt16 g_fadeInSequence[kLastFadeSequence];
+SInt16 g_rightClip;
+SInt16 g_leftClip;
+SInt16 g_transRoom;
+Boolean g_shadowVisible;
+Boolean g_onePlayerLeft;
+Boolean g_playerDead;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  MoveGlider
@@ -164,21 +164,21 @@ void MoveGliderNormal (gliderPtr thisGlider)
 	{
 		if (thisGlider->sliding)
 		{
-			thisGlider->src = gliderSrc[30];
-			thisGlider->mask = gliderSrc[30];
+			thisGlider->src = g_gliderSrc[30];
+			thisGlider->mask = g_gliderSrc[30];
 			thisGlider->sliding = false;
 		}
 		else
 		{
 			if (thisGlider->tipped)
 			{
-				thisGlider->src = gliderSrc[3];
-				thisGlider->mask = gliderSrc[3];
+				thisGlider->src = g_gliderSrc[3];
+				thisGlider->mask = g_gliderSrc[3];
 			}
 			else
 			{
-				thisGlider->src = gliderSrc[2];
-				thisGlider->mask = gliderSrc[2];
+				thisGlider->src = g_gliderSrc[2];
+				thisGlider->mask = g_gliderSrc[2];
 			}
 		}
 	}
@@ -186,21 +186,21 @@ void MoveGliderNormal (gliderPtr thisGlider)
 	{
 		if (thisGlider->sliding)
 		{
-			thisGlider->src = gliderSrc[29];
-			thisGlider->mask = gliderSrc[29];
+			thisGlider->src = g_gliderSrc[29];
+			thisGlider->mask = g_gliderSrc[29];
 			thisGlider->sliding = false;
 		}
 		else
 		{
 			if (thisGlider->tipped)
 			{
-				thisGlider->src = gliderSrc[1];
-				thisGlider->mask = gliderSrc[1];
+				thisGlider->src = g_gliderSrc[1];
+				thisGlider->mask = g_gliderSrc[1];
 			}
 			else
 			{
-				thisGlider->src = gliderSrc[0];
-				thisGlider->mask = gliderSrc[0];
+				thisGlider->src = g_gliderSrc[0];
+				thisGlider->mask = g_gliderSrc[0];
 			}
 		}
 	}
@@ -218,13 +218,13 @@ void MoveGliderBurning (gliderPtr thisGlider)
 
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = gliderSrc[25 + thisGlider->frame];
-		thisGlider->mask = gliderSrc[25 + thisGlider->frame];
+		thisGlider->src = g_gliderSrc[25 + thisGlider->frame];
+		thisGlider->mask = g_gliderSrc[25 + thisGlider->frame];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[21 + thisGlider->frame];
-		thisGlider->mask = gliderSrc[21 + thisGlider->frame];
+		thisGlider->src = g_gliderSrc[21 + thisGlider->frame];
+		thisGlider->mask = g_gliderSrc[21 + thisGlider->frame];
 	}
 
 	thisGlider->wasMode--;
@@ -253,15 +253,15 @@ void FadeGliderIn (gliderPtr thisGlider)
 	{
 		if (thisGlider->facing == kFaceLeft)
 		{
-			thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame] +
+			thisGlider->src = g_gliderSrc[g_fadeInSequence[thisGlider->frame] +
 					kLeftFadeOffset];
-			thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame] +
+			thisGlider->mask = g_gliderSrc[g_fadeInSequence[thisGlider->frame] +
 					kLeftFadeOffset];
 		}
 		else
 		{
-			thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame]];
-			thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
+			thisGlider->src = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
+			thisGlider->mask = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
 		}
 	}
 }
@@ -283,15 +283,15 @@ void TransportGliderIn (gliderPtr thisGlider)
 	{
 		if (thisGlider->facing == kFaceLeft)
 		{
-			thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame] +
+			thisGlider->src = g_gliderSrc[g_fadeInSequence[thisGlider->frame] +
 					kLeftFadeOffset];
-			thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame] +
+			thisGlider->mask = g_gliderSrc[g_fadeInSequence[thisGlider->frame] +
 					kLeftFadeOffset];
 		}
 		else
 		{
-			thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame]];
-			thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
+			thisGlider->src = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
+			thisGlider->mask = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
 		}
 	}
 }
@@ -307,15 +307,15 @@ void FadeGliderOut (gliderPtr thisGlider)
 	{
 		if (thisGlider->facing == kFaceLeft)
 		{
-			thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame] +
+			thisGlider->src = g_gliderSrc[g_fadeInSequence[thisGlider->frame] +
 					kLeftFadeOffset];
-			thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame] +
+			thisGlider->mask = g_gliderSrc[g_fadeInSequence[thisGlider->frame] +
 					kLeftFadeOffset];
 		}
 		else
 		{
-			thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame]];
-			thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
+			thisGlider->src = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
+			thisGlider->mask = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
 		}
 	}
 }
@@ -329,13 +329,13 @@ void MoveGliderUpStairs (gliderPtr thisGlider)
 
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = gliderSrc[2];
-		thisGlider->mask = gliderSrc[2];
+		thisGlider->src = g_gliderSrc[2];
+		thisGlider->mask = g_gliderSrc[2];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[1];
-		thisGlider->mask = gliderSrc[1];
+		thisGlider->src = g_gliderSrc[1];
+		thisGlider->mask = g_gliderSrc[1];
 	}
 
 	thisGlider->whole.bottom = thisGlider->dest.bottom;
@@ -351,26 +351,26 @@ void MoveGliderUpStairs (gliderPtr thisGlider)
 			thisGlider->dest.top = thisGlider->dest.bottom;
 			thisGlider->src.top = thisGlider->src.bottom;
 			thisGlider->mask.top = thisGlider->mask.bottom;
-			takingTheStairs = true;
-			if (twoPlayerGame)
+			g_takingTheStairs = true;
+			if (g_twoPlayerGame)
 			{
-				if (onePlayerLeft)
+				if (g_onePlayerLeft)
 				{
-					if (playerDead == kPlayer1)
-						MoveRoomToRoom(&theGlider2, kAbove);
+					if (g_playerDead == kPlayer1)
+						MoveRoomToRoom(&g_theGlider2, kAbove);
 					else
-						MoveRoomToRoom(&theGlider, kAbove);
+						MoveRoomToRoom(&g_theGlider, kAbove);
 				}
 				else
 				{
-					if (otherPlayerEscaped == kPlayerEscapedUpStairs)
+					if (g_otherPlayerEscaped == kPlayerEscapedUpStairs)
 					{
-						otherPlayerEscaped = kNoOneEscaped;
+						g_otherPlayerEscaped = kNoOneEscaped;
 						MoveRoomToRoom(thisGlider, kAbove);
 					}
 					else
 					{
-						otherPlayerEscaped = kPlayerEscapedUpStairs;
+						g_otherPlayerEscaped = kPlayerEscapedUpStairs;
 						RefreshScoreboard(kEscapedTitleMode);
 						FlagGliderInLimbo(thisGlider, true);
 					}
@@ -396,8 +396,8 @@ void FinishGliderUpStairs (gliderPtr thisGlider)
 	#define		kHClimbStairsSpeed	-4
 	SInt16		hNotClipped;
 
-	thisGlider->src = gliderSrc[2];
-	thisGlider->mask = gliderSrc[2];
+	thisGlider->src = g_gliderSrc[2];
+	thisGlider->mask = g_gliderSrc[2];
 
 	thisGlider->whole.bottom = thisGlider->dest.bottom;
 	thisGlider->dest.top += kVClimbStairsSpeed;
@@ -414,7 +414,7 @@ void FinishGliderUpStairs (gliderPtr thisGlider)
 	thisGlider->destShadow.right += kHClimbStairsSpeed;
 	thisGlider->wholeShadow.left = thisGlider->destShadow.left;
 
-	hNotClipped = rightClip - thisGlider->dest.left;
+	hNotClipped = g_rightClip - thisGlider->dest.left;
 	if (hNotClipped < kGliderWide)
 	{
 		thisGlider->dest.right = thisGlider->dest.left + hNotClipped;
@@ -446,13 +446,13 @@ void MoveGliderDownStairs (gliderPtr thisGlider)
 
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = gliderSrc[2];
-		thisGlider->mask = gliderSrc[2];
+		thisGlider->src = g_gliderSrc[2];
+		thisGlider->mask = g_gliderSrc[2];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[0];
-		thisGlider->mask = gliderSrc[0];
+		thisGlider->src = g_gliderSrc[0];
+		thisGlider->mask = g_gliderSrc[0];
 	}
 
 	thisGlider->whole.left = thisGlider->dest.left;
@@ -470,7 +470,7 @@ void MoveGliderDownStairs (gliderPtr thisGlider)
 	thisGlider->dest.bottom += kVDropStairsSpeed;
 	thisGlider->whole.bottom = thisGlider->dest.bottom;
 
-	hNotClipped = rightClip - thisGlider->dest.left;
+	hNotClipped = g_rightClip - thisGlider->dest.left;
 	if (hNotClipped < kGliderWide)
 	{
 		if (hNotClipped <= 0)
@@ -479,26 +479,26 @@ void MoveGliderDownStairs (gliderPtr thisGlider)
 			thisGlider->src.right = thisGlider->src.left;
 			thisGlider->mask.right = thisGlider->mask.left;
 			thisGlider->destShadow.right = thisGlider->dest.right;
-			takingTheStairs = true;
-			if (twoPlayerGame)
+			g_takingTheStairs = true;
+			if (g_twoPlayerGame)
 			{
-				if (onePlayerLeft)
+				if (g_onePlayerLeft)
 				{
-					if (playerDead == kPlayer1)
-						MoveRoomToRoom(&theGlider2, kBelow);
+					if (g_playerDead == kPlayer1)
+						MoveRoomToRoom(&g_theGlider2, kBelow);
 					else
-						MoveRoomToRoom(&theGlider, kBelow);
+						MoveRoomToRoom(&g_theGlider, kBelow);
 				}
 				else
 				{
-					if (otherPlayerEscaped == kPlayerEscapedDownStairs)
+					if (g_otherPlayerEscaped == kPlayerEscapedDownStairs)
 					{
-						otherPlayerEscaped = kNoOneEscaped;
+						g_otherPlayerEscaped = kNoOneEscaped;
 						MoveRoomToRoom(thisGlider, kBelow);
 					}
 					else
 					{
-						otherPlayerEscaped = kPlayerEscapedDownStairs;
+						g_otherPlayerEscaped = kPlayerEscapedDownStairs;
 						RefreshScoreboard(kEscapedTitleMode);
 						FlagGliderInLimbo(thisGlider, true);
 					}
@@ -525,8 +525,8 @@ void FinishGliderDownStairs (gliderPtr thisGlider)
 	#define		kHDropStairsSpeed	4
 	SInt16		hNotClipped;
 
-	thisGlider->src = gliderSrc[0];
-	thisGlider->mask = gliderSrc[0];
+	thisGlider->src = g_gliderSrc[0];
+	thisGlider->mask = g_gliderSrc[0];
 
 	thisGlider->whole.left = thisGlider->dest.left;
 	thisGlider->dest.left += kHDropStairsSpeed;
@@ -543,7 +543,7 @@ void FinishGliderDownStairs (gliderPtr thisGlider)
 	thisGlider->dest.bottom += kVDropStairsSpeed;
 	thisGlider->whole.bottom = thisGlider->dest.bottom;
 
-	hNotClipped = thisGlider->dest.right - leftClip;
+	hNotClipped = thisGlider->dest.right - g_leftClip;
 	if (hNotClipped < kGliderWide)
 	{
 		thisGlider->dest.left = thisGlider->dest.right - hNotClipped;
@@ -569,8 +569,8 @@ void FinishGliderDownStairs (gliderPtr thisGlider)
 
 void MoveGliderFaceLeft (gliderPtr thisGlider)
 {
-	thisGlider->src = gliderSrc[thisGlider->frame];
-	thisGlider->mask = gliderSrc[thisGlider->frame];
+	thisGlider->src = g_gliderSrc[thisGlider->frame];
+	thisGlider->mask = g_gliderSrc[thisGlider->frame];
 
 	MoveGlider(thisGlider);
 
@@ -586,8 +586,8 @@ void MoveGliderFaceLeft (gliderPtr thisGlider)
 
 void MoveGliderFaceRight (gliderPtr thisGlider)
 {
-	thisGlider->src = gliderSrc[thisGlider->frame];
-	thisGlider->mask = gliderSrc[thisGlider->frame];
+	thisGlider->src = g_gliderSrc[thisGlider->frame];
+	thisGlider->mask = g_gliderSrc[thisGlider->frame];
 
 	MoveGlider(thisGlider);
 
@@ -609,32 +609,32 @@ void TransportGliderOut (gliderPtr thisGlider)
 	if (thisGlider->frame < 0)
 	{
 		tempRect = thisGlider->whole;
-		QOffsetRect(&tempRect, playOriginH, playOriginV);
+		QOffsetRect(&tempRect, g_playOriginH, g_playOriginV);
 		CopyRectWorkToMain(&tempRect);
 		tempRect = thisGlider->wholeShadow;
-		QOffsetRect(&tempRect, playOriginH, playOriginV);
+		QOffsetRect(&tempRect, g_playOriginH, g_playOriginV);
 		CopyRectWorkToMain(&tempRect);
 		thisGlider->dontDraw = true;
 
-		if (twoPlayerGame)
+		if (g_twoPlayerGame)
 		{
-			if (onePlayerLeft)
+			if (g_onePlayerLeft)
 			{
-				if (playerDead == kPlayer1)
-					TransportRoomToRoom(&theGlider2);
+				if (g_playerDead == kPlayer1)
+					TransportRoomToRoom(&g_theGlider2);
 				else
-					TransportRoomToRoom(&theGlider);
+					TransportRoomToRoom(&g_theGlider);
 			}
 			else
 			{
-				if (otherPlayerEscaped == kPlayerTransportedOut)
+				if (g_otherPlayerEscaped == kPlayerTransportedOut)
 				{
-					otherPlayerEscaped = kNoOneEscaped;
+					g_otherPlayerEscaped = kNoOneEscaped;
 					TransportRoomToRoom(thisGlider);
 				}
 				else
 				{
-					otherPlayerEscaped = kPlayerTransportedOut;
+					g_otherPlayerEscaped = kPlayerTransportedOut;
 					RefreshScoreboard(kEscapedTitleMode);
 					FlagGliderInLimbo(thisGlider, true);
 				}
@@ -649,15 +649,15 @@ void TransportGliderOut (gliderPtr thisGlider)
 	{
 		if (thisGlider->facing == kFaceLeft)
 		{
-			thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame] +
+			thisGlider->src = g_gliderSrc[g_fadeInSequence[thisGlider->frame] +
 					kLeftFadeOffset];
-			thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame] +
+			thisGlider->mask = g_gliderSrc[g_fadeInSequence[thisGlider->frame] +
 					kLeftFadeOffset];
 		}
 		else
 		{
-			thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame]];
-			thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
+			thisGlider->src = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
+			thisGlider->mask = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
 		}
 	}
 }
@@ -672,13 +672,13 @@ void MoveGliderDownDuct (gliderPtr thisGlider)
 
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = gliderSrc[2];
-		thisGlider->mask = gliderSrc[2];
+		thisGlider->src = g_gliderSrc[2];
+		thisGlider->mask = g_gliderSrc[2];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[0];
-		thisGlider->mask = gliderSrc[0];
+		thisGlider->src = g_gliderSrc[0];
+		thisGlider->mask = g_gliderSrc[0];
 	}
 
 	if (thisGlider->dest.left < thisGlider->clip.left)
@@ -717,31 +717,31 @@ void MoveGliderDownDuct (gliderPtr thisGlider)
 		if (vNotClipped <= 0)
 		{
 			tempRect = thisGlider->whole;
-			QOffsetRect(&tempRect, playOriginH, playOriginV);
+			QOffsetRect(&tempRect, g_playOriginH, g_playOriginV);
 			CopyRectWorkToMain(&tempRect);
 			tempRect = thisGlider->wholeShadow;
-			QOffsetRect(&tempRect, playOriginH, playOriginV);
+			QOffsetRect(&tempRect, g_playOriginH, g_playOriginV);
 			CopyRectWorkToMain(&tempRect);
 			thisGlider->dontDraw = true;
-			if (twoPlayerGame)
+			if (g_twoPlayerGame)
 			{
-				if (onePlayerLeft)
+				if (g_onePlayerLeft)
 				{
-					if (playerDead == kPlayer1)
-						MoveDuctToDuct(&theGlider2);
+					if (g_playerDead == kPlayer1)
+						MoveDuctToDuct(&g_theGlider2);
 					else
-						MoveDuctToDuct(&theGlider);
+						MoveDuctToDuct(&g_theGlider);
 				}
 				else
 				{
-					if (otherPlayerEscaped == kPlayerDuckedOut)
+					if (g_otherPlayerEscaped == kPlayerDuckedOut)
 					{
-						otherPlayerEscaped = kNoOneEscaped;
+						g_otherPlayerEscaped = kNoOneEscaped;
 						MoveDuctToDuct(thisGlider);
 					}
 					else
 					{
-						otherPlayerEscaped = kPlayerDuckedOut;
+						g_otherPlayerEscaped = kPlayerDuckedOut;
 						RefreshScoreboard(kEscapedTitleMode);
 						FlagGliderInLimbo(thisGlider, true);
 					}
@@ -769,13 +769,13 @@ void MoveGliderUpDuct (gliderPtr thisGlider)
 
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = gliderSrc[2];
-		thisGlider->mask = gliderSrc[2];
+		thisGlider->src = g_gliderSrc[2];
+		thisGlider->mask = g_gliderSrc[2];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[0];
-		thisGlider->mask = gliderSrc[0];
+		thisGlider->src = g_gliderSrc[0];
+		thisGlider->mask = g_gliderSrc[0];
 	}
 
 	if (thisGlider->dest.left < thisGlider->clip.left)
@@ -814,31 +814,31 @@ void MoveGliderUpDuct (gliderPtr thisGlider)
 		if (vNotClipped <= 0)
 		{
 			tempRect = thisGlider->whole;
-			QOffsetRect(&tempRect, playOriginH, playOriginV);
+			QOffsetRect(&tempRect, g_playOriginH, g_playOriginV);
 			CopyRectWorkToMain(&tempRect);
 			tempRect = thisGlider->wholeShadow;
-			QOffsetRect(&tempRect, playOriginH, playOriginV);
+			QOffsetRect(&tempRect, g_playOriginH, g_playOriginV);
 			CopyRectWorkToMain(&tempRect);
 			thisGlider->dontDraw = true;
-			if (twoPlayerGame)
+			if (g_twoPlayerGame)
 			{
-				if (onePlayerLeft)
+				if (g_onePlayerLeft)
 				{
-					if (playerDead == kPlayer1)
-						MoveDuctToDuct(&theGlider2);
+					if (g_playerDead == kPlayer1)
+						MoveDuctToDuct(&g_theGlider2);
 					else
-						MoveDuctToDuct(&theGlider);
+						MoveDuctToDuct(&g_theGlider);
 				}
 				else
 				{
-					if (otherPlayerEscaped == kPlayerDuckedOut)
+					if (g_otherPlayerEscaped == kPlayerDuckedOut)
 					{
-						otherPlayerEscaped = kNoOneEscaped;
+						g_otherPlayerEscaped = kNoOneEscaped;
 						MoveDuctToDuct(thisGlider);
 					}
 					else
 					{
-						otherPlayerEscaped = kPlayerDuckedOut;
+						g_otherPlayerEscaped = kPlayerDuckedOut;
 						RefreshScoreboard(kEscapedTitleMode);
 						FlagGliderInLimbo(thisGlider, true);
 					}
@@ -976,13 +976,13 @@ void MoveGliderInMailLeft (gliderPtr thisGlider)
 
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = gliderSrc[2];
-		thisGlider->mask = gliderSrc[2];
+		thisGlider->src = g_gliderSrc[2];
+		thisGlider->mask = g_gliderSrc[2];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[0];
-		thisGlider->mask = gliderSrc[0];
+		thisGlider->src = g_gliderSrc[0];
+		thisGlider->mask = g_gliderSrc[0];
 	}
 
 	if (thisGlider->dest.top < thisGlider->clip.top)
@@ -1013,31 +1013,31 @@ void MoveGliderInMailLeft (gliderPtr thisGlider)
 		if (hNotClipped <= 0)
 		{
 			tempRect = thisGlider->whole;
-			QOffsetRect(&tempRect, playOriginH, playOriginV);
+			QOffsetRect(&tempRect, g_playOriginH, g_playOriginV);
 			CopyRectWorkToMain(&tempRect);
 			tempRect = thisGlider->wholeShadow;
-			QOffsetRect(&tempRect, playOriginH, playOriginV);
+			QOffsetRect(&tempRect, g_playOriginH, g_playOriginV);
 			CopyRectWorkToMain(&tempRect);
 			thisGlider->dontDraw = true;
-			if (twoPlayerGame)
+			if (g_twoPlayerGame)
 			{
-				if (onePlayerLeft)
+				if (g_onePlayerLeft)
 				{
-					if (playerDead == kPlayer1)
-						MoveMailToMail(&theGlider2);
+					if (g_playerDead == kPlayer1)
+						MoveMailToMail(&g_theGlider2);
 					else
-						MoveMailToMail(&theGlider);
+						MoveMailToMail(&g_theGlider);
 				}
 				else
 				{
-					if (otherPlayerEscaped == kPlayerMailedOut)
+					if (g_otherPlayerEscaped == kPlayerMailedOut)
 					{
-						otherPlayerEscaped = kNoOneEscaped;
+						g_otherPlayerEscaped = kNoOneEscaped;
 						MoveMailToMail(thisGlider);
 					}
 					else
 					{
-						otherPlayerEscaped = kPlayerMailedOut;
+						g_otherPlayerEscaped = kPlayerMailedOut;
 						RefreshScoreboard(kEscapedTitleMode);
 						FlagGliderInLimbo(thisGlider, true);
 					}
@@ -1067,13 +1067,13 @@ void MoveGliderInMailRight (gliderPtr thisGlider)
 
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = gliderSrc[2];
-		thisGlider->mask = gliderSrc[2];
+		thisGlider->src = g_gliderSrc[2];
+		thisGlider->mask = g_gliderSrc[2];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[0];
-		thisGlider->mask = gliderSrc[0];
+		thisGlider->src = g_gliderSrc[0];
+		thisGlider->mask = g_gliderSrc[0];
 	}
 
 	if (thisGlider->dest.top < thisGlider->clip.top)
@@ -1104,31 +1104,31 @@ void MoveGliderInMailRight (gliderPtr thisGlider)
 		if (hNotClipped <= 0)
 		{
 			tempRect = thisGlider->whole;
-			QOffsetRect(&tempRect, playOriginH, playOriginV);
+			QOffsetRect(&tempRect, g_playOriginH, g_playOriginV);
 			CopyRectWorkToMain(&tempRect);
 			tempRect = thisGlider->wholeShadow;
-			QOffsetRect(&tempRect, playOriginH, playOriginV);
+			QOffsetRect(&tempRect, g_playOriginH, g_playOriginV);
 			CopyRectWorkToMain(&tempRect);
 			thisGlider->dontDraw = true;
-			if (twoPlayerGame)
+			if (g_twoPlayerGame)
 			{
-				if (onePlayerLeft)
+				if (g_onePlayerLeft)
 				{
-					if (playerDead == kPlayer1)
-						MoveMailToMail(&theGlider2);
+					if (g_playerDead == kPlayer1)
+						MoveMailToMail(&g_theGlider2);
 					else
-						MoveMailToMail(&theGlider);
+						MoveMailToMail(&g_theGlider);
 				}
 				else
 				{
-					if (otherPlayerEscaped == kPlayerMailedOut)
+					if (g_otherPlayerEscaped == kPlayerMailedOut)
 					{
-						otherPlayerEscaped = kNoOneEscaped;
+						g_otherPlayerEscaped = kNoOneEscaped;
 						MoveMailToMail(thisGlider);
 					}
 					else
 					{
-						otherPlayerEscaped = kPlayerMailedOut;
+						g_otherPlayerEscaped = kPlayerMailedOut;
 						RefreshScoreboard(kEscapedTitleMode);
 						FlagGliderInLimbo(thisGlider, true);
 					}
@@ -1151,25 +1151,25 @@ void MoveGliderInMailRight (gliderPtr thisGlider)
 
 void DeckGliderInFoil (gliderPtr thisGlider)
 {
-	showFoil = true;
+	g_showFoil = true;
 
-	if (twoPlayerGame)
+	if (g_twoPlayerGame)
 	{
-		LoadGraphic(glidSrcMap, g_theHouseFile, kGliderFoilPictID);
-		LoadGraphic(glid2SrcMap, g_theHouseFile, kGliderFoil2PictID);
+		LoadGraphic(g_glidSrcMap, g_theHouseFile, kGliderFoilPictID);
+		LoadGraphic(g_glid2SrcMap, g_theHouseFile, kGliderFoil2PictID);
 	}
 
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = gliderSrc[(thisGlider->frame + 2) +
+		thisGlider->src = g_gliderSrc[(thisGlider->frame + 2) +
 				kLeftFadeOffset];
-		thisGlider->mask = gliderSrc[(thisGlider->frame + 2) +
+		thisGlider->mask = g_gliderSrc[(thisGlider->frame + 2) +
 				kLeftFadeOffset];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[thisGlider->frame + 2];
-		thisGlider->mask = gliderSrc[thisGlider->frame + 2];
+		thisGlider->src = g_gliderSrc[thisGlider->frame + 2];
+		thisGlider->mask = g_gliderSrc[thisGlider->frame + 2];
 	}
 }
 
@@ -1188,15 +1188,15 @@ void MoveGliderFoilGoing (gliderPtr thisGlider)
 		{
 			if (thisGlider->facing == kFaceLeft)
 			{
-				thisGlider->src = gliderSrc[(10 - thisGlider->frame) +
+				thisGlider->src = g_gliderSrc[(10 - thisGlider->frame) +
 						kLeftFadeOffset];
-				thisGlider->mask = gliderSrc[(10 - thisGlider->frame) +
+				thisGlider->mask = g_gliderSrc[(10 - thisGlider->frame) +
 						kLeftFadeOffset];
 			}
 			else
 			{
-				thisGlider->src = gliderSrc[10 - thisGlider->frame];
-				thisGlider->mask = gliderSrc[10 - thisGlider->frame];
+				thisGlider->src = g_gliderSrc[10 - thisGlider->frame];
+				thisGlider->mask = g_gliderSrc[10 - thisGlider->frame];
 			}
 		}
 		else
@@ -1209,25 +1209,25 @@ void MoveGliderFoilGoing (gliderPtr thisGlider)
 
 void RemoveFoilFromGlider (gliderPtr thisGlider)
 {
-	showFoil = false;
+	g_showFoil = false;
 
-	if (twoPlayerGame)
+	if (g_twoPlayerGame)
 	{
-		LoadGraphic(glidSrcMap, g_theHouseFile, kGliderPictID);
-		LoadGraphic(glid2SrcMap, g_theHouseFile, kGlider2PictID);
+		LoadGraphic(g_glidSrcMap, g_theHouseFile, kGliderPictID);
+		LoadGraphic(g_glid2SrcMap, g_theHouseFile, kGlider2PictID);
 	}
 
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = gliderSrc[(thisGlider->frame + 2) +
+		thisGlider->src = g_gliderSrc[(thisGlider->frame + 2) +
 				kLeftFadeOffset];
-		thisGlider->mask = gliderSrc[(thisGlider->frame + 2) +
+		thisGlider->mask = g_gliderSrc[(thisGlider->frame + 2) +
 				kLeftFadeOffset];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[thisGlider->frame + 2];
-		thisGlider->mask = gliderSrc[thisGlider->frame + 2];
+		thisGlider->src = g_gliderSrc[thisGlider->frame + 2];
+		thisGlider->mask = g_gliderSrc[thisGlider->frame + 2];
 	}
 }
 
@@ -1244,15 +1244,15 @@ void MoveGliderFoilLosing (gliderPtr thisGlider)
 		{
 			if (thisGlider->facing == kFaceLeft)
 			{
-				thisGlider->src = gliderSrc[(10 - thisGlider->frame) +
+				thisGlider->src = g_gliderSrc[(10 - thisGlider->frame) +
 						kLeftFadeOffset];
-				thisGlider->mask = gliderSrc[(10 - thisGlider->frame) +
+				thisGlider->mask = g_gliderSrc[(10 - thisGlider->frame) +
 						kLeftFadeOffset];
 			}
 			else
 			{
-				thisGlider->src = gliderSrc[10 - thisGlider->frame];
-				thisGlider->mask = gliderSrc[10 - thisGlider->frame];
+				thisGlider->src = g_gliderSrc[10 - thisGlider->frame];
+				thisGlider->mask = g_gliderSrc[10 - thisGlider->frame];
 			}
 		}
 		else
@@ -1273,13 +1273,13 @@ void MoveGliderShredding (gliderPtr thisGlider)
 	{
 		if (thisGlider->facing == kFaceLeft)
 		{
-			thisGlider->src = gliderSrc[2];
-			thisGlider->mask = gliderSrc[2];
+			thisGlider->src = g_gliderSrc[2];
+			thisGlider->mask = g_gliderSrc[2];
 		}
 		else
 		{
-			thisGlider->src = gliderSrc[0];
-			thisGlider->mask = gliderSrc[0];
+			thisGlider->src = g_gliderSrc[0];
+			thisGlider->mask = g_gliderSrc[0];
 		}
 
 		vNotClipped = thisGlider->frame - thisGlider->dest.top;
@@ -1289,7 +1289,7 @@ void MoveGliderShredding (gliderPtr thisGlider)
 			thisGlider->dest.top += kDropShredSlow;
 			thisGlider->dest.bottom += kDropShredSlow;
 			thisGlider->whole.bottom = thisGlider->dest.bottom;
-			shadowVisible = false;
+			g_shadowVisible = false;
 			PlayPrioritySound(kShredSound, kShredPriority);
 		}
 		else
@@ -1448,7 +1448,7 @@ void HandleGlider (gliderPtr thisGlider)
 
 void OffsetGlider (gliderPtr thisGlider, SInt16 where)
 {
-	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
+	if ((g_twoPlayerGame) && (g_onePlayerLeft) && (thisGlider->which == g_playerDead))
 		return;
 
 	switch (where)
@@ -1489,19 +1489,19 @@ void OffsetGlider (gliderPtr thisGlider, SInt16 where)
 
 void OffAMortal (gliderPtr thisGlider)
 {
-	if (gameOver)
+	if (g_gameOver)
 		return;
 
-	if (numShredded > 0)
+	if (g_numShredded > 0)
 		RemoveShreds();
 
-	mortals--;
-	if (mortals < 0)
+	g_mortals--;
+	if (g_mortals < 0)
 	{
 		HideGlider(thisGlider);
-		if (twoPlayerGame)
+		if (g_twoPlayerGame)
 		{
-			if (mortals < -1)		// both players are now dead
+			if (g_mortals < -1)		// both players are now dead
 			{
 				FlagGameOver();
 				thisGlider->dontDraw = true;
@@ -1510,8 +1510,8 @@ void OffAMortal (gliderPtr thisGlider)
 			{
 				FlagGliderInLimbo(thisGlider, false);
 				thisGlider->dontDraw = true;
-				onePlayerLeft = true;
-				playerDead = thisGlider->which;
+				g_onePlayerLeft = true;
+				g_playerDead = thisGlider->which;
 			}
 		}
 		else
@@ -1526,13 +1526,13 @@ void OffAMortal (gliderPtr thisGlider)
 		HideGlider(thisGlider);
 	}
 
-	if (mortals >= 0)
+	if (g_mortals >= 0)
 	{
 		if (thisGlider->mode == kGliderGoingFoil)
 			DeckGliderInFoil(thisGlider);
 
 		FlagGliderNormal(thisGlider);
-		if (playerSuicide)
+		if (g_playerSuicide)
 			FollowTheLeader();
 		else
 		{
@@ -1544,67 +1544,67 @@ void OffAMortal (gliderPtr thisGlider)
 			thisGlider->wholeShadow = thisGlider->destShadow;
 		}
 	}
-	else if ((mortals == -1) && (onePlayerLeft) && (!gameOver))
+	else if ((g_mortals == -1) && (g_onePlayerLeft) && (!g_gameOver))
 	{
-		switch (otherPlayerEscaped)
+		switch (g_otherPlayerEscaped)
 		{
 			case kPlayerEscapedUp:
 			case kPlayerEscapingUpStairs:
 			case kPlayerEscapedUpStairs:
-			if (playerDead == kPlayer1)
-				MoveRoomToRoom(&theGlider2, kAbove);
+			if (g_playerDead == kPlayer1)
+				MoveRoomToRoom(&g_theGlider2, kAbove);
 			else
-				MoveRoomToRoom(&theGlider, kAbove);
+				MoveRoomToRoom(&g_theGlider, kAbove);
 			break;
 
 			case kPlayerEscapedDown:
 			case kPlayerEscapingDownStairs:
 			case kPlayerEscapedDownStairs:
-			if (playerDead == kPlayer1)
-				MoveRoomToRoom(&theGlider2, kBelow);
+			if (g_playerDead == kPlayer1)
+				MoveRoomToRoom(&g_theGlider2, kBelow);
 			else
-				MoveRoomToRoom(&theGlider, kBelow);
+				MoveRoomToRoom(&g_theGlider, kBelow);
 			break;
 
 			case kPlayerEscapedLeft:
-			if (playerDead == kPlayer1)
-				MoveRoomToRoom(&theGlider2, kToLeft);
+			if (g_playerDead == kPlayer1)
+				MoveRoomToRoom(&g_theGlider2, kToLeft);
 			else
-				MoveRoomToRoom(&theGlider, kToLeft);
+				MoveRoomToRoom(&g_theGlider, kToLeft);
 			break;
 
 			case kPlayerEscapedRight:
-			if (playerDead == kPlayer1)
-				MoveRoomToRoom(&theGlider2, kToRight);
+			if (g_playerDead == kPlayer1)
+				MoveRoomToRoom(&g_theGlider2, kToRight);
 			else
-				MoveRoomToRoom(&theGlider, kToRight);
+				MoveRoomToRoom(&g_theGlider, kToRight);
 			break;
 
 			case kPlayerTransportedOut:
-			if (playerDead == kPlayer1)
-				TransportRoomToRoom(&theGlider2);
+			if (g_playerDead == kPlayer1)
+				TransportRoomToRoom(&g_theGlider2);
 			else
-				TransportRoomToRoom(&theGlider);
+				TransportRoomToRoom(&g_theGlider);
 			break;
 
 			case kPlayerMailedOut:
-			if (playerDead == kPlayer1)
-				MoveMailToMail(&theGlider2);
+			if (g_playerDead == kPlayer1)
+				MoveMailToMail(&g_theGlider2);
 			else
-				MoveMailToMail(&theGlider);
+				MoveMailToMail(&g_theGlider);
 			break;
 
 			case kPlayerDuckedOut:
-			if (playerDead == kPlayer1)
-				MoveDuctToDuct(&theGlider2);
+			if (g_playerDead == kPlayer1)
+				MoveDuctToDuct(&g_theGlider2);
 			else
-				MoveDuctToDuct(&theGlider);
+				MoveDuctToDuct(&g_theGlider);
 			break;
 
 			default:
 			break;
 		}
 
-		otherPlayerEscaped = kPlayerIsDeadForever;
+		g_otherPlayerEscaped = kPlayerIsDeadForever;
 	}
 }

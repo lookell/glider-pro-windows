@@ -64,11 +64,11 @@ void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand);
 
 void DrawSimpleBlowers (SInt16 what, const Rect *theRect)
 {
-	if (what < 0 || what >= ARRAYSIZE(srcRects))
+	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
-	Mac_CopyMask(blowerSrcMap, blowerMaskMap, backSrcMap,
-			&srcRects[what], &srcRects[what], theRect);
+	Mac_CopyMask(g_blowerSrcMap, g_blowerMaskMap, g_backSrcMap,
+			&g_srcRects[what], &g_srcRects[what], theRect);
 }
 
 //--------------------------------------------------------------  DrawTiki
@@ -83,20 +83,20 @@ void DrawTiki (const Rect *theRect, SInt16 down)
 
 	if (theRect->bottom < kTikiPoleBase + down)
 	{
-		ColorLine(backSrcMap, theRect->left + 11, theRect->bottom - 1,
+		ColorLine(g_backSrcMap, theRect->left + 11, theRect->bottom - 1,
 				theRect->left + 11, kTikiPoleBase + down - 1, darkGrayC);
-		ColorLine(backSrcMap, theRect->left + 12, theRect->bottom - 1,
+		ColorLine(g_backSrcMap, theRect->left + 12, theRect->bottom - 1,
 				theRect->left + 12, kTikiPoleBase + down, lightWoodC);
-		ColorLine(backSrcMap, theRect->left + 13, theRect->bottom - 1,
+		ColorLine(g_backSrcMap, theRect->left + 13, theRect->bottom - 1,
 				theRect->left + 13, kTikiPoleBase + down, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 14, theRect->bottom - 1,
+		ColorLine(g_backSrcMap, theRect->left + 14, theRect->bottom - 1,
 				theRect->left + 14, kTikiPoleBase + down, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 15, theRect->bottom - 1,
+		ColorLine(g_backSrcMap, theRect->left + 15, theRect->bottom - 1,
 				theRect->left + 15, kTikiPoleBase + down - 1, darkGrayC);
 	}
 
-	Mac_CopyMask(blowerSrcMap, blowerMaskMap, backSrcMap,
-			&srcRects[kTiki], &srcRects[kTiki], theRect);
+	Mac_CopyMask(g_blowerSrcMap, g_blowerMaskMap, g_backSrcMap,
+			&g_srcRects[kTiki], &g_srcRects[kTiki], theRect);
 }
 
 //--------------------------------------------------------------  DrawInvisibleBlower
@@ -108,14 +108,14 @@ void DrawInvisibleBlower (const Rect *theRect)
 	QSetRect(&tempRect, 0, 0, 24, 24);
 	QOffsetRect(&tempRect, theRect->left, theRect->top);
 
-	ColorFrameRect(backSrcMap, &tempRect, 192);
+	ColorFrameRect(g_backSrcMap, &tempRect, 192);
 }
 
 //--------------------------------------------------------------  DrawLiftArea
 
 void DrawLiftArea (const Rect *theRect)
 {
-	ColorFrameRect(backSrcMap, theRect, 192);
+	ColorFrameRect(g_backSrcMap, theRect, 192);
 }
 
 //--------------------------------------------------------------  DrawTable
@@ -139,73 +139,73 @@ void DrawTable (const Rect *tableTop, SInt16 down)
 	QOffsetRect(&tempRect, 0,
 			-HalfRectTall(&tempRect) + kTableShadowTop + down);
 	QOffsetRect(&tempRect, kTableShadowOffset, -kTableShadowOffset);
-	DitherShadowOval(backSrcMap, &tempRect);
+	DitherShadowOval(g_backSrcMap, &tempRect);
 
 	tempRect = *tableTop;
 	QInsetRect(&tempRect, 0, 1);
-	ColorRect(backSrcMap, &tempRect, brownC);
+	ColorRect(g_backSrcMap, &tempRect, brownC);
 
-	ColorLine(backSrcMap, tableTop->left, tableTop->top + 1,
+	ColorLine(g_backSrcMap, tableTop->left, tableTop->top + 1,
 			tableTop->left, tableTop->top + 1, k8WhiteColor);
-	ColorLine(backSrcMap, tableTop->left + 1, tableTop->top,
+	ColorLine(g_backSrcMap, tableTop->left + 1, tableTop->top,
 			tableTop->right - 2, tableTop->top, k8WhiteColor);
-	ColorLine(backSrcMap, tableTop->right - 1, tableTop->top + 1,
+	ColorLine(g_backSrcMap, tableTop->right - 1, tableTop->top + 1,
 			tableTop->right - 1, tableTop->top + 1, k8WhiteColor);
 
-	ColorLine(backSrcMap, tableTop->left + 1, tableTop->top + 1,
+	ColorLine(g_backSrcMap, tableTop->left + 1, tableTop->top + 1,
 			tableTop->right - 2, tableTop->top + 1, tanC);
-	ColorLine(backSrcMap, tableTop->left, tableTop->top + 2,
+	ColorLine(g_backSrcMap, tableTop->left, tableTop->top + 2,
 			tableTop->left, tableTop->bottom - 2, tanC);
 
-	ColorLine(backSrcMap, tableTop->left + 1, tableTop->bottom - 1,
+	ColorLine(g_backSrcMap, tableTop->left + 1, tableTop->bottom - 1,
 			tableTop->right - 2, tableTop->bottom - 1, blackC);
-	ColorLine(backSrcMap, tableTop->right - 1, tableTop->top + 2,
+	ColorLine(g_backSrcMap, tableTop->right - 1, tableTop->top + 2,
 			tableTop->right - 1, tableTop->bottom - 2, blackC);
 
-	ColorLine(backSrcMap, tableTop->left + 1, tableTop->bottom - 2,
+	ColorLine(g_backSrcMap, tableTop->left + 1, tableTop->bottom - 2,
 			tableTop->right - 2, tableTop->bottom - 2, dkRedC);
 
 	if (tableTop->bottom < kTableBaseTop + down)
 	{
 		hCenter = (tableTop->left + tableTop->right) / 2;
 
-		ColorLine(backSrcMap, hCenter - 3, tableTop->bottom,
+		ColorLine(g_backSrcMap, hCenter - 3, tableTop->bottom,
 				hCenter - 3, kTableBaseTop + down, blackC);
-		ColorLine(backSrcMap, hCenter - 2, tableTop->bottom,
+		ColorLine(g_backSrcMap, hCenter - 2, tableTop->bottom,
 				hCenter - 2, kTableBaseTop + down, k8LtGrayColor);
-		ColorLine(backSrcMap, hCenter - 1, tableTop->bottom,
+		ColorLine(g_backSrcMap, hCenter - 1, tableTop->bottom,
 				hCenter - 1, kTableBaseTop + down, k8GrayColor);
-		ColorLine(backSrcMap, hCenter, tableTop->bottom,
+		ColorLine(g_backSrcMap, hCenter, tableTop->bottom,
 				hCenter, kTableBaseTop + down, k8DkGrayColor);
-		ColorLine(backSrcMap, hCenter + 1, tableTop->bottom,
+		ColorLine(g_backSrcMap, hCenter + 1, tableTop->bottom,
 				hCenter + 1, kTableBaseTop + down, blackC);
 
 		vShadow = tableTop->bottom + RectWide(tableTop) / 4 - 2;
 		if (vShadow > kTableBaseTop + down)
 		{
-			ColorLine(backSrcMap, hCenter - 2, tableTop->bottom,
+			ColorLine(g_backSrcMap, hCenter - 2, tableTop->bottom,
 					hCenter - 2, kTableBaseTop + down, k8DkGrayColor);
-			ColorLine(backSrcMap, hCenter - 1, tableTop->bottom,
+			ColorLine(g_backSrcMap, hCenter - 1, tableTop->bottom,
 					hCenter - 1, kTableBaseTop + down, k8DkGrayColor);
-			ColorLine(backSrcMap, hCenter, tableTop->bottom,
+			ColorLine(g_backSrcMap, hCenter, tableTop->bottom,
 					hCenter, kTableBaseTop + down, blackC);
 		}
 		else
 		{
-			ColorLine(backSrcMap, hCenter - 2, tableTop->bottom,
+			ColorLine(g_backSrcMap, hCenter - 2, tableTop->bottom,
 					hCenter - 2, vShadow, k8DkGrayColor);
-			ColorLine(backSrcMap, hCenter - 1, tableTop->bottom,
+			ColorLine(g_backSrcMap, hCenter - 1, tableTop->bottom,
 					hCenter - 1, vShadow + 1, k8DkGrayColor);
-			ColorLine(backSrcMap, hCenter, tableTop->bottom,
+			ColorLine(g_backSrcMap, hCenter, tableTop->bottom,
 					hCenter, vShadow + 2, blackC);
 		}
 	}
 
-	tempRect = tableSrc;
-	QOffsetRect(&tempRect, -HalfRectWide(&tableSrc) + tableTop->left +
+	tempRect = g_tableSrc;
+	QOffsetRect(&tempRect, -HalfRectWide(&g_tableSrc) + tableTop->left +
 			HalfRectWide(tableTop), kTableBaseTop + down);
-	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
-			&tableSrc, &tableSrc, &tempRect);
+	Mac_CopyMask(g_furnitureSrcMap, g_furnitureMaskMap, g_backSrcMap,
+			&g_tableSrc, &g_tableSrc, &tempRect);
 }
 
 //--------------------------------------------------------------  DrawShelf
@@ -225,48 +225,48 @@ void DrawShelf (const Rect *shelfTop)
 	dkRedC = k8DkRed2Color;
 	blackC = k8BlackColor;
 
-	BeginPath(backSrcMap);
-	MoveToEx(backSrcMap, shelfTop->left, shelfTop->bottom, NULL);
-	Mac_Line(backSrcMap, kShelfShadowOff, kShelfShadowOff);
-	Mac_Line(backSrcMap, RectWide(shelfTop) - kShelfDeep, 0);
-	Mac_Line(backSrcMap, 0, -kShelfThick + 1);
-	Mac_Line(backSrcMap, -kShelfShadowOff, -kShelfShadowOff);
-	Mac_LineTo(backSrcMap, shelfTop->left, shelfTop->bottom);
-	EndPath(backSrcMap);
-	DitherShadowPath(backSrcMap);
+	BeginPath(g_backSrcMap);
+	MoveToEx(g_backSrcMap, shelfTop->left, shelfTop->bottom, NULL);
+	Mac_Line(g_backSrcMap, kShelfShadowOff, kShelfShadowOff);
+	Mac_Line(g_backSrcMap, RectWide(shelfTop) - kShelfDeep, 0);
+	Mac_Line(g_backSrcMap, 0, -kShelfThick + 1);
+	Mac_Line(g_backSrcMap, -kShelfShadowOff, -kShelfShadowOff);
+	Mac_LineTo(g_backSrcMap, shelfTop->left, shelfTop->bottom);
+	EndPath(g_backSrcMap);
+	DitherShadowPath(g_backSrcMap);
 
 	tempRect = *shelfTop;
 	QInsetRect(&tempRect, 0, 1);
-	ColorRect(backSrcMap, &tempRect, brownC);
+	ColorRect(g_backSrcMap, &tempRect, brownC);
 
-	ColorLine(backSrcMap, shelfTop->left + 1, shelfTop->top,
+	ColorLine(g_backSrcMap, shelfTop->left + 1, shelfTop->top,
 			shelfTop->left + 1 + kShelfDeep, shelfTop->top, ltTanC);
-	ColorLine(backSrcMap, shelfTop->left, shelfTop->top + 1,
+	ColorLine(g_backSrcMap, shelfTop->left, shelfTop->top + 1,
 			shelfTop->left + kShelfDeep, shelfTop->top + 1, tanC);
-	ColorLine(backSrcMap, shelfTop->left, shelfTop->top + 2,
+	ColorLine(g_backSrcMap, shelfTop->left, shelfTop->top + 2,
 			shelfTop->left + kShelfDeep, shelfTop->top + 2, tanC);
-	ColorLine(backSrcMap, shelfTop->left, shelfTop->top + 3,
+	ColorLine(g_backSrcMap, shelfTop->left, shelfTop->top + 3,
 			shelfTop->left + kShelfDeep, shelfTop->top + 3, tanC);
-	ColorLine(backSrcMap, shelfTop->left + 1, shelfTop->bottom - 1,
+	ColorLine(g_backSrcMap, shelfTop->left + 1, shelfTop->bottom - 1,
 			shelfTop->left + 1 + kShelfDeep, shelfTop->bottom - 1, dkRedC);
-	ColorLine(backSrcMap, shelfTop->left + 2 + kShelfDeep, shelfTop->bottom - 1,
+	ColorLine(g_backSrcMap, shelfTop->left + 2 + kShelfDeep, shelfTop->bottom - 1,
 			shelfTop->right - 2, shelfTop->bottom - 1, blackC);
-	ColorLine(backSrcMap, shelfTop->left + 2 + kShelfDeep, shelfTop->top,
+	ColorLine(g_backSrcMap, shelfTop->left + 2 + kShelfDeep, shelfTop->top,
 			shelfTop->right - 2, shelfTop->top, tanC);
-	ColorLine(backSrcMap, shelfTop->right - 1, shelfTop->top + 1,
+	ColorLine(g_backSrcMap, shelfTop->right - 1, shelfTop->top + 1,
 			shelfTop->right - 1, shelfTop->bottom - 2, blackC);
 
-	tempRect = shelfSrc;
+	tempRect = g_shelfSrc;
 	ZeroRectCorner(&tempRect);
 	QOffsetRect(&tempRect, shelfTop->left + kBracketInset, shelfTop->bottom);
-	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
-			&shelfSrc, &shelfSrc, &tempRect);
+	Mac_CopyMask(g_furnitureSrcMap, g_furnitureMaskMap, g_backSrcMap,
+			&g_shelfSrc, &g_shelfSrc, &tempRect);
 
 	ZeroRectCorner(&tempRect);
 	QOffsetRect(&tempRect, shelfTop->right - kBracketInset - kShelfDeep -
 			kBracketThick, shelfTop->bottom);
-	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
-			&shelfSrc, &shelfSrc, &tempRect);
+	Mac_CopyMask(g_furnitureSrcMap, g_furnitureMaskMap, g_backSrcMap,
+			&g_shelfSrc, &g_shelfSrc, &tempRect);
 }
 
 //--------------------------------------------------------------  DrawCabinet
@@ -284,92 +284,92 @@ void DrawCabinet (const Rect *cabinet)
 	tanC = k8TanColor;
 	dkRedC = k8DkRed2Color;
 
-	BeginPath(backSrcMap);
-	MoveToEx(backSrcMap, cabinet->left, cabinet->bottom, NULL);
-	Mac_Line(backSrcMap, kCabinetShadowOff, kCabinetShadowOff);
-	Mac_Line(backSrcMap, RectWide(cabinet), 0);
-	Mac_Line(backSrcMap, 0, -RectTall(cabinet) + kCabinetDeep);
-	Mac_Line(backSrcMap, -kCabinetShadowOff, -kCabinetShadowOff);
-	Mac_LineTo(backSrcMap, cabinet->left, cabinet->bottom);
-	EndPath(backSrcMap);
-	DitherShadowPath(backSrcMap);
+	BeginPath(g_backSrcMap);
+	MoveToEx(g_backSrcMap, cabinet->left, cabinet->bottom, NULL);
+	Mac_Line(g_backSrcMap, kCabinetShadowOff, kCabinetShadowOff);
+	Mac_Line(g_backSrcMap, RectWide(cabinet), 0);
+	Mac_Line(g_backSrcMap, 0, -RectTall(cabinet) + kCabinetDeep);
+	Mac_Line(g_backSrcMap, -kCabinetShadowOff, -kCabinetShadowOff);
+	Mac_LineTo(g_backSrcMap, cabinet->left, cabinet->bottom);
+	EndPath(g_backSrcMap);
+	DitherShadowPath(g_backSrcMap);
 
 	tempRect = *cabinet;			// fill bulk of cabinet brown
 	QInsetRect(&tempRect, 1, 1);
-	ColorRect(backSrcMap, &tempRect, brownC);
+	ColorRect(g_backSrcMap, &tempRect, brownC);
 
 	tempRect = *cabinet;			// add lighter left side
 	tempRect.right = tempRect.left + kCabinetDeep;
-	ColorRect(backSrcMap, &tempRect, tanC);
+	ColorRect(g_backSrcMap, &tempRect, tanC);
 									// hilight top edge
-	ColorLine(backSrcMap, cabinet->left + 1, cabinet->top + 1,
+	ColorLine(g_backSrcMap, cabinet->left + 1, cabinet->top + 1,
 			cabinet->left + kCabinetDeep, cabinet->top + 1, ltTanC);
-	ColorLine(backSrcMap, cabinet->left + kCabinetDeep, cabinet->top + 1,
+	ColorLine(g_backSrcMap, cabinet->left + kCabinetDeep, cabinet->top + 1,
 			cabinet->right - 3, cabinet->top + 1, tanC);
 									// shadow bottom edge
 
-	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 3, cabinet->top + 5,
+	ColorLine(g_backSrcMap, cabinet->left + kCabinetDeep + 3, cabinet->top + 5,
 			cabinet->left + kCabinetDeep + 3, cabinet->bottom - 6, tanC);
-	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 4, cabinet->top + 5,
+	ColorLine(g_backSrcMap, cabinet->left + kCabinetDeep + 4, cabinet->top + 5,
 			cabinet->left + kCabinetDeep + 4, cabinet->bottom - 6, tanC);
-	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 9, cabinet->top + 10,
+	ColorLine(g_backSrcMap, cabinet->left + kCabinetDeep + 9, cabinet->top + 10,
 			cabinet->left + kCabinetDeep + 9, cabinet->bottom - 11, dkGrayC);
 
-	ColorLine(backSrcMap, cabinet->right - 4, cabinet->top + 6,
+	ColorLine(g_backSrcMap, cabinet->right - 4, cabinet->top + 6,
 			cabinet->right - 4, cabinet->bottom - 5, dkRedC);
-	ColorLine(backSrcMap, cabinet->right - 5, cabinet->top + 5,
+	ColorLine(g_backSrcMap, cabinet->right - 5, cabinet->top + 5,
 			cabinet->right - 5, cabinet->bottom - 6, dkGrayC);
-	ColorLine(backSrcMap, cabinet->right - 10, cabinet->top + 10,
+	ColorLine(g_backSrcMap, cabinet->right - 10, cabinet->top + 10,
 			cabinet->right - 10, cabinet->bottom - 11, tanC);
 
-	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 4, cabinet->top + 4,
+	ColorLine(g_backSrcMap, cabinet->left + kCabinetDeep + 4, cabinet->top + 4,
 			cabinet->left + kCabinetDeep + 4, cabinet->top + 4, ltTanC);
-	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 5, cabinet->top + 4,
+	ColorLine(g_backSrcMap, cabinet->left + kCabinetDeep + 5, cabinet->top + 4,
 			cabinet->right - 6, cabinet->top + 4, tanC);
-	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 10, cabinet->top + 9,
+	ColorLine(g_backSrcMap, cabinet->left + kCabinetDeep + 10, cabinet->top + 9,
 			cabinet->right - 11, cabinet->top + 9, dkGrayC);
 
-	ColorLine(backSrcMap, cabinet->right - 5, cabinet->bottom - 5,
+	ColorLine(g_backSrcMap, cabinet->right - 5, cabinet->bottom - 5,
 			cabinet->right - 5, cabinet->bottom - 5, dkRedC);
-	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 6, cabinet->bottom - 4,
+	ColorLine(g_backSrcMap, cabinet->left + kCabinetDeep + 6, cabinet->bottom - 4,
 			cabinet->right - 5, cabinet->bottom - 4, dkRedC);
-	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 5, cabinet->bottom - 5,
+	ColorLine(g_backSrcMap, cabinet->left + kCabinetDeep + 5, cabinet->bottom - 5,
 			cabinet->right - 6, cabinet->bottom - 5, dkGrayC);
 
-	ColorLine(backSrcMap, cabinet->left + kCabinetDeep + 10, cabinet->bottom - 10,
+	ColorLine(g_backSrcMap, cabinet->left + kCabinetDeep + 10, cabinet->bottom - 10,
 			cabinet->right - 11, cabinet->bottom - 10, tanC);
 
-	tempRect = hingeSrc;
+	tempRect = g_hingeSrc;
 	ZeroRectCorner(&tempRect);
 	QOffsetRect(&tempRect, cabinet->left + kCabinetDeep + 2, cabinet->top + 10);
-	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
-			&hingeSrc, &hingeSrc, &tempRect);
+	Mac_CopyMask(g_furnitureSrcMap, g_furnitureMaskMap, g_backSrcMap,
+			&g_hingeSrc, &g_hingeSrc, &tempRect);
 
-	tempRect = hingeSrc;
+	tempRect = g_hingeSrc;
 	ZeroRectCorner(&tempRect);
 	QOffsetRect(&tempRect, cabinet->left + kCabinetDeep + 2, cabinet->bottom - 26);
-	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
-			&hingeSrc, &hingeSrc, &tempRect);
+	Mac_CopyMask(g_furnitureSrcMap, g_furnitureMaskMap, g_backSrcMap,
+			&g_hingeSrc, &g_hingeSrc, &tempRect);
 
-	tempRect = handleSrc;
+	tempRect = g_handleSrc;
 	ZeroRectCorner(&tempRect);
 	QOffsetRect(&tempRect, cabinet->right - 8, cabinet->top +
-			HalfRectTall(cabinet) - HalfRectTall(&handleSrc));
-	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
-			&handleSrc, &handleSrc, &tempRect);
+			HalfRectTall(cabinet) - HalfRectTall(&g_handleSrc));
+	Mac_CopyMask(g_furnitureSrcMap, g_furnitureMaskMap, g_backSrcMap,
+			&g_handleSrc, &g_handleSrc, &tempRect);
 
-	Mac_FrameRect(backSrcMap, cabinet, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(g_backSrcMap, cabinet, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
 }
 
 //--------------------------------------------------------------  DrawSimpleFurniture
 
 void DrawSimpleFurniture (SInt16 what, const Rect *theRect)
 {
-	if (what < 0 || what >= ARRAYSIZE(srcRects))
+	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
-	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
-			&srcRects[what], &srcRects[what], theRect);
+	Mac_CopyMask(g_furnitureSrcMap, g_furnitureMaskMap, g_backSrcMap,
+			&g_srcRects[what], &g_srcRects[what], theRect);
 }
 
 //--------------------------------------------------------------  DrawCounter
@@ -390,62 +390,62 @@ void DrawCounter (const Rect *counter)
 	blackC = k8BlackColor;
 	dkstRedC = k8DkRed2Color;
 
-	BeginPath(backSrcMap);
-	MoveToEx(backSrcMap, counter->right - 2, counter->bottom, NULL);
-	Mac_Line(backSrcMap, 10, -10);
-	Mac_Line(backSrcMap, 0, -RectTall(counter) + 29);
-	Mac_Line(backSrcMap, 2, 0);
-	Mac_Line(backSrcMap, 0, -7);
-	Mac_Line(backSrcMap, -12, -12);
-	Mac_LineTo(backSrcMap, counter->right - 2, counter->bottom);
-	EndPath(backSrcMap);
-	DitherShadowPath(backSrcMap);
+	BeginPath(g_backSrcMap);
+	MoveToEx(g_backSrcMap, counter->right - 2, counter->bottom, NULL);
+	Mac_Line(g_backSrcMap, 10, -10);
+	Mac_Line(g_backSrcMap, 0, -RectTall(counter) + 29);
+	Mac_Line(g_backSrcMap, 2, 0);
+	Mac_Line(g_backSrcMap, 0, -7);
+	Mac_Line(g_backSrcMap, -12, -12);
+	Mac_LineTo(g_backSrcMap, counter->right - 2, counter->bottom);
+	EndPath(g_backSrcMap);
+	DitherShadowPath(g_backSrcMap);
 
 	tempRect = *counter;
 	QInsetRect(&tempRect, 2, 2);
-	ColorRect(backSrcMap, &tempRect, brownC);
+	ColorRect(g_backSrcMap, &tempRect, brownC);
 
 	tempRect = *counter;
 	tempRect.top = tempRect.bottom - kCounterFooterHigh;
 	tempRect.left += 2;
 	tempRect.right -= 2;
-	ColorRect(backSrcMap, &tempRect, dkGrayC);
-	ColorLine(backSrcMap, counter->left + 2, counter->bottom - kCounterFooterHigh,
+	ColorRect(g_backSrcMap, &tempRect, dkGrayC);
+	ColorLine(g_backSrcMap, counter->left + 2, counter->bottom - kCounterFooterHigh,
 			counter->right - 3, counter->bottom - kCounterFooterHigh, blackC);
-	ColorLine(backSrcMap, counter->left + 2, counter->bottom - kCounterFooterHigh + 1,
+	ColorLine(g_backSrcMap, counter->left + 2, counter->bottom - kCounterFooterHigh + 1,
 			counter->right - 3, counter->bottom - kCounterFooterHigh + 1, blackC);
-	ColorLine(backSrcMap, counter->right - 3, counter->bottom - kCounterFooterHigh,
+	ColorLine(g_backSrcMap, counter->right - 3, counter->bottom - kCounterFooterHigh,
 			counter->right - 3, counter->bottom - 1, blackC);
-	ColorLine(backSrcMap, counter->left + 2, counter->bottom - kCounterFooterHigh,
+	ColorLine(g_backSrcMap, counter->left + 2, counter->bottom - kCounterFooterHigh,
 			counter->left + 2, counter->bottom - 1, k8DkGrayColor);
 
-	ColorLine(backSrcMap, counter->right - 2, counter->top,
+	ColorLine(g_backSrcMap, counter->right - 2, counter->top,
 			counter->right - 2, counter->bottom - kCounterFooterHigh - 1, dkstRedC);
-	ColorLine(backSrcMap, counter->left + 1, counter->top + 8,
+	ColorLine(g_backSrcMap, counter->left + 1, counter->top + 8,
 			counter->left + 1, counter->bottom - kCounterFooterHigh - 1, tanC);
 
-	ColorLine(backSrcMap, counter->left - 1, counter->top,
+	ColorLine(g_backSrcMap, counter->left - 1, counter->top,
 			counter->right, counter->top, k8LtstGrayColor);
-	ColorLine(backSrcMap, counter->left - 1, counter->top + 1,
+	ColorLine(g_backSrcMap, counter->left - 1, counter->top + 1,
 			counter->right, counter->top + 1, k8LtstGray2Color);
-	ColorLine(backSrcMap, counter->left - 1, counter->top + 2,
+	ColorLine(g_backSrcMap, counter->left - 1, counter->top + 2,
 			counter->right, counter->top + 2, k8LtstGray3Color);
-	ColorLine(backSrcMap, counter->left - 1, counter->top + 3,
+	ColorLine(g_backSrcMap, counter->left - 1, counter->top + 3,
 			counter->right, counter->top + 3, k8LtstGray4Color);
-	ColorLine(backSrcMap, counter->left - 1, counter->top + 4,
+	ColorLine(g_backSrcMap, counter->left - 1, counter->top + 4,
 			counter->right, counter->top + 4, k8LtstGray5Color);
-	ColorLine(backSrcMap, counter->left - 1, counter->top + 5,
+	ColorLine(g_backSrcMap, counter->left - 1, counter->top + 5,
 			counter->right, counter->top + 5, k8LtstGray5Color);
-	ColorLine(backSrcMap, counter->left - 1, counter->top + 6,
+	ColorLine(g_backSrcMap, counter->left - 1, counter->top + 6,
 			counter->right, counter->top + 6, k8LtstGray5Color);
-	ColorLine(backSrcMap, counter->left - 1, counter->top,
+	ColorLine(g_backSrcMap, counter->left - 1, counter->top,
 			counter->left - 1, counter->top + 6, k8LtstGrayColor);
 
-	ColorLine(backSrcMap, counter->right, counter->top,
+	ColorLine(g_backSrcMap, counter->right, counter->top,
 			counter->right, counter->top + 6, k8LtGrayColor);
-	ColorLine(backSrcMap, counter->left + 1, counter->top + 7,
+	ColorLine(g_backSrcMap, counter->left + 1, counter->top + 7,
 			counter->right - 2, counter->top + 7, dkstRedC);
-	ColorLine(backSrcMap, counter->left + 1, counter->top + 8,
+	ColorLine(g_backSrcMap, counter->left + 1, counter->top + 8,
 			counter->right - 2, counter->top + 8, dkstRedC);
 
 	nRects = RectWide(counter) / 40;
@@ -457,9 +457,9 @@ void DrawCounter (const Rect *counter)
 			counter->top + kCounterPanelDrop);
 	for (i = 0; i < nRects; i++)
 	{
-		HiliteRect(backSrcMap, &tempRect, tanC, dkstRedC);
+		HiliteRect(g_backSrcMap, &tempRect, tanC, dkstRedC);
 		QInsetRect(&tempRect, 4, 4);
-		HiliteRect(backSrcMap, &tempRect, dkstRedC, tanC);
+		HiliteRect(g_backSrcMap, &tempRect, dkstRedC, tanC);
 		QInsetRect(&tempRect, -4, -4);
 		QOffsetRect(&tempRect, kCounterStripWide + width, 0);
 	}
@@ -482,32 +482,32 @@ void DrawDresser (const Rect *dresser)
 	ltTanC = k8LtTanColor;
 	dkstRedC = k8DkRed2Color;
 
-	BeginPath(backSrcMap);
-	MoveToEx(backSrcMap, dresser->left + 10, dresser->bottom + 9, NULL);
-	Mac_Line(backSrcMap, RectWide(dresser) - 11, 0);
-	Mac_Line(backSrcMap, 9, -9);
-	Mac_Line(backSrcMap, 0, -RectTall(dresser) + 12);
-	Mac_Line(backSrcMap, -9, -9);
-	Mac_Line(backSrcMap, -RectWide(dresser) + 11, 0);
-	Mac_LineTo(backSrcMap, dresser->left + 10, dresser->bottom + 9);
-	EndPath(backSrcMap);
-	DitherShadowPath(backSrcMap);
+	BeginPath(g_backSrcMap);
+	MoveToEx(g_backSrcMap, dresser->left + 10, dresser->bottom + 9, NULL);
+	Mac_Line(g_backSrcMap, RectWide(dresser) - 11, 0);
+	Mac_Line(g_backSrcMap, 9, -9);
+	Mac_Line(g_backSrcMap, 0, -RectTall(dresser) + 12);
+	Mac_Line(g_backSrcMap, -9, -9);
+	Mac_Line(g_backSrcMap, -RectWide(dresser) + 11, 0);
+	Mac_LineTo(g_backSrcMap, dresser->left + 10, dresser->bottom + 9);
+	EndPath(g_backSrcMap);
+	DitherShadowPath(g_backSrcMap);
 
 	tempRect = *dresser;
 	QInsetRect(&tempRect, 2, 2);
-	ColorRect(backSrcMap, &tempRect, k8PumpkinColor);
-	HiliteRect(backSrcMap, &tempRect, k8OrangeColor, dkstRedC);
+	ColorRect(g_backSrcMap, &tempRect, k8PumpkinColor);
+	HiliteRect(g_backSrcMap, &tempRect, k8OrangeColor, dkstRedC);
 
 	tempRect = *dresser;
 	tempRect.bottom = tempRect.top + kDresserTopThick;
-	ColorRect(backSrcMap, &tempRect, k8PissYellowColor);
-	HiliteRect(backSrcMap, &tempRect, ltTanC, dkstRedC);
-	ColorLine(backSrcMap, dresser->left + 2, dresser->top + kDresserTopThick,
+	ColorRect(g_backSrcMap, &tempRect, k8PissYellowColor);
+	HiliteRect(g_backSrcMap, &tempRect, ltTanC, dkstRedC);
+	ColorLine(g_backSrcMap, dresser->left + 2, dresser->top + kDresserTopThick,
 			dresser->right - 3, dresser->top + kDresserTopThick, k8Red4Color);
 
-	ColorLine(backSrcMap, dresser->left + kDresserCrease, dresser->top + kDresserTopThick + 1,
+	ColorLine(g_backSrcMap, dresser->left + kDresserCrease, dresser->top + kDresserTopThick + 1,
 			dresser->left + kDresserCrease, dresser->bottom - 4, k8Red4Color);
-	ColorLine(backSrcMap, dresser->right - kDresserCrease, dresser->top + kDresserTopThick + 1,
+	ColorLine(g_backSrcMap, dresser->right - kDresserCrease, dresser->top + kDresserTopThick + 1,
 			dresser->right - kDresserCrease, dresser->bottom - 4, k8OrangeColor);
 
 	nRects = RectTall(dresser) / 30;
@@ -518,44 +518,44 @@ void DrawDresser (const Rect *dresser)
 	QOffsetRect(&tempRect, dresser->left + 7, dresser->top + 10);
 	for (i = 0; i < nRects; i++)
 	{
-		ColorLine(backSrcMap, tempRect.left + 1, tempRect.bottom,
+		ColorLine(g_backSrcMap, tempRect.left + 1, tempRect.bottom,
 				tempRect.right, tempRect.bottom, dkstRedC);
-		ColorLine(backSrcMap, tempRect.right, tempRect.top + 1,
+		ColorLine(g_backSrcMap, tempRect.right, tempRect.top + 1,
 				tempRect.right, tempRect.bottom, dkstRedC);
-		ColorRect(backSrcMap, &tempRect, yellowC);
-		HiliteRect(backSrcMap, &tempRect, ltTanC, brownC);
+		ColorRect(g_backSrcMap, &tempRect, yellowC);
+		HiliteRect(g_backSrcMap, &tempRect, ltTanC, brownC);
 		QInsetRect(&tempRect, 1, 1);
-		HiliteRect(backSrcMap, &tempRect, ltTanC, brownC);
+		HiliteRect(g_backSrcMap, &tempRect, ltTanC, brownC);
 		QInsetRect(&tempRect, -1, -1);
 
 		QSetRect(&dest, -4, -4, 4, 4);
 		QOffsetRect(&dest, HalfRectTall(&tempRect), HalfRectTall(&tempRect));
 		QOffsetRect(&dest, tempRect.left, tempRect.top);
-		Mac_CopyBits(furnitureSrcMap, backSrcMap,
-				&knobSrc, &dest, srcCopy, nil);
+		Mac_CopyBits(g_furnitureSrcMap, g_backSrcMap,
+				&g_knobSrc, &dest, srcCopy, nil);
 
 		QSetRect(&dest, -4, -4, 4, 4);
 		QOffsetRect(&dest, -HalfRectTall(&tempRect), HalfRectTall(&tempRect));
 		QOffsetRect(&dest, tempRect.right, tempRect.top);
-		Mac_CopyBits(furnitureSrcMap, backSrcMap,
-				&knobSrc, &dest, srcCopy, nil);
+		Mac_CopyBits(g_furnitureSrcMap, g_backSrcMap,
+				&g_knobSrc, &dest, srcCopy, nil);
 
 		QOffsetRect(&tempRect, 0, kDresserTopThick + height);
 	}
 
-	dest = leftFootSrc;
+	dest = g_leftFootSrc;
 	ZeroRectCorner(&dest);
 	QOffsetRect(&dest, dresser->left + 6, dresser->bottom - 2);
 
-	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
-			&leftFootSrc, &leftFootSrc, &dest);
+	Mac_CopyMask(g_furnitureSrcMap, g_furnitureMaskMap, g_backSrcMap,
+			&g_leftFootSrc, &g_leftFootSrc, &dest);
 
-	dest = rightFootSrc;
+	dest = g_rightFootSrc;
 	ZeroRectCorner(&dest);
 	QOffsetRect(&dest, dresser->right - 19, dresser->bottom - 2);
 
-	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
-			&rightFootSrc, &rightFootSrc, &dest);
+	Mac_CopyMask(g_furnitureSrcMap, g_furnitureMaskMap, g_backSrcMap,
+			&g_rightFootSrc, &g_rightFootSrc, &dest);
 }
 
 //--------------------------------------------------------------  DrawDeckTable
@@ -579,74 +579,74 @@ void DrawDeckTable (const Rect *tableTop, SInt16 down)
 	QOffsetRect(&tempRect, 0,
 			-HalfRectTall(&tempRect) + kTableShadowTop + down);
 	QOffsetRect(&tempRect, kTableShadowOffset, -kTableShadowOffset);
-	DitherShadowOval(backSrcMap, &tempRect);
+	DitherShadowOval(g_backSrcMap, &tempRect);
 
 	tempRect = *tableTop;
 	QInsetRect(&tempRect, 0, 1);
-	ColorRect(backSrcMap, &tempRect, kGoldColor);
+	ColorRect(g_backSrcMap, &tempRect, kGoldColor);
 
-	ColorLine(backSrcMap, tableTop->left, tableTop->top + 1,
+	ColorLine(g_backSrcMap, tableTop->left, tableTop->top + 1,
 			tableTop->left, tableTop->top + 1, k8WhiteColor);
-	ColorLine(backSrcMap, tableTop->left + 1, tableTop->top,
+	ColorLine(g_backSrcMap, tableTop->left + 1, tableTop->top,
 			tableTop->right - 2, tableTop->top, k8WhiteColor);
-	ColorLine(backSrcMap, tableTop->right - 1, tableTop->top + 1,
+	ColorLine(g_backSrcMap, tableTop->right - 1, tableTop->top + 1,
 			tableTop->right - 1, tableTop->top + 1, k8WhiteColor);
 
-	ColorLine(backSrcMap, tableTop->left + 1, tableTop->top + 1,
+	ColorLine(g_backSrcMap, tableTop->left + 1, tableTop->top + 1,
 			tableTop->right - 2, tableTop->top + 1, kYellowColor);
-	ColorLine(backSrcMap, tableTop->left, tableTop->top + 2,
+	ColorLine(g_backSrcMap, tableTop->left, tableTop->top + 2,
 			tableTop->left, tableTop->bottom - 2, kYellowColor);
 
-	ColorLine(backSrcMap, tableTop->left + 1, tableTop->bottom - 1,
+	ColorLine(g_backSrcMap, tableTop->left + 1, tableTop->bottom - 1,
 			tableTop->right - 2, tableTop->bottom - 1, brownC);
-	ColorLine(backSrcMap, tableTop->right - 1, tableTop->top + 2,
+	ColorLine(g_backSrcMap, tableTop->right - 1, tableTop->top + 2,
 			tableTop->right - 1, tableTop->bottom - 2, brownC);
 
-	ColorLine(backSrcMap, tableTop->left + 1, tableTop->bottom - 2,
+	ColorLine(g_backSrcMap, tableTop->left + 1, tableTop->bottom - 2,
 			tableTop->right - 2, tableTop->bottom - 2, bambooC);
 
 	if (tableTop->bottom < kTableBaseTop + down)
 	{
 		hCenter = (tableTop->left + tableTop->right) / 2;
 
-		ColorLine(backSrcMap, hCenter - 3, tableTop->bottom,
+		ColorLine(g_backSrcMap, hCenter - 3, tableTop->bottom,
 				hCenter - 3, kTableBaseTop + down, dkGrayC);
-		ColorLine(backSrcMap, hCenter - 2, tableTop->bottom,
+		ColorLine(g_backSrcMap, hCenter - 2, tableTop->bottom,
 				hCenter - 2, kTableBaseTop + down, k8WhiteColor);
-		ColorLine(backSrcMap, hCenter - 1, tableTop->bottom,
+		ColorLine(g_backSrcMap, hCenter - 1, tableTop->bottom,
 				hCenter - 1, kTableBaseTop + down, k8WhiteColor);
-		ColorLine(backSrcMap, hCenter, tableTop->bottom,
+		ColorLine(g_backSrcMap, hCenter, tableTop->bottom,
 				hCenter, kTableBaseTop + down, k8LtGrayColor);
-		ColorLine(backSrcMap, hCenter + 1, tableTop->bottom,
+		ColorLine(g_backSrcMap, hCenter + 1, tableTop->bottom,
 				hCenter + 1, kTableBaseTop + down, dkGrayC);
 
 		vShadow = tableTop->bottom + RectWide(tableTop) / 4 - 2;
 		if (vShadow > kTableBaseTop + down)
 		{
-			ColorLine(backSrcMap, hCenter - 2, tableTop->bottom,
+			ColorLine(g_backSrcMap, hCenter - 2, tableTop->bottom,
 					hCenter - 2, kTableBaseTop + down, k8LtGrayColor);
-			ColorLine(backSrcMap, hCenter - 1, tableTop->bottom,
+			ColorLine(g_backSrcMap, hCenter - 1, tableTop->bottom,
 					hCenter - 1, kTableBaseTop + down, k8LtGrayColor);
-			ColorLine(backSrcMap, hCenter, tableTop->bottom,
+			ColorLine(g_backSrcMap, hCenter, tableTop->bottom,
 					hCenter, kTableBaseTop + down, dkGrayC);
 		}
 		else
 		{
-			ColorLine(backSrcMap, hCenter - 2, tableTop->bottom,
+			ColorLine(g_backSrcMap, hCenter - 2, tableTop->bottom,
 					hCenter - 2, vShadow, k8LtGrayColor);
-			ColorLine(backSrcMap, hCenter - 1, tableTop->bottom,
+			ColorLine(g_backSrcMap, hCenter - 1, tableTop->bottom,
 					hCenter - 1, vShadow + 1, k8LtGrayColor);
-			ColorLine(backSrcMap, hCenter, tableTop->bottom,
+			ColorLine(g_backSrcMap, hCenter, tableTop->bottom,
 					hCenter, vShadow + 2, dkGrayC);
 		}
 	}
 
-	tempRect = deckSrc;
+	tempRect = g_deckSrc;
 	ZeroRectCorner(&tempRect);
-	QOffsetRect(&tempRect, -HalfRectWide(&deckSrc) + tableTop->left +
+	QOffsetRect(&tempRect, -HalfRectWide(&g_deckSrc) + tableTop->left +
 			HalfRectWide(tableTop), kTableBaseTop + down);
-	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
-			&deckSrc, &deckSrc, &tempRect);
+	Mac_CopyMask(g_furnitureSrcMap, g_furnitureMaskMap, g_backSrcMap,
+			&g_deckSrc, &g_deckSrc, &tempRect);
 }
 
 //--------------------------------------------------------------  DrawStool
@@ -661,36 +661,36 @@ void DrawStool (const Rect *theRect, SInt16 down)
 
 	if (theRect->bottom < kStoolBase + down)
 	{
-		ColorLine(backSrcMap, theRect->left + 21, theRect->bottom - 1,
+		ColorLine(g_backSrcMap, theRect->left + 21, theRect->bottom - 1,
 				theRect->left + 21, kStoolBase + down - 1, k8DkGrayColor);
-		ColorLine(backSrcMap, theRect->left + 22, theRect->bottom - 1,
+		ColorLine(g_backSrcMap, theRect->left + 22, theRect->bottom - 1,
 				theRect->left + 22, kStoolBase + down, k8Gray2Color);
-		ColorLine(backSrcMap, theRect->left + 23, theRect->bottom - 1,
+		ColorLine(g_backSrcMap, theRect->left + 23, theRect->bottom - 1,
 				theRect->left + 23, kStoolBase + down, k8DkGrayColor);
-		ColorLine(backSrcMap, theRect->left + 24, theRect->bottom - 1,
+		ColorLine(g_backSrcMap, theRect->left + 24, theRect->bottom - 1,
 				theRect->left + 24, kStoolBase + down, k8DkGray3Color);
-		ColorLine(backSrcMap, theRect->left + 25, theRect->bottom - 1,
+		ColorLine(g_backSrcMap, theRect->left + 25, theRect->bottom - 1,
 				theRect->left + 25, kStoolBase + down, grayC);
-		ColorLine(backSrcMap, theRect->left + 26, theRect->bottom - 1,
+		ColorLine(g_backSrcMap, theRect->left + 26, theRect->bottom - 1,
 				theRect->left + 26, kStoolBase + down - 1, dkGrayC);
 	}
 
-	Mac_CopyMask(furnitureSrcMap, furnitureMaskMap, backSrcMap,
-			&srcRects[kStool], &srcRects[kStool], theRect);
+	Mac_CopyMask(g_furnitureSrcMap, g_furnitureMaskMap, g_backSrcMap,
+			&g_srcRects[kStool], &g_srcRects[kStool], theRect);
 }
 
 //--------------------------------------------------------------  DrawInvisObstacle
 
 void DrawInvisObstacle (const Rect *theRect)
 {
-	ColorFrameRect(backSrcMap, theRect, k8BrownColor);
+	ColorFrameRect(g_backSrcMap, theRect, k8BrownColor);
 }
 
 //--------------------------------------------------------------  DrawInvisBounce
 
 void DrawInvisBounce (const Rect *theRect)
 {
-	ColorFrameRect(backSrcMap, theRect, k8RedColor);
+	ColorFrameRect(g_backSrcMap, theRect, k8RedColor);
 }
 
 //--------------------------------------------------------------  DrawRedClock
@@ -701,8 +701,8 @@ void DrawRedClock (const Rect *theRect)
 	Rect		dest;
 	SInt16		hour, minutes;
 
-	Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
-			&srcRects[kRedClock], &srcRects[kRedClock], theRect);
+	Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
+			&g_srcRects[kRedClock], &g_srcRects[kRedClock], theRect);
 
 	GetLocalTime(&localTime);
 	hour = localTime.wHour % 12;
@@ -726,11 +726,11 @@ void DrawRedClock (const Rect *theRect)
 
 void DrawClockDigit (SInt16 number, const Rect *dest)
 {
-	if (number < 0 || number >= ARRAYSIZE(digits))
+	if (number < 0 || number >= ARRAYSIZE(g_digits))
 		return;
 
-	Mac_CopyBits(bonusSrcMap, backSrcMap,
-			&digits[number], dest, srcCopy, nil);
+	Mac_CopyBits(g_bonusSrcMap, g_backSrcMap,
+			&g_digits[number], dest, srcCopy, nil);
 }
 
 //--------------------------------------------------------------  DrawBlueClock
@@ -741,8 +741,8 @@ void DrawBlueClock (const Rect *theRect)
 	Point		dest;
 	SInt16		hour, minutes;
 
-	Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
-			&srcRects[kBlueClock], &srcRects[kBlueClock], theRect);
+	Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
+			&g_srcRects[kBlueClock], &g_srcRects[kBlueClock], theRect);
 
 	dest.h = theRect->left + 13;
 	dest.v = theRect->top + 13;
@@ -760,8 +760,8 @@ void DrawYellowClock (const Rect *theRect)
 	Point		dest;
 	SInt16		hour, minutes;
 
-	Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
-			&srcRects[kYellowClock], &srcRects[kYellowClock], theRect);
+	Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
+			&g_srcRects[kYellowClock], &g_srcRects[kYellowClock], theRect);
 
 	dest.h = theRect->left + 13;
 	dest.v = theRect->top + 15;
@@ -779,8 +779,8 @@ void DrawCuckoo (const Rect *theRect)
 	Point		dest;
 	SInt16		hour, minutes;
 
-	Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
-			&srcRects[kCuckoo], &srcRects[kCuckoo], theRect);
+	Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
+			&g_srcRects[kCuckoo], &g_srcRects[kCuckoo], theRect);
 
 	dest.h = theRect->left + 19;
 	dest.v = theRect->top + 31;
@@ -796,113 +796,113 @@ void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 {
 	HGDIOBJ		wasPen;
 
-	wasPen = SelectObject(backSrcMap, GetStockObject(BLACK_PEN));
+	wasPen = SelectObject(g_backSrcMap, GetStockObject(BLACK_PEN));
 
-	MoveToEx(backSrcMap, where.h, where.v, NULL);
+	MoveToEx(g_backSrcMap, where.h, where.v, NULL);
 	switch (bigHand)
 	{
 		case 0:
-		Mac_Line(backSrcMap, 0, -6);
+		Mac_Line(g_backSrcMap, 0, -6);
 		break;
 
 		case 1:
-		Mac_Line(backSrcMap, 3, -5);
+		Mac_Line(g_backSrcMap, 3, -5);
 		break;
 
 		case 2:
-		Mac_Line(backSrcMap, 5, -3);
+		Mac_Line(g_backSrcMap, 5, -3);
 		break;
 
 		case 3:
-		Mac_Line(backSrcMap, 6, 0);
+		Mac_Line(g_backSrcMap, 6, 0);
 		break;
 
 		case 4:
-		Mac_Line(backSrcMap, 5, 3);
+		Mac_Line(g_backSrcMap, 5, 3);
 		break;
 
 		case 5:
-		Mac_Line(backSrcMap, 3, 5);
+		Mac_Line(g_backSrcMap, 3, 5);
 		break;
 
 		case 6:
-		Mac_Line(backSrcMap, 0, 6);
+		Mac_Line(g_backSrcMap, 0, 6);
 		break;
 
 		case 7:
-		Mac_Line(backSrcMap, -3, 5);
+		Mac_Line(g_backSrcMap, -3, 5);
 		break;
 
 		case 8:
-		Mac_Line(backSrcMap, -5, 3);
+		Mac_Line(g_backSrcMap, -5, 3);
 		break;
 
 		case 9:
-		Mac_Line(backSrcMap, -6, 0);
+		Mac_Line(g_backSrcMap, -6, 0);
 		break;
 
 		case 10:
-		Mac_Line(backSrcMap, -5, -3);
+		Mac_Line(g_backSrcMap, -5, -3);
 		break;
 
 		case 11:
-		Mac_Line(backSrcMap, -3, -5);
+		Mac_Line(g_backSrcMap, -3, -5);
 		break;
 	}
 
-	MoveToEx(backSrcMap, where.h, where.v, NULL);
+	MoveToEx(g_backSrcMap, where.h, where.v, NULL);
 	switch (littleHand)
 	{
 		case 0:
-		Mac_Line(backSrcMap, 0, -4);
+		Mac_Line(g_backSrcMap, 0, -4);
 		break;
 
 		case 1:
-		Mac_Line(backSrcMap, 2, -3);
+		Mac_Line(g_backSrcMap, 2, -3);
 		break;
 
 		case 2:
-		Mac_Line(backSrcMap, 3, -2);
+		Mac_Line(g_backSrcMap, 3, -2);
 		break;
 
 		case 3:
-		Mac_Line(backSrcMap, 4, 0);
+		Mac_Line(g_backSrcMap, 4, 0);
 		break;
 
 		case 4:
-		Mac_Line(backSrcMap, 3, 2);
+		Mac_Line(g_backSrcMap, 3, 2);
 		break;
 
 		case 5:
-		Mac_Line(backSrcMap, 2, 3);
+		Mac_Line(g_backSrcMap, 2, 3);
 		break;
 
 		case 6:
-		Mac_Line(backSrcMap, 0, 4);
+		Mac_Line(g_backSrcMap, 0, 4);
 		break;
 
 		case 7:
-		Mac_Line(backSrcMap, -2, 3);
+		Mac_Line(g_backSrcMap, -2, 3);
 		break;
 
 		case 8:
-		Mac_Line(backSrcMap, -3, 2);
+		Mac_Line(g_backSrcMap, -3, 2);
 		break;
 
 		case 9:
-		Mac_Line(backSrcMap, -4, 0);
+		Mac_Line(g_backSrcMap, -4, 0);
 		break;
 
 		case 10:
-		Mac_Line(backSrcMap, -3, -2);
+		Mac_Line(g_backSrcMap, -3, -2);
 		break;
 
 		case 11:
-		Mac_Line(backSrcMap, -2, -3);
+		Mac_Line(g_backSrcMap, -2, -3);
 		break;
 	}
 
-	SelectObject(backSrcMap, wasPen);
+	SelectObject(g_backSrcMap, wasPen);
 }
 
 //--------------------------------------------------------------  DrawClockHands
@@ -911,124 +911,124 @@ void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 {
 	HGDIOBJ		wasPen;
 
-	wasPen = SelectObject(backSrcMap, GetStockObject(WHITE_PEN));
+	wasPen = SelectObject(g_backSrcMap, GetStockObject(WHITE_PEN));
 
-	MoveToEx(backSrcMap, where.h, where.v, NULL);
+	MoveToEx(g_backSrcMap, where.h, where.v, NULL);
 	switch (bigHand)
 	{
 		case 0:
-		Mac_Line(backSrcMap, 0, -10);
+		Mac_Line(g_backSrcMap, 0, -10);
 		break;
 
 		case 1:
-		Mac_Line(backSrcMap, 5, -9);
+		Mac_Line(g_backSrcMap, 5, -9);
 		break;
 
 		case 2:
-		Mac_Line(backSrcMap, 9, -5);
+		Mac_Line(g_backSrcMap, 9, -5);
 		break;
 
 		case 3:
-		Mac_Line(backSrcMap, 10, 0);
+		Mac_Line(g_backSrcMap, 10, 0);
 		break;
 
 		case 4:
-		Mac_Line(backSrcMap, 9, 5);
+		Mac_Line(g_backSrcMap, 9, 5);
 		break;
 
 		case 5:
-		Mac_Line(backSrcMap, 5, 9);
+		Mac_Line(g_backSrcMap, 5, 9);
 		break;
 
 		case 6:
-		Mac_Line(backSrcMap, 0, 10);
+		Mac_Line(g_backSrcMap, 0, 10);
 		break;
 
 		case 7:
-		Mac_Line(backSrcMap, -5, 9);
+		Mac_Line(g_backSrcMap, -5, 9);
 		break;
 
 		case 8:
-		Mac_Line(backSrcMap, -9, 5);
+		Mac_Line(g_backSrcMap, -9, 5);
 		break;
 
 		case 9:
-		Mac_Line(backSrcMap, -10, 0);
+		Mac_Line(g_backSrcMap, -10, 0);
 		break;
 
 		case 10:
-		Mac_Line(backSrcMap, -9, -5);
+		Mac_Line(g_backSrcMap, -9, -5);
 		break;
 
 		case 11:
-		Mac_Line(backSrcMap, -5, -9);
+		Mac_Line(g_backSrcMap, -5, -9);
 		break;
 	}
 
-	MoveToEx(backSrcMap, where.h, where.v, NULL);
+	MoveToEx(g_backSrcMap, where.h, where.v, NULL);
 	switch (littleHand)
 	{
 		case 0:
-		Mac_Line(backSrcMap, 0, -6);
+		Mac_Line(g_backSrcMap, 0, -6);
 		break;
 
 		case 1:
-		Mac_Line(backSrcMap, 3, -5);
+		Mac_Line(g_backSrcMap, 3, -5);
 		break;
 
 		case 2:
-		Mac_Line(backSrcMap, 5, -3);
+		Mac_Line(g_backSrcMap, 5, -3);
 		break;
 
 		case 3:
-		Mac_Line(backSrcMap, 6, 0);
+		Mac_Line(g_backSrcMap, 6, 0);
 		break;
 
 		case 4:
-		Mac_Line(backSrcMap, 5, 3);
+		Mac_Line(g_backSrcMap, 5, 3);
 		break;
 
 		case 5:
-		Mac_Line(backSrcMap, 3, 5);
+		Mac_Line(g_backSrcMap, 3, 5);
 		break;
 
 		case 6:
-		Mac_Line(backSrcMap, 0, 6);
+		Mac_Line(g_backSrcMap, 0, 6);
 		break;
 
 		case 7:
-		Mac_Line(backSrcMap, -3, 5);
+		Mac_Line(g_backSrcMap, -3, 5);
 		break;
 
 		case 8:
-		Mac_Line(backSrcMap, -5, 3);
+		Mac_Line(g_backSrcMap, -5, 3);
 		break;
 
 		case 9:
-		Mac_Line(backSrcMap, -6, 0);
+		Mac_Line(g_backSrcMap, -6, 0);
 		break;
 
 		case 10:
-		Mac_Line(backSrcMap, -5, -3);
+		Mac_Line(g_backSrcMap, -5, -3);
 		break;
 
 		case 11:
-		Mac_Line(backSrcMap, -3, -5);
+		Mac_Line(g_backSrcMap, -3, -5);
 		break;
 	}
 
-	SelectObject(backSrcMap, wasPen);
+	SelectObject(g_backSrcMap, wasPen);
 }
 
 //--------------------------------------------------------------  DrawSimplePrizes
 
 void DrawSimplePrizes (SInt16 what, const Rect *theRect)
 {
-	if (what < 0 || what >= ARRAYSIZE(srcRects))
+	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
-	Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
-			&srcRects[what], &srcRects[what], theRect);
+	Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
+			&g_srcRects[what], &g_srcRects[what], theRect);
 }
 
 //--------------------------------------------------------------  DrawGreaseRt
@@ -1040,18 +1040,18 @@ void DrawGreaseRt (const Rect *theRect, SInt16 distance, Boolean state)
 	dest = *theRect;
 	if (state)		// grease upright
 	{
-		Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
-				&greaseSrcRt[0], &greaseSrcRt[0], &dest);
+		Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
+				&g_greaseSrcRt[0], &g_greaseSrcRt[0], &dest);
 	}
 	else			// grease spilled
 	{
 		QOffsetRect(&dest, 6, 0);
-		Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
-				&greaseSrcRt[3], &greaseSrcRt[3], &dest);
+		Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
+				&g_greaseSrcRt[3], &g_greaseSrcRt[3], &dest);
 
 		QSetRect(&spill, 0, -2, distance - 5, 0);
 		QOffsetRect(&spill, dest.right - 1, dest.bottom);
-		Mac_PaintRect(backSrcMap, &spill, (HBRUSH)GetStockObject(BLACK_BRUSH));
+		Mac_PaintRect(g_backSrcMap, &spill, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	}
 }
 
@@ -1064,18 +1064,18 @@ void DrawGreaseLf (const Rect *theRect, SInt16 distance, Boolean state)
 	dest = *theRect;
 	if (state)		// grease upright
 	{
-		Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
-				&greaseSrcLf[0], &greaseSrcLf[0], &dest);
+		Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
+				&g_greaseSrcLf[0], &g_greaseSrcLf[0], &dest);
 	}
 	else			// grease spilled
 	{
 		QOffsetRect(&dest, -6, 0);
-		Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
-				&greaseSrcLf[3], &greaseSrcLf[3], &dest);
+		Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
+				&g_greaseSrcLf[3], &g_greaseSrcLf[3], &dest);
 
 		QSetRect(&spill, -distance + 5, -2, 0, 0);
 		QOffsetRect(&spill, dest.left + 1, dest.bottom);
-		Mac_PaintRect(backSrcMap, &spill, (HBRUSH)GetStockObject(BLACK_BRUSH));
+		Mac_PaintRect(g_backSrcMap, &spill, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	}
 }
 
@@ -1083,22 +1083,22 @@ void DrawGreaseLf (const Rect *theRect, SInt16 distance, Boolean state)
 
 void DrawFoil (const Rect *theRect)
 {
-	Mac_CopyMask(bonusSrcMap, bonusMaskMap, backSrcMap,
-			&srcRects[kFoil], &srcRects[kFoil], theRect);
+	Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
+			&g_srcRects[kFoil], &g_srcRects[kFoil], theRect);
 }
 
 //--------------------------------------------------------------  DrawInvisBonus
 
 void DrawInvisBonus (const Rect *theRect)
 {
-	ColorFrameOval(backSrcMap, theRect, 227);
+	ColorFrameOval(g_backSrcMap, theRect, 227);
 }
 
 //--------------------------------------------------------------  DrawSlider
 
 void DrawSlider (const Rect *theRect)
 {
-	Mac_FrameRect(backSrcMap, theRect, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(g_backSrcMap, theRect, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
 }
 
 //--------------------------------------------------------------  DrawMailboxLeft
@@ -1116,45 +1116,45 @@ void DrawMailboxLeft (const Rect *theRect, SInt16 down)
 
 	if (theRect->bottom < down + kMailboxBase)
 	{
-		ColorLine(backSrcMap, theRect->left + 49, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 49, theRect->bottom,
 				theRect->left + 49, down + kMailboxBase, darkGrayC);
-		ColorLine(backSrcMap, theRect->left + 50, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 50, theRect->bottom,
 				theRect->left + 50, down + kMailboxBase + 1, lightWoodC);
-		ColorLine(backSrcMap, theRect->left + 51, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 51, theRect->bottom,
 				theRect->left + 51, down + kMailboxBase + 2, lightWoodC);
-		ColorLine(backSrcMap, theRect->left + 52, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 52, theRect->bottom,
 				theRect->left + 52, down + kMailboxBase + 3, lightWoodC);
-		ColorLine(backSrcMap, theRect->left + 53, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 53, theRect->bottom,
 				theRect->left + 53, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 54, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 54, theRect->bottom,
 				theRect->left + 54, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 55, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 55, theRect->bottom,
 				theRect->left + 55, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 56, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 56, theRect->bottom,
 				theRect->left + 56, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 57, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 57, theRect->bottom,
 				theRect->left + 57, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 58, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 58, theRect->bottom,
 				theRect->left + 58, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 59, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 59, theRect->bottom,
 				theRect->left + 59, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 60, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 60, theRect->bottom,
 				theRect->left + 60, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 61, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 61, theRect->bottom,
 				theRect->left + 61, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 62, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 62, theRect->bottom,
 				theRect->left + 62, down + kMailboxBase + 3, darkGrayC);
 	}
 
-	bounds = srcRects[kMailboxLf];
+	bounds = g_srcRects[kMailboxLf];
 	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 	LoadGraphic(tempMap, g_theHouseFile, kMailboxLeftPictID);
 
 	tempMask = CreateOffScreenGWorld(&bounds, 1);
 	LoadGraphic(tempMask, g_theHouseFile, kMailboxLeftMaskID);
 
-	Mac_CopyMask(tempMap, tempMask, backSrcMap,
-			&srcRects[kMailboxLf], &srcRects[kMailboxLf], theRect);
+	Mac_CopyMask(tempMap, tempMask, g_backSrcMap,
+			&g_srcRects[kMailboxLf], &g_srcRects[kMailboxLf], theRect);
 
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
@@ -1175,45 +1175,45 @@ void DrawMailboxRight (const Rect *theRect, SInt16 down)
 
 	if (theRect->bottom < down + kMailboxBase)
 	{
-		ColorLine(backSrcMap, theRect->left + 34, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 34, theRect->bottom,
 				theRect->left + 34, down + kMailboxBase, darkGrayC);
-		ColorLine(backSrcMap, theRect->left + 35, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 35, theRect->bottom,
 				theRect->left + 35, down + kMailboxBase + 1, lightWoodC);
-		ColorLine(backSrcMap, theRect->left + 36, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 36, theRect->bottom,
 				theRect->left + 36, down + kMailboxBase + 2, lightWoodC);
-		ColorLine(backSrcMap, theRect->left + 37, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 37, theRect->bottom,
 				theRect->left + 37, down + kMailboxBase + 3, lightWoodC);
-		ColorLine(backSrcMap, theRect->left + 38, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 38, theRect->bottom,
 				theRect->left + 38, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 39, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 39, theRect->bottom,
 				theRect->left + 39, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 40, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 40, theRect->bottom,
 				theRect->left + 40, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 41, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 41, theRect->bottom,
 				theRect->left + 41, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 42, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 42, theRect->bottom,
 				theRect->left + 42, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 43, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 43, theRect->bottom,
 				theRect->left + 43, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 44, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 44, theRect->bottom,
 				theRect->left + 44, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 45, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 45, theRect->bottom,
 				theRect->left + 45, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 46, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 46, theRect->bottom,
 				theRect->left + 46, down + kMailboxBase + 3, darkWoodC);
-		ColorLine(backSrcMap, theRect->left + 47, theRect->bottom,
+		ColorLine(g_backSrcMap, theRect->left + 47, theRect->bottom,
 				theRect->left + 47, down + kMailboxBase + 3, darkGrayC);
 	}
 
-	bounds = srcRects[kMailboxRt];
+	bounds = g_srcRects[kMailboxRt];
 	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 	LoadGraphic(tempMap, g_theHouseFile, kMailboxRightPictID);
 
 	tempMask = CreateOffScreenGWorld(&bounds, 1);
 	LoadGraphic(tempMask, g_theHouseFile, kMailboxRightMaskID);
 
-	Mac_CopyMask(tempMap, tempMask, backSrcMap,
-			&srcRects[kMailboxRt], &srcRects[kMailboxRt], theRect);
+	Mac_CopyMask(tempMap, tempMask, g_backSrcMap,
+			&g_srcRects[kMailboxRt], &g_srcRects[kMailboxRt], theRect);
 
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
@@ -1223,18 +1223,18 @@ void DrawMailboxRight (const Rect *theRect, SInt16 down)
 
 void DrawSimpleTransport (SInt16 what, const Rect *theRect)
 {
-	if (what < 0 || what >= ARRAYSIZE(srcRects))
+	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
-	Mac_CopyMask(transSrcMap, transMaskMap, backSrcMap,
-			&srcRects[what], &srcRects[what], theRect);
+	Mac_CopyMask(g_transSrcMap, g_transMaskMap, g_backSrcMap,
+			&g_srcRects[what], &g_srcRects[what], theRect);
 }
 
 //--------------------------------------------------------------  DrawInvisTransport
 
 void DrawInvisTransport (const Rect *theRect)
 {
-	ColorFrameRect(backSrcMap, theRect, 32);
+	ColorFrameRect(g_backSrcMap, theRect, 32);
 }
 
 //--------------------------------------------------------------  DrawLightSwitch
@@ -1243,13 +1243,13 @@ void DrawLightSwitch (const Rect *theRect, Boolean state)
 {
 	if (state)
 	{
-		Mac_CopyBits(switchSrcMap, backSrcMap,
-				&lightSwitchSrc[0], theRect, srcCopy, nil);
+		Mac_CopyBits(g_switchSrcMap, g_backSrcMap,
+				&g_lightSwitchSrc[0], theRect, srcCopy, nil);
 	}
 	else
 	{
-		Mac_CopyBits(switchSrcMap, backSrcMap,
-				&lightSwitchSrc[1], theRect, srcCopy, nil);
+		Mac_CopyBits(g_switchSrcMap, g_backSrcMap,
+				&g_lightSwitchSrc[1], theRect, srcCopy, nil);
 	}
 }
 
@@ -1258,11 +1258,11 @@ void DrawLightSwitch (const Rect *theRect, Boolean state)
 void DrawMachineSwitch (const Rect *theRect, Boolean state)
 {
 	if (state)
-		Mac_CopyBits(switchSrcMap, backSrcMap,
-				&machineSwitchSrc[0], theRect, srcCopy, nil);
+		Mac_CopyBits(g_switchSrcMap, g_backSrcMap,
+				&g_machineSwitchSrc[0], theRect, srcCopy, nil);
 	else
-		Mac_CopyBits(switchSrcMap, backSrcMap,
-				&machineSwitchSrc[1], theRect, srcCopy, nil);
+		Mac_CopyBits(g_switchSrcMap, g_backSrcMap,
+				&g_machineSwitchSrc[1], theRect, srcCopy, nil);
 }
 
 //--------------------------------------------------------------  DrawThermostat
@@ -1270,11 +1270,11 @@ void DrawMachineSwitch (const Rect *theRect, Boolean state)
 void DrawThermostat (const Rect *theRect, Boolean state)
 {
 	if (state)
-		Mac_CopyBits(switchSrcMap, backSrcMap,
-				&thermostatSrc[0], theRect, srcCopy, nil);
+		Mac_CopyBits(g_switchSrcMap, g_backSrcMap,
+				&g_thermostatSrc[0], theRect, srcCopy, nil);
 	else
-		Mac_CopyBits(switchSrcMap, backSrcMap,
-				&thermostatSrc[1], theRect, srcCopy, nil);
+		Mac_CopyBits(g_switchSrcMap, g_backSrcMap,
+				&g_thermostatSrc[1], theRect, srcCopy, nil);
 }
 
 //--------------------------------------------------------------  DrawPowerSwitch
@@ -1282,11 +1282,11 @@ void DrawThermostat (const Rect *theRect, Boolean state)
 void DrawPowerSwitch (const Rect *theRect, Boolean state)
 {
 	if (state)
-		Mac_CopyBits(switchSrcMap, backSrcMap,
-				&powerSrc[0], theRect, srcCopy, nil);
+		Mac_CopyBits(g_switchSrcMap, g_backSrcMap,
+				&g_powerSrc[0], theRect, srcCopy, nil);
 	else
-		Mac_CopyBits(switchSrcMap, backSrcMap,
-				&powerSrc[1], theRect, srcCopy, nil);
+		Mac_CopyBits(g_switchSrcMap, g_backSrcMap,
+				&g_powerSrc[1], theRect, srcCopy, nil);
 }
 
 //--------------------------------------------------------------  DrawKnifeSwitch
@@ -1294,43 +1294,43 @@ void DrawPowerSwitch (const Rect *theRect, Boolean state)
 void DrawKnifeSwitch (const Rect *theRect, Boolean state)
 {
 	if (state)
-		Mac_CopyBits(switchSrcMap, backSrcMap,
-				&knifeSwitchSrc[0], theRect, srcCopy, nil);
+		Mac_CopyBits(g_switchSrcMap, g_backSrcMap,
+				&g_knifeSwitchSrc[0], theRect, srcCopy, nil);
 	else
-		Mac_CopyBits(switchSrcMap, backSrcMap,
-				&knifeSwitchSrc[1], theRect, srcCopy, nil);
+		Mac_CopyBits(g_switchSrcMap, g_backSrcMap,
+				&g_knifeSwitchSrc[1], theRect, srcCopy, nil);
 }
 
 //--------------------------------------------------------------  DrawInvisibleSwitch
 
 void DrawInvisibleSwitch (const Rect *theRect)
 {
-	ColorFrameRect(backSrcMap, theRect, kIntenseGreenColor);
+	ColorFrameRect(g_backSrcMap, theRect, kIntenseGreenColor);
 }
 
 //--------------------------------------------------------------  DrawTrigger
 
 void DrawTrigger (const Rect *theRect)
 {
-	ColorFrameRect(backSrcMap, theRect, kIntenseBlueColor);
+	ColorFrameRect(g_backSrcMap, theRect, kIntenseBlueColor);
 }
 
 //--------------------------------------------------------------  DrawSoundTrigger
 
 void DrawSoundTrigger (const Rect *theRect)
 {
-	ColorFrameRect(backSrcMap, theRect, kIntenseYellowColor);
+	ColorFrameRect(g_backSrcMap, theRect, kIntenseYellowColor);
 }
 
 //--------------------------------------------------------------  DrawSimpleLight
 
 void DrawSimpleLight (SInt16 what, const Rect *theRect)
 {
-	if (what < 0 || what >= ARRAYSIZE(srcRects))
+	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
-	Mac_CopyMask(lightSrcMap, lightMaskMap, backSrcMap,
-			&srcRects[what], &srcRects[what], theRect);
+	Mac_CopyMask(g_lightSrcMap, g_lightMaskMap, g_backSrcMap,
+			&g_srcRects[what], &g_srcRects[what], theRect);
 }
 
 //--------------------------------------------------------------  DrawFlourescent
@@ -1346,45 +1346,45 @@ void DrawFlourescent (const Rect *theRect)
 	gray4C = k8LtstGrayColor;
 	violetC = kPaleVioletColor;
 
-	ColorLine(backSrcMap, theRect->left + 16, theRect->top,
+	ColorLine(g_backSrcMap, theRect->left + 16, theRect->top,
 			theRect->right - 17, theRect->top, grayC);
-	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 1,
+	ColorLine(g_backSrcMap, theRect->left + 16, theRect->top + 1,
 			theRect->right - 17, theRect->top + 1, gray2C);
-	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 2,
+	ColorLine(g_backSrcMap, theRect->left + 16, theRect->top + 2,
 			theRect->right - 17, theRect->top + 2, gray2C);
-	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 3,
+	ColorLine(g_backSrcMap, theRect->left + 16, theRect->top + 3,
 			theRect->right - 17, theRect->top + 3, gray3C);
-	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 4,
+	ColorLine(g_backSrcMap, theRect->left + 16, theRect->top + 4,
 			theRect->right - 17, theRect->top + 4, gray4C);
-	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 5,
+	ColorLine(g_backSrcMap, theRect->left + 16, theRect->top + 5,
 			theRect->right - 17, theRect->top + 5, violetC);
-	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 6,
+	ColorLine(g_backSrcMap, theRect->left + 16, theRect->top + 6,
 			theRect->right - 17, theRect->top + 6, k8WhiteColor);
-	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 7,
+	ColorLine(g_backSrcMap, theRect->left + 16, theRect->top + 7,
 			theRect->right - 17, theRect->top + 7, k8WhiteColor);
-	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 8,
+	ColorLine(g_backSrcMap, theRect->left + 16, theRect->top + 8,
 			theRect->right - 17, theRect->top + 8, k8WhiteColor);
-	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 9,
+	ColorLine(g_backSrcMap, theRect->left + 16, theRect->top + 9,
 			theRect->right - 17, theRect->top + 9, k8WhiteColor);
-	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 10,
+	ColorLine(g_backSrcMap, theRect->left + 16, theRect->top + 10,
 			theRect->right - 17, theRect->top + 10, k8WhiteColor);
-	ColorLine(backSrcMap, theRect->left + 16, theRect->top + 11,
+	ColorLine(g_backSrcMap, theRect->left + 16, theRect->top + 11,
 			theRect->right - 17, theRect->top + 11, violetC);
 
-	partRect = flourescentSrc1;
+	partRect = g_flourescentSrc1;
 	ZeroRectCorner(&partRect);
 	QOffsetRect(&partRect, theRect->left, theRect->top);
 
-	Mac_CopyMask(lightSrcMap, lightMaskMap, backSrcMap,
-			&flourescentSrc1, &flourescentSrc1, &partRect);
+	Mac_CopyMask(g_lightSrcMap, g_lightMaskMap, g_backSrcMap,
+			&g_flourescentSrc1, &g_flourescentSrc1, &partRect);
 
-	partRect = flourescentSrc2;
+	partRect = g_flourescentSrc2;
 	ZeroRectCorner(&partRect);
 	QOffsetRect(&partRect, -partRect.right, 0);
 	QOffsetRect(&partRect, theRect->right, theRect->top);
 
-	Mac_CopyMask(lightSrcMap, lightMaskMap, backSrcMap,
-			&flourescentSrc2, &flourescentSrc2, &partRect);
+	Mac_CopyMask(g_lightSrcMap, g_lightMaskMap, g_backSrcMap,
+			&g_flourescentSrc2, &g_flourescentSrc2, &partRect);
 }
 
 //--------------------------------------------------------------  DrawTrackLight
@@ -1401,51 +1401,51 @@ void DrawTrackLight (const Rect *theRect)
 	gray3C = k8LtstGray4Color;
 	gray4C = k8DkGrayColor;
 
-	ColorLine(backSrcMap, theRect->left, theRect->top - 3,
+	ColorLine(g_backSrcMap, theRect->left, theRect->top - 3,
 			theRect->right - 1, theRect->top - 3, gray2C);
-	ColorLine(backSrcMap, theRect->left, theRect->top - 2,
+	ColorLine(g_backSrcMap, theRect->left, theRect->top - 2,
 			theRect->right - 1, theRect->top - 2, grayC);
-	ColorLine(backSrcMap, theRect->left, theRect->top - 1,
+	ColorLine(g_backSrcMap, theRect->left, theRect->top - 1,
 			theRect->right - 1, theRect->top - 1, grayC);
-	ColorLine(backSrcMap, theRect->left, theRect->top,
+	ColorLine(g_backSrcMap, theRect->left, theRect->top,
 			theRect->right - 1, theRect->top, gray3C);
-	ColorLine(backSrcMap, theRect->left, theRect->top + 1,
+	ColorLine(g_backSrcMap, theRect->left, theRect->top + 1,
 			theRect->right - 1, theRect->top + 1, gray4C);
-	ColorLine(backSrcMap, theRect->left, theRect->top + 2,
+	ColorLine(g_backSrcMap, theRect->left, theRect->top + 2,
 			theRect->right - 1, theRect->top + 2, gray3C);
 
-	partRect = trackLightSrc[0];			// left most track light
+	partRect = g_trackLightSrc[0];			// left most track light
 	ZeroRectCorner(&partRect);
 	QOffsetRect(&partRect, theRect->left, theRect->top);
 	which = 0;
-	Mac_CopyMask(lightSrcMap, lightMaskMap, backSrcMap,
-			&trackLightSrc[which], &trackLightSrc[which], &partRect);
+	Mac_CopyMask(g_lightSrcMap, g_lightMaskMap, g_backSrcMap,
+			&g_trackLightSrc[which], &g_trackLightSrc[which], &partRect);
 
-	partRect = trackLightSrc[0];			// right most track light
+	partRect = g_trackLightSrc[0];			// right most track light
 	ZeroRectCorner(&partRect);
 	QOffsetRect(&partRect, -partRect.right, 0);
 	QOffsetRect(&partRect, theRect->right, theRect->top);
 	which = 2;
-	Mac_CopyMask(lightSrcMap, lightMaskMap, backSrcMap,
-			&trackLightSrc[which], &trackLightSrc[which], &partRect);
+	Mac_CopyMask(g_lightSrcMap, g_lightMaskMap, g_backSrcMap,
+			&g_trackLightSrc[which], &g_trackLightSrc[which], &partRect);
 
-	howMany = ((RectWide(theRect) - RectWide(&trackLightSrc[0])) /
+	howMany = ((RectWide(theRect) - RectWide(&g_trackLightSrc[0])) /
 			kTrackLightSpacing) - 1;
 	if (howMany > 0)
 	{
 		which = 0;
-		spread = (RectWide(theRect) - RectWide(&trackLightSrc[0])) / (howMany + 1);
+		spread = (RectWide(theRect) - RectWide(&g_trackLightSrc[0])) / (howMany + 1);
 		for (i = 0; i < howMany; i++)
 		{
-			partRect = trackLightSrc[0];			// filler track lights
+			partRect = g_trackLightSrc[0];			// filler track lights
 			ZeroRectCorner(&partRect);
 			QOffsetRect(&partRect, theRect->left, theRect->top);
 			QOffsetRect(&partRect, spread * (i + 1), 0);
 			which++;
 			if (which >= kNumTrackLights)
 				which = 0;
-			Mac_CopyMask(lightSrcMap, lightMaskMap, backSrcMap,
-					&trackLightSrc[which], &trackLightSrc[which], &partRect);
+			Mac_CopyMask(g_lightSrcMap, g_lightMaskMap, g_backSrcMap,
+					&g_trackLightSrc[which], &g_trackLightSrc[which], &partRect);
 		}
 	}
 }
@@ -1454,18 +1454,18 @@ void DrawTrackLight (const Rect *theRect)
 
 void DrawInvisLight (const Rect *theRect)
 {
-	ColorFrameOval(backSrcMap, theRect, 17);
+	ColorFrameOval(g_backSrcMap, theRect, 17);
 }
 
 //--------------------------------------------------------------  DrawSimpleAppliance
 
 void DrawSimpleAppliance (SInt16 what, const Rect *theRect)
 {
-	if (what < 0 || what >= ARRAYSIZE(srcRects))
+	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
-	Mac_CopyMask(applianceSrcMap, applianceMaskMap, backSrcMap,
-			&srcRects[what], &srcRects[what], theRect);
+	Mac_CopyMask(g_applianceSrcMap, g_applianceMaskMap, g_backSrcMap,
+			&g_srcRects[what], &g_srcRects[what], theRect);
 }
 
 //--------------------------------------------------------------  DrawMacPlus
@@ -1476,22 +1476,22 @@ void DrawMacPlus (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 	if (isLit)
 	{
-		Mac_CopyMask(applianceSrcMap, applianceMaskMap, backSrcMap,
-				&srcRects[kMacPlus], &srcRects[kMacPlus], theRect);
+		Mac_CopyMask(g_applianceSrcMap, g_applianceMaskMap, g_backSrcMap,
+				&g_srcRects[kMacPlus], &g_srcRects[kMacPlus], theRect);
 	}
 
-	screen = plusScreen1;
+	screen = g_plusScreen1;
 	ZeroRectCorner(&screen);
 	QOffsetRect(&screen, theRect->left + 10, theRect->top + 7);
 	if (isOn)
 	{
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&plusScreen2, &screen, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_plusScreen2, &screen, srcCopy, nil);
 	}
 	else
 	{
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&plusScreen1, &screen, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_plusScreen1, &screen, srcCopy, nil);
 	}
 }
 
@@ -1505,32 +1505,32 @@ void DrawTV (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 	if (isLit)
 	{
-		bounds = srcRects[kTV];
+		bounds = g_srcRects[kTV];
 		tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 		LoadGraphic(tempMap, g_theHouseFile, kTVPictID);
 
 		tempMask = CreateOffScreenGWorld(&bounds, 1);
 		LoadGraphic(tempMask, g_theHouseFile, kTVMaskID);
 
-		Mac_CopyMask(tempMap, tempMask, backSrcMap,
-				&srcRects[kTV], &srcRects[kTV], theRect);
+		Mac_CopyMask(tempMap, tempMask, g_backSrcMap,
+				&g_srcRects[kTV], &g_srcRects[kTV], theRect);
 
 		DisposeGWorld(tempMap);
 		DisposeGWorld(tempMask);
 	}
 
-	bounds = tvScreen1;
+	bounds = g_tvScreen1;
 	ZeroRectCorner(&bounds);
 	QOffsetRect(&bounds, theRect->left + 17, theRect->top + 10);
 	if (isOn)
 	{
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&tvScreen2, &bounds, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_tvScreen2, &bounds, srcCopy, nil);
 	}
 	else
 	{
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&tvScreen1, &bounds, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_tvScreen1, &bounds, srcCopy, nil);
 	}
 }
 
@@ -1542,22 +1542,22 @@ void DrawCoffee (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 	if (isLit)
 	{
-		Mac_CopyMask(applianceSrcMap, applianceMaskMap, backSrcMap,
-				&srcRects[kCoffee], &srcRects[kCoffee], theRect);
+		Mac_CopyMask(g_applianceSrcMap, g_applianceMaskMap, g_backSrcMap,
+				&g_srcRects[kCoffee], &g_srcRects[kCoffee], theRect);
 	}
 
-	light = coffeeLight1;
+	light = g_coffeeLight1;
 	ZeroRectCorner(&light);
 	QOffsetRect(&light, theRect->left + 32, theRect->top + 57);
 	if (isOn)
 	{
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&coffeeLight2, &light, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_coffeeLight2, &light, srcCopy, nil);
 	}
 	else
 	{
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&coffeeLight1, &light, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_coffeeLight1, &light, srcCopy, nil);
 	}
 }
 
@@ -1565,8 +1565,8 @@ void DrawCoffee (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 void DrawOutlet (const Rect *theRect)
 {
-	Mac_CopyMask(applianceSrcMap, applianceMaskMap, backSrcMap,
-			&srcRects[kOutlet], &srcRects[kOutlet], theRect);
+	Mac_CopyMask(g_applianceSrcMap, g_applianceMaskMap, g_backSrcMap,
+			&g_srcRects[kOutlet], &g_srcRects[kOutlet], theRect);
 }
 
 //--------------------------------------------------------------  DrawVCR
@@ -1579,32 +1579,32 @@ void DrawVCR (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 	if (isLit)
 	{
-		bounds = srcRects[kVCR];
+		bounds = g_srcRects[kVCR];
 		tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 		LoadGraphic(tempMap, g_theHouseFile, kVCRPictID);
 
 		tempMask = CreateOffScreenGWorld(&bounds, 1);
 		LoadGraphic(tempMask, g_theHouseFile, kVCRMaskID);
 
-		Mac_CopyMask(tempMap, tempMask, backSrcMap,
-				&srcRects[kVCR], &srcRects[kVCR], theRect);
+		Mac_CopyMask(tempMap, tempMask, g_backSrcMap,
+				&g_srcRects[kVCR], &g_srcRects[kVCR], theRect);
 
 		DisposeGWorld(tempMap);
 		DisposeGWorld(tempMask);
 	}
 
-	bounds = vcrTime1;
+	bounds = g_vcrTime1;
 	ZeroRectCorner(&bounds);
 	QOffsetRect(&bounds, theRect->left + 64, theRect->top + 6);
 	if (isOn)
 	{
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&vcrTime2, &bounds, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_vcrTime2, &bounds, srcCopy, nil);
 	}
 	else
 	{
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&vcrTime1, &bounds, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_vcrTime1, &bounds, srcCopy, nil);
 	}
 }
 
@@ -1618,32 +1618,32 @@ void DrawStereo (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 	if (isLit)
 	{
-		bounds = srcRects[kStereo];
+		bounds = g_srcRects[kStereo];
 		tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth); 
 		LoadGraphic(tempMap, g_theHouseFile, kStereoPictID);
 
 		tempMask = CreateOffScreenGWorld(&bounds, 1);
 		LoadGraphic(tempMask, g_theHouseFile, kStereoMaskID);
 
-		Mac_CopyMask(tempMap, tempMask, backSrcMap,
-				&srcRects[kStereo], &srcRects[kStereo], theRect);
+		Mac_CopyMask(tempMap, tempMask, g_backSrcMap,
+				&g_srcRects[kStereo], &g_srcRects[kStereo], theRect);
 
 		DisposeGWorld(tempMap);
 		DisposeGWorld(tempMask);
 	}
 
-	bounds = stereoLight1;
+	bounds = g_stereoLight1;
 	ZeroRectCorner(&bounds);
 	QOffsetRect(&bounds, theRect->left + 56, theRect->top + 20);
 	if (isOn)
 	{
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&stereoLight2, &bounds, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_stereoLight2, &bounds, srcCopy, nil);
 	}
 	else
 	{
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&stereoLight1, &bounds, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_stereoLight1, &bounds, srcCopy, nil);
 	}
 }
 
@@ -1657,44 +1657,44 @@ void DrawMicrowave (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 	if (isLit)
 	{
-		bounds = srcRects[kMicrowave];
+		bounds = g_srcRects[kMicrowave];
 		tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 		LoadGraphic(tempMap, g_theHouseFile, kMicrowavePictID);
 
 		tempMask = CreateOffScreenGWorld(&bounds, 1);
 		LoadGraphic(tempMask, g_theHouseFile, kMicrowaveMaskID);
 
-		Mac_CopyMask(tempMap, tempMask, backSrcMap,
-				&srcRects[kMicrowave], &srcRects[kMicrowave], theRect);
+		Mac_CopyMask(tempMap, tempMask, g_backSrcMap,
+				&g_srcRects[kMicrowave], &g_srcRects[kMicrowave], theRect);
 
 		DisposeGWorld(tempMap);
 		DisposeGWorld(tempMask);
 	}
 
-	bounds = microOn;
+	bounds = g_microOn;
 	ZeroRectCorner(&bounds);
 	QOffsetRect(&bounds, theRect->left + 14, theRect->top + 13);
 	if (isOn)
 	{
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&microOn, &bounds, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_microOn, &bounds, srcCopy, nil);
 		QOffsetRect(&bounds, 16, 0);
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&microOn, &bounds, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_microOn, &bounds, srcCopy, nil);
 		QOffsetRect(&bounds, 16, 0);
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&microOn, &bounds, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_microOn, &bounds, srcCopy, nil);
 	}
 	else if (isLit)
 	{
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&microOff, &bounds, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_microOff, &bounds, srcCopy, nil);
 		QOffsetRect(&bounds, 16, 0);
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&microOff, &bounds, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_microOff, &bounds, srcCopy, nil);
 		QOffsetRect(&bounds, 16, 0);
-		Mac_CopyBits(applianceSrcMap, backSrcMap,
-				&microOff, &bounds, srcCopy, nil);
+		Mac_CopyBits(g_applianceSrcMap, g_backSrcMap,
+				&g_microOff, &bounds, srcCopy, nil);
 	}
 }
 
@@ -1702,16 +1702,16 @@ void DrawMicrowave (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 void DrawBalloon (const Rect *theRect)
 {
-	Mac_CopyMask(balloonSrcMap, balloonMaskMap, backSrcMap,
-			&balloonSrc[1], &balloonSrc[1], theRect);
+	Mac_CopyMask(g_balloonSrcMap, g_balloonMaskMap, g_backSrcMap,
+			&g_balloonSrc[1], &g_balloonSrc[1], theRect);
 }
 
 //--------------------------------------------------------------  DrawCopter
 
 void DrawCopter (const Rect *theRect)
 {
-	Mac_CopyMask(copterSrcMap, copterMaskMap, backSrcMap,
-			&copterSrc[1], &copterSrc[1], theRect);
+	Mac_CopyMask(g_copterSrcMap, g_copterMaskMap, g_backSrcMap,
+			&g_copterSrc[1], &g_copterSrc[1], theRect);
 }
 
 //--------------------------------------------------------------  DrawDart
@@ -1720,13 +1720,13 @@ void DrawDart (const Rect *theRect, SInt16 which)
 {
 	if (which == kDartLf)
 	{
-		Mac_CopyMask(dartSrcMap, dartMaskMap, backSrcMap,
-				&dartSrc[0], &dartSrc[0], theRect);
+		Mac_CopyMask(g_dartSrcMap, g_dartMaskMap, g_backSrcMap,
+				&g_dartSrc[0], &g_dartSrc[0], theRect);
 	}
 	else
 	{
-		Mac_CopyMask(dartSrcMap, dartMaskMap, backSrcMap,
-				&dartSrc[2], &dartSrc[2], theRect);
+		Mac_CopyMask(g_dartSrcMap, g_dartMaskMap, g_backSrcMap,
+				&g_dartSrc[2], &g_dartSrc[2], theRect);
 	}
 }
 
@@ -1734,30 +1734,30 @@ void DrawDart (const Rect *theRect, SInt16 which)
 
 void DrawBall (SInt16 what, const Rect *theRect)
 {
-	if (what < 0 || what >= ARRAYSIZE(srcRects))
+	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
-	Mac_CopyMask(ballSrcMap, ballMaskMap, backSrcMap,
-			&srcRects[what], &srcRects[what], theRect);
+	Mac_CopyMask(g_ballSrcMap, g_ballMaskMap, g_backSrcMap,
+			&g_srcRects[what], &g_srcRects[what], theRect);
 }
 
 //--------------------------------------------------------------  DrawFish
 
 void DrawFish (SInt16 what, const Rect *theRect)
 {
-	if (what < 0 || what >= ARRAYSIZE(srcRects))
+	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
-	Mac_CopyMask(enemySrcMap, enemyMaskMap, backSrcMap,
-			&srcRects[what], &srcRects[what], theRect);
+	Mac_CopyMask(g_enemySrcMap, g_enemyMaskMap, g_backSrcMap,
+			&g_srcRects[what], &g_srcRects[what], theRect);
 }
 
 //--------------------------------------------------------------  DrawDrip
 
 void DrawDrip (const Rect *theRect)
 {
-	Mac_CopyMask(dripSrcMap, dripMaskMap, backSrcMap,
-			&dripSrc[3], &dripSrc[3], theRect);
+	Mac_CopyMask(g_dripSrcMap, g_dripMaskMap, g_backSrcMap,
+			&g_dripSrc[3], &g_dripSrc[3], theRect);
 }
 
 //--------------------------------------------------------------  DrawMirror
@@ -1770,36 +1770,36 @@ void DrawMirror (const Rect *mirror)
 	grayC = k8DkGray2Color;
 
 	tempRect = *mirror;
-	ColorRect(backSrcMap, &tempRect, k8WhiteColor);
-	ColorFrameRect(backSrcMap, &tempRect, grayC);
+	ColorRect(g_backSrcMap, &tempRect, k8WhiteColor);
+	ColorFrameRect(g_backSrcMap, &tempRect, grayC);
 	QInsetRect(&tempRect, 1, 1);
-	ColorFrameRect(backSrcMap, &tempRect, k8EarthBlueColor);
+	ColorFrameRect(g_backSrcMap, &tempRect, k8EarthBlueColor);
 	QInsetRect(&tempRect, 1, 1);
-	ColorFrameRect(backSrcMap, &tempRect, k8EarthBlueColor);
+	ColorFrameRect(g_backSrcMap, &tempRect, k8EarthBlueColor);
 	QInsetRect(&tempRect, 1, 1);
-	ColorFrameRect(backSrcMap, &tempRect, grayC);
+	ColorFrameRect(g_backSrcMap, &tempRect, grayC);
 }
 
 //--------------------------------------------------------------  DrawSimpleClutter
 
 void DrawSimpleClutter (SInt16 what, const Rect *theRect)
 {
-	if (what < 0 || what >= ARRAYSIZE(srcRects))
+	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
-	Mac_CopyMask(clutterSrcMap, clutterMaskMap, backSrcMap,
-			&srcRects[what], &srcRects[what], theRect);
+	Mac_CopyMask(g_clutterSrcMap, g_clutterMaskMap, g_backSrcMap,
+			&g_srcRects[what], &g_srcRects[what], theRect);
 }
 
 //--------------------------------------------------------------  DrawFlower
 
 void DrawFlower (const Rect *theRect, SInt16 which)
 {
-	if (which < 0 || which >= ARRAYSIZE(flowerSrc))
+	if (which < 0 || which >= ARRAYSIZE(g_flowerSrc))
 		return;
 
-	Mac_CopyMask(clutterSrcMap, clutterMaskMap, backSrcMap,
-			&flowerSrc[which], &flowerSrc[which], theRect);
+	Mac_CopyMask(g_clutterSrcMap, g_clutterMaskMap, g_backSrcMap,
+			&g_flowerSrc[which], &g_flowerSrc[which], theRect);
 }
 
 //--------------------------------------------------------------  DrawWallWindow
@@ -1817,60 +1817,60 @@ void DrawWallWindow (const Rect *window)
 
 	tempRect = *window;
 	QInsetRect(&tempRect, 3, 0);
-	ColorRect(backSrcMap, &tempRect, brownC);
-	HiliteRect(backSrcMap, &tempRect, tanC, dkstRedC);
+	ColorRect(g_backSrcMap, &tempRect, brownC);
+	HiliteRect(g_backSrcMap, &tempRect, tanC, dkstRedC);
 
 	tempRect = *window;			// top sill
 	tempRect.bottom = tempRect.top + kWindowSillThick;
 	tempRect.left++;
 	tempRect.right--;
-	ColorRect(backSrcMap, &tempRect, brownC);
-	HiliteRect(backSrcMap, &tempRect, tanC, dkstRedC);
+	ColorRect(g_backSrcMap, &tempRect, brownC);
+	HiliteRect(g_backSrcMap, &tempRect, tanC, dkstRedC);
 	tempRect.left--;
 	tempRect.right++;
 	tempRect.top += 2;
 	tempRect.bottom -= 2;
-	ColorRect(backSrcMap, &tempRect, brownC);
-	HiliteRect(backSrcMap, &tempRect, tanC, dkstRedC);
+	ColorRect(g_backSrcMap, &tempRect, brownC);
+	HiliteRect(g_backSrcMap, &tempRect, tanC, dkstRedC);
 
 	tempRect = *window;			// bottom sill
 	tempRect.top = tempRect.bottom - kWindowSillThick;
 	QOffsetRect(&tempRect, 0, -4);
 	tempRect.left++;
 	tempRect.right--;
-	ColorRect(backSrcMap, &tempRect, brownC);
-	HiliteRect(backSrcMap, &tempRect, tanC, dkstRedC);
+	ColorRect(g_backSrcMap, &tempRect, brownC);
+	HiliteRect(g_backSrcMap, &tempRect, tanC, dkstRedC);
 	tempRect.left--;
 	tempRect.right++;
 	tempRect.top += 2;
 	tempRect.bottom -= 2;
-	ColorRect(backSrcMap, &tempRect, brownC);
-	HiliteRect(backSrcMap, &tempRect, tanC, dkstRedC);
+	ColorRect(g_backSrcMap, &tempRect, brownC);
+	HiliteRect(g_backSrcMap, &tempRect, tanC, dkstRedC);
 
 	tempRect = *window;			// inside frame
 	tempRect.left += 8;
 	tempRect.right -= 8;
 	tempRect.top += 11;
 	tempRect.bottom -= 15;
-	HiliteRect(backSrcMap, &tempRect, dkstRedC, tanC);
+	HiliteRect(g_backSrcMap, &tempRect, dkstRedC, tanC);
 
 	halfWay = (tempRect.top + tempRect.bottom) / 2;
 
 	tempRect2 = tempRect;		// top pane
 	tempRect2.bottom = halfWay + 2;
 	QInsetRect(&tempRect2, 5, 5);
-	HiliteRect(backSrcMap, &tempRect2, dkstRedC, tanC);
+	HiliteRect(g_backSrcMap, &tempRect2, dkstRedC, tanC);
 	QInsetRect(&tempRect2, 1, 1);
-	ColorRect(backSrcMap, &tempRect2, k8SkyColor);
+	ColorRect(g_backSrcMap, &tempRect2, k8SkyColor);
 
 	tempRect2 = tempRect;		// bottom pane
 	tempRect2.top = halfWay - 3;
 	QInsetRect(&tempRect2, 5, 5);
-	HiliteRect(backSrcMap, &tempRect2, dkstRedC, tanC);
+	HiliteRect(g_backSrcMap, &tempRect2, dkstRedC, tanC);
 	QInsetRect(&tempRect2, 1, 1);
-	ColorRect(backSrcMap, &tempRect2, k8SkyColor);
+	ColorRect(g_backSrcMap, &tempRect2, k8SkyColor);
 
-	ColorLine(backSrcMap, tempRect2.left - 5, tempRect2.top - 7,
+	ColorLine(g_backSrcMap, tempRect2.left - 5, tempRect2.top - 7,
 			tempRect2.right + 5, tempRect2.top - 7, tanC);
 }
 
@@ -1893,7 +1893,7 @@ void DrawCalendar (const Rect *theRect)
 	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
 	QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
 	QOffsetRect(&bounds, theRect->left, theRect->top);
-	Mac_DrawPicture(backSrcMap, thePicture, &bounds);
+	Mac_DrawPicture(g_backSrcMap, thePicture, &bounds);
 	DeleteObject(thePicture);
 
 	GetLocalTime(&localTime);
@@ -1901,14 +1901,14 @@ void DrawCalendar (const Rect *theRect)
 			kMonthStringBase + localTime.wMonth,
 			monthStr, ARRAYSIZE(monthStr));
 
-	SaveDC(backSrcMap);
-	SetBkMode(backSrcMap, TRANSPARENT);
-	SetTextAlign(backSrcMap, TA_CENTER | TA_BASELINE);
-	SetTextColor(backSrcMap, Index2ColorRef(kDarkFleshColor));
+	SaveDC(g_backSrcMap);
+	SetBkMode(g_backSrcMap, TRANSPARENT);
+	SetTextAlign(g_backSrcMap, TA_CENTER | TA_BASELINE);
+	SetTextColor(g_backSrcMap, Index2ColorRef(kDarkFleshColor));
 	theFont = CreateTahomaFont(-9, FW_BOLD);
-	SelectObject(backSrcMap, theFont);
-	TextOut(backSrcMap, theRect->left + 32, theRect->top + 55, monthStr, monthLen);
-	RestoreDC(backSrcMap, -1);
+	SelectObject(g_backSrcMap, theFont);
+	TextOut(g_backSrcMap, theRect->left + 32, theRect->top + 55, monthStr, monthLen);
+	RestoreDC(g_backSrcMap, -1);
 	DeleteObject(theFont);
 }
 
@@ -1927,7 +1927,7 @@ void DrawBulletin (const Rect *theRect)
 	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
 	QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
 	QOffsetRect(&bounds, theRect->left, theRect->top);
-	Mac_DrawPicture(backSrcMap, thePicture, &bounds);
+	Mac_DrawPicture(g_backSrcMap, thePicture, &bounds);
 	DeleteObject(thePicture);
 }
 
@@ -1977,9 +1977,9 @@ void DrawPictObject (SInt16 what, const Rect *theRect)
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
-	bounds = srcRects[what];
+	bounds = g_srcRects[what];
 	QOffsetRect(&bounds, theRect->left, theRect->top);
-	Mac_DrawPicture(backSrcMap, thePicture, &bounds);
+	Mac_DrawPicture(g_backSrcMap, thePicture, &bounds);
 	DeleteObject(thePicture);
 }
 
@@ -2008,15 +2008,15 @@ void DrawPictWithMaskObject (SInt16 what, const Rect *theRect)
 		return;
 	}
 
-	bounds = srcRects[what];
+	bounds = g_srcRects[what];
 	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 	LoadGraphic(tempMap, g_theHouseFile, pictID);
 
 	tempMask = CreateOffScreenGWorld(&bounds, 1);
 	LoadGraphic(tempMask, g_theHouseFile, maskID);
 
-	Mac_CopyMask(tempMap, tempMask, backSrcMap,
-			&srcRects[what], &srcRects[what], theRect);
+	Mac_CopyMask(tempMap, tempMask, g_backSrcMap,
+			&g_srcRects[what], &g_srcRects[what], theRect);
 
 	DisposeGWorld(tempMap);
 	DisposeGWorld(tempMask);
@@ -2117,7 +2117,7 @@ void DrawPictSansWhiteObject (SInt16 what, const Rect *theRect)
 		return;
 	}
 
-	bounds = srcRects[what];
+	bounds = g_srcRects[what];
 	if (bounds.left >= bounds.right || bounds.top >= bounds.bottom)
 		return;
 
@@ -2127,10 +2127,10 @@ void DrawPictSansWhiteObject (SInt16 what, const Rect *theRect)
 	// The transparent mode of Mac_CopyBits uses the current background
 	// color of the *destination* HDC as the transparent color. Only pixels
 	// that don't match the background color (here, white) are copied.
-	wasBkColor = SetBkColor(backSrcMap, RGB(0xFF, 0xFF, 0xFF));
-	Mac_CopyBits(tempMap, backSrcMap,
-			&srcRects[what], theRect, transparent, nil);
-	SetBkColor(backSrcMap, wasBkColor);
+	wasBkColor = SetBkColor(g_backSrcMap, RGB(0xFF, 0xFF, 0xFF));
+	Mac_CopyBits(tempMap, g_backSrcMap,
+			&g_srcRects[what], theRect, transparent, nil);
+	SetBkColor(g_backSrcMap, wasBkColor);
 
 	DisposeGWorld(tempMap);
 }
@@ -2151,10 +2151,10 @@ void DrawCustPictSansWhite (SInt16 pictID, const Rect *theRect)
 	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 	LoadGraphic(tempMap, g_theHouseFile, pictID);
 
-	wasBkColor = SetBkColor(backSrcMap, RGB(0xFF, 0xFF, 0xFF));
-	Mac_CopyBits(tempMap, backSrcMap,
+	wasBkColor = SetBkColor(g_backSrcMap, RGB(0xFF, 0xFF, 0xFF));
+	Mac_CopyBits(tempMap, g_backSrcMap,
 			&bounds, theRect, transparent, nil);
-	SetBkColor(backSrcMap, wasBkColor);
+	SetBkColor(g_backSrcMap, wasBkColor);
 
 	DisposeGWorld(tempMap);
 }

@@ -22,15 +22,15 @@
 void FlagGliderFaceLeft (gliderPtr thisGlider);
 void FlagGliderFaceRight (gliderPtr thisGlider);
 
-SInt16 saidFollow;
+SInt16 g_saidFollow;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  StartGliderFadingIn
 
 void StartGliderFadingIn (gliderPtr thisGlider)
 {
-	if (foilTotal <= 0)
-		showFoil = false;
+	if (g_foilTotal <= 0)
+		g_showFoil = false;
 
 	thisGlider->mode = kGliderFadingIn;
 	thisGlider->whole = thisGlider->dest;
@@ -39,14 +39,14 @@ void StartGliderFadingIn (gliderPtr thisGlider)
 	if (thisGlider->facing == kFaceLeft)
 	{
 		thisGlider->src =
-				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
+				g_gliderSrc[g_fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
 		thisGlider->mask =
-				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
+				g_gliderSrc[g_fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame]];
-		thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
+		thisGlider->src = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
+		thisGlider->mask = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
 	}
 }
 
@@ -54,8 +54,8 @@ void StartGliderFadingIn (gliderPtr thisGlider)
 
 void StartGliderTransportingIn (gliderPtr thisGlider)
 {
-	if (foilTotal <= 0)
-		showFoil = false;
+	if (g_foilTotal <= 0)
+		g_showFoil = false;
 
 	thisGlider->mode = kGliderTransportingIn;
 	thisGlider->whole = thisGlider->dest;
@@ -64,14 +64,14 @@ void StartGliderTransportingIn (gliderPtr thisGlider)
 	if (thisGlider->facing == kFaceLeft)
 	{
 		thisGlider->src =
-				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
+				g_gliderSrc[g_fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
 		thisGlider->mask =
-				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
+				g_gliderSrc[g_fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame]];
-		thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
+		thisGlider->src = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
+		thisGlider->mask = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
 	}
 }
 
@@ -92,12 +92,12 @@ void StartGliderFadingOut (gliderPtr thisGlider)
 	if (RectTall(&thisGlider->dest) > kGliderHigh)
 	{
 		tempBounds = thisGlider->dest;
-		QOffsetRect(&tempBounds, playOriginH, playOriginV);
+		QOffsetRect(&tempBounds, g_playOriginH, g_playOriginV);
 		AddRectToWorkRects(&tempBounds);
-		if (hasMirror)
+		if (g_hasMirror)
 		{
 			tempBounds = thisGlider->dest;
-			QOffsetRect(&tempBounds, playOriginH, playOriginV);
+			QOffsetRect(&tempBounds, g_playOriginH, g_playOriginV);
 			QOffsetRect(&tempBounds, kReflectionOffsetH, KReflectionOffsetV);
 			AddRectToWorkRects(&tempBounds);
 		}
@@ -110,14 +110,14 @@ void StartGliderFadingOut (gliderPtr thisGlider)
 	if (thisGlider->facing == kFaceLeft)
 	{
 		thisGlider->src =
-				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
+				g_gliderSrc[g_fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
 		thisGlider->mask =
-				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
+				g_gliderSrc[g_fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame]];
-		thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
+		thisGlider->src = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
+		thisGlider->mask = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
 	}
 }
 
@@ -153,7 +153,7 @@ void StartGliderGoingDownStairs (gliderPtr thisGlider)
 		thisGlider->frame = 0;
 
 	thisGlider->mode = kGliderGoingDown;
-	rightClip = GetUpStairsRightEdge();
+	g_rightClip = GetUpStairsRightEdge();
 }
 
 //--------------------------------------------------------------  StartGliderMailingIn
@@ -166,11 +166,11 @@ void StartGliderMailingIn (gliderPtr thisGlider, const Rect *bounds, const hotOb
 	PlayPrioritySound(kTransOutSound, kTransOutPriority);
 
 	whoLinked = who->who;
-	transRoom = masterObjects[whoLinked].roomLink;
-	objLinked = (Byte)masterObjects[whoLinked].objectLink;
-	linkedToWhat = WhatAreWeLinkedTo(transRoom, objLinked);
+	g_transRoom = g_masterObjects[whoLinked].roomLink;
+	objLinked = (Byte)g_masterObjects[whoLinked].objectLink;
+	g_linkedToWhat = WhatAreWeLinkedTo(g_transRoom, objLinked);
 
-	GetObjectRect(&thisHouse.rooms[transRoom].objects[objLinked], &transRect);
+	GetObjectRect(&g_thisHouse.rooms[g_transRoom].objects[objLinked], &g_transRect);
 
 	thisGlider->frame = 0;
 	thisGlider->clip = *bounds;
@@ -187,19 +187,19 @@ void StartGliderMailingOut (gliderPtr thisGlider)
 	else if (thisGlider->mode == kGliderLosingFoil)
 		RemoveFoilFromGlider(thisGlider);
 
-	if (linkedToWhat == kLinkedToLeftMailbox)
+	if (g_linkedToWhat == kLinkedToLeftMailbox)
 	{
 		thisGlider->facing = kFaceLeft;
 		thisGlider->mode = kGliderMailOutLeft;
-		thisGlider->src = gliderSrc[2];
-		thisGlider->mask = gliderSrc[2];
+		thisGlider->src = g_gliderSrc[2];
+		thisGlider->mask = g_gliderSrc[2];
 	}
 	else
 	{
 		thisGlider->facing = kFaceRight;
 		thisGlider->mode = kGliderMailOutRight;
-		thisGlider->src = gliderSrc[0];
-		thisGlider->mask = gliderSrc[0];
+		thisGlider->src = g_gliderSrc[0];
+		thisGlider->mask = g_gliderSrc[0];
 	}
 
 	thisGlider->hVel = 0;
@@ -225,11 +225,11 @@ void StartGliderDuctingDown (gliderPtr thisGlider, const Rect *bounds, const hot
 		RemoveFoilFromGlider(thisGlider);
 
 	whoLinked = who->who;
-	transRoom = masterObjects[whoLinked].roomLink;
-	objLinked = (Byte)masterObjects[whoLinked].objectLink;
-	linkedToWhat = WhatAreWeLinkedTo(transRoom, objLinked);
+	g_transRoom = g_masterObjects[whoLinked].roomLink;
+	objLinked = (Byte)g_masterObjects[whoLinked].objectLink;
+	g_linkedToWhat = WhatAreWeLinkedTo(g_transRoom, objLinked);
 
-	GetObjectRect(&thisHouse.rooms[transRoom].objects[objLinked], &transRect);
+	GetObjectRect(&g_thisHouse.rooms[g_transRoom].objects[objLinked], &g_transRect);
 
 	thisGlider->frame = 0;
 	thisGlider->clip = *bounds;
@@ -254,11 +254,11 @@ void StartGliderDuctingUp (gliderPtr thisGlider, const Rect *bounds, const hotOb
 		RemoveFoilFromGlider(thisGlider);
 
 	whoLinked = who->who;
-	transRoom = masterObjects[whoLinked].roomLink;
-	objLinked = (Byte)masterObjects[whoLinked].objectLink;
-	linkedToWhat = WhatAreWeLinkedTo(transRoom, objLinked);
+	g_transRoom = g_masterObjects[whoLinked].roomLink;
+	objLinked = (Byte)g_masterObjects[whoLinked].objectLink;
+	g_linkedToWhat = WhatAreWeLinkedTo(g_transRoom, objLinked);
 
-	GetObjectRect(&thisHouse.rooms[transRoom].objects[objLinked], &transRect);
+	GetObjectRect(&g_thisHouse.rooms[g_transRoom].objects[objLinked], &g_transRect);
 
 	thisGlider->frame = 0;
 	thisGlider->clip = *bounds;
@@ -292,11 +292,11 @@ void StartGliderTransporting (gliderPtr thisGlider, const hotObject *who)
 		RemoveFoilFromGlider(thisGlider);
 
 	whoLinked = who->who;
-	transRoom = masterObjects[whoLinked].roomLink;
-	objLinked = (Byte)masterObjects[whoLinked].objectLink;
-	linkedToWhat = WhatAreWeLinkedTo(transRoom, objLinked);
+	g_transRoom = g_masterObjects[whoLinked].roomLink;
+	objLinked = (Byte)g_masterObjects[whoLinked].objectLink;
+	g_linkedToWhat = WhatAreWeLinkedTo(g_transRoom, objLinked);
 
-	GetObjectRect(&thisHouse.rooms[transRoom].objects[objLinked], &transRect);
+	GetObjectRect(&g_thisHouse.rooms[g_transRoom].objects[objLinked], &g_transRect);
 
 	thisGlider->dest.right = thisGlider->dest.left + kGliderWide;
 	thisGlider->dest.bottom = thisGlider->dest.top + kGliderHigh;
@@ -308,14 +308,14 @@ void StartGliderTransporting (gliderPtr thisGlider, const hotObject *who)
 	if (thisGlider->facing == kFaceLeft)
 	{
 		thisGlider->src =
-				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
+				g_gliderSrc[g_fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
 		thisGlider->mask =
-				gliderSrc[fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
+				g_gliderSrc[g_fadeInSequence[thisGlider->frame] + kLeftFadeOffset];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[fadeInSequence[thisGlider->frame]];
-		thisGlider->mask = gliderSrc[fadeInSequence[thisGlider->frame]];
+		thisGlider->src = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
+		thisGlider->mask = g_gliderSrc[g_fadeInSequence[thisGlider->frame]];
 	}
 }
 
@@ -330,13 +330,13 @@ void FlagGliderNormal (gliderPtr thisGlider)
 	thisGlider->mode = kGliderNormal;
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = gliderSrc[2];
-		thisGlider->mask = gliderSrc[2];
+		thisGlider->src = g_gliderSrc[2];
+		thisGlider->mask = g_gliderSrc[2];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[0];
-		thisGlider->mask = gliderSrc[0];
+		thisGlider->src = g_gliderSrc[0];
+		thisGlider->mask = g_gliderSrc[0];
 	}
 	thisGlider->hVel = 0;
 	thisGlider->vVel = 0;
@@ -348,7 +348,7 @@ void FlagGliderNormal (gliderPtr thisGlider)
 	thisGlider->ignoreGround = false;
 	thisGlider->dontDraw = false;
 	thisGlider->frame = 0;
-	shadowVisible = IsShadowVisible();
+	g_shadowVisible = IsShadowVisible();
 }
 
 //--------------------------------------------------------------  FlagGliderShredding
@@ -375,13 +375,13 @@ void FlagGliderShredding (gliderPtr thisGlider, const Rect *bounds)
 	thisGlider->mode = kGliderShredding;
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = gliderSrc[2];
-		thisGlider->mask = gliderSrc[2];
+		thisGlider->src = g_gliderSrc[2];
+		thisGlider->mask = g_gliderSrc[2];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[0];
-		thisGlider->mask = gliderSrc[0];
+		thisGlider->src = g_gliderSrc[0];
+		thisGlider->mask = g_gliderSrc[0];
 	}
 	thisGlider->hVel = 0;
 	thisGlider->vVel = 0;
@@ -406,13 +406,13 @@ void FlagGliderBurning (gliderPtr thisGlider)
 	thisGlider->mode = kGliderBurning;
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = gliderSrc[25];
-		thisGlider->mask = gliderSrc[25];
+		thisGlider->src = g_gliderSrc[25];
+		thisGlider->mask = g_gliderSrc[25];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[21];
-		thisGlider->mask = gliderSrc[21];
+		thisGlider->src = g_gliderSrc[21];
+		thisGlider->mask = g_gliderSrc[21];
 	}
 	thisGlider->hVel = 0;
 	thisGlider->vVel = 0;
@@ -429,8 +429,8 @@ void FlagGliderFaceLeft (gliderPtr thisGlider)
 {
 	thisGlider->mode = kGliderFaceLeft;
 	thisGlider->frame = kLastAboutFaceFrame;
-	thisGlider->src = gliderSrc[kLastAboutFaceFrame];
-	thisGlider->mask = gliderSrc[kLastAboutFaceFrame];
+	thisGlider->src = g_gliderSrc[kLastAboutFaceFrame];
+	thisGlider->mask = g_gliderSrc[kLastAboutFaceFrame];
 }
 
 //--------------------------------------------------------------  FlagGliderFaceRight
@@ -439,8 +439,8 @@ void FlagGliderFaceRight (gliderPtr thisGlider)
 {
 	thisGlider->mode = kGliderFaceRight;
 	thisGlider->frame = kFirstAboutFaceFrame;
-	thisGlider->src = gliderSrc[kFirstAboutFaceFrame];
-	thisGlider->mask = gliderSrc[kFirstAboutFaceFrame];
+	thisGlider->src = g_gliderSrc[kFirstAboutFaceFrame];
+	thisGlider->mask = g_gliderSrc[kFirstAboutFaceFrame];
 }
 
 //--------------------------------------------------------------  FlagGliderInLimbo
@@ -449,19 +449,19 @@ void FlagGliderInLimbo (gliderPtr thisGlider, Boolean sayIt)
 {
 	thisGlider->wasMode = thisGlider->mode;
 	thisGlider->mode = kGliderInLimbo;
-	if ((sayIt) && (saidFollow < 3))
+	if ((sayIt) && (g_saidFollow < 3))
 	{
 		PlayPrioritySound(kFollowSound, kFollowPriority);
-		saidFollow++;
+		g_saidFollow++;
 	}
-	firstPlayer = thisGlider->which;
+	g_firstPlayer = thisGlider->which;
 }
 
 //--------------------------------------------------------------  UndoGliderLimbo
 
 void UndoGliderLimbo (gliderPtr thisGlider)
 {
-	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
+	if ((g_twoPlayerGame) && (g_onePlayerLeft) && (thisGlider->which == g_playerDead))
 		return;
 
 	if (thisGlider->mode == kGliderInLimbo)
@@ -486,7 +486,7 @@ void ToggleGliderFacing (gliderPtr thisGlider)
 
 void InsureGliderFacingRight (gliderPtr thisGlider)
 {
-	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
+	if ((g_twoPlayerGame) && (g_onePlayerLeft) && (thisGlider->which == g_playerDead))
 		return;
 
 	if ((thisGlider->facing == kFaceLeft) && (thisGlider->mode != kGliderBurning))
@@ -497,7 +497,7 @@ void InsureGliderFacingRight (gliderPtr thisGlider)
 
 void InsureGliderFacingLeft (gliderPtr thisGlider)
 {
-	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
+	if ((g_twoPlayerGame) && (g_onePlayerLeft) && (thisGlider->which == g_playerDead))
 		return;
 
 	if ((thisGlider->facing == kFaceRight) && (thisGlider->mode != kGliderBurning))
@@ -510,23 +510,23 @@ void ReadyGliderForTripUpStairs (gliderPtr thisGlider)
 {
 	#define kVGliderAppearsComingUp		100
 
-	if ((twoPlayerGame) && (thisGlider->which == playerDead) && (onePlayerLeft))
+	if ((g_twoPlayerGame) && (thisGlider->which == g_playerDead) && (g_onePlayerLeft))
 		return;
 
 	thisGlider->facing = kFaceLeft;
 	thisGlider->mode = kGliderComingUp;
-	thisGlider->src = gliderSrc[2];
-	thisGlider->mask = gliderSrc[2];
+	thisGlider->src = g_gliderSrc[2];
+	thisGlider->mask = g_gliderSrc[2];
 	thisGlider->hVel = 0;
 	thisGlider->vVel = 0;
 	thisGlider->hDesiredVel = 0;
 	thisGlider->vDesiredVel = 0;
 	thisGlider->tipped = false;
 
-	rightClip = GetUpStairsRightEdge();
+	g_rightClip = GetUpStairsRightEdge();
 	thisGlider->dest = thisGlider->src;
 	ZeroRectCorner(&thisGlider->dest);
-	QOffsetRect(&thisGlider->dest, rightClip, kVGliderAppearsComingUp);
+	QOffsetRect(&thisGlider->dest, g_rightClip, kVGliderAppearsComingUp);
 	thisGlider->whole = thisGlider->dest;
 	thisGlider->destShadow.left = thisGlider->dest.left;
 	thisGlider->destShadow.right = thisGlider->dest.right;
@@ -541,23 +541,23 @@ void ReadyGliderForTripDownStairs (gliderPtr thisGlider)
 {
 	#define kVGliderAppearsComingDown		100
 
-	if ((twoPlayerGame) && (thisGlider->which == playerDead) && (onePlayerLeft))
+	if ((g_twoPlayerGame) && (thisGlider->which == g_playerDead) && (g_onePlayerLeft))
 		return;
 
 	thisGlider->facing = kFaceRight;
 	thisGlider->mode = kGliderComingDown;
-	thisGlider->src = gliderSrc[0];
-	thisGlider->mask = gliderSrc[0];
+	thisGlider->src = g_gliderSrc[0];
+	thisGlider->mask = g_gliderSrc[0];
 	thisGlider->hVel = 0;
 	thisGlider->vVel = 0;
 	thisGlider->hDesiredVel = 0;
 	thisGlider->vDesiredVel = 0;
 	thisGlider->tipped = false;
 
-	leftClip = GetDownStairsLeftEdge();
+	g_leftClip = GetDownStairsLeftEdge();
 	thisGlider->dest = thisGlider->src;
 	ZeroRectCorner(&thisGlider->dest);
-	QOffsetRect(&thisGlider->dest, leftClip - kGliderWide, kVGliderAppearsComingDown);
+	QOffsetRect(&thisGlider->dest, g_leftClip - kGliderWide, kVGliderAppearsComingDown);
 	thisGlider->whole = thisGlider->dest;
 	thisGlider->destShadow.left = thisGlider->dest.left;
 	thisGlider->destShadow.right = thisGlider->dest.right;
@@ -580,13 +580,13 @@ void StartGliderFoilGoing (gliderPtr thisGlider)
 	thisGlider->frame = 0;
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = gliderSrc[(10 - thisGlider->frame) + kLeftFadeOffset];
-		thisGlider->mask = gliderSrc[(10 - thisGlider->frame) + kLeftFadeOffset];
+		thisGlider->src = g_gliderSrc[(10 - thisGlider->frame) + kLeftFadeOffset];
+		thisGlider->mask = g_gliderSrc[(10 - thisGlider->frame) + kLeftFadeOffset];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[10 - thisGlider->frame];
-		thisGlider->mask = gliderSrc[10 - thisGlider->frame];
+		thisGlider->src = g_gliderSrc[10 - thisGlider->frame];
+		thisGlider->mask = g_gliderSrc[10 - thisGlider->frame];
 	}
 }
 
@@ -606,13 +606,13 @@ void StartGliderFoilLosing (gliderPtr thisGlider)
 	thisGlider->frame = 0;
 	if (thisGlider->facing == kFaceLeft)
 	{
-		thisGlider->src = gliderSrc[(10 - thisGlider->frame) + kLeftFadeOffset];
-		thisGlider->mask = gliderSrc[(10 - thisGlider->frame) + kLeftFadeOffset];
+		thisGlider->src = g_gliderSrc[(10 - thisGlider->frame) + kLeftFadeOffset];
+		thisGlider->mask = g_gliderSrc[(10 - thisGlider->frame) + kLeftFadeOffset];
 	}
 	else
 	{
-		thisGlider->src = gliderSrc[10 - thisGlider->frame];
-		thisGlider->mask = gliderSrc[10 - thisGlider->frame];
+		thisGlider->src = g_gliderSrc[10 - thisGlider->frame];
+		thisGlider->mask = g_gliderSrc[10 - thisGlider->frame];
 	}
 }
 
@@ -620,7 +620,7 @@ void StartGliderFoilLosing (gliderPtr thisGlider)
 
 void TagGliderIdle (gliderPtr thisGlider)
 {
-	if ((twoPlayerGame) && (onePlayerLeft) && (thisGlider->which == playerDead))
+	if ((g_twoPlayerGame) && (g_onePlayerLeft) && (thisGlider->which == g_playerDead))
 		return;
 
 	thisGlider->wasMode = thisGlider->mode;

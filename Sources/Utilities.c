@@ -23,7 +23,7 @@
 
 UInt32 RandomLongQUS (void);
 
-static UInt32 theSeed;
+static UInt32 g_theSeed;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  RandomInt
@@ -44,7 +44,7 @@ SInt16 RandomInt (SInt16 range)
 
 void InitRandomLongQUS (void)
 {
-	theSeed = Mac_GetDateTime();
+	g_theSeed = Mac_GetDateTime();
 }
 
 //--------------------------------------------------------------  RandomLongQUS
@@ -52,8 +52,8 @@ void InitRandomLongQUS (void)
 
 UInt32 RandomLongQUS (void)
 {
-	theSeed = theSeed * 1103515245 + 12345;
-	return (theSeed);
+	g_theSeed = g_theSeed * 1103515245 + 12345;
+	return (g_theSeed);
 }
 
 //--------------------------------------------------------------  RedAlert
@@ -96,10 +96,10 @@ __declspec(noreturn) void RedAlert (SInt16 errorNumber)
 	params.arg[0] = errTitle;
 	params.arg[1] = errMessage;
 	params.arg[2] = errNumberString;
-	dummyInt = Alert(rDeathAlertID, mainWindow, &params);
+	dummyInt = Alert(rDeathAlertID, g_mainWindow, &params);
 
-	if (mainWindow != NULL)
-		DestroyWindow(mainWindow);
+	if (g_mainWindow != NULL)
+		DestroyWindow(g_mainWindow);
 	CoUninitialize();
 	exit(EXIT_FAILURE);
 }

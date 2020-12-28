@@ -16,26 +16,26 @@
 #define kHeliumBadge            3
 #define kNumBadges              4
 
-extern Rect boardSrcRect;
-extern Rect badgeSrcRect;
-extern Rect boardDestRect;
-extern HDC boardSrcMap;
-extern HDC badgeSrcMap;
-extern Rect boardTSrcRect;
-extern Rect boardTDestRect;
-extern HDC boardTSrcMap;
-extern Rect boardGSrcRect;
-extern Rect boardGDestRect;
-extern HDC boardGSrcMap;
-extern Rect boardPSrcRect;
-extern Rect boardPDestRect;
-extern HDC boardPSrcMap;
-extern Rect boardPQDestRect;
-extern Rect boardGQDestRect;
-extern Rect badgesBlankRects[kNumBadges];
-extern Rect badgesBadgesRects[kNumBadges];
-extern Rect badgesDestRects[kNumBadges];
-extern SInt16 wasScoreboardMode;
+extern Rect g_boardSrcRect;
+extern Rect g_badgeSrcRect;
+extern Rect g_boardDestRect;
+extern HDC g_boardSrcMap;
+extern HDC g_badgeSrcMap;
+extern Rect g_boardTSrcRect;
+extern Rect g_boardTDestRect;
+extern HDC g_boardTSrcMap;
+extern Rect g_boardGSrcRect;
+extern Rect g_boardGDestRect;
+extern HDC g_boardGSrcMap;
+extern Rect g_boardPSrcRect;
+extern Rect g_boardPDestRect;
+extern HDC g_boardPSrcMap;
+extern Rect g_boardPQDestRect;
+extern Rect g_boardGQDestRect;
+extern Rect g_badgesBlankRects[kNumBadges];
+extern Rect g_badgesBadgesRects[kNumBadges];
+extern Rect g_badgesDestRects[kNumBadges];
+extern SInt16 g_wasScoreboardMode;
 
 void RefreshScoreboard (SInt16 mode);
 void HandleDynamicScoreboard (void);

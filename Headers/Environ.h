@@ -16,7 +16,7 @@ typedef struct macEnviron
 	Boolean hasQT;
 } macEnviron;
 
-extern macEnviron thisMac;
+extern macEnviron g_thisMac;
 
 void CheckOurEnvirons (void);
 

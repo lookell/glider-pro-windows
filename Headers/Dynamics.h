@@ -29,9 +29,9 @@ typedef struct dynaType
 	Boolean active;
 } dynaType;
 
-extern Rect breadSrc[kNumBreadPicts];
-extern dynaType dinahs[kMaxDynamicObs];
-extern SInt16 numDynamics;
+extern Rect g_breadSrc[kNumBreadPicts];
+extern dynaType g_dinahs[kMaxDynamicObs];
+extern SInt16 g_numDynamics;
 
 void HandleDynamics (void);
 void RenderDynamics (void);

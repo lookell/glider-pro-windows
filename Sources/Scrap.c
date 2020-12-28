@@ -25,11 +25,11 @@
 
 HIMAGELIST GetRoomDragImageList (const Rect *roomSrc, SInt16 roomNumber);
 
-Boolean hasScrap;
-Boolean scrapIsARoom;
+Boolean g_hasScrap;
+Boolean g_scrapIsARoom;
 
-static roomType savedRoomScrap;
-static objectType savedObjectScrap;
+static roomType g_savedRoomScrap;
+static objectType g_savedObjectScrap;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  PutRoomScrap
@@ -37,15 +37,15 @@ static objectType savedObjectScrap;
 
 void PutRoomScrap (void)
 {
-	if (thisRoomNumber >= 0 && thisRoomNumber < thisHouse.nRooms)
+	if (g_thisRoomNumber >= 0 && g_thisRoomNumber < g_thisHouse.nRooms)
 	{
-		savedRoomScrap = *thisRoom;
-		if (!hasScrap)
+		g_savedRoomScrap = *g_thisRoom;
+		if (!g_hasScrap)
 		{
-			hasScrap = true;
+			g_hasScrap = true;
 			UpdateMenus(false);
 		}
-		scrapIsARoom = true;
+		g_scrapIsARoom = true;
 	}
 }
 
@@ -54,15 +54,15 @@ void PutRoomScrap (void)
 
 void PutObjectScrap (void)
 {
-	if (objActive >= 0 && objActive < kMaxRoomObs)
+	if (g_objActive >= 0 && g_objActive < kMaxRoomObs)
 	{
-		savedObjectScrap = thisRoom->objects[objActive];
-		if (!hasScrap)
+		g_savedObjectScrap = g_thisRoom->objects[g_objActive];
+		if (!g_hasScrap)
 		{
-			hasScrap = true;
+			g_hasScrap = true;
 			UpdateMenus(false);
 		}
-		scrapIsARoom = false;
+		g_scrapIsARoom = false;
 	}
 }
 
@@ -80,25 +80,25 @@ void GetRoomScrap (void)
 	objectType *theObject;
 	SInt16 i;
 
-	if (hasScrap && scrapIsARoom)
+	if (g_hasScrap && g_scrapIsARoom)
 	{
 		DeselectObject();
 
-		srcFloor = savedRoomScrap.floor;
-		srcSuite = savedRoomScrap.suite;
+		srcFloor = g_savedRoomScrap.floor;
+		srcSuite = g_savedRoomScrap.suite;
 		packedSrcCombo = MergeFloorSuite(srcFloor + kNumUndergroundFloors, srcSuite);
-		destFloor = thisRoom->floor;
-		destSuite = thisRoom->suite;
+		destFloor = g_thisRoom->floor;
+		destSuite = g_thisRoom->suite;
 		packedDestCombo = MergeFloorSuite(destFloor + kNumUndergroundFloors, destSuite);
 
-		*thisRoom = savedRoomScrap;
-		thisRoom->floor = destFloor;
-		thisRoom->suite = destSuite;
+		*g_thisRoom = g_savedRoomScrap;
+		g_thisRoom->floor = destFloor;
+		g_thisRoom->suite = destSuite;
 
 		// fix up links within this room
 		for (i = 0; i < kMaxRoomObs; i++)
 		{
-			theObject = &thisRoom->objects[i];
+			theObject = &g_thisRoom->objects[i];
 			if (ObjectIsLinkSwitch(theObject))
 			{
 				if (theObject->data.e.where == packedSrcCombo)
@@ -117,7 +117,7 @@ void GetRoomScrap (void)
 
 		CopyThisRoomToRoom();
 		ReflectCurrentRoom(false);
-		fileDirty = true;
+		g_fileDirty = true;
 		UpdateMenus(false);
 	}
 }
@@ -130,20 +130,20 @@ void GetObjectScrap (void)
 	objectType tempObject;
 	Point noPoint;
 
-	if (hasScrap && !scrapIsARoom)
+	if (g_hasScrap && !g_scrapIsARoom)
 	{
 		DeselectObject();
 
 		noPoint.h = 100;
 		noPoint.v = 100;
-		tempObject = savedObjectScrap;
-		if (AddNewObject(mainWindow, noPoint, tempObject.what, false))
+		tempObject = g_savedObjectScrap;
+		if (AddNewObject(g_mainWindow, noPoint, tempObject.what, false))
 		{
-			thisRoom->objects[objActive] = tempObject;
-			ReadyBackground(thisRoom->background, thisRoom->tiles);
+			g_thisRoom->objects[g_objActive] = tempObject;
+			ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 			GetThisRoomsObjRects();
 			DrawThisRoomsObjects();
-			Mac_InvalWindowRect(mainWindow, &mainWindowRect);
+			Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
 			StartMarqueeForActiveObject();
 		}
 	}
@@ -200,9 +200,9 @@ HIMAGELIST GetRoomDragImageList (const Rect *roomSrc, SInt16 roomNumber)
 			SelectObject(tempDC, roomImage);
 			SetStretchBltMode(tempDC, HALFTONE);
 			SetBrushOrgEx(tempDC, 0, 0, NULL);
-			if (roomNumber >= 0 && roomNumber < thisHouse.nRooms)
+			if (roomNumber >= 0 && roomNumber < g_thisHouse.nRooms)
 			{
-				backgroundID = thisHouse.rooms[roomNumber].background;
+				backgroundID = g_thisHouse.rooms[roomNumber].background;
 			}
 			else
 			{
@@ -244,8 +244,8 @@ void DragRoom (SInt16 clickX, SInt16 clickY, const Rect *roomSrc, SInt16 roomNum
 
 	dragPoint.x = clickX;
 	dragPoint.y = clickY;
-	ClientToScreen(mapWindow, &dragPoint);
-	if (!DragDetect(mapWindow, dragPoint))
+	ClientToScreen(g_mapWindow, &dragPoint);
+	if (!DragDetect(g_mapWindow, dragPoint))
 	{
 		return;
 	}
@@ -253,13 +253,13 @@ void DragRoom (SInt16 clickX, SInt16 clickY, const Rect *roomSrc, SInt16 roomNum
 	dragImageList = GetRoomDragImageList(roomSrc, roomNumber);
 	if (dragImageList == NULL)
 	{
-		YellowAlert(mainWindow, kYellowNoMemory, 0);
+		YellowAlert(g_mainWindow, kYellowNoMemory, 0);
 		return;
 	}
 
 	UpdateMapWindow();
 
-	SetCapture(mapWindow);
+	SetCapture(g_mapWindow);
 	ImageList_BeginDrag(dragImageList, 0, clickX - roomSrc->left, clickY - roomSrc->top);
 	ImageList_DragEnter(NULL, dragPoint.x, dragPoint.y);
 	startPoint = dragPoint;
@@ -276,7 +276,7 @@ void DragRoom (SInt16 clickX, SInt16 clickY, const Rect *roomSrc, SInt16 roomNum
 			break;
 
 		case WM_LBUTTONUP:
-			if (GetCapture() == mapWindow)
+			if (GetCapture() == g_mapWindow)
 			{
 				ReleaseCapture();
 			}
@@ -288,7 +288,7 @@ void DragRoom (SInt16 clickX, SInt16 clickY, const Rect *roomSrc, SInt16 roomNum
 			if (msg.wParam == VK_ESCAPE)
 			{
 				dragPoint = startPoint;
-				if (GetCapture() == mapWindow)
+				if (GetCapture() == g_mapWindow)
 				{
 					ReleaseCapture();
 				}
@@ -305,7 +305,7 @@ void DragRoom (SInt16 clickX, SInt16 clickY, const Rect *roomSrc, SInt16 roomNum
 			DispatchMessage(&msg);
 			break;
 		}
-		if (GetCapture() != mapWindow)
+		if (GetCapture() != g_mapWindow)
 		{
 			break;
 		}
@@ -315,8 +315,8 @@ void DragRoom (SInt16 clickX, SInt16 clickY, const Rect *roomSrc, SInt16 roomNum
 	ImageList_EndDrag();
 	ImageList_Destroy(dragImageList);
 
-	ScreenToClient(mapWindow, &dragPoint);
-	GetClientRect(mapWindow, &clientRect);
+	ScreenToClient(g_mapWindow, &dragPoint);
+	GetClientRect(g_mapWindow, &clientRect);
 	if (PtInRect(&clientRect, dragPoint))
 	{
 		Point pt;

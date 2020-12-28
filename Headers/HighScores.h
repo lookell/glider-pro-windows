@@ -11,9 +11,9 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern Str31 highBanner;
-extern Str15 highName;
-extern SInt16 lastHighScore;
+extern Str31 g_highBanner;
+extern Str15 g_highName;
+extern SInt16 g_lastHighScore;
 
 void DoHighScores (void);
 void ZeroHighScores (housePtr house);

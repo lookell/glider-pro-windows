@@ -37,18 +37,18 @@ void LoopMovie (void);
 void OpenHouseMovie (void);
 void CloseHouseMovie (void);
 
-Movie theMovie;
-Rect movieRect;
-SInt16 wasHouseVersion;
-Boolean houseOpen;
-Boolean fileDirty;
-Boolean gameDirty;
+Movie g_theMovie;
+Rect g_movieRect;
+SInt16 g_wasHouseVersion;
+Boolean g_houseOpen;
+Boolean g_fileDirty;
+Boolean g_gameDirty;
 Gp_HouseFile *g_theHouseFile;
-Boolean changeLockStateOfHouse;
-Boolean saveHouseLocked;
-Boolean houseIsReadOnly;
-Boolean hasMovie;
-Boolean tvInRoom;
+Boolean g_changeLockStateOfHouse;
+Boolean g_saveHouseLocked;
+Boolean g_houseIsReadOnly;
+Boolean g_hasMovie;
+Boolean g_tvInRoom;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  LoopMovie
@@ -63,7 +63,7 @@ void LoopMovie (void)
 
 	theLoop = NewHandle(sizeof(SInt32));
 	(** (SInt32 **) theLoop) = 0;
-	theUserData = GetMovieUserData(theMovie);
+	theUserData = GetMovieUserData(g_theMovie);
 	theCount = CountUserDataType(theUserData, 'LOOP');
 	while (theCount--)
 	{
@@ -86,9 +86,9 @@ void OpenHouseMovie (void)
 	SInt16		movieRefNum;
 	Boolean		dataRefWasChanged;
 
-	if (thisMac.hasQT)
+	if (g_thisMac.hasQT)
 	{
-		theSpec = theHousesSpecs[thisHouseIndex];
+		theSpec = g_theHousesSpecs[g_thisHouseIndex];
 		PasStringConcat(theSpec.name, "\p.mov");
 
 		theErr = FSpGetFInfo(&theSpec, &finderInfo);
@@ -102,7 +102,7 @@ void OpenHouseMovie (void)
 			return;
 		}
 
-		theErr = NewMovieFromFile(&theMovie, movieRefNum, nil, theSpec.name,
+		theErr = NewMovieFromFile(&g_theMovie, movieRefNum, nil, theSpec.name,
 				newMovieActive, &dataRefWasChanged);
 		if (theErr != noErr)
 		{
@@ -120,9 +120,9 @@ void OpenHouseMovie (void)
 			return;
 		}
 
-		GoToBeginningOfMovie(theMovie);
-		theErr = LoadMovieIntoRam(theMovie,
-				GetMovieTime(theMovie, 0L), GetMovieDuration(theMovie), 0);
+		GoToBeginningOfMovie(g_theMovie);
+		theErr = LoadMovieIntoRam(g_theMovie,
+				GetMovieTime(g_theMovie, 0L), GetMovieDuration(g_theMovie), 0);
 		if (theErr != noErr)
 		{
 			YellowAlert(kYellowQTMovieNotLoaded, theErr);
@@ -132,7 +132,7 @@ void OpenHouseMovie (void)
 		}
 		DisposeHandle(spaceSaver);
 
-		theErr = PrerollMovie(theMovie, 0, 0x000F0000);
+		theErr = PrerollMovie(g_theMovie, 0, 0x000F0000);
 		if (theErr != noErr)
 		{
 			YellowAlert(kYellowQTMovieNotLoaded, theErr);
@@ -140,15 +140,15 @@ void OpenHouseMovie (void)
 			return;
 		}
 
-		theTime = GetMovieTimeBase(theMovie);
+		theTime = GetMovieTimeBase(g_theMovie);
 		SetTimeBaseFlags(theTime, loopTimeBase);
-		SetMovieMasterTimeBase(theMovie, theTime, nil);
+		SetMovieMasterTimeBase(g_theMovie, theTime, nil);
 		LoopMovie();
 
-		GetMovieBox(theMovie, &movieRect);
+		GetMovieBox(g_theMovie, &g_movieRect);
 
-		theHousesSpecs[thisHouseIndex].hasMovie = true;
-		hasMovie = true;
+		g_theHousesSpecs[g_thisHouseIndex].g_hasMovie = true;
+		g_hasMovie = true;
 	}
 #endif
 }
@@ -160,14 +160,14 @@ void CloseHouseMovie (void)
 #ifdef COMPILEQT
 	OSErr		theErr;
 
-	if ((thisMac.hasQT) && (hasMovie))
+	if ((g_thisMac.hasQT) && (g_hasMovie))
 	{
-		theErr = LoadMovieIntoRam(theMovie,
-				GetMovieTime(theMovie, 0L), GetMovieDuration(theMovie), flushFromRam);
-		DisposeMovie(theMovie);
+		theErr = LoadMovieIntoRam(g_theMovie,
+				GetMovieTime(g_theMovie, 0L), GetMovieDuration(g_theMovie), flushFromRam);
+		DisposeMovie(g_theMovie);
 	}
 #endif
-	hasMovie = false;
+	g_hasMovie = false;
 }
 
 //--------------------------------------------------------------  OpenHouse
@@ -175,43 +175,43 @@ void CloseHouseMovie (void)
 
 Boolean OpenHouse (HWND ownerWindow)
 {
-	if (houseOpen)
+	if (g_houseOpen)
 	{
 		if (!CloseHouse(ownerWindow))
 		{
 			return false;
 		}
 	}
-	if ((housesFound < 1) || (thisHouseIndex == -1))
+	if ((g_housesFound < 1) || (g_thisHouseIndex == -1))
 	{
 		return false;
 	}
 
 	if (COMPILEDEMO)
 	{
-		if (lstrcmpi(theHousesSpecs[thisHouseIndex].houseName, L"Demo House") != 0)
+		if (lstrcmpi(g_theHousesSpecs[g_thisHouseIndex].houseName, L"Demo House") != 0)
 		{
 			return false;
 		}
 	}
 
-	g_theHouseFile = Gp_LoadHouseFile(theHousesSpecs[thisHouseIndex].path);
+	g_theHouseFile = Gp_LoadHouseFile(g_theHousesSpecs[g_thisHouseIndex].path);
 	if (g_theHouseFile == NULL)
 	{
-		houseIsReadOnly = false;
+		g_houseIsReadOnly = false;
 		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(ERROR_OPEN_FAILED),
-			theHousesSpecs[thisHouseIndex].houseName);
+			g_theHousesSpecs[g_thisHouseIndex].houseName);
 		return false;
 	}
-	houseIsReadOnly = Gp_HouseFileReadOnly(g_theHouseFile);
-	theHousesSpecs[thisHouseIndex].readOnly = houseIsReadOnly;
+	g_houseIsReadOnly = Gp_HouseFileReadOnly(g_theHouseFile);
+	g_theHousesSpecs[g_thisHouseIndex].readOnly = g_houseIsReadOnly;
 
-	houseOpen = true;
+	g_houseOpen = true;
 
-	hasMovie = false;
-	theHousesSpecs[thisHouseIndex].hasMovie = false;
-	tvInRoom = false;
-	tvWithMovieNumber = -1;
+	g_hasMovie = false;
+	g_theHousesSpecs[g_thisHouseIndex].hasMovie = false;
+	g_tvInRoom = false;
+	g_tvWithMovieNumber = -1;
 	OpenHouseMovie();
 
 	return true;
@@ -225,17 +225,17 @@ Boolean OpenSpecificHouse (PCWSTR filename, HWND ownerWindow)
 	SInt16 i;
 	Boolean itOpened;
 
-	if ((housesFound < 1) || (thisHouseIndex == -1))
+	if ((g_housesFound < 1) || (g_thisHouseIndex == -1))
 		return (false);
 
 	itOpened = false;
 
-	for (i = 0; i < housesFound; i++)
+	for (i = 0; i < g_housesFound; i++)
 	{
-		if (wcscmp(theHousesSpecs[i].path, filename) == 0)
+		if (wcscmp(g_theHousesSpecs[i].path, filename) == 0)
 		{
-			thisHouseIndex = i;
-			PasStringCopy(theHousesSpecs[thisHouseIndex].name, thisHouseName);
+			g_thisHouseIndex = i;
+			PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, g_thisHouseName);
 			if (OpenHouse(ownerWindow))
 				itOpened = ReadHouse(ownerWindow);
 			else
@@ -262,10 +262,10 @@ Boolean SaveHouseAs (void)
 	noProblems = true;
 
 	GetLocalizedString_Pascal(15, tempStr);
-	StandardPutFile(tempStr, thisHouseName, &theReply);
+	StandardPutFile(tempStr, g_thisHouseName, &theReply);
 	if (theReply.sfGood)
 	{
-		oldHouse = theHousesSpecs[thisHouseIndex];
+		oldHouse = g_theHousesSpecs[g_thisHouseIndex];
 
 		CloseHouseResFork();						// close this house file
 		theErr = FSClose(houseRefNum);
@@ -282,13 +282,13 @@ Boolean SaveHouseAs (void)
 				theReply.sfFile.name);
 		if (ResError() != noErr)
 			YellowAlert(kYellowFailedResCreate, ResError());
-		PasStringCopy(theReply.sfFile.name, thisHouseName);
+		PasStringCopy(theReply.sfFile.name, g_thisHouseName);
 													// open new house data fork
 		theErr = FSpOpenDF(&theReply.sfFile, fsRdWrPerm, &houseRefNum);
-		if (!CheckFileError(theErr, thisHouseName))
+		if (!CheckFileError(theErr, g_thisHouseName))
 			return (false);
 
-		houseOpen = true;
+		g_houseOpen = true;
 
 		noProblems = WriteHouse(false);				// write out house data
 		if (!noProblems)
@@ -327,15 +327,15 @@ Boolean ReadHouse (HWND ownerWindow)
 	SInt16 whichRoom;
 	HRESULT hr;
 
-	if (!houseOpen)
+	if (!g_houseOpen)
 	{
 		YellowAlert(ownerWindow, kYellowUnaccounted, 2);
 		return false;
 	}
 
-	if (gameDirty || fileDirty)
+	if (g_gameDirty || g_fileDirty)
 	{
-		if (houseIsReadOnly)
+		if (g_houseIsReadOnly)
 		{
 			if (!WriteScoresToDisk(ownerWindow))
 			{
@@ -359,53 +359,53 @@ Boolean ReadHouse (HWND ownerWindow)
 		}
 	}
 
-	free(thisHouse.rooms);
-	ZeroMemory(&thisHouse, sizeof(thisHouse));
+	free(g_thisHouse.rooms);
+	ZeroMemory(&g_thisHouse, sizeof(g_thisHouse));
 
-	hr = Gp_ReadHouseData(g_theHouseFile, &thisHouse);
+	hr = Gp_ReadHouseData(g_theHouseFile, &g_thisHouse);
 	if (FAILED(hr))
 	{
-		ZeroMemory(&thisHouse, sizeof(thisHouse));
-		thisHouse.nRooms = 0;
-		noRoomAtAll = true;
+		ZeroMemory(&g_thisHouse, sizeof(g_thisHouse));
+		g_thisHouse.nRooms = 0;
+		g_noRoomAtAll = true;
 		YellowAlert(ownerWindow, kYellowNoRooms, 0);
 		return false;
 	}
 
 	if (COMPILEDEMO)
 	{
-		if (thisHouse.nRooms != 45)
+		if (g_thisHouse.nRooms != 45)
 		{
 			return false;
 		}
 	}
-	if ((thisHouse.nRooms < 1) || (byteCount == 0))
+	if ((g_thisHouse.nRooms < 1) || (byteCount == 0))
 	{
-		thisHouse.nRooms = 0;
-		noRoomAtAll = true;
+		g_thisHouse.nRooms = 0;
+		g_noRoomAtAll = true;
 		YellowAlert(ownerWindow, kYellowNoRooms, 0);
 		return false;
 	}
 
-	wasHouseVersion = thisHouse.version;
-	if (wasHouseVersion >= kNewHouseVersion)
+	g_wasHouseVersion = g_thisHouse.version;
+	if (g_wasHouseVersion >= kNewHouseVersion)
 	{
 		YellowAlert(ownerWindow, kYellowNewerVersion, 0);
 		return false;
 	}
 
-	houseUnlocked = ((thisHouse.timeStamp & 0x00000001) == 0);
+	g_houseUnlocked = ((g_thisHouse.timeStamp & 0x00000001) == 0);
 	if (COMPILEDEMO)
 	{
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 		{
 			return false;
 		}
 	}
-	changeLockStateOfHouse = false;
-	saveHouseLocked = false;
+	g_changeLockStateOfHouse = false;
+	g_saveHouseLocked = false;
 
-	whichRoom = thisHouse.firstRoom;
+	whichRoom = g_thisHouse.firstRoom;
 	if (COMPILEDEMO)
 	{
 		if (whichRoom != 0)
@@ -414,30 +414,30 @@ Boolean ReadHouse (HWND ownerWindow)
 		}
 	}
 
-	wardBitSet = ((thisHouse.flags & 0x00000001) == 0x00000001);
-	phoneBitSet = ((thisHouse.flags & 0x00000002) == 0x00000002);
-	bannerStarCountOn = ((thisHouse.flags & 0x00000004) == 0x00000000);
+	g_wardBitSet = ((g_thisHouse.flags & 0x00000001) == 0x00000001);
+	g_phoneBitSet = ((g_thisHouse.flags & 0x00000002) == 0x00000002);
+	g_bannerStarCountOn = ((g_thisHouse.flags & 0x00000004) == 0x00000000);
 
-	noRoomAtAll = (RealRoomNumberCount() == 0);
-	thisRoomNumber = -1;
-	previousRoom = -1;
-	if (!noRoomAtAll)
+	g_noRoomAtAll = (RealRoomNumberCount() == 0);
+	g_thisRoomNumber = -1;
+	g_previousRoom = -1;
+	if (!g_noRoomAtAll)
 	{
 		CopyRoomToThisRoom(whichRoom);
 	}
 
-	if (houseIsReadOnly)
+	if (g_houseIsReadOnly)
 	{
-		houseUnlocked = false;
+		g_houseUnlocked = false;
 		if (ReadScoresFromDisk(ownerWindow))
 		{
 		}
 	}
 
-	objActive = kNoObjectSelected;
+	g_objActive = kNoObjectSelected;
 	ReflectCurrentRoom(true);
-	gameDirty = false;
-	fileDirty = false;
+	g_gameDirty = false;
+	g_fileDirty = false;
 	UpdateMenus(false);
 
 	return true;
@@ -451,7 +451,7 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 	UInt32 timeStamp;
 	HRESULT hr;
 
-	if (!houseOpen)
+	if (!g_houseOpen)
 	{
 		YellowAlert(ownerWindow, kYellowUnaccounted, 4);
 		return false;
@@ -464,17 +464,17 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 		CheckHouseForProblems();
 	}
 
-	if (fileDirty)
+	if (g_fileDirty)
 	{
 		timeStamp = Mac_GetDateTime();
 		timeStamp &= 0x7FFFFFFF;
 
-		if (changeLockStateOfHouse)
+		if (g_changeLockStateOfHouse)
 		{
-			houseUnlocked = !saveHouseLocked;
+			g_houseUnlocked = !g_saveHouseLocked;
 		}
 
-		if (houseUnlocked)
+		if (g_houseUnlocked)
 		{
 			timeStamp &= 0x7FFFFFFE;
 		}
@@ -482,25 +482,25 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 		{
 			timeStamp |= 0x00000001;
 		}
-		thisHouse.timeStamp = (SInt32)timeStamp;
-		thisHouse.version = wasHouseVersion;
+		g_thisHouse.timeStamp = (SInt32)timeStamp;
+		g_thisHouse.version = g_wasHouseVersion;
 	}
 
-	hr = Gp_WriteHouseData(g_theHouseFile, &thisHouse);
+	hr = Gp_WriteHouseData(g_theHouseFile, &g_thisHouse);
 	if (FAILED(hr))
 	{
-		CheckFileError(ownerWindow, hr, theHousesSpecs[thisHouseIndex].houseName);
+		CheckFileError(ownerWindow, hr, g_theHousesSpecs[g_thisHouseIndex].houseName);
 		return false;
 	}
 
-	if (changeLockStateOfHouse)
+	if (g_changeLockStateOfHouse)
 	{
-		changeLockStateOfHouse = false;
+		g_changeLockStateOfHouse = false;
 		ReflectCurrentRoom(true);
 	}
 
-	gameDirty = false;
-	fileDirty = false;
+	g_gameDirty = false;
+	g_fileDirty = false;
 	UpdateMenus(false);
 	return true;
 }
@@ -510,26 +510,26 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 
 Boolean CloseHouse (HWND ownerWindow)
 {
-	if (!houseOpen)
+	if (!g_houseOpen)
 	{
 		return (true);
 	}
 
-	if (gameDirty)
+	if (g_gameDirty)
 	{
-		if (houseIsReadOnly)
+		if (g_houseIsReadOnly)
 		{
 			if (!WriteScoresToDisk(ownerWindow))
 			{
 				YellowAlert(ownerWindow, kYellowFailedWrite, 0);
 			}
 		}
-		else if (!WriteHouse(ownerWindow, theMode == kEditMode))
+		else if (!WriteHouse(ownerWindow, g_theMode == kEditMode))
 		{
 			YellowAlert(ownerWindow, kYellowFailedWrite, 0);
 		}
 	}
-	else if (fileDirty)
+	else if (g_fileDirty)
 	{
 		if (!COMPILEDEMO)
 		{
@@ -544,10 +544,10 @@ Boolean CloseHouse (HWND ownerWindow)
 	Gp_UnloadHouseFile(g_theHouseFile);
 	g_theHouseFile = NULL;
 
-	houseOpen = false;
+	g_houseOpen = false;
 
-	gameDirty = false;
-	fileDirty = false;
+	g_gameDirty = false;
+	g_fileDirty = false;
 	return (true);
 }
 
@@ -562,17 +562,17 @@ Boolean QuerySaveChanges (HWND ownerWindow)
 	SInt16			hitWhat;
 	Boolean			whoCares;
 
-	if (!fileDirty)
+	if (!g_fileDirty)
 		return(true);
 
-	WinFromMacString(houseStr, ARRAYSIZE(houseStr), thisHouseName);
+	WinFromMacString(houseStr, ARRAYSIZE(houseStr), g_thisHouseName);
 	params.arg[0] = houseStr;
 	hitWhat = Alert(kSaveChangesAlert, ownerWindow, &params);
 	if (hitWhat == kSaveChanges)
 	{
-		if (wasHouseVersion < kHouseVersion)
+		if (g_wasHouseVersion < kHouseVersion)
 			ConvertHouseVer1To2();
-		wasHouseVersion = kHouseVersion;
+		g_wasHouseVersion = kHouseVersion;
 		if (WriteHouse(ownerWindow, true))
 			return (true);
 		else
@@ -580,8 +580,8 @@ Boolean QuerySaveChanges (HWND ownerWindow)
 	}
 	else if (hitWhat == kDiscardChanges)
 	{
-		fileDirty = false;
-		if (!quitting)
+		g_fileDirty = false;
+		if (!g_quitting)
 		{
 			whoCares = CloseHouse(ownerWindow);
 			if (OpenHouse(ownerWindow))

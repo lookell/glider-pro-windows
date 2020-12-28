@@ -71,18 +71,18 @@ void Tools_OnButtonClick (HWND hwnd, WORD buttonID);
 void UpdateToolTips (HWND hwnd);
 void SwitchToolModes (SInt16 newMode);
 
-HWND toolsWindow;
-SInt16 isToolsH;
-SInt16 isToolsV;
-SInt16 toolSelected;
-SInt16 toolMode;
-Boolean isToolsOpen;
+HWND g_toolsWindow;
+SInt16 g_isToolsH;
+SInt16 g_isToolsV;
+SInt16 g_toolSelected;
+SInt16 g_toolMode;
+Boolean g_isToolsOpen;
 
-static HDC toolSrcMap = NULL;
-static SInt16 firstTool;
-static SInt16 lastTool;
-static SInt16 objectBase;
-static HWND toolButtonTooltip;
+static HDC g_toolSrcMap = NULL;
+static SInt16 g_firstTool;
+static SInt16 g_lastTool;
+static SInt16 g_objectBase;
+static HWND g_toolButtonTooltip;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  CreateToolsOffscreen
@@ -91,11 +91,11 @@ void CreateToolsOffscreen (void)
 {
 	Rect toolSrcRect;
 
-	if (toolSrcMap == NULL)
+	if (g_toolSrcMap == NULL)
 	{
 		QSetRect(&toolSrcRect, 0, 0, 360, 216);
-		toolSrcMap = CreateOffScreenGWorld(&toolSrcRect, kPreferredDepth);
-		LoadGraphic(toolSrcMap, g_theHouseFile, kToolsPictID);
+		g_toolSrcMap = CreateOffScreenGWorld(&toolSrcRect, kPreferredDepth);
+		LoadGraphic(g_toolSrcMap, g_theHouseFile, kToolsPictID);
 	}
 }
 
@@ -103,10 +103,10 @@ void CreateToolsOffscreen (void)
 
 void KillToolsOffscreen (void)
 {
-	if (toolSrcMap != NULL)
+	if (g_toolSrcMap != NULL)
 	{
-		DisposeGWorld(toolSrcMap);
-		toolSrcMap = NULL;
+		DisposeGWorld(g_toolSrcMap);
+		g_toolSrcMap = NULL;
 	}
 }
 
@@ -130,8 +130,8 @@ void UpdateToolName (void)
 {
 	wchar_t theString[256];
 
-	GetToolName(theString, ARRAYSIZE(theString), toolSelected, toolMode);
-	SetDlgItemText(toolsWindow, kToolNameText, theString);
+	GetToolName(theString, ARRAYSIZE(theString), g_toolSelected, g_toolMode);
+	SetDlgItemText(g_toolsWindow, kToolNameText, theString);
 }
 
 //--------------------------------------------------------------  UpdateToolTiles
@@ -155,7 +155,7 @@ void UpdateToolTiles (void)
 		DrawCIcon(hdc, kSelectToolIcon, -3, -3);
 		SelectObject(hdc, prevBitmap);
 
-		prevButtonBitmap = (HBITMAP)SendDlgItemMessage(toolsWindow,
+		prevButtonBitmap = (HBITMAP)SendDlgItemMessage(g_toolsWindow,
 			kToolButtonBaseID + kSelectTool, BM_SETIMAGE,
 			IMAGE_BITMAP, (LPARAM)buttonBitmap);
 		if (prevButtonBitmap != NULL)
@@ -169,7 +169,7 @@ void UpdateToolTiles (void)
 	{
 		QSetRect(&srcRect, 0, 0, 22, 22);
 		QOffsetRect(&srcRect, 1, 1);
-		QOffsetRect(&srcRect, i * 24, (toolMode - 1) * 24);
+		QOffsetRect(&srcRect, i * 24, (g_toolMode - 1) * 24);
 
 		QSetRect(&destRect, 0, 0, 22, 22);
 
@@ -177,10 +177,10 @@ void UpdateToolTiles (void)
 		if (buttonBitmap != NULL)
 		{
 			prevBitmap = (HBITMAP)SelectObject(hdc, buttonBitmap);
-			Mac_CopyBits(toolSrcMap, hdc, &srcRect, &destRect, srcCopy, nil);
+			Mac_CopyBits(g_toolSrcMap, hdc, &srcRect, &destRect, srcCopy, nil);
 			SelectObject(hdc, prevBitmap);
 
-			prevButtonBitmap = (HBITMAP)SendDlgItemMessage(toolsWindow,
+			prevButtonBitmap = (HBITMAP)SendDlgItemMessage(g_toolsWindow,
 				kToolButtonBaseID + i + 1, BM_SETIMAGE,
 				IMAGE_BITMAP, (LPARAM)buttonBitmap);
 			if (prevButtonBitmap != NULL)
@@ -204,11 +204,11 @@ void SelectTool (SInt16 which)
 		return;
 
 	toolIcon = which;
-	if ((toolMode == kBlowerMode) && (toolIcon >= 7))
+	if ((g_toolMode == kBlowerMode) && (toolIcon >= 7))
 	{
 		toolIcon--;
 	}
-	else if ((toolMode == kTransportMode) && (toolIcon >= 7))
+	else if ((g_toolMode == kTransportMode) && (toolIcon >= 7))
 	{
 		if (toolIcon >= 15)
 			toolIcon -= 4;
@@ -216,10 +216,10 @@ void SelectTool (SInt16 which)
 			toolIcon = ((toolIcon - 7) / 2) + 7;
 	}
 
-	CheckRadioButton(toolsWindow, kToolButtonFirstID, kToolButtonLastID,
+	CheckRadioButton(g_toolsWindow, kToolButtonFirstID, kToolButtonLastID,
 		kToolButtonBaseID + toolIcon);
 
-	toolSelected = which;
+	g_toolSelected = which;
 	UpdateToolName();
 }
 
@@ -304,12 +304,12 @@ INT_PTR Tools_OnInitDialog (HWND hwnd)
 	AddMenuToComboBox(hwnd, kToolModeCombo, menuItemInfo.hSubMenu);
 	DestroyMenu(rootMenu);
 
-	toolButtonTooltip = CreateWindowEx(WS_EX_TOOLWINDOW, TOOLTIPS_CLASS, TEXT(""),
+	g_toolButtonTooltip = CreateWindowEx(WS_EX_TOOLWINDOW, TOOLTIPS_CLASS, TEXT(""),
 		WS_POPUP | TTS_NOPREFIX, 0, 0, 0, 0, hwnd, NULL, HINST_THISCOMPONENT, NULL);
-	SetWindowPos(toolButtonTooltip, HWND_TOPMOST, 0, 0, 0, 0,
+	SetWindowPos(g_toolButtonTooltip, HWND_TOPMOST, 0, 0, 0, 0,
 		SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 	dialogFont = (HFONT)SendMessage(hwnd, WM_GETFONT, 0, 0);
-	SendMessage(toolButtonTooltip, WM_SETFONT, (WPARAM)dialogFont, FALSE);
+	SendMessage(g_toolButtonTooltip, WM_SETFONT, (WPARAM)dialogFont, FALSE);
 	for (buttonID = kToolButtonFirstID; buttonID <= kToolButtonLastID; ++buttonID)
 	{
 		TOOLINFO toolInfo;
@@ -323,7 +323,7 @@ INT_PTR Tools_OnInitDialog (HWND hwnd)
 		SetRectEmpty(&toolInfo.rect);
 		toolInfo.hinst = NULL;
 		toolInfo.lpszText = text;
-		SendMessage(toolButtonTooltip, TTM_ADDTOOL, 0, (LPARAM)&toolInfo);
+		SendMessage(g_toolButtonTooltip, TTM_ADDTOOL, 0, (LPARAM)&toolInfo);
 	}
 
 	return FALSE; // don't change the focus
@@ -345,10 +345,10 @@ void Tools_OnDestroy (HWND hwnd)
 			DeleteObject(buttonBitmap);
 		}
 	}
-	if (toolButtonTooltip != NULL)
+	if (g_toolButtonTooltip != NULL)
 	{
-		DestroyWindow(toolButtonTooltip);
-		toolButtonTooltip = NULL;
+		DestroyWindow(g_toolButtonTooltip);
+		g_toolButtonTooltip = NULL;
 	}
 }
 
@@ -360,8 +360,8 @@ void Tools_OnMove (HWND hwnd)
 
 	placement.length = sizeof(placement);
 	GetWindowPlacement(hwnd, &placement);
-	isToolsH = (SInt16)placement.rcNormalPosition.left;
-	isToolsV = (SInt16)placement.rcNormalPosition.top;
+	g_isToolsH = (SInt16)placement.rcNormalPosition.left;
+	g_isToolsV = (SInt16)placement.rcNormalPosition.top;
 }
 
 //--------------------------------------------------------------  Tools_OnToolSelChange
@@ -396,11 +396,11 @@ void Tools_OnButtonClick (HWND hwnd, WORD clickedID)
 		}
 	}
 
-	if ((toolMode == kBlowerMode) && (toolIcon >= 7))
+	if ((g_toolMode == kBlowerMode) && (toolIcon >= 7))
 	{
 		toolIcon++;
 	}
-	if ((toolMode == kTransportMode) && (toolIcon >= 7))
+	if ((g_toolMode == kTransportMode) && (toolIcon >= 7))
 	{
 		if (toolIcon >= 11)
 			toolIcon += 4;
@@ -422,18 +422,18 @@ void UpdateToolTips (HWND hwnd)
 	for (buttonID = kToolButtonFirstID; buttonID <= kToolButtonLastID; buttonID++)
 	{
 		toolIcon = buttonID - kToolButtonBaseID;
-		if ((toolMode == kBlowerMode) && (toolIcon >= 7))
+		if ((g_toolMode == kBlowerMode) && (toolIcon >= 7))
 		{
 			toolIcon++;
 		}
-		if ((toolMode == kTransportMode) && (toolIcon >= 7))
+		if ((g_toolMode == kTransportMode) && (toolIcon >= 7))
 		{
 			if (toolIcon >= 11)
 				toolIcon += 4;
 			else
 				toolIcon = ((toolIcon - 7) * 2) + 7;
 		}
-		GetToolName(buffer, ARRAYSIZE(buffer), toolIcon, toolMode);
+		GetToolName(buffer, ARRAYSIZE(buffer), toolIcon, g_toolMode);
 
 		ZeroMemory(&toolInfo, sizeof(toolInfo));
 		toolInfo.cbSize = sizeof(toolInfo);
@@ -441,7 +441,7 @@ void UpdateToolTips (HWND hwnd)
 		toolInfo.uId = (UINT_PTR)GetDlgItem(hwnd, buttonID);
 		toolInfo.hinst = NULL;
 		toolInfo.lpszText = buffer;
-		SendMessage(toolButtonTooltip, TTM_UPDATETIPTEXT, 0, (LPARAM)&toolInfo);
+		SendMessage(g_toolButtonTooltip, TTM_UPDATETIPTEXT, 0, (LPARAM)&toolInfo);
 	}
 }
 
@@ -454,34 +454,34 @@ void OpenToolsWindow (void)
 	if (COMPILEDEMO)
 		return;
 
-	if (toolsWindow == NULL)
+	if (g_toolsWindow == NULL)
 	{
-		toolsWindow = CreateDialog(HINST_THISCOMPONENT,
+		g_toolsWindow = CreateDialog(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kToolsWindowID),
-			mainWindow, ToolsWindowProc);
-		if (toolsWindow == NULL)
+			g_mainWindow, ToolsWindowProc);
+		if (g_toolsWindow == NULL)
 			RedAlert(kErrNoMemory);
 
 //		if (OptionKeyDown())
 //		{
-//			isToolsH = qd.screenBits.bounds.right - 120;
-//			isToolsV = 35;
+//			g_isToolsH = qd.screenBits.bounds.right - 120;
+//			g_isToolsV = 35;
 //		}
 		placement.length = sizeof(placement);
-		GetWindowPlacement(toolsWindow, &placement);
+		GetWindowPlacement(g_toolsWindow, &placement);
 		OffsetRect(&placement.rcNormalPosition,
 			-placement.rcNormalPosition.left,
 			-placement.rcNormalPosition.top);
-		OffsetRect(&placement.rcNormalPosition, isToolsH, isToolsV);
+		OffsetRect(&placement.rcNormalPosition, g_isToolsH, g_isToolsV);
 		placement.showCmd = SW_SHOWNOACTIVATE;
-		SetWindowPlacement(toolsWindow, &placement);
+		SetWindowPlacement(g_toolsWindow, &placement);
 
-		SetComboBoxMenuValue(toolsWindow, kToolModeCombo, toolMode);
+		SetComboBoxMenuValue(g_toolsWindow, kToolModeCombo, g_toolMode);
 
 		CreateToolsOffscreen();
 
-		SwitchToolModes(toolMode);
-		toolSelected = kSelectTool;
+		SwitchToolModes(g_toolMode);
+		g_toolSelected = kSelectTool;
 	}
 
 	UpdateToolsCheckmark(true);
@@ -494,10 +494,10 @@ void CloseToolsWindow (void)
 	if (COMPILEDEMO)
 		return;
 
-	if (toolsWindow != NULL)
+	if (g_toolsWindow != NULL)
 	{
-		DestroyWindow(toolsWindow);
-		toolsWindow = NULL;
+		DestroyWindow(g_toolsWindow);
+		g_toolsWindow = NULL;
 	}
 	KillToolsOffscreen();
 	UpdateToolsCheckmark(false);
@@ -510,15 +510,15 @@ void ToggleToolsWindow (void)
 	if (COMPILEDEMO)
 		return;
 
-	if (toolsWindow == NULL)
+	if (g_toolsWindow == NULL)
 	{
 		OpenToolsWindow();
-		isToolsOpen = true;
+		g_isToolsOpen = true;
 	}
 	else
 	{
 		CloseToolsWindow();
-		isToolsOpen = false;
+		g_isToolsOpen = false;
 	}
 }
 
@@ -529,71 +529,71 @@ void SwitchToolModes (SInt16 newMode)
 	HWND hwndButton;
 	SInt16 index;
 
-	if (toolsWindow == NULL)
+	if (g_toolsWindow == NULL)
 		return;
 
 	SelectTool(kSelectTool);
 	switch (newMode)
 	{
 	case kBlowerMode:
-		firstTool = kFirstBlower;
-		lastTool = kLastBlower;
-		objectBase = kBlowerBase;
+		g_firstTool = kFirstBlower;
+		g_lastTool = kLastBlower;
+		g_objectBase = kBlowerBase;
 		break;
 
 	case kFurnitureMode:
-		firstTool = kFirstFurniture;
-		lastTool = kLastFurniture;
-		objectBase = kFurnitureBase;
+		g_firstTool = kFirstFurniture;
+		g_lastTool = kLastFurniture;
+		g_objectBase = kFurnitureBase;
 		break;
 
 	case kBonusMode:
-		firstTool = kFirstBonus;
-		lastTool = kLastBonus;
-		objectBase = kBonusBase;
+		g_firstTool = kFirstBonus;
+		g_lastTool = kLastBonus;
+		g_objectBase = kBonusBase;
 		break;
 
 	case kTransportMode:
-		firstTool = kFirstTransport;
-		lastTool = kLastTransport;
-		objectBase = kTransportBase;
+		g_firstTool = kFirstTransport;
+		g_lastTool = kLastTransport;
+		g_objectBase = kTransportBase;
 		break;
 
 	case kSwitchMode:
-		firstTool = kFirstSwitch;
-		lastTool = kLastSwitch;
-		objectBase = kSwitchBase;
+		g_firstTool = kFirstSwitch;
+		g_lastTool = kLastSwitch;
+		g_objectBase = kSwitchBase;
 		break;
 
 	case kLightMode:
-		firstTool = kFirstLight;
-		lastTool = kLastLight;
-		objectBase = kLightBase;
+		g_firstTool = kFirstLight;
+		g_lastTool = kLastLight;
+		g_objectBase = kLightBase;
 		break;
 
 	case kApplianceMode:
-		firstTool = kFirstAppliance;
-		lastTool = kLastAppliance;
-		objectBase = kApplianceBase;
+		g_firstTool = kFirstAppliance;
+		g_lastTool = kLastAppliance;
+		g_objectBase = kApplianceBase;
 		break;
 
 	case kEnemyMode:
-		firstTool = kFirstEnemy;
-		lastTool = kLastEnemy;
-		objectBase = kEnemyBase;
+		g_firstTool = kFirstEnemy;
+		g_lastTool = kLastEnemy;
+		g_objectBase = kEnemyBase;
 		break;
 
 	case kClutterMode:
-		firstTool = kFirstClutter;
-		lastTool = kLastClutter;
-		objectBase = kClutterBase;
+		g_firstTool = kFirstClutter;
+		g_lastTool = kLastClutter;
+		g_objectBase = kClutterBase;
 		break;
 	}
 
 	for (index = 1; index < kTotalTools; index++)
 	{
-		hwndButton = GetDlgItem(toolsWindow, kToolButtonBaseID + index);
-		if (index <= lastTool)
+		hwndButton = GetDlgItem(g_toolsWindow, kToolButtonBaseID + index);
+		if (index <= g_lastTool)
 		{
 			ShowWindow(hwndButton, SW_SHOW);
 		}
@@ -603,9 +603,9 @@ void SwitchToolModes (SInt16 newMode)
 		}
 	}
 
-	toolMode = newMode;
+	g_toolMode = newMode;
 	UpdateToolTiles();
-	UpdateToolTips(toolsWindow);
+	UpdateToolTips(g_toolsWindow);
 }
 
 //--------------------------------------------------------------  NextToolMode
@@ -615,15 +615,15 @@ void NextToolMode (void)
 	if (COMPILEDEMO)
 		return;
 
-	if (toolsWindow == NULL)
+	if (g_toolsWindow == NULL)
 		return;
 
-	if ((theMode == kEditMode) && (toolMode < kClutterMode))
+	if ((g_theMode == kEditMode) && (g_toolMode < kClutterMode))
 	{
-		toolMode++;
-		SetComboBoxMenuValue(toolsWindow, kToolModeCombo, toolMode);
-		SwitchToolModes(toolMode);
-		toolSelected = kSelectTool;
+		g_toolMode++;
+		SetComboBoxMenuValue(g_toolsWindow, kToolModeCombo, g_toolMode);
+		SwitchToolModes(g_toolMode);
+		g_toolSelected = kSelectTool;
 	}
 }
 
@@ -634,15 +634,15 @@ void PrevToolMode (void)
 	if (COMPILEDEMO)
 		return;
 
-	if (toolsWindow == NULL)
+	if (g_toolsWindow == NULL)
 		return;
 
-	if ((theMode == kEditMode) && (toolMode > kBlowerMode))
+	if ((g_theMode == kEditMode) && (g_toolMode > kBlowerMode))
 	{
-		toolMode--;
-		SetComboBoxMenuValue(toolsWindow, kToolModeCombo, toolMode);
-		SwitchToolModes(toolMode);
-		toolSelected = kSelectTool;
+		g_toolMode--;
+		SetComboBoxMenuValue(g_toolsWindow, kToolModeCombo, g_toolMode);
+		SwitchToolModes(g_toolMode);
+		g_toolSelected = kSelectTool;
 	}
 }
 
@@ -653,11 +653,11 @@ void SetSpecificToolMode (SInt16 modeToSet)
 	if (COMPILEDEMO)
 		return;
 
-	if ((toolsWindow == NULL) || (theMode != kEditMode))
+	if ((g_toolsWindow == NULL) || (g_theMode != kEditMode))
 		return;
 
-	toolMode = modeToSet;
-	SetComboBoxMenuValue(toolsWindow, kToolModeCombo, toolMode);
-	SwitchToolModes(toolMode);
-	toolSelected = kSelectTool;
+	g_toolMode = modeToSet;
+	SetComboBoxMenuValue(g_toolsWindow, kToolModeCombo, g_toolMode);
+	SwitchToolModes(g_toolMode);
+	g_toolSelected = kSelectTool;
 }

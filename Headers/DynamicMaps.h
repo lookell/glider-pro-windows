@@ -11,26 +11,26 @@
 #include "GliderStructs.h"
 #include "MacTypes.h"
 
-extern sparkleType sparkles[kMaxSparkles];
-extern flyingPtType flyingPoints[kMaxFlyingPts];
-extern flameType flames[kMaxCandles];
-extern flameType tikiFlames[kMaxTikis];
-extern flameType bbqCoals[kMaxCoals];
-extern pendulumType pendulums[kMaxPendulums];
-extern starType theStars[kMaxStars];
-extern shredType shreds[kMaxShredded];
-extern Rect pointsSrc[15];
-extern SInt16 numSparkles;
-extern SInt16 numFlyingPts;
-extern SInt16 numChimes;
-extern SInt16 numFlames;
-extern SInt16 numSavedMaps;
-extern SInt16 numTikiFlames;
-extern SInt16 numCoals;
-extern SInt16 numPendulums;
-extern SInt16 clockFrame;
-extern SInt16 numStars;
-extern SInt16 numShredded;
+extern sparkleType g_sparkles[kMaxSparkles];
+extern flyingPtType g_flyingPoints[kMaxFlyingPts];
+extern flameType g_flames[kMaxCandles];
+extern flameType g_tikiFlames[kMaxTikis];
+extern flameType g_bbqCoals[kMaxCoals];
+extern pendulumType g_pendulums[kMaxPendulums];
+extern starType g_theStars[kMaxStars];
+extern shredType g_shreds[kMaxShredded];
+extern Rect g_pointsSrc[15];
+extern SInt16 g_numSparkles;
+extern SInt16 g_numFlyingPts;
+extern SInt16 g_numChimes;
+extern SInt16 g_numFlames;
+extern SInt16 g_numSavedMaps;
+extern SInt16 g_numTikiFlames;
+extern SInt16 g_numCoals;
+extern SInt16 g_numPendulums;
+extern SInt16 g_clockFrame;
+extern SInt16 g_numStars;
+extern SInt16 g_numShredded;
 
 void NilSavedMaps (void);
 SInt16 BackUpToSavedMap (const Rect *theRect, SInt16 where, SInt16 who);

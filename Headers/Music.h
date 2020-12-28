@@ -10,11 +10,11 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern Boolean isMusicOn;
-extern Boolean isPlayMusicIdle;
-extern Boolean isPlayMusicGame;
-extern Boolean failedMusic;
-extern Boolean dontLoadMusic;
+extern Boolean g_isMusicOn;
+extern Boolean g_isPlayMusicIdle;
+extern Boolean g_isPlayMusicGame;
+extern Boolean g_failedMusic;
+extern Boolean g_dontLoadMusic;
 
 OSErr StartMusic (void);
 void StopTheMusic (void);

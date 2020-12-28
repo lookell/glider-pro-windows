@@ -11,24 +11,24 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-extern Rect glidSrcRect;
-extern Rect justRoomsRect;
-extern HDC glidSrcMap;
-extern HDC glid2SrcMap;
-extern HDC glidMaskMap;
-extern SInt32 gameFrame;
-extern SInt16 batteryTotal;
-extern SInt16 bandsTotal;
-extern SInt16 foilTotal;
-extern SInt16 mortals;
-extern Boolean playing;
-extern Boolean evenFrame;
-extern Boolean twoPlayerGame;
-extern Boolean showFoil;
-extern Boolean demoGoing;
-extern Boolean playerSuicide;
-extern Boolean phoneBitSet;
-extern Boolean tvOn;
+extern Rect g_glidSrcRect;
+extern Rect g_justRoomsRect;
+extern HDC g_glidSrcMap;
+extern HDC g_glid2SrcMap;
+extern HDC g_glidMaskMap;
+extern SInt32 g_gameFrame;
+extern SInt16 g_batteryTotal;
+extern SInt16 g_bandsTotal;
+extern SInt16 g_foilTotal;
+extern SInt16 g_mortals;
+extern Boolean g_playing;
+extern Boolean g_evenFrame;
+extern Boolean g_twoPlayerGame;
+extern Boolean g_showFoil;
+extern Boolean g_demoGoing;
+extern Boolean g_playerSuicide;
+extern Boolean g_phoneBitSet;
+extern Boolean g_tvOn;
 
 void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex);
 void DoDemoGame (HWND ownerWindow);

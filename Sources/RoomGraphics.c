@@ -35,18 +35,18 @@ void ReadyBackMap (void);
 void RestoreWorkMap (void);
 void DrawLighting (void);
 
-Rect suppSrcRect;
-HDC suppSrcMap;
-Rect localRoomsDest[9];
-Rect houseRect;
-SInt16 numNeighbors;
-SInt16 numLights;
-SInt16 thisTiles[kNumTiles];
-SInt16 localNumbers[9];
-SInt16 thisBackground;
-Boolean wardBitSet;
+Rect g_suppSrcRect;
+HDC g_suppSrcMap;
+Rect g_localRoomsDest[9];
+Rect g_houseRect;
+SInt16 g_numNeighbors;
+SInt16 g_numLights;
+SInt16 g_thisTiles[kNumTiles];
+SInt16 g_localNumbers[9];
+SInt16 g_thisBackground;
+Boolean g_wardBitSet;
 
-static Boolean isStructure[9];
+static Boolean g_isStructure[9];
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DrawLocale
@@ -60,73 +60,73 @@ void DrawLocale (void)
 	KillAllBands();
 	ZeroMirrorRegion();
 	ZeroTriggers();
-	numTempManholes = 0;
+	g_numTempManholes = 0;
 	FlushAnyTriggerPlaying();
 	DumpTriggerSound();
-	tvInRoom = false;
-	tvWithMovieNumber = -1;
+	g_tvInRoom = false;
+	g_tvWithMovieNumber = -1;
 
-	roomV = thisHouse.rooms[thisRoomNumber].floor;
+	roomV = g_thisHouse.rooms[g_thisRoomNumber].floor;
 
 	for (i = 0; i < 9; i++)
 	{
-		localNumbers[i] = GetNeighborRoomNumber(i);
-		isStructure[i] = IsRoomAStructure(localNumbers[i]);
+		g_localNumbers[i] = GetNeighborRoomNumber(i);
+		g_isStructure[i] = IsRoomAStructure(g_localNumbers[i]);
 	}
 	ListAllLocalObjects();
 
-	Mac_PaintRect(backSrcMap, &backSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+	Mac_PaintRect(g_backSrcMap, &g_backSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 
-	if (numNeighbors > 3)
+	if (g_numNeighbors > 3)
 	{
-		numLights = GetNumberOfLights(localNumbers[kNorthWestRoom]);
-		DrawRoomBackground(localNumbers[kNorthWestRoom], kNorthWestRoom, roomV + 1);
+		g_numLights = GetNumberOfLights(g_localNumbers[kNorthWestRoom]);
+		DrawRoomBackground(g_localNumbers[kNorthWestRoom], kNorthWestRoom, roomV + 1);
 		DrawARoomsObjects(kNorthWestRoom, false);
 
-		numLights = GetNumberOfLights(localNumbers[kNorthEastRoom]);
-		DrawRoomBackground(localNumbers[kNorthEastRoom], kNorthEastRoom, roomV + 1);
+		g_numLights = GetNumberOfLights(g_localNumbers[kNorthEastRoom]);
+		DrawRoomBackground(g_localNumbers[kNorthEastRoom], kNorthEastRoom, roomV + 1);
 		DrawARoomsObjects(kNorthEastRoom, false);
 
-		numLights = GetNumberOfLights(localNumbers[kNorthRoom]);
-		DrawRoomBackground(localNumbers[kNorthRoom], kNorthRoom, roomV + 1);
+		g_numLights = GetNumberOfLights(g_localNumbers[kNorthRoom]);
+		DrawRoomBackground(g_localNumbers[kNorthRoom], kNorthRoom, roomV + 1);
 		DrawARoomsObjects(kNorthRoom, false);
 
-		numLights = GetNumberOfLights(localNumbers[kSouthWestRoom]);
-		DrawRoomBackground(localNumbers[kSouthWestRoom], kSouthWestRoom, roomV - 1);
+		g_numLights = GetNumberOfLights(g_localNumbers[kSouthWestRoom]);
+		DrawRoomBackground(g_localNumbers[kSouthWestRoom], kSouthWestRoom, roomV - 1);
 		DrawARoomsObjects(kSouthWestRoom, false);
 
-		numLights = GetNumberOfLights(localNumbers[kSouthEastRoom]);
-		DrawRoomBackground(localNumbers[kSouthEastRoom], kSouthEastRoom, roomV - 1);
+		g_numLights = GetNumberOfLights(g_localNumbers[kSouthEastRoom]);
+		DrawRoomBackground(g_localNumbers[kSouthEastRoom], kSouthEastRoom, roomV - 1);
 		DrawARoomsObjects(kSouthEastRoom, false);
 
-		numLights = GetNumberOfLights(localNumbers[kSouthRoom]);
-		DrawRoomBackground(localNumbers[kSouthRoom], kSouthRoom, roomV - 1);
+		g_numLights = GetNumberOfLights(g_localNumbers[kSouthRoom]);
+		DrawRoomBackground(g_localNumbers[kSouthRoom], kSouthRoom, roomV - 1);
 		DrawARoomsObjects(kSouthRoom, false);
 	}
 
-	if (numNeighbors > 1)
+	if (g_numNeighbors > 1)
 	{
-		numLights = GetNumberOfLights(localNumbers[kWestRoom]);
-		DrawRoomBackground(localNumbers[kWestRoom], kWestRoom, roomV);
+		g_numLights = GetNumberOfLights(g_localNumbers[kWestRoom]);
+		DrawRoomBackground(g_localNumbers[kWestRoom], kWestRoom, roomV);
 		DrawARoomsObjects(kWestRoom, false);
 		DrawLighting();
 
-		numLights = GetNumberOfLights(localNumbers[kEastRoom]);
-		DrawRoomBackground(localNumbers[kEastRoom], kEastRoom, roomV);
+		g_numLights = GetNumberOfLights(g_localNumbers[kEastRoom]);
+		DrawRoomBackground(g_localNumbers[kEastRoom], kEastRoom, roomV);
 		DrawARoomsObjects(kEastRoom, false);
 		DrawLighting();
 	}
 
-	numLights = GetNumberOfLights(localNumbers[kCentralRoom]);
-	DrawRoomBackground(localNumbers[kCentralRoom], kCentralRoom, roomV);
+	g_numLights = GetNumberOfLights(g_localNumbers[kCentralRoom]);
+	DrawRoomBackground(g_localNumbers[kCentralRoom], kCentralRoom, roomV);
 	DrawARoomsObjects(kCentralRoom, false);
 	DrawLighting();
 
-	if (numNeighbors > 3)
+	if (g_numNeighbors > 3)
 		DrawFloorSupport();
 	RestoreWorkMap();
-	shadowVisible = IsShadowVisible();
-	takingTheStairs = false;
+	g_shadowVisible = IsShadowVisible();
+	g_takingTheStairs = false;
 }
 
 //--------------------------------------------------------------  LoadGraphicSpecial
@@ -164,22 +164,22 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 
 	if (where == kCentralRoom)
 	{
-		thisBackground = thisHouse.rooms[who].background;
+		g_thisBackground = g_thisHouse.rooms[who].background;
 		for (i = 0; i < kNumTiles; i++)
-			thisTiles[i] = thisHouse.rooms[who].tiles[i];
+			g_thisTiles[i] = g_thisHouse.rooms[who].tiles[i];
 	}
 
-	if ((numLights == 0) && (who != kRoomIsEmpty))
+	if ((g_numLights == 0) && (who != kRoomIsEmpty))
 	{
-		Mac_PaintRect(backSrcMap, &localRoomsDest[where], (HBRUSH)GetStockObject(BLACK_BRUSH));
+		Mac_PaintRect(g_backSrcMap, &g_localRoomsDest[where], (HBRUSH)GetStockObject(BLACK_BRUSH));
 		return;
 	}
 
 	if (who == kRoomIsEmpty)		// This call should be smarter than this
 	{
-		if (wardBitSet)
+		if (g_wardBitSet)
 		{
-			Mac_PaintRect(backSrcMap, &localRoomsDest[where], (HBRUSH)GetStockObject(BLACK_BRUSH));
+			Mac_PaintRect(g_backSrcMap, &g_localRoomsDest[where], (HBRUSH)GetStockObject(BLACK_BRUSH));
 			return;
 		}
 
@@ -204,21 +204,21 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 	}
 	else
 	{
-		pictID = thisHouse.rooms[who].background;
+		pictID = g_thisHouse.rooms[who].background;
 		for (i = 0; i < kNumTiles; i++)
-			tiles[i] = thisHouse.rooms[who].tiles[i];
+			tiles[i] = g_thisHouse.rooms[who].tiles[i];
 	}
 
-	LoadGraphicSpecial(workSrcMap, pictID);
+	LoadGraphicSpecial(g_workSrcMap, pictID);
 
 	QSetRect(&src, 0, 0, kTileWide, kTileHigh);
 	QSetRect(&dest, 0, 0, kTileWide, kTileHigh);
-	QOffsetRect(&dest, localRoomsDest[where].left, localRoomsDest[where].top);
+	QOffsetRect(&dest, g_localRoomsDest[where].left, g_localRoomsDest[where].top);
 	for (i = 0; i < kNumTiles; i++)
 	{
 		src.left = tiles[i] * kTileWide;
 		src.right = src.left + kTileWide;
-		Mac_CopyBits(workSrcMap, backSrcMap,
+		Mac_CopyBits(g_workSrcMap, g_backSrcMap,
 				&src, &dest, srcCopy, nil);
 		QOffsetRect(&dest, kTileWide, 0);
 	}
@@ -231,112 +231,112 @@ void DrawFloorSupport (void)
 	Rect		src, dest, whoCares;
 	SInt16		i;
 
-	src = suppSrcRect;
+	src = g_suppSrcRect;
 
-	if (isStructure[kNorthWestRoom])
+	if (g_isStructure[kNorthWestRoom])
 	{
-		dest = suppSrcRect;			// left room's ceiling
-		QOffsetRect(&dest, localRoomsDest[kWestRoom].left,
-				localRoomsDest[kCentralRoom].top - suppSrcRect.bottom);
-		Mac_CopyBits(suppSrcMap, backSrcMap,
+		dest = g_suppSrcRect;			// left room's ceiling
+		QOffsetRect(&dest, g_localRoomsDest[kWestRoom].left,
+				g_localRoomsDest[kCentralRoom].top - g_suppSrcRect.bottom);
+		Mac_CopyBits(g_suppSrcMap, g_backSrcMap,
 				&src, &dest, srcCopy, nil);
 
-		for (i = 0; i < numTempManholes; i++)
-			if (QSectRect(&dest, &tempManholes[i], &whoCares))
+		for (i = 0; i < g_numTempManholes; i++)
+			if (QSectRect(&dest, &g_tempManholes[i], &whoCares))
 			{
-				tempManholes[i].top = dest.top;
-				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(backSrcMap, g_theHouseFile,
-					kManholeThruFloor, &tempManholes[i]);
+				g_tempManholes[i].top = dest.top;
+				g_tempManholes[i].bottom = dest.bottom;
+				LoadScaledGraphic(g_backSrcMap, g_theHouseFile,
+					kManholeThruFloor, &g_tempManholes[i]);
 			}
 	}
 
-	if (isStructure[kWestRoom])
+	if (g_isStructure[kWestRoom])
 	{
-		dest = suppSrcRect;			// left room's floor
-		QOffsetRect(&dest, localRoomsDest[kWestRoom].left,
-				localRoomsDest[kCentralRoom].bottom);
-		Mac_CopyBits(suppSrcMap, backSrcMap,
+		dest = g_suppSrcRect;			// left room's floor
+		QOffsetRect(&dest, g_localRoomsDest[kWestRoom].left,
+				g_localRoomsDest[kCentralRoom].bottom);
+		Mac_CopyBits(g_suppSrcMap, g_backSrcMap,
 				&src, &dest, srcCopy, nil);
 
-		for (i = 0; i < numTempManholes; i++)
-			if (QSectRect(&dest, &tempManholes[i], &whoCares))
+		for (i = 0; i < g_numTempManholes; i++)
+			if (QSectRect(&dest, &g_tempManholes[i], &whoCares))
 			{
-				tempManholes[i].top = dest.top;
-				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(backSrcMap, g_theHouseFile,
-					kManholeThruFloor, &tempManholes[i]);
+				g_tempManholes[i].top = dest.top;
+				g_tempManholes[i].bottom = dest.bottom;
+				LoadScaledGraphic(g_backSrcMap, g_theHouseFile,
+					kManholeThruFloor, &g_tempManholes[i]);
 			}
 	}
 
-	if (isStructure[kNorthRoom])
+	if (g_isStructure[kNorthRoom])
 	{
-		dest = suppSrcRect;			// directly above main room
-		QOffsetRect(&dest, localRoomsDest[kCentralRoom].left,
-				localRoomsDest[kCentralRoom].top - suppSrcRect.bottom);
-		Mac_CopyBits(suppSrcMap, backSrcMap,
+		dest = g_suppSrcRect;			// directly above main room
+		QOffsetRect(&dest, g_localRoomsDest[kCentralRoom].left,
+				g_localRoomsDest[kCentralRoom].top - g_suppSrcRect.bottom);
+		Mac_CopyBits(g_suppSrcMap, g_backSrcMap,
 				&src, &dest, srcCopy, nil);
-		for (i = 0; i < numTempManholes; i++)
-			if (QSectRect(&dest, &tempManholes[i], &whoCares))
+		for (i = 0; i < g_numTempManholes; i++)
+			if (QSectRect(&dest, &g_tempManholes[i], &whoCares))
 			{
-				tempManholes[i].top = dest.top;
-				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(backSrcMap, g_theHouseFile,
-					kManholeThruFloor, &tempManholes[i]);
+				g_tempManholes[i].top = dest.top;
+				g_tempManholes[i].bottom = dest.bottom;
+				LoadScaledGraphic(g_backSrcMap, g_theHouseFile,
+					kManholeThruFloor, &g_tempManholes[i]);
 			}
 	}
 
-	if (isStructure[kCentralRoom])
+	if (g_isStructure[kCentralRoom])
 	{
-		dest = suppSrcRect;			// directly below main room
-		QOffsetRect(&dest, localRoomsDest[kCentralRoom].left,
-				localRoomsDest[kCentralRoom].bottom);
-		Mac_CopyBits(suppSrcMap, backSrcMap,
+		dest = g_suppSrcRect;			// directly below main room
+		QOffsetRect(&dest, g_localRoomsDest[kCentralRoom].left,
+				g_localRoomsDest[kCentralRoom].bottom);
+		Mac_CopyBits(g_suppSrcMap, g_backSrcMap,
 				&src, &dest, srcCopy, nil);
 
-		for (i = 0; i < numTempManholes; i++)
-			if (QSectRect(&dest, &tempManholes[i], &whoCares))
+		for (i = 0; i < g_numTempManholes; i++)
+			if (QSectRect(&dest, &g_tempManholes[i], &whoCares))
 			{
-				tempManholes[i].top = dest.top;
-				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(backSrcMap, g_theHouseFile,
-					kManholeThruFloor, &tempManholes[i]);
+				g_tempManholes[i].top = dest.top;
+				g_tempManholes[i].bottom = dest.bottom;
+				LoadScaledGraphic(g_backSrcMap, g_theHouseFile,
+					kManholeThruFloor, &g_tempManholes[i]);
 			}
 	}
 
-	if (isStructure[kNorthEastRoom])
+	if (g_isStructure[kNorthEastRoom])
 	{
-		dest = suppSrcRect;
-		QOffsetRect(&dest, localRoomsDest[kEastRoom].left,
-				localRoomsDest[kCentralRoom].top - suppSrcRect.bottom);
-		Mac_CopyBits(suppSrcMap, backSrcMap,
+		dest = g_suppSrcRect;
+		QOffsetRect(&dest, g_localRoomsDest[kEastRoom].left,
+				g_localRoomsDest[kCentralRoom].top - g_suppSrcRect.bottom);
+		Mac_CopyBits(g_suppSrcMap, g_backSrcMap,
 				&src, &dest, srcCopy, nil);
 
-		for (i = 0; i < numTempManholes; i++)
-			if (QSectRect(&dest, &tempManholes[i], &whoCares))
+		for (i = 0; i < g_numTempManholes; i++)
+			if (QSectRect(&dest, &g_tempManholes[i], &whoCares))
 			{
-				tempManholes[i].top = dest.top;
-				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(backSrcMap, g_theHouseFile,
-					kManholeThruFloor, &tempManholes[i]);
+				g_tempManholes[i].top = dest.top;
+				g_tempManholes[i].bottom = dest.bottom;
+				LoadScaledGraphic(g_backSrcMap, g_theHouseFile,
+					kManholeThruFloor, &g_tempManholes[i]);
 			}
 	}
 
-	if (isStructure[kEastRoom])
+	if (g_isStructure[kEastRoom])
 	{
-		dest = suppSrcRect;
-		QOffsetRect(&dest, localRoomsDest[kEastRoom].left,
-				localRoomsDest[kCentralRoom].bottom);
-		Mac_CopyBits(suppSrcMap, backSrcMap,
+		dest = g_suppSrcRect;
+		QOffsetRect(&dest, g_localRoomsDest[kEastRoom].left,
+				g_localRoomsDest[kCentralRoom].bottom);
+		Mac_CopyBits(g_suppSrcMap, g_backSrcMap,
 				&src, &dest, srcCopy, nil);
 
-		for (i = 0; i < numTempManholes; i++)
-			if (QSectRect(&dest, &tempManholes[i], &whoCares))
+		for (i = 0; i < g_numTempManholes; i++)
+			if (QSectRect(&dest, &g_tempManholes[i], &whoCares))
 			{
-				tempManholes[i].top = dest.top;
-				tempManholes[i].bottom = dest.bottom;
-				LoadScaledGraphic(backSrcMap, g_theHouseFile,
-					kManholeThruFloor, &tempManholes[i]);
+				g_tempManholes[i].top = dest.top;
+				g_tempManholes[i].bottom = dest.bottom;
+				LoadScaledGraphic(g_backSrcMap, g_theHouseFile,
+					kManholeThruFloor, &g_tempManholes[i]);
 			}
 	}
 }
@@ -345,16 +345,16 @@ void DrawFloorSupport (void)
 
 void ReadyBackMap (void)
 {
-	Mac_CopyBits(workSrcMap, backSrcMap,
-			&workSrcRect, &workSrcRect, srcCopy, nil);
+	Mac_CopyBits(g_workSrcMap, g_backSrcMap,
+			&g_workSrcRect, &g_workSrcRect, srcCopy, nil);
 }
 
 //--------------------------------------------------------------  RestoreWorkMap
 
 void RestoreWorkMap (void)
 {
-	Mac_CopyBits(backSrcMap, workSrcMap,
-			&backSrcRect, &backSrcRect, srcCopy, nil);
+	Mac_CopyBits(g_backSrcMap, g_workSrcMap,
+			&g_backSrcRect, &g_backSrcRect, srcCopy, nil);
 }
 
 //--------------------------------------------------------------  ReadyLevel
@@ -364,11 +364,11 @@ void ReadyLevel (void)
 	NilSavedMaps();
 
 #ifdef COMPILEQT
-	if ((thisMac.hasQT) && (hasMovie) && (tvInRoom))
+	if ((g_thisMac.hasQT) && (g_hasMovie) && (g_tvInRoom))
 	{
-		tvInRoom = false;
-		tvWithMovieNumber = -1;
-		StopMovie(theMovie);
+		g_tvInRoom = false;
+		g_tvWithMovieNumber = -1;
+		StopMovie(g_theMovie);
 	}
 #endif
 
@@ -381,7 +381,7 @@ void ReadyLevel (void)
 
 void DrawLighting (void)
 {
-	if (numLights == 0)
+	if (g_numLights == 0)
 		return;
 	else
 	{
@@ -396,22 +396,22 @@ void RedrawRoomLighting (void)
 	SInt16		roomV;
 	Boolean		wasLit, isLit;
 
-	roomV = thisHouse.rooms[thisRoomNumber].floor;
+	roomV = g_thisHouse.rooms[g_thisRoomNumber].floor;
 
-	wasLit = numLights > 0;
-	numLights = GetNumberOfLights(localNumbers[kCentralRoom]);
-	isLit = numLights > 0;
+	wasLit = g_numLights > 0;
+	g_numLights = GetNumberOfLights(g_localNumbers[kCentralRoom]);
+	isLit = g_numLights > 0;
 	if (wasLit != isLit)
 	{
-		DrawRoomBackground(localNumbers[kCentralRoom], kCentralRoom, roomV);
+		DrawRoomBackground(g_localNumbers[kCentralRoom], kCentralRoom, roomV);
 		DrawARoomsObjects(kCentralRoom, true);
 		DrawLighting();
-		UpdateOutletsLighting(localNumbers[kCentralRoom], numLights);
+		UpdateOutletsLighting(g_localNumbers[kCentralRoom], g_numLights);
 
-		if (numNeighbors > 3)
+		if (g_numNeighbors > 3)
 			DrawFloorSupport();
 		RestoreWorkMap();
-		AddRectToWorkRects(&localRoomsDest[kCentralRoom]);
-		shadowVisible = IsShadowVisible();
+		AddRectToWorkRects(&g_localRoomsDest[kCentralRoom]);
+		g_shadowVisible = IsShadowVisible();
 	}
 }

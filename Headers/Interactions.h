@@ -10,7 +10,7 @@
 #include "GliderStructs.h"
 #include "MacTypes.h"
 
-extern SInt16 otherPlayerEscaped;
+extern SInt16 g_otherPlayerEscaped;
 
 Boolean SectGlider (const gliderType *thisGlider, const Rect *theRect, Boolean scrutinize);
 void HandleSwitches (hotPtr who);

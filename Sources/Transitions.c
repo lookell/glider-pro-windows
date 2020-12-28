@@ -54,7 +54,7 @@ void WipeScreenOn (SInt16 direction, const Rect *theRect)
 	{
 		wipeRect = MakeWipeRect(direction, theRect, i, count);
 		mainWindowDC = GetMainWindowDC();
-		Mac_CopyBits(workSrcMap, mainWindowDC,
+		Mac_CopyBits(g_workSrcMap, mainWindowDC,
 				&wipeRect, &wipeRect, srcCopy, nil);
 		ReleaseMainWindowDC(mainWindowDC);
 		WaitUntilNextFrame();
@@ -122,7 +122,7 @@ void DumpScreenOn (const Rect *theRect)
 	HDC			mainWindowDC;
 
 	mainWindowDC = GetMainWindowDC();
-	Mac_CopyBits(workSrcMap, mainWindowDC,
+	Mac_CopyBits(g_workSrcMap, mainWindowDC,
 			theRect, theRect, srcCopy, nil);
 	ReleaseMainWindowDC(mainWindowDC);
 }
@@ -131,7 +131,7 @@ void DumpScreenOn (const Rect *theRect)
 
 void DissolveScreenOn (const Rect *theRect)
 {
-	if (quickerTransitions)
+	if (g_quickerTransitions)
 	{
 		DissBitsChunky(theRect);
 	}
@@ -223,9 +223,9 @@ void DissBits (const Rect *theRect)
 		if ((theRect->top > chunkV + chunkSize - 1) || (chunkV >= theRect->bottom))
 			continue;
 		BitBlt(mainWindowDC, chunkH, chunkV, chunkSize, chunkSize,
-				workSrcMap, chunkH, chunkV, SRCCOPY);
+				g_workSrcMap, chunkH, chunkV, SRCCOPY);
 	} while (state != 1);
-	BitBlt(mainWindowDC, 0, 0, chunkSize, chunkSize, workSrcMap, 0, 0, SRCCOPY);
+	BitBlt(mainWindowDC, 0, 0, chunkSize, chunkSize, g_workSrcMap, 0, 0, SRCCOPY);
 
 	RestoreDC(mainWindowDC, -1);
 	ReleaseMainWindowDC(mainWindowDC);
@@ -275,9 +275,9 @@ void DissBitsChunky (const Rect *theRect)
 		if ((theRect->top > chunkV + chunkSize - 1) || (chunkV >= theRect->bottom))
 			continue;
 		BitBlt(mainWindowDC, chunkH, chunkV, chunkSize, chunkSize,
-			workSrcMap, chunkH, chunkV, SRCCOPY);
+			g_workSrcMap, chunkH, chunkV, SRCCOPY);
 	} while (state != 1);
-	BitBlt(mainWindowDC, 0, 0, chunkSize, chunkSize, workSrcMap, 0, 0, SRCCOPY);
+	BitBlt(mainWindowDC, 0, 0, chunkSize, chunkSize, g_workSrcMap, 0, 0, SRCCOPY);
 
 	RestoreDC(mainWindowDC, -1);
 	ReleaseMainWindowDC(mainWindowDC);

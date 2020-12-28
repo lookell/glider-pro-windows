@@ -44,11 +44,11 @@
 void ReadInPrefs (HWND ownerWindow);
 void WriteOutPrefs (HWND ownerWindow);
 
-Boolean quitting;
-Boolean quickerTransitions;
-Boolean isUseSecondScreen;
-UInt16 isViewportWidth;
-UInt16 isViewportHeight;
+Boolean g_quitting;
+Boolean g_quickerTransitions;
+Boolean g_isUseSecondScreen;
+UInt16 g_isViewportWidth;
+UInt16 g_isViewportHeight;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  ReadInPrefs
@@ -70,141 +70,141 @@ void ReadInPrefs (HWND ownerWindow)
 	{
 		if (COMPILEDEMO)
 		{
-			PasStringCopyC("Demo House", thisHouseName);
+			PasStringCopyC("Demo House", g_thisHouseName);
 		}
 		else
 		{
-			PasStringCopy(thePrefs.wasDefaultName, thisHouseName);
+			PasStringCopy(thePrefs.wasDefaultName, g_thisHouseName);
 		}
-		isViewportWidth = thePrefs.wasViewportWidth;
-		if (isViewportWidth < minimumWidth)
+		g_isViewportWidth = thePrefs.wasViewportWidth;
+		if (g_isViewportWidth < minimumWidth)
 		{
-			isViewportWidth = minimumWidth;
+			g_isViewportWidth = minimumWidth;
 		}
-		isViewportHeight = thePrefs.wasViewportHeight;
-		if (isViewportHeight < minimumHeight)
+		g_isViewportHeight = thePrefs.wasViewportHeight;
+		if (g_isViewportHeight < minimumHeight)
 		{
-			isViewportHeight = minimumHeight;
+			g_isViewportHeight = minimumHeight;
 		}
-		PasStringCopy(thePrefs.wasHighName, highName);
-		PasStringCopy(thePrefs.wasHighBanner, highBanner);
-		theGlider.leftKey = thePrefs.wasLeftKeyOne;
-		theGlider.rightKey = thePrefs.wasRightKeyOne;
-		theGlider.battKey = thePrefs.wasBattKeyOne;
-		theGlider.bandKey = thePrefs.wasBandKeyOne;
-		theGlider2.leftKey = thePrefs.wasLeftKeyTwo;
-		theGlider2.rightKey = thePrefs.wasRightKeyTwo;
-		theGlider2.battKey = thePrefs.wasBattKeyTwo;
-		theGlider2.bandKey = thePrefs.wasBandKeyTwo;
+		PasStringCopy(thePrefs.wasHighName, g_highName);
+		PasStringCopy(thePrefs.wasHighBanner, g_highBanner);
+		g_theGlider.leftKey = thePrefs.wasLeftKeyOne;
+		g_theGlider.rightKey = thePrefs.wasRightKeyOne;
+		g_theGlider.battKey = thePrefs.wasBattKeyOne;
+		g_theGlider.bandKey = thePrefs.wasBandKeyOne;
+		g_theGlider2.leftKey = thePrefs.wasLeftKeyTwo;
+		g_theGlider2.rightKey = thePrefs.wasRightKeyTwo;
+		g_theGlider2.battKey = thePrefs.wasBattKeyTwo;
+		g_theGlider2.bandKey = thePrefs.wasBandKeyTwo;
 		theVolume = thePrefs.wasVolume;
-		isMusicOn = thePrefs.wasMusicOn;
-		quickerTransitions = thePrefs.wasQuickTrans;
-		isDoColorFade = thePrefs.wasDoColorFade;
-		isPlayMusicIdle = thePrefs.wasIdleMusic;
-		isPlayMusicGame = thePrefs.wasGameMusic;
-		isHouseChecks = thePrefs.wasHouseChecks;
-		maxFiles = thePrefs.wasMaxFiles;
-		if ((maxFiles < 12) || (maxFiles > 500))
-			maxFiles = 12;
-		isEditH = thePrefs.wasEditH;
-		isEditV = thePrefs.wasEditV;
-		isMapH = thePrefs.wasMapH;
-		isMapV = thePrefs.wasMapV;
-		mapRoomsWide = thePrefs.wasMapWide;
-		mapRoomsHigh = thePrefs.wasMapHigh;
-		isToolsH = thePrefs.wasToolsH;
-		isToolsV = thePrefs.wasToolsV;
-		isLinkH = thePrefs.wasLinkH;
-		isLinkV = thePrefs.wasLinkV;
-		isCoordH = thePrefs.wasCoordH;
-		isCoordV = thePrefs.wasCoordV;
-		mapLeftRoom = thePrefs.isMapLeft;
-		mapTopRoom = thePrefs.isMapTop;
-		wasFloor = thePrefs.wasFloor;
-		wasSuite = thePrefs.wasSuite;
-		autoRoomEdit = thePrefs.wasAutoEdit;
-		isMapOpen = thePrefs.wasMapOpen;
-		isToolsOpen = thePrefs.wasToolsOpen;
-		isCoordOpen = thePrefs.wasCoordOpen;
-		numNeighbors = thePrefs.wasNumNeighbors;
-		toolMode = thePrefs.wasToolGroup;
-		doAutoDemo = thePrefs.wasDoAutoDemo;
-		isEscPauseKey = thePrefs.wasEscPauseKey;
+		g_isMusicOn = thePrefs.wasMusicOn;
+		g_quickerTransitions = thePrefs.wasQuickTrans;
+		g_isDoColorFade = thePrefs.wasDoColorFade;
+		g_isPlayMusicIdle = thePrefs.wasIdleMusic;
+		g_isPlayMusicGame = thePrefs.wasGameMusic;
+		g_isHouseChecks = thePrefs.wasHouseChecks;
+		g_maxFiles = thePrefs.wasMaxFiles;
+		if ((g_maxFiles < 12) || (g_maxFiles > 500))
+			g_maxFiles = 12;
+		g_isEditH = thePrefs.wasEditH;
+		g_isEditV = thePrefs.wasEditV;
+		g_isMapH = thePrefs.wasMapH;
+		g_isMapV = thePrefs.wasMapV;
+		g_mapRoomsWide = thePrefs.wasMapWide;
+		g_mapRoomsHigh = thePrefs.wasMapHigh;
+		g_isToolsH = thePrefs.wasToolsH;
+		g_isToolsV = thePrefs.wasToolsV;
+		g_isLinkH = thePrefs.wasLinkH;
+		g_isLinkV = thePrefs.wasLinkV;
+		g_isCoordH = thePrefs.wasCoordH;
+		g_isCoordV = thePrefs.wasCoordV;
+		g_mapLeftRoom = thePrefs.isMapLeft;
+		g_mapTopRoom = thePrefs.isMapTop;
+		g_wasFloor = thePrefs.wasFloor;
+		g_wasSuite = thePrefs.wasSuite;
+		g_autoRoomEdit = thePrefs.wasAutoEdit;
+		g_isMapOpen = thePrefs.wasMapOpen;
+		g_isToolsOpen = thePrefs.wasToolsOpen;
+		g_isCoordOpen = thePrefs.wasCoordOpen;
+		g_numNeighbors = thePrefs.wasNumNeighbors;
+		g_toolMode = thePrefs.wasToolGroup;
+		g_doAutoDemo = thePrefs.wasDoAutoDemo;
+		g_isEscPauseKey = thePrefs.wasEscPauseKey;
 		// TODO: implement support for fullscreen display and monitor selection
-		isUseSecondScreen = false;
-		doPrettyMap = thePrefs.wasPrettyMap;
-		doBitchDialogs = thePrefs.wasBitchDialogs;
+		g_isUseSecondScreen = false;
+		g_doPrettyMap = thePrefs.wasPrettyMap;
+		g_doBitchDialogs = thePrefs.wasBitchDialogs;
 	}
 	else
 	{
 		if (COMPILEDEMO)
 		{
-			PasStringCopyC("Demo House", thisHouseName);
+			PasStringCopyC("Demo House", g_thisHouseName);
 		}
 		else
 		{
-			PasStringCopyC("Slumberland", thisHouseName);
+			PasStringCopyC("Slumberland", g_thisHouseName);
 		}
-		isViewportWidth = 640;
-		isViewportHeight = 480;
-		PasStringCopyC("Your Name", highName);
-		PasStringCopyC("Your Message Here", highBanner);
-		theGlider.leftKey = VK_LEFT;
-		theGlider.rightKey = VK_RIGHT;
-		theGlider.battKey = VK_DOWN;
-		theGlider.bandKey = VK_UP;
-		theGlider2.leftKey = 'A';
-		theGlider2.rightKey = 'D';
-		theGlider2.battKey = 'S';
-		theGlider2.bandKey = 'W';
+		g_isViewportWidth = 640;
+		g_isViewportHeight = 480;
+		PasStringCopyC("Your Name", g_highName);
+		PasStringCopyC("Your Message Here", g_highBanner);
+		g_theGlider.leftKey = VK_LEFT;
+		g_theGlider.rightKey = VK_RIGHT;
+		g_theGlider.battKey = VK_DOWN;
+		g_theGlider.bandKey = VK_UP;
+		g_theGlider2.leftKey = 'A';
+		g_theGlider2.rightKey = 'D';
+		g_theGlider2.battKey = 'S';
+		g_theGlider2.bandKey = 'W';
 		theVolume = 3;
-		isSoundOn = true;
-		isMusicOn = true;
-		isPlayMusicIdle = true;
-		isPlayMusicGame = true;
-		isHouseChecks = true;
-		quickerTransitions = false;
-		numNeighbors = 9;
-		isDoColorFade = true;
-		maxFiles = 48;
-		willMaxFiles = 48;
-		isEditH = 3;
-		isEditV = 41;
-		isMapH = 3;
-//		isMapV = qd.screenBits.bounds.bottom - 100;
-		isMapV = 100;
-		mapRoomsWide = 15;
-		mapRoomsHigh = 4;
-//		isToolsH = qd.screenBits.bounds.right - 120;
-		isToolsH = 100;
-		isToolsV = 35;
-		isLinkH = 50;
-		isLinkV = 80;
-//		isCoordH = qd.screenBits.bounds.right - 55;
-		isCoordH = 50;
-		isCoordV = 204;
-		mapLeftRoom = 60;
-		mapTopRoom = 50;
-		wasFloor = 0;
-		wasSuite = 0;
-		autoRoomEdit = true;
-		isMapOpen = true;
-		isToolsOpen = true;
-		isCoordOpen = false;
-		toolMode = kBlowerMode;
-		doAutoDemo = true;
-		isEscPauseKey = false;
-		isUseSecondScreen = false;
-		doPrettyMap = false;
-		doBitchDialogs = true;
+		g_isSoundOn = true;
+		g_isMusicOn = true;
+		g_isPlayMusicIdle = true;
+		g_isPlayMusicGame = true;
+		g_isHouseChecks = true;
+		g_quickerTransitions = false;
+		g_numNeighbors = 9;
+		g_isDoColorFade = true;
+		g_maxFiles = 48;
+		g_willMaxFiles = 48;
+		g_isEditH = 3;
+		g_isEditV = 41;
+		g_isMapH = 3;
+//		g_isMapV = qd.screenBits.bounds.bottom - 100;
+		g_isMapV = 100;
+		g_mapRoomsWide = 15;
+		g_mapRoomsHigh = 4;
+//		g_isToolsH = qd.screenBits.bounds.right - 120;
+		g_isToolsH = 100;
+		g_isToolsV = 35;
+		g_isLinkH = 50;
+		g_isLinkV = 80;
+//		g_isCoordH = qd.screenBits.bounds.right - 55;
+		g_isCoordH = 50;
+		g_isCoordV = 204;
+		g_mapLeftRoom = 60;
+		g_mapTopRoom = 50;
+		g_wasFloor = 0;
+		g_wasSuite = 0;
+		g_autoRoomEdit = true;
+		g_isMapOpen = true;
+		g_isToolsOpen = true;
+		g_isCoordOpen = false;
+		g_toolMode = kBlowerMode;
+		g_doAutoDemo = true;
+		g_isEscPauseKey = false;
+		g_isUseSecondScreen = false;
+		g_doPrettyMap = false;
+		g_doBitchDialogs = true;
 	}
 
-	if ((numNeighbors > 1) && (isViewportWidth <= minimumWidth))
-		numNeighbors = 1;
+	if ((g_numNeighbors > 1) && (g_isViewportWidth <= minimumWidth))
+		g_numNeighbors = 1;
 
 	UnivSetSoundVolume(theVolume);
 
-	isSoundOn = (theVolume != 0);
+	g_isSoundOn = (theVolume != 0);
 }
 
 //--------------------------------------------------------------  WriteOutPrefs
@@ -224,55 +224,55 @@ void WriteOutPrefs (HWND ownerWindow)
 	}
 	else
 	{
-		PasStringCopy(thisHouseName, thePrefs.wasDefaultName);
+		PasStringCopy(g_thisHouseName, thePrefs.wasDefaultName);
 	}
-	thePrefs.wasViewportWidth = isViewportWidth;
-	thePrefs.wasViewportHeight = isViewportHeight;
-	PasStringCopy(highName, thePrefs.wasHighName);
-	PasStringCopy(highBanner, thePrefs.wasHighBanner);
-	thePrefs.wasLeftKeyOne = theGlider.leftKey;
-	thePrefs.wasRightKeyOne = theGlider.rightKey;
-	thePrefs.wasBattKeyOne = theGlider.battKey;
-	thePrefs.wasBandKeyOne = theGlider.bandKey;
-	thePrefs.wasLeftKeyTwo = theGlider2.leftKey;
-	thePrefs.wasRightKeyTwo = theGlider2.rightKey;
-	thePrefs.wasBattKeyTwo = theGlider2.battKey;
-	thePrefs.wasBandKeyTwo = theGlider2.bandKey;
+	thePrefs.wasViewportWidth = g_isViewportWidth;
+	thePrefs.wasViewportHeight = g_isViewportHeight;
+	PasStringCopy(g_highName, thePrefs.wasHighName);
+	PasStringCopy(g_highBanner, thePrefs.wasHighBanner);
+	thePrefs.wasLeftKeyOne = g_theGlider.leftKey;
+	thePrefs.wasRightKeyOne = g_theGlider.rightKey;
+	thePrefs.wasBattKeyOne = g_theGlider.battKey;
+	thePrefs.wasBandKeyOne = g_theGlider.bandKey;
+	thePrefs.wasLeftKeyTwo = g_theGlider2.leftKey;
+	thePrefs.wasRightKeyTwo = g_theGlider2.rightKey;
+	thePrefs.wasBattKeyTwo = g_theGlider2.battKey;
+	thePrefs.wasBandKeyTwo = g_theGlider2.bandKey;
 	thePrefs.wasVolume = theVolume;
-	thePrefs.wasMusicOn = isMusicOn;
-	thePrefs.wasQuickTrans = quickerTransitions;
-	thePrefs.wasDoColorFade = isDoColorFade;
-	thePrefs.wasIdleMusic = isPlayMusicIdle;
-	thePrefs.wasGameMusic = isPlayMusicGame;
-	thePrefs.wasHouseChecks = isHouseChecks;
-	thePrefs.wasMaxFiles = willMaxFiles;
-	thePrefs.wasEditH = isEditH;
-	thePrefs.wasEditV = isEditV;
-	thePrefs.wasMapH = isMapH;
-	thePrefs.wasMapV = isMapV;
-	thePrefs.wasMapWide = mapRoomsWide;
-	thePrefs.wasMapHigh = mapRoomsHigh;
-	thePrefs.wasToolsH = isToolsH;
-	thePrefs.wasToolsV = isToolsV;
-	thePrefs.isMapLeft = mapLeftRoom;
-	thePrefs.isMapTop = mapTopRoom;
-	thePrefs.wasFloor = wasFloor;
-	thePrefs.wasSuite = wasSuite;
-	thePrefs.wasLinkH = isLinkH;
-	thePrefs.wasLinkV = isLinkV;
-	thePrefs.wasCoordH = isCoordH;
-	thePrefs.wasCoordV = isCoordV;
-	thePrefs.wasAutoEdit = autoRoomEdit;
-	thePrefs.wasMapOpen = isMapOpen;
-	thePrefs.wasToolsOpen = isToolsOpen;
-	thePrefs.wasCoordOpen = isCoordOpen;
-	thePrefs.wasNumNeighbors = numNeighbors;
-	thePrefs.wasToolGroup = toolMode;
-	thePrefs.wasDoAutoDemo = doAutoDemo;
-	thePrefs.wasEscPauseKey = isEscPauseKey;
-	thePrefs.wasScreen2 = isUseSecondScreen;
-	thePrefs.wasPrettyMap = doPrettyMap;
-	thePrefs.wasBitchDialogs = doBitchDialogs;
+	thePrefs.wasMusicOn = g_isMusicOn;
+	thePrefs.wasQuickTrans = g_quickerTransitions;
+	thePrefs.wasDoColorFade = g_isDoColorFade;
+	thePrefs.wasIdleMusic = g_isPlayMusicIdle;
+	thePrefs.wasGameMusic = g_isPlayMusicGame;
+	thePrefs.wasHouseChecks = g_isHouseChecks;
+	thePrefs.wasMaxFiles = g_willMaxFiles;
+	thePrefs.wasEditH = g_isEditH;
+	thePrefs.wasEditV = g_isEditV;
+	thePrefs.wasMapH = g_isMapH;
+	thePrefs.wasMapV = g_isMapV;
+	thePrefs.wasMapWide = g_mapRoomsWide;
+	thePrefs.wasMapHigh = g_mapRoomsHigh;
+	thePrefs.wasToolsH = g_isToolsH;
+	thePrefs.wasToolsV = g_isToolsV;
+	thePrefs.isMapLeft = g_mapLeftRoom;
+	thePrefs.isMapTop = g_mapTopRoom;
+	thePrefs.wasFloor = g_wasFloor;
+	thePrefs.wasSuite = g_wasSuite;
+	thePrefs.wasLinkH = g_isLinkH;
+	thePrefs.wasLinkV = g_isLinkV;
+	thePrefs.wasCoordH = g_isCoordH;
+	thePrefs.wasCoordV = g_isCoordV;
+	thePrefs.wasAutoEdit = g_autoRoomEdit;
+	thePrefs.wasMapOpen = g_isMapOpen;
+	thePrefs.wasToolsOpen = g_isToolsOpen;
+	thePrefs.wasCoordOpen = g_isCoordOpen;
+	thePrefs.wasNumNeighbors = g_numNeighbors;
+	thePrefs.wasToolGroup = g_toolMode;
+	thePrefs.wasDoAutoDemo = g_doAutoDemo;
+	thePrefs.wasEscPauseKey = g_isEscPauseKey;
+	thePrefs.wasScreen2 = g_isUseSecondScreen;
+	thePrefs.wasPrettyMap = g_doPrettyMap;
+	thePrefs.wasBitchDialogs = g_doBitchDialogs;
 
 	if (!SavePrefs(ownerWindow, &thePrefs, kPrefsVersion))
 		MessageBeep(MB_ICONWARNING);
@@ -303,8 +303,8 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 	audioInitialized = Audio_InitDevice();
 	if (!audioInitialized)
 	{
-		dontLoadSounds = true;
-		dontLoadMusic = true;
+		g_dontLoadSounds = true;
+		g_dontLoadMusic = true;
 	}
 
 	ZeroMemory(&icc, sizeof(icc));
@@ -313,7 +313,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 	InitCommonControlsEx(&icc);
 	RegisterMainWindowClass();
 	InitRandomLongQUS();
-	switchedOut = false;
+	g_switchedOut = false;
 
 	// NOTE: ReadInPrefs() must come before CheckOurEnvirons()
 	ReadInPrefs(NULL);
@@ -331,53 +331,53 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 	OpenMainWindow();
 
 #ifdef COMPILEQT
-	if (thisMac.hasQT)
+	if (g_thisMac.hasQT)
 	{
 		theErr = EnterMovies();
 		if (theErr != noErr)
-			thisMac.hasQT = false;
+			g_thisMac.hasQT = false;
 	}
 #endif
 
-	BuildHouseList(mainWindow);
-	if (OpenHouse(mainWindow))
-		whoCares = ReadHouse(mainWindow);
+	BuildHouseList(g_mainWindow);
+	if (OpenHouse(g_mainWindow))
+		whoCares = ReadHouse(g_mainWindow);
 
 	PlayPrioritySound(kBirdSound, kBirdPriority);
 	InitializeMenus();
 
-	if (isDoColorFade)
+	if (g_isDoColorFade)
 	{
 		WashColorIn();
 	}
 
-	incrementModeTime = timeGetTime() + kIdleSplashTime;
-	while (!quitting)		// this is the main loop
+	g_incrementModeTime = timeGetTime() + kIdleSplashTime;
+	while (!g_quitting)		// this is the main loop
 		HandleEvent();
 
 	CloseMainWindow();
 	KillMusic();
 	KillSound();
-	if (houseOpen)
+	if (g_houseOpen)
 	{
 		if (!CloseHouse(NULL))
 		{
 			Gp_UnloadHouseFile(g_theHouseFile);
 			g_theHouseFile = NULL;
-			houseOpen = false;
+			g_houseOpen = false;
 		}
 	}
 
 	// Detach all submenus from the menu bar, and then destroy all menus.
-	RemoveMenu(theMenuBar, kAppleMenuID, MF_BYCOMMAND);
-	RemoveMenu(theMenuBar, kGameMenuID, MF_BYCOMMAND);
-	RemoveMenu(theMenuBar, kOptionsMenuID, MF_BYCOMMAND);
-	RemoveMenu(theMenuBar, kHouseMenuID, MF_BYCOMMAND);
-	DestroyMenu(appleMenu);
-	DestroyMenu(gameMenu);
-	DestroyMenu(optionsMenu);
-	DestroyMenu(houseMenu);
-	DestroyMenu(theMenuBar);
+	RemoveMenu(g_theMenuBar, kAppleMenuID, MF_BYCOMMAND);
+	RemoveMenu(g_theMenuBar, kGameMenuID, MF_BYCOMMAND);
+	RemoveMenu(g_theMenuBar, kOptionsMenuID, MF_BYCOMMAND);
+	RemoveMenu(g_theMenuBar, kHouseMenuID, MF_BYCOMMAND);
+	DestroyMenu(g_appleMenu);
+	DestroyMenu(g_gameMenu);
+	DestroyMenu(g_optionsMenu);
+	DestroyMenu(g_houseMenu);
+	DestroyMenu(g_theMenuBar);
 
 	WriteOutPrefs(NULL);
 	Gp_UnloadBuiltInAssets();

@@ -56,15 +56,15 @@ Boolean PictIDExists (SInt16 theID);
 SInt16 GetFirstPICT (void);
 void BitchAboutPICTNotFound (HWND ownerWindow);
 
-Rect tileSrcRect;
-HDC tileSrcMap;
+Rect g_tileSrcRect;
+HDC g_tileSrcMap;
 
-static SInt16 tempTiles[kNumTiles];
-static Rect tileSrc;
-static Rect tileDest;
-static SInt16 tileOver;
-static SInt16 tempBack;
-static Boolean showHandCursor = false;
+static SInt16 g_tempTiles[kNumTiles];
+static Rect g_tileSrc;
+static Rect g_tileDest;
+static SInt16 g_tileOver;
+static SInt16 g_tempBack;
+static Boolean g_showHandCursor = false;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  LoadTileSrcGraphic
@@ -110,25 +110,25 @@ void UpdateRoomInfoDialog (HWND hDlg, HDC hdc)
 	Rect src, dest;
 	SInt16 i;
 
-	Mac_CopyBits(tileSrcMap, hdc, &tileSrcRect, &tileSrc, srcCopy, nil);
+	Mac_CopyBits(g_tileSrcMap, hdc, &g_tileSrcRect, &g_tileSrc, srcCopy, nil);
 
-	dest = tileDest;
+	dest = g_tileDest;
 	dest.right = dest.left + kMiniTileWide;
 	for (i = 0; i < kNumTiles; i++)
 	{
 		QSetRect(&src, 0, 0, kMiniTileWide, 80);
-		HOffsetRect(&src, tempTiles[i] * kMiniTileWide);
-		Mac_CopyBits(tileSrcMap, hdc, &src, &dest, srcCopy, nil);
+		HOffsetRect(&src, g_tempTiles[i] * kMiniTileWide);
+		Mac_CopyBits(g_tileSrcMap, hdc, &src, &dest, srcCopy, nil);
 		HOffsetRect(&dest, kMiniTileWide);
 	}
 
-	if (GetNumberOfLights(thisRoomNumber) == 0)
+	if (GetNumberOfLights(g_thisRoomNumber) == 0)
 		SetDlgItemText(hDlg, kLitUnlitText, L"(Room Is Dark)");
 	else
 		SetDlgItemText(hDlg, kLitUnlitText, L"(Room Is Lit)");
 
-	Mac_FrameRect(hdc, &tileSrc, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
-	Mac_FrameRect(hdc, &tileDest, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(hdc, &g_tileSrc, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(hdc, &g_tileDest, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
 }
 
 //--------------------------------------------------------------  DragMiniTile
@@ -155,13 +155,13 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 
 	hiliteBrush = CreateSolidBrush(blueColor);
 
-	tileOver = (mouseIs.h - tileSrc.left) / kMiniTileWide;
+	g_tileOver = (mouseIs.h - g_tileSrc.left) / kMiniTileWide;
 	wasTileOver = -1;
 	*newTileOver = -1;
 	SetRect(&dragRect, 0, 0, kMiniTileWide, 80);
 	OffsetRect(&dragRect,
-		tileSrc.left + (tileOver * kMiniTileWide),
-		tileSrc.top);
+		g_tileSrc.left + (g_tileOver * kMiniTileWide),
+		g_tileSrc.top);
 
 	hdc = GetDC(hDlg);
 	DrawFocusRect(hdc, &dragRect);
@@ -181,35 +181,35 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 			DrawFocusRect(hdc, &dragRect);
 
 			// is cursor in the drop rect?
-			if (QPtInRect(mouseIs, &tileDest))
+			if (QPtInRect(mouseIs, &g_tileDest))
 			{
-				*newTileOver = (mouseIs.h - tileDest.left) / kMiniTileWide;
+				*newTileOver = (mouseIs.h - g_tileDest.left) / kMiniTileWide;
 				if (*newTileOver != wasTileOver)
 				{
 					QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 					QOffsetRect(&hiliteRect,
-						tileDest.left + (*newTileOver * kMiniTileWide),
-						tileDest.top - 3);
+						g_tileDest.left + (*newTileOver * kMiniTileWide),
+						g_tileDest.top - 3);
 					Mac_PaintRect(hdc, &hiliteRect, hiliteBrush);
 
 					QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 					QOffsetRect(&hiliteRect,
-						tileDest.left + (*newTileOver * kMiniTileWide),
-						tileDest.bottom + 1);
+						g_tileDest.left + (*newTileOver * kMiniTileWide),
+						g_tileDest.bottom + 1);
 					Mac_PaintRect(hdc, &hiliteRect, hiliteBrush);
 
 					if (wasTileOver != -1)
 					{
 						QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 						QOffsetRect(&hiliteRect,
-							tileDest.left + (wasTileOver * kMiniTileWide),
-							tileDest.top - 3);
+							g_tileDest.left + (wasTileOver * kMiniTileWide),
+							g_tileDest.top - 3);
 						Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
 
 						QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 						QOffsetRect(&hiliteRect,
-							tileDest.left + (wasTileOver * kMiniTileWide),
-							tileDest.bottom + 1);
+							g_tileDest.left + (wasTileOver * kMiniTileWide),
+							g_tileDest.bottom + 1);
 						Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
 					}
 					wasTileOver = *newTileOver;
@@ -223,14 +223,14 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 				{
 					QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 					QOffsetRect(&hiliteRect,
-						tileDest.left + (wasTileOver * kMiniTileWide),
-						tileDest.top - 3);
+						g_tileDest.left + (wasTileOver * kMiniTileWide),
+						g_tileDest.top - 3);
 					Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
 
 					QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 					QOffsetRect(&hiliteRect,
-						tileDest.left + (wasTileOver * kMiniTileWide),
-						tileDest.bottom + 1);
+						g_tileDest.left + (wasTileOver * kMiniTileWide),
+						g_tileDest.bottom + 1);
 					Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
 
 					wasTileOver = -1;
@@ -278,14 +278,14 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 	{
 		QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 		QOffsetRect(&hiliteRect,
-			tileDest.left + (wasTileOver * kMiniTileWide),
-			tileDest.top - 3);
+			g_tileDest.left + (wasTileOver * kMiniTileWide),
+			g_tileDest.top - 3);
 		Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
 
 		QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 		QOffsetRect(&hiliteRect,
-			tileDest.left + (wasTileOver * kMiniTileWide),
-			tileDest.bottom + 1);
+			g_tileDest.left + (wasTileOver * kMiniTileWide),
+			g_tileDest.bottom + 1);
 		Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
 
 		wasTileOver = -1;
@@ -308,66 +308,66 @@ void HiliteTileOver (HWND hDlg, Point mouseIs)
 	Rect hiliteRect;
 	COLORREF oldColor;
 
-	if (QPtInRect(mouseIs, &tileSrc))
+	if (QPtInRect(mouseIs, &g_tileSrc))
 	{
-		newTileOver = (mouseIs.h - tileSrc.left) / kMiniTileWide;
-		if (newTileOver != tileOver)
+		newTileOver = (mouseIs.h - g_tileSrc.left) / kMiniTileWide;
+		if (newTileOver != g_tileOver)
 		{
 			hdc = GetDC(hDlg);
 
 			oldColor = SetDCBrushColor(hdc, redColor);
 			QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 			QOffsetRect(&hiliteRect,
-				tileSrc.left + (newTileOver * kMiniTileWide),
-				tileSrc.top - 3);
+				g_tileSrc.left + (newTileOver * kMiniTileWide),
+				g_tileSrc.top - 3);
 			Mac_PaintRect(hdc, &hiliteRect, (HBRUSH)GetStockObject(DC_BRUSH));
 
 			QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 			QOffsetRect(&hiliteRect,
-				tileSrc.left + (newTileOver * kMiniTileWide),
-				tileSrc.bottom + 1);
+				g_tileSrc.left + (newTileOver * kMiniTileWide),
+				g_tileSrc.bottom + 1);
 			Mac_PaintRect(hdc, &hiliteRect, (HBRUSH)GetStockObject(DC_BRUSH));
 			SetDCBrushColor(hdc, oldColor);
 
-			if (tileOver != -1)
+			if (g_tileOver != -1)
 			{
 				QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 				QOffsetRect(&hiliteRect,
-					tileSrc.left + (tileOver * kMiniTileWide),
-					tileSrc.top - 3);
+					g_tileSrc.left + (g_tileOver * kMiniTileWide),
+					g_tileSrc.top - 3);
 				Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
 				QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 				QOffsetRect(&hiliteRect,
-					tileSrc.left + (tileOver * kMiniTileWide),
-					tileSrc.bottom + 1);
+					g_tileSrc.left + (g_tileOver * kMiniTileWide),
+					g_tileSrc.bottom + 1);
 				Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
 			}
 
 			ReleaseDC(hDlg, hdc);
 
-			tileOver = newTileOver;
+			g_tileOver = newTileOver;
 		}
 	}
 	else
 	{
-		if (tileOver != -1)
+		if (g_tileOver != -1)
 		{
 			hdc = GetDC(hDlg);
 
 			QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 			QOffsetRect(&hiliteRect,
-				tileSrc.left + (tileOver * kMiniTileWide),
-				tileSrc.top - 3);
+				g_tileSrc.left + (g_tileOver * kMiniTileWide),
+				g_tileSrc.top - 3);
 			Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
 			QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 			QOffsetRect(&hiliteRect,
-				tileSrc.left + (tileOver * kMiniTileWide),
-				tileSrc.bottom + 1);
+				g_tileSrc.left + (g_tileOver * kMiniTileWide),
+				g_tileSrc.bottom + 1);
 			Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
 
 			ReleaseDC(hDlg, hdc);
 
-			tileOver = -1;
+			g_tileOver = -1;
 		}
 	}
 }
@@ -387,9 +387,9 @@ void RoomInfo_InitDialog (HWND hDlg)
 
 	CenterDialogOverOwner(hDlg);
 
-	showHandCursor = false;
-	tileOver = -1;
-	tempBack = thisRoom->background;
+	g_showHandCursor = false;
+	g_tileOver = -1;
+	g_tempBack = g_thisRoom->background;
 
 	rootMenu = LoadMenu(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDM_ROOT));
 	if (rootMenu == NULL)
@@ -410,47 +410,47 @@ void RoomInfo_InitDialog (HWND hDlg)
 	AddMenuToComboBox(hDlg, kRoomPopupItem, backgroundsMenu);
 	DestroyMenu(rootMenu);
 
-	StringCchPrintf(floorStr, ARRAYSIZE(floorStr), L"%d", (int)thisRoom->floor);
-	StringCchPrintf(suiteStr, ARRAYSIZE(suiteStr), L"%d", (int)thisRoom->suite);
-	StringCchPrintf(objectsStr, ARRAYSIZE(objectsStr), L"%d", (int)thisRoom->numObjects);
+	StringCchPrintf(floorStr, ARRAYSIZE(floorStr), L"%d", (int)g_thisRoom->floor);
+	StringCchPrintf(suiteStr, ARRAYSIZE(suiteStr), L"%d", (int)g_thisRoom->suite);
+	StringCchPrintf(objectsStr, ARRAYSIZE(objectsStr), L"%d", (int)g_thisRoom->numObjects);
 
 	params.arg[0] = floorStr;
 	params.arg[1] = suiteStr;
 	params.arg[2] = objectsStr;
 	ParamDialogText(hDlg, &params);
 
-	tileSrcMap = CreateOffScreenGWorld(&tileSrcRect, kPreferredDepth);
-	if ((tempBack > kStars) && (!PictIDExists(tempBack)))
+	g_tileSrcMap = CreateOffScreenGWorld(&g_tileSrcRect, kPreferredDepth);
+	if ((g_tempBack > kStars) && (!PictIDExists(g_tempBack)))
 	{
 		BitchAboutPICTNotFound(hDlg);
-		tempBack = kSimpleRoom;
+		g_tempBack = kSimpleRoom;
 	}
-	LoadTileSrcGraphic(tileSrcMap, tempBack, &tileSrcRect);
+	LoadTileSrcGraphic(g_tileSrcMap, g_tempBack, &g_tileSrcRect);
 
 	for (i = 0; i < kNumTiles; i++)
-		tempTiles[i] = thisRoom->tiles[i];
+		g_tempTiles[i] = g_thisRoom->tiles[i];
 
-	if (tempBack >= kUserBackground)
+	if (g_tempBack >= kUserBackground)
 		SetComboBoxMenuValue(hDlg, kRoomPopupItem, kUserBackground);
 	else
-		SetComboBoxMenuValue(hDlg, kRoomPopupItem, tempBack);
+		SetComboBoxMenuValue(hDlg, kRoomPopupItem, g_tempBack);
 
-	SetDialogString(hDlg, kRoomNameItem, thisRoom->name);
+	SetDialogString(hDlg, kRoomNameItem, g_thisRoom->name);
 
-	QSetRect(&tileSrc, 0, 0, 128, 80);
+	QSetRect(&g_tileSrc, 0, 0, 128, 80);
 	GetDialogItemRect(hDlg, kRoomTilesBox, &tileBoxRect);
-	CenterRectInRect(&tileSrc, &tileBoxRect);
+	CenterRectInRect(&g_tileSrc, &tileBoxRect);
 
-	QSetRect(&tileDest, 0, 0, 128, 80);
+	QSetRect(&g_tileDest, 0, 0, 128, 80);
 	GetDialogItemRect(hDlg, kRoomTilesBox2, &tileBoxRect);
-	CenterRectInRect(&tileDest, &tileBoxRect);
+	CenterRectInRect(&g_tileDest, &tileBoxRect);
 
-	if (thisHouse.firstRoom == thisRoomNumber)
+	if (g_thisHouse.firstRoom == g_thisRoomNumber)
 		CheckDlgButton(hDlg, kRoomFirstCheck, BST_CHECKED);
 	else
 		CheckDlgButton(hDlg, kRoomFirstCheck, BST_UNCHECKED);
 
-	if (tempBack >= kUserBackground)
+	if (g_tempBack >= kUserBackground)
 		EnableWindow(GetDlgItem(hDlg, kBoundsButton), TRUE);
 	else
 		EnableWindow(GetDlgItem(hDlg, kBoundsButton), FALSE);
@@ -471,8 +471,8 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 		return TRUE;
 
 	case WM_DESTROY:
-		DisposeGWorld(tileSrcMap);
-		tileSrcMap = NULL;
+		DisposeGWorld(g_tileSrcMap);
+		g_tileSrcMap = NULL;
 		return FALSE;
 
 	case WM_COMMAND:
@@ -480,20 +480,20 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 		{
 		case IDOK:
 			for (i = 0; i < kNumTiles; i++)
-				thisRoom->tiles[i] = tempTiles[i];
+				g_thisRoom->tiles[i] = g_tempTiles[i];
 
 			GetDialogString(hDlg, kRoomNameItem,
-				thisRoom->name, ARRAYSIZE(thisRoom->name));
+				g_thisRoom->name, ARRAYSIZE(g_thisRoom->name));
 			if (IsDlgButtonChecked(hDlg, kRoomFirstCheck))
-				thisHouse.firstRoom = thisRoomNumber;
+				g_thisHouse.firstRoom = g_thisRoomNumber;
 
-			thisRoom->background = tempBack;
-			if (tempBack < kUserBackground)
-				lastBackground = tempBack;
+			g_thisRoom->background = g_tempBack;
+			if (g_tempBack < kUserBackground)
+				g_lastBackground = g_tempBack;
 
 			CopyThisRoomToRoom();
 			ReflectCurrentRoom(false);
-			fileDirty = true;
+			g_fileDirty = true;
 			UpdateMenus(false);
 			EndDialog(hDlg, IDOK);
 			break;
@@ -510,69 +510,69 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 				if (newBack == kUserBackground)
 				{
 					// was previous bg built-in?
-					if (tempBack < kUserBackground)
+					if (g_tempBack < kUserBackground)
 					{
 						// then assign 1st PICT
-						tempBack = GetFirstPICT();
+						g_tempBack = GetFirstPICT();
 						forceDraw = true;
 					}
 					else
 					{
 						forceDraw = false;
 					}
-					newBack = ChooseOriginalArt(hDlg, tempBack);
-					if ((tempBack != newBack) || (forceDraw))
+					newBack = ChooseOriginalArt(hDlg, g_tempBack);
+					if ((g_tempBack != newBack) || (forceDraw))
 					{
-						tempBack = newBack;
-						LoadTileSrcGraphic(tileSrcMap, tempBack, &tileSrcRect);
-						Mac_InvalWindowRect(hDlg, &tileSrc);
-						Mac_InvalWindowRect(hDlg, &tileDest);
+						g_tempBack = newBack;
+						LoadTileSrcGraphic(g_tileSrcMap, g_tempBack, &g_tileSrcRect);
+						Mac_InvalWindowRect(hDlg, &g_tileSrc);
+						Mac_InvalWindowRect(hDlg, &g_tileDest);
 					}
 				}
 				else
 				{
 					// if background has changed
-					if (newBack != tempBack)
-						SetInitialTiles(newBack, tempTiles);
+					if (newBack != g_tempBack)
+						SetInitialTiles(newBack, g_tempTiles);
 				}
 
 				if (newBack >= kUserBackground)
 				{
 					EnableWindow(GetDlgItem(hDlg, kBoundsButton), TRUE);
 					// if background has changed
-					if (newBack != tempBack)
-						SetInitialTiles(newBack, tempTiles);
+					if (newBack != g_tempBack)
+						SetInitialTiles(newBack, g_tempTiles);
 				}
 				else
 				{
 					EnableWindow(GetDlgItem(hDlg, kBoundsButton), FALSE);
 				}
 
-				if (newBack != tempBack)
+				if (newBack != g_tempBack)
 				{
-					tempBack = newBack;
-					LoadTileSrcGraphic(tileSrcMap, tempBack, &tileSrcRect);
-					Mac_InvalWindowRect(hDlg, &tileSrc);
-					Mac_InvalWindowRect(hDlg, &tileDest);
+					g_tempBack = newBack;
+					LoadTileSrcGraphic(g_tileSrcMap, g_tempBack, &g_tileSrcRect);
+					Mac_InvalWindowRect(hDlg, &g_tileSrc);
+					Mac_InvalWindowRect(hDlg, &g_tileDest);
 				}
 			}
 			break;
 
 		case kBoundsButton:
-			newBack = ChooseOriginalArt(hDlg, tempBack);
-			if (tempBack != newBack)
+			newBack = ChooseOriginalArt(hDlg, g_tempBack);
+			if (g_tempBack != newBack)
 			{
-				tempBack = newBack;
-				LoadTileSrcGraphic(tileSrcMap, tempBack, &tileSrcRect);
-				Mac_InvalWindowRect(hDlg, &tileSrc);
-				Mac_InvalWindowRect(hDlg, &tileDest);
+				g_tempBack = newBack;
+				LoadTileSrcGraphic(g_tileSrcMap, g_tempBack, &g_tileSrcRect);
+				Mac_InvalWindowRect(hDlg, &g_tileSrc);
+				Mac_InvalWindowRect(hDlg, &g_tileDest);
 			}
 			break;
 		}
 		return TRUE;
 
 	case WM_SETCURSOR:
-		if (showHandCursor)
+		if (g_showHandCursor)
 		{
 			HCURSOR handCursor;
 
@@ -586,7 +586,7 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 	case WM_LBUTTONDOWN:
 		mouseIs.h = GET_X_LPARAM(lParam);
 		mouseIs.v = GET_Y_LPARAM(lParam);
-		if (QPtInRect(mouseIs, &tileSrc))
+		if (QPtInRect(mouseIs, &g_tileSrc))
 		{
 			POINT pt;
 			pt.x = mouseIs.h;
@@ -599,7 +599,7 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 				DragMiniTile(hDlg, mouseIs, &newTileOver);
 				if ((newTileOver >= 0) && (newTileOver < kNumTiles))
 				{
-					tempTiles[newTileOver] = tileOver;
+					g_tempTiles[newTileOver] = g_tileOver;
 					InvalidateRect(hDlg, NULL, TRUE);
 				}
 			}
@@ -609,7 +609,7 @@ INT_PTR CALLBACK RoomFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 	case WM_MOUSEMOVE:
 		mouseIs.h = GET_X_LPARAM(lParam);
 		mouseIs.v = GET_Y_LPARAM(lParam);
-		showHandCursor = QPtInRect(mouseIs, &tileSrc);
+		g_showHandCursor = QPtInRect(mouseIs, &g_tileSrc);
 		HiliteTileOver(hDlg, mouseIs);
 		return FALSE;
 
@@ -673,7 +673,7 @@ INT_PTR CALLBACK OriginalArtFilter (HWND hDlg, UINT message, WPARAM wParam, LPAR
 		SetDlgItemInt(hDlg, kPICTIDItem, *pPictID, FALSE);
 
 		// TODO: should version 1.0 house bounds be supported as well?
-		tempShort = thisRoom->bounds >> 1; // version 2.0 house
+		tempShort = g_thisRoom->bounds >> 1; // version 2.0 house
 		CheckDlgButton(hDlg, kLeftWallCheck, ((tempShort & 1) == 0));
 		CheckDlgButton(hDlg, kTopWallCheck, ((tempShort & 2) == 0));
 		CheckDlgButton(hDlg, kRightWallCheck, ((tempShort & 4) == 0));
@@ -697,7 +697,7 @@ INT_PTR CALLBACK OriginalArtFilter (HWND hDlg, UINT message, WPARAM wParam, LPAR
 			if ((tempID >= 3000) && (tempID < 3800) && (PictIDExists(tempID)))
 			{
 				if (tempID != *pPictID)
-					SetInitialTiles(tempBack, tempTiles);
+					SetInitialTiles(g_tempBack, g_tempTiles);
 				*pPictID = tempID;
 				tempShort = 0;
 				if (IsDlgButtonChecked(hDlg, kLeftWallCheck) == BST_UNCHECKED)
@@ -712,9 +712,9 @@ INT_PTR CALLBACK OriginalArtFilter (HWND hDlg, UINT message, WPARAM wParam, LPAR
 					tempShort += 16;
 				tempShort = tempShort << 1;  // shift left 1 bit
 				tempShort += 1;  // flag that says orginal bounds used
-				thisRoom->bounds = tempShort;
+				g_thisRoom->bounds = tempShort;
 
-				fileDirty = true;
+				g_fileDirty = true;
 				UpdateMenus(false);
 				EndDialog(hDlg, IDOK);
 			}
