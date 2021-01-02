@@ -525,6 +525,18 @@ void WashColorIn (void)
 	fading = TRUE;
 	for (i = 0; fading && (i < kGray2ColorSteps); i++)
 	{
+		for (c = 0; c < ARRAYSIZE(newColors); c++)
+		{
+			newColors[c] = wasColors[c];
+		}
+		SetPaletteToGrays(newColors, ARRAYSIZE(newColors), i, kGray2ColorSteps);
+		SetDIBColorTable(splashDC, 0, ARRAYSIZE(newColors), newColors);
+
+		hdc = GetMainWindowDC();
+		BitBlt(hdc, g_splashOriginH, g_splashOriginV, 640, 460, splashDC, 0, 0, SRCCOPY);
+		ReleaseMainWindowDC(hdc);
+		ValidateRect(g_mainWindow, NULL);
+
 		while (PeekMessageOrWaitForFrame(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if (msg.message == WM_QUIT)
@@ -544,18 +556,6 @@ void WashColorIn (void)
 				break;
 			}
 		}
-
-		for (c = 0; c < ARRAYSIZE(newColors); c++)
-		{
-			newColors[c] = wasColors[c];
-		}
-		SetPaletteToGrays(newColors, ARRAYSIZE(newColors), i, kGray2ColorSteps);
-		SetDIBColorTable(splashDC, 0, ARRAYSIZE(newColors), newColors);
-
-		hdc = GetMainWindowDC();
-		BitBlt(hdc, g_splashOriginH, g_splashOriginV, 640, 460, splashDC, 0, 0, SRCCOPY);
-		ReleaseMainWindowDC(hdc);
-		ValidateRect(g_mainWindow, NULL);
 	}
 
 	SetFrameRate(wasFPS);
