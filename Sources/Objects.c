@@ -9,7 +9,6 @@
 #include "House.h"
 #include "HouseIO.h"
 #include "Link.h"
-#include "Macintosh.h"
 #include "MainWindow.h"
 #include "Menu.h"
 #include "Music.h"
@@ -1035,7 +1034,7 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 
 	g_fileDirty = true;
 	UpdateMenus(false);
-	Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+	InvalidateRect(g_mainWindow, NULL, TRUE);
 	DeselectObject();
 	GetThisRoomsObjRects();
 	ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);

@@ -10,7 +10,6 @@
 #include "House.h"
 #include "HouseIO.h"
 #include "Link.h"
-#include "Macintosh.h"
 #include "MainWindow.h"
 #include "Map.h"
 #include "Menu.h"
@@ -143,7 +142,7 @@ void GetObjectScrap (void)
 			ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 			GetThisRoomsObjRects();
 			DrawThisRoomsObjects();
-			Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+			InvalidateRect(g_mainWindow, NULL, TRUE);
 			StartMarqueeForActiveObject();
 		}
 	}

@@ -337,7 +337,7 @@ INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 				if (KeepObjectLegal())
 				{
 				}
-				Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+				InvalidateRect(g_mainWindow, NULL, TRUE);
 				GetThisRoomsObjRects();
 				ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 				DrawThisRoomsObjects();
@@ -459,7 +459,7 @@ INT_PTR CALLBACK CustPictFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 					}
 					g_fileDirty = true;
 					UpdateMenus(false);
-					Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+					InvalidateRect(g_mainWindow, NULL, TRUE);
 					GetThisRoomsObjRects();
 					ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 					DrawThisRoomsObjects();
@@ -481,7 +481,7 @@ INT_PTR CALLBACK CustPictFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 					g_thisRoom->objects[g_objActive].data.e.where = (SInt16)wasPict;
 					g_fileDirty = true;
 					UpdateMenus(false);
-					Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+					InvalidateRect(g_mainWindow, NULL, TRUE);
 					GetThisRoomsObjRects();
 					ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 					DrawThisRoomsObjects();
@@ -656,7 +656,7 @@ INT_PTR CALLBACK LightFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 
 			ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 			DrawThisRoomsObjects();
-			Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+			InvalidateRect(g_mainWindow, NULL, TRUE);
 			g_fileDirty = true;
 			UpdateMenus(false);
 			EndDialog(hDlg, LOWORD(wParam));
@@ -727,7 +727,7 @@ INT_PTR CALLBACK ApplianceFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 					g_thisRoom->objects[g_objActive].data.g.initial = false;
 				g_fileDirty = true;
 				UpdateMenus(false);
-				Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+				InvalidateRect(g_mainWindow, NULL, TRUE);
 				GetThisRoomsObjRects();
 				ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 				DrawThisRoomsObjects();
@@ -799,7 +799,7 @@ INT_PTR CALLBACK MicrowaveFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 
 			g_fileDirty = true;
 			UpdateMenus(false);
-			Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+			InvalidateRect(g_mainWindow, NULL, TRUE);
 			GetThisRoomsObjRects();
 			ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 			DrawThisRoomsObjects();
@@ -845,7 +845,7 @@ INT_PTR CALLBACK GreaseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 				g_thisRoom->objects[g_objActive].data.c.initial = true;
 			g_fileDirty = true;
 			UpdateMenus(false);
-			Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+			InvalidateRect(g_mainWindow, NULL, TRUE);
 			GetThisRoomsObjRects();
 			ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 			DrawThisRoomsObjects();

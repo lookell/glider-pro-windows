@@ -11,7 +11,6 @@
 #include "House.h"
 #include "HouseIO.h"
 #include "HouseLegal.h"
-#include "Macintosh.h"
 #include "MainWindow.h"
 #include "Menu.h"
 #include "ObjectEdit.h"
@@ -791,7 +790,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 		GetThisRoomsObjRects();
 		DrawThisRoomsObjects();
-		Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+		InvalidateRect(g_mainWindow, NULL, TRUE);
 		StartMarqueeForActiveObject();
 	}
 

@@ -12,7 +12,6 @@
 
 extern Rect g_workSrcRect;
 extern HDC g_workSrcMap;
-extern Rect g_mainWindowRect;
 extern HWND g_mainWindow;
 extern SInt16 g_isEditH;
 extern SInt16 g_isEditV;

@@ -52,7 +52,6 @@ LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam);
 
 Rect g_workSrcRect;
 HDC g_workSrcMap;
-Rect g_mainWindowRect;
 HWND g_mainWindow;
 SInt16 g_isEditH;
 SInt16 g_isEditV;
@@ -146,27 +145,33 @@ void RedrawSplashScreen (SInt16 splashHouseIndex)
 void PaintMainWindow (HDC hdc)
 {
 	RECT clientRect;
+	RECT unpaintedRect;
 	HRGN unpaintedRgn;
 	HRGN justPaintedRgn;
 	Rect tempRect;
 
 	GetClientRect(g_mainWindow, &clientRect);
-	DPtoLP(hdc, (POINT *)&clientRect, 2);
-	unpaintedRgn = CreateRectRgnIndirect(&clientRect);
+	unpaintedRect = clientRect;
+	DPtoLP(hdc, (POINT *)&unpaintedRect, 2);
+	unpaintedRgn = CreateRectRgnIndirect(&unpaintedRect);
 	justPaintedRgn = CreateRectRgn(0, 0, 0, 0);
 
 	if (g_theMode == kEditMode)
 	{
+		tempRect.left = (SInt16)clientRect.left;
+		tempRect.top = (SInt16)clientRect.top;
+		tempRect.right = (SInt16)clientRect.right;
+		tempRect.bottom = (SInt16)clientRect.bottom;
 		PauseMarquee();
-		Mac_CopyBits(g_workSrcMap, hdc, &g_mainWindowRect, &g_mainWindowRect, srcCopy, nil);
+		Mac_CopyBits(g_workSrcMap, hdc, &tempRect, &tempRect, srcCopy, nil);
 		ResumeMarquee();
 
 		SetRectRgn(
 			justPaintedRgn,
-			g_mainWindowRect.left,
-			g_mainWindowRect.top,
-			g_mainWindowRect.right,
-			g_mainWindowRect.bottom
+			clientRect.left,
+			clientRect.top,
+			clientRect.right,
+			clientRect.bottom
 		);
 		CombineRgn(unpaintedRgn, unpaintedRgn, justPaintedRgn, RGN_DIFF);
 	}
@@ -268,7 +273,6 @@ void OpenMainWindow (void)
 
 	if (g_theMode == kEditMode)
 	{
-		QSetRect(&g_mainWindowRect, 0, 0, kRoomWide, kTileHigh);
 		SetRect(&rcClient, 0, 0, kRoomWide, kTileHigh);
 		windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 		AdjustWindowRect(&rcClient, windowStyle, TRUE);
@@ -316,12 +320,6 @@ void OpenMainWindow (void)
 			RedAlert(kErrDialogDidntLoad);
 		CenterWindowOverOwner(g_mainWindow);
 		ShowWindow(g_mainWindow, SW_SHOWNORMAL);
-
-		GetClientRect(g_mainWindow, &rcClient);
-		g_mainWindowRect.left = 0;
-		g_mainWindowRect.top = 0;
-		g_mainWindowRect.right = (SInt16)rcClient.right;
-		g_mainWindowRect.bottom = (SInt16)rcClient.bottom;
 
 		{
 			RECT clientRect;

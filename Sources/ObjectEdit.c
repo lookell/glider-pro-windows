@@ -160,7 +160,7 @@ void DragHandle (Point where)
 		g_thisRoom->objects[g_objActive].data.a.distance = hDelta;
 		g_thisRoom->objects[g_objActive].data.a.tall = (Byte)(vDelta / 2);
 		whoCares = KeepObjectLegal();
-		Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+		InvalidateRect(g_mainWindow, NULL, TRUE);
 		GetThisRoomsObjRects();
 		ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -199,7 +199,7 @@ void DragHandle (Point where)
 		g_thisRoom->objects[g_objActive].data.b.bounds.right =
 			g_thisRoom->objects[g_objActive].data.b.bounds.left + hDelta;
 		whoCares = KeepObjectLegal();
-		Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+		InvalidateRect(g_mainWindow, NULL, TRUE);
 		GetThisRoomsObjRects();
 		ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -216,7 +216,7 @@ void DragHandle (Point where)
 		g_thisRoom->objects[g_objActive].data.b.bounds.bottom =
 			g_thisRoom->objects[g_objActive].data.b.bounds.top + vDelta;
 		whoCares = KeepObjectLegal();
-		Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+		InvalidateRect(g_mainWindow, NULL, TRUE);
 		GetThisRoomsObjRects();
 		ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -232,7 +232,7 @@ void DragHandle (Point where)
 		g_thisRoom->objects[g_objActive].data.b.bounds.top =
 			g_thisRoom->objects[g_objActive].data.b.bounds.bottom - vDelta;
 		whoCares = KeepObjectLegal();
-		Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+		InvalidateRect(g_mainWindow, NULL, TRUE);
 		GetThisRoomsObjRects();
 		ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -245,7 +245,7 @@ void DragHandle (Point where)
 		DragMarqueeHandle(where, &hDelta);
 		g_thisRoom->objects[g_objActive].data.c.length = hDelta;
 		whoCares = KeepObjectLegal();
-		Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+		InvalidateRect(g_mainWindow, NULL, TRUE);
 		GetThisRoomsObjRects();
 		ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -260,7 +260,7 @@ void DragHandle (Point where)
 		g_thisRoom->objects[g_objActive].data.d.wide = (Byte)hDelta;
 		g_thisRoom->objects[g_objActive].data.d.tall = vDelta;
 		whoCares = KeepObjectLegal();
-		Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+		InvalidateRect(g_mainWindow, NULL, TRUE);
 		GetThisRoomsObjRects();
 		ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -276,7 +276,7 @@ void DragHandle (Point where)
 			vDelta = 32;
 		g_thisRoom->objects[g_objActive].data.d.tall = ((hDelta / 4) << 8) + (vDelta / 4);
 		whoCares = KeepObjectLegal();
-		Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+		InvalidateRect(g_mainWindow, NULL, TRUE);
 		GetThisRoomsObjRects();
 		ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -288,7 +288,7 @@ void DragHandle (Point where)
 		DragMarqueeHandle(where, &hDelta);
 		g_thisRoom->objects[g_objActive].data.f.length = hDelta;
 		whoCares = KeepObjectLegal();
-		Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+		InvalidateRect(g_mainWindow, NULL, TRUE);
 		GetThisRoomsObjRects();
 		ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -320,7 +320,7 @@ void DragHandle (Point where)
 		g_thisRoom->objects[g_objActive].data.i.bounds.bottom =
 			g_thisRoom->objects[g_objActive].data.i.bounds.top + vDelta;
 		whoCares = KeepObjectLegal();
-		Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+		InvalidateRect(g_mainWindow, NULL, TRUE);
 		GetThisRoomsObjRects();
 		ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 		DrawThisRoomsObjects();
@@ -732,7 +732,7 @@ void Gp_DragObject (Point where)
 	}
 	GetThisRoomsObjRects();
 	if (invalAll)
-		Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+		InvalidateRect(g_mainWindow, NULL, TRUE);
 	else
 	{
 		Mac_InvalWindowRect(g_mainWindow, &wasRect);
@@ -1118,7 +1118,7 @@ void Gp_DeleteObject (void)
 	g_thisRoom->numObjects--;
 	g_fileDirty = true;
 	UpdateMenus(false);
-	Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+	InvalidateRect(g_mainWindow, NULL, TRUE);
 	QSetRect(&g_roomObjectRects[g_objActive], -1, -1, 0, 0);
 	DeselectObject();
 	ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
@@ -1296,7 +1296,7 @@ void DuplicateObject (HWND ownerWindow)
 		ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 		GetThisRoomsObjRects();
 		DrawThisRoomsObjects();
-		Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+		InvalidateRect(g_mainWindow, NULL, TRUE);
 		StartMarqueeForActiveObject();
 	}
 }
@@ -1675,7 +1675,7 @@ void MoveObject (SInt16 whichWay, Boolean shiftDown)
 			case kTrackLight:
 			case kMirror:
 			case kWallWindow:
-			Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+			InvalidateRect(g_mainWindow, NULL, TRUE);
 			break;
 
 			default:

@@ -267,8 +267,7 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 
 	if (!g_gameOver)
 	{
-		Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
-
+		InvalidateRect(g_mainWindow, NULL, TRUE);
 		Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 		tempRect = g_splashSrcRect;
 		ZeroRectCorner(&tempRect);

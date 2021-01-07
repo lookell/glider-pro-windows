@@ -320,7 +320,7 @@ void ReflectCurrentRoom (Boolean forceMapRedraw)
 	ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
 	GetThisRoomsObjRects();
 	DrawThisRoomsObjects();
-	Mac_InvalWindowRect(g_mainWindow, &g_mainWindowRect);
+	InvalidateRect(g_mainWindow, NULL, TRUE);
 }
 
 //--------------------------------------------------------------  CopyRoomToThisRoom
