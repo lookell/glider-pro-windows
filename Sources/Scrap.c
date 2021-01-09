@@ -85,10 +85,10 @@ void GetRoomScrap (void)
 
 		srcFloor = g_savedRoomScrap.floor;
 		srcSuite = g_savedRoomScrap.suite;
-		packedSrcCombo = MergeFloorSuite(srcFloor + kNumUndergroundFloors, srcSuite);
+		packedSrcCombo = MergeFloorSuite(srcFloor, srcSuite);
 		destFloor = g_thisRoom->floor;
 		destSuite = g_thisRoom->suite;
-		packedDestCombo = MergeFloorSuite(destFloor + kNumUndergroundFloors, destSuite);
+		packedDestCombo = MergeFloorSuite(destFloor, destSuite);
 
 		*g_thisRoom = g_savedRoomScrap;
 		g_thisRoom->floor = destFloor;

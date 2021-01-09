@@ -49,6 +49,7 @@ SInt16 MergeFloorSuite (SInt16 floor, SInt16 suite)
 
 SInt16 MergeFloorSuiteVer1 (SInt16 floor, SInt16 suite)
 {
+	floor += kNumUndergroundFloors;
 	return ((floor * 100) + suite);
 }
 
@@ -56,6 +57,7 @@ SInt16 MergeFloorSuiteVer1 (SInt16 floor, SInt16 suite)
 
 SInt16 MergeFloorSuiteVer2 (SInt16 floor, SInt16 suite)
 {
+	floor += kNumUndergroundFloors;
 	return ((suite * 100) + floor);
 }
 
@@ -334,7 +336,6 @@ void DoLink (void)
 
 	if (GetRoomFloorSuite(g_thisRoomNumber, &floor, &suite))
 	{
-		floor += kNumUndergroundFloors;
 		if (g_thisRoomNumber == g_linkRoom)
 		{
 			if (g_linkerIsSwitch)

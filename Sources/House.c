@@ -709,8 +709,7 @@ void ConvertHouseVer1To2 (void)
 					case kDeluxeTrans:
 					if (g_thisRoom->objects[h].data.d.where != -1)
 					{
-						ExtractFloorSuite(g_thisRoom->objects[h].data.d.where, &floor, &suite);
-						floor += kNumUndergroundFloors;
+						ExtractFloorSuiteVer1(g_thisRoom->objects[h].data.d.where, &floor, &suite);
 						g_thisRoom->objects[h].data.d.where = MergeFloorSuiteVer2(floor, suite);
 					}
 					break;
@@ -725,8 +724,7 @@ void ConvertHouseVer1To2 (void)
 					case kLgTrigger:
 					if (g_thisRoom->objects[h].data.e.where != -1)
 					{
-						ExtractFloorSuite(g_thisRoom->objects[h].data.e.where, &floor, &suite);
-						floor += kNumUndergroundFloors;
+						ExtractFloorSuiteVer1(g_thisRoom->objects[h].data.e.where, &floor, &suite);
 						g_thisRoom->objects[h].data.e.where = MergeFloorSuiteVer2(floor, suite);
 					}
 					break;
