@@ -35,14 +35,21 @@ Boolean g_linkerIsSwitch;
 
 SInt16 MergeFloorSuite (SInt16 floor, SInt16 suite)
 {
-	if (g_thisHouse.version < 0x0200)     // old floor/suite combo
+	if (g_thisHouse.version < 0x0200) // old floor/suite combo
 	{
-		return ((floor * 100) + suite);
+		return MergeFloorSuiteVer1(floor, suite);
 	}
 	else
 	{
 		return MergeFloorSuiteVer2(floor, suite);
 	}
+}
+
+//--------------------------------------------------------------  MergeFloorSuiteVer1
+
+SInt16 MergeFloorSuiteVer1 (SInt16 floor, SInt16 suite)
+{
+	return ((floor * 100) + suite);
 }
 
 //--------------------------------------------------------------  MergeFloorSuiteVer2
@@ -56,16 +63,30 @@ SInt16 MergeFloorSuiteVer2 (SInt16 floor, SInt16 suite)
 
 void ExtractFloorSuite (SInt16 combo, SInt16 *floor, SInt16 *suite)
 {
-	if (g_thisHouse.version < 0x0200)     // old floor/suite combo
+	if (g_thisHouse.version < 0x0200) // old floor/suite combo
 	{
-		*floor = (combo / 100) - kNumUndergroundFloors;
-		*suite = combo % 100;
+		ExtractFloorSuiteVer1(combo, floor, suite);
 	}
 	else
 	{
-		*suite = combo / 100;
-		*floor = (combo % 100) - kNumUndergroundFloors;
+		ExtractFloorSuiteVer2(combo, floor, suite);
 	}
+}
+
+//--------------------------------------------------------------  ExtractFloorSuiteVer1
+
+void ExtractFloorSuiteVer1 (SInt16 combo, SInt16 *floor, SInt16 *suite)
+{
+	*floor = (combo / 100) - kNumUndergroundFloors;
+	*suite = combo % 100;
+}
+
+//--------------------------------------------------------------  ExtractFloorSuiteVer2
+
+void ExtractFloorSuiteVer2 (SInt16 combo, SInt16 *floor, SInt16 *suite)
+{
+	*suite = combo / 100;
+	*floor = (combo % 100) - kNumUndergroundFloors;
 }
 
 //--------------------------------------------------------------  LinkWindowProc
