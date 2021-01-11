@@ -179,13 +179,12 @@ void DissolveScreenOn (const Rect *theRect)
 // the screen is treated as if it's very large (2048 x 1024). Any rectangles
 // generated that lie outside of the visible area will be skipped.
 
-//--------------------------------------------------------------  DissBits
+//--------------------------------------------------------------  DissBitsImpl
 
-void DissBits (const Rect *theRect)
+void DissBitsImpl (const Rect *theRect, Boolean doChunky)
 {
-	const UInt32 lfsrMask = 0x10016;  // 1 to 131071 (2^17 - 1)
-	const INT chunkSize = 4;
-
+	UINT32 lfsrMask;
+	INT chunkSize;
 	HDC mainWindowDC;
 	RECT clipRect;
 	HRGN theClipRgn;
@@ -195,6 +194,17 @@ void DissBits (const Rect *theRect)
 
 	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
 		return;
+
+	if (doChunky)
+	{
+		lfsrMask = 0x4016; // 1 to 32767 (2^15 - 1)
+		chunkSize = 8;
+	}
+	else
+	{
+		lfsrMask = 0x10016; // 1 to 131071 (2^17 - 1)
+		chunkSize = 4;
+	}
 
 	mainWindowDC = GetMainWindowDC();
 	SaveDC(mainWindowDC);
@@ -215,9 +225,16 @@ void DissBits (const Rect *theRect)
 		else
 			state = (state >> 1);
 
-		chunkH = chunkSize * (state & 0x1FF); // 4 * (0 to 511)
-		chunkV = chunkSize * ((state >> 9) & 0xFF); // 4 * (0 to 255)
-
+		if (doChunky)
+		{
+			chunkH = chunkSize * (state & 0xFF); // 8 * (0 to 255)
+			chunkV = chunkSize * ((state >> 8) & 0x7F); // 8 * (0 to 127)
+		}
+		else
+		{
+			chunkH = chunkSize * (state & 0x1FF); // 4 * (0 to 511)
+			chunkV = chunkSize * ((state >> 9) & 0xFF); // 4 * (0 to 255)
+		}
 		if ((theRect->left > chunkH + chunkSize - 1) || (chunkH >= theRect->right))
 			continue;
 		if ((theRect->top > chunkV + chunkSize - 1) || (chunkV >= theRect->bottom))
@@ -231,54 +248,16 @@ void DissBits (const Rect *theRect)
 	ReleaseMainWindowDC(mainWindowDC);
 }
 
+//--------------------------------------------------------------  DissBits
+
+void DissBits (const Rect *theRect)
+{
+	DissBitsImpl(theRect, false);
+}
+
 //--------------------------------------------------------------  DissBitsChunky
 
 void DissBitsChunky (const Rect *theRect)
 {
-	const UInt32 lfsrMask = 0x4016;  // 1 to 32767 (2^15 - 1)
-	const INT chunkSize = 8;
-
-	HDC mainWindowDC;
-	RECT clipRect;
-	HRGN theClipRgn;
-	INT chunkH;
-	INT chunkV;
-	UInt32 state;
-
-	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
-		return;
-
-	mainWindowDC = GetMainWindowDC();
-	SaveDC(mainWindowDC);
-	clipRect.left = theRect->left;
-	clipRect.top = theRect->top;
-	clipRect.right = theRect->right;
-	clipRect.bottom = theRect->bottom;
-	LPtoDP(mainWindowDC, (LPPOINT)&clipRect, 2);
-	theClipRgn = CreateRectRgnIndirect(&clipRect);
-	ExtSelectClipRgn(mainWindowDC, theClipRgn, RGN_AND);
-	DeleteObject(theClipRgn);
-
-	state = 1;
-	do
-	{
-		if (state & 1)
-			state = (state >> 1) ^ lfsrMask;
-		else
-			state = (state >> 1);
-
-		chunkH = chunkSize * (state & 0xFF); // 8 * (0 to 255)
-		chunkV = chunkSize * ((state >> 8) & 0x7F); // 8 * (0 to 127)
-
-		if ((theRect->left > chunkH + chunkSize - 1) || (chunkH >= theRect->right))
-			continue;
-		if ((theRect->top > chunkV + chunkSize - 1) || (chunkV >= theRect->bottom))
-			continue;
-		BitBlt(mainWindowDC, chunkH, chunkV, chunkSize, chunkSize,
-			g_workSrcMap, chunkH, chunkV, SRCCOPY);
-	} while (state != 1);
-	BitBlt(mainWindowDC, 0, 0, chunkSize, chunkSize, g_workSrcMap, 0, 0, SRCCOPY);
-
-	RestoreDC(mainWindowDC, -1);
-	ReleaseMainWindowDC(mainWindowDC);
+	DissBitsImpl(theRect, true);
 }
