@@ -2,9 +2,10 @@
 
 #include "ByteIO.h"
 #include "ImageIO.h"
-#include "miniz.h"
 #include "StructIO.h"
 #include "Utilities.h" // TEMP TEMP TEMP
+
+#include "miniz.h"
 
 #include <strsafe.h>
 

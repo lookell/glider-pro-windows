@@ -1,7 +1,6 @@
 #include "Audio.h"
-#include "WinAPI.h"
 
-// NOTE: <mmsystem.h> MUST come before <dsound.h>
+#include "WinAPI.h"
 #include <mmsystem.h>
 #include <dsound.h>
 

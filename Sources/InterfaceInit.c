@@ -1,10 +1,10 @@
-#include "InterfaceInit.h"
-
 //============================================================================
 //----------------------------------------------------------------------------
 //                              InterfaceInit.c
 //----------------------------------------------------------------------------
 //============================================================================
+
+#include "InterfaceInit.h"
 
 #include "Coordinates.h"
 #include "Environ.h"
@@ -29,9 +29,9 @@
 #include "Tools.h"
 #include "Utilities.h"
 
-#include <stdlib.h>
-
 #include <mmsystem.h>
+
+#include <stdlib.h>
 
 static HMENU DetachPopupMenu (HMENU rootMenu, UINT id, LPWSTR *title);
 
