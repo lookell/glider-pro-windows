@@ -32,7 +32,7 @@
 #define kBannerScoreNCharsItem	1005
 
 void DrawHighScores (void);
-void SortHighScores (void);
+void SortHighScores (scoresType *theScores);
 INT_PTR CALLBACK NameFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 void GetHighScoreName (HWND ownerWindow, SInt16 place);
 INT_PTR CALLBACK BannerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
@@ -250,9 +250,9 @@ void DrawHighScores (void)
 //--------------------------------------------------------------  SortHighScores
 // This does a simple sort of the high scores.
 
-void SortHighScores (void)
+void SortHighScores (scoresType *theScores)
 {
-	scoresType	tempScores;
+	scoresType	tempScores = { 0 };
 	SInt32		greatest;
 	SInt16		i, h, which;
 
@@ -262,23 +262,23 @@ void SortHighScores (void)
 		which = -1;
 		for (i = 0; i < kMaxScores; i++)
 		{
-			if (g_thisHouse.highScores.scores[i] > greatest)
+			if (theScores->scores[i] > greatest)
 			{
-				greatest = g_thisHouse.highScores.scores[i];
+				greatest = theScores->scores[i];
 				which = i;
 			}
 		}
 		if (which != -1)
 		{
-			PasStringCopy(g_thisHouse.highScores.names[which], tempScores.names[h]);
-			tempScores.scores[h] = g_thisHouse.highScores.scores[which];
-			tempScores.timeStamps[h] = g_thisHouse.highScores.timeStamps[which];
-			tempScores.levels[h] = g_thisHouse.highScores.levels[which];
-			g_thisHouse.highScores.scores[which] = -1L;
+			PasStringCopy(theScores->names[which], tempScores.names[h]);
+			tempScores.scores[h] = theScores->scores[which];
+			tempScores.timeStamps[h] = theScores->timeStamps[which];
+			tempScores.levels[h] = theScores->levels[which];
+			theScores->scores[which] = -1L;
 		}
 	}
-	PasStringCopy(g_thisHouse.highScores.banner, tempScores.banner);
-	g_thisHouse.highScores = tempScores;
+	PasStringCopy(theScores->banner, tempScores.banner);
+	*theScores = tempScores;
 }
 
 //--------------------------------------------------------------  ZeroHighScores
@@ -351,7 +351,7 @@ Boolean TestHighScore (HWND ownerWindow)
 		g_thisHouse.highScores.scores[kMaxScores - 1] = g_theScore;
 		g_thisHouse.highScores.timeStamps[kMaxScores - 1] = Mac_GetDateTime();
 		g_thisHouse.highScores.levels[kMaxScores - 1] = CountRoomsVisited();
-		SortHighScores();
+		SortHighScores(&g_thisHouse.highScores);
 		g_gameDirty = true;
 	}
 
