@@ -8,6 +8,7 @@
 #define STRING_UTILS_H_
 
 #include "MacTypes.h"
+
 #include <wchar.h>
 
 void PasStringCopy (ConstStringPtr p1, StringPtr p2);
