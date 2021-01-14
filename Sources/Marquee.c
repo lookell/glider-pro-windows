@@ -18,7 +18,7 @@
 
 #include <commctrl.h>
 
-#define kHandleSideLong			9
+#define kHandleSideLong         9
 
 HBRUSH CreateMarqueeBrush (void);
 HPEN CreateMarqueePen (void);
@@ -759,10 +759,10 @@ void DrawMarquee (HDC hdc)
 
 void InitMarquee (void)
 {
-	HIMAGELIST	himlMarquee;
-	HDC			hdc;
-	HBITMAP		hBitmap, hbmPrev;
-	INT			i, numMarqueePats;
+	HIMAGELIST himlMarquee;
+	HDC hdc;
+	HBITMAP hBitmap, hbmPrev;
+	INT i, numMarqueePats;
 
 	himlMarquee = ImageList_LoadImage(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kMarqueePatListID), 8, 0,

@@ -119,7 +119,7 @@ Rect MakeWipeRect (SInt16 direction, const Rect *theRect, SInt16 index, SInt16 c
 
 void DumpScreenOn (const Rect *theRect)
 {
-	HDC			mainWindowDC;
+	HDC mainWindowDC;
 
 	mainWindowDC = GetMainWindowDC();
 	Mac_CopyBits(g_workSrcMap, mainWindowDC,

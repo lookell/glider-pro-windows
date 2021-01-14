@@ -362,7 +362,7 @@ void DoLink (void)
 				g_thisHouse.rooms[g_linkRoom].objects[g_linkObject].data.e.who =
 						(Byte)g_objActive;
 			}
-			else	// linker is transport
+			else  // linker is transport
 			{
 				g_thisHouse.rooms[g_linkRoom].objects[g_linkObject].data.d.where =
 						MergeFloorSuite(floor, suite);

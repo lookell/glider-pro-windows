@@ -132,7 +132,7 @@ void InitializeMenus (void)
 
 void VariableInit (void)
 {
-	size_t		i;
+	size_t i;
 
 	g_theMenuBar = NULL;
 	g_menusUp = false;
@@ -146,11 +146,15 @@ void VariableInit (void)
 	g_paused = false;
 	g_hasMirror = false;
 	g_demoGoing = false;
-//	g_scrapIsARoom = true;
+#if 0
+	g_scrapIsARoom = true;
+#endif
 	g_splashDrawn = false;
 
-//	if (!COMPILEDEMO)
-//		SeeIfValidScrapAvailable(false);
+#if 0
+	if (!COMPILEDEMO)
+		SeeIfValidScrapAvailable(false);
+#endif
 
 	g_theGlider.which = kPlayer1;
 	g_theGlider2.which = kPlayer2;
@@ -172,19 +176,19 @@ void VariableInit (void)
 	g_incrementModeTime = timeGetTime() + kIdleSplashTime;
 	g_willMaxFiles = g_maxFiles;
 
-	g_fadeInSequence[0] = 4;	// 4
+	g_fadeInSequence[0] = 4;  // 4
 	g_fadeInSequence[1] = 5;
 	g_fadeInSequence[2] = 6;
 	g_fadeInSequence[3] = 7;
-	g_fadeInSequence[4] = 5;	// 5
+	g_fadeInSequence[4] = 5;  // 5
 	g_fadeInSequence[5] = 6;
 	g_fadeInSequence[6] = 7;
 	g_fadeInSequence[7] = 8;
-	g_fadeInSequence[8] = 6;	// 6
+	g_fadeInSequence[8] = 6;  // 6
 	g_fadeInSequence[9] = 7;
 	g_fadeInSequence[10] = 8;
 	g_fadeInSequence[11] = 9;
-	g_fadeInSequence[12] = 7;	// 7
+	g_fadeInSequence[12] = 7;  // 7
 	g_fadeInSequence[13] = 8;
 	g_fadeInSequence[14] = 9;
 	g_fadeInSequence[15] = 10;

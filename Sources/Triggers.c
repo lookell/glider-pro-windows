@@ -11,7 +11,7 @@
 #include "Sound.h"
 #include "Trip.h"
 
-#define kMaxTriggers			16
+#define kMaxTriggers            16
 
 typedef struct trigType
 {
@@ -33,7 +33,7 @@ static trigType g_triggers[kMaxTriggers];
 
 void ArmTrigger (hotPtr who)
 {
-	SInt16		where, whoLinked;
+	SInt16 where, whoLinked;
 
 	if (who->stillOver)
 		return;
@@ -42,7 +42,7 @@ void ArmTrigger (hotPtr who)
 
 	if (where != -1)
 	{
-		whoLinked = who->who;				// what is trigger's obj. #
+		whoLinked = who->who;  // what is trigger's obj. #
 		g_triggers[where].room = g_masterObjects[whoLinked].roomLink;
 		g_triggers[where].object = g_masterObjects[whoLinked].objectLink;
 		g_triggers[where].index = whoLinked;
@@ -58,7 +58,7 @@ void ArmTrigger (hotPtr who)
 
 SInt16 FindEmptyTriggerSlot (void)
 {
-	SInt16		where, i;
+	SInt16 where, i;
 
 	where = -1;
 
@@ -78,7 +78,7 @@ SInt16 FindEmptyTriggerSlot (void)
 
 void HandleTriggers (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	for (i = 0; i < kMaxTriggers; i++)
 	{
@@ -99,7 +99,7 @@ void HandleTriggers (void)
 
 void FireTrigger (SInt16 index)
 {
-	SInt16		triggerIs, triggeredIs;
+	SInt16 triggerIs, triggeredIs;
 
 	triggerIs = g_triggers[index].index;
 
@@ -128,7 +128,7 @@ void FireTrigger (SInt16 index)
 			break;
 
 			case kSoundTrigger:
-			PlayPrioritySound(kChordSound, kChordPriority);	// Change me
+			PlayPrioritySound(kChordSound, kChordPriority);  // Change me
 			break;
 
 			case kToaster:
@@ -176,7 +176,7 @@ void FireTrigger (SInt16 index)
 
 void ZeroTriggers (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	for (i = 0; i < kMaxTriggers; i++)
 		g_triggers[i].armed = false;

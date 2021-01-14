@@ -301,7 +301,7 @@ OSErr CloseMusicChannel (void)
 
 void InitMusic (HWND ownerWindow)
 {
-	OSErr		theErr;
+	OSErr theErr;
 
 	if (g_dontLoadMusic)
 	{

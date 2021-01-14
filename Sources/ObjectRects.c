@@ -18,13 +18,13 @@
 #include "Room.h"
 #include "Sound.h"
 
-#define kFloorColumnWide		4
-#define kCeilingColumnWide		24
-#define kFanColumnThick			16
-#define kFanColumnDown			20
-#define kDeadlyFlameHeight		24
-#define kStoolThick				25
-#define kShredderActiveHigh		40
+#define kFloorColumnWide        4
+#define kCeilingColumnWide      24
+#define kFanColumnThick         16
+#define kFanColumnDown          20
+#define kDeadlyFlameHeight      24
+#define kStoolThick             25
+#define kShredderActiveHigh     40
 
 SInt16 AddActiveRect (const Rect *bounds, SInt16 action, SInt16 who, Boolean isOn,
 	Boolean doScrutinize);
@@ -34,9 +34,9 @@ SInt16 AddActiveRect (const Rect *bounds, SInt16 action, SInt16 who, Boolean isO
 
 void GetObjectRect (objectPtr who, Rect *itsRect)
 {
-	HBITMAP		thePict;
-	SInt16		wide, tall;
-	BITMAP		bmInfo;
+	HBITMAP thePict;
+	SInt16 wide, tall;
+	BITMAP bmInfo;
 
 	switch (who->what)
 	{
@@ -145,9 +145,9 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		break;
 
 		case kDeluxeTrans:
-		wide = (who->data.d.tall & 0xFF00) >> 8;		// Get high byte
-		tall = who->data.d.tall & 0x00FF;				// Get low byte
-		QSetRect(itsRect, 0, 0, wide * 4, tall * 4);	// Scale by 4
+		wide = (who->data.d.tall & 0xFF00) >> 8;  // Get high byte
+		tall = who->data.d.tall & 0x00FF;  // Get low byte
+		QSetRect(itsRect, 0, 0, wide * 4, tall * 4);  // Scale by 4
 		QOffsetRect(itsRect,
 				who->data.d.topLeft.h,
 				who->data.d.topLeft.v);
@@ -280,10 +280,10 @@ SInt16 AddActiveRect (const Rect *bounds, SInt16 action, SInt16 who, Boolean isO
 	if (g_nHotSpots >= kMaxHotSpots)
 		return (-1);
 
-	g_hotSpots[g_nHotSpots].bounds = *bounds;		// the active rect
-	g_hotSpots[g_nHotSpots].action = action;		// what it does
-	g_hotSpots[g_nHotSpots].who = who;				// local obj. linked to
-	g_hotSpots[g_nHotSpots].isOn = isOn;			// is it active?
+	g_hotSpots[g_nHotSpots].bounds = *bounds;  // the active rect
+	g_hotSpots[g_nHotSpots].action = action;  // what it does
+	g_hotSpots[g_nHotSpots].who = who;  // local obj. linked to
+	g_hotSpots[g_nHotSpots].isOn = isOn;  // is it active?
 	g_hotSpots[g_nHotSpots].stillOver = false;
 	g_hotSpots[g_nHotSpots].doScrutinize = doScrutinize;
 	g_nHotSpots++;
@@ -295,10 +295,10 @@ SInt16 AddActiveRect (const Rect *bounds, SInt16 action, SInt16 who, Boolean isO
 
 SInt16 CreateActiveRects (SInt16 who)
 {
-	objectType	theObject;
-	Rect		bounds;
-	SInt16		hotSpotNumber, wide, tall;
-	Boolean		isOn;
+	objectType theObject;
+	Rect bounds;
+	SInt16 hotSpotNumber, wide, tall;
+	Boolean isOn;
 
 	// NOTE: CreateActiveRects is called in the process of adding an entry to the
 	// `masterObjects` table, so checking `who >= g_numMasterObjects` is incorrect.
@@ -528,7 +528,7 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kInvisBlower:
 		switch (theObject.data.a.vector & 0x0F)
 		{
-			case 1:		// up
+			case 1:  // up
 			QSetRect(&bounds, 0, -theObject.data.a.distance - 24,
 					kFloorColumnWide, 0);
 			QOffsetRect(&bounds, 12 - kFloorColumnWide / 2, 24);
@@ -538,7 +538,7 @@ SInt16 CreateActiveRects (SInt16 who)
 					false);
 			break;
 
-			case 2:		// right
+			case 2:  // right
 			QSetRect(&bounds, 0, 0, theObject.data.a.distance + 24,
 					kFanColumnThick);
 			QOffsetRect(&bounds, 0, 12 - kFanColumnThick / 2);
@@ -548,7 +548,7 @@ SInt16 CreateActiveRects (SInt16 who)
 					theObject.data.a.state, false);
 			break;
 
-			case 4:		// down
+			case 4:  // down
 			QSetRect(&bounds, 0, 0, kFloorColumnWide,
 					theObject.data.a.distance + 24);
 			QOffsetRect(&bounds, 12 - kFloorColumnWide / 2, 0);
@@ -558,7 +558,7 @@ SInt16 CreateActiveRects (SInt16 who)
 					theObject.data.a.state, false);
 			break;
 
-			case 8:		// left
+			case 8:  // left
 			QSetRect(&bounds, 0, 0, theObject.data.a.distance + 24, kFanColumnThick);
 			QOffsetRect(&bounds, -(theObject.data.a.distance), 12 - kFanColumnThick / 2);
 			QOffsetRect(&bounds, theObject.data.a.topLeft.h,
@@ -600,22 +600,22 @@ SInt16 CreateActiveRects (SInt16 who)
 				theObject.data.a.topLeft.v);
 		switch (theObject.data.a.vector & 0x0F)
 		{
-			case 1:		// up
+			case 1:  // up
 			hotSpotNumber = AddActiveRect(&bounds, kLiftIt, who, theObject.data.a.state,
 					false);
 			break;
 
-			case 2:		// right
+			case 2:  // right
 			hotSpotNumber = AddActiveRect(&bounds, kPushItRight, who,
 					theObject.data.a.state, false);
 			break;
 
-			case 4:		// down
+			case 4:  // down
 			hotSpotNumber = AddActiveRect(&bounds, kDropIt, who,
 					theObject.data.a.state, false);
 			break;
 
-			case 8:		// left
+			case 8:  // left
 			hotSpotNumber = AddActiveRect(&bounds, kPushItLeft, who,
 					theObject.data.a.state, false);
 			break;
@@ -890,9 +890,9 @@ SInt16 CreateActiveRects (SInt16 who)
 		case kDeluxeTrans:
 		if (theObject.data.d.who != 255)
 		{
-			wide = (theObject.data.d.tall & 0xFF00) >> 8;	// Get high byte
-			tall = theObject.data.d.tall & 0x00FF;			// Get low byte
-			QSetRect(&bounds, 0, 0, wide * 4, tall * 4);	// Scale by 4
+			wide = (theObject.data.d.tall & 0xFF00) >> 8;  // Get high byte
+			tall = theObject.data.d.tall & 0x00FF;  // Get low byte
+			QSetRect(&bounds, 0, 0, wide * 4, tall * 4);  // Scale by 4
 			QOffsetRect(&bounds,
 					theObject.data.d.topLeft.h,
 					theObject.data.d.topLeft.v);
@@ -1072,7 +1072,7 @@ SInt16 CreateActiveRects (SInt16 who)
 
 SInt16 VerticalRoomOffset (SInt16 neighbor)
 {
-	SInt16		offset;
+	SInt16 offset;
 
 	offset = 0;
 
@@ -1140,8 +1140,8 @@ void OffsetRectRoomRelative (Rect *theRect, SInt16 neighbor)
 
 SInt16 GetUpStairsRightEdge (void)
 {
-	objectType	thisObject;
-	SInt16		i, rightEdge;
+	objectType thisObject;
+	SInt16 i, rightEdge;
 
 	rightEdge = kRoomWide;
 
@@ -1165,8 +1165,8 @@ SInt16 GetUpStairsRightEdge (void)
 
 SInt16 GetDownStairsLeftEdge (void)
 {
-	objectType	thisObject;
-	SInt16		i, leftEdge;
+	objectType thisObject;
+	SInt16 i, leftEdge;
 
 	leftEdge = 0;
 

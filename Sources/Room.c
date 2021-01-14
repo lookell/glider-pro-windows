@@ -24,7 +24,7 @@
 
 #include <stdlib.h>
 
-#define kYesDoDeleteRoom		IDOK
+#define kYesDoDeleteRoom        IDOK
 
 Boolean QueryDeleteRoom (HWND ownerWindow);
 void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_);
@@ -138,10 +138,12 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 	size_t newRoomsCount;
 	roomPtr newRoomsPtr;
 
-	CopyThisRoomToRoom();					// save off current room
+	// save off current room
+	CopyThisRoomToRoom();
 
+	// fill out fields of new room
 	PasStringCopyC("Untitled Room", g_thisRoom->name);
-	g_thisRoom->leftStart = 32;				// fill out fields of new room
+	g_thisRoom->leftStart = 32;
 	g_thisRoom->rightStart = 32;
 	g_thisRoom->bounds = 0;
 	g_thisRoom->unusedByte = 0;
@@ -152,19 +154,26 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 	g_thisRoom->suite = h;
 	g_thisRoom->openings = 0;
 	g_thisRoom->numObjects = 0;
-	for (i = 0; i < kMaxRoomObs; i++)		// zero out all objects
+	// zero out all objects
+	for (i = 0; i < kMaxRoomObs; i++)
 		g_thisRoom->objects[i].what = kObjectIsEmpty;
 
-	availableRoom = -1;						// assume no available rooms
-	if (g_thisHouse.nRooms > 0)				// look for an empty room
+	// assume no available rooms
+	availableRoom = -1;
+	if (g_thisHouse.nRooms > 0)
+	{
+		// look for an empty room
 		for (i = 0; i < g_thisHouse.nRooms; i++)
+		{
 			if (g_thisHouse.rooms[i].suite == kRoomIsEmpty)
 			{
 				availableRoom = i;
 				break;
 			}
+		}
+	}
 
-	if (availableRoom == -1)				// found no available rooms
+	if (availableRoom == -1)  // found no available rooms
 	{
 		if (g_thisHouse.nRooms < 0)
 			g_thisHouse.nRooms = 0;
@@ -177,7 +186,7 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 			return (false);
 		}
 		g_thisHouse.rooms = newRoomsPtr;
-		g_thisHouse.nRooms++;					// increment nRooms
+		g_thisHouse.nRooms++;  // increment nRooms
 		g_previousRoom = g_thisRoomNumber;
 		g_thisRoomNumber = g_thisHouse.nRooms - 1;
 	}
@@ -199,7 +208,7 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 	if (GetKeyState(VK_SHIFT) < 0)
 		g_newRoomNow = false;
 	else
-		g_newRoomNow = g_autoRoomEdit;			// Flag to bring up RoomInfo
+		g_newRoomNow = g_autoRoomEdit;  // Flag to bring up RoomInfo
 
 	return (true);
 }
@@ -208,12 +217,11 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 
 void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 {
-	Rect		src, dest;
-	HBITMAP		thePicture;
-	BITMAP		bmInfo;
-	COLORREF	wasColor;
-	SInt16		i;
-
+	Rect src, dest;
+	HBITMAP thePicture;
+	BITMAP bmInfo;
+	COLORREF wasColor;
+	SInt16 i;
 	NONCLIENTMETRICS ncm;
 	HFONT hFont;
 	wchar_t theString[256];
@@ -307,12 +315,12 @@ void ReflectCurrentRoom (Boolean forceMapRedraw)
 		if ((!ThisRoomVisibleOnMap()) || (forceMapRedraw))
 		{
 			CenterMapOnRoom(g_thisRoom->suite, g_thisRoom->floor);
-			UpdateMapWindow();			// whole map window redrawm
+			UpdateMapWindow();  // whole map window redrawm
 		}
 		else
 		{
-			FindNewActiveRoomRect();	// find newly selected room rect
-			FlagMapRoomsForUpdate();	// redraw only the portions required
+			FindNewActiveRoomRect();  // find newly selected room rect
+			FlagMapRoomsForUpdate();  // redraw only the portions required
 		}
 	}
 	GenerateRetroLinks();
@@ -330,8 +338,8 @@ void CopyRoomToThisRoom (SInt16 roomNumber)
 	if (roomNumber == -1)
 		return;
 
-	CopyThisRoomToRoom();			// copy back to house
-	ForceThisRoom(roomNumber);		// load new room from house
+	CopyThisRoomToRoom();  // copy back to house
+	ForceThisRoom(roomNumber);  // load new room from house
 }
 
 //--------------------------------------------------------------  CopyThisRoomToRoom
@@ -343,7 +351,7 @@ void CopyThisRoomToRoom (void)
 	if (g_thisRoomNumber < 0 || g_thisRoomNumber >= g_thisHouse.nRooms)
 		return;
 
-	g_thisHouse.rooms[g_thisRoomNumber] = *g_thisRoom;	// copy back to house
+	g_thisHouse.rooms[g_thisRoomNumber] = *g_thisRoom;  // copy back to house
 }
 
 //--------------------------------------------------------------  ForceThisRoom
@@ -367,8 +375,8 @@ void ForceThisRoom (SInt16 roomNumber)
 Boolean RoomExists (SInt16 suite, SInt16 floor, SInt16 *roomNum)
 {
 	// pass in a suite and floor; returns true is it is a legitimate room
-	SInt16		i;
-	Boolean		foundIt;
+	SInt16 i;
+	Boolean foundIt;
 
 	foundIt = false;
 
@@ -393,8 +401,8 @@ Boolean RoomExists (SInt16 suite, SInt16 floor, SInt16 *roomNum)
 
 Boolean RoomNumExists (SInt16 roomNum)
 {
-	SInt16		floor, suite, whoCares;
-	Boolean		exists;
+	SInt16 floor, suite, whoCares;
+	Boolean exists;
 
 	exists = false;
 	if (GetRoomFloorSuite(roomNum, &floor, &suite))
@@ -407,8 +415,8 @@ Boolean RoomNumExists (SInt16 roomNum)
 
 void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 {
-	SInt16		wasFloor_, wasSuite_;
-	Boolean		firstDeleted;
+	SInt16 wasFloor_, wasSuite_;
+	Boolean firstDeleted;
 
 	if (COMPILEDEMO)
 		return;
@@ -427,11 +435,11 @@ void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 
 	wasFloor_ = g_thisHouse.rooms[g_thisRoomNumber].floor;
 	wasSuite_ = g_thisHouse.rooms[g_thisRoomNumber].suite;
-	firstDeleted = (g_thisHouse.firstRoom == g_thisRoomNumber);		// is room "first"
+	firstDeleted = (g_thisHouse.firstRoom == g_thisRoomNumber);  // is room "first"
 	g_thisRoom->suite = kRoomIsEmpty;
 	g_thisHouse.rooms[g_thisRoomNumber].suite = kRoomIsEmpty;
 
-	g_noRoomAtAll = (RealRoomNumberCount() == 0);					// see if now no rooms
+	g_noRoomAtAll = (RealRoomNumberCount() == 0);  // see if now no rooms
 	if (g_noRoomAtAll)
 		g_thisRoomNumber = kRoomIsEmpty;
 	else
@@ -465,7 +473,7 @@ Boolean QueryDeleteRoom (HWND ownerWindow)
 
 SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor)
 {
-	SInt16		newH, newV, newRoomNumber;
+	SInt16 newH, newV, newRoomNumber;
 
 	if (COMPILEDEMO)
 		return(-1);
@@ -505,7 +513,7 @@ SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor)
 
 void SelectNeighborRoom (SInt16 whichNeighbor)
 {
-	SInt16		newRoomNumber;
+	SInt16 newRoomNumber;
 
 	if (COMPILEDEMO)
 		return;
@@ -524,9 +532,9 @@ void SelectNeighborRoom (SInt16 whichNeighbor)
 
 SInt16 GetNeighborRoomNumber (SInt16 which)
 {
-	SInt16		hDelta, vDelta, i;
-	SInt16		roomH, roomV;
-	SInt16		roomNum;
+	SInt16 hDelta, vDelta, i;
+	SInt16 roomH, roomV;
+	SInt16 roomNum;
 
 	switch (which)
 	{
@@ -606,24 +614,25 @@ void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_)
 {
 	// searches in a clockwise spiral pattern (from g_thisRoom) for a
 	// legitimate neighboring room - then sets g_thisRoom to it
-	SInt16		distance, h, v;
-	SInt16		hStep, vStep;
-	SInt16		testRoomNum, testH, testV;
-	Boolean		finished;
+	SInt16 distance, h, v;
+	SInt16 hStep, vStep;
+	SInt16 testRoomNum, testH, testV;
+	Boolean finished;
 
 	finished = false;
-	distance = 1;	// we begin our walk a distance of one from source room
-	h = -1;			// we begin with the neighbor to the left
-	v = 0;			// and on the same floor
-	hStep = 0;		// we don't 'walk' left or right
-	vStep = -1;		// instead, we 'walk' up
+	distance = 1;  // we begin our walk a distance of one from source room
+	h = -1;  // we begin with the neighbor to the left
+	v = 0;  // and on the same floor
+	hStep = 0;  // we don't 'walk' left or right
+	vStep = -1;  // instead, we 'walk' up
 
 	do
 	{
 		testH = wasSuite_ + h;
 		testV = wasFloor_ + v;
 
-		if (RoomExists(testH, testV, &testRoomNum))		// if a legitimate room
+		// if a legitimate room
+		if (RoomExists(testH, testV, &testRoomNum))
 		{
 			CopyRoomToThisRoom(testRoomNum);
 			finished = true;
@@ -633,32 +642,38 @@ void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_)
 			h += hStep;
 			v += vStep;
 			if ((h > distance) || (h < -distance) || (v > distance) || (v < -distance))
-			{			// we have walked beyond the bounds of our spiral
-				if ((hStep == -1) && (vStep == 0))	// we expand our spiral out
+			{
+				// we have walked beyond the bounds of our spiral
+				if ((hStep == -1) && (vStep == 0))  // we expand our spiral out
 				{
 					distance++;
-					hStep = 0;						// begin travelling up again
+					// begin travelling up again
+					hStep = 0;
 					vStep = -1;
 				}
 				else
 				{
-					h -= hStep;						// first, back up a step
+					// first, back up a step
+					h -= hStep;
 					v -= vStep;
 
-					if (hStep == 0)					// we were travelling up or down
+					if (hStep == 0)
 					{
-						if (vStep == -1)			// we were travelling up
-							hStep = 1;				// so begin travelling right
-						else						// we were travelling down
-							hStep = -1;				// so begin travelling left
+						// we were travelling up or down
+						if (vStep == -1)  // we were travelling up
+							hStep = 1;  // so begin travelling right
+						else  // we were travelling down
+							hStep = -1;  // so begin travelling left
 						vStep = 0;
 					}
 					else
 					{
-						hStep = 0;					// begin travelling down
+						// begin travelling down
+						hStep = 0;
 						vStep = 1;
 					}
-					h += hStep;						// proceed a step now
+					// proceed a step now
+					h += hStep;
 					v += vStep;
 				}
 			}
@@ -670,7 +685,7 @@ void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_)
 
 Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite)
 {
-	Boolean		isRoom;
+	Boolean isRoom;
 
 	if (room < 0 || room >= g_thisHouse.nRooms)
 	{
@@ -699,7 +714,7 @@ Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite)
 SInt16 GetRoomNumber (SInt16 floor, SInt16 suite)
 {
 	// pass in a floor and suite; returns the room index into the house file
-	SInt16		roomNum, i;
+	SInt16 roomNum, i;
 
 	roomNum = kRoomIsEmpty;
 
@@ -720,7 +735,7 @@ SInt16 GetRoomNumber (SInt16 floor, SInt16 suite)
 
 Boolean IsRoomAStructure (SInt16 roomNum)
 {
-	Boolean		isStructure;
+	Boolean isStructure;
 
 	if (roomNum < 0 || roomNum >= g_thisHouse.nRooms)
 		return (false);
@@ -769,8 +784,8 @@ Boolean IsRoomAStructure (SInt16 roomNum)
 
 void DetermineRoomOpenings (void)
 {
-	SInt16		whichBack, leftTile, rightTile;
-	SInt16		boundsCode;
+	SInt16 whichBack, leftTile, rightTile;
+	SInt16 boundsCode;
 
 	whichBack = g_thisRoom->background;
 	leftTile = g_thisRoom->tiles[0];
@@ -890,8 +905,8 @@ void DetermineRoomOpenings (void)
 
 SInt16 GetOriginalBounding (SInt16 theID)
 {
-	boundsType	boundsRes;
-	SInt16		boundCode;
+	boundsType boundsRes;
+	SInt16 boundCode;
 
 	boundCode = 0;
 	if (FAILED(Gp_LoadHouseBounding(g_theHouseFile, theID, &boundsRes)))
@@ -928,7 +943,7 @@ SInt16 GetOriginalBounding (SInt16 theID)
 
 SInt16 GetNumberOfLights (SInt16 where)
 {
-	SInt16		i, count;
+	SInt16 i, count;
 
 	if (g_theMode == kEditMode)
 	{
@@ -1057,12 +1072,13 @@ SInt16 GetNumberOfLights (SInt16 where)
 
 Boolean IsShadowVisible (void)
 {
-	SInt16		boundsCode;
-	Boolean		hasFloor;
+	SInt16 boundsCode;
+	Boolean hasFloor;
 
 	if (g_thisRoom->background >= kUserBackground)
 	{
-		if (g_thisRoom->bounds != 0)			// is this a version 2.0 house?
+		// is this a version 2.0 house?
+		if (g_thisRoom->bounds != 0)
 			boundsCode = (g_thisRoom->bounds >> 1);
 		else
 			boundsCode = GetOriginalBounding(g_thisRoom->background);
@@ -1092,12 +1108,13 @@ Boolean IsShadowVisible (void)
 
 Boolean DoesRoomHaveFloor (void)
 {
-	SInt16		boundsCode;
-	Boolean		hasFloor;
+	SInt16 boundsCode;
+	Boolean hasFloor;
 
 	if (g_thisRoom->background >= kUserBackground)
 	{
-		if (g_thisRoom->bounds != 0)			// is this a version 2.0 house?
+		// is this a version 2.0 house?
+		if (g_thisRoom->bounds != 0)
 			boundsCode = (g_thisRoom->bounds >> 1);
 		else
 			boundsCode = GetOriginalBounding(g_thisRoom->background);
@@ -1126,12 +1143,13 @@ Boolean DoesRoomHaveFloor (void)
 
 Boolean DoesRoomHaveCeiling (void)
 {
-	SInt16		boundsCode;
-	Boolean		hasCeiling;
+	SInt16 boundsCode;
+	Boolean hasCeiling;
 
 	if (g_thisRoom->background >= kUserBackground)
 	{
-		if (g_thisRoom->bounds != 0)			// is this a version 2.0 house?
+		// is this a version 2.0 house?
+		if (g_thisRoom->bounds != 0)
 			boundsCode = (g_thisRoom->bounds >> 1);
 		else
 			boundsCode = GetOriginalBounding(g_thisRoom->background);

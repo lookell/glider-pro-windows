@@ -38,7 +38,7 @@ void PasStringCopy (ConstStringPtr p1, StringPtr p2)
 
 void PasStringCopyC (const char *s1, StringPtr p2)
 {
-	Byte		stringLength;
+	Byte stringLength;
 
 	stringLength = 0;
 	while (*s1 != '\0' && stringLength < 255)
@@ -54,42 +54,42 @@ void PasStringCopyC (const char *s1, StringPtr p2)
 
 SInt16 WhichStringFirst (ConstStringPtr p1, ConstStringPtr p2)
 {
-	SInt16		smallestLength, seek, greater;
-	Byte		char1, char2;
-	Boolean		foundIt;
+	SInt16 smallestLength, seek, greater;
+	Byte char1, char2;
+	Boolean foundIt;
 
 	smallestLength = p1[0];
 	if (p2[0] < smallestLength)
 		smallestLength = p2[0];
 
-	greater = 0;					// neither are greater, they are equal
-	seek = 1;						// start at character #1
+	greater = 0;  // neither are greater, they are equal
+	seek = 1;  // start at character #1
 	foundIt = false;
 	do
 	{
-		char1 = p1[seek];			// make upper case (if applicable)
+		char1 = p1[seek];  // make upper case (if applicable)
 		if ((char1 > 0x60) && (char1 < 0x7B))
 			char1 -= 0x20;
-		char2 = p2[seek];			// make upper case (if applicable)
+		char2 = p2[seek];  // make upper case (if applicable)
 		if ((char2 > 0x60) && (char2 < 0x7B))
 			char2 -= 0x20;
 
-		if (char1 > char2)			// first string is greater
+		if (char1 > char2)  // first string is greater
 		{
 			greater = 1;
 			foundIt = true;
 		}
-		else if (char1 < char2)		// second string is greater
+		else if (char1 < char2)  // second string is greater
 		{
 			greater = 2;
 			foundIt = true;
 		}
 		seek++;
-		if (seek > smallestLength)	// we've reached the end of the line
+		if (seek > smallestLength)  // we've reached the end of the line
 		{
 			if (!foundIt)
 			{
-				if (p1[0] < p2[0])	// shortest string wins
+				if (p1[0] < p2[0])  // shortest string wins
 					greater = 1;
 				else if (p1[0] > p2[0])
 					greater = 2;
@@ -108,10 +108,12 @@ SInt16 WhichStringFirst (ConstStringPtr p1, ConstStringPtr p2)
 
 void PasStringCopyNum (ConstStringPtr p1, StringPtr p2, Byte charsToCopy)
 {
-	SInt16		i;
+	SInt16 i;
 
-	if (charsToCopy > *p1)		// if trying to copy more chars than there are
-		charsToCopy = *p1;		// reduce the number of chars to copy to this size
+	// if trying to copy more chars than there are
+	// reduce the number of chars to copy to this size
+	if (charsToCopy > *p1)
+		charsToCopy = *p1;
 
 	*p2 = charsToCopy;
 
@@ -128,7 +130,7 @@ void PasStringCopyNum (ConstStringPtr p1, StringPtr p2, Byte charsToCopy)
 
 void PasStringConcat (StringPtr p1, ConstStringPtr p2)
 {
-	SInt16		wasLength, addedLength, i;
+	SInt16 wasLength, addedLength, i;
 
 	wasLength = *p1;
 	if (wasLength > 255)
@@ -154,7 +156,7 @@ void PasStringConcat (StringPtr p1, ConstStringPtr p2)
 
 void PasStringConcatC (StringPtr p1, const char *s2)
 {
-	Byte		stringLength;
+	Byte stringLength;
 
 	stringLength = p1[0];
 	while (*s2 != '\0' && stringLength < 255)
@@ -196,13 +198,13 @@ Boolean PasStringEqual (ConstStringPtr p1, ConstStringPtr p2, Boolean caseSens)
 
 void GetLineOfText (ConstStringPtr srcStr, SInt16 index, StringPtr textLine)
 {
-	SInt16		i, srcLength, count, start, stop;
-	Boolean		foundIt;
+	SInt16 i, srcLength, count, start, stop;
+	Boolean foundIt;
 
 	PasStringCopyC("", textLine);
 	srcLength = srcStr[0];
 
-	if (index == 0)						// walk through to "index"
+	if (index == 0)  // walk through to "index"
 		start = 1;
 	else
 	{
@@ -276,8 +278,8 @@ void GetLineOfText (ConstStringPtr srcStr, SInt16 index, StringPtr textLine)
 
 void WrapText (StringPtr theText, SInt16 maxChars)
 {
-	SInt16		lastChar, count, chars, spaceIs;
-	Boolean		foundEdge, foundSpace;
+	SInt16 lastChar, count, chars, spaceIs;
+	Boolean foundEdge, foundSpace;
 
 	lastChar = theText[0];
 	count = 0;
@@ -316,7 +318,7 @@ void WrapText (StringPtr theText, SInt16 maxChars)
 
 void GetFirstWordOfString (ConstStringPtr stringIn, StringPtr stringOut)
 {
-	SInt16		isLong, spaceAt, i;
+	SInt16 isLong, spaceAt, i;
 
 	isLong = stringIn[0];
 	spaceAt = isLong;

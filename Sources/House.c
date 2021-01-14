@@ -33,11 +33,11 @@
 
 #include <stdlib.h>
 
-#define kGoToFirstRadio		1002
-#define kGoToPrevRadio		1003
-#define kGoToFSRadio		1004
-#define kFloorEditText		1005
-#define kSuiteEditText		1006
+#define kGoToFirstRadio     1002
+#define kGoToPrevRadio      1003
+#define kGoToFSRadio        1004
+#define kFloorEditText      1005
+#define kSuiteEditText      1006
 
 void SortRoomsObjects (SInt16 which);
 INT_PTR CALLBACK GoToFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
@@ -184,7 +184,7 @@ void InitializeEmptyHouse (void)
 
 SInt16 RealRoomNumberCount (void)
 {
-	SInt16		realRoomCount, i;
+	SInt16 realRoomCount, i;
 
 	realRoomCount = g_thisHouse.nRooms;
 	if (realRoomCount != 0)
@@ -205,7 +205,7 @@ SInt16 RealRoomNumberCount (void)
 
 SInt16 GetFirstRoomNumber (void)
 {
-	SInt16		firstRoom;
+	SInt16 firstRoom;
 
 	if (g_thisHouse.nRooms <= 0)
 	{
@@ -246,8 +246,8 @@ void WhereDoesGliderBegin (Rect *theRect, SInt16 mode)
 
 SInt16 CountHouseLinks (void)
 {
-	SInt16		numRooms, numLinks;
-	SInt16		r, i, what;
+	SInt16 numRooms, numLinks;
+	SInt16 r, i, what;
 
 	numLinks = 0;
 	numRooms = g_thisHouse.nRooms;
@@ -295,9 +295,9 @@ SInt16 CountHouseLinks (void)
 
 void GenerateLinksList (void)
 {
-	objectType	thisObject;
-	SInt16		numLinks, numRooms, r, i, what;
-	SInt16		floor, suite, roomLinked, objectLinked;
+	objectType thisObject;
+	SInt16 numLinks, numRooms, r, i, what;
+	SInt16 floor, suite, roomLinked, objectLinked;
 
 	numRooms = g_thisHouse.nRooms;
 	numLinks = 0;
@@ -360,8 +360,8 @@ void GenerateLinksList (void)
 
 void SortRoomsObjects (SInt16 which)
 {
-	SInt16		probe, probe2, room, obj;
-	Boolean		busy, looking;
+	SInt16 probe, probe2, room, obj;
+	Boolean busy, looking;
 
 	if (which < 0 || which >= g_thisHouse.nRooms)
 		return;
@@ -374,7 +374,7 @@ void SortRoomsObjects (SInt16 which)
 		if (g_thisHouse.rooms[which].objects[probe].what == kObjectIsEmpty)
 		{
 			looking = true;
-			probe2 = probe + 1;			// begin by looking at the next object
+			probe2 = probe + 1;  // begin by looking at the next object
 			do
 			{
 				if (g_thisHouse.rooms[which].objects[probe2].what != kObjectIsEmpty)
@@ -422,7 +422,7 @@ void SortRoomsObjects (SInt16 which)
 
 void SortHouseObjects (void)
 {
-	SInt16		numLinks, numRooms, r, i, l;
+	SInt16 numLinks, numRooms, r, i, l;
 
 	CopyThisRoomToRoom();
 
@@ -441,15 +441,15 @@ void SortHouseObjects (void)
 
 	for (r = 0; r < numRooms; r++)
 	{
-		for (i = 0; i < kMaxRoomObs; i++)	// initialize arrays
+		for (i = 0; i < kMaxRoomObs; i++)  // initialize arrays
 		{
 			g_srcLocations[i] = -1;
 			g_destLocations[i] = -1;
 		}
 
-		for (i = 0; i < kMaxRoomObs; i++)	// walk object list
+		for (i = 0; i < kMaxRoomObs; i++)  // walk object list
 		{
-			for (l = 0; l < numLinks; l++)	// walk link list
+			for (l = 0; l < numLinks; l++)  // walk link list
 			{
 				if ((g_linksList[l].srcRoom == r) && (g_linksList[l].srcObj == i))
 					g_srcLocations[i] = l;
@@ -470,7 +470,7 @@ void SortHouseObjects (void)
 
 SInt16 CountRoomsVisited (void)
 {
-	SInt16		numRooms, r, count;
+	SInt16 numRooms, r, count;
 
 	numRooms = g_thisHouse.nRooms;
 	count = 0;
@@ -490,11 +490,11 @@ SInt16 CountRoomsVisited (void)
 
 void GenerateRetroLinks (void)
 {
-	objectType	thisObject;
-	SInt16		i, r, numRooms, floor, suite;
-	SInt16		what, roomLinked, objectLinked;
+	objectType thisObject;
+	SInt16 i, r, numRooms, floor, suite;
+	SInt16 what, roomLinked, objectLinked;
 
-	for (i = 0; i < kMaxRoomObs; i++)		// Initialize array.
+	for (i = 0; i < kMaxRoomObs; i++)  // Initialize array.
 		g_retroLinkList[i].room = -1;
 
 	numRooms = g_thisHouse.nRooms;
@@ -749,9 +749,9 @@ void ShiftWholeHouse (SInt16 howFar)
 	return;
 #if 0
 #pragma unused (howFar)
-	SInt16		wasRoom;
-	SInt16		i, h, numRooms;
-	char		wasState;
+	SInt16 wasRoom;
+	SInt16 i, h, numRooms;
+	char wasState;
 
 	OpenMessageWindow_Pascal("\pShifting Whole House…");
 

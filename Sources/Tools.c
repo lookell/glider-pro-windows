@@ -26,36 +26,36 @@
 #define kToolButtonLastID   2015
 #define kToolNameText       3000
 
-#define kToolsHigh			4
-#define kToolsWide			4
-#define kTotalTools			16				// kToolsHigh * kToolsWide
-#define kFirstBlower		1
-#define kLastBlower			15
-#define kBlowerBase			1
-#define kFirstFurniture		1
-#define kLastFurniture		15
-#define kFurnitureBase		21
-#define kFirstBonus			1
-#define kLastBonus			15
-#define kBonusBase			41
-#define kFirstTransport		1
-#define kLastTransport		12
-#define kTransportBase		61
-#define kFirstSwitch		1
-#define kLastSwitch			9
-#define kSwitchBase			81
-#define kFirstLight			1
-#define kLastLight			8
-#define kLightBase			101
-#define kFirstAppliance		1
-#define kLastAppliance		14
-#define kApplianceBase		121
-#define kFirstEnemy			1
-#define kLastEnemy			9
-#define kEnemyBase			141
-#define kFirstClutter		1
-#define kLastClutter		15
-#define kClutterBase		161
+#define kToolsHigh          4
+#define kToolsWide          4
+#define kTotalTools         16  // kToolsHigh * kToolsWide
+#define kFirstBlower        1
+#define kLastBlower         15
+#define kBlowerBase         1
+#define kFirstFurniture     1
+#define kLastFurniture      15
+#define kFurnitureBase      21
+#define kFirstBonus         1
+#define kLastBonus          15
+#define kBonusBase          41
+#define kFirstTransport     1
+#define kLastTransport      12
+#define kTransportBase      61
+#define kFirstSwitch        1
+#define kLastSwitch         9
+#define kSwitchBase         81
+#define kFirstLight         1
+#define kLastLight          8
+#define kLightBase          101
+#define kFirstAppliance     1
+#define kLastAppliance      14
+#define kApplianceBase      121
+#define kFirstEnemy         1
+#define kLastEnemy          9
+#define kEnemyBase          141
+#define kFirstClutter       1
+#define kLastClutter        15
+#define kClutterBase        161
 
 void CreateToolsOffscreen (void);
 void KillToolsOffscreen (void);
@@ -462,11 +462,13 @@ void OpenToolsWindow (void)
 		if (g_toolsWindow == NULL)
 			RedAlert(kErrNoMemory);
 
-//		if (OptionKeyDown())
-//		{
-//			g_isToolsH = qd.screenBits.bounds.right - 120;
-//			g_isToolsV = 35;
-//		}
+#if 0
+		if (OptionKeyDown())
+		{
+			g_isToolsH = qd.screenBits.bounds.right - 120;
+			g_isToolsV = 35;
+		}
+#endif
 		placement.length = sizeof(placement);
 		GetWindowPlacement(g_toolsWindow, &placement);
 		OffsetRect(&placement.rcNormalPosition,

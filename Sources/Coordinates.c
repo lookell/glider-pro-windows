@@ -15,9 +15,9 @@
 
 #include <strsafe.h>
 
-#define kHoriCoordItem		1001
-#define kVertCoordItem		1002
-#define kDistCoordItem		1003
+#define kHoriCoordItem      1001
+#define kVertCoordItem      1002
+#define kDistCoordItem      1003
 
 INT_PTR CALLBACK CoordWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 void UpdateCoordWindow (void);
@@ -151,11 +151,13 @@ void OpenCoordWindow (void)
 		if (g_coordWindow == NULL)
 			RedAlert(kErrNoMemory);
 
-//		if (OptionKeyDown())
-//		{
-//			g_isCoordH = qd.screenBits.bounds.right - 55;
-//			g_isCoordV = 204;
-//		}
+#if 0
+		if (OptionKeyDown())
+		{
+			g_isCoordH = qd.screenBits.bounds.right - 55;
+			g_isCoordV = 204;
+		}
+#endif
 		placement.length = sizeof(placement);
 		GetWindowPlacement(g_coordWindow, &placement);
 		OffsetRect(&placement.rcNormalPosition,

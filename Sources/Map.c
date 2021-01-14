@@ -24,10 +24,10 @@
 #include "Scrap.h"
 #include "Utilities.h"
 
-#define kMapRoomsHigh			9	// was 7
-#define kMapRoomsWide			9	// was 7
-#define kMapGroundValue			56
-#define kYesDoNewRoom			IDOK
+#define kMapRoomsHigh           9   // was 7
+#define kMapRoomsWide           9   // was 7
+#define kMapGroundValue         56
+#define kYesDoNewRoom           IDOK
 #define WC_MAPWINDOW            L"GliderMapWindow"
 
 void RegisterMapWindowClass (void);
@@ -88,7 +88,7 @@ void RegisterMapWindowClass (void)
 
 Boolean ThisRoomVisibleOnMap (void)
 {
-	SInt16		h, v;
+	SInt16 h, v;
 
 	h = g_thisRoom->suite;
 	v = kMapGroundValue - g_thisRoom->floor;
@@ -150,10 +150,10 @@ void FlagMapRoomsForUpdate (void)
 
 void FindNewActiveRoomRect (void)
 {
-	Rect		aRoom;
-	SInt16		h, i;
-	SInt16		floor, suite, whoCares;
-	Boolean		activeRoomVisible;
+	Rect aRoom;
+	SInt16 h, i;
+	SInt16 floor, suite, whoCares;
+	Boolean activeRoomVisible;
 
 	if (g_mapWindow == nil)
 		return;
@@ -490,11 +490,13 @@ void OpenMapWindow (void)
 		if (g_mapWindow == NULL)
 			RedAlert(kErrNoMemory);
 
-//		if (OptionKeyDown())
-//		{
-//			g_isMapH = 3;
-//			g_isMapV = qd.screenBits.bounds.bottom - 100;
-//		}
+#if 0
+		if (OptionKeyDown())
+		{
+			g_isMapH = 3;
+			g_isMapV = qd.screenBits.bounds.bottom - 100;
+		}
+#endif
 		placement.length = sizeof(placement);
 		GetWindowPlacement(g_mapWindow, &placement);
 		placement.flags = 0;

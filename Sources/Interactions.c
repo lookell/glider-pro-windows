@@ -26,13 +26,13 @@
 #include "Triggers.h"
 #include "Trip.h"
 
-#define kFloorVentLift			-6
-#define kCeilingVentDrop		8
-#define kFanStrength			12
-#define kBatterySupply			50		// about 2 rooms worth of thrust
-#define kHeliumSupply			150
-#define kBandsSupply			8
-#define kFoilSupply				8
+#define kFloorVentLift          -6
+#define kCeilingVentDrop        8
+#define kFanStrength            12
+#define kBatterySupply          50      // about 2 rooms worth of thrust
+#define kHeliumSupply           150
+#define kBandsSupply            8
+#define kFoilSupply             8
 
 Boolean GliderHitTop (gliderPtr thisGlider, const Rect *theRect);
 Boolean GliderInRect (const gliderType *thisGlider, const Rect *theRect);
@@ -62,9 +62,9 @@ static SInt16 g_activeRectEscaped;
 
 Boolean GliderHitTop (gliderPtr thisGlider, const Rect *theRect)
 {
-	Rect		glideBounds;
-	SInt16		offset;
-	Boolean		hitTop;
+	Rect glideBounds;
+	SInt16 offset;
+	Boolean hitTop;
 
 	glideBounds.left = thisGlider->dest.left + 5;
 	glideBounds.top = thisGlider->dest.top + 5;
@@ -109,8 +109,8 @@ Boolean GliderHitTop (gliderPtr thisGlider, const Rect *theRect)
 
 Boolean SectGlider (const gliderType *thisGlider, const Rect *theRect, Boolean scrutinize)
 {
-	Rect		glideBounds;
-	Boolean		itHit;
+	Rect glideBounds;
+	Boolean itHit;
 
 	glideBounds = thisGlider->dest;
 	if (thisGlider->mode == kGliderBurning)
@@ -142,7 +142,7 @@ Boolean SectGlider (const gliderType *thisGlider, const Rect *theRect, Boolean s
 
 Boolean GliderInRect (const gliderType *thisGlider, const Rect *theRect)
 {
-	Rect		glideBounds;
+	Rect glideBounds;
 
 	glideBounds = thisGlider->dest;
 
@@ -162,7 +162,7 @@ Boolean GliderInRect (const gliderType *thisGlider, const Rect *theRect)
 
 void BounceGlider (gliderPtr thisGlider, const Rect *theRect)
 {
-	Rect		glideBounds;
+	Rect glideBounds;
 
 	glideBounds = thisGlider->dest;
 	if ((theRect->right - glideBounds.left) < (glideBounds.right - theRect->left))
@@ -179,7 +179,7 @@ void BounceGlider (gliderPtr thisGlider, const Rect *theRect)
 
 void CheckEscapeUpTwo (gliderPtr thisGlider)
 {
-	SInt16		offset, leftTile, rightTile;
+	SInt16 offset, leftTile, rightTile;
 
 	if (g_topOpen)
 	{
@@ -206,8 +206,8 @@ void CheckEscapeUpTwo (gliderPtr thisGlider)
 	}
 	else if (g_thisBackground == kDirt)
 	{
-		leftTile = thisGlider->dest.left >> 6;		// ÷ 64
-		rightTile = thisGlider->dest.right >> 6;	// ÷ 64
+		leftTile = thisGlider->dest.left >> 6;  // ÷ 64
+		rightTile = thisGlider->dest.right >> 6;  // ÷ 64
 
 		if ((leftTile >= 0) && (leftTile < 8) &&
 				(rightTile >= 0) && (rightTile < 8))
@@ -252,7 +252,7 @@ void CheckEscapeUpTwo (gliderPtr thisGlider)
 
 void CheckEscapeUp (gliderPtr thisGlider)
 {
-	SInt16		leftTile, rightTile;
+	SInt16 leftTile, rightTile;
 
 	if (g_topOpen)
 	{
@@ -263,8 +263,8 @@ void CheckEscapeUp (gliderPtr thisGlider)
 	}
 	else if (g_thisBackground == kDirt)
 	{
-		leftTile = thisGlider->dest.left >> 6;		// ÷ 64
-		rightTile = thisGlider->dest.right >> 6;	// ÷ 64
+		leftTile = thisGlider->dest.left >> 6;  // ÷ 64
+		rightTile = thisGlider->dest.right >> 6;  // ÷ 64
 
 		if ((leftTile >= 0) && (leftTile < 8) &&
 				(rightTile >= 0) && (rightTile < 8))
@@ -291,7 +291,7 @@ void CheckEscapeUp (gliderPtr thisGlider)
 
 void CheckEscapeDownTwo (gliderPtr thisGlider)
 {
-	SInt16		offset, leftTile, rightTile;
+	SInt16 offset, leftTile, rightTile;
 
 	if (g_bottomOpen)
 	{
@@ -318,8 +318,8 @@ void CheckEscapeDownTwo (gliderPtr thisGlider)
 	}
 	else if (g_thisBackground == kDirt)
 	{
-		leftTile = thisGlider->dest.left >> 6;		// ÷ 64
-		rightTile = thisGlider->dest.right >> 6;	// ÷ 64
+		leftTile = thisGlider->dest.left >> 6;  // ÷ 64
+		rightTile = thisGlider->dest.right >> 6;  // ÷ 64
 
 		if ((leftTile >= 0) && (leftTile < 8) &&
 				(rightTile >= 0) && (rightTile < 8))
@@ -386,7 +386,7 @@ void CheckEscapeDownTwo (gliderPtr thisGlider)
 
 void CheckEscapeDown (gliderPtr thisGlider)
 {
-	SInt16		leftTile, rightTile;
+	SInt16 leftTile, rightTile;
 
 	if (g_bottomOpen)
 	{
@@ -397,8 +397,8 @@ void CheckEscapeDown (gliderPtr thisGlider)
 	}
 	else if (g_thisBackground == kDirt)
 	{
-		leftTile = thisGlider->dest.left >> 6;		// ÷ 64
-		rightTile = thisGlider->dest.right >> 6;	// ÷ 64
+		leftTile = thisGlider->dest.left >> 6;  // ÷ 64
+		rightTile = thisGlider->dest.right >> 6;  // ÷ 64
 
 		if ((leftTile >= 0) && (leftTile < 8) && (rightTile >= 0) && (rightTile < 8))
 		{
@@ -458,9 +458,9 @@ void CheckEscapeDown (gliderPtr thisGlider)
 
 void CheckRoofCollision (gliderPtr thisGlider)
 {
-	SInt16		offset, tileOver;
+	SInt16 offset, tileOver;
 
-	offset = (thisGlider->dest.left + kHalfGliderWide) >> 6;	// ÷ 64
+	offset = (thisGlider->dest.left + kHalfGliderWide) >> 6;  // ÷ 64
 	if ((offset >= 0) && (offset <= 7) && (!thisGlider->sliding))
 	{
 		tileOver = g_thisTiles[offset];
@@ -517,7 +517,7 @@ void CheckRoofCollision (gliderPtr thisGlider)
 
 void CheckEscapeLeftTwo (gliderPtr thisGlider)
 {
-	SInt16		offset;
+	SInt16 offset;
 
 	if (g_leftThresh == kLeftWallLimit)
 	{
@@ -580,7 +580,7 @@ void CheckEscapeLeftTwo (gliderPtr thisGlider)
 
 void CheckEscapeLeft (gliderPtr thisGlider)
 {
-	SInt16		offset;
+	SInt16 offset;
 
 	if (g_leftThresh == kLeftWallLimit)
 	{
@@ -607,7 +607,7 @@ void CheckEscapeLeft (gliderPtr thisGlider)
 
 void CheckEscapeRightTwo (gliderPtr thisGlider)
 {
-	SInt16		offset;
+	SInt16 offset;
 
 	if (g_rightThresh == kRightWallLimit)
 	{
@@ -670,7 +670,7 @@ void CheckEscapeRightTwo (gliderPtr thisGlider)
 
 void CheckEscapeRight (gliderPtr thisGlider)
 {
-	SInt16		offset;
+	SInt16 offset;
 
 	if (g_rightThresh == kRightWallLimit)
 	{
@@ -764,8 +764,8 @@ void CheckGliderInRoom (gliderPtr thisGlider)
 
 void HandleRewards (gliderPtr thisGlider, hotPtr who)
 {
-	Rect		bounds;
-	SInt16		whoLinked, points;
+	Rect bounds;
+	SInt16 whoLinked, points;
 
 	whoLinked = who->who;
 	bounds =  who->bounds;
@@ -866,9 +866,9 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 			AddSparkle(&bounds);
 			thisGlider->hVel /= 2;
 			thisGlider->vVel /= 2;
-			if (g_batteryTotal > 0)		// positive number means battery power
+			if (g_batteryTotal > 0)  // positive number means battery power
 				g_batteryTotal += kBatterySupply;
-			else						// negative number means helium gas
+			else  // negative number means helium gas
 				g_batteryTotal = kBatterySupply;
 			if ((g_twoPlayerGame) && (!g_onePlayerLeft))
 				g_batteryTotal += kBatterySupply;
@@ -972,9 +972,9 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 			AddSparkle(&bounds);
 			thisGlider->hVel /= 2;
 			thisGlider->vVel /= 2;
-			if (g_batteryTotal < 0)	// if negative, it is already helium gas
+			if (g_batteryTotal < 0)  // if negative, it is already helium gas
 				g_batteryTotal -= kHeliumSupply;
-			else					// if positive, it is battery power
+			else  // if positive, it is battery power
 				g_batteryTotal = -kHeliumSupply;
 			if ((g_twoPlayerGame) && (!g_onePlayerLeft))
 				g_batteryTotal -= kHeliumSupply;
@@ -993,17 +993,17 @@ void HandleRewards (gliderPtr thisGlider, hotPtr who)
 
 void HandleSwitches (hotPtr who)
 {
-	Rect		newRect;
-	SInt16		whoLinked, roomLinked, objectLinked, linkIndex;
+	Rect newRect;
+	SInt16 whoLinked, roomLinked, objectLinked, linkIndex;
 
 	if (who->stillOver)
 		return;
 
-	whoLinked = who->who;					// what is switch's obj. #
+	whoLinked = who->who;  // what is switch's obj. #
 	roomLinked = g_masterObjects[whoLinked].roomLink;
 	objectLinked = g_masterObjects[whoLinked].objectLink;
 	linkIndex = g_masterObjects[whoLinked].localLink;
-											// change state of linked obj.
+	// change state of linked obj.
 	if (SetObjectState(roomLinked, objectLinked,
 			g_masterObjects[whoLinked].theObject.data.e.type, linkIndex))
 	{
@@ -1166,14 +1166,14 @@ void HandleSwitches (hotPtr who)
 
 void HandleMicrowaveAction (hotPtr who, gliderPtr thisGlider)
 {
-	SInt16		whoLinked, kills;
-	Boolean		killed;
+	SInt16 whoLinked, kills;
+	Boolean killed;
 
 	if (who->stillOver)
 		return;
 
 	killed = false;
-	whoLinked = who->who;					// what is microwave's obj. #
+	whoLinked = who->who;  // what is microwave's obj. #
 	if (g_masterObjects[whoLinked].theObject.data.g.state)
 	{
 		kills = (SInt16)g_masterObjects[whoLinked].theObject.data.g.byte0;
@@ -1429,7 +1429,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, SInt16 index)
 		thisGlider->ignoreRight = true;
 		break;
 
-		case kMailItLeft:									// mailbox open to right
+		case kMailItLeft:  // mailbox open to right
 		if (thisGlider->mode == kGliderBurning)
 		{
 			thisGlider->wasMode = 0;
@@ -1443,11 +1443,11 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, SInt16 index)
 				(((thisGlider->facing == kFaceRight) && (!thisGlider->tipped)) ||
 				((thisGlider->facing == kFaceLeft) && (thisGlider->tipped))))
 		{
-			if ((g_twoPlayerGame) && (!g_onePlayerLeft))		// two gliders to handle
+			if ((g_twoPlayerGame) && (!g_onePlayerLeft))  // two gliders to handle
 			{
-				if (g_otherPlayerEscaped == kNoOneEscaped)	// other glider in room
+				if (g_otherPlayerEscaped == kNoOneEscaped)  // other glider in room
 				{
-					if (thisGlider->mode != kGliderInLimbo)	// this glider is active
+					if (thisGlider->mode != kGliderInLimbo)  // this glider is active
 					{
 						g_activeRectEscaped = index;
 						StartGliderMailingIn(thisGlider, &who->bounds, who);
@@ -1455,16 +1455,18 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, SInt16 index)
 					}
 				}
 				else if (g_otherPlayerEscaped == kPlayerMailedOut)
-				{											// other glider left here
+				{
+					// other glider left here
 					if ((thisGlider->mode != kGliderInLimbo) &&
 							(g_activeRectEscaped == index))
-					{										// []_ <--G
+					{
+						// []_ <--G
 						StartGliderMailingIn(thisGlider, &who->bounds, who);
 						thisGlider->mode = kGliderMailInLeft;
 					}
 				}
 			}
-			else											// only 1 glider in game
+			else  // only 1 glider in game
 			{
 				StartGliderMailingIn(thisGlider, &who->bounds, who);
 				thisGlider->mode = kGliderMailInLeft;
@@ -1472,7 +1474,7 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, SInt16 index)
 		}
 		break;
 
-		case kMailItRight:									// mailbox open to left
+		case kMailItRight:  // mailbox open to left
 		if (thisGlider->mode == kGliderBurning)
 		{
 			thisGlider->wasMode = 0;
@@ -1634,8 +1636,8 @@ void HandleHotSpotCollision (gliderPtr thisGlider, hotPtr who, SInt16 index)
 
 void CheckForHotSpots (void)
 {
-	SInt16		i;
-	Boolean		hitObject;
+	SInt16 i;
+	Boolean hitObject;
 
 	for (i = 0; i < g_nHotSpots; i++)
 	{
@@ -1722,7 +1724,7 @@ void HandleInteraction (void)
 
 void FlagStillOvers (const gliderType *thisGlider)
 {
-	SInt16		i;
+	SInt16 i;
 
 	for (i = 0; i < g_nHotSpots; i++)
 	{
@@ -1743,8 +1745,8 @@ void FlagStillOvers (const gliderType *thisGlider)
 
 void WebGlider (gliderPtr thisGlider, const Rect *webBounds)
 {
-	#define		kKillWebbedGlider	150
-	SInt16		hDist, vDist;
+	#define kKillWebbedGlider  150
+	SInt16 hDist, vDist;
 
 	if ((thisGlider->mode == kGliderBurning) && (GliderInRect(thisGlider, webBounds)))
 	{

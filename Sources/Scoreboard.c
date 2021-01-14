@@ -55,7 +55,7 @@ static Boolean g_doRollScore;
 
 void RefreshScoreboard (SInt16 mode)
 {
-	HDC			mainWindowDC;
+	HDC mainWindowDC;
 
 	g_doRollScore = true;
 
@@ -77,11 +77,11 @@ void RefreshScoreboard (SInt16 mode)
 
 void HandleDynamicScoreboard (void)
 {
-	#define		kFoilLow		2		// 25%
-	#define		kBatteryLow		17		// 25%
-	#define		kHeliumLow		-38		// 25%
-	#define		kBandsLow		2		// 25%
-	SInt32		whosTurn;
+	#define kFoilLow  2  // 25%
+	#define kBatteryLow  17  // 25%
+	#define kHeliumLow  -38  // 25%
+	#define kBandsLow  2  // 25%
+	SInt32 whosTurn;
 
 	if (g_theScore > g_displayedScore)
 	{
@@ -101,36 +101,36 @@ void HandleDynamicScoreboard (void)
 	whosTurn = g_gameFrame & 0x00000007;
 	switch (whosTurn)
 	{
-		case 0:		// show foil
+		case 0:  // show foil
 		if ((g_foilTotal > 0) && (g_foilTotal < kFoilLow))
 			QuickFoilRefresh(false);
 		break;
 
-		case 1:		// hide battery
+		case 1:  // hide battery
 		if ((g_batteryTotal > 0) && (g_batteryTotal < kBatteryLow))
 			QuickBatteryRefresh(true);
 		else if ((g_batteryTotal < 0) && (g_batteryTotal > kHeliumLow))
 			QuickBatteryRefresh(true);
 		break;
 
-		case 2:		// show rubber bands
+		case 2:  // show rubber bands
 		if ((g_bandsTotal > 0) && (g_bandsTotal < kBandsLow))
 			QuickBandsRefresh(false);
 		break;
 
-		case 4:		// show battery
+		case 4:  // show battery
 		if ((g_batteryTotal > 0) && (g_batteryTotal < kBatteryLow))
 			QuickBatteryRefresh(false);
 		else if ((g_batteryTotal < 0) && (g_batteryTotal > kHeliumLow))
 			QuickBatteryRefresh(false);
 		break;
 
-		case 5:		// hide foil
+		case 5:  // hide foil
 		if ((g_foilTotal > 0) && (g_foilTotal < kFoilLow))
 			QuickFoilRefresh(true);
 		break;
 
-		case 7:		// hide rubber bands
+		case 7:  // hide rubber bands
 		if ((g_bandsTotal > 0) && (g_bandsTotal < kBandsLow))
 			QuickBandsRefresh(true);
 		break;
@@ -307,7 +307,7 @@ void QuickScoreRefresh (void)
 
 void QuickBatteryRefresh (Boolean flash)
 {
-	HDC			mainWindowDC;
+	HDC mainWindowDC;
 
 	mainWindowDC = GetMainWindowDC();
 	if ((g_batteryTotal > 0) && (!flash))
@@ -338,7 +338,7 @@ void QuickBatteryRefresh (Boolean flash)
 
 void QuickBandsRefresh (Boolean flash)
 {
-	HDC			mainWindowDC;
+	HDC mainWindowDC;
 
 	mainWindowDC = GetMainWindowDC();
 	if ((g_bandsTotal > 0) && (!flash))
@@ -362,7 +362,7 @@ void QuickBandsRefresh (Boolean flash)
 
 void QuickFoilRefresh (Boolean flash)
 {
-	HDC			mainWindowDC;
+	HDC mainWindowDC;
 
 	mainWindowDC = GetMainWindowDC();
 	if ((g_foilTotal > 0) && (!flash))
@@ -386,7 +386,7 @@ void QuickFoilRefresh (Boolean flash)
 
 void AdjustScoreboardHeight (void)
 {
-	SInt16		offset, newMode;
+	SInt16 offset, newMode;
 
 	if (g_numNeighbors == 9)
 		newMode = kScoreboardHigh;
@@ -398,13 +398,13 @@ void AdjustScoreboardHeight (void)
 		offset = 0;
 		switch (newMode)
 		{
-			case kScoreboardHigh:		// 9 neighbors
+			case kScoreboardHigh:  // 9 neighbors
 			offset = g_localRoomsDest[kCentralRoom].top;
 			offset = -offset;
 			g_justRoomsRect = g_workSrcRect;
 			break;
 
-			case kScoreboardLow:		// 1 or 3 neighbors
+			case kScoreboardLow:  // 1 or 3 neighbors
 			offset = g_localRoomsDest[kCentralRoom].top;
 			g_justRoomsRect = g_workSrcRect;
 			g_justRoomsRect.top = g_localRoomsDest[kCentralRoom].top;

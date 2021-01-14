@@ -15,10 +15,10 @@
 #include "Room.h"
 #include "Sound.h"
 
-#define kGreaseIdle			0
-#define kGreaseFalling		1
-#define kGreaseSpreading	2
-#define kGreaseSpiltIdle	3
+#define kGreaseIdle         0
+#define kGreaseFalling      1
+#define kGreaseSpreading    2
+#define kGreaseSpiltIdle    3
 
 typedef struct greaseType
 {
@@ -131,8 +131,8 @@ void HandleGrease (void)
 
 void BackupGrease (Rect *src, SInt16 index, Boolean isRight)
 {
-	Rect		dest;
-	SInt16		i;
+	Rect dest;
+	SInt16 i;
 
 	if (index < 0 || index >= g_numSavedMaps)
 		return;

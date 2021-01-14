@@ -17,14 +17,14 @@
 
 #include <strsafe.h>
 
-#define kBannerTextItem			1004
-#define kLockHouseButton		1006
-#define kClearScoresButton		1009
-#define kTrailerTextItem		1011
-#define kNoPhoneCheck			1014
-#define kBannerNCharsItem		1015
-#define kTrailerNCharsItem		1016
-#define kHouseSizeItem			1018
+#define kBannerTextItem         1004
+#define kLockHouseButton        1006
+#define kClearScoresButton      1009
+#define kTrailerTextItem        1011
+#define kNoPhoneCheck           1014
+#define kBannerNCharsItem       1015
+#define kTrailerNCharsItem      1016
+#define kHouseSizeItem          1018
 
 SInt32 CountTotalHousePoints (void);
 INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
@@ -41,8 +41,8 @@ void HowToZeroScores (HWND ownerWindow);
 
 SInt32 CountTotalHousePoints (void)
 {
-	SInt32		pointTotal;
-	SInt16		numRooms, h, i;
+	SInt32 pointTotal;
+	SInt16 numRooms, h, i;
 
 	pointTotal = (SInt32)RealRoomNumberCount() * (SInt32)kRoomVisitScore;
 
@@ -231,13 +231,13 @@ void HowToZeroScores (HWND ownerWindow)
 	hitWhat = Alert(kZeroScoresAlert, ownerWindow, NULL);
 	switch (hitWhat)
 	{
-		case 1002:	// zero all
+		case 1002:  // zero all
 		ZeroHighScores(&g_thisHouse);
 		g_fileDirty = true;
 		UpdateMenus(false);
 		break;
 
-		case 1003:	// zero all but highest
+		case 1003:  // zero all but highest
 		ZeroAllButHighestScore(&g_thisHouse);
 		g_fileDirty = true;
 		UpdateMenus(false);

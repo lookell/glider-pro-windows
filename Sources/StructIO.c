@@ -440,76 +440,153 @@ static HRESULT ReadObjectType(byteio *reader, objectType *data)
 	RETURN_IF_FAILED(byteio_read_be_i16(reader, &data->what));
 	switch (data->what)
 	{
-		case kFloorVent:		case kCeilingVent:		case kFloorBlower:
-		case kCeilingBlower:	case kSewerGrate:		case kLeftFan:
-		case kRightFan:			case kTaper:			case kCandle:
-		case kStubby:			case kTiki:				case kBBQ:
-		case kInvisBlower:		case kGrecoVent:		case kSewerBlower:
-		case kLiftArea:
+	case kFloorVent:
+	case kCeilingVent:
+	case kFloorBlower:
+	case kCeilingBlower:
+	case kSewerGrate:
+	case kLeftFan:
+	case kRightFan:
+	case kTaper:
+	case kCandle:
+	case kStubby:
+	case kTiki:
+	case kBBQ:
+	case kInvisBlower:
+	case kGrecoVent:
+	case kSewerBlower:
+	case kLiftArea:
 		RETURN_IF_FAILED(ReadBlowerType(reader, &data->data.a));
 		break;
 
-		case kTable:			case kShelf:			case kCabinet:
-		case kFilingCabinet:	case kWasteBasket:		case kMilkCrate:
-		case kCounter:			case kDresser:			case kDeckTable:
-		case kStool:			case kTrunk:			case kInvisObstacle:
-		case kManhole:			case kBooks:			case kInvisBounce:
+	case kTable:
+	case kShelf:
+	case kCabinet:
+	case kFilingCabinet:
+	case kWasteBasket:
+	case kMilkCrate:
+	case kCounter:
+	case kDresser:
+	case kDeckTable:
+	case kStool:
+	case kTrunk:
+	case kInvisObstacle:
+	case kManhole:
+	case kBooks:
+	case kInvisBounce:
 		RETURN_IF_FAILED(ReadFurnitureType(reader, &data->data.b));
 		break;
 
-		case kRedClock:			case kBlueClock:		case kYellowClock:
-		case kCuckoo:			case kPaper:			case kBattery:
-		case kBands:			case kGreaseRt:			case kGreaseLf:
-		case kFoil:				case kInvisBonus:		case kStar:
-		case kSparkle:			case kHelium:			case kSlider:
+	case kRedClock:
+	case kBlueClock:
+	case kYellowClock:
+	case kCuckoo:
+	case kPaper:
+	case kBattery:
+	case kBands:
+	case kGreaseRt:
+	case kGreaseLf:
+	case kFoil:
+	case kInvisBonus:
+	case kStar:
+	case kSparkle:
+	case kHelium:
+	case kSlider:
 		RETURN_IF_FAILED(ReadBonusType(reader, &data->data.c));
 		break;
 
-		case kUpStairs:			case kDownStairs:		case kMailboxLf:
-		case kMailboxRt:		case kFloorTrans:		case kCeilingTrans:
-		case kDoorInLf:			case kDoorInRt:			case kDoorExRt:
-		case kDoorExLf:			case kWindowInLf:		case kWindowInRt:
-		case kWindowExRt:		case kWindowExLf:		case kInvisTrans:
-		case kDeluxeTrans:
+	case kUpStairs:
+	case kDownStairs:
+	case kMailboxLf:
+	case kMailboxRt:
+	case kFloorTrans:
+	case kCeilingTrans:
+	case kDoorInLf:
+	case kDoorInRt:
+	case kDoorExRt:
+	case kDoorExLf:
+	case kWindowInLf:
+	case kWindowInRt:
+	case kWindowExRt:
+	case kWindowExLf:
+	case kInvisTrans:
+	case kDeluxeTrans:
 		RETURN_IF_FAILED(ReadTransportType(reader, &data->data.d));
 		break;
 
-		case kLightSwitch:		case kMachineSwitch:	case kThermostat:
-		case kPowerSwitch:		case kKnifeSwitch:		case kInvisSwitch:
-		case kTrigger:			case kLgTrigger:		case kSoundTrigger:
+	case kLightSwitch:
+	case kMachineSwitch:
+	case kThermostat:
+	case kPowerSwitch:
+	case kKnifeSwitch:
+	case kInvisSwitch:
+	case kTrigger:
+	case kLgTrigger:
+	case kSoundTrigger:
 		RETURN_IF_FAILED(ReadSwitchType(reader, &data->data.e));
 		break;
 
-		case kCeilingLight:		case kLightBulb:		case kTableLamp:
-		case kHipLamp:			case kDecoLamp:			case kFlourescent:
-		case kTrackLight:		case kInvisLight:
+	case kCeilingLight:
+	case kLightBulb:
+	case kTableLamp:
+	case kHipLamp:
+	case kDecoLamp:
+	case kFlourescent:
+	case kTrackLight:
+	case kInvisLight:
 		RETURN_IF_FAILED(ReadLightType(reader, &data->data.f));
 		break;
 
-		case kShredder:			case kToaster:			case kMacPlus:
-		case kGuitar:			case kTV:				case kCoffee:
-		case kOutlet:			case kVCR:				case kStereo:
-		case kMicrowave:		case kCinderBlock:		case kFlowerBox:
-		case kCDs:				case kCustomPict:
+	case kShredder:
+	case kToaster:
+	case kMacPlus:
+	case kGuitar:
+	case kTV:
+	case kCoffee:
+	case kOutlet:
+	case kVCR:
+	case kStereo:
+	case kMicrowave:
+	case kCinderBlock:
+	case kFlowerBox:
+	case kCDs:
+	case kCustomPict:
 		RETURN_IF_FAILED(ReadApplianceType(reader, &data->data.g));
 		break;
 
-		case kBalloon:			case kCopterLf:			case kCopterRt:
-		case kDartLf:			case kDartRt:			case kBall:
-		case kDrip:				case kFish:				case kCobweb:
+	case kBalloon:
+	case kCopterLf:
+	case kCopterRt:
+	case kDartLf:
+	case kDartRt:
+	case kBall:
+	case kDrip:
+	case kFish:
+	case kCobweb:
 		RETURN_IF_FAILED(ReadEnemyType(reader, &data->data.h));
 		break;
 
-		case kOzma:				case kMirror:			case kMousehole:
-		case kFireplace:		case kFlower:			case kWallWindow:
-		case kBear:				case kCalendar:			case kVase1:
-		case kVase2:			case kBulletin:			case kCloud:
-		case kFaucet:			case kRug:				case kChimes:
+	case kOzma:
+	case kMirror:
+	case kMousehole:
+	case kFireplace:
+	case kFlower:
+	case kWallWindow:
+	case kBear:
+	case kCalendar:
+	case kVase1:
+	case kVase2:
+	case kBulletin:
+	case kCloud:
+	case kFaucet:
+	case kRug:
+	case kChimes:
 		RETURN_IF_FAILED(ReadClutterType(reader, &data->data.i));
 		break;
 
-		// unknown objects and empty object slots are interpreted as clutter
-		case kObjectIsEmpty:	default:
+	// unknown objects and empty object slots are interpreted as clutter
+	case kObjectIsEmpty:
+	default:
 		RETURN_IF_FAILED(ReadClutterType(reader, &data->data.i));
 		break;
 	}
@@ -521,76 +598,153 @@ static HRESULT WriteObjectType(byteio *writer, const objectType *data)
 	RETURN_IF_FAILED(byteio_write_be_i16(writer, data->what));
 	switch (data->what)
 	{
-		case kFloorVent:		case kCeilingVent:		case kFloorBlower:
-		case kCeilingBlower:	case kSewerGrate:		case kLeftFan:
-		case kRightFan:			case kTaper:			case kCandle:
-		case kStubby:			case kTiki:				case kBBQ:
-		case kInvisBlower:		case kGrecoVent:		case kSewerBlower:
-		case kLiftArea:
+	case kFloorVent:
+	case kCeilingVent:
+	case kFloorBlower:
+	case kCeilingBlower:
+	case kSewerGrate:
+	case kLeftFan:
+	case kRightFan:
+	case kTaper:
+	case kCandle:
+	case kStubby:
+	case kTiki:
+	case kBBQ:
+	case kInvisBlower:
+	case kGrecoVent:
+	case kSewerBlower:
+	case kLiftArea:
 		RETURN_IF_FAILED(WriteBlowerType(writer, &data->data.a));
 		break;
 
-		case kTable:			case kShelf:			case kCabinet:
-		case kFilingCabinet:	case kWasteBasket:		case kMilkCrate:
-		case kCounter:			case kDresser:			case kDeckTable:
-		case kStool:			case kTrunk:			case kInvisObstacle:
-		case kManhole:			case kBooks:			case kInvisBounce:
+	case kTable:
+	case kShelf:
+	case kCabinet:
+	case kFilingCabinet:
+	case kWasteBasket:
+	case kMilkCrate:
+	case kCounter:
+	case kDresser:
+	case kDeckTable:
+	case kStool:
+	case kTrunk:
+	case kInvisObstacle:
+	case kManhole:
+	case kBooks:
+	case kInvisBounce:
 		RETURN_IF_FAILED(WriteFurnitureType(writer, &data->data.b));
 		break;
 
-		case kRedClock:			case kBlueClock:		case kYellowClock:
-		case kCuckoo:			case kPaper:			case kBattery:
-		case kBands:			case kGreaseRt:			case kGreaseLf:
-		case kFoil:				case kInvisBonus:		case kStar:
-		case kSparkle:			case kHelium:			case kSlider:
+	case kRedClock:
+	case kBlueClock:
+	case kYellowClock:
+	case kCuckoo:
+	case kPaper:
+	case kBattery:
+	case kBands:
+	case kGreaseRt:
+	case kGreaseLf:
+	case kFoil:
+	case kInvisBonus:
+	case kStar:
+	case kSparkle:
+	case kHelium:
+	case kSlider:
 		RETURN_IF_FAILED(WriteBonusType(writer, &data->data.c));
 		break;
 
-		case kUpStairs:			case kDownStairs:		case kMailboxLf:
-		case kMailboxRt:		case kFloorTrans:		case kCeilingTrans:
-		case kDoorInLf:			case kDoorInRt:			case kDoorExRt:
-		case kDoorExLf:			case kWindowInLf:		case kWindowInRt:
-		case kWindowExRt:		case kWindowExLf:		case kInvisTrans:
-		case kDeluxeTrans:
+	case kUpStairs:
+	case kDownStairs:
+	case kMailboxLf:
+	case kMailboxRt:
+	case kFloorTrans:
+	case kCeilingTrans:
+	case kDoorInLf:
+	case kDoorInRt:
+	case kDoorExRt:
+	case kDoorExLf:
+	case kWindowInLf:
+	case kWindowInRt:
+	case kWindowExRt:
+	case kWindowExLf:
+	case kInvisTrans:
+	case kDeluxeTrans:
 		RETURN_IF_FAILED(WriteTransportType(writer, &data->data.d));
 		break;
 
-		case kLightSwitch:		case kMachineSwitch:	case kThermostat:
-		case kPowerSwitch:		case kKnifeSwitch:		case kInvisSwitch:
-		case kTrigger:			case kLgTrigger:		case kSoundTrigger:
+	case kLightSwitch:
+	case kMachineSwitch:
+	case kThermostat:
+	case kPowerSwitch:
+	case kKnifeSwitch:
+	case kInvisSwitch:
+	case kTrigger:
+	case kLgTrigger:
+	case kSoundTrigger:
 		RETURN_IF_FAILED(WriteSwitchType(writer, &data->data.e));
 		break;
 
-		case kCeilingLight:		case kLightBulb:		case kTableLamp:
-		case kHipLamp:			case kDecoLamp:			case kFlourescent:
-		case kTrackLight:		case kInvisLight:
+	case kCeilingLight:
+	case kLightBulb:
+	case kTableLamp:
+	case kHipLamp:
+	case kDecoLamp:
+	case kFlourescent:
+	case kTrackLight:
+	case kInvisLight:
 		RETURN_IF_FAILED(WriteLightType(writer, &data->data.f));
 		break;
 
-		case kShredder:			case kToaster:			case kMacPlus:
-		case kGuitar:			case kTV:				case kCoffee:
-		case kOutlet:			case kVCR:				case kStereo:
-		case kMicrowave:		case kCinderBlock:		case kFlowerBox:
-		case kCDs:				case kCustomPict:
+	case kShredder:
+	case kToaster:
+	case kMacPlus:
+	case kGuitar:
+	case kTV:
+	case kCoffee:
+	case kOutlet:
+	case kVCR:
+	case kStereo:
+	case kMicrowave:
+	case kCinderBlock:
+	case kFlowerBox:
+	case kCDs:
+	case kCustomPict:
 		RETURN_IF_FAILED(WriteApplianceType(writer, &data->data.g));
 		break;
 
-		case kBalloon:			case kCopterLf:			case kCopterRt:
-		case kDartLf:			case kDartRt:			case kBall:
-		case kDrip:				case kFish:				case kCobweb:
+	case kBalloon:
+	case kCopterLf:
+	case kCopterRt:
+	case kDartLf:
+	case kDartRt:
+	case kBall:
+	case kDrip:
+	case kFish:
+	case kCobweb:
 		RETURN_IF_FAILED(WriteEnemyType(writer, &data->data.h));
 		break;
 
-		case kOzma:				case kMirror:			case kMousehole:
-		case kFireplace:		case kFlower:			case kWallWindow:
-		case kBear:				case kCalendar:			case kVase1:
-		case kVase2:			case kBulletin:			case kCloud:
-		case kFaucet:			case kRug:				case kChimes:
+	case kOzma:
+	case kMirror:
+	case kMousehole:
+	case kFireplace:
+	case kFlower:
+	case kWallWindow:
+	case kBear:
+	case kCalendar:
+	case kVase1:
+	case kVase2:
+	case kBulletin:
+	case kCloud:
+	case kFaucet:
+	case kRug:
+	case kChimes:
 		RETURN_IF_FAILED(WriteClutterType(writer, &data->data.i));
 		break;
 
-		// unknown objects and empty object slots are interpreted as clutter
-		case kObjectIsEmpty:	default:
+	// unknown objects and empty object slots are interpreted as clutter
+	case kObjectIsEmpty:
+	default:
 		RETURN_IF_FAILED(WriteClutterType(writer, &data->data.i));
 		break;
 	}

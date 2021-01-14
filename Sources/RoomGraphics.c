@@ -53,7 +53,7 @@ static Boolean g_isStructure[9];
 
 void DrawLocale (void)
 {
-	SInt16		i, roomV;
+	SInt16 i, roomV;
 
 	ZeroFlamesAndTheLike();
 	ZeroDinahs();
@@ -133,9 +133,9 @@ void DrawLocale (void)
 
 void LoadGraphicSpecial (HDC hdc, SInt16 resID)
 {
-	Rect		bounds;
-	HBITMAP		thePicture;
-	BITMAP		bmInfo;
+	Rect bounds;
+	HBITMAP thePicture;
+	BITMAP bmInfo;
 
 	thePicture = Gp_LoadImage(g_theHouseFile, resID);
 	if (thePicture == NULL)
@@ -158,9 +158,9 @@ void LoadGraphicSpecial (HDC hdc, SInt16 resID)
 
 void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 {
-	Rect		src, dest;
-	SInt16		i, pictID;
-	SInt16		tiles[kNumTiles];
+	Rect src, dest;
+	SInt16 i, pictID;
+	SInt16 tiles[kNumTiles];
 
 	if (where == kCentralRoom)
 	{
@@ -175,7 +175,7 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 		return;
 	}
 
-	if (who == kRoomIsEmpty)		// This call should be smarter than this
+	if (who == kRoomIsEmpty)  // This call should be smarter than this
 	{
 		if (g_wardBitSet)
 		{
@@ -228,14 +228,14 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 
 void DrawFloorSupport (void)
 {
-	Rect		src, dest, whoCares;
-	SInt16		i;
+	Rect src, dest, whoCares;
+	SInt16 i;
 
 	src = g_suppSrcRect;
 
 	if (g_isStructure[kNorthWestRoom])
 	{
-		dest = g_suppSrcRect;			// left room's ceiling
+		dest = g_suppSrcRect;  // left room's ceiling
 		QOffsetRect(&dest, g_localRoomsDest[kWestRoom].left,
 				g_localRoomsDest[kCentralRoom].top - g_suppSrcRect.bottom);
 		Mac_CopyBits(g_suppSrcMap, g_backSrcMap,
@@ -253,7 +253,7 @@ void DrawFloorSupport (void)
 
 	if (g_isStructure[kWestRoom])
 	{
-		dest = g_suppSrcRect;			// left room's floor
+		dest = g_suppSrcRect;  // left room's floor
 		QOffsetRect(&dest, g_localRoomsDest[kWestRoom].left,
 				g_localRoomsDest[kCentralRoom].bottom);
 		Mac_CopyBits(g_suppSrcMap, g_backSrcMap,
@@ -271,7 +271,7 @@ void DrawFloorSupport (void)
 
 	if (g_isStructure[kNorthRoom])
 	{
-		dest = g_suppSrcRect;			// directly above main room
+		dest = g_suppSrcRect;  // directly above main room
 		QOffsetRect(&dest, g_localRoomsDest[kCentralRoom].left,
 				g_localRoomsDest[kCentralRoom].top - g_suppSrcRect.bottom);
 		Mac_CopyBits(g_suppSrcMap, g_backSrcMap,
@@ -288,7 +288,7 @@ void DrawFloorSupport (void)
 
 	if (g_isStructure[kCentralRoom])
 	{
-		dest = g_suppSrcRect;			// directly below main room
+		dest = g_suppSrcRect;  // directly below main room
 		QOffsetRect(&dest, g_localRoomsDest[kCentralRoom].left,
 				g_localRoomsDest[kCentralRoom].bottom);
 		Mac_CopyBits(g_suppSrcMap, g_backSrcMap,
@@ -393,8 +393,8 @@ void DrawLighting (void)
 
 void RedrawRoomLighting (void)
 {
-	SInt16		roomV;
-	Boolean		wasLit, isLit;
+	SInt16 roomV;
+	Boolean wasLit, isLit;
 
 	roomV = g_thisHouse.rooms[g_thisRoomNumber].floor;
 

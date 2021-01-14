@@ -79,7 +79,7 @@ void StartGliderTransportingIn (gliderPtr thisGlider)
 
 void StartGliderFadingOut (gliderPtr thisGlider)
 {
-	Rect		tempBounds;
+	Rect tempBounds;
 
 	if (thisGlider->mode == kGliderFadingOut)
 		return;
@@ -160,8 +160,8 @@ void StartGliderGoingDownStairs (gliderPtr thisGlider)
 
 void StartGliderMailingIn (gliderPtr thisGlider, const Rect *bounds, const hotObject *who)
 {
-	SInt16		topSought, whoLinked;
-	Byte		objLinked;
+	SInt16 topSought, whoLinked;
+	Byte objLinked;
 
 	PlayPrioritySound(kTransOutSound, kTransOutPriority);
 
@@ -214,8 +214,8 @@ void StartGliderMailingOut (gliderPtr thisGlider)
 
 void StartGliderDuctingDown (gliderPtr thisGlider, const Rect *bounds, const hotObject *who)
 {
-	SInt16		leftSought, whoLinked;
-	Byte		objLinked;
+	SInt16 leftSought, whoLinked;
+	Byte objLinked;
 
 	PlayPrioritySound(kTransOutSound, kTransOutPriority);
 
@@ -243,8 +243,8 @@ void StartGliderDuctingDown (gliderPtr thisGlider, const Rect *bounds, const hot
 
 void StartGliderDuctingUp (gliderPtr thisGlider, const Rect *bounds, const hotObject *who)
 {
-	SInt16		leftSought, whoLinked;
-	Byte		objLinked;
+	SInt16 leftSought, whoLinked;
+	Byte objLinked;
 
 	PlayPrioritySound(kTransOutSound, kTransOutPriority);
 
@@ -281,8 +281,8 @@ void StartGliderDuctingIn (gliderPtr thisGlider)
 
 void StartGliderTransporting (gliderPtr thisGlider, const hotObject *who)
 {
-	SInt16		whoLinked;
-	Byte		objLinked;
+	SInt16 whoLinked;
+	Byte objLinked;
 
 	PlayPrioritySound(kTransOutSound, kTransOutPriority);
 
@@ -395,7 +395,7 @@ void FlagGliderShredding (gliderPtr thisGlider, const Rect *bounds)
 
 void FlagGliderBurning (gliderPtr thisGlider)
 {
-	#define		kFramesToBurn	60
+	#define kFramesToBurn  60
 
 	PlayPrioritySound(kCaughtFireSound, kCaughtFirePriority);
 
@@ -419,7 +419,7 @@ void FlagGliderBurning (gliderPtr thisGlider)
 	thisGlider->hDesiredVel = 0;
 	thisGlider->vDesiredVel = 0;
 	thisGlider->frame = 0;
-	thisGlider->wasMode = kFramesToBurn;		// used to count down burning
+	thisGlider->wasMode = kFramesToBurn;  // used to count down burning
 	thisGlider->tipped = false;
 }
 
@@ -508,7 +508,7 @@ void InsureGliderFacingLeft (gliderPtr thisGlider)
 
 void ReadyGliderForTripUpStairs (gliderPtr thisGlider)
 {
-	#define kVGliderAppearsComingUp		100
+	#define kVGliderAppearsComingUp  100
 
 	if ((g_twoPlayerGame) && (thisGlider->which == g_playerDead) && (g_onePlayerLeft))
 		return;
@@ -539,7 +539,7 @@ void ReadyGliderForTripUpStairs (gliderPtr thisGlider)
 
 void ReadyGliderForTripDownStairs (gliderPtr thisGlider)
 {
-	#define kVGliderAppearsComingDown		100
+	#define kVGliderAppearsComingDown  100
 
 	if ((g_twoPlayerGame) && (thisGlider->which == g_playerDead) && (g_onePlayerLeft))
 		return;
@@ -625,5 +625,5 @@ void TagGliderIdle (gliderPtr thisGlider)
 
 	thisGlider->wasMode = thisGlider->mode;
 	thisGlider->mode = kGliderIdle;
-	thisGlider->hVel = 30;			// used for 30 frame delay
+	thisGlider->hVel = 30;  // used for 30 frame delay
 }

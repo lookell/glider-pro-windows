@@ -56,11 +56,11 @@ Boolean GetDemoDataPointer (void **ppDemoData, size_t *pDemoSize);
 
 void InitScoreboardMap (void)
 {
-	Rect		bounds;
-	HBITMAP		thePicture;
-	BITMAP		bmInfo;
-	HFONT		scoreboardFont;
-	SInt16		hOffset;
+	Rect bounds;
+	HBITMAP thePicture;
+	BITMAP bmInfo;
+	HFONT scoreboardFont;
+	SInt16 hOffset;
 
 	g_wasScoreboardMode = kScoreboardHigh;
 	g_boardSrcRect = g_houseRect;
@@ -81,7 +81,7 @@ void InitScoreboardMap (void)
 	Mac_DrawPicture(g_boardSrcMap, thePicture, &bounds);
 	DeleteObject(thePicture);
 
-	QSetRect(&g_badgeSrcRect, 0, 0, 32, 66);				// 2144 pixels
+	QSetRect(&g_badgeSrcRect, 0, 0, 32, 66);  // 2144 pixels
 	g_badgeSrcMap = CreateOffScreenGWorld(&g_badgeSrcRect, kPreferredDepth);
 	LoadGraphic(g_badgeSrcMap, GP_BUILTIN_ASSETS, kBadgePictID);
 
@@ -92,14 +92,14 @@ void InitScoreboardMap (void)
 	if (hOffset < 0)
 		hOffset = -128;
 
-	QSetRect(&g_boardTSrcRect, 0, 0, 256, 15);			// room title
+	QSetRect(&g_boardTSrcRect, 0, 0, 256, 15);  // room title
 	g_boardTSrcMap = CreateOffScreenGWorld(&g_boardTSrcRect, kPreferredDepth);
 	g_boardTDestRect = g_boardTSrcRect;
 	QOffsetRect(&g_boardTDestRect, 137 + hOffset, 2);
 	scoreboardFont = CreateTahomaFont(14, FW_BOLD);
 	SelectObject(g_boardTSrcMap, scoreboardFont);
 
-	QSetRect(&g_boardGSrcRect, 0, 0, 20, 15);				// # gliders
+	QSetRect(&g_boardGSrcRect, 0, 0, 20, 15);  // # gliders
 	g_boardGSrcMap = CreateOffScreenGWorld(&g_boardGSrcRect, kPreferredDepth);
 	g_boardGDestRect = g_boardGSrcRect;
 	QOffsetRect(&g_boardGDestRect, 526 + hOffset, 2);
@@ -108,10 +108,10 @@ void InitScoreboardMap (void)
 	scoreboardFont = CreateTahomaFont(14, FW_BOLD);
 	SelectObject(g_boardGSrcMap, scoreboardFont);
 
-	QSetRect(&g_boardPSrcRect, 0, 0, 64, 15);				// points
+	QSetRect(&g_boardPSrcRect, 0, 0, 64, 15);  // points
 	g_boardPSrcMap = CreateOffScreenGWorld(&g_boardPSrcRect, kPreferredDepth);
 	g_boardPDestRect = g_boardPSrcRect;
-	QOffsetRect(&g_boardPDestRect, 570 + hOffset, 2);		// total = 6396 pixels
+	QOffsetRect(&g_boardPDestRect, 570 + hOffset, 2);  // total = 6396 pixels
 	g_boardPQDestRect = g_boardPDestRect;
 	QOffsetRect(&g_boardPQDestRect, 0, -kScoreboardTall);
 	scoreboardFont = CreateTahomaFont(14, FW_BOLD);
@@ -151,9 +151,9 @@ void InitScoreboardMap (void)
 
 void InitGliderMap (void)
 {
-	SInt16		i;
+	SInt16 i;
 
-	QSetRect(&g_glidSrcRect, 0, 0, kGliderWide, 668);	// 32112 pixels
+	QSetRect(&g_glidSrcRect, 0, 0, kGliderWide, 668);  // 32112 pixels
 	g_glidSrcMap = CreateOffScreenGWorld(&g_glidSrcRect, kPreferredDepth);
 	LoadGraphic(g_glidSrcMap, GP_BUILTIN_ASSETS, kGliderPictID);
 
@@ -192,7 +192,7 @@ void InitGliderMap (void)
 		QOffsetRect(&g_shadowSrc[i], 0, kShadowHigh * i);
 	}
 
-	QSetRect(&g_bandsSrcRect, 0, 0, 16, 18);		// 304 pixels
+	QSetRect(&g_bandsSrcRect, 0, 0, 16, 18);  // 304 pixels
 	g_bandsSrcMap = CreateOffScreenGWorld(&g_bandsSrcRect, kPreferredDepth);
 	LoadGraphic(g_bandsSrcMap, GP_BUILTIN_ASSETS, kRubberBandsPictID);
 
@@ -212,9 +212,9 @@ void InitGliderMap (void)
 
 void InitBlowers (void)
 {
-	SInt16		i;
+	SInt16 i;
 
-	QSetRect(&g_blowerSrcRect, 0, 0, 48, 402);	// 19344 pixels
+	QSetRect(&g_blowerSrcRect, 0, 0, 48, 402);  // 19344 pixels
 	g_blowerSrcMap = CreateOffScreenGWorld(&g_blowerSrcRect, kPreferredDepth);
 	LoadGraphic(g_blowerSrcMap, GP_BUILTIN_ASSETS, kBlowerPictID);
 
@@ -252,7 +252,7 @@ void InitBlowers (void)
 
 void InitFurniture (void)
 {
-	QSetRect(&g_furnitureSrcRect, 0, 0, 64, 278);		// 17856 pixels
+	QSetRect(&g_furnitureSrcRect, 0, 0, 64, 278);  // 17856 pixels
 	g_furnitureSrcMap = CreateOffScreenGWorld(&g_furnitureSrcRect, kPreferredDepth);
 	LoadGraphic(g_furnitureSrcMap, GP_BUILTIN_ASSETS, kFurniturePictID);
 
@@ -290,9 +290,9 @@ void InitFurniture (void)
 
 void InitPrizes (void)
 {
-	SInt16		i;
+	SInt16 i;
 
-	QSetRect(&g_bonusSrcRect, 0, 0, 88, 378);		// 33264 pixels
+	QSetRect(&g_bonusSrcRect, 0, 0, 88, 378);  // 33264 pixels
 	g_bonusSrcMap = CreateOffScreenGWorld(&g_bonusSrcRect, kPreferredDepth);
 	LoadGraphic(g_bonusSrcMap, GP_BUILTIN_ASSETS, kBonusPictID);
 
@@ -343,7 +343,7 @@ void InitPrizes (void)
 	g_sparkleSrc[0] = g_sparkleSrc[4];
 	g_sparkleSrc[1] = g_sparkleSrc[3];
 
-	QSetRect(&g_pointsSrcRect, 0, 0, 24, 120);		// 2880 pixels
+	QSetRect(&g_pointsSrcRect, 0, 0, 24, 120);  // 2880 pixels
 	g_pointsSrcMap = CreateOffScreenGWorld(&g_pointsSrcRect, kPreferredDepth);
 	LoadGraphic(g_pointsSrcMap, GP_BUILTIN_ASSETS, kPointsPictID);
 
@@ -363,7 +363,7 @@ void InitPrizes (void)
 
 void InitTransports (void)
 {
-	QSetRect(&g_transSrcRect, 0, 0, 56, 32);	// 1848 pixels
+	QSetRect(&g_transSrcRect, 0, 0, 56, 32);  // 1848 pixels
 	g_transSrcMap = CreateOffScreenGWorld(&g_transSrcRect, kPreferredDepth);
 	LoadGraphic(g_transSrcMap, GP_BUILTIN_ASSETS, kTransportPictID);
 
@@ -377,7 +377,7 @@ void InitTransports (void)
 
 void InitSwitches (void)
 {
-	QSetRect(&g_switchSrcRect, 0, 0, 32, 104);	// 3360 pixels
+	QSetRect(&g_switchSrcRect, 0, 0, 32, 104);  // 3360 pixels
 	g_switchSrcMap = CreateOffScreenGWorld(&g_switchSrcRect, kPreferredDepth);
 	LoadGraphic(g_switchSrcMap, GP_BUILTIN_ASSETS, kSwitchPictID);
 
@@ -413,9 +413,9 @@ void InitSwitches (void)
 
 void InitLights (void)
 {
-	SInt16		i;
+	SInt16 i;
 
-	QSetRect(&g_lightSrcRect, 0, 0, 72, 126);		// 9144 pixels
+	QSetRect(&g_lightSrcRect, 0, 0, 72, 126);  // 9144 pixels
 	g_lightSrcMap = CreateOffScreenGWorld(&g_lightSrcRect, kPreferredDepth);
 	LoadGraphic(g_lightSrcMap, GP_BUILTIN_ASSETS, kLightPictID);
 
@@ -441,23 +441,23 @@ void InitLights (void)
 
 void InitAppliances (void)
 {
-	SInt16		i;
+	SInt16 i;
 
-	QSetRect(&g_applianceSrcRect, 0, 0, 80, 269);		// 21600 pixels
+	QSetRect(&g_applianceSrcRect, 0, 0, 80, 269);  // 21600 pixels
 	g_applianceSrcMap = CreateOffScreenGWorld(&g_applianceSrcRect, kPreferredDepth);
 	LoadGraphic(g_applianceSrcMap, GP_BUILTIN_ASSETS, kAppliancePictID);
 
 	g_applianceMaskMap = CreateOffScreenGWorld(&g_applianceSrcRect, 1);
 	LoadGraphic(g_applianceMaskMap, GP_BUILTIN_ASSETS, kApplianceMaskID);
 
-	QSetRect(&g_toastSrcRect, 0, 0, 32, 174);			// 5600 pixels
+	QSetRect(&g_toastSrcRect, 0, 0, 32, 174);  // 5600 pixels
 	g_toastSrcMap = CreateOffScreenGWorld(&g_toastSrcRect, kPreferredDepth);
 	LoadGraphic(g_toastSrcMap, GP_BUILTIN_ASSETS, kToastPictID);
 
 	g_toastMaskMap = CreateOffScreenGWorld(&g_toastSrcRect, 1);
 	LoadGraphic(g_toastMaskMap, GP_BUILTIN_ASSETS, kToastMaskID);
 
-	QSetRect(&g_shredSrcRect, 0, 0, 40, 35);			// 1440 pixels
+	QSetRect(&g_shredSrcRect, 0, 0, 40, 35);  // 1440 pixels
 	g_shredSrcMap = CreateOffScreenGWorld(&g_shredSrcRect, kPreferredDepth);
 	LoadGraphic(g_shredSrcMap, GP_BUILTIN_ASSETS, kShreddedPictID);
 
@@ -513,7 +513,7 @@ void InitAppliances (void)
 
 void InitEnemies (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	QSetRect(&g_balloonSrcRect, 0, 0, 24, 30 * kNumBalloonFrames);
 	g_balloonSrcMap = CreateOffScreenGWorld(&g_balloonSrcRect, kPreferredDepth);
@@ -640,7 +640,7 @@ void InitClutter (void)
 
 void InitSupport (void)
 {
-	QSetRect(&g_suppSrcRect, 0, 0, kRoomWide, kFloorSupportTall);		// 44
+	QSetRect(&g_suppSrcRect, 0, 0, kRoomWide, kFloorSupportTall);  // 44
 	g_suppSrcMap = CreateOffScreenGWorld(&g_suppSrcRect, kPreferredDepth);
 	LoadGraphic(g_suppSrcMap, GP_BUILTIN_ASSETS, kSupportPictID);
 }
@@ -681,11 +681,11 @@ void CreateOffscreens (void)
 	g_justRoomsRect = g_houseRect;
 	ZeroRectCorner(&g_justRoomsRect);
 
-	g_workSrcRect = g_houseRect;			// Set up work map
+	g_workSrcRect = g_houseRect;  // Set up work map
 	ZeroRectCorner(&g_workSrcRect);
 	g_workSrcMap = CreateOffScreenGWorld(&g_workSrcRect, kPreferredDepth);
 
-	g_backSrcRect = g_houseRect;			// Set up background map
+	g_backSrcRect = g_houseRect;  // Set up background map
 	ZeroRectCorner(&g_backSrcRect);
 	g_backSrcMap = CreateOffScreenGWorld(&g_backSrcRect, kPreferredDepth);
 
@@ -706,7 +706,7 @@ void CreateOffscreens (void)
 
 	QSetRect(&g_tileSrcRect, 0, 0, 128, 80);
 	g_tileSrcMap = NULL;
-//	????
+	// ????
 }
 
 //--------------------------------------------------------------  GetDemoDataPointer
@@ -799,7 +799,8 @@ void CreatePointers (void)
 
 void InitSrcRects (void)
 {
-	QSetRect(&g_srcRects[kFloorVent], 0, 0, 48, 11);		// Blowers
+	// Blowers
+	QSetRect(&g_srcRects[kFloorVent], 0, 0, 48, 11);
 	QOffsetRect(&g_srcRects[kFloorVent], 0, 0);
 	QSetRect(&g_srcRects[kCeilingVent], 0, 0, 48, 11);
 	QOffsetRect(&g_srcRects[kCeilingVent], 0, 11);
@@ -829,7 +830,8 @@ void InitSrcRects (void)
 	QOffsetRect(&g_srcRects[kSewerBlower], 0, 390);
 	QSetRect(&g_srcRects[kLiftArea], 0, 0, 64, 32);
 
-	QSetRect(&g_srcRects[kTable], 0, 0, 64, kTableThick);		// Furniture
+	// Furniture
+	QSetRect(&g_srcRects[kTable], 0, 0, 64, kTableThick);
 	QSetRect(&g_srcRects[kShelf], 0, 0, 64, kShelfThick);
 	QSetRect(&g_srcRects[kCabinet], 0, 0, 64, 64);
 	QSetRect(&g_srcRects[kFilingCabinet], 0, 0, 74, 107);
@@ -848,7 +850,8 @@ void InitSrcRects (void)
 	QSetRect(&g_srcRects[kBooks], 0, 0, 64, 51);
 	QSetRect(&g_srcRects[kInvisBounce], 0, 0, 64, 64);
 
-	QSetRect(&g_srcRects[kRedClock], 0, 0, 28, 17);			// Prizes
+	// Prizes
+	QSetRect(&g_srcRects[kRedClock], 0, 0, 28, 17);
 	QSetRect(&g_srcRects[kBlueClock], 0, 0, 28, 25);
 	QOffsetRect(&g_srcRects[kBlueClock], 0, 17);
 	QSetRect(&g_srcRects[kYellowClock], 0, 0, 28, 28);
@@ -876,7 +879,8 @@ void InitSrcRects (void)
 	QOffsetRect(&g_srcRects[kHelium], 32, 270);
 	QSetRect(&g_srcRects[kSlider], 0, 0, 64, 16);
 
-	QSetRect(&g_srcRects[kUpStairs], 0, 0, 160, 267);			// Transport
+	// Transport
+	QSetRect(&g_srcRects[kUpStairs], 0, 0, 160, 267);
 	QSetRect(&g_srcRects[kDownStairs], 0, 0, 160, 267);
 	QSetRect(&g_srcRects[kMailboxLf], 0, 0, 94, 80);
 	QSetRect(&g_srcRects[kMailboxRt], 0, 0, 94, 80);
@@ -895,7 +899,8 @@ void InitSrcRects (void)
 	QSetRect(&g_srcRects[kInvisTrans], 0, 0, 64, 32);
 	QSetRect(&g_srcRects[kDeluxeTrans], 0, 0, 64, 64);
 
-	QSetRect(&g_srcRects[kLightSwitch], 0, 0, 15, 24);		// Switch
+	// Switch
+	QSetRect(&g_srcRects[kLightSwitch], 0, 0, 15, 24);
 	QSetRect(&g_srcRects[kMachineSwitch], 0, 0, 16, 24);
 	QOffsetRect(&g_srcRects[kMachineSwitch], 0, 48);
 	QSetRect(&g_srcRects[kThermostat], 0, 0, 15, 24);
@@ -909,7 +914,8 @@ void InitSrcRects (void)
 	QSetRect(&g_srcRects[kLgTrigger], 0, 0, 48, 48);
 	QSetRect(&g_srcRects[kSoundTrigger], 0, 0, 32, 32);
 
-	QSetRect(&g_srcRects[kCeilingLight], 0, 0, 64, 20);		// Lights
+	// Lights
+	QSetRect(&g_srcRects[kCeilingLight], 0, 0, 64, 20);
 	QOffsetRect(&g_srcRects[kCeilingLight], 0, 0);
 	QSetRect(&g_srcRects[kLightBulb], 0, 0, 16, 28);
 	QOffsetRect(&g_srcRects[kLightBulb], 0, 20);
@@ -921,7 +927,8 @@ void InitSrcRects (void)
 	QSetRect(&g_srcRects[kTrackLight], 0, 0, 64, 24);
 	QSetRect(&g_srcRects[kInvisLight], 0, 0, 16, 16);
 
-	QSetRect(&g_srcRects[kShredder], 0, 0, 73, 22);			// Appliances
+	// Appliances
+	QSetRect(&g_srcRects[kShredder], 0, 0, 73, 22);
 	QSetRect(&g_srcRects[kToaster], 0, 0, 48, 27);
 	QOffsetRect(&g_srcRects[kToaster], 0, 22);
 	QSetRect(&g_srcRects[kMacPlus], 0, 0, 48, 58);
@@ -941,7 +948,8 @@ void InitSrcRects (void)
 	QOffsetRect(&g_srcRects[kCDs], 48, 22);
 	QSetRect(&g_srcRects[kCustomPict], 0, 0, 72, 34);
 
-	QSetRect(&g_srcRects[kBalloon], 0, 0, 24, 30);			// Enemies
+	// Enemies
+	QSetRect(&g_srcRects[kBalloon], 0, 0, 24, 30);
 	QSetRect(&g_srcRects[kCopterLf], 0, 0, 32, 30);
 	QSetRect(&g_srcRects[kCopterRt], 0, 0, 32, 30);
 	QSetRect(&g_srcRects[kDartLf], 0, 0, 64, 19);
@@ -951,7 +959,8 @@ void InitSrcRects (void)
 	QSetRect(&g_srcRects[kFish], 0, 0, 36, 33);
 	QSetRect(&g_srcRects[kCobweb], 0, 0, 54, 45);
 
-	QSetRect(&g_srcRects[kOzma], 0, 0, 102, 92);				// Clutter
+	// Clutter
+	QSetRect(&g_srcRects[kOzma], 0, 0, 102, 92);
 	QSetRect(&g_srcRects[kMirror], 0, 0, 64, 64);
 	QSetRect(&g_srcRects[kMousehole], 0, 0, 10, 11);
 	QSetRect(&g_srcRects[kFireplace], 0, 0, 180, 142);

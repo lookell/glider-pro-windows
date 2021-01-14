@@ -49,7 +49,7 @@ SInt16 g_numShredded;
 
 void NilSavedMaps (void)
 {
-	size_t		i;
+	size_t i;
 
 	for (i = 0; i < kMaxSavedMaps; i++)
 	{
@@ -72,7 +72,7 @@ void NilSavedMaps (void)
 
 SInt16 BackUpToSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 {
-	Rect		mapRect;
+	Rect mapRect;
 
 	if (g_numSavedMaps >= kMaxSavedMaps)
 		return(-1);
@@ -89,7 +89,7 @@ SInt16 BackUpToSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 	g_savedMaps[g_numSavedMaps].who = who;
 	g_numSavedMaps++;
 
-	return (g_numSavedMaps - 1);	// return array index
+	return (g_numSavedMaps - 1);  // return array index
 }
 
 //--------------------------------------------------------------  ReBackUpSavedMap
@@ -99,8 +99,8 @@ SInt16 BackUpToSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 
 SInt16 ReBackUpSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 {
-	Rect		mapRect;
-	SInt16		i, foundIndex;
+	Rect mapRect;
+	SInt16 i, foundIndex;
 
 	foundIndex = -1;
 
@@ -128,8 +128,8 @@ SInt16 ReBackUpSavedMap (const Rect *theRect, SInt16 where, SInt16 who)
 
 void RestoreFromSavedMap (SInt16 where, SInt16 who, Boolean doSparkle)
 {
-	Rect		mapRect, bounds;
-	SInt16		i;
+	Rect mapRect, bounds;
+	SInt16 i;
 
 	for (i = 0; i < g_numSavedMaps; i++)
 	{
@@ -163,8 +163,8 @@ void RestoreFromSavedMap (SInt16 where, SInt16 who, Boolean doSparkle)
 
 void AddSparkle (const Rect *theRect)
 {
-	Rect		centeredRect;
-	SInt16		i;
+	Rect centeredRect;
+	SInt16 i;
 
 	if (g_numSparkles < kMaxSparkles)
 	{
@@ -188,8 +188,8 @@ void AddSparkle (const Rect *theRect)
 
 void AddFlyingPoint (const Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVel)
 {
-	Rect		centeredRect;
-	SInt16		i;
+	Rect centeredRect;
+	SInt16 i;
 
 	if (g_numFlyingPts < kMaxFlyingPts)
 	{
@@ -247,8 +247,8 @@ void AddFlyingPoint (const Rect *theRect, SInt16 points, SInt16 hVel, SInt16 vVe
 
 void BackUpFlames (const Rect *src, SInt16 index)
 {
-	Rect		dest;
-	SInt16		i;
+	Rect dest;
+	SInt16 i;
 
 	if (index < 0 || index >= g_numSavedMaps)
 		return;
@@ -256,11 +256,11 @@ void BackUpFlames (const Rect *src, SInt16 index)
 	QSetRect(&dest, 0, 0, 16, 15);
 	for (i = 0; i < kNumCandleFlames; i++)
 	{
-				// Copy background to map.
+		// Copy background to map.
 		Mac_CopyBits(g_backSrcMap, g_savedMaps[index].map,
 				src, &dest, srcCopy, nil);
 
-				// Copy flame to map.
+		// Copy flame to map.
 		Mac_CopyMask(g_blowerSrcMap, g_blowerMaskMap, g_savedMaps[index].map,
 				&g_flame[i], &g_flame[i], &dest);
 
@@ -274,7 +274,7 @@ void BackUpFlames (const Rect *src, SInt16 index)
 
 void ReBackUpFlames (SInt16 where, SInt16 who)
 {
-	SInt16		i, f;
+	SInt16 i, f;
 
 	for (i = 0; i < g_numSavedMaps; i++)
 	{
@@ -297,8 +297,8 @@ void ReBackUpFlames (SInt16 where, SInt16 who)
 
 void AddCandleFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
-	Rect		src, bounds;
-	SInt16		savedNum;
+	Rect src, bounds;
+	SInt16 savedNum;
 
 	if ((g_numFlames >= kMaxCandles) || (h < 16) || (v < 15))
 		return;
@@ -324,8 +324,8 @@ void AddCandleFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 
 void BackUpTikiFlames (const Rect *src, SInt16 index)
 {
-	Rect		dest;
-	SInt16		i;
+	Rect dest;
+	SInt16 i;
 
 	if (index < 0 || index >= g_numSavedMaps)
 		return;
@@ -333,11 +333,11 @@ void BackUpTikiFlames (const Rect *src, SInt16 index)
 	QSetRect(&dest, 0, 0, 8, 10);
 	for (i = 0; i < kNumTikiFlames; i++)
 	{
-				// copy background to map
+		// copy background to map
 		Mac_CopyBits(g_backSrcMap, g_savedMaps[index].map,
 				src, &dest, srcCopy, nil);
 
-				// copy flame to map
+		// copy flame to map
 		Mac_CopyMask(g_blowerSrcMap, g_blowerMaskMap, g_savedMaps[index].map,
 				&g_tikiFlame[i], &g_tikiFlame[i], &dest);
 
@@ -350,7 +350,7 @@ void BackUpTikiFlames (const Rect *src, SInt16 index)
 
 void ReBackUpTikiFlames (SInt16 where, SInt16 who)
 {
-	SInt16		i, f;
+	SInt16 i, f;
 
 	for (i = 0; i < g_numSavedMaps; i++)
 	{
@@ -373,8 +373,8 @@ void ReBackUpTikiFlames (SInt16 where, SInt16 who)
 
 void AddTikiFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
-	Rect		src, bounds;
-	SInt16		savedNum;
+	Rect src, bounds;
+	SInt16 savedNum;
 
 	if ((g_numTikiFlames >= kMaxTikis) || (h < 8) || (v < 10))
 		return;
@@ -401,8 +401,8 @@ void AddTikiFlame (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 
 void BackUpBBQCoals (const Rect *src, SInt16 index)
 {
-	Rect		dest;
-	SInt16		i;
+	Rect dest;
+	SInt16 i;
 
 	if (index < 0 || index >= g_numSavedMaps)
 		return;
@@ -410,11 +410,11 @@ void BackUpBBQCoals (const Rect *src, SInt16 index)
 	QSetRect(&dest, 0, 0, 32, 9);
 	for (i = 0; i < kNumBBQCoals; i++)
 	{
-				// copy background to map
+		// copy background to map
 		Mac_CopyBits(g_backSrcMap, g_savedMaps[index].map,
 				src, &dest, srcCopy, nil);
 
-				// copy flame to map
+		// copy flame to map
 		Mac_CopyMask(g_blowerSrcMap, g_blowerMaskMap, g_savedMaps[index].map,
 				&g_coals[i], &g_coals[i], &dest);
 
@@ -427,7 +427,7 @@ void BackUpBBQCoals (const Rect *src, SInt16 index)
 
 void ReBackUpBBQCoals (SInt16 where, SInt16 who)
 {
-	SInt16		i, f;
+	SInt16 i, f;
 
 	for (i = 0; i < g_numSavedMaps; i++)
 	{
@@ -450,8 +450,8 @@ void ReBackUpBBQCoals (SInt16 where, SInt16 who)
 
 void AddBBQCoals (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
-	Rect		src, bounds;
-	SInt16		savedNum;
+	Rect src, bounds;
+	SInt16 savedNum;
 
 	if ((g_numCoals >= kMaxCoals) || (h < 32) || (v < 9))
 		return;
@@ -479,8 +479,8 @@ void AddBBQCoals (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 
 void BackUpPendulum (const Rect *src, SInt16 index)
 {
-	Rect		dest;
-	SInt16		i;
+	Rect dest;
+	SInt16 i;
 
 	if (index < 0 || index >= g_numSavedMaps)
 		return;
@@ -503,7 +503,7 @@ void BackUpPendulum (const Rect *src, SInt16 index)
 
 void ReBackUpPendulum (SInt16 where, SInt16 who)
 {
-	SInt16		i, f;
+	SInt16 i, f;
 
 	for (i = 0; i < g_numSavedMaps; i++)
 	{
@@ -526,8 +526,8 @@ void ReBackUpPendulum (SInt16 where, SInt16 who)
 
 void AddPendulum (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
-	Rect		src, bounds;
-	SInt16		savedNum;
+	Rect src, bounds;
+	SInt16 savedNum;
 
 	if ((g_numPendulums >= kMaxPendulums) || (h < 32) || (v < 28))
 		return;
@@ -561,8 +561,8 @@ void AddPendulum (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 
 void BackUpStar (const Rect *src, SInt16 index)
 {
-	Rect		dest;
-	SInt16		i;
+	Rect dest;
+	SInt16 i;
 
 	if (index < 0 || index >= g_numSavedMaps)
 		return;
@@ -573,7 +573,7 @@ void BackUpStar (const Rect *src, SInt16 index)
 		Mac_CopyBits(g_backSrcMap, g_savedMaps[index].map,
 				src, &dest, srcCopy, nil);
 
-				// copy flame to map
+		// copy flame to map
 		Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_savedMaps[index].map,
 				&g_starSrc[i], &g_starSrc[i], &dest);
 
@@ -586,7 +586,7 @@ void BackUpStar (const Rect *src, SInt16 index)
 
 void ReBackUpStar (SInt16 where, SInt16 who)
 {
-	SInt16		i, f;
+	SInt16 i, f;
 
 	for (i = 0; i < g_numSavedMaps; i++)
 	{
@@ -609,8 +609,8 @@ void ReBackUpStar (SInt16 where, SInt16 who)
 
 void AddStar (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 {
-	Rect		src, bounds;
-	SInt16		savedNum;
+	Rect src, bounds;
+	SInt16 savedNum;
 
 	if (g_numStars >= kMaxStars)
 		return;
@@ -640,7 +640,7 @@ void AddStar (SInt16 where, SInt16 who, SInt16 h, SInt16 v)
 
 void StopPendulum (SInt16 where, SInt16 who)
 {
-	SInt16		i;
+	SInt16 i;
 
 	for (i = 0; i < g_numPendulums; i++)
 	{
@@ -654,7 +654,7 @@ void StopPendulum (SInt16 where, SInt16 who)
 
 void StopStar (SInt16 where, SInt16 who)
 {
-	SInt16		i;
+	SInt16 i;
 
 	for (i = 0; i < g_numStars; i++)
 	{
@@ -685,7 +685,7 @@ void AddAShreddedGlider (const Rect *bounds)
 
 void RemoveShreds (void)
 {
-	SInt16		largest, who, i;
+	SInt16 largest, who, i;
 
 	largest = 0;
 	who = -1;

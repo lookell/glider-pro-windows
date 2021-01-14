@@ -74,7 +74,7 @@ SInt16 WhatAreWeLinkedTo (SInt16 where, Byte who)
 
 void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 {
-	Rect		tempRect;
+	Rect tempRect;
 
 	if ((g_twoPlayerGame) && (g_onePlayerLeft) && (thisGlider->which == g_playerDead))
 		return;
@@ -84,8 +84,8 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 	switch (toWhat)
 	{
 		case kLinkedToOther:
-		StartGliderTransportingIn(thisGlider);	// set glider's mode
-		tempRect = thisGlider->dest;			// position glider
+		StartGliderTransportingIn(thisGlider);  // set glider's mode
+		tempRect = thisGlider->dest;  // position glider
 		CenterRectInRect(&tempRect, &g_transRect);
 		thisGlider->dest.left = tempRect.left;
 		thisGlider->dest.right = tempRect.right;
@@ -100,7 +100,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 
 		case kLinkedToLeftMailbox:
 		StartGliderMailingOut(thisGlider);
-		thisGlider->clip = g_transRect;		// fix clip
+		thisGlider->clip = g_transRect;  // fix clip
 		thisGlider->clip.right -= 64;
 		thisGlider->clip.bottom -= 25;
 		tempRect = thisGlider->dest;
@@ -116,7 +116,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 
 		case kLinkedToRightMailbox:
 		StartGliderMailingOut(thisGlider);
-		thisGlider->clip = g_transRect;		// fix clip
+		thisGlider->clip = g_transRect;  // fix clip
 		thisGlider->clip.left += 79;
 		thisGlider->clip.bottom -= 25;
 		tempRect = thisGlider->dest;
@@ -132,7 +132,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 
 		case kLinkedToCeilingDuct:
 		StartGliderDuctingIn(thisGlider);
-		tempRect = thisGlider->dest;		// set glider's position
+		tempRect = thisGlider->dest;  // set glider's position
 		CenterRectInRect(&tempRect, &g_transRect);
 		thisGlider->dest.left = tempRect.left;
 		thisGlider->dest.right = tempRect.right;
@@ -160,7 +160,7 @@ void ReadyGliderFromTransit (gliderPtr thisGlider, SInt16 toWhat)
 
 void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 {
-	Rect		enterRect;
+	Rect enterRect;
 
 	HandleRoomVisitation();
 	switch (where)
@@ -323,7 +323,7 @@ void MoveRoomToRoom (gliderPtr thisGlider, SInt16 where)
 
 void TransportRoomToRoom (gliderPtr thisGlider)
 {
-	Boolean		sameRoom;
+	Boolean sameRoom;
 
 	SetMusicalMode(kKickGameScoreMode);
 	HandleRoomVisitation();
@@ -333,8 +333,8 @@ void TransportRoomToRoom (gliderPtr thisGlider)
 		ForceThisRoom(g_transRoom);
 	if (g_twoPlayerGame)
 	{
-		UndoGliderLimbo(&g_theGlider);			// turn off limbo if needed
-		UndoGliderLimbo(&g_theGlider2);			// turn off limbo if needed
+		UndoGliderLimbo(&g_theGlider);  // turn off limbo if needed
+		UndoGliderLimbo(&g_theGlider2);  // turn off limbo if needed
 		ReadyGliderFromTransit(&g_theGlider, g_linkedToWhat);
 		ReadyGliderFromTransit(&g_theGlider2, g_linkedToWhat);
 	}
@@ -361,7 +361,7 @@ void TransportRoomToRoom (gliderPtr thisGlider)
 
 void MoveDuctToDuct (gliderPtr thisGlider)
 {
-	Boolean		sameRoom;
+	Boolean sameRoom;
 
 	SetMusicalMode(kKickGameScoreMode);
 	HandleRoomVisitation();
@@ -372,8 +372,8 @@ void MoveDuctToDuct (gliderPtr thisGlider)
 
 	if (g_twoPlayerGame)
 	{
-		UndoGliderLimbo(&g_theGlider);			// turn off limbo if needed
-		UndoGliderLimbo(&g_theGlider2);			// turn off limbo if needed
+		UndoGliderLimbo(&g_theGlider);  // turn off limbo if needed
+		UndoGliderLimbo(&g_theGlider2);  // turn off limbo if needed
 		ReadyGliderFromTransit(&g_theGlider, g_linkedToWhat);
 		ReadyGliderFromTransit(&g_theGlider2, g_linkedToWhat);
 	}
@@ -400,7 +400,7 @@ void MoveDuctToDuct (gliderPtr thisGlider)
 
 void MoveMailToMail (gliderPtr thisGlider)
 {
-	Boolean		sameRoom;
+	Boolean sameRoom;
 
 	SetMusicalMode(kKickGameScoreMode);
 	HandleRoomVisitation();
@@ -411,8 +411,8 @@ void MoveMailToMail (gliderPtr thisGlider)
 
 	if (g_twoPlayerGame)
 	{
-		UndoGliderLimbo(&g_theGlider);			// turn off limbo if needed
-		UndoGliderLimbo(&g_theGlider2);			// turn off limbo if needed
+		UndoGliderLimbo(&g_theGlider);  // turn off limbo if needed
+		UndoGliderLimbo(&g_theGlider2);  // turn off limbo if needed
 		ReadyGliderFromTransit(&g_theGlider, g_linkedToWhat);
 		ReadyGliderFromTransit(&g_theGlider2, g_linkedToWhat);
 	}
@@ -475,8 +475,8 @@ void ForceKillGlider (void)
 
 void FollowTheLeader (void)
 {
-	SInt16		wasEscaped;
-	Boolean		oneOrTwo;
+	SInt16 wasEscaped;
+	Boolean oneOrTwo;
 
 	g_playerSuicide = false;
 	wasEscaped = g_otherPlayerEscaped;

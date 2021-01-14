@@ -77,29 +77,29 @@ static LPWSTR GetHResultErrorString (HRESULT hResult)
 // bring up an alert but with "Miscellaneous file error" and the
 // error ID.
 
-#define dirFulErr		(-33)	// directory full
-#define dskFulErr		(-34)	// disk full
-#define ioErr			(-36)	// I/O error
-#define bdNamErr		(-37)	// bad file name
-#define fnOpnErr		(-38)	// file not open
-#define mFulErr			(-41)	// memory full (open) or file won't fit (load)
-#define tmfoErr			(-42)	// too many files open
-#define wPrErr			(-44)	// diskette is write protected
-#define fLckdErr		(-45)	// file is locked
-#define vLckdErr		(-46)	// volume is locked
-#define fBsyErr			(-47)	// file is busy (delete)
-#define dupFNErr		(-48)	// duplicate filename (rename)
-#define opWrErr			(-49)	// file already open with write permission
-#define volOffLinErr	(-53)	// volume not on line error (was ejected)
-#define permErr			(-54)	// permissions error (on file open)
-#define wrPermErr		(-61)	// write permissions error
+#define dirFulErr       (-33)   // directory full
+#define dskFulErr       (-34)   // disk full
+#define ioErr           (-36)   // I/O error
+#define bdNamErr        (-37)   // bad file name
+#define fnOpnErr        (-38)   // file not open
+#define mFulErr         (-41)   // memory full (open) or file won't fit (load)
+#define tmfoErr         (-42)   // too many files open
+#define wPrErr          (-44)   // diskette is write protected
+#define fLckdErr        (-45)   // file is locked
+#define vLckdErr        (-46)   // volume is locked
+#define fBsyErr         (-47)   // file is busy (delete)
+#define dupFNErr        (-48)   // duplicate filename (rename)
+#define opWrErr         (-49)   // file already open with write permission
+#define volOffLinErr    (-53)   // volume not on line error (was ejected)
+#define permErr         (-54)   // permissions error (on file open)
+#define wrPermErr       (-61)   // write permissions error
 
 Boolean CheckFileError (HWND ownerWindow, HRESULT resultCode, PCWSTR fileName)
 {
-	SInt16			dummyInt;
-	DialogParams	params = { 0 };
-	LPWSTR			errMessage;
-	wchar_t			errNumString[32];
+	SInt16 dummyInt;
+	DialogParams params = { 0 };
+	LPWSTR errMessage;
+	wchar_t errNumString[32];
 
 	if (SUCCEEDED(resultCode))  // No problems?  Then cruise
 		return(true);

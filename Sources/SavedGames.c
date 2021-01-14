@@ -28,7 +28,7 @@
 
 #include <stdlib.h>
 
-#define kSavedGameVersion		0x0200
+#define kSavedGameVersion       0x0200
 
 BOOL GetSaveFolderPath (LPWSTR lpSavePath, DWORD cchSavePath);
 void SavedGameMismatchError (HWND ownerWindow, ConstStringPtr gameName);
@@ -59,18 +59,18 @@ BOOL GetSaveFolderPath (LPWSTR lpSavePath, DWORD cchSavePath)
 
 void SaveGame2 (HWND ownerWindow)
 {
-	OPENFILENAME		ofn = { 0 };
-	Str255				gameNameStr;
-	WCHAR				startPath[MAX_PATH];
-	WCHAR				gamePath[MAX_PATH];
-	roomType			*srcRoom;
-	savedRoom			*destRoom;
-	game2Type			savedGame;
-	SInt16				r, i, numRooms;
-	HANDLE				gameFileHandle;
-	byteio				*byteWriter;
-	HRESULT				writeResult;
-	HRESULT				closeResult;
+	OPENFILENAME ofn = { 0 };
+	Str255 gameNameStr;
+	WCHAR startPath[MAX_PATH];
+	WCHAR gamePath[MAX_PATH];
+	roomType *srcRoom;
+	savedRoom *destRoom;
+	game2Type savedGame;
+	SInt16 r, i, numRooms;
+	HANDLE gameFileHandle;
+	byteio *byteWriter;
+	HRESULT writeResult;
+	HRESULT closeResult;
 
 	if (!GetSaveFolderPath(startPath, ARRAYSIZE(startPath)))
 		startPath[0] = L'\0';
@@ -189,16 +189,16 @@ void SavedGameMismatchError (HWND ownerWindow, ConstStringPtr gameName)
 
 Boolean OpenSavedGame (HWND ownerWindow)
 {
-	OPENFILENAME		ofn = { 0 };
-	WCHAR				startPath[MAX_PATH];
-	WCHAR				gamePath[MAX_PATH];
-	roomType			*destRoom;
-	savedRoom			*srcRoom;
-	game2Type			savedGame;
-	SInt16				r, i;
-	HANDLE				gameFileHandle;
-	byteio				*byteReader;
-	HRESULT				readResult;
+	OPENFILENAME ofn = { 0 };
+	WCHAR startPath[MAX_PATH];
+	WCHAR gamePath[MAX_PATH];
+	roomType *destRoom;
+	savedRoom *srcRoom;
+	game2Type savedGame;
+	SInt16 r, i;
+	HANDLE gameFileHandle;
+	byteio *byteReader;
+	HRESULT readResult;
 
 	if (!GetSaveFolderPath(startPath, ARRAYSIZE(startPath)))
 		startPath[0] = L'\0';

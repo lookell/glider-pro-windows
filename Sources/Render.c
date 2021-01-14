@@ -23,7 +23,7 @@
 #include "RubberBands.h"
 #include "Sound.h"
 
-#define kMaxGarbageRects		48
+#define kMaxGarbageRects        48
 
 void DrawReflection (const gliderType *thisGlider, Boolean oneOrTwo);
 void RenderFlames (void);
@@ -121,8 +121,8 @@ void AddRectToWorkRectsWhole (const Rect *theRect)
 
 void DrawReflection (const gliderType *thisGlider, Boolean oneOrTwo)
 {
-	Rect		src, dest;
-	SInt16		which;
+	Rect src, dest;
+	SInt16 which;
 
 	if (thisGlider->dontDraw)
 		return;
@@ -167,7 +167,7 @@ void DrawReflection (const gliderType *thisGlider, Boolean oneOrTwo)
 
 void RenderFlames (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	if ((g_numFlames == 0) && (g_numTikiFlames == 0) && (g_numCoals == 0))
 		return;
@@ -231,8 +231,8 @@ void RenderFlames (void)
 
 void RenderPendulums (void)
 {
-	SInt16		i;
-	Boolean		playedTikTok;
+	SInt16 i;
+	Boolean playedTikTok;
 
 	playedTikTok = false;
 
@@ -295,7 +295,7 @@ void RenderPendulums (void)
 
 void RenderFlyingPoints (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	if (g_numFlyingPts == 0)
 		return;
@@ -352,7 +352,7 @@ void RenderFlyingPoints (void)
 
 void RenderSparkles (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	if (g_numSparkles == 0)
 		return;
@@ -386,7 +386,7 @@ void RenderSparkles (void)
 
 void RenderStars (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	if (g_numStars == 0)
 		return;
@@ -417,8 +417,8 @@ void RenderStars (void)
 
 void RenderGlider (const gliderType *thisGlider, Boolean oneOrTwo)
 {
-	Rect		src, dest;
-	SInt16		which;
+	Rect src, dest;
+	SInt16 which;
 
 	if (thisGlider->dontDraw)
 		return;
@@ -487,8 +487,8 @@ void RenderGlider (const gliderType *thisGlider, Boolean oneOrTwo)
 
 void RenderBands (void)
 {
-	Rect		dest;
-	SInt16		i;
+	Rect dest;
+	SInt16 i;
 
 	if (g_numBands == 0)
 		return;
@@ -510,8 +510,8 @@ void RenderBands (void)
 
 void RenderShreds (void)
 {
-	Rect		src, dest;
-	SInt16		i, high;
+	Rect src, dest;
+	SInt16 i, high;
 
 	if (g_numShredded > 0)
 	{
@@ -663,7 +663,7 @@ void RenderFrame (void)
 
 void InitGarbageRects (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	g_numWork2Main = 0;
 	g_numBack2Work = 0;
@@ -697,7 +697,7 @@ void CopyRectWorkToBack (const Rect *theRect)
 
 void CopyRectWorkToMain (const Rect *theRect)
 {
-	HDC			mainWindowDC;
+	HDC mainWindowDC;
 
 	mainWindowDC = GetMainWindowDC();
 	Mac_CopyBits(g_workSrcMap, mainWindowDC,
@@ -709,7 +709,7 @@ void CopyRectWorkToMain (const Rect *theRect)
 
 void CopyRectMainToWork (const Rect *theRect)
 {
-	HDC			mainWindowDC;
+	HDC mainWindowDC;
 
 	mainWindowDC = GetMainWindowDC();
 	Mac_CopyBits(mainWindowDC, g_workSrcMap,
@@ -721,7 +721,7 @@ void CopyRectMainToWork (const Rect *theRect)
 
 void CopyRectMainToBack (const Rect *theRect)
 {
-	HDC			mainWindowDC;
+	HDC mainWindowDC;
 
 	mainWindowDC = GetMainWindowDC();
 	Mac_CopyBits(mainWindowDC, g_backSrcMap,
@@ -733,7 +733,7 @@ void CopyRectMainToBack (const Rect *theRect)
 
 void AddToMirrorRegion (const Rect *theRect)
 {
-	HRGN		tempRgn;
+	HRGN tempRgn;
 
 	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
 		return;

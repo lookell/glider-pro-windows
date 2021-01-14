@@ -20,13 +20,13 @@
 #include "Room.h"
 #include "Utilities.h"
 
-#define kMaxSoundTriggers		1
-#define kMaxStairs				1
-#define kMouseholeBottom		295
-#define kFireplaceBottom		297
-#define kManholeSits			322
-#define kGrecoVentTop			303
-#define kSewerBlowerTop			292
+#define kMaxSoundTriggers       1
+#define kMaxStairs              1
+#define kMouseholeBottom        295
+#define kFireplaceBottom        297
+#define kManholeSits            322
+#define kGrecoVentTop           303
+#define kSewerBlowerTop         292
 
 SInt16 FindEmptyObjectSlot (void);
 void ShoutNoMoreObjects (HWND ownerWindow);
@@ -801,7 +801,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 
 SInt16 FindEmptyObjectSlot (void)
 {
-	SInt16		i, emptySlot;
+	SInt16 i, emptySlot;
 
 	emptySlot = -1;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -818,8 +818,8 @@ SInt16 FindEmptyObjectSlot (void)
 
 SInt16 FindObjectSlotInRoom (SInt16 roomNumber)
 {
-	roomPtr		testRoomPtr;
-	SInt16		i, emptySlot;
+	roomPtr testRoomPtr;
+	SInt16 i, emptySlot;
 
 	if (roomNumber < 0 || roomNumber >= g_thisHouse.nRooms)
 	{
@@ -845,9 +845,9 @@ SInt16 FindObjectSlotInRoom (SInt16 roomNumber)
 
 Boolean DoesRoomNumHaveObject (SInt16 room, SInt16 what)
 {
-	roomPtr		testRoomPtr;
-	SInt16		i;
-	Boolean		hasIt;
+	roomPtr testRoomPtr;
+	SInt16 i;
+	Boolean hasIt;
 
 	if (room < 0 || room >= g_thisHouse.nRooms)
 	{
@@ -880,7 +880,7 @@ void ShoutNoMoreObjects (HWND ownerWindow)
 
 SInt16 HowManyCandleObjects (void)
 {
-	SInt16		i, aCandle;
+	SInt16 i, aCandle;
 
 	aCandle = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -896,7 +896,7 @@ SInt16 HowManyCandleObjects (void)
 
 SInt16 HowManyTikiObjects (void)
 {
-	SInt16		i, aTiki;
+	SInt16 i, aTiki;
 
 	aTiki = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -910,7 +910,7 @@ SInt16 HowManyTikiObjects (void)
 
 SInt16 HowManyBBQObjects (void)
 {
-	SInt16		i, aBBQ;
+	SInt16 i, aBBQ;
 
 	aBBQ = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -924,7 +924,7 @@ SInt16 HowManyBBQObjects (void)
 
 SInt16 HowManyCuckooObjects (void)
 {
-	SInt16		i, aCuckoo;
+	SInt16 i, aCuckoo;
 
 	aCuckoo = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -938,7 +938,7 @@ SInt16 HowManyCuckooObjects (void)
 
 SInt16 HowManyBandsObjects (void)
 {
-	SInt16		i, aBands;
+	SInt16 i, aBands;
 
 	aBands = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -952,7 +952,7 @@ SInt16 HowManyBandsObjects (void)
 
 SInt16 HowManyGreaseObjects (void)
 {
-	SInt16		i, aGrease;
+	SInt16 i, aGrease;
 
 	aGrease = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -967,7 +967,7 @@ SInt16 HowManyGreaseObjects (void)
 
 SInt16 HowManyStarsObjects (void)
 {
-	SInt16		i, aStar;
+	SInt16 i, aStar;
 
 	aStar = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -981,7 +981,7 @@ SInt16 HowManyStarsObjects (void)
 
 SInt16 HowManySoundObjects (void)
 {
-	SInt16		i, aSound;
+	SInt16 i, aSound;
 
 	aSound = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -995,7 +995,7 @@ SInt16 HowManySoundObjects (void)
 
 SInt16 HowManyUpStairsObjects (void)
 {
-	SInt16		i, aStair;
+	SInt16 i, aStair;
 
 	aStair = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1009,7 +1009,7 @@ SInt16 HowManyUpStairsObjects (void)
 
 SInt16 HowManyDownStairsObjects (void)
 {
-	SInt16		i, aStair;
+	SInt16 i, aStair;
 
 	aStair = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1023,7 +1023,7 @@ SInt16 HowManyDownStairsObjects (void)
 
 SInt16 HowManyShredderObjects (void)
 {
-	SInt16		i, aShredder;
+	SInt16 i, aShredder;
 
 	aShredder = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1037,7 +1037,7 @@ SInt16 HowManyShredderObjects (void)
 
 SInt16 HowManyDynamicObjects (void)
 {
-	SInt16		i, aDinah;
+	SInt16 i, aDinah;
 
 	aDinah = 0;
 	for (i = 0; i < kMaxRoomObs; i++)

@@ -246,7 +246,7 @@ void TriggerDrip (SInt16 who)
 		return;
 
 	if ((!g_dinahs[who].moving) && (g_dinahs[who].timer > 7))
-		g_dinahs[who].timer = 7;		// kick off drip
+		g_dinahs[who].timer = 7;  // kick off drip
 }
 
 //--------------------------------------------------------------  TriggerFish

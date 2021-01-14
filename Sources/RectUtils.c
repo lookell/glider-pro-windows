@@ -34,7 +34,7 @@ void NormalizeRect (Rect *theRect)
 // The rect passed in is slid over so that its top left corner is
 // at coordinates (0, 0).
 
-void ZeroRectCorner (Rect *theRect)		// Offset rect to (0, 0)
+void ZeroRectCorner (Rect *theRect)
 {
 	theRect->right -= theRect->left;
 	theRect->bottom -= theRect->top;

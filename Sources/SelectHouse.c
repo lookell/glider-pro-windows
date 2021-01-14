@@ -17,8 +17,8 @@
 #include <commctrl.h>
 #include <strsafe.h>
 
-#define kHouseListItem			1000
-#define kMaxExtraHouses			8
+#define kHouseListItem          1000
+#define kMaxExtraHouses         8
 
 BOOL InitLoadDialog (HWND hDlg);
 INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -88,10 +88,10 @@ BOOL InitLoadDialog (HWND hDlg)
 
 INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	HWND		houseListView;
-	INT			selectedIndex;
-	LVITEM		lvItem;
-	SInt16		whoCares;
+	HWND houseListView;
+	INT selectedIndex;
+	LVITEM lvItem;
+	SInt16 whoCares;
 
 	switch (uMsg)
 	{
@@ -167,10 +167,10 @@ void DoLoadHouse (HWND ownerWindow)
 
 void SortHouseList (void)
 {
-	houseSpec	tempSpec;
-	SInt16		i, h, whosFirst;
+	houseSpec tempSpec;
+	SInt16 i, h, whosFirst;
 
-	i = 0;			// remove exact duplicate houses
+	i = 0;  // remove exact duplicate houses
 	while (i < g_housesFound)
 	{
 		h = i + 1;
@@ -235,17 +235,17 @@ static HANDLE OpenFindFile(LPCWSTR lpPath, LPWIN32_FIND_DATA lpFindFileData)
 
 void DoDirSearch (HWND ownerWindow)
 {
-	#define			kMaxDirectories		32
-	WIN32_FIND_DATA	ffd;
-	WCHAR			pathString[MAX_PATH];
-	WCHAR			newPathString[MAX_PATH];
-	HANDLE			findFileHandles[kMaxDirectories];
-	HANDLE			hff;
-	SInt16			i, currentDir, numDirs;
-	PWCH			extPtr, sepPtr;
-	HRESULT			hr;
-	int				cxIcon, cyIcon;
-	HICON			houseIcon;
+	#define kMaxDirectories  32
+	WIN32_FIND_DATA ffd;
+	WCHAR pathString[MAX_PATH];
+	WCHAR newPathString[MAX_PATH];
+	HANDLE findFileHandles[kMaxDirectories];
+	HANDLE hff;
+	SInt16 i, currentDir, numDirs;
+	PWCH extPtr, sepPtr;
+	HRESULT hr;
+	int cxIcon, cyIcon;
+	HICON houseIcon;
 	Gp_HouseFile *houseFile;
 
 	cxIcon = GetSystemMetrics(SM_CXICON);
@@ -406,13 +406,16 @@ void BuildHouseList (HWND ownerWindow)
 {
 	SInt16 i;
 
-	if (g_houseIconImageList != NULL)			// destroy icons from previous search
+	// destroy icons from previous search
+	if (g_houseIconImageList != NULL)
 	{
 		ImageList_Destroy(g_houseIconImageList);
 		g_houseIconImageList = NULL;
 	}
-	g_housesFound = 0;						// zero the number of houses found
-	for (i = 0; i < g_numExtraHouses; i++)	// 1st, insert extra houses into list
+	// zero the number of houses found
+	g_housesFound = 0;
+	// 1st, insert extra houses into list
+	for (i = 0; i < g_numExtraHouses; i++)
 	{
 		if (g_housesFound < g_maxFiles)
 		{
@@ -420,7 +423,8 @@ void BuildHouseList (HWND ownerWindow)
 			g_housesFound++;
 		}
 	}
-	DoDirSearch(ownerWindow);				// now, search folders for the rest
+	// now, search folders for the rest
+	DoDirSearch(ownerWindow);
 }
 
 //--------------------------------------------------------------  AddExtraHouse

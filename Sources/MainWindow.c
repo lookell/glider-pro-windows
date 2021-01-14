@@ -701,8 +701,10 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
 
 			if (!COMPILEDEMO)
 			{
-//				if (g_theMode == kEditMode)
-//					SeeIfValidScrapAvailable(true);
+#if 0
+				if (g_theMode == kEditMode)
+					SeeIfValidScrapAvailable(true);
+#endif
 			}
 		}
 		else

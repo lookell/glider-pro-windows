@@ -109,9 +109,9 @@ __declspec(noreturn) void RedAlert (SInt16 errorNumber)
 
 HDC CreateOffScreenGWorld (const Rect *bounds, SInt16 depth)
 {
-	HDC			hdcDisplay, hdcSurface;
-	HBITMAP		hbmSurface;
-	INT			cxSurface, cySurface;
+	HDC hdcDisplay, hdcSurface;
+	HBITMAP hbmSurface;
+	INT cxSurface, cySurface;
 
 	if (bounds->left >= bounds->right || bounds->top >= bounds->bottom)
 		return NULL;
@@ -152,7 +152,7 @@ HDC CreateOffScreenGWorld (const Rect *bounds, SInt16 depth)
 
 void DisposeGWorld (HDC theGWorld)
 {
-	HGDIOBJ		hbmSurface;
+	HGDIOBJ hbmSurface;
 
 	hbmSurface = GetCurrentObject(theGWorld, OBJ_BITMAP);
 	RestoreDC(theGWorld, -1);
@@ -250,10 +250,10 @@ HFONT CreateTahomaFont (LONG height, LONG weight)
 
 void WaitForInputEvent (UInt16 seconds)
 {
-	MSG			theEvent;
-	DWORD		startTime, elapsedTime, timeout;
-	DWORD		status;
-	Boolean		waiting;
+	MSG theEvent;
+	DWORD startTime, elapsedTime, timeout;
+	DWORD status;
+	Boolean waiting;
 
 	if (seconds < 0)
 		return;

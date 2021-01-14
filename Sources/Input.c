@@ -28,9 +28,9 @@
 #include "Transit.h"
 #include "Utilities.h"
 
-#define kNormalThrust		5
-#define kHyperThrust		8
-#define kHeliumLift			4
+#define kNormalThrust       5
+#define kHyperThrust        8
+#define kHeliumLift         4
 
 #define IsKeyDown(vkey) (GetActiveWindow() == g_mainWindow && GetAsyncKeyState(vkey) < 0)
 #define IsKeyUp(vkey) (GetActiveWindow() != g_mainWindow || GetAsyncKeyState(vkey) >= 0)
@@ -134,9 +134,9 @@ void DoCommandKey (void)
 
 void DoPause (void)
 {
-	Rect		bounds;
-	MSG			msg;
-	HDC			mainWindowDC;
+	Rect bounds;
+	MSG msg;
+	HDC mainWindowDC;
 
 	QSetRect(&bounds, 0, 0, 214, 54);
 	CenterRectInRect(&bounds, &g_houseRect);
@@ -176,7 +176,7 @@ void DoPause (void)
 			DoCommandKey();
 	}
 	if (msg.message == WM_QUIT)
-	{		
+	{
 		PostQuitMessage((int)msg.wParam);
 		g_paused = false;
 		g_quitting = true;
@@ -384,7 +384,7 @@ void GetInput (gliderPtr thisGlider)
 	{
 		thisGlider->heldLeft = false;
 		thisGlider->heldRight = false;
-		if (IsKeyDown(thisGlider->rightKey))			// right key
+		if (IsKeyDown(thisGlider->rightKey))  // right key
 		{
 			if (CREATEDEMODATA)
 				LogDemoKey(0);
@@ -401,7 +401,7 @@ void GetInput (gliderPtr thisGlider)
 				thisGlider->heldRight = true;
 			}
 		}
-		else if (IsKeyDown(thisGlider->leftKey))		// left key
+		else if (IsKeyDown(thisGlider->leftKey))  // left key
 		{
 			if (CREATEDEMODATA)
 				LogDemoKey(1);
@@ -468,8 +468,8 @@ void GetInput (gliderPtr thisGlider)
 
 Boolean QuerySaveGame (HWND ownerWindow)
 {
-	#define			kYesSaveGameButton	IDYES
-	SInt16			hitWhat;
+	#define kYesSaveGameButton  IDYES
+	SInt16 hitWhat;
 
 	hitWhat = Alert(kSaveGameAlert, ownerWindow, NULL);
 	if (hitWhat == kYesSaveGameButton)

@@ -171,16 +171,22 @@ void ReadInPrefs (HWND ownerWindow)
 		g_isEditH = 3;
 		g_isEditV = 41;
 		g_isMapH = 3;
-//		g_isMapV = qd.screenBits.bounds.bottom - 100;
+#if 0
+		g_isMapV = qd.screenBits.bounds.bottom - 100;
+#endif
 		g_isMapV = 100;
 		g_mapRoomsWide = 15;
 		g_mapRoomsHigh = 4;
-//		g_isToolsH = qd.screenBits.bounds.right - 120;
+#if 0
+		g_isToolsH = qd.screenBits.bounds.right - 120;
+#endif
 		g_isToolsH = 100;
 		g_isToolsV = 35;
 		g_isLinkH = 50;
 		g_isLinkV = 80;
-//		g_isCoordH = qd.screenBits.bounds.right - 55;
+#if 0
+		g_isCoordH = qd.screenBits.bounds.right - 55;
+#endif
 		g_isCoordH = 50;
 		g_isCoordV = 204;
 		g_mapLeftRoom = 60;
@@ -352,7 +358,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 	}
 
 	g_incrementModeTime = timeGetTime() + kIdleSplashTime;
-	while (!g_quitting)		// this is the main loop
+	while (!g_quitting)  // this is the main loop
 		HandleEvent();
 
 	CloseMainWindow();

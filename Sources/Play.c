@@ -42,11 +42,11 @@
 
 #include <mmsystem.h>
 
-#define kInitialGliders			2
-#define kRingDelay				90
-#define kRingSpread				25000	// 25000
-#define kRingBaseDelay			5000	// 5000
-#define kChimeDelay				180
+#define kInitialGliders         2
+#define kRingDelay              90
+#define kRingSpread             25000   // 25000
+#define kRingBaseDelay          5000    // 5000
+#define kChimeDelay             180
 
 typedef struct phoneType
 {
@@ -135,7 +135,7 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 	g_onePlayerLeft = false;
 	g_playerSuicide = false;
 
-	if (g_twoPlayerGame)					// initialize glider(s)
+	if (g_twoPlayerGame)  // initialize glider(s)
 	{
 		InitGlider(&g_theGlider, kNewGameMode);
 		InitGlider(&g_theGlider2, kNewGameMode);
@@ -282,8 +282,8 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 
 void DoDemoGame (HWND ownerWindow)
 {
-	SInt16		wasHouseIndex;
-	Boolean		whoCares;
+	SInt16 wasHouseIndex;
+	Boolean whoCares;
 
 	wasHouseIndex = g_thisHouseIndex;
 	whoCares = CloseHouse(ownerWindow);
@@ -373,7 +373,7 @@ void InitGlider (gliderPtr thisGlider, SInt16 mode)
 
 void SetHouseToFirstRoom (void)
 {
-	SInt16		firstRoom;
+	SInt16 firstRoom;
 
 	firstRoom = GetFirstRoomNumber();
 	ForceThisRoom(firstRoom);
@@ -481,9 +481,9 @@ void PlayGame (SInt16 splashHouseIndex)
 
 void SetObjectsToDefaults (void)
 {
-	SInt16		numRooms;
-	SInt16		r, i;
-	Boolean		initState;
+	SInt16 numRooms;
+	SInt16 r, i;
+	Boolean initState;
 
 	numRooms = g_thisHouse.nRooms;
 
@@ -583,7 +583,7 @@ void SetObjectsToDefaults (void)
 
 void HideGlider (const gliderType *thisGlider)
 {
-	Rect		tempRect;
+	Rect tempRect;
 
 	tempRect = thisGlider->whole;
 	QOffsetRect(&tempRect, g_playOriginH, g_playOriginV);
@@ -615,7 +615,7 @@ void InitTelephone (void)
 
 void HandleTelephone (void)
 {
-	SInt16		delayTime;
+	SInt16 delayTime;
 
 	if (!g_phoneBitSet)
 	{

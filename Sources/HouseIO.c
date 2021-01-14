@@ -30,8 +30,8 @@
 
 #include <stdlib.h>
 
-#define kSaveChanges			IDYES
-#define kDiscardChanges			IDNO
+#define kSaveChanges            IDYES
+#define kDiscardChanges         IDNO
 
 void LoopMovie (void);
 void OpenHouseMovie (void);
@@ -57,9 +57,9 @@ void LoopMovie (void)
 {
 	return;
 #if 0
-	Handle		theLoop;
-	UserData	theUserData;
-	SInt16		theCount;
+	Handle theLoop;
+	UserData theUserData;
+	SInt16 theCount;
 
 	theLoop = NewHandle(sizeof(SInt32));
 	(** (SInt32 **) theLoop) = 0;
@@ -78,13 +78,13 @@ void LoopMovie (void)
 void OpenHouseMovie (void)
 {
 #ifdef COMPILEQT
-	TimeBase	theTime;
-	houseSpec	theSpec;
-	FInfo		finderInfo;
-	Handle		spaceSaver;
-	OSErr		theErr;
-	SInt16		movieRefNum;
-	Boolean		dataRefWasChanged;
+	TimeBase theTime;
+	houseSpec theSpec;
+	FInfo finderInfo;
+	Handle spaceSaver;
+	OSErr theErr;
+	SInt16 movieRefNum;
+	Boolean dataRefWasChanged;
 
 	if (g_thisMac.hasQT)
 	{
@@ -158,7 +158,7 @@ void OpenHouseMovie (void)
 void CloseHouseMovie (void)
 {
 #ifdef COMPILEQT
-	OSErr		theErr;
+	OSErr theErr;
 
 	if ((g_thisMac.hasQT) && (g_hasMovie))
 	{
@@ -252,12 +252,12 @@ Boolean OpenSpecificHouse (PCWSTR filename, HWND ownerWindow)
 Boolean SaveHouseAs (void)
 {
 	// TEMP - fix this later -- use NavServices (see House.c)
-/*
-	StandardFileReply	theReply;
-	FSSpec				oldHouse;
-	OSErr				theErr;
-	Boolean				noProblems;
-	Str255				tempStr;
+#if 0
+	StandardFileReply theReply;
+	FSSpec oldHouse;
+	OSErr theErr;
+	Boolean noProblems;
+	Str255 tempStr;
 
 	noProblems = true;
 
@@ -267,14 +267,14 @@ Boolean SaveHouseAs (void)
 	{
 		oldHouse = g_theHousesSpecs[g_thisHouseIndex];
 
-		CloseHouseResFork();						// close this house file
+		CloseHouseResFork();  // close this house file
 		theErr = FSClose(houseRefNum);
 		if (theErr != noErr)
 		{
 			CheckFileError(theErr, "\pPreferences");
 			return(false);
 		}
-													// create new house file
+		// create new house file
 		theErr = FSpCreate(&theReply.sfFile, 'ozm5', 'gliH', theReply.sfScript);
 		if (!CheckFileError(theErr, theReply.sfFile.name))
 			return (false);
@@ -283,19 +283,19 @@ Boolean SaveHouseAs (void)
 		if (ResError() != noErr)
 			YellowAlert(kYellowFailedResCreate, ResError());
 		PasStringCopy(theReply.sfFile.name, g_thisHouseName);
-													// open new house data fork
+		// open new house data fork
 		theErr = FSpOpenDF(&theReply.sfFile, fsRdWrPerm, &houseRefNum);
 		if (!CheckFileError(theErr, g_thisHouseName))
 			return (false);
 
 		g_houseOpen = true;
 
-		noProblems = WriteHouse(false);				// write out house data
+		noProblems = WriteHouse(false);  // write out house data
 		if (!noProblems)
 			return(false);
 
 		BuildHouseList();
-		if (OpenSpecificHouse(&theReply.sfFile))	// open new house again
+		if (OpenSpecificHouse(&theReply.sfFile))  // open new house again
 		{
 		}
 		else
@@ -313,7 +313,7 @@ Boolean SaveHouseAs (void)
 	}
 
 	return (noProblems);
-	*/
+#endif
 	return false;
 }
 
@@ -557,10 +557,10 @@ Boolean CloseHouse (HWND ownerWindow)
 
 Boolean QuerySaveChanges (HWND ownerWindow)
 {
-	DialogParams	params = { 0 };
-	wchar_t			houseStr[64];
-	SInt16			hitWhat;
-	Boolean			whoCares;
+	DialogParams params = { 0 };
+	wchar_t houseStr[64];
+	SInt16 hitWhat;
+	Boolean whoCares;
 
 	if (!g_fileDirty)
 		return(true);
@@ -601,11 +601,11 @@ Boolean QuerySaveChanges (HWND ownerWindow)
 
 void YellowAlert (HWND ownerWindow, SInt16 whichAlert, SInt16 identifier)
 {
-	DialogParams	params = { 0 };
-	wchar_t			errStr[256];
-	wchar_t			errNumStr[16];
-	INT				result;
-	SInt16			whoCares;
+	DialogParams params = { 0 };
+	wchar_t errStr[256];
+	wchar_t errNumStr[16];
+	INT result;
+	SInt16 whoCares;
 
 	result = LoadString(HINST_THISCOMPONENT, kYellowAlertStringBase + whichAlert,
 			errStr, ARRAYSIZE(errStr));

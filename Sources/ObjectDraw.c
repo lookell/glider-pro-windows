@@ -17,43 +17,43 @@
 #include "Utilities.h"
 #include "WinAPI.h"
 
-#define k8WhiteColor			0
-#define kYellowColor			5
-#define kIntenseYellowColor		5
-#define kGoldColor				11
-#define k8RedColor				35
-#define kPaleVioletColor		42
-#define k8LtTanColor			52
-#define k8BambooColor			53
-#define kDarkFleshColor			58
-#define k8TanColor				94
-#define k8PissYellowColor		95
-#define k8OrangeColor			59
-#define k8BrownColor			137
-#define k8Red4Color				143
-#define k8SkyColor				150
-#define k8EarthBlueColor		170
-#define k8DkRedColor			222
-#define k8DkRed2Color			223
-#define kIntenseGreenColor		225
-#define kIntenseBlueColor		235
-#define k8PumpkinColor			101
-#define k8LtstGrayColor			245
-#define k8LtstGray2Color		246
-#define k8LtstGray3Color		43
-#define k8LtstGray4Color		247
-#define k8LtstGray5Color		248
-#define k8LtGrayColor			249
-#define k8GrayColor				250
-#define k8Gray2Color			251
-#define k8DkGrayColor			252
-#define k8DkGray2Color			253
-#define k8DkGray3Color			172
-#define k8DkstGrayColor			254
-#define k8BlackColor			255
+#define k8WhiteColor            0
+#define kYellowColor            5
+#define kIntenseYellowColor     5
+#define kGoldColor              11
+#define k8RedColor              35
+#define kPaleVioletColor        42
+#define k8LtTanColor            52
+#define k8BambooColor           53
+#define kDarkFleshColor         58
+#define k8TanColor              94
+#define k8PissYellowColor       95
+#define k8OrangeColor           59
+#define k8BrownColor            137
+#define k8Red4Color             143
+#define k8SkyColor              150
+#define k8EarthBlueColor        170
+#define k8DkRedColor            222
+#define k8DkRed2Color           223
+#define kIntenseGreenColor      225
+#define kIntenseBlueColor       235
+#define k8PumpkinColor          101
+#define k8LtstGrayColor         245
+#define k8LtstGray2Color        246
+#define k8LtstGray3Color        43
+#define k8LtstGray4Color        247
+#define k8LtstGray5Color        248
+#define k8LtGrayColor           249
+#define k8GrayColor             250
+#define k8Gray2Color            251
+#define k8DkGrayColor           252
+#define k8DkGray2Color          253
+#define k8DkGray3Color          172
+#define k8DkstGrayColor         254
+#define k8BlackColor            255
 
-#define kTikiPoleBase			300
-#define	kMailboxBase			296
+#define kTikiPoleBase           300
+#define kMailboxBase            296
 
 void DrawClockDigit (SInt16 number, const Rect *dest);
 void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand);
@@ -75,7 +75,7 @@ void DrawSimpleBlowers (SInt16 what, const Rect *theRect)
 
 void DrawTiki (const Rect *theRect, SInt16 down)
 {
-	SInt32		darkGrayC, lightWoodC, darkWoodC;
+	SInt32 darkGrayC, lightWoodC, darkWoodC;
 
 	darkGrayC = k8DkstGrayColor;
 	lightWoodC = k8BambooColor;
@@ -103,7 +103,7 @@ void DrawTiki (const Rect *theRect, SInt16 down)
 
 void DrawInvisibleBlower (const Rect *theRect)
 {
-	Rect		tempRect;
+	Rect tempRect;
 
 	QSetRect(&tempRect, 0, 0, 24, 24);
 	QOffsetRect(&tempRect, theRect->left, theRect->top);
@@ -122,12 +122,12 @@ void DrawLiftArea (const Rect *theRect)
 
 void DrawTable (const Rect *tableTop, SInt16 down)
 {
-	#define		kTableBaseTop		296
-	#define		kTableShadowTop		312
-	#define		kTableShadowOffset	12
-	Rect		tempRect;
-	SInt32		brownC, tanC, dkRedC, blackC;
-	SInt16		hCenter, vShadow;
+	#define kTableBaseTop  296
+	#define kTableShadowTop  312
+	#define kTableShadowOffset  12
+	Rect tempRect;
+	SInt32 brownC, tanC, dkRedC, blackC;
+	SInt16 hCenter, vShadow;
 
 	brownC = k8BrownColor;
 	tanC = k8TanColor;
@@ -212,12 +212,12 @@ void DrawTable (const Rect *tableTop, SInt16 down)
 
 void DrawShelf (const Rect *shelfTop)
 {
-	#define		kBracketInset		18
-	#define		kShelfDeep			4
-	#define		kBracketThick		5
-	#define		kShelfShadowOff		12
-	Rect		tempRect;
-	SInt32		brownC, ltTanC, tanC, dkRedC, blackC;
+	#define kBracketInset  18
+	#define kShelfDeep  4
+	#define kBracketThick  5
+	#define kShelfShadowOff  12
+	Rect tempRect;
+	SInt32 brownC, ltTanC, tanC, dkRedC, blackC;
 
 	brownC = k8BrownColor;
 	ltTanC = k8LtTanColor;
@@ -273,10 +273,10 @@ void DrawShelf (const Rect *shelfTop)
 
 void DrawCabinet (const Rect *cabinet)
 {
-	#define		kCabinetDeep		4
-	#define		kCabinetShadowOff	6
-	Rect		tempRect;
-	SInt32		brownC, dkGrayC, ltTanC, tanC, dkRedC;
+	#define kCabinetDeep  4
+	#define kCabinetShadowOff  6
+	Rect tempRect;
+	SInt32 brownC, dkGrayC, ltTanC, tanC, dkRedC;
 
 	brownC = k8BrownColor;
 	dkGrayC = k8DkstGrayColor;
@@ -294,20 +294,23 @@ void DrawCabinet (const Rect *cabinet)
 	EndPath(g_backSrcMap);
 	DitherShadowPath(g_backSrcMap);
 
-	tempRect = *cabinet;			// fill bulk of cabinet brown
+	// fill bulk of cabinet brown
+	tempRect = *cabinet;
 	QInsetRect(&tempRect, 1, 1);
 	ColorRect(g_backSrcMap, &tempRect, brownC);
 
-	tempRect = *cabinet;			// add lighter left side
+	// add lighter left side
+	tempRect = *cabinet;
 	tempRect.right = tempRect.left + kCabinetDeep;
 	ColorRect(g_backSrcMap, &tempRect, tanC);
-									// hilight top edge
+
+	// hilight top edge
 	ColorLine(g_backSrcMap, cabinet->left + 1, cabinet->top + 1,
 			cabinet->left + kCabinetDeep, cabinet->top + 1, ltTanC);
 	ColorLine(g_backSrcMap, cabinet->left + kCabinetDeep, cabinet->top + 1,
 			cabinet->right - 3, cabinet->top + 1, tanC);
-									// shadow bottom edge
 
+	// shadow bottom edge
 	ColorLine(g_backSrcMap, cabinet->left + kCabinetDeep + 3, cabinet->top + 5,
 			cabinet->left + kCabinetDeep + 3, cabinet->bottom - 6, tanC);
 	ColorLine(g_backSrcMap, cabinet->left + kCabinetDeep + 4, cabinet->top + 5,
@@ -376,13 +379,13 @@ void DrawSimpleFurniture (SInt16 what, const Rect *theRect)
 
 void DrawCounter (const Rect *counter)
 {
-	#define		kCounterFooterHigh	12
-	#define		kCounterStripWide	6
-	#define		kCounterStripTall	29
-	#define		kCounterPanelDrop	12
-	Rect		tempRect;
-	SInt32		brownC, dkGrayC, tanC, blackC, dkstRedC;
-	SInt16		nRects, width, i;
+	#define kCounterFooterHigh  12
+	#define kCounterStripWide  6
+	#define kCounterStripTall  29
+	#define kCounterPanelDrop  12
+	Rect tempRect;
+	SInt32 brownC, dkGrayC, tanC, blackC, dkstRedC;
+	SInt16 nRects, width, i;
 
 	brownC = k8BrownColor;
 	dkGrayC = k8DkstGrayColor;
@@ -469,13 +472,13 @@ void DrawCounter (const Rect *counter)
 
 void DrawDresser (const Rect *dresser)
 {
-	#define		kDresserTopThick	4
-	#define		kDresserCrease		9
-	#define		kDresserDrawerDrop	12
-	#define		kDresserSideSpare	14
-	Rect		tempRect, dest;
-	SInt32		yellowC, brownC, ltTanC, dkstRedC;
-	SInt16		nRects, height, i;
+	#define kDresserTopThick  4
+	#define kDresserCrease  9
+	#define kDresserDrawerDrop  12
+	#define kDresserSideSpare  14
+	Rect tempRect, dest;
+	SInt32 yellowC, brownC, ltTanC, dkstRedC;
+	SInt16 nRects, height, i;
 
 	yellowC = k8PissYellowColor;
 	brownC = k8BrownColor;
@@ -562,13 +565,12 @@ void DrawDresser (const Rect *dresser)
 
 void DrawDeckTable (const Rect *tableTop, SInt16 down)
 {
-	#define		kTableBaseTop		296
-	#define		kTableShadowTop		312
-	#define		kTableShadowOffset	12
-
-	Rect		tempRect;
-	SInt32		bambooC, brownC, dkGrayC;
-	SInt16		hCenter, vShadow;
+	#define kTableBaseTop  296
+	#define kTableShadowTop  312
+	#define kTableShadowOffset  12
+	Rect tempRect;
+	SInt32 bambooC, brownC, dkGrayC;
+	SInt16 hCenter, vShadow;
 
 	bambooC = k8BambooColor;
 	brownC = k8BrownColor;
@@ -653,8 +655,8 @@ void DrawDeckTable (const Rect *tableTop, SInt16 down)
 
 void DrawStool (const Rect *theRect, SInt16 down)
 {
-	#define		kStoolBase	304
-	SInt32		grayC, dkGrayC;
+	#define kStoolBase  304
+	SInt32 grayC, dkGrayC;
 
 	grayC = k8DkGray2Color;
 	dkGrayC = k8DkstGrayColor;
@@ -697,9 +699,9 @@ void DrawInvisBounce (const Rect *theRect)
 
 void DrawRedClock (const Rect *theRect)
 {
-	SYSTEMTIME	localTime;
-	Rect		dest;
-	SInt16		hour, minutes;
+	SYSTEMTIME localTime;
+	Rect dest;
+	SInt16 hour, minutes;
 
 	Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
 			&g_srcRects[kRedClock], &g_srcRects[kRedClock], theRect);
@@ -737,9 +739,9 @@ void DrawClockDigit (SInt16 number, const Rect *dest)
 
 void DrawBlueClock (const Rect *theRect)
 {
-	SYSTEMTIME	localTime;
-	Point		dest;
-	SInt16		hour, minutes;
+	SYSTEMTIME localTime;
+	Point dest;
+	SInt16 hour, minutes;
 
 	Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
 			&g_srcRects[kBlueClock], &g_srcRects[kBlueClock], theRect);
@@ -756,9 +758,9 @@ void DrawBlueClock (const Rect *theRect)
 
 void DrawYellowClock (const Rect *theRect)
 {
-	SYSTEMTIME	localTime;
-	Point		dest;
-	SInt16		hour, minutes;
+	SYSTEMTIME localTime;
+	Point dest;
+	SInt16 hour, minutes;
 
 	Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
 			&g_srcRects[kYellowClock], &g_srcRects[kYellowClock], theRect);
@@ -775,9 +777,9 @@ void DrawYellowClock (const Rect *theRect)
 
 void DrawCuckoo (const Rect *theRect)
 {
-	SYSTEMTIME	localTime;
-	Point		dest;
-	SInt16		hour, minutes;
+	SYSTEMTIME localTime;
+	Point dest;
+	SInt16 hour, minutes;
 
 	Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
 			&g_srcRects[kCuckoo], &g_srcRects[kCuckoo], theRect);
@@ -794,7 +796,7 @@ void DrawCuckoo (const Rect *theRect)
 
 void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 {
-	HGDIOBJ		wasPen;
+	HGDIOBJ wasPen;
 
 	wasPen = SelectObject(g_backSrcMap, GetStockObject(BLACK_PEN));
 
@@ -909,7 +911,7 @@ void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 
 void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 {
-	HGDIOBJ		wasPen;
+	HGDIOBJ wasPen;
 
 	wasPen = SelectObject(g_backSrcMap, GetStockObject(WHITE_PEN));
 
@@ -1035,15 +1037,15 @@ void DrawSimplePrizes (SInt16 what, const Rect *theRect)
 
 void DrawGreaseRt (const Rect *theRect, SInt16 distance, Boolean state)
 {
-	Rect		spill, dest;
+	Rect spill, dest;
 
 	dest = *theRect;
-	if (state)		// grease upright
+	if (state)  // grease upright
 	{
 		Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
 				&g_greaseSrcRt[0], &g_greaseSrcRt[0], &dest);
 	}
-	else			// grease spilled
+	else  // grease spilled
 	{
 		QOffsetRect(&dest, 6, 0);
 		Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
@@ -1059,15 +1061,15 @@ void DrawGreaseRt (const Rect *theRect, SInt16 distance, Boolean state)
 
 void DrawGreaseLf (const Rect *theRect, SInt16 distance, Boolean state)
 {
-	Rect		spill, dest;
+	Rect spill, dest;
 
 	dest = *theRect;
-	if (state)		// grease upright
+	if (state)  // grease upright
 	{
 		Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
 				&g_greaseSrcLf[0], &g_greaseSrcLf[0], &dest);
 	}
-	else			// grease spilled
+	else  // grease spilled
 	{
 		QOffsetRect(&dest, -6, 0);
 		Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, g_backSrcMap,
@@ -1105,10 +1107,10 @@ void DrawSlider (const Rect *theRect)
 
 void DrawMailboxLeft (const Rect *theRect, SInt16 down)
 {
-	Rect		bounds;
-	HDC			tempMap;
-	HDC			tempMask;
-	SInt32		darkGrayC, lightWoodC, darkWoodC;
+	Rect bounds;
+	HDC tempMap;
+	HDC tempMask;
+	SInt32 darkGrayC, lightWoodC, darkWoodC;
 
 	darkGrayC = k8DkGray2Color;
 	lightWoodC = k8PissYellowColor;
@@ -1164,10 +1166,10 @@ void DrawMailboxLeft (const Rect *theRect, SInt16 down)
 
 void DrawMailboxRight (const Rect *theRect, SInt16 down)
 {
-	Rect		bounds;
-	HDC			tempMap;
-	HDC			tempMask;
-	SInt32		darkGrayC, lightWoodC, darkWoodC;
+	Rect bounds;
+	HDC tempMap;
+	HDC tempMask;
+	SInt32 darkGrayC, lightWoodC, darkWoodC;
 
 	darkGrayC = k8DkGray2Color;
 	lightWoodC = k8PissYellowColor;
@@ -1337,8 +1339,8 @@ void DrawSimpleLight (SInt16 what, const Rect *theRect)
 
 void DrawFlourescent (const Rect *theRect)
 {
-	Rect		partRect;
-	SInt32		grayC, gray2C, gray3C, gray4C, violetC;
+	Rect partRect;
+	SInt32 grayC, gray2C, gray3C, gray4C, violetC;
 
 	grayC = k8LtGrayColor;
 	gray2C = k8LtstGray5Color;
@@ -1391,10 +1393,10 @@ void DrawFlourescent (const Rect *theRect)
 
 void DrawTrackLight (const Rect *theRect)
 {
-	#define		kTrackLightSpacing	64
-	Rect		partRect;
-	SInt32		grayC, gray2C, gray3C, gray4C;
-	SInt16		which, howMany, i, spread;
+	#define kTrackLightSpacing  64
+	Rect partRect;
+	SInt32 grayC, gray2C, gray3C, gray4C;
+	SInt16 which, howMany, i, spread;
 
 	grayC = k8LtGrayColor;
 	gray2C = k8Gray2Color;
@@ -1414,14 +1416,16 @@ void DrawTrackLight (const Rect *theRect)
 	ColorLine(g_backSrcMap, theRect->left, theRect->top + 2,
 			theRect->right - 1, theRect->top + 2, gray3C);
 
-	partRect = g_trackLightSrc[0];			// left most track light
+	// left most track light
+	partRect = g_trackLightSrc[0];
 	ZeroRectCorner(&partRect);
 	QOffsetRect(&partRect, theRect->left, theRect->top);
 	which = 0;
 	Mac_CopyMask(g_lightSrcMap, g_lightMaskMap, g_backSrcMap,
 			&g_trackLightSrc[which], &g_trackLightSrc[which], &partRect);
 
-	partRect = g_trackLightSrc[0];			// right most track light
+	// right most track light
+	partRect = g_trackLightSrc[0];
 	ZeroRectCorner(&partRect);
 	QOffsetRect(&partRect, -partRect.right, 0);
 	QOffsetRect(&partRect, theRect->right, theRect->top);
@@ -1437,7 +1441,8 @@ void DrawTrackLight (const Rect *theRect)
 		spread = (RectWide(theRect) - RectWide(&g_trackLightSrc[0])) / (howMany + 1);
 		for (i = 0; i < howMany; i++)
 		{
-			partRect = g_trackLightSrc[0];			// filler track lights
+			// filler track lights
+			partRect = g_trackLightSrc[0];
 			ZeroRectCorner(&partRect);
 			QOffsetRect(&partRect, theRect->left, theRect->top);
 			QOffsetRect(&partRect, spread * (i + 1), 0);
@@ -1472,7 +1477,7 @@ void DrawSimpleAppliance (SInt16 what, const Rect *theRect)
 
 void DrawMacPlus (const Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	Rect		screen;
+	Rect screen;
 
 	if (isLit)
 	{
@@ -1499,9 +1504,9 @@ void DrawMacPlus (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 void DrawTV (const Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	Rect		bounds;
-	HDC			tempMap;
-	HDC			tempMask;
+	Rect bounds;
+	HDC tempMap;
+	HDC tempMask;
 
 	if (isLit)
 	{
@@ -1538,7 +1543,7 @@ void DrawTV (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 void DrawCoffee (const Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	Rect		light;
+	Rect light;
 
 	if (isLit)
 	{
@@ -1573,9 +1578,9 @@ void DrawOutlet (const Rect *theRect)
 
 void DrawVCR (const Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	Rect		bounds;
-	HDC			tempMap;
-	HDC			tempMask;
+	Rect bounds;
+	HDC tempMap;
+	HDC tempMask;
 
 	if (isLit)
 	{
@@ -1612,9 +1617,9 @@ void DrawVCR (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 void DrawStereo (const Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	Rect		bounds;
-	HDC			tempMap;
-	HDC			tempMask;
+	Rect bounds;
+	HDC tempMap;
+	HDC tempMask;
 
 	if (isLit)
 	{
@@ -1651,9 +1656,9 @@ void DrawStereo (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 void DrawMicrowave (const Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	Rect		bounds;
-	HDC			tempMap;
-	HDC			tempMask;
+	Rect bounds;
+	HDC tempMap;
+	HDC tempMask;
 
 	if (isLit)
 	{
@@ -1764,8 +1769,8 @@ void DrawDrip (const Rect *theRect)
 
 void DrawMirror (const Rect *mirror)
 {
-	Rect		tempRect;
-	SInt32		grayC;
+	Rect tempRect;
+	SInt32 grayC;
 
 	grayC = k8DkGray2Color;
 
@@ -1806,10 +1811,10 @@ void DrawFlower (const Rect *theRect, SInt16 which)
 
 void DrawWallWindow (const Rect *window)
 {
-	#define		kWindowSillThick	7
-	Rect		tempRect, tempRect2;
-	SInt32		brownC, tanC, dkstRedC;
-	SInt16		halfWay;
+	#define kWindowSillThick  7
+	Rect tempRect, tempRect2;
+	SInt32 brownC, tanC, dkstRedC;
+	SInt16 halfWay;
 
 	brownC = k8BrownColor;
 	tanC = k8TanColor;
@@ -1820,7 +1825,8 @@ void DrawWallWindow (const Rect *window)
 	ColorRect(g_backSrcMap, &tempRect, brownC);
 	HiliteRect(g_backSrcMap, &tempRect, tanC, dkstRedC);
 
-	tempRect = *window;			// top sill
+	// top sill
+	tempRect = *window;
 	tempRect.bottom = tempRect.top + kWindowSillThick;
 	tempRect.left++;
 	tempRect.right--;
@@ -1833,7 +1839,8 @@ void DrawWallWindow (const Rect *window)
 	ColorRect(g_backSrcMap, &tempRect, brownC);
 	HiliteRect(g_backSrcMap, &tempRect, tanC, dkstRedC);
 
-	tempRect = *window;			// bottom sill
+	// bottom sill
+	tempRect = *window;
 	tempRect.top = tempRect.bottom - kWindowSillThick;
 	QOffsetRect(&tempRect, 0, -4);
 	tempRect.left++;
@@ -1847,7 +1854,8 @@ void DrawWallWindow (const Rect *window)
 	ColorRect(g_backSrcMap, &tempRect, brownC);
 	HiliteRect(g_backSrcMap, &tempRect, tanC, dkstRedC);
 
-	tempRect = *window;			// inside frame
+	// inside frame
+	tempRect = *window;
 	tempRect.left += 8;
 	tempRect.right -= 8;
 	tempRect.top += 11;
@@ -1856,14 +1864,16 @@ void DrawWallWindow (const Rect *window)
 
 	halfWay = (tempRect.top + tempRect.bottom) / 2;
 
-	tempRect2 = tempRect;		// top pane
+	// top pane
+	tempRect2 = tempRect;
 	tempRect2.bottom = halfWay + 2;
 	QInsetRect(&tempRect2, 5, 5);
 	HiliteRect(g_backSrcMap, &tempRect2, dkstRedC, tanC);
 	QInsetRect(&tempRect2, 1, 1);
 	ColorRect(g_backSrcMap, &tempRect2, k8SkyColor);
 
-	tempRect2 = tempRect;		// bottom pane
+	// bottom pane
+	tempRect2 = tempRect;
 	tempRect2.top = halfWay - 3;
 	QInsetRect(&tempRect2, 5, 5);
 	HiliteRect(g_backSrcMap, &tempRect2, dkstRedC, tanC);
@@ -1878,13 +1888,13 @@ void DrawWallWindow (const Rect *window)
 
 void DrawCalendar (const Rect *theRect)
 {
-	SYSTEMTIME	localTime;
-	Rect		bounds;
-	HBITMAP		thePicture;
-	BITMAP		bmInfo;
-	WCHAR		monthStr[256];
-	INT			monthLen;
-	HFONT		theFont;
+	SYSTEMTIME localTime;
+	Rect bounds;
+	HBITMAP thePicture;
+	BITMAP bmInfo;
+	WCHAR monthStr[256];
+	INT monthLen;
+	HFONT theFont;
 
 	thePicture = Gp_LoadImage(g_theHouseFile, kCalendarPictID);
 	if (thePicture == NULL)
@@ -1916,9 +1926,9 @@ void DrawCalendar (const Rect *theRect)
 
 void DrawBulletin (const Rect *theRect)
 {
-	Rect		bounds;
-	HBITMAP		thePicture;
-	BITMAP		bmInfo;
+	Rect bounds;
+	HBITMAP thePicture;
+	BITMAP bmInfo;
 
 	thePicture = Gp_LoadImage(g_theHouseFile, kBulletinPictID);
 	if (thePicture == NULL)
@@ -1935,9 +1945,9 @@ void DrawBulletin (const Rect *theRect)
 
 void DrawPictObject (SInt16 what, const Rect *theRect)
 {
-	Rect		bounds;
-	HBITMAP		thePicture;
-	SInt16		pictID;
+	Rect bounds;
+	HBITMAP thePicture;
+	SInt16 pictID;
 
 	switch (what)
 	{
@@ -1987,10 +1997,10 @@ void DrawPictObject (SInt16 what, const Rect *theRect)
 
 void DrawPictWithMaskObject (SInt16 what, const Rect *theRect)
 {
-	Rect		bounds;
-	HDC			tempMap;
-	HDC			tempMask;
-	SInt16		pictID, maskID;
+	Rect bounds;
+	HDC tempMap;
+	HDC tempMask;
+	SInt16 pictID, maskID;
 
 	switch (what)
 	{
@@ -2026,10 +2036,10 @@ void DrawPictWithMaskObject (SInt16 what, const Rect *theRect)
 
 void DrawPictSansWhiteObject (SInt16 what, const Rect *theRect)
 {
-	Rect		bounds;
-	HDC			tempMap;
-	SInt16		pictID;
-	COLORREF	wasBkColor;
+	Rect bounds;
+	HDC tempMap;
+	SInt16 pictID;
+	COLORREF wasBkColor;
 
 	switch (what)
 	{
@@ -2139,9 +2149,9 @@ void DrawPictSansWhiteObject (SInt16 what, const Rect *theRect)
 
 void DrawCustPictSansWhite (SInt16 pictID, const Rect *theRect)
 {
-	Rect		bounds;
-	HDC			tempMap;
-	COLORREF	wasBkColor;
+	Rect bounds;
+	HDC tempMap;
+	COLORREF wasBkColor;
 
 	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
 		return;

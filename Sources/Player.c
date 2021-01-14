@@ -21,11 +21,11 @@
 #include "Transit.h"
 #include "Utilities.h"
 
-#define kGravity				3
-#define kHImpulse				2
-#define kVImpulse				2
-#define kMaxHVel				16
-#define kShredderCountdown		-68
+#define kGravity                3
+#define kHImpulse               2
+#define kVImpulse               2
+#define kMaxHVel                16
+#define kShredderCountdown      -68
 
 void MoveGlider (gliderPtr thisGlider);
 void MoveGliderNormal (gliderPtr thisGlider);
@@ -324,8 +324,8 @@ void FadeGliderOut (gliderPtr thisGlider)
 
 void MoveGliderUpStairs (gliderPtr thisGlider)
 {
-	#define		kClimbStairsSpeed	-4
-	SInt16		vNotClipped;
+	#define kClimbStairsSpeed  -4
+	SInt16 vNotClipped;
 
 	if (thisGlider->facing == kFaceLeft)
 	{
@@ -392,9 +392,9 @@ void MoveGliderUpStairs (gliderPtr thisGlider)
 
 void FinishGliderUpStairs (gliderPtr thisGlider)
 {
-	#define		kVClimbStairsSpeed	-4
-	#define		kHClimbStairsSpeed	-4
-	SInt16		hNotClipped;
+	#define kVClimbStairsSpeed  -4
+	#define kHClimbStairsSpeed  -4
+	SInt16 hNotClipped;
 
 	thisGlider->src = g_gliderSrc[2];
 	thisGlider->mask = g_gliderSrc[2];
@@ -440,9 +440,9 @@ void FinishGliderUpStairs (gliderPtr thisGlider)
 
 void MoveGliderDownStairs (gliderPtr thisGlider)
 {
-	#define		kVDropStairsSpeed	4
-	#define		kHDropStairsSpeed	4
-	SInt16		hNotClipped;
+	#define kVDropStairsSpeed  4
+	#define kHDropStairsSpeed  4
+	SInt16 hNotClipped;
 
 	if (thisGlider->facing == kFaceLeft)
 	{
@@ -521,9 +521,9 @@ void MoveGliderDownStairs (gliderPtr thisGlider)
 
 void FinishGliderDownStairs (gliderPtr thisGlider)
 {
-	#define		kVDropStairsSpeed	4
-	#define		kHDropStairsSpeed	4
-	SInt16		hNotClipped;
+	#define kVDropStairsSpeed  4
+	#define kHDropStairsSpeed  4
+	SInt16 hNotClipped;
 
 	thisGlider->src = g_gliderSrc[0];
 	thisGlider->mask = g_gliderSrc[0];
@@ -603,7 +603,7 @@ void MoveGliderFaceRight (gliderPtr thisGlider)
 
 void TransportGliderOut (gliderPtr thisGlider)
 {
-	Rect		tempRect;
+	Rect tempRect;
 
 	thisGlider->frame--;
 	if (thisGlider->frame < 0)
@@ -666,9 +666,9 @@ void TransportGliderOut (gliderPtr thisGlider)
 
 void MoveGliderDownDuct (gliderPtr thisGlider)
 {
-	#define		kVDropDuctSpeed		4
-	Rect		tempRect;
-	SInt16		vNotClipped;
+	#define kVDropDuctSpeed  4
+	Rect tempRect;
+	SInt16 vNotClipped;
 
 	if (thisGlider->facing == kFaceLeft)
 	{
@@ -763,9 +763,9 @@ void MoveGliderDownDuct (gliderPtr thisGlider)
 
 void MoveGliderUpDuct (gliderPtr thisGlider)
 {
-	#define		kVRiseDuctSpeed		-4
-	Rect		tempRect;
-	SInt16		vNotClipped;
+	#define kVRiseDuctSpeed  -4
+	Rect tempRect;
+	SInt16 vNotClipped;
 
 	if (thisGlider->facing == kFaceLeft)
 	{
@@ -860,8 +860,8 @@ void MoveGliderUpDuct (gliderPtr thisGlider)
 
 void FinishGliderMailingLeft (gliderPtr thisGlider)
 {
-	#define		kHPushMailSpeed		-4
-	SInt16		hNotClipped;
+	#define kHPushMailSpeed  -4
+	SInt16 hNotClipped;
 
 	if (thisGlider->dest.left == thisGlider->dest.right)
 		PlayPrioritySound(kTransInSound, kTransInPriority);
@@ -898,8 +898,8 @@ void FinishGliderMailingLeft (gliderPtr thisGlider)
 
 void FinishGliderMailingRight (gliderPtr thisGlider)
 {
-	#define		kHPushMailRtSpeed	4
-	SInt16		hNotClipped;
+	#define kHPushMailRtSpeed  4
+	SInt16 hNotClipped;
 
 	if (thisGlider->dest.left == thisGlider->dest.right)
 		PlayPrioritySound(kTransInSound, kTransInPriority);
@@ -936,8 +936,8 @@ void FinishGliderMailingRight (gliderPtr thisGlider)
 
 void FinishGliderDuctingIn (gliderPtr thisGlider)
 {
-	#define		kVDropStairsSpeed	4
-	SInt16		vNotClipped;
+	#define kVDropStairsSpeed  4
+	SInt16 vNotClipped;
 
 	if (thisGlider->dest.top == thisGlider->dest.bottom)
 		PlayPrioritySound(kTransInSound, kTransInPriority);
@@ -969,10 +969,10 @@ void FinishGliderDuctingIn (gliderPtr thisGlider)
 
 void MoveGliderInMailLeft (gliderPtr thisGlider)
 {
-	#define		kHMailPullSpeed		4
-	#define		kVMailDropSpeed		2
-	Rect		tempRect;
-	SInt16		fromIdealTop, hNotClipped;
+	#define kHMailPullSpeed  4
+	#define kVMailDropSpeed  2
+	Rect tempRect;
+	SInt16 fromIdealTop, hNotClipped;
 
 	if (thisGlider->facing == kFaceLeft)
 	{
@@ -1060,10 +1060,10 @@ void MoveGliderInMailLeft (gliderPtr thisGlider)
 
 void MoveGliderInMailRight (gliderPtr thisGlider)
 {
-	#define		kHMailPullRtSpeed	-4
-	#define		kVMailDropSpeed		2
-	Rect		tempRect;
-	SInt16		fromIdealTop, hNotClipped;
+	#define kHMailPullRtSpeed  -4
+	#define kVMailDropSpeed  2
+	Rect tempRect;
+	SInt16 fromIdealTop, hNotClipped;
 
 	if (thisGlider->facing == kFaceLeft)
 	{
@@ -1265,9 +1265,9 @@ void MoveGliderFoilLosing (gliderPtr thisGlider)
 
 void MoveGliderShredding (gliderPtr thisGlider)
 {
-	#define		kDropShredSlow		1
-	#define		kDropShredFast		4
-	SInt16		vNotClipped;
+	#define kDropShredSlow  1
+	#define kDropShredFast  4
+	SInt16 vNotClipped;
 
 	if (thisGlider->frame > 0)
 	{
@@ -1402,7 +1402,7 @@ void HandleGlider (gliderPtr thisGlider)
 		MoveGliderInMailLeft(thisGlider);
 		break;
 
-		case kGliderMailOutLeft:				// <-- G _[]
+		case kGliderMailOutLeft:  // <-- G _[]
 		FinishGliderMailingLeft(thisGlider);
 		break;
 
@@ -1410,7 +1410,7 @@ void HandleGlider (gliderPtr thisGlider)
 		MoveGliderInMailRight(thisGlider);
 		break;
 
-		case kGliderMailOutRight:				// []_ G -->
+		case kGliderMailOutRight:  // []_ G -->
 		FinishGliderMailingRight(thisGlider);
 		break;
 
@@ -1501,7 +1501,7 @@ void OffAMortal (gliderPtr thisGlider)
 		HideGlider(thisGlider);
 		if (g_twoPlayerGame)
 		{
-			if (g_mortals < -1)		// both players are now dead
+			if (g_mortals < -1)  // both players are now dead
 			{
 				FlagGameOver();
 				thisGlider->dontDraw = true;

@@ -24,8 +24,8 @@
 #include "StringUtils.h"
 #include "Utilities.h"
 
-#define kNumCountDownFrames		16
-#define kPageFrames				14
+#define kNumCountDownFrames     16
+#define kPageFrames             14
 
 typedef struct pageType
 {
@@ -66,7 +66,7 @@ static SInt16 g_pagesStuck;
 
 void DoGameOver (void)
 {
-	HDC			mainWindowDC;
+	HDC mainWindowDC;
 
 	g_playing = false;
 	SetUpFinalScreen();
@@ -82,11 +82,11 @@ void DoGameOver (void)
 
 void SetUpFinalScreen (void)
 {
-	Rect		tempRect;
-	Str255		tempStr, subStr;
-	WCHAR		outStr[256];
-	SInt16		count, hOffset, vOffset, i, textDown;
-	HFONT		gameOverFont;
+	Rect tempRect;
+	Str255 tempStr, subStr;
+	WCHAR outStr[256];
+	SInt16 count, hOffset, vOffset, i, textDown;
+	HFONT gameOverFont;
 
 	ColorRect(g_workSrcMap, &g_workSrcRect, 244);
 	QSetRect(&tempRect, 0, 0, 640, 460);
@@ -122,7 +122,7 @@ void SetUpFinalScreen (void)
 
 	CopyRectWorkToBack(&g_workSrcRect);
 
-	for (i = 0; i < 8; i++)		// initialize the falling stars
+	for (i = 0; i < 8; i++)  // initialize the falling stars
 	{
 		g_pages[i].dest = g_starSrc[0];
 		QOffsetRect(&g_pages[i].dest,
@@ -140,11 +140,11 @@ void SetUpFinalScreen (void)
 
 void DoGameOverStarAnimation (void)
 {
-	#define		kStarFalls	8
-	MSG			msg;
-	Rect		angelDest;
-	SInt16		which, i, count, pass;
-	Boolean		noInteruption;
+	#define kStarFalls  8
+	MSG msg;
+	Rect angelDest;
+	SInt16 which, i, count, pass;
+	Boolean noInteruption;
 
 	angelDest = g_angelSrcRect;
 	QOffsetRect(&angelDest, -96, 0);
@@ -154,7 +154,7 @@ void DoGameOverStarAnimation (void)
 
 	while (noInteruption)
 	{
-		if ((angelDest.left % 32) == 0 && angelDest.left >= 0)		// add a star
+		if ((angelDest.left % 32) == 0 && angelDest.left >= 0)  // add a star
 		{
 			PlayPrioritySound(kMysticSound, kMysticPriority);
 			which = angelDest.left / 32;
@@ -254,10 +254,10 @@ void FlagGameOver (void)
 
 void InitDiedGameOver (void)
 {
-	#define		kPageSpacing		40
-	#define		kPageRightOffset	128
-	#define		kPageBackUp			128
-	SInt16		i;
+	#define kPageSpacing  40
+	#define kPageRightOffset  128
+	#define kPageBackUp  128
+	SInt16 i;
 
 	QSetRect(&g_pageSrcRect, 0, 0, 25, 32 * 8);
 	g_gameOverSrcMap = CreateOffScreenGWorld(&g_pageSrcRect, kPreferredDepth);
@@ -270,13 +270,13 @@ void InitDiedGameOver (void)
 	g_pageMaskMap = CreateOffScreenGWorld(&g_pageSrcRect, 1);
 	LoadGraphic(g_pageMaskMap, g_theHouseFile, kPagesMaskID);
 
-	for (i = 0; i < kPageFrames; i++)	// initialize src page rects
+	for (i = 0; i < kPageFrames; i++)  // initialize src page rects
 	{
 		QSetRect(&g_pageSrc[i], 0, 0, 32, 32);
 		QOffsetRect(&g_pageSrc[i], 0, 32 * i);
 	}
 
-	for (i = 0; i < 8; i++)				// initialize dest page rects
+	for (i = 0; i < 8; i++)  // initialize dest page rects
 	{
 		QSetRect(&g_pages[i].dest, 0, 0, 32, 32);
 		CenterRectInRect(&g_pages[i].dest, &g_workSrcRect);
@@ -312,7 +312,7 @@ void InitDiedGameOver (void)
 
 void HandlePages (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	for (i = 0; i < 8; i++)
 	{
@@ -396,7 +396,7 @@ void HandlePages (void)
 
 void DrawPages (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	for (i = 0; i < 8; i++)
 	{

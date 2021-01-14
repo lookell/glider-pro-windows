@@ -26,10 +26,10 @@
 
 #include <strsafe.h>
 
-#define kHighNameItem			1002
-#define kNameNCharsItem			1005
-#define kHighBannerItem			1002
-#define kBannerScoreNCharsItem	1005
+#define kHighNameItem           1002
+#define kNameNCharsItem         1005
+#define kHighBannerItem         1002
+#define kBannerScoreNCharsItem  1005
 
 void DrawHighScores (void);
 void SortHighScores (scoresType *theScores);
@@ -50,7 +50,7 @@ SInt16 g_lastHighScore;
 
 void DoHighScores (void)
 {
-	Rect		tempRect;
+	Rect tempRect;
 
 	Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	QSetRect(&tempRect, 0, 0, 640, 460);
@@ -66,19 +66,18 @@ void DoHighScores (void)
 //--------------------------------------------------------------  DrawHighScores
 // Draws the actual scores on the screen.
 
-#define kScoreSpacing			18
-#define kScoreWide				352
-#define kKimsLifted				4
-
 void DrawHighScores (void)
 {
-	HDC			tempMap, tempMask;
-	Rect		tempRect, tempRect2;
-	Str255		tempStr;
-	SInt16		scoreLeft, bannerWidth, i, dropIt;
-	INT			hOffset, vOffset;
-	HFONT		theFont;
-	COLORREF	wasColor;
+	#define kScoreSpacing  18
+	#define kScoreWide  352
+	#define kKimsLifted  4
+	HDC tempMap, tempMask;
+	Rect tempRect, tempRect2;
+	Str255 tempStr;
+	SInt16 scoreLeft, bannerWidth, i, dropIt;
+	INT hOffset, vOffset;
+	HFONT theFont;
+	COLORREF wasColor;
 
 	scoreLeft = (RectWide(&g_workSrcRect) - kScoreWide) / 2;
 	dropIt = 129 + g_splashOriginV;
@@ -120,7 +119,8 @@ void DrawHighScores (void)
 	theFont = CreateTahomaFont(-12, FW_BOLD);
 	SaveDC(g_workSrcMap);
 	SelectObject(g_workSrcMap, theFont);
-													// message for score #1
+
+	// message for score #1
 	PasStringCopy(g_thisHouse.highScores.banner, tempStr);
 	bannerWidth = Mac_StringWidth(g_workSrcMap, tempStr);
 	hOffset = scoreLeft + (kScoreWide - bannerWidth) / 2;
@@ -146,7 +146,8 @@ void DrawHighScores (void)
 	{
 		if (g_thisHouse.highScores.scores[i] > 0L)
 		{
-			NumToString(i + 1L, tempStr);		// draw placing number
+			// draw placing number
+			NumToString(i + 1L, tempStr);
 			SetTextColor(g_workSrcMap, blackColor);
 			if (i == 0)
 				MoveToEx(g_workSrcMap, scoreLeft + 1, dropIt - kScoreSpacing - kKimsLifted, NULL);
@@ -162,7 +163,8 @@ void DrawHighScores (void)
 			else
 				MoveToEx(g_workSrcMap, scoreLeft + 0, dropIt - 1 + (i * kScoreSpacing), NULL);
 			Mac_DrawString(g_workSrcMap, tempStr);
-													// draw high score name
+
+			// draw high score name
 			PasStringCopy(g_thisHouse.highScores.names[i], tempStr);
 			SetTextColor(g_workSrcMap, blackColor);
 			if (i == 0)
@@ -179,7 +181,8 @@ void DrawHighScores (void)
 			else
 				MoveToEx(g_workSrcMap, scoreLeft + 30, dropIt - 1 + (i * kScoreSpacing), NULL);
 			Mac_DrawString(g_workSrcMap, tempStr);
-													// draw level number
+
+			// draw level number
 			NumToString(g_thisHouse.highScores.levels[i], tempStr);
 			SetTextColor(g_workSrcMap, blackColor);
 			if (i == 0)
@@ -196,7 +199,8 @@ void DrawHighScores (void)
 			else
 				MoveToEx(g_workSrcMap, scoreLeft + 160, dropIt - 1 + (i * kScoreSpacing), NULL);
 			Mac_DrawString(g_workSrcMap, tempStr);
-													// draw word "rooms"
+
+			// draw word "rooms"
 			if (g_thisHouse.highScores.levels[i] == 1)
 				GetLocalizedString_Pascal(6, tempStr);
 			else
@@ -213,7 +217,8 @@ void DrawHighScores (void)
 			else
 				MoveToEx(g_workSrcMap, scoreLeft + 192, dropIt - 1 + (i * kScoreSpacing), NULL);
 			Mac_DrawString(g_workSrcMap, tempStr);
-													// draw high score points
+
+			// draw high score points
 			NumToString(g_thisHouse.highScores.scores[i], tempStr);
 			SetTextColor(g_workSrcMap, blackColor);
 			if (i == 0)
@@ -252,9 +257,9 @@ void DrawHighScores (void)
 
 void SortHighScores (scoresType *theScores)
 {
-	scoresType	tempScores = { 0 };
-	SInt32		greatest;
-	SInt16		i, h, which;
+	scoresType tempScores = { 0 };
+	SInt32 greatest;
+	SInt16 i, h, which;
 
 	for (h = 0; h < kMaxScores; h++)
 	{
@@ -321,7 +326,7 @@ void ZeroAllButHighestScore (housePtr house)
 
 Boolean TestHighScore (HWND ownerWindow)
 {
-	SInt16		placing, i;
+	SInt16 placing, i;
 
 	if (g_resumedSavedGame)
 		return (false);
@@ -523,11 +528,11 @@ Boolean GetHighScoresFilePath (LPWSTR lpPath, DWORD cchPath, ConstStringPtr base
 
 Boolean WriteScoresToDisk (HWND ownerWindow)
 {
-	WCHAR		pathBuffer[MAX_PATH];
-	HANDLE		scoresFileHandle;
-	byteio		*byteWriter;
-	HRESULT		writeResult;
-	HRESULT		closeResult;
+	WCHAR pathBuffer[MAX_PATH];
+	HANDLE scoresFileHandle;
+	byteio *byteWriter;
+	HRESULT writeResult;
+	HRESULT closeResult;
 
 	if (!GetHighScoresFilePath(pathBuffer, ARRAYSIZE(pathBuffer), g_thisHouseName))
 		return false;
@@ -568,12 +573,12 @@ Boolean WriteScoresToDisk (HWND ownerWindow)
 
 Boolean ReadScoresFromDisk (HWND ownerWindow)
 {
-	scoresType	tempScores;
-	WCHAR		pathBuffer[MAX_PATH];
-	HANDLE		scoresFileHandle;
-	byteio		*byteReader;
-	HRESULT		readResult;
-	DWORD		lastError;
+	scoresType tempScores;
+	WCHAR pathBuffer[MAX_PATH];
+	HANDLE scoresFileHandle;
+	byteio *byteReader;
+	HRESULT readResult;
+	DWORD lastError;
 
 	if (!GetHighScoresFilePath(pathBuffer, ARRAYSIZE(pathBuffer), g_thisHouseName))
 		return false;

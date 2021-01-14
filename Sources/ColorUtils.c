@@ -30,7 +30,7 @@ COLORREF Index2ColorRef (SInt32 color)
 
 void ColorText (HDC hdc, ConstStringPtr theStr, SInt32 color)
 {
-	COLORREF	theRGBColor, wasColor;
+	COLORREF theRGBColor, wasColor;
 
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetTextColor(hdc, theRGBColor);
@@ -44,7 +44,7 @@ void ColorText (HDC hdc, ConstStringPtr theStr, SInt32 color)
 
 void ColorRect (HDC hdc, const Rect *theRect, SInt32 color)
 {
-	COLORREF	theRGBColor, wasColor;
+	COLORREF theRGBColor, wasColor;
 
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
@@ -58,8 +58,8 @@ void ColorRect (HDC hdc, const Rect *theRect, SInt32 color)
 
 void ColorOval (HDC hdc, const Rect *theRect, SInt32 color)
 {
-	COLORREF	theRGBColor, wasColor;
-	HRGN		theRegion;
+	COLORREF theRGBColor, wasColor;
+	HRGN theRegion;
 
 	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
 		return;
@@ -79,7 +79,7 @@ void ColorOval (HDC hdc, const Rect *theRect, SInt32 color)
 
 void ColorRegion (HDC hdc, HRGN theRgn, SInt32 color)
 {
-	COLORREF	theRGBColor, wasColor;
+	COLORREF theRGBColor, wasColor;
 
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
@@ -93,8 +93,8 @@ void ColorRegion (HDC hdc, HRGN theRgn, SInt32 color)
 
 void ColorLine (HDC hdc, SInt16 h0, SInt16 v0, SInt16 h1, SInt16 v1, SInt32 color)
 {
-	COLORREF	theRGBColor, wasColor;
-	HGDIOBJ		wasPen;
+	COLORREF theRGBColor, wasColor;
+	HGDIOBJ wasPen;
 
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCPenColor(hdc, theRGBColor);
@@ -129,7 +129,7 @@ void HiliteRect (HDC hdc, const Rect *theRect, SInt32 color1, SInt32 color2)
 
 void ColorFrameRect (HDC hdc, const Rect *theRect, SInt32 color)
 {
-	COLORREF	theRGBColor, wasColor;
+	COLORREF theRGBColor, wasColor;
 
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
@@ -143,8 +143,8 @@ void ColorFrameRect (HDC hdc, const Rect *theRect, SInt32 color)
 
 void ColorFrameOval (HDC hdc, const Rect *theRect, SInt32 color)
 {
-	COLORREF	theRGBColor, wasColor;
-	HRGN		theRegion;
+	COLORREF theRGBColor, wasColor;
+	HRGN theRegion;
 
 	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
 		return;

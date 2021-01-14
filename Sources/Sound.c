@@ -13,10 +13,10 @@
 
 #include <stdlib.h>
 
-#define kBaseBufferSoundID			1000
-#define kMaxSounds					64
-#define kNumSoundChannels			3
-#define kNoSoundPlaying				-1
+#define kBaseBufferSoundID          1000
+#define kMaxSounds                  64
+#define kNumSoundChannels           3
+#define kNoSoundPlaying             -1
 
 C_ASSERT(kTriggerSound == kMaxSounds - 1);
 
@@ -146,7 +146,7 @@ OSErr LoadTriggerSound (SInt16 soundID)
 		return -1;
 	}
 
-//	FlushAnyTriggerPlaying();
+	//FlushAnyTriggerPlaying();
 
 	if (FAILED(Gp_LoadHouseSound(g_theHouseFile, soundID, &g_theSoundData[kTriggerSound])))
 	{
@@ -293,8 +293,8 @@ OSErr CloseSoundChannels (void)
 
 void InitSound (HWND ownerWindow)
 {
-	OSErr		theErr;
-	SInt16		i;
+	OSErr theErr;
+	SInt16 i;
 
 	if (g_dontLoadSounds)
 	{

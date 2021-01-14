@@ -156,7 +156,7 @@ Boolean g_newState;
 
 Boolean IsThisValid (SInt16 where, SInt16 who)
 {
-	Boolean		itsGood;
+	Boolean itsGood;
 
 	if (where < 0 || where >= g_thisHouse.nRooms)
 		return (false);
@@ -194,8 +194,8 @@ Boolean IsThisValid (SInt16 where, SInt16 who)
 
 SInt16 GetRoomLinked (const objectType *who)
 {
-	SInt16		compoundRoomNumber, whereLinked;
-	SInt16		floor, suite;
+	SInt16 compoundRoomNumber, whereLinked;
+	SInt16 floor, suite;
 
 	switch (who->what)
 	{
@@ -206,13 +206,13 @@ SInt16 GetRoomLinked (const objectType *who)
 		case kInvisTrans:
 		case kDeluxeTrans:
 		compoundRoomNumber = who->data.d.where;
-		if (compoundRoomNumber != -1)	// is object linked
+		if (compoundRoomNumber != -1)  // is object linked
 		{
 			ExtractFloorSuite(compoundRoomNumber, &floor, &suite);
 			whereLinked = GetRoomNumber(floor, suite);
 		}
 		else
-			whereLinked = -1;			// not linked
+			whereLinked = -1;  // not linked
 		break;
 
 		case kLightSwitch:
@@ -224,13 +224,13 @@ SInt16 GetRoomLinked (const objectType *who)
 		case kTrigger:
 		case kLgTrigger:
 		compoundRoomNumber = who->data.e.where;
-		if (compoundRoomNumber != -1)	// is object linked
+		if (compoundRoomNumber != -1)  // is object linked
 		{
 			ExtractFloorSuite(compoundRoomNumber, &floor, &suite);
 			whereLinked = GetRoomNumber(floor, suite);
 		}
 		else
-			whereLinked = -1;			// not linked
+			whereLinked = -1;  // not linked
 		break;
 
 		default:
@@ -245,7 +245,7 @@ SInt16 GetRoomLinked (const objectType *who)
 
 SInt16 GetObjectLinked (const objectType *who)
 {
-	SInt16		whoLinked;
+	SInt16 whoLinked;
 
 	switch (who->what)
 	{
@@ -255,10 +255,10 @@ SInt16 GetObjectLinked (const objectType *who)
 		case kCeilingTrans:
 		case kInvisTrans:
 		case kDeluxeTrans:
-		if (who->data.d.who != 255)		// is it linked?
+		if (who->data.d.who != 255)  // is it linked?
 			whoLinked = (SInt16)who->data.d.who;
 		else
-			whoLinked = -1;				// object not linked
+			whoLinked = -1;  // object not linked
 		break;
 
 		case kLightSwitch:
@@ -269,10 +269,10 @@ SInt16 GetObjectLinked (const objectType *who)
 		case kInvisSwitch:
 		case kTrigger:
 		case kLgTrigger:
-		if (who->data.e.who != 255)		// is it linked?
+		if (who->data.e.who != 255)  // is it linked?
 			whoLinked = (SInt16)who->data.e.who;
 		else
-			whoLinked = -1;				// object not linked
+			whoLinked = -1;  // object not linked
 		break;
 
 		default:
@@ -287,7 +287,7 @@ SInt16 GetObjectLinked (const objectType *who)
 
 Boolean ObjectIsLinkTransport (const objectType *who)
 {
-	Boolean		itIs;
+	Boolean itIs;
 
 	itIs = false;
 	if ((who->what == kMailboxLf) || (who->what == kMailboxRt) ||
@@ -304,7 +304,7 @@ Boolean ObjectIsLinkTransport (const objectType *who)
 
 Boolean ObjectIsLinkSwitch (const objectType *who)
 {
-	Boolean		itIs;
+	Boolean itIs;
 
 	itIs = false;
 	if ((who->what == kLightSwitch) || (who->what == kMachineSwitch) ||
@@ -322,8 +322,8 @@ Boolean ObjectIsLinkSwitch (const objectType *who)
 
 void ListOneRoomsObjects (SInt16 where)
 {
-	objectType	thisObject;
-	SInt16		roomNum, n;
+	objectType thisObject;
+	SInt16 roomNum, n;
 
 	if (where < 0 || where >= ARRAYSIZE(g_localNumbers))
 		return;
@@ -360,7 +360,7 @@ void ListOneRoomsObjects (SInt16 where)
 
 void ListAllLocalObjects (void)
 {
-	SInt16		i, n;
+	SInt16 i, n;
 
 	g_numMasterObjects = 0;
 	g_nHotSpots = 0;
@@ -383,17 +383,21 @@ void ListAllLocalObjects (void)
 		ListOneRoomsObjects(kNorthWestRoom);
 	}
 
-	for (i = 0; i < g_numMasterObjects; i++)				// correlate links with
-	{													// index into this list
-		if ((g_masterObjects[i].roomLink != -1) && 		// if object has a link
+	// correlate link with index into this list
+	for (i = 0; i < g_numMasterObjects; i++)
+	{
+		// if object has a link
+		if ((g_masterObjects[i].roomLink != -1) &&
 				(g_masterObjects[i].objectLink != -1))
 		{
-			for (n = 0; n < g_numMasterObjects; n++)		// search for the object
-			{											// linked to in this list
+			// search for the object linked to in this list
+			for (n = 0; n < g_numMasterObjects; n++)
+			{
 				if ((g_masterObjects[i].roomLink == g_masterObjects[n].roomNum) &&
 						(g_masterObjects[i].objectLink == g_masterObjects[n].objectNum))
 				{
-					g_masterObjects[i].localLink = n;		// log the index
+					// log the index
+					g_masterObjects[i].localLink = n;
 				}
 			}
 		}
@@ -404,7 +408,7 @@ void ListAllLocalObjects (void)
 
 void AddTempManholeRect (const Rect *manHole)
 {
-	Rect		tempRect;
+	Rect tempRect;
 
 	if (g_numTempManholes < kMaxTempManholes)
 	{
@@ -419,7 +423,7 @@ void AddTempManholeRect (const Rect *manHole)
 
 Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 {
-	Boolean		changed;
+	Boolean changed;
 
 	changed = false;
 
@@ -480,7 +484,7 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		case kStubby:
 		case kTiki:
 		case kBBQ:
-		changed = false;	// Cannot switch on/off these
+		changed = false;  // Cannot switch on/off these
 		break;
 
 		case kTable:
@@ -498,7 +502,7 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		case kManhole:
 		case kBooks:
 		case kInvisBounce:
-		changed = false;	// Cannot switch on/off these
+		changed = false;  // Cannot switch on/off these
 		break;
 
 		case kRedClock:
@@ -636,7 +640,7 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 		}
 		break;
 
-		case kGuitar:		// really no point to change this state
+		case kGuitar:  // really no point to change this state
 		changed = false;
 		break;
 
@@ -759,7 +763,7 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 
 Boolean GetObjectState (SInt16 room, SInt16 object)
 {
-	Boolean		theState;
+	Boolean theState;
 
 	theState = true;
 
@@ -931,16 +935,18 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 
 void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 {
-	objectType	savedObject;
-	SInt16		numLinks, i;
-	SInt16		srcRoom, srcObj;
-	SInt16		sorting[kMaxRoomObs];
-	Byte		sorted[kMaxRoomObs];
+	objectType savedObject;
+	SInt16 numLinks, i;
+	SInt16 srcRoom, srcObj;
+	SInt16 sorting[kMaxRoomObs];
+	Byte sorted[kMaxRoomObs];
 
-	if (bringFront)							// No need to bring to front
-	{										// or send to back if the object
-		if (g_objActive == (kMaxRoomObs - 1))	// in question is already front-
-			return;							// most or backmost.
+	// No need to bring to front or send to back if the object
+	// in question is already frontmost or backmost.
+	if (bringFront)
+	{
+		if (g_objActive == (kMaxRoomObs - 1))
+			return;
 	}
 	else
 	{
@@ -948,10 +954,12 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 			return;
 	}
 
-	CopyThisRoomToRoom();					// Any changes to room written
-											// back to the house handle.
-	numLinks = CountHouseLinks();			// Determine space needed for all links.
-	if (numLinks != 0)						// Create links list of ALL house links.
+	// Any changes to room written back to the house handle.
+	CopyThisRoomToRoom();
+	// Determine space needed for all links.
+	numLinks = CountHouseLinks();
+	// Create links list of ALL house links.
+	if (numLinks != 0)
 	{
 		g_linksList = NULL;
 		g_linksList = (linksPtr)calloc(numLinks, sizeof(*g_linksList));
@@ -960,48 +968,57 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 			YellowAlert(ownerWindow, kYellowCantOrderLinks, -1);
 			return;
 		}
-		GenerateLinksList();				// Fill in links list with src/dest
-	}										// data on objects and room numbers.
+		// Fill in links list with src/dest data on objects and room numbers.
+		GenerateLinksList();
+	}
 
-	for (i = 0; i < kMaxRoomObs; i++)		// Set up an ordered array.
+	// Set up an ordered array.
+	for (i = 0; i < kMaxRoomObs; i++)
 		sorting[i] = i;
 
 	savedObject = g_thisHouse.rooms[g_thisRoomNumber].objects[g_objActive];
 
 	if (bringFront)
 	{
+		// Pull all objects down to fill hole.
 		for (i = g_objActive; i < kMaxRoomObs - 1; i++)
-		{									// Pull all objects down to fill hole.
+		{
 			g_thisHouse.rooms[g_thisRoomNumber].objects[i] =
 					g_thisHouse.rooms[g_thisRoomNumber].objects[i + 1];
 			sorting[i] = sorting[i + 1];
 		}
-											// Insert object at end of array.
+		// Insert object at end of array.
 		g_thisHouse.rooms[g_thisRoomNumber].objects[kMaxRoomObs - 1] = savedObject;
 		sorting[kMaxRoomObs - 1] = g_objActive;
 	}
 	else
 	{
+		// Move all objects up to fill hole.
 		for (i = g_objActive; i > 0; i--)
-		{									// Move all objects up to fill hole.
+		{
 			g_thisHouse.rooms[g_thisRoomNumber].objects[i] =
 					g_thisHouse.rooms[g_thisRoomNumber].objects[i - 1];
 			sorting[i] = sorting[i - 1];
 		}
-											// Insert object at beginning of array.
+		// Insert object at beginning of array.
 		g_thisHouse.rooms[g_thisRoomNumber].objects[0] = savedObject;
 		sorting[0] = g_objActive;
 	}
 
-	for (i = 0; i < kMaxRoomObs; i++)		// Set up retro-ordered array.
+	// Set up retro-ordered array.
+	for (i = 0; i < kMaxRoomObs; i++)
 		sorted[sorting[i]] = (Byte)i;
 
-	for (i = 0; i < numLinks; i++)			// Walk links list in order to assign
-	{										// corrected links to objects moved.
+	// Walk links list in order to assign corrected links to objects moved.
+	for (i = 0; i < numLinks; i++)
+	{
+		// Does link point to room we re-ordered?
 		if (g_linksList[i].destRoom == g_thisRoomNumber)
-		{									// Does link point to room we re-ordered?
-			srcRoom = g_linksList[i].srcRoom;	// Room where-which an object is linked from.
-			if (srcRoom == g_thisRoomNumber)	// Handle special case for local links.
+		{
+			// Room where-which object an object is linked from.
+			srcRoom = g_linksList[i].srcRoom;
+			// Handle special case for local links.
+			if (srcRoom == g_thisRoomNumber)
 				srcObj = sorted[g_linksList[i].srcObj];
 			else
 				srcObj = g_linksList[i].srcObj;

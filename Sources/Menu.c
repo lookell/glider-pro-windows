@@ -39,8 +39,8 @@
 #include <mmsystem.h>
 #include <strsafe.h>
 
-#define kSheWantsNewGame		1001
-#define kSheWantsResumeGame		1002
+#define kSheWantsNewGame        1001
+#define kSheWantsResumeGame     1002
 
 void UpdateMenusEditMode (void);
 void UpdateMenusNonEditMode (void);
@@ -417,7 +417,7 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 			DoNotInDemo(hwnd);
 			return;
 		}
-		if (g_theMode == kEditMode)			// switching to splash mode
+		if (g_theMode == kEditMode)  // switching to splash mode
 		{
 			if (g_fileDirty)
 				SortHouseObjects();
@@ -434,7 +434,7 @@ void DoOptionsMenu (HWND hwnd, SInt16 theItem)
 			OpenMainWindow();
 			g_incrementModeTime = timeGetTime() + kIdleSplashTime;
 		}
-		else if (g_theMode == kSplashMode)	// switching to edit mode
+		else if (g_theMode == kSplashMode)  // switching to edit mode
 		{
 			StopTheMusic();
 			CloseMainWindow();
@@ -495,7 +495,9 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 			SortHouseObjects();
 		if ((g_fileDirty) && (g_houseUnlocked))
 		{
-//			SaveGame(false);
+#if 0
+			SaveGame(false);
+#endif
 			if (g_wasHouseVersion < kHouseVersion)
 				ConvertHouseVer1To2();
 			g_wasHouseVersion = kHouseVersion;
@@ -507,9 +509,11 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 		}
 		break;
 
-//		case iSaveAs:
-//		whoCares = SaveHouseAs();
-//		break;
+#if 0
+		case iSaveAs:
+		whoCares = SaveHouseAs();
+		break;
+#endif
 
 		case iHouse:
 		if (g_houseUnlocked)

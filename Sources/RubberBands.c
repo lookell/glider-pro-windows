@@ -18,9 +18,9 @@
 #include "Sound.h"
 #include "Triggers.h"
 
-#define kRubberBandVelocity		20
-#define kBandFallCount			4
-#define kKillBandMode			-1
+#define kRubberBandVelocity     20
+#define kBandFallCount          4
+#define kKillBandMode           -1
 
 void CheckBandCollision (SInt16 who);
 void KillBand (SInt16 which);
@@ -39,8 +39,8 @@ static SInt16 g_bandHitLast;
 
 void CheckBandCollision (SInt16 who)
 {
-	SInt16		i, action, whoLinked;
-	Boolean		collided, nothingCollided;
+	SInt16 i, action, whoLinked;
+	Boolean collided, nothingCollided;
 
 	nothingCollided = true;
 
@@ -85,10 +85,14 @@ void CheckBandCollision (SInt16 who)
 
 				if (collided)
 				{
-					nothingCollided = false;	// we have detected a collision
-					if (g_bandHitLast != i)		// don't count it if same as last frame
-					{							// we don't want rapid on/off toggles
-						g_bandHitLast = i;		// note who so we don't double-toggle it
+					// we have detected a collision
+					nothingCollided = false;
+					// don't count it if same as last frame
+					// we don't want rapid on/off toggles
+					if (g_bandHitLast != i)
+					{
+						// note who so we don't double-toggle it
+						g_bandHitLast = i;
 						if ((action == kDissolveIt) || (action == kBounceIt))
 						{
 							if (g_bands[who].hVel > 0)
@@ -145,8 +149,8 @@ void CheckBandCollision (SInt16 who)
 		}
 	}
 
-	if (nothingCollided)		// the rubberband has hit nothing
-		g_bandHitLast = -1;		// so make note of that for the next time
+	if (nothingCollided)  // the rubberband has hit nothing
+		g_bandHitLast = -1;  // so make note of that for the next time
 
 	if (g_bands[who].hVel != 0)
 	{
@@ -210,8 +214,8 @@ void CheckBandCollision (SInt16 who)
 
 void HandleBands (void)
 {
-	Rect		dest;
-	SInt16		i, count;
+	Rect dest;
+	SInt16 i, count;
 
 	if (g_numBands == 0)
 		return;
@@ -296,7 +300,7 @@ Boolean AddBand (gliderPtr thisGlider, SInt16 h, SInt16 v, Boolean direction)
 
 void KillBand (SInt16 which)
 {
-	SInt16		lastBand;
+	SInt16 lastBand;
 
 	lastBand = g_numBands - 1;
 	if (which != lastBand)
@@ -309,7 +313,7 @@ void KillBand (SInt16 which)
 
 void KillAllBands (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	for (i = 0; i < kMaxRubberBands; i++)
 	{

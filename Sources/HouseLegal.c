@@ -47,10 +47,10 @@ static SInt16 g_wasRoom;
 
 Boolean KeepObjectLegal (void)
 {
-	objectType	*theObject;
-	Rect		bounds, roomRect;
-	SInt16		direction, dist;
-	Boolean		unchanged;
+	objectType *theObject;
+	Rect bounds, roomRect;
+	SInt16 direction, dist;
+	Boolean unchanged;
 
 	unchanged = true;
 
@@ -631,9 +631,9 @@ void ValidateNumberOfRooms (void)
 
 void CheckDuplicateFloorSuite (void)
 {
-	#define		kRoomsTimesSuites	8192
-	SInt16		i, numRooms, bitPlace;
-	char		pidgeonHoles[kRoomsTimesSuites];
+	#define kRoomsTimesSuites  8192
+	SInt16 i, numRooms, bitPlace;
+	char pidgeonHoles[kRoomsTimesSuites];
 
 	ZeroMemory(&pidgeonHoles, sizeof(pidgeonHoles));
 
@@ -667,8 +667,8 @@ void CheckDuplicateFloorSuite (void)
 
 void CompressHouse (void)
 {
-	SInt16		wasFirstRoom, roomNumber, probe;
-	Boolean		compressing, probing;
+	SInt16 wasFirstRoom, roomNumber, probe;
+	Boolean compressing, probing;
 
 	if (g_thisHouse.nRooms <= 0)
 	{
@@ -676,17 +676,21 @@ void CompressHouse (void)
 	}
 	wasFirstRoom = g_thisHouse.firstRoom;
 	compressing = true;
-	roomNumber = g_thisHouse.nRooms - 1;		// start with last room
+	roomNumber = g_thisHouse.nRooms - 1;  // start with last room
 	do
 	{
+		// if not an empty room
 		if (g_thisHouse.rooms[roomNumber].suite != kRoomIsEmpty)
-		{									// if not an empty room
-			probe = 0;						// start looking for empty slot
+		{
+			// start looking for empty slot
+			probe = 0;
 			probing = true;
 			do
-			{								// test room at probe to see if empty
+			{
+				// test room at probe to see if empty
 				if (g_thisHouse.rooms[probe].suite == kRoomIsEmpty)
-				{							// if it is, copy room there
+				{
+					// if it is, copy room there
 					g_thisHouse.rooms[probe] = g_thisHouse.rooms[roomNumber];
 					g_thisHouse.rooms[roomNumber].suite = kRoomIsEmpty;
 					if (roomNumber == wasFirstRoom)
@@ -695,17 +699,23 @@ void CompressHouse (void)
 						g_wasRoom = probe;
 					probing = false;
 				}
-				probe++;					// bump probe up to next room
+				// bump probe up to next room
+				probe++;
+				// if we reached the current room
 				if ((probing) && (probe >= roomNumber))
-				{							// we reached the current room
-					probing = false;		// we can look no further
-					compressing = false;	// so we can compress no more
+				{
+					// we can look no further
+					probing = false;
+					// so we can compress no more
+					compressing = false;
 				}
 			}
 			while (probing);
 		}
-		roomNumber--;						// go on to room preceding
-		if (roomNumber <= 0)				// stop if we reach the first room
+		// go on to room preceding
+		roomNumber--;
+		// stop if we reach the first room
+		if (roomNumber <= 0)
 			compressing = false;
 	}
 	while (compressing);
@@ -727,10 +737,11 @@ void LopOffExtraRooms (HWND mssgWindow)
 	}
 
 	count = 0;
-	r = g_thisHouse.nRooms;			// begin at last room
+	r = g_thisHouse.nRooms;  // begin at last room
 	do
 	{
-		r--;						// look for trailing empties
+		r--;
+		// look for trailing empties
 		if (g_thisHouse.rooms[r].suite == kRoomIsEmpty)
 			count++;
 		else
@@ -738,10 +749,10 @@ void LopOffExtraRooms (HWND mssgWindow)
 	}
 	while (r > 0);
 
-	if (count > 0)					// if there were trailing empties
+	if (count > 0)  // if there were trailing empties
 	{
 		r = g_thisHouse.nRooms - count;
-									// resize room array (shrink)
+		// resize room array (shrink)
 		if (r <= 0)
 		{
 			free(g_thisHouse.rooms);
@@ -762,7 +773,7 @@ void LopOffExtraRooms (HWND mssgWindow)
 				g_thisHouse.rooms = newRoomsPtr;
 			}
 		}
-									// reflect new room count
+		// reflect new room count
 		g_thisHouse.nRooms -= count;
 	}
 }
@@ -812,8 +823,8 @@ void ValidateRoomNumbers (HWND mssgWindow)
 
 void CountUntitledRooms (void)
 {
-	SInt16		i, numRooms;
-	Str255		untitledRoomStr;
+	SInt16 i, numRooms;
+	Str255 untitledRoomStr;
 
 	PasStringCopyC("Untitled Room", untitledRoomStr);
 
@@ -831,7 +842,7 @@ void CountUntitledRooms (void)
 
 void CheckRoomNameLength (void)
 {
-	SInt16		i, numRooms;
+	SInt16 i, numRooms;
 
 	numRooms = g_thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
@@ -852,7 +863,7 @@ void CheckRoomNameLength (void)
 
 void MakeSureNumObjectsJives (void)
 {
-	SInt16		i, h, numRooms, count;
+	SInt16 i, h, numRooms, count;
 
 	numRooms = g_thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)

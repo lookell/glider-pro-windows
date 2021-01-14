@@ -15,7 +15,7 @@
 
 #include <strsafe.h>
 
-#define	kPrefFileName		L"Glider Prefs"
+#define kPrefFileName       L"Glider Prefs"
 
 Boolean GetPrefsFilePath (LPWSTR lpFilePath, size_t cchFilePath);
 Boolean WritePrefs (HWND ownerWindow, LPCWSTR prefsFilePath, const prefsInfo *thePrefs);
@@ -47,10 +47,10 @@ Boolean GetPrefsFilePath (LPWSTR lpFilePath, size_t cchFilePath)
 
 Boolean WritePrefs (HWND ownerWindow, LPCWSTR prefsFilePath, const prefsInfo *thePrefs)
 {
-	HANDLE		fileHandle;
-	byteio		*byteWriter;
-	HRESULT		writeResult;
-	HRESULT		closeResult;
+	HANDLE fileHandle;
+	byteio *byteWriter;
+	HRESULT writeResult;
+	HRESULT closeResult;
 
 	fileHandle = CreateFile(prefsFilePath, GENERIC_WRITE, 0, NULL,
 			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -102,10 +102,10 @@ Boolean SavePrefs (HWND ownerWindow, prefsInfo *thePrefs, SInt16 versionNow)
 
 HRESULT ReadPrefs (HWND ownerWindow, LPCWSTR prefsFilePath, prefsInfo *thePrefs)
 {
-	HANDLE		fileHandle;
-	byteio		*byteReader;
-	DWORD		lastError;
-	HRESULT		readResult;
+	HANDLE fileHandle;
+	byteio *byteReader;
+	DWORD lastError;
+	HRESULT readResult;
 
 	fileHandle = CreateFile(prefsFilePath, GENERIC_READ, FILE_SHARE_READ, NULL,
 			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);

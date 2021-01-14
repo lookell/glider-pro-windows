@@ -38,9 +38,9 @@ Boolean g_bannerStarCountOn;
 
 void DrawBanner (Point *topLeft)
 {
-	Rect		wholePage, partPage, mapBounds;
-	HDC			tempMap;
-	HDC			tempMask;
+	Rect wholePage, partPage, mapBounds;
+	HDC tempMap;
+	HDC tempMask;
 
 	QSetRect(&wholePage, 0, 0, 330, 220);
 	mapBounds = g_workSrcRect;
@@ -74,7 +74,7 @@ void DrawBanner (Point *topLeft)
 
 SInt16 CountStarsInHouse (void)
 {
-	SInt16		i, h, numRooms, numStars;
+	SInt16 i, h, numRooms, numStars;
 
 	numStars = 0;
 
@@ -97,9 +97,9 @@ SInt16 CountStarsInHouse (void)
 
 void DrawBannerMessage (Point topLeft)
 {
-	Str255		bannerStr, subStr;
-	SInt16		count;
-	HFONT		bannerFont;
+	Str255 bannerStr, subStr;
+	SInt16 count;
+	HFONT bannerFont;
 
 	PasStringCopy(g_thisHouse.banner, bannerStr);
 
@@ -149,8 +149,8 @@ void DrawBannerMessage (Point topLeft)
 
 void BringUpBanner (void)
 {
-	Rect		wholePage;
-	Point		topLeft;
+	Rect wholePage;
+	Point topLeft;
 
 	DrawBanner(&topLeft);
 	DrawBannerMessage(topLeft);
@@ -176,10 +176,10 @@ void BringUpBanner (void)
 
 void DisplayStarsRemaining (void)
 {
-	Rect		src, bounds;
-	WCHAR		theStr[256];
-	HDC			mainWindowDC;
-	HFONT		textFont;
+	Rect src, bounds;
+	WCHAR theStr[256];
+	HDC mainWindowDC;
+	HFONT textFont;
 
 	QSetRect(&bounds, 0, 0, 256, 64);
 	CenterRectInRect(&bounds, &g_workSrcRect);

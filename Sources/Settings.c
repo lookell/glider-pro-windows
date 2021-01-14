@@ -29,28 +29,28 @@
 #include <commctrl.h>
 #include <shlwapi.h> // for DLLGETVERSIONPROC and DLLGETVERSIONINFO
 
-#define kDisplayButton			1003
-#define kSoundButton			1004
-#define kControlsButton			1005
-#define kBrainsButton			1006
-#define kAllDefaultsButton		1011
+#define kDisplayButton          1003
+#define kSoundButton            1004
+#define kControlsButton         1005
+#define kBrainsButton           1006
+#define kAllDefaultsButton      1011
 
-#define kDisplay1Item			1003
-#define kDisplay3Item			1004
-#define kDisplay9Item			1005
-#define kDoColorFadeItem		1009
-#define kCurrentDepth			1010
-#define k256Depth				1011
-#define k16Depth				1012
-#define kDispDefault			1015
-#define kUseQDItem				1016
-#define kUseScreen2Item			1017
+#define kDisplay1Item           1003
+#define kDisplay3Item           1004
+#define kDisplay9Item           1005
+#define kDoColorFadeItem        1009
+#define kCurrentDepth           1010
+#define k256Depth               1011
+#define k16Depth                1012
+#define kDispDefault            1015
+#define kUseQDItem              1016
+#define kUseScreen2Item         1017
 
-#define kVolumeSliderItem		1003
-#define kVolNumberItem			1007
-#define kIdleMusicItem			1008
-#define kPlayMusicItem			1009
-#define kSoundDefault			1013
+#define kVolumeSliderItem       1003
+#define kVolNumberItem          1007
+#define kIdleMusicItem          1008
+#define kPlayMusicItem          1009
+#define kSoundDefault           1013
 
 #define kLeftControlOne         1001
 #define kRightControlOne        1002
@@ -64,15 +64,15 @@
 #define kESCPausesRadio         1010
 #define kTABPausesRadio         1011
 
-#define kMaxFilesItem			1005
-#define kQuickTransitCheck		1007
-#define kDoZoomsCheck			1008
-#define kBrainsDefault			1009
-#define kDoDemoCheck			1010
-#define kDoBackgroundCheck		1011
-#define kDoErrorCheck			1012
-#define kDoPrettyMapCheck		1013
-#define kDoBitchDlgsCheck		1014
+#define kMaxFilesItem           1005
+#define kQuickTransitCheck      1007
+#define kDoZoomsCheck           1008
+#define kBrainsDefault          1009
+#define kDoDemoCheck            1010
+#define kDoBackgroundCheck      1011
+#define kDoErrorCheck           1012
+#define kDoPrettyMapCheck       1013
+#define kDoBitchDlgsCheck       1014
 
 void SetBrainsToDefaults (HWND prefDlg);
 void BrainsInit (HWND prefDlg);
@@ -563,7 +563,7 @@ void SoundPrefsApply (HWND prefDlg)
 
 void HandleSoundMusicChange (HWND prefDlg, SInt16 newVolume, Boolean sayIt)
 {
-	OSErr		theErr;
+	OSErr theErr;
 
 	g_isSoundOn = (newVolume != 0);
 
@@ -913,14 +913,16 @@ void DoDisplayPrefs (HWND ownerWindow)
 
 void SetAllDefaults (HWND ownerWindow)
 {
-	OSErr		theErr;
-								// Default brain settings
+	OSErr theErr;
+
+	// Default brain settings
 	g_willMaxFiles = 48;
 	g_doAutoDemo = true;
 	g_isHouseChecks = true;
 	g_doPrettyMap = true;
 	g_doBitchDialogs = true;
-								// Default control settings
+
+	// Default control settings
 	g_theGlider.leftKey = VK_LEFT;
 	g_theGlider.rightKey = VK_RIGHT;
 	g_theGlider.battKey = VK_DOWN;
@@ -930,7 +932,8 @@ void SetAllDefaults (HWND ownerWindow)
 	g_theGlider2.battKey = 'S';
 	g_theGlider2.bandKey = 'W';
 	g_isEscPauseKey = false;
-								// Default sound settings
+
+	// Default sound settings
 	g_isPlayMusicIdle = true;
 	g_isPlayMusicGame = true;
 	UnivSetSoundVolume(3);
@@ -944,7 +947,8 @@ void SetAllDefaults (HWND ownerWindow)
 			g_failedMusic = true;
 		}
 	}
-								// Default display settings
+
+	// Default display settings
 	g_numNeighbors = 9;
 	g_quickerTransitions = false;
 	g_isDoColorFade = true;

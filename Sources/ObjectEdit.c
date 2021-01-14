@@ -52,7 +52,7 @@ static Boolean g_isFirstRoom;
 
 SInt16 FindObjectSelected (Point where)
 {
-	SInt16		found, i;
+	SInt16 found, i;
 
 	found = kNoObjectSelected;
 
@@ -125,8 +125,8 @@ void DoSelectionClick (HWND hwnd, Point where, Boolean isDoubleClick)
 
 void DragHandle (Point where)
 {
-	SInt16		hDelta, vDelta;
-	Boolean		whoCares;
+	SInt16 hDelta, vDelta;
+	Boolean whoCares;
 
 	if (g_objActive < 0 || g_objActive >= kMaxRoomObs)
 	{
@@ -335,9 +335,9 @@ void DragHandle (Point where)
 
 void Gp_DragObject (Point where)
 {
-	Rect		newRect, wasRect;
-	SInt16		deltaH, deltaV, increment;
-	Boolean		invalAll;
+	Rect newRect, wasRect;
+	SInt16 deltaH, deltaV, increment;
+	Boolean invalAll;
 
 	invalAll = false;
 
@@ -754,7 +754,7 @@ void Gp_DragObject (Point where)
 
 void DoNewObjectClick (HWND ownerWindow, Point where)
 {
-	SInt16		whatObject;
+	SInt16 whatObject;
 
 	if (COMPILEDEMO)
 		return;
@@ -1091,7 +1091,7 @@ void AddObjectPairing (void)
 
 void Gp_DeleteObject (void)
 {
-	SInt16		i;
+	SInt16 i;
 
 	if (COMPILEDEMO)
 		return;
@@ -1148,11 +1148,21 @@ void DuplicateObject (HWND ownerWindow)
 	{
 		switch (tempObject.what)
 		{
-			case kFloorVent:		case kCeilingVent:		case kFloorBlower:
-			case kCeilingBlower:	case kSewerGrate:		case kLeftFan:
-			case kRightFan:			case kTaper:			case kCandle:
-			case kStubby:			case kTiki:				case kBBQ:
-			case kInvisBlower:		case kGrecoVent:		case kSewerBlower:
+		case kFloorVent:
+		case kCeilingVent:
+		case kFloorBlower:
+		case kCeilingBlower:
+		case kSewerGrate:
+		case kLeftFan:
+		case kRightFan:
+		case kTaper:
+		case kCandle:
+		case kStubby:
+		case kTiki:
+		case kBBQ:
+		case kInvisBlower:
+		case kGrecoVent:
+		case kSewerBlower:
 			g_thisRoom->objects[g_objActive].data.a.distance = tempObject.data.a.distance;
 			g_thisRoom->objects[g_objActive].data.a.initial = tempObject.data.a.initial;
 			g_thisRoom->objects[g_objActive].data.a.state = tempObject.data.a.state;
@@ -1160,7 +1170,7 @@ void DuplicateObject (HWND ownerWindow)
 			g_thisRoom->objects[g_objActive].data.a.tall = tempObject.data.a.tall;
 			break;
 
-			case kLiftArea:
+		case kLiftArea:
 			g_thisRoom->objects[g_objActive].data.a.topLeft.h = tempObject.data.a.topLeft.h + 64;
 			g_thisRoom->objects[g_objActive].data.a.topLeft.v = tempObject.data.a.topLeft.v;
 			g_thisRoom->objects[g_objActive].data.a.distance = tempObject.data.a.distance;
@@ -1170,32 +1180,50 @@ void DuplicateObject (HWND ownerWindow)
 			g_thisRoom->objects[g_objActive].data.a.tall = tempObject.data.a.tall;
 			break;
 
-			case kFilingCabinet:	case kWasteBasket:		case kMilkCrate:
-			case kStool:			case kTrunk:			case kManhole:
-			case kBooks:
+		case kFilingCabinet:
+		case kWasteBasket:
+		case kMilkCrate:
+		case kStool:
+		case kTrunk:
+		case kManhole:
+		case kBooks:
 			g_thisRoom->objects[g_objActive].data.b.pict = tempObject.data.b.pict;
 			break;
 
-			case kTable:			case kShelf:			case kCabinet:
-			case kCounter:			case kDresser:			case kDeckTable:
-			case kInvisObstacle:	case kInvisBounce:
+		case kTable:
+		case kShelf:
+		case kCabinet:
+		case kCounter:
+		case kDresser:
+		case kDeckTable:
+		case kInvisObstacle:
+		case kInvisBounce:
 			g_thisRoom->objects[g_objActive].data.b.bounds = tempObject.data.b.bounds;
 			QOffsetRect(&g_thisRoom->objects[g_objActive].data.b.bounds, 64, 0);
 			g_thisRoom->objects[g_objActive].data.b.pict = tempObject.data.b.pict;
 			break;
 
-			case kRedClock:			case kBlueClock:		case kYellowClock:
-			case kCuckoo:			case kPaper:			case kBattery:
-			case kBands:			case kGreaseRt:			case kGreaseLf:
-			case kFoil:				case kInvisBonus:		case kStar:
-			case kSparkle:			case kHelium:
+		case kRedClock:
+		case kBlueClock:
+		case kYellowClock:
+		case kCuckoo:
+		case kPaper:
+		case kBattery:
+		case kBands:
+		case kGreaseRt:
+		case kGreaseLf:
+		case kFoil:
+		case kInvisBonus:
+		case kStar:
+		case kSparkle:
+		case kHelium:
 			g_thisRoom->objects[g_objActive].data.c.length = tempObject.data.c.length;
 			g_thisRoom->objects[g_objActive].data.c.points = tempObject.data.c.points;
 			g_thisRoom->objects[g_objActive].data.c.state = tempObject.data.c.state;
 			g_thisRoom->objects[g_objActive].data.c.initial = tempObject.data.c.initial;
 			break;
 
-			case kSlider:
+		case kSlider:
 			g_thisRoom->objects[g_objActive].data.c.topLeft.h = tempObject.data.c.topLeft.h + 64;
 			g_thisRoom->objects[g_objActive].data.c.length = tempObject.data.c.length;
 			g_thisRoom->objects[g_objActive].data.c.points = tempObject.data.c.points;
@@ -1203,18 +1231,28 @@ void DuplicateObject (HWND ownerWindow)
 			g_thisRoom->objects[g_objActive].data.c.initial = tempObject.data.c.initial;
 			break;
 
-			case kUpStairs:			case kDownStairs:		case kMailboxLf:
-			case kMailboxRt:		case kFloorTrans:		case kCeilingTrans:
-			case kDoorInLf:			case kDoorInRt:			case kDoorExRt:
-			case kDoorExLf:			case kWindowInLf:		case kWindowInRt:
-			case kWindowExRt:		case kWindowExLf:
+		case kUpStairs:
+		case kDownStairs:
+		case kMailboxLf:
+		case kMailboxRt:
+		case kFloorTrans:
+		case kCeilingTrans:
+		case kDoorInLf:
+		case kDoorInRt:
+		case kDoorExRt:
+		case kDoorExLf:
+		case kWindowInLf:
+		case kWindowInRt:
+		case kWindowExRt:
+		case kWindowExLf:
 			g_thisRoom->objects[g_objActive].data.d.tall = tempObject.data.d.tall;
 			g_thisRoom->objects[g_objActive].data.d.where = tempObject.data.d.where;
 			g_thisRoom->objects[g_objActive].data.d.who = tempObject.data.d.who;
 			g_thisRoom->objects[g_objActive].data.d.wide = tempObject.data.d.wide;
 			break;
 
-			case kInvisTrans:		case kDeluxeTrans:
+		case kInvisTrans:
+		case kDeluxeTrans:
 			g_thisRoom->objects[g_objActive].data.d.topLeft.h = tempObject.data.d.topLeft.h + 64;
 			g_thisRoom->objects[g_objActive].data.d.topLeft.v = tempObject.data.d.topLeft.v;
 			g_thisRoom->objects[g_objActive].data.d.tall = tempObject.data.d.tall;
@@ -1223,18 +1261,29 @@ void DuplicateObject (HWND ownerWindow)
 			g_thisRoom->objects[g_objActive].data.d.wide = tempObject.data.d.wide;
 			break;
 
-			case kLightSwitch:		case kMachineSwitch:	case kThermostat:
-			case kPowerSwitch:		case kKnifeSwitch:		case kInvisSwitch:
-			case kTrigger:			case kLgTrigger:		case kSoundTrigger:
+		case kLightSwitch:
+		case kMachineSwitch:
+		case kThermostat:
+		case kPowerSwitch:
+		case kKnifeSwitch:
+		case kInvisSwitch:
+		case kTrigger:
+		case kLgTrigger:
+		case kSoundTrigger:
 			g_thisRoom->objects[g_objActive].data.e.delay = tempObject.data.e.delay;
 			g_thisRoom->objects[g_objActive].data.e.where = tempObject.data.e.where;
 			g_thisRoom->objects[g_objActive].data.e.who = tempObject.data.e.who;
 			g_thisRoom->objects[g_objActive].data.e.type = tempObject.data.e.type;
 			break;
 
-			case kCeilingLight:		case kLightBulb:		case kTableLamp:
-			case kHipLamp:			case kDecoLamp:			case kFlourescent:
-			case kTrackLight:		case kInvisLight:
+		case kCeilingLight:
+		case kLightBulb:
+		case kTableLamp:
+		case kHipLamp:
+		case kDecoLamp:
+		case kFlourescent:
+		case kTrackLight:
+		case kInvisLight:
 			g_thisRoom->objects[g_objActive].data.f.length = tempObject.data.f.length;
 			g_thisRoom->objects[g_objActive].data.f.byte0 = tempObject.data.f.byte0;
 			g_thisRoom->objects[g_objActive].data.f.byte1 = tempObject.data.f.byte1;
@@ -1242,11 +1291,19 @@ void DuplicateObject (HWND ownerWindow)
 			g_thisRoom->objects[g_objActive].data.f.state = tempObject.data.f.state;
 			break;
 
-			case kShredder:			case kToaster:			case kMacPlus:
-			case kGuitar:			case kTV:				case kCoffee:
-			case kOutlet:			case kVCR:				case kStereo:
-			case kMicrowave:		case kCinderBlock:		case kFlowerBox:
-			case kCDs:
+		case kShredder:
+		case kToaster:
+		case kMacPlus:
+		case kGuitar:
+		case kTV:
+		case kCoffee:
+		case kOutlet:
+		case kVCR:
+		case kStereo:
+		case kMicrowave:
+		case kCinderBlock:
+		case kFlowerBox:
+		case kCDs:
 			g_thisRoom->objects[g_objActive].data.g.height = tempObject.data.g.height;
 			g_thisRoom->objects[g_objActive].data.g.byte0 = tempObject.data.g.byte0;
 			g_thisRoom->objects[g_objActive].data.g.delay = tempObject.data.g.delay;
@@ -1254,9 +1311,9 @@ void DuplicateObject (HWND ownerWindow)
 			g_thisRoom->objects[g_objActive].data.g.state = tempObject.data.g.state;
 			break;
 
-			case kCustomPict:
+		case kCustomPict:
 			g_thisRoom->objects[g_objActive].data.g.topLeft.h =
-					tempObject.data.g.topLeft.h + 64;
+				tempObject.data.g.topLeft.h + 64;
 			g_thisRoom->objects[g_objActive].data.g.topLeft.v = tempObject.data.g.topLeft.v;
 			g_thisRoom->objects[g_objActive].data.g.height = tempObject.data.g.height;
 			g_thisRoom->objects[g_objActive].data.g.byte0 = tempObject.data.g.byte0;
@@ -1265,9 +1322,15 @@ void DuplicateObject (HWND ownerWindow)
 			g_thisRoom->objects[g_objActive].data.g.state = tempObject.data.g.state;
 			break;
 
-			case kBalloon:			case kCopterLf:			case kCopterRt:
-			case kDartLf:			case kDartRt:			case kBall:
-			case kDrip:				case kFish:				case kCobweb:
+		case kBalloon:
+		case kCopterLf:
+		case kCopterRt:
+		case kDartLf:
+		case kDartRt:
+		case kBall:
+		case kDrip:
+		case kFish:
+		case kCobweb:
 			g_thisRoom->objects[g_objActive].data.h.length = tempObject.data.h.length;
 			g_thisRoom->objects[g_objActive].data.h.delay = tempObject.data.h.delay;
 			g_thisRoom->objects[g_objActive].data.h.byte0 = tempObject.data.h.byte0;
@@ -1275,14 +1338,24 @@ void DuplicateObject (HWND ownerWindow)
 			g_thisRoom->objects[g_objActive].data.h.state = tempObject.data.h.state;
 			break;
 
-			case kOzma:				case kMousehole:		case kFireplace:
-			case kBear:				case kCalendar:			case kVase1:
-			case kVase2:			case kBulletin:			case kCloud:
-			case kFaucet:			case kRug:				case kChimes:
+		case kOzma:
+		case kMousehole:
+		case kFireplace:
+		case kBear:
+		case kCalendar:
+		case kVase1:
+		case kVase2:
+		case kBulletin:
+		case kCloud:
+		case kFaucet:
+		case kRug:
+		case kChimes:
 			g_thisRoom->objects[g_objActive].data.i.pict = tempObject.data.i.pict;
 			break;
 
-			case kMirror:			case kFlower:			case kWallWindow:
+		case kMirror:
+		case kFlower:
+		case kWallWindow:
 			g_thisRoom->objects[g_objActive].data.i.bounds = tempObject.data.i.bounds;
 			QOffsetRect(&g_thisRoom->objects[g_objActive].data.i.bounds, 64, 0);
 			g_thisRoom->objects[g_objActive].data.i.pict = tempObject.data.i.pict;
@@ -1892,7 +1965,7 @@ Boolean ObjectIsUpBlower (const objectType *who)
 
 void HandleBlowerGlider (void)
 {
-	SInt16		direction, dist;
+	SInt16 direction, dist;
 
 	if (COMPILEDEMO)
 		return;
@@ -1966,9 +2039,9 @@ void SelectPrevObject (void)
 
 void GetThisRoomsObjRects (void)
 {
-	HBITMAP		thePict;
-	SInt16		i, wide, tall;
-	BITMAP		bmInfo;
+	HBITMAP thePict;
+	SInt16 i, wide, tall;
+	BITMAP bmInfo;
 
 	g_isFirstRoom = (GetFirstRoomNumber() == g_thisRoomNumber);
 
@@ -2129,7 +2202,7 @@ void GetThisRoomsObjRects (void)
 				g_roomObjectRects[i].right += (SInt16)g_thisRoom->objects[i].data.d.wide;
 				break;
 
-				case kDeluxeTrans:		// Uses a kludge to get width & height (x4)
+				case kDeluxeTrans:  // Uses a kludge to get width & height (x4)
 				wide = (g_thisRoom->objects[i].data.d.tall & 0xFF00) >> 8;
 				tall = g_thisRoom->objects[i].data.d.tall & 0x00FF;
 				QSetRect(&g_roomObjectRects[i], 0, 0, wide * 4, tall * 4);
@@ -2264,8 +2337,8 @@ void GetThisRoomsObjRects (void)
 
 void DrawThisRoomsObjects (void)
 {
-	Rect		tempRect;
-	SInt16		i;
+	Rect tempRect;
+	SInt16 i;
 
 	if ((g_noRoomAtAll) || (!g_houseUnlocked))
 		return;
@@ -2632,10 +2705,10 @@ void DrawThisRoomsObjects (void)
 
 void HiliteAllObjects (void)
 {
-	HDC			mainWindowDC;
-	RECT		focusRects[ARRAYSIZE(g_roomObjectRects)];
-	MSG			msg;
-	SInt16		i;
+	HDC mainWindowDC;
+	RECT focusRects[ARRAYSIZE(g_roomObjectRects)];
+	MSG msg;
+	SInt16 i;
 
 	if (COMPILEDEMO)
 		return;
@@ -2715,7 +2788,7 @@ void GoToObjectInRoom (SInt16 object, SInt16 floor, SInt16 suite)
 
 void GoToObjectInRoomNum (SInt16 object, SInt16 roomNum)
 {
-	SInt16		floor, suite;
+	SInt16 floor, suite;
 
 	if (GetRoomFloorSuite(roomNum, &floor, &suite))
 		GoToObjectInRoom(object, floor, suite);

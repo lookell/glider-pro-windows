@@ -29,14 +29,14 @@
 
 void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 {
-	objectType	thisObject;
-	Rect		whoCares, itsRect, rectA, rectB, testRect;
+	objectType thisObject;
+	Rect whoCares, itsRect, rectA, rectB, testRect;
 #ifdef COMPILEQT
-	HRGN		theRgn;
+	HRGN theRgn;
 #endif
-	SInt16		i, legit, dynamicNum, n;
-	SInt16		floor, suite, room, obj;
-	Boolean		isLit;
+	SInt16 i, legit, dynamicNum, n;
+	SInt16 floor, suite, room, obj;
+	Boolean isLit;
 
 	if (neighbor < 0 || neighbor >= 9)
 		return;
@@ -373,7 +373,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				case kGreaseRt:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				if (thisObject.data.c.state)		// standing
+				if (thisObject.data.c.state)  // standing
 				{
 					if (QSectRect(&itsRect, &testRect, &whoCares))
 					{
@@ -387,7 +387,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 							DrawGreaseRt(&itsRect, thisObject.data.c.length, true);
 					}
 				}
-				else								// fallen
+				else  // fallen
 					DrawGreaseRt(&itsRect, thisObject.data.c.length, false);
 				break;
 
@@ -957,7 +957,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 			}
 		}
 
-		if (!redraw)									// set up links
+		if (!redraw)  // set up links
 		{
 			for (n = 0; n < g_numMasterObjects; n++)
 			{
