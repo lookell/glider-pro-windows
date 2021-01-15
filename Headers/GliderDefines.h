@@ -45,10 +45,10 @@
 #define kYellowNoRooms              23
 #define kYellowCantOrderLinks       24
 
-#define kProdGameScoreMode          -4
-#define kKickGameScoreMode          -3
-#define kPlayGameScoreMode          -2
-#define kPlayWholeScoreMode         -1
+#define kProdGameScoreMode          (-4)
+#define kKickGameScoreMode          (-3)
+#define kPlayGameScoreMode          (-2)
+#define kPlayWholeScoreMode         (-1)
 #define kPlayChorus                 4
 #define kPlayRefrainSparse1         5
 #define kPlayRefrainSparse2         6
@@ -492,10 +492,10 @@
 #define kFloorLimit                 312
 #define kRoofLimit                  122
 #define kLeftWallLimit              12
-#define kNoLeftWallLimit            -24         // 0 - (kGliderWide / 2)
+#define kNoLeftWallLimit            (-24)       // 0 - (kGliderWide / 2)
 #define kRightWallLimit             500
 #define kNoRightWallLimit           536         // kRoomWide + (kGliderWide / 2)
-#define kNoCeilingLimit             -10
+#define kNoCeilingLimit             (-10)
 #define kNoFloorLimit               332
 
 #define kScoreboardHigh             0
@@ -509,12 +509,12 @@
 #define kNumBackgrounds             18
 #define kUserBackground             3000
 #define kUserStructureRange         3300
-#define kRoomIsEmpty                -1
-#define kObjectIsEmpty              -1
-#define kNoObjectSelected           -1
-#define kInitialGliderSelected      -2
-#define kLeftGliderSelected         -3
-#define kRightGliderSelected        -4
+#define kRoomIsEmpty                (-1)
+#define kObjectIsEmpty              (-1)
+#define kNoObjectSelected           (-1)
+#define kInitialGliderSelected      (-2)
+#define kLeftGliderSelected         (-3)
+#define kRightGliderSelected        (-4)
 #define kTicksPerFrame              2
 #define kNumUndergroundFloors       8
 #define kRoomVisitScore             100
@@ -573,19 +573,19 @@
 #define kGliderIdle                 22          //  ••••••••
 #define kGliderTransportingIn       23
 
-#define kPlayerIsDeadForever        -69
-#define kPlayerMailedOut            -12
-#define kPlayerDuckedOut            -11
-#define kPlayerTransportedOut       -10
-#define kPlayerEscapingDownStairs   -9
-#define kPlayerEscapingUpStairs     -8
-#define kPlayerEscapedDownStairs    -7
-#define kPlayerEscapedUpStairs      -6
-#define kPlayerEscapedDown          -5
-#define kPlayerEscapedUp            -4
-#define kPlayerEscapedLeft          -3
-#define kPlayerEscapedRight         -2
-#define kNoOneEscaped               -1
+#define kPlayerIsDeadForever        (-69)
+#define kPlayerMailedOut            (-12)
+#define kPlayerDuckedOut            (-11)
+#define kPlayerTransportedOut       (-10)
+#define kPlayerEscapingDownStairs   (-9)
+#define kPlayerEscapingUpStairs     (-8)
+#define kPlayerEscapedDownStairs    (-7)
+#define kPlayerEscapedUpStairs      (-6)
+#define kPlayerEscapedDown          (-5)
+#define kPlayerEscapedUp            (-4)
+#define kPlayerEscapedLeft          (-3)
+#define kPlayerEscapedRight         (-2)
+#define kNoOneEscaped               (-1)
 
 #define kLinkedToOther              0
 #define kLinkedToLeftMailbox        1

@@ -25,7 +25,7 @@
 #define kHImpulse               2
 #define kVImpulse               2
 #define kMaxHVel                16
-#define kShredderCountdown      -68
+#define kShredderCountdown      (-68)
 
 void MoveGlider (gliderPtr thisGlider);
 void MoveGliderNormal (gliderPtr thisGlider);

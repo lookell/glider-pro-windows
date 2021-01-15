@@ -26,7 +26,7 @@
 #include "Triggers.h"
 #include "Trip.h"
 
-#define kFloorVentLift          -6
+#define kFloorVentLift          (-6)
 #define kCeilingVentDrop        8
 #define kFanStrength            12
 #define kBatterySupply          50      // about 2 rooms worth of thrust

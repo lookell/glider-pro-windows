@@ -20,7 +20,7 @@
 
 #define kRubberBandVelocity     20
 #define kBandFallCount          4
-#define kKillBandMode           -1
+#define kKillBandMode           (-1)
 
 void CheckBandCollision (SInt16 who);
 void KillBand (SInt16 which);

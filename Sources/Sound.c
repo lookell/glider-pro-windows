@@ -16,7 +16,7 @@
 #define kBaseBufferSoundID          1000
 #define kMaxSounds                  64
 #define kNumSoundChannels           3
-#define kNoSoundPlaying             -1
+#define kNoSoundPlaying             (-1)
 
 C_ASSERT(kTriggerSound == kMaxSounds - 1);
 
