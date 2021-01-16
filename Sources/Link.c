@@ -334,7 +334,7 @@ void DoLink (void)
 {
 	SInt16 floor, suite;
 
-	if (GetRoomFloorSuite(g_thisRoomNumber, &floor, &suite))
+	if (GetRoomFloorSuite(&g_thisHouse, g_thisRoomNumber, &floor, &suite))
 	{
 		if (g_thisRoomNumber == g_linkRoom)
 		{

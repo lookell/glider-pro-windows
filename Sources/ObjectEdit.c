@@ -2792,7 +2792,7 @@ void GoToObjectInRoomNum (SInt16 object, SInt16 roomNum)
 {
 	SInt16 floor, suite;
 
-	if (GetRoomFloorSuite(roomNum, &floor, &suite))
+	if (GetRoomFloorSuite(&g_thisHouse, roomNum, &floor, &suite))
 		GoToObjectInRoom(object, floor, suite);
 }
 

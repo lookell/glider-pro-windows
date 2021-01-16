@@ -404,7 +404,7 @@ Boolean RoomNumExists (SInt16 roomNum)
 	Boolean exists;
 
 	exists = false;
-	if (GetRoomFloorSuite(roomNum, &floor, &suite))
+	if (GetRoomFloorSuite(&g_thisHouse, roomNum, &floor, &suite))
 		exists = RoomExists(&g_thisHouse, suite, floor, &whoCares);
 
 	return (exists);
@@ -675,17 +675,17 @@ void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_)
 
 //--------------------------------------------------------------  GetRoomFloorSuite
 
-Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite)
+Boolean GetRoomFloorSuite (const houseType *house, SInt16 room, SInt16 *floor, SInt16 *suite)
 {
 	Boolean isRoom;
 
-	if (room < 0 || room >= g_thisHouse.nRooms)
+	if (room < 0 || room >= house->nRooms)
 	{
 		*floor = 0;
 		*suite = kRoomIsEmpty;
 		isRoom = false;
 	}
-	else if (g_thisHouse.rooms[room].suite == kRoomIsEmpty)
+	else if (house->rooms[room].suite == kRoomIsEmpty)
 	{
 		*floor = 0;
 		*suite = kRoomIsEmpty;
@@ -693,8 +693,8 @@ Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite)
 	}
 	else
 	{
-		*suite = g_thisHouse.rooms[room].suite;
-		*floor = g_thisHouse.rooms[room].floor;
+		*suite = house->rooms[room].suite;
+		*floor = house->rooms[room].floor;
 		isRoom = true;
 	}
 
