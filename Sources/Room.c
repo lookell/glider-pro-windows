@@ -474,12 +474,6 @@ SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor)
 {
 	SInt16 newH, newV, newRoomNumber;
 
-	if (COMPILEDEMO)
-		return(-1);
-
-	if (g_theMode != kEditMode)
-		return(-1);
-
 	newH = g_thisRoom->suite;
 	newV = g_thisRoom->floor;
 
@@ -514,7 +508,7 @@ void SelectNeighborRoom (SInt16 whichNeighbor)
 {
 	SInt16 newRoomNumber;
 
-	if (COMPILEDEMO)
+	if (COMPILEDEMO || (g_theMode != kEditMode))
 		return;
 
 	newRoomNumber = DoesNeighborRoomExist(whichNeighbor);

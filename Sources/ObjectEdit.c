@@ -780,7 +780,7 @@ void AddObjectPairing (void)
 	wchar_t message[256];
 	HWND mssgWindow;
 
-	if (COMPILEDEMO)
+	if (COMPILEDEMO || (g_theMode != kEditMode))
 		return;
 
 	if (g_thisRoom->objects[g_objActive].what == kDoorInRt)
