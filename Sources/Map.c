@@ -169,7 +169,7 @@ void FindNewActiveRoomRect (void)
 
 			suite = h + g_mapLeftRoom;
 			floor = kMapGroundValue - (i + g_mapTopRoom);
-			if ((RoomExists(suite, floor, &whoCares)) && (g_houseUnlocked))
+			if ((RoomExists(&g_thisHouse, suite, floor, &whoCares)) && (g_houseUnlocked))
 			{
 				if (whoCares == g_thisRoomNumber)
 				{
@@ -260,7 +260,7 @@ void RedrawMapContents (HDC hdc)
 
 			suite = h + g_mapLeftRoom;
 			floor = kMapGroundValue - (i + g_mapTopRoom);
-			if ((RoomExists(suite, floor, &roomNum)) && (g_houseUnlocked))
+			if ((RoomExists(&g_thisHouse, suite, floor, &roomNum)) && (g_houseUnlocked))
 			{
 				DrawMapRoomImage(hdc, g_thisHouse.rooms[roomNum].background, &aRoom);
 				if (roomNum == g_thisRoomNumber)
@@ -738,7 +738,7 @@ void HandleMapClick (SInt16 clickX, SInt16 clickY)
 	roomH = localH + g_mapLeftRoom;
 	roomV = kMapGroundValue - (localV + g_mapTopRoom);
 
-	if (RoomExists(roomH, roomV, &itsNumber))
+	if (RoomExists(&g_thisHouse, roomH, roomV, &itsNumber))
 	{
 		CopyRoomToThisRoom(itsNumber);
 		DeselectObject();
@@ -850,7 +850,7 @@ void MoveRoom (Point wherePt)
 	roomH = localH + g_mapLeftRoom;
 	roomV = kMapGroundValue - (localV + g_mapTopRoom);
 
-	if (RoomExists(roomH, roomV, &itsNumber) == false)
+	if (!RoomExists(&g_thisHouse, roomH, roomV, &itsNumber))
 	{
 		srcFloor = g_thisRoom->floor;
 		srcSuite = g_thisRoom->suite;

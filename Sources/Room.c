@@ -372,7 +372,7 @@ void ForceThisRoom (SInt16 roomNumber)
 
 //--------------------------------------------------------------  RoomExists
 
-Boolean RoomExists (SInt16 suite, SInt16 floor, SInt16 *roomNum)
+Boolean RoomExists (const houseType *house, SInt16 suite, SInt16 floor, SInt16 *roomNum)
 {
 	// pass in a suite and floor; returns true is it is a legitimate room
 	SInt16 i;
@@ -383,10 +383,9 @@ Boolean RoomExists (SInt16 suite, SInt16 floor, SInt16 *roomNum)
 	if (suite < 0)
 		return (foundIt);
 
-	for (i = 0; i < g_thisHouse.nRooms; i++)
+	for (i = 0; i < house->nRooms; i++)
 	{
-		if ((g_thisHouse.rooms[i].floor == floor) &&
-				(g_thisHouse.rooms[i].suite == suite))
+		if ((house->rooms[i].floor == floor) && (house->rooms[i].suite == suite))
 		{
 			foundIt = true;
 			*roomNum = i;
@@ -406,7 +405,7 @@ Boolean RoomNumExists (SInt16 roomNum)
 
 	exists = false;
 	if (GetRoomFloorSuite(roomNum, &floor, &suite))
-		exists = RoomExists(suite, floor, &whoCares);
+		exists = RoomExists(&g_thisHouse, suite, floor, &whoCares);
 
 	return (exists);
 }
@@ -503,7 +502,7 @@ SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor)
 		break;
 	}
 
-	if (RoomExists(newH, newV, &newRoomNumber))
+	if (RoomExists(&g_thisHouse, newH, newV, &newRoomNumber))
 		return (newRoomNumber);
 	else
 		return (-1);
@@ -632,7 +631,7 @@ void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_)
 		testV = wasFloor_ + v;
 
 		// if a legitimate room
-		if (RoomExists(testH, testV, &testRoomNum))
+		if (RoomExists(&g_thisHouse, testH, testV, &testRoomNum))
 		{
 			CopyRoomToThisRoom(testRoomNum);
 			finished = true;

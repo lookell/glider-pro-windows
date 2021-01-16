@@ -2764,7 +2764,7 @@ void GoToObjectInRoom (SInt16 object, SInt16 floor, SInt16 suite)
 	if (COMPILEDEMO)
 		return;
 
-	if (RoomExists(suite, floor, &itsNumber))
+	if (RoomExists(&g_thisHouse, suite, floor, &itsNumber))
 	{
 		if (itsNumber != g_thisRoomNumber)
 		{
@@ -2773,7 +2773,9 @@ void GoToObjectInRoom (SInt16 object, SInt16 floor, SInt16 suite)
 			ReflectCurrentRoom(false);
 		}
 		else
+		{
 			DeselectObject();
+		}
 
 		if (g_thisRoom->objects[object].what != kObjectIsEmpty)
 		{
