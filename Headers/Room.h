@@ -36,7 +36,7 @@ void CopyRoomToThisRoom (SInt16 roomNumber);
 void CopyThisRoomToRoom (void);
 void ForceThisRoom (SInt16 roomNumber);
 Boolean RoomExists (const houseType *house, SInt16 suite, SInt16 floor, SInt16 *roomNum);
-Boolean RoomNumExists (SInt16 roomNum);
+Boolean RoomNumExists (const houseType *house, SInt16 roomNum);
 void DeleteRoom (HWND ownerWindow, Boolean doWarn);
 SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor);
 void SelectNeighborRoom (SInt16 whichNeighbor);

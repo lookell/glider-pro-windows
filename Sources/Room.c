@@ -398,14 +398,14 @@ Boolean RoomExists (const houseType *house, SInt16 suite, SInt16 floor, SInt16 *
 
 //--------------------------------------------------------------  RoomNumExists
 
-Boolean RoomNumExists (SInt16 roomNum)
+Boolean RoomNumExists (const houseType *house, SInt16 roomNum)
 {
 	SInt16 floor, suite, whoCares;
 	Boolean exists;
 
 	exists = false;
-	if (GetRoomFloorSuite(&g_thisHouse, roomNum, &floor, &suite))
-		exists = RoomExists(&g_thisHouse, suite, floor, &whoCares);
+	if (GetRoomFloorSuite(house, roomNum, &floor, &suite))
+		exists = RoomExists(house, suite, floor, &whoCares);
 
 	return (exists);
 }

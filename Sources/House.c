@@ -579,8 +579,11 @@ INT_PTR CALLBACK GoToFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 
 		if (GetFirstRoomNumber() == g_thisRoomNumber)
 			EnableWindow(GetDlgItem(hDlg, kGoToFirstRadio), FALSE);
-		if ((!RoomNumExists(g_previousRoom)) || (g_previousRoom == g_thisRoomNumber))
+		if ((!RoomNumExists(&g_thisHouse, g_previousRoom)) ||
+			(g_previousRoom == g_thisRoomNumber))
+		{
 			EnableWindow(GetDlgItem(hDlg, kGoToPrevRadio), FALSE);
+		}
 
 		CheckRadioButton(hDlg, kGoToFirstRadio, kGoToFSRadio, kGoToFSRadio);
 		SetDlgItemInt(hDlg, kFloorEditText, g_wasFloor, TRUE);
@@ -658,7 +661,7 @@ void DoGoToDialog (HWND ownerWindow)
 
 	if (dlgResult == IDOK)
 	{
-		if (RoomNumExists(roomToGoTo))
+		if (RoomNumExists(&g_thisHouse, roomToGoTo))
 		{
 			DeselectObject();
 			CopyRoomToThisRoom(roomToGoTo);
