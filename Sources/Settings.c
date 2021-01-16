@@ -118,6 +118,7 @@ static BYTE g_tempLeftKeyTwo;
 static BYTE g_tempRightKeyTwo;
 static BYTE g_tempBattKeyTwo;
 static BYTE g_tempBandKeyTwo;
+static SInt16 g_wasLoudness;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  SetBrainsToDefaults
@@ -593,7 +594,6 @@ void HandleSoundMusicChange (HWND prefDlg, SInt16 newVolume, Boolean sayIt)
 
 INT_PTR CALLBACK SoundFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	static SInt16 wasLoudness;
 	SInt16 tempVolume;
 	Boolean wasIdle;
 
@@ -601,7 +601,7 @@ INT_PTR CALLBACK SoundFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM 
 	{
 	case WM_INITDIALOG:
 		CenterDialogOverOwner(prefDlg);
-		UnivGetSoundVolume(&wasLoudness);
+		UnivGetSoundVolume(&g_wasLoudness);
 		SoundPrefsInit(prefDlg);
 		return TRUE;
 
@@ -614,15 +614,15 @@ INT_PTR CALLBACK SoundFilter (HWND prefDlg, UINT message, WPARAM wParam, LPARAM 
 			break;
 
 		case IDCANCEL:
-			UnivSetSoundVolume(wasLoudness);
-			HandleSoundMusicChange(prefDlg, wasLoudness, false);
+			UnivSetSoundVolume(g_wasLoudness);
+			HandleSoundMusicChange(prefDlg, g_wasLoudness, false);
 			g_isPlayMusicIdle = (g_isPlayMusicIdle != 0);
 			wasIdle = (IsDlgButtonChecked(prefDlg, kIdleMusicItem) != 0);
 			if (g_isPlayMusicIdle != wasIdle)
 			{
 				if (g_isPlayMusicIdle)
 				{
-					if (wasLoudness != 0)
+					if (g_wasLoudness != 0)
 					{
 						OSErr theErr = StartMusic();
 						if (theErr != noErr)

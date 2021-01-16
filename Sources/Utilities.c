@@ -24,6 +24,7 @@
 UInt32 RandomLongQUS (void);
 
 static UInt32 g_theSeed;
+static int g_useProgramDirectory = -1;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  RandomInt
@@ -341,7 +342,6 @@ void UnivSetSoundVolume (SInt16 volume)
 
 BOOL GetDataFolderPath (LPWSTR lpDataPath, DWORD cchDataPath)
 {
-	static int useProgramDirectory = -1;
 	WCHAR pathBuffer[MAX_PATH];
 	DWORD fileAttributes;
 	DWORD result;
@@ -359,16 +359,16 @@ BOOL GetDataFolderPath (LPWSTR lpDataPath, DWORD cchDataPath)
 		sepPtr = &pathBuffer[0];
 	*sepPtr = L'\0';
 
-	if (useProgramDirectory == -1)
+	if (g_useProgramDirectory == -1)
 	{
 		hr = StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\portable.dat");
 		if (FAILED(hr))
 			return FALSE;
 		fileAttributes = GetFileAttributes(pathBuffer);
 		*sepPtr = L'\0';
-		useProgramDirectory = (fileAttributes != INVALID_FILE_ATTRIBUTES);
+		g_useProgramDirectory = (fileAttributes != INVALID_FILE_ATTRIBUTES);
 	}
-	if (!useProgramDirectory)
+	if (!g_useProgramDirectory)
 	{
 		hr = SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, pathBuffer);
 		if (FAILED(hr))

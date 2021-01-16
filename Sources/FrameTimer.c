@@ -6,6 +6,7 @@
 static DWORD g_CurrentFrameRate = FRAME_TIMER_DEFAULT_FPS;
 static LONGLONG g_FrameStart = 0;
 static LONGLONG g_FrameNext = 0;
+static LONGLONG g_QpcFrequency = 0;
 
 LONGLONG GetPerformanceCounter(void)
 {
@@ -16,15 +17,13 @@ LONGLONG GetPerformanceCounter(void)
 
 LONGLONG GetPerformanceFrequency(void)
 {
-	static LONGLONG QPC_Frequency = 0;
-
-	if (QPC_Frequency == 0)
+	if (g_QpcFrequency == 0)
 	{
 		LARGE_INTEGER li;
 		QueryPerformanceFrequency(&li);
-		QPC_Frequency = li.QuadPart;
+		g_QpcFrequency = li.QuadPart;
 	}
-	return QPC_Frequency;
+	return g_QpcFrequency;
 }
 
 DWORD GetFrameRate(void)
