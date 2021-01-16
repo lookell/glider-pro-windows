@@ -1140,7 +1140,7 @@ void CheckHouseForProblems (void)
 
 	if (g_isHouseChecks)
 	{
-		if (CountStarsInHouse() < 1)
+		if (CountStarsInHouse(&g_thisHouse) < 1)
 		{
 			SetMessageTextColor(mssgWindow, redColor);
 			GetLocalizedString(35, message, ARRAYSIZE(message));

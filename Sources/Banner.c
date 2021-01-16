@@ -72,21 +72,25 @@ void DrawBanner (Point *topLeft)
 //--------------------------------------------------------------  CountStarsInHouse
 // Goes through the current house and counts the total number of stars within.
 
-SInt16 CountStarsInHouse (void)
+SInt16 CountStarsInHouse (const houseType *house)
 {
 	SInt16 i, h, numRooms, numStars;
 
 	numStars = 0;
 
-	numRooms = g_thisHouse.nRooms;
+	numRooms = house->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (g_thisHouse.rooms[i].suite != kRoomIsEmpty)
+		if (house->rooms[i].suite != kRoomIsEmpty)
+		{
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				if (g_thisHouse.rooms[i].objects[h].what == kStar)
+				if (house->rooms[i].objects[h].what == kStar)
+				{
 					numStars++;
+				}
 			}
+		}
 	}
 
 	return (numStars);

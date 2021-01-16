@@ -315,7 +315,7 @@ void InitGlider (gliderPtr thisGlider, SInt16 mode)
 	if (mode == kResumeGameMode)
 		g_numStarsRemaining = g_smallGame.wasStarsLeft;
 	else if (mode == kNewGameMode)
-		g_numStarsRemaining = CountStarsInHouse();
+		g_numStarsRemaining = CountStarsInHouse(&g_thisHouse);
 
 	if (mode == kResumeGameMode)
 	{
