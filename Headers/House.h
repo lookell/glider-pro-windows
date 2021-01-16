@@ -22,7 +22,7 @@ extern Boolean g_houseUnlocked;
 
 Boolean CreateNewHouse (HWND hwndOwner);
 void InitializeEmptyHouse (void);
-SInt16 RealRoomNumberCount (void);
+SInt16 RealRoomNumberCount (const houseType *house);
 SInt16 GetFirstRoomNumber (void);
 void WhereDoesGliderBegin (Rect *theRect, SInt16 mode);
 SInt16 CountHouseLinks (void);

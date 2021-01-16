@@ -438,7 +438,7 @@ void DeleteRoom (HWND ownerWindow, Boolean doWarn)
 	g_thisRoom->suite = kRoomIsEmpty;
 	g_thisHouse.rooms[g_thisRoomNumber].suite = kRoomIsEmpty;
 
-	g_noRoomAtAll = (RealRoomNumberCount() == 0);  // see if now no rooms
+	g_noRoomAtAll = (RealRoomNumberCount(&g_thisHouse) == 0);  // see if now no rooms
 	if (g_noRoomAtAll)
 		g_thisRoomNumber = kRoomIsEmpty;
 	else

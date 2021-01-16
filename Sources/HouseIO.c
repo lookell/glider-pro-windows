@@ -418,7 +418,7 @@ Boolean ReadHouse (HWND ownerWindow)
 	g_phoneBitSet = ((g_thisHouse.flags & 0x00000002) == 0x00000002);
 	g_bannerStarCountOn = ((g_thisHouse.flags & 0x00000004) == 0x00000000);
 
-	g_noRoomAtAll = (RealRoomNumberCount() == 0);
+	g_noRoomAtAll = (RealRoomNumberCount(&g_thisHouse) == 0);
 	g_thisRoomNumber = -1;
 	g_previousRoom = -1;
 	if (!g_noRoomAtAll)

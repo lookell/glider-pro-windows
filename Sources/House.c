@@ -182,17 +182,19 @@ void InitializeEmptyHouse (void)
 // be place-holders - they were deleted earlier and are flagged as
 // deleted but still occupy space in the file).
 
-SInt16 RealRoomNumberCount (void)
+SInt16 RealRoomNumberCount (const houseType *house)
 {
 	SInt16 realRoomCount, i;
 
-	realRoomCount = g_thisHouse.nRooms;
+	realRoomCount = house->nRooms;
 	if (realRoomCount != 0)
 	{
-		for (i = 0; i < g_thisHouse.nRooms; i++)
+		for (i = 0; i < house->nRooms; i++)
 		{
-			if (g_thisHouse.rooms[i].suite == kRoomIsEmpty)
+			if (house->rooms[i].suite == kRoomIsEmpty)
+			{
 				realRoomCount--;
+			}
 		}
 	}
 

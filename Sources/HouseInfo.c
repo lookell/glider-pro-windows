@@ -44,7 +44,7 @@ SInt32 CountTotalHousePoints (void)
 	SInt32 pointTotal;
 	SInt16 numRooms, h, i;
 
-	pointTotal = (SInt32)RealRoomNumberCount() * (SInt32)kRoomVisitScore;
+	pointTotal = (SInt32)RealRoomNumberCount(&g_thisHouse) * (SInt32)kRoomVisitScore;
 
 	numRooms = g_thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
@@ -190,7 +190,7 @@ void DoHouseInfo (HWND ownerWindow)
 	wchar_t loVers[32];
 	wchar_t nRoomsStr[32];
 
-	numRooms = RealRoomNumberCount();
+	numRooms = RealRoomNumberCount(&g_thisHouse);
 	version = g_thisHouse.version;
 	if (g_thisHouse.firstRoom >= 0 && g_thisHouse.firstRoom < g_thisHouse.nRooms)
 	{
