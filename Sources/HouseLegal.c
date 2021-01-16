@@ -937,8 +937,11 @@ void CheckForStaircasePairs (HWND mssgWindow)
 			{
 				if (g_thisHouse.rooms[i].objects[h].what == kUpStairs)
 				{
+					// TODO: see if this assignment is necessary any more. It was
+					// necessary in the past for the GetNeighborRoomNumber call,
+					// because that function accessed g_thisRoomNumber.
 					g_thisRoomNumber = i;
-					neighbor = GetNeighborRoomNumber(kNorthRoom);
+					neighbor = GetNeighborRoomNumber(&g_thisHouse, i, kNorthRoom);
 					if (neighbor == kRoomIsEmpty)
 					{
 						SetMessageTextColor(mssgWindow, redColor);
@@ -965,8 +968,11 @@ void CheckForStaircasePairs (HWND mssgWindow)
 				}
 				else if (g_thisHouse.rooms[i].objects[h].what == kDownStairs)
 				{
+					// TODO: see if this assignment is necessary any more. It was
+					// necessary in the past for the GetNeighborRoomNumber call,
+					// because that function accessed g_thisRoomNumber.
 					g_thisRoomNumber = i;
-					neighbor = GetNeighborRoomNumber(kSouthRoom);
+					neighbor = GetNeighborRoomNumber(&g_thisHouse, i, kSouthRoom);
 					if (neighbor == kRoomIsEmpty)
 					{
 						SetMessageTextColor(mssgWindow, redColor);

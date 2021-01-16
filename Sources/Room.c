@@ -523,7 +523,7 @@ void SelectNeighborRoom (SInt16 whichNeighbor)
 
 //--------------------------------------------------------------  GetNeighborRoomNumber
 
-SInt16 GetNeighborRoomNumber (SInt16 which)
+SInt16 GetNeighborRoomNumber (const houseType *house, SInt16 roomNumber, SInt16 which)
 {
 	SInt16 hDelta, vDelta, i;
 	SInt16 roomH, roomV;
@@ -581,17 +581,16 @@ SInt16 GetNeighborRoomNumber (SInt16 which)
 		break;
 	}
 
-	if (g_thisRoomNumber < 0 || g_thisRoomNumber >= g_thisHouse.nRooms)
+	if (roomNumber < 0 || roomNumber >= house->nRooms)
 		return kRoomIsEmpty;
 
 	roomNum = kRoomIsEmpty;
-	roomH = g_thisHouse.rooms[g_thisRoomNumber].suite + hDelta;
-	roomV = g_thisHouse.rooms[g_thisRoomNumber].floor + vDelta;
+	roomH = house->rooms[roomNumber].suite + hDelta;
+	roomV = house->rooms[roomNumber].floor + vDelta;
 
 	for (i = 0; i < g_thisHouse.nRooms; i++)
 	{
-		if ((g_thisHouse.rooms[i].suite == roomH) &&
-				(g_thisHouse.rooms[i].floor == roomV))
+		if ((house->rooms[i].suite == roomH) && (house->rooms[i].floor == roomV))
 		{
 			roomNum = i;
 			break;

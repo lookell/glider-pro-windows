@@ -70,7 +70,7 @@ void DrawLocale (void)
 
 	for (i = 0; i < 9; i++)
 	{
-		g_localNumbers[i] = GetNeighborRoomNumber(i);
+		g_localNumbers[i] = GetNeighborRoomNumber(&g_thisHouse, g_thisRoomNumber, i);
 		g_isStructure[i] = IsRoomAStructure(g_localNumbers[i]);
 	}
 	ListAllLocalObjects();

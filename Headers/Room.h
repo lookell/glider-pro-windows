@@ -40,7 +40,7 @@ Boolean RoomNumExists (SInt16 roomNum);
 void DeleteRoom (HWND ownerWindow, Boolean doWarn);
 SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor);
 void SelectNeighborRoom (SInt16 whichNeighbor);
-SInt16 GetNeighborRoomNumber (SInt16 which);
+SInt16 GetNeighborRoomNumber (const houseType *house, SInt16 roomNumber, SInt16 which);
 Boolean GetRoomFloorSuite (SInt16 room, SInt16 *floor, SInt16 *suite);
 SInt16 GetRoomNumber (SInt16 floor, SInt16 suite);
 Boolean IsRoomAStructure (SInt16 roomNum);
