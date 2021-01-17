@@ -854,10 +854,10 @@ void MoveRoom (Point wherePt)
 	{
 		srcFloor = g_thisRoom->floor;
 		srcSuite = g_thisRoom->suite;
-		packedSrcCombo = MergeFloorSuite(srcFloor, srcSuite);
+		packedSrcCombo = MergeFloorSuite(&g_thisHouse, srcFloor, srcSuite);
 		destFloor = roomV;
 		destSuite = roomH;
-		packedDestCombo = MergeFloorSuite(destFloor, destSuite);
+		packedDestCombo = MergeFloorSuite(&g_thisHouse, destFloor, destSuite);
 
 		g_thisRoom->floor = destFloor;
 		g_thisRoom->suite = destSuite;

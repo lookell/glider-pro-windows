@@ -33,9 +33,9 @@ Boolean g_linkerIsSwitch;
 //==============================================================  Functions
 //--------------------------------------------------------------  MergeFloorSuite
 
-SInt16 MergeFloorSuite (SInt16 floor, SInt16 suite)
+SInt16 MergeFloorSuite (const houseType *house, SInt16 floor, SInt16 suite)
 {
-	if (g_thisHouse.version < 0x0200) // old floor/suite combo
+	if (house->version < 0x0200) // old floor/suite combo
 	{
 		return MergeFloorSuiteVer1(floor, suite);
 	}
@@ -341,14 +341,14 @@ void DoLink (void)
 			if (g_linkerIsSwitch)
 			{
 				g_thisRoom->objects[g_linkObject].data.e.where =
-						MergeFloorSuite(floor, suite);
+						MergeFloorSuite(&g_thisHouse, floor, suite);
 				g_thisRoom->objects[g_linkObject].data.e.who =
 						(Byte)g_objActive;
 			}
 			else
 			{
 				g_thisRoom->objects[g_linkObject].data.d.where =
-						MergeFloorSuite(floor, suite);
+						MergeFloorSuite(&g_thisHouse, floor, suite);
 				g_thisRoom->objects[g_linkObject].data.d.who =
 						(Byte)g_objActive;
 			}
@@ -358,14 +358,14 @@ void DoLink (void)
 			if (g_linkerIsSwitch)
 			{
 				g_thisHouse.rooms[g_linkRoom].objects[g_linkObject].data.e.where =
-						MergeFloorSuite(floor, suite);
+						MergeFloorSuite(&g_thisHouse, floor, suite);
 				g_thisHouse.rooms[g_linkRoom].objects[g_linkObject].data.e.who =
 						(Byte)g_objActive;
 			}
 			else  // linker is transport
 			{
 				g_thisHouse.rooms[g_linkRoom].objects[g_linkObject].data.d.where =
-						MergeFloorSuite(floor, suite);
+						MergeFloorSuite(&g_thisHouse, floor, suite);
 				g_thisHouse.rooms[g_linkRoom].objects[g_linkObject].data.d.who =
 						(Byte)g_objActive;
 			}
