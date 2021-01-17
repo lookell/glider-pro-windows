@@ -20,7 +20,7 @@
 
 #include <stdlib.h>
 
-SInt16 GetRoomLinked (const objectType *who);
+SInt16 GetRoomLinked (const houseType *house, const objectType *who);
 SInt16 GetObjectLinked (const objectType *who);
 void ListOneRoomsObjects (SInt16 where);
 
@@ -192,7 +192,7 @@ Boolean IsThisValid (SInt16 where, SInt16 who)
 
 //--------------------------------------------------------------  GetRoomLinked
 
-SInt16 GetRoomLinked (const objectType *who)
+SInt16 GetRoomLinked (const houseType *house, const objectType *who)
 {
 	SInt16 compoundRoomNumber, whereLinked;
 	SInt16 floor, suite;
@@ -208,8 +208,8 @@ SInt16 GetRoomLinked (const objectType *who)
 		compoundRoomNumber = who->data.d.where;
 		if (compoundRoomNumber != -1)  // is object linked
 		{
-			ExtractFloorSuite(&g_thisHouse, compoundRoomNumber, &floor, &suite);
-			whereLinked = GetRoomNumber(&g_thisHouse, floor, suite);
+			ExtractFloorSuite(house, compoundRoomNumber, &floor, &suite);
+			whereLinked = GetRoomNumber(house, floor, suite);
 		}
 		else
 		{
@@ -228,8 +228,8 @@ SInt16 GetRoomLinked (const objectType *who)
 		compoundRoomNumber = who->data.e.where;
 		if (compoundRoomNumber != -1)  // is object linked
 		{
-			ExtractFloorSuite(&g_thisHouse, compoundRoomNumber, &floor, &suite);
-			whereLinked = GetRoomNumber(&g_thisHouse, floor, suite);
+			ExtractFloorSuite(house, compoundRoomNumber, &floor, &suite);
+			whereLinked = GetRoomNumber(house, floor, suite);
 		}
 		else
 		{
@@ -344,7 +344,7 @@ void ListOneRoomsObjects (SInt16 where)
 
 			g_masterObjects[g_numMasterObjects].roomNum = roomNum;
 			g_masterObjects[g_numMasterObjects].objectNum = n;
-			g_masterObjects[g_numMasterObjects].roomLink = GetRoomLinked(&thisObject);
+			g_masterObjects[g_numMasterObjects].roomLink = GetRoomLinked(&g_thisHouse, &thisObject);
 			g_masterObjects[g_numMasterObjects].objectLink = GetObjectLinked(&thisObject);
 			g_masterObjects[g_numMasterObjects].localLink = -1;
 			g_masterObjects[g_numMasterObjects].theObject = g_thisHouse.rooms[roomNum].objects[n];
