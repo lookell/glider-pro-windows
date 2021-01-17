@@ -154,18 +154,18 @@ Boolean g_newState;
 //==============================================================  Functions
 //--------------------------------------------------------------  IsThisValid
 
-Boolean IsThisValid (SInt16 where, SInt16 who)
+Boolean IsThisValid (const houseType *house, SInt16 where, SInt16 who)
 {
 	Boolean itsGood;
 
-	if (where < 0 || where >= g_thisHouse.nRooms)
+	if (where < 0 || where >= house->nRooms)
 		return (false);
 	if (who < 0 || who >= kMaxRoomObs)
 		return (false);
 
 	itsGood = true;
 
-	switch (g_thisHouse.rooms[where].objects[who].what)
+	switch (house->rooms[where].objects[who].what)
 	{
 		case kObjectIsEmpty:
 		itsGood = false;
@@ -183,7 +183,7 @@ Boolean IsThisValid (SInt16 where, SInt16 who)
 		case kStar:
 		case kSparkle:
 		case kHelium:
-		itsGood = g_thisHouse.rooms[where].objects[who].data.c.state;
+		itsGood = house->rooms[where].objects[who].data.c.state;
 		break;
 	}
 
@@ -349,7 +349,7 @@ void ListOneRoomsObjects (SInt16 where)
 			g_masterObjects[g_numMasterObjects].localLink = -1;
 			g_masterObjects[g_numMasterObjects].theObject = g_thisHouse.rooms[roomNum].objects[n];
 
-			if ((where == kCentralRoom) && (IsThisValid(roomNum, n)))
+			if ((where == kCentralRoom) && (IsThisValid(&g_thisHouse, roomNum, n)))
 				g_masterObjects[g_numMasterObjects].hotNum = CreateActiveRects(n);
 			else
 				g_masterObjects[g_numMasterObjects].hotNum = -1;

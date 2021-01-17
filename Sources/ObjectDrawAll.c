@@ -52,7 +52,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 		dynamicNum = -1;
 		legit = -1;
 
-		if (IsThisValid(g_localNumbers[neighbor], i))
+		if (IsThisValid(&g_thisHouse, g_localNumbers[neighbor], i))
 		{
 			thisObject = g_thisHouse.rooms[g_localNumbers[neighbor]].objects[i];
 			switch (thisObject.what)

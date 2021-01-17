@@ -149,7 +149,7 @@ extern SInt16 g_numTempManholes;
 extern SInt16 g_tvWithMovieNumber;
 extern Boolean g_newState;
 
-Boolean IsThisValid (SInt16 where, SInt16 who);
+Boolean IsThisValid (const houseType *house, SInt16 where, SInt16 who);
 Boolean ObjectIsLinkTransport (const objectType *who);
 Boolean ObjectIsLinkSwitch (const objectType *who);
 void ListAllLocalObjects (void);
