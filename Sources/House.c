@@ -322,7 +322,7 @@ void GenerateLinksList (void)
 				thisObject = g_thisHouse.rooms[r].objects[i];
 				if (thisObject.data.e.where != -1)
 				{
-					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
+					ExtractFloorSuite(&g_thisHouse, thisObject.data.e.where, &floor, &suite);
 					roomLinked = GetRoomNumber(&g_thisHouse, floor, suite);
 					objectLinked = (SInt16)thisObject.data.e.who;
 					g_linksList[numLinks].srcRoom = r;
@@ -342,7 +342,7 @@ void GenerateLinksList (void)
 				thisObject = g_thisHouse.rooms[r].objects[i];
 				if (thisObject.data.d.where != -1)
 				{
-					ExtractFloorSuite(thisObject.data.d.where, &floor, &suite);
+					ExtractFloorSuite(&g_thisHouse, thisObject.data.d.where, &floor, &suite);
 					roomLinked = GetRoomNumber(&g_thisHouse, floor, suite);
 					objectLinked = (SInt16)thisObject.data.d.who;
 					g_linksList[numLinks].srcRoom = r;
@@ -519,7 +519,7 @@ void GenerateRetroLinks (void)
 				thisObject = g_thisHouse.rooms[r].objects[i];
 				if (thisObject.data.e.where != -1)
 				{
-					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
+					ExtractFloorSuite(&g_thisHouse, thisObject.data.e.where, &floor, &suite);
 					roomLinked = GetRoomNumber(&g_thisHouse, floor, suite);
 					if (roomLinked == g_thisRoomNumber)
 					{
@@ -543,7 +543,7 @@ void GenerateRetroLinks (void)
 				thisObject = g_thisHouse.rooms[r].objects[i];
 				if (thisObject.data.d.where != -1)
 				{
-					ExtractFloorSuite(thisObject.data.d.where, &floor, &suite);
+					ExtractFloorSuite(&g_thisHouse, thisObject.data.d.where, &floor, &suite);
 					roomLinked = GetRoomNumber(&g_thisHouse, floor, suite);
 					if (roomLinked == g_thisRoomNumber)
 					{

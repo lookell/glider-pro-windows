@@ -208,7 +208,7 @@ SInt16 GetRoomLinked (const objectType *who)
 		compoundRoomNumber = who->data.d.where;
 		if (compoundRoomNumber != -1)  // is object linked
 		{
-			ExtractFloorSuite(compoundRoomNumber, &floor, &suite);
+			ExtractFloorSuite(&g_thisHouse, compoundRoomNumber, &floor, &suite);
 			whereLinked = GetRoomNumber(&g_thisHouse, floor, suite);
 		}
 		else
@@ -228,7 +228,7 @@ SInt16 GetRoomLinked (const objectType *who)
 		compoundRoomNumber = who->data.e.where;
 		if (compoundRoomNumber != -1)  // is object linked
 		{
-			ExtractFloorSuite(compoundRoomNumber, &floor, &suite);
+			ExtractFloorSuite(&g_thisHouse, compoundRoomNumber, &floor, &suite);
 			whereLinked = GetRoomNumber(&g_thisHouse, floor, suite);
 		}
 		else

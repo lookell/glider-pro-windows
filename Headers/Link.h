@@ -22,7 +22,7 @@ extern Boolean g_linkerIsSwitch;
 SInt16 MergeFloorSuite (const houseType *house, SInt16 floor, SInt16 suite);
 SInt16 MergeFloorSuiteVer1 (SInt16 floor, SInt16 suite);
 SInt16 MergeFloorSuiteVer2 (SInt16 floor, SInt16 suite);
-void ExtractFloorSuite (SInt16 combo, SInt16 *floor, SInt16 *suite);
+void ExtractFloorSuite (const houseType *house, SInt16 combo, SInt16 *floor, SInt16 *suite);
 void ExtractFloorSuiteVer1 (SInt16 combo, SInt16 *floor, SInt16 *suite);
 void ExtractFloorSuiteVer2 (SInt16 combo, SInt16 *floor, SInt16 *suite);
 void UpdateLinkControl (void);

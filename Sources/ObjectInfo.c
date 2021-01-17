@@ -1243,7 +1243,8 @@ void DoSwitchObjectInfo (HWND hwndOwner)
 	}
 	else
 	{
-		ExtractFloorSuite(g_thisRoom->objects[g_objActive].data.e.where, &floor, &suite);
+		ExtractFloorSuite(&g_thisHouse,
+			g_thisRoom->objects[g_objActive].data.e.where, &floor, &suite);
 		StringCchPrintf(roomStr, ARRAYSIZE(roomStr), L"%d / %d", (int)floor, (int)suite);
 	}
 
@@ -1308,7 +1309,8 @@ void DoTriggerObjectInfo (HWND hwndOwner)
 	}
 	else
 	{
-		ExtractFloorSuite(g_thisRoom->objects[g_objActive].data.e.where, &floor, &suite);
+		ExtractFloorSuite(&g_thisHouse,
+			g_thisRoom->objects[g_objActive].data.e.where, &floor, &suite);
 		StringCchPrintf(roomStr, ARRAYSIZE(roomStr), L"%d / %d", (int)floor, (int)suite);
 	}
 
@@ -1498,7 +1500,8 @@ void DoTransObjectInfo (HWND hwndOwner)
 	}
 	else
 	{
-		ExtractFloorSuite(g_thisRoom->objects[g_objActive].data.d.where, &floor, &suite);
+		ExtractFloorSuite(&g_thisHouse,
+			g_thisRoom->objects[g_objActive].data.d.where, &floor, &suite);
 		StringCchPrintf(roomStr, ARRAYSIZE(roomStr), L"%d / %d", (int)floor, (int)suite);
 	}
 

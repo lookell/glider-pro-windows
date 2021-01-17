@@ -63,9 +63,9 @@ SInt16 MergeFloorSuiteVer2 (SInt16 floor, SInt16 suite)
 
 //--------------------------------------------------------------  ExtractFloorSuite
 
-void ExtractFloorSuite (SInt16 combo, SInt16 *floor, SInt16 *suite)
+void ExtractFloorSuite (const houseType *house, SInt16 combo, SInt16 *floor, SInt16 *suite)
 {
-	if (g_thisHouse.version < 0x0200) // old floor/suite combo
+	if (house->version < 0x0200) // old floor/suite combo
 	{
 		ExtractFloorSuiteVer1(combo, floor, suite);
 	}
