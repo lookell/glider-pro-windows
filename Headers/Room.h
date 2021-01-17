@@ -42,7 +42,7 @@ SInt16 DoesNeighborRoomExist (SInt16 whichNeighbor);
 void SelectNeighborRoom (SInt16 whichNeighbor);
 SInt16 GetNeighborRoomNumber (const houseType *house, SInt16 roomNumber, SInt16 which);
 Boolean GetRoomFloorSuite (const houseType *house, SInt16 room, SInt16 *floor, SInt16 *suite);
-SInt16 GetRoomNumber (SInt16 floor, SInt16 suite);
+SInt16 GetRoomNumber (const houseType *house, SInt16 floor, SInt16 suite);
 Boolean IsRoomAStructure (SInt16 roomNum);
 void DetermineRoomOpenings (void);
 SInt16 GetNumberOfLights (SInt16 where);

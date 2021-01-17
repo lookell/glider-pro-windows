@@ -518,7 +518,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
-					room = GetRoomNumber(floor, suite);
+					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
 					DrawLightSwitch(&itsRect, GetObjectState(room, obj));
 				}
@@ -531,7 +531,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
-					room = GetRoomNumber(floor, suite);
+					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
 					DrawMachineSwitch(&itsRect, GetObjectState(room, obj));
 				}
@@ -544,7 +544,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
-					room = GetRoomNumber(floor, suite);
+					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
 					DrawThermostat(&itsRect, GetObjectState(room, obj));
 				}
@@ -557,7 +557,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
-					room = GetRoomNumber(floor, suite);
+					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
 					DrawPowerSwitch(&itsRect, GetObjectState(room, obj));
 				}
@@ -570,7 +570,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
-					room = GetRoomNumber(floor, suite);
+					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
 					DrawKnifeSwitch(&itsRect, GetObjectState(room, obj));
 				}

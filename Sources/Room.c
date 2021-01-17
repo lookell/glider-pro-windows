@@ -703,17 +703,16 @@ Boolean GetRoomFloorSuite (const houseType *house, SInt16 room, SInt16 *floor, S
 
 //--------------------------------------------------------------  GetRoomNumber
 
-SInt16 GetRoomNumber (SInt16 floor, SInt16 suite)
+SInt16 GetRoomNumber (const houseType *house, SInt16 floor, SInt16 suite)
 {
 	// pass in a floor and suite; returns the room index into the house file
 	SInt16 roomNum, i;
 
 	roomNum = kRoomIsEmpty;
 
-	for (i = 0; i < g_thisHouse.nRooms; i++)
+	for (i = 0; i < house->nRooms; i++)
 	{
-		if ((g_thisHouse.rooms[i].suite == suite) &&
-				(g_thisHouse.rooms[i].floor == floor))
+		if ((house->rooms[i].suite == suite) && (house->rooms[i].floor == floor))
 		{
 			roomNum = i;
 			break;

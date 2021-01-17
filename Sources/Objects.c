@@ -209,10 +209,12 @@ SInt16 GetRoomLinked (const objectType *who)
 		if (compoundRoomNumber != -1)  // is object linked
 		{
 			ExtractFloorSuite(compoundRoomNumber, &floor, &suite);
-			whereLinked = GetRoomNumber(floor, suite);
+			whereLinked = GetRoomNumber(&g_thisHouse, floor, suite);
 		}
 		else
+		{
 			whereLinked = -1;  // not linked
+		}
 		break;
 
 		case kLightSwitch:
@@ -227,10 +229,12 @@ SInt16 GetRoomLinked (const objectType *who)
 		if (compoundRoomNumber != -1)  // is object linked
 		{
 			ExtractFloorSuite(compoundRoomNumber, &floor, &suite);
-			whereLinked = GetRoomNumber(floor, suite);
+			whereLinked = GetRoomNumber(&g_thisHouse, floor, suite);
 		}
 		else
+		{
 			whereLinked = -1;  // not linked
+		}
 		break;
 
 		default:

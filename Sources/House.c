@@ -323,7 +323,7 @@ void GenerateLinksList (void)
 				if (thisObject.data.e.where != -1)
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
-					roomLinked = GetRoomNumber(floor, suite);
+					roomLinked = GetRoomNumber(&g_thisHouse, floor, suite);
 					objectLinked = (SInt16)thisObject.data.e.who;
 					g_linksList[numLinks].srcRoom = r;
 					g_linksList[numLinks].srcObj = i;
@@ -343,7 +343,7 @@ void GenerateLinksList (void)
 				if (thisObject.data.d.where != -1)
 				{
 					ExtractFloorSuite(thisObject.data.d.where, &floor, &suite);
-					roomLinked = GetRoomNumber(floor, suite);
+					roomLinked = GetRoomNumber(&g_thisHouse, floor, suite);
 					objectLinked = (SInt16)thisObject.data.d.who;
 					g_linksList[numLinks].srcRoom = r;
 					g_linksList[numLinks].srcObj = i;
@@ -520,7 +520,7 @@ void GenerateRetroLinks (void)
 				if (thisObject.data.e.where != -1)
 				{
 					ExtractFloorSuite(thisObject.data.e.where, &floor, &suite);
-					roomLinked = GetRoomNumber(floor, suite);
+					roomLinked = GetRoomNumber(&g_thisHouse, floor, suite);
 					if (roomLinked == g_thisRoomNumber)
 					{
 						objectLinked = (SInt16)thisObject.data.e.who;
@@ -544,7 +544,7 @@ void GenerateRetroLinks (void)
 				if (thisObject.data.d.where != -1)
 				{
 					ExtractFloorSuite(thisObject.data.d.where, &floor, &suite);
-					roomLinked = GetRoomNumber(floor, suite);
+					roomLinked = GetRoomNumber(&g_thisHouse, floor, suite);
 					if (roomLinked == g_thisRoomNumber)
 					{
 						objectLinked = (SInt16)thisObject.data.d.who;
@@ -628,7 +628,7 @@ INT_PTR CALLBACK GoToFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 					MessageBeep(MB_ICONWARNING);
 					return TRUE;
 				}
-				*roomToGoTo = GetRoomNumber(g_wasFloor, g_wasSuite);
+				*roomToGoTo = GetRoomNumber(&g_thisHouse, g_wasFloor, g_wasSuite);
 			}
 			EndDialog(hDlg, IDOK);
 			break;
