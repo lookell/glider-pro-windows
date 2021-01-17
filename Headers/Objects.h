@@ -155,7 +155,7 @@ Boolean ObjectIsLinkSwitch (const objectType *who);
 void ListAllLocalObjects (void);
 void AddTempManholeRect (const Rect *manHole);
 Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local);
-Boolean GetObjectState (SInt16 room, SInt16 object);
+Boolean GetObjectState (const houseType *house, SInt16 room, SInt16 object, Boolean musicState);
 void BringSendFrontBack (HWND ownerWindow, Boolean bringFront);
 
 #endif

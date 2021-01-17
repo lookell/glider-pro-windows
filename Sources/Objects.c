@@ -765,18 +765,18 @@ Boolean SetObjectState (SInt16 room, SInt16 object, SInt16 action, SInt16 local)
 
 //--------------------------------------------------------------  GetObjectState
 
-Boolean GetObjectState (SInt16 room, SInt16 object)
+Boolean GetObjectState (const houseType *house, SInt16 room, SInt16 object, Boolean musicState)
 {
 	Boolean theState;
 
 	theState = true;
 
-	if (room < 0 || room >= g_thisHouse.nRooms)
+	if (room < 0 || room >= house->nRooms)
 		return (theState);
 	if (object < 0 || object >= kMaxRoomObs)
 		return (theState);
 
-	switch (g_thisHouse.rooms[room].objects[object].what)
+	switch (house->rooms[room].objects[object].what)
 	{
 		case kFloorVent:
 		case kCeilingVent:
@@ -789,7 +789,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kGrecoVent:
 		case kSewerBlower:
 		case kLiftArea:
-		theState = g_thisHouse.rooms[room].objects[object].data.a.state;
+		theState = house->rooms[room].objects[object].data.a.state;
 		break;
 
 		case kTaper:
@@ -830,7 +830,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kStar:
 		case kSparkle:
 		case kHelium:
-		theState = g_thisHouse.rooms[room].objects[object].data.c.state;
+		theState = house->rooms[room].objects[object].data.c.state;
 		break;
 
 		case kSlider:
@@ -854,7 +854,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		break;
 
 		case kDeluxeTrans:
-		theState = g_thisHouse.rooms[room].objects[object].data.d.wide & 0x0F;
+		theState = house->rooms[room].objects[object].data.d.wide & 0x0F;
 		break;
 
 		case kLightSwitch:
@@ -875,11 +875,11 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kFlourescent:
 		case kTrackLight:
 		case kInvisLight:
-		theState = g_thisHouse.rooms[room].objects[object].data.f.state;
+		theState = house->rooms[room].objects[object].data.f.state;
 		break;
 
 		case kStereo:
-		theState = g_isPlayMusicGame;
+		theState = musicState;
 		break;
 
 		case kShredder:
@@ -891,7 +891,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kOutlet:
 		case kVCR:
 		case kMicrowave:
-		theState = g_thisHouse.rooms[room].objects[object].data.g.state;
+		theState = house->rooms[room].objects[object].data.g.state;
 		break;
 
 		case kCinderBlock:
@@ -908,7 +908,7 @@ Boolean GetObjectState (SInt16 room, SInt16 object)
 		case kBall:
 		case kDrip:
 		case kFish:
-		theState = g_thisHouse.rooms[room].objects[object].data.h.state;
+		theState = house->rooms[room].objects[object].data.h.state;
 		break;
 
 		case kCobweb:

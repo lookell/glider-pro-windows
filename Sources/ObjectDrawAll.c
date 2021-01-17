@@ -36,6 +36,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 #endif
 	SInt16 i, legit, dynamicNum, n;
 	SInt16 floor, suite, room, obj;
+	Boolean state;
 	Boolean isLit;
 
 	if (neighbor < 0 || neighbor >= 9)
@@ -520,7 +521,8 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					ExtractFloorSuite(&g_thisHouse, thisObject.data.e.where, &floor, &suite);
 					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
-					DrawLightSwitch(&itsRect, GetObjectState(room, obj));
+					state = GetObjectState(&g_thisHouse, room, obj, g_isPlayMusicGame);
+					DrawLightSwitch(&itsRect, state);
 				}
 				dynamicNum = g_masterObjects[i].hotNum;
 				break;
@@ -533,7 +535,8 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					ExtractFloorSuite(&g_thisHouse, thisObject.data.e.where, &floor, &suite);
 					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
-					DrawMachineSwitch(&itsRect, GetObjectState(room, obj));
+					state = GetObjectState(&g_thisHouse, room, obj, g_isPlayMusicGame);
+					DrawMachineSwitch(&itsRect, state);
 				}
 				dynamicNum = g_masterObjects[i].hotNum;
 				break;
@@ -546,7 +549,8 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					ExtractFloorSuite(&g_thisHouse, thisObject.data.e.where, &floor, &suite);
 					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
-					DrawThermostat(&itsRect, GetObjectState(room, obj));
+					state = GetObjectState(&g_thisHouse, room, obj, g_isPlayMusicGame);
+					DrawThermostat(&itsRect, state);
 				}
 				dynamicNum = g_masterObjects[i].hotNum;
 				break;
@@ -559,7 +563,8 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					ExtractFloorSuite(&g_thisHouse, thisObject.data.e.where, &floor, &suite);
 					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
-					DrawPowerSwitch(&itsRect, GetObjectState(room, obj));
+					state = GetObjectState(&g_thisHouse, room, obj, g_isPlayMusicGame);
+					DrawPowerSwitch(&itsRect, state);
 				}
 				dynamicNum = g_masterObjects[i].hotNum;
 				break;
@@ -572,7 +577,8 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					ExtractFloorSuite(&g_thisHouse, thisObject.data.e.where, &floor, &suite);
 					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
-					DrawKnifeSwitch(&itsRect, GetObjectState(room, obj));
+					state = GetObjectState(&g_thisHouse, room, obj, g_isPlayMusicGame);
+					DrawKnifeSwitch(&itsRect, state);
 				}
 				dynamicNum = g_masterObjects[i].hotNum;
 				break;
