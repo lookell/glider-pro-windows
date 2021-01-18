@@ -816,18 +816,18 @@ SInt16 FindEmptyObjectSlot (void)
 
 //--------------------------------------------------------------  FindObjectSlotInRoom
 
-SInt16 FindObjectSlotInRoom (SInt16 roomNumber)
+SInt16 FindObjectSlotInRoom (const houseType *house, SInt16 roomNumber)
 {
 	roomPtr testRoomPtr;
 	SInt16 i, emptySlot;
 
-	if (roomNumber < 0 || roomNumber >= g_thisHouse.nRooms)
+	if (roomNumber < 0 || roomNumber >= house->nRooms)
 	{
 		return -1;
 	}
 
 	emptySlot = -1;
-	testRoomPtr = &(g_thisHouse.rooms[roomNumber]);
+	testRoomPtr = &(house->rooms[roomNumber]);
 
 	for (i = 0; i < kMaxRoomObs; i++)
 	{

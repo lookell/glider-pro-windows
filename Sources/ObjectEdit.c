@@ -788,7 +788,7 @@ void AddObjectPairing (void)
 		roomNum = DoesNeighborRoomExist(kRoomToRight);
 		if (roomNum != -1)
 		{
-			emptySlot = FindObjectSlotInRoom(roomNum);
+			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorExLf)))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
@@ -818,7 +818,7 @@ void AddObjectPairing (void)
 		roomNum = DoesNeighborRoomExist(kRoomToLeft);
 		if (roomNum != -1)
 		{
-			emptySlot = FindObjectSlotInRoom(roomNum);
+			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorExRt)))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
@@ -848,7 +848,7 @@ void AddObjectPairing (void)
 		roomNum = DoesNeighborRoomExist(kRoomToRight);
 		if (roomNum != -1)
 		{
-			emptySlot = FindObjectSlotInRoom(roomNum);
+			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorInLf)))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
@@ -878,7 +878,7 @@ void AddObjectPairing (void)
 		roomNum = DoesNeighborRoomExist(kRoomToLeft);
 		if (roomNum != -1)
 		{
-			emptySlot = FindObjectSlotInRoom(roomNum);
+			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorInRt)))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
@@ -908,7 +908,7 @@ void AddObjectPairing (void)
 		roomNum = DoesNeighborRoomExist(kRoomToLeft);
 		if (roomNum != -1)
 		{
-			emptySlot = FindObjectSlotInRoom(roomNum);
+			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowExRt)))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
@@ -938,7 +938,7 @@ void AddObjectPairing (void)
 		roomNum = DoesNeighborRoomExist(kRoomToRight);
 		if (roomNum != -1)
 		{
-			emptySlot = FindObjectSlotInRoom(roomNum);
+			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowExLf)))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
@@ -968,7 +968,7 @@ void AddObjectPairing (void)
 		roomNum = DoesNeighborRoomExist(kRoomToRight);
 		if (roomNum != -1)
 		{
-			emptySlot = FindObjectSlotInRoom(roomNum);
+			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowInLf)))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
@@ -998,7 +998,7 @@ void AddObjectPairing (void)
 		roomNum = DoesNeighborRoomExist(kRoomToLeft);
 		if (roomNum != -1)
 		{
-			emptySlot = FindObjectSlotInRoom(roomNum);
+			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowInRt)))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
@@ -1028,7 +1028,7 @@ void AddObjectPairing (void)
 		roomNum = DoesNeighborRoomExist(kRoomAbove);
 		if (roomNum != -1)
 		{
-			emptySlot = FindObjectSlotInRoom(roomNum);
+			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDownStairs)))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
@@ -1059,7 +1059,7 @@ void AddObjectPairing (void)
 		roomNum = DoesNeighborRoomExist(kRoomBelow);
 		if (roomNum != -1)
 		{
-			emptySlot = FindObjectSlotInRoom(roomNum);
+			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
 			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kUpStairs)))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
