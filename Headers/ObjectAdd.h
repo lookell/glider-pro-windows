@@ -15,6 +15,6 @@ extern SInt16 g_wasFlower;
 
 Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showItNow);
 SInt16 FindObjectSlotInRoom (const houseType *house, SInt16 roomNumber);
-Boolean DoesRoomNumHaveObject (SInt16 room, SInt16 what);
+Boolean DoesRoomNumHaveObject (const houseType *house, SInt16 room, SInt16 what);
 
 #endif

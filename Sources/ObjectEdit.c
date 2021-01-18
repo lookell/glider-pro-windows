@@ -777,6 +777,7 @@ void AddObjectPairing (void)
 	roomType *testRoomPtr;
 	SInt16 roomNum;
 	SInt16 emptySlot;
+	Boolean hasMatch;
 	wchar_t message[256];
 	HWND mssgWindow;
 
@@ -789,7 +790,8 @@ void AddObjectPairing (void)
 		if (roomNum != -1)
 		{
 			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
-			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorExLf)))
+			hasMatch = DoesRoomNumHaveObject(&g_thisHouse, roomNum, kDoorExLf);
+			if ((emptySlot != -1) && (!hasMatch))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
 
@@ -819,7 +821,8 @@ void AddObjectPairing (void)
 		if (roomNum != -1)
 		{
 			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
-			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorExRt)))
+			hasMatch = DoesRoomNumHaveObject(&g_thisHouse, roomNum, kDoorExRt);
+			if ((emptySlot != -1) && (!hasMatch))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
 
@@ -849,7 +852,8 @@ void AddObjectPairing (void)
 		if (roomNum != -1)
 		{
 			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
-			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorInLf)))
+			hasMatch = DoesRoomNumHaveObject(&g_thisHouse, roomNum, kDoorInLf);
+			if ((emptySlot != -1) && (!hasMatch))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
 
@@ -879,7 +883,8 @@ void AddObjectPairing (void)
 		if (roomNum != -1)
 		{
 			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
-			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDoorInRt)))
+			hasMatch = DoesRoomNumHaveObject(&g_thisHouse, roomNum, kDoorInRt);
+			if ((emptySlot != -1) && (!hasMatch))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
 
@@ -909,7 +914,8 @@ void AddObjectPairing (void)
 		if (roomNum != -1)
 		{
 			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
-			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowExRt)))
+			hasMatch = DoesRoomNumHaveObject(&g_thisHouse, roomNum, kWindowExRt);
+			if ((emptySlot != -1) && (!hasMatch))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
 
@@ -939,7 +945,8 @@ void AddObjectPairing (void)
 		if (roomNum != -1)
 		{
 			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
-			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowExLf)))
+			hasMatch = DoesRoomNumHaveObject(&g_thisHouse, roomNum, kWindowExLf);
+			if ((emptySlot != -1) && (!hasMatch))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
 
@@ -969,7 +976,8 @@ void AddObjectPairing (void)
 		if (roomNum != -1)
 		{
 			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
-			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowInLf)))
+			hasMatch = DoesRoomNumHaveObject(&g_thisHouse, roomNum, kWindowInLf);
+			if ((emptySlot != -1) && (!hasMatch))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
 
@@ -999,7 +1007,8 @@ void AddObjectPairing (void)
 		if (roomNum != -1)
 		{
 			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
-			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kWindowInRt)))
+			hasMatch = DoesRoomNumHaveObject(&g_thisHouse, roomNum, kWindowInRt);
+			if ((emptySlot != -1) && (!hasMatch))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
 
@@ -1029,7 +1038,8 @@ void AddObjectPairing (void)
 		if (roomNum != -1)
 		{
 			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
-			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kDownStairs)))
+			hasMatch = DoesRoomNumHaveObject(&g_thisHouse, roomNum, kDownStairs);
+			if ((emptySlot != -1) && (!hasMatch))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
 
@@ -1060,7 +1070,8 @@ void AddObjectPairing (void)
 		if (roomNum != -1)
 		{
 			emptySlot = FindObjectSlotInRoom(&g_thisHouse, roomNum);
-			if ((emptySlot != -1) && (!DoesRoomNumHaveObject(roomNum, kUpStairs)))
+			hasMatch = DoesRoomNumHaveObject(&g_thisHouse, roomNum, kUpStairs);
+			if ((emptySlot != -1) && (!hasMatch))
 			{
 				testRoomPtr = &(g_thisHouse.rooms[roomNum]);
 

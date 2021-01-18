@@ -843,18 +843,18 @@ SInt16 FindObjectSlotInRoom (const houseType *house, SInt16 roomNumber)
 
 //--------------------------------------------------------------  DoesRoomNumHaveObject
 
-Boolean DoesRoomNumHaveObject (SInt16 room, SInt16 what)
+Boolean DoesRoomNumHaveObject (const houseType *house, SInt16 room, SInt16 what)
 {
 	roomPtr testRoomPtr;
 	SInt16 i;
 	Boolean hasIt;
 
-	if (room < 0 || room >= g_thisHouse.nRooms)
+	if (room < 0 || room >= house->nRooms)
 	{
 		return false;
 	}
 
-	testRoomPtr = &(g_thisHouse.rooms[room]);
+	testRoomPtr = &(house->rooms[room]);
 	hasIt = false;
 
 	for (i = 0; i < kMaxRoomObs; i++)
