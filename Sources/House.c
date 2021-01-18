@@ -433,7 +433,7 @@ void SortHouseObjects (void)
 		return;
 
 	g_linksList = NULL;
-	g_linksList = (linksPtr)malloc(sizeof(*g_linksList) * numLinks);
+	g_linksList = (linksPtr)calloc(numLinks, sizeof(*g_linksList));
 	if (g_linksList == NULL)
 		RedAlert(kErrNoMemory);
 

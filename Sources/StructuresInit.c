@@ -756,7 +756,7 @@ void CreatePointers (void)
 	HRESULT hr;
 
 	g_thisRoom = NULL;
-	g_thisRoom = (roomPtr)malloc(sizeof(roomType));
+	g_thisRoom = (roomPtr)calloc(1, sizeof(*g_thisRoom));
 	if (g_thisRoom == NULL)
 		RedAlert(kErrNoMemory);
 
@@ -764,7 +764,7 @@ void CreatePointers (void)
 		g_savedMaps[i].map = NULL;
 
 	g_theHousesSpecs = NULL;
-	g_theHousesSpecs = (houseSpecPtr)malloc(sizeof(houseSpec) * g_maxFiles);
+	g_theHousesSpecs = (houseSpecPtr)calloc(g_maxFiles, sizeof(*g_theHousesSpecs));
 	if (g_theHousesSpecs == NULL)
 		RedAlert(kErrNoMemory);
 
