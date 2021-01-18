@@ -355,7 +355,7 @@ Boolean TestHighScore (HWND ownerWindow)
 		}
 		g_thisHouse.highScores.scores[kMaxScores - 1] = g_theScore;
 		g_thisHouse.highScores.timeStamps[kMaxScores - 1] = Mac_GetDateTime();
-		g_thisHouse.highScores.levels[kMaxScores - 1] = CountRoomsVisited();
+		g_thisHouse.highScores.levels[kMaxScores - 1] = CountRoomsVisited(&g_thisHouse);
 		SortHighScores(&g_thisHouse.highScores);
 		g_gameDirty = true;
 	}

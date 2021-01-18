@@ -470,17 +470,19 @@ void SortHouseObjects (void)
 // Goes through and counts the number of rooms a player has been to in
 // the current game.
 
-SInt16 CountRoomsVisited (void)
+SInt16 CountRoomsVisited (const houseType *house)
 {
 	SInt16 numRooms, r, count;
 
-	numRooms = g_thisHouse.nRooms;
+	numRooms = house->nRooms;
 	count = 0;
 
 	for (r = 0; r < numRooms; r++)
 	{
-		if (g_thisHouse.rooms[r].visited)
+		if (house->rooms[r].visited)
+		{
 			count++;
+		}
 	}
 
 	return (count);

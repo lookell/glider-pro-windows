@@ -28,7 +28,7 @@ void WhereDoesGliderBegin (Rect *theRect, SInt16 mode);
 SInt16 CountHouseLinks (void);
 void GenerateLinksList (void);
 void SortHouseObjects (void);
-SInt16 CountRoomsVisited (void);
+SInt16 CountRoomsVisited (const houseType *house);
 void GenerateRetroLinks (void);
 void DoGoToDialog (HWND ownerWindow);
 void ConvertHouseVer1To2 (void);
