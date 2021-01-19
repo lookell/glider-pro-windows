@@ -20,7 +20,6 @@ extern const COLORREF MacColor8[256];
 
 #define srcCopy 0
 #define srcXor 2
-#define transparent 36
 
 void Mac_CopyBits(
 	HDC srcBits,

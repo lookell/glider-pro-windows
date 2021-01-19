@@ -2037,16 +2037,27 @@ void DrawPictWithMaskObject (SInt16 what, const Rect *theRect)
 
 void CopyBitsSansWhite (HDC srcBits, HDC dstBits, const Rect *srcRect, const Rect *dstRect)
 {
-	COLORREF wasBkColor;
-
-	// The transparent mode of Mac_CopyBits uses the current background
-	// color of the *destination* HDC as the transparent color. Only pixels
-	// that don't match the background color (here, white) are copied.
-	// TODO: this should be replaced with a direct call to TransparentBlt(),
-	// to avoid the SetBkColor kludge.
-	wasBkColor = SetBkColor(dstBits, RGB(0xFF, 0xFF, 0xFF));
-	Mac_CopyBits(srcBits, dstBits, srcRect, dstRect, transparent, nil);
-	SetBkColor(dstBits, wasBkColor);
+	if (srcRect->left >= srcRect->right || srcRect->top >= srcRect->bottom)
+	{
+		return;
+	}
+	if (dstRect->left >= dstRect->right || dstRect->top >= dstRect->bottom)
+	{
+		return;
+	}
+	TransparentBlt(
+		dstBits,
+		dstRect->left,
+		dstRect->top,
+		dstRect->right - dstRect->left,
+		dstRect->bottom - dstRect->top,
+		srcBits,
+		srcRect->left,
+		srcRect->top,
+		srcRect->right - srcRect->left,
+		srcRect->bottom - srcRect->top,
+		RGB(0xFF, 0xFF, 0xFF)
+	);
 }
 
 //--------------------------------------------------------------  DrawPictSansWhiteObject

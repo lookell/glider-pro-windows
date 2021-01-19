@@ -21,7 +21,7 @@ void Mac_CopyBits(
 		return;
 	if (dstRect->left >= dstRect->right || dstRect->top >= dstRect->bottom)
 		return;
-	if (mode != srcCopy && mode != srcXor && mode != transparent)
+	if (mode != srcCopy && mode != srcXor)
 		return;
 
 	xSrc = srcRect->left;
@@ -54,11 +54,6 @@ void Mac_CopyBits(
 				srcBits, xSrc, ySrc, wSrc, hSrc, 0x00990066); // DSxn
 		SetTextColor(dstBits, wasTextColor);
 		SetBkColor(dstBits, wasBkColor);
-		break;
-
-		case transparent:
-		TransparentBlt(dstBits, xDst, yDst, wDst, hDst,
-				srcBits, xSrc, ySrc, wSrc, hSrc, GetBkColor(dstBits));
 		break;
 	}
 	if (maskRgn != NULL)
