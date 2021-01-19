@@ -58,6 +58,7 @@
 void DrawClockDigit (SInt16 number, const Rect *dest);
 void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand);
 void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand);
+void CopyBitsSansWhite (HDC srcBits, HDC dstBits, const Rect *srcRect, const Rect *dstRect);
 
 //==============================================================  Functions
 //--------------------------------------------------------------  DrawSimpleBlowers
@@ -2032,6 +2033,22 @@ void DrawPictWithMaskObject (SInt16 what, const Rect *theRect)
 	DisposeGWorld(tempMask);
 }
 
+//--------------------------------------------------------------  CopyBitsSansWhite
+
+void CopyBitsSansWhite (HDC srcBits, HDC dstBits, const Rect *srcRect, const Rect *dstRect)
+{
+	COLORREF wasBkColor;
+
+	// The transparent mode of Mac_CopyBits uses the current background
+	// color of the *destination* HDC as the transparent color. Only pixels
+	// that don't match the background color (here, white) are copied.
+	// TODO: this should be replaced with a direct call to TransparentBlt(),
+	// to avoid the SetBkColor kludge.
+	wasBkColor = SetBkColor(dstBits, RGB(0xFF, 0xFF, 0xFF));
+	Mac_CopyBits(srcBits, dstBits, srcRect, dstRect, transparent, nil);
+	SetBkColor(dstBits, wasBkColor);
+}
+
 //--------------------------------------------------------------  DrawPictSansWhiteObject
 
 void DrawPictSansWhiteObject (SInt16 what, const Rect *theRect)
@@ -2039,7 +2056,6 @@ void DrawPictSansWhiteObject (SInt16 what, const Rect *theRect)
 	Rect bounds;
 	HDC tempMap;
 	SInt16 pictID;
-	COLORREF wasBkColor;
 
 	switch (what)
 	{
@@ -2133,15 +2149,7 @@ void DrawPictSansWhiteObject (SInt16 what, const Rect *theRect)
 
 	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 	LoadGraphic(tempMap, g_theHouseFile, pictID);
-
-	// The transparent mode of Mac_CopyBits uses the current background
-	// color of the *destination* HDC as the transparent color. Only pixels
-	// that don't match the background color (here, white) are copied.
-	wasBkColor = SetBkColor(g_backSrcMap, RGB(0xFF, 0xFF, 0xFF));
-	Mac_CopyBits(tempMap, g_backSrcMap,
-			&g_srcRects[what], theRect, transparent, nil);
-	SetBkColor(g_backSrcMap, wasBkColor);
-
+	CopyBitsSansWhite(tempMap, g_backSrcMap, &g_srcRects[what], theRect);
 	DisposeGWorld(tempMap);
 }
 
@@ -2151,7 +2159,6 @@ void DrawCustPictSansWhite (SInt16 pictID, const Rect *theRect)
 {
 	Rect bounds;
 	HDC tempMap;
-	COLORREF wasBkColor;
 
 	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
 		return;
@@ -2160,11 +2167,6 @@ void DrawCustPictSansWhite (SInt16 pictID, const Rect *theRect)
 	ZeroRectCorner(&bounds);
 	tempMap = CreateOffScreenGWorld(&bounds, kPreferredDepth);
 	LoadGraphic(tempMap, g_theHouseFile, pictID);
-
-	wasBkColor = SetBkColor(g_backSrcMap, RGB(0xFF, 0xFF, 0xFF));
-	Mac_CopyBits(tempMap, g_backSrcMap,
-			&bounds, theRect, transparent, nil);
-	SetBkColor(g_backSrcMap, wasBkColor);
-
+	CopyBitsSansWhite(tempMap, g_backSrcMap, &bounds, theRect);
 	DisposeGWorld(tempMap);
 }
