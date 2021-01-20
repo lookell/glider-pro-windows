@@ -386,25 +386,44 @@ void QuickFoilRefresh (Boolean flash)
 
 void AdjustScoreboardHeight (void)
 {
-	SInt16 offset, newMode;
-
 	if (g_numNeighbors == 9)
-		newMode = kScoreboardHigh;
+	{
+		SetScoreboardMode(kScoreboardHigh);
+	}
 	else
-		newMode = kScoreboardLow;
+	{
+		SetScoreboardMode(kScoreboardLow);
+	}
+}
+
+//--------------------------------------------------------------  GetScoreboardMode
+
+SInt16 GetScoreboardMode (void)
+{
+	return g_wasScoreboardMode;
+}
+
+//--------------------------------------------------------------  SetScoreboardMode
+
+SInt16 SetScoreboardMode (SInt16 newMode)
+{
+	SInt16 wasMode;
+	SInt16 offset;
+
+	wasMode = g_wasScoreboardMode;
 
 	if (g_wasScoreboardMode != newMode)
 	{
 		offset = 0;
 		switch (newMode)
 		{
-			case kScoreboardHigh:  // 9 neighbors
+		case kScoreboardHigh:  // 9 neighbors
 			offset = g_localRoomsDest[kCentralRoom].top;
 			offset = -offset;
 			g_justRoomsRect = g_workSrcRect;
 			break;
 
-			case kScoreboardLow:  // 1 or 3 neighbors
+		case kScoreboardLow:  // 1 or 3 neighbors
 			offset = g_localRoomsDest[kCentralRoom].top;
 			g_justRoomsRect = g_workSrcRect;
 			g_justRoomsRect.top = g_localRoomsDest[kCentralRoom].top;
@@ -422,4 +441,6 @@ void AdjustScoreboardHeight (void)
 
 		g_wasScoreboardMode = newMode;
 	}
+
+	return wasMode;
 }

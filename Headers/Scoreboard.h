@@ -45,5 +45,7 @@ void QuickBatteryRefresh (Boolean flash);
 void QuickBandsRefresh (Boolean flash);
 void QuickFoilRefresh (Boolean flash);
 void AdjustScoreboardHeight (void);
+SInt16 GetScoreboardMode (void);
+SInt16 SetScoreboardMode (SInt16 newMode);
 
 #endif
