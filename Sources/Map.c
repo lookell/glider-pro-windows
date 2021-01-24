@@ -211,7 +211,7 @@ void DrawMapRoomImage (HDC hdc, SInt16 backgroundID, const Rect *dstRect)
 	if (hBitmap != NULL)
 	{
 		Mac_DrawPicture(hdc, hBitmap, dstRect);
-		DeleteObject(hBitmap);
+		DeleteBitmap(hBitmap);
 	}
 	else
 	{
@@ -294,14 +294,14 @@ void RedrawMapContents (HDC hdc)
 	FillRgn(hdc, groundRgn, ditherBrush);  // draw the green ground
 	SetBkColor(hdc, wasBkColor);
 	SetTextColor(hdc, wasTextColor);
-	DeleteObject(ditherBrush);
-	DeleteObject(ditherBitmap);
+	DeleteBrush(ditherBrush);
+	DeleteBitmap(ditherBitmap);
 
-	DeleteObject(tempRgn);
-	DeleteObject(groundRgn);
-	DeleteObject(skyRgn);
+	DeleteRgn(tempRgn);
+	DeleteRgn(groundRgn);
+	DeleteRgn(skyRgn);
 
-	SelectObject(hdc, GetStockObject(BLACK_PEN));
+	SelectPen(hdc, GetStockPen(BLACK_PEN));
 
 	for (i = 1; i < g_mapRoomsWide; i++)
 	{
@@ -320,9 +320,9 @@ void RedrawMapContents (HDC hdc)
 		SetDCBrushColor(hdc, redColor);
 		g_activeRoomRect.right++;
 		g_activeRoomRect.bottom++;
-		Mac_FrameRect(hdc, &g_activeRoomRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
+		Mac_FrameRect(hdc, &g_activeRoomRect, GetStockBrush(DC_BRUSH), 1, 1);
 		QInsetRect(&g_activeRoomRect, 1, 1);
-		Mac_FrameRect(hdc, &g_activeRoomRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
+		Mac_FrameRect(hdc, &g_activeRoomRect, GetStockBrush(DC_BRUSH), 1, 1);
 		QInsetRect(&g_activeRoomRect, -1, -1);
 	}
 

@@ -156,7 +156,7 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 	}
 #endif
 
-	Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+	Mac_PaintRect(g_workSrcMap, &g_workSrcRect, GetStockBrush(BLACK_BRUSH));
 	DissolveScreenOn(&g_workSrcRect);
 	SetMenu(g_mainWindow, NULL);
 	UpdateWindow(g_mainWindow);
@@ -268,7 +268,7 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 	if (!g_gameOver)
 	{
 		InvalidateRect(g_mainWindow, NULL, TRUE);
-		Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+		Mac_PaintRect(g_workSrcMap, &g_workSrcRect, GetStockBrush(BLACK_BRUSH));
 		tempRect = g_splashSrcRect;
 		ZeroRectCorner(&tempRect);
 		QOffsetRect(&tempRect, g_splashOriginH, g_splashOriginV);

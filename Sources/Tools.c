@@ -151,16 +151,16 @@ void UpdateToolTiles (void)
 	buttonBitmap = CreateCompatibleBitmap(displayDC, 22, 22);
 	if (buttonBitmap != NULL)
 	{
-		prevBitmap = (HBITMAP)SelectObject(hdc, buttonBitmap);
+		prevBitmap = SelectBitmap(hdc, buttonBitmap);
 		DrawCIcon(hdc, kSelectToolIcon, -3, -3);
-		SelectObject(hdc, prevBitmap);
+		SelectBitmap(hdc, prevBitmap);
 
 		prevButtonBitmap = (HBITMAP)SendDlgItemMessage(g_toolsWindow,
 			kToolButtonBaseID + kSelectTool, BM_SETIMAGE,
 			IMAGE_BITMAP, (LPARAM)buttonBitmap);
 		if (prevButtonBitmap != NULL)
 		{
-			DeleteObject(prevButtonBitmap);
+			DeleteBitmap(prevButtonBitmap);
 		}
 	}
 
@@ -176,16 +176,16 @@ void UpdateToolTiles (void)
 		buttonBitmap = CreateCompatibleBitmap(displayDC, 22, 22);
 		if (buttonBitmap != NULL)
 		{
-			prevBitmap = (HBITMAP)SelectObject(hdc, buttonBitmap);
+			prevBitmap = SelectBitmap(hdc, buttonBitmap);
 			Mac_CopyBits(g_toolSrcMap, hdc, &srcRect, &destRect, srcCopy, nil);
-			SelectObject(hdc, prevBitmap);
+			SelectBitmap(hdc, prevBitmap);
 
 			prevButtonBitmap = (HBITMAP)SendDlgItemMessage(g_toolsWindow,
 				kToolButtonBaseID + i + 1, BM_SETIMAGE,
 				IMAGE_BITMAP, (LPARAM)buttonBitmap);
 			if (prevButtonBitmap != NULL)
 			{
-				DeleteObject(prevButtonBitmap);
+				DeleteBitmap(prevButtonBitmap);
 			}
 		}
 	}
@@ -342,7 +342,7 @@ void Tools_OnDestroy (HWND hwnd)
 			BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)NULL);
 		if (buttonBitmap)
 		{
-			DeleteObject(buttonBitmap);
+			DeleteBitmap(buttonBitmap);
 		}
 	}
 	if (g_toolButtonTooltip != NULL)

@@ -435,7 +435,7 @@ static HRESULT LoadMemoryBMPImpl(HBITMAP *phBitmap, const ByteSlice *slice, BOOL
 		FAIL_IF_TRUE(hbm == NULL);
 		if (!SetDIBits(NULL, hbm, 0, bmHeight, bitsSlice.buffer, lpbmi, DIB_RGB_COLORS))
 		{
-			DeleteObject(hbm);
+			DeleteBitmap(hbm);
 			return E_FAIL;
 		}
 		*phBitmap = hbm;

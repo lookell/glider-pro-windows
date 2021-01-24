@@ -351,7 +351,7 @@ void GetDialogItemRect (HWND theDialog, int item, Rect *theRect)
 		return;
 	}
 	SetLastError(ERROR_SUCCESS);
-	if (!MapWindowPoints(HWND_DESKTOP, theDialog, (POINT *)&windowRect, 2))
+	if (!MapWindowRect(HWND_DESKTOP, theDialog, &windowRect))
 	{
 		if (GetLastError() != ERROR_SUCCESS)
 		{

@@ -223,7 +223,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		{
 			GetObject(thePict, sizeof(bmInfo), &bmInfo);
 			QSetRect(itsRect, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
-			DeleteObject(thePict);
+			DeleteBitmap(thePict);
 		}
 		ZeroRectCorner(itsRect);
 		QOffsetRect(itsRect,

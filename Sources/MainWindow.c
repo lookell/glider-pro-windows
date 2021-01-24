@@ -101,7 +101,7 @@ void DrawOnSplash (HDC hdc, SInt16 splashHouseIndex)
 {
 	Str255 houseLoadedStr;
 	HFONT theFont;
-	HGDIOBJ wasFont;
+	HFONT wasFont;
 	houseSpec splashHouseSpec;
 
 	if (splashHouseIndex < 0 || splashHouseIndex >= g_housesFound)
@@ -115,13 +115,13 @@ void DrawOnSplash (HDC hdc, SInt16 splashHouseIndex)
 		PasStringConcatC(houseLoadedStr, " (QT)");
 	MoveToEx(hdc, g_splashOriginH + 436, g_splashOriginV + 314, NULL);
 	theFont = CreateTahomaFont(-9, FW_BOLD);
-	wasFont = SelectObject(hdc, theFont);
+	wasFont = SelectFont(hdc, theFont);
 	if (splashHouseSpec.readOnly)
 		ColorText(hdc, houseLoadedStr, 5L);
 	else
 		ColorText(hdc, houseLoadedStr, 28L);
-	SelectObject(hdc, wasFont);
-	DeleteObject(theFont);
+	SelectFont(hdc, wasFont);
+	DeleteFont(theFont);
 }
 
 //--------------------------------------------------------------  RedrawSplashScreen
@@ -130,7 +130,7 @@ void RedrawSplashScreen (SInt16 splashHouseIndex)
 {
 	Rect tempRect;
 
-	Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+	Mac_PaintRect(g_workSrcMap, &g_workSrcRect, GetStockBrush(BLACK_BRUSH));
 	tempRect = g_splashSrcRect;
 	ZeroRectCorner(&tempRect);
 	QOffsetRect(&tempRect, g_splashOriginH, g_splashOriginV);
@@ -199,7 +199,7 @@ void PaintMainWindow (HDC hdc)
 	}
 	else if (g_theMode == kSplashMode)
 	{
-		Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+		Mac_PaintRect(g_workSrcMap, &g_workSrcRect, GetStockBrush(BLACK_BRUSH));
 		tempRect = g_splashSrcRect;
 		ZeroRectCorner(&tempRect);
 		QOffsetRect(&tempRect, g_splashOriginH, g_splashOriginV);
@@ -217,9 +217,9 @@ void PaintMainWindow (HDC hdc)
 		CombineRgn(unpaintedRgn, unpaintedRgn, justPaintedRgn, RGN_DIFF);
 	}
 
-	FillRgn(hdc, unpaintedRgn, (HBRUSH)GetStockObject(BLACK_BRUSH));
-	DeleteObject(justPaintedRgn);
-	DeleteObject(unpaintedRgn);
+	FillRgn(hdc, unpaintedRgn, GetStockBrush(BLACK_BRUSH));
+	DeleteRgn(justPaintedRgn);
+	DeleteRgn(unpaintedRgn);
 
 	g_splashDrawn = true;
 }
@@ -338,7 +338,7 @@ void OpenMainWindow (void)
 		if (g_splashOriginV < 0)
 			g_splashOriginV = 0;
 
-		Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+		Mac_PaintRect(g_workSrcMap, &g_workSrcRect, GetStockBrush(BLACK_BRUSH));
 		tempRect = g_splashSrcRect;
 		ZeroRectCorner(&tempRect);
 		Mac_CopyBits(g_splashSrcMap, g_workSrcMap, &g_splashSrcRect, &tempRect, srcCopy, nil);
@@ -511,7 +511,7 @@ void WashColorIn (void)
 
 	splashDC = CreateCompatibleDC(NULL);
 	SaveDC(splashDC);
-	SelectObject(splashDC, splashDIB);
+	SelectBitmap(splashDC, splashDIB);
 
 	numColors = GetDIBColorTable(splashDC, 0, ARRAYSIZE(wasColors), wasColors);
 	if (numColors != ARRAYSIZE(wasColors))
@@ -559,7 +559,7 @@ void WashColorIn (void)
 	SetFrameRate(wasFPS);
 	RestoreDC(splashDC, -1);
 	DeleteDC(splashDC);
-	DeleteObject(splashDIB);
+	DeleteBitmap(splashDIB);
 	EnableMenuBar();
 	InvalidateRect(g_mainWindow, NULL, TRUE);
 

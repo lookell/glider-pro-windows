@@ -2293,7 +2293,7 @@ void GetThisRoomsObjRects (void)
 					GetObject(thePict, sizeof(bmInfo), &bmInfo);
 					QSetRect(&g_roomObjectRects[i], 0, 0,
 							(SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
-					DeleteObject(thePict);
+					DeleteBitmap(thePict);
 				}
 				ZeroRectCorner(&g_roomObjectRects[i]);
 				QOffsetRect(&g_roomObjectRects[i],

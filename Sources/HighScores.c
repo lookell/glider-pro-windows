@@ -52,7 +52,7 @@ void DoHighScores (void)
 {
 	Rect tempRect;
 
-	Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+	Mac_PaintRect(g_workSrcMap, &g_workSrcRect, GetStockBrush(BLACK_BRUSH));
 	QSetRect(&tempRect, 0, 0, 640, 460);
 	QOffsetRect(&tempRect, g_splashOriginH, g_splashOriginV);
 	LoadScaledGraphic(g_workSrcMap, g_theHouseFile, kStarPictID, &tempRect);
@@ -101,7 +101,7 @@ void DrawHighScores (void)
 	theFont = CreateTahomaFont(-14, FW_BOLD);
 
 	SaveDC(g_workSrcMap);
-	SelectObject(g_workSrcMap, theFont);
+	SelectFont(g_workSrcMap, theFont);
 	PasStringCopyC("\xA5 ", tempStr); // "• "
 	PasStringConcat(tempStr, g_thisHouseName);
 	PasStringConcatC(tempStr, " \xA5"); // " •"
@@ -114,11 +114,11 @@ void DrawHighScores (void)
 	SetTextColor(g_workSrcMap, cyanColor);
 	Mac_DrawString(g_workSrcMap, tempStr);
 	RestoreDC(g_workSrcMap, -1);
-	DeleteObject(theFont);
+	DeleteFont(theFont);
 
 	theFont = CreateTahomaFont(-12, FW_BOLD);
 	SaveDC(g_workSrcMap);
-	SelectObject(g_workSrcMap, theFont);
+	SelectFont(g_workSrcMap, theFont);
 
 	// message for score #1
 	PasStringCopy(g_thisHouse.highScores.banner, tempStr);
@@ -136,10 +136,10 @@ void DrawHighScores (void)
 	QOffsetRect(&tempRect, scoreLeft - 3 + (kScoreWide - bannerWidth) / 2,
 			dropIt + 5 - kScoreSpacing - kKimsLifted);
 	wasColor = SetDCBrushColor(g_workSrcMap, blackColor);
-	Mac_FrameRect(g_workSrcMap, &tempRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
+	Mac_FrameRect(g_workSrcMap, &tempRect, GetStockBrush(DC_BRUSH), 1, 1);
 	QOffsetRect(&tempRect, -1, -1);
 	SetDCBrushColor(g_workSrcMap, yellowColor);
-	Mac_FrameRect(g_workSrcMap, &tempRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
+	Mac_FrameRect(g_workSrcMap, &tempRect, GetStockBrush(DC_BRUSH), 1, 1);
 	SetDCBrushColor(g_workSrcMap, wasColor);
 
 	for (i = 0; i < kMaxScores; i++)
@@ -239,17 +239,17 @@ void DrawHighScores (void)
 	}
 
 	RestoreDC(g_workSrcMap, -1);
-	DeleteObject(theFont);
+	DeleteFont(theFont);
 
 	theFont = CreateTahomaFont(-9, FW_BOLD);
 	SaveDC(g_workSrcMap);
-	SelectObject(g_workSrcMap, theFont);
+	SelectFont(g_workSrcMap, theFont);
 	SetTextColor(g_workSrcMap, blueColor);
 	MoveToEx(g_workSrcMap, scoreLeft + 80, dropIt - 1 + (10 * kScoreSpacing), NULL);
 	GetLocalizedString_Pascal(8, tempStr);
 	Mac_DrawString(g_workSrcMap, tempStr);
 	RestoreDC(g_workSrcMap, -1);
-	DeleteObject(theFont);
+	DeleteFont(theFont);
 }
 
 //--------------------------------------------------------------  SortHighScores

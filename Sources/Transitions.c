@@ -215,7 +215,7 @@ void DissBitsImpl (const Rect *theRect, Boolean doChunky)
 	LPtoDP(mainWindowDC, (LPPOINT)&clipRect, 2);
 	theClipRgn = CreateRectRgnIndirect(&clipRect);
 	ExtSelectClipRgn(mainWindowDC, theClipRgn, RGN_AND);
-	DeleteObject(theClipRgn);
+	DeleteRgn(theClipRgn);
 
 	state = 1;
 	do

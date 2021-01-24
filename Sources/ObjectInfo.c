@@ -154,7 +154,7 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 		(g_thisRoom->objects[g_objActive].what != kRightFan))
 	{
 		GetWindowRect(GetDlgItem(hDlg, kBlowerArrow), &bounds);
-		MapWindowPoints(HWND_DESKTOP, hDlg, (POINT *)&bounds, 2);
+		MapWindowRect(HWND_DESKTOP, hDlg, &bounds);
 
 		FillRect(hdc, &bounds, GetSysColorBrush(COLOR_BTNFACE));
 
@@ -166,7 +166,7 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 		centerVert = bounds.top + (bounds.bottom - bounds.top) / 2;
 
 		hPen = CreatePen(PS_SOLID, 2, GetSysColor(COLOR_WINDOWTEXT));
-		oldPen = (HPEN)SelectObject(hdc, hPen);
+		oldPen = SelectPen(hdc, hPen);
 
 		// Draw an arrow pointing in the currently selected direction
 		if (IsDlgButtonChecked(hDlg, kBlowerUpButton))
@@ -206,8 +206,8 @@ void UpdateBlowerInfo (HWND hDlg, HDC hdc)
 			LineTo(hdc, bounds.left + 1 + kArrowheadLength, centerVert + kArrowheadLength);
 		}
 
-		SelectObject(hdc, oldPen);
-		DeleteObject(hPen);
+		SelectPen(hdc, oldPen);
+		DeletePen(hPen);
 
 		// Draw the focus rectangle around the custom-drawn arrow, so that
 		// the direction option buttons look like they are part of a single

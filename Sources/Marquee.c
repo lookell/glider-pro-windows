@@ -63,7 +63,7 @@ void PaintMarqueeRect (HDC hdc, const Rect *theRect)
 	wasROP2 = SetROP2(hdc, R2_XORPEN);
 	Mac_PaintRect(hdc, theRect, marqueeBrush);
 	SetROP2(hdc, wasROP2);
-	DeleteObject(marqueeBrush);
+	DeleteBrush(marqueeBrush);
 }
 
 //--------------------------------------------------------------  FrameMarqueeRect
@@ -77,7 +77,7 @@ void FrameMarqueeRect (HDC hdc, const Rect *theRect)
 	wasROP2 = SetROP2(hdc, R2_XORPEN);
 	Mac_FrameRect(hdc, theRect, marqueeBrush, 1, 1);
 	SetROP2(hdc, wasROP2);
-	DeleteObject(marqueeBrush);
+	DeleteBrush(marqueeBrush);
 }
 
 //--------------------------------------------------------------  DoMarquee
@@ -713,7 +713,7 @@ void DrawMarquee (HDC hdc)
 	{
 		Mac_PaintRect(hdc, &g_theMarquee.handle, marqueeBrush);
 		marqueePen = CreateMarqueePen();
-		wasPen = (HPEN)SelectObject(hdc, marqueePen);
+		wasPen = SelectPen(hdc, marqueePen);
 		switch (g_theMarquee.direction)
 		{
 			case kAbove:
@@ -744,12 +744,12 @@ void DrawMarquee (HDC hdc)
 					g_theMarquee.handle.top + (kHandleSideLong / 2));
 			break;
 		}
-		SelectObject(hdc, wasPen);
-		DeleteObject(marqueePen);
+		SelectPen(hdc, wasPen);
+		DeletePen(marqueePen);
 	}
 
 	SetROP2(hdc, wasROP2);
-	DeleteObject(marqueeBrush);
+	DeleteBrush(marqueeBrush);
 
 	if (g_gliderMarqueeUp)
 		DrawGliderMarquee(hdc);
@@ -778,9 +778,9 @@ void InitMarquee (void)
 	for (i = 0; i < kNumMarqueePats; i++)
 	{
 		hBitmap = CreateBitmap(8, 8, 1, 1, NULL);
-		hbmPrev = (HBITMAP)SelectObject(hdc, hBitmap);
+		hbmPrev = SelectBitmap(hdc, hBitmap);
 		ImageList_Draw(himlMarquee, i, hdc, 0, 0, ILD_IMAGE);
-		SelectObject(hdc, hbmPrev);
+		SelectBitmap(hdc, hbmPrev);
 		g_theMarquee.pats[i] = hBitmap;
 	}
 	DeleteDC(hdc);

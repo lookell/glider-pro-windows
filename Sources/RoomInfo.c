@@ -127,8 +127,8 @@ void UpdateRoomInfoDialog (HWND hDlg, HDC hdc)
 	else
 		SetDlgItemText(hDlg, kLitUnlitText, L"(Room Is Lit)");
 
-	Mac_FrameRect(hdc, &g_tileSrc, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
-	Mac_FrameRect(hdc, &g_tileDest, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(hdc, &g_tileSrc, GetStockBrush(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(hdc, &g_tileDest, GetStockBrush(BLACK_BRUSH), 1, 1);
 }
 
 //--------------------------------------------------------------  DragMiniTile
@@ -271,7 +271,7 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 			ReleaseCapture();
 	}
 
-	DeleteObject(hiliteBrush);
+	DeleteBrush(hiliteBrush);
 
 	hdc = GetDC(hDlg);
 	if (wasTileOver != -1)
@@ -320,13 +320,13 @@ void HiliteTileOver (HWND hDlg, Point mouseIs)
 			QOffsetRect(&hiliteRect,
 				g_tileSrc.left + (newTileOver * kMiniTileWide),
 				g_tileSrc.top - 3);
-			Mac_PaintRect(hdc, &hiliteRect, (HBRUSH)GetStockObject(DC_BRUSH));
+			Mac_PaintRect(hdc, &hiliteRect, GetStockBrush(DC_BRUSH));
 
 			QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
 			QOffsetRect(&hiliteRect,
 				g_tileSrc.left + (newTileOver * kMiniTileWide),
 				g_tileSrc.bottom + 1);
-			Mac_PaintRect(hdc, &hiliteRect, (HBRUSH)GetStockObject(DC_BRUSH));
+			Mac_PaintRect(hdc, &hiliteRect, GetStockBrush(DC_BRUSH));
 			SetDCBrushColor(hdc, oldColor);
 
 			if (g_tileOver != -1)

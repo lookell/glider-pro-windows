@@ -163,36 +163,36 @@ void Mac_CopyMask(
 	maskDIB = CreateDIBSection(NULL, &bmInfo, DIB_RGB_COLORS, (void **)&maskPtr, NULL, 0);
 	if (maskDIB == NULL)
 	{
-		DeleteObject(srcDIB);
+		DeleteBitmap(srcDIB);
 		return;
 	}
 	dstDIB = CreateDIBSection(NULL, &bmInfo, DIB_RGB_COLORS, (void **)&dstPtr, NULL, 0);
 	if (dstDIB == NULL)
 	{
-		DeleteObject(maskDIB);
-		DeleteObject(srcDIB);
+		DeleteBitmap(maskDIB);
+		DeleteBitmap(srcDIB);
 		return;
 	}
 	tmpDC = CreateCompatibleDC(NULL);
 	if (tmpDC == NULL)
 	{
-		DeleteObject(dstDIB);
-		DeleteObject(maskDIB);
-		DeleteObject(srcDIB);
+		DeleteBitmap(dstDIB);
+		DeleteBitmap(maskDIB);
+		DeleteBitmap(srcDIB);
 		return;
 	}
 
-	hbmPrev = (HBITMAP)SelectObject(tmpDC, srcDIB);
+	hbmPrev = SelectBitmap(tmpDC, srcDIB);
 	StretchBlt(tmpDC, 0, 0, wOut, hOut, srcBits, xSrc, ySrc, wSrc, hSrc, SRCCOPY);
-	SelectObject(tmpDC, hbmPrev);
+	SelectBitmap(tmpDC, hbmPrev);
 
-	hbmPrev = (HBITMAP)SelectObject(tmpDC, maskDIB);
+	hbmPrev = SelectBitmap(tmpDC, maskDIB);
 	StretchBlt(tmpDC, 0, 0, wOut, hOut, maskBits, xMask, yMask, wMask, hMask, SRCCOPY);
-	SelectObject(tmpDC, hbmPrev);
+	SelectBitmap(tmpDC, hbmPrev);
 
-	hbmPrev = (HBITMAP)SelectObject(tmpDC, dstDIB);
+	hbmPrev = SelectBitmap(tmpDC, dstDIB);
 	StretchBlt(tmpDC, 0, 0, wOut, hOut, dstBits, xDst, yDst, wDst, hDst, SRCCOPY);
-	SelectObject(tmpDC, hbmPrev);
+	SelectBitmap(tmpDC, hbmPrev);
 
 	// Perform the actual mask blending operation
 
@@ -213,14 +213,14 @@ void Mac_CopyMask(
 
 	// Blit the output image to its final destination, and clean up
 
-	hbmPrev = (HBITMAP)SelectObject(tmpDC, dstDIB);
+	hbmPrev = SelectBitmap(tmpDC, dstDIB);
 	StretchBlt(dstBits, xDst, yDst, wDst, hDst, tmpDC, 0, 0, wOut, hOut, SRCCOPY);
-	SelectObject(tmpDC, hbmPrev);
+	SelectBitmap(tmpDC, hbmPrev);
 
 	DeleteDC(tmpDC);
-	DeleteObject(dstDIB);
-	DeleteObject(maskDIB);
-	DeleteObject(srcDIB);
+	DeleteBitmap(dstDIB);
+	DeleteBitmap(maskDIB);
+	DeleteBitmap(srcDIB);
 }
 
 //--------------------------------------------------------------  DrawPicture
@@ -231,7 +231,7 @@ void Mac_CopyMask(
 void Mac_DrawPicture(HDC hdcDst, HBITMAP myPicture, const Rect *dstRect)
 {
 	HDC hdcSrc;
-	HGDIOBJ prevBitmap;
+	HBITMAP prevBitmap;
 	BITMAP bmInfo;
 	INT xSrc, ySrc, wSrc, hSrc;
 	INT xDst, yDst, wDst, hDst;
@@ -251,10 +251,10 @@ void Mac_DrawPicture(HDC hdcDst, HBITMAP myPicture, const Rect *dstRect)
 	hDst = dstRect->bottom - dstRect->top;
 
 	hdcSrc = CreateCompatibleDC(NULL);
-	prevBitmap = SelectObject(hdcSrc, myPicture);
+	prevBitmap = SelectBitmap(hdcSrc, myPicture);
 	StretchBlt(hdcDst, xDst, yDst, wDst, hDst,
 		hdcSrc, xSrc, ySrc, wSrc, hSrc, SRCCOPY);
-	SelectObject(hdcSrc, prevBitmap);
+	SelectBitmap(hdcSrc, prevBitmap);
 	DeleteDC(hdcSrc);
 }
 
@@ -295,7 +295,7 @@ void Mac_FrameRect(HDC hdc, const Rect *r, HBRUSH hbr, SInt16 w, SInt16 h)
 
 	theRgn = CreateRectRgn(r->left, r->top, r->right, r->bottom);
 	FrameRgn(hdc, theRgn, hbr, w, h);
-	DeleteObject(theRgn);
+	DeleteRgn(theRgn);
 }
 
 //--------------------------------------------------------------  GetDateTime
@@ -390,7 +390,7 @@ void Mac_PaintRect(HDC hdc, const Rect *r, HBRUSH hbr)
 
 	theRgn = CreateRectRgn(r->left, r->top, r->right, r->bottom);
 	FillRgn(hdc, theRgn, hbr);
-	DeleteObject(theRgn);
+	DeleteRgn(theRgn);
 }
 
 //--------------------------------------------------------------  StringWidth

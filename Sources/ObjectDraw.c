@@ -362,7 +362,7 @@ void DrawCabinet (const Rect *cabinet)
 	Mac_CopyMask(g_furnitureSrcMap, g_furnitureMaskMap, g_backSrcMap,
 			&g_handleSrc, &g_handleSrc, &tempRect);
 
-	Mac_FrameRect(g_backSrcMap, cabinet, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(g_backSrcMap, cabinet, GetStockBrush(BLACK_BRUSH), 1, 1);
 }
 
 //--------------------------------------------------------------  DrawSimpleFurniture
@@ -797,9 +797,9 @@ void DrawCuckoo (const Rect *theRect)
 
 void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 {
-	HGDIOBJ wasPen;
+	HPEN wasPen;
 
-	wasPen = SelectObject(g_backSrcMap, GetStockObject(BLACK_PEN));
+	wasPen = SelectPen(g_backSrcMap, GetStockPen(BLACK_PEN));
 
 	MoveToEx(g_backSrcMap, where.h, where.v, NULL);
 	switch (bigHand)
@@ -905,16 +905,16 @@ void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 		break;
 	}
 
-	SelectObject(g_backSrcMap, wasPen);
+	SelectPen(g_backSrcMap, wasPen);
 }
 
 //--------------------------------------------------------------  DrawClockHands
 
 void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 {
-	HGDIOBJ wasPen;
+	HPEN wasPen;
 
-	wasPen = SelectObject(g_backSrcMap, GetStockObject(WHITE_PEN));
+	wasPen = SelectPen(g_backSrcMap, GetStockPen(WHITE_PEN));
 
 	MoveToEx(g_backSrcMap, where.h, where.v, NULL);
 	switch (bigHand)
@@ -1020,7 +1020,7 @@ void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 		break;
 	}
 
-	SelectObject(g_backSrcMap, wasPen);
+	SelectPen(g_backSrcMap, wasPen);
 }
 
 //--------------------------------------------------------------  DrawSimplePrizes
@@ -1054,7 +1054,7 @@ void DrawGreaseRt (const Rect *theRect, SInt16 distance, Boolean state)
 
 		QSetRect(&spill, 0, -2, distance - 5, 0);
 		QOffsetRect(&spill, dest.right - 1, dest.bottom);
-		Mac_PaintRect(g_backSrcMap, &spill, (HBRUSH)GetStockObject(BLACK_BRUSH));
+		Mac_PaintRect(g_backSrcMap, &spill, GetStockBrush(BLACK_BRUSH));
 	}
 }
 
@@ -1078,7 +1078,7 @@ void DrawGreaseLf (const Rect *theRect, SInt16 distance, Boolean state)
 
 		QSetRect(&spill, -distance + 5, -2, 0, 0);
 		QOffsetRect(&spill, dest.left + 1, dest.bottom);
-		Mac_PaintRect(g_backSrcMap, &spill, (HBRUSH)GetStockObject(BLACK_BRUSH));
+		Mac_PaintRect(g_backSrcMap, &spill, GetStockBrush(BLACK_BRUSH));
 	}
 }
 
@@ -1101,7 +1101,7 @@ void DrawInvisBonus (const Rect *theRect)
 
 void DrawSlider (const Rect *theRect)
 {
-	Mac_FrameRect(g_backSrcMap, theRect, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(g_backSrcMap, theRect, GetStockBrush(BLACK_BRUSH), 1, 1);
 }
 
 //--------------------------------------------------------------  DrawMailboxLeft
@@ -1905,7 +1905,7 @@ void DrawCalendar (const Rect *theRect)
 	QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
 	QOffsetRect(&bounds, theRect->left, theRect->top);
 	Mac_DrawPicture(g_backSrcMap, thePicture, &bounds);
-	DeleteObject(thePicture);
+	DeleteBitmap(thePicture);
 
 	GetLocalTime(&localTime);
 	monthLen = LoadString(HINST_THISCOMPONENT,
@@ -1917,10 +1917,10 @@ void DrawCalendar (const Rect *theRect)
 	SetTextAlign(g_backSrcMap, TA_CENTER | TA_BASELINE);
 	SetTextColor(g_backSrcMap, Index2ColorRef(kDarkFleshColor));
 	theFont = CreateTahomaFont(-9, FW_BOLD);
-	SelectObject(g_backSrcMap, theFont);
+	SelectFont(g_backSrcMap, theFont);
 	TextOut(g_backSrcMap, theRect->left + 32, theRect->top + 55, monthStr, monthLen);
 	RestoreDC(g_backSrcMap, -1);
-	DeleteObject(theFont);
+	DeleteFont(theFont);
 }
 
 //--------------------------------------------------------------  DrawBulletin
@@ -1939,7 +1939,7 @@ void DrawBulletin (const Rect *theRect)
 	QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
 	QOffsetRect(&bounds, theRect->left, theRect->top);
 	Mac_DrawPicture(g_backSrcMap, thePicture, &bounds);
-	DeleteObject(thePicture);
+	DeleteBitmap(thePicture);
 }
 
 //--------------------------------------------------------------  DrawPictObject
@@ -1991,7 +1991,7 @@ void DrawPictObject (SInt16 what, const Rect *theRect)
 	bounds = g_srcRects[what];
 	QOffsetRect(&bounds, theRect->left, theRect->top);
 	Mac_DrawPicture(g_backSrcMap, thePicture, &bounds);
-	DeleteObject(thePicture);
+	DeleteBitmap(thePicture);
 }
 
 //--------------------------------------------------------------  DrawPictWithMaskObject

@@ -75,7 +75,7 @@ void DrawLocale (void)
 	}
 	ListAllLocalObjects();
 
-	Mac_PaintRect(g_backSrcMap, &g_backSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+	Mac_PaintRect(g_backSrcMap, &g_backSrcRect, GetStockBrush(BLACK_BRUSH));
 
 	if (g_numNeighbors > 3)
 	{
@@ -151,7 +151,7 @@ void LoadGraphicSpecial (HDC hdc, SInt16 resID)
 	QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
 	Mac_DrawPicture(hdc, thePicture, &bounds);
 
-	DeleteObject(thePicture);
+	DeleteBitmap(thePicture);
 }
 
 //--------------------------------------------------------------  DrawRoomBackground
@@ -171,7 +171,7 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 
 	if ((g_numLights == 0) && (who != kRoomIsEmpty))
 	{
-		Mac_PaintRect(g_backSrcMap, &g_localRoomsDest[where], (HBRUSH)GetStockObject(BLACK_BRUSH));
+		Mac_PaintRect(g_backSrcMap, &g_localRoomsDest[where], GetStockBrush(BLACK_BRUSH));
 		return;
 	}
 
@@ -179,7 +179,7 @@ void DrawRoomBackground (SInt16 who, SInt16 where, SInt16 elevation)
 	{
 		if (g_wardBitSet)
 		{
-			Mac_PaintRect(g_backSrcMap, &g_localRoomsDest[where], (HBRUSH)GetStockObject(BLACK_BRUSH));
+			Mac_PaintRect(g_backSrcMap, &g_localRoomsDest[where], GetStockBrush(BLACK_BRUSH));
 			return;
 		}
 
