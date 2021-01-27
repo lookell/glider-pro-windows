@@ -278,9 +278,9 @@ void GetDialogString (HWND theDialog, int item, StringPtr theString, int stringC
 	PasStringCopyC("", theString);
 	dialogItem = GetDlgItem(theDialog, item);
 	itemTextLength = GetWindowTextLength(dialogItem);
-	if (itemTextLength == 0)
+	if (itemTextLength <= 0)
 		return;
-	tmpPtr = (wchar_t *)calloc(itemTextLength + 1, sizeof(*tmpPtr));
+	tmpPtr = (wchar_t *)calloc((size_t)itemTextLength + 1, sizeof(*tmpPtr));
 	if (tmpPtr == NULL)
 		return;
 	GetWindowText(dialogItem, tmpPtr, itemTextLength + 1);
@@ -401,7 +401,7 @@ void AddMenuToComboBox (HWND theDialog, int whichItem, HMENU theMenu)
 		succeeded = GetMenuItemInfo(theMenu, menuIndex, TRUE, &menuItemInfo);
 		if (!succeeded)
 			continue;
-		itemString = (wchar_t *)calloc((menuItemInfo.cch + 1), sizeof(*itemString));
+		itemString = (wchar_t *)calloc((size_t)menuItemInfo.cch + 1, sizeof(*itemString));
 		if (itemString == NULL)
 			RedAlert(kErrNoMemory);
 		menuItemInfo.dwTypeData = itemString;

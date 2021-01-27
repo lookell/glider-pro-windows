@@ -401,14 +401,15 @@ wchar_t *MacToWinLineEndings(const wchar_t *input)
 	}
 
 	outputIndex = 0;
-	for (inputIndex = 0; input[inputIndex] != L'\0'; inputIndex++)
+	for (inputIndex = 0; (input[inputIndex] != L'\0') && (outputIndex < outputSize); inputIndex++)
 	{
 		output[outputIndex++] = input[inputIndex];
-		if (input[inputIndex] == L'\r')
+		if ((input[inputIndex] == L'\r') && (outputIndex < outputSize))
 		{
 			output[outputIndex++] = L'\n';
 		}
 	}
+	output[outputSize - 1] = L'\0';
 
 	return output;
 }
@@ -449,7 +450,7 @@ wchar_t *WinToMacLineEndings(const wchar_t *input)
 	}
 
 	outputIndex = 0;
-	for (inputIndex = 0; input[inputIndex] != L'\0'; inputIndex++)
+	for (inputIndex = 0; (input[inputIndex] != L'\0') && (outputIndex < outputSize); inputIndex++)
 	{
 		output[outputIndex++] = input[inputIndex];
 		if (inputIndex != 0)
@@ -460,6 +461,7 @@ wchar_t *WinToMacLineEndings(const wchar_t *input)
 			}
 		}
 	}
+	output[outputSize - 1] = L'\0';
 
 	return output;
 }

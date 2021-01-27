@@ -945,6 +945,9 @@ void BringSendFrontBack (HWND ownerWindow, Boolean bringFront)
 	SInt16 sorting[kMaxRoomObs];
 	Byte sorted[kMaxRoomObs];
 
+	if (g_objActive < 0 || g_objActive >= kMaxRoomObs)
+		return;
+
 	// No need to bring to front or send to back if the object
 	// in question is already frontmost or backmost.
 	if (bringFront)
