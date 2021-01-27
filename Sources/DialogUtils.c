@@ -415,6 +415,7 @@ void AddMenuToComboBox (HWND theDialog, int whichItem, HMENU theMenu)
 		}
 		comboIndex = ComboBox_AddString(hwndCombo, itemString);
 		ComboBox_SetItemData(hwndCombo, comboIndex, menuItemInfo.wID);
+		free(itemString);
 	}
 }
 
