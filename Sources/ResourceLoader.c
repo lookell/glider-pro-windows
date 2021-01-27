@@ -7,6 +7,7 @@
 
 #include "miniz.h"
 
+#include <shlwapi.h>
 #include <strsafe.h>
 
 #include <stdio.h>
@@ -131,8 +132,6 @@ HRESULT Gp_LoadBuiltInAssets (void)
 {
 	WCHAR mermaidFileName[MAX_PATH];
 	DWORD numChars;
-	wchar_t *lastSlash;
-	HRESULT hr;
 	Gp_HouseFile *houseFile;
 
 	if (Gp_BuiltInAssetsLoaded())
@@ -141,7 +140,7 @@ HRESULT Gp_LoadBuiltInAssets (void)
 	}
 	numChars = GetModuleFileNameW(HINST_THISCOMPONENT,
 		mermaidFileName, ARRAYSIZE(mermaidFileName));
-	if (numChars == ARRAYSIZE(mermaidFileName))
+	if (numChars >= ARRAYSIZE(mermaidFileName))
 	{
 		return HRESULT_FROM_WIN32(ERROR_INSUFFICIENT_BUFFER);
 	}
@@ -149,16 +148,10 @@ HRESULT Gp_LoadBuiltInAssets (void)
 	{
 		return HRESULT_FROM_WIN32(GetLastError());
 	}
-	lastSlash = wcsrchr(mermaidFileName, L'\\');
-	if (lastSlash == NULL)
+	PathRemoveFileSpecW(mermaidFileName);
+	if (!PathAppendW(mermaidFileName, L"Mermaid.dat"))
 	{
-		lastSlash = &mermaidFileName[0];
-	}
-	*lastSlash = L'\0';
-	hr = StringCchCatW(mermaidFileName, ARRAYSIZE(mermaidFileName), L"\\Mermaid.dat");
-	if (FAILED(hr))
-	{
-		return hr;
+		return HRESULT_FROM_WIN32(ERROR_INSUFFICIENT_BUFFER);
 	}
 	houseFile = Gp_LoadHouseFile(mermaidFileName);
 	if (houseFile == NULL)

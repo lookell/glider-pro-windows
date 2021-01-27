@@ -24,6 +24,7 @@
 #include "Utilities.h"
 
 #include <commdlg.h>
+#include <shlwapi.h>
 #include <strsafe.h>
 
 #include <stdlib.h>
@@ -45,8 +46,7 @@ BOOL GetSaveFolderPath (LPWSTR lpSavePath, DWORD cchSavePath)
 
 	if (!GetDataFolderPath(pathBuffer, ARRAYSIZE(pathBuffer)))
 		return FALSE;
-	hr = StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\Saves");
-	if (FAILED(hr))
+	if (!PathAppend(pathBuffer, L"Saves"))
 		return FALSE;
 	if (!CreateDirectory(pathBuffer, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
 		return FALSE;

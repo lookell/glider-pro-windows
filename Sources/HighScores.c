@@ -24,6 +24,7 @@
 #include "Transitions.h"
 #include "Utilities.h"
 
+#include <shlwapi.h>
 #include <strsafe.h>
 
 #define kHighNameItem           1002
@@ -493,8 +494,7 @@ Boolean FindHighScoresFolder (LPWSTR scoresDirPath, DWORD cchDirPath)
 
 	if (!GetDataFolderPath(pathBuffer, ARRAYSIZE(pathBuffer)))
 		return false;
-	hr = StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\Scores");
-	if (FAILED(hr))
+	if (!PathAppend(pathBuffer, L"Scores"))
 		return false;
 	if (!CreateDirectory(pathBuffer, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
 		return false;
@@ -512,13 +512,11 @@ Boolean GetHighScoresFilePath (LPWSTR lpPath, DWORD cchPath, ConstStringPtr base
 
 	if (!WinFromMacString(wideBaseName, ARRAYSIZE(wideBaseName), baseName))
 		return false;
+	if (FAILED(StringCchCat(wideBaseName, ARRAYSIZE(wideBaseName), L".gls")))
+		return false;
 	if (!FindHighScoresFolder(pathBuffer, ARRAYSIZE(pathBuffer)))
 		return false;
-	if (FAILED(StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\")))
-		return false;
-	if (FAILED(StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), wideBaseName)))
-		return false;
-	if (FAILED(StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L".gls")))
+	if (!PathAppend(pathBuffer, wideBaseName))
 		return false;
 
 	return SUCCEEDED(StringCchCopy(lpPath, cchPath, pathBuffer));

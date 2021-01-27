@@ -13,6 +13,7 @@
 #include "StructIO.h"
 #include "Utilities.h"
 
+#include <shlwapi.h>
 #include <strsafe.h>
 
 #define kPrefFileName       L"Glider Prefs"
@@ -33,8 +34,7 @@ Boolean GetPrefsFilePath (LPWSTR lpFilePath, size_t cchFilePath)
 
 	if (!GetDataFolderPath(pathBuffer, ARRAYSIZE(pathBuffer)))
 		return false;
-	hr = StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\" kPrefFileName);
-	if (FAILED(hr))
+	if (!PathAppend(pathBuffer, kPrefFileName))
 		return false;
 	hr = StringCchCopy(lpFilePath, cchFilePath, pathBuffer);
 	if (FAILED(hr))

@@ -15,6 +15,7 @@
 #include "Utilities.h"
 
 #include <commctrl.h>
+#include <shlwapi.h>
 #include <strsafe.h>
 
 #define kHouseListItem          1000
@@ -211,8 +212,7 @@ BOOL GetHouseFolderPath(LPWSTR buffer, DWORD cch)
 
 	if (!GetDataFolderPath(pathBuffer, ARRAYSIZE(pathBuffer)))
 		return FALSE;
-	hr = StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\Houses");
-	if (FAILED(hr))
+	if (!PathAppend(pathBuffer, L"Houses"))
 		return FALSE;
 	if (!CreateDirectory(pathBuffer, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
 		return FALSE;
@@ -242,7 +242,8 @@ void DoDirSearch (HWND ownerWindow)
 	HANDLE findFileHandles[kMaxDirectories];
 	HANDLE hff;
 	SInt16 i, currentDir, numDirs;
-	PWCH extPtr, sepPtr;
+	PCWSTR extPtr;
+	LPCWSTR combineResult;
 	HRESULT hr;
 	int cxIcon, cyIcon;
 	HICON houseIcon;
@@ -284,9 +285,8 @@ void DoDirSearch (HWND ownerWindow)
 					(wcscmp(ffd.cFileName, L"..") != 0))
 			{
 				hff = NULL;
-				hr = StringCchPrintf(newPathString, ARRAYSIZE(newPathString),
-						L"%s\\%s", pathString, ffd.cFileName);
-				if (SUCCEEDED(hr))
+				combineResult = PathCombine(newPathString, pathString, ffd.cFileName);
+				if (combineResult != NULL)
 				{
 					hff = OpenFindFile(newPathString, &ffd);
 				}
@@ -303,17 +303,14 @@ void DoDirSearch (HWND ownerWindow)
 		else
 		{
 			// handle a file entry
-			extPtr = wcsrchr(ffd.cFileName, L'.');
-			if (extPtr == NULL)
-				extPtr = ffd.cFileName;
+			extPtr = PathFindExtension(ffd.cFileName);
 			if ((g_housesFound < g_maxFiles) && (wcscmp(extPtr, L".glh") == 0))
 			{
-				hr = StringCchPrintf(g_theHousesSpecs[g_housesFound].path,
-						ARRAYSIZE(g_theHousesSpecs[g_housesFound].path),
-						L"%s\\%s", pathString, ffd.cFileName);
-				if (SUCCEEDED(hr))
+				combineResult = PathCombine(g_theHousesSpecs[g_housesFound].path,
+						pathString, ffd.cFileName);
+				if (combineResult != NULL)
 				{
-					*extPtr = L'\0';
+					PathRemoveExtension(ffd.cFileName);
 					hr = StringCchCopy(g_theHousesSpecs[g_housesFound].houseName,
 							ARRAYSIZE(g_theHousesSpecs[g_housesFound].houseName),
 							ffd.cFileName);
@@ -359,9 +356,7 @@ void DoDirSearch (HWND ownerWindow)
 			numDirs--;
 			if (currentDir < 0)
 				break;
-			sepPtr = wcsrchr(pathString, L'\\');
-			if (sepPtr)
-				*sepPtr = L'\0';
+			PathRemoveFileSpec(pathString); // remove final component in path
 		}
 	}
 

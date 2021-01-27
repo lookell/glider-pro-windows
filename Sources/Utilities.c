@@ -17,6 +17,7 @@
 
 #include <mmsystem.h>
 #include <shlobj.h>
+#include <shlwapi.h>
 #include <strsafe.h>
 
 #include <stdlib.h>
@@ -343,38 +344,30 @@ void UnivSetSoundVolume (SInt16 volume)
 BOOL GetDataFolderPath (LPWSTR lpDataPath, DWORD cchDataPath)
 {
 	WCHAR pathBuffer[MAX_PATH];
-	DWORD fileAttributes;
 	DWORD result;
-	PWCH sepPtr;
 	HRESULT hr;
 
 	if (lpDataPath == NULL)
 		return FALSE;
 
 	result = GetModuleFileName(HINST_THISCOMPONENT, pathBuffer, ARRAYSIZE(pathBuffer));
-	if (result == 0 || result == ARRAYSIZE(pathBuffer))
+	if (result == 0 || result >= ARRAYSIZE(pathBuffer))
 		return FALSE;
-	sepPtr = wcsrchr(pathBuffer, L'\\');
-	if (sepPtr == NULL)
-		sepPtr = &pathBuffer[0];
-	*sepPtr = L'\0';
+	PathRemoveFileSpec(pathBuffer);
 
 	if (g_useProgramDirectory == -1)
 	{
-		hr = StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\portable.dat");
-		if (FAILED(hr))
+		if (!PathAppend(pathBuffer, L"portable.dat"))
 			return FALSE;
-		fileAttributes = GetFileAttributes(pathBuffer);
-		*sepPtr = L'\0';
-		g_useProgramDirectory = (fileAttributes != INVALID_FILE_ATTRIBUTES);
+		g_useProgramDirectory = (PathFileExists(pathBuffer) != FALSE);
+		PathRemoveFileSpec(pathBuffer);
 	}
 	if (!g_useProgramDirectory)
 	{
 		hr = SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, pathBuffer);
 		if (FAILED(hr))
 			return FALSE;
-		hr = StringCchCat(pathBuffer, ARRAYSIZE(pathBuffer), L"\\glider-pro-windows");
-		if (FAILED(hr))
+		if (!PathAppend(pathBuffer, L"glider-pro-windows"))
 			return FALSE;
 		if (!CreateDirectory(pathBuffer, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
 			return FALSE;
