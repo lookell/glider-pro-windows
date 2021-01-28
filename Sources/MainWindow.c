@@ -576,7 +576,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	switch (uMsg)
 	{
 	case WM_ACTIVATEAPP:
-		MainWindow_OnActivateApp(hwnd, (BOOL)wParam);
+		MainWindow_OnActivateApp(hwnd, !!wParam);
 		return 0;
 
 	case WM_CLOSE:
