@@ -140,12 +140,12 @@ void DoPause (void)
 
 	QSetRect(&bounds, 0, 0, 214, 54);
 	CenterRectInRect(&bounds, &g_houseRect);
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	if (g_isEscPauseKey)
 		LoadScaledGraphic(mainWindowDC, g_theHouseFile, kEscPausePictID, &bounds);
 	else
 		LoadScaledGraphic(mainWindowDC, g_theHouseFile, kTabPausePictID, &bounds);
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
@@ -183,10 +183,10 @@ void DoPause (void)
 		return;
 	}
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	Mac_CopyBits(g_workSrcMap, mainWindowDC,
 			&bounds, &bounds, srcCopy, nil);
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 
 	while (GetMessage(&msg, NULL, 0, 0))
 	{

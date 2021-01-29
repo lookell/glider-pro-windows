@@ -89,7 +89,7 @@ void DoMarquee (void)
 	if ((!g_theMarquee.active) || (g_theMarquee.paused))
 		return;
 
-	hdc = GetMainWindowDC();
+	hdc = GetMainWindowDC(g_mainWindow);
 
 	DrawMarquee(hdc);
 
@@ -99,7 +99,7 @@ void DoMarquee (void)
 
 	DrawMarquee(hdc);
 	
-	ReleaseMainWindowDC(hdc);
+	ReleaseMainWindowDC(g_mainWindow, hdc);
 }
 
 //--------------------------------------------------------------  StartMarquee
@@ -119,9 +119,9 @@ void StartMarquee (const Rect *theRect)
 	g_theMarquee.paused = false;
 	g_theMarquee.handled = false;
 
-	hdc = GetMainWindowDC();
+	hdc = GetMainWindowDC(g_mainWindow);
 	DrawMarquee(hdc);
-	ReleaseMainWindowDC(hdc);
+	ReleaseMainWindowDC(g_mainWindow, hdc);
 
 	SetCoordinateHVD(g_theMarquee.bounds.left, g_theMarquee.bounds.top, -1);
 }
@@ -183,9 +183,9 @@ void StartMarqueeHandled (const Rect *theRect, SInt16 direction, SInt16 dist)
 	g_theMarquee.direction = direction;
 	g_theMarquee.dist = dist;
 
-	hdc = GetMainWindowDC();
+	hdc = GetMainWindowDC(g_mainWindow);
 	DrawMarquee(hdc);
-	ReleaseMainWindowDC(hdc);
+	ReleaseMainWindowDC(g_mainWindow, hdc);
 
 	SetCoordinateHVD(g_theMarquee.bounds.left, g_theMarquee.bounds.top, dist);
 }
@@ -198,18 +198,18 @@ void StopMarquee (void)
 
 	if (g_gliderMarqueeUp)
 	{
-		hdc = GetMainWindowDC();
+		hdc = GetMainWindowDC(g_mainWindow);
 		DrawGliderMarquee(hdc);
-		ReleaseMainWindowDC(hdc);
+		ReleaseMainWindowDC(g_mainWindow, hdc);
 		g_gliderMarqueeUp = false;
 	}
 
 	if (!g_theMarquee.active)
 		return;
 
-	hdc = GetMainWindowDC();
+	hdc = GetMainWindowDC(g_mainWindow);
 	DrawMarquee(hdc);
-	ReleaseMainWindowDC(hdc);
+	ReleaseMainWindowDC(g_mainWindow, hdc);
 
 	g_theMarquee.active = false;
 	SetCoordinateHVD(-1, -1, -1);
@@ -252,9 +252,9 @@ void DragOutMarqueeRect (Point start, Rect *theRect)
 
 	SetCapture(g_mainWindow);
 	QSetRect(theRect, start.h, start.v, start.h, start.v);
-	hdc = GetMainWindowDC();
+	hdc = GetMainWindowDC(g_mainWindow);
 	FrameMarqueeRect(hdc, theRect);
-	ReleaseMainWindowDC(hdc);
+	ReleaseMainWindowDC(g_mainWindow, hdc);
 	wasPt = start;
 
 	while (GetMessage(&msg, NULL, 0, 0))
@@ -264,12 +264,12 @@ void DragOutMarqueeRect (Point start, Rect *theRect)
 		case WM_MOUSEMOVE:
 			newPt.h = GET_X_LPARAM(msg.lParam);
 			newPt.v = GET_Y_LPARAM(msg.lParam);
-			hdc = GetMainWindowDC();
+			hdc = GetMainWindowDC(g_mainWindow);
 			FrameMarqueeRect(hdc, theRect);
 			QSetRect(theRect, start.h, start.v, newPt.h, newPt.v);
 			NormalizeRect(theRect);
 			FrameMarqueeRect(hdc, theRect);
-			ReleaseMainWindowDC(hdc);
+			ReleaseMainWindowDC(g_mainWindow, hdc);
 			wasPt = newPt;
 			break;
 
@@ -299,9 +299,9 @@ void DragOutMarqueeRect (Point start, Rect *theRect)
 		if (GetCapture() == g_mainWindow)
 			ReleaseCapture();
 	}
-	hdc = GetMainWindowDC();
+	hdc = GetMainWindowDC(g_mainWindow);
 	FrameMarqueeRect(hdc, theRect);
-	ReleaseMainWindowDC(hdc);
+	ReleaseMainWindowDC(g_mainWindow, hdc);
 }
 
 //--------------------------------------------------------------  DragMarqueeRect
@@ -317,10 +317,10 @@ void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 
 	SetCapture(g_mainWindow);
 	StopMarquee();
-	hdc = GetMainWindowDC();
+	hdc = GetMainWindowDC(g_mainWindow);
 	g_theMarquee.bounds = *theRect;
 	FrameMarqueeRect(hdc, &g_theMarquee.bounds);
-	ReleaseMainWindowDC(hdc);
+	ReleaseMainWindowDC(g_mainWindow, hdc);
 
 	dragCursor = LoadCursor(NULL, IDC_SIZEALL);
 	if (dragCursor != NULL)
@@ -344,11 +344,11 @@ void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 				deltaV = 0;
 			else
 				deltaV = newPt.v - wasPt.v;
-			hdc = GetMainWindowDC();
+			hdc = GetMainWindowDC(g_mainWindow);
 			FrameMarqueeRect(hdc, &g_theMarquee.bounds);
 			QOffsetRect(&g_theMarquee.bounds, deltaH, deltaV);
 			FrameMarqueeRect(hdc, &g_theMarquee.bounds);
-			ReleaseMainWindowDC(hdc);
+			ReleaseMainWindowDC(g_mainWindow, hdc);
 			wasPt = newPt;
 			SetCoordinateHVD(g_theMarquee.bounds.left, g_theMarquee.bounds.top, -2);
 			break;
@@ -380,9 +380,9 @@ void DragMarqueeRect (Point start, Rect *theRect, Boolean lockH, Boolean lockV)
 			ReleaseCapture();
 	}
 
-	hdc = GetMainWindowDC();
+	hdc = GetMainWindowDC(g_mainWindow);
 	FrameMarqueeRect(hdc, &g_theMarquee.bounds);
-	ReleaseMainWindowDC(hdc);
+	ReleaseMainWindowDC(g_mainWindow, hdc);
 	*theRect = g_theMarquee.bounds;
 
 	if (dragCursor != NULL)
@@ -404,10 +404,10 @@ void DragMarqueeHandle (Point start, SInt16 *dragged)
 
 	SetCapture(g_mainWindow);
 	StopMarquee();
-	hdc = GetMainWindowDC();
+	hdc = GetMainWindowDC(g_mainWindow);
 	FrameMarqueeRect(hdc, &g_theMarquee.bounds);
 	PaintMarqueeRect(hdc, &g_theMarquee.handle);
-	ReleaseMainWindowDC(hdc);
+	ReleaseMainWindowDC(g_mainWindow, hdc);
 
 	if ((g_theMarquee.direction == kAbove) || (g_theMarquee.direction == kBelow))
 	{
@@ -486,11 +486,11 @@ void DragMarqueeHandle (Point start, SInt16 *dragged)
 				break;
 			}
 
-			hdc = GetMainWindowDC();
+			hdc = GetMainWindowDC(g_mainWindow);
 			PaintMarqueeRect(hdc, &g_theMarquee.handle);
 			QOffsetRect(&g_theMarquee.handle, deltaH, deltaV);
 			PaintMarqueeRect(hdc, &g_theMarquee.handle);
-			ReleaseMainWindowDC(hdc);
+			ReleaseMainWindowDC(g_mainWindow, hdc);
 			wasPt = newPt;
 			break;
 
@@ -521,10 +521,10 @@ void DragMarqueeHandle (Point start, SInt16 *dragged)
 			ReleaseCapture();
 	}
 
-	hdc = GetMainWindowDC();
+	hdc = GetMainWindowDC(g_mainWindow);
 	FrameMarqueeRect(hdc, &g_theMarquee.bounds);
 	PaintMarqueeRect(hdc, &g_theMarquee.handle);
-	ReleaseMainWindowDC(hdc);
+	ReleaseMainWindowDC(g_mainWindow, hdc);
 
 	if (dragCursor != NULL)
 	{
@@ -545,10 +545,10 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 
 	SetCapture(g_mainWindow);
 	StopMarquee();
-	hdc = GetMainWindowDC();
+	hdc = GetMainWindowDC(g_mainWindow);
 	FrameMarqueeRect(hdc, &g_theMarquee.bounds);
 	PaintMarqueeRect(hdc, &g_theMarquee.handle);
-	ReleaseMainWindowDC(hdc);
+	ReleaseMainWindowDC(g_mainWindow, hdc);
 
 	if (isTop)
 	{
@@ -588,7 +588,7 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 				deltaV -= *vDragged;
 				*vDragged = 0;
 			}
-			hdc = GetMainWindowDC();
+			hdc = GetMainWindowDC(g_mainWindow);
 			FrameMarqueeRect(hdc, &g_theMarquee.bounds);
 			PaintMarqueeRect(hdc, &g_theMarquee.handle);
 			if (isTop)
@@ -605,7 +605,7 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 			}
 			FrameMarqueeRect(hdc, &g_theMarquee.bounds);
 			PaintMarqueeRect(hdc, &g_theMarquee.handle);
-			ReleaseMainWindowDC(hdc);
+			ReleaseMainWindowDC(g_mainWindow, hdc);
 			wasPt = newPt;
 			break;
 
@@ -636,10 +636,10 @@ void DragMarqueeCorner (Point start, SInt16 *hDragged, SInt16 *vDragged, Boolean
 			ReleaseCapture();
 	}
 
-	hdc = GetMainWindowDC();
+	hdc = GetMainWindowDC(g_mainWindow);
 	FrameMarqueeRect(hdc, &g_theMarquee.bounds);
 	PaintMarqueeRect(hdc, &g_theMarquee.handle);
-	ReleaseMainWindowDC(hdc);
+	ReleaseMainWindowDC(g_mainWindow, hdc);
 
 	if (dragCursor != NULL)
 	{
@@ -691,9 +691,9 @@ void SetMarqueeGliderRect (SInt16 h, SInt16 v)
 	ZeroRectCorner(&g_marqueeGliderRect);
 	QOffsetRect(&g_marqueeGliderRect, h - kHalfGliderWide, v - kGliderHigh);
 
-	hdc = GetMainWindowDC();
+	hdc = GetMainWindowDC(g_mainWindow);
 	DrawGliderMarquee(hdc);
-	ReleaseMainWindowDC(hdc);
+	ReleaseMainWindowDC(g_mainWindow, hdc);
 	g_gliderMarqueeUp = true;
 }
 

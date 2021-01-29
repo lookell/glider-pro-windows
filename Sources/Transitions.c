@@ -53,10 +53,10 @@ void WipeScreenOn (SInt16 direction, const Rect *theRect)
 	for (i = 0; i < count; i++)
 	{
 		wipeRect = MakeWipeRect(direction, theRect, i, count);
-		mainWindowDC = GetMainWindowDC();
+		mainWindowDC = GetMainWindowDC(g_mainWindow);
 		Mac_CopyBits(g_workSrcMap, mainWindowDC,
 				&wipeRect, &wipeRect, srcCopy, nil);
-		ReleaseMainWindowDC(mainWindowDC);
+		ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 		WaitUntilNextFrame();
 	}
 	SetFrameRate(prevFrameRate);
@@ -121,10 +121,10 @@ void DumpScreenOn (const Rect *theRect)
 {
 	HDC mainWindowDC;
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	Mac_CopyBits(g_workSrcMap, mainWindowDC,
 			theRect, theRect, srcCopy, nil);
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 }
 
 //--------------------------------------------------------------  DissolveScreenOn
@@ -206,7 +206,7 @@ void DissBitsImpl (const Rect *theRect, Boolean doChunky)
 		chunkSize = 4;
 	}
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	SaveDC(mainWindowDC);
 	clipRect.left = theRect->left;
 	clipRect.top = theRect->top;
@@ -245,7 +245,7 @@ void DissBitsImpl (const Rect *theRect, Boolean doChunky)
 	BitBlt(mainWindowDC, 0, 0, chunkSize, chunkSize, g_workSrcMap, 0, 0, SRCCOPY);
 
 	RestoreDC(mainWindowDC, -1);
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 }
 
 //--------------------------------------------------------------  DissBits

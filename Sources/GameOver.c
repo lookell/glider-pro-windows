@@ -70,9 +70,9 @@ void DoGameOver (void)
 
 	g_playing = false;
 	SetUpFinalScreen();
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	ColorRect(mainWindowDC, &g_workSrcRect, 244);
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 	DoGameOverStarAnimation();
 }
 

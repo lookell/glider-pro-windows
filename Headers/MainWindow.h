@@ -32,8 +32,8 @@ void UpdateMainWindow (void);
 void OpenMainWindow (void);
 void CloseMainWindow (void);
 void UpdateEditWindowTitle (void);
-HDC GetMainWindowDC (void);
-void ReleaseMainWindowDC (HDC hdc);
+HDC GetMainWindowDC (HWND hwnd);
+void ReleaseMainWindowDC (HWND hwnd, HDC hdc);
 void WashColorIn (void);
 
 #endif

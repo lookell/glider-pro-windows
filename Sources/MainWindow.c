@@ -42,7 +42,7 @@
 
 void DrawOnSplash (HDC hdc, SInt16 splashHouseIndex);
 void PaintMainWindow (HDC hdc);
-void AdjustMainWindowDC (HDC hdc);
+void AdjustMainWindowDC (HWND hwnd, HDC hdc);
 void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick);
 void SetPaletteToGrays (RGBQUAD *colors, UINT numColors, int saturation,
 	int maxSaturation);
@@ -226,9 +226,9 @@ void PaintMainWindow (HDC hdc)
 
 //--------------------------------------------------------------  AdjustMainWindowDC
 
-void AdjustMainWindowDC (HDC hdc)
+void AdjustMainWindowDC (HWND hwnd, HDC hdc)
 {
-	if (GetMenu(g_mainWindow) == NULL)
+	if (GetMenu(hwnd) == NULL)
 	{
 		SetWindowOrgEx(hdc, 0, -kScoreboardTall, NULL);
 	}
@@ -414,14 +414,14 @@ void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick)
 
 //--------------------------------------------------------------  GetMainWindowDC
 
-HDC GetMainWindowDC (void)
+HDC GetMainWindowDC (HWND hwnd)
 {
 	HDC hdc;
 
-	if (g_mainWindow != NULL)
+	if (hwnd != NULL)
 	{
-		hdc = GetDC(g_mainWindow);
-		AdjustMainWindowDC(hdc);
+		hdc = GetDC(hwnd);
+		AdjustMainWindowDC(hwnd, hdc);
 		return hdc;
 	}
 	else
@@ -432,11 +432,11 @@ HDC GetMainWindowDC (void)
 
 //--------------------------------------------------------------  ReleaseMainWindowDC
 
-void ReleaseMainWindowDC (HDC hdc)
+void ReleaseMainWindowDC (HWND hwnd, HDC hdc)
 {
 	if (hdc != NULL)
 	{
-		ReleaseDC(g_mainWindow, hdc);
+		ReleaseDC(hwnd, hdc);
 	}
 }
 
@@ -530,9 +530,9 @@ void WashColorIn (void)
 		SetPaletteToGrays(newColors, ARRAYSIZE(newColors), i, kGray2ColorSteps);
 		SetDIBColorTable(splashDC, 0, ARRAYSIZE(newColors), newColors);
 
-		hdc = GetMainWindowDC();
+		hdc = GetMainWindowDC(g_mainWindow);
 		BitBlt(hdc, g_splashOriginH, g_splashOriginV, 640, 460, splashDC, 0, 0, SRCCOPY);
-		ReleaseMainWindowDC(hdc);
+		ReleaseMainWindowDC(g_mainWindow, hdc);
 		ValidateRect(g_mainWindow, NULL);
 
 		while (PeekMessageOrWaitForFrame(&msg, NULL, 0, 0, PM_REMOVE))
@@ -654,7 +654,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		PAINTSTRUCT ps;
 		if (BeginPaint(hwnd, &ps))
 		{
-			AdjustMainWindowDC(ps.hdc);
+			AdjustMainWindowDC(hwnd, ps.hdc);
 			PaintMainWindow(ps.hdc);
 			EndPaint(hwnd, &ps);
 		}

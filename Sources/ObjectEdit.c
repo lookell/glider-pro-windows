@@ -2737,10 +2737,10 @@ void HiliteAllObjects (void)
 
 	PauseMarquee();
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	for (i = 0; i < kMaxRoomObs; i++)
 		DrawFocusRect(mainWindowDC, &focusRects[i]);
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
@@ -2758,10 +2758,10 @@ void HiliteAllObjects (void)
 	if (msg.message == WM_QUIT)
 		PostQuitMessage((int)msg.wParam);
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	for (i = 0; i < kMaxRoomObs; i++)
 		DrawFocusRect(mainWindowDC, &focusRects[i]);
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 
 	ResumeMarquee();
 }

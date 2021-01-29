@@ -193,7 +193,7 @@ void DisplayStarsRemaining (void)
 
 	StringCchPrintf(theStr, ARRAYSIZE(theStr), L"%d", (int)g_numStarsRemaining);
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	if (g_numStarsRemaining < 2)
 	{
 		LoadScaledGraphic(mainWindowDC, g_theHouseFile, kStarRemainingPICT, &bounds);
@@ -211,7 +211,7 @@ void DisplayStarsRemaining (void)
 		RestoreDC(mainWindowDC, -1);
 		DeleteFont(textFont);
 	}
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 
 	Sleep(1000);
 	WaitForInputEvent(30);

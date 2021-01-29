@@ -600,11 +600,11 @@ void CopyRectsQD (void)
 	HRGN blitRgn;
 	SInt16 i;
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	blitRgn = CreateClipRgnFromRects(mainWindowDC, g_work2MainRects, g_numWork2Main);
 	Mac_CopyBits(g_workSrcMap, mainWindowDC, &g_workSrcRect, &g_workSrcRect, srcCopy, blitRgn);
 	DeleteRgn(blitRgn);
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 
 	for (i = 0; i < g_numBack2Work; i++)
 	{
@@ -699,10 +699,10 @@ void CopyRectWorkToMain (const Rect *theRect)
 {
 	HDC mainWindowDC;
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	Mac_CopyBits(g_workSrcMap, mainWindowDC,
 			theRect, theRect, srcCopy, nil);
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 }
 
 //--------------------------------------------------------------  CopyRectMainToWork
@@ -711,10 +711,10 @@ void CopyRectMainToWork (const Rect *theRect)
 {
 	HDC mainWindowDC;
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	Mac_CopyBits(mainWindowDC, g_workSrcMap,
 			theRect, theRect, srcCopy, nil);
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 }
 
 //--------------------------------------------------------------  CopyRectMainToBack
@@ -723,10 +723,10 @@ void CopyRectMainToBack (const Rect *theRect)
 {
 	HDC mainWindowDC;
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	Mac_CopyBits(mainWindowDC, g_backSrcMap,
 			theRect, theRect, srcCopy, nil);
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 }
 
 //--------------------------------------------------------------  AddToMirrorRegion

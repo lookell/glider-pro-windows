@@ -63,10 +63,10 @@ void RefreshScoreboard (SInt16 mode)
 	RefreshNumGliders();
 	RefreshPoints();
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	Mac_CopyBits(g_boardSrcMap, mainWindowDC,
 			&g_boardSrcRect, &g_boardDestRect, srcCopy, nil);
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 
 	QuickBatteryRefresh(false);
 	QuickBandsRefresh(false);
@@ -266,10 +266,10 @@ void QuickGlidersRefresh (void)
 
 	RestoreDC(g_boardGSrcMap, -1);
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	Mac_CopyBits(g_boardGSrcMap, mainWindowDC,
 			&g_boardGSrcRect, &g_boardGQDestRect, srcCopy, nil);
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 }
 
 //--------------------------------------------------------------  QuickScoreRefresh
@@ -297,10 +297,10 @@ void QuickScoreRefresh (void)
 
 	RestoreDC(g_boardPSrcMap, -1);
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	Mac_CopyBits(g_boardPSrcMap, mainWindowDC,
 			&g_boardPSrcRect, &g_boardPQDestRect, srcCopy, nil);
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 }
 
 //--------------------------------------------------------------  QuickBatteryRefresh
@@ -309,7 +309,7 @@ void QuickBatteryRefresh (Boolean flash)
 {
 	HDC mainWindowDC;
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	if ((g_batteryTotal > 0) && (!flash))
 	{
 		Mac_CopyBits(g_badgeSrcMap, mainWindowDC,
@@ -331,7 +331,7 @@ void QuickBatteryRefresh (Boolean flash)
 				&g_badgesDestRects[kBatteryBadge],
 				srcCopy, nil);
 	}
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 }
 
 //--------------------------------------------------------------  QuickBandsRefresh
@@ -340,7 +340,7 @@ void QuickBandsRefresh (Boolean flash)
 {
 	HDC mainWindowDC;
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	if ((g_bandsTotal > 0) && (!flash))
 	{
 		Mac_CopyBits(g_badgeSrcMap, mainWindowDC,
@@ -355,7 +355,7 @@ void QuickBandsRefresh (Boolean flash)
 				&g_badgesDestRects[kBandsBadge],
 				srcCopy, nil);
 	}
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 }
 
 //--------------------------------------------------------------  QuickFoilRefresh
@@ -364,7 +364,7 @@ void QuickFoilRefresh (Boolean flash)
 {
 	HDC mainWindowDC;
 
-	mainWindowDC = GetMainWindowDC();
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	if ((g_foilTotal > 0) && (!flash))
 	{
 		Mac_CopyBits(g_badgeSrcMap, mainWindowDC,
@@ -379,7 +379,7 @@ void QuickFoilRefresh (Boolean flash)
 				&g_badgesDestRects[kFoilBadge],
 				srcCopy, nil);
 	}
-	ReleaseMainWindowDC(mainWindowDC);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 }
 
 //--------------------------------------------------------------  AdjustScoreboardHeight
