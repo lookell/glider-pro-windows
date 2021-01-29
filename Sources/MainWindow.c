@@ -234,14 +234,6 @@ void AdjustMainWindowDC (HWND hwnd, HDC hdc)
 	}
 }
 
-//--------------------------------------------------------------  UpdateMainWindow
-// Redraws the main window (depends on mode were in - splash, editing, playing).
-
-void UpdateMainWindow (void)
-{
-	UpdateWindow(g_mainWindow);
-}
-
 //--------------------------------------------------------------  OpenMainWindow
 // Opens up the main window (how it does this depends on mode were in).
 

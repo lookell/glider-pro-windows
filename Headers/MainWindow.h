@@ -28,7 +28,6 @@ extern Rect g_splashSrcRect;
 
 void RegisterMainWindowClass (void);
 void RedrawSplashScreen (SInt16 splashHouseIndex);
-void UpdateMainWindow (void);
 void OpenMainWindow (void);
 void CloseMainWindow (void);
 void UpdateEditWindowTitle (void);
