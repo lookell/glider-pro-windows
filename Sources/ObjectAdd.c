@@ -41,7 +41,7 @@ SInt16 HowManySoundObjects (const roomType *room);
 SInt16 HowManyUpStairsObjects (const roomType *room);
 SInt16 HowManyDownStairsObjects (const roomType *room);
 SInt16 HowManyShredderObjects (const roomType *room);
-SInt16 HowManyDynamicObjects (void);
+SInt16 HowManyDynamicObjects (const roomType *room);
 void ShoutNoMoreSpecialObjects (HWND ownerWindow);
 
 SInt16 g_wasFlower;
@@ -233,7 +233,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
-		else if ((what == kSparkle) && (HowManyDynamicObjects() >= kMaxDynamicObs))
+		else if ((what == kSparkle) && (HowManyDynamicObjects(g_thisRoom) >= kMaxDynamicObs))
 		{
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
@@ -655,7 +655,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		case kDartLf:
 		case kDartRt:
 		case kCobweb:
-		if ((what != kCobweb) && (HowManyDynamicObjects() >= kMaxDynamicObs))
+		if ((what != kCobweb) && (HowManyDynamicObjects(g_thisRoom) >= kMaxDynamicObs))
 		{
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
@@ -701,7 +701,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		case kBall:
 		case kDrip:
 		case kFish:
-		if (HowManyDynamicObjects() >= kMaxDynamicObs)
+		if (HowManyDynamicObjects(g_thisRoom) >= kMaxDynamicObs)
 		{
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
@@ -1081,30 +1081,34 @@ SInt16 HowManyShredderObjects (const roomType *room)
 
 //--------------------------------------------------------------  HowManyDynamicObjects
 
-SInt16 HowManyDynamicObjects (void)
+SInt16 HowManyDynamicObjects (const roomType *room)
 {
 	SInt16 i, aDinah;
 
 	aDinah = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
-		if ((g_thisRoom->objects[i].what == kSparkle) ||
-				(g_thisRoom->objects[i].what == kToaster) ||
-				(g_thisRoom->objects[i].what == kMacPlus) ||
-				(g_thisRoom->objects[i].what == kTV) ||
-				(g_thisRoom->objects[i].what == kCoffee) ||
-				(g_thisRoom->objects[i].what == kOutlet) ||
-				(g_thisRoom->objects[i].what == kVCR) ||
-				(g_thisRoom->objects[i].what == kStereo) ||
-				(g_thisRoom->objects[i].what == kMicrowave) ||
-				(g_thisRoom->objects[i].what == kBalloon) ||
-				(g_thisRoom->objects[i].what == kCopterLf) ||
-				(g_thisRoom->objects[i].what == kCopterRt) ||
-				(g_thisRoom->objects[i].what == kDartLf) ||
-				(g_thisRoom->objects[i].what == kDartRt) ||
-				(g_thisRoom->objects[i].what == kBall) ||
-				(g_thisRoom->objects[i].what == kDrip) ||
-				(g_thisRoom->objects[i].what == kFish))
+	{
+		if ((room->objects[i].what == kSparkle) ||
+			(room->objects[i].what == kToaster) ||
+			(room->objects[i].what == kMacPlus) ||
+			(room->objects[i].what == kTV) ||
+			(room->objects[i].what == kCoffee) ||
+			(room->objects[i].what == kOutlet) ||
+			(room->objects[i].what == kVCR) ||
+			(room->objects[i].what == kStereo) ||
+			(room->objects[i].what == kMicrowave) ||
+			(room->objects[i].what == kBalloon) ||
+			(room->objects[i].what == kCopterLf) ||
+			(room->objects[i].what == kCopterRt) ||
+			(room->objects[i].what == kDartLf) ||
+			(room->objects[i].what == kDartRt) ||
+			(room->objects[i].what == kBall) ||
+			(room->objects[i].what == kDrip) ||
+			(room->objects[i].what == kFish))
+		{
 			aDinah++;
+		}
+	}
 
 	return (aDinah);
 }
