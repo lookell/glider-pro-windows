@@ -28,7 +28,7 @@
 #define kGrecoVentTop           303
 #define kSewerBlowerTop         292
 
-SInt16 FindEmptyObjectSlot (void);
+SInt16 FindEmptyObjectSlot (const roomType *room);
 void ShoutNoMoreObjects (HWND ownerWindow);
 SInt16 HowManyCandleObjects (void);
 SInt16 HowManyTikiObjects (void);
@@ -59,7 +59,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 	if (COMPILEDEMO)
 		return (false);
 
-	g_objActive = FindEmptyObjectSlot();
+	g_objActive = FindEmptyObjectSlot(g_thisRoom);
 	if (g_objActive == -1)
 	{
 		ShoutNoMoreObjects(ownerWindow);
@@ -799,17 +799,19 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 
 //--------------------------------------------------------------  FindEmptyObjectSlot
 
-SInt16 FindEmptyObjectSlot (void)
+SInt16 FindEmptyObjectSlot (const roomType *room)
 {
 	SInt16 i, emptySlot;
 
 	emptySlot = -1;
 	for (i = 0; i < kMaxRoomObs; i++)
-		if (g_thisRoom->objects[i].what == kObjectIsEmpty)
+	{
+		if (room->objects[i].what == kObjectIsEmpty)
 		{
 			emptySlot = i;
 			break;
 		}
+	}
 
 	return (emptySlot);
 }
