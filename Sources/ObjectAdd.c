@@ -39,7 +39,7 @@ SInt16 HowManyGreaseObjects (const roomType *room);
 SInt16 HowManyStarsObjects (const roomType *room);
 SInt16 HowManySoundObjects (const roomType *room);
 SInt16 HowManyUpStairsObjects (const roomType *room);
-SInt16 HowManyDownStairsObjects (void);
+SInt16 HowManyDownStairsObjects (const roomType *room);
 SInt16 HowManyShredderObjects (void);
 SInt16 HowManyDynamicObjects (void);
 void ShoutNoMoreSpecialObjects (HWND ownerWindow);
@@ -307,7 +307,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
-		else if ((what == kDownStairs) && (HowManyDownStairsObjects() >= kMaxStairs))
+		else if ((what == kDownStairs) && (HowManyDownStairsObjects(g_thisRoom) >= kMaxStairs))
 		{
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
@@ -1045,14 +1045,18 @@ SInt16 HowManyUpStairsObjects (const roomType *room)
 
 //--------------------------------------------------------------  HowManyDownStairsObjects
 
-SInt16 HowManyDownStairsObjects (void)
+SInt16 HowManyDownStairsObjects (const roomType *room)
 {
 	SInt16 i, aStair;
 
 	aStair = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
-		if (g_thisRoom->objects[i].what == kDownStairs)
+	{
+		if (room->objects[i].what == kDownStairs)
+		{
 			aStair++;
+		}
+	}
 
 	return (aStair);
 }
