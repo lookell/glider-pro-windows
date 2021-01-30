@@ -37,7 +37,7 @@ SInt16 HowManyCuckooObjects (const roomType *room);
 SInt16 HowManyBandsObjects (const roomType *room);
 SInt16 HowManyGreaseObjects (const roomType *room);
 SInt16 HowManyStarsObjects (const roomType *room);
-SInt16 HowManySoundObjects (void);
+SInt16 HowManySoundObjects (const roomType *room);
 SInt16 HowManyUpStairsObjects (void);
 SInt16 HowManyDownStairsObjects (void);
 SInt16 HowManyShredderObjects (void);
@@ -487,7 +487,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		case kTrigger:
 		case kLgTrigger:
 		case kSoundTrigger:
-		if ((what == kSoundTrigger) && (HowManySoundObjects() >= kMaxSoundTriggers))
+		if ((what == kSoundTrigger) && (HowManySoundObjects(g_thisRoom) >= kMaxSoundTriggers))
 		{
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
@@ -1009,14 +1009,18 @@ SInt16 HowManyStarsObjects (const roomType *room)
 
 //--------------------------------------------------------------  HowManySoundObjects
 
-SInt16 HowManySoundObjects (void)
+SInt16 HowManySoundObjects (const roomType *room)
 {
 	SInt16 i, aSound;
 
 	aSound = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
-		if (g_thisRoom->objects[i].what == kSoundTrigger)
+	{
+		if (room->objects[i].what == kSoundTrigger)
+		{
 			aSound++;
+		}
+	}
 
 	return (aSound);
 }
