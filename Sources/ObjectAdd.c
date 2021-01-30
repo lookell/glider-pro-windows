@@ -36,7 +36,7 @@ SInt16 HowManyBBQObjects (const roomType *room);
 SInt16 HowManyCuckooObjects (const roomType *room);
 SInt16 HowManyBandsObjects (const roomType *room);
 SInt16 HowManyGreaseObjects (const roomType *room);
-SInt16 HowManyStarsObjects (void);
+SInt16 HowManyStarsObjects (const roomType *room);
 SInt16 HowManySoundObjects (void);
 SInt16 HowManyUpStairsObjects (void);
 SInt16 HowManyDownStairsObjects (void);
@@ -228,7 +228,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
-		else if ((what == kStar) && (HowManyStarsObjects() >= kMaxStars))
+		else if ((what == kStar) && (HowManyStarsObjects(g_thisRoom) >= kMaxStars))
 		{
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
@@ -991,14 +991,18 @@ SInt16 HowManyGreaseObjects (const roomType *room)
 
 //--------------------------------------------------------------  HowManyStarsObjects
 
-SInt16 HowManyStarsObjects (void)
+SInt16 HowManyStarsObjects (const roomType *room)
 {
 	SInt16 i, aStar;
 
 	aStar = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
-		if (g_thisRoom->objects[i].what == kStar)
+	{
+		if (room->objects[i].what == kStar)
+		{
 			aStar++;
+		}
+	}
 
 	return (aStar);
 }
