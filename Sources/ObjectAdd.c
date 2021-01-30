@@ -33,7 +33,7 @@ void ShoutNoMoreObjects (HWND ownerWindow);
 SInt16 HowManyCandleObjects (const roomType *room);
 SInt16 HowManyTikiObjects (const roomType *room);
 SInt16 HowManyBBQObjects (const roomType *room);
-SInt16 HowManyCuckooObjects (void);
+SInt16 HowManyCuckooObjects (const roomType *room);
 SInt16 HowManyBandsObjects (void);
 SInt16 HowManyGreaseObjects (void);
 SInt16 HowManyStarsObjects (void);
@@ -218,7 +218,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		case kStar:
 		case kSparkle:
 		case kHelium:
-		if ((what == kCuckoo) && (HowManyCuckooObjects() >= kMaxPendulums))
+		if ((what == kCuckoo) && (HowManyCuckooObjects(g_thisRoom) >= kMaxPendulums))
 		{
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
@@ -936,14 +936,18 @@ SInt16 HowManyBBQObjects (const roomType *room)
 
 //--------------------------------------------------------------  HowManyCuckooObjects
 
-SInt16 HowManyCuckooObjects (void)
+SInt16 HowManyCuckooObjects (const roomType *room)
 {
 	SInt16 i, aCuckoo;
 
 	aCuckoo = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
-		if (g_thisRoom->objects[i].what == kCuckoo)
+	{
+		if (room->objects[i].what == kCuckoo)
+		{
 			aCuckoo++;
+		}
+	}
 
 	return (aCuckoo);
 }
