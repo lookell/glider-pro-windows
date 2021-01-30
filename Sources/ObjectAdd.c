@@ -30,7 +30,7 @@
 
 SInt16 FindEmptyObjectSlot (const roomType *room);
 void ShoutNoMoreObjects (HWND ownerWindow);
-SInt16 HowManyCandleObjects (void);
+SInt16 HowManyCandleObjects (const roomType *room);
 SInt16 HowManyTikiObjects (void);
 SInt16 HowManyBBQObjects (void);
 SInt16 HowManyCuckooObjects (void);
@@ -84,7 +84,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		case kSewerBlower:
 		case kLiftArea:
 		if (((what == kTaper) || (what == kCandle) || (what == kStubby)) &&
-				(HowManyCandleObjects() >= kMaxCandles))
+				(HowManyCandleObjects(g_thisRoom) >= kMaxCandles))
 		{
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
@@ -880,16 +880,20 @@ void ShoutNoMoreObjects (HWND ownerWindow)
 
 //--------------------------------------------------------------  HowManyCandleObjects
 
-SInt16 HowManyCandleObjects (void)
+SInt16 HowManyCandleObjects (const roomType *room)
 {
 	SInt16 i, aCandle;
 
 	aCandle = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
-		if ((g_thisRoom->objects[i].what == kTaper) ||
-				(g_thisRoom->objects[i].what == kCandle) ||
-				(g_thisRoom->objects[i].what == kStubby))
+	{
+		if ((room->objects[i].what == kTaper) ||
+			(room->objects[i].what == kCandle) ||
+			(room->objects[i].what == kStubby))
+		{
 			aCandle++;
+		}
+	}
 
 	return (aCandle);
 }
