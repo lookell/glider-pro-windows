@@ -35,7 +35,7 @@ SInt16 HowManyTikiObjects (const roomType *room);
 SInt16 HowManyBBQObjects (const roomType *room);
 SInt16 HowManyCuckooObjects (const roomType *room);
 SInt16 HowManyBandsObjects (const roomType *room);
-SInt16 HowManyGreaseObjects (void);
+SInt16 HowManyGreaseObjects (const roomType *room);
 SInt16 HowManyStarsObjects (void);
 SInt16 HowManySoundObjects (void);
 SInt16 HowManyUpStairsObjects (void);
@@ -254,7 +254,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 
 		case kGreaseRt:
 		case kGreaseLf:
-		if (HowManyGreaseObjects() >= kMaxGrease)
+		if (HowManyGreaseObjects(g_thisRoom) >= kMaxGrease)
 		{
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
@@ -972,15 +972,19 @@ SInt16 HowManyBandsObjects (const roomType *room)
 
 //--------------------------------------------------------------  HowManyGreaseObjects
 
-SInt16 HowManyGreaseObjects (void)
+SInt16 HowManyGreaseObjects (const roomType *room)
 {
 	SInt16 i, aGrease;
 
 	aGrease = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
-		if ((g_thisRoom->objects[i].what == kGreaseRt) ||
-				(g_thisRoom->objects[i].what == kGreaseLf))
+	{
+		if ((room->objects[i].what == kGreaseRt) ||
+			(room->objects[i].what == kGreaseLf))
+		{
 			aGrease++;
+		}
+	}
 
 	return (aGrease);
 }
