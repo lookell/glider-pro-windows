@@ -40,7 +40,7 @@ SInt16 HowManyStarsObjects (const roomType *room);
 SInt16 HowManySoundObjects (const roomType *room);
 SInt16 HowManyUpStairsObjects (const roomType *room);
 SInt16 HowManyDownStairsObjects (const roomType *room);
-SInt16 HowManyShredderObjects (void);
+SInt16 HowManyShredderObjects (const roomType *room);
 SInt16 HowManyDynamicObjects (void);
 void ShoutNoMoreSpecialObjects (HWND ownerWindow);
 
@@ -608,7 +608,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		case kCustomPict:
 		if ((what != kGuitar) && (what != kCinderBlock) && (what != kFlowerBox) &&
 				(what != kCDs) && (what != kCustomPict) &&
-				(HowManyShredderObjects() >= kMaxShredded))
+				(HowManyShredderObjects(g_thisRoom) >= kMaxShredded))
 		{
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
@@ -1063,14 +1063,18 @@ SInt16 HowManyDownStairsObjects (const roomType *room)
 
 //--------------------------------------------------------------  HowManyShredderObjects
 
-SInt16 HowManyShredderObjects (void)
+SInt16 HowManyShredderObjects (const roomType *room)
 {
 	SInt16 i, aShredder;
 
 	aShredder = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
-		if (g_thisRoom->objects[i].what == kShredder)
+	{
+		if (room->objects[i].what == kShredder)
+		{
 			aShredder++;
+		}
+	}
 
 	return (aShredder);
 }
