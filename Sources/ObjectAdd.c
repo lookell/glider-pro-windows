@@ -31,7 +31,7 @@
 SInt16 FindEmptyObjectSlot (const roomType *room);
 void ShoutNoMoreObjects (HWND ownerWindow);
 SInt16 HowManyCandleObjects (const roomType *room);
-SInt16 HowManyTikiObjects (void);
+SInt16 HowManyTikiObjects (const roomType *room);
 SInt16 HowManyBBQObjects (void);
 SInt16 HowManyCuckooObjects (void);
 SInt16 HowManyBandsObjects (void);
@@ -89,7 +89,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
-		else if ((what == kTiki) && (HowManyTikiObjects() >= kMaxTikis))
+		else if ((what == kTiki) && (HowManyTikiObjects(g_thisRoom) >= kMaxTikis))
 		{
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
@@ -900,14 +900,18 @@ SInt16 HowManyCandleObjects (const roomType *room)
 
 //--------------------------------------------------------------  HowManyTikiObjects
 
-SInt16 HowManyTikiObjects (void)
+SInt16 HowManyTikiObjects (const roomType *room)
 {
 	SInt16 i, aTiki;
 
 	aTiki = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
-		if (g_thisRoom->objects[i].what == kTiki)
+	{
+		if (room->objects[i].what == kTiki)
+		{
 			aTiki++;
+		}
+	}
 
 	return (aTiki);
 }
