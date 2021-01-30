@@ -32,7 +32,7 @@ SInt16 FindEmptyObjectSlot (const roomType *room);
 void ShoutNoMoreObjects (HWND ownerWindow);
 SInt16 HowManyCandleObjects (const roomType *room);
 SInt16 HowManyTikiObjects (const roomType *room);
-SInt16 HowManyBBQObjects (void);
+SInt16 HowManyBBQObjects (const roomType *room);
 SInt16 HowManyCuckooObjects (void);
 SInt16 HowManyBandsObjects (void);
 SInt16 HowManyGreaseObjects (void);
@@ -94,7 +94,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
-		else if ((what == kBBQ) && (HowManyBBQObjects() >= kMaxCoals))
+		else if ((what == kBBQ) && (HowManyBBQObjects(g_thisRoom) >= kMaxCoals))
 		{
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
@@ -918,14 +918,18 @@ SInt16 HowManyTikiObjects (const roomType *room)
 
 //--------------------------------------------------------------  HowManyBBQObjects
 
-SInt16 HowManyBBQObjects (void)
+SInt16 HowManyBBQObjects (const roomType *room)
 {
 	SInt16 i, aBBQ;
 
 	aBBQ = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
-		if (g_thisRoom->objects[i].what == kBBQ)
+	{
+		if (room->objects[i].what == kBBQ)
+		{
 			aBBQ++;
+		}
+	}
 
 	return (aBBQ);
 }
