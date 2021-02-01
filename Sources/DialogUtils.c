@@ -215,7 +215,7 @@ void CenterWindowOverRect (HWND hwnd, const RECT *targetRect)
 	// Vertical spacing is 45% top and 55% bottom.
 	newX = targetRect->left + ((targetWidth - windowWidth) / 2);
 	newY = targetRect->top + ((targetHeight - windowHeight) * 9 / 20);
-	SetWindowPos(hwnd, NULL, newX, newY, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+	SetWindowPos(hwnd, NULL, newX, newY, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 }
 
 //--------------------------------------------------------------  CenterWindowOverOwner
