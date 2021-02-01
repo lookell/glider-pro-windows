@@ -20,6 +20,7 @@ extern SInt16 g_mapTopRoom;
 extern Boolean g_isMapOpen;
 extern Boolean g_doPrettyMap;
 
+void RegisterMapWindowClass (void);
 Boolean ThisRoomVisibleOnMap (void);
 void CenterMapOnRoom (SInt16 h, SInt16 v);
 void FlagMapRoomsForUpdate (void);

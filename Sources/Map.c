@@ -30,7 +30,6 @@
 #define kYesDoNewRoom           IDOK
 #define WC_MAPWINDOW            L"GliderMapWindow"
 
-void RegisterMapWindowClass (void);
 void RedrawMapContents (HDC hdc);
 void HandleMapSizingMessage (HWND hwnd, WPARAM sizedEdge, RECT *windowRect);
 void HandleMapSizeMessage (HWND hwnd);
@@ -62,26 +61,21 @@ static Rect g_wasActiveRoomRect;
 
 void RegisterMapWindowClass (void)
 {
-	WNDCLASSEX wcx;
+	WNDCLASSEX wcx = { 0 };
 
 	wcx.cbSize = sizeof(wcx);
-	if (!GetClassInfoEx(HINST_THISCOMPONENT, WC_MAPWINDOW, &wcx))
-	{
-		wcx.cbSize = sizeof(wcx);
-		wcx.style = CS_HREDRAW | CS_VREDRAW;
-		wcx.lpfnWndProc = MapWindowProc;
-		wcx.cbClsExtra = 0;
-		wcx.cbWndExtra = 0;
-		wcx.hInstance = HINST_THISCOMPONENT;
-		wcx.hIcon = NULL;
-		wcx.hCursor = LoadCursor(NULL, IDC_ARROW);
-		wcx.hbrBackground = NULL;
-		wcx.lpszMenuName = NULL;
-		wcx.lpszClassName = WC_MAPWINDOW;
-		wcx.hIconSm = NULL;
-		if (!RegisterClassEx(&wcx))
-			RedAlert(kErrUnnaccounted);
-	}
+	wcx.style = CS_HREDRAW | CS_VREDRAW;
+	wcx.lpfnWndProc = MapWindowProc;
+	wcx.cbClsExtra = 0;
+	wcx.cbWndExtra = 0;
+	wcx.hInstance = HINST_THISCOMPONENT;
+	wcx.hIcon = NULL;
+	wcx.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wcx.hbrBackground = NULL;
+	wcx.lpszMenuName = NULL;
+	wcx.lpszClassName = WC_MAPWINDOW;
+	wcx.hIconSm = NULL;
+	RegisterClassEx(&wcx);
 }
 
 //--------------------------------------------------------------  ThisRoomVisibleOnMap
@@ -474,7 +468,6 @@ void OpenMapWindow (void)
 
 	if (g_mapWindow == NULL)
 	{
-		RegisterMapWindowClass();
 		CreateNailOffscreen();
 
 		windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME |

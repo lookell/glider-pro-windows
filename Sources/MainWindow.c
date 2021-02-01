@@ -71,7 +71,7 @@ Rect g_splashSrcRect;
 
 void RegisterMainWindowClass (void)
 {
-	WNDCLASSEX wcx;
+	WNDCLASSEX wcx = { 0 };
 
 	wcx.cbSize = sizeof(wcx);
 	wcx.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;

@@ -318,6 +318,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 	icc.dwICC = ICC_WIN95_CLASSES;
 	InitCommonControlsEx(&icc);
 	RegisterMainWindowClass();
+	RegisterMapWindowClass();
 	InitRandomLongQUS();
 	g_switchedOut = false;
 
