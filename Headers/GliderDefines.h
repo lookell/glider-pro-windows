@@ -256,6 +256,9 @@
 #define kMaxViewWidth               1536    // kRoomWide * 3
 #define kMaxViewHeight              966     // kTileHigh + (kVertLocalOffset * 2)
 
+#define kMinScreenWidth             512     // kRoomWide
+#define kMinScreenHeight            342     // kTileHigh + kScoreboardTall
+
 #define kSelectTool                 0
 
 #define kBlowerMode                 1

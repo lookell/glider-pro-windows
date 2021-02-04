@@ -58,13 +58,8 @@ UInt16 g_isViewportHeight;
 
 void ReadInPrefs (HWND ownerWindow)
 {
-	SInt16 minimumWidth;
-	SInt16 minimumHeight;
 	prefsInfo thePrefs;
 	SInt16 theVolume;
-
-	minimumWidth = kRoomWide;
-	minimumHeight = kTileHigh + kScoreboardTall;
 
 	if (LoadPrefs(ownerWindow, &thePrefs, kPrefsVersion))
 	{
@@ -77,14 +72,14 @@ void ReadInPrefs (HWND ownerWindow)
 			PasStringCopy(thePrefs.wasDefaultName, g_thisHouseName);
 		}
 		g_isViewportWidth = thePrefs.wasViewportWidth;
-		if (g_isViewportWidth < minimumWidth)
+		if (g_isViewportWidth < kMinScreenWidth)
 		{
-			g_isViewportWidth = minimumWidth;
+			g_isViewportWidth = kMinScreenWidth;
 		}
 		g_isViewportHeight = thePrefs.wasViewportHeight;
-		if (g_isViewportHeight < minimumHeight)
+		if (g_isViewportHeight < kMinScreenHeight)
 		{
-			g_isViewportHeight = minimumHeight;
+			g_isViewportHeight = kMinScreenHeight;
 		}
 		PasStringCopy(thePrefs.wasHighName, g_highName);
 		PasStringCopy(thePrefs.wasHighBanner, g_highBanner);
@@ -205,7 +200,7 @@ void ReadInPrefs (HWND ownerWindow)
 		g_doBitchDialogs = true;
 	}
 
-	if ((g_numNeighbors > 1) && (g_isViewportWidth <= minimumWidth))
+	if ((g_numNeighbors > 1) && (g_isViewportWidth <= kMinScreenWidth))
 		g_numNeighbors = 1;
 
 	UnivSetSoundVolume(theVolume);

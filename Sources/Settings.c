@@ -702,7 +702,14 @@ void DoSoundPrefs (HWND ownerWindow)
 
 void DisplayDefaults (HWND hDlg)
 {
-	CheckRadioButton(hDlg, kDisplay1Item, kDisplay9Item, kDisplay9Item);
+	if (g_isViewportWidth <= kMinScreenWidth)
+	{
+		CheckRadioButton(hDlg, kDisplay1Item, kDisplay9Item, kDisplay1Item);
+	}
+	else
+	{
+		CheckRadioButton(hDlg, kDisplay1Item, kDisplay9Item, kDisplay9Item);
+	}
 	CheckRadioButton(hDlg, kCurrentDepth, k16Depth, kCurrentDepth);
 	CheckDlgButton(hDlg, kDoColorFadeItem, BST_CHECKED);
 	CheckDlgButton(hDlg, kUseScreen2Item, BST_UNCHECKED);
@@ -949,7 +956,14 @@ void SetAllDefaults (HWND ownerWindow)
 	}
 
 	// Default display settings
-	g_numNeighbors = 9;
+	if (g_isViewportWidth <= kMinScreenWidth)
+	{
+		g_numNeighbors = 1;
+	}
+	else
+	{
+		g_numNeighbors = 9;
+	}
 	g_quickerTransitions = false;
 	g_isDoColorFade = true;
 }
