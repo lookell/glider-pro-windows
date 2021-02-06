@@ -15,6 +15,5 @@ extern gameType g_smallGame;
 
 void SaveGame2 (HWND ownerWindow);
 Boolean OpenSavedGame (HWND ownerWindow);
-void SaveGame (HWND ownerWindow, Boolean doSave);
 
 #endif

@@ -12,8 +12,6 @@
 #include "FileError.h"
 #include "House.h"
 #include "HouseIO.h"
-#include "Macintosh.h"
-#include "MainWindow.h"
 #include "Play.h"
 #include "Player.h"
 #include "ResourceIDs.h"
@@ -298,47 +296,4 @@ Boolean OpenSavedGame (HWND ownerWindow)
 	free(savedGame.savedData);
 
 	return true;
-}
-
-//--------------------------------------------------------------  SaveGame
-// This is probably about 3 days away from becoming the "old" function
-// for saving games.
-
-void SaveGame (HWND ownerWindow, Boolean doSave)
-{
-	if (g_twoPlayerGame)
-		return;
-
-	if (doSave)
-	{
-		g_thisHouse.savedGame.version = kSavedGameVersion;
-		g_thisHouse.savedGame.wasStarsLeft = g_numStarsRemaining;
-		g_thisHouse.savedGame.timeStamp = (SInt32)Mac_GetDateTime();
-		g_thisHouse.savedGame.where.h = g_theGlider.dest.left;
-		g_thisHouse.savedGame.where.v = g_theGlider.dest.top;
-		g_thisHouse.savedGame.score = g_theScore;
-		g_thisHouse.savedGame.unusedLong = 0L;
-		g_thisHouse.savedGame.unusedLong2 = 0L;
-		g_thisHouse.savedGame.energy = g_batteryTotal;
-		g_thisHouse.savedGame.bands = g_bandsTotal;
-		g_thisHouse.savedGame.roomNumber = g_thisRoomNumber;
-		g_thisHouse.savedGame.gliderState = g_theGlider.mode;
-		g_thisHouse.savedGame.numGliders = g_mortals;
-		g_thisHouse.savedGame.foil = g_foilTotal;
-		g_thisHouse.savedGame.unusedShort = 0;
-		g_thisHouse.savedGame.facing = g_theGlider.facing;
-		g_thisHouse.savedGame.showFoil = g_showFoil;
-
-		g_thisHouse.hasGame = true;
-	}
-	else
-	{
-		g_thisHouse.hasGame = false;
-	}
-
-	if (doSave)
-	{
-		if (!WriteHouse(ownerWindow, g_theMode == kEditMode))
-			YellowAlert(ownerWindow, kYellowFailedWrite, 0);
-	}
 }

@@ -495,9 +495,6 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 			SortHouseObjects();
 		if ((g_fileDirty) && (g_houseUnlocked))
 		{
-#if 0
-			SaveGame(false);
-#endif
 			if (g_wasHouseVersion < kHouseVersion)
 				ConvertHouseVer1To2();
 			g_wasHouseVersion = kHouseVersion;
