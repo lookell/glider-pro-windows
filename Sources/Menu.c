@@ -39,15 +39,10 @@
 #include <mmsystem.h>
 #include <strsafe.h>
 
-#define kSheWantsNewGame        1001
-#define kSheWantsResumeGame     1002
-
 void UpdateMenusEditMode (void);
 void UpdateMenusNonEditMode (void);
 void UpdateMenusHouseOpen (void);
 void UpdateMenusHouseClosed (void);
-INT_PTR CALLBACK ResumeFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
-SInt16 QueryResumeGame (HWND ownerWindow);
 void DoNotInDemo (HWND ownerWindow);
 void HeyYourPissingAHighScore (HWND ownerWindow);
 void OpenCloseEditWindows (void);
@@ -771,57 +766,6 @@ void UpdateCoordinateCheckmark (Boolean checkIt)
 		CheckMenuItem(g_houseMenu, ID_COORDINATE_WINDOW, MF_CHECKED);
 	else
 		CheckMenuItem(g_houseMenu, ID_COORDINATE_WINDOW, MF_UNCHECKED);
-}
-
-//--------------------------------------------------------------  ResumeFilter
-// Dialog filter for the Resume dialog (below).
-
-INT_PTR CALLBACK ResumeFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	switch (message)
-	{
-	case WM_INITDIALOG:
-		CenterDialogOverOwner(hDlg);
-		ParamDialogText(hDlg, (const DialogParams *)lParam);
-		return TRUE;
-
-	case WM_COMMAND:
-		switch (LOWORD(wParam))
-		{
-		case kSheWantsNewGame:
-		case kSheWantsResumeGame:
-			EndDialog(hDlg, LOWORD(wParam));
-			break;
-		}
-		return TRUE;
-	}
-	return FALSE;
-}
-
-//--------------------------------------------------------------  QueryResumeGame
-// Dialog that asks user whether they want to resume a saved game or
-// begin a new one.  It displays a little info on the state of their
-// saved game (number of glider left, points, etc.).
-
-SInt16 QueryResumeGame (HWND ownerWindow)
-{
-	DialogParams params;
-	wchar_t scoreStr[32];
-	wchar_t glidStr[32];
-	SInt32 hadPoints;
-	SInt16 hadGliders;
-
-	hadPoints = g_thisHouse.savedGame.score;
-	hadGliders = g_thisHouse.savedGame.numGliders;
-	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)hadPoints);
-	StringCchPrintf(glidStr, ARRAYSIZE(glidStr), L"%ld", (long)hadGliders);
-
-	params.arg[0] = glidStr;
-	params.arg[1] = (hadGliders == 1) ? L"" : L"s";
-	params.arg[2] = scoreStr;
-	return (SInt16)DialogBoxParam(HINST_THISCOMPONENT,
-			MAKEINTRESOURCE(kResumeGameDial), ownerWindow,
-			ResumeFilter, (LPARAM)&params);
 }
 
 //--------------------------------------------------------------  DoNotInDemo
