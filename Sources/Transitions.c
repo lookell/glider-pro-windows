@@ -14,9 +14,16 @@
 #include "RectUtils.h"
 #include "WinAPI.h"
 
-#define kNumWipeFrames  12
+#define kNumWipeFrames 12
+#define kNumDissolveSlowFrames 48
+#define kNumDissolveFastFrames 24
 
 Rect MakeWipeRect (SInt16 direction, const Rect *theRect, SInt16 index, SInt16 count);
+SInt16 SInt16_RoundToPrevMultiple (SInt16 number, SInt16 step);
+SInt16 SInt16_RoundToNextMultiple (SInt16 number, SInt16 step);
+Boolean BlitChunk (RGBQUAD *destData, const RGBQUAD *srcData, const Rect *bitmapRect,
+	SInt16 chunkX, SInt16 chunkY, UInt16 chunkWidth, UInt16 chunkHeight);
+void DissBitsImpl (const Rect *theRect, Boolean doChunky);
 void DissBits (const Rect *theRect);
 void DissBitsChunky (const Rect *theRect);
 
@@ -179,73 +186,245 @@ void DissolveScreenOn (const Rect *theRect)
 // the screen is treated as if it's very large (2048 x 1024). Any rectangles
 // generated that lie outside of the visible area will be skipped.
 
+//--------------------------------------------------------------  SInt16_RoundToPrevMultiple
+// Round 'number' to the nearest multiple of 'step' that is less than 'number'.
+// If 'number' is already a multiple of 'step', then 'number' is returned.
+
+SInt16 SInt16_RoundToPrevMultiple (SInt16 number, SInt16 step)
+{
+	SInt16 result;
+
+	result = number / step * step;
+	if (result > number)
+	{
+		result -= step;
+	}
+	return result;
+}
+
+//--------------------------------------------------------------  SInt16_RoundToNextMultiple
+// Round 'number' to the nearest multiple of 'step' that is greater than 'number'.
+// If 'number' is already a multiple of 'step', then 'number' is returned.
+
+SInt16 SInt16_RoundToNextMultiple (SInt16 number, SInt16 step)
+{
+	SInt16 result;
+
+	result = number / step * step;
+	if (result < number)
+	{
+		result += step;
+	}
+	return result;
+}
+
+//--------------------------------------------------------------  BlitChunk
+
+Boolean BlitChunk (RGBQUAD *destData, const RGBQUAD *srcData, const Rect *bitmapRect,
+	SInt16 chunkX, SInt16 chunkY, UInt16 chunkWidth, UInt16 chunkHeight)
+{
+	SInt16 bitmapWidth;
+	SInt16 bitmapHeight;
+	size_t chunkRowByteSize;
+	size_t dataOffset;
+	UInt16 currentY;
+
+	chunkX -= bitmapRect->left;
+	chunkY -= bitmapRect->top;
+	bitmapWidth = bitmapRect->right - bitmapRect->left;
+	bitmapHeight = bitmapRect->bottom - bitmapRect->top;
+	if (chunkX < 0 || chunkX > (bitmapWidth - chunkWidth))
+	{
+		return false;
+	}
+	if (chunkY < 0 || chunkY > (bitmapHeight - chunkHeight))
+	{
+		return false;
+	}
+
+	chunkRowByteSize = sizeof(RGBQUAD) * (size_t)chunkWidth;
+	dataOffset = ((size_t)chunkY * (size_t)bitmapWidth) + (size_t)chunkX;
+	for (currentY = 0; currentY < chunkHeight; currentY++)
+	{
+		CopyMemory(&destData[dataOffset], &srcData[dataOffset], chunkRowByteSize);
+		dataOffset += (size_t)bitmapWidth;
+	}
+	return true;
+}
+
 //--------------------------------------------------------------  DissBitsImpl
 
 void DissBitsImpl (const Rect *theRect, Boolean doChunky)
 {
-	UINT32 lfsrMask;
-	INT chunkSize;
+	UInt32 lfsrMask;
+	SInt16 chunkSize;
+	SInt32 totalFrames;
+	Rect bitmapRect = { 0 };
+	SInt16 bitmapWidth;
+	SInt16 bitmapHeight;
+	SInt32 totalChunks;
+	Rect externalRect = { 0 };
+	Rect internalRect = { 0 };
+	BITMAPINFO bmi;
+	HDC tempDC;
+	void *tempPtr;
+	HBITMAP srcBitmap;
+	RGBQUAD *srcData;
+	HBITMAP destBitmap;
+	RGBQUAD *destData;
+	HBITMAP prevBitmap;
 	HDC mainWindowDC;
-	RECT clipRect;
-	HRGN theClipRgn;
-	INT chunkH;
-	INT chunkV;
-	UInt32 state;
+	DWORD prevFrameRate;
+	SInt32 framesBlitted;
+	SInt32 chunksBlitted;
+	UInt32 lfsrState;
+	UInt16 chunkX;
+	UInt16 chunkY;
+	Boolean didBlit;
 
 	if (theRect->left >= theRect->right || theRect->top >= theRect->bottom)
+	{
 		return;
+	}
 
 	if (doChunky)
 	{
 		lfsrMask = 0x4016; // 1 to 32767 (2^15 - 1)
 		chunkSize = 8;
+		totalFrames = kNumDissolveFastFrames;
 	}
 	else
 	{
 		lfsrMask = 0x10016; // 1 to 131071 (2^17 - 1)
 		chunkSize = 4;
+		totalFrames = kNumDissolveSlowFrames;
 	}
 
-	mainWindowDC = GetMainWindowDC(g_mainWindow);
-	SaveDC(mainWindowDC);
-	clipRect.left = theRect->left;
-	clipRect.top = theRect->top;
-	clipRect.right = theRect->right;
-	clipRect.bottom = theRect->bottom;
-	LPtoDP(mainWindowDC, (LPPOINT)&clipRect, 2);
-	theClipRgn = CreateRectRgnIndirect(&clipRect);
-	ExtSelectClipRgn(mainWindowDC, theClipRgn, RGN_AND);
-	DeleteRgn(theClipRgn);
+	// The rectangle is expanded as necessary so that each side is a multiple of
+	// the chunk size. This allows the dissolve animation to be aligned to the
+	// origin point in the main window, instead of aligned to the top-left corner
+	// of the output rectangle. This also makes it far easier to calculate the
+	// total number of chunks to be copied to the main window.
+	bitmapRect.left = SInt16_RoundToPrevMultiple(theRect->left, chunkSize);
+	bitmapRect.top = SInt16_RoundToPrevMultiple(theRect->top, chunkSize);
+	bitmapRect.right = SInt16_RoundToNextMultiple(theRect->right, chunkSize);
+	bitmapRect.bottom = SInt16_RoundToNextMultiple(theRect->bottom, chunkSize);
+	bitmapWidth = bitmapRect.right - bitmapRect.left;
+	bitmapHeight = bitmapRect.bottom - bitmapRect.top;
 
-	state = 1;
+	totalChunks = ((SInt32)bitmapWidth / chunkSize) * ((SInt32)bitmapHeight / chunkSize);
+	externalRect = *theRect;
+	internalRect = *theRect;
+	QOffsetRect(&internalRect, -bitmapRect.left, -bitmapRect.top);
+
+	ZeroMemory(&bmi, sizeof(bmi));
+	bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bmi.bmiHeader.biWidth = bitmapWidth;
+	bmi.bmiHeader.biHeight = -bitmapHeight; // negative for top-down DIB section
+	bmi.bmiHeader.biPlanes = 1;
+	bmi.bmiHeader.biBitCount = 32;
+	bmi.bmiHeader.biCompression = BI_RGB;
+	bmi.bmiHeader.biSizeImage = 1;
+	bmi.bmiHeader.biXPelsPerMeter = 0;
+	bmi.bmiHeader.biYPelsPerMeter = 0;
+	bmi.bmiHeader.biClrUsed = 0;
+	bmi.bmiHeader.biClrImportant = 0;
+
+	tempDC = CreateCompatibleDC(NULL);
+	if (tempDC == NULL)
+	{
+		DumpScreenOn(theRect);
+		return;
+	}
+
+	srcBitmap = CreateDIBSection(NULL, &bmi, DIB_RGB_COLORS, &tempPtr, NULL, 0);
+	if (srcBitmap == NULL)
+	{
+		DeleteDC(tempDC);
+		DumpScreenOn(theRect);
+		return;
+	}
+	srcData = (RGBQUAD *)tempPtr;
+
+	destBitmap = CreateDIBSection(NULL, &bmi, DIB_RGB_COLORS, &tempPtr, NULL, 0);
+	if (destBitmap == NULL)
+	{
+		DeleteBitmap(srcBitmap);
+		DeleteDC(tempDC);
+		DumpScreenOn(theRect);
+		return;
+	}
+	destData = (RGBQUAD *)tempPtr;
+
+	prevBitmap = SelectBitmap(tempDC, srcBitmap);
+	Mac_CopyBits(g_workSrcMap, tempDC, &externalRect, &internalRect, srcCopy, nil);
+	SelectBitmap(tempDC, prevBitmap);
+
+	prevBitmap = SelectBitmap(tempDC, destBitmap);
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
+	Mac_CopyBits(mainWindowDC, tempDC, &externalRect, &internalRect, srcCopy, nil);
+	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
+	SelectBitmap(tempDC, prevBitmap);
+
+	prevFrameRate = GetFrameRate();
+	SetFrameRate(60);
+
+	framesBlitted = 0;
+	chunksBlitted = 0;
+	lfsrState = 1;
 	do
 	{
-		if (state & 1)
-			state = (state >> 1) ^ lfsrMask;
+		if (lfsrState & 1)
+		{
+			lfsrState = (lfsrState >> 1) ^ lfsrMask;
+		}
 		else
-			state = (state >> 1);
+		{
+			lfsrState = (lfsrState >> 1);
+		}
 
 		if (doChunky)
 		{
-			chunkH = chunkSize * (state & 0xFF); // 8 * (0 to 255)
-			chunkV = chunkSize * ((state >> 8) & 0x7F); // 8 * (0 to 127)
+			chunkX = chunkSize * (lfsrState & 0xFF); // (0 to 255)
+			chunkY = chunkSize * ((lfsrState >> 8) & 0x7F); // (0 to 127)
 		}
 		else
 		{
-			chunkH = chunkSize * (state & 0x1FF); // 4 * (0 to 511)
-			chunkV = chunkSize * ((state >> 9) & 0xFF); // 4 * (0 to 255)
+			chunkX = chunkSize * (lfsrState & 0x1FF); // (0 to 511)
+			chunkY = chunkSize * ((lfsrState >> 9) & 0xFF); // (0 to 255)
 		}
-		if ((theRect->left > chunkH + chunkSize - 1) || (chunkH >= theRect->right))
-			continue;
-		if ((theRect->top > chunkV + chunkSize - 1) || (chunkV >= theRect->bottom))
-			continue;
-		BitBlt(mainWindowDC, chunkH, chunkV, chunkSize, chunkSize,
-				g_workSrcMap, chunkH, chunkV, SRCCOPY);
-	} while (state != 1);
-	BitBlt(mainWindowDC, 0, 0, chunkSize, chunkSize, g_workSrcMap, 0, 0, SRCCOPY);
-
-	RestoreDC(mainWindowDC, -1);
+		didBlit = BlitChunk(destData, srcData, &bitmapRect, chunkX, chunkY, chunkSize, chunkSize);
+		if (didBlit)
+		{
+			chunksBlitted += 1;
+			if (chunksBlitted == ((framesBlitted + 1) * totalChunks / totalFrames))
+			{
+				GdiFlush();
+				prevBitmap = SelectBitmap(tempDC, destBitmap);
+				mainWindowDC = GetMainWindowDC(g_mainWindow);
+				Mac_CopyBits(tempDC, mainWindowDC, &internalRect, &externalRect, srcCopy, nil);
+				ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
+				SelectBitmap(tempDC, prevBitmap);
+				GdiFlush();
+				WaitUntilNextFrame();
+				framesBlitted += 1;
+			}
+		}
+	} while (lfsrState != 1);
+	BlitChunk(destData, srcData, &bitmapRect, 0, 0, chunkSize, chunkSize);
+	GdiFlush();
+	prevBitmap = SelectBitmap(tempDC, destBitmap);
+	mainWindowDC = GetMainWindowDC(g_mainWindow);
+	Mac_CopyBits(tempDC, mainWindowDC, &internalRect, &externalRect, srcCopy, nil);
 	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
+	SelectBitmap(tempDC, prevBitmap);
+	GdiFlush();
+
+	SetFrameRate(prevFrameRate);
+
+	DeleteBitmap(destBitmap);
+	DeleteBitmap(srcBitmap);
+	DeleteDC(tempDC);
 }
 
 //--------------------------------------------------------------  DissBits
