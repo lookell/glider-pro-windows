@@ -390,6 +390,8 @@ void SetHouseToSavedRoom (void)
 
 void PlayGame (SInt16 splashHouseIndex)
 {
+	SInt16 originalMode;
+
 	while ((g_playing) && (!g_quitting))
 	{
 		g_gameFrame++;
@@ -455,20 +457,30 @@ void PlayGame (SInt16 splashHouseIndex)
 			if (g_countDown <= 0)
 			{
 				HideGlider(&g_theGlider);
-				RefreshScoreboard(kNormalTitleMode);
 
+				originalMode = GetScoreboardMode();
 				if (g_mortals < 0)
+				{
+					RefreshScoreboard(kNormalTitleMode);
 					DoDiedGameOver();
+				}
 				else
+				{
+					SetScoreboardMode(kScoreboardHigh);
+					RefreshScoreboard(kNormalTitleMode);
 					DoGameOver();
+				}
 				if (!g_demoGoing)
 				{
 					if (TestHighScore(g_mainWindow))
 					{
+						SetScoreboardMode(kScoreboardHigh);
 						SetMenu(g_mainWindow, g_theMenuBar);
 						DoHighScores();
 					}
 				}
+				SetScoreboardMode(originalMode);
+
 				SetMenu(g_mainWindow, g_theMenuBar);
 				RedrawSplashScreen(splashHouseIndex);
 			}
