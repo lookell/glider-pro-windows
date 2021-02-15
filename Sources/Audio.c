@@ -1032,6 +1032,11 @@ static HWND Audio_SetMessageWindow(HWND hwnd)
 	return (HWND)InterlockedExchangePointer((PVOID *)&g_audioWindow, (PVOID)hwnd);
 }
 
+static void Audio_SendThreadMessage(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	SendMessage(hwnd, message, wParam, lParam);
+}
+
 int Audio_InitDevice(void)
 {
 	AudioThreadParams params;
@@ -1080,7 +1085,7 @@ void Audio_KillDevice(void)
 	audioWindow = Audio_SetMessageWindow(NULL);
 	if (audioWindow != NULL)
 	{
-		SendMessage(audioWindow, AUDIOCMD_SHUTDOWN, 0, 0);
+		Audio_SendThreadMessage(audioWindow, AUDIOCMD_SHUTDOWN, 0, 0);
 		// The audio thread itself will exit shortly after this call.
 		// We hold no handles to the thread, so the underlying object
 		// will destroy itself soon enough.
@@ -1096,7 +1101,7 @@ float Audio_GetMasterVolume(void)
 	audioWindow = Audio_GetMessageWindow();
 	if (audioWindow != NULL)
 	{
-		SendMessage(audioWindow, AUDIOCMD_GETMASTERVOLUME, 0, (LPARAM)&cmdData);
+		Audio_SendThreadMessage(audioWindow, AUDIOCMD_GETMASTERVOLUME, 0, (LPARAM)&cmdData);
 	}
 	return cmdData.masterVolume;
 }
@@ -1110,7 +1115,7 @@ void Audio_SetMasterVolume(float newVolume)
 	audioWindow = Audio_GetMessageWindow();
 	if (audioWindow != NULL)
 	{
-		SendMessage(audioWindow, AUDIOCMD_SETMASTERVOLUME, 0, (LPARAM)&cmdData);
+		Audio_SendThreadMessage(audioWindow, AUDIOCMD_SETMASTERVOLUME, 0, (LPARAM)&cmdData);
 	}
 }
 
@@ -1124,7 +1129,7 @@ AudioChannel *AudioChannel_Open(const WaveFormat *format)
 	audioWindow = Audio_GetMessageWindow();
 	if (audioWindow != NULL)
 	{
-		SendMessage(audioWindow, AUDIOCMD_OPENCHANNEL, 0, (LPARAM)&cmdData);
+		Audio_SendThreadMessage(audioWindow, AUDIOCMD_OPENCHANNEL, 0, (LPARAM)&cmdData);
 	}
 	return cmdData.channel;
 }
@@ -1138,7 +1143,7 @@ void AudioChannel_Close(AudioChannel *channel)
 	audioWindow = Audio_GetMessageWindow();
 	if (audioWindow != NULL)
 	{
-		SendMessage(audioWindow, AUDIOCMD_CLOSECHANNEL, 0, (LPARAM)&cmdData);
+		Audio_SendThreadMessage(audioWindow, AUDIOCMD_CLOSECHANNEL, 0, (LPARAM)&cmdData);
 	}
 }
 
@@ -1152,7 +1157,7 @@ void AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry)
 	audioWindow = Audio_GetMessageWindow();
 	if (audioWindow != NULL)
 	{
-		SendMessage(audioWindow, AUDIOCMD_QUEUECHANNELAUDIO, 0, (LPARAM)&cmdData);
+		Audio_SendThreadMessage(audioWindow, AUDIOCMD_QUEUECHANNELAUDIO, 0, (LPARAM)&cmdData);
 	}
 }
 
@@ -1165,7 +1170,7 @@ void AudioChannel_ClearAudio(AudioChannel *channel)
 	audioWindow = Audio_GetMessageWindow();
 	if (audioWindow != NULL)
 	{
-		SendMessage(audioWindow, AUDIOCMD_CLEARCHANNELAUDIO, 0, (LPARAM)&cmdData);
+		Audio_SendThreadMessage(audioWindow, AUDIOCMD_CLEARCHANNELAUDIO, 0, (LPARAM)&cmdData);
 	}
 }
 
@@ -1179,7 +1184,7 @@ int AudioChannel_IsPlaying(AudioChannel *channel)
 	audioWindow = Audio_GetMessageWindow();
 	if (audioWindow != NULL)
 	{
-		SendMessage(audioWindow, AUDIOCMD_ISCHANNELPLAYING, 0, (LPARAM)&cmdData);
+		Audio_SendThreadMessage(audioWindow, AUDIOCMD_ISCHANNELPLAYING, 0, (LPARAM)&cmdData);
 	}
 	return cmdData.isPlaying;
 }
