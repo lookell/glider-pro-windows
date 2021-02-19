@@ -482,7 +482,10 @@ void PlayGame (SInt16 splashHouseIndex)
 				SetScoreboardMode(originalMode);
 
 				SetMenu(g_mainWindow, g_theMenuBar);
-				RedrawSplashScreen(splashHouseIndex);
+				if (!g_quitting)
+				{
+					RedrawSplashScreen(splashHouseIndex);
+				}
 			}
 		}
 	}
