@@ -12,6 +12,7 @@
 #include "Environ.h"
 #include "Events.h"
 #include "FrameTimer.h"
+#include "GameOver.h"
 #include "House.h"
 #include "HouseIO.h"
 #include "Input.h"
@@ -572,7 +573,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		return 0;
 
 	case WM_CLOSE:
-		if (g_theMode == kPlayMode)
+		if (g_theMode == kPlayMode && g_playing && !g_gameOver)
 		{
 			DoCommandKeyQuit();
 		}
