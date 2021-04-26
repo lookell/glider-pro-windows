@@ -55,9 +55,9 @@
 #define kTikiPoleBase           300
 #define kMailboxBase            296
 
-void DrawClockDigit (SInt16 number, const Rect *dest);
-void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand);
-void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand);
+void DrawClockDigit (HDC hdcDest, SInt16 number, const Rect *dest);
+void DrawClockHands (HDC hdcDest, Point where, SInt16 bigHand, SInt16 littleHand);
+void DrawLargeClockHands (HDC hdcDest, Point where, SInt16 bigHand, SInt16 littleHand);
 void CopyBitsSansWhite (HDC srcBits, HDC dstBits, const Rect *srcRect, const Rect *dstRect);
 
 //==============================================================  Functions
@@ -746,21 +746,19 @@ void DrawRedClock (const Rect *theRect)
 	QSetRect(&dest, 0, 0, 4, 6);
 	QOffsetRect(&dest, theRect->left + 5, theRect->top + 7);
 	if (hour > 9)
-		DrawClockDigit(hour / 10, &dest);
+		DrawClockDigit(hdcDest, hour / 10, &dest);
 	QOffsetRect(&dest, 4, 0);
-	DrawClockDigit(hour % 10, &dest);
+	DrawClockDigit(hdcDest, hour % 10, &dest);
 	QOffsetRect(&dest, 6, 0);
-	DrawClockDigit(minutes / 10, &dest);
+	DrawClockDigit(hdcDest, minutes / 10, &dest);
 	QOffsetRect(&dest, 4, 0);
-	DrawClockDigit(minutes % 10, &dest);
+	DrawClockDigit(hdcDest, minutes % 10, &dest);
 }
 
 //--------------------------------------------------------------  DrawClockDigit
 
-void DrawClockDigit (SInt16 number, const Rect *dest)
+void DrawClockDigit (HDC hdcDest, SInt16 number, const Rect *dest)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (number < 0 || number >= ARRAYSIZE(g_digits))
 		return;
 
@@ -786,7 +784,7 @@ void DrawBlueClock (const Rect *theRect)
 	GetLocalTime(&localTime);
 	hour = localTime.wHour % 12;
 	minutes = ((localTime.wMinute + 2) / 5) % 12;
-	DrawClockHands(dest, minutes, hour);
+	DrawClockHands(hdcDest, dest, minutes, hour);
 }
 
 //--------------------------------------------------------------  DrawYellowClock
@@ -807,7 +805,7 @@ void DrawYellowClock (const Rect *theRect)
 	GetLocalTime(&localTime);
 	hour = localTime.wHour % 12;
 	minutes = ((localTime.wMinute + 2) / 5) % 12;
-	DrawClockHands(dest, minutes, hour);
+	DrawClockHands(hdcDest, dest, minutes, hour);
 }
 
 //--------------------------------------------------------------  DrawCuckoo
@@ -828,15 +826,13 @@ void DrawCuckoo (const Rect *theRect)
 	GetLocalTime(&localTime);
 	hour = localTime.wHour % 12;
 	minutes = ((localTime.wMinute + 2) / 5) % 12;
-	DrawLargeClockHands(dest, minutes, hour);
+	DrawLargeClockHands(hdcDest, dest, minutes, hour);
 }
 
 //--------------------------------------------------------------  DrawClockHands
 
-void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
+void DrawClockHands (HDC hdcDest, Point where, SInt16 bigHand, SInt16 littleHand)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	HPEN wasPen;
 
 	wasPen = SelectPen(hdcDest, GetStockPen(BLACK_PEN));
@@ -948,12 +944,10 @@ void DrawClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
 	SelectPen(hdcDest, wasPen);
 }
 
-//--------------------------------------------------------------  DrawClockHands
+//--------------------------------------------------------------  DrawLargeClockHands
 
-void DrawLargeClockHands (Point where, SInt16 bigHand, SInt16 littleHand)
+void DrawLargeClockHands (HDC hdcDest, Point where, SInt16 bigHand, SInt16 littleHand)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	HPEN wasPen;
 
 	wasPen = SelectPen(hdcDest, GetStockPen(WHITE_PEN));
