@@ -13,9 +13,7 @@
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "ResourceLoader.h"
-#include "Room.h"
 #include "Utilities.h"
-#include "WinAPI.h"
 
 #define k8WhiteColor            0
 #define kYellowColor            5
@@ -63,10 +61,8 @@ void CopyBitsSansWhite (HDC srcBits, HDC dstBits, const Rect *srcRect, const Rec
 //==============================================================  Functions
 //--------------------------------------------------------------  DrawSimpleBlowers
 
-void DrawSimpleBlowers (SInt16 what, const Rect *theRect)
+void DrawSimpleBlowers (HDC hdcDest, SInt16 what, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
@@ -76,10 +72,8 @@ void DrawSimpleBlowers (SInt16 what, const Rect *theRect)
 
 //--------------------------------------------------------------  DrawTiki
 
-void DrawTiki (const Rect *theRect, SInt16 down)
+void DrawTiki (HDC hdcDest, const Rect *theRect, SInt16 down)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	SInt32 darkGrayC, lightWoodC, darkWoodC;
 
 	darkGrayC = k8DkstGrayColor;
@@ -106,10 +100,8 @@ void DrawTiki (const Rect *theRect, SInt16 down)
 
 //--------------------------------------------------------------  DrawInvisibleBlower
 
-void DrawInvisibleBlower (const Rect *theRect)
+void DrawInvisibleBlower (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect tempRect;
 
 	QSetRect(&tempRect, 0, 0, 24, 24);
@@ -120,19 +112,15 @@ void DrawInvisibleBlower (const Rect *theRect)
 
 //--------------------------------------------------------------  DrawLiftArea
 
-void DrawLiftArea (const Rect *theRect)
+void DrawLiftArea (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	ColorFrameRect(hdcDest, theRect, 192);
 }
 
 //--------------------------------------------------------------  DrawTable
 
-void DrawTable (const Rect *tableTop, SInt16 down)
+void DrawTable (HDC hdcDest, const Rect *tableTop, SInt16 down)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	#define kTableBaseTop  296
 	#define kTableShadowTop  312
 	#define kTableShadowOffset  12
@@ -221,10 +209,8 @@ void DrawTable (const Rect *tableTop, SInt16 down)
 
 //--------------------------------------------------------------  DrawShelf
 
-void DrawShelf (const Rect *shelfTop)
+void DrawShelf (HDC hdcDest, const Rect *shelfTop)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	#define kBracketInset  18
 	#define kShelfDeep  4
 	#define kBracketThick  5
@@ -284,10 +270,8 @@ void DrawShelf (const Rect *shelfTop)
 
 //--------------------------------------------------------------  DrawCabinet
 
-void DrawCabinet (const Rect *cabinet)
+void DrawCabinet (HDC hdcDest, const Rect *cabinet)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	#define kCabinetDeep  4
 	#define kCabinetShadowOff  6
 	Rect tempRect;
@@ -381,10 +365,8 @@ void DrawCabinet (const Rect *cabinet)
 
 //--------------------------------------------------------------  DrawSimpleFurniture
 
-void DrawSimpleFurniture (SInt16 what, const Rect *theRect)
+void DrawSimpleFurniture (HDC hdcDest, SInt16 what, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
@@ -394,10 +376,8 @@ void DrawSimpleFurniture (SInt16 what, const Rect *theRect)
 
 //--------------------------------------------------------------  DrawCounter
 
-void DrawCounter (const Rect *counter)
+void DrawCounter (HDC hdcDest, const Rect *counter)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	#define kCounterFooterHigh  12
 	#define kCounterStripWide  6
 	#define kCounterStripTall  29
@@ -489,10 +469,8 @@ void DrawCounter (const Rect *counter)
 
 //--------------------------------------------------------------  DrawDresser
 
-void DrawDresser (const Rect *dresser)
+void DrawDresser (HDC hdcDest, const Rect *dresser)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	#define kDresserTopThick  4
 	#define kDresserCrease  9
 	#define kDresserDrawerDrop  12
@@ -584,10 +562,8 @@ void DrawDresser (const Rect *dresser)
 
 //--------------------------------------------------------------  DrawDeckTable
 
-void DrawDeckTable (const Rect *tableTop, SInt16 down)
+void DrawDeckTable (HDC hdcDest, const Rect *tableTop, SInt16 down)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	#define kTableBaseTop  296
 	#define kTableShadowTop  312
 	#define kTableShadowOffset  12
@@ -676,10 +652,8 @@ void DrawDeckTable (const Rect *tableTop, SInt16 down)
 
 //--------------------------------------------------------------  DrawStool
 
-void DrawStool (const Rect *theRect, SInt16 down)
+void DrawStool (HDC hdcDest, const Rect *theRect, SInt16 down)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	#define kStoolBase  304
 	SInt32 grayC, dkGrayC;
 
@@ -708,28 +682,22 @@ void DrawStool (const Rect *theRect, SInt16 down)
 
 //--------------------------------------------------------------  DrawInvisObstacle
 
-void DrawInvisObstacle (const Rect *theRect)
+void DrawInvisObstacle (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	ColorFrameRect(hdcDest, theRect, k8BrownColor);
 }
 
 //--------------------------------------------------------------  DrawInvisBounce
 
-void DrawInvisBounce (const Rect *theRect)
+void DrawInvisBounce (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	ColorFrameRect(hdcDest, theRect, k8RedColor);
 }
 
 //--------------------------------------------------------------  DrawRedClock
 
-void DrawRedClock (const Rect *theRect)
+void DrawRedClock (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	SYSTEMTIME localTime;
 	Rect dest;
 	SInt16 hour, minutes;
@@ -768,10 +736,8 @@ void DrawClockDigit (HDC hdcDest, SInt16 number, const Rect *dest)
 
 //--------------------------------------------------------------  DrawBlueClock
 
-void DrawBlueClock (const Rect *theRect)
+void DrawBlueClock (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	SYSTEMTIME localTime;
 	Point dest;
 	SInt16 hour, minutes;
@@ -789,10 +755,8 @@ void DrawBlueClock (const Rect *theRect)
 
 //--------------------------------------------------------------  DrawYellowClock
 
-void DrawYellowClock (const Rect *theRect)
+void DrawYellowClock (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	SYSTEMTIME localTime;
 	Point dest;
 	SInt16 hour, minutes;
@@ -810,10 +774,8 @@ void DrawYellowClock (const Rect *theRect)
 
 //--------------------------------------------------------------  DrawCuckoo
 
-void DrawCuckoo (const Rect *theRect)
+void DrawCuckoo (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	SYSTEMTIME localTime;
 	Point dest;
 	SInt16 hour, minutes;
@@ -1061,10 +1023,8 @@ void DrawLargeClockHands (HDC hdcDest, Point where, SInt16 bigHand, SInt16 littl
 
 //--------------------------------------------------------------  DrawSimplePrizes
 
-void DrawSimplePrizes (SInt16 what, const Rect *theRect)
+void DrawSimplePrizes (HDC hdcDest, SInt16 what, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
@@ -1074,10 +1034,8 @@ void DrawSimplePrizes (SInt16 what, const Rect *theRect)
 
 //--------------------------------------------------------------  DrawGreaseRt
 
-void DrawGreaseRt (const Rect *theRect, SInt16 distance, Boolean state)
+void DrawGreaseRt (HDC hdcDest, const Rect *theRect, SInt16 distance, Boolean state)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect spill, dest;
 
 	dest = *theRect;
@@ -1100,10 +1058,8 @@ void DrawGreaseRt (const Rect *theRect, SInt16 distance, Boolean state)
 
 //--------------------------------------------------------------  DrawGreaseLf
 
-void DrawGreaseLf (const Rect *theRect, SInt16 distance, Boolean state)
+void DrawGreaseLf (HDC hdcDest, const Rect *theRect, SInt16 distance, Boolean state)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect spill, dest;
 
 	dest = *theRect;
@@ -1126,38 +1082,30 @@ void DrawGreaseLf (const Rect *theRect, SInt16 distance, Boolean state)
 
 //--------------------------------------------------------------  DrawBands
 
-void DrawFoil (const Rect *theRect)
+void DrawFoil (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Mac_CopyMask(g_bonusSrcMap, g_bonusMaskMap, hdcDest,
 			&g_srcRects[kFoil], &g_srcRects[kFoil], theRect);
 }
 
 //--------------------------------------------------------------  DrawInvisBonus
 
-void DrawInvisBonus (const Rect *theRect)
+void DrawInvisBonus (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	ColorFrameOval(hdcDest, theRect, 227);
 }
 
 //--------------------------------------------------------------  DrawSlider
 
-void DrawSlider (const Rect *theRect)
+void DrawSlider (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Mac_FrameRect(hdcDest, theRect, GetStockBrush(BLACK_BRUSH), 1, 1);
 }
 
 //--------------------------------------------------------------  DrawMailboxLeft
 
-void DrawMailboxLeft (const Rect *theRect, SInt16 down)
+void DrawMailboxLeft (HDC hdcDest, const Rect *theRect, SInt16 down)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect bounds;
 	HDC tempMap;
 	HDC tempMask;
@@ -1215,10 +1163,8 @@ void DrawMailboxLeft (const Rect *theRect, SInt16 down)
 
 //--------------------------------------------------------------  DrawMailboxRight
 
-void DrawMailboxRight (const Rect *theRect, SInt16 down)
+void DrawMailboxRight (HDC hdcDest, const Rect *theRect, SInt16 down)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect bounds;
 	HDC tempMap;
 	HDC tempMask;
@@ -1276,10 +1222,8 @@ void DrawMailboxRight (const Rect *theRect, SInt16 down)
 
 //--------------------------------------------------------------  DrawSimpleTransport
 
-void DrawSimpleTransport (SInt16 what, const Rect *theRect)
+void DrawSimpleTransport (HDC hdcDest, SInt16 what, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
@@ -1289,19 +1233,15 @@ void DrawSimpleTransport (SInt16 what, const Rect *theRect)
 
 //--------------------------------------------------------------  DrawInvisTransport
 
-void DrawInvisTransport (const Rect *theRect)
+void DrawInvisTransport (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	ColorFrameRect(hdcDest, theRect, 32);
 }
 
 //--------------------------------------------------------------  DrawLightSwitch
 
-void DrawLightSwitch (const Rect *theRect, Boolean state)
+void DrawLightSwitch (HDC hdcDest, const Rect *theRect, Boolean state)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (state)
 	{
 		Mac_CopyBits(g_switchSrcMap, hdcDest,
@@ -1316,10 +1256,8 @@ void DrawLightSwitch (const Rect *theRect, Boolean state)
 
 //--------------------------------------------------------------  DrawMachineSwitch
 
-void DrawMachineSwitch (const Rect *theRect, Boolean state)
+void DrawMachineSwitch (HDC hdcDest, const Rect *theRect, Boolean state)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (state)
 		Mac_CopyBits(g_switchSrcMap, hdcDest,
 				&g_machineSwitchSrc[0], theRect, srcCopy, nil);
@@ -1330,10 +1268,8 @@ void DrawMachineSwitch (const Rect *theRect, Boolean state)
 
 //--------------------------------------------------------------  DrawThermostat
 
-void DrawThermostat (const Rect *theRect, Boolean state)
+void DrawThermostat (HDC hdcDest, const Rect *theRect, Boolean state)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (state)
 		Mac_CopyBits(g_switchSrcMap, hdcDest,
 				&g_thermostatSrc[0], theRect, srcCopy, nil);
@@ -1344,10 +1280,8 @@ void DrawThermostat (const Rect *theRect, Boolean state)
 
 //--------------------------------------------------------------  DrawPowerSwitch
 
-void DrawPowerSwitch (const Rect *theRect, Boolean state)
+void DrawPowerSwitch (HDC hdcDest, const Rect *theRect, Boolean state)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (state)
 		Mac_CopyBits(g_switchSrcMap, hdcDest,
 				&g_powerSrc[0], theRect, srcCopy, nil);
@@ -1358,10 +1292,8 @@ void DrawPowerSwitch (const Rect *theRect, Boolean state)
 
 //--------------------------------------------------------------  DrawKnifeSwitch
 
-void DrawKnifeSwitch (const Rect *theRect, Boolean state)
+void DrawKnifeSwitch (HDC hdcDest, const Rect *theRect, Boolean state)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (state)
 		Mac_CopyBits(g_switchSrcMap, hdcDest,
 				&g_knifeSwitchSrc[0], theRect, srcCopy, nil);
@@ -1372,37 +1304,29 @@ void DrawKnifeSwitch (const Rect *theRect, Boolean state)
 
 //--------------------------------------------------------------  DrawInvisibleSwitch
 
-void DrawInvisibleSwitch (const Rect *theRect)
+void DrawInvisibleSwitch (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	ColorFrameRect(hdcDest, theRect, kIntenseGreenColor);
 }
 
 //--------------------------------------------------------------  DrawTrigger
 
-void DrawTrigger (const Rect *theRect)
+void DrawTrigger (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	ColorFrameRect(hdcDest, theRect, kIntenseBlueColor);
 }
 
 //--------------------------------------------------------------  DrawSoundTrigger
 
-void DrawSoundTrigger (const Rect *theRect)
+void DrawSoundTrigger (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	ColorFrameRect(hdcDest, theRect, kIntenseYellowColor);
 }
 
 //--------------------------------------------------------------  DrawSimpleLight
 
-void DrawSimpleLight (SInt16 what, const Rect *theRect)
+void DrawSimpleLight (HDC hdcDest, SInt16 what, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
@@ -1412,10 +1336,8 @@ void DrawSimpleLight (SInt16 what, const Rect *theRect)
 
 //--------------------------------------------------------------  DrawFlourescent
 
-void DrawFlourescent (const Rect *theRect)
+void DrawFlourescent (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect partRect;
 	SInt32 grayC, gray2C, gray3C, gray4C, violetC;
 
@@ -1468,10 +1390,8 @@ void DrawFlourescent (const Rect *theRect)
 
 //--------------------------------------------------------------  DrawTrackLight
 
-void DrawTrackLight (const Rect *theRect)
+void DrawTrackLight (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	#define kTrackLightSpacing  64
 	Rect partRect;
 	SInt32 grayC, gray2C, gray3C, gray4C;
@@ -1536,19 +1456,15 @@ void DrawTrackLight (const Rect *theRect)
 
 //--------------------------------------------------------------  DrawInvisLight
 
-void DrawInvisLight (const Rect *theRect)
+void DrawInvisLight (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	ColorFrameOval(hdcDest, theRect, 17);
 }
 
 //--------------------------------------------------------------  DrawSimpleAppliance
 
-void DrawSimpleAppliance (SInt16 what, const Rect *theRect)
+void DrawSimpleAppliance (HDC hdcDest, SInt16 what, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
@@ -1558,10 +1474,8 @@ void DrawSimpleAppliance (SInt16 what, const Rect *theRect)
 
 //--------------------------------------------------------------  DrawMacPlus
 
-void DrawMacPlus (const Rect *theRect, Boolean isOn, Boolean isLit)
+void DrawMacPlus (HDC hdcDest, const Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect screen;
 
 	if (isLit)
@@ -1587,10 +1501,8 @@ void DrawMacPlus (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 //--------------------------------------------------------------  DrawTV
 
-void DrawTV (const Rect *theRect, Boolean isOn, Boolean isLit)
+void DrawTV (HDC hdcDest, const Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect bounds;
 	HDC tempMap;
 	HDC tempMask;
@@ -1628,10 +1540,8 @@ void DrawTV (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 //--------------------------------------------------------------  DrawCoffee
 
-void DrawCoffee (const Rect *theRect, Boolean isOn, Boolean isLit)
+void DrawCoffee (HDC hdcDest, const Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect light;
 
 	if (isLit)
@@ -1657,20 +1567,16 @@ void DrawCoffee (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 //--------------------------------------------------------------  DrawOutlet
 
-void DrawOutlet (const Rect *theRect)
+void DrawOutlet (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Mac_CopyMask(g_applianceSrcMap, g_applianceMaskMap, hdcDest,
 			&g_srcRects[kOutlet], &g_srcRects[kOutlet], theRect);
 }
 
 //--------------------------------------------------------------  DrawVCR
 
-void DrawVCR (const Rect *theRect, Boolean isOn, Boolean isLit)
+void DrawVCR (HDC hdcDest, const Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect bounds;
 	HDC tempMap;
 	HDC tempMask;
@@ -1708,10 +1614,8 @@ void DrawVCR (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 //--------------------------------------------------------------  DrawStereo
 
-void DrawStereo (const Rect *theRect, Boolean isOn, Boolean isLit)
+void DrawStereo (HDC hdcDest, const Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect bounds;
 	HDC tempMap;
 	HDC tempMask;
@@ -1749,10 +1653,8 @@ void DrawStereo (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 //--------------------------------------------------------------  DrawMicrowave
 
-void DrawMicrowave (const Rect *theRect, Boolean isOn, Boolean isLit)
+void DrawMicrowave (HDC hdcDest, const Rect *theRect, Boolean isOn, Boolean isLit)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect bounds;
 	HDC tempMap;
 	HDC tempMask;
@@ -1802,30 +1704,24 @@ void DrawMicrowave (const Rect *theRect, Boolean isOn, Boolean isLit)
 
 //--------------------------------------------------------------  DrawBalloon
 
-void DrawBalloon (const Rect *theRect)
+void DrawBalloon (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Mac_CopyMask(g_balloonSrcMap, g_balloonMaskMap, hdcDest,
 			&g_balloonSrc[1], &g_balloonSrc[1], theRect);
 }
 
 //--------------------------------------------------------------  DrawCopter
 
-void DrawCopter (const Rect *theRect)
+void DrawCopter (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Mac_CopyMask(g_copterSrcMap, g_copterMaskMap, hdcDest,
 			&g_copterSrc[1], &g_copterSrc[1], theRect);
 }
 
 //--------------------------------------------------------------  DrawDart
 
-void DrawDart (const Rect *theRect, SInt16 which)
+void DrawDart (HDC hdcDest, const Rect *theRect, SInt16 which)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (which == kDartLf)
 	{
 		Mac_CopyMask(g_dartSrcMap, g_dartMaskMap, hdcDest,
@@ -1840,10 +1736,8 @@ void DrawDart (const Rect *theRect, SInt16 which)
 
 //--------------------------------------------------------------  DrawBall
 
-void DrawBall (SInt16 what, const Rect *theRect)
+void DrawBall (HDC hdcDest, SInt16 what, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
@@ -1853,10 +1747,8 @@ void DrawBall (SInt16 what, const Rect *theRect)
 
 //--------------------------------------------------------------  DrawFish
 
-void DrawFish (SInt16 what, const Rect *theRect)
+void DrawFish (HDC hdcDest, SInt16 what, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
@@ -1866,20 +1758,16 @@ void DrawFish (SInt16 what, const Rect *theRect)
 
 //--------------------------------------------------------------  DrawDrip
 
-void DrawDrip (const Rect *theRect)
+void DrawDrip (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Mac_CopyMask(g_dripSrcMap, g_dripMaskMap, hdcDest,
 			&g_dripSrc[3], &g_dripSrc[3], theRect);
 }
 
 //--------------------------------------------------------------  DrawMirror
 
-void DrawMirror (const Rect *mirror)
+void DrawMirror (HDC hdcDest, const Rect *mirror)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect tempRect;
 	SInt32 grayC;
 
@@ -1898,10 +1786,8 @@ void DrawMirror (const Rect *mirror)
 
 //--------------------------------------------------------------  DrawSimpleClutter
 
-void DrawSimpleClutter (SInt16 what, const Rect *theRect)
+void DrawSimpleClutter (HDC hdcDest, SInt16 what, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (what < 0 || what >= ARRAYSIZE(g_srcRects))
 		return;
 
@@ -1911,10 +1797,8 @@ void DrawSimpleClutter (SInt16 what, const Rect *theRect)
 
 //--------------------------------------------------------------  DrawFlower
 
-void DrawFlower (const Rect *theRect, SInt16 which)
+void DrawFlower (HDC hdcDest, const Rect *theRect, SInt16 which)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	if (which < 0 || which >= ARRAYSIZE(g_flowerSrc))
 		return;
 
@@ -1924,10 +1808,8 @@ void DrawFlower (const Rect *theRect, SInt16 which)
 
 //--------------------------------------------------------------  DrawWallWindow
 
-void DrawWallWindow (const Rect *window)
+void DrawWallWindow (HDC hdcDest, const Rect *window)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	#define kWindowSillThick  7
 	Rect tempRect, tempRect2;
 	SInt32 brownC, tanC, dkstRedC;
@@ -2003,10 +1885,8 @@ void DrawWallWindow (const Rect *window)
 
 //--------------------------------------------------------------  DrawCalendar
 
-void DrawCalendar (const Rect *theRect)
+void DrawCalendar (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	SYSTEMTIME localTime;
 	Rect bounds;
 	HBITMAP thePicture;
@@ -2043,10 +1923,8 @@ void DrawCalendar (const Rect *theRect)
 
 //--------------------------------------------------------------  DrawBulletin
 
-void DrawBulletin (const Rect *theRect)
+void DrawBulletin (HDC hdcDest, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect bounds;
 	HBITMAP thePicture;
 	BITMAP bmInfo;
@@ -2064,10 +1942,8 @@ void DrawBulletin (const Rect *theRect)
 
 //--------------------------------------------------------------  DrawPictObject
 
-void DrawPictObject (SInt16 what, const Rect *theRect)
+void DrawPictObject (HDC hdcDest, SInt16 what, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect bounds;
 	HBITMAP thePicture;
 	SInt16 pictID;
@@ -2118,10 +1994,8 @@ void DrawPictObject (SInt16 what, const Rect *theRect)
 
 //--------------------------------------------------------------  DrawPictWithMaskObject
 
-void DrawPictWithMaskObject (SInt16 what, const Rect *theRect)
+void DrawPictWithMaskObject (HDC hdcDest, SInt16 what, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect bounds;
 	HDC tempMap;
 	HDC tempMask;
@@ -2186,10 +2060,8 @@ void CopyBitsSansWhite (HDC srcBits, HDC dstBits, const Rect *srcRect, const Rec
 
 //--------------------------------------------------------------  DrawPictSansWhiteObject
 
-void DrawPictSansWhiteObject (SInt16 what, const Rect *theRect)
+void DrawPictSansWhiteObject (HDC hdcDest, SInt16 what, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect bounds;
 	HDC tempMap;
 	SInt16 pictID;
@@ -2292,10 +2164,8 @@ void DrawPictSansWhiteObject (SInt16 what, const Rect *theRect)
 
 //--------------------------------------------------------------  DrawCustPictSansWhite
 
-void DrawCustPictSansWhite (SInt16 pictID, const Rect *theRect)
+void DrawCustPictSansWhite (HDC hdcDest, SInt16 pictID, const Rect *theRect)
 {
-	const HDC hdcDest = g_backSrcMap;
-
 	Rect bounds;
 	HDC tempMap;
 

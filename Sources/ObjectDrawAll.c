@@ -73,7 +73,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawSimpleBlowers(thisObject.what, &itsRect);
+					DrawSimpleBlowers(g_backSrcMap, thisObject.what, &itsRect);
 				break;
 
 				case kTaper:
@@ -82,7 +82,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (isLit)
-						DrawSimpleBlowers(thisObject.what, &itsRect);
+						DrawSimpleBlowers(g_backSrcMap, thisObject.what, &itsRect);
 					if (neighbor == kCentralRoom)
 					{
 						if (redraw)
@@ -116,7 +116,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (isLit)
-						DrawSimpleBlowers(thisObject.what, &itsRect);
+						DrawSimpleBlowers(g_backSrcMap, thisObject.what, &itsRect);
 					if (neighbor == kCentralRoom)
 					{
 						if (redraw)
@@ -150,7 +150,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (isLit)
-						DrawSimpleBlowers(thisObject.what, &itsRect);
+						DrawSimpleBlowers(g_backSrcMap, thisObject.what, &itsRect);
 					if (neighbor == kCentralRoom)
 					{
 						if (redraw)
@@ -182,7 +182,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
-					DrawTiki(&itsRect, g_playOriginV + VerticalRoomOffset(neighbor));
+					DrawTiki(g_backSrcMap, &itsRect, g_playOriginV + VerticalRoomOffset(neighbor));
 				if (redraw)
 					ReBackUpTikiFlames(g_localNumbers[neighbor], i);
 				else
@@ -196,7 +196,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (isLit)
-						DrawPictSansWhiteObject(thisObject.what, &itsRect);
+						DrawPictSansWhiteObject(g_backSrcMap, thisObject.what, &itsRect);
 					if (redraw)
 						ReBackUpBBQCoals(g_localNumbers[neighbor], i);
 					else
@@ -213,21 +213,21 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
-					DrawTable(&itsRect, g_playOriginV);
+					DrawTable(g_backSrcMap, &itsRect, g_playOriginV);
 				break;
 
 				case kShelf:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
-					DrawShelf(&itsRect);
+					DrawShelf(g_backSrcMap, &itsRect);
 				break;
 
 				case kCabinet:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawCabinet(&itsRect);
+					DrawCabinet(g_backSrcMap, &itsRect);
 				break;
 
 				case kFilingCabinet:
@@ -235,7 +235,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawPictObject(thisObject.what, &itsRect);
+					DrawPictObject(g_backSrcMap, thisObject.what, &itsRect);
 				break;
 
 				case kWasteBasket:
@@ -243,35 +243,35 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawSimpleFurniture(thisObject.what, &itsRect);
+					DrawSimpleFurniture(g_backSrcMap, thisObject.what, &itsRect);
 				break;
 
 				case kCounter:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawCounter(&itsRect);
+					DrawCounter(g_backSrcMap, &itsRect);
 				break;
 
 				case kDresser:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
-					DrawDresser(&itsRect);
+					DrawDresser(g_backSrcMap, &itsRect);
 				break;
 
 				case kDeckTable:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
-					DrawDeckTable(&itsRect, g_playOriginV);
+					DrawDeckTable(g_backSrcMap, &itsRect, g_playOriginV);
 				break;
 
 				case kStool:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (isLit)
-					DrawStool(&itsRect, g_playOriginV + VerticalRoomOffset(neighbor));
+					DrawStool(g_backSrcMap, &itsRect, g_playOriginV + VerticalRoomOffset(neighbor));
 				break;
 
 				case kInvisObstacle:
@@ -284,7 +284,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				{
 					AddTempManholeRect(&itsRect);
 					if (isLit)
-						DrawPictSansWhiteObject(thisObject.what, &itsRect);
+						DrawPictSansWhiteObject(g_backSrcMap, thisObject.what, &itsRect);
 				}
 				break;
 
@@ -301,7 +301,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					else
 						legit = BackUpToSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					if (legit != -1)
-						DrawRedClock(&itsRect);
+						DrawRedClock(g_backSrcMap, &itsRect);
 				}
 				break;
 
@@ -315,7 +315,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					else
 						legit = BackUpToSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					if (legit != -1)
-						DrawBlueClock(&itsRect);
+						DrawBlueClock(g_backSrcMap, &itsRect);
 				}
 				break;
 
@@ -329,7 +329,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					else
 						legit = BackUpToSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					if (legit != -1)
-						DrawYellowClock(&itsRect);
+						DrawYellowClock(g_backSrcMap, &itsRect);
 				}
 				break;
 
@@ -344,7 +344,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 						legit = BackUpToSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					if (legit != -1)
 					{
-						DrawCuckoo(&itsRect);
+						DrawCuckoo(g_backSrcMap, &itsRect);
 						if (redraw)
 							ReBackUpPendulum(g_localNumbers[neighbor], i);
 						else
@@ -367,7 +367,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					else
 						legit = BackUpToSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					if (legit != -1)
-						DrawSimplePrizes(thisObject.what, &itsRect);
+						DrawSimplePrizes(g_backSrcMap, thisObject.what, &itsRect);
 				}
 				break;
 
@@ -385,11 +385,11 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 									itsRect.left, itsRect.top,
 									thisObject.data.c.length, true);
 						if (dynamicNum != -1)
-							DrawGreaseRt(&itsRect, thisObject.data.c.length, true);
+							DrawGreaseRt(g_backSrcMap, &itsRect, thisObject.data.c.length, true);
 					}
 				}
 				else  // fallen
-					DrawGreaseRt(&itsRect, thisObject.data.c.length, false);
+					DrawGreaseRt(g_backSrcMap, &itsRect, thisObject.data.c.length, false);
 				break;
 
 				case kGreaseLf:
@@ -406,11 +406,11 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 									itsRect.left, itsRect.top,
 									thisObject.data.c.length, false);
 						if (dynamicNum != -1)
-							DrawGreaseLf(&itsRect, thisObject.data.c.length, true);
+							DrawGreaseLf(g_backSrcMap, &itsRect, thisObject.data.c.length, true);
 					}
 				}
 				else
-					DrawGreaseLf(&itsRect, thisObject.data.c.length, false);
+					DrawGreaseLf(g_backSrcMap, &itsRect, thisObject.data.c.length, false);
 				break;
 
 				case kFoil:
@@ -423,7 +423,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					else
 						legit = BackUpToSavedMap(&itsRect, g_localNumbers[neighbor], i);
 					if (legit != -1)
-						DrawFoil(&itsRect);
+						DrawFoil(g_backSrcMap, &itsRect);
 				}
 				break;
 
@@ -447,7 +447,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 						else
 							AddStar(g_localNumbers[neighbor], i, itsRect.left,
 									itsRect.top);
-						DrawSimplePrizes(thisObject.what, &itsRect);
+						DrawSimplePrizes(g_backSrcMap, thisObject.what, &itsRect);
 					}
 				}
 				break;
@@ -475,7 +475,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (QSectRect(&itsRect, &testRect, &whoCares))
-					DrawPictSansWhiteObject(thisObject.what, &itsRect);
+					DrawPictSansWhiteObject(g_backSrcMap, thisObject.what, &itsRect);
 				break;
 
 				case kDownStairs:
@@ -486,19 +486,19 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (QSectRect(&itsRect, &testRect, &whoCares))
-					DrawPictObject(thisObject.what, &itsRect);
+					DrawPictObject(g_backSrcMap, thisObject.what, &itsRect);
 				break;
 
 				case kMailboxLf:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				DrawMailboxLeft(&itsRect, g_playOriginV + VerticalRoomOffset(neighbor));
+				DrawMailboxLeft(g_backSrcMap, &itsRect, g_playOriginV + VerticalRoomOffset(neighbor));
 				break;
 
 				case kMailboxRt:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
-				DrawMailboxRight(&itsRect, g_playOriginV + VerticalRoomOffset(neighbor));
+				DrawMailboxRight(g_backSrcMap, &itsRect, g_playOriginV + VerticalRoomOffset(neighbor));
 				break;
 
 				case kFloorTrans:
@@ -506,7 +506,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (QSectRect(&itsRect, &testRect, &whoCares))
-					DrawSimpleTransport(thisObject.what, &itsRect);
+					DrawSimpleTransport(g_backSrcMap, thisObject.what, &itsRect);
 				break;
 
 				case kInvisTrans:
@@ -522,7 +522,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
 					state = GetObjectState(&g_thisHouse, room, obj, g_isPlayMusicGame);
-					DrawLightSwitch(&itsRect, state);
+					DrawLightSwitch(g_backSrcMap, &itsRect, state);
 				}
 				dynamicNum = g_masterObjects[i].hotNum;
 				break;
@@ -536,7 +536,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
 					state = GetObjectState(&g_thisHouse, room, obj, g_isPlayMusicGame);
-					DrawMachineSwitch(&itsRect, state);
+					DrawMachineSwitch(g_backSrcMap, &itsRect, state);
 				}
 				dynamicNum = g_masterObjects[i].hotNum;
 				break;
@@ -550,7 +550,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
 					state = GetObjectState(&g_thisHouse, room, obj, g_isPlayMusicGame);
-					DrawThermostat(&itsRect, state);
+					DrawThermostat(g_backSrcMap, &itsRect, state);
 				}
 				dynamicNum = g_masterObjects[i].hotNum;
 				break;
@@ -564,7 +564,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
 					state = GetObjectState(&g_thisHouse, room, obj, g_isPlayMusicGame);
-					DrawPowerSwitch(&itsRect, state);
+					DrawPowerSwitch(g_backSrcMap, &itsRect, state);
 				}
 				dynamicNum = g_masterObjects[i].hotNum;
 				break;
@@ -578,7 +578,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 					room = GetRoomNumber(&g_thisHouse, floor, suite);
 					obj = (SInt16)thisObject.data.e.who;
 					state = GetObjectState(&g_thisHouse, room, obj, g_isPlayMusicGame);
-					DrawKnifeSwitch(&itsRect, state);
+					DrawKnifeSwitch(g_backSrcMap, &itsRect, state);
 				}
 				dynamicNum = g_masterObjects[i].hotNum;
 				break;
@@ -598,7 +598,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawSimpleLight(thisObject.what, &itsRect);
+					DrawSimpleLight(g_backSrcMap, thisObject.what, &itsRect);
 				break;
 
 				case kTrunk:
@@ -617,28 +617,28 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawPictSansWhiteObject(thisObject.what, &itsRect);
+					DrawPictSansWhiteObject(g_backSrcMap, thisObject.what, &itsRect);
 				break;
 
 				case kCustomPict:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawCustPictSansWhite(thisObject.data.g.height, &itsRect);
+					DrawCustPictSansWhite(g_backSrcMap, thisObject.data.g.height, &itsRect);
 				break;
 
 				case kFlourescent:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawFlourescent(&itsRect);
+					DrawFlourescent(g_backSrcMap, &itsRect);
 				break;
 
 				case kTrackLight:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawTrackLight(&itsRect);
+					DrawTrackLight(g_backSrcMap, &itsRect);
 				break;
 
 				case kInvisLight:
@@ -649,7 +649,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawSimpleAppliance(thisObject.what, &itsRect);
+					DrawSimpleAppliance(g_backSrcMap, thisObject.what, &itsRect);
 				break;
 
 				case kToaster:
@@ -657,7 +657,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
-					DrawSimpleAppliance(thisObject.what, &itsRect);
+					DrawSimpleAppliance(g_backSrcMap, thisObject.what, &itsRect);
 					if ((!redraw) && (neighbor == kCentralRoom))
 					{
 						rectA = itsRect;
@@ -673,7 +673,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
-					DrawMacPlus(&itsRect, thisObject.data.g.state, isLit);
+					DrawMacPlus(g_backSrcMap, &itsRect, thisObject.data.g.state, isLit);
 					if (!redraw)
 					{
 						rectA = itsRect;
@@ -706,7 +706,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 						g_tvOn = thisObject.data.g.state;
 					}
 #endif
-					DrawTV(&itsRect, thisObject.data.g.state, isLit);
+					DrawTV(g_backSrcMap, &itsRect, thisObject.data.g.state, isLit);
 					if (!redraw)
 					{
 						rectA = itsRect;
@@ -730,7 +730,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
-					DrawCoffee(&itsRect, thisObject.data.g.state, isLit);
+					DrawCoffee(g_backSrcMap, &itsRect, thisObject.data.g.state, isLit);
 					if (!redraw)
 					{
 						rectA = itsRect;
@@ -747,7 +747,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
 					if (isLit)
-						DrawOutlet(&itsRect);
+						DrawOutlet(g_backSrcMap, &itsRect);
 					if (!redraw)
 					{
 						rectA = itsRect;
@@ -763,7 +763,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
-					DrawVCR(&itsRect, thisObject.data.g.state, isLit);
+					DrawVCR(g_backSrcMap, &itsRect, thisObject.data.g.state, isLit);
 					if (!redraw)
 					{
 						rectA = itsRect;
@@ -779,7 +779,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
-					DrawStereo(&itsRect, g_isPlayMusicGame, isLit);
+					DrawStereo(g_backSrcMap, &itsRect, g_isPlayMusicGame, isLit);
 					if (!redraw)
 					{
 						rectA = itsRect;
@@ -795,7 +795,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
-					DrawMicrowave(&itsRect, thisObject.data.g.state, isLit);
+					DrawMicrowave(g_backSrcMap, &itsRect, thisObject.data.g.state, isLit);
 					if (!redraw)
 					{
 						rectA = itsRect;
@@ -877,7 +877,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
-					DrawDrip(&itsRect);
+					DrawDrip(g_backSrcMap, &itsRect);
 					if ((!redraw) && (neighbor == kCentralRoom))
 					{
 						rectA = itsRect;
@@ -893,7 +893,7 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (QSectRect(&itsRect, &testRect, &whoCares))
 				{
-					DrawFish(thisObject.what, &itsRect);
+					DrawFish(g_backSrcMap, thisObject.what, &itsRect);
 					if ((!redraw) && (neighbor == kCentralRoom))
 					{
 						rectA = itsRect;
@@ -909,14 +909,14 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawPictWithMaskObject(thisObject.what, &itsRect);
+					DrawPictWithMaskObject(g_backSrcMap, thisObject.what, &itsRect);
 				break;
 
 				case kMirror:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawMirror(&itsRect);
+					DrawMirror(g_backSrcMap, &itsRect);
 				if ((neighbor == kCentralRoom) && (!redraw))
 				{
 					QInsetRect(&itsRect, 4, 4);
@@ -929,35 +929,35 @@ void DrawARoomsObjects (SInt16 neighbor, Boolean redraw)
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawSimpleClutter(thisObject.what, &itsRect);
+					DrawSimpleClutter(g_backSrcMap, thisObject.what, &itsRect);
 				break;
 
 				case kFlower:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawFlower(&itsRect, thisObject.data.i.pict);
+					DrawFlower(g_backSrcMap, &itsRect, thisObject.data.i.pict);
 				break;
 
 				case kWallWindow:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if (QSectRect(&itsRect, &testRect, &whoCares))
-					DrawWallWindow(&itsRect);
+					DrawWallWindow(g_backSrcMap, &itsRect);
 				break;
 
 				case kCalendar:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawCalendar(&itsRect);
+					DrawCalendar(g_backSrcMap, &itsRect);
 				break;
 
 				case kBulletin:
 				GetObjectRect(&thisObject, &itsRect);
 				OffsetRectRoomRelative(&itsRect, neighbor);
 				if ((QSectRect(&itsRect, &testRect, &whoCares)) && isLit)
-					DrawBulletin(&itsRect);
+					DrawBulletin(g_backSrcMap, &itsRect);
 				break;
 
 			}

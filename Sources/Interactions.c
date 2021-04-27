@@ -1013,27 +1013,27 @@ void HandleSwitches (hotPtr who)
 		{
 			case kLightSwitch:
 			PlayPrioritySound(kSwitchSound, kSwitchPriority);
-			DrawLightSwitch(&newRect, g_newState);
+			DrawLightSwitch(g_backSrcMap, &newRect, g_newState);
 			break;
 
 			case kMachineSwitch:
 			PlayPrioritySound(kSwitchSound, kSwitchPriority);
-			DrawMachineSwitch(&newRect, g_newState);
+			DrawMachineSwitch(g_backSrcMap, &newRect, g_newState);
 			break;
 
 			case kThermostat:
 			PlayPrioritySound(kSwitchSound, kSwitchPriority);
-			DrawThermostat(&newRect, g_newState);
+			DrawThermostat(g_backSrcMap, &newRect, g_newState);
 			break;
 
 			case kPowerSwitch:
 			PlayPrioritySound(kSwitchSound, kSwitchPriority);
-			DrawPowerSwitch(&newRect, g_newState);
+			DrawPowerSwitch(g_backSrcMap, &newRect, g_newState);
 			break;
 
 			case kKnifeSwitch:
 			PlayPrioritySound(kSwitchSound, kSwitchPriority);
-			DrawKnifeSwitch(&newRect, g_newState);
+			DrawKnifeSwitch(g_backSrcMap, &newRect, g_newState);
 			break;
 
 			case kInvisSwitch:

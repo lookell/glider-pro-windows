@@ -2379,31 +2379,32 @@ void DrawThisRoomsObjects (void)
 				case kStubby:
 				case kGrecoVent:
 				case kSewerBlower:
-				DrawSimpleBlowers(g_thisRoom->objects[i].what, &g_roomObjectRects[i]);
+				DrawSimpleBlowers(g_backSrcMap, g_thisRoom->objects[i].what,
+						&g_roomObjectRects[i]);
 				break;
 
 				case kTiki:
-				DrawTiki(&g_roomObjectRects[i], 0);
+				DrawTiki(g_backSrcMap, &g_roomObjectRects[i], 0);
 				break;
 
 				case kInvisBlower:
-				DrawInvisibleBlower(&g_roomObjectRects[i]);
+				DrawInvisibleBlower(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kLiftArea:
-				DrawLiftArea(&g_roomObjectRects[i]);
+				DrawLiftArea(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kTable:
-				DrawTable(&g_roomObjectRects[i], 0);
+				DrawTable(g_backSrcMap, &g_roomObjectRects[i], 0);
 				break;
 
 				case kShelf:
-				DrawShelf(&g_roomObjectRects[i]);
+				DrawShelf(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kCabinet:
-				DrawCabinet(&g_roomObjectRects[i]);
+				DrawCabinet(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kFilingCabinet:
@@ -2413,52 +2414,54 @@ void DrawThisRoomsObjects (void)
 				case kWindowExRt:
 				case kWindowExLf:
 				case kOzma:
-				DrawPictObject(g_thisRoom->objects[i].what, &g_roomObjectRects[i]);
+				DrawPictObject(g_backSrcMap, g_thisRoom->objects[i].what,
+						&g_roomObjectRects[i]);
 				break;
 
 				case kWasteBasket:
 				case kMilkCrate:
-				DrawSimpleFurniture(g_thisRoom->objects[i].what, &g_roomObjectRects[i]);
+				DrawSimpleFurniture(g_backSrcMap, g_thisRoom->objects[i].what,
+						&g_roomObjectRects[i]);
 				break;
 
 				case kCounter:
-				DrawCounter(&g_roomObjectRects[i]);
+				DrawCounter(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kDresser:
-				DrawDresser(&g_roomObjectRects[i]);
+				DrawDresser(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kDeckTable:
-				DrawDeckTable(&g_roomObjectRects[i], 0);
+				DrawDeckTable(g_backSrcMap, &g_roomObjectRects[i], 0);
 				break;
 
 				case kStool:
-				DrawStool(&g_roomObjectRects[i], 0);
+				DrawStool(g_backSrcMap, &g_roomObjectRects[i], 0);
 				break;
 
 				case kInvisObstacle:
-				DrawInvisObstacle(&g_roomObjectRects[i]);
+				DrawInvisObstacle(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kInvisBounce:
-				DrawInvisBounce(&g_roomObjectRects[i]);
+				DrawInvisBounce(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kRedClock:
-				DrawRedClock(&g_roomObjectRects[i]);
+				DrawRedClock(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kBlueClock:
-				DrawBlueClock(&g_roomObjectRects[i]);
+				DrawBlueClock(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kYellowClock:
-				DrawYellowClock(&g_roomObjectRects[i]);
+				DrawYellowClock(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kCuckoo:
-				DrawCuckoo(&g_roomObjectRects[i]);
+				DrawCuckoo(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kPaper:
@@ -2467,14 +2470,15 @@ void DrawThisRoomsObjects (void)
 				case kStar:
 				case kSparkle:
 				case kHelium:
-				DrawSimplePrizes(g_thisRoom->objects[i].what, &g_roomObjectRects[i]);
+				DrawSimplePrizes(g_backSrcMap, g_thisRoom->objects[i].what,
+						&g_roomObjectRects[i]);
 				break;
 
 				case kGreaseRt:
 				tempRect = g_roomObjectRects[i];
 				if (!g_thisRoom->objects[i].data.c.initial)
 					QOffsetRect(&tempRect, -8, 0);
-				DrawGreaseRt(&tempRect, g_thisRoom->objects[i].data.c.length,
+				DrawGreaseRt(g_backSrcMap, &tempRect, g_thisRoom->objects[i].data.c.length,
 						g_thisRoom->objects[i].data.c.initial);
 				break;
 
@@ -2482,20 +2486,20 @@ void DrawThisRoomsObjects (void)
 				tempRect = g_roomObjectRects[i];
 				if (!g_thisRoom->objects[i].data.c.initial)
 					QOffsetRect(&tempRect, 8, 0);
-				DrawGreaseLf(&tempRect, g_thisRoom->objects[i].data.c.length,
+				DrawGreaseLf(g_backSrcMap, &tempRect, g_thisRoom->objects[i].data.c.length,
 						g_thisRoom->objects[i].data.c.initial);
 				break;
 
 				case kFoil:
-				DrawFoil(&g_roomObjectRects[i]);
+				DrawFoil(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kInvisBonus:
-				DrawInvisBonus(&g_roomObjectRects[i]);
+				DrawInvisBonus(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kSlider:
-				DrawSlider(&g_roomObjectRects[i]);
+				DrawSlider(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kBBQ:
@@ -2518,176 +2522,183 @@ void DrawThisRoomsObjects (void)
 				case kVase2:
 				case kRug:
 				case kChimes:
-				DrawPictSansWhiteObject(g_thisRoom->objects[i].what, &g_roomObjectRects[i]);
+				DrawPictSansWhiteObject(g_backSrcMap, g_thisRoom->objects[i].what,
+						&g_roomObjectRects[i]);
 				break;
 
 				case kCustomPict:
-				DrawCustPictSansWhite(g_thisRoom->objects[i].data.g.height,
+				DrawCustPictSansWhite(g_backSrcMap, g_thisRoom->objects[i].data.g.height,
 						&g_roomObjectRects[i]);
 				break;
 
 				case kMailboxLf:
-				DrawMailboxLeft(&g_roomObjectRects[i], 0);
+				DrawMailboxLeft(g_backSrcMap, &g_roomObjectRects[i], 0);
 				break;
 
 				case kMailboxRt:
-				DrawMailboxRight(&g_roomObjectRects[i], 0);
+				DrawMailboxRight(g_backSrcMap, &g_roomObjectRects[i], 0);
 				break;
 
 				case kFloorTrans:
 				case kCeilingTrans:
-				DrawSimpleTransport(g_thisRoom->objects[i].what, &g_roomObjectRects[i]);
+				DrawSimpleTransport(g_backSrcMap, g_thisRoom->objects[i].what,
+						&g_roomObjectRects[i]);
 				break;
 
 				case kInvisTrans:
 				case kDeluxeTrans:
-				DrawInvisTransport(&g_roomObjectRects[i]);
+				DrawInvisTransport(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kLightSwitch:
-				DrawLightSwitch(&g_roomObjectRects[i], true);
+				DrawLightSwitch(g_backSrcMap, &g_roomObjectRects[i], true);
 				break;
 
 				case kMachineSwitch:
-				DrawMachineSwitch(&g_roomObjectRects[i], true);
+				DrawMachineSwitch(g_backSrcMap, &g_roomObjectRects[i], true);
 				break;
 
 				case kThermostat:
-				DrawThermostat(&g_roomObjectRects[i], true);
+				DrawThermostat(g_backSrcMap, &g_roomObjectRects[i], true);
 				break;
 
 				case kPowerSwitch:
-				DrawPowerSwitch(&g_roomObjectRects[i], true);
+				DrawPowerSwitch(g_backSrcMap, &g_roomObjectRects[i], true);
 				break;
 
 				case kKnifeSwitch:
-				DrawKnifeSwitch(&g_roomObjectRects[i], true);
+				DrawKnifeSwitch(g_backSrcMap, &g_roomObjectRects[i], true);
 				break;
 
 				case kInvisSwitch:
-				DrawInvisibleSwitch(&g_roomObjectRects[i]);
+				DrawInvisibleSwitch(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kTrigger:
 				case kLgTrigger:
-				DrawTrigger(&g_roomObjectRects[i]);
+				DrawTrigger(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kSoundTrigger:
-				DrawSoundTrigger(&g_roomObjectRects[i]);
+				DrawSoundTrigger(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kCeilingLight:
 				case kLightBulb:
 				case kTableLamp:
-				DrawSimpleLight(g_thisRoom->objects[i].what, &g_roomObjectRects[i]);
+				DrawSimpleLight(g_backSrcMap, g_thisRoom->objects[i].what,
+						&g_roomObjectRects[i]);
 				break;
 
 				case kFlourescent:
-				DrawFlourescent(&g_roomObjectRects[i]);
+				DrawFlourescent(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kTrackLight:
-				DrawTrackLight(&g_roomObjectRects[i]);
+				DrawTrackLight(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kInvisLight:
-				DrawInvisLight(&g_roomObjectRects[i]);
+				DrawInvisLight(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kShredder:
 				case kToaster:
 				case kCDs:
-				DrawSimpleAppliance(g_thisRoom->objects[i].what, &g_roomObjectRects[i]);
+				DrawSimpleAppliance(g_backSrcMap, g_thisRoom->objects[i].what,
+						&g_roomObjectRects[i]);
 				break;
 
 				case kMacPlus:
-				DrawMacPlus(&g_roomObjectRects[i],
+				DrawMacPlus(g_backSrcMap, &g_roomObjectRects[i],
 						g_thisRoom->objects[i].data.g.initial, true);
 				break;
 
 				case kTV:
-				DrawTV(&g_roomObjectRects[i],
+				DrawTV(g_backSrcMap, &g_roomObjectRects[i],
 						g_thisRoom->objects[i].data.g.initial, true);
 				break;
 
 				case kCoffee:
-				DrawCoffee(&g_roomObjectRects[i],
+				DrawCoffee(g_backSrcMap, &g_roomObjectRects[i],
 						g_thisRoom->objects[i].data.g.initial, true);
 				break;
 
 				case kOutlet:
-				DrawOutlet(&g_roomObjectRects[i]);
+				DrawOutlet(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kVCR:
-				DrawVCR(&g_roomObjectRects[i],
+				DrawVCR(g_backSrcMap, &g_roomObjectRects[i],
 						g_thisRoom->objects[i].data.g.initial, true);
 				break;
 
 				case kStereo:
-				DrawStereo(&g_roomObjectRects[i], g_isPlayMusicGame, true);
+				DrawStereo(g_backSrcMap, &g_roomObjectRects[i], g_isPlayMusicGame, true);
 				break;
 
 				case kMicrowave:
-				DrawMicrowave(&g_roomObjectRects[i],
+				DrawMicrowave(g_backSrcMap, &g_roomObjectRects[i],
 						g_thisRoom->objects[i].data.g.initial, true);
 				break;
 
 				case kBalloon:
-				DrawBalloon(&g_roomObjectRects[i]);
+				DrawBalloon(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kCopterLf:
 				case kCopterRt:
-				DrawCopter(&g_roomObjectRects[i]);
+				DrawCopter(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kDartLf:
 				case kDartRt:
-				DrawDart(&g_roomObjectRects[i], g_thisRoom->objects[i].what);
+				DrawDart(g_backSrcMap, &g_roomObjectRects[i], g_thisRoom->objects[i].what);
 				break;
 
 				case kBall:
-				DrawBall(g_thisRoom->objects[i].what, &g_roomObjectRects[i]);
+				DrawBall(g_backSrcMap, g_thisRoom->objects[i].what, &g_roomObjectRects[i]);
 				break;
 
 				case kDrip:
-				DrawDrip(&g_roomObjectRects[i]);
+				DrawDrip(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kFish:
-				DrawFish(g_thisRoom->objects[i].what, &g_roomObjectRects[i]);
+				DrawFish(g_backSrcMap, g_thisRoom->objects[i].what, &g_roomObjectRects[i]);
 				break;
 
 				case kCobweb:
 				case kCloud:
-				DrawPictWithMaskObject(g_thisRoom->objects[i].what, &g_roomObjectRects[i]);
+				DrawPictWithMaskObject(g_backSrcMap, g_thisRoom->objects[i].what,
+						&g_roomObjectRects[i]);
 				break;
 
 				case kMirror:
-				DrawMirror(&g_roomObjectRects[i]);
+				DrawMirror(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kMousehole:
 				case kFaucet:
-				DrawSimpleClutter(g_thisRoom->objects[i].what, &g_roomObjectRects[i]);
+				DrawSimpleClutter(g_backSrcMap, g_thisRoom->objects[i].what,
+						&g_roomObjectRects[i]);
 				break;
 
 				case kFlower:
-				DrawFlower(&g_roomObjectRects[i], g_thisRoom->objects[i].data.i.pict);
+				DrawFlower(g_backSrcMap, &g_roomObjectRects[i],
+						g_thisRoom->objects[i].data.i.pict);
 				break;
 
 				case kWallWindow:
-				DrawWallWindow(&g_roomObjectRects[i]);
+				DrawWallWindow(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kCalendar:
-				DrawCalendar(&g_roomObjectRects[i]);
+				DrawCalendar(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				case kBulletin:
-				DrawBulletin(&g_roomObjectRects[i]);
+				DrawBulletin(g_backSrcMap, &g_roomObjectRects[i]);
 				break;
 
 				default:
