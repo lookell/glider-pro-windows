@@ -1890,7 +1890,6 @@ void DrawCalendar (HDC hdcDest, const Rect *theRect)
 	SYSTEMTIME localTime;
 	Rect bounds;
 	HBITMAP thePicture;
-	BITMAP bmInfo;
 	WCHAR monthStr[256];
 	INT monthLen;
 	HFONT theFont;
@@ -1899,8 +1898,7 @@ void DrawCalendar (HDC hdcDest, const Rect *theRect)
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
-	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
-	QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
+	GetGraphicRect(thePicture, &bounds);
 	QOffsetRect(&bounds, theRect->left, theRect->top);
 	Mac_DrawPicture(hdcDest, thePicture, &bounds);
 	DeleteBitmap(thePicture);
@@ -1927,14 +1925,12 @@ void DrawBulletin (HDC hdcDest, const Rect *theRect)
 {
 	Rect bounds;
 	HBITMAP thePicture;
-	BITMAP bmInfo;
 
 	thePicture = Gp_LoadImage(g_theHouseFile, kBulletinPictID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
-	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
-	QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
+	GetGraphicRect(thePicture, &bounds);
 	QOffsetRect(&bounds, theRect->left, theRect->top);
 	Mac_DrawPicture(hdcDest, thePicture, &bounds);
 	DeleteBitmap(thePicture);

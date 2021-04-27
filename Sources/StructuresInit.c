@@ -58,7 +58,6 @@ void InitScoreboardMap (void)
 {
 	Rect bounds;
 	HBITMAP thePicture;
-	BITMAP bmInfo;
 	HFONT scoreboardFont;
 	SInt16 hOffset;
 
@@ -75,8 +74,7 @@ void InitScoreboardMap (void)
 	thePicture = Gp_LoadBuiltInImage(kScoreboardPictID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
-	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
-	QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
+	GetGraphicRect(thePicture, &bounds);
 	QOffsetRect(&bounds, hOffset, 0);
 	Mac_DrawPicture(g_boardSrcMap, thePicture, &bounds);
 	DeleteBitmap(thePicture);

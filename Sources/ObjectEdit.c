@@ -29,6 +29,7 @@
 #include "RoomInfo.h"
 #include "StringUtils.h"
 #include "Tools.h"
+#include "Utilities.h"
 #include "WindowUtils.h"
 
 SInt16 FindObjectSelected (Point where);
@@ -2052,7 +2053,6 @@ void GetThisRoomsObjRects (void)
 {
 	HBITMAP thePict;
 	SInt16 i, wide, tall;
-	BITMAP bmInfo;
 
 	g_isFirstRoom = (GetFirstRoomNumber() == g_thisRoomNumber);
 
@@ -2290,9 +2290,7 @@ void GetThisRoomsObjRects (void)
 				}
 				else
 				{
-					GetObject(thePict, sizeof(bmInfo), &bmInfo);
-					QSetRect(&g_roomObjectRects[i], 0, 0,
-							(SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
+					GetGraphicRect(thePict, &g_roomObjectRects[i]);
 					DeleteBitmap(thePict);
 				}
 				ZeroRectCorner(&g_roomObjectRects[i]);

@@ -18,6 +18,7 @@ void InitRandomLongQUS (void);
 __declspec(noreturn) void RedAlert (SInt16 errorNumber);
 HDC CreateOffScreenGWorld (const Rect *bounds, SInt16 depth);
 void DisposeGWorld (HDC theGWorld);
+void GetGraphicRect (HBITMAP hbm, Rect *theRect);
 void LoadGraphic (HDC hdc, Gp_HouseFile *houseFile, SInt16 resID);
 void LoadScaledGraphic (HDC hdc, Gp_HouseFile *houseFile, SInt16 resID, const Rect *theRect);
 void DrawCIcon (HDC hdc, SInt16 theID, SInt16 h, SInt16 v);

@@ -17,6 +17,7 @@
 #include "ResourceLoader.h"
 #include "Room.h"
 #include "Sound.h"
+#include "Utilities.h"
 
 #define kFloorColumnWide        4
 #define kCeilingColumnWide      24
@@ -36,7 +37,6 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 {
 	HBITMAP thePict;
 	SInt16 wide, tall;
-	BITMAP bmInfo;
 
 	switch (who->what)
 	{
@@ -221,8 +221,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		}
 		else
 		{
-			GetObject(thePict, sizeof(bmInfo), &bmInfo);
-			QSetRect(itsRect, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
+			GetGraphicRect(thePict, itsRect);
 			DeleteBitmap(thePict);
 		}
 		ZeroRectCorner(itsRect);

@@ -162,6 +162,31 @@ void DisposeGWorld (HDC theGWorld)
 	DeleteBitmap(hbmSurface);
 }
 
+//--------------------------------------------------------------  GetGraphicRect
+// Get the boundary rectangle of the given GDI bitmap, as a Macintosh-style
+// rectangle. If the function fails, the rectangle is set to an empty rectangle
+// with zero for every coordinate.
+
+void GetGraphicRect (HBITMAP hbm, Rect *theRect)
+{
+	BITMAP bmInfo = { 0 };
+	int result;
+
+	result = GetObject(hbm, sizeof(bmInfo), &bmInfo);
+	if (result != sizeof(bmInfo))
+	{
+		theRect->left = 0;
+		theRect->top = 0;
+		theRect->right = 0;
+		theRect->bottom = 0;
+		return;
+	}
+	theRect->left = 0;
+	theRect->top = 0;
+	theRect->right = (SInt16)bmInfo.bmWidth;
+	theRect->bottom = (SInt16)bmInfo.bmHeight;
+}
+
 //--------------------------------------------------------------  LoadGraphic
 // Function loads the specified 'PICT' from disk and draws it to
 // the current port (no scaling, clipping, etc, are done).  Always
@@ -171,14 +196,12 @@ void LoadGraphic (HDC hdc, Gp_HouseFile *houseFile, SInt16 resID)
 {
 	Rect bounds;
 	HBITMAP thePicture;
-	BITMAP bmInfo;
 
 	thePicture = Gp_LoadImage(houseFile, resID);
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 
-	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
-	QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
+	GetGraphicRect(thePicture, &bounds);
 	Mac_DrawPicture(hdc, thePicture, &bounds);
 
 	DeleteBitmap(thePicture);

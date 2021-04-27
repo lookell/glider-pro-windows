@@ -135,7 +135,6 @@ void LoadGraphicSpecial (HDC hdc, SInt16 resID)
 {
 	Rect bounds;
 	HBITMAP thePicture;
-	BITMAP bmInfo;
 
 	thePicture = Gp_LoadImage(g_theHouseFile, resID);
 	if (thePicture == NULL)
@@ -147,8 +146,7 @@ void LoadGraphicSpecial (HDC hdc, SInt16 resID)
 		}
 	}
 
-	GetObject(thePicture, sizeof(bmInfo), &bmInfo);
-	QSetRect(&bounds, 0, 0, (SInt16)bmInfo.bmWidth, (SInt16)bmInfo.bmHeight);
+	GetGraphicRect(thePicture, &bounds);
 	Mac_DrawPicture(hdc, thePicture, &bounds);
 
 	DeleteBitmap(thePicture);
