@@ -24,7 +24,6 @@
 BOOL InitLoadDialog (HWND hDlg);
 INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void SortHouseList (void);
-BOOL GetHouseFolderPath (LPWSTR buffer, DWORD cch);
 void DoDirSearch (HWND ownerWindow);
 
 houseSpecPtr g_theHousesSpecs;
