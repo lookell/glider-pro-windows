@@ -34,6 +34,9 @@ void Gp_UnloadHouseFile (Gp_HouseFile *houseFile);
 // Return whether a loaded house file is read-only.
 BOOLEAN Gp_HouseFileReadOnly (Gp_HouseFile *houseFile);
 
+// Return whether a loaded house file has a movie associated with it.
+BOOLEAN Gp_HouseFileHasMovie (Gp_HouseFile *houseFile);
+
 // Create an HICON for the house, if the house contains an icon. If the
 // width parameter is zero, the SM_CXICON system metric is used instead.
 // If the height parameter is zero, the SM_CYICON system metric is used

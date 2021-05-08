@@ -205,6 +205,7 @@ Boolean OpenHouse (HWND ownerWindow)
 	}
 	g_houseIsReadOnly = Gp_HouseFileReadOnly(g_theHouseFile);
 	g_theHousesSpecs[g_thisHouseIndex].readOnly = g_houseIsReadOnly;
+	g_theHousesSpecs[g_thisHouseIndex].hasMovie = Gp_HouseFileHasMovie(g_theHouseFile);
 
 	g_houseOpen = true;
 

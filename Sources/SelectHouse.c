@@ -337,8 +337,7 @@ void DoDirSearch (HWND ownerWindow)
 								g_theHousesSpecs[g_housesFound].iconIndex = 0;
 							}
 							g_theHousesSpecs[g_housesFound].readOnly = Gp_HouseFileReadOnly(houseFile);
-							// TODO: QuickTime movie support (or equivalent)
-							g_theHousesSpecs[g_housesFound].hasMovie = false;
+							g_theHousesSpecs[g_housesFound].hasMovie = Gp_HouseFileHasMovie(houseFile);
 							Gp_UnloadHouseFile(houseFile);
 							g_housesFound++;
 						}

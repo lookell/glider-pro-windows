@@ -262,6 +262,15 @@ BOOLEAN Gp_HouseFileReadOnly (Gp_HouseFile *houseFile)
 	return (fileAttributes & FILE_ATTRIBUTE_READONLY) != 0;
 }
 
+//--------------------------------------------------------------  Gp_HouseFileHasMovie
+
+BOOLEAN Gp_HouseFileHasMovie (Gp_HouseFile *houseFile)
+{
+	// TODO: QuickTime movie support (or equivalent) for house movies
+	(void)houseFile;
+	return FALSE;
+}
+
 //--------------------------------------------------------------  Gp_LoadHouseIcon
 
 HICON Gp_LoadHouseIcon (Gp_HouseFile *houseFile, UINT width, UINT height)
