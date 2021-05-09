@@ -37,6 +37,11 @@ BOOLEAN Gp_HouseFileReadOnly (Gp_HouseFile *houseFile);
 // Return whether a loaded house file has a movie associated with it.
 BOOLEAN Gp_HouseFileHasMovie (Gp_HouseFile *houseFile);
 
+// Return the display name for the loaded house file.
+// Free the returned string with free(). If the function fails,
+// '*ppszDisplayName' is set to NULL.
+HRESULT Gp_GetHouseDisplayName (Gp_HouseFile *houseFile, PWSTR *ppszDisplayName);
+
 // Create an HICON for the house, if the house contains an icon. If the
 // width parameter is zero, the SM_CXICON system metric is used instead.
 // If the height parameter is zero, the SM_CYICON system metric is used

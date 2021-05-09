@@ -271,6 +271,33 @@ BOOLEAN Gp_HouseFileHasMovie (Gp_HouseFile *houseFile)
 	return FALSE;
 }
 
+//--------------------------------------------------------------  Gp_GetHouseDisplayName
+
+HRESULT Gp_GetHouseDisplayName (Gp_HouseFile *houseFile, PWSTR *ppszDisplayName)
+{
+	PCWSTR pFileName;
+	PCWSTR pFileExt;
+	size_t cchResult;
+	PWSTR pszResult;
+
+	*ppszDisplayName = NULL;
+	if (houseFile == NULL)
+	{
+		return E_INVALIDARG;
+	}
+	pFileName = PathFindFileNameW(houseFile->fileName);
+	pFileExt = PathFindExtensionW(houseFile->fileName);
+	cchResult = pFileExt - pFileName + 1;
+	pszResult = (PWSTR)calloc(cchResult, sizeof(*pszResult));
+	if (pszResult == NULL)
+	{
+		return E_OUTOFMEMORY;
+	}
+	StringCchCopyNW(pszResult, cchResult, pFileName, pFileExt - pFileName);
+	*ppszDisplayName = pszResult;
+	return S_OK;
+}
+
 //--------------------------------------------------------------  Gp_LoadHouseIcon
 
 HICON Gp_LoadHouseIcon (Gp_HouseFile *houseFile, UINT width, UINT height)
