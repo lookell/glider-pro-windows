@@ -21,8 +21,11 @@
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Room.h"
+#include "Utilities.h"
 
 #include <strsafe.h>
+
+#include <stdlib.h>
 
 #define kBlowerInitialState     1006
 #define kForceCheckbox          1007
@@ -123,21 +126,13 @@ void DoFlowerObjectInfo (HWND hwndOwner);
 //==============================================================  Functions
 //--------------------------------------------------------------  GetObjectName
 
-void GetObjectName (wchar_t *pszDest, size_t cchDest, SInt16 objectType)
+HRESULT GetObjectName (SInt16 objectType, PWSTR *ppszObjectName)
 {
-	UINT strID;
-	LPCWSTR strPtr;
-	int strLen;
-
-	if (pszDest == NULL || cchDest < 1)
-		return;
-	pszDest[0] = L'\0';
-
-	strID = (UINT)(kObjectNameStringsBase + objectType);
-	strLen = LoadString(HINST_THISCOMPONENT, strID, (LPWSTR)&strPtr, 0);
-	if (strLen <= 0 || strPtr == NULL)
-		return;
-	StringCchCopyN(pszDest, cchDest, strPtr, (size_t)strLen);
+	return AllocLoadString(
+		HINST_THISCOMPONENT,
+		kObjectNameStringsBase + objectType,
+		ppszObjectName
+	);
 }
 
 //--------------------------------------------------------------  UpdateBlowerInfo
@@ -1121,12 +1116,14 @@ void DoBlowerObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
-	wchar_t kindStr[256];
+	PWSTR kindStrBuffer = NULL;
+	PCWSTR kindStr;
 	wchar_t distStr[16];
 	INT_PTR result;
 
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
+	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 	StringCchPrintf(distStr, ARRAYSIZE(distStr), L"%d",
 		(int)g_thisRoom->objects[g_objActive].data.a.distance);
 
@@ -1136,6 +1133,8 @@ void DoBlowerObjectInfo (HWND hwndOwner)
 	result = DialogBoxParam(HINST_THISCOMPONENT,
 		MAKEINTRESOURCE(kBlowerInfoDialogID),
 		hwndOwner, BlowerFilter, (LPARAM)&params);
+
+	free(kindStrBuffer);
 
 	if (result == kBlowerLinkedFrom)
 	{
@@ -1150,28 +1149,30 @@ void DoFurnitureObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
-	wchar_t kindStr[256];
+	PWSTR kindStrBuffer = NULL;
+	PCWSTR kindStr;
 	INT_PTR result;
 
 	if (g_objActive == kInitialGliderSelected)
 	{
 		StringCchCopy(numberStr, ARRAYSIZE(numberStr), L"-");
-		StringCchCopy(kindStr, ARRAYSIZE(kindStr), L"Glider Begins");
+		kindStr = L"Glider Begins";
 	}
 	else if (g_objActive == kLeftGliderSelected)
 	{
 		StringCchCopy(numberStr, ARRAYSIZE(numberStr), L"-");
-		StringCchCopy(kindStr, ARRAYSIZE(kindStr), L"New Glider (left)");
+		kindStr = L"New Glider (left)";
 	}
 	else if (g_objActive == kRightGliderSelected)
 	{
 		StringCchCopy(numberStr, ARRAYSIZE(numberStr), L"-");
-		StringCchCopy(kindStr, ARRAYSIZE(kindStr), L"New Glider (right)");
+		kindStr = L"New Glider (right)";
 	}
 	else
 	{
 		StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
-		GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+		GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
+		kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 	}
 
 	params.arg[0] = numberStr;
@@ -1179,6 +1180,8 @@ void DoFurnitureObjectInfo (HWND hwndOwner)
 	result = DialogBoxParam(HINST_THISCOMPONENT,
 		MAKEINTRESOURCE(kFurnitureInfoDialogID),
 		hwndOwner, FurnitureFilter, (LPARAM)&params);
+
+	free(kindStrBuffer);
 
 	if (result == kFurnitureLinkedFrom)
 	{
@@ -1196,10 +1199,12 @@ void DoCustPictObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
-	wchar_t kindStr[256];
+	PWSTR kindStrBuffer = NULL;
+	PCWSTR kindStr;
 
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
+	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
 	if (g_thisRoom->objects[g_objActive].what == kCustomPict)
 	{
@@ -1218,6 +1223,8 @@ void DoCustPictObjectInfo (HWND hwndOwner)
 	DialogBoxParam(HINST_THISCOMPONENT,
 		MAKEINTRESOURCE(kCustPictInfoDialogID),
 		hwndOwner, CustPictFilter, (LPARAM)&params);
+
+	free(kindStrBuffer);
 }
 
 //--------------------------------------------------------------  DoSwitchObjectInfo
@@ -1226,7 +1233,8 @@ void DoSwitchObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
-	wchar_t kindStr[256];
+	PWSTR kindStrBuffer = NULL;
+	PCWSTR kindStr;
 	wchar_t roomStr[32];
 	wchar_t objStr[16];
 	SInt16 floor, suite;
@@ -1236,7 +1244,8 @@ void DoSwitchObjectInfo (HWND hwndOwner)
 	suite = kRoomIsEmpty;
 
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
+	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 	if (g_thisRoom->objects[g_objActive].data.e.where == -1)
 	{
 		StringCchCopy(roomStr, ARRAYSIZE(roomStr), L"none");
@@ -1266,6 +1275,8 @@ void DoSwitchObjectInfo (HWND hwndOwner)
 		MAKEINTRESOURCE(kSwitchInfoDialogID),
 		hwndOwner, SwitchFilter, (LPARAM)&params);
 
+	free(kindStrBuffer);
+
 	if (result == kLinkSwitchButton)
 	{
 		g_linkType = kSwitchLinkOnly;
@@ -1292,7 +1303,8 @@ void DoTriggerObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
-	wchar_t kindStr[256];
+	PWSTR kindStrBuffer = NULL;
+	PCWSTR kindStr;
 	wchar_t roomStr[32];
 	wchar_t objStr[16];
 	SInt16 floor, suite;
@@ -1302,7 +1314,8 @@ void DoTriggerObjectInfo (HWND hwndOwner)
 	suite = kRoomIsEmpty;
 
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
+	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 	if (g_thisRoom->objects[g_objActive].data.e.where == -1)
 	{
 		StringCchCopy(roomStr, ARRAYSIZE(roomStr), L"none");
@@ -1332,6 +1345,8 @@ void DoTriggerObjectInfo (HWND hwndOwner)
 		MAKEINTRESOURCE(kTriggerInfoDialogID),
 		hwndOwner, TriggerFilter, (LPARAM)&params);
 
+	free(kindStrBuffer);
+
 	if (result == kLinkTriggerButton)
 	{
 		g_linkType = kTriggerLinkOnly;
@@ -1358,17 +1373,21 @@ void DoLightObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
-	wchar_t kindStr[256];
+	PWSTR kindStrBuffer = NULL;
+	PCWSTR kindStr;
 	INT_PTR result;
 
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
+	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
 		MAKEINTRESOURCE(kLightInfoDialogID),
 		hwndOwner, LightFilter, (LPARAM)&params);
+
+	free(kindStrBuffer);
 
 	if (result == kLightLinkedFrom)
 	{
@@ -1383,17 +1402,21 @@ void DoApplianceObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
-	wchar_t kindStr[256];
+	PWSTR kindStrBuffer = NULL;
+	PCWSTR kindStr;
 	INT_PTR result;
 
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
+	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
 		MAKEINTRESOURCE(kApplianceInfoDialogID),
 		hwndOwner, ApplianceFilter, (LPARAM)&params);
+
+	free(kindStrBuffer);
 
 	if (result == kApplianceLinkedFrom)
 	{
@@ -1408,17 +1431,21 @@ void DoMicrowaveObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
-	wchar_t kindStr[256];
+	PWSTR kindStrBuffer = NULL;
+	PCWSTR kindStr;
 	INT_PTR result;
 
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
+	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
 		MAKEINTRESOURCE(kMicrowaveInfoDialogID),
 		hwndOwner, MicrowaveFilter, (LPARAM)&params);
+
+	free(kindStrBuffer);
 
 	if (result == kMicrowaveLinkedFrom)
 	{
@@ -1433,17 +1460,21 @@ void DoGreaseObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
-	wchar_t kindStr[256];
+	PWSTR kindStrBuffer = NULL;
+	PCWSTR kindStr;
 	INT_PTR result;
 
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
+	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
 		MAKEINTRESOURCE(kGreaseInfoDialogID),
 		hwndOwner, GreaseFilter, (LPARAM)&params);
+
+	free(kindStrBuffer);
 
 	if (result == kGreaseLinkedFrom)
 	{
@@ -1458,17 +1489,21 @@ void DoInvisBonusObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
-	wchar_t kindStr[256];
+	PWSTR kindStrBuffer = NULL;
+	PCWSTR kindStr;
 	INT_PTR result;
 
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
+	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
 		MAKEINTRESOURCE(kInvisBonusInfoDialogID),
 		hwndOwner, InvisBonusFilter, (LPARAM)&params);
+
+	free(kindStrBuffer);
 
 	if (result == kInvisBonusLinkedFrom)
 	{
@@ -1483,7 +1518,8 @@ void DoTransObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
-	wchar_t kindStr[256];
+	PWSTR kindStrBuffer = NULL;
+	PCWSTR kindStr;
 	wchar_t roomStr[32];
 	wchar_t objStr[16];
 	SInt16 floor, suite;
@@ -1493,7 +1529,8 @@ void DoTransObjectInfo (HWND hwndOwner)
 	suite = kRoomIsEmpty;
 
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
+	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 	if (g_thisRoom->objects[g_objActive].data.d.where == -1)
 	{
 		StringCchCopy(roomStr, ARRAYSIZE(roomStr), L"none");
@@ -1523,6 +1560,8 @@ void DoTransObjectInfo (HWND hwndOwner)
 		MAKEINTRESOURCE(kTransInfoDialogID),
 		hwndOwner, TransFilter, (LPARAM)&params);
 
+	free(kindStrBuffer);
+
 	if (result == kLinkTransButton)
 	{
 		g_linkType = kTransportLinkOnly;
@@ -1549,17 +1588,21 @@ void DoEnemyObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
-	wchar_t kindStr[256];
+	PWSTR kindStrBuffer = NULL;
+	PCWSTR kindStr;
 	INT_PTR result;
 
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
+	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
 		MAKEINTRESOURCE(kEnemyInfoDialogID),
 		hwndOwner, EnemyFilter, (LPARAM)&params);
+
+	free(kindStrBuffer);
 
 	if (result == kEnemyLinkedFrom)
 	{
@@ -1574,17 +1617,21 @@ void DoFlowerObjectInfo (HWND hwndOwner)
 {
 	DialogParams params = { 0 };
 	wchar_t numberStr[16];
-	wchar_t kindStr[256];
+	PWSTR kindStrBuffer = NULL;
+	PCWSTR kindStr;
 	INT_PTR result;
 
 	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
-	GetObjectName(kindStr, ARRAYSIZE(kindStr), g_thisRoom->objects[g_objActive].what);
+	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
+	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
 	result = DialogBoxParam(HINST_THISCOMPONENT,
 		MAKEINTRESOURCE(kFlowerInfoDialogID),
 		hwndOwner, FlowerFilter, (LPARAM)&params);
+
+	free(kindStrBuffer);
 
 	if (result == kFlowerLinkedFrom)
 	{

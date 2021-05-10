@@ -20,6 +20,8 @@
 #include <commctrl.h>
 #include <strsafe.h>
 
+#include <stdlib.h>
+
 #define kToolModeCombo      1000
 #define kToolButtonBaseID   2000
 #define kToolButtonFirstID  2000
@@ -59,7 +61,7 @@
 
 void CreateToolsOffscreen (void);
 void KillToolsOffscreen (void);
-void GetToolName (PWSTR buffer, size_t length, SInt16 selected, SInt16 mode);
+HRESULT GetToolName (SInt16 selected, SInt16 mode, PWSTR *ppszToolName);
 void UpdateToolName (void);
 void UpdateToolTiles (void);
 INT_PTR CALLBACK ToolsWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -112,26 +114,52 @@ void KillToolsOffscreen (void)
 
 //--------------------------------------------------------------  GetToolName
 
-void GetToolName (PWSTR buffer, size_t length, SInt16 selected, SInt16 mode)
+HRESULT GetToolName (SInt16 selected, SInt16 mode, PWSTR *ppszToolName)
 {
+	const PCWSTR pszSelectionTool = L"Selection Tool";
+	size_t cchBuffer;
+	PWSTR pszBuffer;
+	HRESULT hr;
+
+	*ppszToolName = NULL;
+
 	if (selected == kSelectTool)
 	{
-		StringCchCopy(buffer, length, L"Selection Tool");
+		cchBuffer = wcslen(pszSelectionTool) + 1;
+		pszBuffer = (PWSTR)calloc(cchBuffer, sizeof(*pszBuffer));
+		if (pszBuffer == NULL)
+		{
+			return E_OUTOFMEMORY;
+		}
+		hr = StringCchCopyW(pszBuffer, cchBuffer, pszSelectionTool);
+		if (FAILED(hr))
+		{
+			// StringCchCopyW shouldn't fail here, but just in case...
+			free(pszBuffer);
+			return hr;
+		}
+		*ppszToolName = pszBuffer;
+		hr = S_OK;
 	}
 	else
 	{
-		GetObjectName(buffer, length, selected + ((mode - 1) * 0x0010));
+		hr = GetObjectName(selected + ((mode - 1) * 0x0010), ppszToolName);
 	}
+
+	return hr;
 }
 
 //--------------------------------------------------------------  UpdateToolName
 
 void UpdateToolName (void)
 {
-	wchar_t theString[256];
+	PWSTR theStringBuffer;
+	PCWSTR theString;
 
-	GetToolName(theString, ARRAYSIZE(theString), g_toolSelected, g_toolMode);
+	GetToolName(g_toolSelected, g_toolMode, &theStringBuffer);
+	theString = (theStringBuffer != NULL) ? theStringBuffer : L"";
 	SetDlgItemText(g_toolsWindow, kToolNameText, theString);
+	free(theStringBuffer);
 }
 
 //--------------------------------------------------------------  UpdateToolTiles
@@ -414,9 +442,11 @@ void Tools_OnButtonClick (HWND hwnd, WORD clickedID)
 
 void UpdateToolTips (HWND hwnd)
 {
+	WCHAR emptyString[] = L"";
 	SInt16 buttonID;
 	SInt16 toolIcon;
-	WCHAR buffer[256];
+	PWSTR nameStrBuffer;
+	PWSTR nameStr;
 	TOOLINFO toolInfo;
 
 	for (buttonID = kToolButtonFirstID; buttonID <= kToolButtonLastID; buttonID++)
@@ -433,15 +463,17 @@ void UpdateToolTips (HWND hwnd)
 			else
 				toolIcon = ((toolIcon - 7) * 2) + 7;
 		}
-		GetToolName(buffer, ARRAYSIZE(buffer), toolIcon, g_toolMode);
+		GetToolName(toolIcon, g_toolMode, &nameStrBuffer);
+		nameStr = (nameStrBuffer != NULL) ? nameStrBuffer : emptyString;
 
 		ZeroMemory(&toolInfo, sizeof(toolInfo));
 		toolInfo.cbSize = sizeof(toolInfo);
 		toolInfo.hwnd = hwnd;
 		toolInfo.uId = (UINT_PTR)GetDlgItem(hwnd, buttonID);
 		toolInfo.hinst = NULL;
-		toolInfo.lpszText = buffer;
+		toolInfo.lpszText = nameStr;
 		SendMessage(g_toolButtonTooltip, TTM_UPDATETIPTEXT, 0, (LPARAM)&toolInfo);
+		free(nameStrBuffer);
 	}
 }
 

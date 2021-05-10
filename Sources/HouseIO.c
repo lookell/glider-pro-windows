@@ -25,6 +25,7 @@
 #include "RoomGraphics.h"
 #include "SelectHouse.h"
 #include "StringUtils.h"
+#include "Utilities.h"
 
 #include <strsafe.h>
 
@@ -603,18 +604,18 @@ Boolean QuerySaveChanges (HWND ownerWindow)
 void YellowAlert (HWND ownerWindow, SInt16 whichAlert, SInt16 identifier)
 {
 	DialogParams params = { 0 };
-	wchar_t errStr[256];
+	PWSTR errStrBuffer;
+	PCWSTR errStr;
 	wchar_t errNumStr[16];
-	INT result;
 	SInt16 whoCares;
 
-	result = LoadString(HINST_THISCOMPONENT, kYellowAlertStringBase + whichAlert,
-			errStr, ARRAYSIZE(errStr));
-	if (result <= 0)
-		errStr[0] = L'\0';
+	AllocLoadString(HINST_THISCOMPONENT, kYellowAlertStringBase + whichAlert, &errStrBuffer);
+	errStr = (errStrBuffer != NULL) ? errStrBuffer : L"";
 	StringCchPrintf(errNumStr, ARRAYSIZE(errNumStr), L"%d", (int)identifier);
 
 	params.arg[0] = errStr;
 	params.arg[1] = errNumStr;
 	whoCares = Alert(kYellowAlert, ownerWindow, &params);
+
+	free(errStrBuffer);
 }

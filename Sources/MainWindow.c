@@ -39,6 +39,8 @@
 #include <mmsystem.h>
 #include <strsafe.h>
 
+#include <stdlib.h>
+
 #define WC_MAINWINDOW  TEXT("GliderMainWindow")
 
 void DrawOnSplash (HDC hdc, SInt16 splashHouseIndex);
@@ -240,9 +242,8 @@ void AdjustMainWindowDC (HWND hwnd, HDC hdc)
 
 void OpenMainWindow (void)
 {
-	LPCWSTR titlePtr;
-	int titleLen;
-	WCHAR windowTitle[128];
+	PWSTR windowTitleBuffer;
+	PCWSTR windowTitle;
 	SInt16 whichRoom;
 	RECT rcClient;
 	LONG width, height;
@@ -250,19 +251,14 @@ void OpenMainWindow (void)
 	DWORD windowStyle;
 	Rect tempRect;
 
-	titleLen = LoadString(HINST_THISCOMPONENT, IDS_APPLICATION_TITLE, (LPWSTR)&titlePtr, 0);
-	if (titleLen <= 0)
-	{
-		titleLen = 0;
-		titlePtr = L"";
-	}
-	StringCchCopyN(windowTitle, ARRAYSIZE(windowTitle), titlePtr, titleLen);
-
 	if (g_mainWindow != NULL)
 	{
 		YellowAlert(g_mainWindow, kYellowUnaccounted, 6);
 		return;
 	}
+
+	AllocLoadString(HINST_THISCOMPONENT, IDS_APPLICATION_TITLE, &windowTitleBuffer);
+	windowTitle = (windowTitleBuffer != NULL) ? windowTitleBuffer : L"";
 
 	if (g_theMode == kEditMode)
 	{
@@ -341,6 +337,8 @@ void OpenMainWindow (void)
 			g_fadeGraysOut = false;
 		}
 	}
+
+	free(windowTitleBuffer);
 }
 
 //--------------------------------------------------------------  CloseMainWindow

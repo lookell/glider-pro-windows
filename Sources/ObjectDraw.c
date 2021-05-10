@@ -15,6 +15,8 @@
 #include "ResourceLoader.h"
 #include "Utilities.h"
 
+#include <stdlib.h>
+
 #define k8WhiteColor            0
 #define kYellowColor            5
 #define kIntenseYellowColor     5
@@ -1890,8 +1892,8 @@ void DrawCalendar (HDC hdcDest, const Rect *theRect)
 	SYSTEMTIME localTime;
 	Rect bounds;
 	HBITMAP thePicture;
-	WCHAR monthStr[256];
-	INT monthLen;
+	PWSTR monthStrBuffer;
+	PCWSTR monthStr;
 	HFONT theFont;
 
 	thePicture = Gp_LoadImage(g_theHouseFile, kCalendarPictID);
@@ -1904,19 +1906,18 @@ void DrawCalendar (HDC hdcDest, const Rect *theRect)
 	DeleteBitmap(thePicture);
 
 	GetLocalTime(&localTime);
-	monthLen = LoadString(HINST_THISCOMPONENT,
-			kMonthStringBase + localTime.wMonth,
-			monthStr, ARRAYSIZE(monthStr));
-
+	AllocLoadString(HINST_THISCOMPONENT, kMonthStringBase + localTime.wMonth, &monthStrBuffer);
+	monthStr = (monthStrBuffer != NULL) ? monthStrBuffer : L"";
 	SaveDC(hdcDest);
 	SetBkMode(hdcDest, TRANSPARENT);
 	SetTextAlign(hdcDest, TA_CENTER | TA_BASELINE);
 	SetTextColor(hdcDest, Index2ColorRef(kDarkFleshColor));
 	theFont = CreateTahomaFont(-9, FW_BOLD);
 	SelectFont(hdcDest, theFont);
-	TextOut(hdcDest, theRect->left + 32, theRect->top + 55, monthStr, monthLen);
+	TextOut(hdcDest, theRect->left + 32, theRect->top + 55, monthStr, (int)wcslen(monthStr));
 	RestoreDC(hdcDest, -1);
 	DeleteFont(theFont);
+	free(monthStrBuffer);
 }
 
 //--------------------------------------------------------------  DrawBulletin

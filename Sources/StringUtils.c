@@ -7,6 +7,7 @@
 #include "StringUtils.h"
 
 #include "ResourceIDs.h"
+#include "Utilities.h"
 #include "WinAPI.h"
 
 #include <strsafe.h>
@@ -349,23 +350,13 @@ void GetLocalizedString_Pascal (UInt16 index, StringPtr theString)
 
 void GetLocalizedString (UInt16 index, wchar_t *pszDest, size_t cchDest)
 {
-	UINT strIndex;
-	const wchar_t *strPtr;
-	int strLen;
+	PWSTR pszStringBuffer;
+	PCWSTR pszString;
 
-	if (pszDest == NULL || cchDest < 1)
-	{
-		return;
-	}
-	pszDest[0] = L'\0';
-
-	strIndex = kLocalizedStringsBase + index;
-	strLen = LoadString(HINST_THISCOMPONENT, strIndex, (LPWSTR)&strPtr, 0);
-	if (strLen <= 0 || strPtr == NULL)
-	{
-		return;
-	}
-	StringCchCopyN(pszDest, cchDest, strPtr, (size_t)strLen);
+	AllocLoadString(HINST_THISCOMPONENT, kLocalizedStringsBase + index, &pszStringBuffer);
+	pszString = (pszStringBuffer != NULL) ? pszStringBuffer : L"";
+	StringCchCopy(pszDest, cchDest, pszString);
+	free(pszStringBuffer);
 }
 
 //--------------------------------------------------------------  MacToWinLineEndings

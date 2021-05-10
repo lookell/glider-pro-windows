@@ -13,6 +13,7 @@
 
 #define GP_BUILTIN_ASSETS  NULL
 
+HRESULT AllocLoadString (HINSTANCE hInstance, UINT uID, PWSTR *ppszString);
 SInt16 RandomInt (SInt16 range);
 void InitRandomLongQUS (void);
 __declspec(noreturn) void RedAlert (SInt16 errorNumber);

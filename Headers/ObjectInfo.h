@@ -10,9 +10,7 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-#include <wchar.h>
-
-void GetObjectName (wchar_t *pszDest, size_t cchDest, SInt16 objectType);
+HRESULT GetObjectName (SInt16 objectType, PWSTR *ppszObjectName);
 void DoObjectInfo (HWND hwndOwner);
 
 #endif

@@ -28,6 +28,49 @@ static UInt32 g_theSeed;
 static int g_useProgramDirectory = -1;
 
 //==============================================================  Functions
+//--------------------------------------------------------------  AllocLoadString
+
+HRESULT AllocLoadString (HINSTANCE hInstance, UINT uID, PWSTR *ppszString)
+{
+	int numChars;
+	PCNZWCH stringDataPtr;
+	DWORD lastError;
+	size_t cchResult;
+	PWSTR pszResult;
+	HRESULT hr;
+
+	*ppszString = NULL;
+
+	SetLastError(ERROR_SUCCESS);
+	stringDataPtr = NULL;
+	numChars = LoadStringW(hInstance, uID, (PWSTR)&stringDataPtr, 0);
+	if (numChars <= 0 || stringDataPtr == NULL)
+	{
+		lastError = GetLastError();
+		if (lastError == ERROR_SUCCESS)
+		{
+			return E_FAIL;
+		}
+		return HRESULT_FROM_WIN32(lastError);
+	}
+	cchResult = (size_t)numChars + 1;
+	pszResult = (PWSTR)calloc(cchResult, sizeof(*pszResult));
+	if (pszResult == NULL)
+	{
+		return E_OUTOFMEMORY;
+	}
+	hr = StringCchCopyNW(pszResult, cchResult, stringDataPtr, (size_t)numChars);
+	if (FAILED(hr))
+	{
+		// NOTE: StringCchCopyNW shouldn't fail here, but just in case...
+		free(pszResult);
+		return hr;
+	}
+
+	*ppszString = pszResult;
+	return S_OK;
+}
+
 //--------------------------------------------------------------  RandomInt
 // Returns a random integer (short) within "range".
 
@@ -74,23 +117,20 @@ __declspec(noreturn) void RedAlert (SInt16 errorNumber)
 {
 	DialogParams params = { 0 };
 	SInt16 dummyInt;
-	INT loadResult;
-	wchar_t errTitle[256];
-	wchar_t errMessage[256];
+	PWSTR errTitleBuffer;
+	PCWSTR errTitle;
+	PWSTR errMessageBuffer;
+	PCWSTR errMessage;
 	wchar_t errNumberString[32];
 
 	if (errorNumber <= 0)       // <= 0 is unaccounted for
 		errorNumber = 1;
 
-	loadResult = LoadString(HINST_THISCOMPONENT, rErrTitleBase + errorNumber,
-			errTitle, ARRAYSIZE(errTitle));
-	if (loadResult <= 0)
-		errTitle[0] = L'\0';
+	AllocLoadString(HINST_THISCOMPONENT, rErrTitleBase + errorNumber, &errTitleBuffer);
+	errTitle = (errTitleBuffer != NULL) ? errTitleBuffer : L"";
 
-	loadResult = LoadString(HINST_THISCOMPONENT, rErrMssgBase + errorNumber,
-			errMessage, ARRAYSIZE(errMessage));
-	if (loadResult <= 0)
-		errMessage[0] = L'\0';
+	AllocLoadString(HINST_THISCOMPONENT, rErrMssgBase + errorNumber, &errMessageBuffer);
+	errMessage = (errMessageBuffer != NULL) ? errMessageBuffer : L"";
 
 	StringCchPrintf(errNumberString, ARRAYSIZE(errNumberString), L"%d", (int)errorNumber);
 
@@ -99,6 +139,9 @@ __declspec(noreturn) void RedAlert (SInt16 errorNumber)
 	params.arg[1] = errMessage;
 	params.arg[2] = errNumberString;
 	dummyInt = Alert(rDeathAlertID, g_mainWindow, &params);
+
+	free(errMessageBuffer);
+	free(errTitleBuffer);
 
 	if (g_mainWindow != NULL)
 		DestroyWindow(g_mainWindow);
