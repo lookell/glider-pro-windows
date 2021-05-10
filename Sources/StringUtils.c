@@ -37,7 +37,7 @@ void PasStringCopy (ConstStringPtr p1, StringPtr p2)
 
 //--------------------------------------------------------------  PasStringCopyC
 
-void PasStringCopyC (const char *s1, StringPtr p2)
+void PasStringCopyC (PCSTR s1, StringPtr p2)
 {
 	Byte stringLength;
 
@@ -155,7 +155,7 @@ void PasStringConcat (StringPtr p1, ConstStringPtr p2)
 
 //--------------------------------------------------------------  PasStringConcatC
 
-void PasStringConcatC (StringPtr p1, const char *s2)
+void PasStringConcatC (StringPtr p1, PCSTR s2)
 {
 	Byte stringLength;
 
@@ -172,8 +172,8 @@ void PasStringConcatC (StringPtr p1, const char *s2)
 
 Boolean PasStringEqual (ConstStringPtr p1, ConstStringPtr p2, Boolean caseSens)
 {
-	wchar_t firstString[256];
-	wchar_t secondString[256];
+	WCHAR firstString[256];
+	WCHAR secondString[256];
 
 	if (p1[0] != p2[0])
 	{
@@ -340,7 +340,7 @@ void GetFirstWordOfString (ConstStringPtr stringIn, StringPtr stringOut)
 
 void GetLocalizedString_Pascal (UInt16 index, StringPtr theString, int stringCapacity)
 {
-	wchar_t buffer[256];
+	WCHAR buffer[256];
 
 	GetLocalizedString(index, buffer, ARRAYSIZE(buffer));
 	MacFromWinString(theString, stringCapacity, buffer);
@@ -348,7 +348,7 @@ void GetLocalizedString_Pascal (UInt16 index, StringPtr theString, int stringCap
 
 //--------------------------------------------------------------  GetLocalizedString
 
-void GetLocalizedString (UInt16 index, wchar_t *pszDest, size_t cchDest)
+void GetLocalizedString (UInt16 index, PWSTR pszDest, size_t cchDest)
 {
 	PWSTR pszStringBuffer;
 	PCWSTR pszString;
@@ -365,9 +365,9 @@ void GetLocalizedString (UInt16 index, wchar_t *pszDest, size_t cchDest)
 // function fails (e.g., memory could not be allocated). The returned pointer must
 // be deallocated with the standard 'free' function.
 
-wchar_t *MacToWinLineEndings(const wchar_t *input)
+PWSTR MacToWinLineEndings(PCWSTR input)
 {
-	wchar_t *output;
+	PWSTR output;
 	size_t inputIndex, outputIndex, outputSize;
 
 	if (input == NULL)
@@ -385,7 +385,7 @@ wchar_t *MacToWinLineEndings(const wchar_t *input)
 		}
 	}
 
-	output = (wchar_t *)calloc(outputSize, sizeof(*output));
+	output = (PWSTR)calloc(outputSize, sizeof(*output));
 	if (output == NULL)
 	{
 		return NULL;
@@ -411,9 +411,9 @@ wchar_t *MacToWinLineEndings(const wchar_t *input)
 // function fails (e.g., memory could not be allocated for the new string). The
 // returned pointer must be deallocated with the standard 'free' function.
 
-wchar_t *WinToMacLineEndings(const wchar_t *input)
+PWSTR WinToMacLineEndings(PCWSTR input)
 {
-	wchar_t *output;
+	PWSTR output;
 	size_t inputIndex, outputIndex, outputSize;
 
 	if (input == NULL)
@@ -434,7 +434,7 @@ wchar_t *WinToMacLineEndings(const wchar_t *input)
 		}
 	}
 
-	output = (wchar_t *)calloc(outputSize, sizeof(*output));
+	output = (PWSTR)calloc(outputSize, sizeof(*output));
 	if (output == NULL)
 	{
 		return NULL;
@@ -494,7 +494,7 @@ void NumToString (SInt32 theNum, StringPtr theString)
 // The return value of this function is the return value of 'MultiByteToWideChar'.
 // Return nonzero on success and zero on failure.
 
-int WinFromMacString(wchar_t *winbuf, int winlen, ConstStringPtr macbuf)
+int WinFromMacString(PWSTR winbuf, int winlen, ConstStringPtr macbuf)
 {
 	int copySize, result;
 
@@ -523,7 +523,7 @@ int WinFromMacString(wchar_t *winbuf, int winlen, ConstStringPtr macbuf)
 // The return value of this function is the return value of 'WideCharToMultiByte'.
 // Return nonzero on success and zero on failure.
 
-int MacFromWinString(StringPtr macbuf, int maclen, const wchar_t *winbuf)
+int MacFromWinString(StringPtr macbuf, int maclen, PCWSTR winbuf)
 {
 	size_t inputSize;
 	int copySize, result;

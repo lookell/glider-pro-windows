@@ -8,24 +8,23 @@
 #define STRING_UTILS_H_
 
 #include "MacTypes.h"
-
-#include <wchar.h>
+#include "WinAPI.h"
 
 void PasStringCopy (ConstStringPtr p1, StringPtr p2);
-void PasStringCopyC (const char *s1, StringPtr p2);
+void PasStringCopyC (PCSTR s1, StringPtr p2);
 SInt16 WhichStringFirst (ConstStringPtr p1, ConstStringPtr p2);
 void PasStringConcat (StringPtr p1, ConstStringPtr p2);
-void PasStringConcatC (StringPtr p1, const char *s2);
+void PasStringConcatC (StringPtr p1, PCSTR s2);
 Boolean PasStringEqual (ConstStringPtr p1, ConstStringPtr p2, Boolean caseSens);
 void GetLineOfText (ConstStringPtr srcStr, SInt16 index, StringPtr textLine);
 void WrapText (StringPtr theText, SInt16 maxChars);
 void GetFirstWordOfString (ConstStringPtr stringIn, StringPtr stringOut);
-void GetLocalizedString (UInt16 index, wchar_t *pszDest, size_t cchDest);
+void GetLocalizedString (UInt16 index, PWSTR pszDest, size_t cchDest);
 void GetLocalizedString_Pascal (UInt16 index, StringPtr theString, int stringCapacity);
-wchar_t *MacToWinLineEndings (const wchar_t *input);
-wchar_t *WinToMacLineEndings (const wchar_t *input);
+PWSTR MacToWinLineEndings (PCWSTR input);
+PWSTR WinToMacLineEndings (PCWSTR input);
 void NumToString(SInt32 theNum, StringPtr theString);
-int WinFromMacString (wchar_t *winbuf, int winlen, ConstStringPtr macbuf);
-int MacFromWinString (StringPtr macbuf, int maclen, const wchar_t *winbuf);
+int WinFromMacString (PWSTR winbuf, int winlen, ConstStringPtr macbuf);
+int MacFromWinString (StringPtr macbuf, int maclen, PCWSTR winbuf);
 
 #endif
