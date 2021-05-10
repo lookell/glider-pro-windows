@@ -124,24 +124,24 @@ void DrawBannerMessage (Point topLeft)
 	if (g_bannerStarCountOn)
 	{
 		if (g_numStarsRemaining != 1)
-			GetLocalizedString_Pascal(1, bannerStr);
+			GetLocalizedString_Pascal(1, bannerStr, ARRAYSIZE(bannerStr));
 		else
-			GetLocalizedString_Pascal(2, bannerStr);
+			GetLocalizedString_Pascal(2, bannerStr, ARRAYSIZE(bannerStr));
 
 		NumToString((SInt32)g_numStarsRemaining, subStr);
 		PasStringConcat(bannerStr, subStr);
 
 		if (g_numStarsRemaining != 1)
-			GetLocalizedString_Pascal(3, subStr);
+			GetLocalizedString_Pascal(3, subStr, ARRAYSIZE(subStr));
 		else
-			GetLocalizedString_Pascal(4, subStr);
+			GetLocalizedString_Pascal(4, subStr, ARRAYSIZE(subStr));
 		PasStringConcat(bannerStr, subStr);
 
 		SetTextColor(g_workSrcMap, redColor);
 		MoveToEx(g_workSrcMap, topLeft.h + 16, topLeft.v + 164, NULL);
 		Mac_DrawString(g_workSrcMap, bannerStr);
 		MoveToEx(g_workSrcMap, topLeft.h + 16, topLeft.v + 180, NULL);
-		GetLocalizedString_Pascal(5, subStr);
+		GetLocalizedString_Pascal(5, subStr, ARRAYSIZE(subStr));
 		Mac_DrawString(g_workSrcMap, subStr);
 	}
 	RestoreDC(g_workSrcMap, -1);

@@ -21,7 +21,7 @@ void GetLineOfText (ConstStringPtr srcStr, SInt16 index, StringPtr textLine);
 void WrapText (StringPtr theText, SInt16 maxChars);
 void GetFirstWordOfString (ConstStringPtr stringIn, StringPtr stringOut);
 void GetLocalizedString (UInt16 index, wchar_t *pszDest, size_t cchDest);
-void GetLocalizedString_Pascal (UInt16 index, StringPtr theString);
+void GetLocalizedString_Pascal (UInt16 index, StringPtr theString, int stringCapacity);
 wchar_t *MacToWinLineEndings (const wchar_t *input);
 wchar_t *WinToMacLineEndings (const wchar_t *input);
 void NumToString(SInt32 theNum, StringPtr theString);

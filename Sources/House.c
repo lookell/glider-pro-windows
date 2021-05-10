@@ -141,8 +141,6 @@ Boolean CreateNewHouse (HWND hwndOwner)
 
 void InitializeEmptyHouse (void)
 {
-	wchar_t tempStr[256];
-
 	free(g_thisHouse.rooms);
 
 	ZeroMemory(&g_thisHouse, sizeof(g_thisHouse));
@@ -151,10 +149,8 @@ void InitializeEmptyHouse (void)
 	g_thisHouse.flags = 0L;
 	g_thisHouse.initial.h = 32;
 	g_thisHouse.initial.v = 32;
-	GetLocalizedString(11, tempStr, ARRAYSIZE(tempStr));
-	MacFromWinString(g_thisHouse.banner, ARRAYSIZE(g_thisHouse.banner), tempStr);
-	GetLocalizedString(12, tempStr, ARRAYSIZE(tempStr));
-	MacFromWinString(g_thisHouse.trailer, ARRAYSIZE(g_thisHouse.trailer), tempStr);
+	GetLocalizedString_Pascal(11, g_thisHouse.banner, ARRAYSIZE(g_thisHouse.banner));
+	GetLocalizedString_Pascal(12, g_thisHouse.trailer, ARRAYSIZE(g_thisHouse.trailer));
 	ZeroHighScores(&g_thisHouse);
 	g_thisHouse.hasGame = false;
 	g_thisHouse.firstRoom = -1;

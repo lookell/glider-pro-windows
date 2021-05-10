@@ -338,12 +338,12 @@ void GetFirstWordOfString (ConstStringPtr stringIn, StringPtr stringOut)
 
 //--------------------------------------------------------------  GetLocalizedString_Pascal
 
-void GetLocalizedString_Pascal (UInt16 index, StringPtr theString)
+void GetLocalizedString_Pascal (UInt16 index, StringPtr theString, int stringCapacity)
 {
 	wchar_t buffer[256];
 
 	GetLocalizedString(index, buffer, ARRAYSIZE(buffer));
-	MacFromWinString(theString, sizeof(Str255), buffer);
+	MacFromWinString(theString, stringCapacity, buffer);
 }
 
 //--------------------------------------------------------------  GetLocalizedString

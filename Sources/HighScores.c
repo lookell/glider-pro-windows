@@ -203,9 +203,9 @@ void DrawHighScores (void)
 
 			// draw word "rooms"
 			if (g_thisHouse.highScores.levels[i] == 1)
-				GetLocalizedString_Pascal(6, tempStr);
+				GetLocalizedString_Pascal(6, tempStr, ARRAYSIZE(tempStr));
 			else
-				GetLocalizedString_Pascal(7, tempStr);
+				GetLocalizedString_Pascal(7, tempStr, ARRAYSIZE(tempStr));
 			SetTextColor(g_workSrcMap, blackColor);
 			if (i == 0)
 				MoveToEx(g_workSrcMap, scoreLeft + 193, dropIt - kScoreSpacing - kKimsLifted, NULL);
@@ -247,7 +247,7 @@ void DrawHighScores (void)
 	SelectFont(g_workSrcMap, theFont);
 	SetTextColor(g_workSrcMap, blueColor);
 	MoveToEx(g_workSrcMap, scoreLeft + 80, dropIt - 1 + (10 * kScoreSpacing), NULL);
-	GetLocalizedString_Pascal(8, tempStr);
+	GetLocalizedString_Pascal(8, tempStr, ARRAYSIZE(tempStr));
 	Mac_DrawString(g_workSrcMap, tempStr);
 	RestoreDC(g_workSrcMap, -1);
 	DeleteFont(theFont);
