@@ -7,7 +7,9 @@
 #include "HouseIO.h"
 
 #include "Banner.h"
+#include "ColorUtils.h"
 #include "DialogUtils.h"
+#include "Environ.h"
 #include "FileError.h"
 #include "HighScores.h"
 #include "House.h"
@@ -37,6 +39,7 @@
 void LoopMovie (void);
 void OpenHouseMovie (void);
 void CloseHouseMovie (void);
+void DrawHouseSplashScreen (HDC hdcDest, Gp_HouseFile *houseFile);
 
 Movie g_theMovie;
 Rect g_movieRect;
@@ -319,6 +322,69 @@ Boolean SaveHouseAs (void)
 	return false;
 }
 
+//--------------------------------------------------------------  DrawHouseSplashScreen
+// Draws the splash screen appropriate for the given house file.
+// The destination HDC is assumed to be large enough to hold a splash screen
+// (640 by 460 pixels). The splash screen is drawn into the coordinates specified
+// by g_splashSrcRect.
+
+void DrawHouseSplashScreen (HDC hdcDest, Gp_HouseFile *houseFile)
+{
+	PWSTR displayNameBuffer;
+	PCWSTR displayName;
+	PWSTR splashTextBuffer;
+	PCWSTR splashText;
+	HFONT splashTextFont;
+	HFONT prevTextFont;
+	COLORREF splashTextColor;
+	COLORREF prevTextColor;
+	int prevBkMode;
+	UINT prevTextAlign;
+
+	LoadScaledGraphic(hdcDest, houseFile, kSplash8BitPICT, &g_splashSrcRect);
+
+	Gp_GetHouseDisplayName(houseFile, &displayNameBuffer);
+	displayName = (displayNameBuffer != NULL) ? displayNameBuffer : L"";
+	if (g_thisMac.hasQT && Gp_HouseFileHasMovie(houseFile))
+	{
+		splashTextBuffer = AllocStringPrintfW(L"House: %s (QT)", displayName);
+	}
+	else
+	{
+		splashTextBuffer = AllocStringPrintfW(L"House: %s", displayName);
+	}
+	splashText = (splashTextBuffer != NULL) ? splashTextBuffer : L"";
+
+	if (Gp_HouseFileReadOnly(houseFile))
+	{
+		splashTextColor = Index2ColorRef(5);
+	}
+	else
+	{
+		splashTextColor = Index2ColorRef(28);
+	}
+	splashTextFont = CreateTahomaFont(-9, FW_BOLD);
+	prevTextFont = SelectFont(hdcDest, splashTextFont);
+	prevTextColor = SetTextColor(hdcDest, splashTextColor);
+	prevBkMode = SetBkMode(hdcDest, TRANSPARENT);
+	prevTextAlign = SetTextAlign(hdcDest, TA_LEFT | TA_TOP);
+	TextOut(
+		hdcDest,
+		g_splashSrcRect.left + 436,
+		g_splashSrcRect.top + 305,
+		splashText,
+		(int)wcslen(splashText)
+	);
+	SetTextAlign(hdcDest, prevTextAlign);
+	SetBkMode(hdcDest, prevBkMode);
+	SetTextColor(hdcDest, prevTextColor);
+	SelectFont(hdcDest, prevTextFont);
+	DeleteFont(splashTextFont);
+
+	free(splashTextBuffer);
+	free(displayNameBuffer);
+}
+
 //--------------------------------------------------------------  ReadHouse
 // With a house open, this function reads in the actual bits of data
 // into memory.
@@ -376,7 +442,7 @@ Boolean ReadHouse (HWND ownerWindow, Boolean loadSplashScreen)
 
 	if (loadSplashScreen)
 	{
-		LoadScaledGraphic(g_splashSrcMap, g_theHouseFile, kSplash8BitPICT, &g_splashSrcRect);
+		DrawHouseSplashScreen(g_splashSrcMap, g_theHouseFile);
 	}
 
 	if (COMPILEDEMO)

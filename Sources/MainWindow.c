@@ -43,7 +43,6 @@
 
 #define WC_MAINWINDOW  TEXT("GliderMainWindow")
 
-void DrawOnSplash (HDC hdc, SInt16 splashHouseIndex);
 void PaintMainWindow (HDC hdc);
 void AdjustMainWindowDC (HWND hwnd, HDC hdc);
 void HandleMainClick (HWND hwnd, Point wherePt, Boolean isDoubleClick);
@@ -91,45 +90,9 @@ void RegisterMainWindowClass (void)
 	RegisterClassEx(&wcx);
 }
 
-//--------------------------------------------------------------  DrawOnSplash
-// Draws additional text on top of splash screen.
-//
-// The appropriate house name to display may not be the current house, so an index
-// into 'g_theHousesSpecs' is passed in to specify which house to display on the
-// splash screen. In most cases, the value should be 'g_thisHouseIndex', but during
-// the demo, 'g_thisHouseIndex' refers to the demo house and not the house that the
-// player had loaded up before. The DoDemoGame() function handles this subtlety.
-
-void DrawOnSplash (HDC hdc, SInt16 splashHouseIndex)
-{
-	Str255 houseLoadedStr;
-	HFONT theFont;
-	HFONT wasFont;
-	houseSpec splashHouseSpec;
-
-	if (splashHouseIndex < 0 || splashHouseIndex >= g_housesFound)
-		return;
-
-	splashHouseSpec = g_theHousesSpecs[splashHouseIndex];
-
-	PasStringCopyC("House: ", houseLoadedStr);
-	PasStringConcat(houseLoadedStr, splashHouseSpec.name);
-	if ((g_thisMac.hasQT) && (splashHouseSpec.hasMovie))
-		PasStringConcatC(houseLoadedStr, " (QT)");
-	MoveToEx(hdc, g_splashOriginH + 436, g_splashOriginV + 314, NULL);
-	theFont = CreateTahomaFont(-9, FW_BOLD);
-	wasFont = SelectFont(hdc, theFont);
-	if (splashHouseSpec.readOnly)
-		ColorText(hdc, houseLoadedStr, 5L);
-	else
-		ColorText(hdc, houseLoadedStr, 28L);
-	SelectFont(hdc, wasFont);
-	DeleteFont(theFont);
-}
-
 //--------------------------------------------------------------  RedrawSplashScreen
 
-void RedrawSplashScreen (SInt16 splashHouseIndex)
+void RedrawSplashScreen (void)
 {
 	Rect tempRect;
 
@@ -138,7 +101,6 @@ void RedrawSplashScreen (SInt16 splashHouseIndex)
 	ZeroRectCorner(&tempRect);
 	QOffsetRect(&tempRect, g_splashOriginH, g_splashOriginV);
 	Mac_CopyBits(g_splashSrcMap, g_workSrcMap, &g_splashSrcRect, &tempRect, srcCopy, nil);
-	DrawOnSplash(g_workSrcMap, splashHouseIndex);
 	DissolveScreenOn(&g_workSrcRect);
 	CopyRectMainToWork(&g_workSrcRect);
 }
@@ -208,7 +170,6 @@ void PaintMainWindow (HDC hdc)
 		QOffsetRect(&tempRect, g_splashOriginH, g_splashOriginV);
 		Mac_CopyBits(g_splashSrcMap, g_workSrcMap, &g_splashSrcRect, &tempRect, srcCopy, nil);
 		Mac_CopyBits(g_workSrcMap, hdc, &g_workSrcRect, &g_workSrcRect, srcCopy, nil);
-		DrawOnSplash(hdc, g_thisHouseIndex);
 
 		SetRectRgn(
 			justPaintedRgn,

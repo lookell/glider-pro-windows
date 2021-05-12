@@ -58,7 +58,7 @@ typedef struct phoneType
 void InitGlider (gliderPtr thisGlider, SInt16 mode);
 void SetHouseToFirstRoom (void);
 void SetHouseToSavedRoom (void);
-void PlayGame (SInt16 splashHouseIndex);
+void PlayGame (void);
 void HandleRoomVisitation (void);
 void SetObjectsToDefaults (void);
 void InitTelephone (void);
@@ -89,7 +89,7 @@ static phoneType g_theChimes;
 //==============================================================  Functions
 //--------------------------------------------------------------  NewGame
 
-void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
+void NewGame (HWND ownerWindow, SInt16 mode)
 {
 	Rect tempRect;
 	OSErr theErr;
@@ -218,7 +218,7 @@ void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex)
 	}
 
 	g_playing = true;  // everything before this line is game set-up
-	PlayGame(splashHouseIndex);  // everything following is after a game has ended
+	PlayGame();  // everything following is after a game has ended
 
 	if (mmResult == MMSYSERR_NOERROR)
 	{
@@ -296,10 +296,7 @@ void DoDemoGame (HWND ownerWindow)
 		// when the demo ends (whether by user abort or by completing).
 		whoCares = ReadHouse(ownerWindow, false);
 		g_demoGoing = true;
-		// The previous house's name should be shown on the splash screen
-		// when the demo reaches its game over point, so pass the previous
-		// house's index instead of the index to the demo house.
-		NewGame(ownerWindow, kNewGameMode, wasHouseIndex);
+		NewGame(ownerWindow, kNewGameMode);
 	}
 	whoCares = CloseHouse(ownerWindow);
 	g_thisHouseIndex = wasHouseIndex;
@@ -391,7 +388,7 @@ void SetHouseToSavedRoom (void)
 
 //--------------------------------------------------------------  PlayGame
 
-void PlayGame (SInt16 splashHouseIndex)
+void PlayGame (void)
 {
 	SInt16 originalMode;
 
@@ -487,7 +484,7 @@ void PlayGame (SInt16 splashHouseIndex)
 				SetMenu(g_mainWindow, g_theMenuBar);
 				if (!g_quitting)
 				{
-					RedrawSplashScreen(splashHouseIndex);
+					RedrawSplashScreen();
 				}
 			}
 		}

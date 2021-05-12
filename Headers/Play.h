@@ -30,7 +30,7 @@ extern Boolean g_playerSuicide;
 extern Boolean g_phoneBitSet;
 extern Boolean g_tvOn;
 
-void NewGame (HWND ownerWindow, SInt16 mode, SInt16 splashHouseIndex);
+void NewGame (HWND ownerWindow, SInt16 mode);
 void DoDemoGame (HWND ownerWindow);
 void HideGlider (const gliderType *thisGlider);
 void StrikeChime (void);
