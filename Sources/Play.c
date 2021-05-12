@@ -291,7 +291,10 @@ void DoDemoGame (HWND ownerWindow)
 	PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, g_thisHouseName);
 	if (OpenHouse(ownerWindow))
 	{
-		whoCares = ReadHouse(ownerWindow);
+		// NOTE: We aren't reloading the splash screen when reading the
+		// demo house. This is so the previous splash screen will be shown
+		// when the demo ends (whether by user abort or by completing).
+		whoCares = ReadHouse(ownerWindow, false);
 		g_demoGoing = true;
 		// The previous house's name should be shown on the splash screen
 		// when the demo reaches its game over point, so pass the previous
@@ -302,7 +305,7 @@ void DoDemoGame (HWND ownerWindow)
 	g_thisHouseIndex = wasHouseIndex;
 	PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, g_thisHouseName);
 	if (OpenHouse(ownerWindow))
-		whoCares = ReadHouse(ownerWindow);
+		whoCares = ReadHouse(ownerWindow, true);
 	g_incrementModeTime = timeGetTime() + kIdleSplashTime;
 }
 

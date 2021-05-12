@@ -116,7 +116,7 @@ INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					whoCares = CloseHouse(hDlg);
 					PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, g_thisHouseName);
 					if (OpenHouse(hDlg))
-						whoCares = ReadHouse(hDlg);
+						whoCares = ReadHouse(hDlg, true);
 				}
 			}
 			EndDialog(hDlg, IDOK);

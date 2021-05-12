@@ -239,7 +239,7 @@ Boolean OpenSpecificHouse (PCWSTR filename, HWND ownerWindow)
 			g_thisHouseIndex = i;
 			PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, g_thisHouseName);
 			if (OpenHouse(ownerWindow))
-				itOpened = ReadHouse(ownerWindow);
+				itOpened = ReadHouse(ownerWindow, true);
 			else
 				itOpened = false;
 			break;
@@ -323,7 +323,7 @@ Boolean SaveHouseAs (void)
 // With a house open, this function reads in the actual bits of data
 // into memory.
 
-Boolean ReadHouse (HWND ownerWindow)
+Boolean ReadHouse (HWND ownerWindow, Boolean loadSplashScreen)
 {
 	uint64_t byteCount;
 	SInt16 whichRoom;
@@ -372,6 +372,11 @@ Boolean ReadHouse (HWND ownerWindow)
 		g_noRoomAtAll = true;
 		YellowAlert(ownerWindow, kYellowNoRooms, 0);
 		return false;
+	}
+
+	if (loadSplashScreen)
+	{
+		LoadScaledGraphic(g_splashSrcMap, g_theHouseFile, kSplash8BitPICT, &g_splashSrcRect);
 	}
 
 	if (COMPILEDEMO)
@@ -587,7 +592,7 @@ Boolean QuerySaveChanges (HWND ownerWindow)
 		{
 			whoCares = CloseHouse(ownerWindow);
 			if (OpenHouse(ownerWindow))
-				whoCares = ReadHouse(ownerWindow);
+				whoCares = ReadHouse(ownerWindow, true);
 		}
 		UpdateMenus(false);
 		return (true);

@@ -343,7 +343,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 
 	BuildHouseList(g_mainWindow);
 	if (OpenHouse(g_mainWindow))
-		whoCares = ReadHouse(g_mainWindow);
+		whoCares = ReadHouse(g_mainWindow, true);
 
 	PlayPrioritySound(kBirdSound, kBirdPriority);
 	InitializeMenus();

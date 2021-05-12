@@ -27,7 +27,7 @@ extern Boolean g_tvInRoom;
 Boolean OpenHouse (HWND ownerWindow);
 Boolean OpenSpecificHouse (PCWSTR filename, HWND ownerWindow);
 Boolean SaveHouseAs (void);
-Boolean ReadHouse (HWND ownerWindow);
+Boolean ReadHouse (HWND ownerWindow, Boolean loadSplashScreen);
 Boolean WriteHouse (HWND ownerWindow, Boolean checkIt);
 Boolean CloseHouse (HWND ownerWindow);
 Boolean QuerySaveChanges (HWND ownerWindow);
