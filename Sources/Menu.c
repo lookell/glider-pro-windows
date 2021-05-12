@@ -15,7 +15,6 @@
 #include "HouseInfo.h"
 #include "HouseIO.h"
 #include "Link.h"
-#include "Macintosh.h"
 #include "Main.h"
 #include "MainWindow.h"
 #include "Map.h"
@@ -374,11 +373,9 @@ void DoGameMenu (HWND hwnd, SInt16 theItem)
 			g_incrementModeTime = timeGetTime() + kIdleSplashTime;
 			if ((g_theMode == kSplashMode) || (g_theMode == kPlayMode))
 			{
-				Rect updateRect;
-
-				QSetRect(&updateRect, 0, 0, 210, 20);
-				QOffsetRect(&updateRect, g_splashOriginH + 430, g_splashOriginV + 300);
-				Mac_InvalWindowRect(g_mainWindow, &updateRect);
+				// Mark the main window as dirty, in case a new house
+				// was loaded and the splash screen needs to be redrawn.
+				InvalidateRect(g_mainWindow, NULL, TRUE);
 			}
 		}
 		break;
