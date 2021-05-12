@@ -26,5 +26,9 @@ PWSTR WinToMacLineEndings (PCWSTR input);
 void NumToString(SInt32 theNum, StringPtr theString);
 int WinFromMacString (PWSTR winbuf, int winlen, ConstStringPtr macbuf);
 int MacFromWinString (StringPtr macbuf, int maclen, PCWSTR winbuf);
+PSTR AllocStringVPrintfA (PCSTR format, va_list args);
+PSTR AllocStringPrintfA (PCSTR format, ...);
+PWSTR AllocStringVPrintfW (PCWSTR format, va_list args);
+PWSTR AllocStringPrintfW (PCWSTR format, ...);
 
 #endif

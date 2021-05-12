@@ -552,3 +552,93 @@ int MacFromWinString(StringPtr macbuf, int maclen, PCWSTR winbuf)
 	macbuf[0] = (Byte)result;
 	return result;
 }
+
+//--------------------------------------------------------------  AllocStringVPrintfA
+
+PSTR AllocStringVPrintfA (PCSTR format, va_list args)
+{
+	int resultLength;
+	va_list argsCopy;
+	size_t cchResult;
+	PSTR pszResult;
+	HRESULT hr;
+
+	va_copy(argsCopy, args);
+	resultLength = _vscprintf(format, argsCopy);
+	va_end(argsCopy);
+	if (resultLength < 0)
+	{
+		return NULL;
+	}
+	cchResult = (size_t)resultLength + 1;
+	pszResult = (PSTR)calloc(cchResult, sizeof(*pszResult));
+	if (pszResult == NULL)
+	{
+		return NULL;
+	}
+	hr = StringCchVPrintfA(pszResult, cchResult, format, args);
+	if (FAILED(hr))
+	{
+		free(pszResult);
+		return NULL;
+	}
+	return pszResult;
+}
+
+//--------------------------------------------------------------  AllocStringPrintfA
+
+PSTR AllocStringPrintfA (PCSTR format, ...)
+{
+	va_list args;
+	PSTR result;
+
+	va_start(args, format);
+	result = AllocStringVPrintfA(format, args);
+	va_end(args);
+	return result;
+}
+
+//--------------------------------------------------------------  AllocStringVPrintfW
+
+PWSTR AllocStringVPrintfW (PCWSTR format, va_list args)
+{
+	int resultLength;
+	va_list argsCopy;
+	size_t cchResult;
+	PWSTR pszResult;
+	HRESULT hr;
+
+	va_copy(argsCopy, args);
+	resultLength = _vscwprintf(format, argsCopy);
+	va_end(argsCopy);
+	if (resultLength < 0)
+	{
+		return NULL;
+	}
+	cchResult = (size_t)resultLength + 1;
+	pszResult = (PWSTR)calloc(cchResult, sizeof(*pszResult));
+	if (pszResult == NULL)
+	{
+		return NULL;
+	}
+	hr = StringCchVPrintfW(pszResult, cchResult, format, args);
+	if (FAILED(hr))
+	{
+		free(pszResult);
+		return NULL;
+	}
+	return pszResult;
+}
+
+//--------------------------------------------------------------  AllocStringPrintfW
+
+PWSTR AllocStringPrintfW (PCWSTR format, ...)
+{
+	va_list args;
+	PWSTR result;
+
+	va_start(args, format);
+	result = AllocStringVPrintfW(format, args);
+	va_end(args);
+	return result;
+}
