@@ -50,7 +50,7 @@ void SetPaletteToGrays (RGBQUAD *colors, UINT numColors, int saturation,
 	int maxSaturation);
 LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate);
-LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam);
+LRESULT MainWindow_OnCommand (HWND hwnd, WPARAM wParam, LPARAM lParam);
 
 Rect g_workSrcRect;
 HDC g_workSrcMap;
@@ -540,8 +540,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		return 0;
 
 	case WM_COMMAND:
-		DoMenuChoice(hwnd, LOWORD(wParam));
-		return 0;
+		return MainWindow_OnCommand(hwnd, wParam, lParam);
 
 	case WM_DESTROY:
 		// Remove the menu bar from the window so that it isn't destroyed
@@ -568,9 +567,6 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			EnableWindow(g_coordWindow, !!wParam);
 		}
 		return 0;
-
-	case WM_KEYDOWN:
-		return MainWindow_OnKeyDown(hwnd, wParam, lParam);
 
 	case WM_LBUTTONDOWN:
 	case WM_LBUTTONDBLCLK:
@@ -668,71 +664,72 @@ void MainWindow_OnActivateApp (HWND hwnd, BOOL fActivate)
 	}
 }
 
-//--------------------------------------------------------------  MainWindow_OnKeyDown
+//--------------------------------------------------------------  MainWindow_OnCommand
 
-LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam)
+LRESULT MainWindow_OnCommand (HWND hwnd, WPARAM wParam, LPARAM lParam)
 {
-	BYTE vKey;
-	Boolean shiftDown;
+	WORD command;
 
 	(void)lParam;
 
-	vKey = (BYTE)wParam;
-	shiftDown = (GetKeyState(VK_SHIFT) < 0);
-
-	switch (vKey)
+	command = LOWORD(wParam);
+	switch (command)
 	{
-	case VK_PRIOR: // page up
+	case ID_EDIT_PREV_TOOL_MODE:
 		if (g_houseUnlocked)
 			PrevToolMode();
 		break;
 
-	case VK_NEXT: // page down
+	case ID_EDIT_NEXT_TOOL_MODE:
 		if (g_houseUnlocked)
 			NextToolMode();
 		break;
 
-	case VK_LEFT:
+	case ID_EDIT_MOVE_THIS_LEFT:
+	case ID_EDIT_MOVE_THIS_LEFT_LARGE:
 		if (g_houseUnlocked)
 		{
 			if (g_objActive == kNoObjectSelected)
 				SelectNeighborRoom(kRoomToLeft);
 			else
-				MoveObject(kBumpLeft, shiftDown);
+				MoveObject(kBumpLeft, (command == ID_EDIT_MOVE_THIS_LEFT_LARGE));
 		}
 		break;
 
-	case VK_RIGHT:
+	case ID_EDIT_MOVE_THIS_RIGHT:
+	case ID_EDIT_MOVE_THIS_RIGHT_LARGE:
 		if (g_houseUnlocked)
 		{
 			if (g_objActive == kNoObjectSelected)
 				SelectNeighborRoom(kRoomToRight);
 			else
-				MoveObject(kBumpRight, shiftDown);
+				MoveObject(kBumpRight, (command == ID_EDIT_MOVE_THIS_RIGHT_LARGE));
 		}
 		break;
 
-	case VK_UP:
+	case ID_EDIT_MOVE_THIS_UP:
+	case ID_EDIT_MOVE_THIS_UP_LARGE:
 		if (g_houseUnlocked)
 		{
 			if (g_objActive == kNoObjectSelected)
 				SelectNeighborRoom(kRoomAbove);
 			else
-				MoveObject(kBumpUp, shiftDown);
+				MoveObject(kBumpUp, (command == ID_EDIT_MOVE_THIS_UP_LARGE));
 		}
 		break;
 
-	case VK_DOWN:
+	case ID_EDIT_MOVE_THIS_DOWN:
+	case ID_EDIT_MOVE_THIS_DOWN_LARGE:
 		if (g_houseUnlocked)
 		{
 			if (g_objActive == kNoObjectSelected)
 				SelectNeighborRoom(kRoomBelow);
 			else
-				MoveObject(kBumpDown, shiftDown);
+				MoveObject(kBumpDown, (command == ID_EDIT_MOVE_THIS_DOWN_LARGE));
 		}
 		break;
 
-	case VK_DELETE:
+	case ID_EDIT_DELETE_THIS:
 		if (g_houseUnlocked)
 		{
 			if (g_objActive == kNoObjectSelected)
@@ -742,67 +739,68 @@ LRESULT MainWindow_OnKeyDown (HWND hwnd, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
-	case VK_TAB:
+	case ID_EDIT_SELECT_NEXT_OBJECT:
 		if ((g_theMode == kEditMode) && (g_houseUnlocked))
-		{
-			if (shiftDown)
-				SelectPrevObject();
-			else
-				SelectNextObject();
-		}
+			SelectNextObject();
 		break;
 
-	case VK_ESCAPE:
+	case ID_EDIT_SELECT_PREV_OBJECT:
+		if ((g_theMode == kEditMode) && (g_houseUnlocked))
+			SelectPrevObject();
+		break;
+
+	case ID_EDIT_DESELECT_OBJECT:
 		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			DeselectObject();
 		break;
 
-	case 'A':
+	case ID_EDIT_TOOL_MODE_APPLIANCE:
 		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kApplianceMode);
 		break;
 
-	case 'B':
+	case ID_EDIT_TOOL_MODE_BLOWER:
 		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kBlowerMode);
 		break;
 
-	case 'C':
+	case ID_EDIT_TOOL_MODE_CLUTTER:
 		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kClutterMode);
 		break;
 
-	case 'E':
+	case ID_EDIT_TOOL_MODE_ENEMY:
 		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kEnemyMode);
 		break;
 
-	case 'F':
+	case ID_EDIT_TOOL_MODE_FURNITURE:
 		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kFurnitureMode);
 		break;
 
-	case 'L':
+	case ID_EDIT_TOOL_MODE_LIGHT:
 		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kLightMode);
 		break;
 
-	case 'P':
+	case ID_EDIT_TOOL_MODE_PRIZE:
 		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kBonusMode);
 		break;
 
-	case 'S':
+	case ID_EDIT_TOOL_MODE_SWITCH:
 		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kSwitchMode);
 		break;
 
-	case 'T':
+	case ID_EDIT_TOOL_MODE_TRANSPORT:
 		if ((g_theMode == kEditMode) && (g_houseUnlocked))
 			SetSpecificToolMode(kTransportMode);
 		break;
 
 	default:
+		DoMenuChoice(hwnd, command);
 		break;
 	}
 
