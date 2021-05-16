@@ -78,6 +78,13 @@ void RegisterMapWindowClass (void)
 	RegisterClassEx(&wcx);
 }
 
+//--------------------------------------------------------------  UnregisterMapWindowClass
+
+void UnregisterMapWindowClass (void)
+{
+	UnregisterClass(WC_MAPWINDOW, HINST_THISCOMPONENT);
+}
+
 //--------------------------------------------------------------  ThisRoomVisibleOnMap
 
 Boolean ThisRoomVisibleOnMap (void)

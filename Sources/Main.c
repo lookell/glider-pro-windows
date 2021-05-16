@@ -381,6 +381,9 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 	DestroyMenu(g_houseMenu);
 	DestroyMenu(g_theMenuBar);
 
+	UnregisterMapWindowClass();
+	UnregisterMainWindowClass();
+
 	WriteOutPrefs(NULL);
 	Gp_UnloadBuiltInAssets();
 

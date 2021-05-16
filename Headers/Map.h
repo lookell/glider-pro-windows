@@ -21,6 +21,7 @@ extern Boolean g_isMapOpen;
 extern Boolean g_doPrettyMap;
 
 void RegisterMapWindowClass (void);
+void UnregisterMapWindowClass (void);
 Boolean ThisRoomVisibleOnMap (void);
 void CenterMapOnRoom (SInt16 h, SInt16 v);
 void FlagMapRoomsForUpdate (void);

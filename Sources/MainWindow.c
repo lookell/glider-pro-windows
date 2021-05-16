@@ -90,6 +90,13 @@ void RegisterMainWindowClass (void)
 	RegisterClassEx(&wcx);
 }
 
+//--------------------------------------------------------------  UnregisterMainWindowClass
+
+void UnregisterMainWindowClass (void)
+{
+	UnregisterClass(WC_MAINWINDOW, HINST_THISCOMPONENT);
+}
+
 //--------------------------------------------------------------  RedrawSplashScreen
 
 void RedrawSplashScreen (void)

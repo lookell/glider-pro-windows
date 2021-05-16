@@ -27,6 +27,7 @@ extern HDC g_splashSrcMap;
 extern Rect g_splashSrcRect;
 
 void RegisterMainWindowClass (void);
+void UnregisterMainWindowClass (void);
 void RedrawSplashScreen (void);
 void OpenMainWindow (void);
 void CloseMainWindow (void);
