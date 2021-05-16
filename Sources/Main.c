@@ -381,6 +381,9 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 	DestroyMenu(g_houseMenu);
 	DestroyMenu(g_theMenuBar);
 
+	DestroyAcceleratorTable(g_editAccelTable);
+	DestroyAcceleratorTable(g_splashAccelTable);
+
 	UnregisterMapWindowClass();
 	UnregisterMainWindowClass();
 
