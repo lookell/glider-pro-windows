@@ -58,8 +58,9 @@ void InitScoreboardMap (void)
 {
 	Rect bounds;
 	HBITMAP thePicture;
-	HFONT scoreboardFont;
 	SInt16 hOffset;
+
+	g_scoreboardFont = CreateTahomaFont(14, FW_BOLD);
 
 	g_wasScoreboardMode = kScoreboardHigh;
 	g_boardSrcRect = g_houseRect;
@@ -94,8 +95,6 @@ void InitScoreboardMap (void)
 	g_boardTSrcMap = CreateOffScreenGWorld(&g_boardTSrcRect, kPreferredDepth);
 	g_boardTDestRect = g_boardTSrcRect;
 	QOffsetRect(&g_boardTDestRect, 137 + hOffset, 2);
-	scoreboardFont = CreateTahomaFont(14, FW_BOLD);
-	SelectFont(g_boardTSrcMap, scoreboardFont);
 
 	QSetRect(&g_boardGSrcRect, 0, 0, 20, 15);  // # gliders
 	g_boardGSrcMap = CreateOffScreenGWorld(&g_boardGSrcRect, kPreferredDepth);
@@ -103,8 +102,6 @@ void InitScoreboardMap (void)
 	QOffsetRect(&g_boardGDestRect, 526 + hOffset, 2);
 	g_boardGQDestRect = g_boardGDestRect;
 	QOffsetRect(&g_boardGQDestRect, 0, -kScoreboardTall);
-	scoreboardFont = CreateTahomaFont(14, FW_BOLD);
-	SelectFont(g_boardGSrcMap, scoreboardFont);
 
 	QSetRect(&g_boardPSrcRect, 0, 0, 64, 15);  // points
 	g_boardPSrcMap = CreateOffScreenGWorld(&g_boardPSrcRect, kPreferredDepth);
@@ -112,8 +109,6 @@ void InitScoreboardMap (void)
 	QOffsetRect(&g_boardPDestRect, 570 + hOffset, 2);  // total = 6396 pixels
 	g_boardPQDestRect = g_boardPDestRect;
 	QOffsetRect(&g_boardPQDestRect, 0, -kScoreboardTall);
-	scoreboardFont = CreateTahomaFont(14, FW_BOLD);
-	SelectFont(g_boardPSrcMap, scoreboardFont);
 
 	QSetRect(&g_badgesBlankRects[kFoilBadge], 0, 0, 16, 16);
 	QOffsetRect(&g_badgesBlankRects[kFoilBadge], 0, 0);

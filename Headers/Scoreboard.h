@@ -16,6 +16,7 @@
 #define kHeliumBadge            3
 #define kNumBadges              4
 
+extern HFONT g_scoreboardFont;
 extern Rect g_boardSrcRect;
 extern Rect g_badgeSrcRect;
 extern Rect g_boardDestRect;
