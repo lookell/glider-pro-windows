@@ -792,3 +792,19 @@ void InitMarquee (void)
 	g_theMarquee.handled = false;
 	g_gliderMarqueeUp = false;
 }
+
+//--------------------------------------------------------------  DestroyMarquee
+
+void DestroyMarquee (void)
+{
+	size_t i;
+
+	for (i = 0; i < kNumMarqueePats; i++)
+	{
+		if (g_theMarquee.pats[i] != NULL)
+		{
+			DeleteBitmap(g_theMarquee.pats[i]);
+			g_theMarquee.pats[i] = NULL;
+		}
+	}
+}

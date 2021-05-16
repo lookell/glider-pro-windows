@@ -33,23 +33,49 @@
 
 #include <stdlib.h>
 
+static void SafeDisposeGWorld (HDC *pGWorld);
 void InitScoreboardMap (void);
+void DestroyScoreboardMap (void);
 void InitGliderMap (void);
+void DestroyGliderMap (void);
 void InitBlowers (void);
+void DestroyBlowers (void);
 void InitFurniture (void);
+void DestroyFurniture (void);
 void InitPrizes (void);
+void DestroyPrizes (void);
 void InitTransports (void);
+void DestroyTransports (void);
 void InitSwitches (void);
+void DestroySwitches (void);
 void InitLights (void);
+void DestroyLights (void);
 void InitAppliances (void);
+void DestroyAppliances (void);
 void InitEnemies (void);
+void DestroyEnemies (void);
 void InitClutter (void);
+void DestroyClutter (void);
 void InitSupport (void);
+void DestroySupport (void);
 void InitAngel (void);
+void DestroyAngel (void);
 void InitSplashScreenMap (void);
+void DestroySplashScreenMap (void);
 Boolean GetDemoDataPointer (void **ppDemoData, size_t *pDemoSize);
 
 //==============================================================  Functions
+//--------------------------------------------------------------  SafeDisposeGWorld
+
+static void SafeDisposeGWorld (HDC *pGWorld)
+{
+	if (*pGWorld != NULL)
+	{
+		DisposeGWorld(*pGWorld);
+		*pGWorld = NULL;
+	}
+}
+
 //--------------------------------------------------------------  InitScoreboardMap
 // Any graphics and structures relating to the scoreboard that appears
 // across the top of the game are initialized and loaded up here.
@@ -138,6 +164,23 @@ void InitScoreboardMap (void)
 	QOffsetRect(&g_badgesDestRects[kHeliumBadge], 467 + hOffset, 1 - kScoreboardTall);
 }
 
+//--------------------------------------------------------------  DestroyScoreboardMap
+
+void DestroyScoreboardMap (void)
+{
+	SafeDisposeGWorld(&g_boardPSrcMap);
+	SafeDisposeGWorld(&g_boardGSrcMap);
+	SafeDisposeGWorld(&g_boardTSrcMap);
+	SafeDisposeGWorld(&g_badgeSrcMap);
+	SafeDisposeGWorld(&g_boardSrcMap);
+
+	if (g_scoreboardFont != NULL)
+	{
+		DeleteFont(g_scoreboardFont);
+		g_scoreboardFont = NULL;
+	}
+}
+
 //--------------------------------------------------------------  InitGliderMap
 // Graphics and structures relating to the little paper glider (the
 // player) are cretaed, loaded up and initialized here.
@@ -199,6 +242,19 @@ void InitGliderMap (void)
 	}
 }
 
+//--------------------------------------------------------------  DestroyGliderMap
+
+void DestroyGliderMap (void)
+{
+	SafeDisposeGWorld(&g_bandsMaskMap);
+	SafeDisposeGWorld(&g_bandsSrcMap);
+	SafeDisposeGWorld(&g_shadowMaskMap);
+	SafeDisposeGWorld(&g_shadowSrcMap);
+	SafeDisposeGWorld(&g_glidMaskMap);
+	SafeDisposeGWorld(&g_glid2SrcMap);
+	SafeDisposeGWorld(&g_glidSrcMap);
+}
+
 //--------------------------------------------------------------  InitBlowers
 // All blower graphics and structures are loaded up and initialized here.
 // Blowers include vents, ducts, candles, fans, etc.
@@ -239,6 +295,14 @@ void InitBlowers (void)
 	QOffsetRect(&g_rightStartGliderSrc, 0, 374);
 }
 
+//--------------------------------------------------------------  DestroyBlowers
+
+void DestroyBlowers (void)
+{
+	SafeDisposeGWorld(&g_blowerMaskMap);
+	SafeDisposeGWorld(&g_blowerSrcMap);
+}
+
 //--------------------------------------------------------------  InitFurniture
 // Structures and graphics relating to the furniture is loaded up.
 // Furniture includes tables, cabinets, shelves, etc.
@@ -275,6 +339,14 @@ void InitFurniture (void)
 
 	QSetRect(&g_deckSrc, 0, 0, 64, 21);
 	QOffsetRect(&g_deckSrc, 0, 162);
+}
+
+//--------------------------------------------------------------  DestroyFurniture
+
+void DestroyFurniture (void)
+{
+	SafeDisposeGWorld(&g_furnitureMaskMap);
+	SafeDisposeGWorld(&g_furnitureSrcMap);
 }
 
 //--------------------------------------------------------------  InitPrizes
@@ -350,6 +422,16 @@ void InitPrizes (void)
 	}
 }
 
+//--------------------------------------------------------------  DestroyPrizes
+
+void DestroyPrizes (void)
+{
+	SafeDisposeGWorld(&g_pointsMaskMap);
+	SafeDisposeGWorld(&g_pointsSrcMap);
+	SafeDisposeGWorld(&g_bonusMaskMap);
+	SafeDisposeGWorld(&g_bonusSrcMap);
+}
+
 //--------------------------------------------------------------  InitTransports
 // Structures and graphics relating to the transports is loaded up.
 // Transports includes transport ducts, mailboxes, etc.
@@ -362,6 +444,14 @@ void InitTransports (void)
 
 	g_transMaskMap = CreateOffScreenGWorld(&g_transSrcRect, 1);
 	LoadGraphic(g_transMaskMap, GP_BUILTIN_ASSETS, kTransportMaskID);
+}
+
+//--------------------------------------------------------------  DestroyTransports
+
+void DestroyTransports (void)
+{
+	SafeDisposeGWorld(&g_transMaskMap);
+	SafeDisposeGWorld(&g_transSrcMap);
 }
 
 //--------------------------------------------------------------  InitSwitches
@@ -400,6 +490,13 @@ void InitSwitches (void)
 	QOffsetRect(&g_knifeSwitchSrc[1], 16, 80);
 }
 
+//--------------------------------------------------------------  DestroySwitches
+
+void DestroySwitches (void)
+{
+	SafeDisposeGWorld(&g_switchSrcMap);
+}
+
 //--------------------------------------------------------------  InitLights
 // Structures and graphics relating to lights are loaded up.
 // Lights includes table lamps, flourescent lights, track lights, etc.
@@ -426,6 +523,14 @@ void InitLights (void)
 		QSetRect(&g_trackLightSrc[i], 0, 0, 24, 24);
 		QOffsetRect(&g_trackLightSrc[i], 24 * i, 102);
 	}
+}
+
+//--------------------------------------------------------------  DestroyLights
+
+void DestroyLights (void)
+{
+	SafeDisposeGWorld(&g_lightMaskMap);
+	SafeDisposeGWorld(&g_lightSrcMap);
 }
 
 //--------------------------------------------------------------  InitAppliances
@@ -498,6 +603,18 @@ void InitAppliances (void)
 	QOffsetRect(&g_microOn, 64, 222);
 	QSetRect(&g_microOff, 0, 0, 16, 35);
 	QOffsetRect(&g_microOff, 64, 187);
+}
+
+//--------------------------------------------------------------  DestroyAppliances
+
+void DestroyAppliances (void)
+{
+	SafeDisposeGWorld(&g_shredMaskMap);
+	SafeDisposeGWorld(&g_shredSrcMap);
+	SafeDisposeGWorld(&g_toastMaskMap);
+	SafeDisposeGWorld(&g_toastSrcMap);
+	SafeDisposeGWorld(&g_applianceMaskMap);
+	SafeDisposeGWorld(&g_applianceSrcMap);
 }
 
 //--------------------------------------------------------------  InitEnemies
@@ -594,6 +711,26 @@ void InitEnemies (void)
 	}
 }
 
+//--------------------------------------------------------------  DestroyEnemies
+
+void DestroyEnemies (void)
+{
+	SafeDisposeGWorld(&g_fishMaskMap);
+	SafeDisposeGWorld(&g_fishSrcMap);
+	SafeDisposeGWorld(&g_enemyMaskMap);
+	SafeDisposeGWorld(&g_enemySrcMap);
+	SafeDisposeGWorld(&g_dripMaskMap);
+	SafeDisposeGWorld(&g_dripSrcMap);
+	SafeDisposeGWorld(&g_ballMaskMap);
+	SafeDisposeGWorld(&g_ballSrcMap);
+	SafeDisposeGWorld(&g_dartMaskMap);
+	SafeDisposeGWorld(&g_dartSrcMap);
+	SafeDisposeGWorld(&g_copterMaskMap);
+	SafeDisposeGWorld(&g_copterSrcMap);
+	SafeDisposeGWorld(&g_balloonMaskMap);
+	SafeDisposeGWorld(&g_balloonSrcMap);
+}
+
 //--------------------------------------------------------------  InitClutter
 // Structures and graphics relating to clutter are loaded up.
 // Clutter includes mirrors, teddy bears, fireplaces, calendars, etc.
@@ -626,6 +763,14 @@ void InitClutter (void)
 	QOffsetRect(&g_flowerSrc[5], 95, 0);
 }
 
+//--------------------------------------------------------------  DestroyClutter
+
+void DestroyClutter (void)
+{
+	SafeDisposeGWorld(&g_clutterMaskMap);
+	SafeDisposeGWorld(&g_clutterSrcMap);
+}
+
 //--------------------------------------------------------------  InitSupport
 // The floor support grphic is loaded up.  It is only visible when
 // playing in 9-room mode.  It is the horizontal wooden beam that
@@ -636,6 +781,13 @@ void InitSupport (void)
 	QSetRect(&g_suppSrcRect, 0, 0, kRoomWide, kFloorSupportTall);  // 44
 	g_suppSrcMap = CreateOffScreenGWorld(&g_suppSrcRect, kPreferredDepth);
 	LoadGraphic(g_suppSrcMap, GP_BUILTIN_ASSETS, kSupportPictID);
+}
+
+//--------------------------------------------------------------  DestroySupport
+
+void DestroySupport (void)
+{
+	SafeDisposeGWorld(&g_suppSrcMap);
 }
 
 //--------------------------------------------------------------  InitAngel
@@ -653,6 +805,14 @@ void InitAngel (void)
 	LoadGraphic(g_angelMaskMap, GP_BUILTIN_ASSETS, kAngelMaskID);
 }
 
+//--------------------------------------------------------------  DestroyAngel
+
+void DestroyAngel (void)
+{
+	SafeDisposeGWorld(&g_angelMaskMap);
+	SafeDisposeGWorld(&g_angelSrcMap);
+}
+
 //--------------------------------------------------------------  InitSplashScreenMap
 // This loads the graphic for the splash screen.
 
@@ -661,6 +821,13 @@ void InitSplashScreenMap (void)
 	QSetRect(&g_splashSrcRect, 0, 0, 640, 460);
 	g_splashSrcMap = CreateOffScreenGWorld(&g_splashSrcRect, kPreferredDepth);
 	LoadGraphic(g_splashSrcMap, GP_BUILTIN_ASSETS, kSplash8BitPICT);
+}
+
+//--------------------------------------------------------------  DestroySplashScreenMap
+
+void DestroySplashScreenMap (void)
+{
+	SafeDisposeGWorld(&g_splashSrcMap);
 }
 
 //--------------------------------------------------------------  CreateOffscreens
@@ -700,6 +867,28 @@ void CreateOffscreens (void)
 	QSetRect(&g_tileSrcRect, 0, 0, 128, 80);
 	g_tileSrcMap = NULL;
 	// ????
+}
+
+//--------------------------------------------------------------  DestroyOffscreens
+
+void DestroyOffscreens (void)
+{
+	DestroySplashScreenMap();
+	DestroyAngel();
+	DestroySupport();
+	DestroyClutter();
+	DestroyEnemies();
+	DestroyAppliances();
+	DestroyLights();
+	DestroySwitches();
+	DestroyTransports();
+	DestroyPrizes();
+	DestroyFurniture();
+	DestroyBlowers();
+	DestroyGliderMap();
+	DestroyScoreboardMap();
+	SafeDisposeGWorld(&g_backSrcMap);
+	SafeDisposeGWorld(&g_workSrcMap);
 }
 
 //--------------------------------------------------------------  GetDemoDataPointer

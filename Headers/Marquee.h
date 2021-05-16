@@ -40,5 +40,6 @@ Boolean MarqueeHasHandles (SInt16 *direction, SInt16 *dist);
 Boolean PtInMarqueeHandle (Point where);
 void SetMarqueeGliderRect (SInt16 h, SInt16 v);
 void InitMarquee (void);
+void DestroyMarquee (void);
 
 #endif
