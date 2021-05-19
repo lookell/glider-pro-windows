@@ -132,6 +132,7 @@ Boolean CreateNewHouse (HWND hwndOwner)
 	{
 		return false;
 	}
+	DrawHouseSplashScreen(g_splashSrcMap, g_theHouseFile);
 
 	return true;
 }

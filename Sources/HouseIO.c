@@ -39,7 +39,6 @@
 void LoopMovie (void);
 void OpenHouseMovie (void);
 void CloseHouseMovie (void);
-void DrawHouseSplashScreen (HDC hdcDest, Gp_HouseFile *houseFile);
 
 Movie g_theMovie;
 Rect g_movieRect;

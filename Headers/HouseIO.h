@@ -27,6 +27,7 @@ extern Boolean g_tvInRoom;
 Boolean OpenHouse (HWND ownerWindow);
 Boolean OpenSpecificHouse (PCWSTR filename, HWND ownerWindow);
 Boolean SaveHouseAs (void);
+void DrawHouseSplashScreen (HDC hdcDest, Gp_HouseFile *houseFile);
 Boolean ReadHouse (HWND ownerWindow, Boolean loadSplashScreen);
 Boolean WriteHouse (HWND ownerWindow, Boolean checkIt);
 Boolean CloseHouse (HWND ownerWindow);
