@@ -25,6 +25,7 @@
 #include "Utilities.h"
 
 #include <shlwapi.h>
+#include <stdlib.h>
 #include <strsafe.h>
 
 #define kHighNameItem           1002
@@ -39,7 +40,7 @@ void GetHighScoreName (HWND ownerWindow, SInt16 place);
 INT_PTR CALLBACK BannerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 void GetHighScoreBanner (HWND ownerWindow);
 Boolean FindHighScoresFolder (LPWSTR scoresDirPath, DWORD cchDirPath);
-Boolean GetHighScoresFilePath (LPWSTR lpPath, DWORD cchPath, ConstStringPtr baseName);
+Boolean GetHighScoresFilePath (PWSTR pszPath, DWORD cchPath, PCWSTR pszHousePath);
 
 Str31 g_highBanner;
 Str15 g_highName;
@@ -505,41 +506,48 @@ Boolean FindHighScoresFolder (LPWSTR scoresDirPath, DWORD cchDirPath)
 
 //--------------------------------------------------------------  GetHighScoresFilePath
 
-Boolean GetHighScoresFilePath (LPWSTR lpPath, DWORD cchPath, ConstStringPtr baseName)
+Boolean GetHighScoresFilePath (PWSTR pszPath, DWORD cchPath, PCWSTR pszHousePath)
 {
 	WCHAR pathBuffer[MAX_PATH];
-	WCHAR wideBaseName[256];
 
-	if (!WinFromMacString(wideBaseName, ARRAYSIZE(wideBaseName), baseName))
-		return false;
-	if (FAILED(StringCchCat(wideBaseName, ARRAYSIZE(wideBaseName), L".gls")))
-		return false;
 	if (!FindHighScoresFolder(pathBuffer, ARRAYSIZE(pathBuffer)))
 		return false;
-	if (!PathAppend(pathBuffer, wideBaseName))
+	if (!PathAppend(pathBuffer, PathFindFileName(pszHousePath)))
+		return false;
+	if (!PathRenameExtension(pathBuffer, L".gls"))
+		return false;
+	if (FAILED(StringCchCopy(pszPath, cchPath, pathBuffer)))
 		return false;
 
-	return SUCCEEDED(StringCchCopy(lpPath, cchPath, pathBuffer));
+	return true;
 }
 
 //--------------------------------------------------------------  WriteScoresToDisk
 
 Boolean WriteScoresToDisk (HWND ownerWindow)
 {
+	PWSTR houseFilePath;
 	WCHAR pathBuffer[MAX_PATH];
 	HANDLE scoresFileHandle;
 	byteio *byteWriter;
 	HRESULT writeResult;
 	HRESULT closeResult;
 
-	if (!GetHighScoresFilePath(pathBuffer, ARRAYSIZE(pathBuffer), g_thisHouseName))
+	if (FAILED(Gp_GetHouseFilePath(g_theHouseFile, &houseFilePath)))
+		RedAlert(kErrNoMemory);
+
+	if (!GetHighScoresFilePath(pathBuffer, ARRAYSIZE(pathBuffer), houseFilePath))
+	{
+		free(houseFilePath);
 		return false;
+	}
 
 	scoresFileHandle = CreateFile(pathBuffer, GENERIC_WRITE, 0, NULL,
 			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (scoresFileHandle == INVALID_HANDLE_VALUE)
 	{
 		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(GetLastError()), L"High Scores File");
+		free(houseFilePath);
 		return false;
 	}
 
@@ -547,6 +555,7 @@ Boolean WriteScoresToDisk (HWND ownerWindow)
 	if (byteWriter == NULL)
 	{
 		CloseHandle(scoresFileHandle);
+		free(houseFilePath);
 		return false;
 	}
 	writeResult = WriteScoresType(byteWriter, &g_thisHouse.highScores);
@@ -555,15 +564,18 @@ Boolean WriteScoresToDisk (HWND ownerWindow)
 	if (FAILED(writeResult))
 	{
 		CheckFileError(ownerWindow, writeResult, L"High Scores File");
+		free(houseFilePath);
 		return false;
 	}
 	if (FAILED(closeResult))
 	{
 		CheckFileError(ownerWindow, closeResult, L"High Scores File");
+		free(houseFilePath);
 		return false;
 	}
 
 	g_gameDirty = false;
+	free(houseFilePath);
 	return true;
 }
 
@@ -572,14 +584,21 @@ Boolean WriteScoresToDisk (HWND ownerWindow)
 Boolean ReadScoresFromDisk (HWND ownerWindow)
 {
 	scoresType tempScores;
+	PWSTR houseFilePath;
 	WCHAR pathBuffer[MAX_PATH];
 	HANDLE scoresFileHandle;
 	byteio *byteReader;
 	HRESULT readResult;
 	DWORD lastError;
 
-	if (!GetHighScoresFilePath(pathBuffer, ARRAYSIZE(pathBuffer), g_thisHouseName))
+	if (FAILED(Gp_GetHouseFilePath(g_theHouseFile, &houseFilePath)))
+		RedAlert(kErrNoMemory);
+
+	if (!GetHighScoresFilePath(pathBuffer, ARRAYSIZE(pathBuffer), houseFilePath))
+	{
+		free(houseFilePath);
 		return false;
+	}
 
 	scoresFileHandle = CreateFile(pathBuffer, GENERIC_READ, FILE_SHARE_READ, NULL,
 			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -588,6 +607,7 @@ Boolean ReadScoresFromDisk (HWND ownerWindow)
 	{
 		if (lastError != ERROR_FILE_NOT_FOUND)
 			CheckFileError(ownerWindow, HRESULT_FROM_WIN32(lastError), L"High Scores File");
+		free(houseFilePath);
 		return false;
 	}
 
@@ -595,6 +615,7 @@ Boolean ReadScoresFromDisk (HWND ownerWindow)
 	if (byteReader == NULL)
 	{
 		CloseHandle(scoresFileHandle);
+		free(houseFilePath);
 		return false;
 	}
 	readResult = ReadScoresType(byteReader, &tempScores);
@@ -603,9 +624,11 @@ Boolean ReadScoresFromDisk (HWND ownerWindow)
 	if (FAILED(readResult))
 	{
 		CheckFileError(ownerWindow, readResult, L"High Scores File");
+		free(houseFilePath);
 		return false;
 	}
 
 	g_thisHouse.highScores = tempScores;
+	free(houseFilePath);
 	return true;
 }
