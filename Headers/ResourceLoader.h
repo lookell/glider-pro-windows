@@ -37,6 +37,11 @@ BOOLEAN Gp_HouseFileReadOnly (Gp_HouseFile *houseFile);
 // Return whether a loaded house file has a movie associated with it.
 BOOLEAN Gp_HouseFileHasMovie (Gp_HouseFile *houseFile);
 
+// Return the full file path for the loaded house file.
+// Free the returned string with free(). If the function fails,
+// '*ppszFilePath' is set to NULL.
+HRESULT Gp_GetHouseFilePath (Gp_HouseFile *houseFile, PWSTR *ppszFilePath);
+
 // Return the display name for the loaded house file.
 // Free the returned string with free(). If the function fails,
 // '*ppszDisplayName' is set to NULL.

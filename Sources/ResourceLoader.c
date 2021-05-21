@@ -271,6 +271,35 @@ BOOLEAN Gp_HouseFileHasMovie (Gp_HouseFile *houseFile)
 	return FALSE;
 }
 
+//--------------------------------------------------------------  Gp_GetHouseFilePath
+
+HRESULT Gp_GetHouseFilePath (Gp_HouseFile *houseFile, PWSTR *ppszFilePath)
+{
+	size_t cchResult;
+	PWSTR pszResult;
+	HRESULT hr;
+
+	*ppszFilePath = NULL;
+	if (houseFile == NULL)
+	{
+		return E_INVALIDARG;
+	}
+	cchResult = wcslen(houseFile->fileName) + 1;
+	pszResult = (PWSTR)calloc(cchResult, sizeof(*pszResult));
+	if (pszResult == NULL)
+	{
+		return E_OUTOFMEMORY;
+	}
+	hr = StringCchCopyW(pszResult, cchResult, houseFile->fileName);
+	if (FAILED(hr))
+	{
+		free(pszResult);
+		return hr;
+	}
+	*ppszFilePath = pszResult;
+	return S_OK;
+}
+
 //--------------------------------------------------------------  Gp_GetHouseDisplayName
 
 HRESULT Gp_GetHouseDisplayName (Gp_HouseFile *houseFile, PWSTR *ppszDisplayName)
