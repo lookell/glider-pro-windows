@@ -790,98 +790,10 @@ static LRESULT AudioWnd_OnShutdown(AudioWnd *self)
 	return 0;
 }
 
-#define AUDIOCMD_SHUTDOWN                (WM_USER + 1)
-#define AUDIOCMD_GETMASTERVOLUME         (WM_USER + 2)
-#define AUDIOCMD_SETMASTERVOLUME         (WM_USER + 3)
-#define AUDIOCMD_OPENCHANNEL             (WM_USER + 4)
-#define AUDIOCMD_CLOSECHANNEL            (WM_USER + 5)
-#define AUDIOCMD_QUEUECHANNELAUDIO       (WM_USER + 6)
-#define AUDIOCMD_CLEARCHANNELAUDIO       (WM_USER + 7)
-#define AUDIOCMD_ISCHANNELPLAYING        (WM_USER + 8)
+#define AUDIOCMD_SHUTDOWN        (WM_USER + 1)
+#define AUDIOCMD_RUNFUNCTION     (WM_USER + 2)
 
-typedef struct AudioCmdData_GetMasterVolume
-{
-	float masterVolume;
-} AudioCmdData_GetMasterVolume;
-
-typedef struct AudioCmdData_SetMasterVolume
-{
-	float masterVolume;
-} AudioCmdData_SetMasterVolume;
-
-typedef struct AudioCmdData_OpenChannel
-{
-	WaveFormat format;
-	AudioChannel *channel;
-} AudioCmdData_OpenChannel;
-
-typedef struct AudioCmdData_CloseChannel
-{
-	AudioChannel *channel;
-} AudioCmdData_CloseChannel;
-
-typedef struct AudioCmdData_QueueChannelAudio
-{
-	AudioChannel *channel;
-	AudioEntry entry;
-} AudioCmdData_QueueChannelAudio;
-
-typedef struct AudioCmdData_ClearChannelAudio
-{
-	AudioChannel *channel;
-} AudioCmdData_ClearChannelAudio;
-
-typedef struct AudioCmdData_IsChannelPlaying
-{
-	AudioChannel *channel;
-	int isPlaying;
-} AudioCmdData_IsChannelPlaying;
-
-static LRESULT AudioWnd_OnGetMasterVolume(AudioWnd *self, AudioCmdData_GetMasterVolume *cmdData)
-{
-	cmdData->masterVolume = AudioDevice_GetMasterVolume(&self->deviceState);
-	return 0;
-}
-
-static LRESULT AudioWnd_OnSetMasterVolume(AudioWnd *self, AudioCmdData_SetMasterVolume *cmdData)
-{
-	AudioDevice_SetMasterVolume(&self->deviceState, cmdData->masterVolume);
-	return 0;
-}
-
-static LRESULT AudioWnd_OnOpenChannel(AudioWnd *self, AudioCmdData_OpenChannel *cmdData)
-{
-	cmdData->channel = AudioDevice_OpenChannel(&self->deviceState, &cmdData->format);
-	return 0;
-}
-
-static LRESULT AudioWnd_OnCloseChannel(AudioWnd *self, AudioCmdData_CloseChannel *cmdData)
-{
-	(void)self;
-	AudioDevice_CloseChannel(cmdData->channel);
-	return 0;
-}
-
-static LRESULT AudioWnd_OnQueueChannelAudio(AudioWnd *self, AudioCmdData_QueueChannelAudio *cmdData)
-{
-	(void)self;
-	AudioDevice_QueueChannelAudio(cmdData->channel, &cmdData->entry);
-	return 0;
-}
-
-static LRESULT AudioWnd_OnClearChannelAudio(AudioWnd *self, AudioCmdData_ClearChannelAudio *cmdData)
-{
-	(void)self;
-	AudioDevice_ClearChannelAudio(cmdData->channel);
-	return 0;
-}
-
-static LRESULT AudioWnd_OnIsChannelPlaying(AudioWnd *self, AudioCmdData_IsChannelPlaying *cmdData)
-{
-	(void)self;
-	cmdData->isPlaying = AudioDevice_IsChannelPlaying(cmdData->channel);
-	return 0;
-}
+typedef void (*PFNAUDIOCMD)(AudioWnd *self, void *callData);
 
 static LRESULT AudioWnd_WndProc(AudioWnd *self, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -905,26 +817,9 @@ static LRESULT AudioWnd_WndProc(AudioWnd *self, UINT message, WPARAM wParam, LPA
 	case AUDIOCMD_SHUTDOWN:
 		return AudioWnd_OnShutdown(self);
 
-	case AUDIOCMD_GETMASTERVOLUME:
-		return AudioWnd_OnGetMasterVolume(self, (AudioCmdData_GetMasterVolume *)lParam);
-
-	case AUDIOCMD_SETMASTERVOLUME:
-		return AudioWnd_OnSetMasterVolume(self, (AudioCmdData_SetMasterVolume *)lParam);
-
-	case AUDIOCMD_OPENCHANNEL:
-		return AudioWnd_OnOpenChannel(self, (AudioCmdData_OpenChannel *)lParam);
-
-	case AUDIOCMD_CLOSECHANNEL:
-		return AudioWnd_OnCloseChannel(self, (AudioCmdData_CloseChannel *)lParam);
-
-	case AUDIOCMD_QUEUECHANNELAUDIO:
-		return AudioWnd_OnQueueChannelAudio(self, (AudioCmdData_QueueChannelAudio *)lParam);
-
-	case AUDIOCMD_CLEARCHANNELAUDIO:
-		return AudioWnd_OnClearChannelAudio(self, (AudioCmdData_ClearChannelAudio *)lParam);
-
-	case AUDIOCMD_ISCHANNELPLAYING:
-		return AudioWnd_OnIsChannelPlaying(self, (AudioCmdData_IsChannelPlaying *)lParam);
+	case AUDIOCMD_RUNFUNCTION:
+		((PFNAUDIOCMD)wParam)(self, (void *)lParam);
+		return 0;
 
 	default:
 		return DefWindowProc(self->hwndSelf, message, wParam, lParam);
@@ -1037,6 +932,11 @@ static void Audio_SendThreadMessage(HWND hwnd, UINT message, WPARAM wParam, LPAR
 	SendMessage(hwnd, message, wParam, lParam);
 }
 
+static void Audio_RunFunctionInThread(HWND hwnd, PFNAUDIOCMD pfn, void *callData)
+{
+	Audio_SendThreadMessage(hwnd, AUDIOCMD_RUNFUNCTION, (WPARAM)pfn, (LPARAM)callData);
+}
+
 int Audio_InitDevice(void)
 {
 	AudioThreadParams params;
@@ -1092,6 +992,18 @@ void Audio_KillDevice(void)
 	}
 }
 
+typedef struct AudioCmdData_GetMasterVolume
+{
+	float masterVolume;
+} AudioCmdData_GetMasterVolume;
+
+static void AudioWnd_GetMasterVolumeImpl(AudioWnd *self, void *callData)
+{
+	AudioCmdData_GetMasterVolume *cmdData = (AudioCmdData_GetMasterVolume *)callData;
+
+	cmdData->masterVolume = AudioDevice_GetMasterVolume(&self->deviceState);
+}
+
 float Audio_GetMasterVolume(void)
 {
 	AudioCmdData_GetMasterVolume cmdData;
@@ -1101,9 +1013,21 @@ float Audio_GetMasterVolume(void)
 	audioWindow = Audio_GetMessageWindow();
 	if (audioWindow != NULL)
 	{
-		Audio_SendThreadMessage(audioWindow, AUDIOCMD_GETMASTERVOLUME, 0, (LPARAM)&cmdData);
+		Audio_RunFunctionInThread(audioWindow, AudioWnd_GetMasterVolumeImpl, &cmdData);
 	}
 	return cmdData.masterVolume;
+}
+
+typedef struct AudioCmdData_SetMasterVolume
+{
+	float masterVolume;
+} AudioCmdData_SetMasterVolume;
+
+static void AudioWnd_SetMasterVolumeImpl(AudioWnd *self, void *callData)
+{
+	AudioCmdData_SetMasterVolume *cmdData = (AudioCmdData_SetMasterVolume *)callData;
+
+	AudioDevice_SetMasterVolume(&self->deviceState, cmdData->masterVolume);
 }
 
 void Audio_SetMasterVolume(float newVolume)
@@ -1115,8 +1039,21 @@ void Audio_SetMasterVolume(float newVolume)
 	audioWindow = Audio_GetMessageWindow();
 	if (audioWindow != NULL)
 	{
-		Audio_SendThreadMessage(audioWindow, AUDIOCMD_SETMASTERVOLUME, 0, (LPARAM)&cmdData);
+		Audio_RunFunctionInThread(audioWindow, AudioWnd_SetMasterVolumeImpl, &cmdData);
 	}
+}
+
+typedef struct AudioCmdData_OpenChannel
+{
+	WaveFormat format;
+	AudioChannel *channel;
+} AudioCmdData_OpenChannel;
+
+static void AudioWnd_OpenChannelImpl(AudioWnd *self, void *callData)
+{
+	AudioCmdData_OpenChannel *cmdData = (AudioCmdData_OpenChannel *)callData;
+
+	cmdData->channel = AudioDevice_OpenChannel(&self->deviceState, &cmdData->format);
 }
 
 AudioChannel *AudioChannel_Open(const WaveFormat *format)
@@ -1129,9 +1066,22 @@ AudioChannel *AudioChannel_Open(const WaveFormat *format)
 	audioWindow = Audio_GetMessageWindow();
 	if (audioWindow != NULL)
 	{
-		Audio_SendThreadMessage(audioWindow, AUDIOCMD_OPENCHANNEL, 0, (LPARAM)&cmdData);
+		Audio_RunFunctionInThread(audioWindow, AudioWnd_OpenChannelImpl, &cmdData);
 	}
 	return cmdData.channel;
+}
+
+typedef struct AudioCmdData_CloseChannel
+{
+	AudioChannel *channel;
+} AudioCmdData_CloseChannel;
+
+static void AudioWnd_CloseChannelImpl(AudioWnd *self, void *callData)
+{
+	AudioCmdData_CloseChannel *cmdData = (AudioCmdData_CloseChannel *)callData;
+
+	(void)self;
+	AudioDevice_CloseChannel(cmdData->channel);
 }
 
 void AudioChannel_Close(AudioChannel *channel)
@@ -1143,8 +1093,22 @@ void AudioChannel_Close(AudioChannel *channel)
 	audioWindow = Audio_GetMessageWindow();
 	if (audioWindow != NULL)
 	{
-		Audio_SendThreadMessage(audioWindow, AUDIOCMD_CLOSECHANNEL, 0, (LPARAM)&cmdData);
+		Audio_RunFunctionInThread(audioWindow, AudioWnd_CloseChannelImpl, &cmdData);
 	}
+}
+
+typedef struct AudioCmdData_QueueChannelAudio
+{
+	AudioChannel *channel;
+	AudioEntry entry;
+} AudioCmdData_QueueChannelAudio;
+
+static void AudioWnd_QueueChannelAudioImpl(AudioWnd *self, void *callData)
+{
+	AudioCmdData_QueueChannelAudio *cmdData = (AudioCmdData_QueueChannelAudio *)callData;
+
+	(void)self;
+	AudioDevice_QueueChannelAudio(cmdData->channel, &cmdData->entry);
 }
 
 void AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry)
@@ -1157,8 +1121,21 @@ void AudioChannel_QueueAudio(AudioChannel *channel, const AudioEntry *entry)
 	audioWindow = Audio_GetMessageWindow();
 	if (audioWindow != NULL)
 	{
-		Audio_SendThreadMessage(audioWindow, AUDIOCMD_QUEUECHANNELAUDIO, 0, (LPARAM)&cmdData);
+		Audio_RunFunctionInThread(audioWindow, AudioWnd_QueueChannelAudioImpl, &cmdData);
 	}
+}
+
+typedef struct AudioCmdData_ClearChannelAudio
+{
+	AudioChannel *channel;
+} AudioCmdData_ClearChannelAudio;
+
+static void AudioWnd_ClearChannelAudioImpl(AudioWnd *self, void *callData)
+{
+	AudioCmdData_ClearChannelAudio *cmdData = (AudioCmdData_ClearChannelAudio *)callData;
+
+	(void)self;
+	AudioDevice_ClearChannelAudio(cmdData->channel);
 }
 
 void AudioChannel_ClearAudio(AudioChannel *channel)
@@ -1170,8 +1147,22 @@ void AudioChannel_ClearAudio(AudioChannel *channel)
 	audioWindow = Audio_GetMessageWindow();
 	if (audioWindow != NULL)
 	{
-		Audio_SendThreadMessage(audioWindow, AUDIOCMD_CLEARCHANNELAUDIO, 0, (LPARAM)&cmdData);
+		Audio_RunFunctionInThread(audioWindow, AudioWnd_ClearChannelAudioImpl, &cmdData);
 	}
+}
+
+typedef struct AudioCmdData_IsChannelPlaying
+{
+	AudioChannel *channel;
+	int isPlaying;
+} AudioCmdData_IsChannelPlaying;
+
+static void AudioWnd_IsChannelPlayingImpl(AudioWnd *self, void *callData)
+{
+	AudioCmdData_IsChannelPlaying *cmdData = (AudioCmdData_IsChannelPlaying *)callData;
+
+	(void)self;
+	cmdData->isPlaying = AudioDevice_IsChannelPlaying(cmdData->channel);
 }
 
 int AudioChannel_IsPlaying(AudioChannel *channel)
@@ -1184,7 +1175,7 @@ int AudioChannel_IsPlaying(AudioChannel *channel)
 	audioWindow = Audio_GetMessageWindow();
 	if (audioWindow != NULL)
 	{
-		Audio_SendThreadMessage(audioWindow, AUDIOCMD_ISCHANNELPLAYING, 0, (LPARAM)&cmdData);
+		Audio_RunFunctionInThread(audioWindow, AudioWnd_IsChannelPlayingImpl, &cmdData);
 	}
 	return cmdData.isPlaying;
 }
