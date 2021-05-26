@@ -18,7 +18,6 @@
 #include <shlwapi.h>
 #include <strsafe.h>
 
-#define kHouseListItem          1000
 #define kMaxExtraHouses         8
 
 BOOL InitLoadDialog (HWND hDlg);

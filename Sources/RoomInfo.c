@@ -20,27 +20,6 @@
 
 #include <strsafe.h>
 
-#define kRoomNameItem               1003
-#define kRoomLocationBox            1006
-#define kRoomTilesBox               1010
-#define kRoomPopupItem              1011
-#define kRoomDividerLine            1012
-#define kRoomTilesBox2              1015
-#define kRoomFirstCheck             1017
-#define kLitUnlitText               1018
-#define kBoundsButton               1019
-
-#define kPICTIDItem                 1003
-#define kFloorSupportCheck          1005
-#define kLeftWallCheck              1006
-#define kTopWallCheck               1007
-#define kRightWallCheck             1008
-#define kBottomWallCheck            1009
-#define kLeftWallLine               1010
-#define kTopWallLine                1011
-#define kRightWallLine              1012
-#define kBottomWallLine             1013
-
 #define kMiniTileWide               16
 
 void LoadTileSrcGraphic (HDC hdc, SInt16 backID, const Rect *theRect);

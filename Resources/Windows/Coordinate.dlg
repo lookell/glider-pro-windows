@@ -1,9 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kHoriCoordItem     1001
-#define kVertCoordItem     1002
-#define kDistCoordItem     1003
-
 kCoordinateWindowID DIALOGEX 0, 0, 62, 36
 CAPTION ""
 FONT 8, "MS Shell Dlg"

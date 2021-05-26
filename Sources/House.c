@@ -33,12 +33,6 @@
 
 #include <stdlib.h>
 
-#define kGoToFirstRadio     1002
-#define kGoToPrevRadio      1003
-#define kGoToFSRadio        1004
-#define kFloorEditText      1005
-#define kSuiteEditText      1006
-
 void SortRoomsObjects (SInt16 which);
 INT_PTR CALLBACK GoToFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 

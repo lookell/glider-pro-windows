@@ -22,12 +22,6 @@
 
 #include <stdlib.h>
 
-#define kToolModeCombo      1000
-#define kToolButtonBaseID   2000
-#define kToolButtonFirstID  2000
-#define kToolButtonLastID   2015
-#define kToolNameText       3000
-
 #define kToolsHigh          4
 #define kToolsWide          4
 #define kTotalTools         16  // kToolsHigh * kToolsWide

@@ -27,74 +27,6 @@
 
 #include <stdlib.h>
 
-#define kBlowerInitialState     1006
-#define kForceCheckbox          1007
-#define kBlowerArrow            1008
-#define kDirectionText          1009
-#define kBlowerUpButton         1011
-#define kBlowerRightButton      1012
-#define kBlowerDownButton       1013
-#define kBlowerLeftButton       1014
-#define kBlowerLinkedFrom       1015
-#define kLeftFacingRadio        1016
-#define kRightFacingRadio       1017
-
-#define kFurnitureLinkedFrom    1006
-
-#define kCustPictIDItem         1007
-
-#define kToggleRadio            1006
-#define kForceOnRadio           1007
-#define kForceOffRadio          1008
-#define kLinkSwitchButton       1009
-#define kSwitchGotoButton       1014
-#define kSwitchLinkedFrom       1015
-
-#define kTriggerDelayItem       1006
-#define kLinkTriggerButton      1009
-#define kTriggerGotoButton      1014
-#define kTriggerLinkedFrom      1015
-
-#define kLightInitialState      1006
-#define kLightLinkedFrom        1008
-
-#define kApplianceInitialState  1006
-#define kApplianceDelay         1008
-#define kApplianceDelayLabel    1009
-#define kApplianceLinkedFrom    1010
-
-#define kMicrowaveInitialState  1006
-#define kKillBandsCheckbox      1008
-#define kKillBatteryCheckbox    1009
-#define kKillFoilCheckbox       1010
-#define kMicrowaveLinkedFrom    1011
-
-#define kGreaseSpilled          1006
-#define kGreaseLinkedFrom       1008
-
-#define k100PtRadio             1006
-#define k300PtRadio             1007
-#define k500PtRadio             1008
-#define kInvisBonusLinkedFrom   1009
-
-#define kLinkTransButton        1006
-#define kTransGotoButton        1011
-#define kTransLinkedFrom        1012
-#define kTransInitialState      1013
-
-#define kEnemyDelayItem         1007
-#define kEnemyDelayLabelItem    1008
-#define kEnemyInitialState      1010
-#define kEnemyLinkedFrom        1011
-
-#define kRadioFlower1           1006
-#define kRadioFlower2           1007
-#define kRadioFlower3           1008
-#define kRadioFlower4           1009
-#define kRadioFlower5           1010
-#define kRadioFlower6           1011
-#define kFlowerLinkedFrom       1013
-
 void UpdateBlowerInfo (HWND hDlg, HDC hdc);
 INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK FurnitureFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
@@ -1064,7 +996,7 @@ INT_PTR CALLBACK FlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 		flower = g_thisRoom->objects[g_objActive].data.i.pict;
 		if ((flower < 0) || (flower >= kNumFlowers))
 			flower = 0;
-		CheckRadioButton(hDlg, kRadioFlower1, kRadioFlower6, kRadioFlower1 + flower);
+		CheckRadioButton(hDlg, kRadioFlower1, kRadioFlower6, kRadioFlowerBase + flower);
 
 		CenterDialogOverOwner(hDlg);
 		ParamDialogText(hDlg, (const DialogParams *)lParam);
@@ -1076,7 +1008,7 @@ INT_PTR CALLBACK FlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 		case IDOK:
 		case kFlowerLinkedFrom:
 			for (flower = 0; flower < kNumFlowers; flower++)
-				if (IsDlgButtonChecked(hDlg, kRadioFlower1 + flower))
+				if (IsDlgButtonChecked(hDlg, kRadioFlowerBase + flower))
 					break;
 			if (flower >= kNumFlowers)
 				flower = 0;

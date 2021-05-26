@@ -133,37 +133,216 @@
 #define kNoHighScoreAlert       1046
 
 #define kAboutDialogID              150
+#define kTextItemVers               1002
+#define kPictItemMain               1004
+#define kFreeMemoryText             1007
+#define kScreenInfoText             1008
+
 #define kLoadHouseDialogID          1000
+#define kHouseListItem              1000
+
 #define kHouseInfoDialogID          1001
+#define kBannerTextItem             1004
+#define kLockHouseButton            1006
+#define kClearScoresButton          1009
+#define kTrailerTextItem            1011
+#define kNoPhoneCheck               1014
+#define kBannerNCharsItem           1015
+#define kTrailerNCharsItem          1016
+#define kHouseSizeItem              1018
+
 #define kRoomInfoDialogID           1003
+#define kRoomNameItem               1003
+#define kRoomLocationBox            1006
+#define kRoomTilesBox               1010
+#define kRoomPopupItem              1011
+#define kRoomDividerLine            1012
+#define kRoomTilesBox2              1015
+#define kRoomFirstCheck             1017
+#define kLitUnlitText               1018
+#define kBoundsButton               1019
+
 #define kBlowerInfoDialogID         1007
+#define kBlowerInitialState         1006
+#define kForceCheckbox              1007
+#define kBlowerArrow                1008
+#define kDirectionText              1009
+#define kBlowerUpButton             1011
+#define kBlowerRightButton          1012
+#define kBlowerDownButton           1013
+#define kBlowerLeftButton           1014
+#define kBlowerLinkedFrom           1015
+#define kLeftFacingRadio            1016
+#define kRightFacingRadio           1017
+
 #define kFurnitureInfoDialogID      1010
+#define kFurnitureLinkedFrom        1006
+
 #define kSwitchInfoDialogID         1011
+#define kToggleRadio                1006
+#define kForceOnRadio               1007
+#define kForceOffRadio              1008
+#define kLinkSwitchButton           1009
+#define kSwitchGotoButton           1014
+#define kSwitchLinkedFrom           1015
+
 #define kMainPrefsDialID            1012
+#define kDisplayButton              1003
+#define kSoundButton                1004
+#define kControlsButton             1005
+#define kBrainsButton               1006
+#define kAllDefaultsButton          1011
+
 #define kLightInfoDialogID          1013
+#define kLightInitialState          1006
+#define kLightLinkedFrom            1008
+
 #define kApplianceInfoDialogID      1014
+#define kApplianceInitialState      1006
+#define kApplianceDelay             1008
+#define kApplianceDelayLabel        1009
+#define kApplianceLinkedFrom        1010
+
 #define kInvisBonusInfoDialogID     1015
+#define k100PtRadio                 1006
+#define k300PtRadio                 1007
+#define k500PtRadio                 1008
+#define kInvisBonusLinkedFrom       1009
+
 #define kOriginalArtDialogID        1016
+#define kPICTIDItem                 1003
+#define kFloorSupportCheck          1005
+#define kLeftWallCheck              1006
+#define kTopWallCheck               1007
+#define kRightWallCheck             1008
+#define kBottomWallCheck            1009
+#define kLeftWallLine               1010
+#define kTopWallLine                1011
+#define kRightWallLine              1012
+#define kBottomWallLine             1013
+
 #define kDisplayPrefsDialID         1017
+#define kDisplay1Item               1003
+#define kDisplay3Item               1004
+#define kDisplay9Item               1005
+#define kDoColorFadeItem            1009
+#define kCurrentDepth               1010
+#define k256Depth                   1011
+#define k16Depth                    1012
+#define kDispDefault                1015
+#define kUseQDItem                  1016
+#define kUseScreen2Item             1017
+
 #define kSoundPrefsDialID           1018
+#define kVolumeSliderItem           1003
+#define kVolNumberItem              1007
+#define kIdleMusicItem              1008
+#define kPlayMusicItem              1009
+#define kSoundDefault               1013
+
 #define kGreaseInfoDialogID         1019
+#define kGreaseSpilled              1006
+#define kGreaseLinkedFrom           1008
+
 #define kHighNameDialogID           1020
+#define kHighNameItem               1002
+#define kNameNCharsItem             1005
+
 #define kHighBannerDialogID         1021
+#define kHighBannerItem             1002
+#define kBannerScoreNCharsItem      1005
+
 #define kTransInfoDialogID          1022
+#define kLinkTransButton            1006
+#define kTransGotoButton            1011
+#define kTransLinkedFrom            1012
+#define kTransInitialState          1013
+
 #define kControlPrefsDialID         1023
+#define kLeftControlOne             1001
+#define kRightControlOne            1002
+#define kBattControlOne             1003
+#define kBandControlOne             1004
+#define kLeftControlTwo             1005
+#define kRightControlTwo            1006
+#define kBattControlTwo             1007
+#define kBandControlTwo             1008
+#define kControlDefaults            1009
+#define kESCPausesRadio             1010
+#define kTABPausesRadio             1011
+
 #define kBrainsPrefsDialID          1024
+#define kMaxFilesItem               1005
+#define kQuickTransitCheck          1007
+#define kDoZoomsCheck               1008
+#define kBrainsDefault              1009
+#define kDoDemoCheck                1010
+#define kDoBackgroundCheck          1011
+#define kDoErrorCheck               1012
+#define kDoPrettyMapCheck           1013
+#define kDoBitchDlgsCheck           1014
+
 #define kResumeGameDial             1025
+#define kSheWantsNewGame            1001
+#define kSheWantsResumeGame         1002
+
 #define kEnemyInfoDialogID          1027
+#define kEnemyDelayItem             1007
+#define kEnemyDelayLabelItem        1008
+#define kEnemyInitialState          1010
+#define kEnemyLinkedFrom            1011
+
 #define kFlowerInfoDialogID         1033
+#define kRadioFlowerBase            1006
+#define kRadioFlower1               (kRadioFlowerBase + 0)
+#define kRadioFlower2               (kRadioFlowerBase + 1)
+#define kRadioFlower3               (kRadioFlowerBase + 2)
+#define kRadioFlower4               (kRadioFlowerBase + 3)
+#define kRadioFlower5               (kRadioFlowerBase + 4)
+#define kRadioFlower6               (kRadioFlowerBase + 5)
+#define kFlowerLinkedFrom           1013
+
 #define kTriggerInfoDialogID        1034
+#define kTriggerDelayItem           1006
+#define kLinkTriggerButton          1009
+#define kTriggerGotoButton          1014
+#define kTriggerLinkedFrom          1015
+
 #define kMicrowaveInfoDialogID      1035
+#define kMicrowaveInitialState      1006
+#define kKillBandsCheckbox          1008
+#define kKillBatteryCheckbox        1009
+#define kKillFoilCheckbox           1010
+#define kMicrowaveLinkedFrom        1011
+
 #define kGoToDialogID               1043
+#define kGoToFirstRadio             1002
+#define kGoToPrevRadio              1003
+#define kGoToFSRadio                1004
+#define kFloorEditText              1005
+#define kSuiteEditText              1006
+
 #define kCustPictInfoDialogID       1045
+#define kCustPictIDItem             1007
 
 #define kCoordinateWindowID     10001
+#define kHoriCoordItem          1001
+#define kVertCoordItem          1002
+#define kDistCoordItem          1003
+
 #define kMessageWindowID        10002
+#define kMessageItem            1001
+
 #define kLinkWindowID           10003
+#define kLinkButton             1300
+#define kUnlinkButton           1310
+
 #define kToolsWindowID          10004
+#define kToolModeCombo          1000
+#define kToolButtonBaseID       2000
+#define kToolButtonFirstID      2000
+#define kToolButtonLastID       2015
+#define kToolNameText           3000
 
 #define kColorDepthIcon         130
 #define kFloppyDiskIcon         140

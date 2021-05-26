@@ -1,15 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kMaxFilesItem           1005
-#define kQuickTransitCheck      1007
-#define kDoZoomsCheck           1008
-#define kBrainsDefault          1009
-#define kDoDemoCheck            1010
-#define kDoBackgroundCheck      1011
-#define kDoErrorCheck           1012
-#define kDoPrettyMapCheck       1013
-#define kDoBitchDlgsCheck       1014
-
 kBrainsPrefsDialID DIALOGEX 0, 0, 213, 110
 CAPTION "Brains Preferences"
 FONT 8, "MS Shell Dlg"

@@ -1,17 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kBlowerInitialState         1006
-#define kForceCheckbox              1007
-#define kBlowerArrow                1008
-#define kDirectionText              1009
-#define kBlowerUpButton             1011
-#define kBlowerRightButton          1012
-#define kBlowerDownButton           1013
-#define kBlowerLeftButton           1014
-#define kBlowerLinkedFrom           1015
-#define kLeftFacingRadio            1016
-#define kRightFacingRadio           1017
-
 kBlowerInfoDialogID DIALOGEX 0, 0, 193, 90
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"

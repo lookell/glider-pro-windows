@@ -1,10 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kTriggerDelayItem           1006
-#define kLinkTriggerButton          1009
-#define kTriggerGotoButton          1014
-#define kTriggerLinkedFrom          1015
-
 kTriggerInfoDialogID DIALOGEX 0, 0, 193, 117
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"

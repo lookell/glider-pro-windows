@@ -1,11 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kGoToFirstRadio     1002
-#define kGoToPrevRadio      1003
-#define kGoToFSRadio        1004
-#define kFloorEditText      1005
-#define kSuiteEditText      1006
-
 kGoToDialogID DIALOGEX 0, 0, 149, 91
 CAPTION "Go To Room"
 FONT 8, "MS Shell Dlg"

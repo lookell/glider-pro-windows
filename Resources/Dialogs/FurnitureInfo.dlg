@@ -1,7 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kFurnitureLinkedFrom    1006
-
 kFurnitureInfoDialogID DIALOGEX 0, 0, 174, 62
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"

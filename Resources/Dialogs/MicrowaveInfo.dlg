@@ -1,11 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kMicrowaveInitialState  1006
-#define kKillBandsCheckbox      1008
-#define kKillBatteryCheckbox    1009
-#define kKillFoilCheckbox       1010
-#define kMicrowaveLinkedFrom    1011
-
 kMicrowaveInfoDialogID DIALOGEX 0, 0, 193, 92
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"

@@ -1,11 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kVolumeSliderItem       1003
-#define kVolNumberItem          1007
-#define kIdleMusicItem          1008
-#define kPlayMusicItem          1009
-#define kSoundDefault           1013
-
 kSoundPrefsDialID DIALOGEX 0, 0, 211, 116
 CAPTION "Sound Preferences"
 FONT 8, "MS Shell Dlg"

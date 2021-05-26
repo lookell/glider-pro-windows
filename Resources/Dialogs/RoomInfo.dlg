@@ -1,15 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kRoomNameItem               1003
-#define kRoomLocationBox            1006
-#define kRoomTilesBox               1010
-#define kRoomPopupItem              1011
-#define kRoomDividerLine            1012
-#define kRoomTilesBox2              1015
-#define kRoomFirstCheck             1017
-#define kLitUnlitText               1018
-#define kBoundsButton               1019
-
 // COMBOBOX height should be (16 + 8 * NumberOfVisibleItems)
 
 // TODO: investigate and implement alternative methods of choosing tiles

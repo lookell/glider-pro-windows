@@ -1,10 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kTextItemVers       1002
-#define kPictItemMain       1004
-#define kFreeMemoryText     1007
-#define kScreenInfoText     1008
-
 kAboutDialogID DIALOGEX 0, 0, 262, 118
 CAPTION "About Glider PRO"
 FONT 8, "MS Shell Dlg"

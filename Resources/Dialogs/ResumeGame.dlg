@@ -1,8 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kSheWantsNewGame        1001
-#define kSheWantsResumeGame     1002
-
 kResumeGameDial DIALOGEX 0, 0, 216, 74
 CAPTION "Resume Game?"
 FONT 8, "MS Shell Dlg"

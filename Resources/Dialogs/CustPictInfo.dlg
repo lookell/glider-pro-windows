@@ -1,7 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kCustPictIDItem             1007
-
 kCustPictInfoDialogID DIALOGEX 0, 0, 174, 81
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"

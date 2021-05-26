@@ -1,10 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define k100PtRadio             1006
-#define k300PtRadio             1007
-#define k500PtRadio             1008
-#define kInvisBonusLinkedFrom   1009
-
 kInvisBonusInfoDialogID DIALOGEX 0, 0, 193, 92
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"

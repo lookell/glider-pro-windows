@@ -1,16 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kDisplay1Item           1003
-#define kDisplay3Item           1004
-#define kDisplay9Item           1005
-#define kDoColorFadeItem        1009
-#define kCurrentDepth           1010
-#define k256Depth               1011
-#define k16Depth                1012
-#define kDispDefault            1015
-#define kUseQDItem              1016
-#define kUseScreen2Item         1017
-
 kDisplayPrefsDialID DIALOGEX 0, 0, 243, 157
 CAPTION "Display Preferences"
 FONT 8, "MS Shell Dlg"

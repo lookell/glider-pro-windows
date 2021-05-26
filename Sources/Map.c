@@ -27,7 +27,6 @@
 #define kMapRoomsHigh           9   // was 7
 #define kMapRoomsWide           9   // was 7
 #define kMapGroundValue         56
-#define kYesDoNewRoom           IDOK
 #define WC_MAPWINDOW            L"GliderMapWindow"
 
 void RedrawMapContents (HDC hdc);
@@ -793,7 +792,7 @@ Boolean QueryNewRoom (HWND ownerWindow)
 	SInt16 hitWhat;
 
 	hitWhat = Alert(kNewRoomAlert, ownerWindow, NULL);
-	if (hitWhat == kYesDoNewRoom)
+	if (hitWhat == IDOK)
 		return (true);
 	else
 		return (false);

@@ -25,8 +25,6 @@
 
 #include <stdlib.h>
 
-#define kYesDoDeleteRoom        IDOK
-
 Boolean QueryDeleteRoom (HWND ownerWindow);
 void SetToNearestNeighborRoom (SInt16 wasFloor_, SInt16 wasSuite_);
 SInt16 GetOriginalBounding (SInt16 theID);
@@ -461,7 +459,7 @@ Boolean QueryDeleteRoom (HWND ownerWindow)
 	SInt16 hitWhat;
 
 	hitWhat = Alert(kDeleteRoomAlert, ownerWindow, NULL);
-	if (hitWhat == kYesDoDeleteRoom)
+	if (hitWhat == IDOK)
 		return (true);
 	else
 		return (false);

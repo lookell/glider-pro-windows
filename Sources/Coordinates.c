@@ -15,10 +15,6 @@
 
 #include <strsafe.h>
 
-#define kHoriCoordItem      1001
-#define kVertCoordItem      1002
-#define kDistCoordItem      1003
-
 INT_PTR CALLBACK CoordWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 void UpdateCoordWindow (void);
 

@@ -1,8 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kGreaseSpilled          1006
-#define kGreaseLinkedFrom       1008
-
 kGreaseInfoDialogID DIALOGEX 0, 0, 193, 79
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"

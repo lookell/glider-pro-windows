@@ -1,8 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kHighBannerItem         1002
-#define kBannerScoreNCharsItem  1005
-
 kHighBannerDialogID DIALOGEX 27, 25, 211, 80
 CAPTION "High Score Banner"
 FONT 8, "MS Shell Dlg"

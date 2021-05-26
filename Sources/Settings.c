@@ -29,51 +29,6 @@
 #include <commctrl.h>
 #include <shlwapi.h> // for DLLGETVERSIONPROC and DLLGETVERSIONINFO
 
-#define kDisplayButton          1003
-#define kSoundButton            1004
-#define kControlsButton         1005
-#define kBrainsButton           1006
-#define kAllDefaultsButton      1011
-
-#define kDisplay1Item           1003
-#define kDisplay3Item           1004
-#define kDisplay9Item           1005
-#define kDoColorFadeItem        1009
-#define kCurrentDepth           1010
-#define k256Depth               1011
-#define k16Depth                1012
-#define kDispDefault            1015
-#define kUseQDItem              1016
-#define kUseScreen2Item         1017
-
-#define kVolumeSliderItem       1003
-#define kVolNumberItem          1007
-#define kIdleMusicItem          1008
-#define kPlayMusicItem          1009
-#define kSoundDefault           1013
-
-#define kLeftControlOne         1001
-#define kRightControlOne        1002
-#define kBattControlOne         1003
-#define kBandControlOne         1004
-#define kLeftControlTwo         1005
-#define kRightControlTwo        1006
-#define kBattControlTwo         1007
-#define kBandControlTwo         1008
-#define kControlDefaults        1009
-#define kESCPausesRadio         1010
-#define kTABPausesRadio         1011
-
-#define kMaxFilesItem           1005
-#define kQuickTransitCheck      1007
-#define kDoZoomsCheck           1008
-#define kBrainsDefault          1009
-#define kDoDemoCheck            1010
-#define kDoBackgroundCheck      1011
-#define kDoErrorCheck           1012
-#define kDoPrettyMapCheck       1013
-#define kDoBitchDlgsCheck       1014
-
 void SetBrainsToDefaults (HWND prefDlg);
 void BrainsInit (HWND prefDlg);
 void BrainsApply (HWND prefDlg);

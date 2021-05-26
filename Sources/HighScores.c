@@ -28,11 +28,6 @@
 #include <stdlib.h>
 #include <strsafe.h>
 
-#define kHighNameItem           1002
-#define kNameNCharsItem         1005
-#define kHighBannerItem         1002
-#define kBannerScoreNCharsItem  1005
-
 void DrawHighScores (void);
 void SortHighScores (scoresType *theScores);
 INT_PTR CALLBACK NameFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);

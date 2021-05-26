@@ -1,13 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kRadioFlower1           1006
-#define kRadioFlower2           1007
-#define kRadioFlower3           1008
-#define kRadioFlower4           1009
-#define kRadioFlower5           1010
-#define kRadioFlower6           1011
-#define kFlowerLinkedFrom       1013
-
 kFlowerInfoDialogID DIALOGEX 0, 0, 193, 103
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"

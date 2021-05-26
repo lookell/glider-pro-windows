@@ -1,8 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kLightInitialState      1006
-#define kLightLinkedFrom        1008
-
 kLightInfoDialogID DIALOGEX 0, 0, 193, 79
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"

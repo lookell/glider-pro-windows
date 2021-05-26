@@ -33,9 +33,6 @@
 
 #include <stdlib.h>
 
-#define kSaveChanges            IDYES
-#define kDiscardChanges         IDNO
-
 void LoopMovie (void);
 void OpenHouseMovie (void);
 void CloseHouseMovie (void);
@@ -640,7 +637,7 @@ Boolean QuerySaveChanges (HWND ownerWindow)
 	WinFromMacString(houseStr, ARRAYSIZE(houseStr), g_thisHouseName);
 	params.arg[0] = houseStr;
 	hitWhat = Alert(kSaveChangesAlert, ownerWindow, &params);
-	if (hitWhat == kSaveChanges)
+	if (hitWhat == IDYES)
 	{
 		if (g_wasHouseVersion < kHouseVersion)
 			ConvertHouseVer1To2();
@@ -650,7 +647,7 @@ Boolean QuerySaveChanges (HWND ownerWindow)
 		else
 			return (false);
 	}
-	else if (hitWhat == kDiscardChanges)
+	else if (hitWhat == IDNO)
 	{
 		g_fileDirty = false;
 		if (!g_quitting)

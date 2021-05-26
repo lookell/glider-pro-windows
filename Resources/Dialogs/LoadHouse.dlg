@@ -1,6 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kHouseListItem  1000
 #define HOUSELIST_STYLE \
     (WS_BORDER | WS_TABSTOP | LVS_ICON | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SHAREIMAGELISTS)
 

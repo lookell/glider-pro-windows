@@ -1,8 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kLinkButton     1300
-#define kUnlinkButton   1310
-
 kLinkWindowID DIALOGEX 0, 0, 64, 46
 CAPTION ""
 FONT 8, "MS Shell Dlg"

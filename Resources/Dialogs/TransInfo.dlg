@@ -1,10 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kLinkTransButton        1006
-#define kTransGotoButton        1011
-#define kTransLinkedFrom        1012
-#define kTransInitialState      1013
-
 kTransInfoDialogID DIALOGEX 0, 0, 193, 113
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"

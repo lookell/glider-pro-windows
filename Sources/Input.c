@@ -468,11 +468,10 @@ void GetInput (gliderPtr thisGlider)
 
 Boolean QuerySaveGame (HWND ownerWindow)
 {
-	#define kYesSaveGameButton  IDYES
 	SInt16 hitWhat;
 
 	hitWhat = Alert(kSaveGameAlert, ownerWindow, NULL);
-	if (hitWhat == kYesSaveGameButton)
+	if (hitWhat == IDYES)
 		return (true);
 	else
 		return (false);

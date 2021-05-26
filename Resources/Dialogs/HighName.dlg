@@ -1,8 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kHighNameItem       1002
-#define kNameNCharsItem     1005
-
 kHighNameDialogID DIALOGEX 0, 0, 211, 72
 CAPTION "High Score Name"
 FONT 8, "MS Shell Dlg"

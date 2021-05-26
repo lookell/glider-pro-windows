@@ -1,17 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kLeftControlOne         1001
-#define kRightControlOne        1002
-#define kBattControlOne         1003
-#define kBandControlOne         1004
-#define kLeftControlTwo         1005
-#define kRightControlTwo        1006
-#define kBattControlTwo         1007
-#define kBandControlTwo         1008
-#define kControlDefaults        1009
-#define kESCPausesRadio         1010
-#define kTABPausesRadio         1011
-
 kControlPrefsDialID DIALOGEX 0, 0, 225, 112
 CAPTION "Control Preferences"
 FONT 8, "MS Shell Dlg"

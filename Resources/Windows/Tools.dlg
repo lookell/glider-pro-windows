@@ -1,11 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kToolModeCombo      1000
-#define kToolButtonBaseID   2000
-#define kToolButtonFirstID  2000
-#define kToolButtonLastID   2015
-#define kToolNameText       3000
-
 // COMBOBOX height should be (16 + 8 * NumberOfVisibleItems)
 
 kToolsWindowID DIALOGEX 0, 0, 94, 116

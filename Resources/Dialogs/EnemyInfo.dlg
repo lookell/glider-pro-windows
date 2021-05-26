@@ -1,10 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kEnemyDelayItem         1007
-#define kEnemyDelayLabelItem    1008
-#define kEnemyInitialState      1010
-#define kEnemyLinkedFrom        1011
-
 kEnemyInfoDialogID DIALOGEX 0, 0, 193, 85
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"

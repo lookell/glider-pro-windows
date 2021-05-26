@@ -17,15 +17,6 @@
 
 #include <strsafe.h>
 
-#define kBannerTextItem         1004
-#define kLockHouseButton        1006
-#define kClearScoresButton      1009
-#define kTrailerTextItem        1011
-#define kNoPhoneCheck           1014
-#define kBannerNCharsItem       1015
-#define kTrailerNCharsItem      1016
-#define kHouseSizeItem          1018
-
 SInt32 CountTotalHousePoints (void);
 INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 Boolean WarnLockingHouse (HWND ownerWindow);

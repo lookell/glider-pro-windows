@@ -1,16 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kPICTIDItem                 1003
-#define kFloorSupportCheck          1005
-#define kLeftWallCheck              1006
-#define kTopWallCheck               1007
-#define kRightWallCheck             1008
-#define kBottomWallCheck            1009
-#define kLeftWallLine               1010
-#define kTopWallLine                1011
-#define kRightWallLine              1012
-#define kBottomWallLine             1013
-
 kOriginalArtDialogID DIALOGEX 0, 0, 174, 104
 CAPTION "Original Artwork"
 FONT 8, "MS Shell Dlg"

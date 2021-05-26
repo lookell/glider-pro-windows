@@ -1,11 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kDisplayButton          1003
-#define kSoundButton            1004
-#define kControlsButton         1005
-#define kBrainsButton           1006
-#define kAllDefaultsButton      1011
-
 kMainPrefsDialID DIALOGEX 0, 0, 192, 70
 CAPTION "Preferences"
 FONT 8, "MS Shell Dlg"

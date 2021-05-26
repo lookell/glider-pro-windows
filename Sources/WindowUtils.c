@@ -9,8 +9,6 @@
 #include "DialogUtils.h"
 #include "ResourceIDs.h"
 
-#define kMessageItem        1001
-
 static INT_PTR CALLBACK MessageWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 //==============================================================  Functions

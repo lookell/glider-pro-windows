@@ -1,12 +1,5 @@
 /* this comment enforces υτƒ-8 encoding */
 
-#define kToggleRadio                1006
-#define kForceOnRadio               1007
-#define kForceOffRadio              1008
-#define kLinkSwitchButton           1009
-#define kSwitchGotoButton           1014
-#define kSwitchLinkedFrom           1015
-
 kSwitchInfoDialogID DIALOGEX 0, 0, 193, 117
 CAPTION "Object Info"
 FONT 8, "MS Shell Dlg"
