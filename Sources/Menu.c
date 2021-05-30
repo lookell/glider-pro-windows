@@ -500,7 +500,7 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 
 #if 0
 		case iSaveAs:
-		whoCares = SaveHouseAs();
+		whoCares = SaveHouseAs(hwnd);
 		break;
 #endif
 

@@ -250,8 +250,10 @@ Boolean OpenSpecificHouse (PCWSTR filename, HWND ownerWindow)
 
 //--------------------------------------------------------------  SaveHouseAs
 
-Boolean SaveHouseAs (void)
+Boolean SaveHouseAs (HWND ownerWindow)
 {
+	(void)ownerWindow;
+
 	// TEMP - fix this later -- use NavServices (see House.c)
 #if 0
 	StandardFileReply theReply;
