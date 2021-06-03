@@ -399,6 +399,11 @@ Boolean ReadHouse (HWND ownerWindow, Boolean loadSplashScreen)
 		return false;
 	}
 
+	if (loadSplashScreen)
+	{
+		DrawHouseSplashScreen(g_splashSrcMap, g_theHouseFile);
+	}
+
 	if (g_gameDirty || g_fileDirty)
 	{
 		if (g_houseIsReadOnly)
@@ -436,11 +441,6 @@ Boolean ReadHouse (HWND ownerWindow, Boolean loadSplashScreen)
 		g_noRoomAtAll = true;
 		YellowAlert(ownerWindow, kYellowNoRooms, 0);
 		return false;
-	}
-
-	if (loadSplashScreen)
-	{
-		DrawHouseSplashScreen(g_splashSrcMap, g_theHouseFile);
 	}
 
 	if (COMPILEDEMO)
