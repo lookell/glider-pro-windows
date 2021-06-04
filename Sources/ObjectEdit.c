@@ -35,7 +35,7 @@
 SInt16 FindObjectSelected (Point where);
 void DragHandle (Point where);
 void Gp_DragObject (Point where);
-void AddObjectPairing (void);
+void AddObjectPairing (HWND ownerWindow);
 Boolean ObjectIsUpBlower (const objectType *who);
 
 Rect g_roomObjectRects[kMaxRoomObs];
@@ -768,12 +768,12 @@ void DoNewObjectClick (HWND ownerWindow, Point where)
 		IgnoreThisClick();
 	UpdateMenus(false);
 
-	AddObjectPairing();
+	AddObjectPairing(ownerWindow);
 }
 
 //--------------------------------------------------------------  AddObjectPairing
 
-void AddObjectPairing (void)
+void AddObjectPairing (HWND ownerWindow)
 {
 	roomType *testRoomPtr;
 	SInt16 roomNum;
@@ -807,7 +807,7 @@ void AddObjectPairing (void)
 				testRoomPtr->numObjects++;
 
 				GetLocalizedString(45, message, ARRAYSIZE(message));
-				mssgWindow = OpenMessageWindow(message, g_mainWindow);
+				mssgWindow = OpenMessageWindow(message, ownerWindow);
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(46, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
@@ -838,7 +838,7 @@ void AddObjectPairing (void)
 				testRoomPtr->numObjects++;
 
 				GetLocalizedString(45, message, ARRAYSIZE(message));
-				mssgWindow = OpenMessageWindow(message, g_mainWindow);
+				mssgWindow = OpenMessageWindow(message, ownerWindow);
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(46, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
@@ -869,7 +869,7 @@ void AddObjectPairing (void)
 				testRoomPtr->numObjects++;
 
 				GetLocalizedString(45, message, ARRAYSIZE(message));
-				mssgWindow = OpenMessageWindow(message, g_mainWindow);
+				mssgWindow = OpenMessageWindow(message, ownerWindow);
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(47, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
@@ -900,7 +900,7 @@ void AddObjectPairing (void)
 				testRoomPtr->numObjects++;
 
 				GetLocalizedString(45, message, ARRAYSIZE(message));
-				mssgWindow = OpenMessageWindow(message, g_mainWindow);
+				mssgWindow = OpenMessageWindow(message, ownerWindow);
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(47, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
@@ -931,7 +931,7 @@ void AddObjectPairing (void)
 				testRoomPtr->numObjects++;
 
 				GetLocalizedString(45, message, ARRAYSIZE(message));
-				mssgWindow = OpenMessageWindow(message, g_mainWindow);
+				mssgWindow = OpenMessageWindow(message, ownerWindow);
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(48, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
@@ -962,7 +962,7 @@ void AddObjectPairing (void)
 				testRoomPtr->numObjects++;
 
 				GetLocalizedString(45, message, ARRAYSIZE(message));
-				mssgWindow = OpenMessageWindow(message, g_mainWindow);
+				mssgWindow = OpenMessageWindow(message, ownerWindow);
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(48, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
@@ -993,7 +993,7 @@ void AddObjectPairing (void)
 				testRoomPtr->numObjects++;
 
 				GetLocalizedString(45, message, ARRAYSIZE(message));
-				mssgWindow = OpenMessageWindow(message, g_mainWindow);
+				mssgWindow = OpenMessageWindow(message, ownerWindow);
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(49, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
@@ -1024,7 +1024,7 @@ void AddObjectPairing (void)
 				testRoomPtr->numObjects++;
 
 				GetLocalizedString(45, message, ARRAYSIZE(message));
-				mssgWindow = OpenMessageWindow(message, g_mainWindow);
+				mssgWindow = OpenMessageWindow(message, ownerWindow);
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(49, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
@@ -1056,7 +1056,7 @@ void AddObjectPairing (void)
 				testRoomPtr->numObjects++;
 
 				GetLocalizedString(45, message, ARRAYSIZE(message));
-				mssgWindow = OpenMessageWindow(message, g_mainWindow);
+				mssgWindow = OpenMessageWindow(message, ownerWindow);
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(50, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);
@@ -1088,7 +1088,7 @@ void AddObjectPairing (void)
 				testRoomPtr->numObjects++;
 
 				GetLocalizedString(45, message, ARRAYSIZE(message));
-				mssgWindow = OpenMessageWindow(message, g_mainWindow);
+				mssgWindow = OpenMessageWindow(message, ownerWindow);
 				SetMessageTextColor(mssgWindow, blueColor);
 				GetLocalizedString(51, message, ARRAYSIZE(message));
 				SetMessageWindowMessage(mssgWindow, message);

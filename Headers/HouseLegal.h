@@ -8,10 +8,11 @@
 #define HOUSE_LEGAL_H_
 
 #include "MacTypes.h"
+#include "WinAPI.h"
 
 extern Boolean g_isHouseChecks;
 
 Boolean KeepObjectLegal (void);
-void CheckHouseForProblems (void);
+void CheckHouseForProblems (HWND ownerWindow);
 
 #endif

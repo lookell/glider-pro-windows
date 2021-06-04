@@ -488,7 +488,7 @@ void DoHouseMenu (HWND hwnd, SInt16 theItem)
 		if ((g_fileDirty) && (g_houseUnlocked))
 		{
 			if (g_wasHouseVersion < kHouseVersion)
-				ConvertHouseVer1To2();
+				ConvertHouseVer1To2(hwnd);
 			g_wasHouseVersion = kHouseVersion;
 			whoCares = WriteHouse(hwnd, true);
 			ForceThisRoom(g_thisRoomNumber);

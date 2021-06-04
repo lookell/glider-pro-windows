@@ -532,7 +532,7 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 
 	if (checkIt)
 	{
-		CheckHouseForProblems();
+		CheckHouseForProblems(ownerWindow);
 	}
 
 	if (g_fileDirty)
@@ -642,7 +642,7 @@ Boolean QuerySaveChanges (HWND ownerWindow)
 	if (hitWhat == IDYES)
 	{
 		if (g_wasHouseVersion < kHouseVersion)
-			ConvertHouseVer1To2();
+			ConvertHouseVer1To2(ownerWindow);
 		g_wasHouseVersion = kHouseVersion;
 		if (WriteHouse(ownerWindow, true))
 			return (true);

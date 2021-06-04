@@ -31,7 +31,7 @@ void SortHouseObjects (void);
 SInt16 CountRoomsVisited (const houseType *house);
 void GenerateRetroLinks (void);
 void DoGoToDialog (HWND ownerWindow);
-void ConvertHouseVer1To2 (void);
-void ShiftWholeHouse (SInt16 howFar);
+void ConvertHouseVer1To2 (HWND ownerWindow);
+void ShiftWholeHouse (SInt16 howFar, HWND ownerWindow);
 
 #endif

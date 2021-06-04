@@ -36,7 +36,7 @@
 #define IsKeyUp(vkey) (GetActiveWindow() != g_mainWindow || GetAsyncKeyState(vkey) >= 0)
 
 void LogDemoKey (Byte keyIs);
-void DoCommandKey (void);
+void DoCommandKey (HWND ownerWindow);
 void DoPause (void);
 void DoBatteryEngaged (gliderPtr thisGlider);
 void DoHeliumEngaged (gliderPtr thisGlider);
@@ -93,40 +93,40 @@ void DumpDemoData (void)
 
 //--------------------------------------------------------------  DoCommandKeyQuit
 
-void DoCommandKeyQuit (void)
+void DoCommandKeyQuit (HWND ownerWindow)
 {
 	g_playing = false;
 	g_paused = false;
 	if ((!g_twoPlayerGame) && (!g_demoGoing))
 	{
-		if (QuerySaveGame(g_mainWindow))
+		if (QuerySaveGame(ownerWindow))
 		{
-			SaveGame2(g_mainWindow); // New save game.
+			SaveGame2(ownerWindow); // New save game.
 		}
 	}
 }
 
 //--------------------------------------------------------------  DoCommandKeySave
 
-void DoCommandKeySave (void)
+void DoCommandKeySave (HWND ownerWindow)
 {
 	RefreshScoreboard(kSavingTitleMode);
-	SaveGame2(g_mainWindow); // New save game.
+	SaveGame2(ownerWindow); // New save game.
 	CopyRectWorkToMain(&g_workSrcRect);
 	RefreshScoreboard(kNormalTitleMode);
 }
 
 //--------------------------------------------------------------  DoCommandKey
 
-void DoCommandKey (void)
+void DoCommandKey (HWND ownerWindow)
 {
 	if (IsKeyDown('Q'))
 	{
-		DoCommandKeyQuit();
+		DoCommandKeyQuit(ownerWindow);
 	}
 	else if ((IsKeyDown('S')) && (!g_twoPlayerGame) && (!g_demoGoing))
 	{
-		DoCommandKeySave();
+		DoCommandKeySave(ownerWindow);
 	}
 }
 
@@ -173,7 +173,7 @@ void DoPause (void)
 				(!g_isEscPauseKey && IsKeyDown(VK_TAB)))
 			g_paused = false;
 		else if (IsKeyDown(VK_CONTROL))
-			DoCommandKey();
+			DoCommandKey(g_mainWindow);
 	}
 	if (msg.message == WM_QUIT)
 	{
@@ -285,7 +285,7 @@ void GetDemoInput (gliderPtr thisGlider)
 	if (thisGlider->which == kPlayer1)
 	{
 		if (IsKeyDown(VK_CONTROL))
-			DoCommandKey();
+			DoCommandKey(g_mainWindow);
 	}
 
 	if (thisGlider->mode == kGliderBurning)
@@ -370,7 +370,7 @@ void GetInput (gliderPtr thisGlider)
 	if (thisGlider->which == kPlayer1)
 	{
 		if (IsKeyDown(VK_CONTROL))
-			DoCommandKey();
+			DoCommandKey(g_mainWindow);
 	}
 
 	if (thisGlider->mode == kGliderBurning)

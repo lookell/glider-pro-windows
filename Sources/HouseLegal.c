@@ -9,7 +9,6 @@
 #include "Banner.h"
 #include "House.h"
 #include "Macintosh.h"
-#include "MainWindow.h"
 #include "ObjectEdit.h"
 #include "ObjectRects.h"
 #include "Objects.h"
@@ -1005,7 +1004,7 @@ void CheckForStaircasePairs (HWND mssgWindow)
 //--------------------------------------------------------------  CheckHouseForProblems
 // Calls all the above functions and reports (and corrects) errors.
 
-void CheckHouseForProblems (void)
+void CheckHouseForProblems (HWND ownerWindow)
 {
 	HWND mssgWindow;
 	wchar_t message[256];
@@ -1020,7 +1019,7 @@ void CheckHouseForProblems (void)
 	g_wasRoom = g_thisRoomNumber;
 	wasActive = g_objActive;
 	GetLocalizedString(24, message, ARRAYSIZE(message));
-	mssgWindow = OpenMessageWindow(message, g_mainWindow);
+	mssgWindow = OpenMessageWindow(message, ownerWindow);
 
 	SetMessageTextColor(mssgWindow, blackColor);
 	GetLocalizedString(25, message, ARRAYSIZE(message));

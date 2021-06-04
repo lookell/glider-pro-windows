@@ -671,7 +671,7 @@ void DoGoToDialog (HWND ownerWindow)
 // This function goes through an old version 1 house and converts it
 // to version 2.
 
-void ConvertHouseVer1To2 (void)
+void ConvertHouseVer1To2 (HWND ownerWindow)
 {
 	wchar_t roomStr[32];
 	wchar_t message[256];
@@ -682,7 +682,7 @@ void ConvertHouseVer1To2 (void)
 	CopyThisRoomToRoom();
 	wasRoom = g_thisRoomNumber;
 	GetLocalizedString(13, message, ARRAYSIZE(message));
-	mssgWindow = OpenMessageWindow(message, g_mainWindow);
+	mssgWindow = OpenMessageWindow(message, ownerWindow);
 
 	numRooms = g_thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
@@ -740,9 +740,10 @@ void ConvertHouseVer1To2 (void)
 
 //--------------------------------------------------------------  ShiftWholeHouse
 
-void ShiftWholeHouse (SInt16 howFar)
+void ShiftWholeHouse (SInt16 howFar, HWND ownerWindow)
 {
 	(void)howFar;
+	(void)ownerWindow;
 
 	return;
 #if 0
@@ -751,7 +752,7 @@ void ShiftWholeHouse (SInt16 howFar)
 	SInt16 i, h, numRooms;
 	char wasState;
 
-	OpenMessageWindow_Pascal("\pShifting Whole House…");
+	OpenMessageWindow(L"Shifting Whole House…", ownerWindow);
 
 	CopyThisRoomToRoom();
 	wasRoom = g_thisRoomNumber;

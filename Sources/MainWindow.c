@@ -541,7 +541,7 @@ LRESULT CALLBACK MainWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	case WM_CLOSE:
 		if (g_theMode == kPlayMode && g_playing && !g_gameOver)
 		{
-			DoCommandKeyQuit();
+			DoCommandKeyQuit(hwnd);
 		}
 		DoMenuChoice(hwnd, ID_QUIT);
 		return 0;
