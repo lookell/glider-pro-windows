@@ -20,7 +20,6 @@ extern Boolean g_gameDirty;
 extern Gp_HouseFile *g_theHouseFile;
 extern Boolean g_changeLockStateOfHouse;
 extern Boolean g_saveHouseLocked;
-extern Boolean g_houseIsReadOnly;
 extern Boolean g_hasMovie;
 extern Boolean g_tvInRoom;
 

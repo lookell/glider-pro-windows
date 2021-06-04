@@ -299,7 +299,7 @@ BOOLEAN Gp_HouseFileReadOnly (Gp_HouseFile *houseFile)
 	{
 		return TRUE;
 	}
-	return (fileAttributes & FILE_ATTRIBUTE_READONLY) != 0;
+	return ((fileAttributes & FILE_ATTRIBUTE_READONLY) == FILE_ATTRIBUTE_READONLY);
 }
 
 //--------------------------------------------------------------  Gp_HouseFileHasMovie

@@ -46,7 +46,6 @@ Boolean g_gameDirty;
 Gp_HouseFile *g_theHouseFile;
 Boolean g_changeLockStateOfHouse;
 Boolean g_saveHouseLocked;
-Boolean g_houseIsReadOnly;
 Boolean g_hasMovie;
 Boolean g_tvInRoom;
 
@@ -201,12 +200,9 @@ Boolean OpenHouse (HWND ownerWindow)
 	if (FAILED(hr))
 	{
 		g_theHouseFile = NULL;
-		g_houseIsReadOnly = false;
 		CheckFileError(ownerWindow, hr, g_theHousesSpecs[g_thisHouseIndex].houseName);
 		return false;
 	}
-	g_houseIsReadOnly = Gp_HouseFileReadOnly(g_theHouseFile);
-	g_theHousesSpecs[g_thisHouseIndex].readOnly = g_houseIsReadOnly;
 	g_theHousesSpecs[g_thisHouseIndex].hasMovie = Gp_HouseFileHasMovie(g_theHouseFile);
 
 	g_houseOpen = true;
@@ -408,7 +404,7 @@ Boolean ReadHouse (HWND ownerWindow, Boolean loadSplashScreen)
 
 	if (g_gameDirty || g_fileDirty)
 	{
-		if (g_houseIsReadOnly)
+		if (Gp_HouseFileReadOnly(g_theHouseFile))
 		{
 			if (!WriteScoresToDisk(ownerWindow))
 			{
@@ -499,7 +495,7 @@ Boolean ReadHouse (HWND ownerWindow, Boolean loadSplashScreen)
 		CopyRoomToThisRoom(whichRoom);
 	}
 
-	if (g_houseIsReadOnly)
+	if (Gp_HouseFileReadOnly(g_theHouseFile))
 	{
 		g_houseUnlocked = false;
 		if (ReadScoresFromDisk(ownerWindow))
@@ -590,7 +586,7 @@ Boolean CloseHouse (HWND ownerWindow)
 
 	if (g_gameDirty)
 	{
-		if (g_houseIsReadOnly)
+		if (Gp_HouseFileReadOnly(g_theHouseFile))
 		{
 			if (!WriteScoresToDisk(ownerWindow))
 			{
