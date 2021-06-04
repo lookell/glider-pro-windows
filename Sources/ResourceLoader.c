@@ -82,48 +82,82 @@ Gp_ExtractFromHouseFile (Gp_HouseFile *houseFile, const char *fileName, size_t *
 	return mz_zip_reader_extract_file_to_heap(&houseFile->archive, fileName, pLength, 0);
 }
 
-//--------------------------------------------------------------  Gp_OpenHouseFileImpl
+//--------------------------------------------------------------  MinizErrorToHResult
 
-static HRESULT
-Gp_OpenHouseFileImpl (Gp_HouseFile *houseFile, PCWSTR fileName)
+static HRESULT MinizErrorToHResult (mz_zip_error errorCode)
 {
-	HRESULT hr;
-	errno_t err;
-	mz_bool succeeded;
+	switch (errorCode)
+	{
+	case MZ_ZIP_NO_ERROR:
+		return S_OK;
 
-	if (fileName != NULL)
-	{
-		hr = StringCchCopyW(houseFile->fileName, ARRAYSIZE(houseFile->fileName), fileName);
-		if (FAILED(hr))
-		{
-			return hr;
-		}
-	}
-	err = _wfopen_s(&houseFile->filePtr, houseFile->fileName, L"rb");
-	if ((err != 0) || (houseFile->filePtr == NULL))
-	{
+	case MZ_ZIP_UNDEFINED_ERROR:
+		return E_FAIL;
+
+	case MZ_ZIP_FAILED_FINDING_CENTRAL_DIR:
+	case MZ_ZIP_NOT_AN_ARCHIVE:
+	case MZ_ZIP_INVALID_HEADER_OR_CORRUPTED:
+	case MZ_ZIP_CRC_CHECK_FAILED:
+		return HRESULT_FROM_WIN32(ERROR_INVALID_DATA);
+
+	case MZ_ZIP_ALLOC_FAILED:
+		return E_OUTOFMEMORY;
+
+	case MZ_ZIP_INVALID_PARAMETER:
+		return E_INVALIDARG;
+
+	case MZ_ZIP_FILE_NOT_FOUND:
+		return HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
+
+	default:
 		return E_FAIL;
 	}
-	mz_zip_zero_struct(&houseFile->archive);
-	succeeded = mz_zip_reader_init_cfile(&houseFile->archive, houseFile->filePtr, 0, 0);
+}
+
+//--------------------------------------------------------------  Gp_OpenZipReader
+
+static HRESULT Gp_OpenZipReader (PCWSTR fileName, FILE **pFilePtr, mz_zip_archive *pArchive)
+{
+	errno_t err;
+	unsigned long dosErrNum;
+	mz_bool succeeded;
+	mz_zip_error zipError;
+
+	*pFilePtr = NULL;
+	mz_zip_zero_struct(pArchive);
+
+	_set_doserrno(ERROR_SUCCESS);
+	err = _wfopen_s(pFilePtr, fileName, L"rb");
+	if (err != 0)
+	{
+		*pFilePtr = NULL;
+		_get_doserrno(&dosErrNum);
+		if (dosErrNum == 0)
+		{
+			return E_FAIL;
+		}
+		return HRESULT_FROM_WIN32(dosErrNum);
+	}
+	succeeded = mz_zip_reader_init_cfile(pArchive, *pFilePtr, 0, 0);
 	if (!succeeded)
 	{
-		fclose(houseFile->filePtr);
-		houseFile->filePtr = NULL;
-		return E_FAIL;
+		zipError = mz_zip_get_last_error(pArchive);
+		mz_zip_zero_struct(pArchive);
+		fclose(*pFilePtr);
+		*pFilePtr = NULL;
+		return MinizErrorToHResult(zipError);
 	}
-
 	return S_OK;
 }
 
-//--------------------------------------------------------------  Gp_CloseHouseFileImpl
+//--------------------------------------------------------------  Gp_CloseZipReader
 
-static void
-Gp_CloseHouseFileImpl (Gp_HouseFile *houseFile)
+static void Gp_CloseZipReader (FILE **pFilePtr, mz_zip_archive *pArchive)
 {
-	mz_zip_end(&houseFile->archive);
-	fclose(houseFile->filePtr);
-	houseFile->filePtr = NULL;
+	mz_zip_end(pArchive);
+	mz_zip_zero_struct(pArchive);
+	fclose(*pFilePtr);
+	*pFilePtr = NULL;
 }
 
 //--------------------------------------------------------------  Gp_LoadBuiltInAssets
@@ -132,7 +166,7 @@ HRESULT Gp_LoadBuiltInAssets (void)
 {
 	WCHAR mermaidFileName[MAX_PATH];
 	DWORD numChars;
-	Gp_HouseFile *houseFile;
+	HRESULT hr;
 
 	if (Gp_BuiltInAssetsLoaded())
 	{
@@ -153,12 +187,12 @@ HRESULT Gp_LoadBuiltInAssets (void)
 	{
 		return HRESULT_FROM_WIN32(ERROR_INSUFFICIENT_BUFFER);
 	}
-	houseFile = Gp_LoadHouseFile(mermaidFileName);
-	if (houseFile == NULL)
+	hr = Gp_LoadHouseFile(mermaidFileName, &g_mermaidRes);
+	if (FAILED(hr))
 	{
-		return E_FAIL;
+		g_mermaidRes = NULL;
+		return hr;
 	}
-	g_mermaidRes = houseFile;
 	return S_OK;
 }
 
@@ -209,27 +243,33 @@ HRESULT Gp_CreateHouseFile (PCWSTR fileName)
 
 //--------------------------------------------------------------  Gp_LoadHouseFile
 
-Gp_HouseFile *Gp_LoadHouseFile (PCWSTR fileName)
+HRESULT Gp_LoadHouseFile (PCWSTR fileName, Gp_HouseFile **pHouseFile)
 {
 	Gp_HouseFile *houseFile;
 	HRESULT hr;
 
-	if (fileName == NULL)
-	{
-		return NULL;
-	}
+	*pHouseFile = NULL;
+
 	houseFile = (Gp_HouseFile *)calloc(1, sizeof(*houseFile));
 	if (houseFile == NULL)
 	{
-		return NULL;
+		return E_OUTOFMEMORY;
 	}
-	hr = Gp_OpenHouseFileImpl(houseFile, fileName);
+	hr = StringCchCopyW(houseFile->fileName, ARRAYSIZE(houseFile->fileName), fileName);
 	if (FAILED(hr))
 	{
 		free(houseFile);
-		return NULL;
+		return hr;
 	}
-	return houseFile;
+	hr = Gp_OpenZipReader(houseFile->fileName, &houseFile->filePtr, &houseFile->archive);
+	if (FAILED(hr))
+	{
+		free(houseFile);
+		return hr;
+	}
+
+	*pHouseFile = houseFile;
+	return S_OK;
 }
 
 //--------------------------------------------------------------  Gp_UnloadHouseFile
@@ -240,7 +280,7 @@ void Gp_UnloadHouseFile (Gp_HouseFile *houseFile)
 	{
 		return;
 	}
-	Gp_CloseHouseFileImpl(houseFile);
+	Gp_CloseZipReader(&houseFile->filePtr, &houseFile->archive);
 	free(houseFile);
 }
 
@@ -506,7 +546,7 @@ HRESULT Gp_WriteHouseData (Gp_HouseFile *houseFile, const houseType *houseData)
 	//
 	// Temporarily close the zip archive and file stream.
 	//
-	Gp_CloseHouseFileImpl(houseFile);
+	Gp_CloseZipReader(&houseFile->filePtr, &houseFile->archive);
 
 	lastError = ERROR_SUCCESS;
 	succeeded = ReplaceFileW(houseFile->fileName, outputFileName, NULL, 0, NULL, NULL);
@@ -523,7 +563,7 @@ HRESULT Gp_WriteHouseData (Gp_HouseFile *houseFile, const houseType *houseData)
 	//
 	// Restore the zip archive and file stream.
 	//
-	hr = Gp_OpenHouseFileImpl(houseFile, NULL);
+	hr = Gp_OpenZipReader(houseFile->fileName, &houseFile->filePtr, &houseFile->archive);
 	if (FAILED(hr))
 	{
 		RedAlert(kErrUnnaccounted); // FIXME FIXME FIXME

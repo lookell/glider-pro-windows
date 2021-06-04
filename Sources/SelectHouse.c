@@ -321,8 +321,8 @@ void DoDirSearch (HWND ownerWindow)
 								g_theHousesSpecs[g_housesFound].houseName);
 
 						// Extract the house's icon.
-						houseFile = Gp_LoadHouseFile(g_theHousesSpecs[g_housesFound].path);
-						if (houseFile != NULL)
+						hr = Gp_LoadHouseFile(g_theHousesSpecs[g_housesFound].path, &houseFile);
+						if (SUCCEEDED(hr))
 						{
 							houseIcon = Gp_LoadHouseIcon(houseFile, cxIcon, cyIcon);
 							if (houseIcon != NULL)

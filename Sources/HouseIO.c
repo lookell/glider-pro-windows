@@ -175,6 +175,8 @@ void CloseHouseMovie (void)
 
 Boolean OpenHouse (HWND ownerWindow)
 {
+	HRESULT hr;
+
 	if (g_houseOpen)
 	{
 		if (!CloseHouse(ownerWindow))
@@ -195,12 +197,12 @@ Boolean OpenHouse (HWND ownerWindow)
 		}
 	}
 
-	g_theHouseFile = Gp_LoadHouseFile(g_theHousesSpecs[g_thisHouseIndex].path);
-	if (g_theHouseFile == NULL)
+	hr = Gp_LoadHouseFile(g_theHousesSpecs[g_thisHouseIndex].path, &g_theHouseFile);
+	if (FAILED(hr))
 	{
+		g_theHouseFile = NULL;
 		g_houseIsReadOnly = false;
-		CheckFileError(ownerWindow, HRESULT_FROM_WIN32(ERROR_OPEN_FAILED),
-			g_theHousesSpecs[g_thisHouseIndex].houseName);
+		CheckFileError(ownerWindow, hr, g_theHousesSpecs[g_thisHouseIndex].houseName);
 		return false;
 	}
 	g_houseIsReadOnly = Gp_HouseFileReadOnly(g_theHouseFile);

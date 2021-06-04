@@ -26,7 +26,7 @@ BOOLEAN Gp_BuiltInAssetsLoaded (void);
 HRESULT Gp_CreateHouseFile (PCWSTR fileName);
 
 // Load the house file with the given file name.
-Gp_HouseFile *Gp_LoadHouseFile (PCWSTR fileName);
+HRESULT Gp_LoadHouseFile (PCWSTR fileName, Gp_HouseFile **pHouseFile);
 
 // Unload the loaded house file.
 void Gp_UnloadHouseFile (Gp_HouseFile *houseFile);
