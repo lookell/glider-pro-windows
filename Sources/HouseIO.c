@@ -203,12 +203,10 @@ Boolean OpenHouse (HWND ownerWindow)
 		CheckFileError(ownerWindow, hr, g_theHousesSpecs[g_thisHouseIndex].houseName);
 		return false;
 	}
-	g_theHousesSpecs[g_thisHouseIndex].hasMovie = Gp_HouseFileHasMovie(g_theHouseFile);
 
 	g_houseOpen = true;
 
 	g_hasMovie = false;
-	g_theHousesSpecs[g_thisHouseIndex].hasMovie = false;
 	g_tvInRoom = false;
 	g_tvWithMovieNumber = -1;
 	OpenHouseMovie();

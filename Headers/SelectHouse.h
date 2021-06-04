@@ -17,7 +17,6 @@ typedef struct houseSpec
 	WCHAR houseName[33];
 	Str32 name;
 	int iconIndex;
-	Boolean hasMovie;
 } houseSpec, *houseSpecPtr;
 
 extern houseSpecPtr g_theHousesSpecs;
