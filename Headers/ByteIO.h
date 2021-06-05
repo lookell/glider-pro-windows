@@ -56,76 +56,44 @@ HRESULT byteio_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos)
 // calling `byteio_seek(stream, 0, SEEK_CUR, curPos)`.
 HRESULT byteio_tell(byteio *stream, int64_t *curPos);
 
-// Read a big-endian, 8-bit unsigned integer.
-HRESULT byteio_read_be_u8(byteio *stream, uint8_t *num);
+// *** Fixed-size integer reading routines ***
 
-// Read a little-endian, 8-bit unsigned integer.
+HRESULT byteio_read_be_u8(byteio *stream, uint8_t *num);
 HRESULT byteio_read_le_u8(byteio *stream, uint8_t *num);
 
-// Read a big-endian, 8-bit signed integer.
 HRESULT byteio_read_be_i8(byteio *stream, int8_t *num);
-
-// Read a little-endian, 8-bit signed integer.
 HRESULT byteio_read_le_i8(byteio *stream, int8_t *num);
 
-// Read a big-endian, 16-bit unsigned integer.
 HRESULT byteio_read_be_u16(byteio *stream, uint16_t *num);
-
-// Read a little-endian, 16-bit unsigned integer.
 HRESULT byteio_read_le_u16(byteio *stream, uint16_t *num);
 
-// Read a big-endian, 16-bit signed integer.
 HRESULT byteio_read_be_i16(byteio *stream, int16_t *num);
-
-// Read a little-endian, 16-bit signed integer.
 HRESULT byteio_read_le_i16(byteio *stream, int16_t *num);
 
-// Read a big-endian, 32-bit unsigned integer.
 HRESULT byteio_read_be_u32(byteio *stream, uint32_t *num);
-
-// Read a little-endian, 32-bit unsigned integer.
 HRESULT byteio_read_le_u32(byteio *stream, uint32_t *num);
 
-// Read a big-endian, 32-bit signed integer.
 HRESULT byteio_read_be_i32(byteio *stream, int32_t *num);
-
-// Read a little-endian, 32-bit signed integer.
 HRESULT byteio_read_le_i32(byteio *stream, int32_t *num);
 
-// Write a big-endian, 8-bit unsigned integer.
-HRESULT byteio_write_be_u8(byteio *stream, uint8_t num);
+// *** Fixed-size integer writing routines ***
 
-// Write a little-endian, 8-bit unsigned integer.
+HRESULT byteio_write_be_u8(byteio *stream, uint8_t num);
 HRESULT byteio_write_le_u8(byteio *stream, uint8_t num);
 
-// Write a big-endian, 8-bit signed integer.
 HRESULT byteio_write_be_i8(byteio *stream, int8_t num);
-
-// Write a little-endian, 8-bit signed integer.
 HRESULT byteio_write_le_i8(byteio *stream, int8_t num);
 
-// Write a big-endian, 16-bit unsigned integer.
 HRESULT byteio_write_be_u16(byteio *stream, uint16_t num);
-
-// Write a little-endian, 16-bit unsigned integer.
 HRESULT byteio_write_le_u16(byteio *stream, uint16_t num);
 
-// Write a big-endian, 16-bit signed integer.
 HRESULT byteio_write_be_i16(byteio *stream, int16_t num);
-
-// Write a little-endian, 16-bit signed integer.
 HRESULT byteio_write_le_i16(byteio *stream, int16_t num);
 
-// Write a big-endian, 32-bit unsigned integer.
 HRESULT byteio_write_be_u32(byteio *stream, uint32_t num);
-
-// Write a little-endian, 32-bit unsigned integer.
 HRESULT byteio_write_le_u32(byteio *stream, uint32_t num);
 
-// Write a big-endian, 32-bit signed integer.
 HRESULT byteio_write_be_i32(byteio *stream, int32_t num);
-
-// Write a little-endian, 32-bit signed integer.
 HRESULT byteio_write_le_i32(byteio *stream, int32_t num);
 
 #endif
