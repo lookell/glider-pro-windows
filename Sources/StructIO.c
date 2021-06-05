@@ -37,13 +37,18 @@ static HRESULT WriteRect(byteio *writer, const Rect *data)
 	return S_OK;
 }
 
+static void ClampPascalStringLength(StringPtr data, Byte maxLength)
+{
+	if (data[0] > maxLength)
+	{
+		data[0] = maxLength;
+	}
+}
+
 static HRESULT ReadStr15(byteio *reader, Str15 *data)
 {
 	RETURN_IF_FAILED(byteio_read(reader, data, sizeof(*data)));
-	if ((*data)[0] > sizeof(*data) - 1)
-	{
-		(*data)[0] = sizeof(*data) - 1;
-	}
+	ClampPascalStringLength(*data, sizeof(*data) - 1);
 	return S_OK;
 }
 
@@ -56,10 +61,7 @@ static HRESULT WriteStr15(byteio *writer, const Str15 *data)
 static HRESULT ReadStr27(byteio *reader, Str27 *data)
 {
 	RETURN_IF_FAILED(byteio_read(reader, data, sizeof(*data)));
-	if ((*data)[0] > sizeof(*data) - 1)
-	{
-		(*data)[0] = sizeof(*data) - 1;
-	}
+	ClampPascalStringLength(*data, sizeof(*data) - 1);
 	return S_OK;
 }
 
@@ -72,10 +74,7 @@ static HRESULT WriteStr27(byteio *writer, const Str27 *data)
 static HRESULT ReadStr31(byteio *reader, Str31 *data)
 {
 	RETURN_IF_FAILED(byteio_read(reader, data, sizeof(*data)));
-	if ((*data)[0] > sizeof(*data) - 1)
-	{
-		(*data)[0] = sizeof(*data) - 1;
-	}
+	ClampPascalStringLength(*data, sizeof(*data) - 1);
 	return S_OK;
 }
 
@@ -88,10 +87,7 @@ static HRESULT WriteStr31(byteio *writer, const Str31 *data)
 static HRESULT ReadStr32(byteio *reader, Str32 *data)
 {
 	RETURN_IF_FAILED(byteio_read(reader, data, sizeof(*data)));
-	if ((*data)[0] > sizeof(*data) - 1)
-	{
-		(*data)[0] = sizeof(*data) - 1;
-	}
+	ClampPascalStringLength(*data, sizeof(*data) - 1);
 	return S_OK;
 }
 
@@ -104,10 +100,7 @@ static HRESULT WriteStr32(byteio *writer, const Str32 *data)
 static HRESULT ReadStr63(byteio *reader, Str63 *data)
 {
 	RETURN_IF_FAILED(byteio_read(reader, data, sizeof(*data)));
-	if ((*data)[0] > sizeof(*data) - 1)
-	{
-		(*data)[0] = sizeof(*data) - 1;
-	}
+	ClampPascalStringLength(*data, sizeof(*data) - 1);
 	return S_OK;
 }
 
@@ -120,10 +113,7 @@ static HRESULT WriteStr63(byteio *writer, const Str63 *data)
 static HRESULT ReadStr255(byteio *reader, Str255 *data)
 {
 	RETURN_IF_FAILED(byteio_read(reader, data, sizeof(*data)));
-	if ((*data)[0] > sizeof(*data) - 1)
-	{
-		(*data)[0] = sizeof(*data) - 1;
-	}
+	ClampPascalStringLength(*data, sizeof(*data) - 1);
 	return S_OK;
 }
 
