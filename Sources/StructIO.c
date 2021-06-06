@@ -84,19 +84,6 @@ static HRESULT WriteStr31(byteio *writer, const Str31 *data)
 	return S_OK;
 }
 
-static HRESULT ReadStr32(byteio *reader, Str32 *data)
-{
-	RETURN_IF_FAILED(byteio_read(reader, data, sizeof(*data)));
-	ClampPascalStringLength(*data, sizeof(*data) - 1);
-	return S_OK;
-}
-
-static HRESULT WriteStr32(byteio *writer, const Str32 *data)
-{
-	RETURN_IF_FAILED(byteio_write(writer, data, sizeof(*data)));
-	return S_OK;
-}
-
 static HRESULT ReadStr63(byteio *reader, Str63 *data)
 {
 	RETURN_IF_FAILED(byteio_read(reader, data, sizeof(*data)));
@@ -139,9 +126,34 @@ static HRESULT WriteFSSpec(byteio *writer, const FSSpec *data)
 	return S_OK;
 }
 
+static HRESULT ReadWideString(byteio *reader, WCHAR *buffer, size_t length)
+{
+	uint16_t value;
+	size_t i;
+
+	for (i = 0; i < length; i++)
+	{
+		RETURN_IF_FAILED(byteio_read_be_u16(reader, &value));
+		buffer[i] = (WCHAR)value;
+	}
+	return S_OK;
+}
+
+static HRESULT WriteWideString(byteio *writer, const WCHAR *buffer, size_t length)
+{
+	uint16_t value;
+	size_t i;
+
+	for (i = 0; i < length; i++)
+	{
+		value = (uint16_t)buffer[i];
+		RETURN_IF_FAILED(byteio_write_be_u16(writer, value));
+	}
+	return S_OK;
+}
+
 HRESULT ReadPrefsInfo(byteio *reader, prefsInfo *data)
 {
-	RETURN_IF_FAILED(ReadStr32(reader, &data->wasDefaultName));
 	RETURN_IF_FAILED(byteio_read_be_u16(reader, &data->wasViewportWidth));
 	RETURN_IF_FAILED(byteio_read_be_u16(reader, &data->wasViewportHeight));
 	RETURN_IF_FAILED(byteio_read(reader, &data->unusedBytes, sizeof(data->unusedBytes)));
@@ -191,12 +203,12 @@ HRESULT ReadPrefsInfo(byteio *reader, prefsInfo *data)
 	RETURN_IF_FAILED(byteio_read_be_u8(reader, &data->wasHouseChecks));
 	RETURN_IF_FAILED(byteio_read_be_u8(reader, &data->wasPrettyMap));
 	RETURN_IF_FAILED(byteio_read_be_u8(reader, &data->wasBitchDialogs));
+	RETURN_IF_FAILED(ReadWideString(reader, data->wasHouseName, ARRAYSIZE(data->wasHouseName)));
 	return S_OK;
 }
 
 HRESULT WritePrefsInfo(byteio *writer, const prefsInfo *data)
 {
-	RETURN_IF_FAILED(WriteStr32(writer, &data->wasDefaultName));
 	RETURN_IF_FAILED(byteio_write_be_u16(writer, data->wasViewportWidth));
 	RETURN_IF_FAILED(byteio_write_be_u16(writer, data->wasViewportHeight));
 	RETURN_IF_FAILED(byteio_write(writer, &data->unusedBytes, sizeof(data->unusedBytes)));
@@ -246,6 +258,7 @@ HRESULT WritePrefsInfo(byteio *writer, const prefsInfo *data)
 	RETURN_IF_FAILED(byteio_write_be_u8(writer, data->wasHouseChecks));
 	RETURN_IF_FAILED(byteio_write_be_u8(writer, data->wasPrettyMap));
 	RETURN_IF_FAILED(byteio_write_be_u8(writer, data->wasBitchDialogs));
+	RETURN_IF_FAILED(WriteWideString(writer, data->wasHouseName, ARRAYSIZE(data->wasHouseName)));
 	return S_OK;
 }
 

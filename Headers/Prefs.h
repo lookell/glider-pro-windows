@@ -10,14 +10,13 @@
 #include "MacTypes.h"
 #include "WinAPI.h"
 
-#define kPrefsVersion           0x0036
+#define kPrefsVersion           0x0037
 
 typedef struct prefsInfo
 {
-	Str32 wasDefaultName;
 	UInt16 wasViewportWidth;
 	UInt16 wasViewportHeight;
-	Byte unusedBytes[44];
+	Byte unusedBytes[77];
 	Str15 wasHighName;
 	Str31 wasHighBanner;
 	SInt32 wasLeftKeyOne;
@@ -64,6 +63,7 @@ typedef struct prefsInfo
 	Boolean wasHouseChecks;
 	Boolean wasPrettyMap;
 	Boolean wasBitchDialogs;
+	WCHAR wasHouseName[MAX_PATH];
 } prefsInfo;
 
 Boolean SavePrefs (HWND ownerWindow, prefsInfo *thePrefs, SInt16 versionNow);

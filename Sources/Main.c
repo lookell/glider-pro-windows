@@ -40,6 +40,7 @@
 #include <commctrl.h>
 #include <mmsystem.h>
 #include <objbase.h>
+#include <strsafe.h>
 
 void ReadInPrefs (HWND ownerWindow);
 void WriteOutPrefs (HWND ownerWindow);
@@ -63,14 +64,6 @@ void ReadInPrefs (HWND ownerWindow)
 
 	if (LoadPrefs(ownerWindow, &thePrefs, kPrefsVersion))
 	{
-		if (COMPILEDEMO)
-		{
-			PasStringCopyC("Demo House", g_thisHouseName);
-		}
-		else
-		{
-			PasStringCopy(thePrefs.wasDefaultName, g_thisHouseName);
-		}
 		g_isViewportWidth = thePrefs.wasViewportWidth;
 		if (g_isViewportWidth < kMinScreenWidth)
 		{
@@ -129,17 +122,17 @@ void ReadInPrefs (HWND ownerWindow)
 		g_isUseSecondScreen = false;
 		g_doPrettyMap = thePrefs.wasPrettyMap;
 		g_doBitchDialogs = thePrefs.wasBitchDialogs;
-	}
-	else
-	{
 		if (COMPILEDEMO)
 		{
-			PasStringCopyC("Demo House", g_thisHouseName);
+			MacFromWinString(g_thisHouseName, ARRAYSIZE(g_thisHouseName), L"Demo House");
 		}
 		else
 		{
-			PasStringCopyC("Slumberland", g_thisHouseName);
+			MacFromWinString(g_thisHouseName, ARRAYSIZE(g_thisHouseName), thePrefs.wasHouseName);
 		}
+	}
+	else
+	{
 		g_isViewportWidth = 640;
 		g_isViewportHeight = 480;
 		PasStringCopyC("Your Name", g_highName);
@@ -198,6 +191,14 @@ void ReadInPrefs (HWND ownerWindow)
 		g_isUseSecondScreen = false;
 		g_doPrettyMap = false;
 		g_doBitchDialogs = true;
+		if (COMPILEDEMO)
+		{
+			MacFromWinString(g_thisHouseName, ARRAYSIZE(g_thisHouseName), L"Demo House");
+		}
+		else
+		{
+			MacFromWinString(g_thisHouseName, ARRAYSIZE(g_thisHouseName), L"Slumberland");
+		}
 	}
 
 	if ((g_numNeighbors > 1) && (g_isViewportWidth <= kMinScreenWidth))
@@ -219,14 +220,6 @@ void WriteOutPrefs (HWND ownerWindow)
 
 	UnivGetSoundVolume(&theVolume);
 
-	if (COMPILEDEMO)
-	{
-		PasStringCopyC("Demo House", thePrefs.wasDefaultName);
-	}
-	else
-	{
-		PasStringCopy(g_thisHouseName, thePrefs.wasDefaultName);
-	}
 	thePrefs.wasViewportWidth = g_isViewportWidth;
 	thePrefs.wasViewportHeight = g_isViewportHeight;
 	PasStringCopy(g_highName, thePrefs.wasHighName);
@@ -274,6 +267,22 @@ void WriteOutPrefs (HWND ownerWindow)
 	thePrefs.wasScreen2 = g_isUseSecondScreen;
 	thePrefs.wasPrettyMap = g_doPrettyMap;
 	thePrefs.wasBitchDialogs = g_doBitchDialogs;
+	if (COMPILEDEMO)
+	{
+		StringCchCopy(
+			thePrefs.wasHouseName,
+			ARRAYSIZE(thePrefs.wasHouseName),
+			L"Demo House"
+		);
+	}
+	else
+	{
+		WinFromMacString(
+			thePrefs.wasHouseName,
+			ARRAYSIZE(thePrefs.wasHouseName),
+			g_thisHouseName
+		);
+	}
 
 	if (!SavePrefs(ownerWindow, &thePrefs, kPrefsVersion))
 		MessageBeep(MB_ICONWARNING);
