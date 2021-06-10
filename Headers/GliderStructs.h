@@ -10,6 +10,8 @@
 #include "GliderDefines.h"
 #include "MacTypes.h"
 
+#include <wchar.h>
+
 typedef struct blowerType
 {
 	Point topLeft;                      // 4
@@ -145,9 +147,12 @@ typedef struct savedRoom
 	objectType objects[kMaxRoomObs];        // 24 * 12
 } savedRoom;                                // total = 292
 
+#define kSavedGameVersion           0x0200
+#define kSavedGameUnicodeVersion    0x0300
+
 typedef struct game2Type
 {
-	FSSpec house;                           // 70
+	FSSpec houseSpec;                       // 70
 	SInt16 version;                         // 2
 	SInt16 wasStarsLeft;                    // 2
 	SInt32 timeStamp;                       // 4
@@ -164,8 +169,9 @@ typedef struct game2Type
 	SInt16 nRooms;                          // 2
 	Boolean facing;                         // 1
 	Boolean showFoil;                       // 1
-	savedRoom *savedData;                   // 4
-} game2Type;                                // total = 114
+	wchar_t houseName[260];                 // 260 * 2  (present if 'version >= 0x0300')
+	savedRoom *savedData;                   // 292 * nRooms
+} game2Type;                                // total = 630 +
 
 typedef struct roomType
 {

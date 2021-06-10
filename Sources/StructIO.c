@@ -879,7 +879,7 @@ HRESULT ReadGame2Type(byteio *reader, game2Type *data)
 
 	data->nRooms = 0;
 	data->savedData = NULL;
-	RETURN_IF_FAILED(ReadFSSpec(reader, &data->house));
+	RETURN_IF_FAILED(ReadFSSpec(reader, &data->houseSpec));
 	RETURN_IF_FAILED(byteio_read_be_i16(reader, &data->version));
 	RETURN_IF_FAILED(byteio_read_be_i16(reader, &data->wasStarsLeft));
 	RETURN_IF_FAILED(byteio_read_be_i32(reader, &data->timeStamp));
@@ -896,6 +896,14 @@ HRESULT ReadGame2Type(byteio *reader, game2Type *data)
 	RETURN_IF_FAILED(byteio_read_be_i16(reader, &data->nRooms));
 	RETURN_IF_FAILED(byteio_read_be_u8(reader, &data->facing));
 	RETURN_IF_FAILED(byteio_read_be_u8(reader, &data->showFoil));
+	if (data->version >= kSavedGameUnicodeVersion)
+	{
+		RETURN_IF_FAILED(ReadWideString(reader, data->houseName, ARRAYSIZE(data->houseName)));
+	}
+	else
+	{
+		ZeroMemory(&data->houseName, sizeof(data->houseName));
+	}
 	if (data->nRooms <= 0)
 	{
 		data->nRooms = 0;
@@ -925,7 +933,7 @@ HRESULT WriteGame2Type(byteio *writer, const game2Type *data)
 {
 	SInt16 i;
 
-	RETURN_IF_FAILED(WriteFSSpec(writer, &data->house));
+	RETURN_IF_FAILED(WriteFSSpec(writer, &data->houseSpec));
 	RETURN_IF_FAILED(byteio_write_be_i16(writer, data->version));
 	RETURN_IF_FAILED(byteio_write_be_i16(writer, data->wasStarsLeft));
 	RETURN_IF_FAILED(byteio_write_be_i32(writer, data->timeStamp));
@@ -942,6 +950,10 @@ HRESULT WriteGame2Type(byteio *writer, const game2Type *data)
 	RETURN_IF_FAILED(byteio_write_be_i16(writer, data->nRooms));
 	RETURN_IF_FAILED(byteio_write_be_u8(writer, data->facing));
 	RETURN_IF_FAILED(byteio_write_be_u8(writer, data->showFoil));
+	if (data->version >= kSavedGameUnicodeVersion)
+	{
+		RETURN_IF_FAILED(WriteWideString(writer, data->houseName, ARRAYSIZE(data->houseName)));
+	}
 	if (data->savedData != NULL)
 	{
 		for (i = 0; i < data->nRooms; i++)

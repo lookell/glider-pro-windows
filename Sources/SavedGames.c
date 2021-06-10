@@ -27,10 +27,10 @@
 
 #include <stdlib.h>
 
-#define kSavedGameVersion       0x0200
-
 BOOL GetSaveFolderPath (LPWSTR lpSavePath, DWORD cchSavePath);
-void SavedGameMismatchError (HWND ownerWindow, ConstStringPtr gameName);
+void SavedGameMismatchError (HWND ownerWindow, PCWSTR expectedName, PCWSTR actualName);
+void SavedGameMismatchError_Pascal (HWND ownerWindow, ConstStringPtr expectedName,
+		ConstStringPtr actualName);
 
 gameType g_smallGame;
 
@@ -63,7 +63,7 @@ void SaveGame2 (HWND ownerWindow)
 	WCHAR gamePath[MAX_PATH];
 	roomType *srcRoom;
 	savedRoom *destRoom;
-	game2Type savedGame;
+	game2Type savedGame = { 0 };
 	SInt16 r, i, numRooms;
 	HANDLE gameFileHandle;
 	byteio *byteWriter;
@@ -103,10 +103,10 @@ void SaveGame2 (HWND ownerWindow)
 		return;
 	}
 
-	savedGame.house.vRefNum = 0;
-	savedGame.house.parID = 0;
-	PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, savedGame.house.name);
-	savedGame.version = kSavedGameVersion;
+	savedGame.houseSpec.vRefNum = 0;
+	savedGame.houseSpec.parID = 0;
+	PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, savedGame.houseSpec.name);
+	savedGame.version = kSavedGameUnicodeVersion;
 	savedGame.wasStarsLeft = g_numStarsRemaining;
 	savedGame.timeStamp = g_thisHouse.timeStamp;
 	savedGame.where.h = g_theGlider.dest.left;
@@ -123,6 +123,8 @@ void SaveGame2 (HWND ownerWindow)
 	savedGame.nRooms = numRooms;
 	savedGame.facing = g_theGlider.facing;
 	savedGame.showFoil = g_showFoil;
+	StringCchCopy(savedGame.houseName, ARRAYSIZE(savedGame.houseName),
+			g_theHousesSpecs[g_thisHouseIndex].houseName);
 
 	for (r = 0; r < numRooms; r++)
 	{
@@ -169,18 +171,26 @@ void SaveGame2 (HWND ownerWindow)
 
 //--------------------------------------------------------------  SavedGameMismatchError
 
-void SavedGameMismatchError (HWND ownerWindow, ConstStringPtr gameName)
+void SavedGameMismatchError (HWND ownerWindow, PCWSTR expectedName, PCWSTR actualName)
 {
 	DialogParams params = { 0 };
-	wchar_t gameStr[256];
-	wchar_t houseStr[64];
 
-	WinFromMacString(gameStr, ARRAYSIZE(gameStr), gameName);
-	WinFromMacString(houseStr, ARRAYSIZE(houseStr), g_thisHouseName);
-
-	params.arg[0] = gameStr;
-	params.arg[1] = houseStr;
+	params.arg[0] = expectedName;
+	params.arg[1] = actualName;
 	Alert(kSavedGameErrorAlert, ownerWindow, &params);
+}
+
+//--------------------------------------------------------------  SavedGameMismatchError_Pascal
+
+void SavedGameMismatchError_Pascal (HWND ownerWindow, ConstStringPtr expectedName,
+		ConstStringPtr actualName)
+{
+	WCHAR expectedNameWide[MAX_PATH];
+	WCHAR actualNameWide[MAX_PATH];
+
+	WinFromMacString(expectedNameWide, ARRAYSIZE(expectedNameWide), expectedName);
+	WinFromMacString(actualNameWide, ARRAYSIZE(actualNameWide), actualName);
+	SavedGameMismatchError(ownerWindow, expectedNameWide, actualNameWide);
 }
 
 //--------------------------------------------------------------  OpenSavedGame
@@ -236,21 +246,35 @@ Boolean OpenSavedGame (HWND ownerWindow)
 		return false;
 	}
 
-	if (!PasStringEqual(savedGame.house.name, g_thisHouseName, true))
+	if (savedGame.version == kSavedGameVersion)
 	{
-		SavedGameMismatchError(ownerWindow, savedGame.house.name);
-		free(savedGame.savedData);
-		return false;
+		if (!PasStringEqual(savedGame.houseSpec.name, g_thisHouseName, true))
+		{
+			SavedGameMismatchError_Pascal(ownerWindow, savedGame.houseSpec.name, g_thisHouseName);
+			free(savedGame.savedData);
+			return false;
+		}
 	}
-	else if (g_thisHouse.timeStamp != savedGame.timeStamp)
+	else if (savedGame.version == kSavedGameUnicodeVersion)
 	{
-		YellowAlert(ownerWindow, kYellowSavedTimeWrong, 0);
-		free(savedGame.savedData);
-		return false;
+		if (lstrcmp(savedGame.houseName, g_theHousesSpecs[g_thisHouseIndex].houseName) != 0)
+		{
+			SavedGameMismatchError(ownerWindow, savedGame.houseName,
+					g_theHousesSpecs[g_thisHouseIndex].houseName);
+			free(savedGame.savedData);
+			return false;
+		}
 	}
-	else if (savedGame.version != kSavedGameVersion)
+	else
 	{
 		YellowAlert(ownerWindow, kYellowSavedVersWrong, kSavedGameVersion);
+		free(savedGame.savedData);
+		return false;
+	}
+
+	if (g_thisHouse.timeStamp != savedGame.timeStamp)
+	{
+		YellowAlert(ownerWindow, kYellowSavedTimeWrong, 0);
 		free(savedGame.savedData);
 		return false;
 	}
