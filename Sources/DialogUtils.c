@@ -30,6 +30,7 @@ static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
 	PCWSTR theParam;
 	PWSTR remainingText;
 	size_t remainingSize;
+	Boolean copyChar;
 
 	oldText = NULL;
 	newText = NULL;
@@ -59,10 +60,11 @@ static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
 			case L'2':
 			case L'3':
 				theParam = params->arg[oldText[i + 1] - L'0'];
-				if (theParam != NULL)
+				if (theParam == NULL)
 				{
-					newTextSize += wcslen(theParam);
+					theParam = L"";
 				}
+				newTextSize += wcslen(theParam);
 				break;
 			}
 		}
@@ -76,6 +78,7 @@ static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
 	remainingSize = newTextSize;
 	for (i = 0; i < textLength; i++)
 	{
+		copyChar = true;
 		if (oldText[i] == L'^')
 		{
 			switch (oldText[i + 1])
@@ -85,17 +88,18 @@ static BOOL CALLBACK FormatWindowText (HWND hwnd, LPARAM lParam)
 			case L'2':
 			case L'3':
 				theParam = params->arg[oldText[i + 1] - L'0'];
-				if (theParam != NULL)
+				if (theParam == NULL)
 				{
-					i++;
-					StringCchCatEx(remainingText, remainingSize, theParam,
-							&remainingText, &remainingSize, 0);
-					continue;
+					theParam = L"";
 				}
+				i++;
+				StringCchCatEx(remainingText, remainingSize, theParam,
+						&remainingText, &remainingSize, 0);
+				copyChar = false;
 				break;
 			}
 		}
-		if (remainingSize >= 2)
+		if (copyChar && remainingSize >= 2)
 		{
 			*(remainingText++) = oldText[i];
 			remainingSize--;
