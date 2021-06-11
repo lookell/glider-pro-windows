@@ -41,6 +41,7 @@
 #include "Utilities.h"
 
 #include <mmsystem.h>
+#include <strsafe.h>
 
 #define kInitialGliders         2
 #define kRingDelay              90
@@ -288,7 +289,8 @@ void DoDemoGame (HWND ownerWindow)
 	wasHouseIndex = g_thisHouseIndex;
 	whoCares = CloseHouse(ownerWindow);
 	g_thisHouseIndex = g_demoHouseIndex;
-	PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, g_thisHouseName);
+	StringCchCopy(g_thisHouseName, ARRAYSIZE(g_thisHouseName),
+			g_theHousesSpecs[g_thisHouseIndex].houseName);
 	if (OpenHouse(ownerWindow))
 	{
 		// NOTE: We aren't reloading the splash screen when reading the
@@ -300,7 +302,8 @@ void DoDemoGame (HWND ownerWindow)
 	}
 	whoCares = CloseHouse(ownerWindow);
 	g_thisHouseIndex = wasHouseIndex;
-	PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, g_thisHouseName);
+	StringCchCopy(g_thisHouseName, ARRAYSIZE(g_thisHouseName),
+			g_theHousesSpecs[g_thisHouseIndex].houseName);
 	if (OpenHouse(ownerWindow))
 		whoCares = ReadHouse(ownerWindow, true);
 	g_incrementModeTime = timeGetTime() + kIdleSplashTime;

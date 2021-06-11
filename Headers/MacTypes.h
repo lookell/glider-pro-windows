@@ -46,7 +46,6 @@ typedef const Byte *ConstStringPtr;
 typedef Byte Str15[16];
 typedef Byte Str27[28];
 typedef Byte Str31[32];
-typedef Byte Str32[33];
 typedef Byte Str63[64];
 typedef Byte Str255[256];
 

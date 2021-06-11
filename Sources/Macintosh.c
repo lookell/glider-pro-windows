@@ -265,20 +265,24 @@ void Mac_DrawPicture(HDC hdcDst, HBITMAP myPicture, const Rect *dstRect)
 // The current position is updated by this function to the right edge
 // of the text, at the baseline (TA_UPDATECP in GDI).
 
-void Mac_DrawString(HDC hdc, ConstStringPtr s)
+void Win_DrawString(HDC hdc, PCWSTR str)
 {
-	WCHAR buffer[256];
-	INT prevBkMode;
+	int prevBkMode;
 	UINT prevTextAlign;
 
-	WinFromMacString(buffer, ARRAYSIZE(buffer), s);
 	prevBkMode = SetBkMode(hdc, TRANSPARENT);
 	prevTextAlign = SetTextAlign(hdc, TA_LEFT | TA_BASELINE | TA_UPDATECP);
-	// The MacRoman string's length byte is used here, because each
-	// MacRoman byte corresponds to only one UTF-16 code unit.
-	TextOut(hdc, 0, 0, buffer, s[0]);
+	TextOut(hdc, 0, 0, str, (int)wcslen(str));
 	SetTextAlign(hdc, prevTextAlign);
 	SetBkMode(hdc, prevBkMode);
+}
+
+void Mac_DrawString(HDC hdc, ConstStringPtr str)
+{
+	WCHAR buffer[256];
+
+	WinFromMacString(buffer, ARRAYSIZE(buffer), str);
+	Win_DrawString(hdc, buffer);
 }
 
 //--------------------------------------------------------------  FrameRect
@@ -397,15 +401,23 @@ void Mac_PaintRect(HDC hdc, const Rect *r, HBRUSH hbr)
 // Calculate the width, in logical units, of the given Pascal string,
 // using the currently selected font.
 
-SInt16 Mac_StringWidth(HDC hdc, ConstStringPtr s)
+SInt16 Win_StringWidth(HDC hdc, PCWSTR str)
 {
-	WCHAR buffer[256];
 	SIZE extents;
 
-	WinFromMacString(buffer, ARRAYSIZE(buffer), s);
-	if (!GetTextExtentPoint32(hdc, buffer, (int)wcslen(buffer), &extents))
+	if (!GetTextExtentPoint32(hdc, str, (int)wcslen(str), &extents))
+	{
 		return 0;
+	}
 	return (SInt16)extents.cx;
+}
+
+SInt16 Mac_StringWidth(HDC hdc, ConstStringPtr str)
+{
+	WCHAR buffer[256];
+
+	WinFromMacString(buffer, ARRAYSIZE(buffer), str);
+	return Win_StringWidth(hdc, buffer);
 }
 
 //--------------------------------------------------------------  Global Data

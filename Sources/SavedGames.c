@@ -29,8 +29,6 @@
 
 BOOL GetSaveFolderPath (LPWSTR lpSavePath, DWORD cchSavePath);
 void SavedGameMismatchError (HWND ownerWindow, PCWSTR expectedName, PCWSTR actualName);
-void SavedGameMismatchError_Pascal (HWND ownerWindow, ConstStringPtr expectedName,
-		ConstStringPtr actualName);
 
 gameType g_smallGame;
 
@@ -58,7 +56,7 @@ BOOL GetSaveFolderPath (LPWSTR lpSavePath, DWORD cchSavePath)
 void SaveGame2 (HWND ownerWindow)
 {
 	OPENFILENAME ofn = { 0 };
-	Str255 gameNameStr;
+	PWCHAR spacePtr;
 	WCHAR startPath[MAX_PATH];
 	WCHAR gamePath[MAX_PATH];
 	roomType *srcRoom;
@@ -82,10 +80,14 @@ void SaveGame2 (HWND ownerWindow)
 		return;
 	}
 
-	GetFirstWordOfString(g_thisHouseName, gameNameStr);
-	PasStringConcatC(gameNameStr, " Game");
+	StringCchCopy(gamePath, ARRAYSIZE(gamePath), g_thisHouseName);
+	spacePtr = wcschr(gamePath, L' ');
+	if (spacePtr != NULL)
+	{
+		*spacePtr = L'\0';
+	}
+	StringCchCat(gamePath, ARRAYSIZE(gamePath), L" Game");
 
-	WinFromMacString(gamePath, ARRAYSIZE(gamePath), gameNameStr);
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = ownerWindow;
 	ofn.lpstrFilter = L"Glider PRO Saved Game (*.glg)\0*.glg\0\0";
@@ -105,7 +107,8 @@ void SaveGame2 (HWND ownerWindow)
 
 	savedGame.houseSpec.vRefNum = 0;
 	savedGame.houseSpec.parID = 0;
-	PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, savedGame.houseSpec.name);
+	MacFromWinString(savedGame.houseSpec.name, ARRAYSIZE(savedGame.houseSpec.name),
+			g_theHousesSpecs[g_thisHouseIndex].houseName);
 	savedGame.version = kSavedGameUnicodeVersion;
 	savedGame.wasStarsLeft = g_numStarsRemaining;
 	savedGame.timeStamp = g_thisHouse.timeStamp;
@@ -180,19 +183,6 @@ void SavedGameMismatchError (HWND ownerWindow, PCWSTR expectedName, PCWSTR actua
 	Alert(kSavedGameErrorAlert, ownerWindow, &params);
 }
 
-//--------------------------------------------------------------  SavedGameMismatchError_Pascal
-
-void SavedGameMismatchError_Pascal (HWND ownerWindow, ConstStringPtr expectedName,
-		ConstStringPtr actualName)
-{
-	WCHAR expectedNameWide[MAX_PATH];
-	WCHAR actualNameWide[MAX_PATH];
-
-	WinFromMacString(expectedNameWide, ARRAYSIZE(expectedNameWide), expectedName);
-	WinFromMacString(actualNameWide, ARRAYSIZE(actualNameWide), actualName);
-	SavedGameMismatchError(ownerWindow, expectedNameWide, actualNameWide);
-}
-
 //--------------------------------------------------------------  OpenSavedGame
 
 Boolean OpenSavedGame (HWND ownerWindow)
@@ -248,19 +238,24 @@ Boolean OpenSavedGame (HWND ownerWindow)
 
 	if (savedGame.version == kSavedGameVersion)
 	{
-		if (!PasStringEqual(savedGame.houseSpec.name, g_thisHouseName, true))
+		Str63 mangledMacName;
+
+		MacFromWinString(mangledMacName, ARRAYSIZE(mangledMacName), g_thisHouseName);
+		if (!PasStringEqual(savedGame.houseSpec.name, mangledMacName, true))
 		{
-			SavedGameMismatchError_Pascal(ownerWindow, savedGame.houseSpec.name, g_thisHouseName);
+			WCHAR mangledWinName[sizeof(Str63)];
+
+			WinFromMacString(mangledWinName, ARRAYSIZE(mangledWinName), savedGame.houseSpec.name);
+			SavedGameMismatchError(ownerWindow, mangledWinName, g_thisHouseName);
 			free(savedGame.savedData);
 			return false;
 		}
 	}
 	else if (savedGame.version == kSavedGameUnicodeVersion)
 	{
-		if (lstrcmp(savedGame.houseName, g_theHousesSpecs[g_thisHouseIndex].houseName) != 0)
+		if (lstrcmp(savedGame.houseName, g_thisHouseName) != 0)
 		{
-			SavedGameMismatchError(ownerWindow, savedGame.houseName,
-					g_theHousesSpecs[g_thisHouseIndex].houseName);
+			SavedGameMismatchError(ownerWindow, savedGame.houseName, g_thisHouseName);
 			free(savedGame.savedData);
 			return false;
 		}

@@ -14,7 +14,7 @@
 
 extern houseType g_thisHouse;
 extern linksPtr g_linksList;
-extern Str32 g_thisHouseName;
+extern WCHAR g_thisHouseName[MAX_PATH];
 extern SInt16 g_wasFloor;
 extern SInt16 g_wasSuite;
 extern retroLink g_retroLinkList[kMaxRoomObs];

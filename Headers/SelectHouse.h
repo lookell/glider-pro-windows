@@ -14,8 +14,7 @@
 typedef struct houseSpec
 {
 	WCHAR path[MAX_PATH];
-	WCHAR houseName[33];
-	Str32 name;
+	WCHAR houseName[MAX_PATH];
 	int iconIndex;
 } houseSpec, *houseSpecPtr;
 

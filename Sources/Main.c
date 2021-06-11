@@ -124,11 +124,11 @@ void ReadInPrefs (HWND ownerWindow)
 		g_doBitchDialogs = thePrefs.wasBitchDialogs;
 		if (COMPILEDEMO)
 		{
-			MacFromWinString(g_thisHouseName, ARRAYSIZE(g_thisHouseName), L"Demo House");
+			StringCchCopy(g_thisHouseName, ARRAYSIZE(g_thisHouseName), L"Demo House");
 		}
 		else
 		{
-			MacFromWinString(g_thisHouseName, ARRAYSIZE(g_thisHouseName), thePrefs.wasHouseName);
+			StringCchCopy(g_thisHouseName, ARRAYSIZE(g_thisHouseName), thePrefs.wasHouseName);
 		}
 	}
 	else
@@ -193,11 +193,11 @@ void ReadInPrefs (HWND ownerWindow)
 		g_doBitchDialogs = true;
 		if (COMPILEDEMO)
 		{
-			MacFromWinString(g_thisHouseName, ARRAYSIZE(g_thisHouseName), L"Demo House");
+			StringCchCopy(g_thisHouseName, ARRAYSIZE(g_thisHouseName), L"Demo House");
 		}
 		else
 		{
-			MacFromWinString(g_thisHouseName, ARRAYSIZE(g_thisHouseName), L"Slumberland");
+			StringCchCopy(g_thisHouseName, ARRAYSIZE(g_thisHouseName), L"Slumberland");
 		}
 	}
 
@@ -277,7 +277,7 @@ void WriteOutPrefs (HWND ownerWindow)
 	}
 	else
 	{
-		WinFromMacString(
+		StringCchCopy(
 			thePrefs.wasHouseName,
 			ARRAYSIZE(thePrefs.wasHouseName),
 			g_thisHouseName

@@ -19,8 +19,6 @@
 #define kReturnKeyASCII             0x0D
 #define kSpaceBarASCII              0x20
 
-void PasStringCopyNum (ConstStringPtr p1, StringPtr p2, Byte charsToCopy);
-
 //==============================================================  Functions
 //--------------------------------------------------------------  PasStringCopy
 // Given a source string and storage for a second, this function
@@ -45,84 +43,6 @@ void PasStringCopyC (PCSTR s1, StringPtr p2)
 	while (*s1 != '\0' && stringLength < 255)
 		p2[++stringLength] = *s1++;
 	p2[0] = stringLength;
-}
-
-//--------------------------------------------------------------  WhichStringFirst
-// This is a sorting function that handles two Pascal strings.  It
-// will return a 1 to indicate the 1st string is "greater", a 1 to
-// indicate the 2nd was greater and a 0 to indicate that the strings
-// are equal.
-
-SInt16 WhichStringFirst (ConstStringPtr p1, ConstStringPtr p2)
-{
-	SInt16 smallestLength, seek, greater;
-	Byte char1, char2;
-	Boolean foundIt;
-
-	smallestLength = p1[0];
-	if (p2[0] < smallestLength)
-		smallestLength = p2[0];
-
-	greater = 0;  // neither are greater, they are equal
-	seek = 1;  // start at character #1
-	foundIt = false;
-	do
-	{
-		char1 = p1[seek];  // make upper case (if applicable)
-		if ((char1 > 0x60) && (char1 < 0x7B))
-			char1 -= 0x20;
-		char2 = p2[seek];  // make upper case (if applicable)
-		if ((char2 > 0x60) && (char2 < 0x7B))
-			char2 -= 0x20;
-
-		if (char1 > char2)  // first string is greater
-		{
-			greater = 1;
-			foundIt = true;
-		}
-		else if (char1 < char2)  // second string is greater
-		{
-			greater = 2;
-			foundIt = true;
-		}
-		seek++;
-		if (seek > smallestLength)  // we've reached the end of the line
-		{
-			if (!foundIt)
-			{
-				if (p1[0] < p2[0])  // shortest string wins
-					greater = 1;
-				else if (p1[0] > p2[0])
-					greater = 2;
-			}
-			foundIt = true;
-		}
-	}
-	while (!foundIt);
-
-	return (greater);
-}
-
-//--------------------------------------------------------------  PasStringCopyNum
-// This function copies a specified number of characters from one
-// Pascal string to another.
-
-void PasStringCopyNum (ConstStringPtr p1, StringPtr p2, Byte charsToCopy)
-{
-	SInt16 i;
-
-	// if trying to copy more chars than there are
-	// reduce the number of chars to copy to this size
-	if (charsToCopy > *p1)
-		charsToCopy = *p1;
-
-	*p2 = charsToCopy;
-
-	p2++;
-	p1++;
-
-	for (i = 0; i < charsToCopy; i++)
-		*p2++ = *p1++;
 }
 
 //--------------------------------------------------------------  PasStringConcat
@@ -151,18 +71,6 @@ void PasStringConcat (StringPtr p1, ConstStringPtr p2)
 
 	for (i = 0; i < addedLength; i++)
 		*p1++ = *p2++;
-}
-
-//--------------------------------------------------------------  PasStringConcatC
-
-void PasStringConcatC (StringPtr p1, PCSTR s2)
-{
-	Byte stringLength;
-
-	stringLength = p1[0];
-	while (*s2 != '\0' && stringLength < 255)
-		p1[++stringLength] = *s2++;
-	p1[0] = stringLength;
 }
 
 //--------------------------------------------------------------  PasStringEqual
@@ -312,28 +220,6 @@ void WrapText (StringPtr theText, SInt16 maxChars)
 		}
 	}
 	while (count < lastChar);
-}
-
-//--------------------------------------------------------------  GetFirstWordOfString
-// Walks a string looking for a space (denoting first word of string).
-
-void GetFirstWordOfString (ConstStringPtr stringIn, StringPtr stringOut)
-{
-	SInt16 isLong, spaceAt, i;
-
-	isLong = stringIn[0];
-	spaceAt = isLong;
-
-	for (i = 1; i < isLong; i++)
-	{
-		if ((stringIn[i] == ' ') && (spaceAt == isLong))
-			spaceAt = i - 1;
-	}
-
-	if (spaceAt <= 0)
-		PasStringCopyC("", stringOut);
-	else
-		PasStringCopyNum(stringIn, stringOut, (Byte)spaceAt);
 }
 
 //--------------------------------------------------------------  GetLocalizedString_Pascal

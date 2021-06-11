@@ -200,7 +200,7 @@ Boolean OpenHouse (HWND ownerWindow)
 	if (FAILED(hr))
 	{
 		g_theHouseFile = NULL;
-		CheckFileError(ownerWindow, hr, g_theHousesSpecs[g_thisHouseIndex].houseName);
+		CheckFileError(ownerWindow, hr, g_thisHouseName);
 		return false;
 	}
 
@@ -232,7 +232,8 @@ Boolean OpenSpecificHouse (PCWSTR filename, HWND ownerWindow)
 		if (wcscmp(g_theHousesSpecs[i].path, filename) == 0)
 		{
 			g_thisHouseIndex = i;
-			PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, g_thisHouseName);
+			StringCchCopy(g_thisHouseName, ARRAYSIZE(g_thisHouseName),
+					g_theHousesSpecs[g_thisHouseIndex].houseName);
 			if (OpenHouse(ownerWindow))
 				itOpened = ReadHouse(ownerWindow, true);
 			else
@@ -435,7 +436,7 @@ Boolean ReadHouse (HWND ownerWindow, Boolean loadSplashScreen)
 		ZeroMemory(&g_thisHouse, sizeof(g_thisHouse));
 		g_thisHouse.nRooms = 0;
 		g_noRoomAtAll = true;
-		YellowAlert(ownerWindow, kYellowNoRooms, 0);
+		CheckFileError(ownerWindow, hr, g_thisHouseName);
 		return false;
 	}
 
@@ -556,7 +557,7 @@ Boolean WriteHouse (HWND ownerWindow, Boolean checkIt)
 	hr = Gp_WriteHouseData(g_theHouseFile, &g_thisHouse);
 	if (FAILED(hr))
 	{
-		CheckFileError(ownerWindow, hr, g_theHousesSpecs[g_thisHouseIndex].houseName);
+		CheckFileError(ownerWindow, hr, g_thisHouseName);
 		return false;
 	}
 
@@ -625,15 +626,13 @@ Boolean CloseHouse (HWND ownerWindow)
 Boolean QuerySaveChanges (HWND ownerWindow)
 {
 	DialogParams params = { 0 };
-	wchar_t houseStr[64];
 	SInt16 hitWhat;
 	Boolean whoCares;
 
 	if (!g_fileDirty)
 		return(true);
 
-	WinFromMacString(houseStr, ARRAYSIZE(houseStr), g_thisHouseName);
-	params.arg[0] = houseStr;
+	params.arg[0] = g_thisHouseName;
 	hitWhat = Alert(kSaveChangesAlert, ownerWindow, &params);
 	if (hitWhat == IDYES)
 	{

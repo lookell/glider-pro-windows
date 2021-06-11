@@ -113,7 +113,8 @@ INT_PTR CALLBACK LoadFilter (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				{
 					g_thisHouseIndex = (SInt16)lvItem.lParam;
 					whoCares = CloseHouse(hDlg);
-					PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, g_thisHouseName);
+					StringCchCopy(g_thisHouseName, ARRAYSIZE(g_thisHouseName),
+							g_theHousesSpecs[g_thisHouseIndex].houseName);
 					if (OpenHouse(hDlg))
 						whoCares = ReadHouse(hDlg, true);
 				}
@@ -167,7 +168,7 @@ void DoLoadHouse (HWND ownerWindow)
 void SortHouseList (void)
 {
 	houseSpec tempSpec;
-	SInt16 i, h, whosFirst;
+	SInt16 i, h;
 
 	i = 0;  // remove exact duplicate houses
 	while (i < g_housesFound)
@@ -175,7 +176,7 @@ void SortHouseList (void)
 		h = i + 1;
 		while (h < g_housesFound)
 		{
-			if (PasStringEqual(g_theHousesSpecs[i].name, g_theHousesSpecs[h].name, true))
+			if (lstrcmp(g_theHousesSpecs[i].houseName, g_theHousesSpecs[h].houseName) == 0)
 			{
 				g_theHousesSpecs[h] = g_theHousesSpecs[g_housesFound - 1];
 				g_housesFound--;
@@ -189,9 +190,7 @@ void SortHouseList (void)
 	{
 		for (h = 0; h < (g_housesFound - i - 1); h++)
 		{
-			whosFirst = WhichStringFirst(g_theHousesSpecs[h].name,
-					g_theHousesSpecs[h + 1].name);
-			if (whosFirst == 1)
+			if (lstrcmpi(g_theHousesSpecs[h].houseName, g_theHousesSpecs[h + 1].houseName) > 0)
 			{
 				tempSpec = g_theHousesSpecs[h + 1];
 				g_theHousesSpecs[h + 1] = g_theHousesSpecs[h];
@@ -240,7 +239,6 @@ void DoDirSearch (HWND ownerWindow)
 	HANDLE findFileHandles[kMaxDirectories];
 	HANDLE hff;
 	SInt16 i, currentDir, numDirs;
-	PCWSTR extPtr;
 	LPCWSTR combineResult;
 	HRESULT hr;
 	int cxIcon, cyIcon;
@@ -298,11 +296,10 @@ void DoDirSearch (HWND ownerWindow)
 				}
 			}
 		}
-		else
+		else if (g_housesFound < g_maxFiles)
 		{
 			// handle a file entry
-			extPtr = PathFindExtension(ffd.cFileName);
-			if ((g_housesFound < g_maxFiles) && (wcscmp(extPtr, L".glh") == 0))
+			if (PathMatchSpec(ffd.cFileName, L"*.glh"))
 			{
 				combineResult = PathCombine(g_theHousesSpecs[g_housesFound].path,
 						pathString, ffd.cFileName);
@@ -312,14 +309,8 @@ void DoDirSearch (HWND ownerWindow)
 					hr = StringCchCopy(g_theHousesSpecs[g_housesFound].houseName,
 							ARRAYSIZE(g_theHousesSpecs[g_housesFound].houseName),
 							ffd.cFileName);
-					if (SUCCEEDED(hr) || hr == STRSAFE_E_INSUFFICIENT_BUFFER)
+					if (SUCCEEDED(hr))
 					{
-						// STRSAFE_E_INSUFFICIENT_BUFFER is okay. Just means that the
-						// house's name will be truncated on display.
-						MacFromWinString(g_theHousesSpecs[g_housesFound].name,
-								ARRAYSIZE(g_theHousesSpecs[g_housesFound].name),
-								g_theHousesSpecs[g_housesFound].houseName);
-
 						// Extract the house's icon.
 						hr = Gp_LoadHouseFile(g_theHousesSpecs[g_housesFound].path, &houseFile);
 						if (SUCCEEDED(hr))
@@ -367,21 +358,19 @@ void DoDirSearch (HWND ownerWindow)
 		g_thisHouseIndex = 0;
 		for (i = 0; i < g_housesFound; i++)
 		{
-			if (PasStringEqual(g_theHousesSpecs[i].name, g_thisHouseName, false))
+			if (lstrcmpi(g_theHousesSpecs[i].houseName, g_thisHouseName) == 0)
 			{
 				g_thisHouseIndex = i;
 				break;
 			}
 		}
-		PasStringCopy(g_theHousesSpecs[g_thisHouseIndex].name, g_thisHouseName);
+		StringCchCopy(g_thisHouseName, ARRAYSIZE(g_thisHouseName),
+				g_theHousesSpecs[g_thisHouseIndex].houseName);
 
 		g_demoHouseIndex = -1;
 		for (i = 0; i < g_housesFound; i++)
 		{
-			Str32 demoHouseName;
-
-			PasStringCopyC("Demo House", demoHouseName);
-			if (PasStringEqual(g_theHousesSpecs[i].name, demoHouseName, false))
+			if (lstrcmpi(g_theHousesSpecs[i].houseName, L"Demo House") == 0)
 			{
 				g_demoHouseIndex = i;
 				break;

@@ -36,13 +36,15 @@ void Mac_CopyMask(
 	const Rect *maskRect,
 	const Rect *dstRect);
 void Mac_DrawPicture(HDC hdcDst, HBITMAP myPicture, const Rect *dstRect);
-void Mac_DrawString(HDC hdc, ConstStringPtr s);
+void Win_DrawString(HDC hdc, PCWSTR str);
+void Mac_DrawString(HDC hdc, ConstStringPtr str);
 void Mac_FrameRect(HDC hdc, const Rect *r, HBRUSH hbr, SInt16 w, SInt16 h);
 UInt32 Mac_GetDateTime(void);
 void Mac_InvalWindowRect(HWND window, const Rect *bounds);
 void Mac_Line(HDC hdc, SInt16 dh, SInt16 dv);
 void Mac_LineTo(HDC hdc, SInt16 h, SInt16 v);
 void Mac_PaintRect(HDC hdc, const Rect *r, HBRUSH hbr);
-SInt16 Mac_StringWidth(HDC hdc, ConstStringPtr s);
+SInt16 Win_StringWidth(HDC hdc, PCWSTR str);
+SInt16 Mac_StringWidth(HDC hdc, ConstStringPtr str);
 
 #endif

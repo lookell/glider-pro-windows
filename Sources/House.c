@@ -42,7 +42,7 @@ SInt16 g_wasFloor;
 SInt16 g_wasSuite;
 retroLink g_retroLinkList[kMaxRoomObs];
 Boolean g_houseUnlocked;
-Str32 g_thisHouseName;
+WCHAR g_thisHouseName[MAX_PATH];
 
 static SInt16 g_srcLocations[kMaxRoomObs];
 static SInt16 g_destLocations[kMaxRoomObs];
@@ -98,7 +98,6 @@ Boolean CreateNewHouse (HWND hwndOwner)
 	ofn.lpstrFile[ofn.nFileExtension - 1] = L'\0';
 	StringCchCopy(theSpec.houseName, ARRAYSIZE(theSpec.houseName),
 		&ofn.lpstrFile[ofn.nFileOffset]);
-	MacFromWinString(theSpec.name, ARRAYSIZE(theSpec.name), theSpec.houseName);
 	theSpec.iconIndex = 0;
 
 	// Create the empty house file
@@ -119,7 +118,7 @@ Boolean CreateNewHouse (HWND hwndOwner)
 		}
 	}
 
-	PasStringCopy(theSpec.name, g_thisHouseName);
+	StringCchCopy(g_thisHouseName, ARRAYSIZE(g_thisHouseName), theSpec.houseName);
 	AddExtraHouse(&theSpec);
 	BuildHouseList(hwndOwner);
 	if (!OpenHouse(hwndOwner))

@@ -325,7 +325,6 @@ void CloseMainWindow (void)
 
 void UpdateEditWindowTitle (void)
 {
-	wchar_t houseName[64];
 	wchar_t roomName[32];
 	wchar_t newTitle[256];
 
@@ -334,20 +333,19 @@ void UpdateEditWindowTitle (void)
 		return;
 	}
 
-	WinFromMacString(houseName, ARRAYSIZE(houseName), g_thisHouseName);
 	if (g_noRoomAtAll)
 	{
-		StringCchPrintf(newTitle, ARRAYSIZE(newTitle), L"%s - No rooms", houseName);
+		StringCchPrintf(newTitle, ARRAYSIZE(newTitle), L"%s - No rooms", g_thisHouseName);
 	}
 	else if (g_houseUnlocked)
 	{
 		WinFromMacString(roomName, ARRAYSIZE(roomName), g_thisRoom->name);
 		StringCchPrintf(newTitle, ARRAYSIZE(newTitle), L"%s - %s (%d, %d)",
-			houseName, roomName, (int)g_thisRoom->floor, (int)g_thisRoom->suite);
+			g_thisHouseName, roomName, (int)g_thisRoom->floor, (int)g_thisRoom->suite);
 	}
 	else
 	{
-		StringCchPrintf(newTitle, ARRAYSIZE(newTitle), L"%s - House Locked", houseName);
+		StringCchPrintf(newTitle, ARRAYSIZE(newTitle), L"%s - House Locked", g_thisHouseName);
 	}
 	SetWindowText(g_mainWindow, newTitle);
 }

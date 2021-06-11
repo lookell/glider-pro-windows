@@ -12,13 +12,10 @@
 
 void PasStringCopy (ConstStringPtr p1, StringPtr p2);
 void PasStringCopyC (PCSTR s1, StringPtr p2);
-SInt16 WhichStringFirst (ConstStringPtr p1, ConstStringPtr p2);
 void PasStringConcat (StringPtr p1, ConstStringPtr p2);
-void PasStringConcatC (StringPtr p1, PCSTR s2);
 Boolean PasStringEqual (ConstStringPtr p1, ConstStringPtr p2, Boolean caseSens);
 void GetLineOfText (ConstStringPtr srcStr, SInt16 index, StringPtr textLine);
 void WrapText (StringPtr theText, SInt16 maxChars);
-void GetFirstWordOfString (ConstStringPtr stringIn, StringPtr stringOut);
 void GetLocalizedString (UInt16 index, PWSTR pszDest, size_t cchDest);
 void GetLocalizedString_Pascal (UInt16 index, StringPtr theString, int stringCapacity);
 PWSTR MacToWinLineEndings (PCWSTR input);

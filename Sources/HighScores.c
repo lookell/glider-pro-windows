@@ -71,6 +71,7 @@ void DrawHighScores (void)
 	HDC tempMap, tempMask;
 	Rect tempRect, tempRect2;
 	Str255 tempStr;
+	WCHAR tempHouseStr[MAX_PATH + 4];
 	SInt16 scoreLeft, bannerWidth, i, dropIt;
 	INT hOffset, vOffset;
 	HFONT theFont;
@@ -99,17 +100,17 @@ void DrawHighScores (void)
 
 	SaveDC(g_workSrcMap);
 	SelectFont(g_workSrcMap, theFont);
-	PasStringCopyC("\xA5 ", tempStr); // "• "
-	PasStringConcat(tempStr, g_thisHouseName);
-	PasStringConcatC(tempStr, " \xA5"); // " •"
-	hOffset = scoreLeft + ((kScoreWide - Mac_StringWidth(g_workSrcMap, tempStr)) / 2);
+	StringCchCopy(tempHouseStr, ARRAYSIZE(tempHouseStr), L"\u2022 "); // "• "
+	StringCchCat(tempHouseStr, ARRAYSIZE(tempHouseStr), g_thisHouseName);
+	StringCchCat(tempHouseStr, ARRAYSIZE(tempHouseStr), L" \u2022"); // " •"
+	hOffset = scoreLeft + ((kScoreWide - Win_StringWidth(g_workSrcMap, tempHouseStr)) / 2);
 	vOffset = dropIt - 65;
 	MoveToEx(g_workSrcMap, hOffset - 1, vOffset - 1, NULL);
 	SetTextColor(g_workSrcMap, blackColor);
-	Mac_DrawString(g_workSrcMap, tempStr);
+	Win_DrawString(g_workSrcMap, tempHouseStr);
 	MoveToEx(g_workSrcMap, hOffset, vOffset, NULL);
 	SetTextColor(g_workSrcMap, cyanColor);
-	Mac_DrawString(g_workSrcMap, tempStr);
+	Win_DrawString(g_workSrcMap, tempHouseStr);
 	RestoreDC(g_workSrcMap, -1);
 	DeleteFont(theFont);
 
@@ -290,7 +291,11 @@ void ZeroHighScores (housePtr house)
 {
 	SInt16 i;
 
-	PasStringCopy(g_thisHouseName, house->highScores.banner);
+	MacFromWinString(
+		house->highScores.banner,
+		ARRAYSIZE(house->highScores.banner),
+		g_thisHouseName
+	);
 	for (i = 0; i < kMaxScores; i++)
 	{
 		PasStringCopyC("--------------", house->highScores.names[i]);
@@ -408,15 +413,13 @@ void GetHighScoreName (HWND ownerWindow, SInt16 place)
 	DialogParams params = { 0 };
 	wchar_t scoreStr[32];
 	wchar_t placeStr[32];
-	wchar_t houseStr[64];
 
 	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)g_theScore);
 	StringCchPrintf(placeStr, ARRAYSIZE(placeStr), L"%ld", (long)place);
-	WinFromMacString(houseStr, ARRAYSIZE(houseStr), g_thisHouseName);
 
 	params.arg[0] = scoreStr;
 	params.arg[1] = placeStr;
-	params.arg[2] = houseStr;
+	params.arg[2] = g_thisHouseName;
 	DialogBoxParam(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kHighNameDialogID),
 			ownerWindow, NameFilter, (LPARAM)&params);
