@@ -146,7 +146,6 @@ void OpenHouseMovie (void)
 
 		GetMovieBox(g_theMovie, &g_movieRect);
 
-		g_theHousesSpecs[g_thisHouseIndex].g_hasMovie = true;
 		g_hasMovie = true;
 	}
 #endif
