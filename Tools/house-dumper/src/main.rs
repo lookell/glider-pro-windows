@@ -1,4 +1,6 @@
+use std::env;
 use std::fmt::{self, Debug, Formatter};
+use std::fs;
 use std::io;
 use std::io::prelude::*;
 
@@ -808,7 +810,21 @@ impl House {
 }
 
 fn main() {
-    let mut house_data: &[u8] = include_bytes!("../../../Houses/Slumberland");
+    let house_file_name = match env::args_os().nth(1) {
+        Some(file_name) => file_name,
+        None => {
+            eprintln!("usage: house-dumper <house file>");
+            return;
+        }
+    };
+    let house_file_bytes = match fs::read(house_file_name) {
+        Ok(result) => result,
+        Err(err) => {
+            eprintln!("error: couldn't read house file: {}", err);
+            return;
+        }
+    };
+    let mut house_data: &[u8] = house_file_bytes.as_slice();
     let house = House::read_from(&mut house_data).unwrap();
     println!("{:#?}", &house);
 }
