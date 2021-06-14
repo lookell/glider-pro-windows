@@ -154,7 +154,11 @@ OSErr LoadTriggerSound (SInt16 soundID)
 		return -1;
 	}
 
-	g_triggerSoundOutput.channel = AudioChannel_Open(&g_theSoundData[kTriggerSound].format);
+	g_triggerSoundOutput.channel = AudioChannel_Open(
+		g_theSoundData[kTriggerSound].channels,
+		g_theSoundData[kTriggerSound].bitsPerSample,
+		g_theSoundData[kTriggerSound].samplesPerSec
+	);
 	if (g_triggerSoundOutput.channel == NULL)
 	{
 		free((void *)g_theSoundData[kTriggerSound].dataBytes);
@@ -188,7 +192,6 @@ OSErr LoadBufferSounds (void)
 {
 	SInt16 i;
 	HRESULT hr;
-	WaveFormat expectedFormat;
 
 	for (i = 0; i < kMaxSounds - 1; i++)
 	{
@@ -200,18 +203,17 @@ OSErr LoadBufferSounds (void)
 	}
 
 	// Make sure that all built-in sounds have the same format
-	expectedFormat = g_theSoundData[0].format;
 	for (i = 0; i < kMaxSounds - 1; i++)
 	{
-		if (g_theSoundData[i].format.channels != expectedFormat.channels)
+		if (g_theSoundData[i].channels != g_theSoundData[0].channels)
 		{
 			return -2;
 		}
-		if (g_theSoundData[i].format.bitsPerSample != expectedFormat.bitsPerSample)
+		if (g_theSoundData[i].bitsPerSample != g_theSoundData[0].bitsPerSample)
 		{
 			return -2;
 		}
-		if (g_theSoundData[i].format.samplesPerSec != expectedFormat.samplesPerSec)
+		if (g_theSoundData[i].samplesPerSec != g_theSoundData[0].samplesPerSec)
 		{
 			return -2;
 		}
@@ -248,7 +250,11 @@ OSErr OpenSoundChannels (void)
 
 	for (i = 0; i < kNumSoundChannels; i++)
 	{
-		g_soundOutputs[i].channel = AudioChannel_Open(&g_theSoundData[0].format);
+		g_soundOutputs[i].channel = AudioChannel_Open(
+			g_theSoundData[0].channels,
+			g_theSoundData[0].bitsPerSample,
+			g_theSoundData[0].samplesPerSec
+		);
 		if (g_soundOutputs[i].channel == NULL)
 		{
 			theErr = -5;

@@ -3,20 +3,6 @@
 
 #include <stdint.h>
 
-typedef struct WaveFormat
-{
-	uint16_t channels;
-	uint16_t bitsPerSample;
-	uint32_t samplesPerSec;
-} WaveFormat;
-
-typedef struct WaveData
-{
-	WaveFormat format;
-	uint32_t dataLength;
-	const unsigned char *dataBytes;
-} WaveData;
-
 typedef struct AudioChannel AudioChannel;
 
 // A callback function that is called in response to certain events happening
@@ -58,14 +44,6 @@ typedef struct AudioEntry
 	void *userdata;
 } AudioEntry;
 
-// Parse a WAV file from an in-memory representation, and write the data
-// into the waveData output parameter. Return nonzero on success and zero
-// on failure.
-//
-// The pointer written into waveData->dataBytes is simply a pointer into the
-// given buffer, and does not need to be freed separately.
-int ReadWAVFromMemory(const void *buffer, size_t length, WaveData *waveData);
-
 // Initialize the internal audio-management structures.
 //
 // This function must be called only once (at the beginning of the program),
@@ -95,7 +73,7 @@ void Audio_SetMasterVolume(float newVolume);
 // returns NULL on failure. Release the audio channel pointer by calling the
 // AudioChannel_Close function. The audio channel will not play any audio until
 // AudioChannel_QueueAudio is called.
-AudioChannel *AudioChannel_Open(const WaveFormat *format);
+AudioChannel *AudioChannel_Open(uint16_t channels, uint16_t bitsPerSample, uint32_t samplesPerSec);
 
 // Close an audio output channel. All queued sounds will be removed from the
 // channel's queue, and all playing sound will be stopped. Do not use the

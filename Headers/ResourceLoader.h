@@ -1,9 +1,19 @@
 #ifndef RESOURCE_LOADER_H_
 #define RESOURCE_LOADER_H_
 
-#include "Audio.h"
 #include "GliderStructs.h"
 #include "WinAPI.h"
+
+#include <stdint.h>
+
+typedef struct WaveData
+{
+	uint16_t channels;
+	uint16_t bitsPerSample;
+	uint32_t samplesPerSec;
+	uint32_t dataLength;
+	const unsigned char *dataBytes;
+} WaveData;
 
 typedef struct Gp_HouseFile Gp_HouseFile;
 

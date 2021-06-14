@@ -241,15 +241,15 @@ OSErr LoadMusicSounds (void)
 	// Test to make sure that all music resources have the same format
 	for (i = 1; i < kMaxMusic; i++)
 	{
-		if (g_theMusicData[i].format.channels != g_theMusicData[0].format.channels)
+		if (g_theMusicData[i].channels != g_theMusicData[0].channels)
 		{
 			return -2;
 		}
-		if (g_theMusicData[i].format.bitsPerSample != g_theMusicData[0].format.bitsPerSample)
+		if (g_theMusicData[i].bitsPerSample != g_theMusicData[0].bitsPerSample)
 		{
 			return -2;
 		}
-		if (g_theMusicData[i].format.samplesPerSec != g_theMusicData[0].format.samplesPerSec)
+		if (g_theMusicData[i].samplesPerSec != g_theMusicData[0].samplesPerSec)
 		{
 			return -2;
 		}
@@ -277,7 +277,11 @@ OSErr DumpMusicSounds (void)
 
 OSErr OpenMusicChannel (void)
 {
-	g_musicChannel = AudioChannel_Open(&g_theMusicData[0].format);
+	g_musicChannel = AudioChannel_Open(
+		g_theMusicData[0].channels,
+		g_theMusicData[0].bitsPerSample,
+		g_theMusicData[0].samplesPerSec
+	);
 	if (g_musicChannel == NULL)
 	{
 		return -1;
