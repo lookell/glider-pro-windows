@@ -74,8 +74,8 @@ void ReadInPrefs (HWND ownerWindow)
 		{
 			g_isViewportHeight = kMinScreenHeight;
 		}
-		PasStringCopy(thePrefs.wasHighName, g_highName);
-		PasStringCopy(thePrefs.wasHighBanner, g_highBanner);
+		PasStringCopy(thePrefs.wasHighName, g_highName, ARRAYSIZE(g_highName));
+		PasStringCopy(thePrefs.wasHighBanner, g_highBanner, ARRAYSIZE(g_highBanner));
 		g_theGlider.leftKey = thePrefs.wasLeftKeyOne;
 		g_theGlider.rightKey = thePrefs.wasRightKeyOne;
 		g_theGlider.battKey = thePrefs.wasBattKeyOne;
@@ -135,8 +135,8 @@ void ReadInPrefs (HWND ownerWindow)
 	{
 		g_isViewportWidth = 640;
 		g_isViewportHeight = 480;
-		PasStringCopyC("Your Name", g_highName);
-		PasStringCopyC("Your Message Here", g_highBanner);
+		PasStringCopyC("Your Name", g_highName, ARRAYSIZE(g_highName));
+		PasStringCopyC("Your Message Here", g_highBanner, ARRAYSIZE(g_highBanner));
 		g_theGlider.leftKey = VK_LEFT;
 		g_theGlider.rightKey = VK_RIGHT;
 		g_theGlider.battKey = VK_DOWN;
@@ -222,8 +222,8 @@ void WriteOutPrefs (HWND ownerWindow)
 
 	thePrefs.wasViewportWidth = g_isViewportWidth;
 	thePrefs.wasViewportHeight = g_isViewportHeight;
-	PasStringCopy(g_highName, thePrefs.wasHighName);
-	PasStringCopy(g_highBanner, thePrefs.wasHighBanner);
+	PasStringCopy(g_highName, thePrefs.wasHighName, ARRAYSIZE(thePrefs.wasHighName));
+	PasStringCopy(g_highBanner, thePrefs.wasHighBanner, ARRAYSIZE(thePrefs.wasHighBanner));
 	thePrefs.wasLeftKeyOne = g_theGlider.leftKey;
 	thePrefs.wasRightKeyOne = g_theGlider.rightKey;
 	thePrefs.wasBattKeyOne = g_theGlider.battKey;

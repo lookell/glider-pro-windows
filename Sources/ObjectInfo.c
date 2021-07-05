@@ -21,6 +21,7 @@
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Room.h"
+#include "StringUtils.h"
 #include "Utilities.h"
 
 #include <strsafe.h>
@@ -1053,11 +1054,11 @@ void DoBlowerObjectInfo (HWND hwndOwner)
 	wchar_t distStr[16];
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	NumToString(g_objActive + 1, numberStr, ARRAYSIZE(numberStr));
 	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
 	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
-	StringCchPrintf(distStr, ARRAYSIZE(distStr), L"%d",
-		(int)g_thisRoom->objects[g_objActive].data.a.distance);
+	NumToString(g_thisRoom->objects[g_objActive].data.a.distance,
+			distStr, ARRAYSIZE(distStr));
 
 	params.arg[0] = numberStr;
 	params.arg[1] = kindStr;
@@ -1102,7 +1103,7 @@ void DoFurnitureObjectInfo (HWND hwndOwner)
 	}
 	else
 	{
-		StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+		NumToString(g_objActive + 1, numberStr, ARRAYSIZE(numberStr));
 		GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
 		kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 	}
@@ -1134,7 +1135,7 @@ void DoCustPictObjectInfo (HWND hwndOwner)
 	PWSTR kindStrBuffer = NULL;
 	PCWSTR kindStr;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	NumToString(g_objActive + 1, numberStr, ARRAYSIZE(numberStr));
 	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
 	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
@@ -1175,7 +1176,7 @@ void DoSwitchObjectInfo (HWND hwndOwner)
 	floor = 0;
 	suite = kRoomIsEmpty;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	NumToString(g_objActive + 1, numberStr, ARRAYSIZE(numberStr));
 	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
 	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 	if (g_thisRoom->objects[g_objActive].data.e.where == -1)
@@ -1195,8 +1196,8 @@ void DoSwitchObjectInfo (HWND hwndOwner)
 	}
 	else
 	{
-		StringCchPrintf(objStr, ARRAYSIZE(objStr), L"%d",
-			(int)(g_thisRoom->objects[g_objActive].data.e.who + 1));
+		NumToString((SInt32)g_thisRoom->objects[g_objActive].data.e.who + 1,
+				objStr, ARRAYSIZE(objStr));
 	}
 
 	params.arg[0] = numberStr;
@@ -1245,7 +1246,7 @@ void DoTriggerObjectInfo (HWND hwndOwner)
 	floor = 0;
 	suite = kRoomIsEmpty;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	NumToString(g_objActive + 1, numberStr, ARRAYSIZE(numberStr));
 	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
 	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 	if (g_thisRoom->objects[g_objActive].data.e.where == -1)
@@ -1265,8 +1266,8 @@ void DoTriggerObjectInfo (HWND hwndOwner)
 	}
 	else
 	{
-		StringCchPrintf(objStr, ARRAYSIZE(objStr), L"%d",
-			(int)(g_thisRoom->objects[g_objActive].data.e.who + 1));
+		NumToString((SInt32)g_thisRoom->objects[g_objActive].data.e.who + 1,
+				objStr, ARRAYSIZE(objStr));
 	}
 
 	params.arg[0] = numberStr;
@@ -1309,7 +1310,7 @@ void DoLightObjectInfo (HWND hwndOwner)
 	PCWSTR kindStr;
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	NumToString(g_objActive + 1, numberStr, ARRAYSIZE(numberStr));
 	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
 	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
@@ -1338,7 +1339,7 @@ void DoApplianceObjectInfo (HWND hwndOwner)
 	PCWSTR kindStr;
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	NumToString(g_objActive + 1, numberStr, ARRAYSIZE(numberStr));
 	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
 	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
@@ -1367,7 +1368,7 @@ void DoMicrowaveObjectInfo (HWND hwndOwner)
 	PCWSTR kindStr;
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	NumToString(g_objActive + 1, numberStr, ARRAYSIZE(numberStr));
 	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
 	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
@@ -1396,7 +1397,7 @@ void DoGreaseObjectInfo (HWND hwndOwner)
 	PCWSTR kindStr;
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	NumToString(g_objActive + 1, numberStr, ARRAYSIZE(numberStr));
 	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
 	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
@@ -1425,7 +1426,7 @@ void DoInvisBonusObjectInfo (HWND hwndOwner)
 	PCWSTR kindStr;
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	NumToString(g_objActive + 1, numberStr, ARRAYSIZE(numberStr));
 	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
 	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
@@ -1460,7 +1461,7 @@ void DoTransObjectInfo (HWND hwndOwner)
 	floor = 0;
 	suite = kRoomIsEmpty;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	NumToString(g_objActive + 1, numberStr, ARRAYSIZE(numberStr));
 	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
 	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 	if (g_thisRoom->objects[g_objActive].data.d.where == -1)
@@ -1480,8 +1481,8 @@ void DoTransObjectInfo (HWND hwndOwner)
 	}
 	else
 	{
-		StringCchPrintf(objStr, ARRAYSIZE(objStr), L"%d",
-			(int)g_thisRoom->objects[g_objActive].data.d.who + 1);
+		NumToString((SInt32)g_thisRoom->objects[g_objActive].data.d.who + 1,
+				objStr, ARRAYSIZE(objStr));
 	}
 
 	params.arg[0] = numberStr;
@@ -1524,7 +1525,7 @@ void DoEnemyObjectInfo (HWND hwndOwner)
 	PCWSTR kindStr;
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	NumToString(g_objActive + 1, numberStr, ARRAYSIZE(numberStr));
 	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
 	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 
@@ -1553,7 +1554,7 @@ void DoFlowerObjectInfo (HWND hwndOwner)
 	PCWSTR kindStr;
 	INT_PTR result;
 
-	StringCchPrintf(numberStr, ARRAYSIZE(numberStr), L"%d", (int)(g_objActive + 1));
+	NumToString(g_objActive + 1, numberStr, ARRAYSIZE(numberStr));
 	GetObjectName(g_thisRoom->objects[g_objActive].what, &kindStrBuffer);
 	kindStr = (kindStrBuffer != NULL) ? kindStrBuffer : L"";
 

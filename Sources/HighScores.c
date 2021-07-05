@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <strsafe.h>
 
+SInt16 GetWidthOfString (HDC hdc, PCWSTR theString);
 void DrawHighScores (void);
 void SortHighScores (scoresType *theScores);
 INT_PTR CALLBACK NameFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
@@ -60,6 +61,19 @@ void DoHighScores (void)
 	WaitForInputEvent(30);
 }
 
+//--------------------------------------------------------------  GetWidthOfString
+
+SInt16 GetWidthOfString (HDC hdc, PCWSTR theString)
+{
+	SIZE extents = { 0 };
+
+	if (!GetTextExtentPoint32W(hdc, theString, (int)wcslen(theString), &extents))
+	{
+		return 0;
+	}
+	return (SInt16)extents.cx;
+}
+
 //--------------------------------------------------------------  DrawHighScores
 // Draws the actual scores on the screen.
 
@@ -70,11 +84,12 @@ void DrawHighScores (void)
 	#define kKimsLifted  4
 	HDC tempMap, tempMask;
 	Rect tempRect, tempRect2;
-	Str255 tempStr;
-	WCHAR tempHouseStr[MAX_PATH + 4];
+	WCHAR tempStr[MAX_PATH + 4];
 	SInt16 scoreLeft, bannerWidth, i, dropIt;
 	INT hOffset, vOffset;
 	HFONT theFont;
+	COLORREF numberColor;
+	COLORREF entryColor;
 	COLORREF wasColor;
 
 	scoreLeft = (RectWide(&g_workSrcRect) - kScoreWide) / 2;
@@ -100,35 +115,35 @@ void DrawHighScores (void)
 
 	SaveDC(g_workSrcMap);
 	SelectFont(g_workSrcMap, theFont);
-	StringCchCopy(tempHouseStr, ARRAYSIZE(tempHouseStr), L"\u2022 "); // "• "
-	StringCchCat(tempHouseStr, ARRAYSIZE(tempHouseStr), g_thisHouseName);
-	StringCchCat(tempHouseStr, ARRAYSIZE(tempHouseStr), L" \u2022"); // " •"
-	hOffset = scoreLeft + ((kScoreWide - Win_StringWidth(g_workSrcMap, tempHouseStr)) / 2);
+	SetBkMode(g_workSrcMap, TRANSPARENT);
+	SetTextAlign(g_workSrcMap, TA_LEFT | TA_BASELINE);
+	StringCchCopy(tempStr, ARRAYSIZE(tempStr), L"\u2022 "); // "• "
+	StringCchCat(tempStr, ARRAYSIZE(tempStr), g_thisHouseName);
+	StringCchCat(tempStr, ARRAYSIZE(tempStr), L" \u2022"); // " •"
+	hOffset = scoreLeft + ((kScoreWide - GetWidthOfString(g_workSrcMap, tempStr)) / 2);
 	vOffset = dropIt - 65;
-	MoveToEx(g_workSrcMap, hOffset - 1, vOffset - 1, NULL);
 	SetTextColor(g_workSrcMap, blackColor);
-	Win_DrawString(g_workSrcMap, tempHouseStr);
-	MoveToEx(g_workSrcMap, hOffset, vOffset, NULL);
+	TextOutW(g_workSrcMap, hOffset - 1, vOffset - 1, tempStr, (int)wcslen(tempStr));
 	SetTextColor(g_workSrcMap, cyanColor);
-	Win_DrawString(g_workSrcMap, tempHouseStr);
+	TextOutW(g_workSrcMap, hOffset, vOffset, tempStr, (int)wcslen(tempStr));
 	RestoreDC(g_workSrcMap, -1);
 	DeleteFont(theFont);
 
 	theFont = CreateTahomaFont(-12, FW_BOLD);
 	SaveDC(g_workSrcMap);
 	SelectFont(g_workSrcMap, theFont);
+	SetBkMode(g_workSrcMap, TRANSPARENT);
+	SetTextAlign(g_workSrcMap, TA_LEFT | TA_BASELINE);
 
 	// message for score #1
-	PasStringCopy(g_thisHouse.highScores.banner, tempStr);
-	bannerWidth = Mac_StringWidth(g_workSrcMap, tempStr);
+	WinFromMacString(tempStr, ARRAYSIZE(tempStr), g_thisHouse.highScores.banner);
+	bannerWidth = GetWidthOfString(g_workSrcMap, tempStr);
 	hOffset = scoreLeft + (kScoreWide - bannerWidth) / 2;
 	vOffset = dropIt - kKimsLifted;
 	SetTextColor(g_workSrcMap, blackColor);
-	MoveToEx(g_workSrcMap, hOffset, vOffset, NULL);
-	Mac_DrawString(g_workSrcMap, tempStr);
+	TextOutW(g_workSrcMap, hOffset, vOffset, tempStr, (int)wcslen(tempStr));
 	SetTextColor(g_workSrcMap, yellowColor);
-	MoveToEx(g_workSrcMap, hOffset, vOffset - 1, NULL);
-	Mac_DrawString(g_workSrcMap, tempStr);
+	TextOutW(g_workSrcMap, hOffset, vOffset - 1, tempStr, (int)wcslen(tempStr));
 
 	QSetRect(&tempRect, 0, 0, bannerWidth + 8, kScoreSpacing);
 	QOffsetRect(&tempRect, scoreLeft - 3 + (kScoreWide - bannerWidth) / 2,
@@ -144,95 +159,63 @@ void DrawHighScores (void)
 	{
 		if (g_thisHouse.highScores.scores[i] > 0L)
 		{
-			// draw placing number
-			NumToString(i + 1L, tempStr);
-			SetTextColor(g_workSrcMap, blackColor);
 			if (i == 0)
-				MoveToEx(g_workSrcMap, scoreLeft + 1, dropIt - kScoreSpacing - kKimsLifted, NULL);
+			{
+				vOffset = dropIt - 1 - kScoreSpacing - kKimsLifted;
+			}
 			else
-				MoveToEx(g_workSrcMap, scoreLeft + 1, dropIt + (i * kScoreSpacing), NULL);
-			Mac_DrawString(g_workSrcMap, tempStr);
+			{
+				vOffset = dropIt - 1 + (i * kScoreSpacing);
+			}
+
 			if (i == g_lastHighScore)
-				SetTextColor(g_workSrcMap, whiteColor);
+			{
+				numberColor = whiteColor;
+				entryColor = whiteColor;
+			}
 			else
-				SetTextColor(g_workSrcMap, cyanColor);
-			if (i == 0)
-				MoveToEx(g_workSrcMap, scoreLeft + 0, dropIt - 1 - kScoreSpacing - kKimsLifted, NULL);
-			else
-				MoveToEx(g_workSrcMap, scoreLeft + 0, dropIt - 1 + (i * kScoreSpacing), NULL);
-			Mac_DrawString(g_workSrcMap, tempStr);
+			{
+				numberColor = cyanColor;
+				entryColor = yellowColor;
+			}
+
+			// draw placing number
+			NumToString(i + 1L, tempStr, ARRAYSIZE(tempStr));
+			SetTextColor(g_workSrcMap, blackColor);
+			TextOutW(g_workSrcMap, scoreLeft + 1, vOffset + 1, tempStr, (int)wcslen(tempStr));
+			SetTextColor(g_workSrcMap, numberColor);
+			TextOutW(g_workSrcMap, scoreLeft + 0, vOffset, tempStr, (int)wcslen(tempStr));
 
 			// draw high score name
-			PasStringCopy(g_thisHouse.highScores.names[i], tempStr);
+			WinFromMacString(tempStr, ARRAYSIZE(tempStr), g_thisHouse.highScores.names[i]);
 			SetTextColor(g_workSrcMap, blackColor);
-			if (i == 0)
-				MoveToEx(g_workSrcMap, scoreLeft + 31, dropIt - kScoreSpacing - kKimsLifted, NULL);
-			else
-				MoveToEx(g_workSrcMap, scoreLeft + 31, dropIt + (i * kScoreSpacing), NULL);
-			Mac_DrawString(g_workSrcMap, tempStr);
-			if (i == g_lastHighScore)
-				SetTextColor(g_workSrcMap, whiteColor);
-			else
-				SetTextColor(g_workSrcMap, yellowColor);
-			if (i == 0)
-				MoveToEx(g_workSrcMap, scoreLeft + 30, dropIt - 1 - kScoreSpacing - kKimsLifted, NULL);
-			else
-				MoveToEx(g_workSrcMap, scoreLeft + 30, dropIt - 1 + (i * kScoreSpacing), NULL);
-			Mac_DrawString(g_workSrcMap, tempStr);
+			TextOutW(g_workSrcMap, scoreLeft + 31, vOffset + 1, tempStr, (int)wcslen(tempStr));
+			SetTextColor(g_workSrcMap, entryColor);
+			TextOutW(g_workSrcMap, scoreLeft + 30, vOffset, tempStr, (int)wcslen(tempStr));
 
 			// draw level number
-			NumToString(g_thisHouse.highScores.levels[i], tempStr);
+			NumToString(g_thisHouse.highScores.levels[i], tempStr, ARRAYSIZE(tempStr));
 			SetTextColor(g_workSrcMap, blackColor);
-			if (i == 0)
-				MoveToEx(g_workSrcMap, scoreLeft + 161, dropIt - kScoreSpacing - kKimsLifted, NULL);
-			else
-				MoveToEx(g_workSrcMap, scoreLeft + 161, dropIt + (i * kScoreSpacing), NULL);
-			Mac_DrawString(g_workSrcMap, tempStr);
-			if (i == g_lastHighScore)
-				SetTextColor(g_workSrcMap, whiteColor);
-			else
-				SetTextColor(g_workSrcMap, yellowColor);
-			if (i == 0)
-				MoveToEx(g_workSrcMap, scoreLeft + 160, dropIt - 1 - kScoreSpacing - kKimsLifted, NULL);
-			else
-				MoveToEx(g_workSrcMap, scoreLeft + 160, dropIt - 1 + (i * kScoreSpacing), NULL);
-			Mac_DrawString(g_workSrcMap, tempStr);
+			TextOutW(g_workSrcMap, scoreLeft + 161, vOffset + 1, tempStr, (int)wcslen(tempStr));
+			SetTextColor(g_workSrcMap, entryColor);
+			TextOutW(g_workSrcMap, scoreLeft + 160, vOffset, tempStr, (int)wcslen(tempStr));
 
 			// draw word "rooms"
 			if (g_thisHouse.highScores.levels[i] == 1)
-				GetLocalizedString_Pascal(6, tempStr, ARRAYSIZE(tempStr));
+				GetLocalizedString(6, tempStr, ARRAYSIZE(tempStr));
 			else
-				GetLocalizedString_Pascal(7, tempStr, ARRAYSIZE(tempStr));
+				GetLocalizedString(7, tempStr, ARRAYSIZE(tempStr));
 			SetTextColor(g_workSrcMap, blackColor);
-			if (i == 0)
-				MoveToEx(g_workSrcMap, scoreLeft + 193, dropIt - kScoreSpacing - kKimsLifted, NULL);
-			else
-				MoveToEx(g_workSrcMap, scoreLeft + 193, dropIt + (i * kScoreSpacing), NULL);
-			Mac_DrawString(g_workSrcMap, tempStr);
+			TextOutW(g_workSrcMap, scoreLeft + 193, vOffset + 1, tempStr, (int)wcslen(tempStr));
 			SetTextColor(g_workSrcMap, cyanColor);
-			if (i == 0)
-				MoveToEx(g_workSrcMap, scoreLeft + 192, dropIt - 1 - kScoreSpacing - kKimsLifted, NULL);
-			else
-				MoveToEx(g_workSrcMap, scoreLeft + 192, dropIt - 1 + (i * kScoreSpacing), NULL);
-			Mac_DrawString(g_workSrcMap, tempStr);
+			TextOutW(g_workSrcMap, scoreLeft + 192, vOffset, tempStr, (int)wcslen(tempStr));
 
 			// draw high score points
-			NumToString(g_thisHouse.highScores.scores[i], tempStr);
+			NumToString(g_thisHouse.highScores.scores[i], tempStr, ARRAYSIZE(tempStr));
 			SetTextColor(g_workSrcMap, blackColor);
-			if (i == 0)
-				MoveToEx(g_workSrcMap, scoreLeft + 291, dropIt - kScoreSpacing - kKimsLifted, NULL);
-			else
-				MoveToEx(g_workSrcMap, scoreLeft + 291, dropIt + (i * kScoreSpacing), NULL);
-			Mac_DrawString(g_workSrcMap, tempStr);
-			if (i == g_lastHighScore)
-				SetTextColor(g_workSrcMap, whiteColor);
-			else
-				SetTextColor(g_workSrcMap, yellowColor);
-			if (i == 0)
-				MoveToEx(g_workSrcMap, scoreLeft + 290, dropIt - 1 - kScoreSpacing - kKimsLifted, NULL);
-			else
-				MoveToEx(g_workSrcMap, scoreLeft + 290, dropIt - 1 + (i * kScoreSpacing), NULL);
-			Mac_DrawString(g_workSrcMap, tempStr);
+			TextOutW(g_workSrcMap, scoreLeft + 291, vOffset + 1, tempStr, (int)wcslen(tempStr));
+			SetTextColor(g_workSrcMap, entryColor);
+			TextOutW(g_workSrcMap, scoreLeft + 290, vOffset, tempStr, (int)wcslen(tempStr));
 		}
 	}
 
@@ -242,10 +225,12 @@ void DrawHighScores (void)
 	theFont = CreateTahomaFont(-9, FW_BOLD);
 	SaveDC(g_workSrcMap);
 	SelectFont(g_workSrcMap, theFont);
+	SetBkMode(g_workSrcMap, TRANSPARENT);
+	SetTextAlign(g_workSrcMap, TA_LEFT | TA_BASELINE);
 	SetTextColor(g_workSrcMap, blueColor);
-	MoveToEx(g_workSrcMap, scoreLeft + 80, dropIt - 1 + (10 * kScoreSpacing), NULL);
-	GetLocalizedString_Pascal(8, tempStr, ARRAYSIZE(tempStr));
-	Mac_DrawString(g_workSrcMap, tempStr);
+	GetLocalizedString(8, tempStr, ARRAYSIZE(tempStr));
+	vOffset = dropIt - 1 + (10 * kScoreSpacing);
+	TextOutW(g_workSrcMap, scoreLeft + 80, vOffset, tempStr, (int)wcslen(tempStr));
 	RestoreDC(g_workSrcMap, -1);
 	DeleteFont(theFont);
 }
@@ -273,14 +258,15 @@ void SortHighScores (scoresType *theScores)
 		}
 		if (which != -1)
 		{
-			PasStringCopy(theScores->names[which], tempScores.names[h]);
+			PasStringCopy(theScores->names[which], tempScores.names[h],
+					ARRAYSIZE(tempScores.names[h]));
 			tempScores.scores[h] = theScores->scores[which];
 			tempScores.timeStamps[h] = theScores->timeStamps[which];
 			tempScores.levels[h] = theScores->levels[which];
 			theScores->scores[which] = -1L;
 		}
 	}
-	PasStringCopy(theScores->banner, tempScores.banner);
+	PasStringCopy(theScores->banner, tempScores.banner, ARRAYSIZE(tempScores.banner));
 	*theScores = tempScores;
 }
 
@@ -298,7 +284,8 @@ void ZeroHighScores (housePtr house)
 	);
 	for (i = 0; i < kMaxScores; i++)
 	{
-		PasStringCopyC("--------------", house->highScores.names[i]);
+		PasStringCopyC("--------------", house->highScores.names[i],
+				ARRAYSIZE(house->highScores.names[i]));
 		house->highScores.scores[i] = 0L;
 		house->highScores.timeStamps[i] = 0L;
 		house->highScores.levels[i] = 0;
@@ -314,7 +301,8 @@ void ZeroAllButHighestScore (housePtr house)
 
 	for (i = 1; i < kMaxScores; i++)
 	{
-		PasStringCopyC("--------------", house->highScores.names[i]);
+		PasStringCopyC("--------------", house->highScores.names[i],
+				ARRAYSIZE(house->highScores.names[i]));
 		house->highScores.scores[i] = 0L;
 		house->highScores.timeStamps[i] = 0L;
 		house->highScores.levels[i] = 0;
@@ -349,11 +337,13 @@ Boolean TestHighScore (HWND ownerWindow)
 	if (placing != -1)
 	{
 		GetHighScoreName(ownerWindow, placing + 1);
-		PasStringCopy(g_highName, g_thisHouse.highScores.names[kMaxScores - 1]);
+		PasStringCopy(g_highName, g_thisHouse.highScores.names[kMaxScores - 1],
+				ARRAYSIZE(g_thisHouse.highScores.names[kMaxScores - 1]));
 		if (placing == 0)
 		{
 			GetHighScoreBanner(ownerWindow);
-			PasStringCopy(g_highBanner, g_thisHouse.highScores.banner);
+			PasStringCopy(g_highBanner, g_thisHouse.highScores.banner,
+					ARRAYSIZE(g_thisHouse.highScores.banner));
 		}
 		g_thisHouse.highScores.scores[kMaxScores - 1] = g_theScore;
 		g_thisHouse.highScores.timeStamps[kMaxScores - 1] = Mac_GetDateTime();
@@ -414,8 +404,8 @@ void GetHighScoreName (HWND ownerWindow, SInt16 place)
 	wchar_t scoreStr[32];
 	wchar_t placeStr[32];
 
-	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)g_theScore);
-	StringCchPrintf(placeStr, ARRAYSIZE(placeStr), L"%ld", (long)place);
+	NumToString(g_theScore, scoreStr, ARRAYSIZE(scoreStr));
+	NumToString(place, placeStr, ARRAYSIZE(placeStr));
 
 	params.arg[0] = scoreStr;
 	params.arg[1] = placeStr;

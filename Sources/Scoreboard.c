@@ -194,7 +194,7 @@ void RefreshNumGliders (void)
 	{
 		displayMortals = 0;
 	}
-	StringCchPrintf(nGlidersStr, ARRAYSIZE(nGlidersStr), L"%ld", (long)displayMortals);
+	NumToString(displayMortals, nGlidersStr, ARRAYSIZE(nGlidersStr));
 	numChars = (int)wcslen(nGlidersStr);
 
 	SaveDC(g_boardGSrcMap);
@@ -223,7 +223,7 @@ void RefreshPoints (void)
 
 	ColorRect(g_boardPSrcMap, &g_boardPSrcRect, kGrayBackgroundColor);
 
-	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)g_theScore);
+	NumToString(g_theScore, scoreStr, ARRAYSIZE(scoreStr));
 	numChars = (int)wcslen(scoreStr);
 
 	SaveDC(g_boardPSrcMap);
@@ -255,7 +255,7 @@ void QuickGlidersRefresh (void)
 
 	ColorRect(g_boardGSrcMap, &g_boardGSrcRect, kGrayBackgroundColor);
 
-	StringCchPrintf(nGlidersStr, ARRAYSIZE(nGlidersStr), L"%ld", (long)g_mortals);
+	NumToString(g_mortals, nGlidersStr, ARRAYSIZE(nGlidersStr));
 	numChars = (int)wcslen(nGlidersStr);
 
 	SaveDC(g_boardGSrcMap);
@@ -287,7 +287,7 @@ void QuickScoreRefresh (void)
 
 	ColorRect(g_boardPSrcMap, &g_boardPSrcRect, kGrayBackgroundColor);
 
-	StringCchPrintf(scoreStr, ARRAYSIZE(scoreStr), L"%ld", (long)g_displayedScore);
+	NumToString(g_displayedScore, scoreStr, ARRAYSIZE(scoreStr));
 	numChars = (int)wcslen(scoreStr);
 
 	SaveDC(g_boardPSrcMap);

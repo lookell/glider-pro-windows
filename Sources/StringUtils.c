@@ -19,58 +19,50 @@
 #define kReturnKeyASCII             0x0D
 #define kSpaceBarASCII              0x20
 
+static Byte CopyPascalStringContents(
+	void *dstPtr,
+	size_t dstCapacity,
+	const void *srcPtr,
+	size_t srcLength);
+
 //==============================================================  Functions
+//--------------------------------------------------------------  CopyPascalStringContents
+
+static Byte CopyPascalStringContents(
+	void *dstPtr,
+	size_t dstCapacity,
+	const void *srcPtr,
+	size_t srcLength)
+{
+	size_t fullLength;
+	Byte copyLength;
+
+	fullLength = (srcLength < dstCapacity) ? srcLength : dstCapacity;
+	copyLength = (fullLength < 255) ? (Byte)fullLength : (Byte)255;
+	memcpy(dstPtr, srcPtr, copyLength);
+	return copyLength;
+}
+
 //--------------------------------------------------------------  PasStringCopy
 // Given a source string and storage for a second, this function
 // copies from one to the other.  It assumes Pascal style strings.
 
-void PasStringCopy (ConstStringPtr p1, StringPtr p2)
+void PasStringCopy (ConstStringPtr src, StringPtr dst, size_t capacity)
 {
-	SInt16 stringLength;
+	if (capacity == 0)
+		return;
 
-	stringLength = *p2++ = *p1++;
-	while (--stringLength >= 0)
-		*p2++ = *p1++;
+	dst[0] = CopyPascalStringContents(&dst[1], capacity - 1, &src[1], src[0]);
 }
 
 //--------------------------------------------------------------  PasStringCopyC
 
-void PasStringCopyC (PCSTR s1, StringPtr p2)
+void PasStringCopyC (PCSTR src, StringPtr dst, size_t capacity)
 {
-	Byte stringLength;
+	if (capacity == 0)
+		return;
 
-	stringLength = 0;
-	while (*s1 != '\0' && stringLength < 255)
-		p2[++stringLength] = *s1++;
-	p2[0] = stringLength;
-}
-
-//--------------------------------------------------------------  PasStringConcat
-// This function concatenates the second Pascal string to the end of
-// the first Pascal string.
-
-void PasStringConcat (StringPtr p1, ConstStringPtr p2)
-{
-	SInt16 wasLength, addedLength, i;
-
-	wasLength = *p1;
-	if (wasLength > 255)
-		wasLength = 255;
-
-	addedLength = *p2;
-	if ((wasLength + addedLength) > 255)
-		addedLength = 255 - wasLength;
-
-	*p1 = (Byte)(wasLength + addedLength);
-
-	p1++;
-	p2++;
-
-	for (i = 0; i < wasLength; i++)
-		p1++;
-
-	for (i = 0; i < addedLength; i++)
-		*p1++ = *p2++;
+	dst[0] = CopyPascalStringContents(&dst[1], capacity - 1, src, strlen(src));
 }
 
 //--------------------------------------------------------------  PasStringEqual
@@ -103,81 +95,46 @@ Boolean PasStringEqual (ConstStringPtr p1, ConstStringPtr p2, Boolean caseSens)
 // This function walks through a source string and looks for an
 // entire line of text.  A "line" of text is assumed to be bounded
 // by carriage returns.  The index variable indicates which line
-// is sought.
+// is sought.  The 'pOffset' and 'pLength' are filled in with the
+// offset and length of the substring within 'srcStr'.  This function
+// returns nonzero if the requested line is found, or zero if the
+// line doesn't exist in the source text.
 
-void GetLineOfText (ConstStringPtr srcStr, SInt16 index, StringPtr textLine)
+Boolean GetLineOfText (PCWSTR srcStr, SInt16 index, size_t *pOffset, size_t *pLength)
 {
-	SInt16 i, srcLength, count, start, stop;
-	Boolean foundIt;
+	SInt16 i;
+	PCWSTR startPtr;
+	PCWSTR carriagePtr;
+	PCWSTR stopPtr;
 
-	PasStringCopyC("", textLine);
-	srcLength = srcStr[0];
+	*pOffset = 0;
+	*pLength = 0;
 
-	if (index == 0)  // walk through to "index"
-		start = 1;
-	else
+	if (index < 0)
 	{
-		start = 0;
-		count = 0;
-		i = 0;
-		foundIt = false;
-		do
-		{
-			i++;
-			if (srcStr[i] == kReturnKeyASCII)
-			{
-				count++;
-				if (count == index)
-				{
-					start = i + 1;
-					foundIt = true;
-				}
-			}
-		}
-		while ((i < srcLength) && (!foundIt));
+		return false;
 	}
 
-	if (start != 0)
+	startPtr = srcStr;
+	for (i = 0; i < index; i++)
 	{
-		i = start;
-		stop = -1;
-
-		foundIt = false;
-		do
+		carriagePtr = wcschr(startPtr, L'\r');
+		if (carriagePtr == NULL)
 		{
-			if (srcStr[i] == kReturnKeyASCII)
-			{
-				stop = i;
-				foundIt = true;
-			}
-			i++;
+			return false;
 		}
-		while ((i < srcLength) && (!foundIt));
-
-		if (!foundIt)
-		{
-			if (start > srcLength)
-			{
-				start = srcLength;
-				stop = srcLength - 1;
-			}
-			else
-				stop = i;
-		}
-
-		count = 0;
-
-		for (i = start; i <= stop; i++)
-		{
-			count++;
-			textLine[count] = srcStr[i];
-		}
-		textLine[0] = (Byte)count;
-
-		// blank out the trailing carriage return, if any
-		if (textLine[count] == kReturnKeyASCII)
-			textLine[count] = kSpaceBarASCII;
+		startPtr = carriagePtr + 1;
 	}
+
+	stopPtr = wcschr(startPtr, L'\r');
+	if (stopPtr == NULL)
+	{
+		stopPtr = startPtr + wcslen(startPtr);
+	}
+
+	*pOffset = startPtr - srcStr;
+	*pLength = stopPtr - startPtr;
+	return true;
 }
 
 //--------------------------------------------------------------  WrapText
@@ -185,10 +142,13 @@ void GetLineOfText (ConstStringPtr srcStr, SInt16 index, StringPtr textLine)
 // one line, this function goes through and inserts carriage returns
 // in order to ensure that no line of text exceeds maxChars.
 
-void WrapText (StringPtr theText, SInt16 maxChars)
+void WrapText (StringPtr theText, SInt16 capacity, SInt16 maxChars)
 {
 	SInt16 lastChar, count, chars, spaceIs;
 	Boolean foundEdge, foundSpace;
+
+	if (capacity <= 0)
+		return;
 
 	lastChar = theText[0];
 	count = 0;
@@ -203,19 +163,27 @@ void WrapText (StringPtr theText, SInt16 maxChars)
 		{
 			count++;
 			chars++;
-			if (theText[count] == kReturnKeyASCII)
-				foundEdge = true;
-			else if (theText[count] == kSpaceBarASCII)
+			if (count < capacity)
 			{
-				foundSpace = true;
-				spaceIs = count;
+				if (theText[count] == kReturnKeyASCII)
+				{
+					foundEdge = true;
+				}
+				else if (theText[count] == kSpaceBarASCII)
+				{
+					foundSpace = true;
+					spaceIs = count;
+				}
 			}
 		}
 		while ((count < lastChar) && (chars < maxChars) && (!foundEdge));
 
 		if ((!foundEdge) && (count < lastChar) && (foundSpace) && (spaceIs >= 0))
 		{
-			theText[spaceIs] = kReturnKeyASCII;
+			if (spaceIs < capacity)
+			{
+				theText[spaceIs] = kReturnKeyASCII;
+			}
 			count = spaceIs + 1;
 		}
 	}
@@ -251,7 +219,7 @@ void GetLocalizedString (UInt16 index, PWSTR pszDest, size_t cchDest)
 // function fails (e.g., memory could not be allocated). The returned pointer must
 // be deallocated with the standard 'free' function.
 
-PWSTR MacToWinLineEndings(PCWSTR input)
+PWSTR MacToWinLineEndings (PCWSTR input)
 {
 	PWSTR output;
 	size_t inputIndex, outputIndex, outputSize;
@@ -297,7 +265,7 @@ PWSTR MacToWinLineEndings(PCWSTR input)
 // function fails (e.g., memory could not be allocated for the new string). The
 // returned pointer must be deallocated with the standard 'free' function.
 
-PWSTR WinToMacLineEndings(PCWSTR input)
+PWSTR WinToMacLineEndings (PCWSTR input)
 {
 	PWSTR output;
 	size_t inputIndex, outputIndex, outputSize;
@@ -347,29 +315,9 @@ PWSTR WinToMacLineEndings(PCWSTR input)
 // Convert the given number to a decimal string representation.
 // The string is written to the given output string.
 
-void NumToString (SInt32 theNum, StringPtr theString)
+void NumToString (SInt32 theNum, PWSTR theString, size_t capacity)
 {
-	char buffer[sizeof("-2147483648")];
-	size_t length;
-	HRESULT hr;
-
-	if (theString == NULL)
-	{
-		return;
-	}
-	// Return an empty string if an error occurs.
-	theString[0] = 0;
-
-	hr = StringCchPrintfA(buffer, ARRAYSIZE(buffer), "%ld", (long)theNum);
-	if (SUCCEEDED(hr))
-	{
-		hr = StringCchLengthA(buffer, ARRAYSIZE(buffer), &length);
-		if (SUCCEEDED(hr))
-		{
-			theString[0] = (Byte)length;
-			memcpy(&theString[1], buffer, theString[0]);
-		}
-	}
+	StringCchPrintfW(theString, capacity, L"%ld", (long)theNum);
 }
 
 //--------------------------------------------------------------  WinFromMacString
@@ -380,7 +328,7 @@ void NumToString (SInt32 theNum, StringPtr theString)
 // The return value of this function is the return value of 'MultiByteToWideChar'.
 // Return nonzero on success and zero on failure.
 
-int WinFromMacString(PWSTR winbuf, int winlen, ConstStringPtr macbuf)
+int WinFromMacString (PWSTR winbuf, int winlen, ConstStringPtr macbuf)
 {
 	int copySize, result;
 
@@ -409,17 +357,16 @@ int WinFromMacString(PWSTR winbuf, int winlen, ConstStringPtr macbuf)
 // The return value of this function is the return value of 'WideCharToMultiByte'.
 // Return nonzero on success and zero on failure.
 
-int MacFromWinString(StringPtr macbuf, int maclen, PCWSTR winbuf)
+int MacFromWinString (StringPtr macbuf, int maclen, PCWSTR winbuf)
 {
 	size_t inputSize;
 	int copySize, result;
-	HRESULT hr;
 
 	// Calculate the number of wide characters to copy
-	hr = StringCchLength(winbuf, INT_MAX, &inputSize);
-	if (FAILED(hr))
+	inputSize = wcslen(winbuf);
+	if (inputSize > (size_t)INT_MAX)
 	{
-		inputSize = 0;
+		inputSize = (size_t)INT_MAX;
 	}
 	copySize = (int)inputSize;
 	if (copySize > maclen - 1)

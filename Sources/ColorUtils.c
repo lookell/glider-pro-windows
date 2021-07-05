@@ -23,21 +23,6 @@ COLORREF Index2ColorRef (SInt32 color)
 	return MacColor8[color];
 }
 
-//--------------------------------------------------------------  ColorText
-// Given a string and a color index (index into the current palette),
-// this function draws text in that color.  It assumes the current port,
-// the current font, the current pen location, etc.
-
-void ColorText (HDC hdc, ConstStringPtr theStr, SInt32 color)
-{
-	COLORREF theRGBColor, wasColor;
-
-	theRGBColor = Index2ColorRef(color);
-	wasColor = SetTextColor(hdc, theRGBColor);
-	Mac_DrawString(hdc, theStr);
-	SetTextColor(hdc, wasColor);
-}
-
 //--------------------------------------------------------------  ColorRect
 // Given a rectangle and color index, this function draws a solid
 // rectangle in that color.  Current port, pen mode, etc. assumed.

@@ -606,8 +606,8 @@ Boolean KeepObjectLegal (void)
 
 void WrapBannerAndTrailer (void)
 {
-	WrapText(g_thisHouse.banner, 40);
-	WrapText(g_thisHouse.trailer, 64);
+	WrapText(g_thisHouse.banner, ARRAYSIZE(g_thisHouse.banner), 40);
+	WrapText(g_thisHouse.trailer, ARRAYSIZE(g_thisHouse.trailer), 64);
 }
 
 //--------------------------------------------------------------  ValidateNumberOfRooms
@@ -825,7 +825,7 @@ void CountUntitledRooms (void)
 	SInt16 i, numRooms;
 	Str255 untitledRoomStr;
 
-	PasStringCopyC("Untitled Room", untitledRoomStr);
+	PasStringCopyC("Untitled Room", untitledRoomStr, ARRAYSIZE(untitledRoomStr));
 
 	numRooms = g_thisHouse.nRooms;
 	for (i = 0; i < numRooms; i++)
@@ -1048,7 +1048,7 @@ void CheckHouseForProblems (HWND ownerWindow)
 		CheckDuplicateFloorSuite();
 		if (g_houseErrors != 0)
 		{
-			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)g_houseErrors);
+			NumToString(g_houseErrors, message, ARRAYSIZE(message));
 			GetLocalizedString(28, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, redColor);
@@ -1065,7 +1065,7 @@ void CheckHouseForProblems (HWND ownerWindow)
 		ValidateRoomNumbers(mssgWindow);
 		if (g_houseErrors != 0)
 		{
-			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)g_houseErrors);
+			NumToString(g_houseErrors, message, ARRAYSIZE(message));
 			GetLocalizedString(29, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, redColor);
@@ -1080,7 +1080,7 @@ void CheckHouseForProblems (HWND ownerWindow)
 		CountUntitledRooms();
 		if (g_houseErrors != 0)
 		{
-			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)g_houseErrors);
+			NumToString(g_houseErrors, message, ARRAYSIZE(message));
 			GetLocalizedString(30, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, blueColor);
@@ -1095,7 +1095,7 @@ void CheckHouseForProblems (HWND ownerWindow)
 		CheckRoomNameLength();
 		if (g_houseErrors != 0)
 		{
-			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)g_houseErrors);
+			NumToString(g_houseErrors, message, ARRAYSIZE(message));
 			GetLocalizedString(31, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, blueColor);
@@ -1110,7 +1110,7 @@ void CheckHouseForProblems (HWND ownerWindow)
 		MakeSureNumObjectsJives();
 		if (g_houseErrors != 0)
 		{
-			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)g_houseErrors);
+			NumToString(g_houseErrors, message, ARRAYSIZE(message));
 			GetLocalizedString(32, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, redColor);
@@ -1128,7 +1128,7 @@ void CheckHouseForProblems (HWND ownerWindow)
 		KeepAllObjectsLegal(mssgWindow);
 		if (g_houseErrors != 0)
 		{
-			StringCchPrintf(message, ARRAYSIZE(message), L"%d", (int)g_houseErrors);
+			NumToString(g_houseErrors, message, ARRAYSIZE(message));
 			GetLocalizedString(34, message2, ARRAYSIZE(message2));
 			StringCchCat(message, ARRAYSIZE(message), message2);
 			SetMessageTextColor(mssgWindow, redColor);

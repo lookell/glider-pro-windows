@@ -1,7 +1,5 @@
 #include "Macintosh.h"
 
-#include "StringUtils.h"
-
 //--------------------------------------------------------------  CopyBits
 // Copy some portion of a bitmap from one graphics port to another.
 
@@ -258,33 +256,6 @@ void Mac_DrawPicture(HDC hdcDst, HBITMAP myPicture, const Rect *dstRect)
 	DeleteDC(hdcSrc);
 }
 
-//--------------------------------------------------------------  DrawString
-// Draw the given character string, starting from the current position
-// and using the current settings. The reference point of the text is
-// the left edge, at the baseline (TA_LEFT | TA_BASELINE in GDI).
-// The current position is updated by this function to the right edge
-// of the text, at the baseline (TA_UPDATECP in GDI).
-
-void Win_DrawString(HDC hdc, PCWSTR str)
-{
-	int prevBkMode;
-	UINT prevTextAlign;
-
-	prevBkMode = SetBkMode(hdc, TRANSPARENT);
-	prevTextAlign = SetTextAlign(hdc, TA_LEFT | TA_BASELINE | TA_UPDATECP);
-	TextOut(hdc, 0, 0, str, (int)wcslen(str));
-	SetTextAlign(hdc, prevTextAlign);
-	SetBkMode(hdc, prevBkMode);
-}
-
-void Mac_DrawString(HDC hdc, ConstStringPtr str)
-{
-	WCHAR buffer[256];
-
-	WinFromMacString(buffer, ARRAYSIZE(buffer), str);
-	Win_DrawString(hdc, buffer);
-}
-
 //--------------------------------------------------------------  FrameRect
 // Draw a frame within the specified rectangle using the current brush.
 // The vertical strokes use the specified width, and the horizontal
@@ -395,29 +366,6 @@ void Mac_PaintRect(HDC hdc, const Rect *r, HBRUSH hbr)
 	theRgn = CreateRectRgn(r->left, r->top, r->right, r->bottom);
 	FillRgn(hdc, theRgn, hbr);
 	DeleteRgn(theRgn);
-}
-
-//--------------------------------------------------------------  StringWidth
-// Calculate the width, in logical units, of the given Pascal string,
-// using the currently selected font.
-
-SInt16 Win_StringWidth(HDC hdc, PCWSTR str)
-{
-	SIZE extents;
-
-	if (!GetTextExtentPoint32(hdc, str, (int)wcslen(str), &extents))
-	{
-		return 0;
-	}
-	return (SInt16)extents.cx;
-}
-
-SInt16 Mac_StringWidth(HDC hdc, ConstStringPtr str)
-{
-	WCHAR buffer[256];
-
-	WinFromMacString(buffer, ARRAYSIZE(buffer), str);
-	return Win_StringWidth(hdc, buffer);
 }
 
 //--------------------------------------------------------------  Global Data

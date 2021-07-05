@@ -141,7 +141,7 @@ Boolean CreateNewRoom (HWND ownerWindow, SInt16 h, SInt16 v)
 	CopyThisRoomToRoom();
 
 	// fill out fields of new room
-	PasStringCopyC("Untitled Room", g_thisRoom->name);
+	PasStringCopyC("Untitled Room", g_thisRoom->name, ARRAYSIZE(g_thisRoom->name));
 	g_thisRoom->leftStart = 32;
 	g_thisRoom->rightStart = 32;
 	g_thisRoom->bounds = 0;

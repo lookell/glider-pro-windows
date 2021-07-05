@@ -279,7 +279,10 @@ void GetDialogString (HWND theDialog, int item, StringPtr theString, int stringC
 	HWND dialogItem;
 	int itemTextLength;
 
-	PasStringCopyC("", theString);
+	if (stringCapacity <= 0)
+		return;
+
+	theString[0] = 0; // set to empty string
 	dialogItem = GetDlgItem(theDialog, item);
 	itemTextLength = GetWindowTextLength(dialogItem);
 	if (itemTextLength <= 0)

@@ -11,7 +11,6 @@
 #include "WinAPI.h"
 
 COLORREF Index2ColorRef (SInt32 color);
-void ColorText (HDC hdc, ConstStringPtr theStr, SInt32 color);
 void ColorRect (HDC hdc, const Rect *theRect, SInt32 color);
 void ColorOval (HDC hdc, const Rect *theRect, SInt32 color);
 void ColorRegion (HDC hdc, HRGN theRgn, SInt32 color);

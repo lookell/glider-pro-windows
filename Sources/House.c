@@ -688,7 +688,7 @@ void ConvertHouseVer1To2 (HWND ownerWindow)
 	{
 		if (g_thisHouse.rooms[i].suite != kRoomIsEmpty)
 		{
-			StringCchPrintf(roomStr, ARRAYSIZE(roomStr), L"%d", (int)i);
+			NumToString(i, roomStr, ARRAYSIZE(roomStr));
 			GetLocalizedString(14, message, ARRAYSIZE(message));
 			StringCchCat(message, ARRAYSIZE(message), roomStr);
 			SetMessageWindowMessage(mssgWindow, message);

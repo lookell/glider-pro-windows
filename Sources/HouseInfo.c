@@ -14,8 +14,7 @@
 #include "Menu.h"
 #include "Play.h"
 #include "ResourceIDs.h"
-
-#include <strsafe.h>
+#include "StringUtils.h"
 
 SInt32 CountTotalHousePoints (void);
 INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
@@ -190,10 +189,10 @@ void DoHouseInfo (HWND ownerWindow)
 	}
 
 	// Convert version to two strings, the 1's and 1/10th's part.
-	StringCchPrintf(versStr, ARRAYSIZE(versStr), L"%ld", (long)(version >> 8));
-	StringCchPrintf(loVers, ARRAYSIZE(loVers), L"%ld", (long)(version % 0x0100));
+	NumToString(version >> 8, versStr, ARRAYSIZE(versStr));
+	NumToString(version % 0x0100, loVers, ARRAYSIZE(loVers));
 	// Number of rooms -> string.
-	StringCchPrintf(nRoomsStr, ARRAYSIZE(nRoomsStr), L"%ld", (long)numRooms);
+	NumToString(numRooms, nRoomsStr, ARRAYSIZE(nRoomsStr));
 
 	params.arg[0] = versStr;
 	params.arg[1] = loVers;

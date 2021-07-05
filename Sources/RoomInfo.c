@@ -16,9 +16,8 @@
 #include "Room.h"
 #include "ResourceIDs.h"
 #include "ResourceLoader.h"
+#include "StringUtils.h"
 #include "Utilities.h"
-
-#include <strsafe.h>
 
 #define kMiniTileWide               16
 
@@ -389,9 +388,9 @@ void RoomInfo_InitDialog (HWND hDlg)
 	AddMenuToComboBox(hDlg, kRoomPopupItem, backgroundsMenu);
 	DestroyMenu(rootMenu);
 
-	StringCchPrintf(floorStr, ARRAYSIZE(floorStr), L"%d", (int)g_thisRoom->floor);
-	StringCchPrintf(suiteStr, ARRAYSIZE(suiteStr), L"%d", (int)g_thisRoom->suite);
-	StringCchPrintf(objectsStr, ARRAYSIZE(objectsStr), L"%d", (int)g_thisRoom->numObjects);
+	NumToString(g_thisRoom->floor, floorStr, ARRAYSIZE(floorStr));
+	NumToString(g_thisRoom->suite, suiteStr, ARRAYSIZE(suiteStr));
+	NumToString(g_thisRoom->numObjects, objectsStr, ARRAYSIZE(objectsStr));
 
 	params.arg[0] = floorStr;
 	params.arg[1] = suiteStr;

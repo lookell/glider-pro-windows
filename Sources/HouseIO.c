@@ -674,7 +674,7 @@ void YellowAlert (HWND ownerWindow, SInt16 whichAlert, SInt16 identifier)
 
 	AllocLoadString(HINST_THISCOMPONENT, kYellowAlertStringBase + whichAlert, &errStrBuffer);
 	errStr = (errStrBuffer != NULL) ? errStrBuffer : L"";
-	StringCchPrintf(errNumStr, ARRAYSIZE(errNumStr), L"%d", (int)identifier);
+	NumToString(identifier, errNumStr, ARRAYSIZE(errNumStr));
 
 	params.arg[0] = errStr;
 	params.arg[1] = errNumStr;

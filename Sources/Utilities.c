@@ -13,6 +13,7 @@
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "ResourceLoader.h"
+#include "StringUtils.h"
 #include "WinAPI.h"
 
 #include <mmsystem.h>
@@ -132,7 +133,7 @@ __declspec(noreturn) void RedAlert (SInt16 errorNumber)
 	AllocLoadString(HINST_THISCOMPONENT, rErrMssgBase + errorNumber, &errMessageBuffer);
 	errMessage = (errMessageBuffer != NULL) ? errMessageBuffer : L"";
 
-	StringCchPrintf(errNumberString, ARRAYSIZE(errNumberString), L"%d", (int)errorNumber);
+	NumToString(errorNumber, errNumberString, ARRAYSIZE(errNumberString));
 
 	EnumThreadWindows(GetCurrentThreadId(), DisableThreadWndProc, 0);
 	params.arg[0] = errTitle;

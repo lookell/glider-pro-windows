@@ -101,48 +101,52 @@ SInt16 CountStarsInHouse (const houseType *house)
 
 void DrawBannerMessage (Point topLeft)
 {
-	Str255 bannerStr, subStr;
+	WCHAR bannerStr[256];
+	WCHAR subStr[256];
+	size_t lineOffset;
+	size_t lineLength;
 	SInt16 count;
 	HFONT bannerFont;
 
-	PasStringCopy(g_thisHouse.banner, bannerStr);
+	WinFromMacString(bannerStr, ARRAYSIZE(bannerStr), g_thisHouse.banner);
 
 	bannerFont = CreateTahomaFont(-12, FW_BOLD);
 	SaveDC(g_workSrcMap);
 	SelectFont(g_workSrcMap, bannerFont);
+	SetBkMode(g_workSrcMap, TRANSPARENT);
+	SetTextAlign(g_workSrcMap, TA_LEFT | TA_BASELINE);
+
 	SetTextColor(g_workSrcMap, blackColor);
 	count = 0;
-	do
+	while (GetLineOfText(bannerStr, count, &lineOffset, &lineLength))
 	{
-		GetLineOfText(bannerStr, count, subStr);
-		MoveToEx(g_workSrcMap, topLeft.h + 16, topLeft.v + 32 + (count * 20), NULL);
-		Mac_DrawString(g_workSrcMap, subStr);
+		TextOut(g_workSrcMap, topLeft.h + 16, topLeft.v + 32 + (count * 20),
+				&bannerStr[lineOffset], (int)lineLength);
 		count++;
 	}
-	while (subStr[0] > 0);
 
 	if (g_bannerStarCountOn)
 	{
 		if (g_numStarsRemaining != 1)
-			GetLocalizedString_Pascal(1, bannerStr, ARRAYSIZE(bannerStr));
+			GetLocalizedString(1, bannerStr, ARRAYSIZE(bannerStr));
 		else
-			GetLocalizedString_Pascal(2, bannerStr, ARRAYSIZE(bannerStr));
+			GetLocalizedString(2, bannerStr, ARRAYSIZE(bannerStr));
 
-		NumToString((SInt32)g_numStarsRemaining, subStr);
-		PasStringConcat(bannerStr, subStr);
+		NumToString(g_numStarsRemaining, subStr, ARRAYSIZE(subStr));
+		StringCchCat(bannerStr, ARRAYSIZE(bannerStr), subStr);
 
 		if (g_numStarsRemaining != 1)
-			GetLocalizedString_Pascal(3, subStr, ARRAYSIZE(subStr));
+			GetLocalizedString(3, subStr, ARRAYSIZE(subStr));
 		else
-			GetLocalizedString_Pascal(4, subStr, ARRAYSIZE(subStr));
-		PasStringConcat(bannerStr, subStr);
+			GetLocalizedString(4, subStr, ARRAYSIZE(subStr));
+		StringCchCat(bannerStr, ARRAYSIZE(bannerStr), subStr);
 
 		SetTextColor(g_workSrcMap, redColor);
-		MoveToEx(g_workSrcMap, topLeft.h + 16, topLeft.v + 164, NULL);
-		Mac_DrawString(g_workSrcMap, bannerStr);
-		MoveToEx(g_workSrcMap, topLeft.h + 16, topLeft.v + 180, NULL);
-		GetLocalizedString_Pascal(5, subStr, ARRAYSIZE(subStr));
-		Mac_DrawString(g_workSrcMap, subStr);
+		TextOut(g_workSrcMap, topLeft.h + 16, topLeft.v + 164,
+				bannerStr, (int)wcslen(bannerStr));
+		GetLocalizedString(5, subStr, ARRAYSIZE(subStr));
+		TextOut(g_workSrcMap, topLeft.h + 16, topLeft.v + 180,
+				subStr, (int)wcslen(subStr));
 	}
 	RestoreDC(g_workSrcMap, -1);
 	DeleteFont(bannerFont);
@@ -191,7 +195,7 @@ void DisplayStarsRemaining (void)
 	src = bounds;
 	QInsetRect(&src, 64, 32);
 
-	StringCchPrintf(theStr, ARRAYSIZE(theStr), L"%d", (int)g_numStarsRemaining);
+	NumToString(g_numStarsRemaining, theStr, ARRAYSIZE(theStr));
 
 	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	if (g_numStarsRemaining < 2)
@@ -204,7 +208,7 @@ void DisplayStarsRemaining (void)
 		LoadScaledGraphic(mainWindowDC, g_theHouseFile, kStarsRemainingPICT, &bounds);
 		textFont = CreateTahomaFont(-12, FW_BOLD);
 		SelectFont(mainWindowDC, textFont);
-		SetTextAlign(mainWindowDC, TA_BASELINE | TA_CENTER);
+		SetTextAlign(mainWindowDC, TA_CENTER | TA_BASELINE);
 		SetTextColor(mainWindowDC, Index2ColorRef(4L));
 		SetBkMode(mainWindowDC, TRANSPARENT);
 		TextOut(mainWindowDC, bounds.left + 102, bounds.top + 23, theStr, (int)wcslen(theStr));

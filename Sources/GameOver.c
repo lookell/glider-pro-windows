@@ -83,8 +83,9 @@ void DoGameOver (void)
 void SetUpFinalScreen (void)
 {
 	Rect tempRect;
-	Str255 tempStr, subStr;
-	WCHAR outStr[256];
+	WCHAR tempStr[256];
+	size_t lineOffset;
+	size_t lineLength;
 	SInt16 count, hOffset, vOffset, i, textDown;
 	HFONT gameOverFont;
 
@@ -96,7 +97,7 @@ void SetUpFinalScreen (void)
 	if (textDown < 0)
 		textDown = 0;
 
-	PasStringCopy(g_thisHouse.trailer, tempStr);
+	WinFromMacString(tempStr, ARRAYSIZE(tempStr), g_thisHouse.trailer);
 
 	SaveDC(g_workSrcMap);
 	gameOverFont = CreateTahomaFont(-12, FW_BOLD);
@@ -104,19 +105,18 @@ void SetUpFinalScreen (void)
 	SetBkMode(g_workSrcMap, TRANSPARENT);
 	SetTextAlign(g_workSrcMap, TA_BASELINE | TA_CENTER);
 	count = 0;
-	do
+	while (GetLineOfText(tempStr, count, &lineOffset, &lineLength))
 	{
-		GetLineOfText(tempStr, count, subStr);
-		WinFromMacString(outStr, ARRAYSIZE(outStr), subStr);
 		hOffset = HalfRectWide(&g_workSrcRect);
 		vOffset = textDown + 32 + (count * 20);
 		SetTextColor(g_workSrcMap, blackColor);
-		TextOut(g_workSrcMap, hOffset + 1, vOffset + 1, outStr, subStr[0]);
+		TextOut(g_workSrcMap, hOffset + 1, vOffset + 1,
+				&tempStr[lineOffset], (int)lineLength);
 		SetTextColor(g_workSrcMap, whiteColor);
-		TextOut(g_workSrcMap, hOffset, vOffset, outStr, subStr[0]);
+		TextOut(g_workSrcMap, hOffset, vOffset,
+				&tempStr[lineOffset], (int)lineLength);
 		count++;
 	}
-	while (subStr[0] > 0);
 	RestoreDC(g_workSrcMap, -1);
 	DeleteFont(gameOverFont);
 
