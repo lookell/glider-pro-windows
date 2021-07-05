@@ -45,7 +45,7 @@ static HMENU DetachPopupMenu (HMENU rootMenu, UINT id, LPWSTR *title);
 
 static HMENU DetachPopupMenu (HMENU rootMenu, UINT id, LPWSTR *title)
 {
-	MENUITEMINFO mii;
+	MENUITEMINFO mii = { 0 };
 
 	if (title == NULL)
 		return NULL;
@@ -62,6 +62,11 @@ static HMENU DetachPopupMenu (HMENU rootMenu, UINT id, LPWSTR *title)
 	if (mii.dwTypeData == NULL)
 		return NULL;
 	if (!GetMenuItemInfo(rootMenu, id, FALSE, &mii))
+	{
+		free(mii.dwTypeData);
+		return NULL;
+	}
+	if (mii.hSubMenu == NULL)
 	{
 		free(mii.dwTypeData);
 		return NULL;

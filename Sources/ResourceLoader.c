@@ -263,19 +263,21 @@ static HRESULT MinizErrorToHResult (mz_zip_error errorCode)
 
 static HRESULT Gp_OpenZipReader (PCWSTR fileName, FILE **pFilePtr, mz_zip_archive *pArchive)
 {
+	FILE *fp;
 	errno_t err;
 	unsigned long dosErrNum;
 	mz_bool succeeded;
 	mz_zip_error zipError;
+	HRESULT hr;
 
 	*pFilePtr = NULL;
 	mz_zip_zero_struct(pArchive);
 
+	fp = NULL;
 	_set_doserrno(ERROR_SUCCESS);
-	err = _wfopen_s(pFilePtr, fileName, L"rb");
+	err = _wfopen_s(&fp, fileName, L"rb");
 	if (err != 0)
 	{
-		*pFilePtr = NULL;
 		_get_doserrno(&dosErrNum);
 		if (dosErrNum == 0)
 		{
@@ -283,15 +285,24 @@ static HRESULT Gp_OpenZipReader (PCWSTR fileName, FILE **pFilePtr, mz_zip_archiv
 		}
 		return HRESULT_FROM_WIN32(dosErrNum);
 	}
-	succeeded = mz_zip_reader_init_cfile(pArchive, *pFilePtr, 0, 0);
+	if (fp == NULL)
+	{
+		return E_FAIL;
+	}
+	succeeded = mz_zip_reader_init_cfile(pArchive, fp, 0, 0);
 	if (!succeeded)
 	{
 		zipError = mz_zip_get_last_error(pArchive);
+		hr = MinizErrorToHResult(zipError);
+		if (SUCCEEDED(hr))
+		{
+			hr = E_FAIL;
+		}
 		mz_zip_zero_struct(pArchive);
-		fclose(*pFilePtr);
-		*pFilePtr = NULL;
-		return MinizErrorToHResult(zipError);
+		fclose(fp);
+		return hr;
 	}
+	*pFilePtr = fp;
 	return S_OK;
 }
 
@@ -726,7 +737,11 @@ HBITMAP Gp_LoadImage (Gp_HouseFile *houseFile, SInt16 imageID)
 {
 	HBITMAP image;
 
-	image = Gp_LoadHouseImage(houseFile, imageID);
+	image = NULL;
+	if (houseFile != NULL)
+	{
+		image = Gp_LoadHouseImage(houseFile, imageID);
+	}
 	if (image == NULL)
 	{
 		image = Gp_LoadBuiltInImage(imageID);
@@ -740,7 +755,11 @@ HBITMAP Gp_LoadImageAsDIB (Gp_HouseFile *houseFile, SInt16 imageID)
 {
 	HBITMAP image;
 
-	image = Gp_LoadHouseImageAsDIB(houseFile, imageID);
+	image = NULL;
+	if (houseFile != NULL)
+	{
+		image = Gp_LoadHouseImageAsDIB(houseFile, imageID);
+	}
 	if (image == NULL)
 	{
 		image = Gp_LoadBuiltInImageAsDIB(imageID);
@@ -754,7 +773,11 @@ HRESULT Gp_LoadSound (Gp_HouseFile *houseFile, SInt16 soundID, WaveData *sound)
 {
 	HRESULT hr;
 
-	hr = Gp_LoadHouseSound(houseFile, soundID, sound);
+	hr = E_FAIL;
+	if (houseFile != NULL)
+	{
+		hr = Gp_LoadHouseSound(houseFile, soundID, sound);
+	}
 	if (FAILED(hr))
 	{
 		hr = Gp_LoadBuiltInSound(soundID, sound);
