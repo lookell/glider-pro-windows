@@ -489,6 +489,21 @@ void OpenMapWindow (void)
 		if (g_mapWindow == NULL)
 			RedAlert(kErrNoMemory);
 
+		scrollInfo.cbSize = sizeof(scrollInfo);
+		scrollInfo.fMask = SIF_RANGE | SIF_PAGE | SIF_POS | SIF_DISABLENOSCROLL;
+
+		scrollInfo.nMin = 0;
+		scrollInfo.nMax = kMaxNumRoomsH - 1;
+		scrollInfo.nPage = g_mapRoomsWide;
+		scrollInfo.nPos = g_mapLeftRoom;
+		SetScrollInfo(g_mapWindow, SB_HORZ, &scrollInfo, TRUE);
+
+		scrollInfo.nMin = 0;
+		scrollInfo.nMax = kMaxNumRoomsV - 1;
+		scrollInfo.nPage = g_mapRoomsHigh;
+		scrollInfo.nPos = g_mapTopRoom;
+		SetScrollInfo(g_mapWindow, SB_VERT, &scrollInfo, TRUE);
+
 #if 0
 		if (OptionKeyDown())
 		{
@@ -507,19 +522,6 @@ void OpenMapWindow (void)
 
 		QSetRect(&g_wasActiveRoomRect, 0, 0, 1, 1);
 		QSetRect(&g_activeRoomRect, 0, 0, 1, 1);
-
-		scrollInfo.cbSize = sizeof(scrollInfo);
-		scrollInfo.fMask = SIF_RANGE | SIF_PAGE | SIF_DISABLENOSCROLL;
-
-		scrollInfo.nMin = 0;
-		scrollInfo.nMax = kMaxNumRoomsH - 1;
-		scrollInfo.nPage = g_mapRoomsWide;
-		SetScrollInfo(g_mapWindow, SB_HORZ, &scrollInfo, TRUE);
-
-		scrollInfo.nMin = 0;
-		scrollInfo.nMax = kMaxNumRoomsV - 1;
-		scrollInfo.nPage = g_mapRoomsHigh;
-		SetScrollInfo(g_mapWindow, SB_VERT, &scrollInfo, TRUE);
 
 		CenterMapOnRoom(g_thisRoom->suite, g_thisRoom->floor);
 	}
