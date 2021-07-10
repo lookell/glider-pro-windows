@@ -6,6 +6,7 @@
 
 #include "House.h"
 
+#include "Banner.h"
 #include "DialogUtils.h"
 #include "FileError.h"
 #include "HighScores.h"
@@ -135,6 +136,8 @@ Boolean CreateNewHouse (HWND hwndOwner)
 
 void InitializeEmptyHouse (void)
 {
+	SInt16 i;
+
 	free(g_thisHouse.rooms);
 
 	ZeroMemory(&g_thisHouse, sizeof(g_thisHouse));
@@ -151,8 +154,32 @@ void InitializeEmptyHouse (void)
 	g_thisHouse.nRooms = 0;
 	g_thisHouse.rooms = NULL;
 
+	g_wasHouseVersion = g_thisHouse.version;
+	g_changeLockStateOfHouse = false;
+	g_saveHouseLocked = false;
+
+	// clear out stale contents from g_thisRoom
+	ZeroMemory(g_thisRoom, sizeof(*g_thisRoom));
+	PasStringCopyC("", g_thisRoom->name, ARRAYSIZE(g_thisRoom->name));
+	g_thisRoom->bounds = 0;
+	g_thisRoom->leftStart = 32;
+	g_thisRoom->rightStart = 32;
+	g_thisRoom->unusedByte = 0;
+	g_thisRoom->visited = false;
+	g_thisRoom->background = kSimpleRoom;
+	SetInitialTiles(g_thisRoom->background, g_thisRoom->tiles);
+	g_thisRoom->floor = 0;
+	g_thisRoom->suite = kRoomIsEmpty;
+	g_thisRoom->openings = 0;
+	g_thisRoom->numObjects = 0;
+	for (i = 0; i < ARRAYSIZE(g_thisRoom->objects); i++)
+	{
+		g_thisRoom->objects[i].what = kObjectIsEmpty;
+	}
+
 	g_wardBitSet = false;
 	g_phoneBitSet = false;
+	g_bannerStarCountOn = true;
 
 	g_mapLeftRoom = 60;
 	g_mapTopRoom = 50;
@@ -163,6 +190,7 @@ void InitializeEmptyHouse (void)
 	UpdateMapWindow();
 	g_noRoomAtAll = true;
 	g_fileDirty = true;
+	g_gameDirty = false;
 	UpdateMenus(false);
 	ReflectCurrentRoom(true);
 }
