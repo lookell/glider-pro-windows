@@ -57,7 +57,9 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 	Boolean drawWholeRoom;
 
 	if (COMPILEDEMO)
+	{
 		return (false);
+	}
 
 	g_objActive = FindEmptyObjectSlot(g_thisRoom);
 	if (g_objActive == -1)
@@ -84,7 +86,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		case kSewerBlower:
 		case kLiftArea:
 		if (((what == kTaper) || (what == kCandle) || (what == kStubby)) &&
-				(HowManyCandleObjects(g_thisRoom) >= kMaxCandles))
+			(HowManyCandleObjects(g_thisRoom) >= kMaxCandles))
 		{
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
@@ -103,31 +105,48 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		theObject->data.a.topLeft.h = where.h - HalfRectWide(&srcRect);
 		QSetRect(&newRect, 0, 0, RectWide(&srcRect), RectTall(&srcRect));
 		if (what == kFloorVent)
+		{
 			theObject->data.a.topLeft.v = kFloorVentTop;
+		}
 		else if (what == kFloorBlower)
+		{
 			theObject->data.a.topLeft.v = kFloorBlowerTop;
+		}
 		else if (what == kSewerGrate)
+		{
 			theObject->data.a.topLeft.v = kSewerGrateTop;
+		}
 		else if ((what == kTaper) || (what == kCandle) || (what == kStubby) ||
-				(what == kTiki) || (what == kBBQ) || (what == kInvisBlower) ||
-				(what == kLiftArea))
+			(what == kTiki) || (what == kBBQ) || (what == kInvisBlower) ||
+			(what == kLiftArea))
+		{
 			theObject->data.a.topLeft.v = where.v - HalfRectTall(&srcRect);
+		}
 		else if (what == kGrecoVent)
+		{
 			theObject->data.a.topLeft.v = kGrecoVentTop;
+		}
 		else if (what == kSewerBlower)
+		{
 			theObject->data.a.topLeft.v = kSewerBlowerTop;
+		}
 		else
+		{
 			theObject->data.a.topLeft.v = where.v - HalfRectTall(&srcRect);
-		QOffsetRect(&newRect, theObject->data.a.topLeft.h,
-				theObject->data.a.topLeft.v);
+		}
+		QOffsetRect(&newRect, theObject->data.a.topLeft.h, theObject->data.a.topLeft.v);
 		theObject->data.a.distance = 64;
 		theObject->data.a.initial = true;
 		theObject->data.a.state = true;
 		theObject->data.a.vector = 0x01;
 		if (what == kLiftArea)
+		{
 			theObject->data.a.tall = 0x10;
+		}
 		else
+		{
 			theObject->data.a.tall = 0x00;
+		}
 		break;
 
 		case kCeilingVent:
@@ -136,13 +155,18 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		theObject->data.a.topLeft.h = where.h - HalfRectWide(&srcRect);
 		QSetRect(&newRect, 0, 0, RectWide(&srcRect), RectTall(&srcRect));
 		if (what == kCeilingVent)
+		{
 			theObject->data.a.topLeft.v = kCeilingVentTop;
+		}
 		else if (what == kCeilingBlower)
+		{
 			theObject->data.a.topLeft.v = kCeilingBlowerTop;
+		}
 		else
+		{
 			theObject->data.a.topLeft.v = where.v - HalfRectTall(&srcRect);
-		QOffsetRect(&newRect, theObject->data.a.topLeft.h,
-				theObject->data.a.topLeft.v);
+		}
+		QOffsetRect(&newRect, theObject->data.a.topLeft.h, theObject->data.a.topLeft.v);
 		theObject->data.a.distance = 32;
 		theObject->data.a.initial = true;
 		theObject->data.a.state = true;
@@ -151,14 +175,10 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		break;
 
 		case kLeftFan:
-		theObject->data.a.topLeft.h =
-				where.h - HalfRectWide(&g_srcRects[kLeftFan]);
-		theObject->data.a.topLeft.v =
-				where.v - HalfRectTall(&g_srcRects[kLeftFan]);
-		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[kLeftFan]),
-				RectTall(&g_srcRects[kLeftFan]));
-		QOffsetRect(&newRect, theObject->data.a.topLeft.h,
-				theObject->data.a.topLeft.v);
+		theObject->data.a.topLeft.h = where.h - HalfRectWide(&g_srcRects[kLeftFan]);
+		theObject->data.a.topLeft.v = where.v - HalfRectTall(&g_srcRects[kLeftFan]);
+		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[kLeftFan]), RectTall(&g_srcRects[kLeftFan]));
+		QOffsetRect(&newRect, theObject->data.a.topLeft.h, theObject->data.a.topLeft.v);
 		theObject->data.a.distance = 32;
 		theObject->data.a.initial = true;
 		theObject->data.a.state = true;
@@ -167,13 +187,10 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		break;
 
 		case kRightFan:
-		theObject->data.a.topLeft.h =
-				where.h - HalfRectWide(&g_srcRects[kRightFan]);
-		theObject->data.a.topLeft.v =
-				where.v - HalfRectTall(&g_srcRects[kRightFan]);
+		theObject->data.a.topLeft.h = where.h - HalfRectWide(&g_srcRects[kRightFan]);
+		theObject->data.a.topLeft.v = where.v - HalfRectTall(&g_srcRects[kRightFan]);
 		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[kRightFan]), RectTall(&g_srcRects[kRightFan]));
-		QOffsetRect(&newRect, theObject->data.a.topLeft.h,
-				theObject->data.a.topLeft.v);
+		QOffsetRect(&newRect, theObject->data.a.topLeft.h, theObject->data.a.topLeft.v);
 		theObject->data.a.distance = 32;
 		theObject->data.a.initial = true;
 		theObject->data.a.state = true;
@@ -198,9 +215,13 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		newRect = g_srcRects[what];
 		CenterRectOnPoint(&newRect, where);
 		if (what == kCounter)
+		{
 			newRect.bottom = kCounterBottom;
+		}
 		else if (what == kDresser)
+		{
 			newRect.bottom = kDresserBottom;
+		}
 		theObject->data.b.bounds = newRect;
 		theObject->data.b.pict = 0;
 		break;
@@ -247,14 +268,10 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
-		theObject->data.c.topLeft.h =
-				where.h - HalfRectWide(&g_srcRects[what]);
-		theObject->data.c.topLeft.v =
-				where.v - HalfRectTall(&g_srcRects[what]);
-		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
-				RectTall(&g_srcRects[what]));
-		QOffsetRect(&newRect, theObject->data.c.topLeft.h,
-				theObject->data.c.topLeft.v);
+		theObject->data.c.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
+		theObject->data.c.topLeft.v = where.v - HalfRectTall(&g_srcRects[what]);
+		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
+		QOffsetRect(&newRect, theObject->data.c.topLeft.h, theObject->data.c.topLeft.v);
 		theObject->data.c.length = 0;
 		theObject->data.c.points = 0;
 		theObject->data.c.state = true;
@@ -268,13 +285,10 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
-		theObject->data.c.topLeft.h =
-				where.h - HalfRectWide(&g_srcRects[what]);
-		theObject->data.c.topLeft.v =
-				where.v - HalfRectTall(&g_srcRects[what]);
+		theObject->data.c.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
+		theObject->data.c.topLeft.v = where.v - HalfRectTall(&g_srcRects[what]);
 		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
-		QOffsetRect(&newRect, theObject->data.c.topLeft.h,
-				theObject->data.c.topLeft.v);
+		QOffsetRect(&newRect, theObject->data.c.topLeft.h, theObject->data.c.topLeft.v);
 		theObject->data.c.length = 64;
 		theObject->data.c.points = 0;
 		theObject->data.c.state = true;
@@ -282,13 +296,10 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		break;
 
 		case kInvisBonus:
-		theObject->data.c.topLeft.h =
-				where.h - HalfRectWide(&g_srcRects[what]);
-		theObject->data.c.topLeft.v =
-				where.v - HalfRectTall(&g_srcRects[what]);
+		theObject->data.c.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
+		theObject->data.c.topLeft.v = where.v - HalfRectTall(&g_srcRects[what]);
 		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
-		QOffsetRect(&newRect, theObject->data.c.topLeft.h,
-				theObject->data.c.topLeft.v);
+		QOffsetRect(&newRect, theObject->data.c.topLeft.h, theObject->data.c.topLeft.v);
 		theObject->data.c.length = 0;
 		theObject->data.c.points = 100;
 		theObject->data.c.state = true;
@@ -296,13 +307,10 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		break;
 
 		case kSlider:
-		theObject->data.c.topLeft.h =
-				where.h - HalfRectWide(&g_srcRects[what]);
-		theObject->data.c.topLeft.v =
-				where.v - HalfRectTall(&g_srcRects[what]);
+		theObject->data.c.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
+		theObject->data.c.topLeft.v = where.v - HalfRectTall(&g_srcRects[what]);
 		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
-		QOffsetRect(&newRect, theObject->data.c.topLeft.h,
-				theObject->data.c.topLeft.v);
+		QOffsetRect(&newRect, theObject->data.c.topLeft.h, theObject->data.c.topLeft.v);
 		theObject->data.c.length = 64;
 		theObject->data.c.points = 0;
 		theObject->data.c.state = true;
@@ -321,13 +329,10 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
-		theObject->data.d.topLeft.h =
-				where.h - HalfRectWide(&g_srcRects[what]);
+		theObject->data.d.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
 		theObject->data.d.topLeft.v = kStairsTop;
-		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
-				RectTall(&g_srcRects[what]));
-		QOffsetRect(&newRect, theObject->data.d.topLeft.h,
-				theObject->data.d.topLeft.v);
+		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
+		QOffsetRect(&newRect, theObject->data.d.topLeft.h, theObject->data.d.topLeft.v);
 		theObject->data.d.tall = 0;
 		theObject->data.d.where = -1;
 		theObject->data.d.who = 255;
@@ -336,14 +341,10 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 
 		case kMailboxLf:
 		case kMailboxRt:
-		theObject->data.d.topLeft.h =
-				where.h - HalfRectWide(&g_srcRects[what]);
-		theObject->data.d.topLeft.v =
-				where.v - HalfRectTall(&g_srcRects[what]);
-		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
-				RectTall(&g_srcRects[what]));
-		QOffsetRect(&newRect, theObject->data.d.topLeft.h,
-				theObject->data.d.topLeft.v);
+		theObject->data.d.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
+		theObject->data.d.topLeft.v = where.v - HalfRectTall(&g_srcRects[what]);
+		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
+		QOffsetRect(&newRect, theObject->data.d.topLeft.h, theObject->data.d.topLeft.v);
 		theObject->data.d.tall = 0;
 		theObject->data.d.where = -1;
 		theObject->data.d.who = 255;
@@ -351,13 +352,10 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		break;
 
 		case kFloorTrans:
-		theObject->data.d.topLeft.h =
-				where.h - HalfRectWide(&g_srcRects[what]);
+		theObject->data.d.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
 		theObject->data.d.topLeft.v = kFloorTransTop;
-		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
-				RectTall(&g_srcRects[what]));
-		QOffsetRect(&newRect, theObject->data.d.topLeft.h,
-				theObject->data.d.topLeft.v);
+		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
+		QOffsetRect(&newRect, theObject->data.d.topLeft.h, theObject->data.d.topLeft.v);
 		theObject->data.d.tall = 0;
 		theObject->data.d.where = -1;
 		theObject->data.d.who = 255;
@@ -365,13 +363,10 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		break;
 
 		case kCeilingTrans:
-		theObject->data.d.topLeft.h =
-				where.h - HalfRectWide(&g_srcRects[what]);
+		theObject->data.d.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
 		theObject->data.d.topLeft.v = kCeilingTransTop;
-		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
-				RectTall(&g_srcRects[what]));
-		QOffsetRect(&newRect, theObject->data.d.topLeft.h,
-				theObject->data.d.topLeft.v);
+		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
+		QOffsetRect(&newRect, theObject->data.d.topLeft.h, theObject->data.d.topLeft.v);
 		theObject->data.d.tall = 0;
 		theObject->data.d.where = -1;
 		theObject->data.d.who = 255;
@@ -459,10 +454,8 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			theObject->data.d.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
 			theObject->data.d.topLeft.v = where.v - HalfRectTall(&g_srcRects[what]);
 		}
-		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
-				RectTall(&g_srcRects[what]));
-		QOffsetRect(&newRect, theObject->data.d.topLeft.h,
-				theObject->data.d.topLeft.v);
+		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
+		QOffsetRect(&newRect, theObject->data.d.topLeft.h, theObject->data.d.topLeft.v);
 		theObject->data.d.tall = 0;
 		theObject->data.d.where = -1;
 		theObject->data.d.who = 255;
@@ -506,24 +499,28 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
-		theObject->data.e.topLeft.h =
-				where.h - HalfRectWide(&g_srcRects[what]);
-		theObject->data.e.topLeft.v =
-				where.v - HalfRectTall(&g_srcRects[what]);
-		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
-				RectTall(&g_srcRects[what]));
-		QOffsetRect(&newRect, theObject->data.e.topLeft.h,
-				theObject->data.e.topLeft.v);
+		theObject->data.e.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
+		theObject->data.e.topLeft.v = where.v - HalfRectTall(&g_srcRects[what]);
+		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
+		QOffsetRect(&newRect, theObject->data.e.topLeft.h, theObject->data.e.topLeft.v);
 		theObject->data.e.delay = 0;
 		if (what == kSoundTrigger)
+		{
 			theObject->data.e.where = 3000;
+		}
 		else
+		{
 			theObject->data.e.where = -1;
+		}
 		theObject->data.e.who = 255;
 		if ((what == kTrigger) || (what == kLgTrigger))
+		{
 			theObject->data.e.type = kOneShot;
+		}
 		else
+		{
 			theObject->data.e.type = kToggle;
+		}
 		break;
 
 		case kCeilingLight:
@@ -536,67 +533,50 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		case kInvisLight:
 		if (what == kCeilingLight)
 		{
-			theObject->data.f.topLeft.h =
-					where.h - HalfRectWide(&g_srcRects[what]);
+			theObject->data.f.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
 			theObject->data.f.topLeft.v = kCeilingLightTop;
-			QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
-					RectTall(&g_srcRects[what]));
-			QOffsetRect(&newRect, theObject->data.f.topLeft.h,
-					theObject->data.f.topLeft.v);
+			QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
+			QOffsetRect(&newRect, theObject->data.f.topLeft.h, theObject->data.f.topLeft.v);
 			theObject->data.f.length = 64;
 		}
 		else if (what == kHipLamp)
 		{
-			theObject->data.f.topLeft.h =
-					where.h - HalfRectWide(&g_srcRects[what]);
+			theObject->data.f.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
 			theObject->data.f.topLeft.v = kHipLampTop;
-			QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
-					RectTall(&g_srcRects[what]));
-			QOffsetRect(&newRect, theObject->data.f.topLeft.h,
-					theObject->data.f.topLeft.v);
+			QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
+			QOffsetRect(&newRect, theObject->data.f.topLeft.h, theObject->data.f.topLeft.v);
 			theObject->data.f.length = 0;
 		}
 		else if (what == kDecoLamp)
 		{
-			theObject->data.f.topLeft.h =
-					where.h - HalfRectWide(&g_srcRects[what]);
+			theObject->data.f.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
 			theObject->data.f.topLeft.v = kDecoLampTop;
-			QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
-					RectTall(&g_srcRects[what]));
-			QOffsetRect(&newRect, theObject->data.f.topLeft.h,
-					theObject->data.f.topLeft.v);
+			QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
+			QOffsetRect(&newRect, theObject->data.f.topLeft.h, theObject->data.f.topLeft.v);
 			theObject->data.f.length = 0;
 		}
 		else if (what == kFlourescent)
 		{
-			theObject->data.f.topLeft.h =
-					where.h - HalfRectWide(&g_srcRects[what]);
+			theObject->data.f.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
 			theObject->data.f.topLeft.v = kFlourescentTop;
 			newRect = g_srcRects[what];
-			QOffsetRect(&newRect, theObject->data.f.topLeft.h,
-					theObject->data.f.topLeft.v);
+			QOffsetRect(&newRect, theObject->data.f.topLeft.h, theObject->data.f.topLeft.v);
 			theObject->data.f.length = 64;
 		}
 		else if (what == kTrackLight)
 		{
-			theObject->data.f.topLeft.h =
-					where.h - HalfRectWide(&g_srcRects[what]);
+			theObject->data.f.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
 			theObject->data.f.topLeft.v = kTrackLightTop;
 			newRect = g_srcRects[what];
-			QOffsetRect(&newRect, theObject->data.f.topLeft.h,
-					theObject->data.f.topLeft.v);
+			QOffsetRect(&newRect, theObject->data.f.topLeft.h, theObject->data.f.topLeft.v);
 			theObject->data.f.length = 64;
 		}
 		else
 		{
-			theObject->data.f.topLeft.h =
-					where.h - HalfRectWide(&g_srcRects[what]);
-			theObject->data.f.topLeft.v =
-					where.v - HalfRectTall(&g_srcRects[what]);
-			QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
-					RectTall(&g_srcRects[what]));
-			QOffsetRect(&newRect, theObject->data.f.topLeft.h,
-					theObject->data.f.topLeft.v);
+			theObject->data.f.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
+			theObject->data.f.topLeft.v = where.v - HalfRectTall(&g_srcRects[what]);
+			QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
+			QOffsetRect(&newRect, theObject->data.f.topLeft.h, theObject->data.f.topLeft.v);
 			theObject->data.f.length = 0;
 		}
 		theObject->data.f.initial = true;
@@ -621,20 +601,16 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		case kCDs:
 		case kCustomPict:
 		if ((what != kGuitar) && (what != kCinderBlock) && (what != kFlowerBox) &&
-				(what != kCDs) && (what != kCustomPict) &&
-				(HowManyShredderObjects(g_thisRoom) >= kMaxShredded))
+			(what != kCDs) && (what != kCustomPict) &&
+			(HowManyShredderObjects(g_thisRoom) >= kMaxShredded))
 		{
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
-		theObject->data.g.topLeft.h =
-				where.h - HalfRectWide(&g_srcRects[what]);
-		theObject->data.g.topLeft.v =
-				where.v - HalfRectTall(&g_srcRects[what]);
-		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
-				RectTall(&g_srcRects[what]));
-		QOffsetRect(&newRect, theObject->data.g.topLeft.h,
-				theObject->data.g.topLeft.v);
+		theObject->data.g.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
+		theObject->data.g.topLeft.v = where.v - HalfRectTall(&g_srcRects[what]);
+		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
+		QOffsetRect(&newRect, theObject->data.g.topLeft.h, theObject->data.g.topLeft.v);
 		if (what == kToaster)
 		{
 			theObject->data.g.height = 64;
@@ -656,9 +632,13 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			theObject->data.g.delay = 0;
 		}
 		if (what == kMicrowave)
+		{
 			theObject->data.g.byte0 = 7;
+		}
 		else
+		{
 			theObject->data.g.byte0 = 0;
+		}
 		theObject->data.g.initial = true;
 		theObject->data.g.state = true;
 		break;
@@ -676,8 +656,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		}
 		if (what == kDartLf)
 		{
-			theObject->data.h.topLeft.h =
-					kRoomWide - RectWide(&g_srcRects[what]);
+			theObject->data.h.topLeft.h = kRoomWide - RectWide(&g_srcRects[what]);
 		}
 		else if (what == kDartRt)
 		{
@@ -685,28 +664,27 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		}
 		else
 		{
-			theObject->data.h.topLeft.h =
-					where.h - HalfRectWide(&g_srcRects[what]);
+			theObject->data.h.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
 		}
 		if ((what == kDartLf) || (what == kDartRt) || (what == kCobweb))
 		{
-			theObject->data.h.topLeft.v =
-					where.v - HalfRectTall(&g_srcRects[what]);
+			theObject->data.h.topLeft.v = where.v - HalfRectTall(&g_srcRects[what]);
 		}
 		else
 		{
-			theObject->data.h.topLeft.v =
-					(kTileHigh / 2) - HalfRectTall(&g_srcRects[what]);
+			theObject->data.h.topLeft.v = (kTileHigh / 2) - HalfRectTall(&g_srcRects[what]);
 		}
-		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
-				RectTall(&g_srcRects[what]));
-		QOffsetRect(&newRect, theObject->data.h.topLeft.h,
-				theObject->data.h.topLeft.v);
+		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
+		QOffsetRect(&newRect, theObject->data.h.topLeft.h, theObject->data.h.topLeft.v);
 		theObject->data.h.length = 0;
 		if (what == kCobweb)
+		{
 			theObject->data.h.delay = 0;
+		}
 		else
+		{
 			theObject->data.h.delay = 10 + (Byte)RandomInt(10);
+		}
 		theObject->data.h.byte0 = 0;
 		theObject->data.h.initial = true;
 		theObject->data.h.state = true;
@@ -720,19 +698,19 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			ShoutNoMoreSpecialObjects(ownerWindow);
 			return (false);
 		}
-		theObject->data.h.topLeft.h =
-				where.h - HalfRectWide(&g_srcRects[what]);
-		theObject->data.h.topLeft.v =
-				where.v - HalfRectTall(&g_srcRects[what]);
-		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
-				RectTall(&g_srcRects[what]));
-		QOffsetRect(&newRect, theObject->data.h.topLeft.h,
-				theObject->data.h.topLeft.v);
+		theObject->data.h.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
+		theObject->data.h.topLeft.v = where.v - HalfRectTall(&g_srcRects[what]);
+		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]), RectTall(&g_srcRects[what]));
+		QOffsetRect(&newRect, theObject->data.h.topLeft.h, theObject->data.h.topLeft.v);
 		theObject->data.h.length = 64;
 		if (what == kBall)
+		{
 			theObject->data.h.delay = 0;
+		}
 		else
+		{
 			theObject->data.h.delay = 10 + (Byte)RandomInt(10);
+		}
 		theObject->data.h.byte0 = 0;
 		theObject->data.h.initial = true;
 		theObject->data.h.state = true;
@@ -758,9 +736,13 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 
 		case kFlower:
 		if (g_wasFlower < 0 || g_wasFlower >= kNumFlowers)  // sanity check
+		{
 			g_wasFlower = 0;
+		}
 		if (GetKeyState(VK_SHIFT) >= 0)  // shift key up?
+		{
 			g_wasFlower = RandomInt(kNumFlowers);
+		}
 		newRect = g_flowerSrc[g_wasFlower];
 		CenterRectOnPoint(&newRect, where);
 		theObject->data.i.bounds = newRect;
@@ -801,7 +783,9 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 	if (showItNow)
 	{
 		if (drawWholeRoom)
+		{
 			ReadyBackground(g_thisRoom->background, g_thisRoom->tiles);
+		}
 		GetThisRoomsObjRects();
 		DrawThisRoomsObjects();
 		InvalidateRect(g_mainWindow, NULL, TRUE);
@@ -815,7 +799,8 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 
 SInt16 FindEmptyObjectSlot (const roomType *room)
 {
-	SInt16 i, emptySlot;
+	SInt16 emptySlot;
+	SInt16 i;
 
 	emptySlot = -1;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -835,7 +820,8 @@ SInt16 FindEmptyObjectSlot (const roomType *room)
 SInt16 FindObjectSlotInRoom (const houseType *house, SInt16 roomNumber)
 {
 	roomPtr testRoomPtr;
-	SInt16 i, emptySlot;
+	SInt16 emptySlot;
+	SInt16 i;
 
 	if (roomNumber < 0 || roomNumber >= house->nRooms)
 	{
@@ -862,8 +848,8 @@ SInt16 FindObjectSlotInRoom (const houseType *house, SInt16 roomNumber)
 Boolean DoesRoomNumHaveObject (const houseType *house, SInt16 room, SInt16 what)
 {
 	roomPtr testRoomPtr;
-	SInt16 i;
 	Boolean hasIt;
+	SInt16 i;
 
 	if (room < 0 || room >= house->nRooms)
 	{
@@ -896,7 +882,8 @@ void ShoutNoMoreObjects (HWND ownerWindow)
 
 SInt16 HowManyCandleObjects (const roomType *room)
 {
-	SInt16 i, aCandle;
+	SInt16 aCandle;
+	SInt16 i;
 
 	aCandle = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -916,7 +903,8 @@ SInt16 HowManyCandleObjects (const roomType *room)
 
 SInt16 HowManyTikiObjects (const roomType *room)
 {
-	SInt16 i, aTiki;
+	SInt16 aTiki;
+	SInt16 i;
 
 	aTiki = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -934,7 +922,8 @@ SInt16 HowManyTikiObjects (const roomType *room)
 
 SInt16 HowManyBBQObjects (const roomType *room)
 {
-	SInt16 i, aBBQ;
+	SInt16 aBBQ;
+	SInt16 i;
 
 	aBBQ = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -952,7 +941,8 @@ SInt16 HowManyBBQObjects (const roomType *room)
 
 SInt16 HowManyCuckooObjects (const roomType *room)
 {
-	SInt16 i, aCuckoo;
+	SInt16 aCuckoo;
+	SInt16 i;
 
 	aCuckoo = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -970,7 +960,8 @@ SInt16 HowManyCuckooObjects (const roomType *room)
 
 SInt16 HowManyBandsObjects (const roomType *room)
 {
-	SInt16 i, aBands;
+	SInt16 aBands;
+	SInt16 i;
 
 	aBands = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -988,7 +979,8 @@ SInt16 HowManyBandsObjects (const roomType *room)
 
 SInt16 HowManyGreaseObjects (const roomType *room)
 {
-	SInt16 i, aGrease;
+	SInt16 aGrease;
+	SInt16 i;
 
 	aGrease = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1007,7 +999,8 @@ SInt16 HowManyGreaseObjects (const roomType *room)
 
 SInt16 HowManyStarsObjects (const roomType *room)
 {
-	SInt16 i, aStar;
+	SInt16 aStar;
+	SInt16 i;
 
 	aStar = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1025,7 +1018,8 @@ SInt16 HowManyStarsObjects (const roomType *room)
 
 SInt16 HowManySoundObjects (const roomType *room)
 {
-	SInt16 i, aSound;
+	SInt16 aSound;
+	SInt16 i;
 
 	aSound = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1043,7 +1037,8 @@ SInt16 HowManySoundObjects (const roomType *room)
 
 SInt16 HowManyUpStairsObjects (const roomType *room)
 {
-	SInt16 i, aStair;
+	SInt16 aStair;
+	SInt16 i;
 
 	aStair = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1061,7 +1056,8 @@ SInt16 HowManyUpStairsObjects (const roomType *room)
 
 SInt16 HowManyDownStairsObjects (const roomType *room)
 {
-	SInt16 i, aStair;
+	SInt16 aStair;
+	SInt16 i;
 
 	aStair = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1079,7 +1075,8 @@ SInt16 HowManyDownStairsObjects (const roomType *room)
 
 SInt16 HowManyShredderObjects (const roomType *room)
 {
-	SInt16 i, aShredder;
+	SInt16 aShredder;
+	SInt16 i;
 
 	aShredder = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
@@ -1097,7 +1094,8 @@ SInt16 HowManyShredderObjects (const roomType *room)
 
 SInt16 HowManyDynamicObjects (const roomType *room)
 {
-	SInt16 i, aDinah;
+	SInt16 aDinah;
+	SInt16 i;
 
 	aDinah = 0;
 	for (i = 0; i < kMaxRoomObs; i++)
