@@ -106,6 +106,8 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			theObject->data.a.topLeft.v = kFloorVentTop;
 		else if (what == kFloorBlower)
 			theObject->data.a.topLeft.v = kFloorBlowerTop;
+		else if (what == kSewerGrate)
+			theObject->data.a.topLeft.v = kSewerGrateTop;
 		else if ((what == kTaper) || (what == kCandle) || (what == kStubby) ||
 				(what == kTiki) || (what == kBBQ) || (what == kInvisBlower) ||
 				(what == kLiftArea))
@@ -114,6 +116,8 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			theObject->data.a.topLeft.v = kGrecoVentTop;
 		else if (what == kSewerBlower)
 			theObject->data.a.topLeft.v = kSewerBlowerTop;
+		else
+			theObject->data.a.topLeft.v = where.v - HalfRectTall(&srcRect);
 		QOffsetRect(&newRect, theObject->data.a.topLeft.h,
 				theObject->data.a.topLeft.v);
 		theObject->data.a.distance = 64;
@@ -135,12 +139,15 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 			theObject->data.a.topLeft.v = kCeilingVentTop;
 		else if (what == kCeilingBlower)
 			theObject->data.a.topLeft.v = kCeilingBlowerTop;
+		else
+			theObject->data.a.topLeft.v = where.v - HalfRectTall(&srcRect);
 		QOffsetRect(&newRect, theObject->data.a.topLeft.h,
 				theObject->data.a.topLeft.v);
 		theObject->data.a.distance = 32;
 		theObject->data.a.initial = true;
 		theObject->data.a.state = true;
 		theObject->data.a.vector = 0x04;
+		theObject->data.a.tall = 0;
 		break;
 
 		case kLeftFan:
@@ -156,6 +163,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		theObject->data.a.initial = true;
 		theObject->data.a.state = true;
 		theObject->data.a.vector = 0x08;
+		theObject->data.a.tall = 0;
 		break;
 
 		case kRightFan:
@@ -170,6 +178,7 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 		theObject->data.a.initial = true;
 		theObject->data.a.state = true;
 		theObject->data.a.vector = 0x02;
+		theObject->data.a.tall = 0;
 		break;
 
 		case kTable:
@@ -444,6 +453,11 @@ Boolean AddNewObject (HWND ownerWindow, Point where, SInt16 what, Boolean showIt
 				theObject->data.d.topLeft.h = kWindowExLfLeft;
 				theObject->data.d.topLeft.v = kWindowExTop;
 			}
+		}
+		else
+		{
+			theObject->data.d.topLeft.h = where.h - HalfRectWide(&g_srcRects[what]);
+			theObject->data.d.topLeft.v = where.v - HalfRectTall(&g_srcRects[what]);
 		}
 		QSetRect(&newRect, 0, 0, RectWide(&g_srcRects[what]),
 				RectTall(&g_srcRects[what]));
