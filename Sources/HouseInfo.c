@@ -16,7 +16,7 @@
 #include "ResourceIDs.h"
 #include "StringUtils.h"
 
-SInt32 CountTotalHousePoints (void);
+SInt32 CountTotalHousePoints (const houseType *house);
 INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 Boolean WarnLockingHouse (HWND ownerWindow);
 void HowToZeroScores (HWND ownerWindow);
@@ -29,21 +29,21 @@ void HowToZeroScores (HWND ownerWindow);
 
 //--------------------------------------------------------------  CountTotalHousePoints
 
-SInt32 CountTotalHousePoints (void)
+SInt32 CountTotalHousePoints (const houseType *house)
 {
 	SInt32 pointTotal;
 	SInt16 numRooms, h, i;
 
-	pointTotal = (SInt32)RealRoomNumberCount(&g_thisHouse) * (SInt32)kRoomVisitScore;
+	pointTotal = (SInt32)RealRoomNumberCount(house) * (SInt32)kRoomVisitScore;
 
-	numRooms = g_thisHouse.nRooms;
+	numRooms = house->nRooms;
 	for (i = 0; i < numRooms; i++)
 	{
-		if (g_thisHouse.rooms[i].suite != kRoomIsEmpty)
+		if (house->rooms[i].suite != kRoomIsEmpty)
 		{
 			for (h = 0; h < kMaxRoomObs; h++)
 			{
-				switch (g_thisHouse.rooms[i].objects[h].what)
+				switch (house->rooms[i].objects[h].what)
 				{
 					case kRedClock:
 					pointTotal += kRedClockPoints;
@@ -66,7 +66,7 @@ SInt32 CountTotalHousePoints (void)
 					break;
 
 					case kInvisBonus:
-					pointTotal += g_thisHouse.rooms[i].objects[h].data.c.points;
+					pointTotal += house->rooms[i].objects[h].data.c.points;
 					break;
 
 					default:
@@ -103,7 +103,7 @@ INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		SetDialogString(hDlg, kTrailerTextItem, g_thisHouse.trailer);
 		SendEditChangeNotification(hDlg, kTrailerTextItem);
 
-		SetDlgItemInt(hDlg, kHouseSizeItem, CountTotalHousePoints(), TRUE);
+		SetDlgItemInt(hDlg, kHouseSizeItem, CountTotalHousePoints(&g_thisHouse), TRUE);
 		if (g_phoneBitSet)
 			CheckDlgButton(hDlg, kNoPhoneCheck, BST_CHECKED);
 		else
