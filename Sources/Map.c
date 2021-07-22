@@ -24,17 +24,33 @@
 #include "Scrap.h"
 #include "Utilities.h"
 
+#include <limits.h>
+
 #define kMapRoomsHigh           9   // was 7
 #define kMapRoomsWide           9   // was 7
 #define kMapGroundValue         56
 #define WC_MAPWINDOW            L"GliderMapWindow"
 
+// These constants are only defined for Windows Vista and above,
+// so define them here to have them always available.
+#ifndef WM_MOUSEHWHEEL
+#define WM_MOUSEHWHEEL 0x020E
+#endif
+#ifndef SPI_GETWHEELSCROLLCHARS
+#define SPI_GETWHEELSCROLLCHARS 0x006C
+#endif
+
 void RedrawMapContents (HDC hdc);
 void HandleMapSizingMessage (HWND hwnd, WPARAM sizedEdge, RECT *windowRect);
 void HandleMapSizeMessage (HWND hwnd);
 LRESULT CALLBACK MapWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
-void LiveHScrollAction (HWND hwnd, WORD scrollRequest);
-void LiveVScrollAction (HWND hwnd, WORD scrollRequest);
+void LoadScrollSettings(void);
+UINT GetWheelScrollLinesSetting (void);
+UINT GetWheelScrollCharsSetting (void);
+void LiveHScrollAction (HWND hwnd, WORD scrollRequest, int numLinesToMove);
+void LiveVScrollAction (HWND hwnd, WORD scrollRequest, int numLinesToMove);
+void HandleMapMouseWheel (HWND hwnd, int wheelDelta);
+void HandleMapMouseHWheel (HWND hwnd, int wheelDelta);
 void HandleMapClick (SInt16 clickX, SInt16 clickY);
 Boolean QueryNewRoom (HWND ownerWindow);
 void CreateNailOffscreen (void);
@@ -54,6 +70,10 @@ static Rect g_nailSrcRect;
 static HDC g_nailSrcMap = NULL;
 static Rect g_activeRoomRect;
 static Rect g_wasActiveRoomRect;
+static UINT g_numLinesToScroll;
+static UINT g_numCharsToScroll;
+static int g_hScrollDelta;
+static int g_vScrollDelta;
 
 //==============================================================  Functions
 //--------------------------------------------------------------  RegisterMapWindowClass
@@ -569,6 +589,18 @@ LRESULT CALLBACK MapWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 {
 	switch (message)
 	{
+	case WM_CREATE:
+		LoadScrollSettings();
+		g_hScrollDelta = 0;
+		g_vScrollDelta = 0;
+		return 0;
+
+	case WM_SETTINGCHANGE:
+		LoadScrollSettings();
+		g_hScrollDelta = 0;
+		g_vScrollDelta = 0;
+		return DefWindowProc(hwnd, message, wParam, lParam);
+
 	case WM_MOVE:
 	{
 		WINDOWPLACEMENT placement;
@@ -585,6 +617,8 @@ LRESULT CALLBACK MapWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 
 	case WM_SIZE:
 		HandleMapSizeMessage(hwnd);
+		g_hScrollDelta = 0;
+		g_vScrollDelta = 0;
 		return 0;
 
 	case WM_PAINT:
@@ -603,23 +637,67 @@ LRESULT CALLBACK MapWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 		return 0;
 
 	case WM_HSCROLL:
-		LiveHScrollAction(hwnd, LOWORD(wParam));
+		LiveHScrollAction(hwnd, LOWORD(wParam), 1);
+		g_hScrollDelta = 0;
+		g_vScrollDelta = 0;
 		return 0;
 
 	case WM_VSCROLL:
-		LiveVScrollAction(hwnd, LOWORD(wParam));
+		LiveVScrollAction(hwnd, LOWORD(wParam), 1);
+		g_hScrollDelta = 0;
+		g_vScrollDelta = 0;
 		return 0;
 
 	case WM_LBUTTONDOWN:
 		HandleMapClick(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		return 0;
+
+	case WM_MOUSEWHEEL:
+		HandleMapMouseWheel(hwnd, GET_WHEEL_DELTA_WPARAM(wParam));
+		return 0;
+
+	case WM_MOUSEHWHEEL:
+		HandleMapMouseHWheel(hwnd, GET_WHEEL_DELTA_WPARAM(wParam));
+		return 0;
 	}
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
+//--------------------------------------------------------------  LoadScrollSettings
+
+void LoadScrollSettings (void)
+{
+	g_numLinesToScroll = GetWheelScrollLinesSetting();
+	g_numCharsToScroll = GetWheelScrollCharsSetting();
+}
+
+//--------------------------------------------------------------  GetWheelScrollLinesSetting
+
+UINT GetWheelScrollLinesSetting (void)
+{
+	UINT result = 0;
+	if (!SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &result, 0))
+	{
+		result = 3;
+	}
+	return result;
+}
+
+//--------------------------------------------------------------  GetWheelScrollCharsSetting
+
+UINT GetWheelScrollCharsSetting (void)
+{
+	UINT result = 0;
+	if (!SystemParametersInfo(SPI_GETWHEELSCROLLCHARS, 0, &result, 0))
+	{
+		result = 3;
+	}
+	return result;
+}
+
 //--------------------------------------------------------------  LiveHScrollAction
 
-void LiveHScrollAction (HWND hwnd, WORD scrollRequest)
+void LiveHScrollAction (HWND hwnd, WORD scrollRequest, int numLinesToMove)
 {
 	SCROLLINFO scrollInfo;
 	int wasValue, newValue;
@@ -633,10 +711,10 @@ void LiveHScrollAction (HWND hwnd, WORD scrollRequest)
 	switch (scrollRequest)
 	{
 	case SB_LINELEFT:
-		newValue = wasValue - 1;
+		newValue = wasValue - numLinesToMove;
 		break;
 	case SB_LINERIGHT:
-		newValue = wasValue + 1;
+		newValue = wasValue + numLinesToMove;
 		break;
 	case SB_PAGELEFT:
 		newValue = wasValue - (g_mapRoomsWide / 2);
@@ -668,7 +746,7 @@ void LiveHScrollAction (HWND hwnd, WORD scrollRequest)
 
 //--------------------------------------------------------------  LiveVScrollAction
 
-void LiveVScrollAction (HWND hwnd, WORD scrollRequest)
+void LiveVScrollAction (HWND hwnd, WORD scrollRequest, int numLinesToMove)
 {
 	SCROLLINFO scrollInfo;
 	int wasValue, newValue;
@@ -682,10 +760,10 @@ void LiveVScrollAction (HWND hwnd, WORD scrollRequest)
 	switch (scrollRequest)
 	{
 	case SB_LINEUP:
-		newValue = wasValue - 1;
+		newValue = wasValue - numLinesToMove;
 		break;
 	case SB_LINEDOWN:
-		newValue = wasValue + 1;
+		newValue = wasValue + numLinesToMove;
 		break;
 	case SB_PAGEUP:
 		newValue = wasValue - (g_mapRoomsHigh / 2);
@@ -713,6 +791,98 @@ void LiveVScrollAction (HWND hwnd, WORD scrollRequest)
 	{
 		g_mapTopRoom = (SInt16)scrollInfo.nPos;
 		UpdateMapWindow();
+	}
+}
+
+//--------------------------------------------------------------  HandleMapMouseWheel
+
+void HandleMapMouseWheel (HWND hwnd, int wheelDelta)
+{
+	WORD scrollRequest;
+
+	// if the scroll direction changes, reset the scroll delta
+	if ((wheelDelta < 0 && g_vScrollDelta > 0) || (wheelDelta > 0 && g_vScrollDelta < 0))
+	{
+		g_vScrollDelta = 0;
+	}
+	g_vScrollDelta += wheelDelta;
+	if (g_vScrollDelta > 0)
+	{
+		if (g_numLinesToScroll == WHEEL_PAGESCROLL)
+		{
+			scrollRequest = SB_PAGEUP;
+		}
+		else
+		{
+			scrollRequest = SB_LINEUP;
+		}
+		while (g_vScrollDelta >= WHEEL_DELTA)
+		{
+			LiveVScrollAction(hwnd, scrollRequest, g_numLinesToScroll);
+			g_vScrollDelta -= WHEEL_DELTA;
+		}
+	}
+	else
+	{
+		if (g_numLinesToScroll == WHEEL_PAGESCROLL)
+		{
+			scrollRequest = SB_PAGEDOWN;
+		}
+		else
+		{
+			scrollRequest = SB_LINEDOWN;
+		}
+		while (g_vScrollDelta <= -WHEEL_DELTA)
+		{
+			LiveVScrollAction(hwnd, scrollRequest, g_numLinesToScroll);
+			g_vScrollDelta += WHEEL_DELTA;
+		}
+	}
+}
+
+//--------------------------------------------------------------  HandleMapMouseHWheel
+
+void HandleMapMouseHWheel (HWND hwnd, int wheelDelta)
+{
+	WORD scrollRequest;
+
+	// if the scroll direction changes, reset the scroll delta
+	if ((wheelDelta < 0 && g_hScrollDelta > 0) || (wheelDelta > 0 && g_hScrollDelta < 0))
+	{
+		g_hScrollDelta = 0;
+	}
+	g_hScrollDelta += wheelDelta;
+	if (g_hScrollDelta > 0)
+	{
+		if (g_numCharsToScroll == WHEEL_PAGESCROLL)
+		{
+			scrollRequest = SB_PAGERIGHT;
+		}
+		else
+		{
+			scrollRequest = SB_LINERIGHT;
+		}
+		while (g_hScrollDelta >= WHEEL_DELTA)
+		{
+			LiveHScrollAction(hwnd, scrollRequest, g_numCharsToScroll);
+			g_hScrollDelta -= WHEEL_DELTA;
+		}
+	}
+	else
+	{
+		if (g_numCharsToScroll == WHEEL_PAGESCROLL)
+		{
+			scrollRequest = SB_PAGELEFT;
+		}
+		else
+		{
+			scrollRequest = SB_LINELEFT;
+		}
+		while (g_hScrollDelta <= -WHEEL_DELTA)
+		{
+			LiveHScrollAction(hwnd, scrollRequest, g_numCharsToScroll);
+			g_hScrollDelta += WHEEL_DELTA;
+		}
 	}
 }
 
