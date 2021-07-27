@@ -23,6 +23,11 @@
 
 void LoadTileSrcGraphic (HDC hdc, SInt16 backID, const Rect *theRect);
 void UpdateRoomInfoDialog (HWND hDlg, HDC hdc);
+void DrawTileOverMarkings (
+	HDC hdcDest,
+	SInt16 whichTile,
+	const Rect *tileRect,
+	COLORREF hiliteColor);
 void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver);
 void HiliteTileOver (HWND hDlg, Point mouseIs);
 void RoomInfo_InitDialog (HWND hDlg);
@@ -109,6 +114,27 @@ void UpdateRoomInfoDialog (HWND hDlg, HDC hdc)
 	Mac_FrameRect(hdc, &g_tileDest, GetStockBrush(BLACK_BRUSH), 1, 1);
 }
 
+//--------------------------------------------------------------  DrawTileOverMarkings
+
+void DrawTileOverMarkings (
+	HDC hdcDest,
+	SInt16 whichTile,
+	const Rect *tileRect,
+	COLORREF hiliteColor)
+{
+	HBRUSH prevBrush;
+	COLORREF prevBrushColor;
+	int markLeft;
+
+	prevBrush = SelectBrush(hdcDest, GetStockBrush(DC_BRUSH));
+	prevBrushColor = SetDCBrushColor(hdcDest, hiliteColor);
+	markLeft = tileRect->left + (whichTile * kMiniTileWide);
+	PatBlt(hdcDest, markLeft, tileRect->top - 3, kMiniTileWide, 2, PATCOPY);
+	PatBlt(hdcDest, markLeft, tileRect->bottom + 1, kMiniTileWide, 2, PATCOPY);
+	SetDCBrushColor(hdcDest, prevBrushColor);
+	SelectBrush(hdcDest, prevBrush);
+}
+
 //--------------------------------------------------------------  DragMiniTile
 
 void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
@@ -116,10 +142,9 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 	HCURSOR dragCursor = NULL;
 	HCURSOR oldCursor = NULL;
 	RECT dragRect;
-	Rect hiliteRect;
 	Point mouseWas;
 	SInt16 wasTileOver;
-	HBRUSH hiliteBrush;
+	COLORREF btnFaceColor;
 	HDC hdc;
 	MSG msg;
 
@@ -130,8 +155,6 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 	{
 		oldCursor = SetCursor(dragCursor);
 	}
-
-	hiliteBrush = CreateSolidBrush(blueColor);
 
 	g_tileOver = (mouseIs.h - g_tileSrc.left) / kMiniTileWide;
 	wasTileOver = -1;
@@ -158,37 +181,18 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 			OffsetRect(&dragRect, mouseIs.h - mouseWas.h, 0);
 			DrawFocusRect(hdc, &dragRect);
 
+			btnFaceColor = GetSysColor(COLOR_BTNFACE);
+
 			// is cursor in the drop rect?
 			if (QPtInRect(mouseIs, &g_tileDest))
 			{
 				*newTileOver = (mouseIs.h - g_tileDest.left) / kMiniTileWide;
 				if (*newTileOver != wasTileOver)
 				{
-					QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
-					QOffsetRect(&hiliteRect,
-						g_tileDest.left + (*newTileOver * kMiniTileWide),
-						g_tileDest.top - 3);
-					Mac_PaintRect(hdc, &hiliteRect, hiliteBrush);
-
-					QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
-					QOffsetRect(&hiliteRect,
-						g_tileDest.left + (*newTileOver * kMiniTileWide),
-						g_tileDest.bottom + 1);
-					Mac_PaintRect(hdc, &hiliteRect, hiliteBrush);
-
+					DrawTileOverMarkings(hdc, *newTileOver, &g_tileDest, blueColor);
 					if (wasTileOver != -1)
 					{
-						QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
-						QOffsetRect(&hiliteRect,
-							g_tileDest.left + (wasTileOver * kMiniTileWide),
-							g_tileDest.top - 3);
-						Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
-
-						QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
-						QOffsetRect(&hiliteRect,
-							g_tileDest.left + (wasTileOver * kMiniTileWide),
-							g_tileDest.bottom + 1);
-						Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
+						DrawTileOverMarkings(hdc, wasTileOver, &g_tileDest, btnFaceColor);
 					}
 					wasTileOver = *newTileOver;
 				}
@@ -199,18 +203,7 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 				*newTileOver = -1;
 				if (wasTileOver != -1)
 				{
-					QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
-					QOffsetRect(&hiliteRect,
-						g_tileDest.left + (wasTileOver * kMiniTileWide),
-						g_tileDest.top - 3);
-					Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
-
-					QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
-					QOffsetRect(&hiliteRect,
-						g_tileDest.left + (wasTileOver * kMiniTileWide),
-						g_tileDest.bottom + 1);
-					Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
-
+					DrawTileOverMarkings(hdc, wasTileOver, &g_tileDest, btnFaceColor);
 					wasTileOver = -1;
 				}
 			}
@@ -249,23 +242,11 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 			ReleaseCapture();
 	}
 
-	DeleteBrush(hiliteBrush);
-
 	hdc = GetDC(hDlg);
 	if (wasTileOver != -1)
 	{
-		QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
-		QOffsetRect(&hiliteRect,
-			g_tileDest.left + (wasTileOver * kMiniTileWide),
-			g_tileDest.top - 3);
-		Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
-
-		QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
-		QOffsetRect(&hiliteRect,
-			g_tileDest.left + (wasTileOver * kMiniTileWide),
-			g_tileDest.bottom + 1);
-		Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
-
+		btnFaceColor = GetSysColor(COLOR_BTNFACE);
+		DrawTileOverMarkings(hdc, wasTileOver, &g_tileDest, btnFaceColor);
 		wasTileOver = -1;
 	}
 	DrawFocusRect(hdc, &dragRect);
@@ -281,48 +262,23 @@ void DragMiniTile (HWND hDlg, Point mouseIs, SInt16 *newTileOver)
 
 void HiliteTileOver (HWND hDlg, Point mouseIs)
 {
+	COLORREF btnFaceColor;
 	SInt16 newTileOver;
 	HDC hdc;
-	Rect hiliteRect;
-	COLORREF oldColor;
 
+	btnFaceColor = GetSysColor(COLOR_BTNFACE);
 	if (QPtInRect(mouseIs, &g_tileSrc))
 	{
 		newTileOver = (mouseIs.h - g_tileSrc.left) / kMiniTileWide;
 		if (newTileOver != g_tileOver)
 		{
 			hdc = GetDC(hDlg);
-
-			oldColor = SetDCBrushColor(hdc, redColor);
-			QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
-			QOffsetRect(&hiliteRect,
-				g_tileSrc.left + (newTileOver * kMiniTileWide),
-				g_tileSrc.top - 3);
-			Mac_PaintRect(hdc, &hiliteRect, GetStockBrush(DC_BRUSH));
-
-			QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
-			QOffsetRect(&hiliteRect,
-				g_tileSrc.left + (newTileOver * kMiniTileWide),
-				g_tileSrc.bottom + 1);
-			Mac_PaintRect(hdc, &hiliteRect, GetStockBrush(DC_BRUSH));
-			SetDCBrushColor(hdc, oldColor);
-
+			DrawTileOverMarkings(hdc, newTileOver, &g_tileSrc, redColor);
 			if (g_tileOver != -1)
 			{
-				QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
-				QOffsetRect(&hiliteRect,
-					g_tileSrc.left + (g_tileOver * kMiniTileWide),
-					g_tileSrc.top - 3);
-				Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
-				QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
-				QOffsetRect(&hiliteRect,
-					g_tileSrc.left + (g_tileOver * kMiniTileWide),
-					g_tileSrc.bottom + 1);
-				Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
+				DrawTileOverMarkings(hdc, g_tileOver, &g_tileSrc, btnFaceColor);
 			}
-
 			ReleaseDC(hDlg, hdc);
-
 			g_tileOver = newTileOver;
 		}
 	}
@@ -331,20 +287,8 @@ void HiliteTileOver (HWND hDlg, Point mouseIs)
 		if (g_tileOver != -1)
 		{
 			hdc = GetDC(hDlg);
-
-			QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
-			QOffsetRect(&hiliteRect,
-				g_tileSrc.left + (g_tileOver * kMiniTileWide),
-				g_tileSrc.top - 3);
-			Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
-			QSetRect(&hiliteRect, 0, 0, kMiniTileWide, 2);
-			QOffsetRect(&hiliteRect,
-				g_tileSrc.left + (g_tileOver * kMiniTileWide),
-				g_tileSrc.bottom + 1);
-			Mac_PaintRect(hdc, &hiliteRect, GetSysColorBrush(COLOR_BTNFACE));
-
+			DrawTileOverMarkings(hdc, g_tileOver, &g_tileSrc, btnFaceColor);
 			ReleaseDC(hDlg, hdc);
-
 			g_tileOver = -1;
 		}
 	}
