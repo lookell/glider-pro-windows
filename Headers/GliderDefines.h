@@ -620,6 +620,7 @@
 #define kErrFailedCatSearch         11
 #define kErrNeedColorQD             12
 #define kErrNeed16Or256Colors       13
+#define kErrNeedWinXPOrLater        14
 
 #define iAbout                  1
 #define iNewGame                1

@@ -42,6 +42,7 @@
 #include <objbase.h>
 #include <strsafe.h>
 
+void QuitIfLessThanWindowsXP (void);
 void ReadInPrefs (HWND ownerWindow);
 void WriteOutPrefs (HWND ownerWindow);
 
@@ -52,6 +53,30 @@ UInt16 g_isViewportWidth;
 UInt16 g_isViewportHeight;
 
 //==============================================================  Functions
+//--------------------------------------------------------------  QuitIfLessThanWindowsXP
+
+void QuitIfLessThanWindowsXP (void)
+{
+	OSVERSIONINFOEX osvi;
+	DWORD dwTypeMask;
+	DWORDLONG dwlConditionMask;
+	BOOL atLeastWinXP;
+
+	ZeroMemory(&osvi, sizeof(osvi));
+	osvi.dwOSVersionInfoSize = sizeof(osvi);
+	osvi.dwMajorVersion = HIBYTE(_WIN32_WINNT_WINXP);
+	osvi.dwMinorVersion = LOBYTE(_WIN32_WINNT_WINXP);
+	dwTypeMask = VER_MAJORVERSION | VER_MINORVERSION;
+	dwlConditionMask = 0;
+	dwlConditionMask = VerSetConditionMask(dwlConditionMask, VER_MAJORVERSION, VER_GREATER_EQUAL);
+	dwlConditionMask = VerSetConditionMask(dwlConditionMask, VER_MINORVERSION, VER_GREATER_EQUAL);
+	atLeastWinXP = VerifyVersionInfo(&osvi, dwTypeMask, dwlConditionMask);
+	if (!atLeastWinXP)
+	{
+		RedAlert(kErrNeedWinXPOrLater);
+	}
+}
+
 //--------------------------------------------------------------  ReadInPrefs
 // Called only once when game launches - reads in the preferences saved
 // from the last time Glider PRO was launched.  If no prefs are found,
@@ -303,6 +328,8 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 	(void)hPrevInstance;
 	(void)lpCmdLine;
 	(void)nShowCmd;
+
+	QuitIfLessThanWindowsXP();
 
 	hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 	if (FAILED(hr))

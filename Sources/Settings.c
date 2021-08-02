@@ -27,7 +27,6 @@
 #include "Utilities.h"
 
 #include <commctrl.h>
-#include <shlwapi.h> // for DLLGETVERSIONPROC and DLLGETVERSIONINFO
 
 void SetBrainsToDefaults (HWND prefDlg);
 void BrainsInit (HWND prefDlg);
@@ -672,63 +671,14 @@ void DisplayDefaults (HWND hDlg)
 
 //--------------------------------------------------------------  DisplayInit
 
-static BOOL AreCommonControlsVersionSix(void)
-{
-	HMODULE comctl32;
-	DLLGETVERSIONPROC comctl32_DllGetVersion;
-	DLLVERSIONINFO versionInfo;
-	HRESULT hr;
-
-	// NOTE: This assumes that comctl32.dll has already been loaded by the
-	// process (which is true for this program, because we call the function
-	// InitCommonControlsEx).
-	comctl32 = GetModuleHandle(L"comctl32");
-	if (comctl32 == NULL)
-	{
-		return FALSE;
-	}
-	comctl32_DllGetVersion = (DLLGETVERSIONPROC)GetProcAddress(comctl32, "DllGetVersion");
-	if (comctl32_DllGetVersion == NULL)
-	{
-		return FALSE;
-	}
-	ZeroMemory(&versionInfo, sizeof(versionInfo));
-	versionInfo.cbSize = sizeof(versionInfo);
-	hr = comctl32_DllGetVersion(&versionInfo);
-	if (FAILED(hr))
-	{
-		return FALSE;
-	}
-	return (versionInfo.dwMajorVersion >= 6);
-}
-
 void DisplayInit (HWND hDlg)
 {
 	HWND display1Control, display3Control, display9Control;
-	UINT loadFlags, enabledLoadFlags, disabledLoadFlags;
 	HICON display1Icon, display3Icon, display9Icon;
 
 	display1Control = GetDlgItem(hDlg, kDisplay1Item);
 	display3Control = GetDlgItem(hDlg, kDisplay3Item);
 	display9Control = GetDlgItem(hDlg, kDisplay9Item);
-
-	if (AreCommonControlsVersionSix())
-	{
-		// Version 6 of the common controls will render a disabled icon radio button
-		// with a faded-out version, so enabled and disabled icons are loaded in the
-		// same way.
-		enabledLoadFlags = LR_DEFAULTSIZE | LR_DEFAULTCOLOR;
-		disabledLoadFlags = LR_DEFAULTSIZE | LR_DEFAULTCOLOR;
-	}
-	else
-	{
-		// Previous versions of the common controls render a disabled icon radio button
-		// by first converting the icon to monochrome and then tinting it. To allow this
-		// to happen nicely, load our monochrome icons instead of letting our color icons
-		// be converted to a completely black blob.
-		enabledLoadFlags = LR_DEFAULTSIZE | LR_DEFAULTCOLOR;
-		disabledLoadFlags = LR_DEFAULTSIZE | LR_MONOCHROME;
-	}
 
 	if (g_thisMac.screen.right <= kRoomWide)
 	{
@@ -736,31 +686,19 @@ void DisplayInit (HWND hDlg)
 		EnableWindow(display9Control, FALSE);
 	}
 
-	if (IsWindowEnabled(display1Control))
-		loadFlags = enabledLoadFlags;
-	else
-		loadFlags = disabledLoadFlags;
 	display1Icon = (HICON)LoadImage(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kDisplay1Icon),
-			IMAGE_ICON, 0, 0, loadFlags);
+			IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_DEFAULTCOLOR);
 	SendMessage(display1Control, BM_SETIMAGE, IMAGE_ICON, (LPARAM)display1Icon);
 
-	if (IsWindowEnabled(display3Control))
-		loadFlags = enabledLoadFlags;
-	else
-		loadFlags = disabledLoadFlags;
 	display3Icon = (HICON)LoadImage(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kDisplay3Icon),
-			IMAGE_ICON, 0, 0, loadFlags);
+			IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_DEFAULTCOLOR);
 	SendMessage(display3Control, BM_SETIMAGE, IMAGE_ICON, (LPARAM)display3Icon);
 
-	if (IsWindowEnabled(display9Control))
-		loadFlags = enabledLoadFlags;
-	else
-		loadFlags = disabledLoadFlags;
 	display9Icon = (HICON)LoadImage(HINST_THISCOMPONENT,
 			MAKEINTRESOURCE(kDisplay9Icon),
-			IMAGE_ICON, 0, 0, loadFlags);
+			IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_DEFAULTCOLOR);
 	SendMessage(display9Control, BM_SETIMAGE, IMAGE_ICON, (LPARAM)display9Icon);
 
 	if (g_numNeighbors == 1)

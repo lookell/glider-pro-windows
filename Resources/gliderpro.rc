@@ -169,6 +169,7 @@ STRINGTABLE
     rErrTitleBase + kErrFailedCatSearch,        L"Failed House Search"
     rErrTitleBase + kErrNeedColorQD,            L"Need Color Quickdraw"
     rErrTitleBase + kErrNeed16Or256Colors,      L"Need Color Monitor"
+    rErrTitleBase + kErrNeedWinXPOrLater,       L"Need Windows XP"
 }
 
 STRINGTABLE
@@ -186,6 +187,7 @@ STRINGTABLE
     rErrMssgBase + kErrFailedCatSearch,         L"The act of looking for house files failed. Call Casady & Greene's technical support and report this error."
     rErrMssgBase + kErrNeedColorQD,             L"This Macintosh is incapable of color (or even grayscale). Glider PRO™ requires a Mac with Color Quickdraw built in."
     rErrMssgBase + kErrNeed16Or256Colors,       L"Glider PRO runs only in 16 shades of gray or 256 colors. None of the monitors hooked up to this Mac are capable of either of these modes."
+    rErrMssgBase + kErrNeedWinXPOrLater,        L"Glider PRO requires Windows XP (or later) to run."
 }
 
 STRINGTABLE
