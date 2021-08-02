@@ -1,4 +1,4 @@
-# Glider PRO for Windows
+# Glider PRO
 
 This repository contains the source code of Glider PRO, ported to run
 on the Windows operating system. It requires Windows XP or later.

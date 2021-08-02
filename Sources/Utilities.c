@@ -434,7 +434,7 @@ BOOL GetDataFolderPath (LPWSTR lpDataPath, DWORD cchDataPath)
 		hr = SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, pathBuffer);
 		if (FAILED(hr))
 			return FALSE;
-		if (!PathAppend(pathBuffer, L"glider-pro-windows"))
+		if (!PathAppend(pathBuffer, L"glider-pro-mermaid"))
 			return FALSE;
 		if (!CreateDirectory(pathBuffer, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
 			return FALSE;

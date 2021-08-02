@@ -19,7 +19,7 @@ If this succeeds, then Slumberland.glh is ready to be used by Glider PRO.
 Now, simply place it into the `Houses` directory for Glider PRO to find.
 If there is a `portable.dat` next to the Glider PRO executable, the Houses
 directory is also next to that executable. If `portable.dat` does not exist,
-then the directory is at `%APPDATA%\glider-pro-windows\Houses`.
+then the directory is at `%APPDATA%\glider-pro-mermaid\Houses`.
 
 
 ## Explanation

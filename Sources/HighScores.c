@@ -474,7 +474,7 @@ Boolean FindHighScoresFolder (LPWSTR scoresDirPath, DWORD cchDirPath)
 {
 	// This used to search the system preferences folder for a folder
 	// named "G-PRO Scores ƒ". Now it just uses the "Scores" folder under
-	// "%APPDATA%\glider-pro-windows" or next to the executable (depending
+	// "%APPDATA%\glider-pro-mermaid" or next to the executable (depending
 	// on whether "portable.dat" exists next to the executable or not.
 	// (See the GetDataFolderPath function.)
 
