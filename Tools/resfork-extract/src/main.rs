@@ -517,6 +517,13 @@ fn make_gliderpro_house(
 
 fn parse_resfork<P: AsRef<Path>>(filename: P) -> io::Result<ResourceFork> {
     let file_bytes = fs::read(filename.as_ref())?;
+    if file_bytes.is_empty() {
+        // special case: an empty file will be treated as an empty resource fork
+        // without issuing an error message
+        return Ok(ResourceFork {
+            resources: Vec::new(),
+        });
+    }
     if let Ok(Some(data)) = AppleDouble::read_from(Cursor::new(&file_bytes)) {
         if let Ok(resfork) = ResourceFork::read_from(Cursor::new(&data.rsrc)) {
             return Ok(resfork);
@@ -530,7 +537,10 @@ fn parse_resfork<P: AsRef<Path>>(filename: P) -> io::Result<ResourceFork> {
     if let Ok(resfork) = ResourceFork::read_from(Cursor::new(&file_bytes)) {
         return Ok(resfork);
     }
-    Err(ErrorKind::InvalidData.into())
+    Err(io::Error::new(
+        ErrorKind::InvalidData,
+        "invalid resource fork data",
+    ))
 }
 
 fn do_derez_command<I: IntoIterator<Item = OsString>>(args: I) -> AnyResult<()> {
