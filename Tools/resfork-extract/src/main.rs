@@ -554,7 +554,14 @@ fn do_derez_command<I: IntoIterator<Item = OsString>>(args: I) -> AnyResult<()> 
     };
     let output_name = args.next();
 
-    let resfork = parse_resfork(input_name)?;
+    let resfork = match parse_resfork(input_name) {
+        Ok(resfork) => resfork,
+        Err(error) => {
+            eprintln!("error: could not parse resource fork");
+            eprintln!("note: {}", error);
+            return Ok(());
+        }
+    };
     match output_name {
         Some(filename) => {
             let output_file = BufWriter::new(File::create(filename)?);
@@ -581,7 +588,14 @@ fn do_dump_command<I: IntoIterator<Item = OsString>>(args: I) -> AnyResult<()> {
         }
     };
 
-    let resfork = parse_resfork(input_name)?;
+    let resfork = match parse_resfork(input_name) {
+        Ok(resfork) => resfork,
+        Err(error) => {
+            eprintln!("error: could not parse resource fork");
+            eprintln!("note: {}", error);
+            return Ok(());
+        }
+    };
     let output_file = BufWriter::new(File::create(output_name)?);
     dump_resfork(&resfork, output_file)
 }
@@ -603,7 +617,14 @@ fn do_convert_command<I: IntoIterator<Item = OsString>>(args: I) -> AnyResult<()
         }
     };
 
-    let resfork = parse_resfork(input_name)?;
+    let resfork = match parse_resfork(input_name) {
+        Ok(resfork) => resfork,
+        Err(error) => {
+            eprintln!("error: could not parse resource fork");
+            eprintln!("note: {}", error);
+            return Ok(());
+        }
+    };
     let output_file = BufWriter::new(File::create(output_name)?);
     convert_resfork(&resfork, output_file)
 }
@@ -632,7 +653,16 @@ fn do_gliderpro_command<I: IntoIterator<Item = OsString>>(args: I) -> AnyResult<
         }
     };
     let data_bytes = fs::read(data_name)?;
-    let resfork = parse_resfork(rsrc_name)?;
+    let resfork = match parse_resfork(rsrc_name) {
+        Ok(resfork) => resfork,
+        Err(error) => {
+            eprintln!("warning: could not parse resource fork; continuing with empty one");
+            eprintln!("note: {}", error);
+            ResourceFork {
+                resources: Vec::new(),
+            }
+        }
+    };
     let output_file = BufWriter::new(File::create(output_name)?);
     make_gliderpro_house(&data_bytes, &resfork, output_file)
 }
