@@ -1,6 +1,7 @@
 #include "ByteIO.h"
 
 #include "WinAPI.h"
+
 #include <limits.h>
 #include <stdlib.h>
 
@@ -103,7 +104,7 @@ HRESULT byteio_tell(byteio *stream, int64_t *curPos)
 	{
 		return E_INVALIDARG;
 	}
-	return stream->fn_seek(stream, 0, SEEK_CUR, curPos);
+	return stream->fn_seek(stream, 0, BYTEIO_SEEK_CUR, curPos);
 }
 
 HRESULT byteio_close(byteio *stream)
@@ -410,15 +411,15 @@ static HRESULT handle_reader_seek(byteio *stream, int64_t offset, int origin, in
 	fileOffset.QuadPart = offset;
 	switch (origin)
 	{
-	case SEEK_SET:
+	case BYTEIO_SEEK_SET:
 		moveMethod = FILE_BEGIN;
 		break;
 
-	case SEEK_CUR:
+	case BYTEIO_SEEK_CUR:
 		moveMethod = FILE_CURRENT;
 		break;
 
-	case SEEK_END:
+	case BYTEIO_SEEK_END:
 		moveMethod = FILE_END;
 		break;
 
@@ -581,15 +582,15 @@ static HRESULT handle_writer_seek(byteio *stream, int64_t offset, int origin, in
 	fileOffset.QuadPart = offset;
 	switch (origin)
 	{
-	case SEEK_SET:
+	case BYTEIO_SEEK_SET:
 		moveMethod = FILE_BEGIN;
 		break;
 	
-	case SEEK_CUR:
+	case BYTEIO_SEEK_CUR:
 		moveMethod = FILE_CURRENT;
 		break;
 	
-	case SEEK_END:
+	case BYTEIO_SEEK_END:
 		moveMethod = FILE_END;
 		break;
 	
@@ -716,15 +717,15 @@ static HRESULT memory_reader_seek(byteio *stream, int64_t offset, int origin, in
 	memoryOffset = (ptrdiff_t)offset;
 	switch (origin)
 	{
-	case SEEK_SET:
+	case BYTEIO_SEEK_SET:
 		memoryPos = memoryOffset;
 		break;
 
-	case SEEK_CUR:
+	case BYTEIO_SEEK_CUR:
 		memoryPos = self->pos + memoryOffset;
 		break;
 
-	case SEEK_END:
+	case BYTEIO_SEEK_END:
 		memoryPos = self->size + memoryOffset;
 		break;
 
@@ -849,15 +850,15 @@ static HRESULT memory_writer_seek(byteio *stream, int64_t offset, int origin, in
 	memoryOffset = (ptrdiff_t)offset;
 	switch (origin)
 	{
-	case SEEK_SET:
+	case BYTEIO_SEEK_SET:
 		memoryPos = memoryOffset;
 		break;
 
-	case SEEK_CUR:
+	case BYTEIO_SEEK_CUR:
 		memoryPos = self->pos + memoryOffset;
 		break;
 
-	case SEEK_END:
+	case BYTEIO_SEEK_END:
 		memoryPos = self->size + memoryOffset;
 		break;
 

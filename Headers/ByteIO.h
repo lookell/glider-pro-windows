@@ -3,16 +3,16 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <stdio.h>
 
 #include "WinAPI.h"
+
+#define BYTEIO_SEEK_SET  0
+#define BYTEIO_SEEK_CUR  1
+#define BYTEIO_SEEK_END  2
 
 // The `byteio` structure is used to perform sequential input or output,
 // using a Windows HANDLE or an in-memory buffer.
 typedef struct byteio byteio;
-
-// All functions in this interface that return an `int` return a nonzero
-// value on success, and zero on failure.
 
 // Initialize a `byteio` structure to read bytes from a Windows file HANDLE.
 byteio *byteio_init_handle_reader(HANDLE fileHandle);
@@ -48,12 +48,12 @@ HRESULT byteio_write(byteio *stream, const void *buffer, size_t size);
 
 // Seek by `offset` bytes from the specified `origin` position.
 // If `newPos` is not NULL, then the new position is returned to the caller.
-// The `origin` parameter values are the same as for the standard `fseek`
-// function (i.e., SEEK_SET, SEEK_CUR, and SEEK_END).
+// The `origin` parameter values are named similarly to those for the standard `fseek`
+// function (i.e., BYTEIO_SEEK_SET, BYTEIO_SEEK_CUR, and BYTEIO_SEEK_END).
 HRESULT byteio_seek(byteio *stream, int64_t offset, int origin, int64_t *newPos);
 
 // Retrieve the current position in the stream. This is equivalent to
-// calling `byteio_seek(stream, 0, SEEK_CUR, curPos)`.
+// calling `byteio_seek(stream, 0, BYTEIO_SEEK_CUR, curPos)`.
 HRESULT byteio_tell(byteio *stream, int64_t *curPos);
 
 // *** Fixed-size integer reading routines ***
