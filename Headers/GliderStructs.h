@@ -10,7 +10,7 @@
 #include "GliderDefines.h"
 #include "MacTypes.h"
 
-#include <wchar.h>
+#include <stddef.h>
 
 typedef struct blowerType
 {
