@@ -5,6 +5,7 @@
 #include "StructIO.h"
 #include "Utilities.h" // TEMP TEMP TEMP
 
+#define MINIZ_NO_ZLIB_COMPATIBLE_NAMES
 #include "miniz.h"
 
 #include <mmsystem.h>
