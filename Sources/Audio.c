@@ -834,14 +834,20 @@ int Audio_InitDevice(void)
 void Audio_KillDevice(void)
 {
 	HWND audioWindow;
+	DWORD audioThreadId;
+	HANDLE audioThreadHandle;
 
 	audioWindow = Audio_SetMessageWindow(NULL);
 	if (audioWindow != NULL)
 	{
+		audioThreadId = GetWindowThreadProcessId(audioWindow, NULL);
+		audioThreadHandle = OpenThread(SYNCHRONIZE, FALSE, audioThreadId);
 		Audio_SendThreadMessage(audioWindow, AUDIOCMD_SHUTDOWN, 0, 0);
-		// The audio thread itself will exit shortly after this call.
-		// We hold no handles to the thread, so the underlying object
-		// will destroy itself soon enough.
+		if (audioThreadHandle != NULL)
+		{
+			WaitForSingleObject(audioThreadHandle, INFINITE);
+			CloseHandle(audioThreadHandle);
+		}
 	}
 }
 
