@@ -49,7 +49,7 @@ pub fn pix_to_ydlu(pix: i32) -> i32 {
     (f64::from(pix) * 8.0 / MS_SHELL_DLG_BASE_Y).round() as i32
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct Point {
     pub v: i16,
     pub h: i16,
@@ -68,7 +68,7 @@ impl Point {
     }
 }
 
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct Rect {
     pub top: i16,
     pub left: i16,

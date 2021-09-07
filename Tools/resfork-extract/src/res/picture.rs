@@ -2,9 +2,11 @@ use super::{ColorTable, Point, Rect};
 use crate::bitmap::{
     Bitmap, BitmapEight, BitmapFour, BitmapOne, BitmapSixteen, BitmapTwentyFour, RgbQuad,
 };
+use crate::rsrcfork::Resource;
 use crate::utils::{ReadExt, SeekExt};
 use std::io::{self, ErrorKind, Read, Seek, SeekFrom, Write};
 
+#[derive(Debug)]
 struct Region {
     rgnSize: u16,
     rgnBBox: Rect,
@@ -519,14 +521,110 @@ struct PictureV2 {
     picOps: Vec<PicV2Op>,
 }
 
+fn is_region_unsupported(rgn: &Region, bounds: &Rect) -> bool {
+    (rgn.rgnSize != 10)
+        || (rgn.rgnBBox.left > bounds.left)
+        || (rgn.rgnBBox.top > bounds.top)
+        || (rgn.rgnBBox.right < bounds.right)
+        || (rgn.rgnBBox.bottom < bounds.bottom)
+}
+
+fn issue_warnings_on_v1_opcode(pict_id: i16, picFrame: &Rect, opcode: &PicV1Op) {
+    match opcode {
+        &PicV1Op::Skipped(skipped) => {
+            eprintln!(
+                "warning: skipped opcode ${:02X} in V1 PICT #{}",
+                skipped, pict_id
+            );
+        }
+        PicV1Op::ClipRgn(clip_rgn) => {
+            if is_region_unsupported(clip_rgn, picFrame) {
+                eprintln!(
+                    "warning: unsupported ClipRgn opcode in V1 PICT #{}",
+                    pict_id
+                );
+            }
+        }
+        PicV1Op::BitsRgn(data) => {
+            if is_region_unsupported(&data.maskRgn, &data.srcRect) {
+                eprintln!(
+                    "warning: unsupported BitsRgn opcode in V1 PICT #{}",
+                    pict_id
+                );
+            }
+        }
+        PicV1Op::PackBitsRgn(data) => {
+            if is_region_unsupported(&data.maskRgn, &data.srcRect) {
+                eprintln!(
+                    "warning: unsupported PackBitsRgn opcode in V1 PICT #{}",
+                    pict_id
+                );
+            }
+        }
+        _ => {}
+    }
+}
+
+fn issue_warnings_on_v2_opcode(pict_id: i16, picFrame: &Rect, opcode: &PicV2Op) {
+    match opcode {
+        &PicV2Op::Skipped(skipped) => {
+            if skipped == 0x8200 || skipped == 0x8201 {
+                eprintln!(
+                    "warning: unsupported QuickTime data in V2 PICT #{}",
+                    pict_id
+                );
+            } else {
+                eprintln!(
+                    "warning: skipped opcode ${:02X} in V2 PICT #{}",
+                    skipped, pict_id
+                );
+            }
+        }
+        PicV2Op::ClipRgn(clip_rgn) => {
+            if is_region_unsupported(clip_rgn, picFrame) {
+                eprintln!(
+                    "warning: unsupported ClipRgn opcode in V2 PICT #{}",
+                    pict_id
+                );
+            }
+        }
+        PicV2Op::BitsRgn(data) => {
+            if is_region_unsupported(&data.maskRgn, &data.srcRect) {
+                eprintln!(
+                    "warning: unsupported BitsRgn opcode in V2 PICT #{}",
+                    pict_id
+                );
+            }
+        }
+        PicV2Op::PackBitsRgn(data) => {
+            if is_region_unsupported(&data.maskRgn, &data.srcRect) {
+                eprintln!(
+                    "warning: unsupported PackBitsRgn opcode in V2 PICT #{}",
+                    pict_id
+                );
+            }
+        }
+        PicV2Op::DirectBitsRgn(data) => {
+            if is_region_unsupported(&data.maskRgn, &data.srcRect) {
+                eprintln!(
+                    "warning: unsupported DirectBitsRgn opcode in V2 PICT #{}",
+                    pict_id
+                );
+            }
+        }
+        _ => {}
+    }
+}
+
 impl Picture {
-    fn read_from(mut reader: impl Read + Seek) -> io::Result<Option<Self>> {
+    fn read_from(mut reader: impl Read + Seek, pict_id: i16) -> io::Result<Option<Self>> {
         let picSize = reader.read_be_u16()?;
         let picFrame = Rect::read_from(&mut reader)?;
         let magic = reader.read_be_u16()?;
         if magic == 0x1101 {
             let mut picOps = Vec::new();
             while let Some(new_opcode) = PicV1Op::read_from(&mut reader)? {
+                issue_warnings_on_v1_opcode(pict_id, &picFrame, &new_opcode);
                 picOps.push(new_opcode);
             }
             Ok(Some(Self::V1(PictureV1 {
@@ -541,6 +639,7 @@ impl Picture {
             }
             let mut picOps = Vec::new();
             while let Some(new_opcode) = PicV2Op::read_from(&mut reader)? {
+                issue_warnings_on_v2_opcode(pict_id, &picFrame, &new_opcode);
                 picOps.push(new_opcode);
             }
             Ok(Some(Self::V2(PictureV2 {
@@ -563,12 +662,12 @@ fn skip_bytes(mut reader: impl Seek, num: i64) -> io::Result<()> {
     reader.seek(SeekFrom::Current(num)).map(|_| ())
 }
 
-fn read_dont_care_v1(reader: impl Seek, num: i64) -> io::Result<PicV1Op> {
-    skip_bytes(reader, num).map(|_| PicV1Op::DontCare)
+fn skip_v1_opcode(reader: impl Seek, opcode: u8, num: i64) -> io::Result<PicV1Op> {
+    skip_bytes(reader, num).map(|_| PicV1Op::Skipped(opcode))
 }
 
-fn read_dont_care_v2(reader: impl Seek, num: i64) -> io::Result<PicV2Op> {
-    skip_bytes(reader, num).map(|_| PicV2Op::DontCare)
+fn skip_v2_opcode(reader: impl Seek, opcode: u16, num: i64) -> io::Result<PicV2Op> {
+    skip_bytes(reader, num).map(|_| PicV2Op::Skipped(opcode))
 }
 
 #[derive(Clone)]
@@ -586,86 +685,99 @@ impl OffsetOrigin {
 }
 
 enum PicV1Op {
-    DontCare,
+    // This is used for both the QuickDraw NOP opcode as well as the
+    // comment opcodes.
+    NOP,
+
+    ClipRgn(Region),
     OffsetOrigin(OffsetOrigin),
     BitsRect(BitsRect),
     BitsRgn(BitsRgn),
     PackBitsRect(BitsRect),
     PackBitsRgn(BitsRgn),
+
+    // This is used for opcodes which are unimplemented but don't affect
+    // the picture's contents on their own.
+    Ignored(u8),
+
+    // This is used for opcodes which are unimplemented but do affect the
+    // picture's contents. NOTE: If one of these is implemented, make sure
+    // any "Ignored" opcode that affect the output are also implemented.
+    Skipped(u8),
 }
 
 impl PicV1Op {
     fn read_from(mut reader: impl Read + Seek) -> io::Result<Option<Self>> {
         let opcode = reader.read_be_u8()?;
         Ok(match opcode {
-            0x00 => Some(PicV1Op::DontCare),
-            0x01 => {
-                let _ = Region::read_from(reader)?;
-                Some(PicV1Op::DontCare)
-            }
-            0x02 => Some(read_dont_care_v1(reader, 8)?),
-            0x03 => Some(read_dont_care_v1(reader, 2)?),
-            0x04 => Some(read_dont_care_v1(reader, 1)?),
-            0x05 => Some(read_dont_care_v1(reader, 2)?),
-            0x06 => Some(read_dont_care_v1(reader, 4)?),
-            0x07 => Some(read_dont_care_v1(reader, 4)?),
-            0x08 => Some(read_dont_care_v1(reader, 2)?),
-            0x09 => Some(read_dont_care_v1(reader, 8)?),
-            0x0A => Some(read_dont_care_v1(reader, 8)?),
-            0x0B => Some(read_dont_care_v1(reader, 4)?),
+            0x00 => Some(PicV1Op::NOP),
+            0x01 => Some(PicV1Op::ClipRgn(Region::read_from(reader)?)),
+            0x02 => Some(skip_v1_opcode(reader, opcode, 8)?),
+            0x03 => Some(skip_v1_opcode(reader, opcode, 2)?),
+            0x04 => Some(skip_v1_opcode(reader, opcode, 1)?),
+            0x05 => Some(skip_v1_opcode(reader, opcode, 2)?),
+            0x06 => Some(skip_v1_opcode(reader, opcode, 4)?),
+            0x07 => Some(skip_v1_opcode(reader, opcode, 4)?),
+            0x08 => Some(skip_v1_opcode(reader, opcode, 2)?),
+            0x09 => Some(skip_v1_opcode(reader, opcode, 8)?),
+            0x0A => Some(skip_v1_opcode(reader, opcode, 8)?),
+            0x0B => Some(skip_v1_opcode(reader, opcode, 4)?),
             0x0C => Some(PicV1Op::OffsetOrigin(OffsetOrigin::read_from(reader)?)),
-            0x0D => Some(read_dont_care_v1(reader, 2)?),
-            0x0E => Some(read_dont_care_v1(reader, 4)?),
-            0x0F => Some(read_dont_care_v1(reader, 4)?),
-            0x10 => Some(read_dont_care_v1(reader, 8)?),
-            0x11 => Some(read_dont_care_v1(reader, 1)?),
-            0x20 => Some(read_dont_care_v1(reader, 8)?),
-            0x21 => Some(read_dont_care_v1(reader, 4)?),
-            0x22 => Some(read_dont_care_v1(reader, 6)?),
-            0x23 => Some(read_dont_care_v1(reader, 2)?),
+            0x0D => Some(skip_v1_opcode(reader, opcode, 2)?),
+            0x0E => Some(skip_v1_opcode(reader, opcode, 4)?),
+            0x0F => Some(skip_v1_opcode(reader, opcode, 4)?),
+            0x10 => Some(skip_v1_opcode(reader, opcode, 8)?),
+            0x11 => Some(skip_v1_opcode(reader, opcode, 1)?),
+            0x20 => Some(skip_v1_opcode(reader, opcode, 8)?),
+            0x21 => Some(skip_v1_opcode(reader, opcode, 4)?),
+            0x22 => Some(skip_v1_opcode(reader, opcode, 6)?),
+            0x23 => Some(skip_v1_opcode(reader, opcode, 2)?),
             0x28 => {
                 skip_bytes(&mut reader, 4)?;
                 let _ = super::read_pstring(&mut reader)?;
-                Some(PicV1Op::DontCare)
+                Some(PicV1Op::Skipped(opcode))
             }
             0x29 | 0x2A => {
                 skip_bytes(&mut reader, 1)?;
                 let _ = super::read_pstring(&mut reader)?;
-                Some(PicV1Op::DontCare)
+                Some(PicV1Op::Skipped(opcode))
             }
             0x2B => {
                 skip_bytes(&mut reader, 2)?;
                 let _ = super::read_pstring(&mut reader)?;
-                Some(PicV1Op::DontCare)
+                Some(PicV1Op::Skipped(opcode))
             }
-            0x30..=0x34 => Some(read_dont_care_v1(reader, 8)?),
-            0x38..=0x3C => Some(PicV1Op::DontCare),
-            0x40..=0x44 => Some(read_dont_care_v1(reader, 8)?),
-            0x48..=0x4C => Some(PicV1Op::DontCare),
-            0x50..=0x54 => Some(read_dont_care_v1(reader, 8)?),
-            0x58..=0x5C => Some(PicV1Op::DontCare),
-            0x60..=0x64 => Some(read_dont_care_v1(reader, 12)?),
-            0x68..=0x6C => Some(read_dont_care_v1(reader, 4)?),
+            0x30..=0x34 => Some(skip_v1_opcode(reader, opcode, 8)?),
+            0x38..=0x3C => Some(PicV1Op::Skipped(opcode)),
+            0x40..=0x44 => Some(skip_v1_opcode(reader, opcode, 8)?),
+            0x48..=0x4C => Some(PicV1Op::Skipped(opcode)),
+            0x50..=0x54 => Some(skip_v1_opcode(reader, opcode, 8)?),
+            0x58..=0x5C => Some(PicV1Op::Skipped(opcode)),
+            0x60..=0x64 => Some(skip_v1_opcode(reader, opcode, 12)?),
+            0x68..=0x6C => Some(skip_v1_opcode(reader, opcode, 4)?),
             0x70..=0x74 => {
                 let _ = Polygon::read_from(reader)?;
-                Some(PicV1Op::DontCare)
+                Some(PicV1Op::Skipped(opcode))
             }
-            0x78..=0x7C => Some(PicV1Op::DontCare),
+            0x78..=0x7C => Some(PicV1Op::Skipped(opcode)),
             0x80..=0x84 => {
                 let _ = Region::read_from(reader)?;
-                Some(PicV1Op::DontCare)
+                Some(PicV1Op::Skipped(opcode))
             }
-            0x88..=0x8C => Some(PicV1Op::DontCare),
+            0x88..=0x8C => Some(PicV1Op::Skipped(opcode)),
             0x90 => Some(PicV1Op::BitsRect(BitsRect::read_from(reader)?)),
             0x91 => Some(PicV1Op::BitsRgn(BitsRgn::read_from(reader)?)),
             0x98 => Some(PicV1Op::PackBitsRect(BitsRect::read_from(reader)?)),
             0x99 => Some(PicV1Op::PackBitsRgn(BitsRgn::read_from(reader)?)),
-            0xA0 => Some(read_dont_care_v1(reader, 2)?),
+            0xA0 => {
+                skip_bytes(reader, 2)?;
+                Some(PicV1Op::NOP)
+            }
             0xA1 => {
                 let _ = reader.read_be_u16()?;
                 let length = reader.read_be_u16()?;
                 skip_bytes(reader, length.into())?;
-                Some(PicV1Op::DontCare)
+                Some(PicV1Op::NOP)
             }
             0xFF => None,
             _ => {
@@ -679,7 +791,11 @@ impl PicV1Op {
 }
 
 enum PicV2Op {
-    DontCare,
+    // This is used for both the QuickDraw NOP opcode as well as the
+    // comment opcodes.
+    NOP,
+
+    ClipRgn(Region),
     OffsetOrigin(OffsetOrigin),
     BitsRect(BitsRect),
     BitsRgn(BitsRgn),
@@ -687,6 +803,15 @@ enum PicV2Op {
     PackBitsRgn(BitsRgn),
     DirectBitsRect(DirectBitsRect),
     DirectBitsRgn(DirectBitsRgn),
+
+    // This is used for opcodes which are unimplemented but don't affect
+    // the picture's contents on their own.
+    Ignored(u16),
+
+    // This is used for opcodes which are unimplemented but do affect the
+    // picture's contents. NOTE: If one of these is implemented, make sure
+    // any "Ignored" opcode that affect the output are also implemented.
+    Skipped(u16),
 }
 
 impl PicV2Op {
@@ -694,87 +819,83 @@ impl PicV2Op {
         reader.align_to(2)?;
         let opcode = reader.read_be_u16()?;
         Ok(match opcode {
-            0x0000 => Some(PicV2Op::DontCare),
-            0x0001 => {
-                let _ = Region::read_from(reader)?;
-                Some(PicV2Op::DontCare)
-            }
-            0x0002 => Some(read_dont_care_v2(reader, 8)?),
-            0x0003 => Some(read_dont_care_v2(reader, 2)?),
-            0x0004 => Some(read_dont_care_v2(reader, 1)?),
-            0x0005 => Some(read_dont_care_v2(reader, 2)?),
-            0x0006 => Some(read_dont_care_v2(reader, 4)?),
-            0x0007 => Some(read_dont_care_v2(reader, 4)?),
-            0x0008 => Some(read_dont_care_v2(reader, 2)?),
-            0x0009 => Some(read_dont_care_v2(reader, 8)?),
-            0x000A => Some(read_dont_care_v2(reader, 8)?),
-            0x000B => Some(read_dont_care_v2(reader, 4)?),
+            0x0000 => Some(PicV2Op::NOP),
+            0x0001 => Some(PicV2Op::ClipRgn(Region::read_from(reader)?)),
+            0x0002 => Some(skip_v2_opcode(reader, opcode, 8)?),
+            0x0003 => Some(skip_v2_opcode(reader, opcode, 2)?),
+            0x0004 => Some(skip_v2_opcode(reader, opcode, 1)?),
+            0x0005 => Some(skip_v2_opcode(reader, opcode, 2)?),
+            0x0006 => Some(skip_v2_opcode(reader, opcode, 4)?),
+            0x0007 => Some(skip_v2_opcode(reader, opcode, 4)?),
+            0x0008 => Some(skip_v2_opcode(reader, opcode, 2)?),
+            0x0009 => Some(skip_v2_opcode(reader, opcode, 8)?),
+            0x000A => Some(skip_v2_opcode(reader, opcode, 8)?),
+            0x000B => Some(skip_v2_opcode(reader, opcode, 4)?),
             0x000C => Some(PicV2Op::OffsetOrigin(OffsetOrigin::read_from(reader)?)),
-            0x000D => Some(read_dont_care_v2(reader, 2)?),
-            0x000E => Some(read_dont_care_v2(reader, 4)?),
-            0x000F => Some(read_dont_care_v2(reader, 4)?),
-            0x0010 => Some(read_dont_care_v2(reader, 8)?),
-            0x0011 => Some(read_dont_care_v2(reader, 1)?),
+            0x000D => Some(skip_v2_opcode(reader, opcode, 2)?),
+            0x000E => Some(skip_v2_opcode(reader, opcode, 4)?),
+            0x000F => Some(skip_v2_opcode(reader, opcode, 4)?),
+            0x0010 => Some(skip_v2_opcode(reader, opcode, 8)?),
+            0x0011 => Some(skip_v2_opcode(reader, opcode, 1)?),
             // ($0012 ... $0014) pixel pattern opcodes not implemented here
-            0x0015 => Some(read_dont_care_v2(reader, 2)?),
-            0x0016 => Some(read_dont_care_v2(reader, 2)?),
-            0x0017..=0x0019 => Some(PicV2Op::DontCare),
-            0x001A => Some(read_dont_care_v2(reader, 6)?),
-            0x001B => Some(read_dont_care_v2(reader, 6)?),
-            0x001C => Some(PicV2Op::DontCare),
-            0x001D => Some(read_dont_care_v2(reader, 6)?),
-            0x001E => Some(PicV2Op::DontCare),
-            0x001F => Some(read_dont_care_v2(reader, 6)?),
-            0x0020 => Some(read_dont_care_v2(reader, 8)?),
-            0x0021 => Some(read_dont_care_v2(reader, 4)?),
-            0x0022 => Some(read_dont_care_v2(reader, 6)?),
-            0x0023 => Some(read_dont_care_v2(reader, 2)?),
+            0x0015 => Some(skip_v2_opcode(reader, opcode, 2)?),
+            0x0016 => Some(skip_v2_opcode(reader, opcode, 2)?),
+            0x001A => Some(skip_v2_opcode(reader, opcode, 6)?),
+            0x001B => Some(skip_v2_opcode(reader, opcode, 6)?),
+            0x001C => Some(PicV2Op::Skipped(opcode)),
+            0x001D => Some(skip_v2_opcode(reader, opcode, 6)?),
+            0x001E => Some(PicV2Op::Ignored(opcode)),
+            0x001F => Some(skip_v2_opcode(reader, opcode, 6)?),
+            0x0020 => Some(skip_v2_opcode(reader, opcode, 8)?),
+            0x0021 => Some(skip_v2_opcode(reader, opcode, 4)?),
+            0x0022 => Some(skip_v2_opcode(reader, opcode, 6)?),
+            0x0023 => Some(skip_v2_opcode(reader, opcode, 2)?),
             0x0024..=0x0027 => {
                 let length = reader.read_be_u16()?;
-                Some(read_dont_care_v2(reader, length.into())?)
+                Some(skip_v2_opcode(reader, opcode, length.into())?)
             }
             0x0028 => {
                 skip_bytes(&mut reader, 4)?;
                 let _ = super::read_pstring(&mut reader)?;
-                Some(PicV2Op::DontCare)
+                Some(PicV2Op::Skipped(opcode))
             }
             0x0029 | 0x002A => {
                 skip_bytes(&mut reader, 1)?;
                 let _ = super::read_pstring(&mut reader)?;
-                Some(PicV2Op::DontCare)
+                Some(PicV2Op::Skipped(opcode))
             }
             0x002B => {
                 skip_bytes(&mut reader, 2)?;
                 let _ = super::read_pstring(&mut reader)?;
-                Some(PicV2Op::DontCare)
+                Some(PicV2Op::Skipped(opcode))
             }
             0x002C..=0x002F => {
                 let length = reader.read_be_u16()?;
-                Some(read_dont_care_v2(reader, length.into())?)
+                Some(skip_v2_opcode(reader, opcode, length.into())?)
             }
-            0x0030..=0x0037 => Some(read_dont_care_v2(reader, 8)?),
-            0x0038..=0x003F => Some(PicV2Op::DontCare),
-            0x0040..=0x0047 => Some(read_dont_care_v2(reader, 8)?),
-            0x0048..=0x004F => Some(PicV2Op::DontCare),
-            0x0050..=0x0057 => Some(read_dont_care_v2(reader, 8)?),
-            0x0058..=0x005F => Some(PicV2Op::DontCare),
-            0x0060..=0x0067 => Some(read_dont_care_v2(reader, 12)?),
-            0x0068..=0x006F => Some(read_dont_care_v2(reader, 4)?),
+            0x0030..=0x0037 => Some(skip_v2_opcode(reader, opcode, 8)?),
+            0x0038..=0x003F => Some(PicV2Op::Skipped(opcode)),
+            0x0040..=0x0047 => Some(skip_v2_opcode(reader, opcode, 8)?),
+            0x0048..=0x004F => Some(PicV2Op::Skipped(opcode)),
+            0x0050..=0x0057 => Some(skip_v2_opcode(reader, opcode, 8)?),
+            0x0058..=0x005F => Some(PicV2Op::Skipped(opcode)),
+            0x0060..=0x0067 => Some(skip_v2_opcode(reader, opcode, 12)?),
+            0x0068..=0x006F => Some(skip_v2_opcode(reader, opcode, 4)?),
             0x0070..=0x0077 => {
                 let _ = Polygon::read_from(reader)?;
-                Some(PicV2Op::DontCare)
+                Some(PicV2Op::Skipped(opcode))
             }
-            0x0078..=0x007F => Some(PicV2Op::DontCare),
+            0x0078..=0x007F => Some(PicV2Op::Skipped(opcode)),
             0x0080..=0x0087 => {
                 let _ = Region::read_from(reader)?;
-                Some(PicV2Op::DontCare)
+                Some(PicV2Op::Skipped(opcode))
             }
-            0x0088..=0x008F => Some(PicV2Op::DontCare),
+            0x0088..=0x008F => Some(PicV2Op::Skipped(opcode)),
             0x0090 => Some(PicV2Op::BitsRect(BitsRect::read_from(reader)?)),
             0x0091 => Some(PicV2Op::BitsRgn(BitsRgn::read_from(reader)?)),
             0x0092..=0x0097 => {
                 let length = reader.read_be_u16()?;
-                Some(read_dont_care_v2(reader, length.into())?)
+                Some(skip_v2_opcode(reader, opcode, length.into())?)
             }
             0x0098 => Some(PicV2Op::PackBitsRect(BitsRect::read_from(reader)?)),
             0x0099 => Some(PicV2Op::PackBitsRgn(BitsRgn::read_from(reader)?)),
@@ -782,44 +903,54 @@ impl PicV2Op {
             0x009B => Some(PicV2Op::DirectBitsRgn(DirectBitsRgn::read_from(reader)?)),
             0x009C..=0x009F => {
                 let length = reader.read_be_u16()?;
-                Some(read_dont_care_v2(reader, length.into())?)
+                Some(skip_v2_opcode(reader, opcode, length.into())?)
             }
-            0x00A0 => Some(read_dont_care_v2(reader, 2)?),
+            0x00A0 => {
+                skip_bytes(reader, 2)?;
+                Some(PicV2Op::NOP)
+            }
             0x00A1 => {
                 let _ = reader.read_be_u16()?;
                 let length = reader.read_be_u16()?;
-                Some(read_dont_care_v2(reader, length.into())?)
+                skip_bytes(reader, length.into())?;
+                Some(PicV2Op::NOP)
             }
             0x00A2..=0x00AF => {
                 let length = reader.read_be_u16()?;
-                Some(read_dont_care_v2(reader, length.into())?)
+                Some(skip_v2_opcode(reader, opcode, length.into())?)
             }
-            0x00B0..=0x00CF => Some(PicV2Op::DontCare),
+            0x00B0..=0x00CF => Some(PicV2Op::Skipped(opcode)),
             0x00D0..=0x00FE => {
                 let length = reader.read_be_u32()?;
-                Some(read_dont_care_v2(reader, length.into())?)
+                Some(skip_v2_opcode(reader, opcode, length.into())?)
             }
             0x00FF => None,
-            0x0100..=0x01FF => Some(read_dont_care_v2(reader, 2)?),
-            0x0200 => Some(read_dont_care_v2(reader, 4)?),
-            0x0BFF => Some(read_dont_care_v2(reader, 22)?),
-            0x0C00 => Some(read_dont_care_v2(reader, 24)?),
-            0x0C01 => Some(read_dont_care_v2(reader, 24)?),
-            0x7F00..=0x7FFF => Some(read_dont_care_v2(reader, 254)?),
-            0x8000..=0x80FF => Some(PicV2Op::DontCare),
+            0x0100..=0x7FFF => {
+                let length = (opcode >> 8) * 2;
+                skip_bytes(reader, length.into())?;
+                match opcode {
+                    0x0C00 => Some(PicV2Op::Ignored(opcode)),
+                    _ => Some(PicV2Op::Skipped(opcode)),
+                }
+            }
+            0x8000..=0x80FF => Some(PicV2Op::Skipped(opcode)),
             0x8100..=0x81FF => {
                 let length = reader.read_be_u32()?;
-                Some(read_dont_care_v2(reader, length.into())?)
+                Some(skip_v2_opcode(reader, opcode, length.into())?)
             }
-            0x8200 | 0x8201 => {
-                return Err(io::Error::new(
-                    ErrorKind::InvalidData,
-                    "PICT contains private QuickTime data",
-                ));
+            0x8200 => {
+                // Compressed QuickTime data
+                let length = reader.read_be_u32()?;
+                Some(skip_v2_opcode(reader, opcode, length.into())?)
+            }
+            0x8201 => {
+                // Uncompressed QuickTime data
+                let length = reader.read_be_u32()?;
+                Some(skip_v2_opcode(reader, opcode, length.into())?)
             }
             0xFFFF => {
                 let length = reader.read_be_u32()?;
-                Some(read_dont_care_v2(reader, length.into())?)
+                Some(skip_v2_opcode(reader, opcode, length.into())?)
             }
             _ => {
                 return Err(io::Error::new(
@@ -1067,8 +1198,8 @@ fn convert_v2(picture: PictureV2, writer: impl Write) -> io::Result<()> {
     convert_pict(picture.picFrame, bits_data, writer)
 }
 
-pub fn convert(data: &[u8], writer: impl Write) -> io::Result<()> {
-    match Picture::read_from(io::Cursor::new(data))? {
+pub fn convert(resource: &Resource, writer: impl Write) -> io::Result<()> {
+    match Picture::read_from(io::Cursor::new(&resource.data), resource.id)? {
         Some(Picture::V1(pict)) => convert_v1(pict, writer),
         Some(Picture::V2(pict)) => convert_v2(pict, writer),
         None => Ok(()),

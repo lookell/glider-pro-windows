@@ -229,7 +229,7 @@ fn convert_resource(resource: &Resource, mut writer: impl Write) -> io::Result<(
             .and_then(|(image, mask)| IconFile::new().add_entry(image, mask).write_to(writer)),
         b"mctb" => menu_color_table::convert(&resource.data, writer),
         b"MENU" => menu::convert(&resource.data, writer),
-        b"Date" | b"PICT" => picture::convert(&resource.data, writer),
+        b"Date" | b"PICT" => picture::convert(&resource, writer),
         b"snd " => sound::convert(&resource.data, writer),
         b"STR#" => string_list::convert(&resource.data, writer),
         b"TEXT" => text::convert(&resource.data, writer),
@@ -411,7 +411,7 @@ fn make_gliderpro_house(
         resource: &Resource,
     ) -> AnyResult<()> {
         let mut data_bytes = Vec::new();
-        if picture::convert(&resource.data, &mut data_bytes).is_ok() {
+        if picture::convert(&resource, &mut data_bytes).is_ok() {
             let entry_name = format!("images/{}.bmp", resource.id);
             zipfile.start_file(entry_name, Default::default())?;
             zipfile.write_all(&data_bytes)?;
