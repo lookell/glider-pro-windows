@@ -136,7 +136,7 @@ struct BitsRect {
     ctTable: ColorTable,
     srcRect: Rect,
     dstRect: Rect,
-    mode: u16,
+    mode: i16,
     data: PixData,
 }
 
@@ -153,7 +153,7 @@ impl BitsRect {
             ctTable,
             srcRect: Rect::read_from(&mut reader)?,
             dstRect: Rect::read_from(&mut reader)?,
-            mode: reader.read_be_u16()?,
+            mode: reader.read_be_i16()?,
             data: PixData::read_from(&mut reader, &pixMap)?,
         })
     }
@@ -164,7 +164,7 @@ struct BitsRgn {
     ctTable: ColorTable,
     srcRect: Rect,
     dstRect: Rect,
-    mode: u16,
+    mode: i16,
     maskRgn: Region,
     data: PixData,
 }
@@ -182,7 +182,7 @@ impl BitsRgn {
             ctTable,
             srcRect: Rect::read_from(&mut reader)?,
             dstRect: Rect::read_from(&mut reader)?,
-            mode: reader.read_be_u16()?,
+            mode: reader.read_be_i16()?,
             maskRgn: Region::read_from(&mut reader)?,
             data: PixData::read_from(&mut reader, &pixMap)?,
         })
@@ -193,7 +193,7 @@ struct DirectBitsRect {
     pixMap: PixMap,
     srcRect: Rect,
     dstRect: Rect,
-    mode: u16,
+    mode: i16,
     data: PixData,
 }
 
@@ -204,7 +204,7 @@ impl DirectBitsRect {
             pixMap,
             srcRect: Rect::read_from(&mut reader)?,
             dstRect: Rect::read_from(&mut reader)?,
-            mode: reader.read_be_u16()?,
+            mode: reader.read_be_i16()?,
             data: PixData::read_from(&mut reader, &pixMap)?,
         })
     }
@@ -214,7 +214,7 @@ struct DirectBitsRgn {
     pixMap: PixMap,
     srcRect: Rect,
     dstRect: Rect,
-    mode: u16,
+    mode: i16,
     maskRgn: Region,
     data: PixData,
 }
@@ -226,7 +226,7 @@ impl DirectBitsRgn {
             pixMap,
             srcRect: Rect::read_from(&mut reader)?,
             dstRect: Rect::read_from(&mut reader)?,
-            mode: reader.read_be_u16()?,
+            mode: reader.read_be_i16()?,
             maskRgn: Region::read_from(&mut reader)?,
             data: PixData::read_from(&mut reader, &pixMap)?,
         })
@@ -529,35 +529,67 @@ fn is_region_unsupported(rgn: &Region, bounds: &Rect) -> bool {
         || (rgn.rgnBBox.bottom < bounds.bottom)
 }
 
+pub const QD_MODE_SRC_COPY: i16 = 0;
+pub const QD_MODE_DITHER_COPY: i16 = 64;
+
+fn is_transfer_mode_unsupported(mode: i16) -> bool {
+    (mode != QD_MODE_SRC_COPY) && (mode != (QD_MODE_SRC_COPY + QD_MODE_DITHER_COPY))
+}
+
 fn issue_warnings_on_v1_opcode(pict_id: i16, picFrame: &Rect, opcode: &PicV1Op) {
     match opcode {
         &PicV1Op::Skipped(skipped) => {
             eprintln!(
-                "warning: skipped opcode ${:02X} in V1 PICT #{}",
+                "warning: skipped opcode ${:02X} in PICT #{}",
                 skipped, pict_id
             );
         }
         PicV1Op::ClipRgn(clip_rgn) => {
             if is_region_unsupported(clip_rgn, picFrame) {
+                eprintln!("warning: unsupported ClipRgn opcode in PICT #{}", pict_id);
+            }
+        }
+        PicV1Op::BitsRect(data) => {
+            if is_transfer_mode_unsupported(data.mode) {
                 eprintln!(
-                    "warning: unsupported ClipRgn opcode in V1 PICT #{}",
-                    pict_id
+                    "warning: unsupported BitsRect transfer mode ({}) in PICT #{}",
+                    data.mode, pict_id
                 );
             }
         }
         PicV1Op::BitsRgn(data) => {
             if is_region_unsupported(&data.maskRgn, &data.srcRect) {
                 eprintln!(
-                    "warning: unsupported BitsRgn opcode in V1 PICT #{}",
+                    "warning: unsupported BitsRgn mask region in PICT #{}",
                     pict_id
+                );
+            }
+            if is_transfer_mode_unsupported(data.mode) {
+                eprintln!(
+                    "warning: unsupported BitsRgn transfer mode ({}) in PICT #{}",
+                    data.mode, pict_id
+                );
+            }
+        }
+        PicV1Op::PackBitsRect(data) => {
+            if is_transfer_mode_unsupported(data.mode) {
+                eprintln!(
+                    "warning: unsupported PackBitsRect transfer mode ({}) in PICT #{}",
+                    data.mode, pict_id
                 );
             }
         }
         PicV1Op::PackBitsRgn(data) => {
             if is_region_unsupported(&data.maskRgn, &data.srcRect) {
                 eprintln!(
-                    "warning: unsupported PackBitsRgn opcode in V1 PICT #{}",
+                    "warning: unsupported PackBitsRgn mask region in PICT #{}",
                     pict_id
+                );
+            }
+            if is_transfer_mode_unsupported(data.mode) {
+                eprintln!(
+                    "warning: unsupported PackBitsRgn transfer mode ({}) in PICT #{}",
+                    data.mode, pict_id
                 );
             }
         }
@@ -569,46 +601,82 @@ fn issue_warnings_on_v2_opcode(pict_id: i16, picFrame: &Rect, opcode: &PicV2Op) 
     match opcode {
         &PicV2Op::Skipped(skipped) => {
             if skipped == 0x8200 || skipped == 0x8201 {
-                eprintln!(
-                    "warning: unsupported QuickTime data in V2 PICT #{}",
-                    pict_id
-                );
+                eprintln!("warning: unsupported QuickTime data in PICT #{}", pict_id);
             } else {
                 eprintln!(
-                    "warning: skipped opcode ${:02X} in V2 PICT #{}",
+                    "warning: skipped opcode ${:04X} in PICT #{}",
                     skipped, pict_id
                 );
             }
         }
         PicV2Op::ClipRgn(clip_rgn) => {
             if is_region_unsupported(clip_rgn, picFrame) {
+                eprintln!("warning: unsupported ClipRgn opcode in PICT #{}", pict_id);
+            }
+        }
+        PicV2Op::BitsRect(data) => {
+            if is_transfer_mode_unsupported(data.mode) {
                 eprintln!(
-                    "warning: unsupported ClipRgn opcode in V2 PICT #{}",
-                    pict_id
+                    "warning: unsupported BitsRect transfer mode ({}) in PICT #{}",
+                    data.mode, pict_id
                 );
             }
         }
         PicV2Op::BitsRgn(data) => {
             if is_region_unsupported(&data.maskRgn, &data.srcRect) {
                 eprintln!(
-                    "warning: unsupported BitsRgn opcode in V2 PICT #{}",
+                    "warning: unsupported BitsRgn mask region in PICT #{}",
                     pict_id
+                );
+            }
+            if is_transfer_mode_unsupported(data.mode) {
+                eprintln!(
+                    "warning: unsupported BitsRgn transfer mode ({}) in PICT #{}",
+                    data.mode, pict_id
+                );
+            }
+        }
+        PicV2Op::PackBitsRect(data) => {
+            if is_transfer_mode_unsupported(data.mode) {
+                eprintln!(
+                    "warning: unsupported PackBitsRect transfer mode ({}) in PICT #{}",
+                    data.mode, pict_id
                 );
             }
         }
         PicV2Op::PackBitsRgn(data) => {
             if is_region_unsupported(&data.maskRgn, &data.srcRect) {
                 eprintln!(
-                    "warning: unsupported PackBitsRgn opcode in V2 PICT #{}",
+                    "warning: unsupported PackBitsRgn mask region in PICT #{}",
                     pict_id
+                );
+            }
+            if is_transfer_mode_unsupported(data.mode) {
+                eprintln!(
+                    "warning: unsupported PackBitsRgn transfer mode ({}) in PICT #{}",
+                    data.mode, pict_id
+                );
+            }
+        }
+        PicV2Op::DirectBitsRect(data) => {
+            if is_transfer_mode_unsupported(data.mode) {
+                eprintln!(
+                    "warning: unsupported DirectBitsRect transfer mode ({}) in PICT #{}",
+                    data.mode, pict_id
                 );
             }
         }
         PicV2Op::DirectBitsRgn(data) => {
             if is_region_unsupported(&data.maskRgn, &data.srcRect) {
                 eprintln!(
-                    "warning: unsupported DirectBitsRgn opcode in V2 PICT #{}",
+                    "warning: unsupported DirectBitsRgn mask region in PICT #{}",
                     pict_id
+                );
+            }
+            if is_transfer_mode_unsupported(data.mode) {
+                eprintln!(
+                    "warning: unsupported DirectBitsRgn transfer mode ({}) in PICT #{}",
+                    data.mode, pict_id
                 );
             }
         }
@@ -668,6 +736,14 @@ fn skip_v1_opcode(reader: impl Seek, opcode: u8, num: i64) -> io::Result<PicV1Op
 
 fn skip_v2_opcode(reader: impl Seek, opcode: u16, num: i64) -> io::Result<PicV2Op> {
     skip_bytes(reader, num).map(|_| PicV2Op::Skipped(opcode))
+}
+
+fn ignore_v1_opcode(reader: impl Seek, opcode: u8, num: i64) -> io::Result<PicV1Op> {
+    skip_bytes(reader, num).map(|_| PicV1Op::Ignored(opcode))
+}
+
+fn ignore_v2_opcode(reader: impl Seek, opcode: u16, num: i64) -> io::Result<PicV2Op> {
+    skip_bytes(reader, num).map(|_| PicV2Op::Ignored(opcode))
 }
 
 #[derive(Clone)]
