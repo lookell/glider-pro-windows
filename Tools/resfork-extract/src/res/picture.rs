@@ -4,6 +4,8 @@ use crate::bitmap::{
 };
 use crate::rsrcfork::Resource;
 use crate::utils::{ReadExt, SeekExt};
+
+use std::collections::HashSet;
 use std::io::{self, ErrorKind, Read, Seek, SeekFrom, Write};
 
 #[derive(Debug)]
@@ -536,13 +538,28 @@ fn is_transfer_mode_unsupported(mode: i16) -> bool {
     (mode != QD_MODE_SRC_COPY) && (mode != (QD_MODE_SRC_COPY + QD_MODE_DITHER_COPY))
 }
 
-fn issue_warnings_on_v1_opcode(pict_id: i16, picFrame: &Rect, opcode: &PicV1Op) {
+fn issue_warnings_on_v1_opcode(
+    pict_id: i16,
+    picFrame: &Rect,
+    opcode: &PicV1Op,
+    tracing_mode: bool,
+) {
     match opcode {
+        &PicV1Op::Ignored(ignored) => {
+            if tracing_mode {
+                eprintln!(
+                    "tracing: ignored opcode ${:02X} in PICT #{}",
+                    ignored, pict_id
+                );
+            }
+        }
         &PicV1Op::Skipped(skipped) => {
-            eprintln!(
-                "warning: skipped opcode ${:02X} in PICT #{}",
-                skipped, pict_id
-            );
+            if tracing_mode {
+                eprintln!(
+                    "tracing: skipped opcode ${:02X} in PICT #{}",
+                    skipped, pict_id
+                );
+            }
         }
         PicV1Op::ClipRgn(clip_rgn) => {
             if is_region_unsupported(clip_rgn, picFrame) {
@@ -597,14 +614,27 @@ fn issue_warnings_on_v1_opcode(pict_id: i16, picFrame: &Rect, opcode: &PicV1Op) 
     }
 }
 
-fn issue_warnings_on_v2_opcode(pict_id: i16, picFrame: &Rect, opcode: &PicV2Op) {
+fn issue_warnings_on_v2_opcode(
+    pict_id: i16,
+    picFrame: &Rect,
+    opcode: &PicV2Op,
+    tracing_mode: bool,
+) {
     match opcode {
+        &PicV2Op::Ignored(ignored) => {
+            if tracing_mode {
+                eprintln!(
+                    "tracing: ignored opcode ${:04X} in PICT #{}",
+                    ignored, pict_id
+                );
+            }
+        }
         &PicV2Op::Skipped(skipped) => {
             if skipped == 0x8200 || skipped == 0x8201 {
                 eprintln!("warning: unsupported QuickTime data in PICT #{}", pict_id);
-            } else {
+            } else if tracing_mode {
                 eprintln!(
-                    "warning: skipped opcode ${:04X} in PICT #{}",
+                    "tracing: skipped opcode ${:04X} in PICT #{}",
                     skipped, pict_id
                 );
             }
@@ -685,15 +715,40 @@ fn issue_warnings_on_v2_opcode(pict_id: i16, picFrame: &Rect, opcode: &PicV2Op) 
 }
 
 impl Picture {
-    fn read_from(mut reader: impl Read + Seek, pict_id: i16) -> io::Result<Option<Self>> {
+    fn read_from(
+        mut reader: impl Read + Seek,
+        pict_id: i16,
+        tracing_mode: bool,
+    ) -> io::Result<Option<Self>> {
         let picSize = reader.read_be_u16()?;
         let picFrame = Rect::read_from(&mut reader)?;
         let magic = reader.read_be_u16()?;
         if magic == 0x1101 {
             let mut picOps = Vec::new();
             while let Some(new_opcode) = PicV1Op::read_from(&mut reader)? {
-                issue_warnings_on_v1_opcode(pict_id, &picFrame, &new_opcode);
+                issue_warnings_on_v1_opcode(pict_id, &picFrame, &new_opcode, tracing_mode);
                 picOps.push(new_opcode);
+            }
+            if !tracing_mode {
+                let mut skipped_set = HashSet::new();
+                for opcode in picOps.iter() {
+                    if let &PicV1Op::Skipped(skipped) = opcode {
+                        skipped_set.insert(skipped);
+                    }
+                }
+                let mut skipped_vec = skipped_set.into_iter().collect::<Vec<_>>();
+                skipped_vec.sort();
+                if skipped_vec.len() != 0 {
+                    eprintln!(
+                        "warning: skipped unimplemented opcodes in PICT #{}",
+                        pict_id
+                    );
+                    eprint!("note: ${:02X}", skipped_vec[0]);
+                    for skipped in skipped_vec[1..].iter().copied() {
+                        eprint!(", ${:02X}", skipped);
+                    }
+                    eprintln!();
+                }
             }
             Ok(Some(Self::V1(PictureV1 {
                 picSize,
@@ -707,8 +762,31 @@ impl Picture {
             }
             let mut picOps = Vec::new();
             while let Some(new_opcode) = PicV2Op::read_from(&mut reader)? {
-                issue_warnings_on_v2_opcode(pict_id, &picFrame, &new_opcode);
+                issue_warnings_on_v2_opcode(pict_id, &picFrame, &new_opcode, tracing_mode);
                 picOps.push(new_opcode);
+            }
+            if !tracing_mode {
+                let mut skipped_set = HashSet::new();
+                for opcode in picOps.iter() {
+                    if let &PicV2Op::Skipped(skipped) = opcode {
+                        if skipped != 0x8200 && skipped != 0x8201 {
+                            skipped_set.insert(skipped);
+                        }
+                    }
+                }
+                let mut skipped_vec = skipped_set.into_iter().collect::<Vec<_>>();
+                skipped_vec.sort();
+                if skipped_vec.len() != 0 {
+                    eprintln!(
+                        "warning: skipped unimplemented opcodes in PICT #{}",
+                        pict_id
+                    );
+                    eprint!("note: ${:04X}", skipped_vec[0]);
+                    for skipped in skipped_vec[1..].iter().copied() {
+                        eprint!(", ${:04X}", skipped);
+                    }
+                    eprintln!();
+                }
             }
             Ok(Some(Self::V2(PictureV2 {
                 picSize,
@@ -919,9 +997,9 @@ impl PicV2Op {
             0x001A => Some(skip_v2_opcode(reader, opcode, 6)?),
             0x001B => Some(skip_v2_opcode(reader, opcode, 6)?),
             0x001C => Some(PicV2Op::Skipped(opcode)),
-            0x001D => Some(skip_v2_opcode(reader, opcode, 6)?),
+            0x001D => Some(ignore_v2_opcode(reader, opcode, 6)?),
             0x001E => Some(PicV2Op::Ignored(opcode)),
-            0x001F => Some(skip_v2_opcode(reader, opcode, 6)?),
+            0x001F => Some(ignore_v2_opcode(reader, opcode, 6)?),
             0x0020 => Some(skip_v2_opcode(reader, opcode, 8)?),
             0x0021 => Some(skip_v2_opcode(reader, opcode, 4)?),
             0x0022 => Some(skip_v2_opcode(reader, opcode, 6)?),
@@ -1005,7 +1083,7 @@ impl PicV2Op {
                 let length = (opcode >> 8) * 2;
                 skip_bytes(reader, length.into())?;
                 match opcode {
-                    0x0C00 => Some(PicV2Op::Ignored(opcode)),
+                    0x0C00 => Some(PicV2Op::NOP),
                     _ => Some(PicV2Op::Skipped(opcode)),
                 }
             }
@@ -1274,8 +1352,8 @@ fn convert_v2(picture: PictureV2, writer: impl Write) -> io::Result<()> {
     convert_pict(picture.picFrame, bits_data, writer)
 }
 
-pub fn convert(resource: &Resource, writer: impl Write) -> io::Result<()> {
-    match Picture::read_from(io::Cursor::new(&resource.data), resource.id)? {
+pub fn convert(resource: &Resource, writer: impl Write, tracing_mode: bool) -> io::Result<()> {
+    match Picture::read_from(io::Cursor::new(&resource.data), resource.id, tracing_mode)? {
         Some(Picture::V1(pict)) => convert_v1(pict, writer),
         Some(Picture::V2(pict)) => convert_v2(pict, writer),
         None => Ok(()),

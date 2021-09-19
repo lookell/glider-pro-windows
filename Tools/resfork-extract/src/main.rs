@@ -189,7 +189,17 @@ fn report_invalid_resource(resource: &Resource, err: &io::Error) {
     eprintln!("note: {}", err);
 }
 
-fn convert_resource(resource: &Resource, mut writer: impl Write) -> io::Result<()> {
+#[derive(Clone, Copy, Default)]
+pub struct ConvertOptions {
+    pub trace_pict_opcodes: bool,
+    pub dump_pict_files: bool,
+}
+
+fn convert_resource(
+    resource: &Resource,
+    mut writer: impl Write,
+    options: &ConvertOptions,
+) -> io::Result<()> {
     let result = match resource.restype.as_bstr() {
         b"acur" => animated_cursor::convert(&resource.data, writer),
         b"ALRT" => alert::convert(&resource.data, writer),
@@ -229,7 +239,7 @@ fn convert_resource(resource: &Resource, mut writer: impl Write) -> io::Result<(
             .and_then(|(image, mask)| IconFile::new().add_entry(image, mask).write_to(writer)),
         b"mctb" => menu_color_table::convert(&resource.data, writer),
         b"MENU" => menu::convert(&resource.data, writer),
-        b"Date" | b"PICT" => picture::convert(&resource, writer),
+        b"Date" | b"PICT" => picture::convert(&resource, writer, options.trace_pict_opcodes),
         b"snd " => sound::convert(&resource.data, writer),
         b"STR#" => string_list::convert(&resource.data, writer),
         b"TEXT" => text::convert(&resource.data, writer),
@@ -341,7 +351,11 @@ where
     Ok(())
 }
 
-fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
+fn convert_resfork(
+    resfork: &ResourceFork,
+    writer: impl Seek + Write,
+    options: &ConvertOptions,
+) -> AnyResult<()> {
     let mut zipfile = ZipWriter::new(writer);
     zipfile.set_comment("");
 
@@ -352,12 +366,20 @@ fn convert_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResu
 
     for resource in resfork.iter() {
         let mut buffer = Vec::new();
-        let (entry_name, output) = match convert_resource(resource, &mut buffer) {
+        let result = convert_resource(resource, &mut buffer, options);
+        let (entry_name, output) = match result {
             Ok(_) => (get_entry_name(resource), &buffer),
             Err(_) => (make_zip_entry_path(resource), &resource.data),
         };
         zipfile.start_file(entry_name, Default::default())?;
         zipfile.write_all(output)?;
+        if options.dump_pict_files {
+            if let b"Date" | b"PICT" = resource.restype.as_bstr() {
+                zipfile.start_file(format!("PICT/{}.pct", resource.id), Default::default())?;
+                zipfile.write_all(&[0; 512])?;
+                zipfile.write_all(resource.data.as_slice())?;
+            }
+        }
     }
 
     for resource in resfork.iter_type(b"PAT#") {
@@ -411,7 +433,7 @@ fn make_gliderpro_house(
         resource: &Resource,
     ) -> AnyResult<()> {
         let mut data_bytes = Vec::new();
-        if picture::convert(&resource, &mut data_bytes).is_ok() {
+        if picture::convert(&resource, &mut data_bytes, false).is_ok() {
             let entry_name = format!("images/{}.bmp", resource.id);
             zipfile.start_file(entry_name, Default::default())?;
             zipfile.write_all(&data_bytes)?;
@@ -616,6 +638,14 @@ fn do_convert_command<I: IntoIterator<Item = OsString>>(args: I) -> AnyResult<()
             return Ok(());
         }
     };
+    let mut convert_options = ConvertOptions::default();
+    while let Some(s) = args.next() {
+        if s == "--tracing-mode" {
+            convert_options.trace_pict_opcodes = true;
+        } else if s == "--dump-pict-files" {
+            convert_options.dump_pict_files = true;
+        }
+    }
 
     let resfork = match parse_resfork(input_name) {
         Ok(resfork) => resfork,
@@ -626,7 +656,7 @@ fn do_convert_command<I: IntoIterator<Item = OsString>>(args: I) -> AnyResult<()
         }
     };
     let output_file = BufWriter::new(File::create(output_name)?);
-    convert_resfork(&resfork, output_file)
+    convert_resfork(&resfork, output_file, &convert_options)
 }
 
 fn do_gliderpro_command<I: IntoIterator<Item = OsString>>(args: I) -> AnyResult<()> {
