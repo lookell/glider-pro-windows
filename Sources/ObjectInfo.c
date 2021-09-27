@@ -28,6 +28,7 @@
 
 #include <stdlib.h>
 
+HRESULT GetObjectName (SInt16 objectType, PWSTR *ppszObjectName);
 void UpdateBlowerInfo (HWND hDlg, HDC hdc);
 INT_PTR CALLBACK BlowerFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK FurnitureFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);

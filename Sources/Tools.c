@@ -12,13 +12,11 @@
 #include "Macintosh.h"
 #include "MainWindow.h"
 #include "Menu.h"
-#include "ObjectInfo.h"
 #include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Utilities.h"
 
 #include <commctrl.h>
-#include <strsafe.h>
 
 #include <stdlib.h>
 
@@ -55,7 +53,7 @@
 
 void CreateToolsOffscreen (void);
 void KillToolsOffscreen (void);
-HRESULT GetToolName (SInt16 selected, SInt16 mode, PWSTR *ppszToolName);
+UINT GetToolNameStringId (SInt16 selected, SInt16 mode);
 void UpdateToolName (void);
 void UpdateToolTiles (void);
 INT_PTR CALLBACK ToolsWindowProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -106,51 +104,30 @@ void KillToolsOffscreen (void)
 	}
 }
 
-//--------------------------------------------------------------  GetToolName
+//--------------------------------------------------------------  GetToolNameStringId
 
-HRESULT GetToolName (SInt16 selected, SInt16 mode, PWSTR *ppszToolName)
+UINT GetToolNameStringId (SInt16 selected, SInt16 mode)
 {
-	const PCWSTR pszSelectionTool = L"Selection Tool";
-	size_t cchBuffer;
-	PWSTR pszBuffer;
-	HRESULT hr;
-
-	*ppszToolName = NULL;
-
 	if (selected == kSelectTool)
 	{
-		cchBuffer = wcslen(pszSelectionTool) + 1;
-		pszBuffer = (PWSTR)calloc(cchBuffer, sizeof(*pszBuffer));
-		if (pszBuffer == NULL)
-		{
-			return E_OUTOFMEMORY;
-		}
-		hr = StringCchCopyW(pszBuffer, cchBuffer, pszSelectionTool);
-		if (FAILED(hr))
-		{
-			// StringCchCopyW shouldn't fail here, but just in case...
-			free(pszBuffer);
-			return hr;
-		}
-		*ppszToolName = pszBuffer;
-		hr = S_OK;
+		return IDS_SELECTION_TOOL;
 	}
 	else
 	{
-		hr = GetObjectName(selected + ((mode - 1) * 0x0010), ppszToolName);
+		return kObjectNameStringsBase + (selected + ((mode - 1) * 0x0010));
 	}
-
-	return hr;
 }
 
 //--------------------------------------------------------------  UpdateToolName
 
 void UpdateToolName (void)
 {
+	UINT stringId;
 	PWSTR theStringBuffer;
 	PCWSTR theString;
 
-	GetToolName(g_toolSelected, g_toolMode, &theStringBuffer);
+	stringId = GetToolNameStringId(g_toolSelected, g_toolMode);
+	AllocLoadString(HINST_THISCOMPONENT, stringId, &theStringBuffer);
 	theString = (theStringBuffer != NULL) ? theStringBuffer : L"";
 	SetDlgItemText(g_toolsWindow, kToolNameText, theString);
 	free(theStringBuffer);
@@ -309,10 +286,12 @@ INT_PTR CALLBACK ToolsWindowProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM
 
 INT_PTR Tools_OnInitDialog (HWND hwnd)
 {
+	TCHAR emptyString[] = TEXT("");
 	HMENU rootMenu;
 	MENUITEMINFO menuItemInfo;
 	HFONT dialogFont;
 	SInt16 buttonID;
+	TOOLINFO toolInfo;
 
 	rootMenu = LoadMenu(HINST_THISCOMPONENT, MAKEINTRESOURCE(IDM_ROOT));
 	if (rootMenu == NULL)
@@ -334,17 +313,13 @@ INT_PTR Tools_OnInitDialog (HWND hwnd)
 	SendMessage(g_toolButtonTooltip, WM_SETFONT, (WPARAM)dialogFont, FALSE);
 	for (buttonID = kToolButtonFirstID; buttonID <= kToolButtonLastID; ++buttonID)
 	{
-		TOOLINFO toolInfo;
-		WCHAR text[256] = L"";
-
 		ZeroMemory(&toolInfo, sizeof(toolInfo));
 		toolInfo.cbSize = sizeof(toolInfo);
 		toolInfo.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
 		toolInfo.hwnd = hwnd;
 		toolInfo.uId = (UINT_PTR)GetDlgItem(hwnd, buttonID);
-		SetRectEmpty(&toolInfo.rect);
 		toolInfo.hinst = NULL;
-		toolInfo.lpszText = text;
+		toolInfo.lpszText = emptyString;
 		SendMessage(g_toolButtonTooltip, TTM_ADDTOOL, 0, (LPARAM)&toolInfo);
 	}
 
@@ -436,11 +411,9 @@ void Tools_OnButtonClick (HWND hwnd, WORD clickedID)
 
 void UpdateToolTips (HWND hwnd)
 {
-	WCHAR emptyString[] = L"";
 	SInt16 buttonID;
 	SInt16 toolIcon;
-	PWSTR nameStrBuffer;
-	PWSTR nameStr;
+	UINT nameStrId;
 	TOOLINFO toolInfo;
 
 	for (buttonID = kToolButtonFirstID; buttonID <= kToolButtonLastID; buttonID++)
@@ -457,17 +430,15 @@ void UpdateToolTips (HWND hwnd)
 			else
 				toolIcon = ((toolIcon - 7) * 2) + 7;
 		}
-		GetToolName(toolIcon, g_toolMode, &nameStrBuffer);
-		nameStr = (nameStrBuffer != NULL) ? nameStrBuffer : emptyString;
+		nameStrId = GetToolNameStringId(toolIcon, g_toolMode);
 
 		ZeroMemory(&toolInfo, sizeof(toolInfo));
 		toolInfo.cbSize = sizeof(toolInfo);
 		toolInfo.hwnd = hwnd;
 		toolInfo.uId = (UINT_PTR)GetDlgItem(hwnd, buttonID);
-		toolInfo.hinst = NULL;
-		toolInfo.lpszText = nameStr;
+		toolInfo.hinst = HINST_THISCOMPONENT;
+		toolInfo.lpszText = MAKEINTRESOURCE(nameStrId);
 		SendMessage(g_toolButtonTooltip, TTM_UPDATETIPTEXT, 0, (LPARAM)&toolInfo);
-		free(nameStrBuffer);
 	}
 }
 

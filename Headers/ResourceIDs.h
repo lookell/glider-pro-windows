@@ -25,8 +25,10 @@
 #define kMonthStringBase            1700
 #define kYellowAlertStringBase      1800
 #define kObjectNameStringsBase      1900
+#define kMiscellaneousStringBase    3000
 
-#define IDS_APPLICATION_TITLE   3000
+#define IDS_APPLICATION_TITLE   (kMiscellaneousStringBase + 0)
+#define IDS_SELECTION_TOOL      (kMiscellaneousStringBase + 1)
 
 #define IDR_DEMO                128
 
