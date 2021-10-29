@@ -55,12 +55,36 @@
 #define kTikiPoleBase           300
 #define kMailboxBase            296
 
+__inline POINT MakePOINT (LONG x, LONG y);
+__inline POINT MakeDeltaPOINT (POINT ptBase, LONG dx, LONG dy);
 void DrawClockDigit (HDC hdcDest, SInt16 number, const Rect *dest);
 void DrawClockHands (HDC hdcDest, Point where, SInt16 bigHand, SInt16 littleHand);
 void DrawLargeClockHands (HDC hdcDest, Point where, SInt16 bigHand, SInt16 littleHand);
 void CopyBitsSansWhite (HDC srcBits, HDC dstBits, const Rect *srcRect, const Rect *dstRect);
 
 //==============================================================  Functions
+//--------------------------------------------------------------  MakePOINT
+
+__inline POINT MakePOINT (LONG x, LONG y)
+{
+	POINT ptResult;
+
+	ptResult.x = x;
+	ptResult.y = y;
+	return ptResult;
+}
+
+//--------------------------------------------------------------  MakeDeltaPOINT
+
+__inline POINT MakeDeltaPOINT (POINT ptBase, LONG dx, LONG dy)
+{
+	POINT ptResult;
+
+	ptResult.x = ptBase.x + dx;
+	ptResult.y = ptBase.y + dy;
+	return ptResult;
+}
+
 //--------------------------------------------------------------  DrawSimpleBlowers
 
 void DrawSimpleBlowers (HDC hdcDest, SInt16 what, const Rect *theRect)
@@ -219,6 +243,8 @@ void DrawShelf (HDC hdcDest, const Rect *shelfTop)
 	#define kShelfShadowOff  12
 	Rect tempRect;
 	SInt32 brownC, ltTanC, tanC, dkRedC, blackC;
+	POINT shadowPts[6];
+	HRGN shadowRgn;
 
 	brownC = k8BrownColor;
 	ltTanC = k8LtTanColor;
@@ -226,15 +252,15 @@ void DrawShelf (HDC hdcDest, const Rect *shelfTop)
 	dkRedC = k8DkRed2Color;
 	blackC = k8BlackColor;
 
-	BeginPath(hdcDest);
-	MoveToEx(hdcDest, shelfTop->left, shelfTop->bottom, NULL);
-	Mac_Line(hdcDest, kShelfShadowOff, kShelfShadowOff);
-	Mac_Line(hdcDest, RectWide(shelfTop) - kShelfDeep, 0);
-	Mac_Line(hdcDest, 0, -kShelfThick + 1);
-	Mac_Line(hdcDest, -kShelfShadowOff, -kShelfShadowOff);
-	Mac_LineTo(hdcDest, shelfTop->left, shelfTop->bottom);
-	EndPath(hdcDest);
-	DitherShadowPath(hdcDest);
+	shadowPts[0] = MakePOINT(shelfTop->left, shelfTop->bottom);
+	shadowPts[1] = MakeDeltaPOINT(shadowPts[0], kShelfShadowOff, kShelfShadowOff);
+	shadowPts[2] = MakeDeltaPOINT(shadowPts[1], RectWide(shelfTop) - kShelfDeep, 0);
+	shadowPts[3] = MakeDeltaPOINT(shadowPts[2], 0, -kShelfThick + 1);
+	shadowPts[4] = MakeDeltaPOINT(shadowPts[3], -kShelfShadowOff, -kShelfShadowOff);
+	shadowPts[5] = MakePOINT(shelfTop->left, shelfTop->bottom);
+	shadowRgn = CreatePolygonRgn(shadowPts, ARRAYSIZE(shadowPts), ALTERNATE);
+	DitherShadowRegion(hdcDest, shadowRgn);
+	DeleteRgn(shadowRgn);
 
 	tempRect = *shelfTop;
 	QInsetRect(&tempRect, 0, 1);
@@ -278,6 +304,8 @@ void DrawCabinet (HDC hdcDest, const Rect *cabinet)
 	#define kCabinetShadowOff  6
 	Rect tempRect;
 	SInt32 brownC, dkGrayC, ltTanC, tanC, dkRedC;
+	POINT shadowPts[6];
+	HRGN shadowRgn;
 
 	brownC = k8BrownColor;
 	dkGrayC = k8DkstGrayColor;
@@ -285,15 +313,15 @@ void DrawCabinet (HDC hdcDest, const Rect *cabinet)
 	tanC = k8TanColor;
 	dkRedC = k8DkRed2Color;
 
-	BeginPath(hdcDest);
-	MoveToEx(hdcDest, cabinet->left, cabinet->bottom, NULL);
-	Mac_Line(hdcDest, kCabinetShadowOff, kCabinetShadowOff);
-	Mac_Line(hdcDest, RectWide(cabinet), 0);
-	Mac_Line(hdcDest, 0, -RectTall(cabinet) + kCabinetDeep);
-	Mac_Line(hdcDest, -kCabinetShadowOff, -kCabinetShadowOff);
-	Mac_LineTo(hdcDest, cabinet->left, cabinet->bottom);
-	EndPath(hdcDest);
-	DitherShadowPath(hdcDest);
+	shadowPts[0] = MakePOINT(cabinet->left, cabinet->bottom);
+	shadowPts[1] = MakeDeltaPOINT(shadowPts[0], kCabinetShadowOff, kCabinetShadowOff);
+	shadowPts[2] = MakeDeltaPOINT(shadowPts[1], RectWide(cabinet), 0);
+	shadowPts[3] = MakeDeltaPOINT(shadowPts[2], 0, -RectTall(cabinet) + kCabinetDeep);
+	shadowPts[4] = MakeDeltaPOINT(shadowPts[3], -kCabinetShadowOff, -kCabinetShadowOff);
+	shadowPts[5] = MakePOINT(cabinet->left, cabinet->bottom);
+	shadowRgn = CreatePolygonRgn(shadowPts, ARRAYSIZE(shadowPts), ALTERNATE);
+	DitherShadowRegion(hdcDest, shadowRgn);
+	DeleteRgn(shadowRgn);
 
 	// fill bulk of cabinet brown
 	tempRect = *cabinet;
@@ -386,6 +414,8 @@ void DrawCounter (HDC hdcDest, const Rect *counter)
 	#define kCounterPanelDrop  12
 	Rect tempRect;
 	SInt32 brownC, dkGrayC, tanC, blackC, dkstRedC;
+	POINT shadowPts[7];
+	HRGN shadowRgn;
 	SInt16 nRects, width, i;
 
 	brownC = k8BrownColor;
@@ -394,16 +424,16 @@ void DrawCounter (HDC hdcDest, const Rect *counter)
 	blackC = k8BlackColor;
 	dkstRedC = k8DkRed2Color;
 
-	BeginPath(hdcDest);
-	MoveToEx(hdcDest, counter->right - 2, counter->bottom, NULL);
-	Mac_Line(hdcDest, 10, -10);
-	Mac_Line(hdcDest, 0, -RectTall(counter) + 29);
-	Mac_Line(hdcDest, 2, 0);
-	Mac_Line(hdcDest, 0, -7);
-	Mac_Line(hdcDest, -12, -12);
-	Mac_LineTo(hdcDest, counter->right - 2, counter->bottom);
-	EndPath(hdcDest);
-	DitherShadowPath(hdcDest);
+	shadowPts[0] = MakePOINT(counter->right - 2, counter->bottom);
+	shadowPts[1] = MakeDeltaPOINT(shadowPts[0], 10, -10);
+	shadowPts[2] = MakeDeltaPOINT(shadowPts[1], 0, -RectTall(counter) + 29);
+	shadowPts[3] = MakeDeltaPOINT(shadowPts[2], 2, 0);
+	shadowPts[4] = MakeDeltaPOINT(shadowPts[3], 0, -7);
+	shadowPts[5] = MakeDeltaPOINT(shadowPts[4], -12, -12);
+	shadowPts[6] = MakePOINT(counter->right - 2, counter->bottom);
+	shadowRgn = CreatePolygonRgn(shadowPts, ARRAYSIZE(shadowPts), ALTERNATE);
+	DitherShadowRegion(hdcDest, shadowRgn);
+	DeleteRgn(shadowRgn);
 
 	tempRect = *counter;
 	QInsetRect(&tempRect, 2, 2);
@@ -479,6 +509,8 @@ void DrawDresser (HDC hdcDest, const Rect *dresser)
 	#define kDresserSideSpare  14
 	Rect tempRect, dest;
 	SInt32 yellowC, brownC, ltTanC, dkstRedC;
+	POINT shadowPts[7];
+	HRGN shadowRgn;
 	SInt16 nRects, height, i;
 
 	yellowC = k8PissYellowColor;
@@ -486,16 +518,16 @@ void DrawDresser (HDC hdcDest, const Rect *dresser)
 	ltTanC = k8LtTanColor;
 	dkstRedC = k8DkRed2Color;
 
-	BeginPath(hdcDest);
-	MoveToEx(hdcDest, dresser->left + 10, dresser->bottom + 9, NULL);
-	Mac_Line(hdcDest, RectWide(dresser) - 11, 0);
-	Mac_Line(hdcDest, 9, -9);
-	Mac_Line(hdcDest, 0, -RectTall(dresser) + 12);
-	Mac_Line(hdcDest, -9, -9);
-	Mac_Line(hdcDest, -RectWide(dresser) + 11, 0);
-	Mac_LineTo(hdcDest, dresser->left + 10, dresser->bottom + 9);
-	EndPath(hdcDest);
-	DitherShadowPath(hdcDest);
+	shadowPts[0] = MakePOINT(dresser->left + 10, dresser->bottom + 9);
+	shadowPts[1] = MakeDeltaPOINT(shadowPts[0], RectWide(dresser) - 11, 0);
+	shadowPts[2] = MakeDeltaPOINT(shadowPts[1], 9, -9);
+	shadowPts[3] = MakeDeltaPOINT(shadowPts[2], 0, -RectTall(dresser) + 12);
+	shadowPts[4] = MakeDeltaPOINT(shadowPts[3], -9, -9);
+	shadowPts[5] = MakeDeltaPOINT(shadowPts[4], -RectWide(dresser) + 11, 0);
+	shadowPts[6] = MakePOINT(dresser->left + 10, dresser->bottom + 9);
+	shadowRgn = CreatePolygonRgn(shadowPts, ARRAYSIZE(shadowPts), ALTERNATE);
+	DitherShadowRegion(hdcDest, shadowRgn);
+	DeleteRgn(shadowRgn);
 
 	tempRect = *dresser;
 	QInsetRect(&tempRect, 2, 2);

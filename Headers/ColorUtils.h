@@ -24,7 +24,6 @@ COLORREF DkGrayForeColor (void);
 void DitherShadowRect (HDC hdc, const Rect *theRect);
 void DitherShadowOval (HDC hdc, const Rect *theRect);
 void DitherShadowRegion (HDC hdc, HRGN theRgn);
-void DitherShadowPath (HDC hdc);
 HBITMAP CreateShadowBitmap (void);
 
 #endif

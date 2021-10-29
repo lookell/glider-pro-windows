@@ -228,35 +228,6 @@ void DitherShadowRegion (HDC hdc, HRGN theRgn)
 	DeleteBitmap(shadowBitmap);
 }
 
-//--------------------------------------------------------------  DitherShadowPath
-// Similar to DitherShadowRect, but the shadow is drawn within the current path
-// held in the device context. After filling the path, the path is discarded from
-// the DC.
-
-void DitherShadowPath (HDC hdc)
-{
-	HBITMAP shadowBitmap;
-	HBRUSH shadowBrush;
-	COLORREF wasTextColor;
-	COLORREF wasBkColor;
-	HBRUSH wasBrush;
-	int wasROP2;
-
-	shadowBitmap = CreateShadowBitmap();
-	shadowBrush = CreatePatternBrush(shadowBitmap);
-	wasTextColor = SetTextColor(hdc, RGB(0x00, 0x00, 0x00));
-	wasBkColor = SetBkColor(hdc, RGB(0xFF, 0xFF, 0xFF));
-	wasROP2 = SetROP2(hdc, R2_MASKPEN);
-	wasBrush = SelectBrush(hdc, shadowBrush);
-	FillPath(hdc);
-	SelectBrush(hdc, wasBrush);
-	SetROP2(hdc, wasROP2);
-	SetBkColor(hdc, wasBkColor);
-	SetTextColor(hdc, wasTextColor);
-	DeleteBrush(shadowBrush);
-	DeleteBitmap(shadowBitmap);
-}
-
 //--------------------------------------------------------------  CreateShadowBitmap
 // Create a dithered gray bitmap for filling in shadows. It can be made into
 // a brush by calling CreatePatternBrush(), and then colorized by calling
