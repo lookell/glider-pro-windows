@@ -385,12 +385,8 @@ void BuildHouseList (HWND ownerWindow)
 {
 	SInt16 i;
 
-	// destroy icons from previous search
-	if (g_houseIconImageList != NULL)
-	{
-		ImageList_Destroy(g_houseIconImageList);
-		g_houseIconImageList = NULL;
-	}
+	ReleaseHouseList();
+
 	// zero the number of houses found
 	g_housesFound = 0;
 	// 1st, insert extra houses into list
@@ -404,6 +400,17 @@ void BuildHouseList (HWND ownerWindow)
 	}
 	// now, search folders for the rest
 	DoDirSearch(ownerWindow);
+}
+
+//--------------------------------------------------------------  ReleaseHouseList
+
+void ReleaseHouseList (void)
+{
+	if (g_houseIconImageList != NULL)
+	{
+		ImageList_Destroy(g_houseIconImageList);
+		g_houseIconImageList = NULL;
+	}
 }
 
 //--------------------------------------------------------------  AddExtraHouse

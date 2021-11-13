@@ -28,6 +28,7 @@ extern SInt16 g_demoHouseIndex;
 void DoLoadHouse (HWND ownerWindow);
 BOOL GetHouseFolderPath (LPWSTR buffer, DWORD cch);
 void BuildHouseList (HWND ownerWindow);
+void ReleaseHouseList (void);
 void AddExtraHouse (const houseSpec *newHouse);
 
 #endif

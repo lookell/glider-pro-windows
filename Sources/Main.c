@@ -417,6 +417,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 	DestroyMenu(g_houseMenu);
 	DestroyMenu(g_theMenuBar);
 
+	ReleaseHouseList();
 	DestroyOffscreens();
 	DestroyMarquee();
 
