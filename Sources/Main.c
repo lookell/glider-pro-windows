@@ -384,7 +384,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nSh
 	PlayPrioritySound(kBirdSound, kBirdPriority);
 	InitializeMenus();
 
-	if (g_isDoColorFade)
+	if (g_isDoColorFade && !Gp_HouseImageExists(g_theHouseFile, kSplash8BitPICT))
 	{
 		WashColorIn();
 	}
