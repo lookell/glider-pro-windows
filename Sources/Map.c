@@ -561,6 +561,7 @@ void CloseMapWindow (void)
 		DestroyWindow(g_mapWindow);
 		g_mapWindow = NULL;
 	}
+	KillNailOffscreen();
 	UpdateMapCheckmark(false);
 }
 
