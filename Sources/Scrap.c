@@ -217,7 +217,7 @@ HIMAGELIST GetRoomDragImageList (const Rect *roomSrc, SInt16 roomNumber)
 	himl = NULL;
 	if (roomImage != NULL)
 	{
-		himl = ImageList_Create(smallWidth, smallHeight, ILC_COLOR32, 0, 1);
+		himl = ImageList_Create(smallWidth, smallHeight, ILC_COLOR32 | ILC_MASK, 0, 1);
 		if (himl != NULL)
 		{
 			if (ImageList_Add(himl, roomImage, NULL) < 0)
