@@ -450,7 +450,7 @@ void GetInput (gliderPtr thisGlider)
 			thisGlider->fireHeld = false;
 
 		if ((g_otherPlayerEscaped != kNoOneEscaped) &&
-				(IsKeyDown(VK_DELETE)) &&
+				(IsKeyDown(VK_BACK) || IsKeyDown(VK_DELETE)) &&
 				(thisGlider->which) && (!g_onePlayerLeft))
 		{
 			ForceKillGlider();
