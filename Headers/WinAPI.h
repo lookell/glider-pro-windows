@@ -11,9 +11,10 @@
 #define OEMRESOURCE
 
 // Ask for Windows XP and later APIs
-#define WINVER _WIN32_WINNT
-#define _WIN32_WINNT _WIN32_WINNT_WINXP
-#define _WIN32_IE_ _WIN32_IE_WINXP
+#define WINVER          0x0501      // _WIN32_WINNT_WINXP
+#define _WIN32_WINNT    0x0501      // _WIN32_WINNT_WINXP
+#define _WIN32_IE       0x0600      // _WIN32_IE_XP
+#define NTDDI_VERSION   0x05010000  // NTDDI_WINXP
 
 // Slim down the amount of stuff in <windows.h>
 #define NOMINMAX
