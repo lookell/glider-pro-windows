@@ -267,7 +267,7 @@ pub fn read_16bit_bitmap_data(bitmap: &mut BitmapSixteen, data: &[u8], row_bytes
     };
     for (y, row) in data.chunks_exact(row_bytes.into()).enumerate() {
         for (x, pair) in row.chunks_exact(2).enumerate() {
-            let red = 8 * ((pair[0] & 0x7A) >> 2);
+            let red = 8 * ((pair[0] & 0x7C) >> 2);
             let green = 8 * (((pair[0] & 0x03) << 3) | ((pair[1] & 0xE0) >> 5));
             let blue = 8 * (pair[1] & 0x1F);
             bitmap.set_pixel(x as u16, y as u16, RgbQuad::new(red, green, blue));
