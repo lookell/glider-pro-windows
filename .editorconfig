@@ -21,7 +21,8 @@ indent_size = 4
 indent_style = tab
 
 [*.{dlg,rc}]
-end_of_line = lf
+charset = utf-16le
+end_of_line = crlf
 indent_size = 4
 indent_style = space
 
