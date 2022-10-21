@@ -327,12 +327,24 @@ void Mac_InvalWindowRect(HWND window, const Rect *bounds)
 // vertical movement of the current pen. Negative values move the
 // pen left or up, and positive values move the pen right or down.
 // NOTE: Macintosh lines include the end pixel, unlike GDI lines.
+//
+// WARNING: This function should not be used in a GDI path bracket,
+// like it was in the past. Use LineTo() directly instead.
 
 void Mac_Line(HDC hdc, SInt16 dh, SInt16 dv)
 {
 	POINT curPos;
 
 	GetCurrentPositionEx(hdc, &curPos);
+	if (dh == 0 && dv == 0)
+	{
+		// HACK: Macintosh lines that don't go anywhere still light up pixels,
+		// whereas GDI lines that don't go anywhere don't light up any pixels.
+		// We draw a 1 unit long line to emulate Macintosh behavior here.
+		LineTo(hdc, curPos.x + 1, curPos.y);
+		MoveToEx(hdc, curPos.x, curPos.y, NULL);
+		return;
+	}
 	LineTo(hdc, curPos.x + dh, curPos.y + dv);
 	LineTo(hdc, curPos.x, curPos.y);
 	LineTo(hdc, curPos.x + dh, curPos.y + dv);
@@ -342,12 +354,24 @@ void Mac_Line(HDC hdc, SInt16 dh, SInt16 dv)
 // Draw a line from the current position to the specified position.
 // 'h' and 'v' specify the coordinates of the line's end point.
 // NOTE: Macintosh lines include the end pixel, unlike GDI lines.
+//
+// WARNING: This function should not be used in a GDI path bracket,
+// like it was in the past. Use LineTo() directly instead.
 
 void Mac_LineTo(HDC hdc, SInt16 h, SInt16 v)
 {
 	POINT curPos;
 
 	GetCurrentPositionEx(hdc, &curPos);
+	if (curPos.x == h && curPos.y == v)
+	{
+		// HACK: Macintosh lines that don't go anywhere still light up pixels,
+		// whereas GDI lines that don't go anywhere don't light up any pixels.
+		// We draw a 1 unit long line to emulate Macintosh behavior here.
+		LineTo(hdc, curPos.x + 1, curPos.y);
+		MoveToEx(hdc, curPos.x, curPos.y, NULL);
+		return;
+	}
 	LineTo(hdc, h, v);
 	LineTo(hdc, curPos.x, curPos.y);
 	LineTo(hdc, h, v);
