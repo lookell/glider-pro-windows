@@ -24,7 +24,6 @@
 #include "ObjectInfo.h"
 #include "Objects.h"
 #include "Play.h"
-#include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "Room.h"
 #include "RoomInfo.h"

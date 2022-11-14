@@ -8,7 +8,6 @@
 
 #include "Banner.h"
 #include "DialogUtils.h"
-#include "FileError.h"
 #include "HighScores.h"
 #include "HouseIO.h"
 #include "Link.h"

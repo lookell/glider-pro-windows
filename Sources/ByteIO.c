@@ -1,7 +1,5 @@
 #include "ByteIO.h"
 
-#include "WinAPI.h"
-
 #include <limits.h>
 #include <stdlib.h>
 

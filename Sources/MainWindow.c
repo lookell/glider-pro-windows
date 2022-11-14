@@ -6,7 +6,6 @@
 
 #include "MainWindow.h"
 
-#include "ColorUtils.h"
 #include "Coordinates.h"
 #include "DialogUtils.h"
 #include "Environ.h"
@@ -30,7 +29,6 @@
 #include "ResourceLoader.h"
 #include "Room.h"
 #include "Scoreboard.h"
-#include "SelectHouse.h"
 #include "StringUtils.h"
 #include "Tools.h"
 #include "Transitions.h"

@@ -7,7 +7,6 @@
 #include "Banner.h"
 
 #include "ColorUtils.h"
-#include "Environ.h"
 #include "House.h"
 #include "HouseIO.h"
 #include "Macintosh.h"

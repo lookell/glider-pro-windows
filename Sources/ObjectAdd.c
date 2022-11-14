@@ -8,7 +8,6 @@
 
 #include "DialogUtils.h"
 #include "GliderDefines.h"
-#include "House.h"
 #include "HouseIO.h"
 #include "HouseLegal.h"
 #include "MainWindow.h"

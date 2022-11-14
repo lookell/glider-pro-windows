@@ -10,11 +10,9 @@
 #include "DialogUtils.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
-#include "RectUtils.h"
 #include "ResourceIDs.h"
 #include "ResourceLoader.h"
 #include "StringUtils.h"
-#include "WinAPI.h"
 
 #include <mmsystem.h>
 #include <shlobj.h>

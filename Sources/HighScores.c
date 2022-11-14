@@ -8,7 +8,6 @@
 
 #include "ByteIO.h"
 #include "DialogUtils.h"
-#include "Environ.h"
 #include "FileError.h"
 #include "House.h"
 #include "HouseIO.h"

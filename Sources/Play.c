@@ -35,7 +35,6 @@
 #include "Scoreboard.h"
 #include "SelectHouse.h"
 #include "Sound.h"
-#include "StringUtils.h"
 #include "Transitions.h"
 #include "Triggers.h"
 #include "Utilities.h"

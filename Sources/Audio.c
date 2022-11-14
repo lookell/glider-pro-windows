@@ -8,8 +8,6 @@
 #include <process.h>
 #include <stdlib.h>
 
-#include "ResourceIDs.h"
-
 #define AUDIO_TICK_MS  50
 
 typedef struct AudioQueueEntry

@@ -9,7 +9,6 @@
 #include "DialogUtils.h"
 #include "Environ.h"
 #include "ResourceIDs.h"
-#include "WinAPI.h"
 
 #include <strsafe.h>
 
