@@ -42,6 +42,7 @@ target_sources(
   Headers/ColorUtils.h
   Headers/Coordinates.h
   Headers/DialogUtils.h
+  Headers/DrawUtils.h
   Headers/DynamicMaps.h
   Headers/Dynamics.h
   Headers/Environ.h
@@ -114,6 +115,7 @@ target_sources(
   Sources/ColorUtils.c
   Sources/Coordinates.c
   Sources/DialogUtils.c
+  Sources/DrawUtils.c
   Sources/DynamicMaps.c
   Sources/Dynamics.c
   Sources/Environ.c

@@ -1,5 +1,7 @@
 #include "Macintosh.h"
 
+#include "DrawUtils.h"
+
 //--------------------------------------------------------------  CopyBits
 // Copy some portion of a bitmap from one graphics port to another.
 
@@ -336,18 +338,7 @@ void Mac_Line(HDC hdc, SInt16 dh, SInt16 dv)
 	POINT curPos;
 
 	GetCurrentPositionEx(hdc, &curPos);
-	if (dh == 0 && dv == 0)
-	{
-		// HACK: Macintosh lines that don't go anywhere still light up pixels,
-		// whereas GDI lines that don't go anywhere don't light up any pixels.
-		// We draw a 1 unit long line to emulate Macintosh behavior here.
-		LineTo(hdc, curPos.x + 1, curPos.y);
-		MoveToEx(hdc, curPos.x, curPos.y, NULL);
-		return;
-	}
-	LineTo(hdc, curPos.x + dh, curPos.y + dv);
-	LineTo(hdc, curPos.x, curPos.y);
-	LineTo(hdc, curPos.x + dh, curPos.y + dv);
+	DrawInclusiveLineDelta(hdc, curPos.x, curPos.y, dh, dv);
 }
 
 //--------------------------------------------------------------  LineTo
@@ -363,18 +354,7 @@ void Mac_LineTo(HDC hdc, SInt16 h, SInt16 v)
 	POINT curPos;
 
 	GetCurrentPositionEx(hdc, &curPos);
-	if (curPos.x == h && curPos.y == v)
-	{
-		// HACK: Macintosh lines that don't go anywhere still light up pixels,
-		// whereas GDI lines that don't go anywhere don't light up any pixels.
-		// We draw a 1 unit long line to emulate Macintosh behavior here.
-		LineTo(hdc, curPos.x + 1, curPos.y);
-		MoveToEx(hdc, curPos.x, curPos.y, NULL);
-		return;
-	}
-	LineTo(hdc, h, v);
-	LineTo(hdc, curPos.x, curPos.y);
-	LineTo(hdc, h, v);
+	DrawInclusiveLine(hdc, curPos.x, curPos.y, h, v);
 }
 
 //--------------------------------------------------------------  PaintRect
