@@ -39,8 +39,6 @@ void Mac_DrawPicture(HDC hdcDst, HBITMAP myPicture, const Rect *dstRect);
 void Mac_FrameRect(HDC hdc, const Rect *r, HBRUSH hbr, SInt16 w, SInt16 h);
 UInt32 Mac_GetDateTime(void);
 void Mac_InvalWindowRect(HWND window, const Rect *bounds);
-void Mac_Line(HDC hdc, SInt16 dh, SInt16 dv);
-void Mac_LineTo(HDC hdc, SInt16 h, SInt16 v);
 void Mac_PaintRect(HDC hdc, const Rect *r, HBRUSH hbr);
 
 #endif

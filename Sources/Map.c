@@ -8,6 +8,7 @@
 
 #include "ColorUtils.h"
 #include "DialogUtils.h"
+#include "DrawUtils.h"
 #include "GliderDefines.h"
 #include "House.h"
 #include "HouseIO.h"
@@ -325,14 +326,12 @@ void RedrawMapContents (HDC hdc)
 
 	for (i = 1; i < g_mapRoomsWide; i++)
 	{
-		MoveToEx(hdc, i * kMapRoomWidth, 0, NULL);
-		Mac_Line(hdc, 0, g_mapRoomsHigh * kMapRoomHeight);
+		DrawInclusiveLineDelta(hdc, i * kMapRoomWidth, 0, 0, g_mapRoomsHigh * kMapRoomHeight);
 	}
 
 	for (i = 1; i < g_mapRoomsHigh; i++)
 	{
-		MoveToEx(hdc, 0, i * kMapRoomHeight, NULL);
-		Mac_Line(hdc, g_mapRoomsWide * kMapRoomWidth, 0);
+		DrawInclusiveLineDelta(hdc, 0, i * kMapRoomHeight, g_mapRoomsWide * kMapRoomWidth, 0);
 	}
 
 	if (activeRoomVisible)

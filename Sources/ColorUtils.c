@@ -6,6 +6,7 @@
 
 #include "ColorUtils.h"
 
+#include "DrawUtils.h"
 #include "Macintosh.h"
 
 //==============================================================  Functions
@@ -84,8 +85,7 @@ void ColorLine (HDC hdc, SInt16 h0, SInt16 v0, SInt16 h1, SInt16 v1, SInt32 colo
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCPenColor(hdc, theRGBColor);
 	wasPen = SelectPen(hdc, GetStockPen(DC_PEN));
-	MoveToEx(hdc, h0, v0, NULL);
-	Mac_LineTo(hdc, h1, v1);
+	DrawInclusiveLine(hdc, h0, v0, h1, v1);
 	SelectPen(hdc, wasPen);
 	SetDCPenColor(hdc, wasColor);
 }

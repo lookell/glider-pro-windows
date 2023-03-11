@@ -7,6 +7,7 @@
 #include "ObjectDraw.h"
 
 #include "ColorUtils.h"
+#include "DrawUtils.h"
 #include "HouseIO.h"
 #include "Macintosh.h"
 #include "Objects.h"
@@ -833,107 +834,105 @@ void DrawClockHands (HDC hdcDest, Point where, SInt16 bigHand, SInt16 littleHand
 
 	wasPen = SelectPen(hdcDest, GetStockPen(BLACK_PEN));
 
-	MoveToEx(hdcDest, where.h, where.v, NULL);
 	switch (bigHand)
 	{
 		case 0:
-		Mac_Line(hdcDest, 0, -6);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 0, -6);
 		break;
 
 		case 1:
-		Mac_Line(hdcDest, 3, -5);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 3, -5);
 		break;
 
 		case 2:
-		Mac_Line(hdcDest, 5, -3);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 5, -3);
 		break;
 
 		case 3:
-		Mac_Line(hdcDest, 6, 0);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 6, 0);
 		break;
 
 		case 4:
-		Mac_Line(hdcDest, 5, 3);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 5, 3);
 		break;
 
 		case 5:
-		Mac_Line(hdcDest, 3, 5);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 3, 5);
 		break;
 
 		case 6:
-		Mac_Line(hdcDest, 0, 6);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 0, 6);
 		break;
 
 		case 7:
-		Mac_Line(hdcDest, -3, 5);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -3, 5);
 		break;
 
 		case 8:
-		Mac_Line(hdcDest, -5, 3);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -5, 3);
 		break;
 
 		case 9:
-		Mac_Line(hdcDest, -6, 0);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -6, 0);
 		break;
 
 		case 10:
-		Mac_Line(hdcDest, -5, -3);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -5, -3);
 		break;
 
 		case 11:
-		Mac_Line(hdcDest, -3, -5);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -3, -5);
 		break;
 	}
 
-	MoveToEx(hdcDest, where.h, where.v, NULL);
 	switch (littleHand)
 	{
 		case 0:
-		Mac_Line(hdcDest, 0, -4);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 0, -4);
 		break;
 
 		case 1:
-		Mac_Line(hdcDest, 2, -3);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 2, -3);
 		break;
 
 		case 2:
-		Mac_Line(hdcDest, 3, -2);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 3, -2);
 		break;
 
 		case 3:
-		Mac_Line(hdcDest, 4, 0);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 4, 0);
 		break;
 
 		case 4:
-		Mac_Line(hdcDest, 3, 2);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 3, 2);
 		break;
 
 		case 5:
-		Mac_Line(hdcDest, 2, 3);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 2, 3);
 		break;
 
 		case 6:
-		Mac_Line(hdcDest, 0, 4);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 0, 4);
 		break;
 
 		case 7:
-		Mac_Line(hdcDest, -2, 3);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -2, 3);
 		break;
 
 		case 8:
-		Mac_Line(hdcDest, -3, 2);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -3, 2);
 		break;
 
 		case 9:
-		Mac_Line(hdcDest, -4, 0);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -4, 0);
 		break;
 
 		case 10:
-		Mac_Line(hdcDest, -3, -2);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -3, -2);
 		break;
 
 		case 11:
-		Mac_Line(hdcDest, -2, -3);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -2, -3);
 		break;
 	}
 
@@ -948,107 +947,105 @@ void DrawLargeClockHands (HDC hdcDest, Point where, SInt16 bigHand, SInt16 littl
 
 	wasPen = SelectPen(hdcDest, GetStockPen(WHITE_PEN));
 
-	MoveToEx(hdcDest, where.h, where.v, NULL);
 	switch (bigHand)
 	{
 		case 0:
-		Mac_Line(hdcDest, 0, -10);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 0, -10);
 		break;
 
 		case 1:
-		Mac_Line(hdcDest, 5, -9);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 5, -9);
 		break;
 
 		case 2:
-		Mac_Line(hdcDest, 9, -5);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 9, -5);
 		break;
 
 		case 3:
-		Mac_Line(hdcDest, 10, 0);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 10, 0);
 		break;
 
 		case 4:
-		Mac_Line(hdcDest, 9, 5);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 9, 5);
 		break;
 
 		case 5:
-		Mac_Line(hdcDest, 5, 9);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 5, 9);
 		break;
 
 		case 6:
-		Mac_Line(hdcDest, 0, 10);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 0, 10);
 		break;
 
 		case 7:
-		Mac_Line(hdcDest, -5, 9);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -5, 9);
 		break;
 
 		case 8:
-		Mac_Line(hdcDest, -9, 5);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -9, 5);
 		break;
 
 		case 9:
-		Mac_Line(hdcDest, -10, 0);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -10, 0);
 		break;
 
 		case 10:
-		Mac_Line(hdcDest, -9, -5);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -9, -5);
 		break;
 
 		case 11:
-		Mac_Line(hdcDest, -5, -9);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -5, -9);
 		break;
 	}
 
-	MoveToEx(hdcDest, where.h, where.v, NULL);
 	switch (littleHand)
 	{
 		case 0:
-		Mac_Line(hdcDest, 0, -6);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 0, -6);
 		break;
 
 		case 1:
-		Mac_Line(hdcDest, 3, -5);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 3, -5);
 		break;
 
 		case 2:
-		Mac_Line(hdcDest, 5, -3);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 5, -3);
 		break;
 
 		case 3:
-		Mac_Line(hdcDest, 6, 0);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 6, 0);
 		break;
 
 		case 4:
-		Mac_Line(hdcDest, 5, 3);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 5, 3);
 		break;
 
 		case 5:
-		Mac_Line(hdcDest, 3, 5);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 3, 5);
 		break;
 
 		case 6:
-		Mac_Line(hdcDest, 0, 6);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, 0, 6);
 		break;
 
 		case 7:
-		Mac_Line(hdcDest, -3, 5);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -3, 5);
 		break;
 
 		case 8:
-		Mac_Line(hdcDest, -5, 3);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -5, 3);
 		break;
 
 		case 9:
-		Mac_Line(hdcDest, -6, 0);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -6, 0);
 		break;
 
 		case 10:
-		Mac_Line(hdcDest, -5, -3);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -5, -3);
 		break;
 
 		case 11:
-		Mac_Line(hdcDest, -3, -5);
+		DrawInclusiveLineDelta(hdcDest, where.h, where.v, -3, -5);
 		break;
 	}
 

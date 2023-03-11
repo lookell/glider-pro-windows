@@ -1,7 +1,5 @@
 #include "Macintosh.h"
 
-#include "DrawUtils.h"
-
 //--------------------------------------------------------------  CopyBits
 // Copy some portion of a bitmap from one graphics port to another.
 
@@ -321,40 +319,6 @@ void Mac_InvalWindowRect(HWND window, const Rect *bounds)
 	rcDirty.right = bounds->right;
 	rcDirty.bottom = bounds->bottom;
 	InvalidateRect(window, &rcDirty, TRUE);
-}
-
-//--------------------------------------------------------------  Line
-// Draw a line from the current position to the specified offsets.
-// 'dh' specifies the horizontal movement and 'dv' specifies the
-// vertical movement of the current pen. Negative values move the
-// pen left or up, and positive values move the pen right or down.
-// NOTE: Macintosh lines include the end pixel, unlike GDI lines.
-//
-// WARNING: This function should not be used in a GDI path bracket,
-// like it was in the past. Use LineTo() directly instead.
-
-void Mac_Line(HDC hdc, SInt16 dh, SInt16 dv)
-{
-	POINT curPos;
-
-	GetCurrentPositionEx(hdc, &curPos);
-	DrawInclusiveLineDelta(hdc, curPos.x, curPos.y, dh, dv);
-}
-
-//--------------------------------------------------------------  LineTo
-// Draw a line from the current position to the specified position.
-// 'h' and 'v' specify the coordinates of the line's end point.
-// NOTE: Macintosh lines include the end pixel, unlike GDI lines.
-//
-// WARNING: This function should not be used in a GDI path bracket,
-// like it was in the past. Use LineTo() directly instead.
-
-void Mac_LineTo(HDC hdc, SInt16 h, SInt16 v)
-{
-	POINT curPos;
-
-	GetCurrentPositionEx(hdc, &curPos);
-	DrawInclusiveLine(hdc, curPos.x, curPos.y, h, v);
 }
 
 //--------------------------------------------------------------  PaintRect

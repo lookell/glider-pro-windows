@@ -7,6 +7,7 @@
 #include "Marquee.h"
 
 #include "Coordinates.h"
+#include "DrawUtils.h"
 #include "GliderDefines.h"
 #include "Macintosh.h"
 #include "MainWindow.h"
@@ -716,32 +717,44 @@ void DrawMarquee (HDC hdc)
 		wasPen = SelectPen(hdc, marqueePen);
 		switch (g_theMarquee.direction)
 		{
-			case kAbove:
-			MoveToEx(hdc, g_theMarquee.handle.left + (kHandleSideLong / 2),
-					g_theMarquee.handle.bottom, NULL);
-			Mac_LineTo(hdc, g_theMarquee.handle.left + (kHandleSideLong / 2),
-					g_theMarquee.bounds.top - 1);
+		case kAbove:
+			DrawInclusiveLine(
+				hdc,
+				g_theMarquee.handle.left + (kHandleSideLong / 2),
+				g_theMarquee.handle.bottom,
+				g_theMarquee.handle.left + (kHandleSideLong / 2),
+				g_theMarquee.bounds.top - 1
+			);
 			break;
 
-			case kToRight:
-			MoveToEx(hdc, g_theMarquee.handle.left,
-					g_theMarquee.handle.top + (kHandleSideLong / 2), NULL);
-			Mac_LineTo(hdc, g_theMarquee.bounds.right,
-					g_theMarquee.handle.top + (kHandleSideLong / 2));
+		case kToRight:
+			DrawInclusiveLine(
+				hdc,
+				g_theMarquee.handle.left,
+				g_theMarquee.handle.top + (kHandleSideLong / 2),
+				g_theMarquee.bounds.right,
+				g_theMarquee.handle.top + (kHandleSideLong / 2)
+			);
 			break;
 
-			case kBelow:
-			MoveToEx(hdc, g_theMarquee.handle.left + (kHandleSideLong / 2),
-					g_theMarquee.handle.top - 1, NULL);
-			Mac_LineTo(hdc, g_theMarquee.handle.left + (kHandleSideLong / 2),
-					g_theMarquee.bounds.bottom);
+		case kBelow:
+			DrawInclusiveLine(
+				hdc,
+				g_theMarquee.handle.left + (kHandleSideLong / 2),
+				g_theMarquee.handle.top - 1,
+				g_theMarquee.handle.left + (kHandleSideLong / 2),
+				g_theMarquee.bounds.bottom
+			);
 			break;
 
-			case kToLeft:
-			MoveToEx(hdc, g_theMarquee.handle.right,
-					g_theMarquee.handle.top + (kHandleSideLong / 2), NULL);
-			Mac_LineTo(hdc, g_theMarquee.bounds.left,
-					g_theMarquee.handle.top + (kHandleSideLong / 2));
+		case kToLeft:
+			DrawInclusiveLine(
+				hdc,
+				g_theMarquee.handle.right,
+				g_theMarquee.handle.top + (kHandleSideLong / 2),
+				g_theMarquee.bounds.left,
+				g_theMarquee.handle.top + (kHandleSideLong / 2)
+			);
 			break;
 		}
 		SelectPen(hdc, wasPen);
