@@ -159,6 +159,22 @@ impl BitsRect {
             data: PixData::read_from(&mut reader, &pixMap)?,
         })
     }
+
+    // Return whether the two BitsRect are incompatible with each other,
+    // in terms of color table and pixel bit depth.
+    fn is_incompatible_with(&self, other: &Self) -> bool {
+        if self.pixMap.pixelSize != other.pixMap.pixelSize {
+            // incompatible because the pixel bit depths don't match
+            return true;
+        }
+        let rgb_iter_1 = self.ctTable.ctTable.iter().map(|elem| elem.rgb);
+        let rgb_iter_2 = other.ctTable.ctTable.iter().map(|elem| elem.rgb);
+        if rgb_iter_1.ne(rgb_iter_2) {
+            // incompatible because the color table values don't match
+            return true;
+        }
+        false
+    }
 }
 
 struct BitsRgn {
@@ -1321,7 +1337,10 @@ fn convert_pict(picFrame: Rect, bits_data: Vec<BitsRect>, writer: impl Write) ->
         ));
     }
     let depth = bits_data[0].pixMap.pixelSize;
-    if bits_data.iter().any(|data| data.pixMap.pixelSize != depth) {
+    if bits_data
+        .iter()
+        .any(|data| data.is_incompatible_with(&bits_data[0]))
+    {
         convert_mixed_pict(picFrame, &bits_data).write_bmp_file(writer)?;
         return Ok(());
     }
