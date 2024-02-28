@@ -21,9 +21,11 @@ void ColorFrameOval (HDC hdc, const Rect *theRect, SInt32 color);
 COLORREF LtGrayForeColor (void);
 COLORREF GrayForeColor (void);
 COLORREF DkGrayForeColor (void);
-void DitherShadowRect (HDC hdc, const Rect *theRect);
-void DitherShadowOval (HDC hdc, const Rect *theRect);
-void DitherShadowRegion (HDC hdc, HRGN theRgn);
+void ColorShadowRect (HDC hdc, const Rect *theRect, SInt32 color);
+void ColorShadowOval (HDC hdc, const Rect *theRect, SInt32 color);
+void ColorShadowPolygon (HDC hdc, const POINT *pointList, int pointCount, int fillMode, SInt32 color);
+void ColorShadowRegion (HDC hdc, HRGN theRgn, SInt32 color);
 HBITMAP CreateShadowBitmap (void);
+HBRUSH CreateDither50Brush (COLORREF color1, COLORREF color2);
 
 #endif

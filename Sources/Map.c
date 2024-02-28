@@ -250,10 +250,8 @@ void RedrawMapContents (HDC hdc)
 	SInt16 h, i, groundLevel;
 	SInt16 floor, suite, roomNum;
 	Boolean activeRoomVisible;
-	HBITMAP ditherBitmap;
 	HBRUSH ditherBrush;
 	HRGN skyRgn, groundRgn, tempRgn;
-	COLORREF wasBkColor, wasTextColor;
 
 	if (COMPILEDEMO)
 		return;
@@ -305,18 +303,12 @@ void RedrawMapContents (HDC hdc)
 		}
 	}
 
-	ditherBitmap = CreateShadowBitmap();
-	ditherBrush = CreatePatternBrush(ditherBitmap);
-	wasBkColor = SetBkColor(hdc, whiteColor);
-	wasTextColor = SetTextColor(hdc, blueColor);
+	ditherBrush = CreateDither50Brush(blueColor, whiteColor);
 	FillRgn(hdc, skyRgn, ditherBrush);  // draw the blue sky
-	SetBkColor(hdc, whiteColor);
-	SetTextColor(hdc, greenColor);
-	FillRgn(hdc, groundRgn, ditherBrush);  // draw the green ground
-	SetBkColor(hdc, wasBkColor);
-	SetTextColor(hdc, wasTextColor);
 	DeleteBrush(ditherBrush);
-	DeleteBitmap(ditherBitmap);
+	ditherBrush = CreateDither50Brush(greenColor, whiteColor);
+	FillRgn(hdc, groundRgn, ditherBrush);  // draw the green ground
+	DeleteBrush(ditherBrush);
 
 	DeleteRgn(tempRgn);
 	DeleteRgn(groundRgn);

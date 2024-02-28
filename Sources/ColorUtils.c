@@ -174,7 +174,7 @@ COLORREF DkGrayForeColor (void)
 // This functions fills in every other pixel in the given rectangle with black
 // and leaves the rest unmodified, creating a dithered shadow.
 
-void DitherShadowRect (HDC hdc, const Rect *theRect)
+void ColorShadowRect (HDC hdc, const Rect *theRect, SInt32 color)
 {
 	HRGN theRgn;
 
@@ -183,14 +183,14 @@ void DitherShadowRect (HDC hdc, const Rect *theRect)
 
 	theRgn = CreateRectRgn(theRect->left, theRect->top,
 			theRect->right, theRect->bottom);
-	DitherShadowRegion(hdc, theRgn);
+	ColorShadowRegion(hdc, theRgn, color);
 	DeleteRgn(theRgn);
 }
 
 //--------------------------------------------------------------  DitherShadowOval
 // Similar to DitherShadowRect, but the shadow is drawn within the given oval.
 
-void DitherShadowOval (HDC hdc, const Rect *theRect)
+void ColorShadowOval (HDC hdc, const Rect *theRect, SInt32 color)
 {
 	HRGN theRgn;
 
@@ -199,7 +199,19 @@ void DitherShadowOval (HDC hdc, const Rect *theRect)
 
 	theRgn = CreateEllipticRgn(theRect->left, theRect->top,
 			theRect->right + 1, theRect->bottom + 1);
-	DitherShadowRegion(hdc, theRgn);
+	ColorShadowRegion(hdc, theRgn, color);
+	DeleteRgn(theRgn);
+}
+
+//--------------------------------------------------------------  DitherShadowOval
+// Similar to DitherShadowRect, but the shadow is drawn within the given polygon.
+
+void ColorShadowPolygon (HDC hdc, const POINT *pointList, int pointCount, int fillMode, SInt32 color)
+{
+	HRGN theRgn;
+
+	theRgn = CreatePolygonRgn(pointList, pointCount, fillMode);
+	ColorShadowRegion(hdc, theRgn, color);
 	DeleteRgn(theRgn);
 }
 
@@ -207,25 +219,24 @@ void DitherShadowOval (HDC hdc, const Rect *theRect)
 // Similar to DitherShadowRect, but the shadow is drawn within the given region.
 // The region's coordinates are presumed to be in logical units.
 
-void DitherShadowRegion (HDC hdc, HRGN theRgn)
+void ColorShadowRegion (HDC hdc, HRGN theRgn, SInt32 color)
 {
-	HBITMAP shadowBitmap;
+	// NOTE: These shadows in the original game are only rendered in two colors:
+	// RGB(0x00, 0x00, 0x00) and RGB(0x11, 0x11, 0x11). These colors were represented
+	// as the Macintosh 8-bit palette indexes 255 and 254, respectively. To apply
+	// these shadows, a bitwise OR was used to combine the shadow color index (255
+	// or 254) with the existing color. The resulting color could only be 255 or 254.
+	// The below code is not strictly equivalent, but is close enough without
+	// restricting the game to use 8-bit DIB sections everywhere.
+
 	HBRUSH shadowBrush;
-	COLORREF wasTextColor;
-	COLORREF wasBkColor;
 	int wasROP2;
 
-	shadowBitmap = CreateShadowBitmap();
-	shadowBrush = CreatePatternBrush(shadowBitmap);
-	wasTextColor = SetTextColor(hdc, RGB(0x00, 0x00, 0x00));
-	wasBkColor = SetBkColor(hdc, RGB(0xFF, 0xFF, 0xFF));
+	shadowBrush = CreateDither50Brush(Index2ColorRef(color), RGB(0xFF, 0xFF, 0xFF));
 	wasROP2 = SetROP2(hdc, R2_MASKPEN);
 	FillRgn(hdc, theRgn, shadowBrush);
 	SetROP2(hdc, wasROP2);
-	SetBkColor(hdc, wasBkColor);
-	SetTextColor(hdc, wasTextColor);
 	DeleteBrush(shadowBrush);
-	DeleteBitmap(shadowBitmap);
 }
 
 //--------------------------------------------------------------  CreateShadowBitmap
@@ -237,4 +248,70 @@ HBITMAP CreateShadowBitmap (void)
 {
 	const WORD grayBits[8] = { 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA };
 	return CreateBitmap(8, 8, 1, 1, grayBits);
+}
+
+//--------------------------------------------------------------  FillInShadowBitmapData
+
+typedef struct ShadowBitmapData
+{
+	BITMAPINFOHEADER infoHeader;
+	RGBQUAD pixelData[8][8];
+} ShadowBitmapData;
+
+void FillInShadowBitmapData (ShadowBitmapData *bitmapData, COLORREF color1, COLORREF color2)
+{
+	RGBQUAD rgbQuad1;
+	RGBQUAD rgbQuad2;
+	size_t row;
+	size_t col;
+
+	rgbQuad1.rgbBlue = GetBValue(color1);
+	rgbQuad1.rgbGreen = GetGValue(color1);
+	rgbQuad1.rgbRed = GetRValue(color1);
+	rgbQuad1.rgbReserved = 0x00;
+
+	rgbQuad2.rgbBlue = GetBValue(color2);
+	rgbQuad2.rgbGreen = GetGValue(color2);
+	rgbQuad2.rgbRed = GetRValue(color2);
+	rgbQuad2.rgbReserved = 0x00;
+
+	bitmapData->infoHeader.biSize = sizeof(bitmapData->infoHeader);
+	bitmapData->infoHeader.biWidth = 8;
+	bitmapData->infoHeader.biHeight = -8; // NOTE: top-down bitmap
+	bitmapData->infoHeader.biPlanes = 1;
+	bitmapData->infoHeader.biBitCount = 32;
+	bitmapData->infoHeader.biCompression = BI_RGB;
+	bitmapData->infoHeader.biSizeImage = sizeof(bitmapData->pixelData);
+	bitmapData->infoHeader.biXPelsPerMeter = 0;
+	bitmapData->infoHeader.biYPelsPerMeter = 0;
+	bitmapData->infoHeader.biClrUsed = 0;
+	bitmapData->infoHeader.biClrImportant = 0;
+	for (row = 0; row < 8; row++)
+	{
+		for (col = 0; col < 8; col++)
+		{
+			// NOTE: Adding row and col here gives the desired dither pattern.
+			if (((row + col) % 2) == 0)
+			{
+				bitmapData->pixelData[row][col] = rgbQuad1;
+			}
+			else
+			{
+				bitmapData->pixelData[row][col] = rgbQuad2;
+			}
+		}
+	}
+}
+
+//--------------------------------------------------------------  CreateDither50Brush
+// Creates an 8-by-8 pattern brush with a dithered, equal mixing of the two given
+// colors. The first color is placed at the top left, and alternates with the second
+// color outwards across the entire square pattern.
+
+HBRUSH CreateDither50Brush (COLORREF color1, COLORREF color2)
+{
+	ShadowBitmapData bitmapData;
+
+	FillInShadowBitmapData(&bitmapData, color1, color2);
+	return CreateDIBPatternBrushPt(&bitmapData, DIB_RGB_COLORS);
 }

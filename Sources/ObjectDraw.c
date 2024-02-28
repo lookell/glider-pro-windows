@@ -165,7 +165,7 @@ void DrawTable (HDC hdcDest, const Rect *tableTop, SInt16 down)
 	QOffsetRect(&tempRect, 0,
 			-HalfRectTall(&tempRect) + kTableShadowTop + down);
 	QOffsetRect(&tempRect, kTableShadowOffset, -kTableShadowOffset);
-	DitherShadowOval(hdcDest, &tempRect);
+	ColorShadowOval(hdcDest, &tempRect, k8DkstGrayColor);
 
 	tempRect = *tableTop;
 	QInsetRect(&tempRect, 0, 1);
@@ -245,7 +245,6 @@ void DrawShelf (HDC hdcDest, const Rect *shelfTop)
 	Rect tempRect;
 	SInt32 brownC, ltTanC, tanC, dkRedC, blackC;
 	POINT shadowPts[6];
-	HRGN shadowRgn;
 
 	brownC = k8BrownColor;
 	ltTanC = k8LtTanColor;
@@ -259,9 +258,7 @@ void DrawShelf (HDC hdcDest, const Rect *shelfTop)
 	shadowPts[3] = MakeDeltaPOINT(shadowPts[2], 0, -kShelfThick + 1);
 	shadowPts[4] = MakeDeltaPOINT(shadowPts[3], -kShelfShadowOff, -kShelfShadowOff);
 	shadowPts[5] = MakePOINT(shelfTop->left, shelfTop->bottom);
-	shadowRgn = CreatePolygonRgn(shadowPts, ARRAYSIZE(shadowPts), ALTERNATE);
-	DitherShadowRegion(hdcDest, shadowRgn);
-	DeleteRgn(shadowRgn);
+	ColorShadowPolygon(hdcDest, shadowPts, ARRAYSIZE(shadowPts), ALTERNATE, k8DkstGrayColor);
 
 	tempRect = *shelfTop;
 	QInsetRect(&tempRect, 0, 1);
@@ -306,7 +303,6 @@ void DrawCabinet (HDC hdcDest, const Rect *cabinet)
 	Rect tempRect;
 	SInt32 brownC, dkGrayC, ltTanC, tanC, dkRedC;
 	POINT shadowPts[6];
-	HRGN shadowRgn;
 
 	brownC = k8BrownColor;
 	dkGrayC = k8DkstGrayColor;
@@ -320,9 +316,7 @@ void DrawCabinet (HDC hdcDest, const Rect *cabinet)
 	shadowPts[3] = MakeDeltaPOINT(shadowPts[2], 0, -RectTall(cabinet) + kCabinetDeep);
 	shadowPts[4] = MakeDeltaPOINT(shadowPts[3], -kCabinetShadowOff, -kCabinetShadowOff);
 	shadowPts[5] = MakePOINT(cabinet->left, cabinet->bottom);
-	shadowRgn = CreatePolygonRgn(shadowPts, ARRAYSIZE(shadowPts), ALTERNATE);
-	DitherShadowRegion(hdcDest, shadowRgn);
-	DeleteRgn(shadowRgn);
+	ColorShadowPolygon(hdcDest, shadowPts, ARRAYSIZE(shadowPts), ALTERNATE, dkGrayC);
 
 	// fill bulk of cabinet brown
 	tempRect = *cabinet;
@@ -416,7 +410,6 @@ void DrawCounter (HDC hdcDest, const Rect *counter)
 	Rect tempRect;
 	SInt32 brownC, dkGrayC, tanC, blackC, dkstRedC;
 	POINT shadowPts[7];
-	HRGN shadowRgn;
 	SInt16 nRects, width, i;
 
 	brownC = k8BrownColor;
@@ -432,9 +425,7 @@ void DrawCounter (HDC hdcDest, const Rect *counter)
 	shadowPts[4] = MakeDeltaPOINT(shadowPts[3], 0, -7);
 	shadowPts[5] = MakeDeltaPOINT(shadowPts[4], -12, -12);
 	shadowPts[6] = MakePOINT(counter->right - 2, counter->bottom);
-	shadowRgn = CreatePolygonRgn(shadowPts, ARRAYSIZE(shadowPts), ALTERNATE);
-	DitherShadowRegion(hdcDest, shadowRgn);
-	DeleteRgn(shadowRgn);
+	ColorShadowPolygon(hdcDest, shadowPts, ARRAYSIZE(shadowPts), ALTERNATE, dkGrayC);
 
 	tempRect = *counter;
 	QInsetRect(&tempRect, 2, 2);
@@ -511,7 +502,6 @@ void DrawDresser (HDC hdcDest, const Rect *dresser)
 	Rect tempRect, dest;
 	SInt32 yellowC, brownC, ltTanC, dkstRedC;
 	POINT shadowPts[7];
-	HRGN shadowRgn;
 	SInt16 nRects, height, i;
 
 	yellowC = k8PissYellowColor;
@@ -526,9 +516,7 @@ void DrawDresser (HDC hdcDest, const Rect *dresser)
 	shadowPts[4] = MakeDeltaPOINT(shadowPts[3], -9, -9);
 	shadowPts[5] = MakeDeltaPOINT(shadowPts[4], -RectWide(dresser) + 11, 0);
 	shadowPts[6] = MakePOINT(dresser->left + 10, dresser->bottom + 9);
-	shadowRgn = CreatePolygonRgn(shadowPts, ARRAYSIZE(shadowPts), ALTERNATE);
-	DitherShadowRegion(hdcDest, shadowRgn);
-	DeleteRgn(shadowRgn);
+	ColorShadowPolygon(hdcDest, shadowPts, ARRAYSIZE(shadowPts), ALTERNATE, k8DkstGrayColor);
 
 	tempRect = *dresser;
 	QInsetRect(&tempRect, 2, 2);
@@ -615,7 +603,7 @@ void DrawDeckTable (HDC hdcDest, const Rect *tableTop, SInt16 down)
 	QOffsetRect(&tempRect, 0,
 			-HalfRectTall(&tempRect) + kTableShadowTop + down);
 	QOffsetRect(&tempRect, kTableShadowOffset, -kTableShadowOffset);
-	DitherShadowOval(hdcDest, &tempRect);
+	ColorShadowOval(hdcDest, &tempRect, dkGrayC);
 
 	tempRect = *tableTop;
 	QInsetRect(&tempRect, 0, 1);
