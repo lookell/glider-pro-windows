@@ -61,6 +61,7 @@ impl HeaderRaw {
     }
 }
 
+#[allow(unused)]
 pub struct MacBinary {
     pub data: Vec<u8>,
     pub rsrc: Vec<u8>,

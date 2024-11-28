@@ -49,6 +49,7 @@ impl EntryRaw {
     }
 }
 
+#[allow(unused)]
 pub struct AppleDouble {
     pub data: Vec<u8>,
     pub rsrc: Vec<u8>,

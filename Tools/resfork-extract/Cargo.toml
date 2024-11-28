@@ -6,7 +6,7 @@ license = "MIT AND LGPL-2.1-or-later"
 publish = false
 
 [dependencies]
-zip = { version = "0.5", default-features = false, features = ["deflate", "time"] }
+zip = { version = "2.2", default-features = false, features = ["deflate", "time"] }
 
 [profile.release]
 opt-level = 2
