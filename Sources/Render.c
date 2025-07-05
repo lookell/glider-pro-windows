@@ -587,7 +587,7 @@ HRGN CreateClipRgnFromRects (HDC hdcDest, const Rect *theRects, size_t numRects)
 		SetRectRgn(tempRgn, points[0].x, points[0].y, points[1].x, points[1].y);
 		CombineRgn(clipRgn, clipRgn, tempRgn, RGN_OR);
 	}
-	DeleteRgn(tempRgn);
+	DeleteObject(tempRgn);
 
 	return clipRgn;
 }
@@ -603,7 +603,7 @@ void CopyRectsQD (void)
 	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	blitRgn = CreateClipRgnFromRects(mainWindowDC, g_work2MainRects, g_numWork2Main);
 	Mac_CopyBits(g_workSrcMap, mainWindowDC, &g_workSrcRect, &g_workSrcRect, srcCopy, blitRgn);
-	DeleteRgn(blitRgn);
+	DeleteObject(blitRgn);
 	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 
 	for (i = 0; i < g_numBack2Work; i++)
@@ -750,7 +750,7 @@ void AddToMirrorRegion (const Rect *theRect)
 		if (tempRgn != NULL)
 		{
 			CombineRgn(g_mirrorRgn, g_mirrorRgn, tempRgn, RGN_OR);
-			DeleteRgn(tempRgn);
+			DeleteObject(tempRgn);
 		}
 	}
 	g_hasMirror = true;
@@ -761,7 +761,7 @@ void AddToMirrorRegion (const Rect *theRect)
 void ZeroMirrorRegion (void)
 {
 	if (g_mirrorRgn != NULL)
-		DeleteRgn(g_mirrorRgn);
+		DeleteObject(g_mirrorRgn);
 	g_mirrorRgn = NULL;
 	g_hasMirror = false;
 }

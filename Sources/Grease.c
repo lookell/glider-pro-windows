@@ -105,8 +105,8 @@ void HandleGrease (void)
 				g_hotSpots[thisGrease->hotNum].bounds.left -= 2;
 			}
 
-			Mac_PaintRect(g_backSrcMap, &src, GetStockBrush(BLACK_BRUSH));
-			Mac_PaintRect(g_workSrcMap, &src, GetStockBrush(BLACK_BRUSH));
+			Mac_PaintRect(g_backSrcMap, &src, (HBRUSH)GetStockObject(BLACK_BRUSH));
+			Mac_PaintRect(g_workSrcMap, &src, (HBRUSH)GetStockObject(BLACK_BRUSH));
 			AddRectToWorkRects(&src);
 
 			if (thisGrease->isRight)
@@ -286,8 +286,8 @@ void RedrawAllGrease (void)
 				(thisGrease->mode != kGreaseIdle))
 		{
 			QOffsetRect(&src, g_playOriginH, g_playOriginV);
-			Mac_PaintRect(g_backSrcMap, &src, GetStockBrush(BLACK_BRUSH));
-			Mac_PaintRect(g_workSrcMap, &src, GetStockBrush(BLACK_BRUSH));
+			Mac_PaintRect(g_backSrcMap, &src, (HBRUSH)GetStockObject(BLACK_BRUSH));
+			Mac_PaintRect(g_workSrcMap, &src, (HBRUSH)GetStockObject(BLACK_BRUSH));
 			AddRectToWorkRects(&src);
 		}
 	}

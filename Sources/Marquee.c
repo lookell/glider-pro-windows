@@ -64,7 +64,7 @@ void PaintMarqueeRect (HDC hdc, const Rect *theRect)
 	wasROP2 = SetROP2(hdc, R2_XORPEN);
 	Mac_PaintRect(hdc, theRect, marqueeBrush);
 	SetROP2(hdc, wasROP2);
-	DeleteBrush(marqueeBrush);
+	DeleteObject(marqueeBrush);
 }
 
 //--------------------------------------------------------------  FrameMarqueeRect
@@ -78,7 +78,7 @@ void FrameMarqueeRect (HDC hdc, const Rect *theRect)
 	wasROP2 = SetROP2(hdc, R2_XORPEN);
 	Mac_FrameRect(hdc, theRect, marqueeBrush, 1, 1);
 	SetROP2(hdc, wasROP2);
-	DeleteBrush(marqueeBrush);
+	DeleteObject(marqueeBrush);
 }
 
 //--------------------------------------------------------------  DoMarquee
@@ -703,7 +703,8 @@ void SetMarqueeGliderRect (SInt16 h, SInt16 v)
 void DrawMarquee (HDC hdc)
 {
 	HBRUSH marqueeBrush;
-	HPEN marqueePen, wasPen;
+	HPEN marqueePen;
+	HGDIOBJ wasPen;
 	int wasROP2;
 
 	marqueeBrush = CreateMarqueeBrush();
@@ -714,7 +715,7 @@ void DrawMarquee (HDC hdc)
 	{
 		Mac_PaintRect(hdc, &g_theMarquee.handle, marqueeBrush);
 		marqueePen = CreateMarqueePen();
-		wasPen = SelectPen(hdc, marqueePen);
+		wasPen = SelectObject(hdc, marqueePen);
 		switch (g_theMarquee.direction)
 		{
 		case kAbove:
@@ -757,12 +758,12 @@ void DrawMarquee (HDC hdc)
 			);
 			break;
 		}
-		SelectPen(hdc, wasPen);
-		DeletePen(marqueePen);
+		SelectObject(hdc, wasPen);
+		DeleteObject(marqueePen);
 	}
 
 	SetROP2(hdc, wasROP2);
-	DeleteBrush(marqueeBrush);
+	DeleteObject(marqueeBrush);
 
 	if (g_gliderMarqueeUp)
 		DrawGliderMarquee(hdc);
@@ -774,7 +775,8 @@ void InitMarquee (void)
 {
 	HIMAGELIST himlMarquee;
 	HDC hdc;
-	HBITMAP hBitmap, hbmPrev;
+	HBITMAP hBitmap;
+	HGDIOBJ hbmPrev;
 	INT i, numMarqueePats;
 
 	himlMarquee = ImageList_LoadImage(HINST_THISCOMPONENT,
@@ -791,9 +793,9 @@ void InitMarquee (void)
 	for (i = 0; i < kNumMarqueePats; i++)
 	{
 		hBitmap = CreateBitmap(8, 8, 1, 1, NULL);
-		hbmPrev = SelectBitmap(hdc, hBitmap);
+		hbmPrev = SelectObject(hdc, hBitmap);
 		ImageList_Draw(himlMarquee, i, hdc, 0, 0, ILD_IMAGE);
-		SelectBitmap(hdc, hbmPrev);
+		SelectObject(hdc, hbmPrev);
 		g_theMarquee.pats[i] = hBitmap;
 	}
 	DeleteDC(hdc);
@@ -816,7 +818,7 @@ void DestroyMarquee (void)
 	{
 		if (g_theMarquee.pats[i] != NULL)
 		{
-			DeleteBitmap(g_theMarquee.pats[i]);
+			DeleteObject(g_theMarquee.pats[i]);
 			g_theMarquee.pats[i] = NULL;
 		}
 	}

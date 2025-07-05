@@ -100,7 +100,7 @@ void SetUpFinalScreen (void)
 
 	SaveDC(g_workSrcMap);
 	gameOverFont = CreateTahomaFont(-12, FW_BOLD);
-	SelectFont(g_workSrcMap, gameOverFont);
+	SelectObject(g_workSrcMap, gameOverFont);
 	SetBkMode(g_workSrcMap, TRANSPARENT);
 	SetTextAlign(g_workSrcMap, TA_BASELINE | TA_CENTER);
 	count = 0;
@@ -117,7 +117,7 @@ void SetUpFinalScreen (void)
 		count++;
 	}
 	RestoreDC(g_workSrcMap, -1);
-	DeleteFont(gameOverFont);
+	DeleteObject(gameOverFont);
 
 	CopyRectWorkToBack(&g_workSrcRect);
 
@@ -472,7 +472,7 @@ void DoDiedGameOver (void)
 	}
 
 	if (g_roomRgn != nil)
-		DeleteRgn(g_roomRgn);
+		DeleteObject(g_roomRgn);
 
 	DisposeGWorld(g_pageSrcMap);
 	g_pageSrcMap = nil;

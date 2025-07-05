@@ -111,7 +111,7 @@ INT_PTR CALLBACK HouseFilter (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		return TRUE;
 
 	case WM_COMMAND:
-		switch (GET_WM_COMMAND_ID(wParam, lParam))
+		switch (LOWORD(wParam))
 		{
 		case IDOK:
 			GetDialogString(hDlg, kBannerTextItem,

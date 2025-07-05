@@ -272,7 +272,7 @@ void DissBitsImpl (const Rect *theRect, Boolean doChunky)
 	RGBQUAD *srcData;
 	HBITMAP destBitmap;
 	RGBQUAD *destData;
-	HBITMAP prevBitmap;
+	HGDIOBJ prevBitmap;
 	HDC mainWindowDC;
 	DWORD prevFrameRate;
 	SInt32 framesBlitted;
@@ -349,22 +349,22 @@ void DissBitsImpl (const Rect *theRect, Boolean doChunky)
 	destBitmap = CreateDIBSection(NULL, &bmi, DIB_RGB_COLORS, &tempPtr, NULL, 0);
 	if (destBitmap == NULL)
 	{
-		DeleteBitmap(srcBitmap);
+		DeleteObject(srcBitmap);
 		DeleteDC(tempDC);
 		DumpScreenOn(theRect);
 		return;
 	}
 	destData = (RGBQUAD *)tempPtr;
 
-	prevBitmap = SelectBitmap(tempDC, srcBitmap);
+	prevBitmap = SelectObject(tempDC, srcBitmap);
 	Mac_CopyBits(g_workSrcMap, tempDC, &externalRect, &internalRect, srcCopy, nil);
-	SelectBitmap(tempDC, prevBitmap);
+	SelectObject(tempDC, prevBitmap);
 
-	prevBitmap = SelectBitmap(tempDC, destBitmap);
+	prevBitmap = SelectObject(tempDC, destBitmap);
 	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	Mac_CopyBits(mainWindowDC, tempDC, &externalRect, &internalRect, srcCopy, nil);
 	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
-	SelectBitmap(tempDC, prevBitmap);
+	SelectObject(tempDC, prevBitmap);
 
 	prevFrameRate = GetFrameRate();
 	SetFrameRate(60);
@@ -400,11 +400,11 @@ void DissBitsImpl (const Rect *theRect, Boolean doChunky)
 			if (chunksBlitted == ((framesBlitted + 1) * totalChunks / totalFrames))
 			{
 				GdiFlush();
-				prevBitmap = SelectBitmap(tempDC, destBitmap);
+				prevBitmap = SelectObject(tempDC, destBitmap);
 				mainWindowDC = GetMainWindowDC(g_mainWindow);
 				Mac_CopyBits(tempDC, mainWindowDC, &internalRect, &externalRect, srcCopy, nil);
 				ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
-				SelectBitmap(tempDC, prevBitmap);
+				SelectObject(tempDC, prevBitmap);
 				GdiFlush();
 				WaitUntilNextFrame();
 				framesBlitted += 1;
@@ -413,17 +413,17 @@ void DissBitsImpl (const Rect *theRect, Boolean doChunky)
 	} while (lfsrState != 1);
 	BlitChunk(destData, srcData, &bitmapRect, 0, 0, chunkSize, chunkSize);
 	GdiFlush();
-	prevBitmap = SelectBitmap(tempDC, destBitmap);
+	prevBitmap = SelectObject(tempDC, destBitmap);
 	mainWindowDC = GetMainWindowDC(g_mainWindow);
 	Mac_CopyBits(tempDC, mainWindowDC, &internalRect, &externalRect, srcCopy, nil);
 	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
-	SelectBitmap(tempDC, prevBitmap);
+	SelectObject(tempDC, prevBitmap);
 	GdiFlush();
 
 	SetFrameRate(prevFrameRate);
 
-	DeleteBitmap(destBitmap);
-	DeleteBitmap(srcBitmap);
+	DeleteObject(destBitmap);
+	DeleteObject(srcBitmap);
 	DeleteDC(tempDC);
 }
 

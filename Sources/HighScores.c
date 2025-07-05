@@ -49,7 +49,7 @@ void DoHighScores (void)
 {
 	Rect tempRect;
 
-	Mac_PaintRect(g_workSrcMap, &g_workSrcRect, GetStockBrush(BLACK_BRUSH));
+	Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	QSetRect(&tempRect, 0, 0, 640, 460);
 	QOffsetRect(&tempRect, g_splashOriginH, g_splashOriginV);
 	LoadScaledGraphic(g_workSrcMap, g_theHouseFile, kStarPictID, &tempRect);
@@ -113,7 +113,7 @@ void DrawHighScores (void)
 	theFont = CreateTahomaFont(-14, FW_BOLD);
 
 	SaveDC(g_workSrcMap);
-	SelectFont(g_workSrcMap, theFont);
+	SelectObject(g_workSrcMap, theFont);
 	SetBkMode(g_workSrcMap, TRANSPARENT);
 	SetTextAlign(g_workSrcMap, TA_LEFT | TA_BASELINE);
 	StringCchCopy(tempStr, ARRAYSIZE(tempStr), L"\u2022 "); // "• "
@@ -126,11 +126,11 @@ void DrawHighScores (void)
 	SetTextColor(g_workSrcMap, cyanColor);
 	TextOutW(g_workSrcMap, hOffset, vOffset, tempStr, (int)wcslen(tempStr));
 	RestoreDC(g_workSrcMap, -1);
-	DeleteFont(theFont);
+	DeleteObject(theFont);
 
 	theFont = CreateTahomaFont(-12, FW_BOLD);
 	SaveDC(g_workSrcMap);
-	SelectFont(g_workSrcMap, theFont);
+	SelectObject(g_workSrcMap, theFont);
 	SetBkMode(g_workSrcMap, TRANSPARENT);
 	SetTextAlign(g_workSrcMap, TA_LEFT | TA_BASELINE);
 
@@ -148,10 +148,10 @@ void DrawHighScores (void)
 	QOffsetRect(&tempRect, scoreLeft - 3 + (kScoreWide - bannerWidth) / 2,
 			dropIt + 5 - kScoreSpacing - kKimsLifted);
 	wasColor = SetDCBrushColor(g_workSrcMap, blackColor);
-	Mac_FrameRect(g_workSrcMap, &tempRect, GetStockBrush(DC_BRUSH), 1, 1);
+	Mac_FrameRect(g_workSrcMap, &tempRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
 	QOffsetRect(&tempRect, -1, -1);
 	SetDCBrushColor(g_workSrcMap, yellowColor);
-	Mac_FrameRect(g_workSrcMap, &tempRect, GetStockBrush(DC_BRUSH), 1, 1);
+	Mac_FrameRect(g_workSrcMap, &tempRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
 	SetDCBrushColor(g_workSrcMap, wasColor);
 
 	for (i = 0; i < kMaxScores; i++)
@@ -219,11 +219,11 @@ void DrawHighScores (void)
 	}
 
 	RestoreDC(g_workSrcMap, -1);
-	DeleteFont(theFont);
+	DeleteObject(theFont);
 
 	theFont = CreateTahomaFont(-9, FW_BOLD);
 	SaveDC(g_workSrcMap);
-	SelectFont(g_workSrcMap, theFont);
+	SelectObject(g_workSrcMap, theFont);
 	SetBkMode(g_workSrcMap, TRANSPARENT);
 	SetTextAlign(g_workSrcMap, TA_LEFT | TA_BASELINE);
 	SetTextColor(g_workSrcMap, blueColor);
@@ -231,7 +231,7 @@ void DrawHighScores (void)
 	vOffset = dropIt - 1 + (10 * kScoreSpacing);
 	TextOutW(g_workSrcMap, scoreLeft + 80, vOffset, tempStr, (int)wcslen(tempStr));
 	RestoreDC(g_workSrcMap, -1);
-	DeleteFont(theFont);
+	DeleteObject(theFont);
 }
 
 //--------------------------------------------------------------  SortHighScores

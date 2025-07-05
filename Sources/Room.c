@@ -227,7 +227,7 @@ void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 	if ((g_noRoomAtAll) || (!g_houseUnlocked))
 	{
 		wasColor = SetDCBrushColor(g_workSrcMap, LtGrayForeColor());
-		Mac_PaintRect(g_workSrcMap, &g_workSrcRect, GetStockBrush(DC_BRUSH));
+		Mac_PaintRect(g_workSrcMap, &g_workSrcRect, (HBRUSH)GetStockObject(DC_BRUSH));
 		SetDCBrushColor(g_workSrcMap, wasColor);
 
 		ncm.cbSize = sizeof(ncm);
@@ -238,7 +238,7 @@ void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 		}
 		if (hFont == NULL)
 		{
-			hFont = GetStockFont(SYSTEM_FONT);
+			hFont = (HFONT)GetStockObject(SYSTEM_FONT);
 		}
 
 		if (g_houseUnlocked)
@@ -254,10 +254,10 @@ void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 		SetTextColor(g_workSrcMap, blackColor);
 		SetTextAlign(g_workSrcMap, TA_TOP | TA_LEFT | TA_NOUPDATECP);
 		SetBkMode(g_workSrcMap, TRANSPARENT);
-		SelectFont(g_workSrcMap, hFont);
+		SelectObject(g_workSrcMap, hFont);
 		TextOut(g_workSrcMap, 10, 10, theString, (int)wcslen(theString));
 		RestoreDC(g_workSrcMap, -1);
-		DeleteFont(hFont);
+		DeleteObject(hFont);
 
 		Mac_CopyBits(g_workSrcMap, g_backSrcMap,
 				&g_workSrcRect, &g_workSrcRect, srcCopy, nil);
@@ -273,7 +273,7 @@ void ReadyBackground (SInt16 theID, const SInt16 *theTiles)
 
 	GetGraphicRect(thePicture, &dest);
 	Mac_DrawPicture(g_workSrcMap, thePicture, &dest);
-	DeleteBitmap(thePicture);
+	DeleteObject(thePicture);
 
 	QSetRect(&src, 0, 0, kTileWide, kTileHigh);
 	QSetRect(&dest, 0, 0, kTileWide, kTileHigh);

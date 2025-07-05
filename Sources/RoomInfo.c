@@ -110,8 +110,8 @@ void UpdateRoomInfoDialog (HWND hDlg, HDC hdc)
 	else
 		SetDlgItemText(hDlg, kLitUnlitText, L"(Room Is Lit)");
 
-	Mac_FrameRect(hdc, &g_tileSrc, GetStockBrush(BLACK_BRUSH), 1, 1);
-	Mac_FrameRect(hdc, &g_tileDest, GetStockBrush(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(hdc, &g_tileSrc, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(hdc, &g_tileDest, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
 }
 
 //--------------------------------------------------------------  DrawTileOverMarkings
@@ -122,17 +122,17 @@ void DrawTileOverMarkings (
 	const Rect *tileRect,
 	COLORREF hiliteColor)
 {
-	HBRUSH prevBrush;
+	HGDIOBJ prevBrush;
 	COLORREF prevBrushColor;
 	int markLeft;
 
-	prevBrush = SelectBrush(hdcDest, GetStockBrush(DC_BRUSH));
+	prevBrush = SelectObject(hdcDest, GetStockObject(DC_BRUSH));
 	prevBrushColor = SetDCBrushColor(hdcDest, hiliteColor);
 	markLeft = tileRect->left + (whichTile * kMiniTileWide);
 	PatBlt(hdcDest, markLeft, tileRect->top - 3, kMiniTileWide, 2, PATCOPY);
 	PatBlt(hdcDest, markLeft, tileRect->bottom + 1, kMiniTileWide, 2, PATCOPY);
 	SetDCBrushColor(hdcDest, prevBrushColor);
-	SelectBrush(hdcDest, prevBrush);
+	SelectObject(hdcDest, prevBrush);
 }
 
 //--------------------------------------------------------------  DragMiniTile

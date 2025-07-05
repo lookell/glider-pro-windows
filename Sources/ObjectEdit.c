@@ -2293,7 +2293,7 @@ void GetThisRoomsObjRects (void)
 				else
 				{
 					GetGraphicRect(thePict, &g_roomObjectRects[i]);
-					DeleteBitmap(thePict);
+					DeleteObject(thePict);
 				}
 				ZeroRectCorner(&g_roomObjectRects[i]);
 				QOffsetRect(&g_roomObjectRects[i],

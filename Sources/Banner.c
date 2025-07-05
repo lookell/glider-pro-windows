@@ -111,7 +111,7 @@ void DrawBannerMessage (Point topLeft)
 
 	bannerFont = CreateTahomaFont(-12, FW_BOLD);
 	SaveDC(g_workSrcMap);
-	SelectFont(g_workSrcMap, bannerFont);
+	SelectObject(g_workSrcMap, bannerFont);
 	SetBkMode(g_workSrcMap, TRANSPARENT);
 	SetTextAlign(g_workSrcMap, TA_LEFT | TA_BASELINE);
 
@@ -148,7 +148,7 @@ void DrawBannerMessage (Point topLeft)
 				subStr, (int)wcslen(subStr));
 	}
 	RestoreDC(g_workSrcMap, -1);
-	DeleteFont(bannerFont);
+	DeleteObject(bannerFont);
 }
 
 //--------------------------------------------------------------  BringUpBanner
@@ -206,13 +206,13 @@ void DisplayStarsRemaining (void)
 		SaveDC(mainWindowDC);
 		LoadScaledGraphic(mainWindowDC, g_theHouseFile, kStarsRemainingPICT, &bounds);
 		textFont = CreateTahomaFont(-12, FW_BOLD);
-		SelectFont(mainWindowDC, textFont);
+		SelectObject(mainWindowDC, textFont);
 		SetTextAlign(mainWindowDC, TA_CENTER | TA_BASELINE);
 		SetTextColor(mainWindowDC, Index2ColorRef(4L));
 		SetBkMode(mainWindowDC, TRANSPARENT);
 		TextOut(mainWindowDC, bounds.left + 102, bounds.top + 23, theStr, (int)wcslen(theStr));
 		RestoreDC(mainWindowDC, -1);
-		DeleteFont(textFont);
+		DeleteObject(textFont);
 	}
 	ReleaseMainWindowDC(g_mainWindow, mainWindowDC);
 

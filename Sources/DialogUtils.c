@@ -358,7 +358,7 @@ void GetDialogItemRect (HWND theDialog, int item, Rect *theRect)
 		return;
 	}
 	SetLastError(ERROR_SUCCESS);
-	if (!MapWindowRect(HWND_DESKTOP, theDialog, &windowRect))
+	if (!MapWindowPoints(HWND_DESKTOP, theDialog, (POINT *)&windowRect, 2))
 	{
 		if (GetLastError() != ERROR_SUCCESS)
 		{
@@ -397,7 +397,7 @@ void AddMenuToComboBox (HWND theDialog, int whichItem, HMENU theMenu)
 	if (numItems < 0)
 		return;
 
-	ComboBox_ResetContent(hwndCombo);
+	SendMessage(hwndCombo, CB_RESETCONTENT, 0, 0);
 
 	itemString = NULL;
 	menuItemInfo.cbSize = sizeof(menuItemInfo);
@@ -420,8 +420,8 @@ void AddMenuToComboBox (HWND theDialog, int whichItem, HMENU theMenu)
 			itemString = NULL;
 			continue;
 		}
-		comboIndex = ComboBox_AddString(hwndCombo, itemString);
-		ComboBox_SetItemData(hwndCombo, comboIndex, menuItemInfo.wID);
+		comboIndex = (int)SendMessage(hwndCombo, CB_ADDSTRING, 0, (LPARAM)itemString);
+		SendMessage(hwndCombo, CB_SETITEMDATA, comboIndex, menuItemInfo.wID);
 		free(itemString);
 	}
 }
@@ -442,10 +442,10 @@ void GetComboBoxMenuValue (HWND theDialog, int whichItem, SInt16 *value)
 	hwndCombo = GetDlgItem(theDialog, whichItem);
 	if (hwndCombo == NULL)
 		return;
-	selectedIndex = ComboBox_GetCurSel(hwndCombo);
+	selectedIndex = (int)SendMessage(hwndCombo, CB_GETCURSEL, 0, 0);
 	if (selectedIndex < 0)
 		return;
-	*value = (SInt16)ComboBox_GetItemData(hwndCombo, selectedIndex);
+	*value = (SInt16)SendMessage(hwndCombo, CB_GETITEMDATA, selectedIndex, 0);
 }
 
 //--------------------------------------------------------------  SetComboBoxMenuValue
@@ -464,13 +464,13 @@ void SetComboBoxMenuValue (HWND theDialog, int whichItem, SInt16 value)
 	hwndCombo = GetDlgItem(theDialog, whichItem);
 	if (hwndCombo == NULL)
 		return;
-	numItems = ComboBox_GetCount(hwndCombo);
+	numItems = (int)SendMessage(hwndCombo, CB_GETCOUNT, 0, 0);
 	for (index = 0; index < numItems; index++)
 	{
-		itemData = ComboBox_GetItemData(hwndCombo, index);
+		itemData = SendMessage(hwndCombo, CB_GETITEMDATA, index, 0);
 		if (itemData == value)
 		{
-			ComboBox_SetCurSel(hwndCombo, index);
+			SendMessage(hwndCombo, CB_SETCURSEL, index, 0);
 			break;
 		}
 	}

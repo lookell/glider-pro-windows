@@ -222,7 +222,7 @@ void GetObjectRect (objectPtr who, Rect *itsRect)
 		else
 		{
 			GetGraphicRect(thePict, itsRect);
-			DeleteBitmap(thePict);
+			DeleteObject(thePict);
 		}
 		ZeroRectCorner(itsRect);
 		QOffsetRect(itsRect,

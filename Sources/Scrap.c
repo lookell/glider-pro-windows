@@ -196,7 +196,7 @@ HIMAGELIST GetRoomDragImageList (const Rect *roomSrc, SInt16 roomNumber)
 			Rect roomImageRect;
 
 			SaveDC(tempDC);
-			SelectBitmap(tempDC, roomImage);
+			SelectObject(tempDC, roomImage);
 			SetStretchBltMode(tempDC, HALFTONE);
 			SetBrushOrgEx(tempDC, 0, 0, NULL);
 			if (roomNumber >= 0 && roomNumber < g_thisHouse.nRooms)
@@ -226,7 +226,7 @@ HIMAGELIST GetRoomDragImageList (const Rect *roomSrc, SInt16 roomNumber)
 				himl = NULL;
 			}
 		}
-		DeleteBitmap(roomImage);
+		DeleteObject(roomImage);
 	}
 	return himl;
 }

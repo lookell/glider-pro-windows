@@ -165,7 +165,7 @@ void RefreshRoomTitle (SInt16 mode)
 	SaveDC(g_boardTSrcMap);
 	SetBkMode(g_boardTSrcMap, TRANSPARENT);
 	SetTextAlign(g_boardTSrcMap, TA_TOP | TA_LEFT);
-	SelectFont(g_boardTSrcMap, g_scoreboardFont);
+	SelectObject(g_boardTSrcMap, g_scoreboardFont);
 
 	SetTextColor(g_boardTSrcMap, blackColor);
 	TextOut(g_boardTSrcMap, 1, 1, titleString, numChars);
@@ -200,7 +200,7 @@ void RefreshNumGliders (void)
 	SaveDC(g_boardGSrcMap);
 	SetBkMode(g_boardGSrcMap, TRANSPARENT);
 	SetTextAlign(g_boardGSrcMap, TA_TOP | TA_LEFT);
-	SelectFont(g_boardGSrcMap, g_scoreboardFont);
+	SelectObject(g_boardGSrcMap, g_scoreboardFont);
 
 	SetTextColor(g_boardGSrcMap, blackColor);
 	TextOut(g_boardGSrcMap, 1, 1, nGlidersStr, numChars);
@@ -229,7 +229,7 @@ void RefreshPoints (void)
 	SaveDC(g_boardPSrcMap);
 	SetBkMode(g_boardPSrcMap, TRANSPARENT);
 	SetTextAlign(g_boardPSrcMap, TA_TOP | TA_LEFT);
-	SelectFont(g_boardPSrcMap, g_scoreboardFont);
+	SelectObject(g_boardPSrcMap, g_scoreboardFont);
 
 	SetTextColor(g_boardPSrcMap, blackColor);
 	TextOut(g_boardPSrcMap, 1, 1, scoreStr, numChars);
@@ -261,7 +261,7 @@ void QuickGlidersRefresh (void)
 	SaveDC(g_boardGSrcMap);
 	SetBkMode(g_boardGSrcMap, TRANSPARENT);
 	SetTextAlign(g_boardGSrcMap, TA_TOP | TA_LEFT);
-	SelectFont(g_boardGSrcMap, g_scoreboardFont);
+	SelectObject(g_boardGSrcMap, g_scoreboardFont);
 
 	SetTextColor(g_boardGSrcMap, blackColor);
 	TextOut(g_boardGSrcMap, 1, 1, nGlidersStr, numChars);
@@ -293,7 +293,7 @@ void QuickScoreRefresh (void)
 	SaveDC(g_boardPSrcMap);
 	SetBkMode(g_boardPSrcMap, TRANSPARENT);
 	SetTextAlign(g_boardPSrcMap, TA_TOP | TA_LEFT);
-	SelectFont(g_boardPSrcMap, g_scoreboardFont);
+	SelectObject(g_boardPSrcMap, g_scoreboardFont);
 
 	SetTextColor(g_boardPSrcMap, blackColor);
 	TextOut(g_boardPSrcMap, 1, 1, scoreStr, numChars);

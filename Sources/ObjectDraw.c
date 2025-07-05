@@ -385,7 +385,7 @@ void DrawCabinet (HDC hdcDest, const Rect *cabinet)
 	Mac_CopyMask(g_furnitureSrcMap, g_furnitureMaskMap, hdcDest,
 			&g_handleSrc, &g_handleSrc, &tempRect);
 
-	Mac_FrameRect(hdcDest, cabinet, GetStockBrush(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(hdcDest, cabinet, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
 }
 
 //--------------------------------------------------------------  DrawSimpleFurniture
@@ -818,9 +818,9 @@ void DrawCuckoo (HDC hdcDest, const Rect *theRect)
 
 void DrawClockHands (HDC hdcDest, Point where, SInt16 bigHand, SInt16 littleHand)
 {
-	HPEN wasPen;
+	HGDIOBJ wasPen;
 
-	wasPen = SelectPen(hdcDest, GetStockPen(BLACK_PEN));
+	wasPen = SelectObject(hdcDest, GetStockObject(BLACK_PEN));
 
 	switch (bigHand)
 	{
@@ -924,16 +924,16 @@ void DrawClockHands (HDC hdcDest, Point where, SInt16 bigHand, SInt16 littleHand
 		break;
 	}
 
-	SelectPen(hdcDest, wasPen);
+	SelectObject(hdcDest, wasPen);
 }
 
 //--------------------------------------------------------------  DrawLargeClockHands
 
 void DrawLargeClockHands (HDC hdcDest, Point where, SInt16 bigHand, SInt16 littleHand)
 {
-	HPEN wasPen;
+	HGDIOBJ wasPen;
 
-	wasPen = SelectPen(hdcDest, GetStockPen(WHITE_PEN));
+	wasPen = SelectObject(hdcDest, GetStockObject(WHITE_PEN));
 
 	switch (bigHand)
 	{
@@ -1037,7 +1037,7 @@ void DrawLargeClockHands (HDC hdcDest, Point where, SInt16 bigHand, SInt16 littl
 		break;
 	}
 
-	SelectPen(hdcDest, wasPen);
+	SelectObject(hdcDest, wasPen);
 }
 
 //--------------------------------------------------------------  DrawSimplePrizes
@@ -1071,7 +1071,7 @@ void DrawGreaseRt (HDC hdcDest, const Rect *theRect, SInt16 distance, Boolean st
 
 		QSetRect(&spill, 0, -2, distance - 5, 0);
 		QOffsetRect(&spill, dest.right - 1, dest.bottom);
-		Mac_PaintRect(hdcDest, &spill, GetStockBrush(BLACK_BRUSH));
+		Mac_PaintRect(hdcDest, &spill, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	}
 }
 
@@ -1095,7 +1095,7 @@ void DrawGreaseLf (HDC hdcDest, const Rect *theRect, SInt16 distance, Boolean st
 
 		QSetRect(&spill, -distance + 5, -2, 0, 0);
 		QOffsetRect(&spill, dest.left + 1, dest.bottom);
-		Mac_PaintRect(hdcDest, &spill, GetStockBrush(BLACK_BRUSH));
+		Mac_PaintRect(hdcDest, &spill, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	}
 }
 
@@ -1118,7 +1118,7 @@ void DrawInvisBonus (HDC hdcDest, const Rect *theRect)
 
 void DrawSlider (HDC hdcDest, const Rect *theRect)
 {
-	Mac_FrameRect(hdcDest, theRect, GetStockBrush(BLACK_BRUSH), 1, 1);
+	Mac_FrameRect(hdcDest, theRect, (HBRUSH)GetStockObject(BLACK_BRUSH), 1, 1);
 }
 
 //--------------------------------------------------------------  DrawMailboxLeft
@@ -1920,7 +1920,7 @@ void DrawCalendar (HDC hdcDest, const Rect *theRect)
 	GetGraphicRect(thePicture, &bounds);
 	QOffsetRect(&bounds, theRect->left, theRect->top);
 	Mac_DrawPicture(hdcDest, thePicture, &bounds);
-	DeleteBitmap(thePicture);
+	DeleteObject(thePicture);
 
 	GetLocalTime(&localTime);
 	AllocLoadString(HINST_THISCOMPONENT, kMonthStringBase + localTime.wMonth, &monthStrBuffer);
@@ -1930,10 +1930,10 @@ void DrawCalendar (HDC hdcDest, const Rect *theRect)
 	SetTextAlign(hdcDest, TA_CENTER | TA_BASELINE);
 	SetTextColor(hdcDest, Index2ColorRef(kDarkFleshColor));
 	theFont = CreateTahomaFont(-9, FW_BOLD);
-	SelectFont(hdcDest, theFont);
+	SelectObject(hdcDest, theFont);
 	TextOut(hdcDest, theRect->left + 32, theRect->top + 55, monthStr, (int)wcslen(monthStr));
 	RestoreDC(hdcDest, -1);
-	DeleteFont(theFont);
+	DeleteObject(theFont);
 	free(monthStrBuffer);
 }
 
@@ -1951,7 +1951,7 @@ void DrawBulletin (HDC hdcDest, const Rect *theRect)
 	GetGraphicRect(thePicture, &bounds);
 	QOffsetRect(&bounds, theRect->left, theRect->top);
 	Mac_DrawPicture(hdcDest, thePicture, &bounds);
-	DeleteBitmap(thePicture);
+	DeleteObject(thePicture);
 }
 
 //--------------------------------------------------------------  DrawPictObject
@@ -2003,7 +2003,7 @@ void DrawPictObject (HDC hdcDest, SInt16 what, const Rect *theRect)
 	bounds = g_srcRects[what];
 	QOffsetRect(&bounds, theRect->left, theRect->top);
 	Mac_DrawPicture(hdcDest, thePicture, &bounds);
-	DeleteBitmap(thePicture);
+	DeleteObject(thePicture);
 }
 
 //--------------------------------------------------------------  DrawPictWithMaskObject

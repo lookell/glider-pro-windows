@@ -329,7 +329,7 @@ void DrawHouseSplashScreen (HDC hdcDest, Gp_HouseFile *houseFile)
 	PWSTR splashTextBuffer;
 	PCWSTR splashText;
 	HFONT splashTextFont;
-	HFONT prevTextFont;
+	HGDIOBJ prevTextFont;
 	COLORREF splashTextColor;
 	COLORREF prevTextColor;
 	int prevBkMode;
@@ -358,7 +358,7 @@ void DrawHouseSplashScreen (HDC hdcDest, Gp_HouseFile *houseFile)
 		splashTextColor = Index2ColorRef(28);
 	}
 	splashTextFont = CreateTahomaFont(-9, FW_BOLD);
-	prevTextFont = SelectFont(hdcDest, splashTextFont);
+	prevTextFont = SelectObject(hdcDest, splashTextFont);
 	prevTextColor = SetTextColor(hdcDest, splashTextColor);
 	prevBkMode = SetBkMode(hdcDest, TRANSPARENT);
 	prevTextAlign = SetTextAlign(hdcDest, TA_LEFT | TA_TOP);
@@ -372,8 +372,8 @@ void DrawHouseSplashScreen (HDC hdcDest, Gp_HouseFile *houseFile)
 	SetTextAlign(hdcDest, prevTextAlign);
 	SetBkMode(hdcDest, prevBkMode);
 	SetTextColor(hdcDest, prevTextColor);
-	SelectFont(hdcDest, prevTextFont);
-	DeleteFont(splashTextFont);
+	SelectObject(hdcDest, prevTextFont);
+	DeleteObject(splashTextFont);
 
 	free(splashTextBuffer);
 	free(displayNameBuffer);

@@ -176,14 +176,14 @@ HDC CreateOffScreenGWorld (const Rect *bounds, SInt16 depth)
 		if (hdcSurface)
 			DeleteDC(hdcSurface);
 		if (hbmSurface)
-			DeleteBitmap(hbmSurface);
+			DeleteObject(hbmSurface);
 		return NULL;
 	}
 	SaveDC(hdcSurface);
 	SetWindowOrgEx(hdcSurface, bounds->left, bounds->top, NULL);
-	SelectBitmap(hdcSurface, hbmSurface);
-	SelectBrush(hdcSurface, GetStockBrush(DC_BRUSH));
-	SelectPen(hdcSurface, GetStockPen(DC_PEN));
+	SelectObject(hdcSurface, hbmSurface);
+	SelectObject(hdcSurface, GetStockObject(DC_BRUSH));
+	SelectObject(hdcSurface, GetStockObject(DC_PEN));
 	SetDCBrushColor(hdcSurface, RGB(0xFF, 0xFF, 0xFF));
 	SetDCPenColor(hdcSurface, RGB(0x00, 0x00, 0x00));
 	SetBkColor(hdcSurface, RGB(0xFF, 0xFF, 0xFF));
@@ -201,7 +201,7 @@ void DisposeGWorld (HDC theGWorld)
 	hbmSurface = (HBITMAP)GetCurrentObject(theGWorld, OBJ_BITMAP);
 	RestoreDC(theGWorld, -1);
 	DeleteDC(theGWorld);
-	DeleteBitmap(hbmSurface);
+	DeleteObject(hbmSurface);
 }
 
 //--------------------------------------------------------------  GetGraphicRect
@@ -246,7 +246,7 @@ void LoadGraphic (HDC hdc, Gp_HouseFile *houseFile, SInt16 resID)
 	GetGraphicRect(thePicture, &bounds);
 	Mac_DrawPicture(hdc, thePicture, &bounds);
 
-	DeleteBitmap(thePicture);
+	DeleteObject(thePicture);
 }
 
 //--------------------------------------------------------------  LoadScaledGraphic
@@ -262,7 +262,7 @@ void LoadScaledGraphic (HDC hdc, Gp_HouseFile *houseFile, SInt16 resID, const Re
 	if (thePicture == NULL)
 		RedAlert(kErrFailedGraphicLoad);
 	Mac_DrawPicture(hdc, thePicture, theRect);
-	DeleteBitmap(thePicture);
+	DeleteObject(thePicture);
 }
 
 //--------------------------------------------------------------  DrawCIcon

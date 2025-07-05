@@ -34,7 +34,7 @@ void ColorRect (HDC hdc, const Rect *theRect, SInt32 color)
 
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
-	Mac_PaintRect(hdc, theRect, GetStockBrush(DC_BRUSH));
+	Mac_PaintRect(hdc, theRect, (HBRUSH)GetStockObject(DC_BRUSH));
 	SetDCBrushColor(hdc, wasColor);
 }
 
@@ -54,8 +54,8 @@ void ColorOval (HDC hdc, const Rect *theRect, SInt32 color)
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
 	theRegion = CreateEllipticRgn(theRect->left, theRect->top,
 			theRect->right + 1, theRect->bottom + 1);
-	FillRgn(hdc, theRegion, GetStockBrush(DC_BRUSH));
-	DeleteRgn(theRegion);
+	FillRgn(hdc, theRegion, (HBRUSH)GetStockObject(DC_BRUSH));
+	DeleteObject(theRegion);
 	SetDCBrushColor(hdc, wasColor);
 }
 
@@ -69,7 +69,7 @@ void ColorRegion (HDC hdc, HRGN theRgn, SInt32 color)
 
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
-	FillRgn(hdc, theRgn, GetStockBrush(DC_BRUSH));
+	FillRgn(hdc, theRgn, (HBRUSH)GetStockObject(DC_BRUSH));
 	SetDCBrushColor(hdc, wasColor);
 }
 
@@ -80,13 +80,13 @@ void ColorRegion (HDC hdc, HRGN theRgn, SInt32 color)
 void ColorLine (HDC hdc, SInt16 h0, SInt16 v0, SInt16 h1, SInt16 v1, SInt32 color)
 {
 	COLORREF theRGBColor, wasColor;
-	HPEN wasPen;
+	HGDIOBJ wasPen;
 
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCPenColor(hdc, theRGBColor);
-	wasPen = SelectPen(hdc, GetStockPen(DC_PEN));
+	wasPen = SelectObject(hdc, GetStockObject(DC_PEN));
 	DrawInclusiveLine(hdc, h0, v0, h1, v1);
-	SelectPen(hdc, wasPen);
+	SelectObject(hdc, wasPen);
 	SetDCPenColor(hdc, wasColor);
 }
 
@@ -118,7 +118,7 @@ void ColorFrameRect (HDC hdc, const Rect *theRect, SInt32 color)
 
 	theRGBColor = Index2ColorRef(color);
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
-	Mac_FrameRect(hdc, theRect, GetStockBrush(DC_BRUSH), 1, 1);
+	Mac_FrameRect(hdc, theRect, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
 	SetDCBrushColor(hdc, wasColor);
 }
 
@@ -138,8 +138,8 @@ void ColorFrameOval (HDC hdc, const Rect *theRect, SInt32 color)
 	wasColor = SetDCBrushColor(hdc, theRGBColor);
 	theRegion = CreateEllipticRgn(theRect->left, theRect->top,
 			theRect->right + 1, theRect->bottom + 1);
-	FrameRgn(hdc, theRegion, GetStockBrush(DC_BRUSH), 1, 1);
-	DeleteRgn(theRegion);
+	FrameRgn(hdc, theRegion, (HBRUSH)GetStockObject(DC_BRUSH), 1, 1);
+	DeleteObject(theRegion);
 	SetDCBrushColor(hdc, wasColor);
 }
 
@@ -184,7 +184,7 @@ void ColorShadowRect (HDC hdc, const Rect *theRect, SInt32 color)
 	theRgn = CreateRectRgn(theRect->left, theRect->top,
 			theRect->right, theRect->bottom);
 	ColorShadowRegion(hdc, theRgn, color);
-	DeleteRgn(theRgn);
+	DeleteObject(theRgn);
 }
 
 //--------------------------------------------------------------  DitherShadowOval
@@ -200,7 +200,7 @@ void ColorShadowOval (HDC hdc, const Rect *theRect, SInt32 color)
 	theRgn = CreateEllipticRgn(theRect->left, theRect->top,
 			theRect->right + 1, theRect->bottom + 1);
 	ColorShadowRegion(hdc, theRgn, color);
-	DeleteRgn(theRgn);
+	DeleteObject(theRgn);
 }
 
 //--------------------------------------------------------------  DitherShadowOval
@@ -212,7 +212,7 @@ void ColorShadowPolygon (HDC hdc, const POINT *pointList, int pointCount, int fi
 
 	theRgn = CreatePolygonRgn(pointList, pointCount, fillMode);
 	ColorShadowRegion(hdc, theRgn, color);
-	DeleteRgn(theRgn);
+	DeleteObject(theRgn);
 }
 
 //--------------------------------------------------------------  DitherShadowRegion
@@ -236,7 +236,7 @@ void ColorShadowRegion (HDC hdc, HRGN theRgn, SInt32 color)
 	wasROP2 = SetROP2(hdc, R2_MASKPEN);
 	FillRgn(hdc, theRgn, shadowBrush);
 	SetROP2(hdc, wasROP2);
-	DeleteBrush(shadowBrush);
+	DeleteObject(shadowBrush);
 }
 
 //--------------------------------------------------------------  CreateShadowBitmap

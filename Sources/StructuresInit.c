@@ -104,7 +104,7 @@ void InitScoreboardMap (void)
 	GetGraphicRect(thePicture, &bounds);
 	QOffsetRect(&bounds, hOffset, 0);
 	Mac_DrawPicture(g_boardSrcMap, thePicture, &bounds);
-	DeleteBitmap(thePicture);
+	DeleteObject(thePicture);
 
 	QSetRect(&g_badgeSrcRect, 0, 0, 32, 66);  // 2144 pixels
 	g_badgeSrcMap = CreateOffScreenGWorld(&g_badgeSrcRect, kPreferredDepth);
@@ -176,7 +176,7 @@ void DestroyScoreboardMap (void)
 
 	if (g_scoreboardFont != NULL)
 	{
-		DeleteFont(g_scoreboardFont);
+		DeleteObject(g_scoreboardFont);
 		g_scoreboardFont = NULL;
 	}
 }
