@@ -123,18 +123,21 @@ fn write_names_txt(resfork: &ResourceFork, mut writer: impl Write) -> io::Result
     Ok(())
 }
 
+fn my_zip_file_options() -> SimpleFileOptions {
+    SimpleFileOptions::default().compression_level(Some(9))
+}
+
 fn dump_resfork(resfork: &ResourceFork, writer: impl Seek + Write) -> AnyResult<()> {
     let mut zip_writer = ZipWriter::new(writer);
-    zip_writer.set_comment("");
 
     if resfork.iter().any(|res| res.name.is_some()) {
-        zip_writer.start_file("names.txt", SimpleFileOptions::default())?;
+        zip_writer.start_file("names.txt", my_zip_file_options())?;
         write_names_txt(resfork, &mut zip_writer)?;
     }
 
     for res in resfork.iter() {
         let entry_name = make_zip_entry_path(&res);
-        zip_writer.start_file(entry_name, SimpleFileOptions::default())?;
+        zip_writer.start_file(entry_name, my_zip_file_options())?;
         zip_writer.write_all(res.data.as_slice())?;
     }
     Ok(())
@@ -345,10 +348,7 @@ where
         if let Some(image) = icon_entry.small_1bit.take() {
             icon_file.add_entry(image, icon_entry.small_mask.clone());
         }
-        zipfile.start_file(
-            format!("FinderIcon/{}.ico", icon_id),
-            SimpleFileOptions::default(),
-        )?;
+        zipfile.start_file(format!("FinderIcon/{}.ico", icon_id), my_zip_file_options())?;
         icon_file.write_to(&mut zipfile)?;
     }
     Ok(())
@@ -360,10 +360,9 @@ fn convert_resfork(
     options: &ConvertOptions,
 ) -> AnyResult<()> {
     let mut zipfile = ZipWriter::new(writer);
-    zipfile.set_comment("");
 
     if resfork.iter().any(|res| res.name.is_some()) {
-        zipfile.start_file("names.txt", SimpleFileOptions::default())?;
+        zipfile.start_file("names.txt", my_zip_file_options())?;
         write_names_txt(resfork, &mut zipfile)?;
     }
 
@@ -374,14 +373,11 @@ fn convert_resfork(
             Ok(_) => (get_entry_name(resource), &buffer),
             Err(_) => (make_zip_entry_path(resource), &resource.data),
         };
-        zipfile.start_file(entry_name, SimpleFileOptions::default())?;
+        zipfile.start_file(entry_name, my_zip_file_options())?;
         zipfile.write_all(output)?;
         if options.dump_pict_files {
             if let b"Date" | b"PICT" = resource.restype.as_bstr() {
-                zipfile.start_file(
-                    format!("PICT/{}.pct", resource.id),
-                    SimpleFileOptions::default(),
-                )?;
+                zipfile.start_file(format!("PICT/{}.pct", resource.id), my_zip_file_options())?;
                 zipfile.write_all(&[0; 512])?;
                 zipfile.write_all(resource.data.as_slice())?;
             }
@@ -398,7 +394,7 @@ fn convert_resfork(
         };
         for (idx, patt) in patterns.into_iter().enumerate() {
             let entry_name = format!("PatternList/{}/{}.bmp", resource.id, idx);
-            zipfile.start_file(entry_name, SimpleFileOptions::default())?;
+            zipfile.start_file(entry_name, my_zip_file_options())?;
             patt.write_bmp_file(&mut zipfile)?;
         }
     }
@@ -414,20 +410,19 @@ fn make_gliderpro_house(
     output_file: impl Seek + Write,
 ) -> AnyResult<()> {
     let mut zipfile = ZipWriter::new(output_file);
-    zipfile.set_comment("");
 
-    zipfile.start_file("house.dat", SimpleFileOptions::default())?;
+    zipfile.start_file("house.dat", my_zip_file_options())?;
     zipfile.write_all(data_bytes)?;
 
     let mut added_bounds_directory = false;
     for resource in resfork.iter_type(b"bnds") {
         if !added_bounds_directory {
-            zipfile.add_directory("bounds/", SimpleFileOptions::default())?;
+            zipfile.add_directory("bounds/", my_zip_file_options())?;
             added_bounds_directory = true;
         }
         if resource.data.len() == 4 {
             let entry_name = format!("bounds/{}.bin", resource.id);
-            zipfile.start_file(entry_name, SimpleFileOptions::default())?;
+            zipfile.start_file(entry_name, my_zip_file_options())?;
             zipfile.write_all(&resource.data)?;
         } else {
             eprintln!("warning: bounds resource #{} invalid", resource.id);
@@ -441,7 +436,7 @@ fn make_gliderpro_house(
         let mut data_bytes = Vec::new();
         if picture::convert(&resource, &mut data_bytes, false).is_ok() {
             let entry_name = format!("images/{}.bmp", resource.id);
-            zipfile.start_file(entry_name, SimpleFileOptions::default())?;
+            zipfile.start_file(entry_name, my_zip_file_options())?;
             zipfile.write_all(&data_bytes)?;
         } else {
             eprintln!("warning: failed to convert PICT #{}", resource.id);
@@ -452,14 +447,14 @@ fn make_gliderpro_house(
     let mut added_images_directory = false;
     for resource in resfork.iter_type(b"PICT") {
         if !added_images_directory {
-            zipfile.add_directory("images/", SimpleFileOptions::default())?;
+            zipfile.add_directory("images/", my_zip_file_options())?;
             added_images_directory = true;
         }
         handle_image_resource(&mut zipfile, resource)?;
     }
     for resource in resfork.iter_type(b"Date") {
         if !added_images_directory {
-            zipfile.add_directory("images/", SimpleFileOptions::default())?;
+            zipfile.add_directory("images/", my_zip_file_options())?;
             added_images_directory = true;
         }
         handle_image_resource(&mut zipfile, resource)?;
@@ -468,13 +463,13 @@ fn make_gliderpro_house(
     let mut added_sounds_directory = false;
     for resource in resfork.iter_type(b"snd ") {
         if !added_sounds_directory {
-            zipfile.add_directory("sounds/", SimpleFileOptions::default())?;
+            zipfile.add_directory("sounds/", my_zip_file_options())?;
             added_sounds_directory = true;
         }
         let mut data_bytes = Vec::new();
         if sound::convert(&resource.data, &mut data_bytes).is_ok() {
             let entry_name = format!("sounds/{}.wav", resource.id);
-            zipfile.start_file(entry_name, SimpleFileOptions::default())?;
+            zipfile.start_file(entry_name, my_zip_file_options())?;
             zipfile.write_all(&data_bytes)?;
         } else {
             eprintln!("warning: failed to convert sound #{}", resource.id);
@@ -536,7 +531,7 @@ fn make_gliderpro_house(
         house_icon.add_entry(image, icon_images.small_mask.clone());
     }
     if house_icon.num_entries() != 0 {
-        zipfile.start_file("house.ico", SimpleFileOptions::default())?;
+        zipfile.start_file("house.ico", my_zip_file_options())?;
         house_icon.write_to(&mut zipfile)?;
     }
 
